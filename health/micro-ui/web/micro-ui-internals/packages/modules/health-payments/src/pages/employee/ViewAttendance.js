@@ -95,12 +95,20 @@ const ViewAttendance = ({ editAttendance = false }) => {
   useEffect(() => {
     if (AttendanceData) {
       setAttendanceDuration(
-        Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
+        // Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
+
+        Math.ceil(selectedPeriod?.periodDurationInDays)
       );
       if (AttendanceData?.attendanceRegister?.[0]?.registerPeriodStatus === "APPROVED") {
         setDisabledAction(true);
       }
-      if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+
+      // commented the old code
+      // if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
+      //   setDisabledAction(true);
+      // }
+
+      if (!paymentConfig.enableApprovalAnyTime && selectedPeriod?.periodEndDate > new Date()) {
         setDisabledAction(true);
       }
     }
@@ -511,8 +519,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER", individualsData?.Individual?.[0]?.name?.givenName)}
           {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER", individualsData?.Individual?.[0]?.mobileNumber)}
           {renderLabelPair("HCM_AM_NO_OF_ATTENDEE", AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
-          {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(project?.[0]?.startDate))}
-          {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(project?.[0]?.endDate))}
+          {/* {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(project?.[0]?.startDate))} */}
+          {/* {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(project?.[0]?.endDate))} */}
+          {renderLabelPair(
+            "Attendance duration",
+            `${formatTimestampToDate(selectedPeriod?.periodStartDate)} - ${formatTimestampToDate(selectedPeriod?.periodEndDate)}`
+          )}
           {renderLabelPair("HCM_AM_EVENT_DURATION", attendanceDuration || 0)}
           {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>

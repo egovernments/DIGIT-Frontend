@@ -248,7 +248,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
         {/* Billing Period Dropdown */}
         {projectSelected && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
-            <div className="comment-label">{t("Billing Period")}</div>
+            <div className="comment-label">{t("HCM_AM_BILL_PERIOD_DATE")}</div>
 
             {loadingPeriods ? (
               <div style={{ padding: "1rem", textAlign: "center" }}>
@@ -258,7 +258,7 @@ const CustomFilter = ({ resetTable, isRequired, onFilterChange }) => {
               <Dropdown
                 style={{ width: "100%" }}
                 t={t}
-                option={getValidPeriods(periods)}
+                option={getValidPeriods(t,periods)}
                 optionKey="name"
                 selected={selectedPeriod}
                 select={handlePeriodSelect}

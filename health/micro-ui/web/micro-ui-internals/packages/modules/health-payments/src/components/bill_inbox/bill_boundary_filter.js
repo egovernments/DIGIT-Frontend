@@ -393,14 +393,21 @@ const BillBoundaryFilter = ({ isRequired, selectedProject, selectedLevel, onFilt
         {/* Billing Period Dropdown */}
         {selectedProject && (
           <div style={{ width: "100%", marginTop: "1.5rem" }}>
-            <div className="comment-label">{t("Billing Period")}</div>
+            <div className="comment-label">{t("HCM_AM_BILL_PERIOD_DATE")}</div>
 
             {loadingPeriods ? (
               <div style={{ padding: "1rem", textAlign: "center" }}>
                 <Loader />
               </div>
             ) : periods.length > 0 ? (
-              <Dropdown style={{ width: "100%" }} t={t} option={getValidPeriods(periods)} optionKey="name" selected={selectedPeriod} select={handlePeriodSelect} />
+              <Dropdown
+                style={{ width: "100%" }}
+                t={t}
+                option={getValidPeriods(t,periods)}
+                optionKey="name"
+                selected={selectedPeriod}
+                select={handlePeriodSelect}
+              />
             ) : (
               <div style={{ padding: "0.5rem", color: "#666", fontSize: "14px" }}>{t("No billing periods available for this project")}</div>
             )}

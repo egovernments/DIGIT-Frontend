@@ -497,6 +497,8 @@ import { LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-component
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
 import AlertPopUp from "../alertPopUp";
 import InboxSearchLinkHeader from "../InboxSearchLinkHeader";
+import { renderProjectPeriod } from "../../utils/time_conversion";
+
 
 /**
  * @returns {React.ReactElement} BillInboxComponent
@@ -767,25 +769,25 @@ const BillInboxComponent = () => {
     }
   };
 
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
+  // const formatDate = (timestamp) => {
+  //   if (!timestamp) return "";
+  //   const date = new Date(timestamp);
+  //   return date.toLocaleDateString("en-GB", {
+  //     day: "2-digit",
+  //     month: "short",
+  //     year: "numeric",
+  //   });
+  // };
 
-  const renderProjectPeriod = (t, selectedProject, period) => {
-    if (!selectedProject?.name) return t(selectedProject?.name || "");
-    if (!period?.periodStartDate || !period?.periodEndDate) return t(selectedProject.name);
+  // const renderProjectPeriod = (t, selectedProject, period) => {
+  //   if (!selectedProject?.name) return t(selectedProject?.name || "");
+  //   if (!period?.periodStartDate || !period?.periodEndDate) return t(selectedProject.name);
 
-    const start = formatDate(period.periodStartDate);
-    const end = formatDate(period.periodEndDate);
+  //   const start = formatDate(period.periodStartDate);
+  //   const end = formatDate(period.periodEndDate);
 
-    return `${t(selectedProject.name)} (${start} - ${end})`;
-  };
+  //   return `${t(selectedProject.name)} (${start} - ${end})`;
+  // };
 
   if (generateBillMutation.isLoading) {
     return <LoaderWithGap />;

@@ -251,8 +251,6 @@
 
 // export default AttendanceInboxComponent;
 
-
-
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
@@ -261,6 +259,7 @@ import CustomInboxTable from "./table_inbox";
 import { Toast, Card } from "@egovernments/digit-ui-components";
 import { defaultRowsPerPage, ScreenTypeEnum, StatusEnum } from "../../utils/constants";
 import SearchResultsPlaceholder from "../SearchResultsPlaceholder";
+import { renderProjectPeriod } from "../../utils/time_conversion";
 
 /**
  * AttendanceInboxComponent: Displays a filterable and paginated inbox for attendance records.
@@ -304,7 +303,7 @@ const AttendanceInboxComponent = () => {
   const triggerAttendanceSearch = (filterData, status, totalRows, totalNext, selectedProject) => {
     try {
       setChildrenDataLoading(true);
-      
+
       // FIX: Always get the latest period from session storage when function is called
       const latestPeriod = Digit.SessionStorage.get("selectedPeriod");
       const periodId = latestPeriod?.id;
@@ -387,7 +386,7 @@ const AttendanceInboxComponent = () => {
   /// Update filter criteria and fetch new data.
   const handleFilterUpdate = (newFilter, isSelectedData, selectedPeriod) => {
     setFilterCriteria(newFilter);
-    
+
     // Update period in session storage and state
     if (selectedPeriod) {
       setMarkPeriod(selectedPeriod);
@@ -470,6 +469,26 @@ const AttendanceInboxComponent = () => {
     Digit.SessionStorage.del("selectedPeriod");
   };
 
+  // const formatDate = (timestamp) => {
+  //   if (!timestamp) return "";
+  //   const date = new Date(timestamp);
+  //   return date.toLocaleDateString("en-GB", {
+  //     day: "2-digit",
+  //     month: "short",
+  //     year: "numeric",
+  //   });
+  // };
+
+  // const renderProjectPeriod = (t, selectedProject, period) => {
+  //   if (!selectedProject?.name) return t(selectedProject?.name || "");
+  //   if (!period?.periodStartDate || !period?.periodEndDate) return t(selectedProject.name);
+
+  //   const start = formatDate(period.periodStartDate);
+  //   const end = formatDate(period.periodEndDate);
+
+  //   return `${t(selectedProject.name)} (${start} - ${end})`;
+  // };
+
   return (
     <div>
       <div className="custom-register-inbox-screen">
@@ -484,7 +503,7 @@ const AttendanceInboxComponent = () => {
             <div className="inner-table-section" style={{ height: "60vh" }}>
               {card == false ? (
                 <Card className="card-overide">
-                  <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
+                  <div className="summary-sub-heading">{renderProjectPeriod(t, selectedProject, markPeriod)}</div>
                   {<SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />}
                 </Card>
               ) : (
