@@ -9,7 +9,7 @@
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
   },
-  "homepage": "http://jagankumar-egov.github.io/auth",
+  "homepage": "http://design-egov.github.io/auth",
   "keywords": [],
   "author": "",
   "license": "ISC",
