@@ -9,7 +9,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/react-micro-frontends",
+      publicPath: "/container",
       filename: "[name].[contenthash].js",
     },
     plugins: [

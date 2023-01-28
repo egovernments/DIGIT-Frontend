@@ -9,7 +9,7 @@
     "predeploy":"yarn build",
     "deploy":"gh-pages -d dist"
   },
-  "homepage": "http://jagankumar-egov.github.io/react-micro-frontends",
+  "homepage": "http://design-egov.github.io/container",
   "keywords": [],
   "author": "",
   "license": "ISC",
