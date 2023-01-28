@@ -9,8 +9,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/container",
-      filename: "[name].[contenthash].js",
+      publicPath: "auto"
     },
     plugins: [
       new ModuleFederationPlugin({
