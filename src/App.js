@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
+import useRouter from "./hooks/useRouter";
 
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
@@ -9,11 +10,13 @@ const AuthLazy = lazy(() => import("./modules/Auth"));
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
+  const { navigate } = useRouter();
 
   return (
     <div>
       <div style={{ height: "60px", backgroundColor: "#282c34" }}>
         {/* <Header isSignedIn$={isSignedIn$} logout={logout} /> */}
+        <button onClick={()=>navigate("/auth/login")}>Login</button>
       </div>
 
       <div>
