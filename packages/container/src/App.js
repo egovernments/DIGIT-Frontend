@@ -4,7 +4,7 @@ import { Loader } from "./components";
 import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
-import {Header} from "@egovernments/digit-ui-react-components";
+import {AppContainer, Header} from "@egovernments/digit-ui-react-components";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
@@ -29,9 +29,15 @@ const App = () => {
       </div>
       <div>
         <Suspense fallback={<Loader />}>
+        <AppContainer>
           <Switch>
+          <Route path="/route">
+            <div style={{width:"100%",height:"200px"}}>
+              <Header>Test Components</Header>
+              </div>
+            </Route>
             <Route path="/auth">
-              <Header>Test COmponents</Header>
+              <Header>Test Components</Header>
               <AuthLazy login={login} history={history} />
             </Route>
             <Route path="/dashboard">
@@ -39,6 +45,7 @@ const App = () => {
             </Route>
             <Route path="/">{/* <LandingLazy /> */}</Route>
           </Switch>
+          </AppContainer>
         </Suspense>
       </div>
     </div>
