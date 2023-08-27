@@ -5,6 +5,5 @@
     "packages/*"
   ],
   "npmClient": "yarn",
-  "useWorkspaces":true,
   "stream": true
 }
