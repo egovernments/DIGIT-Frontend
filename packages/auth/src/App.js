@@ -4,6 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Container from "./components/container";
+import {Header} from "@egovernments/digit-ui-react-components";
 
 export const Card = (props) => (
   <Container
@@ -23,6 +24,7 @@ const App = ({ login }) => {
     <Container style={{ maxWidth: "600px", margin: "80px auto 0 auto" }}>
       <Card>
         <Container type="h1" style={{ textAlign: "center", margin: "24px 0" }}>
+        <Header>Test COmponents</Header>
           Auth microfrontend (2 routes)
         </Container>
         <Switch>

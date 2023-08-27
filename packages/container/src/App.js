@@ -4,7 +4,7 @@ import { Loader } from "./components";
 import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
-
+import {Header} from "@egovernments/digit-ui-react-components";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
@@ -27,11 +27,11 @@ const App = () => {
         {/* <Header isSignedIn$={isSignedIn$} logout={logout} /> */}
         <button onClick={() => navigate("/auth/login")}>Login</button>
       </div>
-
       <div>
         <Suspense fallback={<Loader />}>
           <Switch>
             <Route path="/auth">
+              <Header>Test COmponents</Header>
               <AuthLazy login={login} history={history} />
             </Route>
             <Route path="/dashboard">
