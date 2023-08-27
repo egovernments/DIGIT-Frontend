@@ -1,0 +1,15 @@
+{
+  "name": "UI",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private":true,
+  "repository": "https://github.com/digit-training/UI.git",
+  "author": "Jagankumar <53823168+jagankumar-egov@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^7.1.5"
+  },
+  "workspaces":[
+      "packages/*"
+  ]
+}
