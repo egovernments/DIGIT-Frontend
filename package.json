@@ -13,6 +13,7 @@
       "packages/*"
   ],
   "scripts": {
-    "build":"yarn lerna run build"
+    "build":"yarn lerna run build",
+    "start":"yarn lerna run start"
   }
 }
