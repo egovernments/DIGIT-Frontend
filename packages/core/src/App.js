@@ -4,6 +4,7 @@ import { Loader } from "./components";
 import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
+import { DigitUI } from "./Module";
 
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
@@ -25,10 +26,11 @@ const App = () => {
         }}
       >
         {/* <Header isSignedIn$={isSignedIn$} logout={logout} /> */}
-        <button onClick={() => navigate("/auth/login")}>Login</button>
+        /*<button onClick={() => navigate("/auth/login")}>Login</button>
       </div>
 
       <div>
+       <DigitUI />
         <Suspense fallback={<Loader />}>
           <Switch>
             <Route path="/auth">
@@ -46,3 +48,4 @@ const App = () => {
 };
 
 export default App;
+
