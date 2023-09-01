@@ -5,7 +5,7 @@ import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
-
+import { initLibraries } from "@egovernments/digit-ui-libraries";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
@@ -46,6 +46,10 @@ const App = () => {
     </div>
   );
 };
+
+initLibraries().then(() => {
+  
+});
 
 export default App;
 
