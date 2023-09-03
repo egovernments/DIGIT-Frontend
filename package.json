@@ -2,7 +2,7 @@
   "name": "UI",
   "version": "1.0.0",
   "main": "index.js",
-  "private":true,
+  "private": true,
   "repository": "https://github.com/digit-training/UI.git",
   "author": "Jagankumar <53823168+jagankumar-egov@users.noreply.github.com>",
   "license": "MIT",
@@ -13,11 +13,14 @@
     "webpack-dev-server": "3.11.1",
     "webpack-merge": "5.7.3"
   },
-  "workspaces":[
-      "packages/*"
+  "workspaces": [
+    "packages/*"
   ],
   "scripts": {
-    "build":"yarn lerna run build",
-    "start":"yarn lerna run start"
+    "build": "yarn lerna run build",
+    "start": "yarn lerna run start"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
   }
 }

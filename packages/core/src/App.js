@@ -10,10 +10,19 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
 
+initLibraries().then(() => {
+  initDigitUI();
+});
+
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
+  const enabledModules=["PT"]
 
+  const moduleReducers = (initData) => initData;
+  
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  
   return (
     <div>
       <div
@@ -30,7 +39,7 @@ const App = () => {
       </div>
 
       <div>
-       <DigitUI />
+   
         <Suspense fallback={<Loader />}>
           <Switch>
             <Route path="/auth">
@@ -39,7 +48,9 @@ const App = () => {
             <Route path="/dashboard">
               <DashboardLazy />
             </Route>
-            <Route path="/">{/* <LandingLazy /> */}</Route>
+            <Route path="/">{
+              <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
+            }</Route>
           </Switch>
         </Suspense>
       </div>
@@ -47,9 +58,31 @@ const App = () => {
   );
 };
 
-initLibraries().then(() => {
-  
-});
+
+
+const initDigitUI = () => {
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  window.Digit.Customizations = {
+
+  };
+  window?.Digit.ComponentRegistryService.setupRegistry({
+    // PaymentModule,
+    // ...paymentConfigs,
+    // PaymentLinks,
+  });
+
+ 
+  const enabledModules=["PT"]
+
+  const moduleReducers = (initData) => initData;
+
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  // initTokens(stateCode);
+
+  // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
+};
+
+
 
 export default App;
 

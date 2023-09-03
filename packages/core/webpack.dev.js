@@ -2,19 +2,38 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const { merge } = require("webpack-merge");
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
+require('dotenv').config({ path: '../../.env' }); 
 
 module.exports = () => {
   const devConfig = {
     mode: "development",
     output: {
-      publicPath: "http://localhost:8008/",
+      publicPath: "https://localhost:8008/",
       filename: "[name].[contenthash].js",
     },
     devServer: {
       port: 8008,
+      proxy: [
+        {
+          context: () => true,
+          target: process.env.REACT_APP_PROXY_API, //'https://unified-dev.digit.org',
+          secure: true,
+          changeOrigin:true,
+          bypass: function (req, res, proxyOptions) {
+            if (req.headers.accept.indexOf('html') !== -1) {
+              console.log('Skipping proxy for browser request.');
+              return '/index.html';
+            }
+          },
+          headers: {
+            "Connection": "keep-alive"
+        },
+        },
+      ],
       historyApiFallback: {
         index: "/",
       },
+      https: true, // Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({
