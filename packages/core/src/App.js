@@ -6,9 +6,11 @@ import useAuth from "./hooks/useAuth";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+//import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
+
 
 initLibraries().then(() => {
   initDigitUI();
@@ -17,7 +19,7 @@ initLibraries().then(() => {
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT"]
+  const enabledModules=["PT","HRMS"]
 
   const moduleReducers = (initData) => initData;
   
@@ -71,7 +73,7 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
 
- 
+ // initHRMSComponents();
   const enabledModules=["PT"]
 
   const moduleReducers = (initData) => initData;

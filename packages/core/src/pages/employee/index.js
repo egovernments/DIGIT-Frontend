@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Redirect, Route, Switch, useLocation, useRouteMatch, useHistory } from "react-router-dom";
 import { AppModules } from "../../components/AppModules";
@@ -11,6 +11,7 @@ import EmployeeLogin from "./Login";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
+const HrmsLazy = lazy(() => import("../../modules/Hrms"));
 
 const userScreensExempted = ["user/profile", "user/error"];
 
@@ -72,6 +73,9 @@ const EmployeeApp = ({
               </Route>
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
+              </Route>
+              <Route path={`${path}/hrms`}>
+                <HrmsLazy />
               </Route>
               <Route path={`${path}/user/change-password`}>
                 <ChangePassword />
