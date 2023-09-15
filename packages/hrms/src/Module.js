@@ -22,11 +22,13 @@ import Details from "./pages/EmployeeDetails";
 import Inbox from "./pages/Inbox";
 import Response from "./pages/Response";
 
+
+var Digit = window.Digit || {};
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = "HR";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
-
+   
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
@@ -36,6 +38,7 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
     return <EmployeeApp path={path} url={url} />;
   } else return null;
 };
+
 
 const componentsToRegister = {
   HRMSCard,

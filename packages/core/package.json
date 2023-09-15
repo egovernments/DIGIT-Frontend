@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
@@ -18,16 +19,17 @@
     "@babel/preset-react": "7.12.10",
     "babel-loader": "8.2.2",
     "gh-pages": "^5.0.0",
-    "html-webpack-plugin": "4.5.1"
+    "html-webpack-plugin": "4.5.1",
+    "babel-plugin-react-html-attrs": "^3.0.5"
   },
   "dependencies": {
+    "@egovernments/digit-ui-libraries": "1.4.100",
+    "@egovernments/digit-ui-module-hrms": "1.5.27",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-router-dom": "5.2.0",
     "react-tooltip": "^5.21.1",
     "redux-thunk": "^2.4.2",
-    "rxjs": "6.6.3",
-    "@egovernments/digit-ui-libraries" : "1.4.100",
-    "@egovernments/digit-ui-module-hrms" : "1.5.27"
+    "rxjs": "6.6.3"
   }
 }

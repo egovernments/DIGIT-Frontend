@@ -1,0 +1,1 @@
+(self.webpackChunk_egovernments_digit_ui_core=self.webpackChunk_egovernments_digit_ui_core||[]).push([[787],{4787:(e,n,t)=>{"use strict";t.r(n),t.d(n,{default:()=>i});var u=t(2212),r=t.n(u),c=t(7489);const i=function(){var e=(0,u.useRef)(null);return(0,u.useEffect)((function(){(0,c.mount)(e.current)}),[]),r().createElement("div",{ref:e})}}}]);

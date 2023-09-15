@@ -7,15 +7,15 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/auth/",
+      publicPath: "/hrms/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "auth",
+        name: "hrms",
         filename: "remoteEntry.js",
         exposes: {
-          "./AuthModule": "./src/bootstrap",
+          "./HrmsModule": "./src/bootstrap",
         },
         shared: packageJson.dependencies,
       }),

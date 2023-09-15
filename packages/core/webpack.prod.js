@@ -19,6 +19,7 @@ module.exports = () => {
           auth: `auth@${domain}/auth/remoteEntry.js`,
           // header: `header@${domain}/header/remoteEntry.js`,
           dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
+          hrms: `hrms@${domain}/hrms/remoteEntry.js`
         },
         shared: packageJson.dependencies,
       }),

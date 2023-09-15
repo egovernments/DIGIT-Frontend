@@ -13,9 +13,28 @@ module.exports = () => {
     },
     devServer: {
       port: 8085,
+      proxy: [
+        {
+          context: () => true,
+          target: 'https://unified-dev.digit.org',
+          secure: true,
+          changeOrigin: true,
+          bypass: function (req, res, proxyOptions){
+            if(req.headers.accept.indexOf('html') !== -1){
+              console.log('Skipping proxy for browser request.');
+              return '/index.html';
+            }
+          },
+          headers:{
+            "Connection" : "keep-alive"
+          },
+        },
+      
+      ],
       historyApiFallback: {
         index: "/",
       },
+      https: true, // Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({

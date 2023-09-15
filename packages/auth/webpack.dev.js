@@ -8,7 +8,7 @@ module.exports = () => {
   const devConfig = {
     mode: "development",
     output: {
-      publicPath: "https://localhost:8082/",
+      publicPath: "http://localhost:8082/",
       filename: "[name].[contenthash].js",
     },
     devServer: {

@@ -7,6 +7,7 @@
   "author": "Jagankumar <53823168+jagankumar-egov@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-plugin-react-html-attrs": "^3.0.5",
     "lerna": "^7.1.5",
     "webpack": "5.11.1",
     "webpack-cli": "4.10",

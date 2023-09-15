@@ -1,0 +1,1 @@
+(self.webpackChunkhrms=self.webpackChunkhrms||[]).push([[560],{7560:(r,n,t)=>{"use strict";function e(){return e=Object.assign?Object.assign.bind():function(r){for(var n=1;n<arguments.length;n++){var t=arguments[n];for(var e in t)Object.prototype.hasOwnProperty.call(t,e)&&(r[e]=t[e])}return r},e.apply(this,arguments)}t.d(n,{Z:()=>e})}}]);
