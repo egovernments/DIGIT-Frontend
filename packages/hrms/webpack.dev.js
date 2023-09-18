@@ -16,7 +16,7 @@ module.exports = () => {
       proxy: [
         {
           context: () => true,
-          target: 'https://unified-dev.digit.org',
+          target: 'https://works-qa.digit.org',
           secure: true,
           changeOrigin: true,
           bypass: function (req, res, proxyOptions){

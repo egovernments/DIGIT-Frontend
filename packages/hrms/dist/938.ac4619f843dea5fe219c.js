@@ -1,0 +1,1 @@
+(self.webpackChunkhrms=self.webpackChunkhrms||[]).push([[938],{4938:(t,e,r)=>{"use strict";function n(t,e){return n=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(t,e){return t.__proto__=e,t},n(t,e)}r.d(e,{Z:()=>n})}}]);

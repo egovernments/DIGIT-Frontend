@@ -10,7 +10,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
-
+const HrmsLazy = lazy(()  => import("./modules/Hrms"));
 
 initLibraries().then(() => {
   initDigitUI();
@@ -49,6 +49,9 @@ const App = () => {
             </Route>
             <Route path="/dashboard">
               <DashboardLazy />
+            </Route>
+            <Route path="/hrms">
+              <HrmsLazy />
             </Route>
             <Route path="/">{
               <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
