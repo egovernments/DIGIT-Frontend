@@ -5,6 +5,7 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -27,6 +28,7 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
+  initDSSComponents();
   initHRMSComponents();
   initWorkbenchComponents();
 };

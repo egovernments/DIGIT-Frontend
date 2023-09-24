@@ -9,7 +9,7 @@ import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 // import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
-import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
