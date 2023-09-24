@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Loader, SearchIcon } from "@egovernments/digit-ui-react-components";
+import {  SearchIcon } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import Sidebar from "./SideBar";
+import { Loader } from "@egovernments/digit-ui-components-core";
 
 const checkMatch = (path = "", searchCriteria = "") => path.toLowerCase().includes(searchCriteria.toLowerCase());
 
