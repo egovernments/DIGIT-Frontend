@@ -1,4 +1,4 @@
 .DS_Store
-accelerators/frontend/micro-ui-internals/node_modules/*
+node_modules/*
 .idea
 index.lock
