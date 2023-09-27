@@ -8,11 +8,11 @@ module.exports = () => {
   const devConfig = {
     mode: "development",
     output: {
-      publicPath: "https://localhost:8085/",
+      publicPath: "https://localhost:8086/",
       filename: "[name].[contenthash].js",
     },
     devServer: {
-      port: 8085,
+      port: 8086,
       proxy: [
         {
           context: () => true,
@@ -38,10 +38,10 @@ module.exports = () => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "hrms",
+        name: "workbench",
         filename: "remoteEntry.js",
         exposes: {
-          "./HrmsModule": "./src/bootstrap",
+          "./WorkbenchModule": "./src/bootstrap",
         },
         shared: packageJson.dependencies,
       }),

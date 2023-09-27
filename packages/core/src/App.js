@@ -11,6 +11,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
 const HrmsLazy = lazy(()  => import("./modules/Hrms"));
+const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
 
 initLibraries().then(() => {
   initDigitUI();
@@ -19,7 +20,7 @@ initLibraries().then(() => {
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS"]
+  const enabledModules=["PT","HRMS","Workbench"]
 
   const moduleReducers = (initData) => initData;
   
@@ -53,6 +54,10 @@ const App = () => {
             <Route path="/hrms">
               <HrmsLazy />
             </Route>
+            <Route path="/workbench">
+              <WorkbenchLazy />
+            </Route>
+
             <Route path="/">{
               <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
             }</Route>
@@ -77,7 +82,7 @@ const initDigitUI = () => {
   });
 
  // initHRMSComponents();
-  const enabledModules=["PT"]
+  const enabledModules=["PT"];
 
   const moduleReducers = (initData) => initData;
 

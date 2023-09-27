@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { mount } from "hrms/HrmsModule";
+import { mount } from "workbench/WorkbenchModule";
 import { History } from "history";
 
 // interface AuthProps {
