@@ -1,6 +1,6 @@
 import { DownwardArrow, Loader, Rating, RemoveableTag, Table, UpwardArrow } from "@egovernments/digit-ui-react-components";
 import { differenceInCalendarDays, subYears } from "date-fns";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
@@ -10,8 +10,8 @@ import ReactTooltip from "react-tooltip";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name"];
 
-const InsightView = ({ rowValue, insight, t ,disableInsights=false}) => {
-  if(disableInsights){
+const InsightView = ({ rowValue, insight, t, disableInsights = false }) => {
+  if (disableInsights) {
     return <span>{rowValue}</span>
   }
   return (
@@ -31,7 +31,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
 };
 
 const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }) => {
-  const { id,disableInsights=false } = data;
+  const { id, disableInsights = false } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
   const { t } = useTranslation();
@@ -44,6 +44,29 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     interval: "month",
     title: "",
   };
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
@@ -55,6 +78,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
+    isVisible: isVisible
   });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
@@ -67,6 +91,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
+    isVisible: isVisible
   });
   useEffect(() => {
     const { id } = data;
@@ -327,7 +352,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
                 style={{ color: "#F47738", cursor: "pointer" }}
                 onClick={() =>
                   getDrilldownCharts(
-                    cellValue?.includes("DSS_TB_")?row?.original?.key:cellValue,
+                    cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
                     filter?.key,
                     t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
                     response?.responseData?.filter
@@ -377,7 +402,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     return <Loader />;
   }
   return (
-    <div style={{ width: "100%" }}>
+    <div ref={chartRef} style={{ width: "100%" }}>
       <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
         {t("DSS_CMN_TABLE_INFO")}
       </span>

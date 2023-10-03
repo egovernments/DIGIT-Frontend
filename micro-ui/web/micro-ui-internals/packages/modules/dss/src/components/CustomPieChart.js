@@ -16,13 +16,38 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
   const [isPieClicked, setIsPieClicked] = useState(false);
   const [pieSelected, setPieSelected] = useState(null);
   const [drillDownId, setdrillDownId] = useState(null);
+  const [isVisible, setisVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: isPieClicked ? drillDownId : id,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected } : value?.filters,
-    moduleLevel: value?.moduleLevel
+    moduleLevel: value?.moduleLevel,
+    isVisible: isVisible
   });
 
   const chartData = useMemo(() => {
@@ -63,7 +88,9 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
       );
     }
 
-    return <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+    return <span style={{ fontSize: "14px", color: "#505A5F" }}>
+      {/* {t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)} */}
+    </span>
   }
 
   const renderCustomLabel = (args) => {

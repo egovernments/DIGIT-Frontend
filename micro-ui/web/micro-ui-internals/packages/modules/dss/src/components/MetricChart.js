@@ -1,10 +1,11 @@
 import { DownwardArrow, Rating, UpwardArrow } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 //import {ReactComponent as Arrow_Downward} from "../images/Arrow_Downward.svg";
 import { ArrowDownwardElement } from "./ArrowDownward";
 import { ArrowUpwardElement } from "./ArrowUpward";
+import { Loader } from "@egovernments/digit-ui-react-components";
 
 const MetricData = ({ t, data, code }) => {
   const { value } = useContext(FilterContext);
@@ -44,13 +45,37 @@ const ColumnMetricData = ({ data, setChartDenomination, index }) => {
   const { value } = useContext(FilterContext);
   const [showDateOrCount, setShowDateOrCount] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
-    moduleLevel: value?.moduleLevel
+    moduleLevel: value?.moduleLevel,
+    isVisible: isVisible
   });
 
   useEffect(() => {
@@ -71,11 +96,11 @@ const ColumnMetricData = ({ data, setChartDenomination, index }) => {
   }, [response]);
 
   if (isLoading) {
-    return false;
+    return <Loader />;
   }
 
   return (
-    <div style={{ marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+    <div ref={chartRef} style={{ marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
       {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px", marginBottom: "0px" }}>
         {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
       </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
@@ -108,13 +133,37 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
-    moduleLevel: value?.moduleLevel
+    moduleLevel: value?.moduleLevel,
+    isVisible: isVisible
   });
 
   useEffect(() => {
@@ -134,12 +183,12 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   }, [response]);
 
   if (isLoading) {
-    return false;
+    return <Loader />;
   }
 
   if (!response) {
     return (
-      <div className="row">
+      <div ref={chartRef} className="row">
         <div className={`tooltip`} >
           {t(data.name)}
           <span
@@ -175,7 +224,7 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   }
 
   return (
-    <div className="row">
+    <div div ref={chartRef} className="row">
       <div className={`tooltip`} >
         {typeof name == "string" && name}
         {Array.isArray(name) && name?.filter(ele => ele)?.map(ele => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}

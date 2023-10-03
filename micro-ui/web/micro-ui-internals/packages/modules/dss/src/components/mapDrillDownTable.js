@@ -6,21 +6,21 @@ import { format } from "date-fns";
 
 
 const Backsvg = ({ onClick }) => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      onClick={onClick}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z"
-        fill="#0B0C0C"
-      />
-    </svg>
-  );
-  const key = "DSS_FILTERS";
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    onClick={onClick}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M16 7H3.83L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7Z"
+      fill="#0B0C0C"
+    />
+  </svg>
+);
+const key = "DSS_FILTERS";
 
 
 const getInitialRange = () => {
@@ -35,57 +35,81 @@ const getInitialRange = () => {
 };
 
 const MapDrillChart = ({
-    data,
-    drilldown = true,
-    selectedState,
-    setselectedState,
-    drilldownId,
-    setdrilldownId,
-    setTotalCount,
-    setLiveCount,
+  data,
+  drilldown = true,
+  selectedState,
+  setselectedState,
+  drilldownId,
+  setdrilldownId,
+  setTotalCount,
+  setLiveCount,
 
 }) => {
-    const { t } = useTranslation();
-    const { id } = data;
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    let filters = {}
-    if(selectedState != "") {
-      filters.state = selectedState;
-    }
-  
-    filters = {...filters};
-  
-    const { startDate, endDate, interval, } = getInitialRange();
-    const requestDate = {
-      startDate: startDate.getTime(),
-      endDate: endDate.getTime(),
-      interval: interval,
-      title: "home",
+  const { t } = useTranslation();
+  const { id } = data;
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  let filters = {}
+  if (selectedState != "") {
+    filters.state = selectedState;
+  }
+
+  filters = { ...filters };
+
+  const { startDate, endDate, interval, } = getInitialRange();
+  const requestDate = {
+    startDate: startDate.getTime(),
+    endDate: endDate.getTime(),
+    interval: interval,
+    title: "home",
+  };
+  const [isVisible, setisVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
     };
-  
-    const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-      key: drilldownId,
-      type: "metric",
-      tenantId,
-      requestDate: requestDate,
-      filters: filters
-    });
 
-    const onBack = (selectedState ) => {
-      setselectedState("");
-      setdrilldownId("none");
-      setTotalCount("");
-      setLiveCount("");
-    }
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
 
-    if(isLoading){
-        return <Loader />;
-    }
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+    key: drilldownId,
+    type: "metric",
+    tenantId,
+    requestDate: requestDate,
+    filters: filters,
+    isVisible: isVisible
+  });
 
-    const data2 = response?.responseData?.data;
+  const onBack = (selectedState) => {
+    setselectedState("");
+    setdrilldownId("none");
+    setTotalCount("");
+    setLiveCount("");
+  }
 
-    return (
-      <ResponsiveContainer
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  const data2 = response?.responseData?.data;
+
+  return (
+    <ResponsiveContainer
       width="50%"
       height={240}
       margin={{
@@ -95,38 +119,38 @@ const MapDrillChart = ({
         bottom: 5,
       }}
     >
-        <div>
-          {" "}
-          <div style={{ float: "left" }}>
-            <Backsvg onClick={onBack} />
-          </div>
-          {data2 && data2.length == 0 && (
-            <div style={{ paddingTop: "60px" }}>
-              {t("DSS_NO_DATA")}
-            </div>
-          )}
-          {data2 && data2[0] && (
-            <span className={"tab-rows tab-header"}>
-              <span>{t(`DSS_${data2[0].plots[1].name}`)}</span>
-              <span>{t(`DSS_${data2[0].plots[2].name}`)}</span>
-            </span>
-          )}
-          {data2.map((dat, i) => {
-            return (
-              <span
-                className={"tab-rows"}
-                style={{
-                  background: i % 2 == 0 ? "none" : "#EEEEEE",
-                }}
-              >
-                <span>{t(`DSS_${dat.plots[1].label}`)}</span>
-                <span>{dat.plots[2].value}</span>
-              </span>
-            );
-          })}
+      <div>
+        {" "}
+        <div style={{ float: "left" }}>
+          <Backsvg onClick={onBack} />
         </div>
-     </ResponsiveContainer> );
-  
+        {data2 && data2.length == 0 && (
+          <div style={{ paddingTop: "60px" }}>
+            {t("DSS_NO_DATA")}
+          </div>
+        )}
+        {data2 && data2[0] && (
+          <span className={"tab-rows tab-header"}>
+            <span>{t(`DSS_${data2[0].plots[1].name}`)}</span>
+            <span>{t(`DSS_${data2[0].plots[2].name}`)}</span>
+          </span>
+        )}
+        {data2.map((dat, i) => {
+          return (
+            <span
+              className={"tab-rows"}
+              style={{
+                background: i % 2 == 0 ? "none" : "#EEEEEE",
+              }}
+            >
+              <span>{t(`DSS_${dat.plots[1].label}`)}</span>
+              <span>{dat.plots[2].value}</span>
+            </span>
+          );
+        })}
+      </div>
+    </ResponsiveContainer>);
+
 }
 
 
