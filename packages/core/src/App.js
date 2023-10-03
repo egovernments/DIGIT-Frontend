@@ -12,6 +12,7 @@ const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
 const HrmsLazy = lazy(()  => import("./modules/Hrms"));
 const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
+const DssLazy = lazy(() => import("./modules/Dss"));
 
 initLibraries().then(() => {
   initDigitUI();
@@ -20,7 +21,7 @@ initLibraries().then(() => {
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS","Workbench"]
+  const enabledModules=["PT","HRMS","Workbench","DSS"]
 
   const moduleReducers = (initData) => initData;
   
@@ -56,6 +57,9 @@ const App = () => {
             </Route>
             <Route path="/workbench">
               <WorkbenchLazy />
+            </Route>
+            <Route path="/dss">
+              <DssLazy />
             </Route>
 
             <Route path="/">{

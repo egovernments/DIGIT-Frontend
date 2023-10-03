@@ -20,7 +20,8 @@ module.exports = () => {
           // header: `header@${domain}/header/remoteEntry.js`,
           dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
           hrms: `hrms@${domain}/hrms/remoteEntry.js`,
-          workbench : `workbench@${domain}/workbench/remoteEntry.js`
+          workbench : `workbench@${domain}/workbench/remoteEntry.js`,
+          dss : `dss@${doamin}/dss/remoteEntry.js`
         },
         shared: packageJson.dependencies,
       }),
