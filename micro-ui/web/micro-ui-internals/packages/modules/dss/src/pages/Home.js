@@ -132,6 +132,31 @@ const HorBarChart = ({ data, setselectState = "" }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
   let filters = {};
+  const [isVisible, setisVisible] = useState(false);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (setselectState !== "") filters.state = setselectState;
 
@@ -143,14 +168,6 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     interval: interval,
     title: "home",
   };
-
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: chartType,
-    tenantId,
-    requestDate,
-    filters: filters,
-  });
 
   const constructChartData = (data) => {
     let result = {};
@@ -168,6 +185,14 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       };
     });
   };
+  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+    key: id,
+    type: chartType,
+    tenantId,
+    requestDate,
+    filters: filters,
+    isVisible: isVisible
+  });
   const renderLegend = (value) => (
     <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
