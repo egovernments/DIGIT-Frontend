@@ -8,15 +8,14 @@ import { ArrowUpwardElement } from "./ArrowUpward";
 
 const MetricData = ({ t, data, code }) => {
   const { value } = useContext(FilterContext);
-  const insight=data?.insight?.value?.replace(/[+-]/g, "")?.split('%');
+  const insight = data?.insight?.value?.replace(/[+-]/g, "")?.split('%');
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px", whiteSpace: "nowrap" }}>
         {code === "citizenAvgRating" ? (
           <Rating currentRating={Math.round(data?.headerValue * 10) / 10} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
         ) : (
-          `${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true, t)} ${
-            code === "totalSludgeTreated" ? t(`DSS_KL`) : ""
+          `${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true, t)} ${code === "totalSludgeTreated" ? t(`DSS_KL`) : ""
           }`
         )}
       </p>
@@ -30,7 +29,7 @@ const MetricData = ({ t, data, code }) => {
         >
           {data?.insight?.indicator === "upper_green" ? ArrowUpwardElement("10px") : ArrowDownwardElement("10px")}
           <p className={`${data?.insight.colorCode}`} style={{ whiteSpace: "pre" }}>
-            {insight?.[0]&&`${Digit.Utils.dss.formatter(insight[0], 'number', value?.denomination, true, t)}% ${t(Digit.Utils.locale.getTransformedLocale('DSS'+insight?.[1]||""))}`}
+            {insight?.[0] && `${Digit.Utils.dss.formatter(insight[0], 'number', value?.denomination, true, t)}% ${t(Digit.Utils.locale.getTransformedLocale('DSS' + insight?.[1] || ""))}`}
           </p>
         </div>
       )}
@@ -38,7 +37,7 @@ const MetricData = ({ t, data, code }) => {
   );
 };
 
-const ColumnMetricData = ({data, setChartDenomination, index }) => {
+const ColumnMetricData = ({ data, setChartDenomination, index }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -58,11 +57,13 @@ const ColumnMetricData = ({data, setChartDenomination, index }) => {
     if (response) {
       let plots = response?.responseData?.data?.[0]?.plots || null;
       if (plots && Array.isArray(plots) && plots.length > 0 && plots?.every((e) => e.value))
-      setShowDateOrCount(oldstate=>({...oldstate,[id]:{
-          todaysDate: Digit.DateUtils.ConvertEpochToDate(plots?.[0]?.value),
-          lastUpdatedTime: Digit.DateUtils.ConvertEpochToTimeInHours(plots?.[1]?.value),
-          count: plots?.[2]?.value
-        }}));
+        setShowDateOrCount(oldstate => ({
+          ...oldstate, [id]: {
+            todaysDate: Digit.DateUtils.ConvertEpochToDate(plots?.[0]?.value),
+            lastUpdatedTime: Digit.DateUtils.ConvertEpochToTimeInHours(plots?.[1]?.value),
+            count: plots?.[2]?.value
+          }
+        }));
       index === 0 && setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     } else {
       setShowDateOrCount({});
@@ -72,19 +73,19 @@ const ColumnMetricData = ({data, setChartDenomination, index }) => {
   if (isLoading) {
     return false;
   }
-  
-    return (
-      <div style={{marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-        {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px",marginBottom:"0px"}}>
-            {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
-        </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
-        <div className={`tooltip`} style={{marginLeft: "42px", paddingLeft: "32px"}}>
+
+  return (
+    <div style={{ marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px", marginBottom: "0px" }}>
+        {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
+      </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
+      <div className={`tooltip`} style={{ marginLeft: "42px", paddingLeft: "32px" }}>
         <span
           className="tooltiptext"
           style={{
             fontSize: "medium",
-            width:"max-content" ,
-            minWidth:  t(`TIP_${data.name}`).length < 20 ? t(`TIP_${data.name}`).length * 4 : 120,
+            width: "max-content",
+            minWidth: t(`TIP_${data.name}`).length < 20 ? t(`TIP_${data.name}`).length * 4 : 120,
             maxWidth: 400,
             whiteSpace: "normal",
             visibility: "visible"
@@ -92,12 +93,12 @@ const ColumnMetricData = ({data, setChartDenomination, index }) => {
         >
           <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
         </span>
-        </div>
-        <div style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word" }}>{`${response?.responseData?.data?.[0]?.plots?.[2]?.value != 0 ? `${response?.responseData?.data?.[0]?.plots?.[2]?.value} ` : ""}${t(`${data.name}`)}`}</div>
       </div>
-      
-    );
-  
+      <div style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word" }}>{`${response?.responseData?.data?.[0]?.plots?.[2]?.value != 0 ? `${response?.responseData?.data?.[0]?.plots?.[2]?.value} ` : ""}${t(`${data.name}`)}`}</div>
+    </div>
+
+  );
+
 };
 
 const MetricChartRow = ({ data, setChartDenomination, index }) => {
@@ -120,10 +121,12 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
     if (response) {
       let plots = response?.responseData?.data?.[0]?.plots || null;
       if (plots && Array.isArray(plots) && plots.length > 0 && plots?.every((e) => e.value))
-        setShowDate(oldstate=>({...oldstate,[id]:{
-          todaysDate: Digit.DateUtils.ConvertEpochToDate(plots?.[0]?.value),
-          lastUpdatedTime: Digit.DateUtils.ConvertEpochToTimeInHours(plots?.[1]?.value),
-        }}));
+        setShowDate(oldstate => ({
+          ...oldstate, [id]: {
+            todaysDate: Digit.DateUtils.ConvertEpochToDate(plots?.[0]?.value),
+            lastUpdatedTime: Digit.DateUtils.ConvertEpochToTimeInHours(plots?.[1]?.value),
+          }
+        }));
       index === 0 && setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     } else {
       setShowDate({});
@@ -137,25 +140,25 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   if (!response) {
     return (
       <div className="row">
-      <div className={`tooltip`} >
-        {t(data.name)}
-        <span
-          className="tooltiptext"
-          style={{
-            fontSize: "medium",
-            width: t(`TIP_${data.name}`).length < 50 ? "fit-content" : 400,
-            height: 50,
-            whiteSpace: "normal",
-          }}
-        >
-          <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
-        </span>
-      </div>
+        <div className={`tooltip`} >
+          {t(data.name)}
+          <span
+            className="tooltiptext"
+            style={{
+              fontSize: "medium",
+              width: t(`TIP_${data.name}`).length < 50 ? "fit-content" : 400,
+              height: 50,
+              whiteSpace: "normal",
+            }}
+          >
+            <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
+          </span>
+        </div>
         <span style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</span>
-    </div>
+      </div>
     );
   }
-  let name=t(data?.name)||"";
+  let name = t(data?.name) || "";
 
   const getWidth = (data) => {
     if (isMobile) return "auto";
@@ -174,8 +177,8 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   return (
     <div className="row">
       <div className={`tooltip`} >
-        {typeof name=="string"&&name}
-        {Array.isArray(name)&&name?.filter(ele=>ele)?.map(ele=><div style={{ whiteSpace: "pre" }}>{ele}</div>)}
+        {typeof name == "string" && name}
+        {Array.isArray(name) && name?.filter(ele => ele)?.map(ele => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
         <span className="dss-white-pre" style={{ display: "block" }}> {showDate?.[id]?.todaysDate}</span>
         <span
           className="tooltiptext"
@@ -200,17 +203,17 @@ const MetricChart = ({ data, setChartDenomination }) => {
   const { charts } = data;
   return (
     <>
-    <span className={`chart-metric-wrapper`} style={data?.isHorizontalChart ?{flexWrap: "wrap", display: "flex",justifyContent: "space-evenly"} : {flexWrap: "wrap", display: "flex"}}>
-  
-      {charts.map((chart, index) => (
-        
-        data?.isHorizontalChart ? (
-          <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
-        ) : (
-          <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
-        )
-      ))}
-        </span>
+      <span className={`chart-metric-wrapper`} style={data?.isHorizontalChart ? { flexWrap: "wrap", display: "flex", justifyContent: "space-evenly" } : { flexWrap: "wrap", display: "flex" }}>
+
+        {charts.map((chart, index) => (
+
+          data?.isHorizontalChart ? (
+            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
+          ) : (
+            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
+          )
+        ))}
+      </span>
     </>
   );
 };

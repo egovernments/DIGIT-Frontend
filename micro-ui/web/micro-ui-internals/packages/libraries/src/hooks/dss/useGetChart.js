@@ -37,20 +37,35 @@ const defaultSelect = (data) => {
 };
 
 const useGetChart = (args) => {
-  const { key, type, tenantId, requestDate, filters, moduleLevel, addlFilter } = args;
+  const { key, type, tenantId, requestDate, filters, moduleLevel, addlFilter, isVisible } = args;
+
   return useQuery(
     [args],
-    () =>
-      DSSService.getCharts({
+    () => {
+      if (!isVisible && isVisible != undefined) {
+        // Return fake data when isVisible is false
+        return { isLoading: true, data: null };
+      }
+
+      return DSSService.getCharts({
         ...getRequest(type, key, requestDate, filters, moduleLevel, addlFilter),
         headers: {
           tenantId,
         },
-      }),
+      });
+    },
     {
-      select: defaultSelect,
+      select: (data) => {
+        if (data && data.fakeData) {
+          // Return null or handle the fake data as needed
+          return null;
+        }
+        // Handle the real data here
+        return defaultSelect(data);
+      },
     }
   );
 };
+
 
 export default useGetChart;

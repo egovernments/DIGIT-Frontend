@@ -51,7 +51,7 @@ const renderUnits = (t, denomination, symbol) => {
 };
 
 const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChartDenomination }) => {
-  
+
   const lineLegend = {
     margin: "10px",
   };
@@ -181,9 +181,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
         }}
       >
         {payloadObj?.payload?.symbol?.toLowerCase() === "amount" && (
-          <p>{`${formattedLabel} : ${value?.denomination === "Unit" ? " ₹" : ""}${Digit.Utils.dss.formatter( payloadObj?.value, 'number', value?.denomination, true, t )} ${
-            value?.denomination !== "Unit" ? t(Digit.Utils.locale.getTransformedLocale(`ES_DSS_${value?.denomination}`)) : ""
-          }`}</p>
+          <p>{`${formattedLabel} : ${value?.denomination === "Unit" ? " ₹" : ""}${Digit.Utils.dss.formatter(payloadObj?.value, 'number', value?.denomination, true, t)} ${value?.denomination !== "Unit" ? t(Digit.Utils.locale.getTransformedLocale(`ES_DSS_${value?.denomination}`)) : ""
+            }`}</p>
         )}
         {payloadObj?.payload?.symbol?.toLowerCase() === "percentage" && <p>{`${formattedLabel} : ${Digit.Utils.dss.formatter(payloadObj?.value, 'number', value?.denomination, true, t)} %`}</p>}
         {payloadObj?.payload?.symbol?.toLowerCase() === "number" && <p>{`${formattedLabel} : ${Digit.Utils.dss.formatter(payloadObj?.value, 'number', value?.denomination, true, t)} `}</p>}
@@ -199,8 +198,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
       payloadObj?.payload?.symbol?.toLowerCase() === "percentage"
         ? " %"
         : payloadObj?.payload?.symbol?.toLowerCase() === "amount" && value?.denomination !== "Unit"
-        ? t(Digit.Utils.locale.getTransformedLocale(`ES_DSS_${value?.denomination}`))
-        : "";
+          ? t(Digit.Utils.locale.getTransformedLocale(`ES_DSS_${value?.denomination}`))
+          : "";
     let newPayload = { ...payloadObj?.payload };
     delete newPayload?.label;
     delete newPayload?.strValue;
@@ -209,8 +208,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
     delete newPayload?.name;
     Object.keys(newPayload).map((key) => {
       newObjArray.push(
-        `${key} -${prefix}${
-          payloadObj?.payload?.symbol?.toLowerCase() === "amount" 
+        `${key} -${prefix}${payloadObj?.payload?.symbol?.toLowerCase() === "amount"
           ? Digit.Utils.dss.formatter(getDenominatedValue(value?.denomination, newPayload?.[key]), 'number', value?.denomination, true, t)
           : Digit.Utils.dss.formatter(newPayload?.[key], 'number', value?.denomination, true, t)
         } ${postfix}`
@@ -296,9 +294,9 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" tick={{fontSize:"14px"}} />
+            <XAxis dataKey="name" tick={{ fontSize: "14px" }} />
             <YAxis
-            tickFormatter={yAxistickFormatter}
+              tickFormatter={yAxistickFormatter}
             /*
             Removed this custom yaxis label for all line charts 
             label={{
