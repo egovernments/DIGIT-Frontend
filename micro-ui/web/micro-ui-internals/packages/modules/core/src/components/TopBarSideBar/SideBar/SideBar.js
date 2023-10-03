@@ -83,7 +83,6 @@ const Sidebar = ({ data }) => {
     for (const key in data) {
       const item = data[key];
       if (key === "item" && item?.leftIcon !== "" && item?.leftIcon != undefined && typeof item.leftIcon == "string") {
-        console.log(item.leftIcon, ' iiiiiiiiii');
         return {
           isDynamic: item.leftIcon.split(":")[0],
           leftIconArray: item.leftIcon.split(":")[1],
@@ -196,7 +195,8 @@ const Sidebar = ({ data }) => {
                   setSelectedChildLevelOne(null)
                   // setOpenItems({});
                   // setSelectedChildLevelOne(null)
-                  navigateToRespectiveURL(history, `${subItems?.item?.navigationURL}`);
+                  navigateToRespectiveURL(history, Array.isArray(subItems?.item?.navigationURL)
+                    ? `${subItems.item.navigationURL[1]}` : `${subItems?.item?.navigationURL}`);
                 }}
               >
                 <div
