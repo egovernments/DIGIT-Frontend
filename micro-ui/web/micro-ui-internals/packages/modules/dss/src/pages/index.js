@@ -1,4 +1,5 @@
 import {
+  Button,
   DownloadIcon,
   EmailIcon,
   FilterIcon,
@@ -65,8 +66,8 @@ const DashBoard = ({ stateCode }) => {
     select: (data) => {
       let screenConfig = data?.["dss-dashboard"]["dashboard-config"][0].MODULE_LEVEL;
       let reduced_array = [];
-      for(let i = 0 ; i < screenConfig.length ; i++){
-        if(screenConfig[i].dashboard !== null ){
+      for (let i = 0; i < screenConfig.length; i++) {
+        if (screenConfig[i].dashboard !== null) {
           reduced_array.push(screenConfig[i]);
         }
       }
@@ -76,7 +77,7 @@ const DashBoard = ({ stateCode }) => {
           code: obj[Object.keys(obj)[0]].filterKey,
           name: Digit.Utils.locale.getTransformedLocale(`DSS_${obj[Object.keys(obj)[0]].services_name}`)
         }
-      }) ;
+      });
       return serviceJS
     }
   });
@@ -108,6 +109,11 @@ const DashBoard = ({ stateCode }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [tabState, setTabState] = useState("");
+  const [refetch, setRefetch] = useState(0);
+  const triggerRefetch = () => {
+    // Triggering Refetch
+    setRefetch(1)
+  };
 
   const handleFilters = (data) => {
     Digit.SessionStorage.set(key, data);
@@ -153,7 +159,7 @@ const DashBoard = ({ stateCode }) => {
   const removeService = () => {
     handleFilters({
       ...filters,
-      moduleLevel: "" ,
+      moduleLevel: "",
     });
   }
 
@@ -271,12 +277,12 @@ const DashBoard = ({ stateCode }) => {
             {t(dashboardConfig?.[0]?.name)}
           </Header>
           {mobileView ? null : (
-            <div className="divToBeHidden" style={{marginRight:"1.5rem"}}>
+            <div className="divToBeHidden" style={{ marginRight: "1.5rem" }}>
               <div className="mrlg divToBeHidden" >
                 <MultiLink
                   className="multilink-block-wrapper divToBeHidden"
                   label={t(`ES_DSS_SHARE`)}
-                  icon={<ShareIcon className="mrsm" fill="#f18f5e"/>}
+                  icon={<ShareIcon className="mrsm" fill="#f18f5e" />}
                   // showOptions={(e) => {
                   // setShowOptions(e)}
                   // }
@@ -304,12 +310,12 @@ const DashBoard = ({ stateCode }) => {
             isNational={isNational}
           />
         ) : dashboardConfig[0]?.filter == 'CustomFilter' && dashboardConfig[0]?.filterConfig ? (
-        <CustomFilter
-          t={t}
-          filterConfig={dashboardConfig[0]?.filterConfig}
-          isOpen={isFilterModalOpen}
-          closeFilters={() => setIsFilterModalOpen(false)}
-        />) : (
+          <CustomFilter
+            t={t}
+            filterConfig={dashboardConfig[0]?.filterConfig}
+            isOpen={isFilterModalOpen}
+            closeFilters={() => setIsFilterModalOpen(false)}
+          />) : (
           <Filters
             t={t}
             showModuleFilter={!isNational && dashboardConfig?.[0]?.name.includes("OVERVIEW") ? true : false}
@@ -318,7 +324,7 @@ const DashBoard = ({ stateCode }) => {
             isOpen={isFilterModalOpen}
             closeFilters={() => setIsFilterModalOpen(false)}
             isNational={isNational}
-            showDateRange= {dashboardConfig?.[0]?.name.includes("DSS_FINANCE_DASHBOARD") ? false : true}
+            showDateRange={dashboardConfig?.[0]?.name.includes("DSS_FINANCE_DASHBOARD") ? false : true}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (
@@ -451,7 +457,7 @@ const DashBoard = ({ stateCode }) => {
               <MultiLink
                 className="multilink-block-wrapper"
                 label={t(`ES_DSS_SHARE`)}
-                icon={<ShareIcon className="mrsm" fill="#f18f5e"/>}
+                icon={<ShareIcon className="mrsm" fill="#f18f5e" />}
                 onHeadClick={(e) => {
                   setShowOptions(!showOptions);
                 }}
@@ -460,7 +466,7 @@ const DashBoard = ({ stateCode }) => {
               />
             </div>
             <div onClick={handlePrint} className="divToBeHidden icon-label-download" >
-              <DownloadIcon fill="#f18f5e"/>
+              <DownloadIcon fill="#f18f5e" />
               {t(`ES_DSS_DOWNLOAD`)}
             </div>
           </div>
@@ -478,10 +484,11 @@ const DashBoard = ({ stateCode }) => {
             </div>
           )}
         </div>
+        <Button onButtonClick={triggerRefetch} label={"Refetch Details"} />
         {dashboardConfig?.[0]?.visualizations
           .filter((row) => row.name === tabState)
           .map((row, key) => {
-            return <Layout rowData={row} key={key} />;
+            return <Layout rowData={row} key={key} refetch={refetch} setRefetch={setRefetch} />;
           })}
       </div>
     </FilterContext.Provider>

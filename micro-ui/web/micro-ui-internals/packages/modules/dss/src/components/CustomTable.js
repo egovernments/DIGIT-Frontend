@@ -30,7 +30,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }) => {
+const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, Refetch, setRefetch }) => {
   const { id, disableInsights = false } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -67,7 +67,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
+  const { isLoading: isRequestLoading, data: lastYearResponse, refetch: refetchLastYearResponse } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -78,9 +78,10 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -91,7 +92,8 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
   useEffect(() => {
     const { id } = data;
@@ -397,8 +399,13 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     setFilterStack(nextState);
     setChartKey(nextState[nextState?.length - 1]?.id);
   };
+  if (Refetch) {
+    refetchLastYearResponse();
+    refetch();
+    setRefetch(0);
+  }
 
-  if (isLoading || isRequestLoading) {
+  if (isLoading || isRequestLoading || Refetch) {
     return <Loader />;
   }
   return (

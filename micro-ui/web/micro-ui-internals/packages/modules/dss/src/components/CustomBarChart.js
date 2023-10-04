@@ -55,6 +55,8 @@ const CustomBarChart = ({
   data,
   title,
   setChartDenomination,
+  Refetch,
+  setRefetch
 }) => {
   const { id } = data;
   const { t } = useTranslation();
@@ -86,14 +88,15 @@ const CustomBarChart = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
   const chartData = useMemo(() => {
     if (!response || !response.responseData) return null;
@@ -123,7 +126,11 @@ const CustomBarChart = ({
       }`
     );
   };
-  if (isLoading) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+  if (isLoading || Refetch) {
     return <Loader />;
   }
   if (chartData?.length === 0 || !chartData) {

@@ -38,7 +38,7 @@ const MetricData = ({ t, data, code }) => {
   );
 };
 
-const ColumnMetricData = ({ data, setChartDenomination, index }) => {
+const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefetch }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -68,14 +68,15 @@ const ColumnMetricData = ({ data, setChartDenomination, index }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
   useEffect(() => {
@@ -94,8 +95,12 @@ const ColumnMetricData = ({ data, setChartDenomination, index }) => {
       setShowDateOrCount({});
     }
   }, [response]);
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
 
-  if (isLoading) {
+  if (isLoading || Refetch) {
     return <Loader />;
   }
 
@@ -126,7 +131,7 @@ const ColumnMetricData = ({ data, setChartDenomination, index }) => {
 
 };
 
-const MetricChartRow = ({ data, setChartDenomination, index }) => {
+const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -156,14 +161,15 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
   useEffect(() => {
@@ -182,7 +188,11 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
     }
   }, [response]);
 
-  if (isLoading) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+  if (isLoading || Refetch) {
     return <Loader />;
   }
 
@@ -248,7 +258,7 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   );
 };
 
-const MetricChart = ({ data, setChartDenomination }) => {
+const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch }) => {
   const { charts } = data;
   return (
     <>
@@ -257,9 +267,9 @@ const MetricChart = ({ data, setChartDenomination }) => {
         {charts.map((chart, index) => (
 
           data?.isHorizontalChart ? (
-            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
+            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} />
           ) : (
-            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} />
+            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} />
           )
         ))}
       </span>

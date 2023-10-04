@@ -8,7 +8,7 @@ import NoData from "./NoData";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
-const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant = undefined }) => {
+const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant = undefined, Refetch, setRefetch }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -40,14 +40,15 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: isPieClicked ? drillDownId : id,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected } : value?.filters,
     moduleLevel: value?.moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
   const chartData = useMemo(() => {
@@ -191,8 +192,11 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
     setdrillDownId(null);
     setPieSelected(null);
   }, [id]);
-
-  if (isLoading) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+  if (isLoading || Refetch) {
     return <Loader />;
   }
   return (

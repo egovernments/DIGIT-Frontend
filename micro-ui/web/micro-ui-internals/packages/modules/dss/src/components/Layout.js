@@ -9,19 +9,20 @@ import FilterContext from "./FilterContext";
 import GenericChart from "./GenericChart";
 import MetricChart from "./MetricChart";
 import Summary from "./Summary";
+import { Button } from "@egovernments/digit-ui-react-components";
 
 let index = 1;
 
-const showCustomLabel = (title,t)=>{
-  switch(title){
+const showCustomLabel = (title, t) => {
+  switch (title) {
     case "DSS_FSM_MONTHLY_WASTE_CAL":
-     return `${t("DSS_WASTE_RECIEVED")} ${t(`DSS_WASTE_UNIT`)}`;
+      return `${t("DSS_WASTE_RECIEVED")} ${t(`DSS_WASTE_UNIT`)}`;
     default:
-     return "";
+      return "";
   }
 }
 
-const Layout = ({ rowData,forHome=false }) => {
+const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState("");
@@ -30,15 +31,17 @@ const Layout = ({ rowData,forHome=false }) => {
   const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} />;
+        return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} Refetch={refetch} setRefetch={setRefetch} />;
       case "donut":
-        return <CustomPieChart 
-                  data={chart} 
-                  title={title} 
-                  variant={chart?.variant} 
-               />;
+        return <CustomPieChart
+          data={chart}
+          title={title}
+          variant={chart?.variant}
+          Refetch={refetch}
+          setRefetch={setRefetch}
+        />;
       case "line":
-        return <CustomAreaChart data={chart} title={title} />;
+        return <CustomAreaChart data={chart} title={title} Refetch={refetch} setRefetch={setRefetch} />;
       case "horizontalBar":
         return (
           <CustomHorizontalBarChart
@@ -51,12 +54,14 @@ const Layout = ({ rowData,forHome=false }) => {
             showDrillDown={false}
             title={title}
             horizontalBarv2={chart.horizontalBarv2 ? true : false}
-            // horizontalBarv2={true} //for testing
+            Refetch={refetch}
+            setRefetch={setRefetch}
+          // horizontalBarv2={true} //for testing
 
           />
         );
       case "bar":
-        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title,t)} />;
+        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} Refetch={refetch} setRefetch={setRefetch} />;
       default:
         return null;
     }
@@ -66,7 +71,7 @@ const Layout = ({ rowData,forHome=false }) => {
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
-          <GenericChart header={visualizer.name} className={`metricsTable ${visualizer?.isHorizontalChart?"dss-metric-horizontal":""}`} key={key} value={value} iconName={visualizer?.iconName}>
+          <GenericChart header={visualizer.name} className={`metricsTable ${visualizer?.isHorizontalChart ? "dss-metric-horizontal" : ""}`} key={key} value={value} iconName={visualizer?.iconName}>
             <MetricChart data={visualizer} />
           </GenericChart>
         );
@@ -105,12 +110,14 @@ const Layout = ({ rowData,forHome=false }) => {
               fillColor={index++ % 2 ? "RED" : "GREEN"}
               title={visualizer.name}
               showDrillDown={true}
+              Refetch={refetch}
+              setRefetch={setRefetch}
             />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary header={visualizer.name} className="metricsTable" key={key} value={value} data={visualizer} />;
+        return <Summary header={visualizer.name} className="metricsTable" key={key} value={value} data={visualizer} Refetch={refetch} setRefetch={setRefetch} />;
       default:
         return null;
     }

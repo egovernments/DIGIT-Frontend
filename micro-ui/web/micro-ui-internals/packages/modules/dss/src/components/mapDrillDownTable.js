@@ -43,6 +43,8 @@ const MapDrillChart = ({
   setdrilldownId,
   setTotalCount,
   setLiveCount,
+  Refetch,
+  setRefetch
 
 }) => {
   const { t } = useTranslation();
@@ -86,13 +88,14 @@ const MapDrillChart = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: drilldownId,
     type: "metric",
     tenantId,
     requestDate: requestDate,
     filters: filters,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
   const onBack = (selectedState) => {
@@ -102,7 +105,11 @@ const MapDrillChart = ({
     setLiveCount("");
   }
 
-  if (isLoading) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+  if (isLoading || Refetch) {
     return <Loader />;
   }
 

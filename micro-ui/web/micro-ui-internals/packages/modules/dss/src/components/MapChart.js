@@ -78,7 +78,9 @@ const MapChart = ({
   setselectedState,
   setdrilldownId,
   settotalCount,
-  setliveCount
+  setliveCount,
+  Refetch,
+  setRefetch
 }) => {
 
   const { t } = useTranslation();
@@ -124,12 +126,13 @@ const MapChart = ({
     },
     enabled: true,
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
     requestDate: requestDate,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
 
@@ -159,8 +162,11 @@ const MapChart = ({
       return { ...acc };
     }, {}) || {};
 
-
-  if (isLoading || isLoadingNAT) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+  if (isLoading || isLoadingNAT || Refetch) {
     return <Loader />
   }
 

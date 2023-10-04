@@ -386,7 +386,6 @@ const Home = ({ stateCode }) => {
 
   return (
     <FilterContext.Provider value={provided}>
-      <Button onButtonClick={triggerRefetch} label={"Refetch Details"} />
       <div ref={fullPageRef}>
         <div className="options" style={{ margin: "10px" }}>
           <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
@@ -430,6 +429,7 @@ const Home = ({ stateCode }) => {
             </div>
           </div>
         ) : null}
+        <Button style={{ marginLeft: "15px" }} onButtonClick={triggerRefetch} label={"Refetch Details"} />
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
           return (
             <div className="dss-card" key={key}>
@@ -488,6 +488,8 @@ const Home = ({ stateCode }) => {
                               setdrilldownId={setdrillDownId}
                               setTotalCount={setTotalCount}
                               setLiveCount={setLiveCount}
+                              Refetch={refetch}
+                              setRefetch={setRefetch}
                             />
                           ) : (
                             <MapChart
@@ -496,6 +498,8 @@ const Home = ({ stateCode }) => {
                               setdrilldownId={setdrillDownId}
                               settotalCount={setTotalCount}
                               setliveCount={setLiveCount}
+                              Refetch={refetch}
+                              setRefetch={setRefetch}
                             />
                           ))}
                         {item?.charts?.[0]?.chartType == "map" && (
