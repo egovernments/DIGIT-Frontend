@@ -55,14 +55,8 @@ const useGetChart = (args) => {
       });
     },
     {
-      select: (data) => {
-        if (data && data.fakeData) {
-          // Return null or handle the fake data as needed
-          return null;
-        }
-        // Handle the real data here
-        return defaultSelect(data);
-      },
+      select: defaultSelect,
+      refetchInterval: args?.refetchInterval
     }
   );
 };

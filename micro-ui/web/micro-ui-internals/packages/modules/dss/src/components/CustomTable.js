@@ -51,7 +51,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     const handleScroll = () => {
       if (chartRef.current) {
         const chartRect = chartRef.current.getBoundingClientRect();
-        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+        const isChartInViewport = chartRect.top < window.innerHeight;
 
         if (isChartInViewport) {
           setisVisible(true);

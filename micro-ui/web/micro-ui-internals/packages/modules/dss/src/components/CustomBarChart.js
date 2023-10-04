@@ -69,7 +69,7 @@ const CustomBarChart = ({
       const elementToCheck = document.querySelector(".recharts-responsive-container");
       if (elementToCheck) {
         const chartRect = elementToCheck.getBoundingClientRect();
-        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+        const isChartInViewport = chartRect.top < window.innerHeight;
 
         if (isChartInViewport) {
           setisVisible(true);

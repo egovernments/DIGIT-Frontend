@@ -23,7 +23,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
       const elementToCheck = document.querySelector(".recharts-responsive-container");
       if (elementToCheck) {
         const chartRect = elementToCheck.getBoundingClientRect();
-        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+        const isChartInViewport = chartRect.top < window.innerHeight;
 
         if (isChartInViewport) {
           setisVisible(true);
@@ -89,7 +89,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
     }
 
     return <span style={{ fontSize: "14px", color: "#505A5F" }}>
-      {/* {t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)} */}
+      {/* {t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}    //here was the problem */}
     </span>
   }
 

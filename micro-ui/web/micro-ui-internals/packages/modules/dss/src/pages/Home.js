@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardHeader,
   DownloadIcon,
@@ -50,7 +51,7 @@ const colors = [
   { dark: "rgba(183, 165, 69, 0.85)", light: "rgba(222, 188, 11, 0.24)" },
 ];
 
-const Chart = ({ data, moduleLevel, overview = false }) => {
+const Chart = ({ data, moduleLevel, overview = false, Refetch, setRefetch }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
@@ -68,7 +69,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     const handleScroll = () => {
       if (chartRef.current) {
         const chartRect = chartRef.current.getBoundingClientRect();
-        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+        const isChartInViewport = chartRect.top < window.innerHeight;
 
         if (isChartInViewport) {
           setisVisible(true);
@@ -85,18 +86,25 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     };
   }, []);
 
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate,
     moduleLevel: moduleLevel,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
 
-  if (isLoading) {
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
+
+  if (isLoading || Refetch) {
     return <Loader />;
   }
+
   const insight = response?.responseData?.data?.[0]?.insight?.value?.replace(/[+-]/g, "")?.split("%");
   return (
     <div ref={chartRef} className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
@@ -126,7 +134,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   );
 };
 
-const HorBarChart = ({ data, setselectState = "" }) => {
+const HorBarChart = ({ data, setselectState = "", Refetch, setRefetch }) => {
   const barColors = ["#298CFF", "#54D140"];
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -140,7 +148,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       const elementToCheck = document.querySelector(".recharts-responsive-container");
       if (elementToCheck) {
         const chartRect = elementToCheck.getBoundingClientRect();
-        const isChartInViewport = chartRect.top < window.innerHeight && chartRect.bottom >= 0;
+        const isChartInViewport = chartRect.top < window.innerHeight;
 
         if (isChartInViewport) {
           setisVisible(true);
@@ -185,20 +193,26 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       };
     });
   };
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate,
     filters: filters,
-    isVisible: isVisible
+    isVisible: isVisible,
+    refetchInterval: 60000,
   });
+
+  if (Refetch) {
+    refetch();
+    setRefetch(0);
+  }
   const renderLegend = (value) => (
     <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
   const chartData = useMemo(() => constructChartData(response?.responseData?.data));
 
-  if (isLoading) {
+  if (isLoading || Refetch) {
     return <Loader />;
   }
 
@@ -273,6 +287,12 @@ const Home = ({ stateCode }) => {
   const [drillDownId, setdrillDownId] = useState("none");
   const [totalCount, setTotalCount] = useState("");
   const [liveCount, setLiveCount] = useState("");
+
+  const [refetch, setRefetch] = useState(0);
+  const triggerRefetch = () => {
+    // Triggering Refetch
+    setRefetch(1)
+  };
 
   const handleFilters = (data) => {
     Digit.SessionStorage.set(key, data);
@@ -366,6 +386,7 @@ const Home = ({ stateCode }) => {
 
   return (
     <FilterContext.Provider value={provided}>
+      <Button onButtonClick={triggerRefetch} label={"Refetch Details"} />
       <div ref={fullPageRef}>
         <div className="options" style={{ margin: "10px" }}>
           <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
@@ -478,7 +499,7 @@ const Home = ({ stateCode }) => {
                             />
                           ))}
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <HorBarChart data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
+                          <HorBarChart setRefetch={setRefetch} Refetch={refetch} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
                         )}
                       </div>
                     </div>
@@ -529,7 +550,7 @@ const Home = ({ stateCode }) => {
                       <div className="dss-card-body">
                         {item.charts.map((chart, key) => (
                           <div style={item.vizType == "collection" ? { width: Digit.Utils.browser.isMobile() ? "50%" : "25%" } : { width: "50%" }}>
-                            <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
+                            <Chart setRefetch={setRefetch} Refetch={refetch} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
                           </div>
                         ))}
                       </div>
