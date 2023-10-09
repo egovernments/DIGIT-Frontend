@@ -46,7 +46,6 @@ const useGetChart = (args) => {
         // Return fake data when isVisible is false
         return { isLoading: true, data: null };
       }
-
       return DSSService.getCharts({
         ...getRequest(type, key, requestDate, filters, moduleLevel, addlFilter),
         headers: {

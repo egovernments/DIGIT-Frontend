@@ -44,7 +44,8 @@ const MapDrillChart = ({
   setTotalCount,
   setLiveCount,
   Refetch,
-  setRefetch
+  setRefetch,
+  refetchInterval
 
 }) => {
   const { t } = useTranslation();
@@ -95,7 +96,7 @@ const MapDrillChart = ({
     requestDate: requestDate,
     filters: filters,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   const onBack = (selectedState) => {

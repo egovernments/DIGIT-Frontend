@@ -62,7 +62,7 @@ const DashBoard = ({ stateCode }) => {
 
   const language = Digit.StoreData.getCurrentLanguage();
 
-  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { isLoading: localizationLoading, data: store, refetchInterval = 60000 } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: screenConfig, isLoading: isServicesLoading } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard", {
     select: (data) => {
       let screenConfig = data?.["dss-dashboard"]["dashboard-config"][0].MODULE_LEVEL;
@@ -492,7 +492,7 @@ const DashBoard = ({ stateCode }) => {
         {dashboardConfig?.[0]?.visualizations
           .filter((row) => row.name === tabState)
           .map((row, key) => {
-            return <Layout rowData={row} key={key} refetch={refetch} setRefetch={setRefetch} />;
+            return <Layout rowData={row} key={key} refetchInterval={refetchInterval} refetch={refetch} setRefetch={setRefetch} />;
           })}
       </div>
     </FilterContext.Provider>

@@ -8,7 +8,7 @@ import NoData from "./NoData";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
-const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant = undefined, Refetch, setRefetch }) => {
+const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant = undefined, Refetch, setRefetch, refetchInterval }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
     filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected } : value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   const chartData = useMemo(() => {

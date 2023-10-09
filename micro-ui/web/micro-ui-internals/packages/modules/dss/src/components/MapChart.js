@@ -80,7 +80,8 @@ const MapChart = ({
   settotalCount,
   setliveCount,
   Refetch,
-  setRefetch
+  setRefetch,
+  refetchInterval
 }) => {
 
   const { t } = useTranslation();
@@ -132,7 +133,7 @@ const MapChart = ({
     tenantId,
     requestDate: requestDate,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
 

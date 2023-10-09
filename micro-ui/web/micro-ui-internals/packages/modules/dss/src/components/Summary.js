@@ -34,7 +34,7 @@ const MetricData = ({ t, data }) => {
   );
 };
 
-const Chart = ({ data, Refetch, setRefetch }) => {
+const Chart = ({ data, Refetch, setRefetch, refetchInterval }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -71,7 +71,7 @@ const Chart = ({ data, Refetch, setRefetch }) => {
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
   if (Refetch) {
     refetch();
@@ -122,7 +122,7 @@ const Chart = ({ data, Refetch, setRefetch }) => {
     </div>
   );
 };
-const Summary = ({ data, Refetch, setRefetch }) => {
+const Summary = ({ data, Refetch, setRefetch, refetchInterval }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   return (
@@ -137,7 +137,7 @@ const Summary = ({ data, Refetch, setRefetch }) => {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {data.charts.map((chart, key) => (
-              <Chart data={chart} key={key} url={data?.ref?.url} Refetch={Refetch} setRefetch={setRefetch} />
+              <Chart data={chart} key={key} url={data?.ref?.url} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
             ))}
           </div>
         </div>

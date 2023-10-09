@@ -50,7 +50,7 @@ const renderUnits = (t, denomination, symbol) => {
   }
 };
 
-const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChartDenomination, Refetch, setRefetch }) => {
+const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChartDenomination, Refetch, setRefetch, refetchInterval }) => {
 
   const lineLegend = {
     margin: "10px",
@@ -101,7 +101,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   useEffect(() => {

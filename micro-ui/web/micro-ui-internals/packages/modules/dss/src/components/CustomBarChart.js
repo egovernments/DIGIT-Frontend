@@ -56,7 +56,8 @@ const CustomBarChart = ({
   title,
   setChartDenomination,
   Refetch,
-  setRefetch
+  setRefetch,
+  refetchInterval
 }) => {
   const { id } = data;
   const { t } = useTranslation();
@@ -96,7 +97,7 @@ const CustomBarChart = ({
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
   const chartData = useMemo(() => {
     if (!response || !response.responseData) return null;

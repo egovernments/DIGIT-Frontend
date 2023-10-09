@@ -43,7 +43,8 @@ const CustomHorizontalBarChart = ({
   setChartDenomination,
   horizontalBarv2 = false,
   Refetch,
-  setRefetch
+  setRefetch,
+  refetchInterval
 }) => {
   const { id } = data;
   const { t } = useTranslation();
@@ -82,7 +83,7 @@ const CustomHorizontalBarChart = ({
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   const constructChartData = (data, denomination) => {

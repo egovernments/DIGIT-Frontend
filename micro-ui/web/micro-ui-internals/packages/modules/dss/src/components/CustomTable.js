@@ -30,7 +30,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, Refetch, setRefetch }) => {
+const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, Refetch, setRefetch, refetchInterval }) => {
   const { id, disableInsights = false } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -79,7 +79,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, 
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
   const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
@@ -93,7 +93,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, 
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
   useEffect(() => {
     const { id } = data;

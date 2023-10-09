@@ -22,7 +22,7 @@ const showCustomLabel = (title, t) => {
   }
 }
 
-const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
+const Layout = ({ rowData, forHome = false, refetch, refetchInterval, setRefetch }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState("");
@@ -31,7 +31,7 @@ const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
   const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} Refetch={refetch} setRefetch={setRefetch} />;
+        return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} Refetch={refetch} refetchInterval={refetchInterval} setRefetch={setRefetch} />;
       case "donut":
         return <CustomPieChart
           data={chart}
@@ -39,9 +39,10 @@ const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
           variant={chart?.variant}
           Refetch={refetch}
           setRefetch={setRefetch}
+          refetchInterval={refetchInterval}
         />;
       case "line":
-        return <CustomAreaChart data={chart} title={title} Refetch={refetch} setRefetch={setRefetch} />;
+        return <CustomAreaChart data={chart} title={title} Refetch={refetch} refetchInterval={refetchInterval} setRefetch={setRefetch} />;
       case "horizontalBar":
         return (
           <CustomHorizontalBarChart
@@ -56,12 +57,13 @@ const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
             horizontalBarv2={chart.horizontalBarv2 ? true : false}
             Refetch={refetch}
             setRefetch={setRefetch}
+            refetchInterval={refetchInterval}
           // horizontalBarv2={true} //for testing
 
           />
         );
       case "bar":
-        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} Refetch={refetch} setRefetch={setRefetch} />;
+        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} Refetch={refetch} refetchInterval={refetchInterval} setRefetch={setRefetch} />;
       default:
         return null;
     }
@@ -72,7 +74,7 @@ const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
       case "metric-collection":
         return (
           <GenericChart header={visualizer.name} className={`metricsTable ${visualizer?.isHorizontalChart ? "dss-metric-horizontal" : ""}`} key={key} value={value} iconName={visualizer?.iconName}>
-            <MetricChart data={visualizer} />
+            <MetricChart data={visualizer} refetchInterval={refetchInterval} />
           </GenericChart>
         );
       case "chart":
@@ -111,13 +113,14 @@ const Layout = ({ rowData, forHome = false, refetch, setRefetch }) => {
               title={visualizer.name}
               showDrillDown={true}
               Refetch={refetch}
+              refetchInterval={refetchInterval}
               setRefetch={setRefetch}
             />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary header={visualizer.name} className="metricsTable" key={key} value={value} data={visualizer} Refetch={refetch} setRefetch={setRefetch} />;
+        return <Summary header={visualizer.name} className="metricsTable" key={key} value={value} data={visualizer} Refetch={refetch} refetchInterval={refetchInterval} setRefetch={setRefetch} />;
       default:
         return null;
     }

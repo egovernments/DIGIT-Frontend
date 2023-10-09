@@ -52,7 +52,7 @@ const colors = [
   { dark: "rgba(183, 165, 69, 0.85)", light: "rgba(222, 188, 11, 0.24)" },
 ];
 
-const Chart = ({ data, moduleLevel, overview = false, Refetch, setRefetch }) => {
+const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, setRefetch }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
@@ -94,7 +94,7 @@ const Chart = ({ data, moduleLevel, overview = false, Refetch, setRefetch }) => 
     requestDate,
     moduleLevel: moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   if (Refetch) {
@@ -140,7 +140,7 @@ const Chart = ({ data, moduleLevel, overview = false, Refetch, setRefetch }) => 
   );
 };
 
-const HorBarChart = ({ data, setselectState = "", Refetch, setRefetch }) => {
+const HorBarChart = ({ data, setselectState = "", Refetch, refetchInterval, setRefetch }) => {
   const barColors = ["#298CFF", "#54D140"];
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -206,7 +206,7 @@ const HorBarChart = ({ data, setselectState = "", Refetch, setRefetch }) => {
     requestDate,
     filters: filters,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   if (Refetch) {
@@ -293,7 +293,7 @@ const Home = ({ stateCode }) => {
   const [filters, setFilters] = useState(() => { });
   const { moduleCode } = useParams();
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { isLoading: localizationLoading, data: store, refetchInterval = 60000 } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedState, setselectedState] = useState("");
@@ -523,7 +523,7 @@ const Home = ({ stateCode }) => {
                             />
                           ))}
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <HorBarChart setRefetch={setRefetch} Refetch={refetch} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
+                          <HorBarChart setRefetch={setRefetch} Refetch={refetch} refetchInterval={refetchInterval} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
                         )}
                       </div>
                     </div>
@@ -574,7 +574,7 @@ const Home = ({ stateCode }) => {
                       <div className="dss-card-body">
                         {item.charts.map((chart, key) => (
                           <div style={item.vizType == "collection" ? { width: Digit.Utils.browser.isMobile() ? "50%" : "25%" } : { width: "50%" }}>
-                            <Chart setRefetch={setRefetch} Refetch={refetch} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
+                            <Chart setRefetch={setRefetch} Refetch={refetch} refetchInterval={refetchInterval} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
                           </div>
                         ))}
                       </div>

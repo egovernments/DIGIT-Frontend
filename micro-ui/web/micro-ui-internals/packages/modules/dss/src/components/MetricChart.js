@@ -38,7 +38,7 @@ const MetricData = ({ t, data, code }) => {
   );
 };
 
-const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefetch }) => {
+const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefet
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   useEffect(() => {
@@ -135,7 +135,7 @@ const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefet
 
 };
 
-const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch }) => {
+const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -173,7 +173,7 @@ const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch
     filters: value?.filters,
     moduleLevel: value?.moduleLevel,
     isVisible: isVisible,
-    refetchInterval: 60000,
+    refetchInterval,
   });
 
   useEffect(() => {
@@ -266,7 +266,7 @@ const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch
   );
 };
 
-const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch }) => {
+const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch, refetchInterval }) => {
   const { charts } = data;
   return (
     <>
@@ -274,9 +274,9 @@ const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch }) => {
         {charts.map((chart, index) => (
 
           data?.isHorizontalChart ? (
-            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} />
+            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
           ) : (
-            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} />
+            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
           )
         ))}
       </span>
