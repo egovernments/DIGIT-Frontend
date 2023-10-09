@@ -419,6 +419,10 @@ const Home = ({ stateCode }) => {
                 <DownloadIcon className="mrsm" fill="#f18f5e" />
                 {t(`ES_DSS_DOWNLOAD`)}
               </div>
+              <div className="mrsm" onClick={triggerRefetch}>
+                <RefreshIcon className="mrsm" fill="#f18f5e" />
+                {" Refetch Details"}
+              </div>
             </div>
           )}
         </div>
@@ -440,9 +444,12 @@ const Home = ({ stateCode }) => {
               <DownloadIcon fill="#f18f5e" />
               {t(`ES_DSS_DOWNLOAD`)}
             </div>
+            <div className="mrsm" onClick={triggerRefetch}>
+              <RefreshIcon className="mrsm" fill="#f18f5e" />
+              {" Refetch Details"}
+            </div>
           </div>
         ) : null}
-        <Button style={{ marginLeft: "15px" }} onButtonClick={triggerRefetch} label={"Refetch Details"} />
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
           return (
             <div className="dss-card" key={key}>

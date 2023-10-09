@@ -6,6 +6,7 @@ import {
   Header,
   Loader,
   MultiLink,
+  RefreshIcon,
   RemoveableTag,
   ShareIcon,
   WhatsappIcon,
@@ -296,7 +297,11 @@ const DashBoard = ({ stateCode }) => {
               </div>
               <div className="mrsm divToBeHidden icon-label-download" onClick={handlePrint} >
                 <DownloadIcon fill="#f18f5e" className="mrsm divToBeHidden" />
-                <p>{t(`ES_DSS_DOWNLOAD`)}</p>
+                {t(`ES_DSS_DOWNLOAD`)}
+              </div>
+              <div className="mrsm" onClick={triggerRefetch}>
+                <RefreshIcon className="mrsm" fill="#f18f5e" />
+                {" Refetch Details"}
               </div>
             </div>
           )}
@@ -484,7 +489,6 @@ const DashBoard = ({ stateCode }) => {
             </div>
           )}
         </div>
-        <Button onButtonClick={triggerRefetch} label={"Refetch Details"} />
         {dashboardConfig?.[0]?.visualizations
           .filter((row) => row.name === tabState)
           .map((row, key) => {
