@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import { getDaysInMonth } from "date-fns";
 import React, { useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -273,6 +273,11 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
           : { display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%" }
       }
     >
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       {id === "fsmCapacityUtilization" && (
         <p>
           {t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}

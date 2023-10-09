@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -138,6 +138,11 @@ const CustomBarChart = ({
   }
   return (
     <Fragment>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       <ResponsiveContainer width="98%" height={320}>
         <BarChart
           width="70%"

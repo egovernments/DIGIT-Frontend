@@ -1,4 +1,4 @@
-import { DownwardArrow, Loader, Rating, RemoveableTag, Table, UpwardArrow } from "@egovernments/digit-ui-react-components";
+import { DownwardArrow, Loader, Rating, RefreshIcon, RemoveableTag, Table, UpwardArrow } from "@egovernments/digit-ui-react-components";
 import { differenceInCalendarDays, subYears } from "date-fns";
 import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -410,6 +410,11 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, 
   }
   return (
     <div ref={chartRef} style={{ width: "100%" }}>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
         {t("DSS_CMN_TABLE_INFO")}
       </span>

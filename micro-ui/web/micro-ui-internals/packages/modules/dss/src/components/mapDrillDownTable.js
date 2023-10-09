@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 
@@ -127,6 +127,11 @@ const MapDrillChart = ({
       }}
     >
       <div>
+        <div style={{ cursor: "pointer" }} onClick={(event) => {
+          event.stopPropagation(); // Prevent the click event from bubbling up to the div
+          refetch();
+          setRefetch(0);
+        }}><RefreshIcon /></div>
         {" "}
         <div style={{ float: "left" }}>
           <Backsvg onClick={onBack} />

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { get } from "lodash";
 import FilterContext from "./FilterContext";
 import { endOfMonth, getTime, startOfMonth } from "date-fns";
-import { Loader } from "@egovernments/digit-ui-react-components"
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components"
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 
@@ -182,6 +182,11 @@ const MapChart = ({
       }}
     >
       <div style={{ position: "relative" }}>
+        <div style={{ cursor: "pointer" }} onClick={(event) => {
+          event.stopPropagation(); // Prevent the click event from bubbling up to the div
+          refetch();
+          setRefetch(0);
+        }}><RefreshIcon /></div>
         <ReactTooltip>{tooltipContent}</ReactTooltip>
         <ComposableMap
           projectionConfig={PROJECTION_CONFIG}

@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -155,6 +155,11 @@ const CustomHorizontalBarChart = ({
   }
   return (
     <Fragment>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       {horizontalBarv2 ?
         <ResponsiveContainer
           width="90%"

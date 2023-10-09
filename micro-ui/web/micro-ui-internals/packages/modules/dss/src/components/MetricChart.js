@@ -1,4 +1,4 @@
-import { DownwardArrow, Rating, UpwardArrow } from "@egovernments/digit-ui-react-components";
+import { DownwardArrow, Rating, RefreshIcon, UpwardArrow } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
@@ -106,6 +106,10 @@ const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefet
 
   return (
     <div ref={chartRef} style={{ marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+      }}><RefreshIcon /></div>
       {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px", marginBottom: "0px" }}>
         {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
       </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
@@ -235,6 +239,10 @@ const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch
 
   return (
     <div div ref={chartRef} className="row">
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+      }}><RefreshIcon /></div>
       <div className={`tooltip`} >
         {typeof name == "string" && name}
         {Array.isArray(name) && name?.filter(ele => ele)?.map(ele => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
@@ -263,7 +271,6 @@ const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch }) => {
   return (
     <>
       <span className={`chart-metric-wrapper`} style={data?.isHorizontalChart ? { flexWrap: "wrap", display: "flex", justifyContent: "space-evenly" } : { flexWrap: "wrap", display: "flex" }}>
-
         {charts.map((chart, index) => (
 
           data?.isHorizontalChart ? (

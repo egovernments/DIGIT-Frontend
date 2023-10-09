@@ -3,6 +3,7 @@ import {
   Card,
   CardHeader,
   DownloadIcon,
+  RefreshIcon,
   EmailIcon,
   Header,
   Loader,
@@ -12,7 +13,7 @@ import {
   WhatsappIcon,
 } from "@egovernments/digit-ui-react-components";
 import { format } from "date-fns";
-import React, { useMemo, useRef, useState, useContext, useEffect } from "react";
+import React, { useMemo, useRef, useState, useContext, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import FilterContext from "../components/FilterContext";
@@ -108,6 +109,11 @@ const Chart = ({ data, moduleLevel, overview = false, Refetch, setRefetch }) => 
   const insight = response?.responseData?.data?.[0]?.insight?.value?.replace(/[+-]/g, "")?.split("%");
   return (
     <div ref={chartRef} className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       <div className={`tooltip`}>
         <p className="p1">{t(data?.name)}</p>
         <span
@@ -218,59 +224,66 @@ const HorBarChart = ({ data, setselectState = "", Refetch, setRefetch }) => {
 
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
   return (
-    <ResponsiveContainer
-      width="50%"
-      height={480}
-      margin={{
-        top: 5,
-        right: 5,
-        left: 5,
-        bottom: 5,
-      }}
-    >
-      {chartData?.length === 0 || !chartData ? (
-        <NoData t={t} />
-      ) : (
-        <BarChart
-          width="100%"
-          height="100%"
-          margin={{
-            top: 5,
-            right: 5,
-            left: 5,
-            bottom: 5,
-          }}
-          layout={"horizontal"}
-          data={chartData}
-          barGap={12}
-          barSize={30}
-        >
-          <CartesianGrid strokeDasharray="2 2" />
-          <YAxis
-            dataKey={""}
-            type={"number"}
-            tick={{ fontSize: "12px", fill: "#505A5F" }}
-            label={{
-              value: "",
-              angle: -90,
-              position: "insideLeft",
-              dy: 50,
-              fontSize: "12px",
-              fill: "#505A5F",
+    <Fragment>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
+      <ResponsiveContainer
+        width="50%"
+        height={480}
+        margin={{
+          top: 5,
+          right: 5,
+          left: 5,
+          bottom: 5,
+        }}
+      >
+        {chartData?.length === 0 || !chartData ? (
+          <NoData t={t} />
+        ) : (
+          <BarChart
+            width="100%"
+            height="100%"
+            margin={{
+              top: 5,
+              right: 5,
+              left: 5,
+              bottom: 5,
             }}
-            tickCount={10}
-            unit={""}
-            width={130}
-          />
-          <XAxis dataKey={"name"} type={"category"} tick={{ fontSize: "14px", fill: "#505A5F" }} tickCount={10} />
-          {bars?.map((bar, id) => (
-            <Bar key={id} dataKey={t(bar)} fill={barColors[id]} stackId={bars?.length > 2 ? 1 : id} />
-          ))}
-          <Legend formatter={renderLegend} iconType="circle" />
-          <Tooltip cursor={false} />
-        </BarChart>
-      )}
-    </ResponsiveContainer>
+            layout={"horizontal"}
+            data={chartData}
+            barGap={12}
+            barSize={30}
+          >
+            <CartesianGrid strokeDasharray="2 2" />
+            <YAxis
+              dataKey={""}
+              type={"number"}
+              tick={{ fontSize: "12px", fill: "#505A5F" }}
+              label={{
+                value: "",
+                angle: -90,
+                position: "insideLeft",
+                dy: 50,
+                fontSize: "12px",
+                fill: "#505A5F",
+              }}
+              tickCount={10}
+              unit={""}
+              width={130}
+            />
+            <XAxis dataKey={"name"} type={"category"} tick={{ fontSize: "14px", fill: "#505A5F" }} tickCount={10} />
+            {bars?.map((bar, id) => (
+              <Bar key={id} dataKey={t(bar)} fill={barColors[id]} stackId={bars?.length > 2 ? 1 : id} />
+            ))}
+            <Legend formatter={renderLegend} iconType="circle" />
+            <Tooltip cursor={false} />
+          </BarChart>
+        )}
+      </ResponsiveContainer>
+    </Fragment>
   );
 };
 

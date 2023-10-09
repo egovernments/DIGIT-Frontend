@@ -1,4 +1,4 @@
-import { Loader, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useMemo, useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, Label } from "recharts";
@@ -206,6 +206,11 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant
           {t('DSS_CMN_PIE_INFO')}
         </span>
       )}
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       {isPieClicked && (
         <div>
           <div className="tag-container" style={{ marginBottom: "unset" }}>

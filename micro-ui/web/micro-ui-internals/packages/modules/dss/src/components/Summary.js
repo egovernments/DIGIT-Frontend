@@ -1,4 +1,4 @@
-import { Card, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowDownwardElement } from "./ArrowDownward";
@@ -93,6 +93,11 @@ const Chart = ({ data, Refetch, setRefetch }) => {
   };
   return (
     <div ref={chartRef} className="blocks cursorPointer" style={{ flexDirection: "column" }}>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        refetch();
+        setRefetch(0);
+      }}><RefreshIcon /></div>
       <div className={`tooltip`}>
         {typeof name == "string" && name}
         {Array.isArray(name) && name?.filter((ele) => ele)?.map((ele) => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
