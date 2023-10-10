@@ -415,13 +415,13 @@ const Home = ({ stateCode }) => {
                   options={shareOptions}
                 />
               </div>
-              <div className="mrsm" onClick={handlePrint}>
+              <div className="mrlg" onClick={handlePrint}>
                 <DownloadIcon className="mrsm" fill="#f18f5e" />
                 {t(`ES_DSS_DOWNLOAD`)}
               </div>
               <div className="mrsm" onClick={triggerRefetch}>
                 <RefreshIcon className="mrsm" fill="#f18f5e" />
-                {" Refetch Details"}
+                {" Refetch"}
               </div>
             </div>
           )}
@@ -444,9 +444,9 @@ const Home = ({ stateCode }) => {
               <DownloadIcon fill="#f18f5e" />
               {t(`ES_DSS_DOWNLOAD`)}
             </div>
-            <div className="mrsm" onClick={triggerRefetch}>
+            <div className="mrlg" onClick={triggerRefetch}>
               <RefreshIcon className="mrsm" fill="#f18f5e" />
-              {" Refetch Details"}
+              {" Refetch"}
             </div>
           </div>
         ) : null}

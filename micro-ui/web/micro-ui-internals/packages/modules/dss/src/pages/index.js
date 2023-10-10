@@ -295,13 +295,13 @@ const DashBoard = ({ stateCode }) => {
                   options={shareOptions}
                 />
               </div>
-              <div className="mrsm divToBeHidden icon-label-download" onClick={handlePrint} >
+              <div className="mrlg divToBeHidden icon-label-download" onClick={handlePrint} >
                 <DownloadIcon fill="#f18f5e" className="mrsm divToBeHidden" />
                 {t(`ES_DSS_DOWNLOAD`)}
               </div>
               <div className="mrsm" onClick={triggerRefetch}>
                 <RefreshIcon className="mrsm" fill="#f18f5e" />
-                {" Refetch Details"}
+                {" Refetch"}
               </div>
             </div>
           )}
