@@ -188,12 +188,17 @@
 
 
 .loginFormStyleEmployee {
+
   .loginCardSubHeaderClassName {
     text-align: center !important;
   }
   .loginCardClassName {
     margin: auto !important; 
     min-width: 408px !important;
+    header.employee-card-sub-header{
+      text-align: center;
+      margin-top: 10px;
+    }
   }
   .buttonClassName {
     max-width: 100% !important;
