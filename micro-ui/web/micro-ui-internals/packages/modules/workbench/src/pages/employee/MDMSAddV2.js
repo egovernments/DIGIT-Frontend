@@ -15,8 +15,6 @@ https://rjsf-team.github.io/react-jsonschema-form/docs/
 */
 const onFormError = (errors) => console.log("I have", errors.length, "errors to fix");
 
-const uiSchema = {};
-
 const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onViewActionsSelect, viewActions, onSubmitEditAction, ...props }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [spinner, toggleSpinner] = useState(false);
@@ -25,10 +23,10 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [sessionFormData, setSessionFormData, clearSessionFormData] = FormSession;
   const [session, setSession] = useState(sessionFormData);
   const [formSchema, setFormSchema] = useState({});
+  const [uiSchema, setUiSchema] = useState({});
   const [api, setAPI] = useState(false);
 
   const [noSchema, setNoSchema] = useState(false);
-  const [loadDependent, setLoadDependent] = useState([]);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
 
