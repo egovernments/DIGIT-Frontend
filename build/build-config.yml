@@ -43,11 +43,17 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: digit-ui
 
-  - name: builds/Digit-Frontend/core-ui
+  # - name: builds/Digit-Frontend/core-ui
+  #   build:
+  #     - work-dir: micro-ui/
+  #       dockerfile: micro-ui/web/core/Dockerfile
+  #       image-name: core-ui
+
+    - name: builds/Digit-Frontend/core-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/core/Dockerfile
-        image-name: core-ui
+        dockerfile: micro-ui/web/mission/urban/Dockerfile
+        image-name: urban-ui
         
   - name: builds/Digit-Frontend/mission/urban-ui
     build:
