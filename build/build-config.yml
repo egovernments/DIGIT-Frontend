@@ -52,7 +52,7 @@ config:
   - name: builds/Digit-Frontend/mission/urban-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/urban/Dockerfile
+        dockerfile: micro-ui/web/mission/urban/Dockerfile
         image-name: urban-ui
 
   - name: builds/Digit-Frontend/mission/works-ui
