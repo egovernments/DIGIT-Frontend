@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
-  "repository": "https://github.com/digit-training/UI.git",
+  "repository": "https://github.com/egovernments/DIGIT-FRONTEND.git",
   "author": "Jagankumar <53823168+jagankumar-egov@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
