@@ -52,7 +52,7 @@
   "dependencies": {
     "@egovernments/digit-ui-css": "1.2.157",
     "@egovernments/digit-ui-libraries-core": "0.0.1",
-    "@egovernments/digit-ui-svg-components": "0.0.8",
+    "@egovernments/digit-ui-svg-components": "1.0.0-beta",
     "@googlemaps/js-api-loader": "1.13.10",
     "autoprefixer": "^10.4.15",
     "postcss-flexbugs-fixes": "^5.0.2",

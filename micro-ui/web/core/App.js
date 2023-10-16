@@ -1,10 +1,10 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import {
-  paymentConfigs,
-  PaymentLinks,
-  PaymentModule,
-} from "@egovernments/digit-ui-module-common";
+// import {
+//   paymentConfigs,
+//   PaymentLinks,
+//   PaymentModule,
+// } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
@@ -12,6 +12,7 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -30,9 +31,9 @@ const moduleReducers = (initData) => ({
 
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
-    PaymentModule,
-    ...paymentConfigs,
-    PaymentLinks,
+    // PaymentModule,
+    // ...paymentConfigs,
+    // PaymentLinks,
   });
 
   initDSSComponents();
@@ -49,6 +50,9 @@ const initDigitUI = () => {
 
 initLibraries().then(() => {
   initDigitUI();
+});
+initCoreLibraries().then(() => {
+  // initDigitUI();
 });
 
 function App() {
