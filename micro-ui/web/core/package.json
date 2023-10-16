@@ -16,6 +16,8 @@
   ],
   "homepage": "/core-ui",
   "dependencies": {
+    "egovernments/digit-ui-libraries-core":"0.0.1",
+    "egovernments/digit-ui-components-core":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.7.40",
     "@egovernments/digit-ui-module-workbench": "1.0.0-beta",
     "@egovernments/digit-ui-module-core": "1.7.40",
