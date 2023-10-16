@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/libraries",
-    "packages/libraries-core",
-    "packages/components-core",
-    "packages/react-components",
+    "packages/*",
     "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
