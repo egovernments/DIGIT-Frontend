@@ -14,7 +14,9 @@ RUN cd web/ \
     && node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' \
     && node -e 'console.log("core only")' \
     && cd core/ \
+    && ls \
     &&  ./install-deps.sh \
+    && ls \
     && cd ../ \
     && yarn install \ 
     && yarn build:webpack 
