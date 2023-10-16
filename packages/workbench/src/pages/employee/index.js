@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { lazy, Suspense ,useEffect} from "react";
+
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, AppContainer, BreadCrumb, Loader } from "@egovernments/digit-ui-react-components";
 import LocalisationSearch from "./LocalisationSearch";
 import MDMSSearch from "./MDMSSearch";
 import MDMSAdd from "./MDMSAdd";
-import MDMSAddV2 from "./MDMSAddV2";
-import MDMSEdit from "./MDMSEdit";
-import MDMSView from "./MDMSView";
-import MDMSSearchv2 from "./MDMSSearchv2";
+// import MDMSAddV2 from "./MDMSAddV2";
+// import MDMSEdit from "./MDMSEdit";
+// import MDMSView from "./MDMSView";
+// import MDMSSearchv2 from "./MDMSSearchv2";
+const MDMSSearchv2= lazy(()  => import("./MDMSSearchv2"));
+const MDMSAddV2= lazy(()  => import("./MDMSAddV2"));
+const MDMSEdit = lazy(()  => import( "./MDMSEdit"));
+const MDMSView = lazy(()  => import( "./MDMSView"));
 
 const MastersBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -58,6 +63,8 @@ const App = ({ path }) => {
   return (
     <React.Fragment>
       <MastersBreadCrumb location={location} defaultPath={path} />
+      <Suspense fallback={<Loader />}>
+
       <Switch>
         <div>
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
@@ -70,6 +77,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path}/>} />
         </div>
       </Switch>
+      </Suspense >
+
     </React.Fragment>
   );
 };
