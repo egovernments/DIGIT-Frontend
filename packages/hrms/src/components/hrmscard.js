@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 
 const HRMSCard = () => {
   const ADMIN = Digit.Utils.hrmsAccess();
-  if (!ADMIN) {
-    return null;
-  }
+//   if (!ADMIN) {
+//     return null;
+//   }
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
@@ -34,7 +34,11 @@ const HRMSCard = () => {
             {
                 label: t("HR_COMMON_CREATE_EMPLOYEE_HEADER"),
                 link: `/${window?.contextPath}/employee/hrms/create`
-            }           
+            }    ,
+            {
+                label: t("ACTION_TEST_MDMS"),
+                link: `/${window?.contextPath}/employee#/workbench/mdms-search-v2`,
+              },       
         ]
     }
 
