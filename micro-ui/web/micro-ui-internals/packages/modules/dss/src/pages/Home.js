@@ -52,7 +52,7 @@ const colors = [
   { dark: "rgba(183, 165, 69, 0.85)", light: "rgba(222, 188, 11, 0.24)" },
 ];
 
-const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, setRefetch }) => {
+const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, setRefetch, chartRefresh, setChartRefresh }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
@@ -96,24 +96,26 @@ const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, 
     isVisible: isVisible,
     refetchInterval,
   });
-
   if (Refetch) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
+  if (chartRefresh) {
+    refetch();
+    setTimeout(() => {
+      setChartRefresh(false);
+    }, 100);
   }
 
-  if (isLoading || Refetch) {
+  if (isLoading || chartRefresh || Refetch) {
     return <Loader />;
   }
 
   const insight = response?.responseData?.data?.[0]?.insight?.value?.replace(/[+-]/g, "")?.split("%");
   return (
     <div ref={chartRef} className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
-      <div style={{ cursor: "pointer" }} onClick={(event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-        setRefetch(0);
-      }}><RefreshIcon /></div>
       <div className={`tooltip`}>
         <p className="p1">{t(data?.name)}</p>
         <span
@@ -140,7 +142,7 @@ const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, 
   );
 };
 
-const HorBarChart = ({ data, setselectState = "", Refetch, refetchInterval, setRefetch }) => {
+const HorBarChart = ({ data, setselectState = "", refetchInterval, horBarChartRefresh, setHorBarChartRefresh, Refetch, setRefetch }) => {
   const barColors = ["#298CFF", "#54D140"];
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -209,27 +211,30 @@ const HorBarChart = ({ data, setselectState = "", Refetch, refetchInterval, setR
     refetchInterval,
   });
 
+  if (horBarChartRefresh) {
+    refetch();
+    setTimeout(() => {
+      setHorBarChartRefresh(false);
+    }, 100);
+  }
   if (Refetch) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(false);
+    }, 100);
   }
   const renderLegend = (value) => (
     <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
   const chartData = useMemo(() => constructChartData(response?.responseData?.data));
 
-  if (isLoading || Refetch) {
+  if (isLoading || horBarChartRefresh || Refetch) {
     return <Loader />;
   }
 
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
   return (
     <Fragment>
-      <div style={{ cursor: "pointer" }} onClick={(event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-        setRefetch(0);
-      }}><RefreshIcon /></div>
       <ResponsiveContainer
         width="50%"
         height={480}
@@ -300,6 +305,9 @@ const Home = ({ stateCode }) => {
   const [drillDownId, setdrillDownId] = useState("none");
   const [totalCount, setTotalCount] = useState("");
   const [liveCount, setLiveCount] = useState("");
+  const [chartRefresh, setChartRefresh] = useState(null);
+  const [horBarChartRefresh, setHorBarChartRefresh] = useState(null);
+  const [mapChartRefetch, setMapChartRefetch] = useState(null);
 
   const [refetch, setRefetch] = useState(0);
   const triggerRefetch = () => {
@@ -393,6 +401,7 @@ const Home = ({ stateCode }) => {
       },
     ];
 
+
   if (isLoading || localizationLoading) {
     return <Loader />;
   }
@@ -468,6 +477,7 @@ const Home = ({ stateCode }) => {
                       style={item.vizType == "collection" ? { backgroundColor: "#fff", height: "600px" } : { backgroundColor: colors[index].light }}
                       key={index}
                     >
+
                       <div
                         style={{
                           display: "flex",
@@ -475,26 +485,43 @@ const Home = ({ stateCode }) => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div className="dss-card-header">
-                          {Icon(item.name)}
-                          <p style={{ marginLeft: "20px" }}>
-                            {selectedState === "" ? t(item.name) : t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(selectedState)}`)}
-                          </p>
-                          {selectedState != "" && item.name.includes("PROJECT_STAUS") && (
-                            <span style={{ fontSize: "14px", display: "block" }}>
-                              {t(`DSS_TOTAL_ULBS`)} {Number(totalCount).toFixed()} | {t(`DSS_LIVE_ULBS`)} {Number(liveCount).toFixed()}
-                            </span>
-                          )}
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <div className="dss-card-header">
+                            {Icon(item.name)}
+                            <p style={{ marginLeft: "20px" }}>
+                              {selectedState === "" ? t(item.name) : t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(selectedState)}`)}
+                            </p>
+                            {selectedState != "" && item.name.includes("PROJECT_STAUS") && (
+                              <span style={{ fontSize: "14px", display: "block" }}>
+                                {t(`DSS_TOTAL_ULBS`)} {Number(totalCount).toFixed()} | {t(`DSS_LIVE_ULBS`)} {Number(liveCount).toFixed()}
+                              </span>
+                            )}
+
+                          </div>
+                          <div style={{ cursor: "pointer", alignSelf: "center", marginBottom: "25px", marginLeft: "15px" }} onClick={(event) => {
+                            setMapChartRefetch(true);
+                          }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
                         </div>
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <div className="dss-card-header" style={{ width: "45%" }}>
-                            {Icon(row.vizArray?.[1]?.name)}
-                            <p style={{ marginLeft: "20px", fontSize: "24px", fontFamily: "Roboto, sans-serif", fontWeight: 500, color: "#000000" }}>
-                              {selectedState === ""
-                                ? t(row.vizArray?.[1]?.name)
-                                : t(`${Digit.Utils.locale.getTransformedLocale(selectedState)}_${row.vizArray?.[1]?.name}`)}
-                            </p>
+                          <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div className="dss-card-header" style={{ width: "45%" }}>
+                              {Icon(row.vizArray?.[1]?.name)}
+                              <p style={{ marginLeft: "20px", fontSize: "24px", fontFamily: "Roboto, sans-serif", fontWeight: 500, color: "#000000" }}>
+                                {selectedState === ""
+                                  ? t(row.vizArray?.[1]?.name)
+                                  : t(`${Digit.Utils.locale.getTransformedLocale(selectedState)}_${row.vizArray?.[1]?.name}`)}
+                              </p>
+
+                            </div>
+                            <span style={{ cursor: "pointer", alignSelf: "center", padding: "10px" }} onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setHorBarChartRefresh(true);
+                            }}>
+                              <RefreshIcon className="mrsm" fill="#f18f5e" />
+                            </span>
                           </div>
+
                         )}
                       </div>
                       <div className="dss-card-body">
@@ -520,10 +547,12 @@ const Home = ({ stateCode }) => {
                               setliveCount={setLiveCount}
                               Refetch={refetch}
                               setRefetch={setRefetch}
+                              mapChartRefetch={mapChartRefetch}
+                              setMapChartRefetch={setMapChartRefetch}
                             />
                           ))}
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <HorBarChart setRefetch={setRefetch} Refetch={refetch} refetchInterval={refetchInterval} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
+                          <HorBarChart Refetch={refetch} setRefetch={setRefetch} horBarChartRefresh={horBarChartRefresh} setHorBarChartRefresh={setHorBarChartRefresh} refetchInterval={refetchInterval} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
                         )}
                       </div>
                     </div>
@@ -545,11 +574,26 @@ const Home = ({ stateCode }) => {
                       key={index}
                       onClick={() => routeTo(`/${window?.contextPath}/employee/dss/dashboard/${item.ref.url}`)}
                     >
-                      <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
-                        <div className="dss-card-header" style={{ marginBottom: "10px" }}>
-                          {Icon(item.name, colors[index].dark)}
-                          <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
+                      <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
+                          <div className="dss-card-header" style={{ marginBottom: "10px" }}>
+                            {Icon(item.name, colors[index].dark)}
+                            <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
+                          </div>
+                          {item.vizType == "collection" ? (
+                            <div style={{ cursor: "pointer", padding: "28px" }} onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setChartRefresh(true);
+                            }}>
+                              <RefreshIcon fill="#f18f5e" />
+                            </div>
+                          ) : <></>}
+
                         </div>
+
+
+
                         {item.vizType == "collection" ? (
                           <div
                             style={{
@@ -567,14 +611,16 @@ const Home = ({ stateCode }) => {
                               {" "}
                               <Arrow_Right />
                             </span>
+
                           </div>
                         ) : null}
                       </div>
 
                       <div className="dss-card-body">
+
                         {item.charts.map((chart, key) => (
                           <div style={item.vizType == "collection" ? { width: Digit.Utils.browser.isMobile() ? "50%" : "25%" } : { width: "50%" }}>
-                            <Chart setRefetch={setRefetch} Refetch={refetch} refetchInterval={refetchInterval} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
+                            <Chart Refetch={refetch} setRefetch={setRefetch} chartRefresh={chartRefresh} setChartRefresh={setChartRefresh} refetchInterval={refetchInterval} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
                           </div>
                         ))}
                       </div>

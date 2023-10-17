@@ -79,9 +79,11 @@ const MapChart = ({
   setdrilldownId,
   settotalCount,
   setliveCount,
+  refetchInterval,
   Refetch,
   setRefetch,
-  refetchInterval
+  mapChartRefetch,
+  setMapChartRefetch
 }) => {
 
   const { t } = useTranslation();
@@ -165,9 +167,17 @@ const MapChart = ({
 
   if (Refetch) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(false);
+    }, 100);
   }
-  if (isLoading || isLoadingNAT || Refetch) {
+  if (mapChartRefetch) {
+    refetch();
+    setTimeout(() => {
+      setMapChartRefetch(false);
+    }, 100);
+  }
+  if (isLoading || isLoadingNAT || Refetch || mapChartRefetch) {
     return <Loader />
   }
 
@@ -183,11 +193,6 @@ const MapChart = ({
       }}
     >
       <div style={{ position: "relative" }}>
-        <div style={{ cursor: "pointer" }} onClick={(event) => {
-          event.stopPropagation(); // Prevent the click event from bubbling up to the div
-          refetch();
-          setRefetch(0);
-        }}><RefreshIcon /></div>
         <ReactTooltip>{tooltipContent}</ReactTooltip>
         <ComposableMap
           projectionConfig={PROJECTION_CONFIG}
