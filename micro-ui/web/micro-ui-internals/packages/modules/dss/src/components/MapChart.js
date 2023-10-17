@@ -165,13 +165,13 @@ const MapChart = ({
       return { ...acc };
     }, {}) || {};
 
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
     setTimeout(() => {
       setRefetch(false);
     }, 100);
   }
-  if (mapChartRefetch) {
+  if (mapChartRefetch && isVisible) {
     refetch();
     setTimeout(() => {
       setMapChartRefetch(false);

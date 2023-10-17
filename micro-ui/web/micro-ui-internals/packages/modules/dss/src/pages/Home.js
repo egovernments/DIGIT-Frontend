@@ -96,13 +96,13 @@ const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, 
     isVisible: isVisible,
     refetchInterval,
   });
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
     setTimeout(() => {
       setRefetch(0);
     }, 100);
   }
-  if (chartRefresh) {
+  if (chartRefresh && isVisible) {
     refetch();
     setTimeout(() => {
       setChartRefresh(false);
@@ -211,13 +211,13 @@ const HorBarChart = ({ data, setselectState = "", refetchInterval, horBarChartRe
     refetchInterval,
   });
 
-  if (horBarChartRefresh) {
+  if (horBarChartRefresh && isVisible) {
     refetch();
     setTimeout(() => {
       setHorBarChartRefresh(false);
     }, 100);
   }
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
     setTimeout(() => {
       setRefetch(false);

@@ -106,7 +106,7 @@ const MapDrillChart = ({
     setLiveCount("");
   }
 
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
     setRefetch(0);
   }
