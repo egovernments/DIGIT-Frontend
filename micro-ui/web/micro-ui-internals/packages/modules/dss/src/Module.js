@@ -61,6 +61,8 @@ const Routes = ({ path, stateCode }) => {
         <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown  stateCode={stateCode}  />} />
+        <Route path={`${path}/open-dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
+
         <Route key={"national-faq"} path={`${path}/national-faqs`}>
           <FAQsSection/>
         </Route>
