@@ -38,7 +38,7 @@ const MetricData = ({ t, data, code }) => {
   );
 };
 
-const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval }) => {
+const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval, refetchMetric, setRefetchMetric }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -95,47 +95,53 @@ const ColumnMetricData = ({ data, setChartDenomination, index, Refetch, setRefet
       setShowDateOrCount({});
     }
   }, [response]);
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
+  if (refetchMetric && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetchMetric(false);
+    }, 100);
   }
 
-  if (isLoading || Refetch) {
-    return <Loader />;
-  }
 
   return (
     <div ref={chartRef} style={{ marginLeft: "8px", marginRight: "8px", maxWidth: "21%", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-      <div style={{ cursor: "pointer" }} onClick={(event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-      }}><RefreshIcon /></div>
-      {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px", marginBottom: "0px" }}>
-        {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
-      </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
-      <div className={`tooltip`} style={{ marginLeft: "42px", paddingLeft: "32px" }}>
-        <span
-          className="tooltiptext"
-          style={{
-            fontSize: "medium",
-            width: "max-content",
-            minWidth: t(`TIP_${data.name}`).length < 20 ? t(`TIP_${data.name}`).length * 4 : 120,
-            maxWidth: 400,
-            whiteSpace: "normal",
-            visibility: "visible"
-          }}
-        >
-          <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
-        </span>
-      </div>
-      <div style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word" }}>{`${response?.responseData?.data?.[0]?.plots?.[2]?.value != 0 ? `${response?.responseData?.data?.[0]?.plots?.[2]?.value} ` : ""}${t(`${data.name}`)}`}</div>
+      {(isLoading || Refetch || refetchMetric) ? (<Loader />) : (
+        <div>
+          {response ? <p className="heading-m" style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word", paddingBottom: "0px", marginLeft: "0px", marginBottom: "0px" }}>
+            {`${Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, value?.denomination, true, t)}`}
+          </p> : <div style={{ whiteSpace: "pre" }}>{t("DSS_NO_DATA")}</div>}
+          <div className={`tooltip`} style={{ marginLeft: "42px", paddingLeft: "32px" }}>
+            <span
+              className="tooltiptext"
+              style={{
+                fontSize: "medium",
+                width: "max-content",
+                minWidth: t(`TIP_${data.name}`).length < 20 ? t(`TIP_${data.name}`).length * 4 : 120,
+                maxWidth: 400,
+                whiteSpace: "normal",
+                visibility: "visible"
+              }}
+            >
+              <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
+            </span>
+          </div>
+          <div style={{ textAlign: "center", paddingTop: "0px", wordWrap: "break-word" }}>{`${response?.responseData?.data?.[0]?.plots?.[2]?.value != 0 ? `${response?.responseData?.data?.[0]?.plots?.[2]?.value} ` : ""}${t(`${data.name}`)}`}</div>
+        </div>
+      )}
+
     </div>
 
   );
 
 };
 
-const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval }) => {
+const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch, refetchInterval, refetchMetric, setRefetchMetric }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -192,12 +198,17 @@ const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch
     }
   }, [response]);
 
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
-  if (isLoading || Refetch) {
-    return <Loader />;
+  if (refetchMetric && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetchMetric(false);
+    }, 100);
   }
 
   if (!response) {
@@ -238,45 +249,51 @@ const MetricChartRow = ({ data, setChartDenomination, index, Refetch, setRefetch
   }
 
   return (
-    <div div ref={chartRef} className="row">
-      <div style={{ cursor: "pointer" }} onClick={(event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-      }}><RefreshIcon /></div>
-      <div className={`tooltip`} >
-        {typeof name == "string" && name}
-        {Array.isArray(name) && name?.filter(ele => ele)?.map(ele => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
-        <span className="dss-white-pre" style={{ display: "block" }}> {showDate?.[id]?.todaysDate}</span>
-        <span
-          className="tooltiptext"
-          style={{
-            fontSize: "medium",
-            width: getWidth(data),
-            height: getHeight(data),
-            whiteSpace: "normal",
-          }}
-        >
-          <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
-          <span style={{ color: "white" }}> {showDate?.[id]?.lastUpdatedTime}</span>
-        </span>
-      </div>
-      <MetricData t={t} data={response?.responseData?.data?.[0]} code={response?.responseData?.visualizationCode} />
-      {/* <div>{`${displaySymbol(response.headerSymbol)} ${response.headerValue}`}</div> */}
+    <div className="row">
+      {(isLoading || Refetch || refetchMetric) ? (<Loader />) : (
+        <div div ref={chartRef} className="row">
+          <div className={`tooltip`}>
+            {typeof name == "string" && name}
+            {Array.isArray(name) && name?.filter(ele => ele)?.map(ele => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
+            <span className="dss-white-pre" style={{ display: "block" }}> {showDate?.[id]?.todaysDate}</span>
+            <span
+              className="tooltiptext"
+              style={{
+                fontSize: "medium",
+                width: getWidth(data),
+                height: getHeight(data),
+                whiteSpace: "normal",
+              }}
+            >
+              <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
+              <span style={{ color: "white" }}> {showDate?.[id]?.lastUpdatedTime}</span>
+            </span>
+          </div>
+          <MetricData t={t} data={response?.responseData?.data?.[0]} code={response?.responseData?.visualizationCode} />
+          {/* <div>{`${displaySymbol(response.headerSymbol)} ${response.headerValue}`}</div> */}
+        </div>
+      )}
     </div>
+
   );
 };
 
 const MetricChart = ({ data, setChartDenomination, Refetch, setRefetch, refetchInterval }) => {
   const { charts } = data;
+  const [refetchMetric, setRefetchMetric] = useState(false);
   return (
     <>
       <span className={`chart-metric-wrapper`} style={data?.isHorizontalChart ? { flexWrap: "wrap", display: "flex", justifyContent: "space-evenly" } : { flexWrap: "wrap", display: "flex" }}>
+        <div style={{ cursor: "pointer", alignSelf: "flex-start", width: "100%", marginTop: "-20px", marginBottom: "15px" }} onClick={(event) => {
+          event.stopPropagation(); // Prevent the click event from bubbling up to the div
+          setRefetchMetric(true);
+        }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
         {charts.map((chart, index) => (
 
           data?.isHorizontalChart ? (
-            <ColumnMetricData data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
+            <ColumnMetricData refetchMetric={refetchMetric} setRefetchMetric={setRefetchMetric} data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
           ) : (
-            <MetricChartRow data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
+            <MetricChartRow refetchMetric={refetchMetric} setRefetchMetric={setRefetchMetric} data={chart} key={index} index={index} setChartDenomination={setChartDenomination} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
           )
         ))}
       </span>

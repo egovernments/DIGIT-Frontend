@@ -73,9 +73,11 @@ const Chart = ({ data, Refetch, setRefetch, refetchInterval }) => {
     isVisible: isVisible,
     refetchInterval,
   });
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
   if (isLoading || Refetch) {
     return <Loader />;
@@ -93,11 +95,6 @@ const Chart = ({ data, Refetch, setRefetch, refetchInterval }) => {
   };
   return (
     <div ref={chartRef} className="blocks cursorPointer" style={{ flexDirection: "column" }}>
-      <div style={{ cursor: "pointer" }} onClick={(event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-        setRefetch(0);
-      }}><RefreshIcon /></div>
       <div className={`tooltip`}>
         {typeof name == "string" && name}
         {Array.isArray(name) && name?.filter((ele) => ele)?.map((ele) => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
@@ -122,6 +119,7 @@ const Chart = ({ data, Refetch, setRefetch, refetchInterval }) => {
     </div>
   );
 };
+
 const Summary = ({ data, Refetch, setRefetch, refetchInterval }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);

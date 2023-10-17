@@ -66,6 +66,7 @@ const CustomBarChart = ({
   const [maxValue, setMaxValue] = useState({});
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isVisible, setisVisible] = useState(false);
+  const [compRefetch, setCompRefetch] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,52 +128,70 @@ const CustomBarChart = ({
       }`
     );
   };
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
-  if (isLoading || Refetch) {
-    return <Loader />;
+  if (compRefetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setCompRefetch(0);
+    }, 100);
   }
-  if (chartData?.length === 0 || !chartData) {
-    return <NoData t={t} />;
-  }
+  // if (isLoading || Refetch || compRefetch) {
+  //   return <Loader />;
+  // }
+  // if (chartData?.length === 0 || !chartData) {
+  //   return <NoData t={t} />;
+  // }
   return (
     <Fragment>
       <div style={{ cursor: "pointer" }} onClick={(event) => {
         event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-        setRefetch(0);
-      }}><RefreshIcon /></div>
-      <ResponsiveContainer width="98%" height={320}>
-        <BarChart
-          width="70%"
-          height="100%"
-          data={showDrillDown ? chartData?.slice(0, 3) : chartData}
-          layout={layout}
-          maxBarSize={8}
-          margin={{ left: 200 }}
-          barGap={50}
-        >
-          {showGrid && <CartesianGrid />}
-          <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} domain={[0, 90]} />
-          <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 60 }} />
-          <Bar
-            dataKey={xDataKey}
-            fill={COLORS[fillColor]}
-            background={{ fill: "#D6D5D4", radius: 8 }}
-            label={<CustomLabel stroke={COLORS[fillColor]} maxValue={maxValue} />}
-            radius={[8, 8, 8, 8]}
-            isAnimationActive={false}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-      {chartData?.length > 3 && showDrillDown && (
-        <p className="showMore" onClick={goToDrillDownCharts}>
-          {t("DSS_SHOW_MORE")}
-        </p>
+        setCompRefetch(true);
+      }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
+      {(isLoading || Refetch || compRefetch) ? (<Loader />) : (
+        <div>
+          {(chartData?.length === 0 || !chartData) ? (<NoData t={t} />) : (
+            <div>
+              <ResponsiveContainer width="98%" height={320}>
+                <BarChart
+                  width="70%"
+                  height="100%"
+                  data={showDrillDown ? chartData?.slice(0, 3) : chartData}
+                  layout={layout}
+                  maxBarSize={8}
+                  margin={{ left: 200 }}
+                  barGap={50}
+                >
+                  {showGrid && <CartesianGrid />}
+                  <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} domain={[0, 90]} />
+                  <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 60 }} />
+                  <Bar
+                    dataKey={xDataKey}
+                    fill={COLORS[fillColor]}
+                    background={{ fill: "#D6D5D4", radius: 8 }}
+                    label={<CustomLabel stroke={COLORS[fillColor]} maxValue={maxValue} />}
+                    radius={[8, 8, 8, 8]}
+                    isAnimationActive={false}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+              {
+                chartData?.length > 3 && showDrillDown && (
+                  <p className="showMore" onClick={goToDrillDownCharts}>
+                    {t("DSS_SHOW_MORE")}
+                  </p>
+                )
+              }
+            </div >
+          )}
+        </div >
       )}
-    </Fragment>
+
+    </Fragment >
   );
 };
 

@@ -38,6 +38,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, 
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
+  const [compRefetch, setCompRefetch] = useState(false);
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
     endDate: subYears(value?.range?.endDate, 1).getTime(),
@@ -399,66 +400,73 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, 
     setFilterStack(nextState);
     setChartKey(nextState[nextState?.length - 1]?.id);
   };
-  if (Refetch) {
+  if (Refetch && isVisible) {
     refetchLastYearResponse();
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
+  if (compRefetch && isVisible) {
+    refetchLastYearResponse();
+    refetch();
+    setTimeout(() => {
+      setCompRefetch(0);
+    }, 100);
   }
 
-  if (isLoading || isRequestLoading || Refetch) {
-    return <Loader />;
-  }
   return (
     <div ref={chartRef} style={{ width: "100%" }}>
       <div style={{ cursor: "pointer" }} onClick={(event) => {
         event.stopPropagation(); // Prevent the click event from bubbling up to the div
-        refetch();
-        setRefetch(0);
-      }}><RefreshIcon /></div>
-      <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
-        {t("DSS_CMN_TABLE_INFO")}
-      </span>
-      {filterStack?.length > 1 && (
-        <div className="tag-container">
-          <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-          {filterStack.map((filter, id) =>
-            id > 0 ? (
-              <RemoveableTag
-                key={id}
-                text={`${filter?.label}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter?.name)}`)}`}
-                onClick={() => removeULB(id)}
-              />
-            ) : null
-          )}
-        </div>
-      )}
+        setCompRefetch(true);
+      }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
+      {(isLoading || isRequestLoading || Refetch || compRefetch) ? (<Loader />) : (<div>
+        <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
+          {t("DSS_CMN_TABLE_INFO")}
+        </span>
+        {filterStack?.length > 1 && (
+          <div className="tag-container">
+            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+            {filterStack.map((filter, id) =>
+              id > 0 ? (
+                <RemoveableTag
+                  key={id}
+                  text={`${filter?.label}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter?.name)}`)}`}
+                  onClick={() => removeULB(id)}
+                />
+              ) : null
+            )}
+          </div>)}
 
-      {!tableColumns || !tableData ? (
-        <NoData t={t} />
-      ) : (
-        <Table
-          className="customTable "
-          t={t}
-          customTableWrapperClassName={"dss-table-wrapper"}
-          disableSort={false}
-          autoSort={true}
-          manualPagination={false}
-          isPaginationRequired={tableData?.length > 5 ? true : false}
-          globalSearch={filterValue}
-          initSortId="S N "
-          onSearch={onSearch}
-          data={tableData?.filter((tRow) => tRow) || []}
-          totalRecords={tableData?.length}
-          columns={tableColumns?.filter((row) => row)?.slice(1)}
-          showAutoSerialNo={"DSS_HEADER_S_N_"}
-          styles={{ overflow: "hidden" }}
-          getCellProps={(cellInfo) => {
-            return {
-              style: {},
-            };
-          }}
-        />
-      )}
+        {!tableColumns || !tableData ? (
+          <NoData t={t} />
+        ) : (
+          <Table
+            className="customTable "
+            t={t}
+            customTableWrapperClassName={"dss-table-wrapper"}
+            disableSort={false}
+            autoSort={true}
+            manualPagination={false}
+            isPaginationRequired={tableData?.length > 5 ? true : false}
+            globalSearch={filterValue}
+            initSortId="S N "
+            onSearch={onSearch}
+            data={tableData?.filter((tRow) => tRow) || []}
+            totalRecords={tableData?.length}
+            columns={tableColumns?.filter((row) => row)?.slice(1)}
+            showAutoSerialNo={"DSS_HEADER_S_N_"}
+            styles={{ overflow: "hidden" }}
+            getCellProps={(cellInfo) => {
+              return {
+                style: {},
+              };
+            }}
+          />
+        )}
+      </div>)}
+
     </div>
   );
 };

@@ -108,7 +108,9 @@ const MapDrillChart = ({
 
   if (Refetch && isVisible) {
     refetch();
-    setRefetch(0);
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
   if (isLoading || Refetch) {
     return <Loader />;

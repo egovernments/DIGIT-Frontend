@@ -69,12 +69,12 @@ const Layout = ({ rowData, forHome = false, refetch, refetchInterval, setRefetch
     }
   };
 
-  const renderVisualizer = (visualizer, key, chip, onChipChange) => {
+  const renderVisualizer = (visualizer, key, chip, onChipChange, refetch, setRefetch) => {
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
           <GenericChart header={visualizer.name} className={`metricsTable ${visualizer?.isHorizontalChart ? "dss-metric-horizontal" : ""}`} key={key} value={value} iconName={visualizer?.iconName}>
-            <MetricChart data={visualizer} refetchInterval={refetchInterval} />
+            <MetricChart data={visualizer} refetchInterval={refetchInterval} Refetch={refetch} setRefetch={setRefetch} />
           </GenericChart>
         );
       case "chart":
@@ -146,7 +146,7 @@ const Layout = ({ rowData, forHome = false, refetch, refetchInterval, setRefetch
                 oldState[chart.name] = prevChip.map((ele) => ({ ...ele, active: ele.index === index }));
                 return { ...oldState };
               });
-            return renderVisualizer(chart, key, chipData, onChipChange);
+            return renderVisualizer(chart, key, chipData, onChipChange, refetch, setRefetch);
           },
           [renderVisualizer, chip]
         )

@@ -474,6 +474,10 @@ const DashBoard = ({ stateCode }) => {
               <DownloadIcon fill="#f18f5e" />
               {t(`ES_DSS_DOWNLOAD`)}
             </div>
+            <div className="mrsm" onClick={triggerRefetch}>
+              <RefreshIcon className="mrsm" fill="#f18f5e" />
+              {" Refetch"}
+            </div>
           </div>
         ) : null}
         <div>
