@@ -1,1 +1,0 @@
-(self.webpackChunkworkbench=self.webpackChunkworkbench||[]).push([[680],{680:(e,n,r)=>{"use strict";r.r(n),r.d(n,{mount:()=>u});var t=r(377),o=r.n(t),c=r(208),h=r.n(c),s=r(392),u=function(e,n){var r=n.history,t=n.login;h().render(o().createElement(s.Router,{history:r},o().createElement(App,{login:t})),e)}}}]);
