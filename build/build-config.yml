@@ -29,7 +29,7 @@ config:
   - name: builds/Digit-Frontend/core-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/mission/urban/Dockerfile
+        dockerfile: micro-ui/web/core/Dockerfile
         image-name: urban-ui
   - name: builds/Digit-Frontend/mission/urban-ui
     build:
@@ -39,15 +39,15 @@ config:
   - name: builds/Digit-Frontend/mission/works-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/works/Dockerfile
+        dockerfile: micro-ui/web/mission/works/Dockerfile
         image-name: works-ui
   - name: builds/Digit-Frontend/mission/sanitation-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/sanitation/Dockerfile
+        dockerfile: micro-ui/web/mission/sanitation/Dockerfile
         image-name: sanitation-ui
   - name: builds/Digit-Frontend/mission/health-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/health/Dockerfile
+        dockerfile: micro-ui/web/mission/health/Dockerfile
         image-name: health-ui
