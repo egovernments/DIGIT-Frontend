@@ -1,11 +1,11 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import ReactTooltip from "react-tooltip";
 import { useTranslation } from "react-i18next";
 import { get } from "lodash";
 import FilterContext from "./FilterContext";
 import { endOfMonth, getTime, startOfMonth } from "date-fns";
-import { Loader } from "@egovernments/digit-ui-react-components"
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components"
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 
@@ -78,7 +78,12 @@ const MapChart = ({
   setselectedState,
   setdrilldownId,
   settotalCount,
-  setliveCount
+  setliveCount,
+  refetchInterval,
+  Refetch,
+  setRefetch,
+  mapChartRefetch,
+  setMapChartRefetch
 }) => {
 
   const { t } = useTranslation();
@@ -92,6 +97,30 @@ const MapChart = ({
     interval: interval,
     title: "home",
   };
+  const [isVisible, setisVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const { data: topoJSON, isLoading: isLoadingNAT } = Digit.Hooks.dss.useMDMS(Digit.ULBService.getStateId(), "dss-dashboard", ["dashboard-config"], {
     select: (data) => {
@@ -100,11 +129,13 @@ const MapChart = ({
     },
     enabled: true,
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
     requestDate: requestDate,
+    isVisible: isVisible,
+    refetchInterval,
   });
 
 
@@ -134,8 +165,19 @@ const MapChart = ({
       return { ...acc };
     }, {}) || {};
 
-
-  if (isLoading || isLoadingNAT) {
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(false);
+    }, 100);
+  }
+  if (mapChartRefetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setMapChartRefetch(false);
+    }, 100);
+  }
+  if (isLoading || isLoadingNAT || Refetch || mapChartRefetch) {
     return <Loader />
   }
 

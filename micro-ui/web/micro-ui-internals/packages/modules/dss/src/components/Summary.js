@@ -1,4 +1,4 @@
-import { Card, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowDownwardElement } from "./ArrowDownward";
@@ -34,21 +34,52 @@ const MetricData = ({ t, data }) => {
   );
 };
 
-const Chart = ({ data }) => {
+const Chart = ({ data, Refetch, setRefetch, refetchInterval }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
+    isVisible: isVisible,
+    refetchInterval,
   });
-  if (isLoading) {
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
+  if (isLoading || Refetch) {
     return <Loader />;
   }
   let name = t(data?.name) || "";
@@ -63,7 +94,7 @@ const Chart = ({ data }) => {
     else return 50;
   };
   return (
-    <div className="blocks cursorPointer" style={{ flexDirection: "column" }}>
+    <div ref={chartRef} className="blocks cursorPointer" style={{ flexDirection: "column" }}>
       <div className={`tooltip`}>
         {typeof name == "string" && name}
         {Array.isArray(name) && name?.filter((ele) => ele)?.map((ele) => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
@@ -88,7 +119,8 @@ const Chart = ({ data }) => {
     </div>
   );
 };
-const Summary = ({ data }) => {
+
+const Summary = ({ data, Refetch, setRefetch, refetchInterval }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   return (
@@ -103,7 +135,7 @@ const Summary = ({ data }) => {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {data.charts.map((chart, key) => (
-              <Chart data={chart} key={key} url={data?.ref?.url} />
+              <Chart data={chart} key={key} url={data?.ref?.url} Refetch={Refetch} setRefetch={setRefetch} refetchInterval={refetchInterval} />
             ))}
           </div>
         </div>

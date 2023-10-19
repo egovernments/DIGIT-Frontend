@@ -1,6 +1,6 @@
-import { DownwardArrow, Loader, Rating, RemoveableTag, Table, UpwardArrow } from "@egovernments/digit-ui-react-components";
+import { DownwardArrow, Loader, Rating, RefreshIcon, RemoveableTag, Table, UpwardArrow } from "@egovernments/digit-ui-react-components";
 import { differenceInCalendarDays, subYears } from "date-fns";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
@@ -10,8 +10,8 @@ import ReactTooltip from "react-tooltip";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name"];
 
-const InsightView = ({ rowValue, insight, t ,disableInsights=false}) => {
-  if(disableInsights){
+const InsightView = ({ rowValue, insight, t, disableInsights = false }) => {
+  if (disableInsights) {
     return <span>{rowValue}</span>
   }
   return (
@@ -30,21 +30,45 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }) => {
-  const { id,disableInsights=false } = data;
+const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination, Refetch, setRefetch, refetchInterval }) => {
+  const { id, disableInsights = false } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
   const { t } = useTranslation();
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
+  const [compRefetch, setCompRefetch] = useState(false);
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
     endDate: subYears(value?.range?.endDate, 1).getTime(),
     interval: "month",
     title: "",
   };
-  const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const { isLoading: isRequestLoading, data: lastYearResponse, refetch: refetchLastYearResponse } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -55,8 +79,10 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
+    isVisible: isVisible,
+    refetchInterval,
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -67,6 +93,8 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         : { ...value?.filters, [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
+    isVisible: isVisible,
+    refetchInterval,
   });
   useEffect(() => {
     const { id } = data;
@@ -327,7 +355,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
                 style={{ color: "#F47738", cursor: "pointer" }}
                 onClick={() =>
                   getDrilldownCharts(
-                    cellValue?.includes("DSS_TB_")?row?.original?.key:cellValue,
+                    cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
                     filter?.key,
                     t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
                     response?.responseData?.filter
@@ -372,56 +400,73 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     setFilterStack(nextState);
     setChartKey(nextState[nextState?.length - 1]?.id);
   };
-
-  if (isLoading || isRequestLoading) {
-    return <Loader />;
+  if (Refetch && isVisible) {
+    refetchLastYearResponse();
+    refetch();
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
-  return (
-    <div style={{ width: "100%" }}>
-      <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
-        {t("DSS_CMN_TABLE_INFO")}
-      </span>
-      {filterStack?.length > 1 && (
-        <div className="tag-container">
-          <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-          {filterStack.map((filter, id) =>
-            id > 0 ? (
-              <RemoveableTag
-                key={id}
-                text={`${filter?.label}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter?.name)}`)}`}
-                onClick={() => removeULB(id)}
-              />
-            ) : null
-          )}
-        </div>
-      )}
+  if (compRefetch && isVisible) {
+    refetchLastYearResponse();
+    refetch();
+    setTimeout(() => {
+      setCompRefetch(0);
+    }, 100);
+  }
 
-      {!tableColumns || !tableData ? (
-        <NoData t={t} />
-      ) : (
-        <Table
-          className="customTable "
-          t={t}
-          customTableWrapperClassName={"dss-table-wrapper"}
-          disableSort={false}
-          autoSort={true}
-          manualPagination={false}
-          isPaginationRequired={tableData?.length > 5 ? true : false}
-          globalSearch={filterValue}
-          initSortId="S N "
-          onSearch={onSearch}
-          data={tableData?.filter((tRow) => tRow) || []}
-          totalRecords={tableData?.length}
-          columns={tableColumns?.filter((row) => row)?.slice(1)}
-          showAutoSerialNo={"DSS_HEADER_S_N_"}
-          styles={{ overflow: "hidden" }}
-          getCellProps={(cellInfo) => {
-            return {
-              style: {},
-            };
-          }}
-        />
-      )}
+  return (
+    <div ref={chartRef} style={{ width: "100%" }}>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        setCompRefetch(true);
+      }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
+      {(isLoading || isRequestLoading || Refetch || compRefetch) ? (<Loader />) : (<div>
+        <span className={"dss-table-subheader"} style={{ position: "sticky", left: 0 }}>
+          {t("DSS_CMN_TABLE_INFO")}
+        </span>
+        {filterStack?.length > 1 && (
+          <div className="tag-container">
+            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+            {filterStack.map((filter, id) =>
+              id > 0 ? (
+                <RemoveableTag
+                  key={id}
+                  text={`${filter?.label}: ${t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(filter?.name)}`)}`}
+                  onClick={() => removeULB(id)}
+                />
+              ) : null
+            )}
+          </div>)}
+
+        {!tableColumns || !tableData ? (
+          <NoData t={t} />
+        ) : (
+          <Table
+            className="customTable "
+            t={t}
+            customTableWrapperClassName={"dss-table-wrapper"}
+            disableSort={false}
+            autoSort={true}
+            manualPagination={false}
+            isPaginationRequired={tableData?.length > 5 ? true : false}
+            globalSearch={filterValue}
+            initSortId="S N "
+            onSearch={onSearch}
+            data={tableData?.filter((tRow) => tRow) || []}
+            totalRecords={tableData?.length}
+            columns={tableColumns?.filter((row) => row)?.slice(1)}
+            showAutoSerialNo={"DSS_HEADER_S_N_"}
+            styles={{ overflow: "hidden" }}
+            getCellProps={(cellInfo) => {
+              return {
+                style: {},
+              };
+            }}
+          />
+        )}
+      </div>)}
+
     </div>
   );
 };

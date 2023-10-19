@@ -1,14 +1,14 @@
-import { Loader, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { Loader, RefreshIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useMemo, useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip,Label } from "recharts";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, Label } from "recharts";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 // ["#048BD0", "#FBC02D", "#8E29BF","#EA8A3B","#0BABDE","#6E8459"]
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
-const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=undefined }) => {
+const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, variant = undefined, Refetch, setRefetch, refetchInterval }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -16,54 +16,83 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
   const [isPieClicked, setIsPieClicked] = useState(false);
   const [pieSelected, setPieSelected] = useState(null);
   const [drillDownId, setdrillDownId] = useState(null);
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const [isVisible, setisVisible] = useState(false);
+  const [compRefetch, setCompRefetch] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: isPieClicked ? drillDownId : id,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected } : value?.filters,
-    moduleLevel: value?.moduleLevel
+    moduleLevel: value?.moduleLevel,
+    isVisible: isVisible,
+    refetchInterval,
   });
 
   const chartData = useMemo(() => {
-    
+
     if (!response) return null;
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     const compareFn = (a, b) => b.value - a.value;
-    return (drillDownId === "deathByCategoryDrilldownAge" || response?.responseData?.visualizationCode === "nssNumberOfDeathsByAge"    )// || drillDownId === "nssDeathByCategoryDrillDownAge") 
-    ? response?.responseData?.data?.[0]?.plots.reduce((acc, plot, index) => {
-      acc = acc.concat(plot);
-      return acc;
-    }, []) 
-    : response?.responseData?.data?.[0]?.plots.sort(compareFn).reduce((acc, plot, index) => {
-      if(variant === "pieChartv2"){
-        if (index < 4) acc = acc.concat(plot);
-        else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: plot?.symbol });
-        else acc[4].value += plot?.value;
-        // If types more than 4 then we'll show as others
-        /* Commnted logic of pie chart which hides more that 4 and show max of 4*/
-        return acc
-      }
-      acc = acc.concat(plot);
-      return acc;
-    }, []);
+    return (drillDownId === "deathByCategoryDrilldownAge" || response?.responseData?.visualizationCode === "nssNumberOfDeathsByAge")// || drillDownId === "nssDeathByCategoryDrillDownAge") 
+      ? response?.responseData?.data?.[0]?.plots.reduce((acc, plot, index) => {
+        acc = acc.concat(plot);
+        return acc;
+      }, [])
+      : response?.responseData?.data?.[0]?.plots.sort(compareFn).reduce((acc, plot, index) => {
+        if (variant === "pieChartv2") {
+          if (index < 4) acc = acc.concat(plot);
+          else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: plot?.symbol });
+          else acc[4].value += plot?.value;
+          // If types more than 4 then we'll show as others
+          /* Commnted logic of pie chart which hides more that 4 and show max of 4*/
+          return acc
+        }
+        acc = acc.concat(plot);
+        return acc;
+      }, []);
   }, [response]);
 
-  const totalCount = Digit.Utils.dss.formatter(chartData?.reduce((acc,item)=> acc + item?.value, 0), chartData ? chartData[0]?.symbol : "number", value?.denomination, true, t)
+  const totalCount = Digit.Utils.dss.formatter(chartData?.reduce((acc, item) => acc + item?.value, 0), chartData ? chartData[0]?.symbol : "number", value?.denomination, true, t)
 
 
-  const renderLegend = (val,entry) => {
+  const renderLegend = (val, entry) => {
 
-    if(variant==="pieChartv2" && entry){
+    if (variant === "pieChartv2" && entry) {
       return (
-        <div style={{ display:"inline-flex",justifyContent:"space-between",fontSize: "16px",width:"95%",color:"black",height:"5px",alignItems:"center" }}>
-          <p style={{display:"inline-block",maxWidth:"20rem",alignItems:"flex-start",paddingLeft:"0.5rem",whiteSpace:"nowrap",textOverflow:"ellipsis",height:"fit-content",overflow:"hidden"}}>{t(`COMMON_MASTERS_${val && Digit.Utils.locale.getTransformedLocale(val)}`)}</p>
-          <p style={{ display:"inline-block",alignItems:"flex-end",fontWeight:"bold",fontSize:"20px" }}>{Digit.Utils.dss.formatter(entry?.payload?.value, entry?.payload?.symbol, value?.denomination, true, t)}</p>
+        <div style={{ display: "inline-flex", justifyContent: "space-between", fontSize: "16px", width: "95%", color: "black", height: "5px", alignItems: "center" }}>
+          <p style={{ display: "inline-block", maxWidth: "20rem", alignItems: "flex-start", paddingLeft: "0.5rem", whiteSpace: "nowrap", textOverflow: "ellipsis", height: "fit-content", overflow: "hidden" }}>{t(`COMMON_MASTERS_${val && Digit.Utils.locale.getTransformedLocale(val)}`)}</p>
+          <p style={{ display: "inline-block", alignItems: "flex-end", fontWeight: "bold", fontSize: "20px" }}>{Digit.Utils.dss.formatter(entry?.payload?.value, entry?.payload?.symbol, value?.denomination, true, t)}</p>
         </div>
       );
     }
 
-    return  <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+    return <span style={{ fontSize: "14px", color: "#505A5F" }}>
+      {/* {t(`COMMON_MASTERS_${value && Digit.Utils.locale.getTransformedLocale(value)}`)}    //here was the problem */}
+    </span>
   }
 
   const renderCustomLabel = (args) => {
@@ -164,141 +193,157 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination,variant=
     setdrillDownId(null);
     setPieSelected(null);
   }, [id]);
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
 
-  if (isLoading) {
-    return <Loader />;
+  if (compRefetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setCompRefetch(0);
+    }, 100);
   }
   return (
     <Fragment>
-      { (id === "deathByCategory" ) && (  //|| id === "nssNumberOfDeathsByCategory") && ( 
-            <span className={"dss-pie-subheader" } style={{position:"sticky" ,left:0}}>
-              {t('DSS_CMN_PIE_INFO')}
-            </span>
-          )}
-      {isPieClicked && (
-        <div>
-          <div className="tag-container" style={{ marginBottom: "unset" }}>
-            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-            <RemoveableTag key={id} text={`${t("COMMON_MASTERS_" + Digit.Utils.locale.getTransformedLocale(pieSelected))}`} onClick={removeFilter} />
-          </div>
-          {/* <div className="tag-container" style={{marginBottom:"unset"}}>
+      {(id === "deathByCategory") && (  //|| id === "nssNumberOfDeathsByCategory") && ( 
+        <span className={"dss-pie-subheader"} style={{ position: "sticky", left: 0 }}>
+          {t('DSS_CMN_PIE_INFO')}
+        </span>
+      )}
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        setCompRefetch(true);
+      }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
+      {(isLoading || Refetch || compRefetch) ? (<Loader />) : (<div>
+        {isPieClicked && (
+          <div>
+            <div className="tag-container" style={{ marginBottom: "unset" }}>
+              <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+              <RemoveableTag key={id} text={`${t("COMMON_MASTERS_" + Digit.Utils.locale.getTransformedLocale(pieSelected))}`} onClick={removeFilter} />
+            </div>
+            {/* <div className="tag-container" style={{marginBottom:"unset"}}>
             <span >{t("DSS_FILTERS_APPLIED")}: </span>
             <RemoveableTag extraStyles={{tagStyles:{ marginTop: "unset" }}} key={id} text={`${t("COMMON_MASTERS_" + Digit.Utils.locale.getTransformedLocale(pieSelected))}`} onClick={removeFilter} />
           </div> */}
-        </div>
-      )}
-      {chartData?.length === 0 || !chartData ? (
-        <NoData t={t} />
-      ) : (
-        variant === "pieChartv2" ? 
-        <ResponsiveContainer width="94%" maxHeight={500}>
-          <PieChart cy={100} width="100%">
-            <Pie
-              data={chartData}
-              dataKey={dataKey}
-              cy={125}
-              style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default" }}
-              innerRadius={checkChartID(id) && !mobileView ? 60 : 80} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
-              outerRadius={checkChartID(id) && !mobileView ? 90 : 100}
-              margin={{ top: isPieClicked ? 0 : 5 }}
-              fill="#8884d8"
-              label={variant==="pieChartv2" ? renderCustomLabel : null}
-              labelLine={false}
-              isAnimationActive={false}
-              onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
-            >
-              {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
-                <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
-              ))}
-              {totalCount && <Label
-                value={`${t("RT_TOTAL")} : ${totalCount}`}
-                position="center"
-                fontSize={18}
-                fontWeight="bold"
-              />}
-            </Pie>
-            <Tooltip content={renderTooltip} />
-            <Legend
-              layout="vertical"
-              verticalAlign="bottom"
-              align="center"
-              iconType="circle"
-              formatter={renderLegend}
-              // formatter={(value, entry) => `${value} (${entry.value})`}
-              // formatter={(value,entry)=> renderCustomLabel(entry)}
-              iconSize={13}
-              wrapperStyle={
-                chartData?.length > 6
-                  ? {
-                      paddingRight: checkChartID(id) && !mobileView ? 30 : 0, ///Padding for 2 charts in a row cases
-                      overflowY: "scroll",
-                      height: 250,
-                      width: "35%",
-                      overflowX: "auto",
-                      paddingTop: -20,
-                      paddingBottom: -20
-                    }
-                  : { paddingRight: checkChartID(id) && !mobileView ? 30 : 0,paddingLeft:checkChartID(id) && !mobileView ? 30 : 0, width: "100%", overflowX: "auto",marginTop:"0px", marginLeft:"1.5rem" } ///Padding for 2 charts in a row cases
-              }
-            />
-          </PieChart>
-        </ResponsiveContainer>:
-        <ResponsiveContainer width="99%" height={340}>
-        <PieChart cy={100}>
-          <Pie
-            data={chartData}
-            dataKey={dataKey}
-            cy={150}
-            style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default" }}
-            innerRadius={checkChartID(id) && !mobileView ? 90 : 70} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
-            outerRadius={checkChartID(id) && !mobileView ? 110 : 90}
-            margin={{ top: isPieClicked ? 0 : 5 }}
-            fill="#8884d8"
-            //label={renderCustomLabel}
-            labelLine={false}
-            isAnimationActive={false}
-            onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
-          >
-            {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
-              <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip content={renderTooltip} />
-          <Legend
-            layout="vertical"
-            verticalAlign="middle"
-            align="right"
-            iconType="circle"
-            formatter={renderLegend}
-            iconSize={10}
-            wrapperStyle={
-              chartData?.length > 6
-                ? {
-                    paddingRight: checkChartID(id) && !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
-                    overflowY: "scroll",
-                    height: 250,
-                    width: "35%",
-                    overflowX: "auto",
-                    paddingTop: -20,
+          </div>
+        )}
+        {chartData?.length === 0 || !chartData ? (
+          <NoData t={t} />
+        ) : (
+          variant === "pieChartv2" ?
+            <ResponsiveContainer width="94%" maxHeight={500}>
+              <PieChart cy={100} width="100%">
+                <Pie
+                  data={chartData}
+                  dataKey={dataKey}
+                  cy={125}
+                  style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default" }}
+                  innerRadius={checkChartID(id) && !mobileView ? 60 : 80} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
+                  outerRadius={checkChartID(id) && !mobileView ? 90 : 100}
+                  margin={{ top: isPieClicked ? 0 : 5 }}
+                  fill="#8884d8"
+                  label={variant === "pieChartv2" ? renderCustomLabel : null}
+                  labelLine={false}
+                  isAnimationActive={false}
+                  onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
+                >
+                  {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
+                    <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                  {totalCount && <Label
+                    value={`${t("RT_TOTAL")} : ${totalCount}`}
+                    position="center"
+                    fontSize={18}
+                    fontWeight="bold"
+                  />}
+                </Pie>
+                <Tooltip content={renderTooltip} />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="bottom"
+                  align="center"
+                  iconType="circle"
+                  formatter={renderLegend}
+                  // formatter={(value, entry) => `${value} (${entry.value})`}
+                  // formatter={(value,entry)=> renderCustomLabel(entry)}
+                  iconSize={13}
+                  wrapperStyle={
+                    chartData?.length > 6
+                      ? {
+                        paddingRight: checkChartID(id) && !mobileView ? 30 : 0, ///Padding for 2 charts in a row cases
+                        overflowY: "scroll",
+                        height: 250,
+                        width: "35%",
+                        overflowX: "auto",
+                        paddingTop: -20,
+                        paddingBottom: -20
+                      }
+                      : { paddingRight: checkChartID(id) && !mobileView ? 30 : 0, paddingLeft: checkChartID(id) && !mobileView ? 30 : 0, width: "100%", overflowX: "auto", marginTop: "0px", marginLeft: "1.5rem" } ///Padding for 2 charts in a row cases
                   }
-                : { paddingRight: checkChartID(id) && !mobileView ? 60 : 0, width: "27%", overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
-            }
-          />
-        </PieChart>
-      </ResponsiveContainer>
-      )}
-      {isPieClicked && (
-        <div
-          style={{
-            marginTop: "-4%",
-            position: "absolute",
-            width: "30%",
-            textAlign: "center",
-          }}
-        >
-          {t(Digit.Utils.locale.getTransformedLocale(`${response?.responseData?.data?.[0]?.headerName}_${pieSelected}`))}
-        </div>
-      )}
+                />
+              </PieChart>
+            </ResponsiveContainer> :
+            <ResponsiveContainer width="99%" height={340}>
+              <PieChart cy={100}>
+                <Pie
+                  data={chartData}
+                  dataKey={dataKey}
+                  cy={150}
+                  style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default" }}
+                  innerRadius={checkChartID(id) && !mobileView ? 90 : 70} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
+                  outerRadius={checkChartID(id) && !mobileView ? 110 : 90}
+                  margin={{ top: isPieClicked ? 0 : 5 }}
+                  fill="#8884d8"
+                  //label={renderCustomLabel}
+                  labelLine={false}
+                  isAnimationActive={false}
+                  onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
+                >
+                  {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
+                    <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={renderTooltip} />
+                <Legend
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                  iconType="circle"
+                  formatter={renderLegend}
+                  iconSize={10}
+                  wrapperStyle={
+                    chartData?.length > 6
+                      ? {
+                        paddingRight: checkChartID(id) && !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
+                        overflowY: "scroll",
+                        height: 250,
+                        width: "35%",
+                        overflowX: "auto",
+                        paddingTop: -20,
+                      }
+                      : { paddingRight: checkChartID(id) && !mobileView ? 60 : 0, width: "27%", overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
+                  }
+                />
+              </PieChart>
+            </ResponsiveContainer>
+        )}
+        {isPieClicked && (
+          <div
+            style={{
+              marginTop: "-4%",
+              position: "absolute",
+              width: "30%",
+              textAlign: "center",
+            }}
+          >
+            {t(Digit.Utils.locale.getTransformedLocale(`${response?.responseData?.data?.[0]?.headerName}_${pieSelected}`))}
+          </div>
+        )}
+      </div>)}
+
     </Fragment>
   );
 };

@@ -1,5 +1,5 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useContext, useMemo, useState } from "react";
+import { Loader, RefreshIcon } from "@egovernments/digit-ui-react-components";
+import React, { Fragment, useContext, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -55,6 +55,9 @@ const CustomBarChart = ({
   data,
   title,
   setChartDenomination,
+  Refetch,
+  setRefetch,
+  refetchInterval
 }) => {
   const { id } = data;
   const { t } = useTranslation();
@@ -62,16 +65,43 @@ const CustomBarChart = ({
   const { value } = useContext(FilterContext);
   const [maxValue, setMaxValue] = useState({});
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const [isVisible, setisVisible] = useState(false);
+  const [compRefetch, setCompRefetch] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
-    moduleLevel: value?.moduleLevel
+    moduleLevel: value?.moduleLevel,
+    isVisible: isVisible,
+    refetchInterval,
   });
   const chartData = useMemo(() => {
-    if (!response) return null;
+    if (!response || !response.responseData) return null;
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     const dd = response?.responseData?.data?.map((bar) => {
       let plotValue = bar?.plots?.[0].value || 0;
@@ -93,50 +123,75 @@ const CustomBarChart = ({
 
   const goToDrillDownCharts = () => {
     history.push(
-      `/${window?.contextPath}/employee/dss/drilldown?chart=${response?.responseData?.visualizationCode}&ulb=${
-        value?.filters?.tenantId
-      }&title=${title}&fromModule=${Digit.Utils.dss.getCurrentModuleName()}&type=performing-metric&fillColor=${fillColor}&isNational=${
-        checkCurrentScreen() ? "YES" : "NO"
+      `/${window?.contextPath}/employee/dss/drilldown?chart=${response?.responseData?.visualizationCode}&ulb=${value?.filters?.tenantId
+      }&title=${title}&fromModule=${Digit.Utils.dss.getCurrentModuleName()}&type=performing-metric&fillColor=${fillColor}&isNational=${checkCurrentScreen() ? "YES" : "NO"
       }`
     );
   };
-  if (isLoading) {
-    return <Loader />;
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
   }
-  if (chartData?.length === 0 || !chartData) {
-    return <NoData t={t} />;
+  if (compRefetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setCompRefetch(0);
+    }, 100);
   }
+  // if (isLoading || Refetch || compRefetch) {
+  //   return <Loader />;
+  // }
+  // if (chartData?.length === 0 || !chartData) {
+  //   return <NoData t={t} />;
+  // }
   return (
     <Fragment>
-      <ResponsiveContainer width="98%" height={320}>
-        <BarChart
-          width="70%"
-          height="100%"
-          data={showDrillDown ? chartData?.slice(0, 3) : chartData}
-          layout={layout}
-          maxBarSize={8}
-          margin={{ left: 200 }}
-          barGap={50}
-        >
-          {showGrid && <CartesianGrid />}
-          <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} domain={[0, 90]} />
-          <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 60 }} />
-          <Bar
-            dataKey={xDataKey}
-            fill={COLORS[fillColor]}
-            background={{ fill: "#D6D5D4", radius: 8 }}
-            label={<CustomLabel stroke={COLORS[fillColor]} maxValue={maxValue} />}
-            radius={[8, 8, 8, 8]}
-            isAnimationActive={false}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-      {chartData?.length > 3 && showDrillDown && (
-        <p className="showMore" onClick={goToDrillDownCharts}>
-          {t("DSS_SHOW_MORE")}
-        </p>
+      <div style={{ cursor: "pointer" }} onClick={(event) => {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the div
+        setCompRefetch(true);
+      }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
+      {(isLoading || Refetch || compRefetch) ? (<Loader />) : (
+        <div>
+          {(chartData?.length === 0 || !chartData) ? (<NoData t={t} />) : (
+            <div>
+              <ResponsiveContainer width="98%" height={320}>
+                <BarChart
+                  width="70%"
+                  height="100%"
+                  data={showDrillDown ? chartData?.slice(0, 3) : chartData}
+                  layout={layout}
+                  maxBarSize={8}
+                  margin={{ left: 200 }}
+                  barGap={50}
+                >
+                  {showGrid && <CartesianGrid />}
+                  <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} domain={[0, 90]} />
+                  <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 60 }} />
+                  <Bar
+                    dataKey={xDataKey}
+                    fill={COLORS[fillColor]}
+                    background={{ fill: "#D6D5D4", radius: 8 }}
+                    label={<CustomLabel stroke={COLORS[fillColor]} maxValue={maxValue} />}
+                    radius={[8, 8, 8, 8]}
+                    isAnimationActive={false}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+              {
+                chartData?.length > 3 && showDrillDown && (
+                  <p className="showMore" onClick={goToDrillDownCharts}>
+                    {t("DSS_SHOW_MORE")}
+                  </p>
+                )
+              }
+            </div >
+          )}
+        </div >
       )}
-    </Fragment>
+
+    </Fragment >
   );
 };
 

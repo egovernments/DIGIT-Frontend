@@ -1,7 +1,9 @@
 import {
+  Button,
   Card,
   CardHeader,
   DownloadIcon,
+  RefreshIcon,
   EmailIcon,
   Header,
   Loader,
@@ -11,7 +13,7 @@ import {
   WhatsappIcon,
 } from "@egovernments/digit-ui-react-components";
 import { format } from "date-fns";
-import React, { useMemo, useRef, useState, useContext } from "react";
+import React, { useMemo, useRef, useState, useContext, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import FilterContext from "../components/FilterContext";
@@ -50,7 +52,7 @@ const colors = [
   { dark: "rgba(183, 165, 69, 0.85)", light: "rgba(222, 188, 11, 0.24)" },
 ];
 
-const Chart = ({ data, moduleLevel, overview = false }) => {
+const Chart = ({ data, moduleLevel, overview = false, refetchInterval, Refetch, setRefetch, chartRefresh, setChartRefresh }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
@@ -61,21 +63,59 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     interval: interval,
     title: "home",
   };
+  const [isVisible, setisVisible] = useState(false);
+  const chartRef = useRef();
 
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chartRef.current) {
+        const chartRect = chartRef.current.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
     requestDate,
     moduleLevel: moduleLevel,
+    isVisible: isVisible,
+    refetchInterval,
   });
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(0);
+    }, 100);
+  }
+  if (chartRefresh && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setChartRefresh(false);
+    }, 100);
+  }
 
-  if (isLoading) {
+  if (isLoading || chartRefresh || Refetch) {
     return <Loader />;
   }
+
   const insight = response?.responseData?.data?.[0]?.insight?.value?.replace(/[+-]/g, "")?.split("%");
   return (
-    <div className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
+    <div ref={chartRef} className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
       <div className={`tooltip`}>
         <p className="p1">{t(data?.name)}</p>
         <span
@@ -102,12 +142,37 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   );
 };
 
-const HorBarChart = ({ data, setselectState = "" }) => {
+const HorBarChart = ({ data, setselectState = "", refetchInterval, horBarChartRefresh, setHorBarChartRefresh, Refetch, setRefetch }) => {
   const barColors = ["#298CFF", "#54D140"];
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
   let filters = {};
+  const [isVisible, setisVisible] = useState(false);
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const elementToCheck = document.querySelector(".recharts-responsive-container");
+      if (elementToCheck) {
+        const chartRect = elementToCheck.getBoundingClientRect();
+        const isChartInViewport = chartRect.top < window.innerHeight;
+
+        if (isChartInViewport) {
+          setisVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    setTimeout(() => {
+      handleScroll(); // Call the handler initially to render the visible components
+    }, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (setselectState !== "") filters.state = setselectState;
 
@@ -119,14 +184,6 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     interval: interval,
     title: "home",
   };
-
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: chartType,
-    tenantId,
-    requestDate,
-    filters: filters,
-  });
 
   const constructChartData = (data) => {
     let result = {};
@@ -144,86 +201,119 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       };
     });
   };
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
+    key: id,
+    type: chartType,
+    tenantId,
+    requestDate,
+    filters: filters,
+    isVisible: isVisible,
+    refetchInterval,
+  });
+
+  if (horBarChartRefresh && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setHorBarChartRefresh(false);
+    }, 100);
+  }
+  if (Refetch && isVisible) {
+    refetch();
+    setTimeout(() => {
+      setRefetch(false);
+    }, 100);
+  }
   const renderLegend = (value) => (
     <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );
   const chartData = useMemo(() => constructChartData(response?.responseData?.data));
 
-  if (isLoading) {
+  if (isLoading || horBarChartRefresh || Refetch) {
     return <Loader />;
   }
 
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
   return (
-    <ResponsiveContainer
-      width="50%"
-      height={480}
-      margin={{
-        top: 5,
-        right: 5,
-        left: 5,
-        bottom: 5,
-      }}
-    >
-      {chartData?.length === 0 || !chartData ? (
-        <NoData t={t} />
-      ) : (
-        <BarChart
-          width="100%"
-          height="100%"
-          margin={{
-            top: 5,
-            right: 5,
-            left: 5,
-            bottom: 5,
-          }}
-          layout={"horizontal"}
-          data={chartData}
-          barGap={12}
-          barSize={30}
-        >
-          <CartesianGrid strokeDasharray="2 2" />
-          <YAxis
-            dataKey={""}
-            type={"number"}
-            tick={{ fontSize: "12px", fill: "#505A5F" }}
-            label={{
-              value: "",
-              angle: -90,
-              position: "insideLeft",
-              dy: 50,
-              fontSize: "12px",
-              fill: "#505A5F",
+    <Fragment>
+      <ResponsiveContainer
+        width="50%"
+        height={480}
+        margin={{
+          top: 5,
+          right: 5,
+          left: 5,
+          bottom: 5,
+        }}
+      >
+        {chartData?.length === 0 || !chartData ? (
+          <NoData t={t} />
+        ) : (
+          <BarChart
+            width="100%"
+            height="100%"
+            margin={{
+              top: 5,
+              right: 5,
+              left: 5,
+              bottom: 5,
             }}
-            tickCount={10}
-            unit={""}
-            width={130}
-          />
-          <XAxis dataKey={"name"} type={"category"} tick={{ fontSize: "14px", fill: "#505A5F" }} tickCount={10} />
-          {bars?.map((bar, id) => (
-            <Bar key={id} dataKey={t(bar)} fill={barColors[id]} stackId={bars?.length > 2 ? 1 : id} />
-          ))}
-          <Legend formatter={renderLegend} iconType="circle" />
-          <Tooltip cursor={false} />
-        </BarChart>
-      )}
-    </ResponsiveContainer>
+            layout={"horizontal"}
+            data={chartData}
+            barGap={12}
+            barSize={30}
+          >
+            <CartesianGrid strokeDasharray="2 2" />
+            <YAxis
+              dataKey={""}
+              type={"number"}
+              tick={{ fontSize: "12px", fill: "#505A5F" }}
+              label={{
+                value: "",
+                angle: -90,
+                position: "insideLeft",
+                dy: 50,
+                fontSize: "12px",
+                fill: "#505A5F",
+              }}
+              tickCount={10}
+              unit={""}
+              width={130}
+            />
+            <XAxis dataKey={"name"} type={"category"} tick={{ fontSize: "14px", fill: "#505A5F" }} tickCount={10} />
+            {bars?.map((bar, id) => (
+              <Bar key={id} dataKey={t(bar)} fill={barColors[id]} stackId={bars?.length > 2 ? 1 : id} />
+            ))}
+            <Legend formatter={renderLegend} iconType="circle" />
+            <Tooltip cursor={false} />
+          </BarChart>
+        )}
+      </ResponsiveContainer>
+    </Fragment>
   );
 };
 
 const Home = ({ stateCode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState(() => {});
+  const [filters, setFilters] = useState(() => { });
   const { moduleCode } = useParams();
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { isLoading: localizationLoading, data: store, refetchInterval = 60000 } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedState, setselectedState] = useState("");
   const [drillDownId, setdrillDownId] = useState("none");
   const [totalCount, setTotalCount] = useState("");
   const [liveCount, setLiveCount] = useState("");
+  const [chartRefresh, setChartRefresh] = useState(null);
+  const [horBarChartRefresh, setHorBarChartRefresh] = useState(null);
+  const [mapChartRefetch, setMapChartRefetch] = useState(null);
+
+  const [refetch, setRefetch] = useState(0);
+  const triggerRefetch = () => {
+    // Triggering Refetch
+    setRefetch(1)
+  };
 
   const handleFilters = (data) => {
     Digit.SessionStorage.set(key, data);
@@ -249,67 +339,68 @@ const Home = ({ stateCode }) => {
 
   const shareOptions = navigator.share
     ? [
-        {
-          label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
-            }, 500);
-          },
+      {
+        label: t("ES_DSS_SHARE_PDF"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          }, 500);
         },
-        {
-          label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
-            }, 500);
-          },
+      },
+      {
+        label: t("ES_DSS_SHARE_IMAGE"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          }, 500);
         },
-      ]
+      },
+    ]
     : [
-        {
-          icon: <EmailIcon />,
-          label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
-            }, 500);
-          },
+      {
+        icon: <EmailIcon />,
+        label: t("ES_DSS_SHARE_PDF"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          }, 500);
         },
-        {
-          icon: <WhatsappIcon />,
-          label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
-            }, 500);
-          },
+      },
+      {
+        icon: <WhatsappIcon />,
+        label: t("ES_DSS_SHARE_PDF"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          }, 500);
         },
-        {
-          icon: <EmailIcon />,
-          label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
-            }, 500);
-          },
+      },
+      {
+        icon: <EmailIcon />,
+        label: t("ES_DSS_SHARE_IMAGE"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          }, 500);
         },
-        {
-          icon: <WhatsappIcon />,
-          label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowOptions(!showOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
-            }, 500);
-          },
+      },
+      {
+        icon: <WhatsappIcon />,
+        label: t("ES_DSS_SHARE_IMAGE"),
+        onClick: () => {
+          setShowOptions(!showOptions);
+          setTimeout(() => {
+            return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          }, 500);
         },
-      ];
+      },
+    ];
+
 
   if (isLoading || localizationLoading) {
     return <Loader />;
@@ -333,9 +424,13 @@ const Home = ({ stateCode }) => {
                   options={shareOptions}
                 />
               </div>
-              <div className="mrsm" onClick={handlePrint}>
-                <DownloadIcon className="mrsm" fill="#f18f5e"/>
+              <div className="mrlg" onClick={handlePrint}>
+                <DownloadIcon className="mrsm" fill="#f18f5e" />
                 {t(`ES_DSS_DOWNLOAD`)}
+              </div>
+              <div className="mrsm" onClick={triggerRefetch}>
+                <RefreshIcon className="mrsm" fill="#f18f5e" />
+                {" Refetch"}
               </div>
             </div>
           )}
@@ -355,8 +450,12 @@ const Home = ({ stateCode }) => {
               />
             </div>
             <div onClick={handlePrint}>
-              <DownloadIcon fill="#f18f5e"/>
+              <DownloadIcon fill="#f18f5e" />
               {t(`ES_DSS_DOWNLOAD`)}
+            </div>
+            <div className="mrlg" onClick={triggerRefetch}>
+              <RefreshIcon className="mrsm" fill="#f18f5e" />
+              {" Refetch"}
             </div>
           </div>
         ) : null}
@@ -369,16 +468,16 @@ const Home = ({ stateCode }) => {
                 } else if (item?.charts?.[0]?.chartType == "map") {
                   return (
                     <div
-                      className={`dss-card-parent  ${
-                        item.vizType == "collection"
-                          ? "w-100"
-                          : item.name.includes("PROJECT_STAUS") || item.name.includes("LIVE_ACTIVE_ULBS")
+                      className={`dss-card-parent  ${item.vizType == "collection"
+                        ? "w-100"
+                        : item.name.includes("PROJECT_STAUS") || item.name.includes("LIVE_ACTIVE_ULBS")
                           ? "dss-h-100"
                           : ""
-                      }`}
+                        }`}
                       style={item.vizType == "collection" ? { backgroundColor: "#fff", height: "600px" } : { backgroundColor: colors[index].light }}
                       key={index}
                     >
+
                       <div
                         style={{
                           display: "flex",
@@ -386,26 +485,43 @@ const Home = ({ stateCode }) => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <div className="dss-card-header">
-                          {Icon(item.name)}
-                          <p style={{ marginLeft: "20px" }}>
-                            {selectedState === "" ? t(item.name) : t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(selectedState)}`)}
-                          </p>
-                          {selectedState != "" && item.name.includes("PROJECT_STAUS") && (
-                            <span style={{ fontSize: "14px", display: "block" }}>
-                              {t(`DSS_TOTAL_ULBS`)} {Number(totalCount).toFixed()} | {t(`DSS_LIVE_ULBS`)} {Number(liveCount).toFixed()}
-                            </span>
-                          )}
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <div className="dss-card-header">
+                            {Icon(item.name)}
+                            <p style={{ marginLeft: "20px" }}>
+                              {selectedState === "" ? t(item.name) : t(`DSS_TB_${Digit.Utils.locale.getTransformedLocale(selectedState)}`)}
+                            </p>
+                            {selectedState != "" && item.name.includes("PROJECT_STAUS") && (
+                              <span style={{ fontSize: "14px", display: "block" }}>
+                                {t(`DSS_TOTAL_ULBS`)} {Number(totalCount).toFixed()} | {t(`DSS_LIVE_ULBS`)} {Number(liveCount).toFixed()}
+                              </span>
+                            )}
+
+                          </div>
+                          <div style={{ cursor: "pointer", alignSelf: "center", marginBottom: "25px", marginLeft: "15px" }} onClick={(event) => {
+                            setMapChartRefetch(true);
+                          }}><RefreshIcon className="mrsm" fill="#f18f5e" /></div>
                         </div>
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <div className="dss-card-header" style={{ width: "45%" }}>
-                            {Icon(row.vizArray?.[1]?.name)}
-                            <p style={{ marginLeft: "20px", fontSize: "24px", fontFamily: "Roboto, sans-serif", fontWeight: 500, color: "#000000" }}>
-                              {selectedState === ""
-                                ? t(row.vizArray?.[1]?.name)
-                                : t(`${Digit.Utils.locale.getTransformedLocale(selectedState)}_${row.vizArray?.[1]?.name}`)}
-                            </p>
+                          <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div className="dss-card-header" style={{ width: "45%" }}>
+                              {Icon(row.vizArray?.[1]?.name)}
+                              <p style={{ marginLeft: "20px", fontSize: "24px", fontFamily: "Roboto, sans-serif", fontWeight: 500, color: "#000000" }}>
+                                {selectedState === ""
+                                  ? t(row.vizArray?.[1]?.name)
+                                  : t(`${Digit.Utils.locale.getTransformedLocale(selectedState)}_${row.vizArray?.[1]?.name}`)}
+                              </p>
+
+                            </div>
+                            <span style={{ cursor: "pointer", alignSelf: "center", padding: "10px" }} onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setHorBarChartRefresh(true);
+                            }}>
+                              <RefreshIcon className="mrsm" fill="#f18f5e" />
+                            </span>
                           </div>
+
                         )}
                       </div>
                       <div className="dss-card-body">
@@ -419,6 +535,8 @@ const Home = ({ stateCode }) => {
                               setdrilldownId={setdrillDownId}
                               setTotalCount={setTotalCount}
                               setLiveCount={setLiveCount}
+                              Refetch={refetch}
+                              setRefetch={setRefetch}
                             />
                           ) : (
                             <MapChart
@@ -427,10 +545,14 @@ const Home = ({ stateCode }) => {
                               setdrilldownId={setdrillDownId}
                               settotalCount={setTotalCount}
                               setliveCount={setLiveCount}
+                              Refetch={refetch}
+                              setRefetch={setRefetch}
+                              mapChartRefetch={mapChartRefetch}
+                              setMapChartRefetch={setMapChartRefetch}
                             />
                           ))}
                         {item?.charts?.[0]?.chartType == "map" && (
-                          <HorBarChart data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
+                          <HorBarChart Refetch={refetch} setRefetch={setRefetch} horBarChartRefresh={horBarChartRefresh} setHorBarChartRefresh={setHorBarChartRefresh} refetchInterval={refetchInterval} data={row.vizArray?.[1]?.charts?.[0]} setselectState={selectedState}></HorBarChart>
                         )}
                       </div>
                     </div>
@@ -438,13 +560,12 @@ const Home = ({ stateCode }) => {
                 } else {
                   return (
                     <div
-                      className={`dss-card-parent  ${
-                        item.vizType == "collection"
-                          ? "dss-w-100"
-                          : item.name.includes("PROJECT_STAUS") || item.name.includes("LIVE_ACTIVE_ULBS")
+                      className={`dss-card-parent  ${item.vizType == "collection"
+                        ? "dss-w-100"
+                        : item.name.includes("PROJECT_STAUS") || item.name.includes("LIVE_ACTIVE_ULBS")
                           ? "h-100"
                           : ""
-                      }`}
+                        }`}
                       style={
                         item.vizType == "collection" || item.name.includes("PROJECT_STAUS") || item.name.includes("LIVE_ACTIVE_ULBS")
                           ? { backgroundColor: "#fff" }
@@ -453,11 +574,26 @@ const Home = ({ stateCode }) => {
                       key={index}
                       onClick={() => routeTo(`/${window?.contextPath}/employee/dss/dashboard/${item.ref.url}`)}
                     >
-                      <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
-                        <div className="dss-card-header" style={{ marginBottom: "10px" }}>
-                          {Icon(item.name, colors[index].dark)}
-                          <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
+                      <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
+                        <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
+                          <div className="dss-card-header" style={{ marginBottom: "10px" }}>
+                            {Icon(item.name, colors[index].dark)}
+                            <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
+                          </div>
+                          {item.vizType == "collection" ? (
+                            <div style={{ cursor: "pointer", padding: "28px" }} onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              setChartRefresh(true);
+                            }}>
+                              <RefreshIcon fill="#f18f5e" />
+                            </div>
+                          ) : <></>}
+
                         </div>
+
+
+
                         {item.vizType == "collection" ? (
                           <div
                             style={{
@@ -475,14 +611,16 @@ const Home = ({ stateCode }) => {
                               {" "}
                               <Arrow_Right />
                             </span>
+
                           </div>
                         ) : null}
                       </div>
 
                       <div className="dss-card-body">
+
                         {item.charts.map((chart, key) => (
                           <div style={item.vizType == "collection" ? { width: Digit.Utils.browser.isMobile() ? "50%" : "25%" } : { width: "50%" }}>
-                            <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
+                            <Chart Refetch={refetch} setRefetch={setRefetch} chartRefresh={chartRefresh} setChartRefresh={setChartRefresh} refetchInterval={refetchInterval} data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
                           </div>
                         ))}
                       </div>
