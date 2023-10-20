@@ -35,6 +35,10 @@ import SearchableDropdown from "./atoms/SearchableDropdown";
 import EllipsisMenu from "./atoms/EllipsisMenu";
 import EmployeeAppContainer from "./atoms/EmployeeAppContainer";
 import { EmployeeModuleCard, ModuleCardFullWidth } from "./atoms/EmployeeModuleCard";
+import { HierarchyCards } from "./atoms/HierarchyCards";
+import { EmployeeModuleCardSection } from "./atoms/EmployeeModuleCardSection";
+import { MobileIconsSection } from "./atoms/MobileIconsSection";
+import { MobileLinksSection } from "./atoms/MobileLinksSection";
 import GreyOutText from "./atoms/GreyOutText";
 import Hamburger from "./atoms/Hamburger";
 import Header from "./atoms/Header";
@@ -280,7 +284,7 @@ import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
 
 // Importing From SVG Library
-import {SVG} from "./atoms/SVG";
+import { SVG } from "./atoms/SVG";
 
 export {
   InputTextAmount,
@@ -367,6 +371,10 @@ export {
   EllipsisMenu,
   CitizenHomeCard,
   EmployeeModuleCard,
+  HierarchyCards,
+  EmployeeModuleCardSection,
+  MobileLinksSection,
+  MobileIconsSection,
   StandaloneSearchBar,
   CardBasedOptions,
   WhatsNewCard,

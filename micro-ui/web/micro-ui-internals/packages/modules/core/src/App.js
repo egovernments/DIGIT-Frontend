@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-d
 import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData ,defaultLanding="citizen"}) => {
+export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData, defaultLanding = "citizen" }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -11,7 +11,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData ,de
   const userDetails = Digit.UserService.getUser();
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
-  
+
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
   let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
 

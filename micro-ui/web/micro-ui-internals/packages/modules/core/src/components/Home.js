@@ -11,9 +11,14 @@ import {
   PTIcon,
   TLIcon,
   WSICon,
+  GeneratedHierarchyCards,
+  EmployeeModuleCard,
+  HierarchyCards,
 } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+
+
 
 /* 
 Feature :: Citizen All service screen cards
@@ -107,12 +112,12 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
                     Info={
                       code === "OBPS"
                         ? () => (
-                            <CitizenInfoLabel
-                              style={{ margin: "0px", padding: "10px" }}
-                              info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                              text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
-                            />
-                          )
+                          <CitizenInfoLabel
+                            style={{ margin: "0px", padding: "10px" }}
+                            info={t("CS_FILE_APPLICATION_INFO_LABEL")}
+                            text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
+                          />
+                        )
                         : null
                     }
                     isInfo={code === "OBPS" ? true : false}
@@ -126,22 +131,26 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
   );
 };
 
-const EmployeeHome = ({ modules }) => {
+
+const EmployeeHome = ({ modules, view2 }) => {
   return (
     <div className="employee-app-container">
       <div className="ground-container moduleCardWrapper gridModuleWrapper">
-        {modules.map(({ code }, index) => {
+        {!view2 && modules.map(({ code }, index) => {
           const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
           return <Card key={index} />;
         })}
+        {view2 && <HierarchyCards />}
       </div>
     </div>
   );
-};
+}
+
 
 export const AppHome = ({ userType, modules, getCitizenMenu, fetchedCitizen, isLoading }) => {
   if (userType === "citizen") {
     return <CitizenHome modules={modules} getCitizenMenu={getCitizenMenu} fetchedCitizen={fetchedCitizen} isLoading={isLoading} />;
   }
-  return <EmployeeHome modules={modules} />;
+  return <EmployeeHome modules={modules} view2={true} />;
 };
+

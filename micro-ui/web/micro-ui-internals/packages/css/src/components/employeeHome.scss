@@ -1,0 +1,18 @@
+.employee-mobile {
+    display: none; // Hidden by default for web view
+}
+
+.employee-web {
+    display: block; // Visible by default for web view
+}
+
+// Media query for mobile view (adjust the max-width as needed)
+@media (max-width: 767px) {
+    .employee-mobile {
+        display: block; // Visible in mobile view
+    }
+
+    .employee-web {
+        display: none; // Hidden in mobile view
+    }
+}
