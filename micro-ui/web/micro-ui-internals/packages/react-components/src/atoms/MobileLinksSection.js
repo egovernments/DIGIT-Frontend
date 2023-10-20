@@ -1,6 +1,7 @@
 import React from 'react';
 import { AddIcon, ArrowBack, ArrowDirection, DashboardIcon } from './svgindex';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from "react-router-dom";
+
 
 export const MobileLinksSection = ({ hierarchy, selectedIcon, setSelectedIcon }) => {
     const history = useHistory();
@@ -14,6 +15,18 @@ export const MobileLinksSection = ({ hierarchy, selectedIcon, setSelectedIcon })
                 <ArrowBack />
                 <div>Back</div>
             </div>
+            {(hierarchy[selectedIcon].employeeModuleCardProps.kpis.length > 0) &&
+                <div className='mobile-details' style={{ marginTop: "20px", padding: "10px", paddingBottom: "5px", width: "90%", backgroundColor: "white" }}>
+                    {hierarchy[selectedIcon].employeeModuleCardProps.kpis.length !== 0 && (
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                            {hierarchy[selectedIcon].employeeModuleCardProps.kpis.map(({ count, label, link }, index) => (
+                                <div key={index} style={{ marginBottom: "10px" }}>
+                                    <span>{count || "-"}</span> {link ? <span className="link" onClick={() => history.push(`${link}`, { count })}>{label}</span> : null}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>}
             <ul className='mobile-links-ul'>
                 {hierarchy[selectedIcon].employeeModuleCardProps.links.map((link, index) => (
                     <li key={index} className='mobile-links-li'>
