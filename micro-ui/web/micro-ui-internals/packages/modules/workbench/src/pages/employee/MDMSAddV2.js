@@ -28,7 +28,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [autogenerate, setAutoGenerate] = useState(false);
 
   const [noSchema, setNoSchema] = useState(false);
-  const [loadDependent, setLoadDependent] = useState([]);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
 
