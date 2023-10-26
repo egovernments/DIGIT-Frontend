@@ -40,8 +40,7 @@ const EmployeeApp = ({
     Digit.UserService.setType("employee");
   }, []);
 
-  const additionalComponent = initData?.modules?.find((i) => i?.module === "Tqm")?.additionalComponent;
-  const Component = typeof additionalComponent === "string" ? Digit.ComponentRegistryService.getComponent(additionalComponent) : additionalComponent;
+  const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent);
 
   return (
     <div className="employee">
@@ -117,11 +116,16 @@ const EmployeeApp = ({
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
             </div>
-            {Component && (
-              <div className="additional-component-wrapper">
-                <Component />
-              </div>
-            )}
+            {additionalComponent &&
+              additionalComponent?.length > 0 &&
+              additionalComponent.map((i) => {
+                const Component = typeof i === "string" ? Digit.ComponentRegistryService.getComponent(i) : i;
+                return (
+                  <div className="additional-component-wrapper">
+                    <Component />
+                  </div>
+                );
+              })}
             <div className="employee-home-footer">
               <img
                 alt="Powered by DIGIT"
