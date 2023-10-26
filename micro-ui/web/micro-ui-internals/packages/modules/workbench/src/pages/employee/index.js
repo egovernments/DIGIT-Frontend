@@ -12,6 +12,7 @@ import MDMSSearchv2 from "./MDMSSearchv2";
 import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
 import DynamicSchemaFormGenerator from "./DynamicSchemaFormGenerator";
+import SchemaHome from "./SchemaHome";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -95,7 +96,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/manage-master-data`} component={() => <MDMSManageMaster parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path} />} />
           <PrivateRoute path={`${path}/localisation-add`} component={() => <LocalisationAdd parentRoute={path} />} />
-          <PrivateRoute path={`${path}/create-schema`} component={() => <DynamicSchemaFormGenerator />} />
+          <PrivateRoute path={`${path}/create-schema`} component={() => <SchemaHome />} />
 
         </AppContainer>
       </Switch>

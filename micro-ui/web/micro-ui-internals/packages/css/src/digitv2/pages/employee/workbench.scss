@@ -634,14 +634,16 @@ button:hover {
 
 .workbench-space-between {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 
   .label-field-pair {
     width: 100%;
     margin-right: 16px;
+    min-width: 250px;
+    max-width: 700px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     flex-direction: column;
 
     .label-field-pair {
