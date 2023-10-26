@@ -40,7 +40,7 @@ const EmployeeApp = ({
     Digit.UserService.setType("employee");
   }, []);
 
-  const additionalComponent = initData?.modules?.find((i) => i?.module === "DSS")?.additionalComponent;
+  const additionalComponent = initData?.modules?.find((i) => i?.module === "Tqm")?.additionalComponent;
   const Component = typeof additionalComponent === "string" ? Digit.ComponentRegistryService.getComponent(additionalComponent) : additionalComponent;
 
   return (
