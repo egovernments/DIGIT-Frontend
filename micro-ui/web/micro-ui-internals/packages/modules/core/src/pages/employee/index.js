@@ -40,6 +40,9 @@ const EmployeeApp = ({
     Digit.UserService.setType("employee");
   }, []);
 
+  const additionalComponent = initData?.modules?.find((i) => i?.module === "DSS")?.additionalComponent;
+  const Component = typeof additionalComponent === "string" ? Digit.ComponentRegistryService.getComponent(additionalComponent) : additionalComponent;
+
   return (
     <div className="employee">
       <Switch>
@@ -114,6 +117,11 @@ const EmployeeApp = ({
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
             </div>
+            {Component && (
+              <div className="additional-component-wrapper">
+                <Component />
+              </div>
+            )}
             <div className="employee-home-footer">
               <img
                 alt="Powered by DIGIT"
