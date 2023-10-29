@@ -112,7 +112,6 @@ function DynamicSchemaFormGenerator(props) {
     }
 
     const removeField = (index) => {
-        console.log(index, " iiiiiiiiiiii")
         const updatedFields = [...fields];
         updatedFields.splice(index, 1);
         setFields(updatedFields);
@@ -163,7 +162,7 @@ function DynamicSchemaFormGenerator(props) {
     };
 
     const generateSchema = () => {
-        if (fields.length == 0) {
+        if (fields.length === 0) {
             // If the fields array is empty, set an error message
             setUniqueError("At least one field is required to generate the schema.");
             setGeneratedSchema(null); // Reset the schema
@@ -175,6 +174,7 @@ function DynamicSchemaFormGenerator(props) {
                 properties: {},
                 required: [],
                 'x-unique': [],
+                'ui:order': [], // Initialize ui:order array
             };
 
             // Track whether at least one unique field is found
@@ -200,6 +200,9 @@ function DynamicSchemaFormGenerator(props) {
                     uniqueFound = true; // Mark that a unique field was found
                 }
             });
+            orderedFields.map((field) => {
+                schema['ui:order'].push(field.name);
+            })
 
             if (!uniqueFound) {
                 // Show an error or take the appropriate action for no unique fields
@@ -215,6 +218,7 @@ function DynamicSchemaFormGenerator(props) {
             setShowModal(true);
         }
     };
+
     useEffect(() => {
         // Create a copy of orderedFields to avoid mutating state directly
         const newOrderedFields = [...orderedFields];
