@@ -8,8 +8,9 @@ import {
   MobileNumber,
   MultiSelectDropdown,
   Paragraph,
+  Numeric,
   TextArea,
-  TextInput,
+  TextInput
 } from "../atoms";
 import { ApiDropdown, CustomDropdown, LocationDropdownWrapper, MultiUploadWrapper } from "../molecules";
 import UploadFileComposer from "./UploadFileComposer";
@@ -33,7 +34,12 @@ const FieldComposer = ({
   errors,
   onBlur,
   controllerProps,
-  variant,
+  state,
+  label,
+  info,
+  charCount,
+  innerLabel,
+  helpText
 }) => {
   const { t } = useTranslation();
   let disableFormValidation = false;
@@ -51,6 +57,10 @@ const FieldComposer = ({
       case "number":
       case "password":
       case "time":
+      case "search":
+      case "prefix":
+      case "suffix":
+      case "geolocation":
         return (
           <TextInput
             value={formData?.[populators.name]}
@@ -63,11 +73,38 @@ const FieldComposer = ({
             min={populators?.validation?.min}
             disable={disable}
             style={type === "date" ? { paddingRight: "3px" } : ""}
+            prefix={populators?.prefix}
+            suffix={populators?.suffix}
             maxlength={populators?.validation?.maxlength}
             minlength={populators?.validation?.minlength}
             customIcon={populators?.customIcon}
             customClass={populators?.customClass}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
+            label={label}
+            info={info}
+            charCount={charCount}
+            innerLabel={innerLabel}
+            helpText={helpText}
+          />
+        );
+      case "numeric":
+        return (
+          <Numeric
+            value={formData?.[populators.name]}
+            type={type}
+            name={populators.name}
+            onChange={onChange}
+            inputRef={ref}
+            errorStyle={errors?.[populators.name]}
+            max={populators?.validation?.max}
+            min={populators?.validation?.min}
+            disable={disable}
+            style={type === "date" ? { paddingRight: "3px" } : " "}
+            maxlength={populators?.validation?.maxlength}
+            minlength={populators?.validation?.minlength}
+            customIcon={populators?.customIcon}
+            customClass={populators?.customClass}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "amount":
@@ -89,7 +126,7 @@ const FieldComposer = ({
             customClass={populators?.customClass}
             prefix={populators?.prefix}
             intlConfig={populators?.intlConfig}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "textarea":
@@ -106,7 +143,12 @@ const FieldComposer = ({
               style={{ marginTop: 0 }}
               maxlength={populators?.validation?.maxlength}
               minlength={populators?.validation?.minlength}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
+              label={label}
+              info={info}
+              charCount={charCount}
+              innerLabel={innerLabel}
+              helpText={helpText}
             />
           </div>
         );
@@ -119,7 +161,7 @@ const FieldComposer = ({
               inputRef={ref}
               customClass={populators?.customClass}
               customStyle={populators?.customStyle}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -133,7 +175,7 @@ const FieldComposer = ({
               disable={disable}
               // {...props}
               errorStyle={errors?.[populators.name]}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -156,7 +198,7 @@ const FieldComposer = ({
               styles={populators?.styles}
               style={populators?.labelStyles}
               customLabelMarkup={populators?.customLabelMarkup}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -177,7 +219,7 @@ const FieldComposer = ({
             customClass={populators?.customClass}
             customErrorMsg={populators?.errorMessage}
             containerStyles={{ ...populators?.containerStyles }}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "select":
@@ -197,7 +239,7 @@ const FieldComposer = ({
               config={populators}
               disable={config?.disable}
               errorStyle={errors?.[populators.name]}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -239,7 +281,7 @@ const FieldComposer = ({
             customClass={config?.customClass}
             customErrorMsg={config?.error}
             localePrefix={config?.localePrefix}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "form":
@@ -259,7 +301,7 @@ const FieldComposer = ({
               clearErrors={controllerProps?.clearErrors}
               formState={controllerProps?.formState}
               control={controllerProps?.control}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </form>
         );
@@ -273,7 +315,7 @@ const FieldComposer = ({
               inputRef={ref}
               errors={errors}
               setValue={controllerProps?.setValue}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -286,7 +328,7 @@ const FieldComposer = ({
               formData={formData}
               inputRef={ref}
               errors={errors}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -311,7 +353,7 @@ const FieldComposer = ({
               defaultLabel={t(populators?.defaultText)}
               defaultUnit={t(populators?.selectedText)}
               config={populators}
-              variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
             />
           </div>
         );
@@ -322,7 +364,7 @@ const FieldComposer = ({
 
   return (
     <>
-      {!config.withoutLabel && (
+      {/* {!config.withoutLabel && (
         <Header
           style={{
             color: config?.isSectionText ? "#505A5F" : "",
@@ -335,15 +377,15 @@ const FieldComposer = ({
           {config?.appendColon ? " : " : null}
           {config.isMandatory ? " * " : null}
         </Header>
-      )}
+      )} */}
       <div style={config.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
         {renderField()}
         {config?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(config?.description)}</CardText>}
         {populators?.name && errors && errors[populators?.name] && Object.keys(errors[populators?.name]).length ? (
           <ErrorMessage message={t(populators?.error)} />
         ) : // {t(field?.populators?.error)}
-        // </ErrorMessage>
-        null}
+          // </ErrorMessage>
+          null}
       </div>
     </>
   );

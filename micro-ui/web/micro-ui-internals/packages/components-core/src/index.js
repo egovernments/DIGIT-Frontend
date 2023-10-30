@@ -55,6 +55,7 @@ import {
   Toast,
   UploadFile,
   WhatsNewCard,
+  Numeric
 } from "./atoms";
 
 import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer } from "./hoc";
@@ -155,4 +156,5 @@ export {
   SearchForm,
   SearchOnRadioButtons,
   TextInputCard,
+  Numeric
 };

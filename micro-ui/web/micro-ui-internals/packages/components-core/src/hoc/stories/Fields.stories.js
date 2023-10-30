@@ -3,21 +3,26 @@ import React from "react";
 import FieldComposer from "../FieldComposer";
 
 export default {
-  title: "Atom-Groups/Fields",
+  title: "Atom-Groups/InputField",
   component: FieldComposer,
   argTypes: {
     type: {
       control: {
         type: "select",
         options: [
-          "date",
           "text",
-          "number",
-          "password",
+          "date",
           "time",
-          "amount",
+          "geolocation",
+          "numeric",
+          "prefix",
+          "suffix",
+          "password",
+          "search",
           "textarea",
-          "mobileNumber",
+          // "mobileNumber",
+          // "amount",
+          // "number",
           // "paragraph",
           // "custom",
           // "checkbox",
@@ -35,12 +40,17 @@ export default {
         ],
       },
     },
-    variant: {
+    state: {
       control: {
         type: "select",
-        options: ["default", "error", "focused", "disabled"],
+        options: ["default", "filled","disabled","noneditable", "focused", "error", "disabled"],
       },
     },
+    label: { control: "boolean" },
+    info: { control: "boolean" },
+    charCount: { control: "boolean" },
+    innerLabel: { control: "boolean" },
+    helpText: { control: "boolean" },
   },
 };
 
@@ -51,7 +61,7 @@ const Template = (args) => {
 export const Playground = Template.bind({});
 Playground.args = {
   type: "date",
-  variant: "default",
+  state: "default",
   populators: {
     name: "Label",
     error: "Required",

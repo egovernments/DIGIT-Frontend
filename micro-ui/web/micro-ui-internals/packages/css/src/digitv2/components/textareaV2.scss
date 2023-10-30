@@ -1,22 +1,64 @@
-@import url("../typography.scss");
-
 .digit-card-textarea,
 .digit-employee-card-textarea {
+  @apply block outline-none mt-md mb-lg border w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
   @extend .light-input-border;
-  @extend .typography.text-body-s;
-  @apply block outline-none mt-md mb-lg w-full bg-white h-24 p-sm;
-  &.error {
-    border: 1px solid theme(digitv2.alert.error);
-  }
+
   &.disabled {
     @apply border-grey-dark text-grey-dark !important;
     pointer-events: none !important;
+    cursor: not-allowed;
+
+  }
+
+  &.focused {
+    border: 1px solid theme(digitv2.lightTheme.primary);
+  }
+
+  &.noneditable {
+    pointer-events: none !important;
+    border: 1px solid #505A5F;
+    background: #EEE;
+  }
+
+  &.error {
+      border: 1px solid theme(digitv2.alert.error);
   }
 }
+
+
 .digit-employee-card-textarea {
-  @extend .typography.text-body-s;
   @apply w-full;
 }
-.digit-cell-text {
-  color: theme(colors.text.secondary);
+
+
+.input-controls {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  text-align: right;
+  font-family: Roboto;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem;
+  justify-content: space-between;
+}
+
+.char-count {
+  margin-left: 448px;
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+}
+
+.error-message {
+  margin-right: 5px;
+  color: theme(digitv2.alert.error); 
+}
+
+.error-icon {
+  width: 1rem;
+  height: 1rem;
 }
