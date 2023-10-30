@@ -1,7 +1,30 @@
 import React from 'react';
 import { Close, Button } from "@egovernments/digit-ui-react-components";
+import { useHistory } from "react-router-dom";
 
 const SchemaModalComponent = ({ generatedSchema, uniqueError, setShowModal }) => {
+    const history = useHistory(); // Initialize the useHistory hook
+
+    const handleSave = () => {
+        if (generatedSchema) {
+            const schema = { SchemaDefinition: generatedSchema };
+            Digit.MdmsSchemaService.create(schema)
+                .then((result, err) => {
+                    if (result && result.ResponseInfo.status === 'successful') {
+                        // Pass the result to the SchemaResponsePage
+                        history.push('schema-response-page', { result });
+                    } else {
+                        history.push('schema-response-page', {});
+                    }
+                })
+                .catch((e) => {
+                    // Handle the error case
+                    history.push('schema-response-page', {});
+                });
+        }
+    };
+
+
     return (
         <div
             style={{
@@ -69,6 +92,7 @@ const SchemaModalComponent = ({ generatedSchema, uniqueError, setShowModal }) =>
                             zIndex: "999",
                         }}
                         label={"Save"}
+                        onButtonClick={handleSave}
                     />
                 )}
             </div>

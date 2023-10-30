@@ -23,6 +23,7 @@ function DynamicSchemaFormGenerator(props) {
     const [uniqueError, setUniqueError] = useState(false);
     const [requiredError, setRequiredError] = useState(null)
     const [showModal, setShowModal] = useState(false);
+    const tenantId = Digit.ULBService.getCurrentTenantId();
 
 
     const fieldTypes = [
@@ -196,7 +197,14 @@ function DynamicSchemaFormGenerator(props) {
             } else {
                 // No error, set the schema as generated
                 setUniqueError(null); // Clear any previous error
-                setGeneratedSchema(schema);
+                setGeneratedSchema(
+                    {
+                        code: "MDMS_Schema." + props.schemaName,
+                        tenantId: tenantId,
+                        description: "Mdms schema " + props.schemaName,
+                        definition: schema
+                    }
+                );
             }
             setShowModal(true);
         }

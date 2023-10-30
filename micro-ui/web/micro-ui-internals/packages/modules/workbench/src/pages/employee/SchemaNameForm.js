@@ -4,16 +4,31 @@ import React, { useState } from 'react';
 const SchemaNameForm = ({ onSubmit }) => {
     const [schemaName, setSchemaName] = useState('');
     const [nameError, setNameError] = useState('');
+    const tenantId = Digit.ULBService.getCurrentTenantId();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (schemaName.trim() === '') {
             setNameError("Schema Name cannot be empty");
         } else {
-            setNameError('');
-            onSubmit(schemaName);
-        }
+            const body = { SchemaDefCriteria: { tenantId: tenantId, codes: ["MDMS_Schema." + schemaName] } }
+            Digit.MdmsSchemaService.search(body)
+                .then((result, err) => {
+                    if (result && result.SchemaDefinitions && result.SchemaDefinitions.length > 0) {
+                        // A schema with this name already exists
+                        setNameError("Schema with this name already exists");
+                    } else {
+                        // No schema found with this name, so proceed
+                        setNameError('');
+                        onSubmit(schemaName);
+                    }
+                })
+                .catch((e) => {
+                    setNameError("Some error happened");
+                });
+        };
     };
+
 
     return (
         <div className='workbench-space-between'>

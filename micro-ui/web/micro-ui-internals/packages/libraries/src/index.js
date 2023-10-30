@@ -22,6 +22,7 @@ import { MdmsService } from "./services/elements/MDMS";
 import { Complaint } from "./services/elements/Complaint";
 import { UserService } from "./services/elements/User";
 import HrmsService from "./services/elements/HRMS";
+import MdmsSchemaService from "./services/elements/MdmsSchemaService";
 import { InboxGeneral } from "./services/elements/InboxService";
 import EventsServices from "./services/elements/Events";
 
@@ -54,12 +55,13 @@ const initLibraries = () => {
   setupLibraries("Services", { useStore });
   setupLibraries("Enums", Enums);
   setupLibraries("LocationService", LocationService);
-  setupLibraries("CustomService",CustomService)
+  setupLibraries("CustomService", CustomService)
   setupLibraries("LocalityService", LocalityService);
   setupLibraries("LoginService", LoginService);
   setupLibraries("LocalizationService", LocalizationService);
   setupLibraries("PGRService", PGRService);
   setupLibraries("HRMSService", HrmsService);
+  setupLibraries("MdmsSchemaService", MdmsSchemaService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);
   setupLibraries("WorkflowService", WorkflowService);
