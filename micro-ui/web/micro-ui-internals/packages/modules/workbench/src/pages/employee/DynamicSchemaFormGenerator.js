@@ -153,6 +153,7 @@ function DynamicSchemaFormGenerator(props) {
             const schema = {
                 schemaName: props.schemaName,
                 type: 'object',
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 properties: {},
                 required: [],
                 'x-unique': [],
