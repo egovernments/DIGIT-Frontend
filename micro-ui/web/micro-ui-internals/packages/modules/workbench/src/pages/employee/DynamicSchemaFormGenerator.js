@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from "@egovernments/digit-ui-react-components"
+import { ActionBar, Button, SubmitBar } from "@egovernments/digit-ui-react-components"
 import FieldView from '../../components/FieldView';
 import FieldSelect from '../../components/FieldSelect';
 import SchemaModalComponent from '../../components/SchemaModalComponent';
 import FieldEditorComponent from '../../components/FieldEditorComponent';
+import Confirmation from '../../../../engagement/src/components/Modal/Confirmation';
+import { useTranslation } from 'react-i18next';
 
 function DynamicSchemaFormGenerator(props) {
+    const { t } = useTranslation();
     const [fields, setFields] = useState([]);
     const [orderedFields, setOrderedFields] = useState([]);
     const [generatedSchema, setGeneratedSchema] = useState(null);
@@ -22,6 +25,7 @@ function DynamicSchemaFormGenerator(props) {
     const [uniqueError, setUniqueError] = useState(false);
     const [requiredError, setRequiredError] = useState(null)
     const [showModal, setShowModal] = useState(false);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
 
@@ -75,6 +79,7 @@ function DynamicSchemaFormGenerator(props) {
             return;
         }
         setNameError({ add: null, edit: null });
+        // if in currentoption any key have empty or null value...delete that key
         var newField = { name: currentFieldName, type: currentFieldType, options: currentOptions, required: currentRequired, unique: currentUnique };
         if (updatingIndex != null && updatingIndex != undefined) {
             var updatedField = [...fields];
@@ -139,9 +144,15 @@ function DynamicSchemaFormGenerator(props) {
 
     const updateFieldOption = (optionName, optionValue) => {
         var updatedOptions = { ...currentOptions };
-        updatedOptions[optionName] = optionValue;
+        if (optionValue === '' || optionValue === null || optionValue === undefined) {
+            // If optionValue is empty, null, or undefined, delete optionName from updatedOptions
+            delete updatedOptions[optionName];
+        } else {
+            updatedOptions[optionName] = optionValue;
+        }
         setCurrentOptions(updatedOptions);
     };
+
 
     const generateSchema = () => {
         if (fields.length === 0) {
@@ -205,6 +216,27 @@ function DynamicSchemaFormGenerator(props) {
             setShowModal(true);
         }
     };
+    const renderButtons = () => {
+        return (
+            <div >
+                <ActionBar style={{ display: "flex", flexDirection: "row", margin: "10px" }}>
+                    <SubmitBar style={{ marginLeft: "auto", marginRight: "10px" }} label={t("Preview And Save")} onSubmit={generateSchema} />
+                    <Button style={{ marginRight: "10px" }} onButtonClick={() => setShowConfirmationModal(true)} label={"Cancel"} variation={"secondary"} />
+                </ActionBar>
+                {showModal && <SchemaModalComponent generatedSchema={generatedSchema} uniqueError={uniqueError} setShowModal={setShowModal} />}
+                {showConfirmationModal && <Confirmation
+                    t={t}
+                    heading={"Confirm Cancelation"}
+                    docName={"Current Schema"}
+                    closeModal={() => setShowConfirmationModal(false)}
+                    actionCancelLabel="Cancel"
+                    actionCancelOnSubmit={() => setShowConfirmationModal(false)}
+                    actionSaveLabel="Delete"
+                    actionSaveOnSubmit={() => { { props.setSchemaName(''); props.setShowDynamicForm(false) } }}
+                />}
+            </div>
+        )
+    }
 
     useEffect(() => {
         // Create a copy of orderedFields to avoid mutating state directly
@@ -286,12 +318,7 @@ function DynamicSchemaFormGenerator(props) {
                     />
                 </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", margin: "10px" }}>
-                <div style={{ marginLeft: "auto", marginRight: "10px" }}>
-                    <Button onButtonClick={generateSchema} label={"Preview And Save"} />
-                </div>
-                {showModal && <SchemaModalComponent generatedSchema={generatedSchema} uniqueError={uniqueError} setShowModal={setShowModal} />}
-            </div>
+            {renderButtons()}
         </div>
     );
 }

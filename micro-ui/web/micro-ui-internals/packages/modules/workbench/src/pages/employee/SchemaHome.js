@@ -14,7 +14,7 @@ function SchemaHome() {
     return (
         <div className="app-container">
             {showDynamicForm ? (
-                <DynamicSchemaFormGenerator schemaName={schemaName} />
+                <DynamicSchemaFormGenerator schemaName={schemaName} setSchemaName={setSchemaName} setShowDynamicForm={setShowDynamicForm} />
             ) : (
                 <SchemaNameForm onSubmit={handleSchemaNameSubmit} />
             )}
