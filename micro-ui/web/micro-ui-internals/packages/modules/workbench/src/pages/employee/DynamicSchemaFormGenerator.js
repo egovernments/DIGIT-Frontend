@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Close, DeleteIcon, Dropdown, EditIcon, TextInput, CheckBox } from "@egovernments/digit-ui-react-components"
+import { Button } from "@egovernments/digit-ui-react-components"
 import FieldView from '../../components/FieldView';
 import FieldSelect from '../../components/FieldSelect';
 import SchemaModalComponent from '../../components/SchemaModalComponent';
@@ -9,7 +9,6 @@ function DynamicSchemaFormGenerator(props) {
     const [fields, setFields] = useState([]);
     const [orderedFields, setOrderedFields] = useState([]);
     const [generatedSchema, setGeneratedSchema] = useState(null);
-    const [selectedProperty, setSelectedProperty] = useState('');
     const [addingFieldType, setAddingFieldType] = useState(null);
     const [selectedFieldIndex, setSelectedFieldIndex] = useState(null); // Track the selected field index
     const [currentRequired, setCurrentRequired] = useState(false);
@@ -52,7 +51,6 @@ function DynamicSchemaFormGenerator(props) {
             setCurrentFieldName('');
             setCurrentFieldType(addingFieldType?.value);
             setAddingFieldType(null)
-            setSelectedProperty('')
             setShowCurrentField(true);
             setSelectedFieldIndex(null);
             setCurrentRequired(false);
@@ -93,7 +91,6 @@ function DynamicSchemaFormGenerator(props) {
         setCurrentFieldType('string');
         setCurrentRequired(false);
         setCurrentUnique(false);
-        setSelectedProperty('')
         setShowCurrentField(false);
         setCurrentOptions({})
     }
@@ -104,7 +101,6 @@ function DynamicSchemaFormGenerator(props) {
         setCurrentFieldType('string');
         setCurrentRequired(false);
         setCurrentUnique(false);
-        setSelectedProperty('')
         setShowCurrentField(false);
         setCurrentOptions({})
     }
@@ -125,7 +121,6 @@ function DynamicSchemaFormGenerator(props) {
             setCurrentFieldType('string');
             setCurrentRequired(false);
             setCurrentUnique(false);
-            setSelectedProperty('')
             setShowCurrentField(false);
             setCurrentOptions({})
         }
