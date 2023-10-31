@@ -1,4 +1,8 @@
-# React Tutorial Component
+# Underlying library used: 
+
+react-joyride
+
+## React Tutorial Component
 
 This is a set of React components for creating interactive tutorials within your React application.
 There are 3 things that are exported from react components library:
@@ -6,7 +10,8 @@ There are 3 things that are exported from react components library:
 2. Help -> This is basically a dummy component for help icon which accepts a callback called startTour as prop. StartTour is fired on onClick of Help icon to start the tour. 
 3. Tutorial -> This is the main component which makes use of the globalState to show the tutorial. 
 
-## Usage
+### Usage
+
 1. Wrap your app component with TourProvider
 2. Render Tutorial somewhere inside the app
 3. Render Help component
@@ -36,9 +41,9 @@ Array of steps looks like this:
     },
 ]
 
+#### References:
+
 Refer the documentation of joyride for more information: https://docs.react-joyride.com/
-Refer the following commit for an exemplar: 
+Refer the following commit for an exemplar done in workbench-ui: https://github.com/egovernments/DIGIT-Frontend/commit/0ab01509fc93dd94065146d9c218fd0e59310936
 ```bash
-npm install react-tutorial-component
-# or
-yarn add react-tutorial-component
+
