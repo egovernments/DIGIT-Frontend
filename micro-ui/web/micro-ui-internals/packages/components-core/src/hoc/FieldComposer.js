@@ -131,7 +131,7 @@ const FieldComposer = ({
         );
       case "textarea":
         return (
-          <div className="digit-field-container">
+          <div>
             <TextArea
               value={formData?.[populators.name]}
               type={type}

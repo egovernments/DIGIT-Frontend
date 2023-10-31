@@ -1,9 +1,9 @@
-// import "@egovernments/digit-ui-css/example/index.css";
-import "@egovernments/digit-ui-css/dist/index.css";
+import "@egovernments/digit-ui-css/example/index.css";
+// import "@egovernments/digit-ui-css/dist/index.css";
 import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
 
 // import '../src/index.css';
-//👇 Configures Storybook to log the actions( onArchiveTask and onPinTask ) in the UI.
+//:point_down: Configures Storybook to log the actions( onArchiveTask and onPinTask ) in the UI.
 /** @type { import('@storybook/react').Preview } */
 
 export const globalTypes = {
@@ -37,11 +37,11 @@ const preview = {
       values: [
         {
           name: "twitter",
-          value: "#00aced",
+          value: "#00ACED",
         },
         {
           name: "facebook",
-          value: "#3b5998",
+          value: "#3B5998",
         },
       ],
     },
