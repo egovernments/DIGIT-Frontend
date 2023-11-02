@@ -1,9 +1,10 @@
-import { Button, TextInput } from '@egovernments/digit-ui-react-components';
-import React, { useState } from 'react';
+import { Button, TextInput, Loader } from '@egovernments/digit-ui-react-components';
+import React, { useState, useEffect } from 'react';
 
 const SchemaNameForm = ({ onSubmit }) => {
     const [schemaName, setSchemaName] = useState('');
     const [nameError, setNameError] = useState('');
+    const [loading, setLoading] = useState(false);
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
     const handleSubmit = (e) => {
@@ -11,9 +12,11 @@ const SchemaNameForm = ({ onSubmit }) => {
         if (schemaName.trim() === '') {
             setNameError("Schema Name cannot be empty");
         } else {
+            setLoading(true); // Set loading to true before making the API call
             const body = { SchemaDefCriteria: { tenantId: tenantId, codes: ["MDMS_Schema." + schemaName] } }
             Digit.MdmsSchemaService.search(body)
                 .then((result, err) => {
+                    setLoading(false); // Set loading to false when the result is available
                     if (result && result.SchemaDefinitions && result.SchemaDefinitions.length > 0) {
                         // A schema with this name already exists
                         setNameError("Schema with this name already exists");
@@ -24,11 +27,11 @@ const SchemaNameForm = ({ onSubmit }) => {
                     }
                 })
                 .catch((e) => {
+                    setLoading(false); // Set loading to false in case of an error
                     setNameError("Some error happened");
                 });
         };
     };
-
 
     return (
         <div className='workbench-space-between'>
@@ -56,7 +59,11 @@ const SchemaNameForm = ({ onSubmit }) => {
                         />
 
                         {nameError && <div style={{ fontSize: "15px", paddingBottom: "10px", color: "red" }}>{nameError}</div>}
-                        <Button onButtonClick={handleSubmit} label={"Submit"} />
+                        {loading ? (
+                            <Loader /> // Show the loader while loading
+                        ) : (
+                            <Button onButtonClick={handleSubmit} label={"Submit"} />
+                        )}
                     </div>
                 </div>
             </div>

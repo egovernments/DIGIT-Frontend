@@ -26,6 +26,10 @@ function DynamicSchemaFormGenerator(props) {
     const [requiredError, setRequiredError] = useState(null)
     const [showModal, setShowModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [objectMode, setObjectMode] = useState(false);
+    const [currentObjectName, setCurrentObjectName] = useState("")
+    const [objectFields, setObjectFields] = useState([]);
+    const [filteredObjectFields, setFilteredObjectFields] = useState([]);
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
 
@@ -35,6 +39,7 @@ function DynamicSchemaFormGenerator(props) {
         { label: 'Boolean', value: 'boolean' },
         { label: 'Date', value: 'date' },
         { label: 'Date-Time', value: 'date-time' },
+        { label: 'Object', value: 'object' },
     ];
 
     const propertyMap = {
@@ -43,12 +48,12 @@ function DynamicSchemaFormGenerator(props) {
         'date': ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum'],
         'date-time': ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum'],
         'boolean': [],
+        'object': []
     };
 
     const addField = () => {
         if (!addingFieldType?.value) {
             setNameError({ add: "Select field type first", edit: null });
-
         }
         else {
             setNameError({ add: null, edit: null });
@@ -79,17 +84,55 @@ function DynamicSchemaFormGenerator(props) {
             return;
         }
         setNameError({ add: null, edit: null });
-        // if in currentoption any key have empty or null value...delete that key
-        var newField = { name: currentFieldName, type: currentFieldType, options: currentOptions, required: currentRequired, unique: currentUnique };
-        if (updatingIndex != null && updatingIndex != undefined) {
-            var updatedField = [...fields];
-            updatedField[updatingIndex] = newField;
-            setFields(updatedField)
-            setUpdatingIndex(null);
+        var fieldName = currentFieldName;
+        if (currentFieldType == 'object') {
+            setObjectMode(true);
+            if (currentObjectName == '') {
+                setCurrentObjectName(currentFieldName);
+            }
+            else {
+                fieldName = currentObjectName + "." + currentFieldName;
+                setCurrentObjectName(fieldName)
+            }
+        }
+        var newField = { name: fieldName, type: currentFieldType, options: currentOptions, required: currentRequired, unique: currentUnique };
+        if (currentFieldType == 'object') {
+            var updatedObjectFields = [...objectFields];
+            updatedObjectFields.push(newField);
+            setObjectFields(updatedObjectFields);
+            if (!fieldName.includes('.')) {
+                setFields([...fields, newField]);
+                setUpdatingIndex(null);
+            }
         }
         else {
-            setFields([...fields, newField]);
-            setUpdatingIndex(null);
+            if (currentObjectName) {
+                if (updatingIndex != null && updatingIndex != undefined) {
+                    newField.name = currentObjectName + "." + currentFieldName;
+                    var updatedField = [...filteredObjectFields];
+                    updatedField[updatingIndex] = newField;
+                    setFilteredObjectFields(updatedField)
+                    setUpdatingIndex(null);
+                }
+                else {
+                    newField.name = currentObjectName + "." + currentFieldName;
+                    var updatedObjectFields = [...objectFields];
+                    updatedObjectFields.push(newField);
+                    setObjectFields(updatedObjectFields);
+                }
+            }
+            if (updatingIndex != null && updatingIndex != undefined) {
+                var updatedField = [...fields];
+                updatedField[updatingIndex] = newField;
+                setFields(updatedField)
+                setUpdatingIndex(null);
+            }
+            else {
+                if (!newField.name.includes('.')) {
+                    setFields([...fields, newField]);
+                    setUpdatingIndex(null);
+                }
+            }
         }
         setSelectedFieldIndex(null);
         setCurrentFieldName('');
@@ -132,13 +175,25 @@ function DynamicSchemaFormGenerator(props) {
     };
 
     const setFieldToUpdate = (index) => {
+        console.log(" sssssssssss")
         setUpdatingIndex(index);
-        setCurrentFieldName(fields[index].name)
-        setCurrentFieldType(fields[index].type)
-        setCurrentOptions(fields[index].options)
-        setCurrentRequired(fields[index].required)
-        setCurrentUnique(fields[index].unique)
-        setShowCurrentField(true)
+        if (objectMode) {
+            setCurrentFieldName(filteredObjectFields[index].name.lastIndexOf('.') > -1 ? filteredObjectFields[index].name.substring(filteredObjectFields[index].name.lastIndexOf('.') + 1) : filteredObjectFields[index].name);
+            setCurrentFieldType(filteredObjectFields[index].type)
+            setCurrentOptions(filteredObjectFields[index].options)
+            setCurrentRequired(filteredObjectFields[index].required)
+            setCurrentUnique(filteredObjectFields[index].unique)
+            setShowCurrentField(true)
+            console.log(filteredObjectFields[index], " ffffffffffffff");
+        }
+        else {
+            setCurrentFieldName(fields[index].name)
+            setCurrentFieldType(fields[index].type)
+            setCurrentOptions(fields[index].options)
+            setCurrentRequired(fields[index].required)
+            setCurrentUnique(fields[index].unique)
+            setShowCurrentField(true)
+        }
     };
 
 
@@ -216,6 +271,29 @@ function DynamicSchemaFormGenerator(props) {
             setShowModal(true);
         }
     };
+
+    useEffect(() => {
+        // Construct a new array of fields based on objectFields and currentObjectName
+        const newFilteredObjectFields = objectFields.filter((field) => {
+            if (currentObjectName) {
+                // Check if the field name starts with the currentObjectName or its prefixes
+                const prefix = currentObjectName + '.';
+                if (field.name.startsWith(prefix)) {
+                    // Check if the field name contains dots only in the prefix
+                    const remainingName = field.name.substring(prefix.length);
+                    if (!remainingName.includes('.')) {
+                        return true;
+                    }
+                }
+            }
+            return false; // If no currentObjectName or not matching the criteria, exclude the field
+        });
+
+
+        // Pass the filtered fields to the FieldView component
+        setFilteredObjectFields(newFilteredObjectFields);
+    }, [objectFields, currentObjectName]);
+
     const renderButtons = () => {
         return (
             <div >
@@ -265,6 +343,7 @@ function DynamicSchemaFormGenerator(props) {
         setOrderedFields(newOrderedFields);
     }, [fields]);
 
+
     return (
         <div>
             <header class="h1 digit-form-composer-sub-header">Dynamic Schema Form Generator</header>
@@ -308,11 +387,32 @@ function DynamicSchemaFormGenerator(props) {
                     />
                 </div>
                 <div style={{ flex: "25%", border: "1px solid #ccc", margin: "5px", padding: "10px", display: "flex", flexDirection: "column" }}>
-                    <h2 style={{ fontSize: "1.5rem", marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", color: "#333" }}>Field List</h2>
+                    {objectMode && currentObjectName &&
+                        <h2 style={{ fontSize: "1.5rem", marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", color: "#333" }}>
+                            <button onClick={() => {
+                                if (currentObjectName && currentObjectName.includes('.')) {
+                                    const parts = currentObjectName.split('.');
+                                    parts.pop(); // Remove the last part
+                                    const newObjectName = parts.join('.');
+                                    setCurrentObjectName(newObjectName);
+                                } else {
+                                    setCurrentObjectName('');
+                                    setObjectMode(false);
+                                }
+                            }} style={{ border: "none", background: "none", cursor: "pointer", color: "blue", textDecoration: "underline" }}>Back</button>
+                            {`${currentObjectName.replace(/\./g, ' -> ')}`}
+                        </h2>
+                    }
+                    {!objectMode &&
+                        <h2 style={{ fontSize: "1.5rem", marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", color: "#333" }}>
+                            Field List
+                        </h2>
+                    }
                     <FieldView
-                        orderedFields={orderedFields}
+                        objectMode={objectMode}
+                        orderedFields={objectMode ? filteredObjectFields : orderedFields}
                         setOrderedFields={setOrderedFields}
-                        fields={fields}
+                        fields={objectMode ? filteredObjectFields : fields}
                         setFieldToUpdate={setFieldToUpdate}
                         removeField={removeField}
                     />

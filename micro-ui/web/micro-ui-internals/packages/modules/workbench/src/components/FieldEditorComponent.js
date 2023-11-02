@@ -21,7 +21,7 @@ const FieldEditorComponent = ({
     setRequiredError
 }) => {
     return (
-        <div>
+        <div style={{ height: "100%" }}>
             {showCurrentField ? (
                 <div>
                     <div style={{ marginLeft: "10px" }}>

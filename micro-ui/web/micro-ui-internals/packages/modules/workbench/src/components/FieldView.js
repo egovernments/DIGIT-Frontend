@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
 
-const FieldView = ({ orderedFields, setOrderedFields, fields, setFieldToUpdate, removeField }) => {
+const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFieldToUpdate, removeField }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
 
     const handleDragStart = (event, index) => {
@@ -33,7 +33,7 @@ const FieldView = ({ orderedFields, setOrderedFields, fields, setFieldToUpdate, 
                     key={index}
                     className="field-item"
                     data-index={index}
-                    draggable="true"
+                    draggable={objectMode ? "false" : "true"}
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
@@ -43,29 +43,24 @@ const FieldView = ({ orderedFields, setOrderedFields, fields, setFieldToUpdate, 
                         marginBottom: "10px",
                         alignItems: "center",
                         padding: "10px",
-                        border: "1px solid #ccc",
+                        border: objectMode ? "" : "1px solid #ccc",
                         background: "#f5f5f5",
-                        cursor: "pointer",
+                        cursor: objectMode ? "" : "pointer",
+                        position: "relative", // Add relative positioning
                     }}
                 >
-                    <span style={{ display: "flex", alignItems: "center" }}>
-                        <div
-                            style={{
-                                backgroundColor: "#007bff",
-                                color: "#fff",
-                                borderRadius: "50%",
-                                width: "30px",
-                                height: "30px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginRight: "10px",
-                            }}
-                        >
-                            {index + 1}
-                        </div>
+                    {objectMode ? (<span style={{ display: "flex", alignItems: "center" }}>
                         {field.name}
-                    </span>
+                    </span>) : (
+                        <div style={{ display: 'flex', flexDirection: "row" }}>
+                            <span className="arrow-up">&#8593;</span>
+                            <span className="arrow-down">&#8595;</span>
+                            <span style={{ display: "flex", alignItems: "center", marginLeft: "5px" }}>
+                                {field.name}
+                            </span>
+                        </div>
+                    )}
+
                     <div style={{ display: "flex" }}>
                         <div
                             onClick={() => {
