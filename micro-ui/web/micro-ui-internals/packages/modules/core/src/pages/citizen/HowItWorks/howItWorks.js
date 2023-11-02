@@ -61,7 +61,7 @@ const HowItWorks = ({ module }) => {
       <div className="how-it-works-page">
         <BackButton></BackButton>
         <div className="how-it-works-page-header">
-          <Header>{t("HOW_IT_WORKS")}</Header>
+          <Header>{t(mdmsConfigResult.screenHeader ? mdmsConfigResult.screenHeader : "HOW_IT_WORKS")}</Header>
         </div>
         <div className="language-selector" style={{ margin: "10px" }}>
           {languages.map((language, index) => (
@@ -89,7 +89,7 @@ const HowItWorks = ({ module }) => {
             </div>
           </div>
         ))}
-        <div className="WhatsNewCard" style={{ position: "relative", width: "100%", marginBottom: 10, display: "inline-block" }}>
+        {mdmsConfigResult.pdfHeader && mdmsConfigResult.pdfDesc && <div className="WhatsNewCard" style={{ position: "relative", width: "100%", marginBottom: 10, display: "inline-block" }}>
           <div className="how-it-works-pdf-section">
             <div className="pdf-icon-header-desc">
               <div className="pdf-icon">
@@ -104,7 +104,7 @@ const HowItWorks = ({ module }) => {
               <DownloadImgIcon />
             </div>
           </div>
-        </div>
+        </div>}
         {videoPlay && (
           <div className="how-it-works-video-play">
             <div className="close-button">
