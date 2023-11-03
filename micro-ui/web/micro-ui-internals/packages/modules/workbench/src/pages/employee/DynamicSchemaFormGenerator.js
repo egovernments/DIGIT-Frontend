@@ -28,8 +28,8 @@ function DynamicSchemaFormGenerator(props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [objectMode, setObjectMode] = useState(false);
     const [currentObjectName, setCurrentObjectName] = useState("")
-    const [objectFields, setObjectFields] = useState([]);
     const [filteredObjectFields, setFilteredObjectFields] = useState([]);
+    const [lastName, setLastName] = useState("");
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
 
@@ -70,7 +70,8 @@ function DynamicSchemaFormGenerator(props) {
 
     };
     const saveField = () => {
-        const nameExists = fields.some((field, index) => field.name == currentFieldName && index != updatingIndex);
+        var fieldName = currentObjectName ? currentObjectName + "." + currentFieldName : currentFieldName
+        const nameExists = fields.some((field, index) => field.name == fieldName && index != updatingIndex);
         if (currentFieldName == '') {
             var error = { ...nameError };
             error.edit = "Field name Can't be empty";
@@ -83,56 +84,37 @@ function DynamicSchemaFormGenerator(props) {
             setNameError(error);
             return;
         }
-        setNameError({ add: null, edit: null });
-        var fieldName = currentFieldName;
         if (currentFieldType == 'object') {
             setObjectMode(true);
-            if (currentObjectName == '') {
-                setCurrentObjectName(currentFieldName);
-            }
-            else {
-                fieldName = currentObjectName + "." + currentFieldName;
-                setCurrentObjectName(fieldName)
-            }
+            setCurrentObjectName(fieldName);
         }
-        var newField = { name: fieldName, type: currentFieldType, options: currentOptions, required: currentRequired, unique: currentUnique };
-        if (currentFieldType == 'object') {
-            var updatedObjectFields = [...objectFields];
-            updatedObjectFields.push(newField);
-            setObjectFields(updatedObjectFields);
-            if (!fieldName.includes('.')) {
-                setFields([...fields, newField]);
-                setUpdatingIndex(null);
+        setNameError({ add: null, edit: null });
+        var newField = { name: currentFieldName, type: currentFieldType, options: currentOptions, required: currentRequired, unique: currentUnique };
+        if (updatingIndex != null && updatingIndex != undefined) {
+            if (currentObjectName) {
+                newField.name = currentObjectName + "." + currentFieldName;
             }
+            var updatedField = [...fields];
+            updatedField[updatingIndex] = newField;
+            updatedField.map(field => {
+                // Check if the field name has the prefix "lastName."
+                if (field.name.startsWith(lastName + ".")) {
+                    // Extract the part of the name after the prefix and append it to the newField.name
+                    const suffix = field.name.substring((lastName + ".").length);
+                    field.name = newField.name + "." + suffix;
+                }
+                return field;
+            });
+            setFields(updatedField)
+            setUpdatingIndex(null);
         }
         else {
             if (currentObjectName) {
-                if (updatingIndex != null && updatingIndex != undefined) {
-                    newField.name = currentObjectName + "." + currentFieldName;
-                    var updatedField = [...filteredObjectFields];
-                    updatedField[updatingIndex] = newField;
-                    setFilteredObjectFields(updatedField)
-                    setUpdatingIndex(null);
-                }
-                else {
-                    newField.name = currentObjectName + "." + currentFieldName;
-                    var updatedObjectFields = [...objectFields];
-                    updatedObjectFields.push(newField);
-                    setObjectFields(updatedObjectFields);
-                }
+                newField.name = currentObjectName + "." + currentFieldName;
             }
-            if (updatingIndex != null && updatingIndex != undefined) {
-                var updatedField = [...fields];
-                updatedField[updatingIndex] = newField;
-                setFields(updatedField)
-                setUpdatingIndex(null);
-            }
-            else {
-                if (!newField.name.includes('.')) {
-                    setFields([...fields, newField]);
-                    setUpdatingIndex(null);
-                }
-            }
+            var updatedFields = [...fields];
+            updatedFields.push(newField);
+            setFields(updatedFields);
         }
         setSelectedFieldIndex(null);
         setCurrentFieldName('');
@@ -155,14 +137,27 @@ function DynamicSchemaFormGenerator(props) {
 
     const removeField = (index) => {
         const updatedFields = [...fields];
+        const fieldToRemove = updatedFields[index];
+
+        // Remove the field at the specified index
         updatedFields.splice(index, 1);
+
+        // Remove all fields with names having the `field.name` as a prefix
+        const prefix = fieldToRemove.name + '.';
+        const fieldsToRemove = updatedFields.filter((field) => field.name.startsWith(prefix));
+        fieldsToRemove.forEach((field) => {
+            const removeIndex = updatedFields.findIndex((f) => f === field);
+            if (removeIndex !== -1) {
+                updatedFields.splice(removeIndex, 1);
+            }
+        });
         setFields(updatedFields);
 
         // Clear the selected field if it was removed
         if (selectedFieldIndex === index) {
             setSelectedFieldIndex(null);
         }
-        if (updatingIndex == index) {
+        if (updatingIndex === index) {
             setUpdatingIndex(null);
             setSelectedFieldIndex(null);
             setCurrentFieldName('');
@@ -170,31 +165,24 @@ function DynamicSchemaFormGenerator(props) {
             setCurrentRequired(false);
             setCurrentUnique(false);
             setShowCurrentField(false);
-            setCurrentOptions({})
+            setCurrentOptions({});
         }
     };
 
+
     const setFieldToUpdate = (index) => {
-        console.log(" sssssssssss")
         setUpdatingIndex(index);
-        if (objectMode) {
-            setCurrentFieldName(filteredObjectFields[index].name.lastIndexOf('.') > -1 ? filteredObjectFields[index].name.substring(filteredObjectFields[index].name.lastIndexOf('.') + 1) : filteredObjectFields[index].name);
-            setCurrentFieldType(filteredObjectFields[index].type)
-            setCurrentOptions(filteredObjectFields[index].options)
-            setCurrentRequired(filteredObjectFields[index].required)
-            setCurrentUnique(filteredObjectFields[index].unique)
-            setShowCurrentField(true)
-            console.log(filteredObjectFields[index], " ffffffffffffff");
-        }
-        else {
-            setCurrentFieldName(fields[index].name)
-            setCurrentFieldType(fields[index].type)
-            setCurrentOptions(fields[index].options)
-            setCurrentRequired(fields[index].required)
-            setCurrentUnique(fields[index].unique)
-            setShowCurrentField(true)
-        }
+        // Split the name by dots, and get the last element of the resulting array
+        const nameParts = fields[index].name.split('.');
+        const lastNamePart = nameParts[nameParts.length - 1];
+        setCurrentFieldName(lastNamePart);
+        setCurrentFieldType(fields[index].type);
+        setCurrentOptions(fields[index].options);
+        setCurrentRequired(fields[index].required);
+        setCurrentUnique(fields[index].unique);
+        setShowCurrentField(true);
     };
+
 
 
     const updateFieldOption = (optionName, optionValue) => {
@@ -209,6 +197,28 @@ function DynamicSchemaFormGenerator(props) {
     };
 
 
+    const deepClone = (obj) => {
+        if (obj === null || typeof obj !== 'object') {
+            return obj;
+        }
+
+        if (Array.isArray(obj)) {
+            const copy = [];
+            obj.forEach((item) => {
+                copy.push(deepClone(item));
+            });
+            return copy;
+        }
+
+        const copy = {};
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                copy[key] = deepClone(obj[key]);
+            }
+        }
+        return copy;
+    };
+
     const generateSchema = () => {
         if (fields.length === 0) {
             // If the fields array is empty, set an error message
@@ -216,6 +226,35 @@ function DynamicSchemaFormGenerator(props) {
             setGeneratedSchema(null); // Reset the schema
             setShowModal(true);
         } else {
+            // Deep clone the fields array
+            const clonedFields = deepClone(fields);
+
+            // Helper function to recursively build the schema
+            const buildSchema = (field, schema) => {
+                const fieldNames = field.name.split('.');
+                const fieldName = fieldNames[0];
+                fieldNames.shift();
+                if (fieldNames.length == 0) {
+                    if (schema.properties) {
+                        schema.properties[fieldName] = field;
+                    }
+                    else {
+                        schema.properties = {}
+                        schema.properties[fieldName] = field;
+                    }
+                }
+                else {
+                    if (schema.properties[fieldName]) {
+                        buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
+                    }
+                    else {
+                        schema.properties[fieldName] = { type: 'object', properties: {} };
+                        buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
+                    }
+                }
+            };
+
+            // Use the cloned fields for generating the schema
             const schema = {
                 schemaName: props.schemaName,
                 type: 'object',
@@ -223,32 +262,23 @@ function DynamicSchemaFormGenerator(props) {
                 properties: {},
                 required: [],
                 'x-unique': [],
-                'ui:order': [], // Initialize ui:order array
+                'ui:order': [],
             };
 
             // Track whether at least one unique field is found
             let uniqueFound = false;
 
-            fields.forEach((field) => {
-                const typeSchema = {
-                    type: field.type,
-                    required: field.required,
-                };
-
-                schema.properties[field.name] = typeSchema;
-                for (const [optionName, optionValue] of Object.entries(field.options)) {
-                    schema.properties[field.name][optionName] = optionValue;
-                }
-
-                if (field.required) {
-                    schema.required.push(field.name);
-                }
-
-                if (field.unique) {
+            clonedFields.forEach((field) => {
+                buildSchema(field, schema);
+                if (field.unique && !field.name.includes(".")) {
                     schema['x-unique'].push(field.name);
                     uniqueFound = true; // Mark that a unique field was found
                 }
+                if (field.required && !field.name.includes(".")) {
+                    schema['required'].push(field.name);
+                }
             });
+
             orderedFields.map((field) => {
                 schema['ui:order'].push(field.name);
             })
@@ -272,9 +302,10 @@ function DynamicSchemaFormGenerator(props) {
         }
     };
 
+
     useEffect(() => {
         // Construct a new array of fields based on objectFields and currentObjectName
-        const newFilteredObjectFields = objectFields.filter((field) => {
+        const newFilteredObjectFields = fields.filter((field) => {
             if (currentObjectName) {
                 // Check if the field name starts with the currentObjectName or its prefixes
                 const prefix = currentObjectName + '.';
@@ -292,7 +323,8 @@ function DynamicSchemaFormGenerator(props) {
 
         // Pass the filtered fields to the FieldView component
         setFilteredObjectFields(newFilteredObjectFields);
-    }, [objectFields, currentObjectName]);
+    }, [fields, currentObjectName]);
+
 
     const renderButtons = () => {
         return (
@@ -323,7 +355,7 @@ function DynamicSchemaFormGenerator(props) {
         // Iterate through the fields and check if their names are in orderedFields
         fields.forEach((field, index) => {
             const nameExistsInOrderedFields = newOrderedFields.some(item => item.name === field.name);
-            if (!nameExistsInOrderedFields) {
+            if (!nameExistsInOrderedFields && !field.name.includes(".")) {
                 // Add the missing field to the end of orderedFields
                 newOrderedFields.push({
                     ...field, // Add all keys of the field element
@@ -342,7 +374,6 @@ function DynamicSchemaFormGenerator(props) {
         // Update the state with the new orderedFields
         setOrderedFields(newOrderedFields);
     }, [fields]);
-
 
     return (
         <div>
@@ -412,9 +443,12 @@ function DynamicSchemaFormGenerator(props) {
                         objectMode={objectMode}
                         orderedFields={objectMode ? filteredObjectFields : orderedFields}
                         setOrderedFields={setOrderedFields}
-                        fields={objectMode ? filteredObjectFields : fields}
+                        fields={fields}
                         setFieldToUpdate={setFieldToUpdate}
                         removeField={removeField}
+                        setLastName={setLastName}
+                        setCurrentObjectName={setCurrentObjectName}
+                        setObjectMode={setObjectMode}
                     />
                 </div>
             </div>

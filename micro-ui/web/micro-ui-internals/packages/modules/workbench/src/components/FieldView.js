@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
 
-const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFieldToUpdate, removeField }) => {
+const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFieldToUpdate, removeField, setLastName, setCurrentObjectName, setObjectMode }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
-
     const handleDragStart = (event, index) => {
         event.dataTransfer.setData('text/plain', index);
         setDraggedIndex(index);
@@ -25,7 +24,6 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
     const handleDragEnd = () => {
         setDraggedIndex(null);
     };
-
     return (
         <div>
             {orderedFields.map((field, index) => (
@@ -49,32 +47,48 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
                         position: "relative", // Add relative positioning
                     }}
                 >
-                    {objectMode ? (<span style={{ display: "flex", alignItems: "center" }}>
-                        {field.name}
-                    </span>) : (
+                    {objectMode ? (
+                        <span style={{ display: "flex", alignItems: "center", color: field.type === 'object' ? '#F47738' : 'black', cursor: field.type === 'object' ? 'pointer' : 'default' }} onClick={() => {
+                            if (field.type === 'object') {
+                                setCurrentObjectName(field.name);
+                                setObjectMode(true);
+                            }
+                        }}>
+                            {field.name.includes('.') ? field.name.split('.').pop() : field.name}
+                        </span>
+                    ) : (
                         <div style={{ display: 'flex', flexDirection: "row" }}>
                             <span className="arrow-up">&#8593;</span>
                             <span className="arrow-down">&#8595;</span>
-                            <span style={{ display: "flex", alignItems: "center", marginLeft: "5px" }}>
-                                {field.name}
+                            <span style={{ display: "flex", alignItems: "center", marginLeft: "5px", color: field.type === 'object' ? '#F47738' : 'black', cursor: field.type === 'object' ? 'pointer' : 'default' }} onClick={() => {
+                                if (field.type === 'object') {
+                                    setCurrentObjectName(field.name);
+                                    setObjectMode(true);
+                                }
+                            }}>
+                                {field.name.includes('.') ? field.name.split('.').pop() : field.name}
                             </span>
                         </div>
                     )}
 
+
                     <div style={{ display: "flex" }}>
                         <div
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation(); // Prevent the click event from bubbling
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
                                     setFieldToUpdate(fieldIndex);
                                 }
+                                setLastName(field.name)
                             }}
                             style={{ cursor: "pointer", marginRight: "16px" }}
                         >
                             <EditIcon />
                         </div>
                         <div
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation(); // Prevent the click event from bubbling
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
                                     removeField(fieldIndex);
