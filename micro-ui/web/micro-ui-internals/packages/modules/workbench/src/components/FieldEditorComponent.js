@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckBox, Button, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
 
 const FieldEditorComponent = ({
+    objectMode,
+    updatingIndex,
     showCurrentField,
     currentRequired,
     currentUnique,
@@ -18,13 +20,24 @@ const FieldEditorComponent = ({
     cancelSave,
     setCurrentRequired,
     setCurrentUnique,
-    setRequiredError
+    setRequiredError,
+    selectedArrayType,
+    setSelectedArrayType
 }) => {
+    const arrayTypes = [
+        { label: 'String', value: 'string' },
+        { label: 'Number', value: 'number' },
+        { label: 'Boolean', value: 'boolean' },
+        { label: 'Date', value: 'date' },
+        { label: 'Date-Time', value: 'date-time' },
+        { label: 'Object', value: 'object' },
+    ];
+
     return (
         <div style={{ height: "100%" }}>
             {showCurrentField ? (
                 <div>
-                    <div style={{ marginLeft: "10px" }}>
+                    {!objectMode ? (<div style={{ marginLeft: "10px" }}>
                         <CheckBox
                             label="Required"
                             checked={currentRequired}
@@ -54,7 +67,8 @@ const FieldEditorComponent = ({
                                 }
                             }}
                         />
-                    </div>
+                    </div>) : (null)}
+
 
                     {requiredError && <span style={{ color: "red", margin: "5px", fontSize: "15px" }}>{requiredError}</span>}
                     <div className='workbench-space-between' style={{ marginRight: "10px", marginLeft: "10px", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
@@ -90,8 +104,34 @@ const FieldEditorComponent = ({
                         {propertyMap[currentFieldType].map((property) => (
                             <div className='label-field-pair' key={property}>
                                 <h2 className="card-label">{property}</h2>
+                                {currentFieldType === 'array' && property === 'arrayType' ? (
+                                    <Dropdown
+                                        selected={selectedArrayType}
+                                        select={(value) => { setSelectedArrayType(value); updateFieldOption(property, value.value) }}
+                                        option={arrayTypes}
+                                        optionKey="label"
+                                        t={(text) => text}
+                                        style={{ width: '100%' }}
+                                        // className="dropdown-zIndex0"
+                                        disable={updatingIndex !== null}
+                                    />
+                                ) : (
+                                    <TextInput
+                                        type={currentFieldType === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (currentFieldType.includes('date') ? 'date' : 'number'))}
+                                        value={currentOptions[property] || ''}
+                                        onChange={(e) => updateFieldOption(property, e.target.value)}
+                                        customClass="employee-card-input"
+                                        style={{ backgroundColor: "white" }}
+                                    />
+                                )}
+                            </div>
+                        ))}
+
+                        {currentFieldType === 'array' && propertyMap[selectedArrayType.value] && propertyMap[selectedArrayType.value].map((property) => (
+                            <div className='label-field-pair' key={property}>
+                                <h2 className="card-label">{property}</h2>
                                 <TextInput
-                                    type={currentFieldType === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (currentFieldType.includes('date') ? 'date' : 'number'))}
+                                    type={selectedArrayType.value === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (selectedArrayType.value.includes('date') ? 'date' : 'number'))}
                                     value={currentOptions[property] || ''}
                                     onChange={(e) => updateFieldOption(property, e.target.value)}
                                     customClass="employee-card-input"

@@ -48,8 +48,15 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
                     }}
                 >
                     {objectMode ? (
-                        <span style={{ display: "flex", alignItems: "center", color: field.type === 'object' ? '#F47738' : 'black', cursor: field.type === 'object' ? 'pointer' : 'default' }} onClick={() => {
-                            if (field.type === 'object') {
+                        <span style={
+                            {
+                                display: "flex",
+                                alignItems: "center",
+                                color: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? '#F47738' : 'black',
+                                cursor: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? 'pointer' : 'default'
+                            }
+                        } onClick={() => {
+                            if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
                                 setCurrentObjectName(field.name);
                                 setObjectMode(true);
                             }
@@ -60,15 +67,24 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
                         <div style={{ display: 'flex', flexDirection: "row" }}>
                             <span className="arrow-up">&#8593;</span>
                             <span className="arrow-down">&#8595;</span>
-                            <span style={{ display: "flex", alignItems: "center", marginLeft: "5px", color: field.type === 'object' ? '#F47738' : 'black', cursor: field.type === 'object' ? 'pointer' : 'default' }} onClick={() => {
-                                if (field.type === 'object') {
+                            <span style={
+                                {
+                                    display: "flex",
+                                    alignItems: "center",
+                                    marginLeft: "5px",
+                                    color: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? '#F47738' : 'black',
+                                    cursor: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? 'pointer' : 'default'
+                                }
+                            } onClick={() => {
+                                if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
                                     setCurrentObjectName(field.name);
                                     setObjectMode(true);
                                 }
                             }}>
-                                {field.name.includes('.') ? field.name.split('.').pop() : field.name}
+                                {field.name.includes('.') ? field.name.split('.').pop() : field.name}{field.required ? ' *' : ''}
                             </span>
                         </div>
+
                     )}
 
 

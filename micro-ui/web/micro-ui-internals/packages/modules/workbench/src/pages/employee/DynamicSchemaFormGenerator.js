@@ -30,6 +30,7 @@ function DynamicSchemaFormGenerator(props) {
     const [currentObjectName, setCurrentObjectName] = useState("")
     const [filteredObjectFields, setFilteredObjectFields] = useState([]);
     const [lastName, setLastName] = useState("");
+    const [selectedArrayType, setSelectedArrayType] = useState({ label: 'String', value: 'string' })
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
 
@@ -40,6 +41,7 @@ function DynamicSchemaFormGenerator(props) {
         { label: 'Date', value: 'date' },
         { label: 'Date-Time', value: 'date-time' },
         { label: 'Object', value: 'object' },
+        { label: 'Array', value: 'array' },
     ];
 
     const propertyMap = {
@@ -48,7 +50,8 @@ function DynamicSchemaFormGenerator(props) {
         'date': ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum'],
         'date-time': ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum'],
         'boolean': [],
-        'object': []
+        'object': [],
+        'array': ['arrayType', 'minLength of Array', 'maxLength of Array']
     };
 
     const addField = () => {
@@ -64,7 +67,15 @@ function DynamicSchemaFormGenerator(props) {
             setSelectedFieldIndex(null);
             setCurrentRequired(false);
             setCurrentUnique(false);
-            setCurrentOptions({})
+            setSelectedArrayType({ label: 'String', value: 'string' });
+            if (addingFieldType?.value == 'array') {
+                setCurrentOptions({
+                    "arrayType": "string"
+                })
+            }
+            else {
+                setCurrentOptions({})
+            }
             setUpdatingIndex(null)
         }
 
@@ -84,7 +95,13 @@ function DynamicSchemaFormGenerator(props) {
             setNameError(error);
             return;
         }
-        if (currentFieldType == 'object') {
+        else if (currentFieldName.includes('.')) {
+            var error = { ...nameError };
+            error.edit = "Field name should not contain dots";
+            setNameError(error);
+            return;
+        }
+        if (currentFieldType == 'object' || (currentFieldType == 'array' && selectedArrayType?.value == 'object')) {
             setObjectMode(true);
             setCurrentObjectName(fieldName);
         }
@@ -122,6 +139,7 @@ function DynamicSchemaFormGenerator(props) {
         setCurrentRequired(false);
         setCurrentUnique(false);
         setShowCurrentField(false);
+        setSelectedArrayType({ label: 'String', value: 'string' });
         setCurrentOptions({})
     }
     const cancelSave = () => {
@@ -178,6 +196,12 @@ function DynamicSchemaFormGenerator(props) {
         setCurrentFieldName(lastNamePart);
         setCurrentFieldType(fields[index].type);
         setCurrentOptions(fields[index].options);
+        if (fields[index].type == 'array') {
+            setSelectedArrayType({
+                label: fields[index].options.arrayType.charAt(0).toUpperCase() + fields[index].options.arrayType.slice(1),
+                value: fields[index].options.arrayType
+            });
+        }
         setCurrentRequired(fields[index].required);
         setCurrentUnique(fields[index].unique);
         setShowCurrentField(true);
@@ -220,6 +244,37 @@ function DynamicSchemaFormGenerator(props) {
     };
 
     const generateSchema = () => {
+        const formatSchema = (schema, fieldName, field) => {
+            schema.properties[fieldName] = { ...field, ...field.options }
+            delete schema.properties[fieldName].options;
+            delete schema.properties[fieldName].required;
+            delete schema.properties[fieldName].unique;
+            delete schema.properties[fieldName].arrayType;
+            delete schema.properties[fieldName].minLength;
+            delete schema.properties[fieldName].maxLength;
+            delete schema.properties[fieldName].exclusiveMaximum;
+            delete schema.properties[fieldName].exclusiveMinimum;
+            delete schema.properties[fieldName].pattern;
+            delete schema.properties[fieldName].format;
+            delete schema.properties[fieldName].minimum;
+            delete schema.properties[fieldName].maximum;
+            delete schema.properties[fieldName].multipleOf;
+            if (schema.properties[fieldName]["minLength of Array"]) {
+                schema.properties[fieldName].minLength = schema.properties[fieldName]["minLength of Array"];
+                delete schema.properties[fieldName]["minLength of Array"]
+            }
+            if (schema.properties[fieldName]["maxLength of Array"]) {
+                schema.properties[fieldName].maxLength = schema.properties[fieldName]["maxLength of Array"];
+                delete schema.properties[fieldName]["maxLength of Array"]
+            }
+            if (schema.properties[fieldName].type == 'array') {
+                schema.properties[fieldName].items = { ...field.options };
+                schema.properties[fieldName].items.type = field.options.arrayType;
+                delete schema.properties[fieldName].items.arrayType;
+                delete schema.properties[fieldName].items["minLength of Array"];
+                delete schema.properties[fieldName].items["maxLength of Array"];
+            }
+        }
         if (fields.length === 0) {
             // If the fields array is empty, set an error message
             setUniqueError("At least one field is required to generate the schema.");
@@ -236,16 +291,21 @@ function DynamicSchemaFormGenerator(props) {
                 fieldNames.shift();
                 if (fieldNames.length == 0) {
                     if (schema.properties) {
-                        schema.properties[fieldName] = field;
+                        formatSchema(schema, fieldName, field);
                     }
                     else {
                         schema.properties = {}
-                        schema.properties[fieldName] = field;
+                        formatSchema(schema, fieldName, field);
                     }
                 }
                 else {
                     if (schema.properties[fieldName]) {
-                        buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
+                        if (schema.properties[fieldName].items) {
+                            buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName].items);
+                        }
+                        else {
+                            buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
+                        }
                     }
                     else {
                         schema.properties[fieldName] = { type: 'object', properties: {} };
@@ -319,8 +379,6 @@ function DynamicSchemaFormGenerator(props) {
             }
             return false; // If no currentObjectName or not matching the criteria, exclude the field
         });
-
-
         // Pass the filtered fields to the FieldView component
         setFilteredObjectFields(newFilteredObjectFields);
     }, [fields, currentObjectName]);
@@ -398,6 +456,8 @@ function DynamicSchemaFormGenerator(props) {
                 </div>
                 <div style={{ flex: "50%", border: "1px solid #ccc", margin: "5px" }}>
                     <FieldEditorComponent
+                        objectMode={objectMode}
+                        updatingIndex={updatingIndex}
                         showCurrentField={showCurrentField}
                         currentRequired={currentRequired}
                         currentUnique={currentUnique}
@@ -415,6 +475,8 @@ function DynamicSchemaFormGenerator(props) {
                         setCurrentRequired={setCurrentRequired}
                         setCurrentUnique={setCurrentUnique}
                         setRequiredError={setRequiredError}
+                        selectedArrayType={selectedArrayType}
+                        setSelectedArrayType={setSelectedArrayType}
                     />
                 </div>
                 <div style={{ flex: "25%", border: "1px solid #ccc", margin: "5px", padding: "10px", display: "flex", flexDirection: "column" }}>
