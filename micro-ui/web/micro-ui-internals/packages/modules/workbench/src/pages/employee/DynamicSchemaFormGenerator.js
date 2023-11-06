@@ -9,8 +9,8 @@ import { useTranslation } from 'react-i18next';
 
 function DynamicSchemaFormGenerator(props) {
     const { t } = useTranslation();
-    const [fields, setFields] = useState([]);
-    const [orderedFields, setOrderedFields] = useState([]);
+    const [fields, setFields] = useState(props.fields ? props.fields : []);
+    const [orderedFields, setOrderedFields] = useState(props.uiOrder ? props.uiOrder : []);
     const [generatedSchema, setGeneratedSchema] = useState(null);
     const [addingFieldType, setAddingFieldType] = useState(null);
     const [selectedFieldIndex, setSelectedFieldIndex] = useState(null); // Track the selected field index
@@ -189,6 +189,7 @@ function DynamicSchemaFormGenerator(props) {
 
 
     const setFieldToUpdate = (index) => {
+        debugger;
         setUpdatingIndex(index);
         // Split the name by dots, and get the last element of the resulting array
         const nameParts = fields[index].name.split('.');
@@ -244,21 +245,24 @@ function DynamicSchemaFormGenerator(props) {
     };
 
     const generateSchema = () => {
+        debugger;
         const formatSchema = (schema, fieldName, field) => {
             schema.properties[fieldName] = { ...field, ...field.options }
             delete schema.properties[fieldName].options;
             delete schema.properties[fieldName].required;
             delete schema.properties[fieldName].unique;
-            delete schema.properties[fieldName].arrayType;
-            delete schema.properties[fieldName].minLength;
-            delete schema.properties[fieldName].maxLength;
-            delete schema.properties[fieldName].exclusiveMaximum;
-            delete schema.properties[fieldName].exclusiveMinimum;
-            delete schema.properties[fieldName].pattern;
-            delete schema.properties[fieldName].format;
-            delete schema.properties[fieldName].minimum;
-            delete schema.properties[fieldName].maximum;
-            delete schema.properties[fieldName].multipleOf;
+            if (field.type == 'object' || field.type == 'array') {
+                delete schema.properties[fieldName].arrayType;
+                delete schema.properties[fieldName].minLength;
+                delete schema.properties[fieldName].maxLength;
+                delete schema.properties[fieldName].exclusiveMaximum;
+                delete schema.properties[fieldName].exclusiveMinimum;
+                delete schema.properties[fieldName].pattern;
+                delete schema.properties[fieldName].format;
+                delete schema.properties[fieldName].minimum;
+                delete schema.properties[fieldName].maximum;
+                delete schema.properties[fieldName].multipleOf;
+            }
             if (schema.properties[fieldName]["minLength of Array"]) {
                 schema.properties[fieldName].minLength = schema.properties[fieldName]["minLength of Array"];
                 delete schema.properties[fieldName]["minLength of Array"]
@@ -363,6 +367,7 @@ function DynamicSchemaFormGenerator(props) {
     };
 
 
+
     useEffect(() => {
         // Construct a new array of fields based on objectFields and currentObjectName
         const newFilteredObjectFields = fields.filter((field) => {
@@ -412,14 +417,18 @@ function DynamicSchemaFormGenerator(props) {
 
         // Iterate through the fields and check if their names are in orderedFields
         fields.forEach((field, index) => {
-            const nameExistsInOrderedFields = newOrderedFields.some(item => item.name === field.name);
-            if (!nameExistsInOrderedFields && !field.name.includes(".")) {
-                // Add the missing field to the end of orderedFields
-                newOrderedFields.push({
-                    ...field, // Add all keys of the field element
-                });
+            // Find the index of the matching field in newOrderedFields
+            const matchingFieldIndex = newOrderedFields.findIndex(item => item.name === field.name);
+
+            if (matchingFieldIndex === -1 && !field.name.includes(".")) {
+                // Add the missing field to the end of newOrderedFields
+                newOrderedFields.push({ ...field });
+            } else if (matchingFieldIndex !== -1) {
+                // Update the matching field in newOrderedFields with the new field
+                newOrderedFields[matchingFieldIndex] = field;
             }
         });
+
 
         // Remove fields from orderedFields that are not present in fields
         newOrderedFields.forEach((orderedField, index) => {
@@ -432,6 +441,7 @@ function DynamicSchemaFormGenerator(props) {
         // Update the state with the new orderedFields
         setOrderedFields(newOrderedFields);
     }, [fields]);
+    console.log(fields, orderedFields, objectMode, " oooooooooooo")
 
     return (
         <div>

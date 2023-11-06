@@ -92,6 +92,7 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
                         <div
                             onClick={(e) => {
                                 e.stopPropagation(); // Prevent the click event from bubbling
+                                debugger;
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
                                     setFieldToUpdate(fieldIndex);

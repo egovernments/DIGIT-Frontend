@@ -29,6 +29,11 @@ const WorkbenchCard = () => {
       roles: ROLES.MDMS,
     },
     {
+      label: t("Edit Schema"),
+      link: `/${window?.contextPath}/employee/workbench/edit-schema`,
+      roles: ROLES.MDMS,
+    },
+    {
       label: t("ACTION_TEST_LOCALISATION"),
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
