@@ -19,38 +19,14 @@ export default {
           "suffix",
           "password",
           "search",
-          "textarea",
-          // "mobileNumber",
-          // "amount",
-          // "number",
-          // "paragraph",
-          // "custom",
-          // "checkbox",
-          // "multiupload",
-          // "select",
-          // "radio",
-          // "dropdown",
-          // "radioordropdown",
-          // "component",
-          // "documentUpload",
-          // "form",
-          // "locationdropdown",
-          // "apidropdown",
-          // "multiselectdropdown",
+          "textarea"
         ],
       },
     },
-    state: {
-      control: {
-        type: "select",
-        options: ["default", "filled","disabled","noneditable", "focused", "error", "disabled"],
-      },
-    },
-    label: { control: "boolean" },
-    info: { control: "boolean" },
-    charCount: { control: "boolean" },
-    innerLabel: { control: "boolean" },
-    helpText: { control: "boolean" },
+    disable: {control: "boolean"},
+    noneditable:{control:"boolean"},
+    focused:{control:"focused"},
+    charCount: { control: "boolean" }
   },
 };
 
@@ -58,16 +34,17 @@ const Template = (args) => {
   return <FieldComposer {...args} />;
 };
 
-export const Playground = Template.bind({});
-Playground.args = {
-  type: "date",
-  state: "default",
+const commonArgs ={
+  type: "text",
   populators: {
     name: "Label",
-    error: "Required",
+    error: "Custom Error Message",
     validation: {
       pattern: {},
     },
+    prefix:"",
+    suffix:"",
+    customIcon:""
   },
   isMandatory: false,
   disable: false,
@@ -85,9 +62,14 @@ Playground.args = {
         pattern: {},
       },
     },
+    description:"",
+    withoutLabel:true,
+    withoutInfo:true
   },
   sectionFormCategory: undefined,
   formData: {},
+  value:"",
+  placeholder:"",
   selectedFormCategory: undefined,
   props: {
     label: "Submit Bar",
@@ -108,6 +90,9 @@ Playground.args = {
                 pattern: {},
               },
             },
+            description:"",
+            withoutLabel:true,
+            withoutInfo:true,
           },
         ],
       },
@@ -117,5 +102,73 @@ Playground.args = {
       marginRight: 0,
     },
   },
-  errors: {},
+  errors: {
+    errorMessage:"",
+  },
+}
+
+
+export const Default = Template.bind({});
+Default.args = {
+  ...commonArgs,
+  variant: "default",
+};
+Default.argTypes = {
+  variant: { control: { disable: true } }, 
+};
+
+export const Filled = Template.bind({});
+Filled.args = {
+  ...commonArgs,
+  variant: "filled",
+  value:"Input Value"
+};
+Filled.argTypes = {
+  variant: { control: { disable: true } }, 
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  ...commonArgs,
+  variant: "disabled",
+  disable: true
+};
+Disabled.argTypes = {
+  variant: { control: { disable: true } }, 
+  disable: { control: { disable: true } }, 
+};
+
+export const NonEditable = Template.bind({});
+NonEditable.args = {
+  ...commonArgs,
+  variant: "noneditable",
+  noneditable:true,
+  value:"Input Value"
+};
+NonEditable.argTypes = {
+  variant: { control: { disable: true } }, 
+  noneditable: { control: { disable: true } }, 
+};
+
+export const Focused = Template.bind({});
+Focused.args = {
+  ...commonArgs,
+  variant: "focused",
+  focused:true
+};
+Focused.argTypes = {
+  variant: { control: { disable: true } }, 
+  focused: { control: { disable: true } },
+};
+
+export const Error = Template.bind({});
+Error.args = {
+  ...commonArgs,
+  variant: "error",
+  errors:{
+    errorMessage:"Error!"
+  }
+};
+Error.argTypes = {
+  variant: { control: { disable: true } }, 
 };
