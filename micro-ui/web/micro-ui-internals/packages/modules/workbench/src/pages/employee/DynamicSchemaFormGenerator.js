@@ -450,22 +450,15 @@ function DynamicSchemaFormGenerator(props) {
                     {showGenerator ? (<div>
                         <header class="h1 digit-form-composer-sub-header">Dynamic Schema Form Generator</header>
                         <h1 style={{ fontWeight: "bolder", fontSize: "20px" }}>{schemaName + " config"}</h1>
-                        <div style={{
-                            display: "flex",
-                            backgroundColor: "#fff",
-                            boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.16)",
-                            padding: "16px",
-                            borderRadius: "4px"
-                        }}
-                        >
-                            <div style={{ flex: "25%", border: "1px solid #ccc", margin: "5px", padding: "10px" }}>
+                        <div className='schemaGeneratorContainer'>
+                            <div className='fieldSelect'>
                                 <FieldSelect
                                     state={state}
                                     addField={addField}
                                     dispatch={dispatch}
                                 />
                             </div>
-                            <div style={{ flex: "50%", border: "1px solid #ccc", margin: "5px" }}>
+                            <div className='fieldEditor'>
                                 <FieldEditorComponent
                                     state={state}
                                     updateFieldOption={updateFieldOption}
@@ -474,28 +467,32 @@ function DynamicSchemaFormGenerator(props) {
                                     dispatch={dispatch}
                                 />
                             </div>
-                            <div style={{ flex: "25%", border: "1px solid #ccc", margin: "5px", padding: "10px", display: "flex", flexDirection: "column" }}>
-                                {state.objectMode && state.currentObjectName &&
-                                    <h2 style={{ fontSize: "1.5rem", marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", color: "#333" }}>
-                                        <button onClick={() => {
-                                            if (state.currentObjectName && state.currentObjectName.includes('.')) {
-                                                const parts = state.currentObjectName.split('.');
-                                                parts.pop(); // Remove the last part
-                                                const newObjectName = parts.join('.');
-                                                dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: newObjectName });
-                                            } else {
-                                                dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: '' });
-                                                dispatch({ type: 'SET_OBJECT_MODE', payload: false });
-                                            }
-                                        }} style={{ border: "none", background: "none", cursor: "pointer", color: "blue", textDecoration: "underline" }}>Back</button>
+                            <div className='fieldView'>
+                                {state.objectMode && state.currentObjectName && (
+                                    <h2 className='objectHeader'>
+                                        <button
+                                            onClick={() => {
+                                                if (state.currentObjectName && state.currentObjectName.includes('.')) {
+                                                    const parts = state.currentObjectName.split('.');
+                                                    parts.pop(); // Remove the last part
+                                                    const newObjectName = parts.join('.');
+                                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: newObjectName });
+                                                } else {
+                                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: '' });
+                                                    dispatch({ type: 'SET_OBJECT_MODE', payload: false });
+                                                }
+                                            }}
+                                        >
+                                            Back
+                                        </button>
                                         {`${state.currentObjectName.replace(/\./g, ' -> ')}`}
                                     </h2>
-                                }
-                                {!state.objectMode &&
-                                    <h2 style={{ fontSize: "1.5rem", marginBottom: "10px", borderBottom: "1px solid #ccc", paddingBottom: "10px", color: "#333" }}>
+                                )}
+                                {!state.objectMode && (
+                                    <h2 className='fieldListHeader'>
                                         Field List
                                     </h2>
-                                }
+                                )}
                                 <FieldView
                                     state={state}
                                     dispatch={dispatch}
@@ -504,6 +501,7 @@ function DynamicSchemaFormGenerator(props) {
                                 />
                             </div>
                         </div>
+
                         {renderButtons()}
                     </div>) : (null)}
                 </div>
