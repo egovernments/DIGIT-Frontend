@@ -5,7 +5,6 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
     const [draggedIndex, setDraggedIndex] = useState(null);
     const orderedFields = objectMode ? state.filteredObjectFields : state.orderedFields;
     const fields = state.fields;
-    console.log(fields, orderedFields, " fffffffffff")
     const handleDragStart = (event, index) => {
         event.dataTransfer.setData('text/plain', index);
         setDraggedIndex(index);

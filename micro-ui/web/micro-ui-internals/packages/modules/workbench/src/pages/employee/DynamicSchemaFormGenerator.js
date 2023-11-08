@@ -390,7 +390,6 @@ function DynamicSchemaFormGenerator(props) {
             const newFields = generateFieldsFromSchema(generatedSchema);
             dispatch({ type: 'SET_FIELDS', payload: newFields });
             const uiOrderNames = generatedSchema.definition["ui:order"];
-            debugger;
             const uiOrderFields = uiOrderNames.map((fieldName) => {
                 const matchingField = newFields.find((field) => field.name == fieldName);
                 return matchingField;

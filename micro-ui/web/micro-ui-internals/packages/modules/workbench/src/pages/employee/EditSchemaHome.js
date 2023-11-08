@@ -28,13 +28,11 @@ function EditSchemaHome() {
                 return matchingField;
             });
             setUiOrder(uiOrderFields);
-            console.log(uiOrderFields, " uiiioooooorrrrrrrrrr")
             setSchemaName(schemaInput?.definition?.schemaName)
         } catch (error) {
             alert('Invalid JSON Schema: ' + error.message);
         }
     };
-    console.log(schemaInput, " schhhhhhhhhhhhh")
 
     return (
         <div>
