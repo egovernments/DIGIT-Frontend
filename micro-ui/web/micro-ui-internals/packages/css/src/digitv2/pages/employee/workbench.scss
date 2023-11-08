@@ -700,3 +700,18 @@ button:hover {
     }
   }
 }
+
+.SchemaActionBar {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+
+  .SubmitBar {
+    margin-left: auto;
+    margin-right: 10px;
+  }
+
+  .Button {
+    margin-right: 10px;
+  }
+}

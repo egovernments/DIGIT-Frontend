@@ -16,72 +16,11 @@ function DynamicSchemaFormGenerator(props) {
     const { t } = useTranslation();
     const [schemaName, setSchemaName] = useState(props.schemaName ? props.schemaName : null);
     const [generatedSchema, setGeneratedSchema] = useState(null);
-    const [selectedFieldIndex, setSelectedFieldIndex] = useState(null); // Track the selected field index
     const [showModal, setShowModal] = useState(false);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [showGenerator, setShowGenerator] = useState(true);
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const initialState = {
-        fields: props.fields || [],
-        orderedFields: props.uiOrder || [],
-        filteredObjectFields: [],
-        nameError: { add: null, edit: null },
-        uniqueError: false,
-        currentRequired: false,
-        currentUnique: false,
-        currentFieldName: '',
-        currentFieldType: 'string',
-        currentOptions: {},
-        showCurrentField: false,
-        currentObjectName: '',
-        addingFieldType: null,
-        updatingIndex: null, // Add updatingIndex to initialState
-        selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
-        objectMode: false,
-        lastName: ''
-    };
-
-    const schemaReducer = (state, action) => {
-        switch (action.type) {
-            case 'SET_FIELDS':
-                return { ...state, fields: action.payload };
-            case 'SET_ORDERED_FIELDS':
-                return { ...state, orderedFields: action.payload };
-            case 'SET_FILTERED_OBJECTS_FIELDS':
-                return { ...state, filteredObjectFields: action.payload };
-            case 'SET_NAME_ERROR':
-                return { ...state, nameError: action.payload };
-            case 'SET_UNIQUE_ERROR':
-                return { ...state, uniqueError: action.payload };
-            case 'SET_CURRENT_REQUIRED':
-                return { ...state, currentRequired: action.payload };
-            case 'SET_CURRENT_UNIQUE':
-                return { ...state, currentUnique: action.payload };
-            case 'SET_CURRENT_FIELD_NAME':
-                return { ...state, currentFieldName: action.payload };
-            case 'SET_CURRENT_FIELD_TYPE':
-                return { ...state, currentFieldType: action.payload };
-            case 'SET_CURRENT_OPTIONS':
-                return { ...state, currentOptions: action.payload };
-            case 'SET_SHOW_CURRENT_FIELD':
-                return { ...state, showCurrentField: action.payload };
-            case 'SET_CURRENT_OBJECT_NAME':
-                return { ...state, currentObjectName: action.payload };
-            case 'SET_ADDING_FIELD_TYPE':
-                return { ...state, addingFieldType: action.payload };
-            case 'SET_UPDATING_INDEX':
-                return { ...state, updatingIndex: action.payload }; // Dispatch action for updatingIndex
-            case 'SET_SELECTED_ARRAY_TYPE':
-                return { ...state, selectedArrayType: action.payload }; // Dispatch action for selectedArrayType
-            case 'SET_OBJECT_MODE':
-                return { ...state, objectMode: action.payload };
-            case 'SET_LAST_NAME':
-                return { ...state, lastName: action.payload };
-            default:
-                return state;
-        }
-    };
-    const [state, dispatch] = useReducer(schemaReducer, initialState);
+    const { state, dispatch } = Digit.Hooks.workbench.useSchemaReducer(props);
 
     const addField = () => {
         if (!state?.addingFieldType?.value) {
@@ -93,7 +32,7 @@ function DynamicSchemaFormGenerator(props) {
             dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: state?.addingFieldType?.value });
             dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: null });
             dispatch({ type: 'SET_SHOW_CURRENT_FIELD', payload: true });
-            setSelectedFieldIndex(null);
+            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
             dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
             dispatch({ type: 'SET_CURRENT_UNIQUE', payload: false });
             dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
@@ -164,7 +103,7 @@ function DynamicSchemaFormGenerator(props) {
             updatedFields.push(newField);
             dispatch({ type: 'SET_FIELDS', payload: updatedFields });
         }
-        setSelectedFieldIndex(null);
+        dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
         dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
         dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
         dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
@@ -175,7 +114,7 @@ function DynamicSchemaFormGenerator(props) {
     }
     const cancelSave = () => {
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-        setSelectedFieldIndex(null);
+        dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
         dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
         dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
         dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
@@ -203,12 +142,12 @@ function DynamicSchemaFormGenerator(props) {
         dispatch({ type: 'SET_FIELDS', payload: updatedFields });
 
         // Clear the selected field if it was removed
-        if (selectedFieldIndex === index) {
-            setSelectedFieldIndex(null);
+        if (state.selectedFieldIndex === index) {
+            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
         }
         if (state.updatingIndex === index) {
             dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            setSelectedFieldIndex(null);
+            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
             dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
             dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
             dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
@@ -342,9 +281,9 @@ function DynamicSchemaFormGenerator(props) {
     const renderButtons = () => {
         return (
             <div >
-                <ActionBar style={{ display: "flex", flexDirection: "row", margin: "10px" }}>
-                    <SubmitBar style={{ marginLeft: "auto", marginRight: "10px" }} label={t("Preview And Save")} onSubmit={generateSchema} />
-                    <Button style={{ marginRight: "10px" }} onButtonClick={() => setShowConfirmationModal(true)} label={"Cancel"} variation={"secondary"} />
+                <ActionBar className="SchemaActionBar">
+                    <SubmitBar label={t("Preview And Save")} className="SubmitBar" onSubmit={generateSchema} />
+                    <Button className="Button" onButtonClick={() => setShowConfirmationModal(true)} label={"Cancel"} variation={"secondary"} />
                 </ActionBar>
                 {showModal && <SchemaModalComponent generatedSchema={generatedSchema} state={state} setShowModal={setShowModal} />}
                 {showConfirmationModal && <Confirmation
@@ -422,7 +361,7 @@ function DynamicSchemaFormGenerator(props) {
             setShowGenerator(true);
             setGeneratedSchema(null);
             dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            setSelectedFieldIndex(null);
+            dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
             dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
             dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
             dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
