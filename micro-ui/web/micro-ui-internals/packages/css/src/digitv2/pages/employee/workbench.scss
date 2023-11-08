@@ -700,6 +700,11 @@ button:hover {
     }
   }
 
+  .schemaNameContainer {
+    font-weight: bolder;
+    font-size: 20px;
+  }
+
   .buttoncontainer {
     display: flex;
     flex-direction: row;
@@ -715,6 +720,11 @@ button:hover {
 
   .field-cancel-button {
     margin-right: 1em;
+  }
+
+  .field-select-button-container {
+    display: flex;
+    justify-content: flex-end;
   }
 }
 

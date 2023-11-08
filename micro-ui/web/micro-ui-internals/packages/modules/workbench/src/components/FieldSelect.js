@@ -15,21 +15,15 @@ const FieldSelect = ({ state, dispatch }) => {
                 select={(value) => { dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: value }); }}
                 showArrow={true}
                 t={(text) => text}
-                style={{ width: '100%' }}
+                className='w-full'
                 showSearchIcon={false}
                 disable={false}
                 autoComplete="off"
                 placeholder="Select a Type"
             />
 
-            {state.nameError?.add && (
-                <div>
-                    <span style={{ color: "red" }}>{state.nameError.add}</span>
-                </div>
-            )}
-
-            <div style={{ display: "grid" }}>
-                <Button style={{ justifySelf: "flex-end" }} onButtonClick={() => addField(state, dispatch)} label={"Add Field"} />
+            <div class="field-select-button-container">
+                <Button onButtonClick={() => addField(state, dispatch)} label={"Add Field"} />
             </div>
         </div>
     );

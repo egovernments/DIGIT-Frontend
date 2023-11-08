@@ -213,7 +213,7 @@ function DynamicSchemaFormGenerator(props) {
                 <div>
                     {showGenerator ? (<div>
                         <header class="h1 digit-form-composer-sub-header">Dynamic Schema Form Generator</header>
-                        <h1 style={{ fontWeight: "bolder", fontSize: "20px" }}>{schemaName + " config"}</h1>
+                        <h1 className='schemaNameContainer'>{schemaName + " config"}</h1>
                         <div className='schemaGeneratorContainer'>
                             <div className='fieldSelect'>
                                 <FieldSelect
