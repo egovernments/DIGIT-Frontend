@@ -11,7 +11,6 @@ import MDMSView from "./MDMSView";
 import MDMSSearchv2 from "./MDMSSearchv2";
 import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
-import DynamicSchemaFormGenerator from "./DynamicSchemaFormGenerator";
 import SchemaHome from "./SchemaHome";
 import SchemaResponsePage from "../../components/SchemaResponsePage";
 import EditSchemaHome from "./EditSchemaHome";

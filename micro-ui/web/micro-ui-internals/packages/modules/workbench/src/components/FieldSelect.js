@@ -2,16 +2,16 @@ import React from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-react-components";
 import { fieldTypes } from './FieldVariable';
 
-const FieldSelect = ({ addingFieldType, setAddingFieldType, state, addField }) => {
+const FieldSelect = ({ state, addField, dispatch }) => {
 
     return (
         <div className='label-field-pair'>
             <h2 className="card-label">Type</h2>
             <Dropdown
-                selected={addingFieldType}
+                selected={state.addingFieldType}
                 option={fieldTypes}
                 optionKey="label"
-                select={(value) => { setAddingFieldType(value) }}
+                select={(value) => { dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: value }); }}
                 showArrow={true}
                 t={(text) => text}
                 style={{ width: '100%' }}

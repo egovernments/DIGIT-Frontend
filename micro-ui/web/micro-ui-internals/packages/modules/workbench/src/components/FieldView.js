@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
 
-const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField, setLastName, setCurrentObjectName, setObjectMode }) => {
+const FieldView = ({ state, dispatch, setFieldToUpdate, removeField }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
-    const orderedFields = objectMode ? state.filteredObjectFields : state.orderedFields;
+    const orderedFields = state.objectMode ? state.filteredObjectFields : state.orderedFields;
     const fields = state.fields;
     const handleDragStart = (event, index) => {
         event.dataTransfer.setData('text/plain', index);
@@ -33,7 +33,7 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
                     key={index}
                     className="field-item"
                     data-index={index}
-                    draggable={objectMode ? "false" : "true"}
+                    draggable={state.objectMode ? "false" : "true"}
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
@@ -43,13 +43,13 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
                         marginBottom: "10px",
                         alignItems: "center",
                         padding: "10px",
-                        border: objectMode ? "" : "1px solid #ccc",
+                        border: state.objectMode ? "" : "1px solid #ccc",
                         background: "#f5f5f5",
-                        cursor: objectMode ? "" : "pointer",
+                        cursor: state.objectMode ? "" : "pointer",
                         position: "relative", // Add relative positioning
                     }}
                 >
-                    {objectMode ? (
+                    {state.objectMode ? (
                         <span style={
                             {
                                 display: "flex",
@@ -59,8 +59,8 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
                             }
                         } onClick={() => {
                             if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
-                                setCurrentObjectName(field.name);
-                                setObjectMode(true);
+                                dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: field.name });
+                                dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                             }
                         }}>
                             {field.name.includes('.') ? field.name.split('.').pop() : field.name}
@@ -79,8 +79,8 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
                                 }
                             } onClick={() => {
                                 if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
-                                    setCurrentObjectName(field.name);
-                                    setObjectMode(true);
+                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: field.name });
+                                    dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                 }
                             }}>
                                 {field.name.includes('.') ? field.name.split('.').pop() : field.name}{field.required ? ' *' : ''}
@@ -99,7 +99,7 @@ const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField,
                                 if (fieldIndex !== -1) {
                                     setFieldToUpdate(fieldIndex);
                                 }
-                                setLastName(field.name)
+                                dispatch({ type: 'SET_LAST_NAME', payload: field.name });
                             }}
                             style={{ cursor: "pointer", marginRight: "16px" }}
                         >

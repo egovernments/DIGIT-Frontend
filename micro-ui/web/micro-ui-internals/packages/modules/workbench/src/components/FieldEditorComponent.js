@@ -4,23 +4,11 @@ import { fieldTypes, propertyMap } from './FieldVariable'
 
 
 const FieldEditorComponent = ({
-    objectMode,
-    updatingIndex,
-    showCurrentField,
-    currentRequired,
-    currentUnique,
-    currentFieldName,
-    setCurrentFieldName,
     state,
-    currentFieldType,
-    currentOptions,
     updateFieldOption,
     saveField,
     cancelSave,
-    setCurrentRequired,
-    setCurrentUnique,
-    selectedArrayType,
-    setSelectedArrayType
+    dispatch,
 }) => {
     const arrayTypes = [
         { label: 'String', value: 'string' },
@@ -35,19 +23,19 @@ const FieldEditorComponent = ({
 
     return (
         <div style={{ height: "100%" }}>
-            {showCurrentField ? (
+            {state.showCurrentField ? (
                 <div>
-                    {!objectMode ? (<div style={{ marginLeft: "10px" }}>
+                    {!state.objectMode ? (<div style={{ marginLeft: "10px" }}>
                         <CheckBox
                             label="Required"
-                            checked={currentRequired}
+                            checked={state.currentRequired}
                             onChange={(e) => {
                                 if (e.target.checked) {
-                                    setCurrentRequired(true);
+                                    dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
                                     setRequiredError(null);
                                 } else {
-                                    if (!currentUnique) {
-                                        setCurrentRequired(false);
+                                    if (!state.currentUnique) {
+                                        dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
                                         setRequiredError(null);
                                     } else {
                                         setRequiredError("First make the 'Unique' checkbox unchecked.");
@@ -58,12 +46,12 @@ const FieldEditorComponent = ({
 
                         <CheckBox
                             label="Unique"
-                            checked={currentUnique}
+                            checked={state.currentUnique}
                             onChange={(e) => {
-                                setCurrentUnique(e.target.checked);
+                                dispatch({ type: 'SET_CURRENT_UNIQUE', payload: e.target.checked });
                                 setRequiredError(null);
                                 if (e.target.checked) {
-                                    setCurrentRequired(true);
+                                    dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
                                 }
                             }}
                         />
@@ -77,8 +65,8 @@ const FieldEditorComponent = ({
                                 <h2 className="card-label undefined">Field Name *</h2>
                                 <TextInput
                                     type="text"
-                                    value={currentFieldName}
-                                    onChange={(e) => setCurrentFieldName(e.target.value)}
+                                    value={state.currentFieldName}
+                                    onChange={(e) => dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: e.target.value })}
                                     customClass="employee-card-input"
                                     style={{ backgroundColor: "white" }}
                                 />
@@ -90,8 +78,8 @@ const FieldEditorComponent = ({
                             <h2 className="card-label">Type</h2>
                             <Dropdown
                                 selected={{
-                                    label: currentFieldType.charAt(0).toUpperCase() + currentFieldType.slice(1),
-                                    value: currentFieldType,
+                                    label: state.currentFieldType.charAt(0).toUpperCase() + state.currentFieldType.slice(1),
+                                    value: state.currentFieldType,
                                 }}
                                 option={fieldTypes}
                                 optionKey="label"
@@ -101,24 +89,24 @@ const FieldEditorComponent = ({
                                 disable={true}
                             />
                         </div>
-                        {propertyMap[currentFieldType].map((property) => (
+                        {propertyMap[state.currentFieldType].map((property) => (
                             <div className='label-field-pair' key={property}>
                                 <h2 className="card-label">{property}</h2>
-                                {currentFieldType === 'array' && property === 'arrayType' ? (
+                                {state.currentFieldType === 'array' && property === 'arrayType' ? (
                                     <Dropdown
-                                        selected={selectedArrayType}
-                                        select={(value) => { setSelectedArrayType(value); updateFieldOption(property, value.value) }}
+                                        selected={state.selectedArrayType}
+                                        select={(value) => { dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: value }); updateFieldOption(property, value.value) }}
                                         option={arrayTypes}
                                         optionKey="label"
                                         t={(text) => text}
                                         style={{ width: '100%' }}
                                         // className="dropdown-zIndex0"
-                                        disable={updatingIndex !== null}
+                                        disable={state.updatingIndex !== null}
                                     />
                                 ) : (
                                     <TextInput
-                                        type={currentFieldType === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (currentFieldType.includes('date') ? 'date' : 'number'))}
-                                        value={currentOptions[property] || ''}
+                                        type={state.currentFieldType === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (state.currentFieldType.includes('date') ? 'date' : 'number'))}
+                                        value={state.currentOptions[property] || ''}
                                         onChange={(e) => updateFieldOption(property, e.target.value)}
                                         customClass="employee-card-input"
                                         style={{ backgroundColor: "white" }}
@@ -127,12 +115,12 @@ const FieldEditorComponent = ({
                             </div>
                         ))}
 
-                        {currentFieldType === 'array' && propertyMap[selectedArrayType.value] && propertyMap[selectedArrayType.value].map((property) => (
+                        {state.currentFieldType === 'array' && propertyMap[state.selectedArrayType.value] && propertyMap[state.selectedArrayType.value].map((property) => (
                             <div className='label-field-pair' key={property}>
                                 <h2 className="card-label">{property}</h2>
                                 <TextInput
-                                    type={selectedArrayType.value === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (selectedArrayType.value.includes('date') ? 'date' : 'number'))}
-                                    value={currentOptions[property] || ''}
+                                    type={state.selectedArrayType.value === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (state.selectedArrayType.value.includes('date') ? 'date' : 'number'))}
+                                    value={state.currentOptions[property] || ''}
                                     onChange={(e) => updateFieldOption(property, e.target.value)}
                                     customClass="employee-card-input"
                                     style={{ backgroundColor: "white" }}
