@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CheckBox, Button, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
+import { fieldTypes, propertyMap } from './FieldVariable'
+
 
 const FieldEditorComponent = ({
     objectMode,
@@ -7,20 +9,16 @@ const FieldEditorComponent = ({
     showCurrentField,
     currentRequired,
     currentUnique,
-    requiredError,
     currentFieldName,
     setCurrentFieldName,
-    nameError,
+    state,
     currentFieldType,
-    fieldTypes,
-    propertyMap,
     currentOptions,
     updateFieldOption,
     saveField,
     cancelSave,
     setCurrentRequired,
     setCurrentUnique,
-    setRequiredError,
     selectedArrayType,
     setSelectedArrayType
 }) => {
@@ -32,6 +30,8 @@ const FieldEditorComponent = ({
         { label: 'Date-Time', value: 'date-time' },
         { label: 'Object', value: 'object' },
     ];
+    const [requiredError, setRequiredError] = useState(null)
+
 
     return (
         <div style={{ height: "100%" }}>
@@ -83,7 +83,7 @@ const FieldEditorComponent = ({
                                     style={{ backgroundColor: "white" }}
                                 />
 
-                                {nameError.edit && <div style={{ fontSize: "15px", color: "red" }}>{nameError.edit}</div>}
+                                {state.nameError.edit && <div style={{ fontSize: "15px", color: "red" }}>{state.nameError.edit}</div>}
                             </div>
                         </div>
                         <div className='label-field-pair'>

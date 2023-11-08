@@ -2,7 +2,7 @@ import React from 'react';
 import { Close, Button } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 
-const SchemaModalComponent = ({ generatedSchema, uniqueError, setShowModal }) => {
+const SchemaModalComponent = ({ generatedSchema, state, setShowModal }) => {
     const history = useHistory(); // Initialize the useHistory hook
 
     const handleSave = () => {
@@ -70,16 +70,16 @@ const SchemaModalComponent = ({ generatedSchema, uniqueError, setShowModal }) =>
                 >
                     <Close />
                 </div>
-                <div style={{ overflow: "auto", maxHeight: "500px" }}>
+                <div style={{ overflow: "auto", maxHeight: "500px", zIndex: "999", }}>
                     {generatedSchema && (
                         <div>
                             <h2 style={{ fontWeight: "bold" }}>Schema : </h2>
                             <pre>{JSON.stringify(generatedSchema, null, 2)}</pre>
                         </div>
                     )}
-                    {uniqueError && (
+                    {state.uniqueError && (
                         <div>
-                            <span style={{ color: "red" }}>{uniqueError}</span>
+                            <span style={{ color: "red" }}>{state.uniqueError}</span>
                         </div>
                     )}
                 </div>

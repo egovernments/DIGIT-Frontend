@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
 
-const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFieldToUpdate, removeField, setLastName, setCurrentObjectName, setObjectMode }) => {
+const FieldView = ({ objectMode, state, dispatch, setFieldToUpdate, removeField, setLastName, setCurrentObjectName, setObjectMode }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
+    const orderedFields = objectMode ? state.filteredObjectFields : state.orderedFields;
+    const fields = state.fields;
+    console.log(fields, orderedFields, " fffffffffff")
     const handleDragStart = (event, index) => {
         event.dataTransfer.setData('text/plain', index);
         setDraggedIndex(index);
@@ -16,7 +19,7 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
             const draggedItem = newOrderedFields[draggedIndex];
             newOrderedFields.splice(draggedIndex, 1);
             newOrderedFields.splice(index, 0, draggedItem);
-            setOrderedFields(newOrderedFields);
+            dispatch({ type: 'SET_ORDERED_FIELDS', payload: newOrderedFields });
             setDraggedIndex(index);
         }
     };
@@ -92,7 +95,7 @@ const FieldView = ({ objectMode, orderedFields, setOrderedFields, fields, setFie
                         <div
                             onClick={(e) => {
                                 e.stopPropagation(); // Prevent the click event from bubbling
-                                debugger;
+
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
                                     setFieldToUpdate(fieldIndex);

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-react-components";
+import { fieldTypes } from './FieldVariable';
 
-const FieldSelect = ({ addingFieldType, setAddingFieldType, nameError, addField, fieldTypes }) => {
+const FieldSelect = ({ addingFieldType, setAddingFieldType, state, addField }) => {
 
     return (
         <div className='label-field-pair'>
@@ -20,9 +21,9 @@ const FieldSelect = ({ addingFieldType, setAddingFieldType, nameError, addField,
                 placeholder="Select a Type"
             />
 
-            {nameError?.add && (
+            {state.nameError?.add && (
                 <div>
-                    <span style={{ color: "red" }}>{nameError.add}</span>
+                    <span style={{ color: "red" }}>{state.nameError.add}</span>
                 </div>
             )}
 
