@@ -1,8 +1,9 @@
 import React from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-react-components";
 import { fieldTypes } from './FieldVariable';
+import { addField } from '../utils/schemaUtils';
 
-const FieldSelect = ({ state, addField, dispatch }) => {
+const FieldSelect = ({ state, dispatch }) => {
 
     return (
         <div className='label-field-pair'>
@@ -28,7 +29,7 @@ const FieldSelect = ({ state, addField, dispatch }) => {
             )}
 
             <div style={{ display: "grid" }}>
-                <Button style={{ justifySelf: "flex-end" }} onButtonClick={addField} label={"Add Field"} />
+                <Button style={{ justifySelf: "flex-end" }} onButtonClick={() => addField(state, dispatch)} label={"Add Field"} />
             </div>
         </div>
     );

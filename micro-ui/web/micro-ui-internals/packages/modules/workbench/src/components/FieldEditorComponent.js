@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { CheckBox, Button, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
 import { fieldTypes, propertyMap } from './FieldVariable'
+import { updateFieldOption, saveField, cancelSave } from '../utils/schemaUtils';
 
 
 const FieldEditorComponent = ({
     state,
-    updateFieldOption,
-    saveField,
-    cancelSave,
     dispatch,
 }) => {
     const arrayTypes = [
@@ -22,56 +20,57 @@ const FieldEditorComponent = ({
 
 
     return (
-        <div style={{ height: "100%" }}>
+        <div className='FieldEditorComponent'>
             {state.showCurrentField ? (
                 <div>
-                    {!state.objectMode ? (<div style={{ marginLeft: "10px" }}>
-                        <CheckBox
-                            label="Required"
-                            checked={state.currentRequired}
-                            onChange={(e) => {
-                                if (e.target.checked) {
-                                    dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
-                                    setRequiredError(null);
-                                } else {
-                                    if (!state.currentUnique) {
-                                        dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
+                    {!state.objectMode ? (
+                        <div className='checkBoxContainer'>
+                            <CheckBox
+                                label="Required"
+                                checked={state.currentRequired}
+                                onChange={(e) => {
+                                    if (e.target.checked) {
+                                        dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
                                         setRequiredError(null);
                                     } else {
-                                        setRequiredError("First make the 'Unique' checkbox unchecked.");
+                                        if (!state.currentUnique) {
+                                            dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
+                                            setRequiredError(null);
+                                        } else {
+                                            setRequiredError("First make the 'Unique' checkbox unchecked.");
+                                        }
                                     }
-                                }
-                            }}
-                        />
+                                }}
+                            />
 
-                        <CheckBox
-                            label="Unique"
-                            checked={state.currentUnique}
-                            onChange={(e) => {
-                                dispatch({ type: 'SET_CURRENT_UNIQUE', payload: e.target.checked });
-                                setRequiredError(null);
-                                if (e.target.checked) {
-                                    dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
-                                }
-                            }}
-                        />
-                    </div>) : (null)}
+                            <CheckBox
+                                label="Unique"
+                                checked={state.currentUnique}
+                                onChange={(e) => {
+                                    dispatch({ type: 'SET_CURRENT_UNIQUE', payload: e.target.checked });
+                                    setRequiredError(null);
+                                    if (e.target.checked) {
+                                        dispatch({ type: 'SET_CURRENT_REQUIRED', payload: true });
+                                    }
+                                }}
+                            />
+                        </div>) : (null)}
 
 
-                    {requiredError && <span style={{ color: "red", margin: "5px", fontSize: "15px" }}>{requiredError}</span>}
-                    <div className='workbench-space-between' style={{ marginRight: "10px", marginLeft: "10px", display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+                    {requiredError && <span className='schemaInputError'>{requiredError}</span>}
+                    <div className='workbench-space-between'>
                         <div className='label-field-pair'>
-                            <div style={{ backgroundColor: "#fff !important" }}>
+                            <div>
                                 <h2 className="card-label undefined">Field Name *</h2>
                                 <TextInput
                                     type="text"
                                     value={state.currentFieldName}
                                     onChange={(e) => dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: e.target.value })}
-                                    customClass="employee-card-input"
-                                    style={{ backgroundColor: "white" }}
+                                    customClass="employee-card-input bg"
+                                    className="bg-white"
                                 />
 
-                                {state.nameError.edit && <div style={{ fontSize: "15px", color: "red" }}>{state.nameError.edit}</div>}
+                                {state.nameError.edit && <div className='schemaInputError'>{state.nameError.edit}</div>}
                             </div>
                         </div>
                         <div className='label-field-pair'>
@@ -84,7 +83,6 @@ const FieldEditorComponent = ({
                                 option={fieldTypes}
                                 optionKey="label"
                                 t={(text) => text}
-                                style={{ width: '100%' }}
                                 className="dropdown-zIndex0"
                                 disable={true}
                             />
@@ -95,21 +93,19 @@ const FieldEditorComponent = ({
                                 {state.currentFieldType === 'array' && property === 'arrayType' ? (
                                     <Dropdown
                                         selected={state.selectedArrayType}
-                                        select={(value) => { dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: value }); updateFieldOption(property, value.value) }}
+                                        select={(value) => { dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: value }); updateFieldOption(property, value.value, state, dispatch) }}
                                         option={arrayTypes}
                                         optionKey="label"
                                         t={(text) => text}
-                                        style={{ width: '100%' }}
-                                        // className="dropdown-zIndex0"
                                         disable={state.updatingIndex !== null}
                                     />
                                 ) : (
                                     <TextInput
                                         type={state.currentFieldType === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (state.currentFieldType.includes('date') ? 'date' : 'number'))}
                                         value={state.currentOptions[property] || ''}
-                                        onChange={(e) => updateFieldOption(property, e.target.value)}
+                                        onChange={(e) => updateFieldOption(property, e.target.value, state, dispatch)}
                                         customClass="employee-card-input"
-                                        style={{ backgroundColor: "white" }}
+                                        className="bg-white"
                                     />
                                 )}
                             </div>
@@ -121,30 +117,30 @@ const FieldEditorComponent = ({
                                 <TextInput
                                     type={state.selectedArrayType.value === 'date-time' ? 'datetime-local' : (property === 'pattern' || property === 'format' ? 'text' : (state.selectedArrayType.value.includes('date') ? 'date' : 'number'))}
                                     value={state.currentOptions[property] || ''}
-                                    onChange={(e) => updateFieldOption(property, e.target.value)}
+                                    onChange={(e) => updateFieldOption(property, e.target.value, state, dispatch)}
                                     customClass="employee-card-input"
-                                    style={{ backgroundColor: "white" }}
+                                    className="bg-white"
                                 />
                             </div>
                         ))}
                     </div>
-                    <div style={{ display: "flex", flexDirection: "row", marginLeft: "10px", marginBottom: "10px" }}>
+                    <div className='buttoncontainer'>
                         <Button
-                            onButtonClick={() => saveField()}
+                            onButtonClick={() => saveField(state, dispatch)}
                             label={"Save Field"}
-                            style={{ marginRight: "10px", marginLeft: "auto" }}
+                            className="field-save-button"
                         />
                         <Button
-                            onButtonClick={() => cancelSave()}
+                            onButtonClick={() => cancelSave(dispatch)}
                             label={"Cancel"}
-                            style={{ marginRight: "10px" }}
+                            className="field-cancel-button"
                             variation={"secondary"}
                         />
                     </div>
                 </div>
             ) : (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%" }}>
-                    <p style={{ fontSize: "16px", fontWeight: "bold" }}>Add a field or select a field to edit</p>
+                <div className='schmema-note-container'>
+                    <p>Add a field or select a field to edit</p>
                 </div>
             )}
         </div>

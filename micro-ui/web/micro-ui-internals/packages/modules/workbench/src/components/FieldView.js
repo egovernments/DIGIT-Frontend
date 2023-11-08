@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
+import { setFieldToUpdate, removeField } from '../utils/schemaUtils';
 
-const FieldView = ({ state, dispatch, setFieldToUpdate, removeField }) => {
+const FieldView = ({ state, dispatch }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
     const orderedFields = state.objectMode ? state.filteredObjectFields : state.orderedFields;
     const fields = state.fields;
@@ -97,7 +98,7 @@ const FieldView = ({ state, dispatch, setFieldToUpdate, removeField }) => {
 
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
-                                    setFieldToUpdate(fieldIndex);
+                                    setFieldToUpdate(fieldIndex, state, dispatch);
                                 }
                                 dispatch({ type: 'SET_LAST_NAME', payload: field.name });
                             }}
@@ -110,7 +111,7 @@ const FieldView = ({ state, dispatch, setFieldToUpdate, removeField }) => {
                                 e.stopPropagation(); // Prevent the click event from bubbling
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
-                                    removeField(fieldIndex);
+                                    removeField(fieldIndex, state, dispatch);
                                 }
                             }}
                             style={{ cursor: "pointer", marginRight: "16px" }}
