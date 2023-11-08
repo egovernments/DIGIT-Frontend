@@ -32,7 +32,6 @@ function DynamicSchemaFormGenerator(props) {
             dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: state?.addingFieldType?.value });
             dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: null });
             dispatch({ type: 'SET_SHOW_CURRENT_FIELD', payload: true });
-            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
             dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
             dispatch({ type: 'SET_CURRENT_UNIQUE', payload: false });
             dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
@@ -103,7 +102,6 @@ function DynamicSchemaFormGenerator(props) {
             updatedFields.push(newField);
             dispatch({ type: 'SET_FIELDS', payload: updatedFields });
         }
-        dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
         dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
         dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
         dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
@@ -114,7 +112,6 @@ function DynamicSchemaFormGenerator(props) {
     }
     const cancelSave = () => {
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-        dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
         dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
         dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
         dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
@@ -141,13 +138,8 @@ function DynamicSchemaFormGenerator(props) {
         });
         dispatch({ type: 'SET_FIELDS', payload: updatedFields });
 
-        // Clear the selected field if it was removed
-        if (state.selectedFieldIndex === index) {
-            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
-        }
         if (state.updatingIndex === index) {
             dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            dispatch({ type: 'SET_SELECTED_FIELD_INDEX', payload: null });
             dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
             dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
             dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });

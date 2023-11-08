@@ -19,8 +19,7 @@ function initializeState(props) {
         updatingIndex: null, // Add updatingIndex to initialState
         selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
         objectMode: false,
-        lastName: '',
-        selectedFieldIndex: null
+        lastName: ''
     };
 }
 
@@ -61,8 +60,6 @@ const schemaReducer = (state, action) => {
             return { ...state, objectMode: action.payload };
         case 'SET_LAST_NAME':
             return { ...state, lastName: action.payload };
-        case 'SET_SELECTED_FIELD_INDEX':
-            return { ...state, selectedFieldIndex: action.payload };
         default:
             return state;
     }
