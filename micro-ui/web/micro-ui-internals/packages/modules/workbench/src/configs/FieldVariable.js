@@ -35,6 +35,7 @@ const resetCurrentVariables = {
     required: false,
     unique: false,
     objectName: '',
+    lastName: ''
 }
 
 export { fieldTypes, propertyMap, arrayTypes, resetCurrentVariables }

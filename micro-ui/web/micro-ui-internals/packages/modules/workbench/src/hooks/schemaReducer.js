@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { resetCurrentVariables } from '../configs/FieldVariable';
 
 // Define your initial state here
 function initializeState(props) {
@@ -8,16 +9,7 @@ function initializeState(props) {
         updatingIndex: null, // Add updatingIndex to initialState
         selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
         objectMode: false,
-        currentVariables: {
-            name: '',
-            type: 'string',
-            options: {},
-            field: false,
-            required: false,
-            unique: false,
-            objectName: '',
-            lastName: '',
-        },
+        currentVariables: resetCurrentVariables,
     };
 }
 
