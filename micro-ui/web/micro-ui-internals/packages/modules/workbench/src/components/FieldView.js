@@ -4,8 +4,8 @@ import { setFieldToUpdate, removeField } from '../utils/schemaUtils';
 
 const FieldView = ({ state, dispatch }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
-    const orderedFields = state.objectMode ? state.filteredObjectFields : state.orderedFields;
-    const fields = state.fields;
+    var orderedFields = state.objectMode ? state.fieldState.filteredObjectFields : state.fieldState.orderedFields;
+    const fields = state.fieldState.fields;
     const handleDragStart = (event, index) => {
         event.dataTransfer.setData('text/plain', index);
         setDraggedIndex(index);
@@ -19,7 +19,7 @@ const FieldView = ({ state, dispatch }) => {
             const draggedItem = newOrderedFields[draggedIndex];
             newOrderedFields.splice(draggedIndex, 1);
             newOrderedFields.splice(index, 0, draggedItem);
-            dispatch({ type: 'SET_ORDERED_FIELDS', payload: newOrderedFields });
+            dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, orderedFields: newOrderedFields } });
             setDraggedIndex(index);
         }
     };
@@ -87,12 +87,13 @@ const FieldView = ({ state, dispatch }) => {
                         <div
                             onClick={(e) => {
                                 e.stopPropagation(); // Prevent the click event from bubbling
-
                                 const fieldIndex = fields.findIndex((f) => f.name === field.name);
                                 if (fieldIndex !== -1) {
-                                    setFieldToUpdate(fieldIndex, state, dispatch);
+                                    setFieldToUpdate(fieldIndex, state, dispatch, field.name);
                                 }
-                                dispatch({ type: 'SET_LAST_NAME', payload: field.name });
+                                else {
+                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, lastName: field.name } });
+                                }
                             }}
                             className='icon-pointer'
                         >

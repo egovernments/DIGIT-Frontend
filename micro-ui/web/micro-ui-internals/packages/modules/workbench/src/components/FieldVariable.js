@@ -27,4 +27,14 @@ const arrayTypes = [
     { label: 'Object', value: 'object' },
 ];
 
-export { fieldTypes, propertyMap, arrayTypes }
+const resetCurrentVariables = {
+    currentFieldName: '',
+    currentFieldType: 'string',
+    currentOptions: {},
+    showCurrentField: false,
+    currentRequired: false,
+    currentUnique: false,
+    currentObjectName: '',
+}
+
+export { fieldTypes, propertyMap, arrayTypes, resetCurrentVariables }

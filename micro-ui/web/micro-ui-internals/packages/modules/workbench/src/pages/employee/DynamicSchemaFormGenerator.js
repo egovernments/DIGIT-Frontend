@@ -11,6 +11,7 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import CustomCheckbox from '../../components/Checbox';
 import { generateFieldsFromSchema, deepClone, buildSchema } from '../../utils/schemaUtils';
 import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleConfig';
+import { resetCurrentVariables } from '../../components/FieldVariable'
 
 function DynamicSchemaFormGenerator(props) {
     const { t } = useTranslation();
@@ -25,7 +26,7 @@ function DynamicSchemaFormGenerator(props) {
 
 
         // Deep clone the fields array
-        const clonedFields = deepClone(state.fields);
+        const clonedFields = deepClone(state.fieldState.fields);
 
         // Use the cloned fields for generating the schema
         const schema = {
@@ -49,7 +50,7 @@ function DynamicSchemaFormGenerator(props) {
             }
         });
 
-        state.orderedFields.map((field) => {
+        state.fieldState.orderedFields.map((field) => {
             schema['ui:order'].push(field.name);
         })
         setGeneratedSchema(
@@ -66,8 +67,32 @@ function DynamicSchemaFormGenerator(props) {
     };
 
     useEffect(() => {
-        // Construct a new array of fields based on objectFields and currentObjectName
-        const newFilteredObjectFields = state.fields.filter((field) => {
+        const newOrderedFields = [...state.fieldState.orderedFields];
+
+        // Iterate through the fields and check if their names are in orderedFields
+        state.fieldState.fields.forEach((field) => {
+            // Find the index of the matching field in newOrderedFields
+            const matchingFieldIndex = newOrderedFields.findIndex(item => item.name === field.name);
+
+            if (matchingFieldIndex === -1 && !field.name.includes(".")) {
+                // Add the missing field to the end of newOrderedFields
+                newOrderedFields.push({ ...field });
+            } else if (matchingFieldIndex !== -1) {
+                // Update the matching field in newOrderedFields with the new field
+                newOrderedFields[matchingFieldIndex] = field;
+            }
+        });
+
+
+        // Remove fields from orderedFields that are not present in fields
+        newOrderedFields.forEach((orderedField, index) => {
+            const nameExistsInFields = state.fieldState.fields.some(field => field.name === orderedField.name);
+            if (!nameExistsInFields) {
+                newOrderedFields.splice(index, 1);
+            }
+        });
+
+        const newFilteredObjectFields = state.fieldState.fields.filter((field) => {
             if (state.currentVariables.currentObjectName) {
                 // Check if the field name starts with the currentObjectName or its prefixes
                 const prefix = state.currentVariables.currentObjectName + '.';
@@ -81,9 +106,9 @@ function DynamicSchemaFormGenerator(props) {
             }
             return false; // If no currentObjectName or not matching the criteria, exclude the field
         });
-        // Pass the filtered fields to the FieldView component
-        dispatch({ type: 'SET_FILTERED_OBJECTS_FIELDS', payload: newFilteredObjectFields });
-    }, [state.fields, state.currentVariables.currentObjectName]);
+
+        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, filteredObjectFields: newFilteredObjectFields, orderedFields: newOrderedFields } });
+    }, [state.fieldState.fields, state.currentVariables.currentObjectName]);
 
 
     const renderButtons = () => {
@@ -107,50 +132,17 @@ function DynamicSchemaFormGenerator(props) {
             </div>
         )
     }
-
-    useEffect(() => {
-        // Create a copy of orderedFields to avoid mutating state directly
-        const newOrderedFields = [...state.orderedFields];
-        debugger;
-
-        // Iterate through the fields and check if their names are in orderedFields
-        state.fields.forEach((field) => {
-            // Find the index of the matching field in newOrderedFields
-            const matchingFieldIndex = newOrderedFields.findIndex(item => item.name === field.name);
-
-            if (matchingFieldIndex === -1 && !field.name.includes(".")) {
-                // Add the missing field to the end of newOrderedFields
-                newOrderedFields.push({ ...field });
-            } else if (matchingFieldIndex !== -1) {
-                // Update the matching field in newOrderedFields with the new field
-                newOrderedFields[matchingFieldIndex] = field;
-            }
-        });
-
-
-        // Remove fields from orderedFields that are not present in fields
-        newOrderedFields.forEach((orderedField, index) => {
-            const nameExistsInFields = state.fields.some(field => field.name === orderedField.name);
-            if (!nameExistsInFields) {
-                newOrderedFields.splice(index, 1);
-            }
-        });
-
-        // Update the state with the new orderedFields
-        dispatch({ type: 'SET_ORDERED_FIELDS', payload: newOrderedFields });
-    }, [state.fields]);
     const handleSchemaSubmit = () => {
         // You can add your schema processing logic here
         // For now, let's just display the parsed JSON
         try {
             const newFields = generateFieldsFromSchema(generatedSchema);
-            dispatch({ type: 'SET_FIELDS', payload: newFields });
             const uiOrderNames = generatedSchema.definition["ui:order"];
             const uiOrderFields = uiOrderNames.map((fieldName) => {
                 const matchingField = newFields.find((field) => field.name == fieldName);
                 return matchingField;
             });
-            dispatch({ type: 'SET_ORDERED_FIELDS', payload: uiOrderFields });
+            dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: newFields, orderedFields: uiOrderFields } });
             setShowGenerator(true);
             setSchemaName(generatedSchema?.definition?.schemaName)
         } catch (error) {
@@ -168,15 +160,6 @@ function DynamicSchemaFormGenerator(props) {
             handleSchemaSubmit();
             setShowGenerator(true);
             setGeneratedSchema(null);
-            const resetCurrentVariables = {
-                currentFieldName: '',
-                currentFieldType: 'string',
-                currentOptions: {},
-                showCurrentField: false,
-                currentRequired: false,
-                currentUnique: false,
-                currentObjectName: '',
-            };
             dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
             dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
             dispatch({ type: 'SET_OBJECT_MODE', payload: false });
@@ -221,9 +204,9 @@ function DynamicSchemaFormGenerator(props) {
                                                     const parts = state.currentVariables.currentObjectName.split('.');
                                                     parts.pop(); // Remove the last part
                                                     const newObjectName = parts.join('.');
-                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: newObjectName } });
+                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: newObjectName } });
                                                 } else {
-                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: '' } });
+                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { resetCurrentVariables } });
                                                     dispatch({ type: 'SET_OBJECT_MODE', payload: false });
                                                 }
                                             }}

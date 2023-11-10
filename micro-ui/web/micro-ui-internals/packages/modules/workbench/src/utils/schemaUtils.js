@@ -1,3 +1,4 @@
+import { resetCurrentVariables } from "../components/FieldVariable";
 function generateFieldsFromSchema(schema) {
     const updateFieldOptions = (field, fieldOptions) => {
 
@@ -214,8 +215,6 @@ function saveField(state, dispatch) {
         dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: fieldName } });
     }
 
-    dispatch({ type: 'SET_NAME_ERROR', payload: { add: null, edit: null } });
-
     var newField = {
         name: state.currentVariables.currentFieldName,
         type: state.currentVariables.currentFieldType,
@@ -228,9 +227,9 @@ function saveField(state, dispatch) {
         if (state.currentVariables.currentObjectName) {
             newField.name = state.currentVariables.currentObjectName + "." + state.currentVariables.currentFieldName;
         }
-        var updatedField = [...state.fields];
+        var updatedField = [...state.fieldState.fields];
         updatedField[state.updatingIndex] = newField;
-
+        debugger;
         updatedField.map(field => {
             if (field.name.startsWith(state.currentVariables.lastName + ".")) {
                 const suffix = field.name.substring((state.currentVariables.lastName + ".").length);
@@ -239,53 +238,34 @@ function saveField(state, dispatch) {
             return field;
         });
 
-        dispatch({ type: 'SET_FIELDS', payload: updatedField });
+        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedField } });
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
     } else {
         if (state.currentVariables.currentObjectName) {
             newField.name = state.currentVariables.currentObjectName + "." + state.currentVariables.currentFieldName;
         }
-        var updatedFields = [...state.fields];
+        var updatedFields = [...state.fieldState.fields];
         updatedFields.push(newField);
-        dispatch({ type: 'SET_FIELDS', payload: updatedFields });
+        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
     }
     if (!(state.currentVariables.currentFieldType == 'object' || (state.currentVariables.currentFieldType == 'array' && state.selectedArrayType?.value == 'object'))) {
         fieldName = state.currentVariables.currentObjectName;
     }
 
-    // Reset currentVariables
-    const resetCurrentVariables = {
-        currentFieldName: '',
-        currentFieldType: 'string',
-        currentOptions: {},
-        showCurrentField: false,
-        currentRequired: false,
-        currentUnique: false,
-        currentObjectName: fieldName,
-    };
-    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
+    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: fieldName } });
     dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
 }
 
 
 
 function cancelSave(dispatch) {
-    const resetCurrentVariables = {
-        currentFieldName: '',
-        currentFieldType: 'string',
-        currentOptions: {},
-        showCurrentField: false,
-        currentRequired: false,
-        currentUnique: false,
-        currentObjectName: state.currentVariables.currentObjectName,
-    };
-    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
+    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: state.currentVariables.currentObjectName } });
     dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
 }
 
 
 function removeField(index, state, dispatch) {
-    const updatedFields = [...state.fields];
+    const updatedFields = [...state.fieldState.fields];
     const fieldToRemove = updatedFields[index];
 
     // Remove the field at the specified index
@@ -300,7 +280,7 @@ function removeField(index, state, dispatch) {
             updatedFields.splice(removeIndex, 1);
         }
     });
-    dispatch({ type: 'SET_FIELDS', payload: updatedFields });
+    dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
 
     if (state.updatingIndex === index) {
         const currentVariables = {
@@ -317,27 +297,28 @@ function removeField(index, state, dispatch) {
     }
 }
 
-function setFieldToUpdate(index, state, dispatch) {
+function setFieldToUpdate(index, state, dispatch, lastName) {
     dispatch({ type: 'SET_UPDATING_INDEX', payload: index });
     // Split the name by dots, and get the last element of the resulting array
-    const nameParts = state.fields[index].name.split('.');
+    const nameParts = state.fieldState.fields[index].name.split('.');
     const lastNamePart = nameParts[nameParts.length - 1];
     dispatch({
         type: 'SET_CURRENT_VARIABLES', payload: {
             ...state.currentVariables,
             currentFieldName: lastNamePart,
-            currentFieldType: state.fields[index].type,
-            currentOptions: state.fields[index].options,
-            currentRequired: state.fields[index].required,
-            currentUnique: state.fields[index].unique,
-            showCurrentField: true
+            currentFieldType: state.fieldState.fields[index].type,
+            currentOptions: state.fieldState.fields[index].options,
+            currentRequired: state.fieldState.fields[index].required,
+            currentUnique: state.fieldState.fields[index].unique,
+            showCurrentField: true,
+            lastName: lastName
         }
     });
-    if (state.fields[index].type === 'array') {
+    if (state.fieldState.fields[index].type === 'array') {
         dispatch({
             type: 'SET_SELECTED_ARRAY_TYPE', payload: {
-                label: state.fields[index].options.arrayType.charAt(0).toUpperCase() + state.fields[index].options.arrayType.slice(1),
-                value: state.fields[index].options.arrayType
+                label: state.fieldState.fields[index].options.arrayType.charAt(0).toUpperCase() + state.fieldState.fields[index].options.arrayType.slice(1),
+                value: state.fieldState.fields[index].options.arrayType
             }
         });
     }

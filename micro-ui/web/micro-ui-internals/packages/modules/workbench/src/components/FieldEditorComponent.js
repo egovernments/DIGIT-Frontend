@@ -24,13 +24,12 @@ const FieldEditorComponent = ({ state, dispatch }) => {
     };
 
     const handleSaveField = () => {
-        debugger;
         const currentName = state.currentVariables.currentObjectName ? state.currentVariables.currentObjectName + '.' + state.currentVariables.currentFieldName : state.currentVariables.currentFieldName;
         if (!state.currentVariables.currentFieldName) {
             setFieldNameError("Field name Can't be empty");
         } else if (state.currentVariables.currentFieldName.includes('.')) {
             setFieldNameError("Field name cannot contain a dot (.)");
-        } else if ((state.fields.some(field => field.name == currentName) && state.updatingIndex == null)) {
+        } else if ((state.fieldState.fields.some(field => field.name == currentName) && state.updatingIndex == null)) {
             setFieldNameError("Field name already exists");
         } else {
             saveField(state, dispatch, state.currentVariables);
