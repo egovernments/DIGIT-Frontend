@@ -21,7 +21,7 @@ import { set } from "lodash";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui"];
+const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui","mgramseva-web"];
 /*
 Used to navigate to other mission's ui if user has access
 */

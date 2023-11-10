@@ -124,6 +124,7 @@ _Bill Module
 # Changelog
 
 ```bash
+1.0.0-beta.1 republished due to some version issues
 1.0.0-beta workbench base version beta release
 0.0.8 fix response data for custom compnent in inbox composer
 0.0.7 updated the readme content

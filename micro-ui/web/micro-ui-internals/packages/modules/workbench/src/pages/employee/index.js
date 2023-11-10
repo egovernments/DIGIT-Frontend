@@ -14,6 +14,7 @@ import LocalisationAdd from "./LocalisationAdd";
 import SchemaHome from "./SchemaHome";
 import SchemaResponsePage from "../../components/SchemaResponsePage";
 import EditSchemaHome from "./EditSchemaHome";
+import WorkbenchHeader from "../../components/WorkbenchHeader";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -84,7 +85,10 @@ const App = ({ path }) => {
 
   return (
     <React.Fragment>
-      <WorkbenchBreadCrumb location={location} defaultPath={path} />
+      <div className="wbh-header-container">
+        <WorkbenchBreadCrumb location={location} defaultPath={path} />
+        <WorkbenchHeader />
+      </div>
       <Switch>
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />

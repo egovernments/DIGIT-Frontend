@@ -782,11 +782,11 @@ const EventCalendar = () => {
   );
 };
 
-const NotificationBell = () => (
+const NotificationBell = ({fill="#F47738"}) => (
   <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M8 20C9.1 20 10 19.1 10 18H6C6 19.1 6.89 20 8 20ZM14 14V9C14 5.93 12.36 3.36 9.5 2.68V2C9.5 1.17 8.83 0.5 8 0.5C7.17 0.5 6.5 1.17 6.5 2V2.68C3.63 3.36 2 5.92 2 9V14L0 16V17H16V16L14 14Z"
-      fill="white"
+      fill={fill}
     />
   </svg>
 );
@@ -1793,9 +1793,48 @@ const AttentionListIcon =({ className = "", fill = "none", style = {} })=>(
 </svg>
 )
 
+const HelpOutlineIcon = ({ className = "", fill = "", style = {} }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className={className} style={style}>
+    <g clip-path="url(#clip0_52342_113207)">
+      <path
+        d="M11 18H13V16H11V18ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6C9.79 6 8 7.79 8 10H10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 12 11 11.75 11 15H13C13 12.75 16 12.5 16 10C16 7.79 14.21 6 12 6Z"
+        fill="#F47738"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_52342_113207">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const InputIcon = () => (
+  <svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M33.9993 0.0166016H3.99935C2.16602 0.0166016 0.666016 1.5166 0.666016 3.34994V9.99994H3.99935V3.3166H33.9993V26.6999H3.99935V19.9999H0.666016V26.6833C0.666016 28.5166 2.16602 29.9833 3.99935 29.9833H33.9993C35.8327 29.9833 37.3327 28.5166 37.3327 26.6833V3.34994C37.3327 1.49994 35.8327 0.0166016 33.9993 0.0166016ZM17.3327 21.6666L23.9993 14.9999L17.3327 8.33327V13.3333H0.666016V16.6666H17.3327V21.6666Z"
+      fill="#F47738"
+    />
+  </svg>
+);
+
+const TreatmentQualityIcon = ({ className = "", fill = "", style = {} }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" viewBox="0 0 34 30" fill="none" className={className} style={style}>
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M30.332 0H3.66536C1.83203 0 0.332031 1.5 0.332031 3.33333V26.6667C0.332031 28.5 1.83203 30 3.66536 30H30.332C32.1654 30 33.6654 28.5 33.6654 26.6667V3.33333C33.6654 1.5 32.1654 0 30.332 0ZM13.6654 23.3333H5.33203V20H13.6654V23.3333ZM13.6654 16.6667H5.33203V13.3333H13.6654V16.6667ZM13.6654 10H5.33203V6.66667H13.6654V10ZM21.6987 20L16.9987 15.2667L19.3487 12.9167L21.6987 15.2833L26.982 10L29.3487 12.3667L21.6987 20Z"
+      fill="#F47738"
+    />
+  </svg>
+);
+
 const ExpenditureIcon = BillsIcon;
 
 export {
+  InputIcon,
+  TreatmentQualityIcon,
+  HelpOutlineIcon,
   AnnouncementIcon,
   ReceiptIcon,
   CreateEstimateIcon,
