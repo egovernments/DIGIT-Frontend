@@ -10,10 +10,6 @@
 
   }
 
-  &.focused {
-    border: 1px solid theme(digitv2.lightTheme.primary);
-  }
-
   &.noneditable {
     pointer-events: none !important;
     border: 1px solid theme(digitv2.lightTheme.input-border);
@@ -29,4 +25,9 @@
 
 .digit-employee-card-textarea {
   @apply w-full;
+}
+
+.digit-card-textarea:focus,
+.digit-employee-card-textarea:focus {
+  border: 1px solid theme(digitv2.lightTheme.primary);
 }

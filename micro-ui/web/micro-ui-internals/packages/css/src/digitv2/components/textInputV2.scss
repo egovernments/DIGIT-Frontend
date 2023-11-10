@@ -8,32 +8,43 @@
 .digit-text-input {
   @apply relative w-full;
 
+  &.numeric {
+    input {
+      pointer-events: none;
+      text-align: center;
+    }
+  }
+
   &.error {
-    input,.digit-prefix,.digit-suffix {
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button {
       border: 1px solid theme(digitv2.alert.error);
     }
   }
 
   &.disabled {
-    input,.digit-prefix,.digit-suffix{
+
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button {
       @apply border-grey-dark text-grey-dark !important;
       pointer-events: none !important;
       cursor: not-allowed;
     }
-  }
 
-
-  &.focused {
-    input,.digit-prefix,.digit-suffix{
-      border: 1px solid theme(digitv2.lightTheme.primary);
-    }
   }
 
   &.noneditable {
-    input, .digit-prefix,.digit-suffix{
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button {
       pointer-events: none !important;
       border: 1px solid theme(digitv2.lightTheme.input-border);
-      background:  theme(digitv2.lightTheme.background);
+      background: theme(digitv2.lightTheme.background);
       color: theme(digitv2.lightTheme.text-color-secondary);
     }
   }
@@ -166,10 +177,23 @@
   display: flex;
   align-items: center;
   width: 23.75rem;
-  height: 5.6875rem;
+  height: 2.5rem;
 }
 
-.digit-prefix, .digit-suffix {
+.input-container:focus-within{
+  .digit-numeric-button,
+  .digit-prefix,
+  .digit-suffix,
+  input {
+    outline: none;
+    border: 1px solid theme(digitv2.lightTheme.primary);
+  }
+}
+
+
+.digit-prefix,
+.digit-suffix,
+.digit-numeric-button {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-size: 1.5rem;
   font-weight: theme(digitv2.fontWeight.bold);
@@ -181,10 +205,13 @@
   font-style: theme(digitv2.fontStyle.normal);
   line-height: theme(digitv2.lineHeight.normal);
   background: theme(colors.grey.mid);
-  margin-top: -24px;
-  pointer-events: none;
+  margin-bottom: 24px;
 }
 
+.digit-prefix,
+.digit-suffix {
+  pointer-events: none;
+}
 
 .digit-text-input-customIcon {
   position: absolute;

@@ -1,0 +1,42 @@
+@import url("../index.scss");
+
+.digit-header {
+
+    &.label {
+        display: block;
+        height: 1.1875rem;
+        margin-bottom: 15px;
+        font-weight: theme(digitv2.fontWeight.regular);
+        color: theme(digitv2.lightTheme.text-color-primary);
+        font-family: theme(digitv2.fontFamily.sans);
+        font-size: theme(digitv2.fontSize.label);
+        font-style:  theme(digitv2.fontStyle.normal);
+        line-height: theme(digitv2.lineHeight.normal);
+    }
+}
+
+.digit-field {
+
+    width: 100%;
+
+    .digit-description,
+    .digit-error {
+        font-weight: theme(digitv2.fontWeight.regular);;
+        font-style: theme(digitv2.fontStyle.normal);
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+        font-family: theme(digitv2.fontFamily.sans);
+    }
+
+    .digit-description {
+        color: theme(digitv2.lightTheme.text-color-secondary);
+        width: 23.75rem;
+        display: flex;
+        justify-content: space-between;
+        height: 1.5rem;
+
+        &:empty {
+            display: none;
+        }
+    }
+}

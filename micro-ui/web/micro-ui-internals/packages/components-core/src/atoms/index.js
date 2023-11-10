@@ -54,7 +54,7 @@ import Toast from "./Toast";
 import UploadFile from "./UploadFile";
 import WhatsNewCard from "./WhatsNewCard";
 import PageBasedInput from "./PageBasedInput";
-import Numeric from "./Numeric";
+// import Numeric from "./Numeric";
 export {
   PageBasedInput,
   ActionBar,
@@ -112,5 +112,5 @@ export {
   Toast,
   UploadFile,
   WhatsNewCard,
-  Numeric
+  // Numeric
 };

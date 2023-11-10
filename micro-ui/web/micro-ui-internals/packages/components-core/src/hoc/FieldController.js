@@ -1,5 +1,6 @@
 import React from "react";
-import FieldComposer from "./FieldComposer";
+// import FieldComposer from "./FieldComposer";
+import FieldV1 from "./FieldV1";
 import { Controller } from "react-hook-form";
 
 function FieldController(args) {
@@ -17,6 +18,11 @@ function FieldController(args) {
     props,
     errors,
     controllerProps,
+    nonEditable,
+    placeholder,
+    description,
+    charCount,
+    withoutLabel,
   } = args;
   let { apiDetails } = props;
   let disableFormValidation = false;
@@ -37,11 +43,19 @@ function FieldController(args) {
     <Controller
       defaultValue={formData?.[populators.name]}
       render={({ onChange, ref, value, onBlur }) => (
-        <FieldComposer
+        <FieldV1
+          error= {errors[populators.name]}
+          label={config.label}
+          nonEditable = {nonEditable}
+          placeholder={placeholder}
+          inline={props.inline}
+          description={description}
+          charCount = {charCount}
+          withoutLabel = {withoutLabel}
           type={type}
           populators={populators}
-          isMandatory={isMandatory}
-          disable={disable}
+          required={isMandatory}
+          disabled={disable}
           component={component}
           config={config}
           sectionFormCategory={sectionFormCategory}

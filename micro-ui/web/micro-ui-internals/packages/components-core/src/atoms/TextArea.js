@@ -1,15 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useState } from "react";
 import { SVG } from "./SVG";
 
 const TextArea = (props) => {
   const user_type = window?.Digit?.SessionStorage.get("userType");
 
-
-  const textareaClass = `${user_type !== "citizen" ? "digit-employee-card-textarea" : "digit-card-textarea"} ${props?.className ? props?.className : ""
-    } ${props.disable ? "disabled" : ""
-  }  ${props?.focused  ? "focused" : ""} ${props.noneditable  ? "noneditable" : ""} ${props?.errors?.errorMessage  ? "error" : ""}`
 
   return (
     <React.Fragment>
@@ -22,13 +17,14 @@ const TextArea = (props) => {
         value={props.value}
         onChange={(event) => {
         }}
-        className={textareaClass}
+        className={`${user_type !== "citizen" ? "digit-employee-card-textarea" : "digit-card-textarea"} ${props?.className ? props?.className : ""
+          } ${props.disabled ? "disabled" : ""
+          } ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""}`}
         minLength={props.minlength}
         maxLength={props.maxlength}
         autoComplete="off"
-        disabled={props.disable}
-        focused={props.focused}
-        noneditable={props.noneditable}
+        disabled={props.disabled}
+        nonEditable={props.nonEditable}
         pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
       ></textarea>
     </React.Fragment>
@@ -44,9 +40,7 @@ TextArea.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   className: PropTypes.string,
-  disable: PropTypes.bool,
-  noneditable: PropTypes.bool,
-  focused:PropTypes.bool,
+  nonEditable: PropTypes.bool,
   minlength: PropTypes.number,
   maxlength: PropTypes.number,
   autoComplete: PropTypes.string,
@@ -57,6 +51,7 @@ TextArea.propTypes = {
   hintText: PropTypes.string,
   charCount: PropTypes.bool,
   errors: PropTypes.object,
+  error:PropTypes.bool
 };
 
 TextArea.defaultProps = {

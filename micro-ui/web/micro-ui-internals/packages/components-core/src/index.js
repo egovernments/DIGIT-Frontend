@@ -55,10 +55,10 @@ import {
   Toast,
   UploadFile,
   WhatsNewCard,
-  Numeric
+  // Numeric
 } from "./atoms";
 
-import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer } from "./hoc";
+import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer ,FieldV1} from "./hoc";
 
 import {
   ApiDropdown,
@@ -140,6 +140,7 @@ export {
   UploadFile,
   WhatsNewCard,
   FieldComposer,
+  FieldV1,
   FieldController,
   Fields,
   FormComposerV2,
@@ -156,5 +157,5 @@ export {
   SearchForm,
   SearchOnRadioButtons,
   TextInputCard,
-  Numeric
+  // Numeric
 };
