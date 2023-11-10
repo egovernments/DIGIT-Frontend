@@ -104,7 +104,41 @@ export const TourSteps = {
       disableBeacon: true,
       placement: 'bottom',
       title:"Manage Master Data"
-    }
+    }  
+  ],
+  '/workbench-ui/employee/workbench/localisation-search':[
+    {
+      content:
+        'Welcome to the master data search screen. Here you can search the master data added under this master',
+      target: '.search-wrapper',
+      disableBeacon: true,
+      placement: 'bottom',
+      title:"Manage Master Data"
+    },
+    {
+      content:
+        'Select any field value and enter the text by which data can be filtered',
+      target: '.label-field-pair',
+      disableBeacon: true,
+      placement: 'bottom',
+      title:"Manage Master Data"
+    },
+    {
+      content:
+        'Filter the master data by clicking on this search by selecting any field and exact value',
+      target: '.search-button-wrapper',
+      disableBeacon: true,
+      placement: 'bottom',
+      title:"Manage Master Data"
+    },
+    {
+      content:
+        'To add new master data under this master click on the Add Master Data button',
+      target: '.mdms-add-btn',
+      disableBeacon: true,
+      placement: 'auto',
+      title:"Manage Master Data"
+    },
     
-  ]
+  ],
 }

@@ -129,7 +129,7 @@ const LocalisationSearch = () => {
       {
         Config && Digit.Utils.didEmployeeHasRole(Config?.actionRole) &&
         <ActionBar >
-          <SubmitBar disabled={false} onSubmit={() => {
+          <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
               history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
             }} label={t("WBH_ADD_LOCALISATION")} />
         </ActionBar>
