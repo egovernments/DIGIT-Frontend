@@ -18,4 +18,13 @@ const propertyMap = {
     'array': ['arrayType', 'minLength of Array', 'maxLength of Array']
 };
 
-export { fieldTypes, propertyMap }
+const arrayTypes = [
+    { label: 'String', value: 'string' },
+    { label: 'Number', value: 'number' },
+    { label: 'Boolean', value: 'boolean' },
+    { label: 'Date', value: 'date' },
+    { label: 'Date-Time', value: 'date-time' },
+    { label: 'Object', value: 'object' },
+];
+
+export { fieldTypes, propertyMap, arrayTypes }

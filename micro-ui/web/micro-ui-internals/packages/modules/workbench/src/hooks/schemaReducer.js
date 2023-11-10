@@ -6,20 +6,20 @@ function initializeState(props) {
         fields: props.fields || [],
         orderedFields: props.uiOrder || [],
         filteredObjectFields: [],
-        nameError: { add: null, edit: null },
-        uniqueError: false,
-        currentRequired: false,
-        currentUnique: false,
-        currentFieldName: '',
-        currentFieldType: 'string',
-        currentOptions: {},
-        showCurrentField: false,
-        currentObjectName: '',
         addingFieldType: null,
         updatingIndex: null, // Add updatingIndex to initialState
         selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
         objectMode: false,
-        lastName: ''
+        lastName: '',
+        currentVariables: {
+            currentFieldName: '',
+            currentFieldType: 'string',
+            currentOptions: {},
+            showCurrentField: false,
+            currentRequired: false,
+            currentUnique: false,
+            currentObjectName: '',
+        },
     };
 }
 
@@ -32,24 +32,8 @@ const schemaReducer = (state, action) => {
             return { ...state, orderedFields: action.payload };
         case 'SET_FILTERED_OBJECTS_FIELDS':
             return { ...state, filteredObjectFields: action.payload };
-        case 'SET_NAME_ERROR':
-            return { ...state, nameError: action.payload };
-        case 'SET_UNIQUE_ERROR':
-            return { ...state, uniqueError: action.payload };
-        case 'SET_CURRENT_REQUIRED':
-            return { ...state, currentRequired: action.payload };
-        case 'SET_CURRENT_UNIQUE':
-            return { ...state, currentUnique: action.payload };
-        case 'SET_CURRENT_FIELD_NAME':
-            return { ...state, currentFieldName: action.payload };
-        case 'SET_CURRENT_FIELD_TYPE':
-            return { ...state, currentFieldType: action.payload };
-        case 'SET_CURRENT_OPTIONS':
-            return { ...state, currentOptions: action.payload };
-        case 'SET_SHOW_CURRENT_FIELD':
-            return { ...state, showCurrentField: action.payload };
-        case 'SET_CURRENT_OBJECT_NAME':
-            return { ...state, currentObjectName: action.payload };
+        case 'SET_CURRENT_VARIABLES':
+            return { ...state, currentVariables: action.payload };
         case 'SET_ADDING_FIELD_TYPE':
             return { ...state, addingFieldType: action.payload };
         case 'SET_UPDATING_INDEX':

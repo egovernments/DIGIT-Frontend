@@ -24,78 +24,50 @@ const SchemaModalComponent = ({ generatedSchema, state, setShowModal }) => {
         }
     };
 
+    const validateSchema = (schema) => {
+        return schema && schema["ui:order"] && schema["x-unique"] && schema["ui:order"].length > 0 && schema["x-unique"].length > 0;
+    };
+
+
 
     return (
-        <div
-            style={{
-                position: "fixed",
-                top: "0",
-                left: "0",
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <div
-                style={{
-                    position: "absolute",
-                    backgroundColor: "#fff",
-                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
-                    maxWidth: "80%",
-                    textAlign: "left",
-                    padding: "20px",
-                    minWidth: "500px",
-                    zIndex: "999",
-                }}
-            >
+        <div className="schema-modal-overlay">
+            <div className='schema-modal-container'>
                 <div
-                    style={{
-                        position: "absolute",
-                        top: "0px",
-                        right: "0px",
-                        backgroundColor: "white",
-                        border: "none",
-                        textAlign: "center",
-                        textDecoration: "none",
-                        display: "inline-block",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        zIndex: "999",
-                        margin: "5px"
-                    }}
+                    className='schema-modal-close'
                     onClick={() => setShowModal(false)}
                 >
                     <Close />
                 </div>
-                <div style={{ overflow: "auto", maxHeight: "500px", zIndex: "999", }}>
-                    {generatedSchema && (
+                <div className="modal-content">
+                    {validateSchema(generatedSchema.definition) && (
                         <div>
-                            <h2 style={{ fontWeight: "bold" }}>Schema : </h2>
+                            <h2 style={{ fontWeight: "bold" }}>Schema:</h2>
                             <pre>{JSON.stringify(generatedSchema, null, 2)}</pre>
                         </div>
+
                     )}
-                    {state.uniqueError && (
+                    {validateSchema(generatedSchema.definition) || (
                         <div>
-                            <span style={{ color: "red" }}>{state.uniqueError}</span>
+                            {(generatedSchema.definition["ui:order"].length == 0) && (
+                                <div className='schemaInputError'>Add at least one field should be there in schema</div>
+                            )}
+
+                            {(generatedSchema.definition["ui:order"].length > 0 && generatedSchema.definition["x-unique"].length == 0) && (
+                                <div className='schemaInputError'>At least one field should be unique</div>
+                            )}
                         </div>
                     )}
                 </div>
-                {generatedSchema && (
-                    <Button
-                        style={{
-                            padding: "10px 20px",
-                            cursor: "pointer",
-                            marginTop: "20px",
-                            zIndex: "999",
-                        }}
+                {validateSchema(generatedSchema.definition) &&
+                    (<Button
+                        className="save-button"
                         label={"Save"}
                         onButtonClick={handleSave}
-                    />
-                )}
+                        disabled={!validateSchema(generatedSchema)}
+                    />)}
             </div>
+
         </div>
     );
 };

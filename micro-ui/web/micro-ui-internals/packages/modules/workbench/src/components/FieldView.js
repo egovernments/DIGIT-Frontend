@@ -32,58 +32,50 @@ const FieldView = ({ state, dispatch }) => {
             {orderedFields.map((field, index) => (
                 <div
                     key={index}
-                    className="field-item"
                     data-index={index}
                     draggable={state.objectMode ? "false" : "true"}
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
+                    className='field-view-container flex-container'
                     style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: "10px",
-                        alignItems: "center",
-                        padding: "10px",
                         border: state.objectMode ? "" : "1px solid #ccc",
-                        background: "#f5f5f5",
                         cursor: state.objectMode ? "" : "pointer",
-                        position: "relative", // Add relative positioning
                     }}
                 >
                     {state.objectMode ? (
-                        <span style={
-                            {
-                                display: "flex",
-                                alignItems: "center",
-                                color: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? '#F47738' : 'black',
-                                cursor: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? 'pointer' : 'default'
-                            }
-                        } onClick={() => {
-                            if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
-                                dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: field.name });
-                                dispatch({ type: 'SET_OBJECT_MODE', payload: true });
-                            }
-                        }}>
-                            {field.name.includes('.') ? field.name.split('.').pop() : field.name}
-                        </span>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: "row" }}>
-                            <span className="arrow-up">&#8593;</span>
-                            <span className="arrow-down">&#8595;</span>
-                            <span style={
+                        <span
+                            className='field-name'
+                            style={
                                 {
-                                    display: "flex",
-                                    alignItems: "center",
-                                    marginLeft: "5px",
-                                    color: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? '#F47738' : 'black',
-                                    cursor: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? 'pointer' : 'default'
+                                    color: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? '#F47738' : 'black',
+                                    cursor: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? 'pointer' : 'default'
                                 }
                             } onClick={() => {
-                                if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
-                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: field.name });
+                                if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
+                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: field.name } });
                                     dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                 }
                             }}>
+                            {field.name.includes('.') ? field.name.split('.').pop() : field.name}
+                        </span>
+                    ) : (
+                        <div className='flex-container'>
+                            <span className="arrow-up">&#8593;</span>
+                            <span className="arrow-down">&#8595;</span>
+                            <span
+                                className='field-name'
+                                style={
+                                    {
+                                        color: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? '#F47738' : 'black',
+                                        cursor: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? 'pointer' : 'default'
+                                    }
+                                } onClick={() => {
+                                    if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
+                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: field.name } });
+                                        dispatch({ type: 'SET_OBJECT_MODE', payload: true });
+                                    }
+                                }}>
                                 {field.name.includes('.') ? field.name.split('.').pop() : field.name}{field.required ? ' *' : ''}
                             </span>
                         </div>
@@ -91,7 +83,7 @@ const FieldView = ({ state, dispatch }) => {
                     )}
 
 
-                    <div style={{ display: "flex" }}>
+                    <div className='flex-container'>
                         <div
                             onClick={(e) => {
                                 e.stopPropagation(); // Prevent the click event from bubbling
@@ -102,7 +94,7 @@ const FieldView = ({ state, dispatch }) => {
                                 }
                                 dispatch({ type: 'SET_LAST_NAME', payload: field.name });
                             }}
-                            style={{ cursor: "pointer", marginRight: "16px" }}
+                            className='icon-pointer'
                         >
                             <EditIcon />
                         </div>
@@ -114,7 +106,7 @@ const FieldView = ({ state, dispatch }) => {
                                     removeField(fieldIndex, state, dispatch);
                                 }
                             }}
-                            style={{ cursor: "pointer", marginRight: "16px" }}
+                            className='icon-pointer'
                         >
                             <DeleteIcon fill={"red"} />
                         </div>

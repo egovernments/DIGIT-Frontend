@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActionBar, Button, SubmitBar } from "@egovernments/digit-ui-react-components"
 import FieldView from '../../components/FieldView';
 import FieldSelect from '../../components/FieldSelect';
@@ -23,71 +23,54 @@ function DynamicSchemaFormGenerator(props) {
     const { state, dispatch } = Digit.Hooks.workbench.useSchemaReducer(props);
     const generateSchema = () => {
 
-        if (state.fields.length === 0) {
-            // If the fields array is empty, set an error message
-            dispatch({ type: 'SET_UNIQUE_ERROR', payload: "At least one field is required to generate the schema." });
-            setGeneratedSchema(null); // Reset the schema
-            setShowModal(true);
-        } else {
-            // Deep clone the fields array
-            const clonedFields = deepClone(state.fields);
 
-            // Use the cloned fields for generating the schema
-            const schema = {
-                schemaName: props.schemaName,
-                type: 'object',
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                properties: {},
-                required: [],
-                'x-unique': [],
-                'ui:order': [],
-            };
+        // Deep clone the fields array
+        const clonedFields = deepClone(state.fields);
 
-            // Track whether at least one unique field is found
-            let uniqueFound = false;
+        // Use the cloned fields for generating the schema
+        const schema = {
+            schemaName: props.schemaName,
+            type: 'object',
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            properties: {},
+            required: [],
+            'x-unique': [],
+            'ui:order': [],
+        };
 
-            clonedFields.forEach((field) => {
-                buildSchema(field, schema);
-                if (field.unique && !field.name.includes(".")) {
-                    schema['x-unique'].push(field.name);
-                    uniqueFound = true; // Mark that a unique field was found
-                }
-                if (field.required && !field.name.includes(".")) {
-                    schema['required'].push(field.name);
-                }
-            });
 
-            state.orderedFields.map((field) => {
-                schema['ui:order'].push(field.name);
-            })
-
-            if (!uniqueFound) {
-                dispatch({ type: 'SET_UNIQUE_ERROR', payload: "At least one unique field is required." });
-                setGeneratedSchema(null); // Reset the schema
-            } else {
-                // No error, set the schema as generated
-                dispatch({ type: 'SET_UNIQUE_ERROR', payload: null });
-                setGeneratedSchema(
-                    {
-                        code: "MDMS_Schema." + props.schemaName,
-                        tenantId: tenantId,
-                        description: "Mdms schema " + props.schemaName,
-                        definition: schema
-                    }
-                );
+        clonedFields.forEach((field) => {
+            buildSchema(field, schema);
+            if (field.unique && !field.name.includes(".")) {
+                schema['x-unique'].push(field.name);
             }
-            setShowModal(true);
-        }
+            if (field.required && !field.name.includes(".")) {
+                schema['required'].push(field.name);
+            }
+        });
+
+        state.orderedFields.map((field) => {
+            schema['ui:order'].push(field.name);
+        })
+        setGeneratedSchema(
+            {
+                code: "MDMS_Schema." + props.schemaName,
+                tenantId: tenantId,
+                description: "Mdms schema " + props.schemaName,
+                definition: schema
+            }
+        );
+
+        setShowModal(true);
+
     };
-
-
 
     useEffect(() => {
         // Construct a new array of fields based on objectFields and currentObjectName
         const newFilteredObjectFields = state.fields.filter((field) => {
-            if (state.currentObjectName) {
+            if (state.currentVariables.currentObjectName) {
                 // Check if the field name starts with the currentObjectName or its prefixes
-                const prefix = state.currentObjectName + '.';
+                const prefix = state.currentVariables.currentObjectName + '.';
                 if (field.name.startsWith(prefix)) {
                     // Check if the field name contains dots only in the prefix
                     const remainingName = field.name.substring(prefix.length);
@@ -100,7 +83,7 @@ function DynamicSchemaFormGenerator(props) {
         });
         // Pass the filtered fields to the FieldView component
         dispatch({ type: 'SET_FILTERED_OBJECTS_FIELDS', payload: newFilteredObjectFields });
-    }, [state.fields, state.currentObjectName]);
+    }, [state.fields, state.currentVariables.currentObjectName]);
 
 
     const renderButtons = () => {
@@ -185,15 +168,17 @@ function DynamicSchemaFormGenerator(props) {
             handleSchemaSubmit();
             setShowGenerator(true);
             setGeneratedSchema(null);
+            const resetCurrentVariables = {
+                currentFieldName: '',
+                currentFieldType: 'string',
+                currentOptions: {},
+                showCurrentField: false,
+                currentRequired: false,
+                currentUnique: false,
+                currentObjectName: '',
+            };
+            dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
             dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            dispatch({ type: 'SET_CURRENT_FIELD_NAME', payload: '' });
-            dispatch({ type: 'SET_CURRENT_FIELD_TYPE', payload: 'string' });
-            dispatch({ type: 'SET_CURRENT_REQUIRED', payload: false });
-            dispatch({ type: 'SET_CURRENT_UNIQUE', payload: false });
-            dispatch({ type: 'SET_SHOW_CURRENT_FIELD', payload: false });
-            dispatch({ type: 'SET_CURRENT_OPTIONS', payload: {} });
-            dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: '' });
             dispatch({ type: 'SET_OBJECT_MODE', payload: false });
         }
     }
@@ -228,24 +213,24 @@ function DynamicSchemaFormGenerator(props) {
                                 />
                             </div>
                             <div className='fieldView'>
-                                {state.objectMode && state.currentObjectName && (
+                                {state.objectMode && state.currentVariables.currentObjectName && (
                                     <h2 className='objectHeader'>
                                         <button
                                             onClick={() => {
-                                                if (state.currentObjectName && state.currentObjectName.includes('.')) {
-                                                    const parts = state.currentObjectName.split('.');
+                                                if (state.currentVariables.currentObjectName && state.currentVariables.currentObjectName.includes('.')) {
+                                                    const parts = state.currentVariables.currentObjectName.split('.');
                                                     parts.pop(); // Remove the last part
                                                     const newObjectName = parts.join('.');
-                                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: newObjectName });
+                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: newObjectName } });
                                                 } else {
-                                                    dispatch({ type: 'SET_CURRENT_OBJECT_NAME', payload: '' });
+                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: '' } });
                                                     dispatch({ type: 'SET_OBJECT_MODE', payload: false });
                                                 }
                                             }}
                                         >
                                             Back
                                         </button>
-                                        {`${state.currentObjectName.replace(/\./g, ' -> ')}`}
+                                        {`${state.currentVariables.currentObjectName.replace(/\./g, ' -> ')}`}
                                     </h2>
                                 )}
                                 {!state.objectMode && (
