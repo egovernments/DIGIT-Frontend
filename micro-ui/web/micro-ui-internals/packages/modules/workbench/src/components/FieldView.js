@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DeleteIcon, EditIcon } from '@egovernments/digit-ui-react-components';
 import { setFieldToUpdate, removeField } from '../utils/schemaUtils';
+import { resetCurrentVariables } from '../configs/FieldVariable';
 
 const FieldView = ({ state, dispatch }) => {
     const [draggedIndex, setDraggedIndex] = useState(null);
@@ -53,7 +54,7 @@ const FieldView = ({ state, dispatch }) => {
                                 }
                             } onClick={() => {
                                 if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
-                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: field.name } });
+                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCu, objectName: field.name } });
                                     dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                 }
                             }}>
@@ -72,7 +73,7 @@ const FieldView = ({ state, dispatch }) => {
                                     }
                                 } onClick={() => {
                                     if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
-                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: field.name } });
+                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: field.name } });
                                         dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                     }
                                 }}>

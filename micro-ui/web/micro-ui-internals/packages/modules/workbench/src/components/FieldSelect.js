@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-react-components";
-import { fieldTypes } from './FieldVariable';
+import { fieldTypes } from '../configs/FieldVariable';
 import { addField } from '../utils/schemaUtils';
 
 const FieldSelect = ({ state, dispatch }) => {

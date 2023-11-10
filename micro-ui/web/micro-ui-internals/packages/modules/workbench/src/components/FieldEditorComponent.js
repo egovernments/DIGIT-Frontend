@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CheckBox, Button, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
-import { fieldTypes, propertyMap, arrayTypes } from './FieldVariable';
+import { fieldTypes, propertyMap, arrayTypes } from '../configs/FieldVariable';
 import { saveField, cancelSave } from '../utils/schemaUtils';
 
 const FieldEditorComponent = ({ state, dispatch }) => {
@@ -14,44 +14,56 @@ const FieldEditorComponent = ({ state, dispatch }) => {
     }, [state.currentVariables])
 
     const updateFieldOption = (optionName, optionValue) => {
-        const updatedOptions = { ...state.currentVariables.currentOptions };
+        const updatedOptions = { ...state.currentVariables.options };
         if (optionValue === '' || optionValue === null || optionValue === undefined) {
             delete updatedOptions[optionName];
         } else {
             updatedOptions[optionName] = optionValue;
         }
-        dispatch({ type: "SET_CURRENT_VARIABLES", payload: { ...state.currentVariables, currentOptions: updatedOptions, } })
+        dispatch({ type: "SET_CURRENT_VARIABLES", payload: { ...state.currentVariables, options: updatedOptions, } })
     };
 
     const handleSaveField = () => {
-        const currentName = state.currentVariables.currentObjectName ? state.currentVariables.currentObjectName + '.' + state.currentVariables.currentFieldName : state.currentVariables.currentFieldName;
-        if (!state.currentVariables.currentFieldName) {
-            setFieldNameError("Field name Can't be empty");
-        } else if (state.currentVariables.currentFieldName.includes('.')) {
+        const currentName = state.currentVariables.objectName ? `${state.currentVariables.objectName}.${state.currentVariables.name}` : state.currentVariables.name;
+
+        if (!state.currentVariables.name) {
+            setFieldNameError("Field name can't be empty");
+        } else if (state.currentVariables.name.includes('.')) {
             setFieldNameError("Field name cannot contain a dot (.)");
-        } else if ((state.fieldState.fields.some(field => field.name == currentName) && state.updatingIndex == null)) {
-            setFieldNameError("Field name already exists");
         } else {
-            saveField(state, dispatch, state.currentVariables);
+            const fieldExists = state.fieldState.fields.some(field => field.name === currentName);
+
+            if (fieldExists) {
+                const matchingField = state.fieldState.fields.find(field => field.name === currentName);
+
+                if (state.updatingIndex === null || (matchingField && matchingField.index !== state.updatingIndex)) {
+                    setFieldNameError("Field name already exists");
+                } else {
+                    saveField(state, dispatch, state.currentVariables);
+                }
+            } else {
+                saveField(state, dispatch, state.currentVariables);
+            }
         }
     };
 
+
     return (
         <div className='FieldEditorComponent'>
-            {state.currentVariables.showCurrentField ? (
+            {state.currentVariables.showField ? (
                 <div>
                     {!state.objectMode ? (
                         <div className='checkBoxContainer'>
                             <CheckBox
                                 label="Required"
-                                checked={state.currentVariables.currentRequired}
+                                checked={state.currentVariables.required}
                                 onChange={(e) => {
                                     if (e.target.checked) {
-                                        dispatch({ type: "SET_CURRENT_VARIABLES", payload: { ...state.currentVariables, currentRequired: true } })
+                                        dispatch({ type: "SET_CURRENT_VARIABLES", payload: { ...state.currentVariables, required: true } })
                                         setRequiredError(null);
                                     } else {
-                                        if (!state.currentVariables.currentUnique) {
-                                            dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentRequired: false } });
+                                        if (!state.currentVariables.unique) {
+                                            dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, required: false } });
                                             setRequiredError(null);
                                         } else {
                                             setRequiredError("First make the 'Unique' checkbox unchecked.");
@@ -62,14 +74,14 @@ const FieldEditorComponent = ({ state, dispatch }) => {
 
                             <CheckBox
                                 label="Unique"
-                                checked={state.currentVariables.currentUnique}
+                                checked={state.currentVariables.unique}
                                 onChange={(e) => {
                                     setRequiredError(null);
                                     if (e.target.checked) {
-                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentUnique: e.target.checked, currentRequired: e.target.checked } });
+                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, unique: e.target.checked, required: e.target.checked } });
                                     }
                                     else {
-                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentUnique: e.target.checked } });
+                                        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, unique: e.target.checked } });
                                     }
                                 }}
                             />
@@ -83,8 +95,8 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                                 <h2 className="card-label undefined">Field Name *</h2>
                                 <TextInput
                                     type="text"
-                                    value={state.currentVariables.currentFieldName}
-                                    onChange={(e) => dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentFieldName: e.target.value } })}
+                                    value={state.currentVariables.name}
+                                    onChange={(e) => dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, name: e.target.value } })}
                                     customClass="employee-card-input bg"
                                     className="bg-white"
                                 />
@@ -96,8 +108,8 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                             <h2 className="card-label">Type</h2>
                             <Dropdown
                                 selected={{
-                                    label: state.currentVariables.currentFieldType.charAt(0).toUpperCase() + state.currentVariables.currentFieldType.slice(1),
-                                    value: state.currentVariables.currentFieldType,
+                                    label: state.currentVariables.type.charAt(0).toUpperCase() + state.currentVariables.type.slice(1),
+                                    value: state.currentVariables.type,
                                 }}
                                 option={fieldTypes}
                                 optionKey="label"
@@ -106,10 +118,10 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                                 disable={true}
                             />
                         </div>
-                        {propertyMap[state.currentVariables.currentFieldType].map(property => (
+                        {propertyMap[state.currentVariables.type].map(property => (
                             <div className='label-field-pair' key={property}>
                                 <h2 className="card-label">{property}</h2>
-                                {state.currentVariables.currentFieldType === 'array' && property === 'arrayType' ? (
+                                {state.currentVariables.type === 'array' && property === 'arrayType' ? (
                                     <Dropdown
                                         selected={state.selectedArrayType}
                                         select={value => {
@@ -123,8 +135,8 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                                     />
                                 ) : (
                                     <TextInput
-                                        type={state.currentVariables.currentFieldType === 'date-time' ? 'datetime-local' : property === 'pattern' || property === 'format' ? 'text' : state.currentVariables.currentFieldType.includes('date') ? 'date' : 'number'}
-                                        value={state.currentVariables.currentOptions[property] || ''}
+                                        type={state.currentVariables.type === 'date-time' ? 'datetime-local' : property === 'pattern' || property === 'format' ? 'text' : state.currentVariables.type.includes('date') ? 'date' : 'number'}
+                                        value={state.currentVariables.options[property] || ''}
                                         onChange={e => updateFieldOption(property, e.target.value)}
                                         customClass="employee-card-input"
                                         className="bg-white"
@@ -133,14 +145,14 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                             </div>
                         ))}
 
-                        {state.currentVariables.currentFieldType === 'array' &&
+                        {state.currentVariables.type === 'array' &&
                             propertyMap[state.selectedArrayType.value] &&
                             propertyMap[state.selectedArrayType.value].map(property => (
                                 <div className='label-field-pair' key={property}>
                                     <h2 className="card-label">{property}</h2>
                                     <TextInput
                                         type={state.selectedArrayType.value === 'date-time' ? 'datetime-local' : property === 'pattern' || property === 'format' ? 'text' : state.selectedArrayType.value.includes('date') ? 'date' : 'number'}
-                                        value={state.currentVariables.currentOptions[property] || ''}
+                                        value={state.currentVariables.options[property] || ''}
                                         onChange={e => updateFieldOption(property, e.target.value)}
                                         customClass="employee-card-input"
                                         className="bg-white"

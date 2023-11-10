@@ -28,13 +28,13 @@ const arrayTypes = [
 ];
 
 const resetCurrentVariables = {
-    currentFieldName: '',
-    currentFieldType: 'string',
-    currentOptions: {},
-    showCurrentField: false,
-    currentRequired: false,
-    currentUnique: false,
-    currentObjectName: '',
+    name: '',
+    type: 'string',
+    options: {},
+    showField: false,
+    required: false,
+    unique: false,
+    objectName: '',
 }
 
 export { fieldTypes, propertyMap, arrayTypes, resetCurrentVariables }

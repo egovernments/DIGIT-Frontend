@@ -1,4 +1,4 @@
-import { resetCurrentVariables } from "../components/FieldVariable";
+import { resetCurrentVariables } from "../configs/FieldVariable";
 function generateFieldsFromSchema(schema) {
     const updateFieldOptions = (field, fieldOptions) => {
 
@@ -184,52 +184,46 @@ const buildSchema = (field, schema) => {
 };
 
 function addField(state, dispatch) {
-    if (!state?.addingFieldType?.value) {
-        dispatch({ type: 'SET_NAME_ERROR', payload: { add: "Select field type first", edit: null } });
-    } else {
-        dispatch({ type: 'SET_NAME_ERROR', payload: { add: null, edit: null } });
-        var currentVariables = {
-            currentFieldName: '',
-            currentFieldType: state?.addingFieldType?.value,
-            currentOptions: state?.addingFieldType?.value === 'array' ? { "arrayType": "string" } : {},
-            showCurrentField: true,
-            currentRequired: false,
-            currentUnique: false,
-            currentObjectName: state.currentVariables.currentObjectName,
-        };
-        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: currentVariables });
-        dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: null });
-        dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
-        dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-    }
+    var currentVariables = {
+        name: '',
+        type: state?.addingFieldType?.value,
+        options: state?.addingFieldType?.value === 'array' ? { "arrayType": "string" } : {},
+        showField: true,
+        required: false,
+        unique: false,
+        objectName: state.currentVariables.objectName,
+    };
+    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: currentVariables });
+    dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: null });
+    dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
+    dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
 }
 
 
 function saveField(state, dispatch) {
-    var fieldName = state.currentVariables.currentObjectName
-        ? state.currentVariables.currentObjectName + "." + state.currentVariables.currentFieldName
-        : state.currentVariables.currentFieldName;
+    var fieldName = state.currentVariables.objectName
+        ? state.currentVariables.objectName + "." + state.currentVariables.name
+        : state.currentVariables.name;
 
-    if (state.currentVariables.currentFieldType == 'object' || (state.currentVariables.currentFieldType == 'array' && state.selectedArrayType?.value == 'object')) {
+    if (state.currentVariables.type == 'object' || (state.currentVariables.type == 'array' && state.selectedArrayType?.value == 'object')) {
         dispatch({ type: 'SET_OBJECT_MODE', payload: true });
-        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, currentObjectName: fieldName } });
+        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, objectName: fieldName } });
     }
 
     var newField = {
-        name: state.currentVariables.currentFieldName,
-        type: state.currentVariables.currentFieldType,
-        options: state.currentVariables.currentOptions,
-        required: state.currentVariables.currentRequired,
-        unique: state.currentVariables.currentUnique
+        name: state.currentVariables.name,
+        type: state.currentVariables.type,
+        options: state.currentVariables.options,
+        required: state.currentVariables.required,
+        unique: state.currentVariables.unique
     };
 
     if (state.updatingIndex != null && state.updatingIndex !== undefined) {
-        if (state.currentVariables.currentObjectName) {
-            newField.name = state.currentVariables.currentObjectName + "." + state.currentVariables.currentFieldName;
+        if (state.currentVariables.objectName) {
+            newField.name = state.currentVariables.objectName + "." + state.currentVariables.name;
         }
         var updatedField = [...state.fieldState.fields];
         updatedField[state.updatingIndex] = newField;
-        debugger;
         updatedField.map(field => {
             if (field.name.startsWith(state.currentVariables.lastName + ".")) {
                 const suffix = field.name.substring((state.currentVariables.lastName + ".").length);
@@ -241,25 +235,25 @@ function saveField(state, dispatch) {
         dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedField } });
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
     } else {
-        if (state.currentVariables.currentObjectName) {
-            newField.name = state.currentVariables.currentObjectName + "." + state.currentVariables.currentFieldName;
+        if (state.currentVariables.objectName) {
+            newField.name = state.currentVariables.objectName + "." + state.currentVariables.name;
         }
         var updatedFields = [...state.fieldState.fields];
         updatedFields.push(newField);
         dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
     }
-    if (!(state.currentVariables.currentFieldType == 'object' || (state.currentVariables.currentFieldType == 'array' && state.selectedArrayType?.value == 'object'))) {
-        fieldName = state.currentVariables.currentObjectName;
+    if (!(state.currentVariables.type == 'object' || (state.currentVariables.type == 'array' && state.selectedArrayType?.value == 'object'))) {
+        fieldName = state.currentVariables.objectName;
     }
 
-    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: fieldName } });
+    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: fieldName } });
     dispatch({ type: 'SET_SELECTED_ARRAY_TYPE', payload: { label: 'String', value: 'string' } });
 }
 
 
 
 function cancelSave(dispatch) {
-    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: state.currentVariables.currentObjectName } });
+    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: state.currentVariables.objectName } });
     dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
 }
 
@@ -283,17 +277,8 @@ function removeField(index, state, dispatch) {
     dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
 
     if (state.updatingIndex === index) {
-        const currentVariables = {
-            currentFieldName: '',
-            currentFieldType: 'string',
-            currentRequired: false,
-            currentUnique: false,
-            showCurrentField: false,
-            currentOptions: {},
-            currentObjectName: state.currentVariables.currentObjectName
-        };
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: currentVariables });
+        dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: state.currentVariables.objectName } });
     }
 }
 
@@ -305,12 +290,12 @@ function setFieldToUpdate(index, state, dispatch, lastName) {
     dispatch({
         type: 'SET_CURRENT_VARIABLES', payload: {
             ...state.currentVariables,
-            currentFieldName: lastNamePart,
-            currentFieldType: state.fieldState.fields[index].type,
-            currentOptions: state.fieldState.fields[index].options,
-            currentRequired: state.fieldState.fields[index].required,
-            currentUnique: state.fieldState.fields[index].unique,
-            showCurrentField: true,
+            name: lastNamePart,
+            type: state.fieldState.fields[index].type,
+            options: state.fieldState.fields[index].options,
+            required: state.fieldState.fields[index].required,
+            unique: state.fieldState.fields[index].unique,
+            showField: true,
             lastName: lastName
         }
     });

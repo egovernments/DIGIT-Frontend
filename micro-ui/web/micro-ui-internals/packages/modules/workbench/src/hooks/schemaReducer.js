@@ -9,13 +9,13 @@ function initializeState(props) {
         selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
         objectMode: false,
         currentVariables: {
-            currentFieldName: '',
-            currentFieldType: 'string',
-            currentOptions: {},
-            showCurrentField: false,
-            currentRequired: false,
-            currentUnique: false,
-            currentObjectName: '',
+            name: '',
+            type: 'string',
+            options: {},
+            field: false,
+            required: false,
+            unique: false,
+            objectName: '',
             lastName: '',
         },
     };

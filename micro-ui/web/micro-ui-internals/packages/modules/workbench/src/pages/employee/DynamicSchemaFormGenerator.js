@@ -11,7 +11,7 @@ import locale from 'react-json-editor-ajrm/locale/en';
 import CustomCheckbox from '../../components/Checbox';
 import { generateFieldsFromSchema, deepClone, buildSchema } from '../../utils/schemaUtils';
 import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleConfig';
-import { resetCurrentVariables } from '../../components/FieldVariable'
+import { resetCurrentVariables } from '../../configs/FieldVariable'
 
 function DynamicSchemaFormGenerator(props) {
     const { t } = useTranslation();
@@ -93,9 +93,9 @@ function DynamicSchemaFormGenerator(props) {
         });
 
         const newFilteredObjectFields = state.fieldState.fields.filter((field) => {
-            if (state.currentVariables.currentObjectName) {
-                // Check if the field name starts with the currentObjectName or its prefixes
-                const prefix = state.currentVariables.currentObjectName + '.';
+            if (state.currentVariables.objectName) {
+                // Check if the field name starts with the objectName or its prefixes
+                const prefix = state.currentVariables.objectName + '.';
                 if (field.name.startsWith(prefix)) {
                     // Check if the field name contains dots only in the prefix
                     const remainingName = field.name.substring(prefix.length);
@@ -104,11 +104,11 @@ function DynamicSchemaFormGenerator(props) {
                     }
                 }
             }
-            return false; // If no currentObjectName or not matching the criteria, exclude the field
+            return false; // If no objectName or not matching the criteria, exclude the field
         });
 
         dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, filteredObjectFields: newFilteredObjectFields, orderedFields: newOrderedFields } });
-    }, [state.fieldState.fields, state.currentVariables.currentObjectName]);
+    }, [state.fieldState.fields, state.currentVariables.objectName]);
 
 
     const renderButtons = () => {
@@ -196,15 +196,15 @@ function DynamicSchemaFormGenerator(props) {
                                 />
                             </div>
                             <div className='fieldView'>
-                                {state.objectMode && state.currentVariables.currentObjectName && (
+                                {state.objectMode && state.currentVariables.objectName && (
                                     <h2 className='objectHeader'>
                                         <button
                                             onClick={() => {
-                                                if (state.currentVariables.currentObjectName && state.currentVariables.currentObjectName.includes('.')) {
-                                                    const parts = state.currentVariables.currentObjectName.split('.');
+                                                if (state.currentVariables.objectName && state.currentVariables.objectName.includes('.')) {
+                                                    const parts = state.currentVariables.objectName.split('.');
                                                     parts.pop(); // Remove the last part
                                                     const newObjectName = parts.join('.');
-                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, currentObjectName: newObjectName } });
+                                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: newObjectName } });
                                                 } else {
                                                     dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { resetCurrentVariables } });
                                                     dispatch({ type: 'SET_OBJECT_MODE', payload: false });
@@ -213,7 +213,7 @@ function DynamicSchemaFormGenerator(props) {
                                         >
                                             Back
                                         </button>
-                                        {`${state.currentVariables.currentObjectName.replace(/\./g, ' -> ')}`}
+                                        {`${state.currentVariables.objectName.replace(/\./g, ' -> ')}`}
                                     </h2>
                                 )}
                                 {!state.objectMode && (
