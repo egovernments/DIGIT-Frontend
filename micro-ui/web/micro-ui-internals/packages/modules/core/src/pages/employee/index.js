@@ -40,6 +40,8 @@ const EmployeeApp = ({
     Digit.UserService.setType("employee");
   }, []);
 
+  const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
+
   return (
     <div className="employee">
       <Switch>
@@ -111,7 +113,7 @@ const EmployeeApp = ({
           <div className={`main ${DSO ? "m-auto" : ""}`}>
             <div className="employee-app-wrapper">
               <ErrorBoundary initData={initData}>
-                <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
+                <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} additionalComponent={additionalComponent} />
               </ErrorBoundary>
             </div>
             <div className="employee-home-footer">
