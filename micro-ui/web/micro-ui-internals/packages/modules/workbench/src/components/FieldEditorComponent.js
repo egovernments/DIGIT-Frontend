@@ -34,9 +34,8 @@ const FieldEditorComponent = ({ state, dispatch }) => {
             const fieldExists = state.fields.some(field => field.name === currentName);
 
             if (fieldExists) {
-                const matchingField = state.fields.find(field => field.name === currentName);
-
-                if (state.updatingIndex === null || (matchingField && matchingField.index !== state.updatingIndex)) {
+                const matchingFieldIndex = state.fields.findIndex(field => field.name === currentName);
+                if (state.updatingIndex === null || (matchingFieldIndex !== state.updatingIndex)) {
                     setFieldNameError("Field name already exists");
                 } else {
                     saveField(state, dispatch, state.currentVariables);
@@ -46,6 +45,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
             }
         }
     };
+    console.log(state, " sssssssssssss")
 
 
     return (
