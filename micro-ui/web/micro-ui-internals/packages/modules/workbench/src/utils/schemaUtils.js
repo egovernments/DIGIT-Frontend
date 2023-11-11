@@ -1,113 +1,79 @@
 import { resetCurrentVariables } from "../configs/FieldVariable";
-function generateFieldsFromSchema(schema) {
-    const updateFieldOptions = (field, fieldOptions) => {
 
-        if (field.minimum && !field.items) {
-            fieldOptions.minimum = field.minimum;
-        }
-
-        if (field.maximum && !field.items) {
-            fieldOptions.maximum = field.maximum;
-        }
-
-        if (field.exclusiveMinimum && !field.items) {
-            fieldOptions.exclusiveMinimum = field.exclusiveMinimum;
-        }
-
-        if (field.exclusiveMaximum && !field.items) {
-            fieldOptions.exclusiveMaximum = field.exclusiveMaximum;
-        }
-
-        if (field.maxLength && !field.items) {
-            fieldOptions.maxLength = field.maxLength;
-        }
-
-        if (field.minLength && !field.items) {
-            fieldOptions.minLength = field.minLength;
-        }
-
-        if (field.pattern && !field.items) {
-            fieldOptions.pattern = field.pattern;
-        }
-
-        if (field.format && !field.items) {
-            fieldOptions.format = field.format;
-        }
-
-        if (field.multipleOf && !field.items) {
-            fieldOptions.multipleOf = field.multipleOf;
-        }
-        if (field.items) {
-            updateFieldOptions(field.items, fieldOptions)
-        }
-    }
-    function orderFields(fields, uiOrder) {
-        const fieldOrderMap = uiOrder.reduce((acc, fieldName, index) => {
-            acc[fieldName] = index;
-            return acc;
-        }, {});
-
-        fields.forEach(field => {
-            const fieldName = field.name;
-            if (fieldOrderMap[fieldName] !== undefined) {
-                field.order = fieldOrderMap[fieldName];
-            }
+function updateFieldOptions(field, fieldOptions) {
+    const { items, minimum, maximum, exclusiveMinimum, exclusiveMaximum, maxLength, minLength, pattern, format, multipleOf } = field;
+    if (!items) {
+        Object.assign(fieldOptions, {
+            minimum,
+            maximum,
+            exclusiveMinimum,
+            exclusiveMaximum,
+            maxLength,
+            minLength,
+            pattern,
+            format,
+            multipleOf
         });
+    } else {
+        updateFieldOptions(field.items, fieldOptions);
     }
+}
 
-    // Helper function to recursively traverse the JSON schema
-    function traverseSchema(properties, parentName = '') {
-        for (const fieldName in properties) {
-            const field = properties[fieldName];
-            const fieldPath = parentName ? `${parentName}.${field.name}` : field.name;
+function orderFields(fields, uiOrder) {
+    const fieldOrderMap = uiOrder.reduce((acc, fieldName, index) => {
+        acc[fieldName] = index;
+        return acc;
+    }, {});
 
-            // Determine field type based on the JSON schema
-            let fieldType;
-            if (field.type === 'array') {
-                fieldType = 'array';
-            } else if (field.type === 'object') {
-                fieldType = 'object';
-            } else {
-                fieldType = field.type;
-            }
+    fields.forEach((field) => {
+        const fieldName = field.name;
+        if (fieldOrderMap[fieldName] !== undefined) {
+            field.order = fieldOrderMap[fieldName];
+        }
+    });
+}
 
-            // Extract field options
-            const fieldOptions = {};
-            if (field.items) {
-                fieldOptions.arrayType = field.items.type;
-                if (field.minLength) {
-                    fieldOptions['minLength of Array'] = field.minLength.toString();
-                }
-                if (field.maxLength) {
-                    fieldOptions['maxLength of Array'] = field.maxLength.toString();
-                }
-            }
-            updateFieldOptions(field, fieldOptions)
+function traverseSchema(properties, parentName = '', schema) {
+    const fields = [];
 
-            // Determine if the field is required and unique
-            const required = schema?.definition?.required && schema?.definition?.required.includes(fieldName);
-            const unique = schema?.definition['x-unique'] && schema?.definition['x-unique'].includes(fieldName);
+    for (const fieldName in properties) {
+        const field = properties[fieldName];
+        const fieldPath = parentName ? `${parentName}.${field.name}` : field.name;
 
-            // Create the field object and add it to the fields array
-            fields.push({
-                name: fieldPath,
-                type: fieldType,
-                options: fieldOptions,
-                required,
-                unique,
-            });
+        let fieldType = field.type === 'array' ? 'array' : field.type === 'object' ? 'object' : field.type;
+        const fieldOptions = {};
 
-            // If the field is an object, recursively traverse its properties
-            if (fieldType === 'object') {
-                traverseSchema(field.properties, fieldPath);
-            }
+        if (field.items) {
+            fieldOptions.arrayType = field.items.type;
+            fieldOptions['minLength of Array'] = field.minLength?.toString();
+            fieldOptions['maxLength of Array'] = field.maxLength?.toString();
+        }
+
+        updateFieldOptions(field, fieldOptions);
+
+        const required = schema?.definition?.required?.includes(fieldName);
+        const unique = schema?.definition['x-unique']?.includes(fieldName);
+
+        const newField = {
+            name: fieldPath,
+            type: fieldType,
+            options: fieldOptions,
+            required,
+            unique
+        };
+
+        fields.push(newField);
+
+        if (fieldType === 'object') {
+            newField.properties = traverseSchema(field.properties, fieldPath, schema);
         }
     }
+    return fields;
+}
 
-    // Start traversing the schema from the top-level properties
-    const fields = [];
-    traverseSchema(schema.definition.properties);
-    orderFields(fields, schema.definition["ui:order"])
+function generateFieldsFromSchema(schema) {
+    const fields = traverseSchema(schema.definition.properties, '', schema);
+    orderFields(fields, schema.definition["ui:order"]);
     return fields;
 }
 
@@ -135,66 +101,60 @@ const deepClone = (obj) => {
 
 
 const buildSchema = (field, schema) => {
-    const formatSchema = (schema, fieldName, field) => {
-        schema.properties[fieldName] = { ...field, ...field.options }
-        delete schema.properties[fieldName].options;
-        delete schema.properties[fieldName].required;
-        delete schema.properties[fieldName].unique;
-        if (field.type == 'object' || field.type == 'array') {
-            delete schema.properties[fieldName].arrayType;
-            delete schema.properties[fieldName].minLength;
-            delete schema.properties[fieldName].maxLength;
-            delete schema.properties[fieldName].exclusiveMaximum;
-            delete schema.properties[fieldName].exclusiveMinimum;
-            delete schema.properties[fieldName].pattern;
-            delete schema.properties[fieldName].format;
-            delete schema.properties[fieldName].minimum;
-            delete schema.properties[fieldName].maximum;
-            delete schema.properties[fieldName].multipleOf;
+    const formatSchema = (targetSchema, fieldName, field) => {
+        const { options, type, arrayType } = field;
+        const { unique, required, arrayType: arrType, ...restOptions } = options;
+
+        const fieldProps = {
+            ...field,
+            ...restOptions,
+        };
+
+        if (type === 'array') {
+            fieldProps.items = { ...options, type: arrayType };
+            delete fieldProps.items.arrayType;
+            delete fieldProps.items['minLength of Array'];
+            delete fieldProps.items['maxLength of Array'];
         }
-        if (schema.properties[fieldName]["minLength of Array"]) {
-            schema.properties[fieldName].minLength = schema.properties[fieldName]["minLength of Array"];
-            delete schema.properties[fieldName]["minLength of Array"]
+
+        if (['object', 'array'].includes(type)) {
+            delete fieldProps.arrayType;
+            delete fieldProps['minLength of Array'];
+            delete fieldProps['maxLength of Array'];
+            delete fieldProps.exclusiveMaximum;
+            delete fieldProps.exclusiveMinimum;
+            delete fieldProps.pattern;
+            delete fieldProps.format;
+            delete fieldProps.minimum;
+            delete fieldProps.maximum;
+            delete fieldProps.multipleOf;
         }
-        if (schema.properties[fieldName]["maxLength of Array"]) {
-            schema.properties[fieldName].maxLength = schema.properties[fieldName]["maxLength of Array"];
-            delete schema.properties[fieldName]["maxLength of Array"]
-        }
-        if (schema.properties[fieldName].type == 'array') {
-            schema.properties[fieldName].items = { ...field.options };
-            schema.properties[fieldName].items.type = field.options.arrayType;
-            delete schema.properties[fieldName].items.arrayType;
-            delete schema.properties[fieldName].items["minLength of Array"];
-            delete schema.properties[fieldName].items["maxLength of Array"];
-        }
-    }
+
+        targetSchema.properties[fieldName] = fieldProps;
+    };
+
     const fieldNames = field.name.split('.');
     const fieldName = fieldNames[0];
     fieldNames.shift();
-    if (fieldNames.length == 0) {
-        if (schema.properties) {
-            formatSchema(schema, fieldName, field);
-        }
-        else {
-            schema.properties = {}
-            formatSchema(schema, fieldName, field);
-        }
-    }
-    else {
-        if (schema.properties[fieldName]) {
-            if (schema.properties[fieldName].items) {
-                buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName].items);
-            }
-            else {
-                buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
-            }
-        }
-        else {
+
+    if (!schema.properties) schema.properties = {};
+
+    if (fieldNames.length === 0) {
+        formatSchema(schema, fieldName, field);
+    } else {
+        const fieldProp = schema.properties[fieldName];
+        const isItemsPresent = fieldProp && fieldProp.items;
+
+        if (fieldProp) {
+            const nextField = { ...field, name: fieldNames.join('.') };
+            buildSchema(isItemsPresent ? nextField : nextField, isItemsPresent ? fieldProp.items : fieldProp);
+        } else {
             schema.properties[fieldName] = { type: 'object', properties: {} };
             buildSchema({ ...field, name: fieldNames.join('.') }, schema.properties[fieldName]);
         }
     }
 };
+
 
 function addField(state, dispatch) {
     var currentVariables = {
@@ -205,6 +165,7 @@ function addField(state, dispatch) {
         required: false,
         unique: false,
         objectName: state.currentVariables.objectName,
+        order: state.fields.reduce((count, field) => count + (!field.name.includes('.') ? 1 : 0), 0)
     };
     dispatch({ type: 'SET_CURRENT_VARIABLES', payload: currentVariables });
     dispatch({ type: 'SET_ADDING_FIELD_TYPE', payload: null });
@@ -228,7 +189,7 @@ function saveField(state, dispatch) {
         options: state.currentVariables.options,
         required: state.currentVariables.required,
         unique: state.currentVariables.unique,
-        order: state.fields.reduce((count, field) => count + (!field.name.includes('.') ? 1 : 0), 0)
+        order: state.currentVariables.order
     };
     if (state.currentVariables.objectName) {
         delete newField.order;
@@ -320,7 +281,8 @@ function setFieldToUpdate(index, state, dispatch, lastName) {
             required: state.fields[index].required,
             unique: state.fields[index].unique,
             showField: true,
-            lastName: lastName
+            lastName: lastName,
+            order: state.fields[index].order
         }
     });
     if (state.fields[index].type === 'array') {
