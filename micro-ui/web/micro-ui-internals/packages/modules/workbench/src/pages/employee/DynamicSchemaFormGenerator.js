@@ -26,7 +26,7 @@ function DynamicSchemaFormGenerator(props) {
 
 
         // Deep clone the fields array
-        const clonedFields = deepClone(state.fieldState.fields);
+        const clonedFields = deepClone(state.fields);
 
         // Use the cloned fields for generating the schema
         const schema = {
@@ -48,11 +48,16 @@ function DynamicSchemaFormGenerator(props) {
             if (field.required && !field.name.includes(".")) {
                 schema['required'].push(field.name);
             }
+            if (field.order !== undefined) {
+                schema['ui:order'].push(field.name);
+            }
+        });
+        schema['ui:order'].sort((a, b) => {
+            const orderA = clonedFields.find(field => field.name === a).order;
+            const orderB = clonedFields.find(field => field.name === b).order;
+            return orderA - orderB;
         });
 
-        state.fieldState.orderedFields.map((field) => {
-            schema['ui:order'].push(field.name);
-        })
         setGeneratedSchema(
             {
                 code: "MDMS_Schema." + props.schemaName,
@@ -65,50 +70,6 @@ function DynamicSchemaFormGenerator(props) {
         setShowModal(true);
 
     };
-
-    useEffect(() => {
-        const newOrderedFields = [...state.fieldState.orderedFields];
-
-        // Iterate through the fields and check if their names are in orderedFields
-        state.fieldState.fields.forEach((field) => {
-            // Find the index of the matching field in newOrderedFields
-            const matchingFieldIndex = newOrderedFields.findIndex(item => item.name === field.name);
-
-            if (matchingFieldIndex === -1 && !field.name.includes(".")) {
-                // Add the missing field to the end of newOrderedFields
-                newOrderedFields.push({ ...field });
-            } else if (matchingFieldIndex !== -1) {
-                // Update the matching field in newOrderedFields with the new field
-                newOrderedFields[matchingFieldIndex] = field;
-            }
-        });
-
-
-        // Remove fields from orderedFields that are not present in fields
-        newOrderedFields.forEach((orderedField, index) => {
-            const nameExistsInFields = state.fieldState.fields.some(field => field.name === orderedField.name);
-            if (!nameExistsInFields) {
-                newOrderedFields.splice(index, 1);
-            }
-        });
-
-        const newFilteredObjectFields = state.fieldState.fields.filter((field) => {
-            if (state.currentVariables.objectName) {
-                // Check if the field name starts with the objectName or its prefixes
-                const prefix = state.currentVariables.objectName + '.';
-                if (field.name.startsWith(prefix)) {
-                    // Check if the field name contains dots only in the prefix
-                    const remainingName = field.name.substring(prefix.length);
-                    if (!remainingName.includes('.')) {
-                        return true;
-                    }
-                }
-            }
-            return false; // If no objectName or not matching the criteria, exclude the field
-        });
-
-        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, filteredObjectFields: newFilteredObjectFields, orderedFields: newOrderedFields } });
-    }, [state.fieldState.fields, state.currentVariables.objectName]);
 
 
     const renderButtons = () => {
@@ -142,7 +103,7 @@ function DynamicSchemaFormGenerator(props) {
                 const matchingField = newFields.find((field) => field.name == fieldName);
                 return matchingField;
             });
-            dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: newFields, orderedFields: uiOrderFields } });
+            dispatch({ type: 'SET_FIELDS', payload: newFields });
             setShowGenerator(true);
             setSchemaName(generatedSchema?.definition?.schemaName)
         } catch (error) {

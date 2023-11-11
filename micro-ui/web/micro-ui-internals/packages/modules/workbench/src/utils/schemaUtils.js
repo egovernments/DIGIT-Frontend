@@ -41,7 +41,19 @@ function generateFieldsFromSchema(schema) {
             updateFieldOptions(field.items, fieldOptions)
         }
     }
-    const fields = [];
+    function orderFields(fields, uiOrder) {
+        const fieldOrderMap = uiOrder.reduce((acc, fieldName, index) => {
+            acc[fieldName] = index;
+            return acc;
+        }, {});
+
+        fields.forEach(field => {
+            const fieldName = field.name;
+            if (fieldOrderMap[fieldName] !== undefined) {
+                field.order = fieldOrderMap[fieldName];
+            }
+        });
+    }
 
     // Helper function to recursively traverse the JSON schema
     function traverseSchema(properties, parentName = '') {
@@ -93,8 +105,9 @@ function generateFieldsFromSchema(schema) {
     }
 
     // Start traversing the schema from the top-level properties
+    const fields = [];
     traverseSchema(schema.definition.properties);
-
+    orderFields(fields, schema.definition["ui:order"])
     return fields;
 }
 
@@ -209,20 +222,22 @@ function saveField(state, dispatch) {
         dispatch({ type: 'SET_OBJECT_MODE', payload: true });
         dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, objectName: fieldName } });
     }
-
-    var newField = {
+    const newField = {
         name: state.currentVariables.name,
         type: state.currentVariables.type,
         options: state.currentVariables.options,
         required: state.currentVariables.required,
-        unique: state.currentVariables.unique
+        unique: state.currentVariables.unique,
+        order: state.fields.reduce((count, field) => count + (!field.name.includes('.') ? 1 : 0), 0)
     };
-
+    if (state.currentVariables.objectName) {
+        delete newField.order;
+    }
     if (state.updatingIndex != null && state.updatingIndex !== undefined) {
         if (state.currentVariables.objectName) {
             newField.name = state.currentVariables.objectName + "." + state.currentVariables.name;
         }
-        var updatedField = [...state.fieldState.fields];
+        var updatedField = [...state.fields];
         updatedField[state.updatingIndex] = newField;
         updatedField.map(field => {
             if (field.name.startsWith(state.currentVariables.lastName + ".")) {
@@ -232,15 +247,15 @@ function saveField(state, dispatch) {
             return field;
         });
 
-        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedField } });
+        dispatch({ type: 'SET_FIELDS', payload: updatedField });
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
     } else {
         if (state.currentVariables.objectName) {
             newField.name = state.currentVariables.objectName + "." + state.currentVariables.name;
         }
-        var updatedFields = [...state.fieldState.fields];
+        var updatedFields = [...state.fields];
         updatedFields.push(newField);
-        dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
+        dispatch({ type: 'SET_FIELDS', payload: updatedFields });
     }
     if (!(state.currentVariables.type == 'object' || (state.currentVariables.type == 'array' && state.selectedArrayType?.value == 'object'))) {
         fieldName = state.currentVariables.objectName;
@@ -252,14 +267,14 @@ function saveField(state, dispatch) {
 
 
 
-function cancelSave(dispatch) {
+function cancelSave(state, dispatch) {
     dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: state.currentVariables.objectName } });
     dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
 }
 
 
 function removeField(index, state, dispatch) {
-    const updatedFields = [...state.fieldState.fields];
+    const updatedFields = [...state.fields];
     const fieldToRemove = updatedFields[index];
 
     // Remove the field at the specified index
@@ -274,7 +289,15 @@ function removeField(index, state, dispatch) {
             updatedFields.splice(removeIndex, 1);
         }
     });
-    dispatch({ type: 'SET_FIELD_STATE', payload: { ...state.fieldState, fields: updatedFields } });
+
+    // Get fields that have order and assign new order values
+    const fieldsWithOrder = updatedFields.filter(field => field.order !== undefined);
+    fieldsWithOrder.sort((a, b) => a.order - b.order);
+    fieldsWithOrder.forEach((field, idx) => {
+        field.order = idx;
+    });
+
+    dispatch({ type: 'SET_FIELDS', payload: updatedFields });
 
     if (state.updatingIndex === index) {
         dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
@@ -282,28 +305,29 @@ function removeField(index, state, dispatch) {
     }
 }
 
+
 function setFieldToUpdate(index, state, dispatch, lastName) {
     dispatch({ type: 'SET_UPDATING_INDEX', payload: index });
     // Split the name by dots, and get the last element of the resulting array
-    const nameParts = state.fieldState.fields[index].name.split('.');
+    const nameParts = state.fields[index].name.split('.');
     const lastNamePart = nameParts[nameParts.length - 1];
     dispatch({
         type: 'SET_CURRENT_VARIABLES', payload: {
             ...state.currentVariables,
             name: lastNamePart,
-            type: state.fieldState.fields[index].type,
-            options: state.fieldState.fields[index].options,
-            required: state.fieldState.fields[index].required,
-            unique: state.fieldState.fields[index].unique,
+            type: state.fields[index].type,
+            options: state.fields[index].options,
+            required: state.fields[index].required,
+            unique: state.fields[index].unique,
             showField: true,
             lastName: lastName
         }
     });
-    if (state.fieldState.fields[index].type === 'array') {
+    if (state.fields[index].type === 'array') {
         dispatch({
             type: 'SET_SELECTED_ARRAY_TYPE', payload: {
-                label: state.fieldState.fields[index].options.arrayType.charAt(0).toUpperCase() + state.fieldState.fields[index].options.arrayType.slice(1),
-                value: state.fieldState.fields[index].options.arrayType
+                label: state.fields[index].options.arrayType.charAt(0).toUpperCase() + state.fields[index].options.arrayType.slice(1),
+                value: state.fields[index].options.arrayType
             }
         });
     }

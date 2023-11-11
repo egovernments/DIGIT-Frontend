@@ -31,10 +31,10 @@ const FieldEditorComponent = ({ state, dispatch }) => {
         } else if (state.currentVariables.name.includes('.')) {
             setFieldNameError("Field name cannot contain a dot (.)");
         } else {
-            const fieldExists = state.fieldState.fields.some(field => field.name === currentName);
+            const fieldExists = state.fields.some(field => field.name === currentName);
 
             if (fieldExists) {
-                const matchingField = state.fieldState.fields.find(field => field.name === currentName);
+                const matchingField = state.fields.find(field => field.name === currentName);
 
                 if (state.updatingIndex === null || (matchingField && matchingField.index !== state.updatingIndex)) {
                     setFieldNameError("Field name already exists");
@@ -167,7 +167,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                             className="field-save-button"
                         />
                         <Button
-                            onButtonClick={() => cancelSave(dispatch)}
+                            onButtonClick={() => cancelSave(state, dispatch)}
                             label={"Cancel"}
                             className="field-cancel-button"
                             variation={"secondary"}

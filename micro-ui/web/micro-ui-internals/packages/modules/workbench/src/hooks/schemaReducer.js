@@ -4,7 +4,7 @@ import { resetCurrentVariables } from '../configs/FieldVariable';
 // Define your initial state here
 function initializeState(props) {
     return {
-        fieldState: { fields: props.fields || [], orderedFields: props.uiOrder || [], filteredObjectFields: [] },
+        fields: props.fields || [],
         addingFieldType: null,
         updatingIndex: null, // Add updatingIndex to initialState
         selectedArrayType: { label: 'String', value: 'string' }, // Add selectedArrayType to initialState
@@ -16,8 +16,8 @@ function initializeState(props) {
 // Define your action types and cases here
 const schemaReducer = (state, action) => {
     switch (action.type) {
-        case 'SET_FIELD_STATE':
-            return { ...state, fieldState: action.payload };
+        case 'SET_FIELDS':
+            return { ...state, fields: action.payload };
         case 'SET_CURRENT_VARIABLES':
             return { ...state, currentVariables: action.payload };
         case 'SET_ADDING_FIELD_TYPE':
