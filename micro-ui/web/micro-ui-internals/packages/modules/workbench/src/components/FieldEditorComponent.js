@@ -45,7 +45,6 @@ const FieldEditorComponent = ({ state, dispatch }) => {
             }
         }
     };
-    console.log(state, " sssssssssssss")
 
 
     return (
