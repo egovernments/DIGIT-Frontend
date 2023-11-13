@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import DynamicSchemaFormGenerator from './DynamicSchemaFormGenerator';
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
-import { generateFieldsFromSchema } from '../../utils/schemaUtils';
+import { generateFieldsFromSchema, validateSchema } from '../../utils/schemaUtils';
 import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleConfig';
 
 
@@ -14,25 +14,31 @@ function EditSchemaHome() {
     const [schemaName, setSchemaName] = useState('');
     const [fields, setFields] = useState([]);
     const [uiOrder, setUiOrder] = useState([]);
+    const [errors, setErrors] = useState([]);
 
     const handleSchemaInputChange = (event) => {
-        setSchemaInput(event.jsObject);
+        if (!event.error && event.jsObject) {
+            setSchemaInput(event.jsObject);
+            setErrors(validateSchema(event.jsObject?.definition));
+        }
     };
     const handleSchemaSubmit = () => {
         // You can add your schema processing logic here
         // For now, let's just display the parsed JSON
-        try {
-            const newFields = generateFieldsFromSchema(schemaInput);
-            setFields(newFields);
-            const uiOrderNames = schemaInput.definition["ui:order"];
-            const uiOrderFields = uiOrderNames.map((fieldName) => {
-                const matchingField = newFields.find((field) => field.name == fieldName);
-                return matchingField;
-            });
-            setUiOrder(uiOrderFields);
-            setSchemaName(schemaInput?.definition?.schemaName)
-        } catch (error) {
-            alert('Invalid JSON Schema: ' + error.message);
+        if (errors.length == 0) {
+            try {
+                const newFields = generateFieldsFromSchema(schemaInput);
+                setFields(newFields);
+                const uiOrderNames = schemaInput.definition["ui:order"];
+                const uiOrderFields = uiOrderNames.map((fieldName) => {
+                    const matchingField = newFields.find((field) => field.name == fieldName);
+                    return matchingField;
+                });
+                setUiOrder(uiOrderFields);
+                setSchemaName(schemaInput?.definition?.schemaName)
+            } catch (error) {
+                alert('Invalid JSON Schema: ' + error.message);
+            }
         }
     };
 
@@ -51,10 +57,10 @@ function EditSchemaHome() {
                         colors={colorsConfigJson}
                         style={styleConfigJson}
                     />
-
-
+                    <div className='schemaInputError'>{(errors.length > 0) ? (errors[0]) : (null)}</div>
                     < Button onButtonClick={handleSchemaSubmit} label={"Submit Schema"} style={{ marginTop: "10px" }} />
                 </div>
+
             )}
             {fields.length > 0 && <DynamicSchemaFormGenerator fields={fields} schemaName={schemaName} uiOrder={uiOrder} />}
         </div>
