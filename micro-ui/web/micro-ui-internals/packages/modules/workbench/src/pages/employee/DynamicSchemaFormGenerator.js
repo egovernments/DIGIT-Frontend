@@ -21,8 +21,10 @@ function DynamicSchemaFormGenerator(props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [showGenerator, setShowGenerator] = useState(true);
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const { state, dispatch } = Digit.Hooks.workbench.useSchemaReducer(props);
     const [errors, setErrors] = useState([]);
+    const [schemaJsError, setSchemaJsError] = useState(null);
+    const { state, dispatch } = Digit.Hooks.workbench.useSchemaReducer(props);
+
     const generateSchema = () => {
 
 
@@ -119,7 +121,7 @@ function DynamicSchemaFormGenerator(props) {
             setShowModal(false);
         }
         else {
-            if (validateSchema(generatedSchema.definition).length == 0) {
+            if (validateSchema(generatedSchema.definition).length == 0 && !schemaJsError) {
                 handleSchemaSubmit();
                 setShowGenerator(true);
                 setGeneratedSchema(null);
@@ -134,12 +136,16 @@ function DynamicSchemaFormGenerator(props) {
         if (!event.error) {
             setGeneratedSchema(event.jsObject);
             setErrors(validateSchema(event.jsObject?.definition));
+            setSchemaJsError(null);
+        }
+        else {
+            setSchemaJsError(event.error)
         }
     };
     return (
         <div>
             <div className="toggle-schema-wrapper">
-                <ToggleSchema onChange={toggleView} label={"Toggle Editor"} value={!showGenerator} disabled={errors.length > 0} />
+                <ToggleSchema onChange={toggleView} label={"Toggle Editor"} value={!showGenerator} />
             </div>
             {showGenerator ? (
                 <div>

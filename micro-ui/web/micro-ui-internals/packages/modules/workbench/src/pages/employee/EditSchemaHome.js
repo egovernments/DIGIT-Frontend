@@ -15,17 +15,22 @@ function EditSchemaHome() {
     const [fields, setFields] = useState([]);
     const [uiOrder, setUiOrder] = useState([]);
     const [errors, setErrors] = useState([]);
+    const [jsError, setJsError] = useState(null);
 
     const handleSchemaInputChange = (event) => {
         if (!event.error && event.jsObject) {
             setSchemaInput(event.jsObject);
             setErrors(validateSchema(event.jsObject?.definition));
+            setJsError(null)
+        }
+        else if (event.error) {
+            setJsError(event.error);
         }
     };
     const handleSchemaSubmit = () => {
         // You can add your schema processing logic here
         // For now, let's just display the parsed JSON
-        if (errors.length == 0) {
+        if (errors.length == 0 && !jsError) {
             try {
                 const newFields = generateFieldsFromSchema(schemaInput);
                 setFields(newFields);
