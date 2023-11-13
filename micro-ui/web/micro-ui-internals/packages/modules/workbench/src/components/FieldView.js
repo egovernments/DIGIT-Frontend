@@ -104,7 +104,7 @@ const FieldView = ({ state, dispatch }) => {
                                 }
                             } onClick={() => {
                                 if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
-                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCu, objectName: field.name } });
+                                    dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: field.name } });
                                     dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                 }
                             }}>

@@ -875,3 +875,21 @@ button:hover {
   z-index: 999;
   margin: 5px;
 }
+
+.toggle-schema-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1em;
+  margin-right: 1em;
+
+  .toggle-schema-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .label {
+      margin-top: 1.2em;
+      margin-right: 0.7em;
+    }
+  }
+}

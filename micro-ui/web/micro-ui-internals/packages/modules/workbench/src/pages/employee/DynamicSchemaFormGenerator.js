@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ActionBar, Button, SubmitBar } from "@egovernments/digit-ui-react-components"
 import FieldView from '../../components/FieldView';
 import FieldSelect from '../../components/FieldSelect';
@@ -8,10 +8,10 @@ import Confirmation from '../../../../engagement/src/components/Modal/Confirmati
 import { useTranslation } from 'react-i18next';
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
-import CustomCheckbox from '../../components/Checbox';
-import { generateFieldsFromSchema, deepClone, buildSchema } from '../../utils/schemaUtils';
+import { generateFieldsFromSchema, deepClone, buildSchema, validateSchema } from '../../utils/schemaUtils';
 import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleConfig';
 import { resetCurrentVariables } from '../../configs/FieldVariable'
+import ToggleSchema from '../../components/toggleSchema';
 
 function DynamicSchemaFormGenerator(props) {
     const { t } = useTranslation();
@@ -22,6 +22,7 @@ function DynamicSchemaFormGenerator(props) {
     const [showGenerator, setShowGenerator] = useState(true);
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const { state, dispatch } = Digit.Hooks.workbench.useSchemaReducer(props);
+    const [errors, setErrors] = useState([]);
     const generateSchema = () => {
 
 
@@ -118,30 +119,32 @@ function DynamicSchemaFormGenerator(props) {
             setShowModal(false);
         }
         else {
-            handleSchemaSubmit();
-            setShowGenerator(true);
-            setGeneratedSchema(null);
-            dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
-            dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
-            dispatch({ type: 'SET_OBJECT_MODE', payload: false });
+            if (validateSchema(generatedSchema.definition).length == 0) {
+                handleSchemaSubmit();
+                setShowGenerator(true);
+                setGeneratedSchema(null);
+                dispatch({ type: 'SET_CURRENT_VARIABLES', payload: resetCurrentVariables });
+                dispatch({ type: 'SET_UPDATING_INDEX', payload: null });
+                dispatch({ type: 'SET_OBJECT_MODE', payload: false });
+            }
         }
     }
 
     const handleSchemaInputChange = (event) => {
-        setGeneratedSchema(event.jsObject);
+        if (!event.error) {
+            setGeneratedSchema(event.jsObject);
+            setErrors(validateSchema(event.jsObject?.definition));
+        }
     };
-
-
     return (
         <div>
-            <div>
-                Toggle Editor
-                <CustomCheckbox onChange={toggleView} label={"Schema Generator"} value={showGenerator} />
+            <div className="toggle-schema-wrapper">
+                <ToggleSchema onChange={toggleView} label={"Toggle Editor"} value={!showGenerator} disabled={errors.length > 0} />
             </div>
             {showGenerator ? (
                 <div>
                     {showGenerator ? (<div>
-                        <header class="h1 digit-form-composer-sub-header">Dynamic Schema Form Generator</header>
+                        <header class="h1 digit-form-composer-sub-header">Dynamic Schema Generator</header>
                         <h1 className='schemaNameContainer'>{schemaName + " config"}</h1>
                         <div className='schemaGeneratorContainer'>
                             <div className='fieldSelect'>
@@ -194,7 +197,8 @@ function DynamicSchemaFormGenerator(props) {
                 </div>
             ) : (
                 <div>
-                    <h2 className="card-label undefined">Paste your schema here:</h2>
+                    <header class="h1 digit-form-composer-sub-header">Dynamic Schema Editor</header>
+                    <h1 className='schemaNameContainer'>{schemaName + " config"}</h1>
                     <JSONInput
                         locale={locale}
                         height='50vh'
@@ -204,6 +208,7 @@ function DynamicSchemaFormGenerator(props) {
                         colors={colorsConfigJson}
                         style={styleConfigJson}
                     />
+                    <div className='schemaInputError'>{(errors.length > 0) ? (errors[0]) : (null)}</div>
                 </div>
             )}
         </div>
