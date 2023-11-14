@@ -97,15 +97,8 @@ function DynamicSchemaFormGenerator(props) {
         )
     }
     const handleSchemaSubmit = () => {
-        // You can add your schema processing logic here
-        // For now, let's just display the parsed JSON
         try {
             const newFields = generateFieldsFromSchema(generatedSchema);
-            const uiOrderNames = generatedSchema.definition["ui:order"];
-            const uiOrderFields = uiOrderNames.map((fieldName) => {
-                const matchingField = newFields.find((field) => field.name == fieldName);
-                return matchingField;
-            });
             dispatch({ type: 'SET_FIELDS', payload: newFields });
             setShowGenerator(true);
             setSchemaName(generatedSchema?.definition?.schemaName)

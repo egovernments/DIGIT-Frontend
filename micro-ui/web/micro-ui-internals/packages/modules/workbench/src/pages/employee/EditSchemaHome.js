@@ -10,10 +10,9 @@ import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleC
 
 
 function EditSchemaHome() {
-    const [schemaInput, setSchemaInput] = useState(''); // State to store the schema input
+    const [schemaInput, setSchemaInput] = useState('');
     const [schemaName, setSchemaName] = useState('');
     const [fields, setFields] = useState([]);
-    const [uiOrder, setUiOrder] = useState([]);
     const [errors, setErrors] = useState([]);
     const [jsError, setJsError] = useState(null);
 
@@ -28,18 +27,10 @@ function EditSchemaHome() {
         }
     };
     const handleSchemaSubmit = () => {
-        // You can add your schema processing logic here
-        // For now, let's just display the parsed JSON
         if (errors.length == 0 && !jsError) {
             try {
                 const newFields = generateFieldsFromSchema(schemaInput);
                 setFields(newFields);
-                const uiOrderNames = schemaInput.definition["ui:order"];
-                const uiOrderFields = uiOrderNames.map((fieldName) => {
-                    const matchingField = newFields.find((field) => field.name == fieldName);
-                    return matchingField;
-                });
-                setUiOrder(uiOrderFields);
                 setSchemaName(schemaInput?.definition?.schemaName)
             } catch (error) {
                 alert('Invalid JSON Schema: ' + error.message);
@@ -67,10 +58,9 @@ function EditSchemaHome() {
                 </div>
 
             )}
-            {fields.length > 0 && <DynamicSchemaFormGenerator fields={fields} schemaName={schemaName} uiOrder={uiOrder} />}
+            {fields.length > 0 && <DynamicSchemaFormGenerator fields={fields} schemaName={schemaName} />}
         </div>
     );
-
 }
 
 export default EditSchemaHome;
