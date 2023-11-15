@@ -1,6 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
 import React from 'react';
+import { Button } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -641,6 +642,16 @@ export const UICustomizations = {
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
+        case " ":
+          return (
+            <Button
+              label={"Select"}
+              onButtonClick={(e) => {
+                e.stopPropagation();
+                column.onClick(row);
+              }}
+            />
+          );
         case "WBH_UNIQUE_IDENTIFIER":
           const [moduleName, masterName] = row.schemaCode.split(".")
           return (
@@ -650,7 +661,6 @@ export const UICustomizations = {
               </Link>
             </span>
           );
-
         case "MASTERS_SOCIAL_CATEGORY":
           return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(`MASTERS_${value}`))}</span> : t("ES_COMMON_NA");
 

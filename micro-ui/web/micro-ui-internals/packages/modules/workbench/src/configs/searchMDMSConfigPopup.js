@@ -126,28 +126,6 @@ export const Config = {
             label: "",
             uiConfig: {
                 columns: [
-                    // {
-                    //   label: "Unique Identifier",
-                    //   jsonPath: "uniqueIdentifier",
-                    //   additionalCustomization:true
-                    // },
-                    // {
-                    //   label: "Id",
-                    //   jsonPath: "data.id",
-                    // },
-                    // {
-                    //   label: "Name",
-                    //   jsonPath: "data.name",
-                    // },
-                    // {
-                    //   label: "Code",
-                    //   jsonPath: "data.code",
-                    // },
-                    // { label: "Description", jsonPath: "data.description" },
-                    // {
-                    //   label: "Active",
-                    //   jsonPath: "data.active",
-                    // }
                 ],
                 enableGlobalSearch: false,
                 enableColumnSort: true,

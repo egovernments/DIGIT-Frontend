@@ -124,8 +124,8 @@ const CustomSelectWidget = (props) => {
     }
     setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.data.code) : obj.data.code == value)));
   }, [formattedOptions, optionsLimit]);
-  const onClickRow = (selectedValue) => {
-    selectedValue = { "value": selectedValue.original.data.code, "label": selectedValue.original.data.description };
+  const onClickSelect = (selectedValue) => {
+    selectedValue = { "value": selectedValue.code, "label": selectedValue.description };
     onChange(multiple ? selectedValue?.value : selectedValue?.value);
     setSelectedDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.data.code) : obj.data.code == selectedValue.value)))
     setShowModal(false);
@@ -229,7 +229,7 @@ const CustomSelectWidget = (props) => {
             </div>
           ))}
 
-          <div className="close-button" onClick={() => setShowTooltipFlag(false)} style={{ color: "blue", cursor: "pointer" }}>
+          <div className="close-button" onClick={() => setShowTooltipFlag(false)}>
             <Close />
           </div>
         </div>
@@ -241,7 +241,7 @@ const CustomSelectWidget = (props) => {
           <div className="modal-wrapper">
             <div className="modal-content">
               <div className="modal-inner">
-                <MDMSSearchv2Popup masterNameInherited={schema.schemaCode.split(".")[0]} moduleNameInherited={schema.schemaCode.split(".")[1]} onClickRow={onClickRow} />
+                <MDMSSearchv2Popup masterNameInherited={schema.schemaCode.split(".")[1]} moduleNameInherited={schema.schemaCode.split(".")[0]} onClickSelect={onClickSelect} />
               </div>
               <Button label={"Close"} onButtonClick={handleCloseModal}></Button>
             </div>

@@ -645,7 +645,7 @@ button:hover {
 }
 
 
-.option-details .close-button {
+.close-button {
   align-self: flex-end;
   cursor: pointer;
   font-weight: bold;
@@ -738,4 +738,40 @@ button:hover {
 
 .modal-content .employee-select-wrap {
   margin-bottom: 24px;
+}
+
+.details-section-wrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  max-height: 80vh;
+
+  .details-section {
+    width: 50vw;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+.inbox-search-wrapper {
+  .add-new-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+
+    .add-new {
+      position: relative;
+      color: #F47738;
+      cursor: pointer;
+      margin-right: 1em;
+      font-weight: bolder;
+      font-size: 23px;
+    }
+  }
 }

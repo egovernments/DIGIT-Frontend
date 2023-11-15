@@ -1,4 +1,4 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, SubmitBar, ActionBar, Close } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ const toDropdownObj = (master = "", mod = "") => {
 };
 
 
-const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRow }) => {
+const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSelect }) => {
     let Config = _.clone(Configg)
     const { t } = useTranslation();
     const history = useHistory();
@@ -21,7 +21,6 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRo
     let { masterName: modulee, moduleName: master, tenantId } = Digit.Hooks.useQueryParams()
     master = masterNameInherited;
     modulee = moduleNameInherited;
-    // console.log(masterNameInherited, moduleNameInherited, " mmmooooooooo")
 
     const [availableSchemas, setAvailableSchemas] = useState([]);
     const [currentSchema, setCurrentSchema] = useState(null);
@@ -30,16 +29,34 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRo
     const [masterOptions, setMasterOptions] = useState([])
     const [moduleOptions, setModuleOptions] = useState([])
     const [updatedConfig, setUpdatedConfig] = useState(null)
+    const [showDetails, setShowDetails] = useState(false);
+    const [selectedRowData, setSelectedRowData] = useState(null);
     tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
     const SchemaDefCriteria = {
         tenantId: tenantId,
         limit: 50
     }
     const handleRowClick = (selectedValue) => {
-        onClickRow(selectedValue);
+        setShowDetails(true);
+        setSelectedRowData(selectedValue);
+    };
+
+    const handleCloseDetails = () => {
+        setShowDetails(false);
+        setSelectedRowData(null);
+    };
+
+    const handleSelect = () => {
+        onClickSelect(selectedRowData.original.data);
+        handleCloseDetails();
     }
+    const handleSelectForRow = (rowValue) => {
+        onClickSelect(rowValue.data);
+        handleCloseDetails();
+    }
+
     if (master && modulee) {
-        SchemaDefCriteria.codes = [`${master}.${modulee}`]
+        SchemaDefCriteria.codes = [`${modulee}.${master}`]
     }
     const { isLoading, data: dropdownData } = Digit.Hooks.useCustomAPIHook({
         url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
@@ -81,19 +98,12 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRo
     });
 
     useEffect(() => {
-        setMasterOptions(dropdownData?.mastersAvailable)
-    }, [dropdownData])
-
-    useEffect(() => {
         setModuleOptions(dropdownData?.[masterName?.name])
-    }, [masterName])
-
-    useEffect(() => {
-        //here set current schema based on module and master name
+        setMasterOptions(dropdownData?.mastersAvailable)
         if (masterName?.name && moduleName?.name) {
             setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
         }
-    }, [moduleName])
+    }, [masterName, dropdownData, moduleName])
 
     useEffect(() => {
         if (currentSchema) {
@@ -134,6 +144,13 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRo
                 jsonPath: `isActive`,
                 additionalCustomization: true
                 // dontShowNA:true
+            }, {
+                label: " ",
+                i18nKey: " ",
+                jsonPath: '',
+                additionalCustomization: true,
+                dontShowNA: true,
+                onClick: handleSelectForRow
             }]
             Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
 
@@ -141,21 +158,61 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickRo
         }
     }, [currentSchema]);
 
-    // const onClickRow = ({ original: row }) => {
-    //     const [moduleName, masterName] = row.schemaCode.split(".")
-    //     history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`)
-    // }
+    const handleAddNewClick = () => {
+        const isConfirmed = window.confirm("You will be redirected to Add section");
+
+        if (isConfirmed) {
+            history.push(
+                `/${window?.contextPath}/employee/workbench/${"mdms-add-v2"}?moduleName=${modulee}&masterName=${master}`
+            );
+        }
+    };
 
     if (isLoading) return <Loader />;
     return (
         <React.Fragment>
-            {updatedConfig && <div className="inbox-search-wrapper">
-                <InboxSearchComposer configs={updatedConfig} additionalConfig={{
-                    resultsTable: {
-                        onClickRow: handleRowClick
-                    }
-                }}></InboxSearchComposer>
-            </div>}
+            {updatedConfig && (
+                <div className="inbox-search-wrapper">
+                    <div className="add-new-container">
+                        <span onClick={handleAddNewClick} className="add-new">
+                            + Add New
+                        </span>
+                    </div>
+                    <InboxSearchComposer
+                        configs={updatedConfig}
+                        additionalConfig={{
+                            resultsTable: {
+                                onClickRow: handleRowClick,
+                            },
+                        }}
+                    />
+                </div>
+            )}
+
+            {showDetails && (
+                <div className="modal-wrapper">
+                    <div className="details-section-wrapper">
+                        <div className="close-button" onClick={handleCloseDetails}>
+                            <Close />
+                        </div>
+                        <div className="details-section">
+                            {Object.keys(selectedRowData?.original?.data).map((key) => {
+                                const value = selectedRowData?.original?.data[key];
+                                if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                                    return (
+                                        <div style={{ margin: "30px", display: "flex", justifyContent: "space-between" }} key={key}>
+                                            <span style={{ fontWeight: "bold" }}>{t(Digit.Utils.locale.getTransformedLocale(key))}</span>{" "}
+                                            <span>{String(value)}</span>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })}
+                        </div>
+                        <Button label={"Select"} onButtonClick={handleSelect} />
+                    </div>
+                </div>
+            )}
         </React.Fragment>
     );
 };
