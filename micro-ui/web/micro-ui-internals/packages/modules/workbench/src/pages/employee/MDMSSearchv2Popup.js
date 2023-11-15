@@ -159,7 +159,7 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
     }, [currentSchema]);
 
     const handleAddNewClick = () => {
-        const isConfirmed = window.confirm("You will be redirected to Add section");
+        const isConfirmed = window.confirm(t("WORKBENCH_MDMS_SEARCH_REDIRECTION"));
 
         if (isConfirmed) {
             history.push(
