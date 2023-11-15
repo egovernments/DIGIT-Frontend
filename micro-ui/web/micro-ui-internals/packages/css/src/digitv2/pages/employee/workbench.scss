@@ -637,11 +637,53 @@ button:hover {
   border: 1px solid #D6D5D4;
   /* Border color and width */
   background-color: #fff;
-  padding: 10px;
+  padding: 2em;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   width: 40%;
+
+  .details-container {
+    margin-top: 20px;
+    overflow-y: auto;
+    max-height: 50vh;
+
+    .detail-item {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+
+      .key {
+        flex-basis: 30%;
+        margin-right: 10px;
+        font-weight: bold;
+        text-align: start !important;
+      }
+
+      .value {
+        flex-basis: 70%;
+        text-align: start !important;
+      }
+    }
+
+    .separator {
+      margin: 10px 0;
+      border: none;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .view-more {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 1.5em;
+    }
+
+    .select {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 1.5em;
+    }
+  }
 }
 
 
@@ -693,7 +735,6 @@ button:hover {
   border-radius: 4px;
   max-width: 80%;
   /* Adjust the maximum width as needed */
-  text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   max-height: 80vh;
   /* Limit the maximum height to 80% of the viewport height */
@@ -738,25 +779,6 @@ button:hover {
 
 .modal-content .employee-select-wrap {
   margin-bottom: 24px;
-}
-
-.details-section-wrapper {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  max-height: 80vh;
-
-  .details-section {
-    width: 50vw;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
 }
 
 .inbox-search-wrapper {

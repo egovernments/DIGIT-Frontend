@@ -153,12 +153,12 @@ const CustomSelectWidget = (props) => {
       <components.Option {...props}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>{data.label}</span>
-          <span
+          {/* <span
             style={{ cursor: "pointer" }}
             onClick={handleInfoBannerClick} // Add the click event handler
           >
             <InfoBannerIcon fill={"#f47738"} style={{ marginLeft: "10px" }} />
-          </span>
+          </span> */}
         </div>
       </components.Option>
     );
@@ -189,7 +189,6 @@ const CustomSelectWidget = (props) => {
 
       <div style={{ marginLeft: "10px", marginBottom: "10px" }}>
         <div className="info-icon" style={{ cursor: "pointer" }}
-          // onMouseEnter={() => setShowTooltipFlag(true)} onMouseLeave={() => setShowTooltipFlag(false)}
           onClick={() => { setShowTooltipFlag(true) }}
         >
           {selectedDetails && selectedDetails.length > 0 && (
@@ -203,32 +202,27 @@ const CustomSelectWidget = (props) => {
       </div>
       {showTooltipFlag && selectedDetails && (
         <div className="option-details">
-          {selectedDetails?.map((detail, index) => (
-            <div style={{ marginTop: "20px" }} key={detail.id}>
-              {Object.keys(detail.data).map((key) => {
-                const value = detail.data[key];
-                if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-                  // Display only if the value is a string, number, or boolean
-                  return (
-                    <div style={{ margin: "30px", display: "flex", justifyContent: "space-between" }} key={key}>
-                      <span style={{ fontWeight: "bold" }}>{t(Digit.Utils.locale.getTransformedLocale(key))}</span>{" "}
-                      <span>{String(value)}</span>
-                    </div>
-                  );
-                }
-                return null; // Don't display for complex values
-              })}
-              {index < selectedDetails.length - 1 && (
-                <hr style={{ margin: "10px 0", border: "none", borderBottom: "1px solid #ccc" }} />
-              )}
-              <div style={{ textAlign: "center" }}>
-                <span onClick={() => handleViewMoreClick(detail)} style={{ color: "blue", cursor: "pointer" }}>
-                  View More
-                </span>
+          {selectedDetails?.map((detail) => (
+            <div className="details-container" key={detail.id}>
+              <div>
+                {Object.keys(detail.data).map((key) => {
+                  const value = detail.data[key];
+                  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                    return (
+                      <div className="detail-item" key={key}>
+                        <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                        <div className="value">{String(value)}</div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+              <div className="view-more">
+                <Button label={t("WORKBENCH_LABEL_VIEW_MORE")} onButtonClick={() => handleViewMoreClick(detail)} />
               </div>
             </div>
           ))}
-
           <div className="close-button" onClick={() => setShowTooltipFlag(false)}>
             <Close />
           </div>

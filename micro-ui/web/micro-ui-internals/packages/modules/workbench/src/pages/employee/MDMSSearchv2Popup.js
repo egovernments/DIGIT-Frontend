@@ -191,25 +191,27 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
 
             {showDetails && (
                 <div className="modal-wrapper">
-                    <div className="details-section-wrapper">
+                    <div className="option-details">
                         <div className="close-button" onClick={handleCloseDetails}>
                             <Close />
                         </div>
-                        <div className="details-section">
+                        <div className="details-container">
                             {Object.keys(selectedRowData?.original?.data).map((key) => {
-                                const value = selectedRowData?.original?.data[key];
+                                const value = selectedRowData?.original?.data[key]
                                 if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
                                     return (
-                                        <div style={{ margin: "30px", display: "flex", justifyContent: "space-between" }} key={key}>
-                                            <span style={{ fontWeight: "bold" }}>{t(Digit.Utils.locale.getTransformedLocale(key))}</span>{" "}
-                                            <span>{String(value)}</span>
+                                        <div className="detail-item" key={key}>
+                                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                                            <div className="value">{String(value)}</div>
                                         </div>
                                     );
                                 }
                                 return null;
                             })}
                         </div>
-                        <Button label={"Select"} onButtonClick={handleSelect} />
+                        <div className="select">
+                            <Button label={t("WORKBENCH_LABEL_SELECT")} onButtonClick={handleSelect} />
+                        </div>
                     </div>
                 </div>
             )}
