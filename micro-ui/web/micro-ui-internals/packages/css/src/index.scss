@@ -35,6 +35,7 @@
 @import "./components/statushighlight.scss";
 @import "./components/imageviewer.scss";
 @import "./components/actionbar.scss";
+@import "./components/mobilelinkssection.scss";
 @import "./components/table.scss";
 @import "./components/popup.scss";
 @import "./components/uploadcomponents.scss";
@@ -804,9 +805,14 @@ input[type="number"] {
   display: none;
 }
 
+.employee-web-links {
+  display: none;
+}
+
 .employee-web {
   display: block;
 }
+
 
 @media (max-width: 767px) {
   .employee-mobile {
@@ -816,6 +822,10 @@ input[type="number"] {
     flex-wrap: wrap;
   }
 
+  .employee-web-links {
+    display: block;
+  }
+
   .employee-web {
     display: none;
   }
@@ -823,7 +833,6 @@ input[type="number"] {
 
 .mobile-links {
   padding: 20px;
-  display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
