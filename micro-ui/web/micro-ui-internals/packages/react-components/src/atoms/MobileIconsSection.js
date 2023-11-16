@@ -16,8 +16,8 @@ export const MobileIconsSection = ({ hierarchy, selectedIcon, setSelectedIcon })
                         }
                     }}
                 >
-                    <PTIcon fill="#fe7a51" height="100" style={{ marginRight: "10px" }} />
-                    <span style={{ margin: "5px" }}>{(key.replace(/^\d+/, '')).toUpperCase()}</span>
+                    <PTIcon fill="#fe7a51" height="100" className={"PTIIcon"} />
+                    <span>{(key.replace(/^\d+/, '')).toUpperCase()}</span>
                 </div>
             ))}
         </div>

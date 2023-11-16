@@ -820,6 +820,14 @@ input[type="number"] {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+
+    .PTIIcon {
+      margin-right: 10px;
+    }
+
+    span {
+      margin: 5px;
+    }
   }
 
   .employee-web-links {
