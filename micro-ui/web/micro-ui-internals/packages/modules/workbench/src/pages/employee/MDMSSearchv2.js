@@ -225,7 +225,7 @@ const MDMSSearchv2 = () => {
       {
         updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) &&
         <ActionBar >
-          <SubmitBar disabled={false} onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
+          <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
       }
       {updatedConfig && <div className="inbox-search-wrapper">
