@@ -5,10 +5,15 @@ import { saveField, cancelSave } from '../utils/schemaUtils';
 import { useTranslation } from "react-i18next";
 
 const FieldEditorComponent = ({ state, dispatch }) => {
-
     const [requiredError, setRequiredError] = useState(null);
     const [fieldNameError, setFieldNameError] = useState(null);
     const { t } = useTranslation();
+    fieldTypes.forEach((field) => {
+        field.label = t(field.label);
+    });
+    arrayTypes.forEach((field) => {
+        field.label = t(field.label);
+    });
 
     useEffect(() => {
         setRequiredError(null);

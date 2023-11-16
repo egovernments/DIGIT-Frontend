@@ -69,7 +69,7 @@ function DynamicSchemaFormGenerator(props) {
                 definition: schema
             }
         );
-
+        setErrors(validateSchema(schema));
         setShowModal(true);
 
     };

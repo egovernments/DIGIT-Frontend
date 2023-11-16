@@ -383,11 +383,6 @@ function rootValidation(schema, errors) {
         }
     }
 
-    // Check that there is at least one unique field.
-    if (schema['x-unique'].length === 0 && Object.keys(schema.properties).length > 0) {
-        errors.push('Schema must have at least one unique field.');
-    }
-
     // Check that all fields from schema.properties are in ui:order and vice versa
     const propertyNames = Object.keys(schema.properties);
     const uiOrderNames = schema['ui:order'];

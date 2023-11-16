@@ -7,6 +7,9 @@ import { useTranslation } from "react-i18next";
 const FieldSelect = ({ state, dispatch }) => {
     const [error, setError] = useState(null);
     const { t } = useTranslation();
+    fieldTypes.forEach((field) => {
+        field.label = t(field.label);
+    });
 
     useEffect(() => {
         setError(null);

@@ -1,11 +1,11 @@
 const fieldTypes = [
-    { label: 'String', value: 'string' },
-    { label: 'Number', value: 'number' },
-    { label: 'Boolean', value: 'boolean' },
-    { label: 'Date', value: 'date' },
-    { label: 'Date-Time', value: 'date-time' },
-    { label: 'Object', value: 'object' },
-    { label: 'Array', value: 'array' },
+    { label: 'WORKBENCH_DROPDOWN_STRING', value: 'string' },
+    { label: 'WORKBENCH_DROPDOWN_NUMBER', value: 'number' },
+    { label: 'WORKBENCH_DROPDOWN_BOOLEAN', value: 'boolean' },
+    { label: 'WORKBENCH_DROPDOWN_DATE', value: 'date' },
+    { label: 'WORKBENCH_DROPDOWN_DATE_TIME', value: 'date-time' },
+    { label: 'WORKBENCH_DROPDOWN_OBJECT', value: 'object' },
+    { label: 'WORKBENCH_DROPDOWN_ARRAY', value: 'array' },
 ];
 
 const propertyMap = {
@@ -19,12 +19,12 @@ const propertyMap = {
 };
 
 const arrayTypes = [
-    { label: 'String', value: 'string' },
-    { label: 'Number', value: 'number' },
-    { label: 'Boolean', value: 'boolean' },
-    { label: 'Date', value: 'date' },
-    { label: 'Date-Time', value: 'date-time' },
-    { label: 'Object', value: 'object' },
+    { label: 'WORKBENCH_DROPDOWN_STRING', value: 'string' },
+    { label: 'WORKBENCH_DROPDOWN_NUMBER', value: 'number' },
+    { label: 'WORKBENCH_DROPDOWN_NUMBER', value: 'boolean' },
+    { label: 'WORKBENCH_DROPDOWN_DATE', value: 'date' },
+    { label: 'WORKBENCH_DROPDOWN_DATE_TIME', value: 'date-time' },
+    { label: 'WORKBENCH_DROPDOWN_OBJECT', value: 'object' },
 ];
 
 const resetCurrentVariables = {
