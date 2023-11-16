@@ -5,9 +5,7 @@ import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
 import { generateFieldsFromSchema, validateSchema } from '../../utils/schemaUtils';
 import { colorsConfigJson, styleConfigJson } from '../../configs/JSONInputStyleConfig';
-
-
-
+import { useTranslation } from "react-i18next";
 
 function EditSchemaHome() {
     const [schemaInput, setSchemaInput] = useState('');
@@ -15,6 +13,7 @@ function EditSchemaHome() {
     const [fields, setFields] = useState([]);
     const [errors, setErrors] = useState([]);
     const [jsError, setJsError] = useState(null);
+    const { t } = useTranslation();
 
     const handleSchemaInputChange = (event) => {
         if (!event.error && event.jsObject) {
@@ -40,10 +39,10 @@ function EditSchemaHome() {
 
     return (
         <div>
-            <header class="h1 digit-form-composer-sub-header">Edit Schema</header>
+            <header class="h1 digit-form-composer-sub-header">{t("WORKBENCH_HEADING_EDIT_SCHEMA")}</header>
             {fields.length === 0 && (
                 <div>
-                    <h2 className="card-label undefined">Paste your schema here:</h2>
+                    <h2 className="card-label undefined">{t("WORKBENCH_HEADING_PASTE_SCHEMA")}</h2>
                     <JSONInput
                         locale={locale}
                         height='50vh'
@@ -54,7 +53,7 @@ function EditSchemaHome() {
                         style={styleConfigJson}
                     />
                     <div className='schemaInputError'>{(errors.length > 0) ? (errors[0]) : (null)}</div>
-                    < Button onButtonClick={handleSchemaSubmit} label={"Submit Schema"} style={{ marginTop: "10px" }} />
+                    < Button onButtonClick={handleSchemaSubmit} label={t("WORKBENCH_LABEL_SUBMIT_SCHEMA")} style={{ marginTop: "10px" }} />
                 </div>
 
             )}

@@ -96,14 +96,9 @@ const FieldView = ({ state, dispatch }) => {
                 >
                     {state.objectMode ? (
                         <span
-                            className='field-name'
-                            style={
-                                {
-                                    color: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? '#F47738' : 'black',
-                                    cursor: (field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object')) ? 'pointer' : 'default'
-                                }
-                            } onClick={() => {
-                                if ((field.type === 'object' || (field.type == 'array' && field?.options?.arrayType == 'object'))) {
+                            className={`field-name ${field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object') ? 'field-type-object' : 'field-type-primitive'}`}
+                            onClick={() => {
+                                if (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) {
                                     dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: field.name } });
                                     dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                 }
@@ -115,14 +110,9 @@ const FieldView = ({ state, dispatch }) => {
                             <span className="arrow-up">&#8593;</span>
                             <span className="arrow-down">&#8595;</span>
                             <span
-                                className='field-name'
-                                style={
-                                    {
-                                        color: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? '#F47738' : 'black',
-                                        cursor: (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) ? 'pointer' : 'default'
-                                    }
-                                } onClick={() => {
-                                    if ((field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object'))) {
+                                className={`field-name ${field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object') ? 'field-type-object' : 'field-type-primitive'}`}
+                                onClick={() => {
+                                    if (field.type === 'object' || (field.type === 'array' && field?.options?.arrayType === 'object')) {
                                         dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...resetCurrentVariables, objectName: field.name } });
                                         dispatch({ type: 'SET_OBJECT_MODE', payload: true });
                                     }

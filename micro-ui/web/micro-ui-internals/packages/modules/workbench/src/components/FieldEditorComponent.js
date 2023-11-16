@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { CheckBox, Button, TextInput, Dropdown } from "@egovernments/digit-ui-react-components";
 import { fieldTypes, propertyMap, arrayTypes } from '../configs/FieldVariable';
 import { saveField, cancelSave } from '../utils/schemaUtils';
+import { useTranslation } from "react-i18next";
 
 const FieldEditorComponent = ({ state, dispatch }) => {
 
     const [requiredError, setRequiredError] = useState(null);
     const [fieldNameError, setFieldNameError] = useState(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         setRequiredError(null);
@@ -27,16 +29,16 @@ const FieldEditorComponent = ({ state, dispatch }) => {
         const currentName = state.currentVariables.objectName ? `${state.currentVariables.objectName}.${state.currentVariables.name}` : state.currentVariables.name;
 
         if (!state.currentVariables.name) {
-            setFieldNameError("Field name can't be empty");
+            setFieldNameError(t("WORKBENCH_SCHEMA_FIELD_EMPTY_ERROR"));
         } else if (state.currentVariables.name.includes('.')) {
-            setFieldNameError("Field name cannot contain a dot (.)");
+            setFieldNameError(t("WORKBENCH_SCHEMA_DOT_ERROR"));
         } else {
             const fieldExists = state.fields.some(field => field.name === currentName);
 
             if (fieldExists) {
                 const matchingFieldIndex = state.fields.findIndex(field => field.name === currentName);
                 if (state.updatingIndex === null || (matchingFieldIndex !== state.updatingIndex)) {
-                    setFieldNameError("Field name already exists");
+                    setFieldNameError(t("WORKBENCH_SCHEMA_NAME_EXISTS_ERROR"));
                 } else {
                     saveField(state, dispatch, state.currentVariables);
                 }
@@ -54,7 +56,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                     {!state.objectMode ? (
                         <div className='checkBoxContainer'>
                             <CheckBox
-                                label="Required"
+                                label={t("WORKBENCH_SCHEMA_REQUIRED")}
                                 checked={state.currentVariables.required}
                                 onChange={(e) => {
                                     if (e.target.checked) {
@@ -65,14 +67,14 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                                             dispatch({ type: 'SET_CURRENT_VARIABLES', payload: { ...state.currentVariables, required: false } });
                                             setRequiredError(null);
                                         } else {
-                                            setRequiredError("First make the 'Unique' checkbox unchecked.");
+                                            setRequiredError(t("WORKBENCH_SCHEMA_UNIQUE_ERROR"));
                                         }
                                     }
                                 }}
                             />
 
                             <CheckBox
-                                label="Unique"
+                                label={t("WORKBENCH_SCHEMA_UNIQUE")}
                                 checked={state.currentVariables.unique}
                                 onChange={(e) => {
                                     setRequiredError(null);
@@ -91,7 +93,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                     <div className='workbench-space-between'>
                         <div className='label-field-pair'>
                             <div>
-                                <h2 className="card-label undefined">Field Name *</h2>
+                                <h2 className="card-label undefined">{t("WORKBENCH_LABEL_FIELD_NAME_REQUIRED")}</h2>
                                 <TextInput
                                     type="text"
                                     value={state.currentVariables.name}
@@ -104,7 +106,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                             </div>
                         </div>
                         <div className='label-field-pair'>
-                            <h2 className="card-label">Type</h2>
+                            <h2 className="card-label">{t("WORKBENCH_LABEL_TYPE")}</h2>
                             <Dropdown
                                 selected={{
                                     label: state.currentVariables.type.charAt(0).toUpperCase() + state.currentVariables.type.slice(1),
@@ -162,12 +164,12 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                     <div className='buttoncontainer'>
                         <Button
                             onButtonClick={handleSaveField}
-                            label={"Save Field"}
+                            label={t("WORKBENCH_LABEL_SAVE_FIELD")}
                             className="field-save-button"
                         />
                         <Button
                             onButtonClick={() => cancelSave(state, dispatch)}
-                            label={"Cancel"}
+                            label={t("WORKBENCH_LABEL_CANCEL")}
                             className="field-cancel-button"
                             variation={"secondary"}
                         />
@@ -175,7 +177,7 @@ const FieldEditorComponent = ({ state, dispatch }) => {
                 </div>
             ) : (
                 <div className='schmema-note-container'>
-                    <p>Add a field or select a field to edit</p>
+                    <p>{t("WORKBENCH_SCHEMA_ADD_FIELD")}</p>
                 </div>
             )}
         </div>

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-react-components";
 import { fieldTypes } from '../configs/FieldVariable';
 import { addField } from '../utils/schemaUtils';
+import { useTranslation } from "react-i18next";
 
 const FieldSelect = ({ state, dispatch }) => {
     const [error, setError] = useState(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         setError(null);
@@ -15,7 +17,7 @@ const FieldSelect = ({ state, dispatch }) => {
             addField(state, dispatch);
             setError(null); // Clear the error if field type is selected
         } else {
-            setError('Please select a field type before adding.');
+            setError(t('WORKBENCH_SELECT_TYPE_ERROR'));
         }
     };
 
@@ -33,11 +35,11 @@ const FieldSelect = ({ state, dispatch }) => {
                 showSearchIcon={false}
                 disable={false}
                 autoComplete="off"
-                placeholder="Select a Type"
+                placeholder={t("WORKBENCH_PLACEHOLDER_SELECT_TYPE")}
             />
             {error && <p className='schemaInputError'>{error}</p>}
             <div className="field-select-button-container">
-                <Button onButtonClick={handleAddField} label={"Add Field"} />
+                <Button onButtonClick={handleAddField} label={t("WORKBENCH_LABEL_ADD_FIELD")} />
             </div>
         </div>
     );

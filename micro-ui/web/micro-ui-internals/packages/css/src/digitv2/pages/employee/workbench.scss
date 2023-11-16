@@ -722,6 +722,16 @@ button:hover {
         display: flex;
         align-items: center;
         margin-left: 5px;
+
+        &.field-type-object {
+          color: #F47738;
+          cursor: pointer;
+        }
+
+        &.field-type-primitive {
+          color: black;
+          cursor: default;
+        }
       }
 
       .icon-pointer {

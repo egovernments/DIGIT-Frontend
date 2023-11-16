@@ -79,18 +79,18 @@ function DynamicSchemaFormGenerator(props) {
         return (
             <div >
                 <ActionBar className="SchemaActionBar">
-                    <SubmitBar label={t("Preview And Save")} className="SubmitBar" onSubmit={generateSchema} />
-                    <Button className="Button" onButtonClick={() => setShowConfirmationModal(true)} label={"Cancel"} variation={"secondary"} />
+                    <SubmitBar label={t("WORKBENCH_LABEL_PREVIEW_SAVE")} className="SubmitBar" onSubmit={generateSchema} />
+                    <Button className="Button" onButtonClick={() => setShowConfirmationModal(true)} label={t("WORKBENCH_LABEL_CANCEL")} variation={"secondary"} />
                 </ActionBar>
                 {showModal && <SchemaModalComponent generatedSchema={generatedSchema} state={state} setShowModal={setShowModal} />}
                 {showConfirmationModal && <Confirmation
                     t={t}
-                    heading={"Confirm Cancelation"}
-                    docName={"Current Schema"}
+                    heading={t("Confirm Cancellation")}
+                    docName={t("WORKBENCH_SCHEMA_DOCNAME")}
                     closeModal={() => setShowConfirmationModal(false)}
-                    actionCancelLabel="Cancel"
+                    actionCancelLabel={t("WORKBENCH_LABEL_CANCEL")}
                     actionCancelOnSubmit={() => setShowConfirmationModal(false)}
-                    actionSaveLabel="Delete"
+                    actionSaveLabel={t("WORKBENCH_LABEL_DELETE")}
                     actionSaveOnSubmit={() => { { props.setSchemaName(''); props.setShowDynamicForm(false) } }}
                 />}
             </div>
@@ -138,12 +138,12 @@ function DynamicSchemaFormGenerator(props) {
     return (
         <div>
             <div className="toggle-schema-wrapper">
-                <ToggleSchema onChange={toggleView} label={"Toggle Editor"} value={!showGenerator} />
+                <ToggleSchema onChange={toggleView} label={t("WORKBENCH_LABEL_TOGGLE_EDITOR")} value={!showGenerator} />
             </div>
             {showGenerator ? (
                 <div>
                     {showGenerator ? (<div>
-                        <header class="h1 digit-form-composer-sub-header">Dynamic Schema Generator</header>
+                        <header class="h1 digit-form-composer-sub-header">{t("WORKBENCH_HEADING_DYNAMIC_GENERATOR")}</header>
                         <h1 className='schemaNameContainer'>{schemaName + " config"}</h1>
                         <div className='schemaGeneratorContainer'>
                             <div className='fieldSelect'>
@@ -174,14 +174,14 @@ function DynamicSchemaFormGenerator(props) {
                                                 }
                                             }}
                                         >
-                                            Back
+                                            {t("WORKBENCH_LABEL_BACK")}
                                         </button>
                                         {`${state.currentVariables.objectName.replace(/\./g, ' -> ')}`}
                                     </h2>
                                 )}
                                 {!state.objectMode && (
                                     <h2 className='fieldListHeader'>
-                                        Field List
+                                        {t("WORKBENCH_HEADING_FIELD_LIST")}
                                     </h2>
                                 )}
                                 <FieldView
@@ -196,7 +196,7 @@ function DynamicSchemaFormGenerator(props) {
                 </div>
             ) : (
                 <div>
-                    <header class="h1 digit-form-composer-sub-header">Dynamic Schema Editor</header>
+                    <header class="h1 digit-form-composer-sub-header">{t("WORKBENCH_HEADING_DYNAMIC_EDITOR")}</header>
                     <h1 className='schemaNameContainer'>{schemaName + " config"}</h1>
                     <JSONInput
                         locale={locale}
