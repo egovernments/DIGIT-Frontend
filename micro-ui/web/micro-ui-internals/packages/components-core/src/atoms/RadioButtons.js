@@ -5,19 +5,23 @@ import { useTranslation } from "react-i18next";
 
 const RadioButtons = (props) => {
   const { t } = useTranslation();
-  var selected = props.selectedOption;
+  const [selected, setSelected] = useState(props.selectedOption);
+  useEffect(() => {
+    setSelected(props.selectedOption);
+  }, [props.selectedOption]);
   function selectOption(value) {
-    //selected = value;
+    setSelected(value);
     props.onSelect(value);
   }
+
 
   return (
     <div style={props?.style} className={`digit-radio-wrap ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
       {props?.options?.map((option, ind) => {
         if (props?.optionsKey && !props?.isDependent) {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"
@@ -35,8 +39,8 @@ const RadioButtons = (props) => {
           );
         } else if (props?.optionsKey && props?.isDependent) {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"
@@ -54,8 +58,8 @@ const RadioButtons = (props) => {
           );
         } else {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"

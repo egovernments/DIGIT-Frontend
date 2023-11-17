@@ -1,0 +1,55 @@
+@import url("../index.scss");
+
+
+.digit-toggle-toolbar {
+  display: flex;
+  justify-content: flex-start;
+}
+
+
+.toggle-option-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.digit-toggle-btn-wrap {
+  cursor: pointer;
+  border: 2px solid theme(digitv2.lightTheme.paper);
+  background-color: transparent;
+  color: theme(digitv2.lightTheme.text-color-disabled);
+  text-align: center;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 0.875rem;
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.5rem;
+  padding: 0.5rem 1rem;
+
+  &:hover {
+    border: 1px solid theme(digitv2.lightTheme.primary);
+    background: theme(digitv2.lightTheme.paper);
+    box-shadow: 0px 0px 6px 0px rgba(244, 119, 56, 0.25);
+
+    .digit-toggle-label{
+      color: #F47738;
+      font-weight: theme(digitv2.fontWeight.regular);
+    }
+
+  }
+
+  input:checked+.digit-toggle-label {
+    background-color: theme(digitv2.lightTheme.primary);
+    color: theme(digitv2.lightTheme.paper);
+  }
+}
+
+
+.digit-toggle-input {
+  position: absolute;
+  opacity: 0;
+}
+
+.digit-toggle-label {
+  color: theme(digitv2.lightTheme.text-color-disabled);
+}

@@ -55,6 +55,7 @@ import {
   Toast,
   UploadFile,
   WhatsNewCard,
+  Toggle,
   // Numeric
 } from "./atoms";
 
@@ -157,5 +158,6 @@ export {
   SearchForm,
   SearchOnRadioButtons,
   TextInputCard,
+  Toggle
   // Numeric
 };

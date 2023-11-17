@@ -4,29 +4,33 @@ import {
     ErrorMessage,
     Header,
     TextArea,
-    TextInput
+    TextInput,
 } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import { CustomDropdown } from "../molecules";
 
 
 const FieldV1 = ({
-    type="",
-    value="",
-    onChange = () => {},
-    error= "",
-    label="",
+    type = "",
+    value = "",
+    onChange = () => { },
+    error = "",
+    label = "",
     disabled = false,
     nonEditable = false,
-    placeholder="",
-    inline=false,
+    placeholder = "",
+    inline = false,
     required = false,
-    description="",
+    description = "",
     charCount = false,
-    populators={},
+    populators = {},
     withoutLabel = false,
-    props={},
+    props = {},
     ref,
+    onBlur,
+    config,
+    errors
 }) => {
     const { t } = useTranslation();
 
@@ -98,17 +102,36 @@ const FieldV1 = ({
                         />
                     </div>
                 );
+            case "radio":
+            case "dropdown":
+            case "select":
+            case "radioordropdown":
+            case "toggle":
+                return (
+                    <CustomDropdown
+                        t={t}
+                        label={label}
+                        type={type}
+                        onBlur={onBlur}
+                        value={value}
+                        inputRef={ref}
+                        onChange={onChange}
+                        config={config}
+                        disabled={disabled}
+                        errorStyle={errors?.[populators.name]}
+                    />
+                );
             default:
                 return null;
         }
     };
 
-
+    console.log(error);
     return (
         <>
             {!withoutLabel && (
                 <Header
-                    className="label" 
+                    className="label"
                 >
                     {t(label)}
                     {required ? " * " : null}
@@ -121,9 +144,9 @@ const FieldV1 = ({
                     {renderCharCount()}
                 </div>
                 <div className="digit-error">
-                {error ? ( 
-                    <ErrorMessage message={t(error)} />
-                ) : null}
+                    {error ? (
+                        <ErrorMessage message={t(error)} />
+                    ) : null}
                 </div>
             </div>
         </>

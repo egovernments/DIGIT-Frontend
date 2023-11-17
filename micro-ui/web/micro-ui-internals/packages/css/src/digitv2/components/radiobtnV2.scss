@@ -3,15 +3,37 @@
 .digit-radio-wrap {
   @apply my-sm block leading-10 mb-lg;
 
+
+  display: "flex";
+  justify-content: "flex-start";
+  gap: "3rem";
+
   div {
     @apply block mb-md;
   }
 
   .digit-radio-btn-wrap {
     @apply block float-left relative;
+
     &:hover {
       .digit-radio-btn-checkmark {
         @apply border-primary-main;
+      }
+    }
+  }
+
+  .radio-option-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &.disabled {
+      .digit-radio-btn-checkmark {
+        border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+      }
+
+      label {
+        color: theme(digitv2.lightTheme.text-color-disabled);
       }
     }
   }
@@ -27,7 +49,7 @@
 
   label {
     @extend .light-text-color-primary;
-    @apply text-text-primary text-form-field ml-md;
+    @apply text-text-primary text-form-field;
   }
 
   .digit-radio-btn-checkmark:after {

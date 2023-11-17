@@ -55,6 +55,7 @@ import UploadFile from "./UploadFile";
 import WhatsNewCard from "./WhatsNewCard";
 import PageBasedInput from "./PageBasedInput";
 // import Numeric from "./Numeric";
+import Toggle from "./Toggle";
 export {
   PageBasedInput,
   ActionBar,
@@ -112,5 +113,6 @@ export {
   Toast,
   UploadFile,
   WhatsNewCard,
+  Toggle,
   // Numeric
 };

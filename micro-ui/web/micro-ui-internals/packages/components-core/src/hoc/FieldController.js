@@ -49,9 +49,9 @@ function FieldController(args) {
           nonEditable = {nonEditable}
           placeholder={placeholder}
           inline={props.inline}
-          description={description}
+          description={config.description}
           charCount = {charCount}
-          withoutLabel = {withoutLabel}
+          withoutLabel = {config.withoutLabel}
           type={type}
           populators={populators}
           required={isMandatory}

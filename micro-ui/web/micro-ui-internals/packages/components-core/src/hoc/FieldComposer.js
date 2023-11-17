@@ -8,7 +8,6 @@ import {
   MobileNumber,
   MultiSelectDropdown,
   Paragraph,
-  Numeric,
   TextArea,
   TextInput
 } from "../atoms";
@@ -91,32 +90,6 @@ const FieldComposer = ({
             variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
             charCount={charCount}
             placeholder={placeholder}
-          />
-        );
-      case "numeric":
-        return (
-          <Numeric
-            value={value}
-            type={type}
-            name={populators.name}
-            onChange={onChange}
-            inputRef={ref}
-            errorStyle={errors?.[populators.name]}
-            max={populators?.validation?.max}
-            min={populators?.validation?.min}
-            disable={disable}
-            errors={errors}
-            noneditable={noneditable}
-            focused={focused}
-            style={type === "date" ? { paddingRight: "3px" } : " "}
-            maxlength={populators?.validation?.maxlength}
-            minlength={populators?.validation?.minlength}
-            customIcon={populators?.customIcon}
-            customClass={populators?.customClass}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
-            charCount={charCount}
-            placeholder={placeholder}
-            config={config}
           />
         );
       case "amount":
