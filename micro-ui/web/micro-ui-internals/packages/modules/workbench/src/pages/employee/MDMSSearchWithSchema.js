@@ -98,8 +98,7 @@ const MDMSSearchWithSchema = () => {
         Digit.UiSchemaSearchService.search({
             tenantId: tenantId,
             uniqueIdentifiers: [
-                "TestMaster.TestModule2"
-                // "Test2" + master + "." + modulee
+                master + "." + modulee
             ],
             schemaCode: "Workbench.UISchema"
         }).then((result) => {
