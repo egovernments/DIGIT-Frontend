@@ -25,6 +25,9 @@ const Profile = ({ info, stateName, t }) => {
       }
     }
   }, [profilePic !== null]);
+
+  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar")
+
   return (
     <div className="profile-section">
       <div className="imageloader imageloader-loaded">
@@ -48,7 +51,7 @@ const Profile = ({ info, stateName, t }) => {
       <div className="profile-divider"></div>
       {window.location.href.includes("/employee") &&
         !window.location.href.includes("/employee/user/login") &&
-        !window.location.href.includes("employee/user/language-selection") && <ChangeCity t={t} mobileView={true} />}
+        !window.location.href.includes("employee/user/language-selection") && !CustomEmployeeTopBar && <ChangeCity t={t} mobileView={true} />}
     </div>
   );
 };
