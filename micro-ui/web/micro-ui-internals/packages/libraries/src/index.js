@@ -11,6 +11,7 @@ import JsDictionary from "./services/atoms/JsDictionary";
 import { LocationService } from "./services/elements/Location";
 import { LocalityService } from "./services/elements/Localities";
 import { CustomService } from "./services/elements/CustomService";
+import { UiSchemaSearchService } from "./services/elements/UiSchemaSearchService"
 import { LocalizationService } from "./services/elements/Localization/service";
 import { LoginService } from "./services/elements/Login";
 import { PGRService } from "./services/elements/PGR";
@@ -54,7 +55,8 @@ const initLibraries = () => {
   setupLibraries("Services", { useStore });
   setupLibraries("Enums", Enums);
   setupLibraries("LocationService", LocationService);
-  setupLibraries("CustomService",CustomService)
+  setupLibraries("CustomService", CustomService)
+  setupLibraries("UiSchemaSearchService", UiSchemaSearchService);
   setupLibraries("LocalityService", LocalityService);
   setupLibraries("LoginService", LoginService);
   setupLibraries("LocalizationService", LocalizationService);
