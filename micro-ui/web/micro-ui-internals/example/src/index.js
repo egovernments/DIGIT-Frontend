@@ -3,11 +3,11 @@ import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
+import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-// import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
+import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 
 import "@egovernments/digit-ui-css/example/index.css";
@@ -18,9 +18,9 @@ import { UICustomizations } from "./UICustomizations";
 var Digit = window.Digit || {};
 
 const enabledModules = [ "DSS", "HRMS",
-"Workbench"
+"Workbench",
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  // "Utilities",
+  "Utilities",
 //added to check fsm
 // "FSM"
 ];
@@ -62,11 +62,11 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-
+  initCoreComponents();
   initDSSComponents();
   initHRMSComponents();
   initEngagementComponents();
-  // initUtilitiesComponents();
+  initUtilitiesComponents();
   initWorkbenchComponents();
 
 
