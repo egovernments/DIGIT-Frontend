@@ -7,6 +7,9 @@
 }
 
 .workbench {
+  &.app-container {
+    margin-top: 0.75rem;
+ }
   .workbench-create-form {
     display: inherit;
     padding-top: 1.5rem;
