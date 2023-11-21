@@ -19,7 +19,7 @@ const toDropdownObj = (master = "", mod = "") => {
 };
 
 
-const MDMSSearchWithSchema = () => {
+const MDMSSearchv3 = () => {
     let Config = _.clone(Configg)
     const { t } = useTranslation();
     const history = useHistory();
@@ -33,7 +33,7 @@ const MDMSSearchWithSchema = () => {
     const [masterOptions, setMasterOptions] = useState([])
     const [moduleOptions, setModuleOptions] = useState([])
     const [updatedConfig, setUpdatedConfig] = useState(null)
-    const [searchableFields, setSearchableFields] = useState(null);
+    const [schemaFields, setSchemaFields] = useState(null);
     tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
     const SchemaDefCriteria = {
         tenantId: tenantId,
@@ -89,7 +89,6 @@ const MDMSSearchWithSchema = () => {
     }, [masterName])
 
     useEffect(() => {
-        //here set current schema based on module and master name
         if (masterName?.name && moduleName?.name) {
             setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
         }
@@ -103,33 +102,33 @@ const MDMSSearchWithSchema = () => {
             schemaCode: "Workbench.UISchema"
         }).then((result) => {
             if (result.mdms.length > 0) {
-                setSearchableFields(result.mdms[0]?.data?.search?.searchableFields)
+                setSchemaFields({ displayFields: result.mdms[0]?.data?.searchResult?.displayFields, searchableFields: result.mdms[0]?.data?.search?.searchableFields })
             }
         })
     }, [])
 
     useEffect(() => {
-        if (searchableFields && currentSchema) {
+        if (schemaFields && currentSchema) {
             const {
                 definition: { properties },
             } = currentSchema;
             var fields = [];
             var resultFields = [];
             Object.keys(properties)?.forEach((key) => {
-                if (searchableFields.includes(key)) {
+                if (schemaFields.searchableFields.includes(key)) {
                     const fieldConfig = utils.getConfig(properties[key].type);
                     fields.push({ label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`), type: fieldConfig.type, code: key, populators: { name: key }, i18nKey: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`) })
-                    if (properties[key].type === "string" && !properties[key].format) {
-                        resultFields.push({
-                            label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`),
-                            name: key,
-                            code: key,
-                            i18nKey: `${currentSchema.code}_${key}`
-                        });
-                    }
                     if (properties[key].default) {
                         Config.sections.search.uiConfig.defaultValues[key] = properties[key].default;
                     }
+                }
+                if (schemaFields.displayFields.includes(key)) {
+                    resultFields.push({
+                        label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`),
+                        name: key,
+                        code: key,
+                        i18nKey: `${currentSchema.code}_${key}`
+                    });
                 }
             });
             fields.push({
@@ -157,11 +156,8 @@ const MDMSSearchWithSchema = () => {
                     ],
                 },
             })
-            console.log(fields, " filedsssss")
             Config.sections.search.uiConfig.fields = fields;
             Config.actionLink = Config.actionLink + `?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
-
-
             Config.additionalDetails = {
                 currentSchemaCode: currentSchema.code,
                 searchBySchema: true
@@ -225,10 +221,9 @@ const MDMSSearchWithSchema = () => {
                 // dontShowNA:true
             }]
             Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-
             setUpdatedConfig(Config)
         }
-    }, [currentSchema, searchableFields]);
+    }, [currentSchema, schemaFields]);
 
     const handleAddMasterData = () => {
         let actionLink = updatedConfig?.actionLink
@@ -265,4 +260,4 @@ const MDMSSearchWithSchema = () => {
     );
 };
 
-export default MDMSSearchWithSchema;
+export default MDMSSearchv3;
