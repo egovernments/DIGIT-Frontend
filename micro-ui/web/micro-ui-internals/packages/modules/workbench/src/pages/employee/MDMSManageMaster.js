@@ -166,7 +166,7 @@ const MDMSManageMaster = () => {
         <Card className="manage-master-wrapper">
         <Dropdown
           option={masterOptions}
-          className={"form-field"}
+          className={"form-field wbh-mdms-module-name"}
           optionKey="code"
           selected={master && modulee ? toDropdownObj(master) : masterName}
           select={(e) => {
@@ -183,7 +183,7 @@ const MDMSManageMaster = () => {
         <Dropdown
           option={moduleOptions}
           style={{marginRight:"auto" }}
-          className={"form-field"}
+          className={"form-field wbh-mdms-master-name"}
           optionKey="code"
           selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
           select={(e) => {

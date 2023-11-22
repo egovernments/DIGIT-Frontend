@@ -65,6 +65,11 @@ with
 # Changelog
 
 ```bash
+1.8.0-beta.11 republished due to some version issues
+1.8.0-beta.10 Constants updated for mgramsewa
+1.8.0-beta.9 Updated How It works screen to take header from mdms config and show pdf card only when required
+1.8.0-beta.8 redefine addtional component to render only under employee home page 
+1.8.0-beta.6 added addtional component render for tqm modules
 1.8.0-beta.5 fix for login screen alignments
 1.8.0-beta.4 made the default localisation in globalconfig
 1.8.0-beta workbench base version beta release
