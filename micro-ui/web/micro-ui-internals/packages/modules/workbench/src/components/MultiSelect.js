@@ -104,10 +104,10 @@ const CustomSelectWidget = (props) => {
         <components.MenuList  {...props}>
           {props.children}
         </components.MenuList>
-        <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "10px", backgroundColor: "#BDC5D1" }}>
-          <button onClick={handleSeeAll} style={{ backgroundColor: "#BDC5D1", color: "#f47738", fontSize: "16px", textDecoration: "underline" }}>
+        <div className="link-container">
+          <div onClick={handleSeeAll} className="view-all-link">
             View All
-          </button>
+          </div>
         </div>
       </div>
     )
@@ -195,7 +195,7 @@ const CustomSelectWidget = (props) => {
       />
 
       <div className="info-icon-container">
-        <div className="info-icon" style={{ cursor: "pointer" }}
+        <div className="info-icon"
           onClick={() => { setShowTooltipFlag(true) }}
         >
           {selectedDetails && selectedDetails.length > 0 && (

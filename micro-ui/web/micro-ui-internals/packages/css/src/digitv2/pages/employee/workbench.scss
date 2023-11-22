@@ -819,4 +819,24 @@ button:hover {
     margin-left: 0.7em;
     margin-right: -2em;
   }
+
+  .info-icon-container .info-icon {
+    cursor: pointer;
+  }
+}
+
+.link-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #bdc5d1;
+
+  .view-all-link {
+    background-color: #bdc5d1;
+    color: #f47738;
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

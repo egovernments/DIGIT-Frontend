@@ -51,6 +51,9 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
   }, [formState])
 
   const onSubmit = (data, e) => {
+    if (e) {
+      e.preventDefault();
+    }
     e.preventDefault();
     //here -> added a custom validator function, if required add in UICustomizations
     const isAnyError = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.customValidationCheck ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.customValidationCheck(data) : false
