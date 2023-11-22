@@ -1,6 +1,6 @@
 var globalConfigs = (function () {
   var contextPath = "workbench-ui";
-  var stateTenantId = "pg";
+  var stateTenantId = "mz";
   var gmaps_api_key = "AIzaSyAASfCFja6YxwDzEAzhHFc8B-17TNTCV0g";
   var configModuleName = "commonUiConfig";
   var centralInstanceEnabled = false;
