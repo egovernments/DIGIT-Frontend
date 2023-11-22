@@ -87,7 +87,8 @@ const CustomSelectWidget = (props) => {
   );
   const [limitedOptions, setLimitedOptions] = useState([]);
   const [selectedDetails, setSelectedDetails] = useState(null);
-
+  const [showDetails, setShowDetails] = useState(null);
+  const [isSelect, setIsSelect] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isSeeAll, setIsSeeAll] = useState(false);
 
@@ -113,9 +114,16 @@ const CustomSelectWidget = (props) => {
   }
   const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
   const handleChange = (selectedValue) => {
-    onChange(multiple ? selectedValue?.value : selectedValue?.value);
-    setSelectedDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.data.code) : obj.data.code == selectedValue.value)))
+    setShowTooltipFlag(true);
+    setIsSelect(true);
+    setShowDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.data.code) : obj.data.code == selectedValue.value)))
   };
+  const handleSelect = (detail) => {
+    setShowTooltipFlag(false);
+    setIsSelect(false);
+    onChange(detail.data.code);
+    setSelectedDetails([detail])
+  }
 
   useEffect(() => {
     setLimitedOptions(formattedOptions.slice(0, optionsLimit));
@@ -164,12 +172,11 @@ const CustomSelectWidget = (props) => {
     );
   };
 
-
   if (isLoading) {
     return <Loader />;
   }
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div className="multiselect">
       <Select
         className="form-control form-select"
         classNamePrefix="digit"
@@ -187,7 +194,7 @@ const CustomSelectWidget = (props) => {
         components={isSeeAll ? { MenuList: SelectMenuButton, Option: OptionWithInfo } : { Option: OptionWithInfo }}
       />
 
-      <div style={{ marginLeft: "10px", marginBottom: "10px" }}>
+      <div className="info-icon-container">
         <div className="info-icon" style={{ cursor: "pointer" }}
           onClick={() => { setShowTooltipFlag(true) }}
         >
@@ -200,34 +207,64 @@ const CustomSelectWidget = (props) => {
         </div>
 
       </div>
-      {showTooltipFlag && selectedDetails && (
+      {showTooltipFlag && (
         <div className="option-details">
-          {selectedDetails?.map((detail) => (
-            <div className="details-container" key={detail.id}>
-              <div>
-                {Object.keys(detail.data).map((key) => {
-                  const value = detail.data[key];
-                  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-                    return (
-                      <div className="detail-item" key={key}>
-                        <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
-                        <div className="value">{String(value)}</div>
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-              <div className="view-more">
-                <Button label={t("WORKBENCH_LABEL_VIEW_MORE")} onButtonClick={() => handleViewMoreClick(detail)} />
-              </div>
+          {isSelect &&
+            <div>
+              {showDetails?.map((detail) => (
+                <div>
+                  <div className="details-container" key={detail.id}>
+                    {Object.keys(detail.data).map((key) => {
+                      const value = detail.data[key];
+                      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                        return (
+                          <div className="detail-item" key={key}>
+                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                            <div className="value">{String(value)}</div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                  <div className="select">
+                    <Button label={t("WORKBENCH_LABEL_SELECT")} onButtonClick={() => handleSelect(detail)} />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-          <div className="close-button" onClick={() => setShowTooltipFlag(false)}>
+          }
+          {!isSelect &&
+            <div>
+              {selectedDetails?.map((detail) => (
+                <div>
+                  <div className="details-container" key={detail.id}>
+                    {Object.keys(detail.data).map((key) => {
+                      const value = detail.data[key];
+                      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                        return (
+                          <div className="detail-item" key={key}>
+                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                            <div className="value">{String(value)}</div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                  <div className="view-more">
+                    <Button label={t("WORKBENCH_LABEL_VIEW_MORE")} onButtonClick={() => handleViewMoreClick(detail)} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+          <div className="close-button" onClick={() => { setShowTooltipFlag(false); setIsSelect(false); }}>
             <Close />
           </div>
         </div>
-      )}
+      )
+      }
 
 
       {

@@ -9,7 +9,8 @@
 .workbench {
   &.app-container {
     margin-top: 0.75rem;
- }
+  }
+
   .workbench-create-form {
     display: inherit;
     padding-top: 1.5rem;
@@ -798,5 +799,24 @@ button:hover {
       font-weight: bolder;
       font-size: 23px;
     }
+  }
+}
+
+.multiselect {
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 588px) {
+    .info-icon-container {
+      position: absolute;
+      right: 2px;
+      margin-right: 0px !important;
+      margin-left: 0px !important;
+    }
+  }
+
+  .info-icon-container {
+    margin-left: 0.7em;
+    margin-right: -2em;
   }
 }
