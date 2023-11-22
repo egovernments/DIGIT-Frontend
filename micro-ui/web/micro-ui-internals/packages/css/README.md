@@ -42,6 +42,8 @@ frontend/micro-ui/web/public/index.html
 # Changelog
 
 ```bash
+1.8.0-beta.16 styles for detail modals
+1.8.0-beta.15 styles for multiselect dropdowns
 1.8.0-beta.14 added tour help styles
 1.8.0-beta.13 fixed the login text styling issue
 1.8.0-beta.1 styles for login dropdown and homepage dropdowns
