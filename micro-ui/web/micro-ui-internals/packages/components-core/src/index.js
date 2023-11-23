@@ -56,6 +56,7 @@ import {
   UploadFile,
   WhatsNewCard,
   Toggle,
+  ToggleSwitch,
   // Numeric
 } from "./atoms";
 
@@ -158,6 +159,7 @@ export {
   SearchForm,
   SearchOnRadioButtons,
   TextInputCard,
-  Toggle
+  Toggle,
+  ToggleSwitch
   // Numeric
 };

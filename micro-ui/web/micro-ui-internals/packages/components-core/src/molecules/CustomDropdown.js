@@ -5,7 +5,6 @@ import { Loader } from "../atoms/Loader";
 import RadioButtons from "../atoms/RadioButtons";
 import Dropdown from "../atoms/Dropdown";
 import { createFunction } from "./techMolecules/createFunction";
-import Toggle from "../atoms/Toggle";
 
 const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyle, disabled, type, additionalWrapperClass = "" }) => {
   const master = { name: config?.mdmsConfig?.masterName };
@@ -71,26 +70,6 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             errorStyle={errorStyle}
             optionCardStyles={config?.optionsCustomStyle}
           />)
-      case "toggle":
-        return (
-          <Toggle
-            inputRef={inputRef}
-            options={data || config?.options || []}
-            key={config.name}
-            optionsKey={config?.optionsKey}
-            value={value}
-            onSelect={(e) => {
-              onChange(e, config.name);
-            }}
-            disabled={disabled}
-            selectedOption={value}
-            defaultValue={value}
-            t={t}
-            errorStyle={errorStyle}
-            additionalWrapperClass={additionalWrapperClass}
-            innerStyles={config?.innerStyles}
-          />
-        )
       default:
         return null;
 

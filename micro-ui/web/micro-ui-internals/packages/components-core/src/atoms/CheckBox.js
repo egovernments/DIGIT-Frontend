@@ -3,7 +3,7 @@ import { SVG } from "./SVG";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pageType, style, index, isLabelFirst, customLabelMarkup, ...props }) => {
+const CheckBox = ({ onChange, label, value, disabled, ref, checked, inputRef, pageType, style, index, isLabelFirst, customLabelMarkup, ...props }) => {
   const { t } = useTranslation();
   const userType = pageType || window?.Digit?.SessionStorage.get("userType");
   let styles = props.styles;
@@ -23,14 +23,14 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
             value={value || label}
             {...props}
             ref={inputRef}
-            disabled={disable}
+            disabled={disabled}
             checked={checked}
           />
           <p
             className={
-              userType === "employee" ? `digit-custom-checkbox-emp ${disable ? "disable" : ""}` : `digit-custom-checkbox ${disable ? "disable" : ""}`
+              userType === "employee" ? `digit-custom-checkbox-emp ${disabled ? "disable" : ""}` : `digit-custom-checkbox ${disabled ? "disable" : ""}`
             }
-            style={disable ? { opacity: 0.5 } : { left: "90%" }}
+            style={disabled ? { opacity: 0.5 } : { left: "90%" }}
           >
             <SVG.Check />
           </p>
@@ -49,14 +49,14 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
             value={value || label}
             {...props}
             ref={inputRef}
-            disabled={disable}
+            disabled={disabled}
             checked={checked}
           />
           <p
             className={
-              userType === "employee" ? `digit-custom-checkbox-emp ${disable ? "disable" : ""}` : `digit-custom-checkbox ${disable ? "disable" : ""}`
+              userType === "employee" ? `digit-custom-checkbox-emp ${disabled ? "disable" : ""}` : `digit-custom-checkbox ${disabled ? "disable" : ""}`
             }
-            style={disable ? { opacity: 0.5 } : null}
+            style={disabled ? { opacity: 0.5 } : null}
           >
             <SVG.Check />
           </p>

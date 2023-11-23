@@ -17,6 +17,7 @@ export default {
     disable: { control: "boolean" },
     additionalWrapperClass: { control: "text" },
     props: { control: "object" },
+    type:{control:"select", options:["dropdown"]}
   },
 };
 const queryClient = new QueryClient();
@@ -36,8 +37,8 @@ const gendersOptions = [
   { code: "TRANSGENDER", name: "TRANSGENDER" },
 ];
 
-export const DropDownStory = Template.bind({});
-DropDownStory.args = {
+export const Default = Template.bind({});
+Default.args = {
   t,
   config: {
     name: "genders",

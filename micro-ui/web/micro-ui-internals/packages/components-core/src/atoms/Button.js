@@ -2,7 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Button = (props) => {
-  let className = props?.variation === "primary" ? "digit-button-primary" : props?.variation ? props?.variation : "digit-button-secondary";
+  let className = (
+    props?.variation === "primary"
+      ? "digit-button-primary"
+      : (props?.variation ? props?.variation : "digit-button-secondary")
+  );
   return (
     <button
       ref={props?.ref}

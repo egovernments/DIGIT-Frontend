@@ -3,7 +3,8 @@
 .digit-button-primary {
   @extend .light-primary-button;
   height: fit-content;
-  @apply text-center cursor-pointer outline-none px-lg;
+  @apply text-center cursor-pointer outline-none px-lg py-sm;
+  box-shadow: 0px -2px 0px 0px theme(digitv2.lightTheme.text-color-primary) inset;
 
   &.disabled {
     opacity: 0.5;
@@ -72,8 +73,14 @@
 
 .digit-button-label {
   width: 100%;
-  font-family: Roboto Condensed,sans-serif;
-  font-weight: 500;
+  color: theme(digitv2.lightTheme.paper);
+  text-align: center;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1.1875rem;
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.medium);
+  line-height: 1.5rem;
+  text-transform: capitalize;
 }
 
 .digit-submit-bar {

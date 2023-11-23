@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { CustomDropdown } from "../../molecules";
 import FieldV1 from "../FieldV1";
@@ -15,22 +15,36 @@ export default {
     value: { control: "text" },
     errorStyle: { control: "object" },
     disabled: { control: "boolean" },
-    type: { control: "radio", options: ["radio","toggle"] },
+    type: { control: "select", options: ["radio"] },
     additionalWrapperClass: { control: "text" },
     props: { control: "object" },
   },
 };
 const queryClient = new QueryClient();
 
-const Template = (args) => (
-  <QueryClientProvider client={queryClient}>
-    <FieldV1 {...args} />
-  </QueryClientProvider>
-);
+const Template = (args) => {
+  const [selectedOption, setSelectedOption] = useState(args.value);
 
+  const handleSelectOption = (e, name) => {
+    const selectedValue = e.code;
+    if (selectedValue !== undefined) {
+      setSelectedOption(selectedValue);
+      args.onChange(e, name);
+    }
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <FieldV1
+        {...args}
+        value={selectedOption}
+        onChange={handleSelectOption}
+      />
+    </QueryClientProvider>
+  );
+};
 
 const t = (key) => key;
-
 
 const gendersOptions = [
   { code: "MALE", name: "MALE" },
@@ -38,8 +52,7 @@ const gendersOptions = [
   { code: "TRANSGENDER", name: "TRANSGENDER" },
 ];
 
-export const RadioStory = Template.bind({});
-RadioStory.args = {
+const commonArgs = {
   t: t,
   config: {
     name: "gender",
@@ -48,29 +61,40 @@ RadioStory.args = {
   },
   inputRef: null,
   label: "Enter Gender",
-  onChange: (e, name) => console.log("Selected value:", e, "Name:", name),
-  value: "MALE",
+  value: "",
   errorStyle: null,
   disabled: false,
   type: "radio",
   additionalWrapperClass: "",
+  error: "",
+}
+
+export const Default = Template.bind({});
+Default.args = {
+  ...commonArgs
 };
 
-export const ToggleStory = Template.bind({});
-ToggleStory.args = {
-  t: t,
-  config: {
-    name: "gender",
-    optionsKey: "name",
-    options: gendersOptions,
-  },
-  inputRef: null,
-  label: "Enter Gender",
-  onChange: (e, name) => console.log("Selected value:", e, "Name:", name),
-  value: "",
-  errorStyle: null,
-  disabled: false,
-  type: "toggle",
-  additionalWrapperClass: "",
+export const Disabled = Template.bind({});
+Disabled.args = {
+  ...commonArgs,
+  disabled: true,
+};
+Disabled.argTypes = {
+  disabled: { control: { disable: true } },
 };
 
+export const Filled = Template.bind({});
+Filled.args = {
+  ...commonArgs,
+  value: "MALE"
+};
+
+export const PreSelected = Template.bind({});
+PreSelected.args = {
+  ...commonArgs,
+  value: "MALE",
+  disabled: true,
+};
+PreSelected.argTypes = {
+  disabled: { control: { disable: true } },
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // import Fields from "../Fields";
 import FieldV1 from "../FieldV1";
 
@@ -23,12 +23,27 @@ export default {
     },
     disabled: {control: "boolean"},
     nonEditable:{control:"boolean"},
-    charCount: { control: "boolean" }
+    charCount: { control: "boolean" },
+    onChange: { action: "onChange" },
   },
 };
 
 const Template = (args) => {
-  return <FieldV1 {...args} />;
+
+  const [value, setValue] = useState(args.value || "");
+
+  useEffect(() => {
+    setValue(args.value || "");
+  }, [args.type]);
+
+  const handleInputChange = (event) => {
+    const newValue = event.target.value;
+    setValue(newValue);
+
+    args.onChange({ ...event, target: { ...event.target, value: newValue } });
+  };
+
+  return <FieldV1 {...args} value={value} onChange={handleInputChange} />;
 };
 
 const commonArgs ={
@@ -48,7 +63,8 @@ const commonArgs ={
   required: false,
   description:"",
   charCount:false,
-  withoutLabel:false
+  withoutLabel:false,
+  infoMessage:""
 }
 
 
@@ -69,7 +85,7 @@ Disabled.args = {
   disabled: true
 };
 Disabled.argTypes = {
-  disabled: { control: { disable: true } }, 
+  disabled: { control: { disable: true } },
 };
 
 export const NonEditable = Template.bind({});
@@ -79,7 +95,7 @@ NonEditable.args = {
   value:"Input Value"
 };
 NonEditable.argTypes = {
-  nonEditable: { control: { disable: true } }, 
+  nonEditable: { control: { disable: true } },
 };
 
 export const Error = Template.bind({});

@@ -27,7 +27,8 @@
     align-items: center;
     gap: 0.5rem;
 
-    &.disabled {
+    &.disabled,
+    &.preselected {
       .digit-radio-btn-checkmark {
         border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
       }
@@ -36,6 +37,11 @@
         color: theme(digitv2.lightTheme.text-color-disabled);
       }
     }
+
+    &.preselected {
+      pointer-events: none !important;
+    }
+
   }
 
   .digit-radio-btn {
@@ -44,7 +50,7 @@
 
   .digit-radio-btn-checkmark {
     @extend .light-input-border;
-    @apply h-10 w-10 border border-input-border border-solid rounded-full block;
+    @apply h-6 w-6 border border-input-border border-solid rounded-full block;
   }
 
   label {
@@ -56,16 +62,30 @@
     content: "";
   }
 
-  .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark {
+  .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
     /* @extend .light-input-border; */
     @apply border-2 border-primary-main;
   }
 
-  .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark:after {
+  .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
     /* @extend .light-background; */
-    @apply block bg-primary-main h-5 w-5 rounded-full absolute top-10 left-10;
+    @apply block bg-primary-main h-3 w-3 rounded-full absolute;
+    top:25%;
+    left:25%
+  }
+
+  .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
+    @apply border-border;
+  }
+
+  .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
+    @apply block h-3 w-3 rounded-full absolute ;
+    top:25%;
+    left:25%;
+    background-color: theme(digitv2.lightTheme.text-color-disabled);
   }
 }
+
 .digit-reverse-radio-selection-wrapper {
   div {
     @apply flex flex-row-reverse place-content-between items-center;

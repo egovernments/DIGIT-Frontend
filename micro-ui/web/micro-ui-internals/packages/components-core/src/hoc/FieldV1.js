@@ -5,6 +5,8 @@ import {
     Header,
     TextArea,
     TextInput,
+    CheckBox,
+    ToggleSwitch,
 } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
@@ -106,7 +108,6 @@ const FieldV1 = ({
             case "dropdown":
             case "select":
             case "radioordropdown":
-            case "toggle":
                 return (
                     <CustomDropdown
                         t={t}
@@ -121,12 +122,45 @@ const FieldV1 = ({
                         errorStyle={errors?.[populators.name]}
                     />
                 );
+            case "toggle":
+                return (
+                    <div className="toggle-container" style={{ width: '7rem', height: '2rem' }} onClick={() => onChange(!value)}>
+                        <ToggleSwitch
+                            t={t}
+                            label={label}
+                            type={type}
+                            onBlur={onBlur}
+                            value={value}
+                            inputRef={ref}
+                            onChange={onChange}
+                            config={config}
+                            disabled={disabled}
+                            errorStyle={errors?.[populators.name]}
+                        />
+                    </div>
+                );
+            case "checkbox":
+                return (
+                    <div style={{ display: "grid", gridAutoFlow: "row" }}>
+                        <CheckBox
+                            onChange={(e) => {
+                                onChange(e.target.checked);
+                            }}
+                            value={value}
+                            checked={config.checked}
+                            label={label}
+                            styles={populators?.styles}
+                            style={populators?.labelStyles}
+                            customLabelMarkup={populators?.customLabelMarkup}
+                            disabled={disabled}
+                        />
+                     </div>
+                );
             default:
                 return null;
         }
     };
 
-    console.log(error);
     return (
         <>
             {!withoutLabel && (

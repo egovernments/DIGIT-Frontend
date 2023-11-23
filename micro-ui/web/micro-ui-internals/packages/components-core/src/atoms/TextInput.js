@@ -5,7 +5,6 @@ import { SVG } from "./SVG";
 const TextInput = (props) => {
   const user_type = window?.Digit?.SessionStorage.get("userType");
   const [date, setDate] = useState(props?.type === "date" && props?.value);
-  const [count, setCount] = useState(props?.defaultValues || 0);
   const data = props?.watch
     ? {
       fromDate: props?.watch("fromDate"),
@@ -17,22 +16,16 @@ const TextInput = (props) => {
     const { value } = event.target;
     setDate(getDDMMYYYY(value));
   };
-
+  
 
   const incrementCount = () => {
-    if (count >= 0) {
-      setCount(count + 1);
-    } else {
-      setCount(0);
-    }
+    const newValue = Number(props.value) + 1;
+    props.onChange({ target: { value: newValue } });
   };
 
   const decrementCount = () => {
-    if (count > 0) {
-      setCount(count - 1);
-    } else {
-      setCount(0);
-    }
+    const newValue = Math.max(Number(props.value) - 1, 0);
+    props.onChange({ target: { value: newValue } });
   };
 
   const renderPrefix = () => {
@@ -79,7 +72,7 @@ const TextInput = (props) => {
     const customIcon = props?.type;
     if (customIcon) {
       if (customIcon === "geolocation") {
-        return <SVG.AddLocation className="digit-text-input-customIcon" />;
+        return <SVG.MyLocation className="digit-text-input-customIcon" />;
       } else if (customIcon === "password") {
         return <SVG.Visibility className="digit-text-input-customIcon" />;
       } else if (customIcon === "search") {
@@ -91,7 +84,7 @@ const TextInput = (props) => {
             return <DynamicIcon className="digit-text-input-customIcon" />;
           }
         } catch (error) {
-          console.error("Icon not found");  
+          console.error("Icon not found");
         }
       }
     }
@@ -136,7 +129,7 @@ const TextInput = (props) => {
                 }
               }}
               ref={props.inputRef}
-              value={(props?.type === "numeric") ? {count} : props.value}
+              value={props?.value}
               style={{ ...props.style }}
               defaultValue={props.defaultValue}
               minLength={props.minlength}
@@ -188,7 +181,7 @@ const TextInput = (props) => {
                 }
               }}
               ref={props.inputRef}
-              value={(props?.type === "numeric") ? count : props.value}
+              value={props?.value}
               style={{ ...props.style }}
               defaultValue={props.defaultValue}
               minLength={props.minlength}
