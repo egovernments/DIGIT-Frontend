@@ -77,7 +77,6 @@ const CustomSelectWidget = (props) => {
     },
     changeQueryName: `data-${schemaCode}`,
   };
-
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
   const optionsList = data || options?.enumOptions || options || [];
   const optionsLimit = 10;
@@ -91,7 +90,6 @@ const CustomSelectWidget = (props) => {
   const [isSelect, setIsSelect] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isSeeAll, setIsSeeAll] = useState(false);
-
   const handleSeeAll = () => {
     setShowModal(true);
   }
@@ -116,12 +114,12 @@ const CustomSelectWidget = (props) => {
   const handleChange = (selectedValue) => {
     setShowTooltipFlag(true);
     setIsSelect(true);
-    setShowDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.data.code) : obj.data.code == selectedValue.value)))
+    setShowDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == selectedValue.value)))
   };
   const handleSelect = (detail) => {
     setShowTooltipFlag(false);
     setIsSelect(false);
-    onChange(detail.data.code);
+    onChange(data ? detail.uniqueIdentifier : detail.value);
     setSelectedDetails([detail])
   }
 
@@ -130,12 +128,12 @@ const CustomSelectWidget = (props) => {
     if (optionsLimit < formattedOptions.length) {
       setIsSeeAll(true);
     }
-    setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.data.code) : obj.data.code == value)));
+    setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == value)));
   }, [formattedOptions, optionsLimit]);
   const onClickSelect = (selectedValue) => {
-    selectedValue = { "value": selectedValue.code, "label": selectedValue.description };
-    onChange(multiple ? selectedValue?.value : selectedValue?.value);
-    setSelectedDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.data.code) : obj.data.code == selectedValue.value)))
+    selectedValue = { ...selectedValue, "value": selectedValue.uniqueIdentifier, "label": selectedValue.description };
+    onChange(selectedValue.uniqueIdentifier);
+    setSelectedDetails(mainData?.filter((obj) => (multiple ? selectedValue.value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == selectedValue.value)))
     setShowModal(false);
   };
   const handleViewMoreClick = (detail) => {
@@ -180,14 +178,14 @@ const CustomSelectWidget = (props) => {
       <Select
         className="form-control form-select"
         classNamePrefix="digit"
-        options={limitedOptions}
+        options={data ? limitedOptions : formattedOptions}
         isDisabled={disabled || readonly}
         placeholder={placeholder}
         onBlur={onBlur}
         onFocus={onFocus}
         closeMenuOnScroll={true}
         value={selectedOption}
-        onChange={handleChange}
+        onChange={data ? handleChange : handleSelect}
         isSearchable={true}
         isMulti={multiple}
         styles={customStyles}
@@ -198,7 +196,7 @@ const CustomSelectWidget = (props) => {
         <div className="info-icon"
           onClick={() => { setShowTooltipFlag(true) }}
         >
-          {selectedDetails && selectedDetails.length > 0 && (
+          {(selectedDetails && selectedDetails.length > 0 && data) && (
             <span >
               <InfoBannerIcon fill={"#f47738"} />
             </span>
@@ -213,7 +211,7 @@ const CustomSelectWidget = (props) => {
             <div>
               {showDetails?.map((detail) => (
                 <div>
-                  <div className="details-container" key={detail.id}>
+                  <div className="detail-container" key={detail.id}>
                     {Object.keys(detail.data).map((key) => {
                       const value = detail.data[key];
                       if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
@@ -238,7 +236,7 @@ const CustomSelectWidget = (props) => {
             <div>
               {selectedDetails?.map((detail) => (
                 <div>
-                  <div className="details-container" key={detail.id}>
+                  <div className="detail-container" key={detail.id}>
                     {Object.keys(detail.data).map((key) => {
                       const value = detail.data[key];
                       if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
