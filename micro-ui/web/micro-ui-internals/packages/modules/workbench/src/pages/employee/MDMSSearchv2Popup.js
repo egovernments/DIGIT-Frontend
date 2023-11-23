@@ -201,7 +201,7 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
                                 if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
                                     return (
                                         <div className="detail-item" key={key}>
-                                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(`${modulee}.${master}_${key}`))}</div>
                                             <div className="value">{String(value)}</div>
                                         </div>
                                     );

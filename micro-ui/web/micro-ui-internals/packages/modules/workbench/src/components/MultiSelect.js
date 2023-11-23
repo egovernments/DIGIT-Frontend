@@ -217,7 +217,7 @@ const CustomSelectWidget = (props) => {
                       if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
                         return (
                           <div className="detail-item" key={key}>
-                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${key}`))}</div>
                             <div className="value">{String(value)}</div>
                           </div>
                         );
@@ -242,7 +242,7 @@ const CustomSelectWidget = (props) => {
                       if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
                         return (
                           <div className="detail-item" key={key}>
-                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${key}`))}</div>
                             <div className="value">{String(value)}</div>
                           </div>
                         );
