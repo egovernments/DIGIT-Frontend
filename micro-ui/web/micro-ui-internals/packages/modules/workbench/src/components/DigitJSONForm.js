@@ -255,6 +255,8 @@ const DigitJSONForm = ({
   setShowErrorToast,
 }) => {
   const { t } = useTranslation();
+   const { configs , updateConfigs } = Digit.Hooks.workbench.useWorkbenchFormContext();
+   console.log(configs,updateConfigs,"ins");
   useEffect(() => {
     onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
   }, []);

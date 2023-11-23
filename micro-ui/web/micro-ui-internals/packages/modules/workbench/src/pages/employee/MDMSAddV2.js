@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
-
+import { WorkbenchProvider } from "../../hooks/useWorkbenchFormContext";
 /*
 
 created the foem using rjfs json form 
@@ -25,6 +25,8 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [formSchema, setFormSchema] = useState({});
   const [uiSchema, setUiSchema] = useState({});
   const [api, setAPI] = useState(false);
+  const [uiConfigs, setUiConfigs] = useState({});
+
 
   const [noSchema, setNoSchema] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
@@ -32,7 +34,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const [showToast, setShowToast] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-
+  const updateFormSchema=(schema)=>{
+    setFormSchema({ ...schema });
+          /* added disable to get the complete form re rendered to get the enum values reflected */
+          setDisableForm(true);
+          setTimeout(() => {
+            setDisableForm(false);
+          });
+  }
   useEffect(() => {
     setSession({ ...session, ...defaultFormData });
   }, [defaultFormData]);
@@ -75,6 +84,45 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
           isActive: true,
         },
       };
+        const { isLoading:isCustomLoading, data: uiSchemaData } = Digit.Hooks.useCustomAPIHook( {
+        url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+        params: {},
+        body: {
+          "MdmsCriteria": {
+            "tenantId": Digit.ULBService.getStateId(),
+            "filters": {
+                "schemaCode": "Workbench.UISchema"
+            },
+            "schemaCode": "Workbench.UISchema"
+        }
+        },
+        config: {
+          enabled: moduleName && masterName && true,
+          select: (data) => {
+            const customUiConfigs=data?.mdms?.[0]?.data;
+            setUiSchema({"ui:order":[...customUiConfigs?.order,"*"]});
+            //formSchema
+            const newSchema={...formSchema};
+            customUiConfigs?.custom.map((dependent) => {
+              console.log(dependent,'dependent');
+              if (dependent?.fieldName &&dependent?.dataSource) {
+                let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldName);
+                console.log(updatedPath,'updatedPath',dependent?.fieldName);
+
+                if (_.get(newSchema?.definition?.properties, updatedPath)) {
+                  _.set(newSchema?.definition?.properties, updatedPath, {
+                    ..._.get(newSchema?.definition?.properties, updatedPath, {}),
+                    enum: [],
+                    schemaCode: "CUSTOM",
+                    fieldPath: dependent?.fieldPath,
+                    tenantId,
+                  });
+                }
+              }
+            });
+            updateFormSchema({...newSchema});
+            setUiConfigs({customUiConfigs})
+          }}});
   const reqCriteriaAdd = {
     url: api ? api?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
     params: {},
@@ -153,12 +201,13 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
             }
           }
         });
-        setFormSchema({ ...schema });
-        /* added disable to get the complete form re rendered to get the enum values reflected */
-        setDisableForm(true);
-        setTimeout(() => {
-          setDisableForm(false);
-        });
+        updateFormSchema({ ...schema });
+        // setFormSchema({ ...schema });
+        // /* added disable to get the complete form re rendered to get the enum values reflected */
+        // setDisableForm(true);
+        // setTimeout(() => {
+        //   setDisableForm(false);
+        // });
       }
     }
   }, [schema]);
@@ -195,10 +244,11 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   if (isLoading || !formSchema || Object.keys(formSchema) == 0) {
     return <Loader />;
   }
+  console.log(schema,'schema');
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
-
   return (
     <React.Fragment>
+      <WorkbenchProvider.Provider value={{configs:uiConfigs ,updateConfigs  :setUiConfigs}}>
       {spinner && <DigitLoader />}
       {formSchema && (
         <DigitJSONForm
@@ -219,6 +269,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
           disabled={disableForm}
         ></DigitJSONForm>
       )}
+      </WorkbenchProvider.Provider>
     </React.Fragment>
   );
 };
