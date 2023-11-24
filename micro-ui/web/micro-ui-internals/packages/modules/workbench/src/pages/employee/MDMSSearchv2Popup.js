@@ -47,11 +47,11 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
     };
 
     const handleSelect = () => {
-        onClickSelect(selectedRowData.original.data);
+        onClickSelect(selectedRowData.original);
         handleCloseDetails();
     }
     const handleSelectForRow = (rowValue) => {
-        onClickSelect(rowValue.data);
+        onClickSelect(rowValue);
         handleCloseDetails();
     }
 
@@ -195,13 +195,13 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
                         <div className="close-button" onClick={handleCloseDetails}>
                             <Close />
                         </div>
-                        <div className="details-container">
+                        <div className="detail-container">
                             {Object.keys(selectedRowData?.original?.data).map((key) => {
                                 const value = selectedRowData?.original?.data[key]
                                 if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
                                     return (
                                         <div className="detail-item" key={key}>
-                                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(key))}</div>
+                                            <div className="key">{t(Digit.Utils.locale.getTransformedLocale(`${modulee}.${master}_${key}`))}</div>
                                             <div className="value">{String(value)}</div>
                                         </div>
                                     );
