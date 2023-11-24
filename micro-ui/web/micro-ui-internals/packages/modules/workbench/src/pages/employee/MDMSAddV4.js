@@ -269,6 +269,7 @@ useEffect(()=>{
           viewActions={viewActions}
           onViewActionsSelect={onViewActionsSelect}
           disabled={disableForm}
+          v2={false}
         ></DigitJSONForm>
       )}
       </WorkbenchProvider.Provider>

@@ -20,6 +20,8 @@ import validator from "@rjsf/validator-ajv8";
 // import { UiSchema } from '@rjsf/utils';
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
+import CustomDropdownV2 from "./MultiSelectV2";
+
 import CustomCheckbox from "./Checbox";
 /*
 
@@ -253,10 +255,9 @@ const DigitJSONForm = ({
   disabled = false,
   setShowToast,
   setShowErrorToast,
+  v2=true
 }) => {
   const { t } = useTranslation();
-   const { configs , updateConfigs } = Digit.Hooks.workbench.useWorkbenchFormContext();
-   console.log(configs,updateConfigs,"ins");
   useEffect(() => {
     onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
   }, []);
@@ -265,7 +266,7 @@ const DigitJSONForm = ({
     onSubmit(updatedData);
   };
 
-  const customWidgets = { SelectWidget: CustomDropdown, CheckboxWidget: CustomCheckbox };
+  const customWidgets = { SelectWidget:v2? CustomDropdown:CustomDropdownV2, CheckboxWidget: CustomCheckbox };
 
   const [displayMenu, setDisplayMenu] = useState(false);
   const [liveValidate, setLiveValidate] = useState(false);
