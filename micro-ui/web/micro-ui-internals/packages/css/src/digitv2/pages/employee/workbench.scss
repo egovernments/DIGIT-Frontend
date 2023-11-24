@@ -646,8 +646,9 @@ button:hover {
   display: flex;
   flex-direction: column;
   width: 40%;
+  min-width: 300px;
 
-  .details-container {
+  .detail-container {
     margin-top: 20px;
     overflow-y: auto;
     max-height: 50vh;
@@ -812,12 +813,18 @@ button:hover {
       right: 2px;
       margin-right: 0px !important;
       margin-left: 0px !important;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.7em;
     }
   }
 
   .info-icon-container {
     margin-left: 0.7em;
     margin-right: -2em;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.7em;
   }
 
   .info-icon-container .info-icon {
