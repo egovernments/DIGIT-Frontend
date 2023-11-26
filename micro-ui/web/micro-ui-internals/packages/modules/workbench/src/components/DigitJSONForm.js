@@ -82,7 +82,7 @@ const getArrayWrapperClassName = (type) => {
     default:
       return "jk-array-of-non-objects";
   }
-};
+}
 
 function ArrayFieldItemTemplate(props) {
   const { t } = useTranslation();
@@ -122,9 +122,10 @@ function ArrayFieldItemTemplate(props) {
               isDisabled={disabled}
             />
           </div>
+
         )
       )}
-    </div>
+    </div >
   );
 }
 
@@ -257,8 +258,8 @@ const DigitJSONForm = ({
   useEffect(() => {
     onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
   }, []);
-  const onSubmitV2 = async({ formData }) => {
-    const updatedData=await Digit.Utils.workbench.preProcessData(formData, inputUiSchema);
+  const onSubmitV2 = async ({ formData }) => {
+    const updatedData = await Digit.Utils.workbench.preProcessData(formData, inputUiSchema);
     onSubmit(updatedData);
   };
 
@@ -309,7 +310,7 @@ const DigitJSONForm = ({
           // focusOnFirstError={true}
           /* added logic to show live validations after form submit is clicked */
           liveValidate={liveValidate}
-          // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
+        // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
         >
           {(screenType === "add" || screenType === "edit") && (
             <ActionBar style={{ zIndex: "0" }}>
@@ -344,7 +345,7 @@ const DigitJSONForm = ({
           isDleteBtn={true}
         ></Toast>
       )}
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 
