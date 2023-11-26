@@ -1,7 +1,8 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
+import _ from "lodash";
 
 const customStyles = {
   control: (provided, state) => ({
@@ -18,7 +19,6 @@ const customStyles = {
 const CustomSelectWidget = (props) => {
   const { t } = useTranslation();
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-  const { prefix, setPrefix } = useState(schemaCode);
 
   const {
     options,
@@ -33,6 +33,8 @@ const CustomSelectWidget = (props) => {
     schema = { schemaCode: "", fieldPath: "" },
   } = props;
   const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
+  const [prefix, setPrefix] = useState(schemaCode);
+
   const handleChange = (selectedValue) => onChange(multiple ? selectedValue?.value : selectedValue?.value);
   /*
   logic added to fetch data of schemas in each component itself
@@ -45,7 +47,7 @@ const CustomSelectWidget = (props) => {
         tenantId: tenantId,
         schemaCode: schemaCode,
         limit: 100,
-        offset: 0
+        offset: 0,
       },
     },
     config: {
@@ -65,38 +67,39 @@ const CustomSelectWidget = (props) => {
     },
     changeQueryName: `data-${schemaCode}`,
   };
-  const {
-    configs,
-    updateConfigs
-  } = Digit.Hooks.workbench.useWorkbenchFormContext();
-  if(schemaCode==="CUSTOM"&&configs?.customUiConfigs?.custom?.length>0){
-    
-    reqCriteriaForData.url=configs?.customUiConfigs?.custom?.[0]?.dataSource?.API;
-    reqCriteriaForData.body=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestBody);
-    reqCriteriaForData.params=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestParams);
-    reqCriteriaForData.config.select= (data) => {
-      console.log(data,"dd data");
-      const customFun=Digit.Utils.createFunction(configs?.customUiConfigs?.custom?.[0]?.dataSource?.customFunction);
-     
-      const respData = customFun(data);
-      console.log(data,"data",respData);
+  const { configs, updateConfigs } = Digit.Hooks.workbench.useWorkbenchFormContext();
+  if (schemaCode === "CUSTOM" && configs?.customUiConfigs?.custom?.length > 0) {
+    const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
+    reqCriteriaForData.url = customConfig?.dataSource?.API;
+    reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody);
+    reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.requestParams);
+    const newPrefix = customConfig?.prefix;
+    const suffix = customConfig?.suffix;
+
+    newPrefix != prefix && setPrefix(newPrefix);
+    reqCriteriaForData.config.select = (data) => {
+      let respData = [];
+      if (customConfig?.dataSource?.responseJSON) {
+        respData = _.get(data, customConfig?.dataSource?.responseJSON, []);
+      }
+      if (customConfig?.dataSource?.customFunction) {
+        const customFun = Digit.Utils.createFunction(customConfig?.dataSource?.customFunction);
+        respData = customFun?.(data);
+      }
       const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
       if (_.has(props, finalJSONPath)) {
         _.set(
           props,
           finalJSONPath,
-          respData?.map((item) => ({label:item,value:item}))
+          respData?.map((item) => ({ label: item, value: item }))
         );
       }
-      const newPrefix=reqCriteriaForData?.body?.SchemaDefCriteria?.codes?.[0];
-      newPrefix&&setPrefix(newPrefix);
-      return respData;
-    }
-    console.log(schemaCode,'schemaCode',reqCriteriaForData);
+      return respData?.map((item) => ({ label: item, value: item }));
+    };
+    reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
   }
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
   const optionsList = data || options?.enumOptions || options || [];
-
   const formattedOptions = React.useMemo(
     () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${prefix}_${e?.label}`)), value: e.value })),
     [optionsList, prefix, data]

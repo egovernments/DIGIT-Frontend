@@ -27,54 +27,45 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [api, setAPI] = useState(false);
   const [uiConfigs, setUiConfigs] = useState({});
 
-
   const [noSchema, setNoSchema] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
-
+console.log(formSchema,'formSchema');
   const [showToast, setShowToast] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-  const updateFormSchema=(schema)=>{
+  const updateFormSchema = (schema) => {
     setFormSchema({ ...schema });
-          /* added disable to get the complete form re rendered to get the enum values reflected */
-          setDisableForm(true);
-          setTimeout(() => {
-            setDisableForm(false);
-          });
-  }
+    /* added disable to get the complete form re rendered to get the enum values reflected */
+    setDisableForm(true);
+    setTimeout(() => {
+      setDisableForm(false);
+    });
+  };
   useEffect(() => {
     setSession({ ...session, ...defaultFormData });
   }, [defaultFormData]);
 
   const { t } = useTranslation();
   const history = useHistory();
-  const reqCriteria = {
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
-    params: {},
-    body: {
-      SchemaDefCriteria: {
-        tenantId: tenantId,
-        codes: [`${moduleName}.${masterName}`],
-      },
-    },
-    config: {
-      enabled: moduleName && masterName && true,
-      select: (data) => {
-        if (data?.SchemaDefinitions?.length == 0) {
-          setNoSchema(true);
-        }
-        if (data?.SchemaDefinitions?.[0]?.definition?.["x-ui-schema"]?.["ui-apidetails"]) {
-          setAPI(data?.SchemaDefinitions?.[0]?.definition?.["x-ui-schema"]?.["ui-apidetails"]);
-        }
-        return data?.SchemaDefinitions?.[0] || {};
-      },
-    },
-    changeQueryName: "schema",
-  };
+  const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.workbench.getMDMSSchema(`${moduleName}.${masterName}`, tenantId);
 
-  const { isLoading, data: schema, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  const body = api?.requestBody
-    ? { ...api?.requestBody }
+  useEffect(() => {
+    if (schemaData?.schema?.definition) {
+      setFormSchema({ ...schemaData?.schema });
+    }
+    if (schemaData?.uiSchema) {
+      setUiSchema({ ...schemaData?.uiSchema });
+    }
+    if (schemaData?.schema?.noSchemaFound) {
+      setNoSchema(true);
+    }
+    if (schemaData?.customUiConfigs) {
+      setUiConfigs({ customUiConfigs: schemaData?.customUiConfigs });
+    }
+  }, [isSchemaLoading]);
+const addAPI=uiConfigs?.customUiConfigs?.addAPI;
+  const body = addAPI?.requestBody
+    ? { ...addAPI?.requestBody }
     : {
         Mdms: {
           tenantId: tenantId,
@@ -84,51 +75,13 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
           isActive: true,
         },
       };
-        const { isLoading:isCustomLoading, data: uiSchemaData } = Digit.Hooks.useCustomAPIHook( {
-        url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
-        params: {},
-        body: {
-          "MdmsCriteria": {
-            "tenantId": Digit.ULBService.getStateId(),
-            "filters": {
-                "schemaCode": "Workbench.UISchema"
-            },
-            "schemaCode": "Workbench.UISchema"
-        }
-        },
-        config: {
-          enabled: moduleName && masterName && true,
-          select: (data) => {
-            const customUiConfigs=data?.mdms?.[0]?.data;
-            setUiSchema({"ui:order":[...customUiConfigs?.order,"*"]});
-            //formSchema
-            const newSchema={...formSchema};
-            customUiConfigs?.custom.map((dependent) => {
-              console.log(dependent,'dependent');
-              if (dependent?.fieldName &&dependent?.dataSource) {
-                let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldName);
-                console.log(updatedPath,'updatedPath',dependent?.fieldName);
 
-                if (_.get(newSchema?.definition?.properties, updatedPath)) {
-                  _.set(newSchema?.definition?.properties, updatedPath, {
-                    ..._.get(newSchema?.definition?.properties, updatedPath, {}),
-                    enum: [],
-                    schemaCode: "CUSTOM",
-                    fieldPath: dependent?.fieldPath,
-                    tenantId,
-                  });
-                }
-              }
-            });
-            updateFormSchema({...newSchema});
-            setUiConfigs({customUiConfigs})
-          }}});
   const reqCriteriaAdd = {
-    url: api ? api?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
+    url: addAPI ? addAPI?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
     params: {},
     body: { ...body },
     config: {
-      enabled: schema ? true : false,
+      enabled: formSchema ? true : false,
       select: (data) => {
         return data?.SchemaDefinitions?.[0] || {};
       },
@@ -143,7 +96,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       setSessionFormData({});
       setSession({});
       setShowErrorToast(false);
-      const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
+      const jsonPath = addAPI?.responseJson ? addAPI?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       closeToast();
 
@@ -156,7 +109,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       closeToast();
     };
 
-    _.set(body, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
+    _.set(body, addAPI?.requestJson ? addAPI?.requestJson : "Mdms.data", { ...data });
     mutation.mutate(
       {
         params: {},
@@ -177,42 +130,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       setSession({ ...session, ...formData });
     }
   };
-useEffect(()=>{
-
-},[uiSchemaData,])
-  useEffect(() => {
-    // setFormSchema(schema);
-    /* localise */
-    if (schema && schema?.definition) {
-      Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schema?.definition, schema?.code);
-      setFormSchema(schema);
-      /* logic to search for the reference data from the mdms data api */
-
-      if (schema?.definition?.["x-ref-schema"]?.length > 0) {
-        schema?.definition?.["x-ref-schema"]?.map((dependent) => {
-          if (dependent?.fieldPath) {
-            let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
-            if (_.get(schema?.definition?.properties, updatedPath)) {
-              _.set(schema?.definition?.properties, updatedPath, {
-                ..._.get(schema?.definition?.properties, updatedPath, {}),
-                enum: [],
-                schemaCode: dependent?.schemaCode,
-                fieldPath: dependent?.fieldPath,
-                tenantId,
-              });
-            }
-          }
-        });
-        updateFormSchema({ ...schema });
-        // setFormSchema({ ...schema });
-        // /* added disable to get the complete form re rendered to get the enum values reflected */
-        // setDisableForm(true);
-        // setTimeout(() => {
-        //   setDisableForm(false);
-        // });
-      }
-    }
-  }, [schema]);
 
   useEffect(() => {
     if (!_.isEqual(sessionFormData, session)) {
@@ -243,35 +160,34 @@ useEffect(()=>{
   };
 
   /* use newConfig instead of commonFields for local development in case needed */
-  if (isLoading || !formSchema || Object.keys(formSchema) == 0) {
+  if (isSchemaLoading || !formSchema || Object.keys(formSchema) == 0) {
     return <Loader />;
   }
-  console.log(schema,'schema');
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      <WorkbenchProvider.Provider value={{configs:uiConfigs ,updateConfigs  :setUiConfigs}}>
-      {spinner && <DigitLoader />}
-      {formSchema && (
-        <DigitJSONForm
-          schema={formSchema}
-          onFormChange={onFormValueChange}
-          onFormError={onFormError}
-          formData={session}
-          onSubmit={screenType === "add" ? onSubmit : onSubmitEditAction}
-          uiSchema={{ ...uiSchema, ...uiJSONSchema, ...updatesToUISchema }}
-          showToast={showToast}
-          closeToast={closeToast}
-          setShowToast={setShowToast}
-          showErrorToast={showErrorToast}
-          setShowErrorToast={setShowErrorToast}
-          screenType={screenType}
-          viewActions={viewActions}
-          onViewActionsSelect={onViewActionsSelect}
-          disabled={disableForm}
-          v2={false}
-        ></DigitJSONForm>
-      )}
+      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs }}>
+        {spinner && <DigitLoader />}
+        {formSchema && (
+          <DigitJSONForm
+            schema={formSchema}
+            onFormChange={onFormValueChange}
+            onFormError={onFormError}
+            formData={session}
+            onSubmit={screenType === "add" ? onSubmit : onSubmitEditAction}
+            uiSchema={{ ...uiSchema, ...uiJSONSchema, ...updatesToUISchema }}
+            showToast={showToast}
+            closeToast={closeToast}
+            setShowToast={setShowToast}
+            showErrorToast={showErrorToast}
+            setShowErrorToast={setShowErrorToast}
+            screenType={screenType}
+            viewActions={viewActions}
+            onViewActionsSelect={onViewActionsSelect}
+            disabled={disableForm}
+            v2={false}
+          ></DigitJSONForm>
+        )}
       </WorkbenchProvider.Provider>
     </React.Fragment>
   );
