@@ -30,7 +30,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [noSchema, setNoSchema] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
-console.log(formSchema,'formSchema');
   const [showToast, setShowToast] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const updateFormSchema = (schema) => {
@@ -166,7 +165,7 @@ const addAPI=uiConfigs?.customUiConfigs?.addAPI;
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs }}>
+      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs,updateSchema:updateFormSchema ,schema:formSchema}}>
         {spinner && <DigitLoader />}
         {formSchema && (
           <DigitJSONForm

@@ -34,6 +34,7 @@ const CustomSelectWidget = (props) => {
   } = props;
   const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
   const [prefix, setPrefix] = useState(schemaCode);
+  const { configs, updateConfigs,updateSchema,schema:formSchema } = Digit.Hooks.workbench.useWorkbenchFormContext();
 
   const handleChange = (selectedValue) => onChange(multiple ? selectedValue?.value : selectedValue?.value);
   /*
@@ -61,13 +62,21 @@ const CustomSelectWidget = (props) => {
             finalJSONPath,
             respData?.map((e) => e.value)
           );
+          const path=`definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+          const newSchema=_.cloneDeep(formSchema);
+          _.set(
+            newSchema,
+            path,
+            respData?.map((e) => e.value)
+          );
+           updateSchema(newSchema)
+
         }
         return respData;
       },
     },
     changeQueryName: `data-${schemaCode}`,
   };
-  const { configs, updateConfigs } = Digit.Hooks.workbench.useWorkbenchFormContext();
   if (schemaCode === "CUSTOM" && configs?.customUiConfigs?.custom?.length > 0) {
     const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
     reqCriteriaForData.url = customConfig?.dataSource?.API;
@@ -93,6 +102,14 @@ const CustomSelectWidget = (props) => {
           finalJSONPath,
           respData?.map((item) => ({ label: item, value: item }))
         );
+        const path=`definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        const newSchema=_.cloneDeep(formSchema);
+        _.set(
+          newSchema,
+          path,
+          respData?.map((e) => e.value)
+        );
+         updateSchema(newSchema);
       }
       return respData?.map((item) => ({ label: item, value: item }));
     };
