@@ -95,7 +95,13 @@ const CustomSelectWidget = (props) => {
       if (isEnabled) {
         let newQuery = "";
         Object.keys(dependencyObj).map((key) => {
-          reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
+          const dependencyConfig=customConfig?.dataSource?.dependentPath?.filter(obj=>obj.depdendentKey==key)?.[0];
+          if(dependencyConfig?.dependencyFor=="REQ_BODY" || dependencyConfig?.dependencyFor=="BOTH"){
+            reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
+          }
+           if(dependencyConfig?.dependencyFor=="REQ_PARAM"  || dependencyConfig?.dependencyFor=="BOTH"){
+            reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.params?.replace(key, dependencyObj?.[key]));
+          }
           newQuery += `-${dependencyObj?.[key]}`;
         });
         reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}${newQuery}`;

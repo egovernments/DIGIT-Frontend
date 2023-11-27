@@ -24,7 +24,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [session, setSession] = useState(sessionFormData);
   const [formSchema, setFormSchema] = useState({});
   const [uiSchema, setUiSchema] = useState({});
-  const [api, setAPI] = useState(false);
   const [uiConfigs, setUiConfigs] = useState({});
 
   const [noSchema, setNoSchema] = useState(false);
