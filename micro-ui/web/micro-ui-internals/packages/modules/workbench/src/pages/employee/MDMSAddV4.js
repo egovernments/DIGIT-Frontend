@@ -165,7 +165,7 @@ const addAPI=uiConfigs?.customUiConfigs?.addAPI;
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs,updateSchema:updateFormSchema ,schema:formSchema}}>
+      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs,updateSchema:updateFormSchema ,schema:formSchema,formData:session}}>
         {spinner && <DigitLoader />}
         {formSchema && (
           <DigitJSONForm

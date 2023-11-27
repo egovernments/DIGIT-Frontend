@@ -19,7 +19,6 @@ const customStyles = {
 const CustomSelectWidget = (props) => {
   const { t } = useTranslation();
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-
   const {
     options,
     value,
@@ -34,7 +33,7 @@ const CustomSelectWidget = (props) => {
   } = props;
   const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
   const [prefix, setPrefix] = useState(schemaCode);
-  const { configs, updateConfigs,updateSchema,schema:formSchema } = Digit.Hooks.workbench.useWorkbenchFormContext();
+  const { configs, updateConfigs, updateSchema, schema: formSchema, formData } = Digit.Hooks.workbench.useWorkbenchFormContext();
 
   const handleChange = (selectedValue) => onChange(multiple ? selectedValue?.value : selectedValue?.value);
   /*
@@ -62,15 +61,14 @@ const CustomSelectWidget = (props) => {
             finalJSONPath,
             respData?.map((e) => e.value)
           );
-          const path=`definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
-          const newSchema=_.cloneDeep(formSchema);
+          const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+          const newSchema = _.cloneDeep(formSchema);
           _.set(
             newSchema,
             path,
             respData?.map((e) => e.value)
           );
-           updateSchema(newSchema)
-
+          updateSchema(newSchema);
         }
         return respData;
       },
@@ -82,12 +80,36 @@ const CustomSelectWidget = (props) => {
     reqCriteriaForData.url = customConfig?.dataSource?.API;
     reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody);
     reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.requestParams);
+    reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
+
+    /*  It has dependency Fields*/
+    if (customConfig?.dataSource?.dependentPath?.length > 0) {
+      // const dependentValue=customConfig?.dataSource?.dependentPath?.length>0?:true;
+      customConfig?.dataSource?.dependentPath?.every((obj) => obj.fieldPath && _.get(formData, obj.fieldPath));
+      const dependencyObj = customConfig?.dataSource?.dependentPath?.reduce((acc, curr) => {
+        acc[curr.depdendentKey] = _.get(formData, curr.fieldPath);
+        return acc;
+      }, {});
+      const isEnabled = Object.keys(dependencyObj).every((key) => dependencyObj?.[key]);
+      reqCriteriaForData.config.enabled = isEnabled;
+      if (isEnabled) {
+        let newQuery = "";
+        Object.keys(dependencyObj).map((key) => {
+          reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
+          newQuery += `-${dependencyObj?.[key]}`;
+        });
+        reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}${newQuery}`;
+      }
+    }
     const newPrefix = customConfig?.prefix;
     const suffix = customConfig?.suffix;
 
     newPrefix != prefix && setPrefix(newPrefix);
     reqCriteriaForData.config.select = (data) => {
       let respData = [];
+      if (data) {
+        respData = data;
+      }
       if (customConfig?.dataSource?.responseJSON) {
         respData = _.get(data, customConfig?.dataSource?.responseJSON, []);
       }
@@ -102,18 +124,17 @@ const CustomSelectWidget = (props) => {
           finalJSONPath,
           respData?.map((item) => ({ label: item, value: item }))
         );
-        const path=`definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
-        const newSchema=_.cloneDeep(formSchema);
+        const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        const newSchema = _.cloneDeep(formSchema);
         _.set(
           newSchema,
           path,
           respData?.map((e) => e.value)
         );
-         updateSchema(newSchema);
+        updateSchema(newSchema);
       }
       return respData?.map((item) => ({ label: item, value: item }));
     };
-    reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
   }
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
   const optionsList = data || options?.enumOptions || options || [];
