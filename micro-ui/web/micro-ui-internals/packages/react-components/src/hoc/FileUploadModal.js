@@ -1,9 +1,9 @@
-import React,{useState,useMemo} from 'react'
+import React, { useState, useMemo } from 'react'
 import Modal from './Modal'
-import { CloseSvg,UploadIcon,FileIcon,DeleteIconv2 } from '../atoms/svgindex';
+import { CloseSvg, UploadIcon, FileIcon, DeleteIconv2 } from '../atoms/svgindex';
 import { FileUploader } from "react-drag-drop-files";
 
-const FileUploadModal = ({heading,cancelLabel,submitLabel,onSubmit,onClose,t,fileTypes= [ "XLS", "XLSX"],multiple=true,fileValidator,onClickDownloadSample,...props}) => {
+const FileUploadModal = ({ heading, cancelLabel, submitLabel, onSubmit, onClose, t, fileTypes = ["XLS", "XLSX"], multiple = true, fileValidator, onClickDownloadSample, ...props }) => {
 
   const [file, setFile] = useState(null);
 
@@ -24,7 +24,7 @@ const FileUploadModal = ({heading,cancelLabel,submitLabel,onSubmit,onClose,t,fil
         {props?.isMobileView ? (
           <CloseSvg />
         ) : (
-          <div className={"icon-bg-secondary"} style={{backgroundColor:"#FFFFFF"}}>
+          <div className={"icon-bg-secondary"} style={{ backgroundColor: "#FFFFFF" }}>
             {" "}
             <Close />{" "}
           </div>
@@ -43,16 +43,16 @@ const FileUploadModal = ({heading,cancelLabel,submitLabel,onSubmit,onClose,t,fil
       <div className='uploaded-file-container'>
         <div className='uploaded-file-container-sub'>
           <FileIcon className='icon' />
-          <div style={{marginLeft:"0.5rem"}}>{file?.name}</div>
-        </div>  
-        <div className='icon' onClick={()=>setFile(null)}>
+          <div style={{ marginLeft: "0.5rem" }}>{file?.name}</div>
+        </div>
+        <div className='icon' onClick={() => setFile(null)}>
           <DeleteIconv2 />
         </div>
       </div>
     )
   }, [file])
 
-  const handleChange = (file) => { 
+  const handleChange = (file) => {
     setFile(file)
   };
 
@@ -60,12 +60,12 @@ const FileUploadModal = ({heading,cancelLabel,submitLabel,onSubmit,onClose,t,fil
     <Modal
       headerBarMain={<Heading t={t} heading={t(heading)} />}
       headerBarEnd={<CloseBtn onClick={onClose} />}
-      actionCancelLabel={t("WBH_DOWLOAD_TEMPLATE")}
-      actionCancelOnSubmit={onClickDownloadSample}
+      actionCancelLabel={onClickDownloadSample ? t("WBH_DOWLOAD_TEMPLATE") : null}
+      actionCancelOnSubmit={onClickDownloadSample ? onClickDownloadSample : null}
       actionSaveLabel={t(submitLabel)}
-      actionSaveOnSubmit={()=>onSubmit(file)}
+      actionSaveOnSubmit={() => onSubmit(file)}
       formId="modal-action"
-      popupModuleActionBarStyles={{justifyContent:"space-between"}}
+      popupModuleActionBarStyles={{ justifyContent: "space-between" }}
       isDisabled={file ? false : true}
     >
       <FileUploader handleChange={handleChange} name="file" types={fileTypes} children={dragDropJSX} onTypeError={fileValidator} />

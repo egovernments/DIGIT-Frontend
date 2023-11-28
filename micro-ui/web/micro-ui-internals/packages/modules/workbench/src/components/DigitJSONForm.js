@@ -21,6 +21,7 @@ import validator from "@rjsf/validator-ajv8";
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
+import { FileUploadModal } from "@egovernments/digit-ui-react-components";
 /*
 
 created the foem using rjfs json form 
@@ -267,17 +268,29 @@ const DigitJSONForm = ({
 
   const [displayMenu, setDisplayMenu] = useState(false);
   const [liveValidate, setLiveValidate] = useState(false);
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const onError = (errors) => {
     setLiveValidate(true);
     onFormError(errors);
   };
   const person = { t: t };
-  console.log(" ddddddddddddddddd")
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
         {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
       </Header>
+      {showBulkUploadModal &&
+        <FileUploadModal
+          heading={"WBH_BULK_UPLOAD_HEADER"}
+          cancelLabel={"WBH_LOC_EDIT_MODAL_CANCEL"}
+          submitLabel={"WBH_BULK_UPLOAD_SUBMIT"}
+          onSubmit={() => { }}
+          onClose={() => setShowBulkUploadModal(false)}
+          t={t}
+          fileTypes={["json"]}
+          fileValidator={() => { }}
+        />
+      }
       <Card className="workbench-create-form">
         <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
         <Form
@@ -315,7 +328,7 @@ const DigitJSONForm = ({
           {(screenType === "add" || screenType === "edit") && (
             <ActionBar className="action-bar">
               {screenType === "add" && (
-                <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} />
+                <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} onButtonClick={() => setShowBulkUploadModal(true)} />
               )}
               <SubmitBar
                 label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
