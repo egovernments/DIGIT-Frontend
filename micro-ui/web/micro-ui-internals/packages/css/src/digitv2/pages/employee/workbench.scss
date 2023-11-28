@@ -847,3 +847,13 @@ button:hover {
     cursor: pointer;
   }
 }
+
+.action-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .action-bar-button {
+    margin-right: 0.5em;
+  }
+}

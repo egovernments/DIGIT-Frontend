@@ -272,7 +272,7 @@ const DigitJSONForm = ({
     onFormError(errors);
   };
   const person = { t: t };
-
+  console.log(" ddddddddddddddddd")
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
@@ -313,8 +313,14 @@ const DigitJSONForm = ({
         // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
         >
           {(screenType === "add" || screenType === "edit") && (
-            <ActionBar style={{ zIndex: "0" }}>
-              <SubmitBar label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")} submit="submit" />
+            <ActionBar className="action-bar">
+              {screenType === "add" && (
+                <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} />
+              )}
+              <SubmitBar
+                label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
+                submit="submit"
+              />
               {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
             </ActionBar>
           )}
