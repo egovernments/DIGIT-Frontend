@@ -1,22 +1,9 @@
 import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
-import utils from "../../utils/index"
-import _, { drop } from "lodash";
-
-const toDropdownObj = (master = "", mod = "") => {
-    return {
-        name: mod || master,
-        code: Digit.Utils.locale.getTransformedLocale(mod ? `WBH_MDMS_${master}_${mod}` : `WBH_MDMS_MASTER_${master}`),
-    };
-
-    // return {
-    //   name: mod || master,
-    //   code: mod ? `${mod}` : `${master}`,
-    // };
-};
+import { updateFields, updatedFieldsWithoutSchema, updateConfig, updateConfigWithoutSchema, toDropdownObj } from "../../utils/MDMSSearchUtils";
 
 
 const MDMSSearchv3 = () => {
@@ -107,121 +94,20 @@ const MDMSSearchv3 = () => {
         })
     }, [])
 
+
     useEffect(() => {
         if (schemaFields && currentSchema) {
-            const {
-                definition: { properties },
-            } = currentSchema;
-            var fields = [];
-            var resultFields = [];
-            Object.keys(properties)?.forEach((key) => {
-                if (schemaFields?.searchableFields?.includes(key)) {
-                    const fieldConfig = utils.getConfig(properties[key].type);
-                    fields.push({ label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`), type: fieldConfig.type, code: key, populators: { name: key }, i18nKey: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`) })
-                    if (properties[key].default) {
-                        Config.sections.search.uiConfig.defaultValues[key] = properties[key].default;
-                    }
-                }
-                if (schemaFields?.displayFields?.includes(key)) {
-                    resultFields.push({
-                        label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`),
-                        name: key,
-                        code: key,
-                        i18nKey: `${currentSchema.code}_${key}`
-                    });
-                }
-            });
-            fields.push({
-                label: "WBH_ISACTIVE",
-                type: "dropdown",
-                isMandatory: false,
-                disable: false,
-                populators: {
-                    name: "isActive",
-                    optionsKey: "code",
-                    optionsCustomStyle: { top: "2.3rem" },
-                    options: [
-                        {
-                            code: "WBH_COMMON_YES",
-                            value: true,
-                        },
-                        {
-                            code: "WBH_COMMON_NO",
-                            value: false,
-                        },
-                        {
-                            code: "WBH_COMMON_ALL",
-                            value: "all",
-                        }
-                    ],
-                },
-            })
-            Config.sections.search.uiConfig.fields = fields;
-            Config.actionLink = Config.actionLink + `?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
-            Config.additionalDetails = {
-                currentSchemaCode: currentSchema.code,
-                searchBySchema: true
-            }
-            Config.sections.searchResult.uiConfig.columns = [...resultFields.map(option => {
-                return {
-                    label: option.label,
-                    i18nKey: option.label,
-                    jsonPath: `data.${option.code}`,
-                    dontShowNA: true
-                }
-            }), {
-                label: "WBH_ISACTIVE",
-                i18nKey: "WBH_ISACTIVE",
-                jsonPath: `isActive`,
-                additionalCustomization: true
-                // dontShowNA:true
-            }]
-            Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-            setUpdatedConfig(Config)
-        }
-        else if (currentSchema) {
-            const dropDownOptions = [];
-            const {
-                definition: { properties },
-            } = currentSchema;
-
-            Object.keys(properties)?.forEach((key) => {
-                if (properties[key].type === "string" && !properties[key].format) {
-                    dropDownOptions.push({
-                        // name: key,
-                        name: key,
-                        code: key,
-                        i18nKey: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`)
-                    });
-                }
-            });
-
-            Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
-            Config.actionLink = Config.actionLink + `?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
-            // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
-
-
-            Config.additionalDetails = {
-                currentSchemaCode: currentSchema.code,
-                searchBySchema: false
-            }
-
-            Config.sections.searchResult.uiConfig.columns = [...dropDownOptions.map(option => {
-                return {
-                    label: option.i18nKey,
-                    i18nKey: option.i18nKey,
-                    jsonPath: `data.${option.code}`,
-                    dontShowNA: true
-                }
-            }), {
-                label: "WBH_ISACTIVE",
-                i18nKey: "WBH_ISACTIVE",
-                jsonPath: `isActive`,
-                additionalCustomization: true
-                // dontShowNA:true
-            }]
-            Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-            setUpdatedConfig(Config)
+            const { definition: { properties } } = currentSchema;
+            const updatedFields = updateFields(properties, schemaFields, Config, currentSchema);
+            var fields = updatedFields?.fields;
+            var resultFields = updatedFields?.resultFields;
+            updateConfig(Config, currentSchema, fields, resultFields, masterName, moduleName);
+            setUpdatedConfig(Config);
+        } else if (currentSchema) {
+            const { definition: { properties } } = currentSchema;
+            const dropDownOptions = updatedFieldsWithoutSchema(properties, currentSchema);
+            updateConfigWithoutSchema(Config, currentSchema, dropDownOptions, masterName, moduleName);
+            setUpdatedConfig(Config);
         }
     }, [currentSchema, schemaFields]);
 
