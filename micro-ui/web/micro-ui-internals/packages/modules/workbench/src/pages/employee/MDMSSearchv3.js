@@ -115,14 +115,14 @@ const MDMSSearchv3 = () => {
             var fields = [];
             var resultFields = [];
             Object.keys(properties)?.forEach((key) => {
-                if (schemaFields.searchableFields.includes(key)) {
+                if (schemaFields?.searchableFields?.includes(key)) {
                     const fieldConfig = utils.getConfig(properties[key].type);
                     fields.push({ label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`), type: fieldConfig.type, code: key, populators: { name: key }, i18nKey: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`) })
                     if (properties[key].default) {
                         Config.sections.search.uiConfig.defaultValues[key] = properties[key].default;
                     }
                 }
-                if (schemaFields.displayFields.includes(key)) {
+                if (schemaFields?.displayFields?.includes(key)) {
                     resultFields.push({
                         label: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`),
                         name: key,
