@@ -80,7 +80,9 @@ module.exports = function (app) {
     "/egov-pdf/download/WORKSESTIMATE/estimatepdf",
     "/muster-roll",
     "/individual",
-    "/mdms-v2"
+    "/mdms-v2",
+    "/boundary-service/boundary"
+    
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
