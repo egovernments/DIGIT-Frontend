@@ -6,6 +6,7 @@ import { FileUploader } from "react-drag-drop-files";
 const FileUploadModal = ({ heading, cancelLabel, submitLabel, onSubmit, onClose, t, fileTypes = ["XLS", "XLSX"], multiple = true, fileValidator, onClickDownloadSample, ...props }) => {
 
   const [file, setFile] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
 
   const Heading = (props) => {
     return <h1 className="heading-m">{props.heading}</h1>;

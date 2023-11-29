@@ -22,6 +22,7 @@ import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
 import { FileUploadModal } from "@egovernments/digit-ui-react-components";
+import { validateJsonContent, onSubmitUpload } from "../utils/BulkUploadUtils";
 /*
 
 created the foem using rjfs json form 
@@ -274,6 +275,16 @@ const DigitJSONForm = ({
     onFormError(errors);
   };
   const person = { t: t };
+  const fileValidator = (errMsg) => {
+    setShowErrorToast(true);
+    setShowToast(errMsg);
+    setTimeout(() => {
+      setShowErrorToast(false);
+      setShowToast(false);
+    }, 2000);
+    setShowBulkUploadModal(false);
+  };
+
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
@@ -284,11 +295,11 @@ const DigitJSONForm = ({
           heading={"WBH_BULK_UPLOAD_HEADER"}
           cancelLabel={"WBH_LOC_EDIT_MODAL_CANCEL"}
           submitLabel={"WBH_BULK_UPLOAD_SUBMIT"}
-          onSubmit={() => { }}
+          onSubmit={(file) => onSubmitUpload(file, schema, fileValidator, setShowBulkUploadModal, onSubmit)}
           onClose={() => setShowBulkUploadModal(false)}
           t={t}
           fileTypes={["json"]}
-          fileValidator={() => { }}
+          fileValidator={fileValidator}
         />
       }
       <Card className="workbench-create-form">
