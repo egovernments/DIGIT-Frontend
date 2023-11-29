@@ -17,12 +17,13 @@ import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
+import Ajv from "ajv"
 // import { UiSchema } from '@rjsf/utils';
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
 import { FileUploadModal } from "@egovernments/digit-ui-react-components";
-import { validateJsonContent, onSubmitUpload } from "../utils/BulkUploadUtils";
+import { validateJsonContent, onConfirm } from "../utils/BulkUploadUtils";
 /*
 
 created the foem using rjfs json form 
@@ -257,6 +258,9 @@ const DigitJSONForm = ({
   setShowErrorToast,
 }) => {
   const { t } = useTranslation();
+  const ajv = new Ajv()
+  ajv.addVocabulary(["schemaCode", "fieldPath", "tenantId", "x-unique", "x-ref-schema"])
+
   useEffect(() => {
     onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
   }, []);
@@ -295,7 +299,7 @@ const DigitJSONForm = ({
           heading={"WBH_BULK_UPLOAD_HEADER"}
           cancelLabel={"WBH_LOC_EDIT_MODAL_CANCEL"}
           submitLabel={"WBH_BULK_UPLOAD_SUBMIT"}
-          onSubmit={(file) => onSubmitUpload(file, schema, fileValidator, setShowBulkUploadModal, onSubmit)}
+          onSubmit={(file) => onConfirm(file, schema?.definition, ajv, setShowBulkUploadModal, fileValidator)}
           onClose={() => setShowBulkUploadModal(false)}
           t={t}
           fileTypes={["json"]}

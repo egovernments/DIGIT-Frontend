@@ -11,13 +11,13 @@ export const validateJsonContent = (jsonContent, schemaDefinition) => {
             }
         }
 
-        // Check if there are any extra fields not defined in the schema
-        const allowedFields = Object.keys(schemaDefinition.properties);
-        for (const field in obj) {
-            if (!allowedFields.includes(field)) {
-                errors.push(`Object at index ${index}: Field "${field}" is not allowed in this schema.`);
-            }
-        }
+        // // Check if there are any extra fields not defined in the schema
+        // const allowedFields = Object.keys(schemaDefinition.properties);
+        // for (const field in obj) {
+        //     if (!allowedFields.includes(field)) {
+        //         errors.push(`Object at index ${index}: Field "${field}" is not allowed in this schema.`);
+        //     }
+        // }
 
         // Validate each field based on its schema definition
         for (const field in schemaDefinition.properties) {
@@ -46,31 +46,30 @@ export const validateJsonContent = (jsonContent, schemaDefinition) => {
     return errors;
 };
 
-export const onSubmitUpload = (file, schema, fileValidator, setShowBulkUploadModal, onSubmit) => {
+export const onConfirm = (file, SchemaDefinitions, ajv, setShowBulkUploadModal, fileValidator) => {
+    const validate = ajv.compile(SchemaDefinitions)
     if (file && file.type === 'application/json') {
         const reader = new FileReader();
         reader.onload = (event) => {
-            try {
-                const jsonContent = JSON.parse(event.target.result);
-                const errors = validateJsonContent(jsonContent, schema?.definition);
-
-                if (errors.length > 0) {
-                    fileValidator(errors)
+            const jsonContent = JSON.parse(event.target.result);
+            jsonContent.forEach((data) => {
+                const valid = validate(data)
+                if (!valid) {
+                    fileValidator(validate.errors[0]?.message + "    instancePath = " + validate.errors[0]?.instancePath)
+                    return;
                 }
-                else {
-                    jsonContent.forEach((data, index) => {
-                        setTimeout(() => {
-                            onSubmit(data);
-                        }, (index) * 2000);
-                    });
-                }
-            } catch (error) {
-                fileValidator(error)
+            });
+            if (validate.errors.length == 0) {
+                jsonContent.forEach((data, index) => {
+                    setTimeout(() => {
+                        onSubmit(data)
+                    }, (index) * 2000);
+                });
             }
         };
         reader.readAsText(file);
     } else {
         fileValidator('File Type is not supported')
     }
-    setShowBulkUploadModal(false);
-};
+    setShowBulkUploadModal(false)
+}
