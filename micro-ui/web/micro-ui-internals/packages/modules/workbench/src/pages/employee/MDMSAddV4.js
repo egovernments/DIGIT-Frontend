@@ -45,6 +45,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const { t } = useTranslation();
   const history = useHistory();
+  /* logics about the schema fetching and overriding with UI Schema */
   const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.workbench.getMDMSSchema(`${moduleName}.${masterName}`, tenantId);
 
   useEffect(() => {

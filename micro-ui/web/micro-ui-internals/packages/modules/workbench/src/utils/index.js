@@ -1,3 +1,6 @@
+import _ from "lodash";
+
+
 const CONFIGS_TEMPLATE = {
   string: {
     inline: true,
@@ -252,7 +255,9 @@ const preProcessData = async (data = {}, schema = {}) => {
   return { ...data };
 };
 
-/*  postprocess the data received from mdms search api to the form */
+/*  postprocess the data received from mdms search api to the form
+    Digit.Utils.workbench.postProcessData(formData, inputUiSchema)
+*/
 const postProcessData = (data = {}, schema = {}) => {
   Object.keys(schema).map((key) => {
     if (
@@ -268,4 +273,128 @@ const postProcessData = (data = {}, schema = {}) => {
   return { ...data };
 };
 
-export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData };
+
+
+
+/**
+ * Custom function to get the CriteriaForSelectData
+ *
+ * @author jagankumar-egov
+ *
+ * @example
+ *   Digit.Utils.workbench.getCriteriaForSelectData(allProps)
+ *
+ * @returns schema object
+ */
+const getCriteriaForSelectData = (allProps)=>{
+  const { configs, updateConfigs, updateSchema, schema: formSchema, formData } = Digit.Hooks.workbench.useWorkbenchFormContext();
+
+  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+
+  const {schema} = allProps;
+  const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
+  const reqCriteriaForData = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    params: {},
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: schemaCode,
+        limit: 100,
+        offset: 0,
+      },
+    },
+    config: {
+      enabled: schemaCode && schemaCode?.length > 0,
+      select: (data) => {
+        const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
+        const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        if (_.has(allProps, finalJSONPath)) {
+          _.set(
+            allProps,
+            finalJSONPath,
+            respData?.map((e) => e.value)
+          );
+          const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+          const newSchema = _.cloneDeep(formSchema);
+          _.set(
+            newSchema,
+            path,
+            respData?.map((e) => e.value)
+          );
+          updateSchema(newSchema);
+        }
+        return respData;
+      },
+    },
+    changeQueryName: `data-${schemaCode}`,
+  };
+  console.log(schemaCode,"schemaCode");
+  if (schemaCode === "CUSTOM" && configs?.customUiConfigs?.custom?.length > 0) {
+    const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
+    reqCriteriaForData.url = customConfig?.dataSource?.API;
+    reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody);
+    reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.requestParams);
+    reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
+  
+    /*  It has dependency Fields*/
+    if (customConfig?.dataSource?.dependentPath?.length > 0) {
+      // const dependentValue=customConfig?.dataSource?.dependentPath?.length>0?:true;
+      customConfig?.dataSource?.dependentPath?.every((obj) => obj.fieldPath && _.get(formData, obj.fieldPath));
+      const dependencyObj = customConfig?.dataSource?.dependentPath?.reduce((acc, curr) => {
+        acc[curr.depdendentKey] = _.get(formData, curr.fieldPath);
+        return acc;
+      }, {});
+      const isEnabled = Object.keys(dependencyObj).every((key) => dependencyObj?.[key]);
+      reqCriteriaForData.config.enabled = isEnabled;
+      if (isEnabled) {
+        let newQuery = "";
+        Object.keys(dependencyObj).map((key) => {
+          const dependencyConfig=customConfig?.dataSource?.dependentPath?.filter(obj=>obj.depdendentKey==key)?.[0];
+          if(dependencyConfig?.dependencyFor=="REQ_BODY" || dependencyConfig?.dependencyFor=="BOTH"){
+            reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
+          }
+           if(dependencyConfig?.dependencyFor=="REQ_PARAM"  || dependencyConfig?.dependencyFor=="BOTH"){
+            reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.params?.replace(key, dependencyObj?.[key]));
+          }
+          newQuery += `-${dependencyObj?.[key]}`;
+        });
+        reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}${newQuery}`;
+      }
+    }
+
+    reqCriteriaForData.config.select = (data) => {
+      let respData = [];
+      if (data) {
+        respData = data;
+      }
+      if (customConfig?.dataSource?.responseJSON) {
+        respData = _.get(data, customConfig?.dataSource?.responseJSON, []);
+      }
+      if (customConfig?.dataSource?.customFunction) {
+        const customFun = Digit.Utils.createFunction(customConfig?.dataSource?.customFunction);
+        respData = customFun?.(data);
+      }
+      const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+      if (_.has(allProps, finalJSONPath)) {
+        _.set(
+          allProps,
+          finalJSONPath,
+          respData?.map((item) => ({ label: item, value: item }))
+        );
+        const path = `definition.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
+        const newSchema = _.cloneDeep(formSchema);
+        _.set(
+          newSchema,
+          path,
+          respData?.map((e) => e)
+        );
+        updateSchema(newSchema);
+      }
+      return respData?.map((item) => ({ label: item, value: item }));
+    };
+  }
+  return reqCriteriaForData;
+
+}
+export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData ,getCriteriaForSelectData};

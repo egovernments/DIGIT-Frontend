@@ -74,6 +74,10 @@ const getMDMSContextPath = () => {
   return window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
 };
 
+
+
+
+
 /**
  * Custom function to get the schema of the screen to be rendered
  *
@@ -140,7 +144,9 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
   let finalResponse = {};
   if (!uiSchemaLoading && !schemaLoading) {
     finalResponse = { ...data };
-    schemaData.definition = Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schemaData?.definition, schemaData?.code);
+    if(schemaData?.definition){
+      schemaData.definition = Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schemaData?.definition, schemaData?.code);
+    }
     if (schemaData?.definition?.["x-ref-schema"]?.length > 0) {
       schemaData?.definition?.["x-ref-schema"]?.map((dependent) => {
         if (dependent?.fieldPath) {
@@ -164,7 +170,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
           if (_.get(schemaData?.definition?.properties, updatedPath)) {
             _.set(schemaData?.definition?.properties, updatedPath, {
               ..._.get(schemaData?.definition?.properties, updatedPath, {}),
-              enum: [],
+              enum: [{label:"WBH_NULL",value:null}],
               schemaCode: "CUSTOM",
               fieldPath: dependent?.fieldPath,
               tenantId,

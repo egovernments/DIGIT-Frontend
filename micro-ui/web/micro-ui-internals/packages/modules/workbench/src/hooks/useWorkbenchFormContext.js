@@ -15,6 +15,5 @@ export const WorkbenchProvider = React.createContext({});
  */
 export const useWorkbenchFormContext = () => {
   const { configs , updateConfigs, ...rest } = useContext(WorkbenchProvider);
-  console.log(configs , updateConfigs,"configs , updateConfigs")
   return { configs , updateConfigs, ...rest };
 };

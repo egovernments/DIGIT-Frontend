@@ -65,7 +65,6 @@ const CustomSelectWidget = (props) => {
     config: {
       enabled: schemaCode && schemaCode?.length > 0,
       select: (data) => {
-        console.log(data,"dd data");
         const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
         const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
         if (_.has(props, finalJSONPath)) {
@@ -91,11 +90,9 @@ const CustomSelectWidget = (props) => {
     reqCriteriaForData.body=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestBody);
     reqCriteriaForData.params=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestParams);
     reqCriteriaForData.config.select= (data) => {
-      console.log(data,"dd data");
       const customFun=Digit.Utils.createFunction(configs?.customUiConfigs?.custom?.[0]?.dataSource?.customFunction);
      
       const respData = customFun(data);
-      console.log(data,"data",respData);
       const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
       if (_.has(props, finalJSONPath)) {
         _.set(
@@ -108,7 +105,6 @@ const CustomSelectWidget = (props) => {
       newPrefix&&setPrefix(newPrefix);
       return respData;
     }
-    console.log(schemaCode,'schemaCode',reqCriteriaForData);
   }
 
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
