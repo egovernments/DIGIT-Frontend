@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
-import { FileUploadModal } from "@egovernments/digit-ui-react-components";
 
 /*
 

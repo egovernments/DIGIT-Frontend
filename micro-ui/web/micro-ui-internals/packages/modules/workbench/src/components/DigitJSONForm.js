@@ -1,5 +1,4 @@
 import {
-  Loader,
   Header,
   Toast,
   Card,
@@ -17,13 +16,11 @@ import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
-import Ajv from "ajv"
 // import { UiSchema } from '@rjsf/utils';
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
-import { FileUploadModal } from "@egovernments/digit-ui-react-components";
-import { validateJsonContent, onConfirm } from "../utils/BulkUploadUtils";
+import { BulkModal } from "./BulkModal";
 /*
 
 created the foem using rjfs json form 
@@ -258,9 +255,6 @@ const DigitJSONForm = ({
   setShowErrorToast,
 }) => {
   const { t } = useTranslation();
-  const ajv = new Ajv()
-  ajv.addVocabulary(["schemaCode", "fieldPath", "tenantId", "x-unique", "x-ref-schema"])
-
   useEffect(() => {
     onFormChange({ formData: Digit.Utils.workbench.postProcessData(formData, inputUiSchema) });
   }, []);
@@ -279,33 +273,13 @@ const DigitJSONForm = ({
     onFormError(errors);
   };
   const person = { t: t };
-  const fileValidator = (errMsg) => {
-    setShowErrorToast(true);
-    setShowToast(errMsg);
-    setTimeout(() => {
-      setShowErrorToast(false);
-      setShowToast(false);
-    }, 2000);
-    setShowBulkUploadModal(false);
-  };
 
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
         {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
       </Header>
-      {showBulkUploadModal &&
-        <FileUploadModal
-          heading={"WBH_BULK_UPLOAD_HEADER"}
-          cancelLabel={"WBH_LOC_EDIT_MODAL_CANCEL"}
-          submitLabel={"WBH_BULK_UPLOAD_SUBMIT"}
-          onSubmit={(file) => onConfirm(file, schema?.definition, ajv, setShowBulkUploadModal, fileValidator)}
-          onClose={() => setShowBulkUploadModal(false)}
-          t={t}
-          fileTypes={["json"]}
-          fileValidator={fileValidator}
-        />
-      }
+      <BulkModal showBulkUploadModal={showBulkUploadModal} setShowBulkUploadModal={setShowBulkUploadModal} />
       <Card className="workbench-create-form">
         <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
         <Form
