@@ -1,6 +1,7 @@
-import { EmployeeModuleCard, ArrowRightInbox, WorksMgmtIcon } from "@egovernments/digit-ui-react-components";
+import { WorksMgmtIcon } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
+import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
   LOCALISATION: ["EMPLOYEE", "SUPERUSER", "EMPLOYEE_COMMON", "LOC_ADMIN", "SYSTEM_ADMINISTRATOR"],
@@ -14,23 +15,38 @@ const HCMWORKBENCHCard = () => {
     return null;
   }
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let links = [
     {
-      label: t("ACTION_TEST_FACILITY"),
+      label: "ACTION_TEST_FACILITY",
       link: `/${window?.contextPath}/employee/hcmworkbench/facility`,
       roles: ROLES.MDMS,
     },
     {
-      label: t("ACTION_TEST_USER"),
+      label: "ACTION_TEST_USER",
       link: `/${window?.contextPath}/employee/hcmworkbench/user`,
       roles: ROLES.MDMS,
     },
     {
-      label: t("ACTION_TEST_OU"),
+      label: "ACTION_TEST_OU",
       link: `/${window?.contextPath}/employee/hcmworkbench/ou`,
+      roles: ROLES.MDMS,
+    },
+    {
+      label: "ACTION_TEST_INBOX",
+      link: `/${window?.contextPath}/employee/hcmworkbench/inbox`,
+      roles: ROLES.MDMS,
+    },
+    {
+      label: "ACTION_TEST_BOUNDARY",
+      link: `/${window?.contextPath}/employee/hcmworkbench/boundary`,
+      roles: ROLES.MDMS,
+    },
+    {
+      label: "ACTION_TEST_PROJECT",
+      link: `/${window?.contextPath}/employee/hcmworkbench/project`,
       roles: ROLES.MDMS,
     },
   ];
@@ -40,7 +56,7 @@ const HCMWORKBENCHCard = () => {
 
   const propsForModuleCard = {
     Icon: <WorksMgmtIcon />,
-    moduleName: t("ACTION_TEST_HCM_WORKBENCH"),
+    moduleName: "ACTION_TEST_HCM_WORKBENCH",
     kpis: [],
     links: links,
   };
