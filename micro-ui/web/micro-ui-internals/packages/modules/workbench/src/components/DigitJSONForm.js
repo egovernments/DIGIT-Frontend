@@ -1,5 +1,4 @@
 import {
-  Loader,
   Header,
   Toast,
   Card,
@@ -21,6 +20,7 @@ import validator from "@rjsf/validator-ajv8";
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
+import { BulkModal } from "./BulkModal";
 /*
 
 created the foem using rjfs json form 
@@ -267,6 +267,9 @@ const DigitJSONForm = ({
 
   const [displayMenu, setDisplayMenu] = useState(false);
   const [liveValidate, setLiveValidate] = useState(false);
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+
   const onError = (errors) => {
     setLiveValidate(true);
     onFormError(errors);
@@ -278,6 +281,7 @@ const DigitJSONForm = ({
       <Header className="digit-form-composer-header">
         {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
       </Header>
+      <BulkModal showBulkUploadModal={showBulkUploadModal} setShowBulkUploadModal={setShowBulkUploadModal} moduleName={moduleName} masterName={masterName} uploadFileTypeXlsx={false} />
       <Card className="workbench-create-form">
         <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
         <Form
@@ -313,8 +317,14 @@ const DigitJSONForm = ({
         // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
         >
           {(screenType === "add" || screenType === "edit") && (
-            <ActionBar style={{ zIndex: "0" }}>
-              <SubmitBar label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")} submit="submit" />
+            <ActionBar className="action-bar">
+              {screenType === "add" && (
+                <Button className="action-bar-button" variation="secondary" label={t("WBH_LOC_BULK_UPLOAD_XLS")} onButtonClick={() => setShowBulkUploadModal(true)} />
+              )}
+              <SubmitBar
+                label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")}
+                submit="submit"
+              />
               {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
             </ActionBar>
           )}
