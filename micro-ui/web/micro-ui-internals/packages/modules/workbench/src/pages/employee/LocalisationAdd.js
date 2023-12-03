@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useMemo, useRef,useCallback } from "react";
+import React, { useState, useEffect, useReducer, useMemo, useRef, useCallback } from "react";
 import {
   Card,
   CustomDropdown,
@@ -99,7 +99,7 @@ function splitArrayIntoDynamicSubsetsByPropertyAndKeys(array, propertyKey, keysT
   const uniquePropertyValuesSet = new Set(array.map(item => item[propertyKey]));
   const uniquePropertyValues = Array.from(uniquePropertyValuesSet)
   const numberOfSubsets = uniquePropertyValues.length;
-  
+
   const subsets = Array.from({ length: numberOfSubsets }, () => []);
 
   array.forEach(item => {
@@ -151,10 +151,10 @@ const LocalisationAdd = () => {
   const [tableState, setTableState] = useState([]);
   const { t } = useTranslation();
   const [jsonResult, setJsonResult] = useState(null);
-  const [jsonResultDefault,setJsonResultDefault] = useState(null)
+  const [jsonResultDefault, setJsonResultDefault] = useState(null)
   const [state, dispatch] = useReducer(reducer, intialState);
-  const [isDeleted,setIsDeleted] = useState(null)
-  const [showBulkUploadModal,setShowBulkUploadModal] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(null)
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false)
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -176,17 +176,17 @@ const LocalisationAdd = () => {
     }
   }, [selectedLang, selectedModule]);
 
-  
-  
-  const handleDeleteRow =  ({row,val,col}) => {
-      dispatch({
-        type: "DELETE_ROW",
-        state: {
-          row
-        },
-      });
-      setIsDeleted(()=>!isDeleted)
-    }
+
+
+  const handleDeleteRow = ({ row, val, col }) => {
+    dispatch({
+      type: "DELETE_ROW",
+      state: {
+        row
+      },
+    });
+    setIsDeleted(() => !isDeleted)
+  }
 
   const columns = useMemo(
     () => [
@@ -213,14 +213,14 @@ const LocalisationAdd = () => {
               value={state.tableState[row.index]?.code}
               defaultValue={""}
               style={{ marginBottom: "0px" }}
-              // onBlur={(e) => {
-              //   dispatch({type:"UPDATE_ROW_KEYCODE",state:{
-              //     row,
-              //     value:e.target.value,
-              //     id:row.index
-              //   }})
+            // onBlur={(e) => {
+            //   dispatch({type:"UPDATE_ROW_KEYCODE",state:{
+            //     row,
+            //     value:e.target.value,
+            //     id:row.index
+            //   }})
 
-              // }}
+            // }}
             />
           );
         },
@@ -267,7 +267,7 @@ const LocalisationAdd = () => {
           <div class="tooltip" style={{ marginTop: "-10px" }}>
             <span class="textoverflow" style={{ "--max-width": `20ch` }}>
               {String(t("WBH_LOC_MESSAGE_VALUE"))}
-              <InfoIconOutline styles={{ marginLeft: "0.3rem",marginBottom:"-0.2rem" }}  />
+              <InfoIconOutline styles={{ marginLeft: "0.3rem", marginBottom: "-0.2rem" }} />
             </span>
             {/* check condtion - if length greater than 20 */}
             <span class="tooltiptext" style={{ whiteSpace: "normal", width: "15rem" }}>
@@ -305,7 +305,7 @@ const LocalisationAdd = () => {
         // accessor: "code",
         Cell: ({ value, col, row, ...rest }) => {
           return (
-            <span onClick={() => handleDeleteRow({row,value,col})} className="icon-wrapper">
+            <span onClick={() => handleDeleteRow({ row, value, col })} className="icon-wrapper">
               <DeleteIconv2 fill={"#F47738"} />
             </span>
           );
@@ -341,7 +341,7 @@ const LocalisationAdd = () => {
     //same key validation
     const hasDuplicateKeycode = hasDuplicatesByKey(tableState, "code");
     const hasEmptyMessageOrCode = hasFalsyValueIgnoringZero(tableState);
-    
+
     if (hasDuplicateKeycode) {
       setShowToast({
         label: t("WBH_LOC_SAME_KEY_VALIDATION_ERR"),
@@ -383,18 +383,18 @@ const LocalisationAdd = () => {
           id: 0,
         },
       });
-      setIsDeleted(()=>!isDeleted)
+      setIsDeleted(() => !isDeleted)
     };
     const onError = (resp) => {
       let label = `${t("WBH_LOC_UPSERT_FAIL")}: `
-      resp?.response?.data?.Errors?.map((err,idx) => {
-        if(idx===resp?.response?.data?.Errors?.length-1){
+      resp?.response?.data?.Errors?.map((err, idx) => {
+        if (idx === resp?.response?.data?.Errors?.length - 1) {
           label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + '.'
-        }else{
-        label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
+        } else {
+          label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
         }
       })
-      
+
       setShowToast({ label, isError: true });
       closeToast();
       // dispatch({
@@ -421,8 +421,8 @@ const LocalisationAdd = () => {
         },
       },
       {
-        onError: () => {},
-        onSuccess: () => {},
+        onError: () => { },
+        onSuccess: () => { },
       }
     );
 
@@ -496,11 +496,11 @@ const LocalisationAdd = () => {
     const onError = (resp) => {
       setShowBulkUploadModal(false)
       let label = `${t("WBH_LOC_UPSERT_FAIL")}: `
-      resp?.response?.data?.Errors?.map((err,idx) => {
-        if(idx===resp?.response?.data?.Errors?.length-1){
+      resp?.response?.data?.Errors?.map((err, idx) => {
+        if (idx === resp?.response?.data?.Errors?.length - 1) {
           label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + '.'
-        }else{
-        label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
+        } else {
+          label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
         }
       })
       setShowToast({ label, isError: true });
@@ -530,76 +530,76 @@ const LocalisationAdd = () => {
 
   const onBulkUploadModalSubmit = async (file) => {
     try {
-     const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheetsFile(file);
-     const updatedResult = convertObjectOfArraysToSingleArray(result)
-     //make result for default locale
-     const updatedResultDefault = updatedResult.map(row=> {
-       return {
-         ...row,
-         locale:"default"
-       }
-     })
- 
-     const filteredResult = [filterObjectsByKeys(updatedResult,["message","module","locale","code"])]
-     const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault,["message","module","locale","code"])]
- 
-     setJsonResult(filteredResult)
-     setJsonResultDefault(filteredResultDefault)
+      const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheetsFile(file);
+      const updatedResult = convertObjectOfArraysToSingleArray(result)
+      //make result for default locale
+      const updatedResultDefault = updatedResult.map(row => {
+        return {
+          ...row,
+          locale: "default"
+        }
+      })
+
+      const filteredResult = [filterObjectsByKeys(updatedResult, ["message", "module", "locale", "code"])]
+      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])]
+
+      setJsonResult(filteredResult)
+      setJsonResultDefault(filteredResultDefault)
     } catch (error) {
-     setShowToast({
-       label: error.message || "Invalid file type. Please upload an Excel file.",
-       isError: true,
-     });
- 
+      setShowToast({
+        label: error.message || "Invalid file type. Please upload an Excel file.",
+        isError: true,
+      });
+
     }
-   };
+  };
 
   const handleBulkUpload = async (event) => {
-   try {
-    const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheets(event);
-    const updatedResult = convertObjectOfArraysToSingleArray(result)
-    //make result for default locale
-    const updatedResultDefault = updatedResult.map(row=> {
-      return {
-        ...row,
-        locale:"default"
-      }
-    })
+    try {
+      const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheets(event);
+      const updatedResult = convertObjectOfArraysToSingleArray(result)
+      //make result for default locale
+      const updatedResultDefault = updatedResult.map(row => {
+        return {
+          ...row,
+          locale: "default"
+        }
+      })
 
-    
-    const filteredResult = [filterObjectsByKeys(updatedResult,["message","module","locale","code"])]
-    const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault,["message","module","locale","code"])]
-   
-    //commenting this code since we can upsert multiple modules in one go(reducing number of api calls)
-    // const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
 
-    // const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
+      const filteredResult = [filterObjectsByKeys(updatedResult, ["message", "module", "locale", "code"])]
+      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])]
 
-    setJsonResult(filteredResult)
-    setJsonResultDefault(filteredResultDefault)
-    //here the result will contain all the sheets in an object
-   } catch (error) {
-    setShowToast({
-      label: error.message || "Invalid file type. Please upload an Excel file.",
-      isError: true,
-    });
+      //commenting this code since we can upsert multiple modules in one go(reducing number of api calls)
+      // const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
 
-   }
+      // const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
 
-  //   const result = await Digit.ParsingUtils.parseXlsToJsonMultipleSheets(event);
-  //  const updatedResult = convertObjectOfArraysToSingleArray(result)
-  //  //make result for default locale
-  //  const updatedResultDefault = updatedResult.map(row=> {
-  //   return {
-  //     ...row,
-  //     locale:"default"
-  //   }
-  //  })
-  //  const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
-  //  const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
-  //  setJsonResult(filteredResult)
-  //  setJsonResultDefault(filteredResultDefault)
-  //  //here the result will contain all the sheets in an object
+      setJsonResult(filteredResult)
+      setJsonResultDefault(filteredResultDefault)
+      //here the result will contain all the sheets in an object
+    } catch (error) {
+      setShowToast({
+        label: error.message || "Invalid file type. Please upload an Excel file.",
+        isError: true,
+      });
+
+    }
+
+    //   const result = await Digit.ParsingUtils.parseXlsToJsonMultipleSheets(event);
+    //  const updatedResult = convertObjectOfArraysToSingleArray(result)
+    //  //make result for default locale
+    //  const updatedResultDefault = updatedResult.map(row=> {
+    //   return {
+    //     ...row,
+    //     locale:"default"
+    //   }
+    //  })
+    //  const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
+    //  const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
+    //  setJsonResult(filteredResult)
+    //  setJsonResultDefault(filteredResultDefault)
+    //  //here the result will contain all the sheets in an object
   };
 
   const callInputClick = async (event) => {
@@ -607,13 +607,13 @@ const LocalisationAdd = () => {
   };
 
   useEffect(() => {
-    if(jsonResult?.length > 0 && jsonResultDefault?.length > 0  ){
+    if (jsonResult?.length > 0 && jsonResultDefault?.length > 0) {
       handleBulkSubmit()
     }
-  }, [jsonResult,jsonResultDefault])
-  
+  }, [jsonResult, jsonResultDefault])
+
   const fileValidator = (errMsg) => {
-    setShowToast({isError:true,label:t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG")})
+    setShowToast({ isError: true, label: t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG") })
     closeToast()
     setShowBulkUploadModal(false)
   }
@@ -645,10 +645,10 @@ const LocalisationAdd = () => {
           onClose={() => setShowBulkUploadModal(false)}
           t={t}
           fileValidator={fileValidator}
-          onClickDownloadSample = {callInputClick}
+          onClickDownloadSample={callInputClick}
         />
       )}
-      {<GenerateXlsx inputRef={inputRef}/>}
+      {<GenerateXlsx inputRef={inputRef} />}
       {/* {
         <div>
           <h2>bobbyhadz.com</h2>
@@ -671,7 +671,7 @@ const LocalisationAdd = () => {
             onChange={(e) => setSelectedLang(e)}
             config={langDropdownConfig?.populators}
             disable={langDropdownConfig?.disable}
-            // errorStyle={errors?.[populators.name]}
+          // errorStyle={errors?.[populators.name]}
           />
         </LabelFieldPair>
 
@@ -748,9 +748,9 @@ const LocalisationAdd = () => {
               }}
             />
           )}
-          <BreakLine style={{height:"0.01rem"}} />
+          <BreakLine style={{ height: "0.01rem" }} />
           {selectedLang && selectedModule && (
-            <div style={{ display: "flex",justifyContent:"space-between", marginTop: "2rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
               <Button
                 label={t("ADD_NEW_ROW")}
                 variation="secondary"

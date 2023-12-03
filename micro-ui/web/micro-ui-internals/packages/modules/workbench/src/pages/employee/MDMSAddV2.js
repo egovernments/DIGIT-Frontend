@@ -25,7 +25,6 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const [formSchema, setFormSchema] = useState({});
   const [uiSchema, setUiSchema] = useState({});
   const [api, setAPI] = useState(false);
-
   const [noSchema, setNoSchema] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
@@ -67,14 +66,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const body = api?.requestBody
     ? { ...api?.requestBody }
     : {
-        Mdms: {
-          tenantId: tenantId,
-          schemaCode: `${moduleName}.${masterName}`,
-          uniqueIdentifier: null,
-          data: {},
-          isActive: true,
-        },
-      };
+      Mdms: {
+        tenantId: tenantId,
+        schemaCode: `${moduleName}.${masterName}`,
+        uniqueIdentifier: null,
+        data: {},
+        isActive: true,
+      },
+    };
   const reqCriteriaAdd = {
     url: api ? api?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
     params: {},
