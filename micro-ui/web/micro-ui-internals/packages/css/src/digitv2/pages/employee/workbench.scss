@@ -868,7 +868,11 @@ button:hover {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 9999;
-  width: 70vw;
+  width: 25vw;
+
+  @media (max-width: 768px) {
+    width: 70vw;
+  }
 
   .progressBar {
     display: flex;
@@ -878,7 +882,7 @@ button:hover {
     border: 1px solid #ccc;
 
     .progressSegment {
-      height: 30px;
+      height: 20px;
       cursor: pointer;
       border-right: 1px solid #ccc;
 

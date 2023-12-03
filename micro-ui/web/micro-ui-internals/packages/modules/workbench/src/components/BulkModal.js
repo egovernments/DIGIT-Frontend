@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { onConfirm } from "../utils/BulkUploadUtils";
+import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
 import { FileUploadModal, Toast } from "@egovernments/digit-ui-react-components";
@@ -43,15 +43,18 @@ const ProgressBar = ({ progress, results, onClick, onClose }) => {
     );
 };
 
-export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
+export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleName, masterName, uploadFileTypeXlsx = true }) => {
     const [showToast, setShowToast] = useState(null);
     const [showErrorToast, setShowErrorToast] = useState(false);
     const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
     const [api, setAPI] = useState(false);
     const [results, setResults] = useState([]);
+    const [template, setTemplate] = useState(["Error in template"]);
+    const ajv = new Ajv();
+    ajv.addVocabulary(["x-unique", "x-ref-schema"])
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+
     const reqCriteria = {
         url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
         params: {},
@@ -75,8 +78,11 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
         },
         changeQueryName: "schema",
     };
+
     const { isLoading, data: schema } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
     const { loading, pureSchemaDefinition } = Digit.Hooks.workbench.usePureSchemaDefinition();
+
     const body = api?.requestBody
         ? { ...api?.requestBody }
         : {
@@ -99,9 +105,8 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
             },
         },
     };
+
     const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
-    const ajv = new Ajv();
-    ajv.addVocabulary(["x-unique", "x-ref-schema"])
 
     const fileValidator = (errMsg) => {
         setShowErrorToast(true);
@@ -112,10 +117,10 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
         }, 2000);
         setShowBulkUploadModal(false);
     };
+
     const onSubmitBulk = async (dataArray, setProgress) => {
         setProgress(0);
         const updatedResults = [...results];
-
         const onSuccess = (index, resp) => {
             // Handle success for the specific index
             var id = "Unknown Id";
@@ -180,12 +185,20 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
         );
         setShowErrorToast(!success);
     };
+
     const onCloseProgresbar = () => {
         setProgress(0);
         setResults([]);
     }
+
     if (loading || isLoading) {
         return <Loader />
+    }
+
+    if (pureSchemaDefinition) {
+        if (typeof template[0] === "string") {
+            setTemplate(generateJsonTemplate(pureSchemaDefinition))
+        }
     }
 
     return (
@@ -201,8 +214,9 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal }) => {
                     onSubmit={(file) => onConfirm(file, pureSchemaDefinition, ajv, t, setShowBulkUploadModal, fileValidator, onSubmitBulk, setProgress)}
                     onClose={() => setShowBulkUploadModal(false)}
                     t={t}
-                    fileTypes={["json"]}
+                    fileTypes={uploadFileTypeXlsx ? ["xlsx", "xls"] : ["json"]}
                     fileValidator={fileValidator}
+                    onClickDownloadSample={() => downloadTemplate(template, !uploadFileTypeXlsx, fileValidator, t)}
                 />
             )}
 
