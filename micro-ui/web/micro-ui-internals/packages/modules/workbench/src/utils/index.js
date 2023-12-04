@@ -236,7 +236,13 @@ const preProcessData = async (data = {}, schema = {}) => {
   let autoGenerateFormat = "";
 
   Object.keys(schema).map((key) => {
-    if (typeof schema[key] == "object" && schema[key]?.["format"] && schema[key]?.["format"]?.includes?.("preprocess") && schema?.[key]?.formatType && data[key]) {
+    if (
+      typeof schema[key] == "object" &&
+      schema[key]?.["format"] &&
+      schema[key]?.["format"]?.includes?.("preprocess") &&
+      schema?.[key]?.formatType &&
+      data[key]
+    ) {
       /* this autogenerate format logic can be removed once we have the mdms v2 support to geenrate formatted id */
       if (schema?.[key]?.formatType == "autogenerate" && schema?.[key]?.autogenerate) {
         autoGenerateFormat = schema?.[key]?.autogenerate;
@@ -268,4 +274,57 @@ const postProcessData = (data = {}, schema = {}) => {
   return { ...data };
 };
 
-export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData };
+const getParent = (boundaryCode, type, data) => {
+  return data.find((e) => e[type] === boundaryCode);
+};
+
+const generateDynamicParentType = (data) => {
+  const dynamicParentType = {};
+  for (const entry of data) {
+    const keys = Object.keys(entry);
+    for (let i = 1; i < keys.length; i++) {
+      dynamicParentType[keys[i]] = keys[i - 1];
+    }
+  }
+  return dynamicParentType;
+};
+
+const getParentType = (type, dynamicParentType) => {
+  return dynamicParentType[type] || null;
+};
+
+const transformBoundary = (boundary, dynamicParentType) => {
+  const transformedResult = {};
+
+  boundary.forEach((entry) => {
+    Object.keys(entry).forEach((key) => {
+      const values = Array.from(new Set(boundary.map((e) => e[key])));
+      transformedResult[key] = values.map((val) => {
+        const parentType = getParentType(key, dynamicParentType);
+        const parentEntry = parentType && val ? getParent(val, key, boundary) : null;
+        const parent = parentEntry ? parentEntry[parentType] : null;
+
+        return {
+          code: val,
+          parent: parent,
+        };
+      });
+    });
+  });
+
+  return transformedResult;
+};
+
+export default {
+  getConfig,
+  getMDMSLabel,
+  getFormattedData,
+  getUpdatedPath,
+  updateTitleToLocalisationCodeForObject,
+  preProcessData,
+  postProcessData,
+  getParent,
+  generateDynamicParentType,
+  getParentType,
+  transformBoundary,
+};
