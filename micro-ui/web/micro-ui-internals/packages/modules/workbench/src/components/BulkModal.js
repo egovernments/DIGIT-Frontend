@@ -1,28 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
 import { FileUploadModal, Toast } from "@egovernments/digit-ui-react-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
-const ProgressBar = ({ progress, results, onClick, onClose }) => {
+const ProgressBar = ({ progress, onClose }) => {
     return (
         <div>
             <div className="overlay"></div>
             <div className="progressBarContainer">
-                <div className="progressBar" style={{ width: `${progress}%` }}>
-                    {results.map((result, index) => (
-                        <div
-                            key={index}
-                            className="progressSegment"
-                            onClick={() => onClick(index)}
-                            style={{
-                                width: `${(1 / results.length) * 100}%`,
-                                backgroundColor: result.success ? "#4CAF50" : "#FF0000",
-                            }}
-                        ></div>
-                    ))}
-                </div>
+                <div className="progressBar" style={{ width: `${progress}%` }}></div>
                 <div className="progressHeading">
                     {progress === 100 ? (
                         <div>
@@ -35,9 +23,11 @@ const ProgressBar = ({ progress, results, onClick, onClose }) => {
                         `Processing: ${progress}%`
                     )}
                 </div>
-                <div className="closeButton" onClick={onClose}>
-                    <CloseSvg />
-                </div>
+                {progress === 100 && (
+                    <div className="closeButton" onClick={onClose}>
+                        <CloseSvg />
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -173,38 +163,25 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         }
     };
 
-    const handleProgressClick = (index) => {
-        const result = results[index];
-        const { success, error, response } = result;
-
-        // Display toast with corresponding details
-        setShowToast(
-            success
-                ? `Request at index ${index} succeeded with Id: ${response}`
-                : `Request at index ${index} failed. Error: ${error}`
-        );
-        setShowErrorToast(!success);
-    };
-
     const onCloseProgresbar = () => {
         setProgress(0);
-        setResults([]);
+        // setResults([]);
     }
 
     if (loading || isLoading) {
         return <Loader />
     }
 
-    if (pureSchemaDefinition) {
-        if (typeof template[0] === "string") {
-            setTemplate(generateJsonTemplate(pureSchemaDefinition))
+    useEffect(() => {
+        if (pureSchemaDefinition && typeof template[0] === "string") {
+            setTemplate(generateJsonTemplate(pureSchemaDefinition));
         }
-    }
+    }, [pureSchemaDefinition, template]);
 
     return (
         <div>
             {progress > 0 && progress <= 100 && (
-                <ProgressBar progress={progress} results={results} onClick={handleProgressClick} onClose={onCloseProgresbar} />
+                <ProgressBar progress={progress} onClose={onCloseProgresbar} />
             )}
             {showBulkUploadModal && (
                 <FileUploadModal
@@ -230,6 +207,36 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
                     isDleteBtn={true}
                 ></Toast>
             )}
-        </div>
+
+            {results.length > 0 && (
+                <Toast
+                    label={
+                        <div>
+                            {results.map((result, index) => (
+                                <div key={index}>
+                                    {result.success ? (
+                                        <span role="img" aria-label="success-tick">
+                                            ✅
+                                        </span>
+                                    ) : (
+                                        <span role="img" aria-label="error-cross">
+                                            ❌
+                                        </span>
+                                    )}
+                                    {result.success ? " Success: " : " Error: "}
+                                    {result.success ? result.response : result.error}
+                                </div>
+                            ))}
+                        </div>
+                    }
+                    error={results.some((result) => !result.success)}
+                    onClose={() => {
+                        setResults([]);
+                    }}
+                    isDleteBtn={true}
+                ></Toast>
+            )
+            }
+        </div >
     );
 }

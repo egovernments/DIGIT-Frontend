@@ -884,16 +884,8 @@ button:hover {
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid #ccc;
-
-    .progressSegment {
-      height: 20px;
-      cursor: pointer;
-      border-right: 1px solid #ccc;
-
-      &:last-child {
-        border-right: none;
-      }
-    }
+    height: 20px;
+    background-color: #4CAF50;
   }
 
   .progressHeading {
