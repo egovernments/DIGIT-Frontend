@@ -10,7 +10,6 @@
   "workspaces": [
     "micro-ui-internals/packages/libraries",
     "micro-ui-internals/packages/react-components",
-    "micro-ui-internals/packages/modules/workbench",
     "micro-ui-internals/packages/modules/workbench-hcm"  ],
   "homepage": "/workbench-ui",
   "dependencies": {

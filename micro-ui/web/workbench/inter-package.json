@@ -5,7 +5,6 @@
   "workspaces": [
     "packages/libraries",
     "packages/react-components",
-    "packages/modules/workbench",
     "packages/modules/workbench-hcm"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -23,14 +22,8 @@
     "publish:css": "cd packages/css && yarn publish --access public",
     "dev:libraries": "cd packages/libraries && yarn start",
     "dev:components": "cd packages/react-components && yarn start",
-    "dev:example": "cd example && yarn start",
-    "dev:core": "cd packages/modules/core && yarn start",
-    "dev:dss": "cd packages/modules/dss && yarn start",
-    "dev:hrms": "cd packages/modules/hrms && yarn start",
-    "dev:common": "cd packages/modules/common && yarn start",
-    "dev:utilities": "cd packages/modules/utilities && yarn start",
-    "dev:workbench": "cd packages/modules/workbench && yarn start",
-    "dev:engagement": "cd packages/modules/engagement && yarn start",
+    "dev:example": "cd example && yarn start",    
+    "dev:workbench-hcm": "cd packages/modules/workbench-hcm && yarn start",
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
     "build:components": "cd packages/react-components && yarn build",
@@ -41,7 +34,7 @@
     "buildD:utilities": "cd packages/modules/utilities && yarn build",
     "buildD:engagement": "cd packages/modules/engagement && yarn build",
     "build:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
-    "build:workbench": "cd packages/modules/workbench && yarn build",
+    "buildD:workbench": "cd packages/modules/workbench && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
