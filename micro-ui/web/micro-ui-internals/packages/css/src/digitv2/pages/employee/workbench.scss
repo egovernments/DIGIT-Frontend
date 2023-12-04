@@ -860,9 +860,8 @@ button:hover {
 
 .progressBarContainer {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 20px;
+  right: 20px;
   background-color: #fff;
   padding: 45px 45px 20px 20px;
   border-radius: 8px;
@@ -872,6 +871,11 @@ button:hover {
 
   @media (max-width: 768px) {
     width: 70vw;
+    position: fixed;
+    bottom: 20px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .progressBar {
