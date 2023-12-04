@@ -223,7 +223,9 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
                                             ❌
                                         </span>
                                     )}
-                                    {result.success ? " Success: " : " Error: "}
+                                    {result.success
+                                        ? " Success at index " + index + ": "
+                                        : " Error at index " + index + ": "}
                                     {result.success ? result.response : result.error}
                                 </div>
                             ))}
