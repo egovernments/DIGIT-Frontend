@@ -6,6 +6,7 @@ import LocalisationSearch from "./LocalisationSearch";
 import MDMSSearch from "./MDMSSearch";
 import MDMSAdd from "./MDMSAdd";
 import MDMSAddV2 from "./MDMSAddV2";
+import MDMSAddV4 from "./MDMSAddV4";
 import MDMSEdit from "./MDMSEdit";
 import MDMSView from "./MDMSView";
 import MDMSSearchv2 from "./MDMSSearchv2";
@@ -93,6 +94,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/mdms-search`} component={() => <MDMSSearch />} />
           <PrivateRoute path={`${path}/mdms-add`} component={() =>  <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path}/>} />
           <PrivateRoute path={`${path}/mdms-add-v2`} component={() =>  <MDMSAddV2 parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/mdms-add-v4`} component={() =>  <MDMSAddV4 parentRoute={path}/>} />
           <PrivateRoute path={`${path}/mdms-view`} component={() =>  <MDMSView parentRoute={path}/>} />
           <PrivateRoute path={`${path}/mdms-edit`} component={() =>  <MDMSEdit parentRoute={path}/>} />
           <PrivateRoute path={`${path}/manage-master-data`} component={() => <MDMSManageMaster parentRoute={path}/>} />
