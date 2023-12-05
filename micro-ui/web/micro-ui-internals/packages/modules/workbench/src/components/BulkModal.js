@@ -5,7 +5,21 @@ import { useTranslation } from "react-i18next";
 import { FileUploadModal, Toast } from "@egovernments/digit-ui-react-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
-const ProgressBar = ({ progress, onClose }) => {
+const ProgressBar = ({ progress, onClose, results }) => {
+    const [selectedErrorIndex, setSelectedErrorIndex] = useState(null);
+
+    results.forEach((result, index) => {
+        result.i = index;
+    });
+
+    const errorResults = results.filter((result) => !result.success);
+    const successCount = results.length - errorResults.length;
+
+    const handleErrorClick = (index) => {
+        setSelectedErrorIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+
     return (
         <div>
             <div className="overlay"></div>
@@ -13,11 +27,14 @@ const ProgressBar = ({ progress, onClose }) => {
                 <div className="progressBar" style={{ width: `${progress}%` }}></div>
                 <div className="progressHeading">
                     {progress === 100 ? (
-                        <div>
-                            Done
-                            <span role="img" aria-label="success-tick">
-                                ✅
-                            </span>
+                        <div
+                            className="success-container"
+                        >
+                            Succeeded <div
+                                className="success-count"
+                            >
+                                {successCount}
+                            </div>
                         </div>
                     ) : (
                         `Processing: ${progress}%`
@@ -28,10 +45,35 @@ const ProgressBar = ({ progress, onClose }) => {
                         <CloseSvg />
                     </div>
                 )}
+                {errorResults.length === 0 ? (
+                    <div className="results-container-orange">
+                        <div className="no-errors">No errors found</div>
+                    </div>
+                ) :
+                    (
+                        <div className="results-container">
+                            <div>
+                                {errorResults.map((result, index) => (
+                                    <div key={index} className="results-list-item" onClick={() => handleErrorClick(index)}>
+                                        {' Error at item ' + (parseInt(result.i) + 1) + ': '}
+                                        {result.error}
+                                        {selectedErrorIndex === index && (
+                                            <div className="results-details">
+                                                {JSON.stringify(result?.data?.Mdms?.data, null, 2)}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )
+                }
             </div>
         </div>
     );
 };
+
+
 
 export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleName, masterName, uploadFileTypeXlsx = true }) => {
     const [showToast, setShowToast] = useState(null);
@@ -42,7 +84,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     const [results, setResults] = useState([]);
     const [template, setTemplate] = useState(["Error in template"]);
     const ajv = new Ajv();
-    ajv.addVocabulary(["x-unique", "x-ref-schema"])
+    ajv.addVocabulary(["x-unique", "x-ref-schema", "x-ui-schema"])
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
     const reqCriteria = {
@@ -117,7 +159,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             if (resp?.mdms[0]?.id) {
                 id = resp?.mdms[0]?.id
             }
-            updatedResults.push({ index, success: true, response: id, error: null });
+            updatedResults.push({ index, success: true, response: id, error: null, data: resp?.mdms[0]?.data });
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
             setResults(updatedResults);
             setProgress(currentProgress);
@@ -129,7 +171,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             if (resp?.response?.data?.Errors && resp?.response?.data?.Errors.length > 0) {
                 err = resp?.response?.data?.Errors[0]?.code
             }
-            updatedResults.push({ index, success: false, error: err, response: null });
+            updatedResults.push({ index, success: false, error: err, response: null, data: JSON.parse(resp?.response?.config?.data) });
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
             setResults(updatedResults);
             setProgress(currentProgress);
@@ -165,7 +207,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
 
     const onCloseProgresbar = () => {
         setProgress(0);
-        // setResults([]);
+        setResults([]);
     }
 
     if (loading || isLoading) {
@@ -181,7 +223,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     return (
         <div>
             {progress > 0 && progress <= 100 && (
-                <ProgressBar progress={progress} onClose={onCloseProgresbar} />
+                <ProgressBar progress={progress} onClose={onCloseProgresbar} results={results} />
             )}
             {showBulkUploadModal && (
                 <FileUploadModal
@@ -207,38 +249,6 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
                     isDleteBtn={true}
                 ></Toast>
             )}
-
-            {results.length > 0 && (
-                <Toast
-                    label={
-                        <div>
-                            {results.map((result, index) => (
-                                <div key={index}>
-                                    {result.success ? (
-                                        <span role="img" aria-label="success-tick">
-                                            ✅
-                                        </span>
-                                    ) : (
-                                        <span role="img" aria-label="error-cross">
-                                            ❌
-                                        </span>
-                                    )}
-                                    {result.success
-                                        ? " Success at index " + index + ": "
-                                        : " Error at index " + index + ": "}
-                                    {result.success ? result.response : result.error}
-                                </div>
-                            ))}
-                        </div>
-                    }
-                    error={results.some((result) => !result.success)}
-                    onClose={() => {
-                        setResults([]);
-                    }}
-                    isDleteBtn={true}
-                ></Toast>
-            )
-            }
         </div >
     );
 }
