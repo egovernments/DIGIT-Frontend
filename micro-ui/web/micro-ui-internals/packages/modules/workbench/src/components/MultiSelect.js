@@ -45,9 +45,6 @@ const CustomSelectWidget = (props) => {
   const [showTooltipFlag, setShowTooltipFlag] = useState(false);
 
   const [mainData, setMainData] = useState([]);
-  const { prefix, setPrefix } = useState(schemaCode);
-
-  // const handleChange = (selectedValue) => onChange(multiple ? selectedValue?.value : selectedValue?.value);
   /*
   logic added to fetch data of schemas in each component itself
   */
@@ -80,39 +77,12 @@ const CustomSelectWidget = (props) => {
     },
     changeQueryName: `data-${schemaCode}`,
   };
-  const {
-    configs,
-    updateConfigs
-  } = Digit.Hooks.workbench.useWorkbenchFormContext();
-  if(schemaCode==="CUSTOM"&&configs?.customUiConfigs?.custom?.length>0){
-    
-    reqCriteriaForData.url=configs?.customUiConfigs?.custom?.[0]?.dataSource?.API;
-    reqCriteriaForData.body=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestBody);
-    reqCriteriaForData.params=JSON.parse(configs?.customUiConfigs?.custom?.[0]?.dataSource?.requestParams);
-    reqCriteriaForData.config.select= (data) => {
-      const customFun=Digit.Utils.createFunction(configs?.customUiConfigs?.custom?.[0]?.dataSource?.customFunction);
-     
-      const respData = customFun(data);
-      const finalJSONPath = `registry.rootSchema.properties.${Digit.Utils.workbench.getUpdatedPath(fieldPath)}.enum`;
-      if (_.has(props, finalJSONPath)) {
-        _.set(
-          props,
-          finalJSONPath,
-          respData?.map((item) => ({label:item,value:item}))
-        );
-      }
-      const newPrefix=reqCriteriaForData?.body?.SchemaDefCriteria?.codes?.[0];
-      newPrefix&&setPrefix(newPrefix);
-      return respData;
-    }
-  }
-
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(reqCriteriaForData);
   const optionsList = data || options?.enumOptions || options || [];
   const optionsLimit = 10;
   const formattedOptions = React.useMemo(
-    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${prefix}_${e?.label}`)), value: e.value })),
-    [optionsList, prefix, data]
+    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${e?.label}`)), value: e.value })),
+    [optionsList, schemaCode, data]
   );
   const [limitedOptions, setLimitedOptions] = useState([]);
   const [selectedDetails, setSelectedDetails] = useState(null);
@@ -312,7 +282,3 @@ const CustomSelectWidget = (props) => {
   );
 };
 export default CustomSelectWidget;
-
-
-
-
