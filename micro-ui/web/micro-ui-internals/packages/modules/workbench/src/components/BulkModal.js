@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Toast } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Toast,Loader } from "@egovernments/digit-ui-react-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
 const ProgressBar = ({ progress, onClose, results }) => {
