@@ -860,9 +860,8 @@ button:hover {
 
 .progressBarContainer {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 20px;
+  right: 20px;
   background-color: #fff;
   padding: 45px 45px 20px 20px;
   border-radius: 8px;
@@ -872,6 +871,11 @@ button:hover {
 
   @media (max-width: 768px) {
     width: 70vw;
+    position: fixed;
+    bottom: 20px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .progressBar {
@@ -880,21 +884,32 @@ button:hover {
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid #ccc;
-
-    .progressSegment {
-      height: 20px;
-      cursor: pointer;
-      border-right: 1px solid #ccc;
-
-      &:last-child {
-        border-right: none;
-      }
-    }
+    height: 20px;
+    background-color: #4CAF50;
   }
 
   .progressHeading {
     margin: 8px 0;
     font-size: 16px;
+
+    .success-container {
+      display: flex;
+      flex-direction: row;
+      background-color: #00703C;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      width: fit-content;
+      align-items: center;
+
+      .success-count {
+        background-color: #fff;
+        color: #00703C;
+        padding: 3px 5px;
+        border-radius: 3px;
+        margin-left: 5px;
+      }
+    }
   }
 
   .closeButton {
@@ -905,6 +920,52 @@ button:hover {
     padding: 2px;
     border: 1px solid #ccc;
     border-radius: 1px;
+  }
+
+  .no-uploads {
+    margin-top: 1em;
+  }
+}
+
+.results-container-orange {
+  max-height: 50vh;
+  overflow: auto;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1em;
+  background-color: #ea8a3b !important;
+
+  .no-errors {
+    background-color: #ea8a3b !important;
+  }
+}
+
+.results-container {
+  max-height: 50vh;
+  overflow: auto;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1em;
+
+  .results-list-item {
+    border-bottom: 1px solid #ddd;
+    padding: 0.5em;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #D4351C;
+      color: white;
+      /* Yellowish color on hover */
+    }
+  }
+
+  .results-details {
+    white-space: pre-wrap;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1em;
   }
 }
 
