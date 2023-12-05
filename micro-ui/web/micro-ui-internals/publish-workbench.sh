@@ -14,6 +14,11 @@ msg() {
 msg "Building and publishing css"
 cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --access public
 
+
+# msg "Building and publishing Utilities module"
+cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.0
+
+
 # msg "Building and publishing svg components"
 cd "$BASEDIR/packages/svg-components" && rm -rf dist && yarn && npm publish --tag workbench-1.0
 
@@ -48,6 +53,3 @@ cd "$BASEDIR/packages/modules/core" &&   rm -rf dist && yarn&& npm publish --tag
 # msg "Building and publishing Utilities module"
 cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.0
 
-
-# msg "Building and publishing Utilities module"
-cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.0
