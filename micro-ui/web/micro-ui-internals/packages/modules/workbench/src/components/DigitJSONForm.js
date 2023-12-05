@@ -284,7 +284,7 @@ const DigitJSONForm = ({
       <Header className="digit-form-composer-header">
         {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
       </Header>
-      <BulkModal showBulkUploadModal={showBulkUploadModal} setShowBulkUploadModal={setShowBulkUploadModal} moduleName={moduleName} masterName={masterName} uploadFileTypeXlsx={false} />
+      {showBulkUploadModal&&<BulkModal showBulkUploadModal={showBulkUploadModal} setShowBulkUploadModal={setShowBulkUploadModal} moduleName={moduleName} masterName={masterName} uploadFileTypeXlsx={false} />}
       <Card className="workbench-create-form">
         <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
         <Form
