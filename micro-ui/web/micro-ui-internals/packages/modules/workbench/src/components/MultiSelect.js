@@ -173,6 +173,7 @@ const CustomSelectWidget = (props) => {
   if (isLoading) {
     return <Loader />;
   }
+
   return (
     <div className="multiselect">
       <Select
@@ -196,7 +197,7 @@ const CustomSelectWidget = (props) => {
         <div className="info-icon"
           onClick={() => { setShowTooltipFlag(true) }}
         >
-          {(selectedDetails && selectedDetails.length > 0 && data) && (
+          {(selectedDetails && selectedDetails.length > 0 && data && Array.isArray(selectedOption) && selectedOption.length > 0) && (
             <span >
               <InfoBannerIcon fill={"#f47738"} />
             </span>
