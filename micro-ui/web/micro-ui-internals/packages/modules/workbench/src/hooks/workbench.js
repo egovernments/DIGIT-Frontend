@@ -135,7 +135,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
         const responseData = {};
         if (customUiConfigs) {
           responseData["customUiConfigs"] = customUiConfigs;
-          responseData["uiSchema"] = { "ui:order": [...customUiConfigs?.order, "*"] };
+          responseData["uiSchema"] = customUiConfigs?.order ? { "ui:order": [...customUiConfigs?.order, "*"] } : {};
         }
         return responseData;
       },
@@ -144,7 +144,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
   let finalResponse = {};
   if (!uiSchemaLoading && !schemaLoading) {
     finalResponse = { ...data };
-    if(schemaData?.definition){
+    if (schemaData?.definition) {
       schemaData.definition = Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schemaData?.definition, schemaData?.code);
     }
     if (schemaData?.definition?.["x-ref-schema"]?.length > 0) {
@@ -170,7 +170,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
           if (_.get(schemaData?.definition?.properties, updatedPath)) {
             _.set(schemaData?.definition?.properties, updatedPath, {
               ..._.get(schemaData?.definition?.properties, updatedPath, {}),
-              enum: [{label:"WBH_NULL",value:null}],
+              enum: [{ label: "WBH_NULL", value: null }],
               schemaCode: "CUSTOM",
               fieldPath: dependent?.fieldPath,
               tenantId,
