@@ -103,6 +103,9 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.0-beta.6 Added Bulk Upload Ui for MDMS Add
+1.0.0-beta.5 Fixed some loading issue
+1.0.0-beta.2 custom api support added
 1.0.0-beta.1 republished due to some version issues
 1.0.0-beta workbench base version beta release
 0.0.3 readme updated

@@ -847,3 +847,134 @@ button:hover {
     cursor: pointer;
   }
 }
+
+.action-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .action-bar-button {
+    margin-right: 0.5em;
+  }
+}
+
+.progressBarContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff;
+  padding: 45px 45px 20px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  width: 25vw;
+
+  @media (max-width: 768px) {
+    width: 70vw;
+    position: fixed;
+    bottom: 20px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .progressBar {
+    display: flex;
+    flex-direction: row;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    height: 20px;
+    background-color: #4CAF50;
+  }
+
+  .progressHeading {
+    margin: 8px 0;
+    font-size: 16px;
+
+    .success-container {
+      display: flex;
+      flex-direction: row;
+      background-color: #00703C;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      width: fit-content;
+      align-items: center;
+
+      .success-count {
+        background-color: #fff;
+        color: #00703C;
+        padding: 3px 5px;
+        border-radius: 3px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    padding: 2px;
+    border: 1px solid #ccc;
+    border-radius: 1px;
+  }
+
+  .no-uploads {
+    margin-top: 1em;
+  }
+}
+
+.results-container-orange {
+  max-height: 50vh;
+  overflow: auto;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1em;
+  background-color: #ea8a3b !important;
+
+  .no-errors {
+    background-color: #ea8a3b !important;
+  }
+}
+
+.results-container {
+  max-height: 50vh;
+  overflow: auto;
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 1em;
+
+  .results-list-item {
+    border-bottom: 1px solid #ddd;
+    padding: 0.5em;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #D4351C;
+      color: white;
+      /* Yellowish color on hover */
+    }
+  }
+
+  .results-details {
+    white-space: pre-wrap;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1em;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+}
