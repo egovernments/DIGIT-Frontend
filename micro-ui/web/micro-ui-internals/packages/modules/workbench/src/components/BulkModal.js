@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Toast,Loader } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Toast, Loader } from "@egovernments/digit-ui-react-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
 const ProgressBar = ({ progress, onClose, results }) => {
@@ -209,16 +209,15 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         setProgress(0);
         setResults([]);
     }
-
-    if (loading || isLoading) {
-        return <Loader />
-    }
-
     useEffect(() => {
         if (pureSchemaDefinition && typeof template[0] === "string") {
             setTemplate(generateJsonTemplate(pureSchemaDefinition));
         }
     }, [pureSchemaDefinition, template]);
+
+    if (loading || isLoading) {
+        return <Loader />
+    }
 
     return (
         <div>
