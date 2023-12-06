@@ -2,9 +2,11 @@ import React from "react";
 import XLSX from "xlsx";
 
 const GenerateXlsx = ({ inputRef, jsonData }) => {
+  console.log("jsonData", jsonData);
+
   const handleExport = () => {
     // Sample JSON data
-    const data = jsonData || [
+    const data = jsonData[0]?.boundaryHierarchy || [
       {
         code: "WBH_MDMS_MASTER_ACCESSCONTROL_ACTIONS_TEST",
         message: "Access Control",
