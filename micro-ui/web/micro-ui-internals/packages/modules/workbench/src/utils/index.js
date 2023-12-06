@@ -268,4 +268,53 @@ const postProcessData = (data = {}, schema = {}) => {
   return { ...data };
 };
 
-export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData };
+const getValueByPath = (obj, path) => {
+  const result = [];
+
+  const traverseObject = (currentObj, keys) => {
+    const key = keys.shift();
+
+    if (!key) {
+      // End of the path, add the current object to the result
+      result.push(currentObj);
+      return;
+    }
+
+    if (key === '*') {
+      // Handle wildcard '*' case
+      for (const prop in currentObj) {
+        traverseObject(currentObj[prop], keys.slice());
+      }
+    } else if (currentObj.hasOwnProperty(key)) {
+      // Move to the next level in the object
+      traverseObject(currentObj[key], keys.slice());
+    }
+  };
+
+  const keys = path.split('.');
+  traverseObject(obj, keys);
+
+  return result;
+};
+
+const get = (path = "") => {
+  let tempPath = path;
+  if (!tempPath?.includes(".")) {
+    return tempPath;
+  }
+  if (tempPath?.includes(".*.")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*.", "_ARRAY_OBJECT_");
+  }
+  if (tempPath?.includes(".*")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*", "_ARRAY_");
+  }
+  if (tempPath?.includes(".")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".", "_OBJECT_");
+  }
+  let updatedPath = Digit.Utils.locale.stringReplaceAll(tempPath, "_ARRAY_OBJECT_", ".items.properties.");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_ARRAY_", ".items");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_OBJECT_", ".properties.");
+  return updatedPath;
+};
+
+export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData, getValueByPath };

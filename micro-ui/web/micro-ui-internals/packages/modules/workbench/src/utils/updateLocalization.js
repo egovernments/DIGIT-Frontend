@@ -9,19 +9,23 @@ export const updateLocalization = async (tenantId, moduleName, masterName, resp)
         const localisableFields = result?.mdms[0]?.data?.localisation?.localisableFields;
 
         if (localisableFields) {
-            const messages = localisableFields.map((field, index) => {
-                const localisationFieldPath = field.fieldPath;
+            const messages = localisableFields.flatMap((field, index) => {
+                const localisationFieldPath = field?.fieldPath;
                 const prefix = field.prefix;
                 const module = field.module;
-                const code = resp?.mdms[0]?.data[localisationFieldPath];
-
-                return {
-                    code: Digit.Utils.locale.getTransformedLocale(`${prefix}_${code}`),
-                    message: code,
-                    module: module,
-                    id: index,
-                    locale: "default"
-                };
+                if (resp?.mdms[0]?.data && localisationFieldPath) {
+                    const codes = Digit.Utils.workbench.getValueByPath(resp?.mdms[0]?.data, localisationFieldPath);
+                    if (codes && Array.isArray(codes)) {
+                        return codes.map((code) => ({
+                            code: Digit.Utils.locale.getTransformedLocale(`${prefix}_${code}`),
+                            message: code,
+                            module: module,
+                            id: index,
+                            locale: "default"
+                        }));
+                    }
+                }
+                return [];
             });
 
             await Digit.CustomService.getResponse({
