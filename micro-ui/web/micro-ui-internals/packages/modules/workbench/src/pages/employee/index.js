@@ -14,7 +14,6 @@ import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
 import MDMSSearchv3 from "./MDMSSearchv3";
-import MDMSAddV3 from "./MDMSADDV3";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -95,7 +94,6 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
           <PrivateRoute path={`${path}/mdms-add`} component={() => <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-add-v2`} component={() => <MDMSAddV2 parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-add-v3`} component={() => <MDMSAddV3 parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-add-v4`} component={() => <MDMSAddV4 parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-view`} component={() => <MDMSView parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-edit`} component={() => <MDMSEdit parentRoute={path} />} />
