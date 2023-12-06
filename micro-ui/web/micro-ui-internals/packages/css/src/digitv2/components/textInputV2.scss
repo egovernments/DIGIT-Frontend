@@ -2,7 +2,12 @@
 @import url("../typography.scss");
 
 .digit-card-input-error {
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-6 text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color:theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-text-input {
@@ -19,8 +24,19 @@
     input,
     .digit-prefix,
     .digit-suffix,
-    .digit-numeric-button {
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
       border: 1px solid theme(digitv2.alert.error);
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right-style: hidden;
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left-style: hidden;
     }
   }
 
@@ -29,10 +45,27 @@
     input,
     .digit-prefix,
     .digit-suffix,
-    .digit-numeric-button {
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
       @apply border-grey-dark text-grey-dark !important;
       pointer-events: none !important;
       cursor: not-allowed;
+      background-color: theme(digitv2.lightTheme.background);
+      border: 1px solid theme(digitv2.lightTheme.divider);
+    }
+
+    input {
+      background-color: white;
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right-style: hidden;
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left-style: hidden;
     }
 
   }
@@ -41,13 +74,56 @@
     input,
     .digit-prefix,
     .digit-suffix,
-    .digit-numeric-button {
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
       pointer-events: none !important;
       border: 1px solid theme(digitv2.lightTheme.input-border);
       background: theme(digitv2.lightTheme.background);
+      color: theme(digitv2.lightTheme.text-color-disabled);
+    }
+    input {
       color: theme(digitv2.lightTheme.text-color-secondary);
     }
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right-style: hidden;
+    }
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left-style: hidden;
+    }
   }
+
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="date"]:disabled::-webkit-calendar-picker-indicator,
+  input[type="time"]:disabled::-webkit-calendar-picker-indicator {
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    right:0.75rem;
+  }
+
+  input[type="date"]:disabled::-webkit-calendar-picker-indicator,
+  input[type="time"]:disabled::-webkit-calendar-picker-indicator {
+    visibility: visible;
+    color: theme(digitv2.lightTheme.divider);
+  }
+
+  input[type="date"]:in-range::-webkit-datetime-edit,
+  input[type="time"]:in-range::-webkit-datetime-edit,
+  input[type="date"]:disabled::-webkit-datetime-edit,
+  input[type="time"]:disabled::-webkit-datetime-edit{
+    display: none;
+  }
+
+  ::placeholder,
+  input[type="date"]:not(:placeholder-shown)::before,
+  input[type="time"]:not(:placeholder-shown)::before {
+    content: attr(placeholder);
+    color: theme(digitv2.lightTheme.text-color-disabled);
+  }
+
 }
 
 .digit-text-input-width {
@@ -55,17 +131,26 @@
 }
 
 .digit-card-input {
-  @apply mb-lg pl-sm outline-none mt-sm block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none mt-sm block border w-full h-10 border-input-border border-solid bg-white leading-6 text-form-field text-text-primary;
+  padding-left: 0.75rem;
 }
 
 .digit-card-input-error {
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-6 text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color:theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-employee-card-input {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none block border w-full h-10 border-input-border border-solid bg-white leading-6 text-form-field text-text-primary;
   font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
 }
 
 .digit-employee-card-input:disabled {
@@ -86,7 +171,12 @@
 
 .digit-employee-card-input-error {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-6 text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color:theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-inputWrapper {
@@ -140,8 +230,11 @@
 
 .digit-citizen-card-input {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none block border w-full h-10 border-input-border border-solid bg-white leading-6 text-form-field text-text-primary;
   font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
 }
 
 .digit-citizen-card-input--front {
@@ -157,14 +250,22 @@
 .digit-employee-card-input-error {
   @extend .typography.text-body-s;
   @extend .light-input-border;
-  @extend .alert-error;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-6 text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-card-input-error {
   @extend .light-input-border;
-  @extend .alert-error;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-6 text-form-field text-text-primary;
+  font-family: theme(digitv2.fontFamily.sans);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .disabled {
@@ -181,19 +282,32 @@
 }
 
 .input-container:focus-within{
-  .digit-numeric-button,
+  .digit-numeric-button-prefix,
+  .digit-numeric-button-suffix,
   .digit-prefix,
   .digit-suffix,
   input {
     outline: none;
     border: 1px solid theme(digitv2.lightTheme.primary);
   }
+
+  .digit-numeric-button-prefix,
+  .digit-prefix {
+    border-right-style: hidden;
+  }
+
+  .digit-numeric-button-suffix,
+  .digit-suffix {
+    border-left-style: hidden;
+  }
+
 }
 
 
 .digit-prefix,
 .digit-suffix,
-.digit-numeric-button {
+.digit-numeric-button-prefix,
+.digit-numeric-button-suffix {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-size: 1.5rem;
   font-weight: theme(digitv2.fontWeight.bold);
@@ -205,7 +319,16 @@
   font-style: theme(digitv2.fontStyle.normal);
   line-height: theme(digitv2.lineHeight.normal);
   background: theme(colors.grey.mid);
-  margin-bottom: 24px;
+}
+
+.digit-prefix,
+.digit-numeric-button-prefix {
+  border-right-style: hidden;
+}
+
+.digit-suffix,
+.digit-numeric-button-suffix {
+  border-left-style: hidden;
 }
 
 .digit-prefix,
@@ -215,9 +338,8 @@
 
 .digit-text-input-customIcon {
   position: absolute;
-  right: 10px;
-  transform: translateY(-100%);
-  top: 50%;
   width: 1.5rem;
   height: 1.5rem;
+  top: 0.5rem;
+  left: 21.5rem;
 }

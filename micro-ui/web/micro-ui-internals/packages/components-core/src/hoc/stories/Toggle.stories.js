@@ -1,41 +1,44 @@
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { CustomDropdown } from "../../molecules";
 import FieldV1 from "../FieldV1";
-import { ToggleSwitch } from "../../atoms";
 
 export default {
   title: "Atom-Groups/ToggleField",
-  component: ToggleSwitch,
+  component: CustomDropdown,
   argTypes: {
     t: { control: false },
     config: { control: "object" },
     inputRef: { control: false },
     label: { control: "text" },
     onChange: { action: "onChange" },
-    value: { control: "boolean" },
+    value: { control: "text" },
+    errorStyle: { control: "object" },
     disabled: { control: "boolean" },
-    type: { control: "select", options: ["toggle"] },
+    type: { control: "radio", options: ["toggle"] },
+    additionalWrapperClass: { control: "text" },
     props: { control: "object" },
   },
 };
 const queryClient = new QueryClient();
 
 const Template = (args) => {
+  const [selectedOption, setSelectedOption] = useState(args.value);
 
-  const [value, setValue] = useState(args.value);
-
-  const handleToggleChange = () => {
-    setValue((prevValue) => {
-      const newValue = !prevValue;
-      return newValue;
-    });
+  const handleSelectOption = (e, name) => {
+    const selectedValue = e;
+    if (selectedValue !== undefined) {
+      setSelectedOption(selectedValue);
+      args.onChange(e, name);
+    }
   };
+
   return (
     <QueryClientProvider client={queryClient}>
       <FieldV1
         {...args}
-        value={value}
-        onChange={handleToggleChange}
+        value={selectedOption}
+        onChange={handleSelectOption}
       />
     </QueryClientProvider>
   );
@@ -43,32 +46,38 @@ const Template = (args) => {
 
 const t = (key) => key;
 
+
+const Options = [
+  { code: "Toggle1", name: "Toggle1" },
+  { code: "Toggle2", name: "Toggle2" },
+  { code: "Toggle3", name: "Toggle3" }
+];
+
 const commonArgs = {
   t: t,
-  config: {
-    name: "toggle",
+  populators: {
+    name: "toggleOptions",
+    optionsKey: "name",
+    options: Options,
   },
   inputRef: null,
-  label: "",
-  value: false,
+  label: "Label",
+  value: "",
   errorStyle: null,
   disabled: false,
   type: "toggle",
-  error:""
+  additionalWrapperClass: "",
+  error: "",
+  description:""
 }
-
 
 export const Default = Template.bind({});
 Default.args = {
   ...commonArgs
 };
 
-
 export const Filled = Template.bind({});
 Filled.args = {
   ...commonArgs,
-  value: true
-};
-Filled.argTypes = {
-  value: { control: { disable: true } },
+  value: "Toggle1"
 };

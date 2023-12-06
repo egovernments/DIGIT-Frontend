@@ -104,7 +104,7 @@ const Dropdown = (props) => {
   }, [props.selected]);
 
   function dropdownSwitch() {
-    if (!props.disable) {
+    if (!props.disabled) {
       var current = dropdownStatus;
       if (!current) {
         document.addEventListener("mousedown", handleClick, false);
@@ -163,13 +163,13 @@ const Dropdown = (props) => {
       {hasCustomSelector && (
         <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch}>
           {props.customSelector}
-          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disable && "disabled"} fill="black" />}
+          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disabled && "disabled"} fill="black" />}
         </div>
       )}
       {!hasCustomSelector && (
         <div
           className={`${dropdownStatus ? "digit-select-active" : "digit-select"} ${props?.variant ? props?.variant : ""} ${
-            props.disable && "disabled"
+            props.disabled && "disabled"
           }`}
           style={
             props.errorStyle
@@ -199,15 +199,15 @@ const Dropdown = (props) => {
             addProps={{ length: filteredOption.length, currentIndex: optionIndex, selectOption: selectOption }}
             dropdownDisplay={dropdownOn}
             handleClick={handleClick}
-            disable={props.disable}
+            disable={props.disabled}
             freeze={props.freeze ? true : false}
             autoFocus={props.autoFocus}
             placeholder={props.placeholder}
             onBlur={props?.onBlur}
             inputRef={props.ref}
           />
-          {props.showSearchIcon ? null : <SVG.ArrowDropDown fill="black" onClick={dropdownSwitch} className="cp" disable={props.disable} />}
-          {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disable} /> : null}
+          {props.showSearchIcon ? null : <SVG.ArrowDropDown fill="black" onClick={dropdownSwitch} className="cp" disable={props.disabled} />}
+          {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disabled} /> : null}
         </div>
       )}
       {dropdownStatus ? (

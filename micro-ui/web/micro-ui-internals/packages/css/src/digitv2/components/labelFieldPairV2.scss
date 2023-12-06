@@ -1,5 +1,5 @@
 .digit-label-field-pair {
-  @apply flex items-center;
+  @apply mb-lg flex items-center;
 
   & .label,
   & header {
@@ -35,7 +35,7 @@
 @screen dt {
   .digit-employee-card {
     .digit-label-field-pair {
-      @apply flex items-center;
+      @apply mb-lg flex items-center;
 
       h2 {
         width: 30%;

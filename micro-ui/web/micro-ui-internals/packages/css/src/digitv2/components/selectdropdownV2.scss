@@ -1,9 +1,9 @@
 .digit-employee-select-wrap {
-  @apply mb-lg w-full relative;
+  @apply w-full relative;
 
   .digit-select {
     @extend .light-input-border;
-    @apply relative block w-full h-10 border border-solid border-input-border;
+    @apply relative block w-full h-10 border border-solid border-input-border bg-white;
     &.digit-field-error {
       border: 1px solid;
       border-color: theme(digitv2.alert.error);
@@ -88,6 +88,11 @@
     }
   }
 }
+.profile-dropdown--item {    
+  &:hover {
+    background: theme(colors.grey.mid);
+  }
+}
 
 .digit-employee-select-wrap--elipses {
   width: 85% !important;
@@ -97,7 +102,8 @@
 }
 
 .digit-select-wrap {
-  @apply mb-lg relative;
+  @apply mb-lg relative bg-white;
+  width:23.75rem;
   max-width: 540px;
 
   .digit-select {
@@ -109,6 +115,10 @@
       width: calc(100% - 32px);
       background-color: transparent;
       @apply absolute z-10 w-full h-full outline-none text-text-primary text-form-field pl-sm;
+    }
+
+    &:hover {
+      @apply border-2 border-solid border-primary-main;
     }
 
     p {
@@ -156,7 +166,6 @@
   }
 
   .digit-options-card {
-    @extend .light-background;
     width: 100% !important;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
     @apply absolute z-20 mt-xs bg-white;

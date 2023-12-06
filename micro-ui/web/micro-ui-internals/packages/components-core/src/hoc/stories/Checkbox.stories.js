@@ -39,5 +39,6 @@ CheckBoxStory.args = {
   errorStyle: null,
   disabled: false,
   type: "checkbox",
+  description:""
 };
 

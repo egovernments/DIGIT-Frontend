@@ -5,11 +5,12 @@ import { SVG } from "./SVG";
 const TextInput = (props) => {
   const user_type = window?.Digit?.SessionStorage.get("userType");
   const [date, setDate] = useState(props?.type === "date" && props?.value);
+  const [visibility, setVisibility] = useState(false);
   const data = props?.watch
     ? {
-      fromDate: props?.watch("fromDate"),
-      toDate: props?.watch("toDate"),
-    }
+        fromDate: props?.watch("fromDate"),
+        toDate: props?.watch("toDate"),
+      }
     : {};
 
   const handleDate = (event) => {
@@ -20,68 +21,88 @@ const TextInput = (props) => {
 
   const incrementCount = () => {
     const newValue = Number(props.value) + 1;
-    props.onChange({ target: { value: newValue } });
+    props.onChange({ target: { value: newValue, type: props.type} });
   };
 
   const decrementCount = () => {
     const newValue = Math.max(Number(props.value) - 1, 0);
-    props.onChange({ target: { value: newValue } });
+    props.onChange({ target: { value: newValue, type: props.type} });
   };
 
   const renderPrefix = () => {
     const prefixValue = props?.populators?.prefix || "";
     if (props?.type === "numeric") {
       return (
-        <button type="button" onClick={() => decrementCount()} className="digit-numeric-button">
+        <button type="button" onClick={() => decrementCount()} className="digit-numeric-button-prefix">
           -
         </button>
       );
     }
     if (prefixValue) {
-      return (
-        <button className="digit-prefix">
-          {prefixValue}
-        </button>
-      );
+      return <button className="digit-prefix">{prefixValue}</button>;
     }
     return null;
   };
-
-
 
   const renderSuffix = () => {
     const suffixValue = props?.populators?.suffix || "";
     if (props?.type === "numeric") {
       return (
-        <button type="button" onClick={() => incrementCount()} className="digit-numeric-button">
+        <button type="button" onClick={() => incrementCount()} className="digit-numeric-button-suffix">
           +
         </button>
       );
     }
     if (suffixValue) {
-      return (
-        <button className="digit-suffix">
-          {suffixValue}
-        </button>
-      );
+      return <button className="digit-suffix">{suffixValue}</button>;
     }
     return null;
   };
 
+  const handleVisibility = () => {
+    setVisibility(!visibility);
+    const newType = !visibility ? "text" : "password";
+    props.onChange({ target: { type: newType, value: props.value } });
+  };
+
+  const handleLocationClick = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          props.onChange({
+            target: {
+              value: `${latitude}, ${longitude}`,
+              type: "geolocation",
+            },
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported");
+    }
+  };
+
   const renderIcon = () => {
     const customIcon = props?.type;
+    const iconFill = props?.disabled ? "#D6D5D4" : props?.nonEditable ? "#b1b4b6" : "#505A5F";
     if (customIcon) {
       if (customIcon === "geolocation") {
-        return <SVG.MyLocation className="digit-text-input-customIcon" />;
+        return <SVG.MyLocation fill={iconFill} onClick={handleLocationClick} className="digit-text-input-customIcon" />;
+      } else if (customIcon === "text" && visibility) {
+        return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
       } else if (customIcon === "password") {
-        return <SVG.Visibility className="digit-text-input-customIcon" />;
+        return <SVG.Visibility fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
       } else if (customIcon === "search") {
-        return <SVG.Search className="digit-text-input-customIcon" />;
+        return <SVG.Search fill={iconFill} className="digit-text-input-customIcon" />;
       } else {
         try {
-          const DynamicIcon = require("@egovernments/digit-ui-react-components")[props?.populators?.customIcon];
+          const DynamicIcon = require("@egovernments/digit-ui-react-components")?.[props?.populators?.customIcon];
           if (DynamicIcon) {
-            return <DynamicIcon className="digit-text-input-customIcon" />;
+            return <DynamicIcon fill={iconFill} className="digit-text-input-customIcon" />;
           }
         } catch (error) {
           console.error("Icon not found");
@@ -93,17 +114,20 @@ const TextInput = (props) => {
 
   const icon = renderIcon();
 
-  const inputClassNameForMandatory = `${user_type ? "digit-employee-card-input-error" : "digit-card-input-error"} ${props.disabled ? "disabled" : ""
-    } ${props.customClass || ""} ${props.nonEditable ? "noneditable" : ""}  ${props.type ==="numeric" ? "numeric" : ""}`;
+  const inputClassNameForMandatory = `${user_type ? "digit-employee-card-input-error" : "digit-card-input-error"} ${
+    props.disabled ? "disabled" : ""
+  } ${props.customClass || ""} ${props.nonEditable ? "noneditable" : ""}  ${props.type === "numeric" ? "numeric" : ""}`;
 
-  const inputClassName = `${user_type ? "digit-employee-card-input" : "digit-citizen-card-input"} ${props.disabled ? "disabled" : ""} focus-visible ${props.errorStyle ? "digit-employee-card-input-error" : ""
-    } ${props.nonEditable ? "noneditable" : ""} ${props.type ==="numeric" ? "numeric" : ""}`;
+  const inputClassName = `${user_type ? "digit-employee-card-input" : "digit-citizen-card-input"} ${props.disabled ? "disabled" : ""} focus-visible ${
+    props.errorStyle ? "digit-employee-card-input-error" : ""
+  } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
   return (
     <React.Fragment>
       <div
-        className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${props.disabled ? "disabled" : ""
-          }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props.type ==="numeric" ? "numeric" : ""}`}
+        className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${
+          props.disabled ? "disabled" : ""
+        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props.type === "numeric" ? "numeric" : ""}`}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
         {props.required ? (
@@ -258,7 +282,7 @@ TextInput.propTypes = {
   charCount: PropTypes.bool,
   errors: PropTypes.object,
   config: PropTypes.object,
-  error: PropTypes.bool
+  error: PropTypes.string,
 };
 
 TextInput.defaultProps = {

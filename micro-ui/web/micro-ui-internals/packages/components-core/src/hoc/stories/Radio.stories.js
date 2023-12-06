@@ -8,7 +8,7 @@ export default {
   component: CustomDropdown,
   argTypes: {
     t: { control: false },
-    config: { control: "object" },
+    populators: { control: "object" },
     inputRef: { control: false },
     label: { control: "text" },
     onChange: { action: "onChange" },
@@ -54,7 +54,7 @@ const gendersOptions = [
 
 const commonArgs = {
   t: t,
-  config: {
+  populators: {
     name: "gender",
     optionsKey: "name",
     options: gendersOptions,
@@ -67,6 +67,7 @@ const commonArgs = {
   type: "radio",
   additionalWrapperClass: "",
   error: "",
+  description:""
 }
 
 export const Default = Template.bind({});

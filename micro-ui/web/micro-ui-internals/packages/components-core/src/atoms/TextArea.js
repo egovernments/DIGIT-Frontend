@@ -16,6 +16,9 @@ const TextArea = (props) => {
         id={props.id}
         value={props.value}
         onChange={(event) => {
+          if (props?.onChange) {
+            props?.onChange(event);
+          }
         }}
         className={`${user_type !== "citizen" ? "digit-employee-card-textarea" : "digit-card-textarea"} ${props?.className ? props?.className : ""
           } ${props.disabled ? "disabled" : ""
@@ -51,7 +54,7 @@ TextArea.propTypes = {
   hintText: PropTypes.string,
   charCount: PropTypes.bool,
   errors: PropTypes.object,
-  error:PropTypes.bool
+  error:PropTypes.string
 };
 
 TextArea.defaultProps = {

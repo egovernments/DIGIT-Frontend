@@ -31,19 +31,26 @@ export default {
 const Template = (args) => {
 
   const [value, setValue] = useState(args.value || "");
+  const [type, setType] = useState(args.type || "");
 
   useEffect(() => {
     setValue(args.value || "");
   }, [args.type]);
 
+  useEffect(() => {
+    setType(args.type || "");
+  }, [args.type]);
+
   const handleInputChange = (event) => {
     const newValue = event.target.value;
+    const newType =event.target.type;
     setValue(newValue);
+    setType(newType);
 
-    args.onChange({ ...event, target: { ...event.target, value: newValue } });
+    args.onChange({ ...event, target: { ...event.target, value: newValue , type:newType} });
   };
 
-  return <FieldV1 {...args} value={value} onChange={handleInputChange} />;
+  return <FieldV1 {...args} value={value} onChange={handleInputChange} type={type}/>;
 };
 
 const commonArgs ={

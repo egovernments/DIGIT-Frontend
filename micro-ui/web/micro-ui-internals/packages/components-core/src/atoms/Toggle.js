@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 const Toggle = (props) => {
   const { t } = useTranslation();
-  const [selected, setSelected] = useState("props.selectedoption");
-
-  useEffect(() => {
-    setSelected(props.selectedOption);
-  }, [props.selectedOption]);
+  var selected = props.selectedOption;
 
   function toggleOption(option) {
-    const updatedSelection = selected === option ? null : option;
-    setSelected(updatedSelection);
-    props.onSelect(updatedSelection);
+    props.onSelect(option);
   }
   return (
     <div style={props?.style} className={`digit-toggle-toolbar ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
       {props?.options?.map((option, ind) => (
         <div className={`toggle-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
-          <div className="digit-toggle-btn-wrap">
+          <label className={`digit-toggle-btn-wrap ${selected === option.code ? "checked" : ""}`}>
             <input
               className="digit-toggle-input"
               type="radio"
@@ -30,12 +24,9 @@ const Toggle = (props) => {
               disabled={props?.disabled}
               ref={props.inputRef}
             />
-            <label className="digit-toggle-label">{t(option[props.optionsKey])}</label>
-          </div>
+            <span className="digit-toggle-label">{t(option[props.optionsKey])}</span>
+          </label>
         </div>
-
-
-
       ))}
     </div>
   );

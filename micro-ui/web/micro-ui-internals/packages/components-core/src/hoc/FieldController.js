@@ -18,11 +18,6 @@ function FieldController(args) {
     props,
     errors,
     controllerProps,
-    nonEditable,
-    placeholder,
-    description,
-    charCount,
-    withoutLabel,
   } = args;
   let { apiDetails } = props;
   let disableFormValidation = false;
@@ -44,13 +39,14 @@ function FieldController(args) {
       defaultValue={formData?.[populators.name]}
       render={({ onChange, ref, value, onBlur }) => (
         <FieldV1
-          error= {errors[populators.name]}
+          error= {populators.error}
           label={config.label}
-          nonEditable = {nonEditable}
-          placeholder={placeholder}
+          nonEditable = {config.nonEditable}
+          placeholder={config.placeholder}
           inline={props.inline}
           description={config.description}
-          charCount = {charCount}
+          charCount = {config.charCount}
+          infoMessage={config.infoMessage}
           withoutLabel = {config.withoutLabel}
           type={type}
           populators={populators}

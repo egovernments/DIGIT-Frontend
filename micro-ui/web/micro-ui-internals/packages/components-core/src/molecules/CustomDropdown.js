@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Loader } from "../atoms/Loader";
 import RadioButtons from "../atoms/RadioButtons";
 import Dropdown from "../atoms/Dropdown";
+import Toggle from "../atoms/Toggle";
 import { createFunction } from "./techMolecules/createFunction";
 
 const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyle, disabled, type, additionalWrapperClass = "" }) => {
@@ -55,7 +56,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
         return (
           <Dropdown
             inputRef={inputRef}
-            style={{ display: "flex", justifyContent: "space-between", ...config.styles }}
+            style={{...config.styles }}
             option={data || config?.options || []}
             key={config.name}
             optionKey={config?.optionsKey}
@@ -70,6 +71,26 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             errorStyle={errorStyle}
             optionCardStyles={config?.optionsCustomStyle}
           />)
+          case "toggle":
+            return (
+              <Toggle
+                inputRef={inputRef}
+                options={data || config?.options || []}
+                key={config.name}
+                optionsKey={config?.optionsKey}
+                value={value}
+                onSelect={(e) => {
+                  onChange(e, config.name);
+                }}
+                disabled={disabled}
+                selectedOption={value}
+                defaultValue={value}
+                t={t}
+                errorStyle={errorStyle}
+                additionalWrapperClass={additionalWrapperClass}
+                innerStyles={config?.innerStyles}
+              />
+            )
       default:
         return null;
 

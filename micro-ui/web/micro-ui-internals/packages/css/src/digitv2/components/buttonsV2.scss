@@ -14,11 +14,15 @@
   }
 
   h2 {
-    @apply font-rc font-medium text-white;
+    @apply font-medium text-white;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 1.1875rem;
+    font-style: theme(digitv2.fontStyle.normal);
+    line-height: 1.5rem;
   }
 }
 
@@ -60,11 +64,14 @@
 
   h2 {
     @extend .light-primary;
-    @apply font-rc font-medium;
+    @apply font-medium;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 1.1875rem;
+    font-style: theme(digitv2.fontStyle.normal);
   }
   .disabled {
     opacity: 0.5;

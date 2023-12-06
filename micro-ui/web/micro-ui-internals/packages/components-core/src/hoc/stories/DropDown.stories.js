@@ -8,16 +8,16 @@ export default {
   component: CustomDropdown,
   argTypes: {
     t: { control: false },
-    config: { control: "object" },
+    populators: { control: "object" },
     inputRef: { control: false },
     label: { control: "text" },
     onChange: { action: "onChange" },
     value: { control: "text" },
     errorStyle: { control: "object" },
-    disable: { control: "boolean" },
+    disabled: { control: "boolean" },
     additionalWrapperClass: { control: "text" },
     props: { control: "object" },
-    type:{control:"select", options:["dropdown"]}
+    type:{control:"select", options:["dropdown","multiselectdropdown"]},
   },
 };
 const queryClient = new QueryClient();
@@ -40,24 +40,24 @@ const gendersOptions = [
 export const Default = Template.bind({});
 Default.args = {
   t,
-  config: {
+  populators: {
     name: "genders",
-
-    styles: { display: "flex", justifyContent: "space-between" },
     defaultValue: "FEMALE",
-    optionsCustomStyle: { color: "blue", fontSize: "14px" },
+    optionsCustomStyle: {},
     optionsKey: "name",
     options: gendersOptions,
   },
+  error:"",
   inputRef: null,
   label: "Enter Gender",
   onChange: (e, name) => console.log("Selected value:", e, "Name:", name),
   errorStyle: null,
-  disable: false,
+  disabled: false,
   type: "dropdown",
   additionalWrapperClass: "",
   props: {
     isLoading: false,
     data: gendersOptions,
   },
+  description:""
 };
