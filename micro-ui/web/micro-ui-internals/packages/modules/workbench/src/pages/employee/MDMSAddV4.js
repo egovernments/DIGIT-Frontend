@@ -6,6 +6,7 @@ import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
 import { WorkbenchProvider } from "../../hooks/useWorkbenchFormContext";
+import { updateLocalization } from "../../utils/updateLocalization";
 /*
 
 created the foem using rjfs json form 
@@ -62,18 +63,18 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       setUiConfigs({ customUiConfigs: schemaData?.customUiConfigs });
     }
   }, [isSchemaLoading]);
-const addAPI=uiConfigs?.customUiConfigs?.addAPI;
+  const addAPI = uiConfigs?.customUiConfigs?.addAPI;
   const body = addAPI?.requestBody
     ? { ...addAPI?.requestBody }
     : {
-        Mdms: {
-          tenantId: tenantId,
-          schemaCode: `${moduleName}.${masterName}`,
-          uniqueIdentifier: null,
-          data: {},
-          isActive: true,
-        },
-      };
+      Mdms: {
+        tenantId: tenantId,
+        schemaCode: `${moduleName}.${masterName}`,
+        uniqueIdentifier: null,
+        data: {},
+        isActive: true,
+      },
+    };
 
   const reqCriteriaAdd = {
     url: addAPI ? addAPI?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
@@ -98,6 +99,7 @@ const addAPI=uiConfigs?.customUiConfigs?.addAPI;
       const jsonPath = addAPI?.responseJson ? addAPI?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       closeToast();
+      updateLocalization(tenantId, moduleName, masterName, resp);
 
       //here redirect to search screen(check if it's required cos user might want  add multiple masters in one go)
     };
@@ -165,7 +167,7 @@ const addAPI=uiConfigs?.customUiConfigs?.addAPI;
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs,updateSchema:updateFormSchema ,schema:formSchema,formData:session}}>
+      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs, updateSchema: updateFormSchema, schema: formSchema, formData: session }}>
         {spinner && <DigitLoader />}
         {formSchema && (
           <DigitJSONForm
