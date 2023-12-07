@@ -71,7 +71,7 @@ export const updateFields = (properties, schemaFields, Config, currentSchema) =>
             ],
         },
     });
-    return { fields: fields, resultFields: resultFields };
+    return { fields: fields, resultFields: resultFields, searchAPI: schemaFields?.searchAPI };
 };
 
 export const updatedFieldsWithoutSchema = (properties, currentSchema) => {
@@ -95,6 +95,7 @@ export const updateConfig = (
     currentSchema,
     fields,
     resultFields,
+    searchAPI,
     masterName,
     moduleName
 ) => {
@@ -123,6 +124,26 @@ export const updateConfig = (
         },
     ];
     Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
+
+    //SearchAPI changes
+    if (searchAPI?.url) {
+        Config.apiDetails.serviceName = searchAPI.url;
+    }
+    if (searchAPI?.requestJson) {
+        Config.apiDetails.requestJson = searchAPI.requestJson;
+    }
+    if (searchAPI?.responseJson) {
+        Config.apiDetails.tableFormJsonPath = searchAPI.requestJson;
+        Config.apiDetails.filterFormJsonPath = searchAPI.requestJson;
+        Config.apiDetails.searchFormJsonPath = searchAPI.requestJson;
+    }
+    if (searchAPI?.requestBody) {
+        try {
+            Config.apiDetails.requestBody = JSON.parse(searchAPI?.requestBody)
+        } catch (error) {
+            console.log("Error during requestBody assignment in search config : ", error)
+        }
+    }
 };
 
 export const updateConfigWithoutSchema = (

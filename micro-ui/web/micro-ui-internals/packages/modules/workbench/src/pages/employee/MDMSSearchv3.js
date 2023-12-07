@@ -96,7 +96,7 @@ const MDMSSearchv3 = () => {
         };
         Digit.CustomService.getResponse({ ...reqCriteria }).then((result) => {
             if (result.mdms.length > 0) {
-                setSchemaFields({ displayFields: result.mdms[0]?.data?.searchResult?.displayFields, searchableFields: result.mdms[0]?.data?.search?.searchableFields })
+                setSchemaFields({ displayFields: result.mdms[0]?.data?.searchResult?.displayFields, searchableFields: result.mdms[0]?.data?.search?.searchableFields, searchAPI: result.mdms[0]?.data?.searchAPI })
             }
         })
     }, [])
@@ -108,7 +108,8 @@ const MDMSSearchv3 = () => {
             const updatedFields = updateFields(properties, schemaFields, Config, currentSchema);
             var fields = updatedFields?.fields;
             var resultFields = updatedFields?.resultFields;
-            updateConfig(Config, currentSchema, fields, resultFields, masterName, moduleName);
+            var searchAPI = updatedFields?.searchAPI;
+            updateConfig(Config, currentSchema, fields, resultFields, searchAPI, masterName, moduleName);
             setUpdatedConfig(Config);
         } else if (currentSchema) {
             const { definition: { properties } } = currentSchema;
