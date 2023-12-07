@@ -1,11 +1,20 @@
 export const updateLocalization = async (tenantId, moduleName, masterName, resp) => {
     try {
-        const result = await Digit.UiSchemaSearchService.search({
-            tenantId: tenantId,
-            uniqueIdentifiers: [`${moduleName}.${masterName}`],
-            schemaCode: "Workbench.UISchema"
-        });
+        const reqCriteria = {
+            url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+            params: {},
+            body: {
+                MdmsCriteria: {
+                    tenantId: tenantId,
+                    uniqueIdentifiers: [
+                        moduleName + "." + masterName
+                    ],
+                    schemaCode: "Workbench.UISchema"
+                },
+            },
+        };
 
+        const result = await Digit.CustomService.getResponse({ ...reqCriteria });
         const localisableFields = result?.mdms[0]?.data?.localisation?.localisableFields;
 
         if (localisableFields) {

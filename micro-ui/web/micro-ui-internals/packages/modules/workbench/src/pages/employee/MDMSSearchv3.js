@@ -1,4 +1,4 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown, SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer, Loader, Dropdown, SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -81,13 +81,20 @@ const MDMSSearchv3 = () => {
         }
     }, [moduleName])
     useEffect(() => {
-        Digit.UiSchemaSearchService.search({
-            tenantId: tenantId,
-            uniqueIdentifiers: [
-                master + "." + modulee
-            ],
-            schemaCode: "Workbench.UISchema"
-        }).then((result) => {
+        const reqCriteria = {
+            url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+            params: {},
+            body: {
+                MdmsCriteria: {
+                    tenantId: tenantId,
+                    uniqueIdentifiers: [
+                        master + "." + modulee
+                    ],
+                    schemaCode: "Workbench.UISchema"
+                },
+            },
+        };
+        Digit.CustomService.getResponse({ ...reqCriteria }).then((result) => {
             if (result.mdms.length > 0) {
                 setSchemaFields({ displayFields: result.mdms[0]?.data?.searchResult?.displayFields, searchableFields: result.mdms[0]?.data?.search?.searchableFields })
             }
