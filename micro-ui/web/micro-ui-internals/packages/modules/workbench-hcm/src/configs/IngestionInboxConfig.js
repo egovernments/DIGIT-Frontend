@@ -1,6 +1,6 @@
 const IngestionInboxConfig = () => {
   return {
-    label: "HCM_WORKBENCH_INBOX",
+    label: "WORKBENCH_INBOX",
     type: "inbox",
     apiDetails: {
       serviceName: "/hcm-moz-impl/v1/jobrecord/_search",
@@ -35,7 +35,7 @@ const IngestionInboxConfig = () => {
           },
           fields: [
             {
-              label: "Ingestion Id",
+              label: "WORKBENCH_INGESTION_ID",
               type: "text",
               isMandatory: false,
               disable: false,
@@ -45,7 +45,7 @@ const IngestionInboxConfig = () => {
               },
             },
             {
-              label: "Ingestion Type",
+              label: "WORKBENCH_INGESTION_TYPE",
               type: "dropdown",
               isMandatory: false,
               disable: false,
@@ -57,22 +57,22 @@ const IngestionInboxConfig = () => {
                 },
                 options: [
                     {
-                      code: "Organisation Units Ingestion",
-                      name: "Organisation Units Ingestion"
+                      code: "WORKBENCH_OU_INGESTION",
+                      name: "WORKBENCH_OU_INGESTION"
                     },
                     {
-                        code : "Facilities Ingestion",
-                        name : "Facilities Ingestion"
+                        code : "WORKBENCH_FACILITY_INGESTION",
+                        name : "WORKBENCH_FACILITY_INGESTION"
                     },
                     {
-                        code : "Users Ingestion",
-                        name : "Users Ingestion"
+                        code : "WORKBENCH_USERS_INGESTION",
+                        name : "WORKBENCH_USERS_INGESTION"
                     },
                 ]
               },
             },
             {
-              label: "Ingestion Status",
+              label: "WORKBENCH_INGESTION_STATUS",
               type: "dropdown",
               isMandatory: false,
               disable: false,
@@ -84,20 +84,20 @@ const IngestionInboxConfig = () => {
                 },
                 options: [
                     {
-                      code: "Started",
-                      name: "Started",
+                      code: "WORKBENCH_STARTED",
+                      name: "WORKBENCH_STARTED",
                     },
                     {
-                        code : "Failed",
-                        name : "Failed"
+                        code : "WORKBENCH_FAILED",
+                        name : "WORKBENCH_FAILED"
                     },
                     {
-                        code : "Completed",
-                        name : "Completed"
+                        code : "WORKBENCH_COMPLETED",
+                        name : "WORKBENCH_COMPLETED"
                     },
                     {
-                        code : "Partial Completed",
-                        name : "Partial Completed"
+                        code : "WORKBENCH_PARTIAL_COMPLETED",
+                        name : "WORKBENCH_PARTIAL_COMPLETED"
                     }
                 ]
               },
@@ -112,17 +112,17 @@ const IngestionInboxConfig = () => {
         uiConfig: {
           links: [
             {
-              text: "OU Ingestion",
+              text: "WORKBENCH_OU_INGESTION",
               url: "/employee/hcmworkbench/ou",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "User Ingestion",
+              text: "WORKBENCH_USERS_INGESTION",
               url: "/employee/hcmworkbench/user",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "Facility Ingestion",
+              text: "WORKBENCH_FACILITY_INGESTION",
               url: "/employee/hcmworkbench/facility",
               roles: ["SYSTEM_ADMINISTRATOR"],
             }
@@ -135,7 +135,7 @@ const IngestionInboxConfig = () => {
         uiConfig: {
           type: "filter",
           headerStyle: null,
-          primaryLabel: "Apply",
+          primaryLabel: "WORKBENCH_APPLY",
           secondaryLabel: "",
           minReqFields: 1,
           defaultValues: {
@@ -177,7 +177,7 @@ const IngestionInboxConfig = () => {
             },
           ],
         },
-        label: "Filter",
+        label: "WORKBENCH_FILTER",
         show: true,
       },
       searchResult: {
@@ -185,21 +185,21 @@ const IngestionInboxConfig = () => {
         uiConfig: {
           columns: [
             {
-              label: "Ingestion Id",
+              label: "WORKBENCH_INGESTION_ID",
               jsonPath: "ingestionId",
               additionalCustomization: true,
             },
             {
-              label: "Ingestion Type",
+              label: "WORKBENCH_INGESTION_TYPE",
               jsonPath: "jobName",
             },
             {
-              label: "Created Time",
+              label: "WORKBENCH_CREATED_TIME",
               jsonPath: "auditDetails.createdTime",
               additionalCustomization: true,
             },
             {
-              label: "Ingestion Status",
+              label: "WORKBENCH_INGESTION_STATUS",
               jsonPath: "executionStatus",
             //   additionalCustomization: true,
             },
