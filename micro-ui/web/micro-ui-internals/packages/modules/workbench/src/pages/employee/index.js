@@ -13,6 +13,7 @@ import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
 import UploadBoundary from "./UploadBoundary";
+import SearchBoundary from "./Search/SearchBoundary";
 
 const WorkbenchBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -100,6 +101,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path}/>} />
           <PrivateRoute path={`${path}/localisation-add`} component={() => <LocalisationAdd parentRoute={path}/>} />
           <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary  />} />
+          <PrivateRoute path={`${path}/search-boundary`} component={() => <SearchBoundary  />} />
 
 
           

@@ -81,7 +81,13 @@ module.exports = function (app) {
     "/muster-roll",
     "/individual",
     "/mdms-v2",
-    "/boundary-service/boundary"
+    "/boundary-service/boundary",
+    "/household/v1/_search",
+    "/product/v1/_search",
+    "/product/variant/v1/_search",
+    "/project/beneficiary/v1/_search",
+    "/project/staff/v1/_search",
+    "/project/task/v1/_search"
     
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
