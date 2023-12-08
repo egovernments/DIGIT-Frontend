@@ -5,7 +5,6 @@ const IngestionInboxConfig = () => {
     apiDetails: {
       serviceName: "/hcm-moz-impl/v1/jobrecord/_search",
       requestParam: {
-        "recordCount" : 10
       },
       requestBody: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -186,7 +185,8 @@ const IngestionInboxConfig = () => {
           columns: [
             {
               label: "WORKBENCH_INGESTION_ID",
-              jsonPath: "ingestionId",
+              jsonPath: "ingestionNumber",
+
               additionalCustomization: true,
             },
             {
