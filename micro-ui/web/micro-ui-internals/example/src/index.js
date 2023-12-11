@@ -9,6 +9,7 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -21,6 +22,7 @@ const enabledModules = [ "DSS", "HRMS",
 "Workbench",
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
+  "HCMWORKBENCH"
 //added to check fsm
 // "FSM"
 ];
@@ -68,7 +70,7 @@ const initDigitUI = () => {
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
-
+  initWorkbenchHCMComponents();
 
   const moduleReducers = (initData) => initData;
 
