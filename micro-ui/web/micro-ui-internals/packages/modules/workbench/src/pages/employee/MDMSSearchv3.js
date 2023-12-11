@@ -14,14 +14,15 @@ const MDMSSearchv3 = () => {
     let { masterName: modulee, moduleName: master, tenantId } = Digit.Hooks.useQueryParams()
 
     const [availableSchemas, setAvailableSchemas] = useState([]);
-    const [currentSchema, setCurrentSchema] = useState(null);
     const [masterName, setMasterName] = useState(null); //for dropdown
     const [moduleName, setModuleName] = useState(null); //for dropdown
     const [masterOptions, setMasterOptions] = useState([])
     const [moduleOptions, setModuleOptions] = useState([])
     const [updatedConfig, setUpdatedConfig] = useState(null)
-    const [schemaFields, setSchemaFields] = useState(null);
     tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
+    const [schemaFields, setSchemaFields] = useState(null);
+    const [currentSchema, setCurrentSchema] = useState(null);
+
     const SchemaDefCriteria = {
         tenantId: tenantId,
         limit: 100
@@ -80,6 +81,24 @@ const MDMSSearchv3 = () => {
             setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
         }
     }, [moduleName])
+
+    useEffect(() => {
+        if (schemaFields && currentSchema) {
+            const { definition: { properties } } = currentSchema;
+            const updatedFields = updateFields(properties, schemaFields, Config, currentSchema);
+            var fields = updatedFields?.fields;
+            var resultFields = updatedFields?.resultFields;
+            var searchAPI = updatedFields?.searchAPI;
+            updateConfig(Config, currentSchema, fields, resultFields, searchAPI, masterName, moduleName);
+            setUpdatedConfig(Config);
+        } else if (currentSchema) {
+            const { definition: { properties } } = currentSchema;
+            const dropDownOptions = updatedFieldsWithoutSchema(properties, currentSchema);
+            updateConfigWithoutSchema(Config, currentSchema, dropDownOptions, masterName, moduleName);
+            setUpdatedConfig(Config);
+        }
+    }, [currentSchema, schemaFields]);
+
     useEffect(() => {
         const reqCriteria = {
             url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -100,24 +119,6 @@ const MDMSSearchv3 = () => {
             }
         })
     }, [])
-
-
-    useEffect(() => {
-        if (schemaFields && currentSchema) {
-            const { definition: { properties } } = currentSchema;
-            const updatedFields = updateFields(properties, schemaFields, Config, currentSchema);
-            var fields = updatedFields?.fields;
-            var resultFields = updatedFields?.resultFields;
-            var searchAPI = updatedFields?.searchAPI;
-            updateConfig(Config, currentSchema, fields, resultFields, searchAPI, masterName, moduleName);
-            setUpdatedConfig(Config);
-        } else if (currentSchema) {
-            const { definition: { properties } } = currentSchema;
-            const dropDownOptions = updatedFieldsWithoutSchema(properties, currentSchema);
-            updateConfigWithoutSchema(Config, currentSchema, dropDownOptions, masterName, moduleName);
-            setUpdatedConfig(Config);
-        }
-    }, [currentSchema, schemaFields]);
 
     const handleAddMasterData = () => {
         let actionLink = updatedConfig?.actionLink

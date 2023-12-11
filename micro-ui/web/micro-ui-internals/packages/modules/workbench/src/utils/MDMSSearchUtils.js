@@ -46,6 +46,20 @@ export const updateFields = (properties, schemaFields, Config, currentSchema) =>
             });
         }
     });
+    if (Array.isArray(schemaFields?.displayFields)) {
+        schemaFields?.displayFields?.forEach((field) => {
+            try {
+                const fieldDetails = JSON.parse(field)
+                if (Object.keys(fieldDetails).length > 0 && fieldDetails?.label && fieldDetails?.jsonPath) {
+                    fieldDetails.code = fieldDetails.jsonPath;
+                    delete fieldDetails["jsonPath"];
+                    resultFields.push(fieldDetails);
+                }
+            } catch (error) {
+                console.log("Error during Json Parsing of displayFields : ", error);
+            }
+        })
+    }
     fields.push({
         label: "WBH_ISACTIVE",
         type: "dropdown",
@@ -71,6 +85,9 @@ export const updateFields = (properties, schemaFields, Config, currentSchema) =>
             ],
         },
     });
+    if (schemaFields?.searchAPI?.requestJson) {
+        schemaFields.searchAPI.requestJsonCustom = schemaFields?.searchAPI?.requestJson + ".custom"
+    }
     return { fields: fields, resultFields: resultFields, searchAPI: schemaFields?.searchAPI };
 };
 
@@ -114,6 +131,7 @@ export const updateConfig = (
                 i18nKey: option.label,
                 jsonPath: `data.${option.code}`,
                 dontShowNA: true,
+                additionalCustomization: option?.additionalCustomization ? true : false
             };
         }),
         {
@@ -130,12 +148,12 @@ export const updateConfig = (
         Config.apiDetails.serviceName = searchAPI.url;
     }
     if (searchAPI?.requestJson) {
-        Config.apiDetails.requestJson = searchAPI.requestJson;
+        Config.apiDetails.tableFormJsonPath = searchAPI.requestJson;
+        Config.apiDetails.filterFormJsonPath = searchAPI.requestJsonCustom;
+        Config.apiDetails.searchFormJsonPath = searchAPI.requestJsonCustom;
     }
     if (searchAPI?.responseJson) {
-        Config.apiDetails.tableFormJsonPath = searchAPI.requestJson;
-        Config.apiDetails.filterFormJsonPath = searchAPI.requestJson;
-        Config.apiDetails.searchFormJsonPath = searchAPI.requestJson;
+        Config.sections.searchResult.uiConfig.resultsJsonPath = searchAPI.responseJson;
     }
     if (searchAPI?.requestBody) {
         try {
