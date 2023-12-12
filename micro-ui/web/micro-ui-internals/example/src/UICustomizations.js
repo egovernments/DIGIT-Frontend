@@ -541,7 +541,7 @@ export const UICustomizations = {
      
       const id = searchParams.get("config")|| masterName;
       
-      if(paths[id]?.basepath == null){
+      if(!paths||!paths?.[id]){
         return data;
       }
       let requestBody = { ...data.body[paths[id]?.basePath] };
