@@ -510,6 +510,17 @@ export const UICustomizations = {
           },
           textConfig :["projectId", "userId"]
         },
+        "SearchFacilityConfig": {
+          basePath: "Facility", 
+          pathConfig: {
+            id: "id[0]"
+          },
+          dateConfig: {
+          },
+          selectConfig: {
+          },
+          textConfig :["faciltyUsage","localityCode", "storageCapacity"]
+        },
         "SearchProjectTaskConfig": {
           basePath: "Task", 
           pathConfig: {
@@ -530,11 +541,14 @@ export const UICustomizations = {
      
       const id = searchParams.get("config")|| masterName;
       
-      let requestBody = { ...data.body[paths[id].basePath] };
-      const pathConfig = paths[id].pathConfig;
-      const dateConfig = paths[id].dateConfig;
-      const selectConfig = paths[id].selectConfig;
-      const textConfig = paths[id].textConfig
+      if(paths[id]?.basepath == null){
+        return data;
+      }
+      let requestBody = { ...data.body[paths[id]?.basePath] };
+      const pathConfig = paths[id]?.pathConfig;
+      const dateConfig = paths[id]?.dateConfig;
+      const selectConfig = paths[id]?.selectConfig;
+      const textConfig = paths[id]?.textConfig
 
       if(paths[id].basePath == "Projects"){
         data.state.searchForm={...data.state.searchForm,tenantId:"mz"}
