@@ -72,7 +72,7 @@ function FileDropArea ({ingestionType}) {
   const responseToast = () => {
 
     if (response?.message != null ) {
-      const toastMessage = response?.message;
+      const toastMessage = "Your request has been forwarded and it's under progress";
       const additionalMessage = `\nIngestion Number is ${response.ingestionNumber}. You can check in the inbox.`;
       const completedMessage = toastMessage + additionalMessage;
       setShowToast({
