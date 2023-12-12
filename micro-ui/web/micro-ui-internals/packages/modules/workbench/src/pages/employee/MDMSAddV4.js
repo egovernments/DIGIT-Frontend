@@ -64,7 +64,8 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }, [isSchemaLoading]);
 const addAPI=uiConfigs?.customUiConfigs?.addAPI;
   const body = addAPI?.requestBody
-    ? { ...addAPI?.requestBody }
+    ? {         ...(JSON.parse(addAPI?.requestBody)||{}),
+  }
     : {
         Mdms: {
           tenantId: tenantId,
