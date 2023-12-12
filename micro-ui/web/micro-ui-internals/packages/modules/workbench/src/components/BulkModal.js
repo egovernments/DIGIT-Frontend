@@ -80,7 +80,6 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     const [showErrorToast, setShowErrorToast] = useState(false);
     const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
-    const [api, setAPI] = useState(false);
     const [results, setResults] = useState([]);
     const [template, setTemplate] = useState(["Error in template"]);
     const [uiConfigs, setUiConfigs] = useState({});
@@ -132,7 +131,6 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             },
         },
     };
-
     const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
 
     const fileValidator = (errMsg) => {
@@ -178,7 +176,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             const data = dataArray[i];
             const bodyCopy = _.cloneDeep(body); // Create a deep copy of the body to avoid modifying the original
 
-            _.set(bodyCopy, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
+            _.set(bodyCopy, addAPI?.requestJson ? addAPI?.requestJson : "Mdms.data", { ...data });
 
             try {
                 const response = await mutation.mutateAsync({
@@ -210,6 +208,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         );
     }
 
+
     const onCloseProgresbar = () => {
         setProgress(0);
         setResults([]);
@@ -222,7 +221,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     return (
         <div>
             {progress > 0 && progress <= 100 && (
-                <ProgressBar progress={progress} onClose={onCloseProgresbar} results={results} />
+                <ProgressBar progress={progress} onClose={onCloseProgresbar} results={results} requestJsonPath={addAPI?.requestJson ? addAPI?.requestJson : "Mdms.data"} />
             )}
             {showBulkUploadModal && (
                 <FileUploadModal

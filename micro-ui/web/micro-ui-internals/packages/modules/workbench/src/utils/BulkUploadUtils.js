@@ -9,6 +9,7 @@ export const onConfirm = (
     onSubmitBulk,
     setProgress
 ) => {
+    SchemaDefinitions["$schema"] = "http://json-schema.org/draft-07/schema#"
     const validate = ajv.compile(SchemaDefinitions);
 
     try {
@@ -82,7 +83,7 @@ export const onConfirm = (
     }
 };
 
-export const generateJsonTemplate = (schema) => {
+export const generateJsonTemplate = (schema, isArray = true) => {
     const template = {
         type: "object",
         title: schema.title,
@@ -106,11 +107,21 @@ export const generateJsonTemplate = (schema) => {
 
     const propertyTemplateObject = Object.keys(template.properties).reduce((acc, property) => {
         const isRequired = template.required.includes(property);
-        acc[property] = `${template.properties[property].type}${isRequired ? " required" : ""}`;
+        if (template.properties[property].type == "object") {
+            acc[property] = generateJsonTemplate(schema.properties[property], false);
+        }
+        else if (template.properties[property].type == "array") {
+            if (schema.properties[property].items && Array.isArray(schema.properties[property].items) && schema.properties[property].items.length > 0) {
+                acc[property] = generateJsonTemplate(schema.properties[property].items[0], true);
+            }
+        }
+        else {
+            acc[property] = `${template.properties[property].type}${isRequired ? " required" : ""}`;
+        }
         return acc;
     }, {});
 
-    return [propertyTemplateObject];
+    return isArray ? [propertyTemplateObject] : propertyTemplateObject;
 }
 
 export const downloadTemplate = (template, isJson, fileValidator, t) => {
