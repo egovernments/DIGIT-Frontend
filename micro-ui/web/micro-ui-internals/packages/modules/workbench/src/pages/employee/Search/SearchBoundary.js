@@ -10,6 +10,7 @@ import { SearchProjectBeneficiary } from "./SearchProjectBeneficiaryConfig";
 import { SearchProjectStaff } from "./SearchProjectStaffConfig";
 import { SearchProjectTask } from "./SearchProjectTaskConfig";
 import { SearchProjectConfig } from "./SearchProjectConfig";
+import { SearchFacilityConfig } from "./SearchFacility";
 
 const SearchBoundary = () => {
     const { t } = useTranslation();
@@ -19,7 +20,7 @@ const SearchBoundary = () => {
     const id = searchParams.get("config");
     const configModuleName = Digit.Utils.getConfigModuleName()
     const tenant = Digit.ULBService.getStateId();
-    const { isLoading, data:config } = Digit.Hooks.useCustomMDMS(
+    const { isLoading, data } = Digit.Hooks.useCustomMDMS(
         "mz",
         "commonHCMUiConfig",
         [
@@ -29,26 +30,26 @@ const SearchBoundary = () => {
         ],
         {
             select: (data) => {
-                return data?.commonHCMUiConfig[id]?.[0]
-                // return SearchProjectConfig?.SearchProjectConfig?.[0];
+                // return data?.commonHCMUiConfig[id]?.[0]
+                return SearchFacilityConfig?.SearchFacilityConfig?.[0];
             },
         }
     );
     
-    // let config = useMemo(
-    //     () => Digit.Utils.preProcessMDMSConfigInboxSearch(t, data, "sections.search.uiConfig.fields", {
-    //         updateDependent: [
-    //             {
-    //                 key: "fromProposalDate",
-    //                 value: [new Date().toISOString().split("T")[0]]
-    //             },
-    //             {
-    //                 key: "toProposalDate",
-    //                 value: [new Date().toISOString().split("T")[0]]
-    //             }
-    //         ]
-    //     }
-    //     ), [data]);
+    let config = useMemo(
+        () => Digit.Utils.preProcessMDMSConfigInboxSearch(t, data, "sections.search.uiConfig.fields", {
+            updateDependent: [
+                {
+                    key: "fromProposalDate",
+                    value: [new Date().toISOString().split("T")[0]]
+                },
+                {
+                    key: "toProposalDate",
+                    value: [new Date().toISOString().split("T")[0]]
+                }
+            ]
+        }
+        ), [data]);
 
 
     if (isLoading) return <Loader />
