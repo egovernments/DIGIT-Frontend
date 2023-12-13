@@ -439,12 +439,12 @@ export const UICustomizations = {
             tenantId: "tenantId",
           },
           dateConfig: {
+            endDate: "dayend",
+            startDate: "daystart"
           },
           selectConfig: {
-            wardCode: "wardCode[0].code",
-            socialCategory: "socialCategory.code",
           },
-          textConfig :["id", "tenantId"]
+          textConfig :["id", "tenantId", "name", "projectNumber", "projectSubType" , "projectType"]
         },
         "SearchProductConfig": {
           basePath: "Product", 
@@ -532,14 +532,14 @@ export const UICustomizations = {
           },
           selectConfig: {
           },
-          textConfig :["faciltyUsage","localityCode", "storageCapacity"]
+          textConfig :["faciltyUsage","localityCode", "storageCapacity","id"]
         }
       }
-     
-      const id = searchParams.get("config");
-      if(paths[id]?.basepath == null){
+      const id = searchParams.get("config")|| masterName;
+      if(!paths||!paths?.[id]){
         return data;
       }
+      
       let requestBody = { ...data.body[paths[id]?.basePath] };
       const pathConfig = paths[id]?.pathConfig;
       const dateConfig = paths[id]?.dateConfig;
