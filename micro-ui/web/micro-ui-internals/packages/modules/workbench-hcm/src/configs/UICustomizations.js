@@ -11,9 +11,14 @@ var Digit = window.Digit || {};
 export const UICustomizations = {
   IngestionConfig: {
     preProcess: (data) => {
+      console.log(data,"fgggffffggffgf");
       let ingestionSearchCriteria = data.body.IngestionSearchCriteria;
+
       data.params= {
         recordCount: data.state.tableForm.limit,
+        sortBy: data?.body?.IngestionSearchCriteria?.sortBy?.code == 'empty'? null:data?.body?.IngestionSearchCriteria?.sortBy?.code,
+        orderBy: data?.body?.IngestionSearchCriteria?.orderBy?.code == 'empty'? null:data?.body?.IngestionSearchCriteria?.orderBy?.code,
+        offset: data?.body?.IngestionSearchCriteria?.offset
       };
 
       const { ingestionType, ingestionStatus } = ingestionSearchCriteria;

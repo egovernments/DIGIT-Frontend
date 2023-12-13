@@ -12,7 +12,7 @@ const IngestionInboxConfig = () => {
             userId : Digit.UserService.getUser().info.uuid
         },
       },
-      minParametersForSearchForm: 1,
+      minParametersForSearchForm: 0,
       masterName: "commonUiConfig",
       moduleName: "IngestionConfig",
       tableFormJsonPath: "requestBody.IngestionSearchCriteria",
@@ -26,7 +26,7 @@ const IngestionInboxConfig = () => {
           formClassName: "custom-both-clear-search",
           primaryLabel: "ES_COMMON_SEARCH",
           secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-          minReqFields: 1,
+          minReqFields: 0,
           defaultValues: {
             ProjectId: "",
             measurementNumber: "",
@@ -67,6 +67,8 @@ const IngestionInboxConfig = () => {
                         code : "WORKBENCH_USERS_INGESTION",
                         name : "WORKBENCH_USERS_INGESTION"
                     },
+
+
                 ]
               },
             },
@@ -124,6 +126,16 @@ const IngestionInboxConfig = () => {
               text: "WORKBENCH_FACILITY_INGESTION",
               url: "/employee/hcmworkbench/facility",
               roles: ["SYSTEM_ADMINISTRATOR"],
+            },
+            {
+              text: "WORKBENCH_BOUNDARY_INGESTION",
+              url: "/employee/hcmworkbench/boundary",
+              roles: ["SYSTEM_ADMINISTRATOR"],
+            },
+            {
+              text: "WORKBENCH_PROJECT_INGESTION",
+              url: "/employee/hcmworkbench/project",
+              roles: ["SYSTEM_ADMINISTRATOR"],
             }
           ],
         },
@@ -141,27 +153,58 @@ const IngestionInboxConfig = () => {
             state: "",
             ward: [],
             locality: [],
-            assignee: {
-              code: "ASSIGNED_TO_ALL",
-              name: "ASSIGNED_TO_ALL",
+            orderBy: {
+              code: "empty",
+              name: "Order By",
+            },
+            sortBy: {
+              code: "empty",
+              name: "Sort By",
             },
           },
           fields: [
             {
               label: "",
-              type: "radio",
+              type: "dropdown",
               isMandatory: false,
               disable: false,
               populators: {
-                name: "assignee",
+                name: "sortBy",
                 options: [
                   {
-                    code: "ASSIGNED TO ME",
-                    name: "MB_ASSIGNED_TO_ME",
+                    code: "createdTime",
+                    name: "Created Time",
                   },
                   {
-                    code: "ASSIGNED_TO_ALL",
-                    name: "MB_ASSIGNED_TO_ALL",
+                    code: "lastModifiedTime",
+                    name: "Updated Time",
+                  },
+                ],
+                optionsKey: "name",
+                styles: {
+                  gap: "1rem",
+                  flexDirection: "column",
+                },
+                innerStyles: {
+                  display: "flex",
+                },
+              },
+            },
+            {
+              label: "",
+              type: "dropdown",
+              isMandatory: false,
+              disable: false,
+              populators: {
+                name: "orderBy",
+                options: [
+                  {
+                    code: "ASC",
+                    name: "ASC",
+                  },
+                  {
+                    code: "DESC",
+                    name: "DESC",
                   },
                 ],
                 optionsKey: "name",
