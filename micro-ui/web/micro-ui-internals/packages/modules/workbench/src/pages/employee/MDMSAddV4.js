@@ -19,18 +19,19 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [spinner, toggleSpinner] = useState(false);
   // const stateId = Digit.ULBService.getStateId();
-  const FormSession = Digit.Hooks.useSessionStorage(`MDMS_${screenType}`, {});
-  const [sessionFormData, setSessionFormData, clearSessionFormData] = FormSession;
-  const [session, setSession] = useState(sessionFormData);
-  const [formSchema, setFormSchema] = useState({});
+
   const [uiSchema, setUiSchema] = useState({});
   const [uiConfigs, setUiConfigs] = useState({});
-
   const [noSchema, setNoSchema] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [disableForm, setDisableForm] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
+  const [formSchema, setFormSchema] = useState({});
+  const FormSession = Digit.Hooks.useSessionStorage(`MDMS_${screenType}_${moduleName}_${masterName}`, {});
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = FormSession;
+  const [session, setSession] = useState(sessionFormData);
+
   const updateFormSchema = (schema) => {
     setFormSchema({ ...schema });
     /* added disable to get the complete form re rendered to get the enum values reflected */
@@ -62,19 +63,20 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       setUiConfigs({ customUiConfigs: schemaData?.customUiConfigs });
     }
   }, [isSchemaLoading]);
-const addAPI=uiConfigs?.customUiConfigs?.addAPI;
+  const addAPI = uiConfigs?.customUiConfigs?.addAPI;
   const body = addAPI?.requestBody
-    ? {         ...(JSON.parse(addAPI?.requestBody)||{}),
-  }
+    ? {
+      ...(JSON.parse(addAPI?.requestBody) || {}),
+    }
     : {
-        Mdms: {
-          tenantId: tenantId,
-          schemaCode: `${moduleName}.${masterName}`,
-          uniqueIdentifier: null,
-          data: {},
-          isActive: true,
-        },
-      };
+      Mdms: {
+        tenantId: tenantId,
+        schemaCode: `${moduleName}.${masterName}`,
+        uniqueIdentifier: null,
+        data: {},
+        isActive: true,
+      },
+    };
 
   const reqCriteriaAdd = {
     url: addAPI ? addAPI?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
@@ -166,7 +168,7 @@ const addAPI=uiConfigs?.customUiConfigs?.addAPI;
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs,updateSchema:updateFormSchema ,schema:formSchema,formData:session}}>
+      <WorkbenchProvider.Provider value={{ configs: uiConfigs, updateConfigs: setUiConfigs, updateSchema: updateFormSchema, schema: formSchema, formData: session }}>
         {spinner && <DigitLoader />}
         {formSchema && (
           <DigitJSONForm
