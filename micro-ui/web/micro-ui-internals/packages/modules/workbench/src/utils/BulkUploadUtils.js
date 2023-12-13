@@ -138,7 +138,7 @@ export const downloadTemplate = (template, isJson, fileValidator, t) => {
                 // if any property of template is not string then fileValidator(t('WBH_ERROR_TEMPLATE')) and return
                 for (const property in template[0]) {
                     if (typeof template[0][property] != "string") {
-                        fileValidator(t('Schema cannnot be uploaded via Sheet'));
+                        fileValidator(t('WBH_SCHEMA_NOT_SUITABLE'));
                         return;
                     }
                 }

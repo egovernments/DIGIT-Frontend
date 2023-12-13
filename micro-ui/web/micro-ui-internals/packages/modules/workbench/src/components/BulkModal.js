@@ -109,7 +109,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         else if (pureSchemaDefinition && typeof template[0] === "object" && uploadFileTypeXlsx) {
             for (const property in template[0]) {
                 if (typeof template[0][property] != "string") {
-                    fileValidator(t('Schema cannnot be uploaded via Sheet'));
+                    fileValidator(t('WBH_SCHEMA_NOT_SUITABLE'));
                     return;
                 }
             }
