@@ -28,7 +28,7 @@ export const onConfirm = (
                     const valid = validate(data);
                     if (!valid) {
                         validationError = true;
-                        fileValidator(validate.errors[0]?.message + " on index " + index);
+                        fileValidator((validate?.errors[0]?.instancePath ? "InctancePath : " + validate.errors[0].instancePath + " " : "") + validate.errors[0]?.message + " on index " + index);
                         setProgress(0);
                         return;
                     }
@@ -84,43 +84,41 @@ export const onConfirm = (
 };
 
 export const generateJsonTemplate = (schema, isArray = true) => {
-    const template = {
-        type: "object",
-        title: schema.title,
-        $schema: schema.$schema,
-        required: schema.required || [],
-        "x-unique": schema["x-unique"] || [],
-        properties: {},
-        "x-ref-schema": schema["x-ref-schema"] || [],
-    };
-
-    for (const propertyKey in schema.properties) {
-        const property = schema.properties[propertyKey];
-        template.properties[propertyKey] = {
-            type: property.type,
-        };
-
-        if (property.enum) {
-            template.properties[propertyKey].enum = property.enum;
-        }
-    }
-
-    const propertyTemplateObject = Object.keys(template.properties).reduce((acc, property) => {
-        const isRequired = template.required.includes(property);
-        if (template.properties[property].type == "object") {
-            acc[property] = generateJsonTemplate(schema.properties[property], false);
-        }
-        else if (template.properties[property].type == "array") {
-            if (schema.properties[property].items && Array.isArray(schema.properties[property].items) && schema.properties[property].items.length > 0) {
-                acc[property] = generateJsonTemplate(schema.properties[property].items[0], true);
+    var propertyTemplateObject = {}
+    if (schema.properties) {
+        propertyTemplateObject = Object.keys(schema.properties).reduce((acc, property) => {
+            var isRequired = false;
+            if (schema?.required) {
+                isRequired = schema.required.includes(property);
             }
-        }
-        else {
-            acc[property] = `${template.properties[property].type}${isRequired ? " required" : ""}`;
-        }
-        return acc;
-    }, {});
+            if (schema.properties[property].type == "object") {
+                acc[property] = generateJsonTemplate(schema.properties[property], false);
+            }
+            else if (schema.properties[property].type == "array") {
+                if (schema.properties[property].items) {
+                    if (Array.isArray(schema.properties[property].items) && schema.properties[property].items.length > 0 && schema.properties[property]?.items[0]) {
+                        acc[property] = generateJsonTemplate(schema.properties[property].items[0], true);
+                    }
+                    else {
+                        acc[property] = generateJsonTemplate(schema.properties[property].items, true);
+                    }
+                }
+            }
+            else {
+                if (schema.properties[property].type) {
+                    acc[property] = `${schema.properties[property].type}${isRequired ? " required" : ""}`;
+                }
+                else {
+                    acc[property] = `${schema.type}${isRequired ? " required" : ""}`;
+                }
 
+            }
+            return acc;
+        }, {});
+    }
+    else {
+        propertyTemplateObject = `${schema.type}`
+    }
     return isArray ? [propertyTemplateObject] : propertyTemplateObject;
 }
 
@@ -137,6 +135,13 @@ export const downloadTemplate = (template, isJson, fileValidator, t) => {
                 URL.revokeObjectURL(url);
             }
             else {
+                // if any property of template is not string then fileValidator(t('WBH_ERROR_TEMPLATE')) and return
+                for (const property in template[0]) {
+                    if (typeof template[0][property] != "string") {
+                        fileValidator(t('Schema cannnot be uploaded via Sheet'));
+                        return;
+                    }
+                }
                 const ws = XLSX.utils.json_to_sheet(template);
                 ws['!cols'] = Array(XLSX.utils.decode_range(ws['!ref']).e.c + 1).fill({ width: 15 });
                 const wb = XLSX.utils.book_new();

@@ -59,7 +59,7 @@ const ProgressBar = ({ progress, onClose, results }) => {
                                         {result.error}
                                         {selectedErrorIndex === index && (
                                             <div className="results-details">
-                                                {JSON.stringify(result?.data?.Mdms?.data, null, 2)}
+                                                {JSON.stringify(result.data, null, 2)}
                                             </div>
                                         )}
                                     </div>
@@ -106,6 +106,14 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         if (pureSchemaDefinition && typeof template[0] === "string") {
             setTemplate(generateJsonTemplate(pureSchemaDefinition));
         }
+        else if (pureSchemaDefinition && typeof template[0] === "object" && uploadFileTypeXlsx) {
+            for (const property in template[0]) {
+                if (typeof template[0][property] != "string") {
+                    fileValidator(t('Schema cannnot be uploaded via Sheet'));
+                    return;
+                }
+            }
+        }
     }, [pureSchemaDefinition, template]);
 
     const addAPI = uiConfigs?.customUiConfigs?.addAPI;
@@ -146,15 +154,8 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     const onSubmitBulk = async (dataArray, setProgress) => {
         setProgress(0);
         const updatedResults = [...results];
-        const onSuccess = (index, resp) => {
-            // Handle success for the specific index
-            var id = "Unknown Id";
-            if (resp?.mdms[0]?.id) {
-                id = resp?.mdms[0]?.id
-            }
-            updatedResults.push({ index, success: true, response: id, error: null, data: resp?.mdms[0]?.data });
+        const onSuccess = (index) => {
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
-            setResults(updatedResults);
             setProgress(currentProgress);
         };
 
@@ -164,7 +165,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             if (resp?.response?.data?.Errors && resp?.response?.data?.Errors.length > 0) {
                 err = resp?.response?.data?.Errors[0]?.code
             }
-            updatedResults.push({ index, success: false, error: err, response: null, data: JSON.parse(resp?.response?.config?.data) });
+            updatedResults.push({ index, success: false, error: err, response: null, data: dataArray[index] });
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
             setResults(updatedResults);
             setProgress(currentProgress);
@@ -221,7 +222,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     return (
         <div>
             {progress > 0 && progress <= 100 && (
-                <ProgressBar progress={progress} onClose={onCloseProgresbar} results={results} requestJsonPath={addAPI?.requestJson ? addAPI?.requestJson : "Mdms.data"} />
+                <ProgressBar progress={progress} onClose={onCloseProgresbar} results={results} />
             )}
             {showBulkUploadModal && (
                 <FileUploadModal
