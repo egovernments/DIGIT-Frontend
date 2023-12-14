@@ -533,6 +533,17 @@ export const UICustomizations = {
           selectConfig: {
           },
           textConfig :["faciltyUsage","localityCode", "storageCapacity","id"]
+        },
+        "SearchProjectResourceConfig": {
+          basePath: "ProjectResource", 
+          pathConfig: {
+            id: "id[0]"
+          },
+          dateConfig: {
+          },
+          selectConfig: {
+          },
+          textConfig : []
         }
       }
       const id = searchParams.get("config")|| masterName;
