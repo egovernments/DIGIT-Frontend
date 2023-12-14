@@ -1,16 +1,18 @@
 import React, { useState, useRef } from "react";
 import { FormComposerV2, TextInput, Button, Card, CardLabel } from "@egovernments/digit-ui-react-components";
-import { addBoundaryHierarchyConfig } from "./boundaryHierarchyConfig";
+import { addBoundaryHierarchyConfig } from "../../configs/boundaryHierarchyConfig";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import { SubmitBar } from "@egovernments/digit-ui-react-components";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { Toast } from "@egovernments/digit-ui-react-components";
 
 const BoundaryHierarchyTypeAdd = () => {
   const { t } = useTranslation();
   const stateId = Digit.ULBService.getStateId();
+  const [showToast, setShowToast] = useState(null);
 
   const [config, setConfig] = useState([...addBoundaryHierarchyConfig]);
   const levelCounter = useRef(2);
@@ -65,38 +67,71 @@ const BoundaryHierarchyTypeAdd = () => {
     return dynamicParentType;
   };
 
+  const resetFormState = () => {
+    setConfig([...addBoundaryHierarchyConfig]);
+    levelCounter.current = 2;
+  };
+
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(null);
+    }, 5000);
+  };
+
   const handleFormSubmit = async (formData) => {
-    // Handle form submission logic here
+    // Handle form submission
 
     try {
       const parentTypeMapping = generateDynamicParentType(formData);
 
-      await mutation.mutate({
-        params: {},
-        body: {
-          BoundaryHierarchy: {
-            tenantId: stateId,
-            hierarchyType: formData.hierarchyType,
-            boundaryHierarchy: Object.keys(formData)
-              .filter((key) => key.startsWith("Level"))
-              .map((key, index) => {
-                const parentBoundaryType = key === "Level 1" ? null : parentTypeMapping[key] || null;
+      await mutation.mutate(
+        {
+          params: {},
+          body: {
+            BoundaryHierarchy: {
+              tenantId: stateId,
+              hierarchyType: formData.hierarchyType,
+              boundaryHierarchy: Object.keys(formData)
+                .filter((key) => key.startsWith("Level"))
+                .map((key, index) => {
+                  const parentBoundaryType = key === "Level 1" ? null : parentTypeMapping[key] || null;
 
-                return {
-                  boundaryType: formData[key],
-                  parentBoundaryType: parentBoundaryType,
-                  active: true,
-                };
-              }),
+                  return {
+                    boundaryType: formData[key],
+                    parentBoundaryType: parentBoundaryType,
+                    active: true,
+                  };
+                }),
+            },
           },
         },
-      });
+        {
+          onError: (resp) => {
+            let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+            resp?.response?.data?.Errors?.map((err, idx) => {
+              if (idx === resp?.response?.data?.Errors?.length - 1) {
+                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
+              } else {
+                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+              }
+            });
+            setShowToast({ label, isError: true });
+            closeToast();
+          },
+          onSuccess: () => {
+            setShowToast({ label: `${t("WBH_BOUNDARY_UPSERT_SUCCESS")}` });
+            closeToast();
+          },
+        }
+      );
+      resetFormState();
+
+      setConfig([...addBoundaryHierarchyConfig]);
+      levelCounter.current = 2;
     } catch {}
   };
 
-  const shouldShowHeader = config[1].body && config[1].body[0]?.label === "Level 1";
-
-  console.log(shouldShowHeader);
+  // const shouldShowHeader = config[0].body && config[0].body.length > 0 && config[0].body[0]?.label === "Level 1";
 
   return (
     <React.Fragment>
@@ -109,16 +144,17 @@ const BoundaryHierarchyTypeAdd = () => {
           fieldStyle={{ marginRight: 0 }}
           showMultipleCardsWithoutNavs={true}
           config={config}
-          formLength={config[1].body?.length}
+          formLength={config[1].body?.length - 1}
           noBreakLine={true}
           label="CORE_COMMON_SAVE"
           enableDelete={true}
           handleDeleteField={handleDeleteField}
         >
-          {shouldShowHeader ? <Header> {t("WBH_CREATE_BOUNDARY_HIERARCHY_TYPES")} </Header> : null}
+          {/* {shouldShowHeader ? null : <Header> {t("WBH_CREATE_BOUNDARY_HIERARCHY_TYPES")} </Header>} */}
         </FormComposerV2>
 
         <Button onButtonClick={handleAddField} label={"WBH_ADD_NEW_LEVEL"} variation="secondary" type="button" />
+        {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       </Card>
     </React.Fragment>
   );

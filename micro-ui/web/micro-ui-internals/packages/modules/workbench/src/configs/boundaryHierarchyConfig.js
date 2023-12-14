@@ -17,7 +17,6 @@ export const addBoundaryHierarchyConfig = [
       {
         label: "Level 1",
         type: "text",
-        labelChildren: "Popopopopopo",
         isMandatory: false,
         disable: false,
         populators: {

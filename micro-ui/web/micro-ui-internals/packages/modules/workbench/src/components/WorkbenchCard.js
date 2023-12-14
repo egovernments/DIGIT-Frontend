@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
+  LOCALISATION: ["EMPLOYEE", "SUPERUSER", "EMPLOYEE_COMMON", "LOC_ADMIN"],
   MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
 };
@@ -32,6 +32,12 @@ const WorkbenchCard = () => {
     {
       label: t("ACTION_TEST_UPLOAD_BOUNDARY"),
       link: `/${window?.contextPath}/employee/workbench/upload-boundary`,
+      roles: ROLES.LOCALISATION,
+    },
+
+    {
+      label: t("ACTION_TEST_SEARCH_BOUNDARY"),
+      link: `/${window?.contextPath}/employee/workbench/boundary-relationship-search`,
       roles: ROLES.LOCALISATION,
     },
     // {

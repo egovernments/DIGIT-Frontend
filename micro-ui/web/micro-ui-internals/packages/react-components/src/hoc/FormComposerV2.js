@@ -680,7 +680,7 @@ export const FormComposer = (props) => {
       <React.Fragment key={index}>
         {section && getCombinedComponent(section)}
         {section.body.map((field, index) => {
-          console.log("formcomposeetrerte", index);
+          console.log("formcomposeetrerte", index, props.formLength);
           if (field?.populators?.hideInForm) return null;
           if (props.inline)
             return (
@@ -748,7 +748,7 @@ export const FormComposer = (props) => {
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
                   {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)}
                   {field?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(field?.description)}</CardText>}
-                  {index === props.formLength - 3 && props.enableDelete && (
+                  {index !== 0 && index === props.formLength && props.enableDelete && (
                     <Button onButtonClick={() => props.handleDeleteField(index)} label={"Delete"} variation="danger" type="button" />
                   )}
                 </div>

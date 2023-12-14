@@ -137,10 +137,8 @@ const UploadBoundary = () => {
               const dynamicParentType = Digit.Utils.workbench.generateDynamicParentType(results);
               const transformedData = Digit.Utils.workbench.transformBoundary(results, dynamicParentType);
 
-              // Show loading toast while API calls are in progress
               setShowToast({ label: "Loading..." });
 
-              // Use Promise.all to wait for all API calls to complete
               await Promise.all(
                 Object.keys(transformedData).map(async (key) => {
                   for (const entry of transformedData[key]) {
@@ -170,16 +168,14 @@ const UploadBoundary = () => {
                 })
               );
 
-              // All API calls are done, show final success toast
-              setShowToast({ label: `${t("WBH_LOC_UPSERT_SUCCESS")}` });
+              setShowToast({ label: `${t("WBH_BOUNDARY_CREATION_SUCCESS")}` });
               closeToast();
             }
           },
         }
       );
     } catch (error) {
-      console.log("error", error);
-      let label = `${t("WBH_LOC_UPSERT_FAIL")}: `;
+      let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
 
       setShowToast({ label, isError: true });
     }

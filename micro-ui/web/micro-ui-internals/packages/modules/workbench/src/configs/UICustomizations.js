@@ -1,6 +1,6 @@
 import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
-import React from 'react';
+import React from "react";
 import { Button } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -252,8 +252,9 @@ export const UICustomizations = {
         return (
           <span className="link">
             <Link
-              to={`/${window.contextPath
-                }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
+              to={`/${
+                window.contextPath
+              }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
             >
               {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
             </Link>
@@ -433,28 +434,27 @@ export const UICustomizations = {
     },
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId
-      const filters = {}
-      const custom = data.body.MdmsCriteria.custom
-      const { field, value, isActive } = custom || {}
-      filters[field?.code] = value
+      data.body.MdmsCriteria.tenantId = tenantId;
+      const filters = {};
+      const custom = data.body.MdmsCriteria.custom;
+      const { field, value, isActive } = custom || {};
+      filters[field?.code] = value;
       if (isActive) {
-        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
-        else data.body.MdmsCriteria.isActive = isActive?.value
+        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive;
+        else data.body.MdmsCriteria.isActive = isActive?.value;
       } else {
-        delete data.body.MdmsCriteria.isActive
+        delete data.body.MdmsCriteria.isActive;
       }
-      data.body.MdmsCriteria.filters = filters
-      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
-      delete data.body.MdmsCriteria.custom
+      data.body.MdmsCriteria.filters = filters;
+      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode;
+      delete data.body.MdmsCriteria.custom;
       // const {field,value} = data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom || {}
 
       // const tenantId = Digit.ULBService.getCurrentTenantId()
       // data.body.MdmsCriteria.tenantId = tenantId
 
-      // //generate filter 
+      // //generate filter
       // const filter = `[?(@.${field?.code}=='${value}')]`
-
 
       // data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].filter = filter
       // delete data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom
@@ -506,10 +506,12 @@ export const UICustomizations = {
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
         case "WBH_UNIQUE_IDENTIFIER":
-          const [moduleName, masterName] = row.schemaCode.split(".")
+          const [moduleName, masterName] = row.schemaCode.split(".");
           return (
             <span className="link">
-              <Link to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}>
+              <Link
+                to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}
+              >
                 {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
               </Link>
             </span>
@@ -535,7 +537,7 @@ export const UICustomizations = {
             t("ES_COMMON_NA")
           );
         case "WBH_ISACTIVE":
-          return value ? <span style={{ color: "green" }}>{t("WBH_COMMON_YES")}</span> : <span style={{ color: "red" }}>{t("WBH_COMMON_NO")}</span>
+          return value ? <span style={{ color: "green" }}>{t("WBH_COMMON_YES")}</span> : <span style={{ color: "red" }}>{t("WBH_COMMON_NO")}</span>;
         default:
           return t("ES_COMMON_NA");
       }
@@ -552,7 +554,7 @@ export const UICustomizations = {
       if (type === "date") {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
       }
-    }
+    },
   },
   SearchMDMSConfigPopup: {
     customValidationCheck: (data) => {
@@ -569,29 +571,28 @@ export const UICustomizations = {
     },
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId
-      const filters = {}
-      const custom = data.body.MdmsCriteria.custom
-      const { field, value, isActive } = custom || {}
-      filters[field?.code] = value
+      data.body.MdmsCriteria.tenantId = tenantId;
+      const filters = {};
+      const custom = data.body.MdmsCriteria.custom;
+      const { field, value, isActive } = custom || {};
+      filters[field?.code] = value;
       if (isActive) {
-        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive
-        else data.body.MdmsCriteria.isActive = isActive?.value
+        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive;
+        else data.body.MdmsCriteria.isActive = isActive?.value;
       } else {
-        delete data.body.MdmsCriteria.isActive
+        delete data.body.MdmsCriteria.isActive;
       }
-      data.body.MdmsCriteria.filters = filters
+      data.body.MdmsCriteria.filters = filters;
       data.body.MdmsCriteria.isActive = true;
-      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode
-      delete data.body.MdmsCriteria.custom
+      data.body.MdmsCriteria.schemaCode = additionalDetails?.currentSchemaCode;
+      delete data.body.MdmsCriteria.custom;
       // const {field,value} = data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom || {}
 
       // const tenantId = Digit.ULBService.getCurrentTenantId()
       // data.body.MdmsCriteria.tenantId = tenantId
 
-      // //generate filter 
+      // //generate filter
       // const filter = `[?(@.${field?.code}=='${value}')]`
-
 
       // data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].filter = filter
       // delete data.body.MdmsCriteria.moduleDetails[0].masterDetails[0].custom
@@ -653,10 +654,12 @@ export const UICustomizations = {
             />
           );
         case "WBH_UNIQUE_IDENTIFIER":
-          const [moduleName, masterName] = row.schemaCode.split(".")
+          const [moduleName, masterName] = row.schemaCode.split(".");
           return (
             <span className="link">
-              <Link to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}>
+              <Link
+                to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}
+              >
                 {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
               </Link>
             </span>
@@ -681,7 +684,7 @@ export const UICustomizations = {
             t("ES_COMMON_NA")
           );
         case "WBH_ISACTIVE":
-          return value ? <span style={{ color: "green" }}>{t("WBH_COMMON_YES")}</span> : <span style={{ color: "red" }}>{t("WBH_COMMON_NO")}</span>
+          return value ? <span style={{ color: "green" }}>{t("WBH_COMMON_YES")}</span> : <span style={{ color: "red" }}>{t("WBH_COMMON_NO")}</span>;
         default:
           return t("ES_COMMON_NA");
       }
@@ -698,38 +701,36 @@ export const UICustomizations = {
       if (type === "date") {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
       }
-    }
+    },
   },
   SearchLocalisationConfig: {
     customValidationCheck: (data) => {
-      //checking locale must be present 
+      //checking locale must be present
       const { locale } = data;
-      if (locale === "")
-        return { warning: true, label: "WBH_LOC_WARNING_LOCALE_MUST_BE_PRESENT" };
+      if (locale === "") return { warning: true, label: "WBH_LOC_WARNING_LOCALE_MUST_BE_PRESENT" };
 
       return false;
     },
     preProcess: (data, additionalDetails) => {
-
-      delete data.body.custom
+      delete data.body.custom;
       const tenant = Digit.ULBService.getStateId();
 
-      const { locale = undefined, module: modulee = undefined, codes = undefined, message = undefined } = data.params
+      const { locale = undefined, module: modulee = undefined, codes = undefined, message = undefined } = data.params;
 
-      delete data.params.locale
-      delete data.params.module
-      delete data.params.codes
-      delete data.params.message
+      delete data.params.locale;
+      delete data.params.module;
+      delete data.params.codes;
+      delete data.params.message;
 
-      data.params.tenantId = tenant
+      data.params.tenantId = tenant;
       if (locale) {
-        data.params.locale = locale.value
+        data.params.locale = locale.value;
       }
       if (modulee) {
-        data.params.module = modulee.value
+        data.params.module = modulee.value;
       }
       if (codes) {
-        data.params.codes = codes
+        data.params.codes = codes;
       }
 
       return data;
@@ -740,10 +741,12 @@ export const UICustomizations = {
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
         case "Unique Identifier":
-          const [moduleName, masterName] = row.schemaCode.split(".")
+          const [moduleName, masterName] = row.schemaCode.split(".");
           return (
             <span className="link">
-              <Link to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}>
+              <Link
+                to={`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`}
+              >
                 {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
               </Link>
             </span>
@@ -798,16 +801,30 @@ export const UICustomizations = {
       // return data
       //TODO: Revisit this logic
       defaultData?.messages?.forEach((message, idx) => {
-        message.defaultMessage = ""
+        message.defaultMessage = "";
         data?.messages?.forEach((defaultMessage, defaultIdx) => {
           if (message.code === defaultMessage.code) {
-            message.defaultMessage = defaultMessage.message
-            message.originalLocale = defaultMessage.locale
+            message.defaultMessage = defaultMessage.message;
+            message.originalLocale = defaultMessage.locale;
           }
-        })
-      })
-      return defaultData
+        });
+      });
+      return defaultData;
+    },
+  },
+  SearchBoundaryHierarchyConfig: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    }
-  }
+      data.params = { ...data.params, tenantId };
+      // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+
+      console.log(data, additionalDetails);
+      return data;
+    },
+  },
+  postProcess: (responseArray, uiConfig) => {
+    console.log("responseArray", responseArray);
+  },
+  additionalCustomizations: (row, key, column, value, t, searchResult) => {},
 };
