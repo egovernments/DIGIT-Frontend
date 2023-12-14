@@ -6,7 +6,7 @@ import { Button } from "@egovernments/digit-ui-react-components";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
-var Digit = window.Digit || {};
+// var Digit = window.Digit || {};
 
 const businessServiceMap = {
   "muster roll": "MR",
