@@ -439,15 +439,16 @@ export const UICustomizations = {
         "SearchProjectConfig": {
           basePath: "Projects", 
           pathConfig: {
+            // id: "id[0]",
             tenantId: "tenantId",
           },
           dateConfig: {
+            endDate: "dayend",
+            startDate: "daystart"
           },
           selectConfig: {
-            wardCode: "wardCode[0].code",
-            socialCategory: "socialCategory.code",
           },
-          textConfig :["id", "tenantId"]
+          textConfig :["id", "tenantId", "name", "projectNumber", "projectSubType" , "projectType"]
         },
         "SearchProductConfig": {
           basePath: "Product", 
@@ -525,16 +526,30 @@ export const UICustomizations = {
           selectConfig: {
           },
           textConfig :["projectId","localityCode", "projectBeneficiaryId", "status"]
+        },
+        "SearchFacilityConfig": {
+          basePath: "Facility", 
+          pathConfig: {
+            id: "id[0]"
+          },
+          dateConfig: {
+          },
+          selectConfig: {
+          },
+          textConfig :["faciltyUsage","localityCode", "storageCapacity","id"]
         }
       }
      
       const id = searchParams.get("config")|| masterName;
       
-      let requestBody = { ...data.body[paths[id].basePath] };
-      const pathConfig = paths[id].pathConfig;
-      const dateConfig = paths[id].dateConfig;
-      const selectConfig = paths[id].selectConfig;
-      const textConfig = paths[id].textConfig
+      if(!paths||!paths?.[id]){
+        return data;
+      }
+      let requestBody = { ...data.body[paths[id]?.basePath] };
+      const pathConfig = paths[id]?.pathConfig;
+      const dateConfig = paths[id]?.dateConfig;
+      const selectConfig = paths[id]?.selectConfig;
+      const textConfig = paths[id]?.textConfig
 
       if(paths[id].basePath == "Projects"){
         data.state.searchForm={...data.state.searchForm,tenantId:"mz"}
