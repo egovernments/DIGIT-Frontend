@@ -521,7 +521,7 @@ export const UICustomizations = {
           selectConfig: {
           },
           textConfig : []
-        }
+        },
         "SearchProjectTaskConfig": {
           basePath: "Task", 
           pathConfig: {
