@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ActionBar, Header, Loader, SubmitBar, Toast} from "@egovernments/digit-ui-react-components";
+import { ActionBar, Button, Header, Loader, SubmitBar, Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import GenerateXlsx from '../GenerateXlsx';
+import { facilityJsonData } from '../../constants/facilityJsonData';
+import { oujsonData } from '../../constants/ouJsonData';
+import { userJsonData } from '../../constants/userJsonData';
 
 
 function FileDropArea ({ingestionType}) {
@@ -14,6 +18,9 @@ function FileDropArea ({ingestionType}) {
 
 
   const fileInputRef = useRef(null);
+  const callInputClick = async (event) => {
+    fileInputRef.current.click();
+  };
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -30,6 +37,9 @@ function FileDropArea ({ingestionType}) {
     }, 5000);
   };
 
+  function formatString(inputString) {
+    return inputString.charAt(0).toUpperCase() + inputString.slice(1).toLowerCase();
+  }
   const handleFileInput = (e) => {
     e.preventDefault();
   setIsDragActive(false);
@@ -146,9 +156,26 @@ function FileDropArea ({ingestionType}) {
   }
   }
 
+  function returnApplicableJson(ingestionType) {
+    switch (ingestionType) {
+      case "facility":
+        return facilityJsonData;
+      case "OU":
+        return oujsonData;
+      case "user":
+        return userJsonData;
+      case "boundary":
+        return oujsonData;
+      case "project":
+        return oujsonData;
+      default:
+        return null;
+    }
+  }
+
   return (
     <div>
-      <Header>{ingestionType} {t("WORKBENCH_INGESTION")}</Header>
+      <Header>{formatString(ingestionType)} {t("WORKBENCH_INGESTION")}</Header>
       <div className={`drop-area ${isDragActive ? 'active' : ''}`} onDragEnter={handleDragEnter} onDragOver={(e) => e.preventDefault()} onDragLeave={handleDragLeave} onDrop={handleFileInput}>
         {droppedFile ? (
           <div>
@@ -171,7 +198,14 @@ function FileDropArea ({ingestionType}) {
       {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)} />}
         {/* {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>} */}
       </div>
-      <ActionBar>
+      <ActionBar className="action-bar">
+        <Button 
+        className="action-bar-button"
+        label={"Download template"}
+        variation="secondary"
+        onButtonClick={callInputClick}>
+        </Button>
+        {<GenerateXlsx inputRef={fileInputRef} jsonData={returnApplicableJson(ingestionType)}/>}
       <SubmitBar label={t("WORKBENCH_SUBMIT")} 
       onSubmit={onsubmit}
       />
