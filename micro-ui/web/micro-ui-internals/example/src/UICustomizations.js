@@ -511,6 +511,17 @@ export const UICustomizations = {
           },
           textConfig :["projectId", "userId"]
         },
+        "SearchProjectResourceConfig": {
+          basePath: "ProjectResource", 
+          pathConfig: {
+            id: "id[0]"
+          },
+          dateConfig: {
+          },
+          selectConfig: {
+          },
+          textConfig : []
+        },
         "SearchProjectTaskConfig": {
           basePath: "Task", 
           pathConfig: {
