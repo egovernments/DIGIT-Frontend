@@ -31,6 +31,11 @@ const IngestionInboxConfig = () => {
             ProjectId: "",
             measurementNumber: "",
             projectType: "",
+            ingestionType: "",
+            ingestionId: "",
+            ingestionStatus: "",
+
+
           },
           fields: [
             {
@@ -50,23 +55,31 @@ const IngestionInboxConfig = () => {
               disable: false,
               populators: {
                 name: "ingestionType",
-                optionsKey: "code",
+                optionsKey: "name",
                 optionsCustomStyle: {
                   top: "2.3rem",
                 },
                 options: [
                     {
-                      code: "WORKBENCH_OU_INGESTION",
+                      code: "Organisation Units Ingestion",
                       name: "WORKBENCH_OU_INGESTION"
                     },
                     {
-                        code : "WORKBENCH_FACILITY_INGESTION",
+                        code : "Facilities Ingestion",
                         name : "WORKBENCH_FACILITY_INGESTION"
                     },
                     {
-                        code : "WORKBENCH_USERS_INGESTION",
+                        code : "Users Ingestion",
                         name : "WORKBENCH_USERS_INGESTION"
                     },
+                    {
+                      code : "Project Ingestion",
+                      name : "WORKBENCH_PROJECT_INGESTION"
+                  },
+                  {
+                      code : "Boundary Ingestion",
+                      name : "WORKBENCH_BOUNDARY_INGESTION"
+                  },
 
 
                 ]
@@ -85,21 +98,22 @@ const IngestionInboxConfig = () => {
                 },
                 options: [
                     {
-                      code: "WORKBENCH_STARTED",
+                      code: "Started",
                       name: "WORKBENCH_STARTED",
                     },
                     {
-                        code : "WORKBENCH_FAILED",
+                        code : "Failed",
                         name : "WORKBENCH_FAILED"
                     },
                     {
-                        code : "WORKBENCH_COMPLETED",
+                        code : "Completed",
                         name : "WORKBENCH_COMPLETED"
                     },
                     {
-                        code : "WORKBENCH_PARTIAL_COMPLETED",
+                        code : "Partial Completed",
                         name : "WORKBENCH_PARTIAL_COMPLETED"
                     }
+                    
                 ]
               },
             },
@@ -113,27 +127,27 @@ const IngestionInboxConfig = () => {
         uiConfig: {
           links: [
             {
-              text: "WORKBENCH_OU_INGESTION",
+              text: "WORKBENCH_OU",
               url: "/employee/hcmworkbench/ou",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "WORKBENCH_USERS_INGESTION",
+              text: "WORKBENCH_USER",
               url: "/employee/hcmworkbench/user",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "WORKBENCH_FACILITY_INGESTION",
+              text: "WORKBENCH_FACILITY",
               url: "/employee/hcmworkbench/facility",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "WORKBENCH_BOUNDARY_INGESTION",
+              text: "WORKBENCH_BOUNDARY",
               url: "/employee/hcmworkbench/boundary",
               roles: ["SYSTEM_ADMINISTRATOR"],
             },
             {
-              text: "WORKBENCH_PROJECT_INGESTION",
+              text: "WORKBENCH_PROJECT",
               url: "/employee/hcmworkbench/project",
               roles: ["SYSTEM_ADMINISTRATOR"],
             }
@@ -153,58 +167,27 @@ const IngestionInboxConfig = () => {
             state: "",
             ward: [],
             locality: [],
-            orderBy: {
+            SortBy: {
               code: "empty",
-              name: "Order By",
-            },
-            sortBy: {
-              code: "empty",
-              name: "Sort By",
+              name: "SortBy",
             },
           },
           fields: [
             {
               label: "",
-              type: "dropdown",
+              type: "radio",
               isMandatory: false,
               disable: false,
               populators: {
-                name: "sortBy",
-                options: [
-                  {
-                    code: "createdTime",
-                    name: "Created Time",
-                  },
-                  {
-                    code: "lastModifiedTime",
-                    name: "Updated Time",
-                  },
-                ],
-                optionsKey: "name",
-                styles: {
-                  gap: "1rem",
-                  flexDirection: "column",
-                },
-                innerStyles: {
-                  display: "flex",
-                },
-              },
-            },
-            {
-              label: "",
-              type: "dropdown",
-              isMandatory: false,
-              disable: false,
-              populators: {
-                name: "orderBy",
+                name: "SortBy",
                 options: [
                   {
                     code: "ASC",
-                    name: "ASC",
+                    name: "WORKBENCH_ASC",
                   },
                   {
                     code: "DESC",
-                    name: "DESC",
+                    name: "WORKBENCH_DESC",
                   },
                 ],
                 optionsKey: "name",
@@ -219,7 +202,7 @@ const IngestionInboxConfig = () => {
             },
           ],
         },
-        label: "WORKBENCH_FILTER",
+        label: "Sort By",
         show: true,
       },
       searchResult: {

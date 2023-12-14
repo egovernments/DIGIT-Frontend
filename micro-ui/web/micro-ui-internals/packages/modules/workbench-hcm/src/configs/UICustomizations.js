@@ -16,8 +16,8 @@ export const UICustomizations = {
 
       data.params= {
         recordCount: data.state.tableForm.limit,
-        sortBy: data?.body?.IngestionSearchCriteria?.sortBy?.code == 'empty'? null:data?.body?.IngestionSearchCriteria?.sortBy?.code,
-        orderBy: data?.body?.IngestionSearchCriteria?.orderBy?.code == 'empty'? null:data?.body?.IngestionSearchCriteria?.orderBy?.code,
+        sortBy: "createdTime",
+        order: data?.body?.IngestionSearchCriteria?.SortBy?.code == 'empty'? null:data?.body?.IngestionSearchCriteria?.SortBy?.code,
         offset: data?.body?.IngestionSearchCriteria?.offset
       };
 

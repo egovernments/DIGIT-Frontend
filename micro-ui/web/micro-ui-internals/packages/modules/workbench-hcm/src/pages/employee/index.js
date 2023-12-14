@@ -99,6 +99,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/inbox`} component={() => <IngestionInbox />} />
           <PrivateRoute path={`${path}/boundary`} component={() => <DataIngestionComponent ingestionType={"boundary"} />} />
           <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
+          <PrivateRoute path={`${path}/microplan`} component={() => <DataIngestionComponent ingestionType={"microplan"} />} />
 
 
         </AppContainer>
