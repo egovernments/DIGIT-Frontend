@@ -112,7 +112,19 @@ _Bill Module
   works-ui/employee/utilities/workflow?tenantId=pg.citya&applicationNo=PB/2023-24/000379&businessService=EXPENSE.PURCHASE&moduleCode=wages.purchase
 ```
 
+4. View Document
 
+   Upload and view
+
+   ```bash
+   works-ui/employee/utilities/doc-viewer
+   ```
+
+   view from url
+
+   ```bash
+   works-ui/employee/utilities/doc-viewer?fileUrl=https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/logo-image.jpeg&fileName=logo-image.jpeg
+   ```
 
 
 ## Coming Soon
@@ -124,6 +136,8 @@ _Bill Module
 # Changelog
 
 ```bash
+1.0.0-beta.3 added new support to view any document
+1.0.0-beta.2 republished due to some iframe issue
 1.0.0-beta.1 republished due to some version issues
 1.0.0-beta workbench base version beta release
 0.0.8 fix response data for custom compnent in inbox composer

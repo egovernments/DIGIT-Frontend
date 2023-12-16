@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Toast, Loader } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Toast, Loader, Card, SVG } from "@egovernments/digit-ui-react-components";
 import { CloseSvg } from "@egovernments/digit-ui-react-components";
 
 const ProgressBar = ({ progress, onClose, results }) => {
@@ -59,7 +59,7 @@ const ProgressBar = ({ progress, onClose, results }) => {
                                         {result.error}
                                         {selectedErrorIndex === index && (
                                             <div className="results-details">
-                                                {JSON.stringify(result?.data?.Mdms?.data, null, 2)}
+                                                {JSON.stringify(result.data, null, 2)}
                                             </div>
                                         )}
                                     </div>
@@ -80,43 +80,45 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     const [showErrorToast, setShowErrorToast] = useState(false);
     const { t } = useTranslation();
     const [progress, setProgress] = useState(0);
-    const [api, setAPI] = useState(false);
     const [results, setResults] = useState([]);
     const [template, setTemplate] = useState(["Error in template"]);
+    const [uiConfigs, setUiConfigs] = useState({});
+    const [noSchema, setNoSchema] = useState(false);
+
+
     const ajv = new Ajv();
     ajv.addVocabulary(["x-unique", "x-ref-schema", "x-ui-schema"])
     const tenantId = Digit.ULBService.getCurrentTenantId();
-
-    const reqCriteria = {
-        url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
-        params: {},
-        body: {
-            SchemaDefCriteria: {
-                tenantId: tenantId,
-                codes: [`${moduleName}.${masterName}`],
-            },
-        },
-        config: {
-            enabled: moduleName && masterName && true,
-            select: (data) => {
-                if (data?.SchemaDefinitions?.length == 0) {
-                    setNoSchema(true);
-                }
-                if (data?.SchemaDefinitions?.[0]?.definition?.["x-ui-schema"]?.["ui-apidetails"]) {
-                    setAPI(data?.SchemaDefinitions?.[0]?.definition?.["x-ui-schema"]?.["ui-apidetails"]);
-                }
-                return data?.SchemaDefinitions?.[0] || {};
-            },
-        },
-        changeQueryName: "schema",
-    };
-
-    const { isLoading, data: schema } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-
+    const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.workbench.getMDMSSchema(`${moduleName}.${masterName}`, tenantId);
     const { loading, pureSchemaDefinition } = Digit.Hooks.workbench.usePureSchemaDefinition();
 
-    const body = api?.requestBody
-        ? { ...api?.requestBody }
+    useEffect(() => {
+        if (schemaData?.customUiConfigs) {
+            setUiConfigs({ customUiConfigs: schemaData?.customUiConfigs });
+        }
+        if (schemaData?.schema?.noSchemaFound) {
+            setNoSchema(true);
+        }
+    }, [isSchemaLoading]);
+
+
+    useEffect(() => {
+        if (pureSchemaDefinition && typeof template[0] === "string") {
+            setTemplate(generateJsonTemplate(pureSchemaDefinition));
+        }
+        else if (pureSchemaDefinition && typeof template[0] === "object" && uploadFileTypeXlsx) {
+            for (const property in template[0]) {
+                if (typeof template[0][property] != "string") {
+                    fileValidator(t('WBH_SCHEMA_NOT_SUITABLE'));
+                    return;
+                }
+            }
+        }
+    }, [pureSchemaDefinition, template]);
+
+    const addAPI = uiConfigs?.customUiConfigs?.addAPI;
+    const body = addAPI?.requestBody
+        ? { ...addAPI?.requestBody }
         : {
             Mdms: {
                 tenantId: tenantId,
@@ -127,17 +129,16 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             },
         };
     const reqCriteriaAdd = {
-        url: api ? api?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
+        url: addAPI ? addAPI?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
         params: {},
         body: { ...body },
         config: {
-            enabled: schema ? true : false,
+            enabled: pureSchemaDefinition ? true : false,
             select: (data) => {
                 return data?.SchemaDefinitions?.[0] || {};
             },
         },
     };
-
     const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
 
     const fileValidator = (errMsg) => {
@@ -153,15 +154,8 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
     const onSubmitBulk = async (dataArray, setProgress) => {
         setProgress(0);
         const updatedResults = [...results];
-        const onSuccess = (index, resp) => {
-            // Handle success for the specific index
-            var id = "Unknown Id";
-            if (resp?.mdms[0]?.id) {
-                id = resp?.mdms[0]?.id
-            }
-            updatedResults.push({ index, success: true, response: id, error: null, data: resp?.mdms[0]?.data });
+        const onSuccess = (index) => {
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
-            setResults(updatedResults);
             setProgress(currentProgress);
         };
 
@@ -171,7 +165,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             if (resp?.response?.data?.Errors && resp?.response?.data?.Errors.length > 0) {
                 err = resp?.response?.data?.Errors[0]?.code
             }
-            updatedResults.push({ index, success: false, error: err, response: null, data: JSON.parse(resp?.response?.config?.data) });
+            updatedResults.push({ index, success: false, error: err, response: null, data: dataArray[index] });
             const currentProgress = Math.floor(((index + 1) / dataArray.length) * 100);
             setResults(updatedResults);
             setProgress(currentProgress);
@@ -183,7 +177,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             const data = dataArray[i];
             const bodyCopy = _.cloneDeep(body); // Create a deep copy of the body to avoid modifying the original
 
-            _.set(bodyCopy, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
+            _.set(bodyCopy, addAPI?.requestJson ? addAPI?.requestJson : "Mdms.data", { ...data });
 
             try {
                 const response = await mutation.mutateAsync({
@@ -204,18 +198,24 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             await delay(1000);
         }
     };
+    if (noSchema) {
+        return (
+            <Card>
+                <span className="workbench-no-schema-found">
+                    <h4>{t("WBH_NO_SCHEMA_FOUND")}</h4>
+                    <SVG.NoResultsFoundIcon width="20em" height={"20em"} />
+                </span>
+            </Card>
+        );
+    }
+
 
     const onCloseProgresbar = () => {
         setProgress(0);
         setResults([]);
     }
-    useEffect(() => {
-        if (pureSchemaDefinition && typeof template[0] === "string") {
-            setTemplate(generateJsonTemplate(pureSchemaDefinition));
-        }
-    }, [pureSchemaDefinition, template]);
 
-    if (loading || isLoading) {
+    if (loading || isSchemaLoading) {
         return <Loader />
     }
 

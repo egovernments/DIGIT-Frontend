@@ -5,17 +5,17 @@ const createProxy = createProxyMiddleware({
   // target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
   target: process.env.REACT_APP_PROXY_API || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 const assetsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 const mdmsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8080",
   changeOrigin: true,
-  secure:false
+  secure: false
 });
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
@@ -59,6 +59,7 @@ module.exports = function (app) {
     "/tl-calculator",
     "/org-services",
     "/edcr",
+    "/hcm-moz-impl",
     "/bpa-services",
     "/noc-services",
     "/egov-user-event",
@@ -80,7 +81,9 @@ module.exports = function (app) {
     "/egov-pdf/download/WORKSESTIMATE/estimatepdf",
     "/muster-roll",
     "/individual",
-    "/mdms-v2"
+    "/mdms-v2",
+    "/project/staff/v1/_create",
+    "/product/v1/_create"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
