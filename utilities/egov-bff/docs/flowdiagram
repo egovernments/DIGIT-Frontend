@@ -1,0 +1,28 @@
+@startuml
+title BFF Service for Measurement
+
+Client -> BFFService: **1** Calls /measurement/_search API to search enriched Measurement object with mdms search config
+
+group parallel API [group parallel API calls]
+
+BFFService -> MDMS: **1** gets all required configs and validates the search key is valid,
+BFFService <-- MDMS:  Return MDMS response
+
+BFFService -> MeasurementService: **2** Search for Measurement Object
+MeasurementService --> BFFService: return the Measurement response
+
+BFFService -> ContractService: **3** Search for Contract Object 
+ContractService --> BFFService: return the Contract response
+
+end
+
+
+BFFService -> MusterService: **4** Search for Muster Object if it has valid start and end dates
+MusterService --> BFFService: return the Muster response
+
+BFFService -> EstimateService: **5** Search for the Estimate Object based on Contract Response
+EstimateService --> BFFService: return the Estimate response
+
+BFFService ---> BFFService: process the responses and based on MDMS config returns the required object
+BFFService --> Client: returns the processed object
+@enduml
