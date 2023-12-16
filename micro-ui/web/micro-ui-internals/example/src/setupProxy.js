@@ -59,6 +59,7 @@ module.exports = function (app) {
     "/tl-calculator",
     "/org-services",
     "/edcr",
+    "/hcm-moz-impl",
     "/bpa-services",
     "/noc-services",
     "/egov-user-event",

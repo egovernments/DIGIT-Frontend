@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import DynamicSearchComponent from "./DynamicSearchComponent";
 import IFrameInterface from "./IFrameInterface";
 import WorkflowCompTest from "./WorkflowComponentTest";
+import DocViewer from "./DocViewer.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -36,6 +37,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <Route path={`${path}/create/:moduleName/:masterName`} component={() => <DynamicCreateComponent parentRoute={path} />} />
         <Route path={`${path}/iframe/:moduleName/:pageName`}>
           <IFrameInterface {...commonProps} />
+        </Route>
+        <Route path={`${path}/doc-viewer`}>
+          <DocViewer {...commonProps} />
         </Route>
         <Route path={`${path}/workflow`} component={() => <WorkflowCompTest parentRoute={path} />} />
       </AppContainer>
