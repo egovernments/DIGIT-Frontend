@@ -273,6 +273,55 @@ const postProcessData = (data = {}, schema = {}) => {
   return { ...data };
 };
 
+const getValueByPath = (obj, path) => {
+  const result = [];
+
+  const traverseObject = (currentObj, keys) => {
+    const key = keys.shift();
+
+    if (!key) {
+      // End of the path, add the current object to the result
+      result.push(currentObj);
+      return;
+    }
+
+    if (key === '*') {
+      // Handle wildcard '*' case
+      for (const prop in currentObj) {
+        traverseObject(currentObj[prop], keys.slice());
+      }
+    } else if (currentObj.hasOwnProperty(key)) {
+      // Move to the next level in the object
+      traverseObject(currentObj[key], keys.slice());
+    }
+  };
+
+  const keys = path.split('.');
+  traverseObject(obj, keys);
+
+  return result;
+};
+
+const get = (path = "") => {
+  let tempPath = path;
+  if (!tempPath?.includes(".")) {
+    return tempPath;
+  }
+  if (tempPath?.includes(".*.")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*.", "_ARRAY_OBJECT_");
+  }
+  if (tempPath?.includes(".*")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".*", "_ARRAY_");
+  }
+  if (tempPath?.includes(".")) {
+    tempPath = Digit.Utils.locale.stringReplaceAll(tempPath, ".", "_OBJECT_");
+  }
+  let updatedPath = Digit.Utils.locale.stringReplaceAll(tempPath, "_ARRAY_OBJECT_", ".items.properties.");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_ARRAY_", ".items");
+  updatedPath = Digit.Utils.locale.stringReplaceAll(updatedPath, "_OBJECT_", ".properties.");
+  return updatedPath;
+};
+
 
 
 
@@ -286,12 +335,12 @@ const postProcessData = (data = {}, schema = {}) => {
  *
  * @returns schema object
  */
-const getCriteriaForSelectData = (allProps)=>{
+const getCriteriaForSelectData = (allProps) => {
   const { configs, updateConfigs, updateSchema, schema: formSchema, formData } = Digit.Hooks.workbench.useWorkbenchFormContext();
 
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
 
-  const {schema} = allProps;
+  const { schema } = allProps;
   const { schemaCode = `${moduleName}.${masterName}`, tenantId, fieldPath } = schema;
   const reqCriteriaForData = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -329,14 +378,14 @@ const getCriteriaForSelectData = (allProps)=>{
     },
     changeQueryName: `data-${schemaCode}`,
   };
-  console.log(schemaCode,"schemaCode");
+  console.log(schemaCode, "schemaCode");
   if (schemaCode === "CUSTOM" && configs?.customUiConfigs?.custom?.length > 0) {
     const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
     reqCriteriaForData.url = customConfig?.dataSource?.API;
     reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody);
     reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.requestParams);
     reqCriteriaForData.changeQueryName = `CUSTOM_DATA-${schemaCode}-${fieldPath}`;
-  
+
     /*  It has dependency Fields*/
     if (customConfig?.dataSource?.dependentPath?.length > 0) {
       // const dependentValue=customConfig?.dataSource?.dependentPath?.length>0?:true;
@@ -350,11 +399,11 @@ const getCriteriaForSelectData = (allProps)=>{
       if (isEnabled) {
         let newQuery = "";
         Object.keys(dependencyObj).map((key) => {
-          const dependencyConfig=customConfig?.dataSource?.dependentPath?.filter(obj=>obj.depdendentKey==key)?.[0];
-          if(dependencyConfig?.dependencyFor=="REQ_BODY" || dependencyConfig?.dependencyFor=="BOTH"){
+          const dependencyConfig = customConfig?.dataSource?.dependentPath?.filter(obj => obj.depdendentKey == key)?.[0];
+          if (dependencyConfig?.dependencyFor == "REQ_BODY" || dependencyConfig?.dependencyFor == "BOTH") {
             reqCriteriaForData.body = JSON.parse(customConfig?.dataSource?.requestBody?.replace(key, dependencyObj?.[key]));
           }
-           if(dependencyConfig?.dependencyFor=="REQ_PARAM"  || dependencyConfig?.dependencyFor=="BOTH"){
+          if (dependencyConfig?.dependencyFor == "REQ_PARAM" || dependencyConfig?.dependencyFor == "BOTH") {
             reqCriteriaForData.params = JSON.parse(customConfig?.dataSource?.params?.replace(key, dependencyObj?.[key]));
           }
           newQuery += `-${dependencyObj?.[key]}`;
@@ -397,4 +446,5 @@ const getCriteriaForSelectData = (allProps)=>{
   return reqCriteriaForData;
 
 }
-export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData ,getCriteriaForSelectData};
+
+export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, updateTitleToLocalisationCodeForObject, preProcessData, postProcessData, getValueByPath, getCriteriaForSelectData };
