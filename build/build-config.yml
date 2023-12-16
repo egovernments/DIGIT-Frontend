@@ -48,53 +48,8 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
-        
-  - name: builds/Digit-Frontend/mission/urban-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/urban/Dockerfile
-        image-name: urban-ui
 
-  - name: builds/Digit-Frontend/mission/works-ui
+  - name: builds/Digit-Frontend/utilities/egov-bff
     build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/works/Dockerfile
-        image-name: works-ui
-        
-  - name: builds/Digit-Frontend/mission/sanitation-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/sanitation/Dockerfile
-        image-name: sanitation-ui
-
-  - name: builds/Digit-Frontend/mission/health-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/health/Dockerfile
-        image-name: health-ui
-
-  - name: builds/Digit-Frontend/modules/core
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: core
-  
-  - name: builds/Digit-Frontend/modules/dss
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: dss
-
-  
-  - name: builds/Digit-Frontend/modules/workbench
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: workbench
-
-  
-  - name: builds/Digit-Frontend/modules/hrms
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: hrms
+      - work-dir: utilities/egov-bff
+        image-name: egov-bff
