@@ -1,6 +1,6 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import _ from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -372,6 +372,7 @@ export const UICustomizations = {
       //here we can add multiple conditions
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
+
       switch (key) {
         case "MASTERS_WAGESEEKER_ID":
           return (
@@ -816,15 +817,150 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
 
-      data.params = { ...data.params, tenantId };
-      // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      console.log("hierarchyType", data);
 
-      console.log(data, additionalDetails);
+      const hierarchyType = data.params.hierarchyType?.hierarchyType;
+      const boundaryType = data.params.boundaryType?.boundaryType;
+
+      data.params = { hierarchyType: hierarchyType, boundaryType: boundaryType, tenantId, includeParents: true, includeChildren: true };
+      // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      const currentUrl = new URL(window.location.href);
+      if (hierarchyType !== undefined) {
+        currentUrl.searchParams.set("hierarchyType", hierarchyType);
+      }
+      window.history.pushState({}, "", currentUrl.toString());
       return data;
     },
+
+    postProcess: (responseArray, uiConfig) => {
+      console.log("responseArray", responseArray, uiConfig);
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [selectedLinkPath, setSelectedLinkPath] = useState(null);
+
+      const [currentLevel, setCurrentLevel] = useState(0);
+      const [selectedNodePath, setSelectedNodePath] = useState("");
+
+      // const onSelect = (node) => {
+      //   // const existingPath = selectedNodePath || "";
+      //   // const newPath = `${existingPath}/${node.boundaryType}_${node.code}`;
+      //   // setSelectedNodePath(newPath);
+
+      //   // // Additional logic or actions on node selection
+
+      //   // // Update URL based on the selected node path
+      //   // const currentUrl = new URL(window.location.href);
+      //   // currentUrl.searchParams.set("selectedNodePath", newPath);
+      //   // window.history.pushState({}, "", currentUrl.toString());
+      //   const currentUrl = new URL(window.location.href);
+      //   const existingPath = currentUrl.searchParams.get("selectedNodePath") || "";
+      //   const newPath = `${existingPath}/${node.boundaryType}_${node.code}`;
+      //   currentUrl.searchParams.set("selectedNodePath", newPath);
+      //   window.history.pushState({}, "", currentUrl.toString());
+
+      //   // Set the new selected node path
+      //   setSelectedNodePath(newPath);
+      // };
+
+      // const onSelect = (node) => {
+      //   // Additional logic or actions on node selection
+
+      //   // Get the current URL
+
+      //   const currentUrl = new URL(window.location.href);
+
+      //   // Get the existing path from the URL
+      //   const existingPath = currentUrl.searchParams.get("selectedBoundaryPath") || "";
+
+      //   // Get the parent node from the existing path
+      //   const parentPath = existingPath.substring(0, existingPath.lastIndexOf("/"));
+
+      //   // Construct the new path based on the parent node and the current node
+      //   const newPath = parentPath ? `${parentPath}/${node.boundaryType}_${node.code}` : `${node.boundaryType}_${node.code}`;
+
+      //   // Update URL with the new path
+      //   currentUrl.searchParams.set("selectedBoundaryPath", newPath);
+      //   window.history.pushState({}, "", currentUrl.toString());
+
+      //   // Set the new selected node path
+      //   setSelectedNodePath(newPath);
+      // };
+      const onSelect = (node) => {
+        // Additional logic or actions on node selection
+
+        // Check if the selected node has children
+        if (node.children && node.children.length > 0) {
+          // Get the first child node
+          const firstChild = node.children[0];
+
+          // Construct the new path based on the first child node
+          const newPath = `${node.boundaryType}_${node.code}/${firstChild.boundaryType}_${firstChild.code}`;
+
+          // Update URL with the new path
+          const currentUrl = new URL(window.location.href);
+          currentUrl.searchParams.set("selectedNodePath", newPath);
+          window.history.pushState({}, "", currentUrl.toString());
+
+          // Set the new selected node path
+          setSelectedNodePath(newPath);
+        }
+      };
+      const currentUrl = new URL(window.location.href);
+      const queryParams = new URLSearchParams(currentUrl.search);
+
+      // Get a specific query parameter value
+      const getHierarchyType = queryParams.get("hierarchyType");
+
+      const generateLink = (node) => (
+        <div key={node.id}>
+          <span className="link" onClick={() => onSelect(node)}>
+            {String(`${Digit.ULBService.getCurrentTenantId().toUpperCase()}_${getHierarchyType}_${node.boundaryType}_${node.code}`)}
+          </span>
+
+          {selectedNodePath.includes(`${node.boundaryType}_${node.code}`) && node.children && node.children.length > 0 ? (
+            <ul>
+              {node.children.map((child) => (
+                <li key={child.id}>{generateLink(child)}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      );
+
+      switch (key) {
+        case "WBH_LOCALISATION_VALUE":
+          return generateLink(row);
+        case "WBH_CODE":
+          // value?.map((row) => {
+          console.log("dhfhd", row, value);
+          return value === "N/A" ? currentLevel : currentLevel;
+        // });
+
+        case "MASTERS_SOCIAL_CATEGORY":
+          return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(`MASTERS_${value}`))}</span> : t("ES_COMMON_NA");
+
+        case "CORE_COMMON_PROFILE_CITY":
+          return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getCityLocale(value)))}</span> : t("ES_COMMON_NA");
+
+        case "MASTERS_WARD":
+          return value ? (
+            <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+          ) : (
+            t("ES_COMMON_NA")
+          );
+
+        case "MASTERS_LOCALITY":
+          return value ? (
+            <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+          ) : (
+            t("ES_COMMON_NA")
+          );
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+    selectionHandler: async (selectedRows) => {
+      console.log("selectedRows", selectedRows);
+    },
   },
-  postProcess: (responseArray, uiConfig) => {
-    console.log("responseArray", responseArray);
-  },
-  additionalCustomizations: (row, key, column, value, t, searchResult) => {},
 };

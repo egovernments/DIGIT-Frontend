@@ -7,25 +7,23 @@ export const Config = {
   apiDetails: {
     serviceName: "/localization/messages/v1/_search",
     requestParam: {},
-    requestBody: {
-      
-    },
+    requestBody: {},
     minParametersForSearchForm: 1,
     masterName: "commonUiConfig",
     moduleName: "SearchLocalisationConfig",
     tableFormJsonPath: "requestBody.custom",
     filterFormJsonPath: "requestBody.custom",
-    searchFormJsonPath: "requestParam"
+    searchFormJsonPath: "requestParam",
   },
   sections: {
     search: {
       uiConfig: {
-        searchWrapperStyles:{
-          flexDirection:"column-reverse",
-          marginTop:"2rem",
-          alignItems:"center",
-          justifyContent:"end",
-          gridColumn:"4"
+        searchWrapperStyles: {
+          flexDirection: "column-reverse",
+          marginTop: "2rem",
+          alignItems: "center",
+          justifyContent: "end",
+          gridColumn: "4",
         },
         headerStyle: null,
         formClassName: "", //"custom-both-clear-search",
@@ -35,7 +33,7 @@ export const Config = {
         defaultValues: {
           locale: "",
           module: "",
-          codes: ""
+          codes: "",
         },
         fields: [
           {
@@ -51,9 +49,8 @@ export const Config = {
                 masterName: "StateInfo",
                 moduleName: "common-masters",
                 // localePrefix: "WBH_LOCALE_",
-                select:
-                    "(data)=>{ return data['common-masters'].StateInfo?.[0]?.languages }"
-                } 
+                select: "(data)=>{ return data['common-masters'].StateInfo?.[0]?.languages }",
+              },
             },
           },
           {
@@ -69,9 +66,8 @@ export const Config = {
                 masterName: "StateInfo",
                 moduleName: "common-masters",
                 // localePrefix: "WBH_LOCALE_",
-                select:
-                    "(data)=>{ return data['common-masters'].StateInfo?.[0]?.localizationModules }"
-                } 
+                select: "(data)=>{ return data['common-masters'].StateInfo?.[0]?.localizationModules }",
+              },
             },
           },
           {
@@ -79,16 +75,16 @@ export const Config = {
             type: "text",
             isMandatory: false,
             disable: false,
-            populators: { 
-                name: "codes",
-            }
+            populators: {
+              name: "codes",
+            },
           },
           // {
           //   label: "WBH_LOC_MESSAGE",
           //   type: "text",
           //   isMandatory: false,
           //   disable: false,
-          //   populators: { 
+          //   populators: {
           //       name: "message",
           //   }
           // },
@@ -101,11 +97,11 @@ export const Config = {
     searchResult: {
       label: "",
       uiConfig: {
-        tableClassName:"table-fixed-last-column table",
+        tableClassName: "table-fixed-last-column table",
         columns: [
           {
             label: "WBH_LOC_HEADER_CODE",
-            jsonPath: "code",
+            jsonPath: "boundary",
           },
           {
             label: "WBH_LOC_HEADER_DEFAULT",
@@ -123,18 +119,18 @@ export const Config = {
             label: "CS_COMMON_ACTION",
             // jsonPath: "message",
             // type:"action",
-            svg:"EditIcon",
+            svg: "EditIcon",
           },
         ],
         enableGlobalSearch: false,
         enableColumnSort: true,
         resultsJsonPath: "messages",
-        manualPagination:false
+        manualPagination: false,
       },
       children: {},
       show: true,
     },
   },
   additionalSections: {},
-  customHookName:"workbench.useLocalisationSearch"
+  customHookName: "workbench.useLocalisationSearch",
 };

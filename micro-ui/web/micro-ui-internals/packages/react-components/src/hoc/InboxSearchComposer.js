@@ -15,7 +15,7 @@ import _ from "lodash";
 import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
 
-const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormValueChange = () => {} }) => {
+const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormValueChange = () => {}, onWatchValueChanged = () => {} }) => {
   const { t } = useTranslation();
 
   const [enable, setEnable] = useState(false);
@@ -172,6 +172,7 @@ const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormVal
                 screenType={configs.type}
                 fullConfig={configs}
                 data={data}
+                onWatchValueChanged={onWatchValueChanged}
               />
             </div>
           )}
@@ -183,6 +184,7 @@ const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormVal
                 screenType={configs.type}
                 fullConfig={configs}
                 data={data}
+                onWatchValueChanged={onWatchValueChanged}
               />
             </div>
           )}
@@ -195,6 +197,7 @@ const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormVal
                   screenType={configs.type}
                   fullConfig={configs}
                   data={data}
+                  onWatchValueChanged={onWatchValueChanged}
                 />
               </div>
             </MediaQuery>
@@ -208,6 +211,7 @@ const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormVal
                   screenType={configs.type}
                   fullConfig={configs}
                   data={data}
+                  onWatchValueChanged={onWatchValueChanged}
                 />
               </div>
             </MediaQuery>

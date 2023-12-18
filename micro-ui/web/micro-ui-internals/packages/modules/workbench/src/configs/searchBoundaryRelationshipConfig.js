@@ -79,21 +79,34 @@ export const searchBoundaryRelationshipConfig = {
         tableClassName: "table-fixed-last-column table",
         columns: [
           {
-            label: "CORE_COMMON_NAME",
-            jsonPath: "code",
+            label: "WBH_LOCALISATION_VALUE",
+            jsonPath: "boundaryType",
+            additionalCustomization: true,
           },
           {
-            label: "WBH_LEVEL",
-            jsonPath: "message",
+            label: "WBH_CODE",
+            jsonPath: "code",
+            additionalCustomization: true,
           },
           {
             label: "WBH_PARENT_BOUNDARY_NAME",
-            jsonPath: "defaultMessage",
+            jsonPath: "hierarchyType",
+            // additionalCustomization: true,
           },
+
           {
-            label: "WBH_PARENT_BOUNDARY_LEVEL",
-            jsonPath: "module",
+            label: "WBH_LEVEL",
+            jsonPath: "",
+            // additionalCustomization: true,
           },
+          // {
+          //   label: "WBH_PARENT_BOUNDARY_NAME",
+          //   jsonPath: "",
+          // },
+          // {
+          //   label: "WBH_PARENT_BOUNDARY_LEVEL",
+          //   jsonPath: "boundaryType",
+          // },
           {
             label: "CS_COMMON_ACTION",
             // jsonPath: "message",
@@ -103,7 +116,7 @@ export const searchBoundaryRelationshipConfig = {
         ],
         enableGlobalSearch: false,
         enableColumnSort: true,
-        resultsJsonPath: "BoundaryHierarchy",
+        resultsJsonPath: "TenantBoundary[0].boundary",
         manualPagination: false,
       },
       children: {},
