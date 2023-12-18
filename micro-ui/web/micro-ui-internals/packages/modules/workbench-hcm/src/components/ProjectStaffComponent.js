@@ -1,21 +1,18 @@
 import React from "react";
 import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { data } from "../configs/ViewProjectConfig";
 
-const ProjectStaffComponent = (props) => {
+
+const ProjectStaffComponent = (props) =>{
     const { t } = useTranslation();
-
+    
     const requestCriteria = {
         url: "/project/staff/v1/_search",
-        changeQueryName: props.projectId,
+        changeQueryName:props.projectId,
         params: {
-            tenantId: "mz",
+            tenantId : "mz",
             offset: 0,
             limit: 10,
-        },
-        config:{
-            enable: data?.horizontalNav?.configNavItems[0].code === "Project Resource" ? true : false
         },
         body: {
             ProjectStaff: {
@@ -68,7 +65,6 @@ const ProjectStaffComponent = (props) => {
             </table>
 
         </div>
-
 
     )
 }
