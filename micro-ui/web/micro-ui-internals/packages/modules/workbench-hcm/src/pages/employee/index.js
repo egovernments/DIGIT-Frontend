@@ -8,6 +8,8 @@ import ErrorViewPage from "./ErrorViewPage";
 
 import IngestionInbox from "./IngestionInbox";
 
+import ViewProject from "./ViewProject";
+
 
 const WorkbenchBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -99,6 +101,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/inbox`} component={() => <IngestionInbox />} />
           <PrivateRoute path={`${path}/boundary`} component={() => <DataIngestionComponent ingestionType={"boundary"} />} />
           <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
+          <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject  />} />
 
 
         </AppContainer>
