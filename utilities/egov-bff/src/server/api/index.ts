@@ -3,6 +3,7 @@ import config, { getErrorCodes } from "../config";
 import { Blob } from 'buffer';
 import * as XLSX from 'xlsx';
 import { RowData, Config } from "../controllers/uploadSheet/Types";
+import { errorResponder } from "../utils";
 
 
 
@@ -228,7 +229,7 @@ const getSheetData = async (
 
   for (const file of response.data.fileStoreIds) {
     try {
-        // TODO @ASHISH use httpRequest method to make api call, 
+      // TODO @ASHISH use httpRequest method to make api call, 
       const responseFile = await axios.get(file.url, {
         responseType: 'arraybuffer',
         headers: {
@@ -244,7 +245,7 @@ const getSheetData = async (
       const arrayBuffer = await fileXlsx.arrayBuffer();
       const data = new Uint8Array(arrayBuffer);
       const workbook = XLSX.read(data, { type: 'array' });
-// TODO @ASHISH  split them into multiple logical functions .
+      // TODO @ASHISH  split them into multiple logical functions .
       let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
 
       if (!desiredSheet) {
@@ -285,6 +286,47 @@ const getSheetData = async (
   return rowDatas;
 };
 
+const getTemplate = async (templateName: any, requestinfo: any, response: any) => {
+  const apiUrl = 'https://unified-uat.digit.org/mdms-v2/v2/_search';
+
+  const data = {
+    "MdmsCriteria": {
+      "tenantId": requestinfo?.userInfo?.tenantId,
+      "uniqueIdentifiers": [templateName],
+      "schemaCode": "HCM.TransformTemplate"
+    },
+    "RequestInfo": requestinfo
+  }
+  try {
+    const result = await axios.post(apiUrl, data);
+    return result;
+  } catch (error: any) {
+    return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
+  }
+
+}
+
+const getParsingTemplate = async (templateName: any, requestinfo: any, response: any) => {
+  const apiUrl = 'https://unified-uat.digit.org/mdms-v2/v2/_search';
+
+  const data = {
+    "MdmsCriteria": {
+      "tenantId": requestinfo?.userInfo?.tenantId,
+      "uniqueIdentifiers": [templateName],
+      "schemaCode": "HCM.ParsingTemplate"
+    },
+    "RequestInfo": requestinfo
+  }
+  try {
+
+    const result = await axios.post(apiUrl, data);
+    return result;
+  } catch (error: any) {
+    return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
+  }
+
+}
+
 
 export {
   create_pdf,
@@ -298,5 +340,7 @@ export {
   search_contract,
   search_estimate,
   search_measurement,
-  getSheetData
+  getSheetData,
+  getTemplate,
+  getParsingTemplate
 };

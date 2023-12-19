@@ -41,10 +41,10 @@ const config = {
     workflow:
       process.env.EGOV_WORKFLOW_HOST || HOST || "http://localhost:8091/",
     muster: process.env.EGOV_MUSTER_ROLL_HOST || HOST || "http://localhost:8070/",
-    individual: process.env.EGOV_PROJECT_HOST || HOST|| "http://localhost:8071/",
-    contract: process.env.EGOV_CONTRACT_HOST|| HOST || "http://localhost:8072/",
-    estimate: process.env.EGOV_ESTIMATE_HOST || HOST|| "http://localhost:8073/",
-    measurement: process.env.EGOV_MEASUREMENT_HOST|| HOST || "http://localhost:8074/",
+    individual: process.env.EGOV_PROJECT_HOST || HOST || "http://localhost:8071/",
+    contract: process.env.EGOV_CONTRACT_HOST || HOST || "http://localhost:8072/",
+    estimate: process.env.EGOV_ESTIMATE_HOST || HOST || "http://localhost:8073/",
+    measurement: process.env.EGOV_MEASUREMENT_HOST || HOST || "http://localhost:8074/",
   },
   paths: {
     pdf_create: "/pdf-service/v1/_createnosave",
