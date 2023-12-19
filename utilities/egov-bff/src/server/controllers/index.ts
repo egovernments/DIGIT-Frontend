@@ -1,5 +1,5 @@
 import BulkUploadController from "./uploadSheet/uploadSheet.controller";
-import { listener } from './uploadSheet/Consumer';
+import { listener } from '../consumer/Consumer';
 
 // Call the listener function to start consuming messages
 listener();
