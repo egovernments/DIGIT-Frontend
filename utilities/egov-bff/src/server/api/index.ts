@@ -214,6 +214,55 @@ const search_measurement = async (requestinfo: any, cachekey: any, allResponse: 
   return getErrorCodes("WORKS", "NO_MEASUREMENT_ROLL_FOUND");
 }
 
+function processExcelSheet(
+  desiredSheet: XLSX.WorkSheet,
+  startRow: number,
+  endRow: number,
+  config: any,
+  rowDatas: any[] = []
+) {
+  const sheetRef = desiredSheet['!ref'];
+  const lastColumn = sheetRef ? XLSX.utils.decode_range(sheetRef).e.c : 0;
+
+  const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRow - 1, c: lastColumn } };
+
+  const rowDataArray = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
+
+  for (const row of rowDataArray) {
+    const rowData: any = {};
+
+    for (const fieldConfig of config || []) {
+      const columnIndex = XLSX.utils.decode_col(fieldConfig.column);
+      const fieldValue = (row as any[])[columnIndex] || fieldConfig.default;
+      rowData[fieldConfig.title] = fieldValue;
+      fieldConfig.default = fieldValue;
+    }
+
+    rowDatas.push(rowData);
+  }
+}
+
+async function getWorkbook(fileUrl: string) {
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/pdf',
+  };
+
+  const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+
+  const fileXlsx = new Blob([responseFile], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;',
+  });
+
+  const arrayBuffer = await fileXlsx.arrayBuffer();
+  const data = new Uint8Array(arrayBuffer);
+  const workbook = XLSX.read(data, { type: 'array' });
+  return workbook;
+}
+
+
+
 const getSheetData = async (
   fileUrl: string,
   startRow: number = 1,
@@ -221,31 +270,13 @@ const getSheetData = async (
   config?: Config,
   sheetName?: string
 ) => {
-  // TODO @ASHISH use httpRequest method to make api call, 
-  // TODO @ASHISH  keep a seperate method to get file url from filestore id
-  // TODO @ASHISH file from file url 
-  const response = await axios.get(fileUrl);
+  const response = await httpRequest(fileUrl, undefined, undefined, 'get');
   const rowDatas: RowData[] = [];
 
-  for (const file of response.data.fileStoreIds) {
+  for (const file of response.fileStoreIds) {
     try {
-      // TODO @ASHISH use httpRequest method to make api call, 
-      const responseFile = await axios.get(file.url, {
-        responseType: 'arraybuffer',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/pdf',
-        },
-      });
+      const workbook = await getWorkbook(file.url);
 
-      const fileXlsx = new Blob([responseFile.data], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;',
-      });
-
-      const arrayBuffer = await fileXlsx.arrayBuffer();
-      const data = new Uint8Array(arrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      // TODO @ASHISH  split them into multiple logical functions .
       let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
 
       if (!desiredSheet) {
@@ -257,28 +288,8 @@ const getSheetData = async (
         const sheetRef = desiredSheet['!ref'];
         endRow = sheetRef ? XLSX.utils.decode_range(sheetRef).e.r + 1 : 1;
       }
+      processExcelSheet(desiredSheet, startRow, endRow, config, rowDatas);
 
-      const sheetRef = desiredSheet['!ref'];
-      const lastColumn = sheetRef ? XLSX.utils.decode_range(sheetRef).e.c : 0;
-
-      const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRow - 1, c: lastColumn } };
-
-      const rowDataArray = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
-
-      for (const row of rowDataArray) {
-        const rowData: RowData = {};
-
-        for (const fieldConfig of config || []) {
-          const columnIndex = XLSX.utils.decode_col(fieldConfig.column);
-          const fieldValue = (row as any[])[columnIndex] || fieldConfig.default;
-          rowData[fieldConfig.title] = fieldValue;
-          fieldConfig.default = fieldValue;
-        }
-
-        rowDatas.push(rowData);
-      }
-
-      // console.log(`Rows from startRow to endRow in "${sheetName || 'first sheet'}":`, rowDatas);
     } catch (error) {
       console.error('Error fetching or processing file:', error);
     }
