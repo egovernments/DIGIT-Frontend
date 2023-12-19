@@ -1,7 +1,5 @@
 import { KafkaClient, Consumer, Producer, Message, ProduceRequest } from 'kafka-node';
 
-// TODO @ASHISH move consumer and producer outside folder 
-
 // Replace with the correct Kafka broker(s) and topic name
 const kafkaConfig = {
     kafkaHost: 'localhost:9092', // Use the correct broker address and port
