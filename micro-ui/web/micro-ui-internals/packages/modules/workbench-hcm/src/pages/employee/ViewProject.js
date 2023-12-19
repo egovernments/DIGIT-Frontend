@@ -39,6 +39,8 @@ const ViewProject = () => {
 
 
     config = data(project);
+
+    console.log("=>>>>>>>>>>.",config);
     return (
        <React.Fragment>
       <Header className="works-header-view">{t("WORKBENCH_PROJECT")}</Header>
