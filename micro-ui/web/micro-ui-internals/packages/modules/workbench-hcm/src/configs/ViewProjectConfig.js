@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 export const data = (project) => {
   const { t } = useTranslation();
-  // console.log("data",project?.Project?.[0]?.id);
+
 
   return {
     cards: [
@@ -60,34 +60,7 @@ export const data = (project) => {
             navigationKey: "card2",
             type: "COMPONENT",
             component: "ProjectBeneficiaryComponent",
-            props: { projectId: project?.Project?.[0]?.id },
-            // values: [
-            //   {
-            //     navigationKey: "card1",
-            //     sections: [
-            //       {
-            //         type: "DATA",
-            //         sectionHeader: { value: "WORKS_PROJECT_DETAILS", inlineStyles: {marginBottom : "16px", marginTop:"32px", fontSize: "24px"} },
-            //         values: [
-            //           {
-            //             key: "WORKS_ESTIMATE_TYPE",
-            //             value:  "ORIGINAL_ESTIMATE",
-            //           }
-            //         ],
-            //       },
-            //       {
-            //         type: "DATA",
-            //         sectionHeader: { value: "WORKS_LOCATION_DETAILS", inlineStyles: {marginBottom : "16px", marginTop:"32px", fontSize: "24px"} },
-            //         values: [
-            //           {
-            //             key: "WORKS_ESTIMATE_TYPE",
-            //             value:  "ORIGINAL_ESTIMATE",
-            //           }
-            //           ],
-            //       },
-            //     ],
-            //   }
-            // ]
+            props: {projectId : project?.Project?.[0]?.id},
           },
         ],
       },

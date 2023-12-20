@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
 import { data } from "../configs/ViewProjectConfig";
 
-console.log("projectConfig",data);
-
 const ProjectBeneficiaryComponent = (props) => {
     const { t } = useTranslation();
     
@@ -27,7 +25,6 @@ const ProjectBeneficiaryComponent = (props) => {
 
     const {isLoading, data: projectResource } = Digit.Hooks.useCustomAPIHook(requestCriteria);
 
-    console.log("resource",projectResource);
 
     const columns = [
         { label: t("PROJECT_RESOURCE_ID"), key: "id" },
@@ -74,13 +71,7 @@ const ProjectBeneficiaryComponent = (props) => {
             </table>
 
         </div>
-
-
     )
-
-    // return (
-    //     null
-    // )
 }
 
 export default ProjectBeneficiaryComponent
