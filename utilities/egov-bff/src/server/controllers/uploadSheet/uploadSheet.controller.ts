@@ -2,9 +2,9 @@ import * as express from "express";
 import { convertObjectForMeasurment } from "../../utils";
 import axios from "axios";
 import FormData from 'form-data';
-// import { Blob } from 'buffer';
+import config from "../../config/index";
 import * as XLSX from 'xlsx';
-// Import necessary modules and libraries
+
 
 import {
   getSheetData, getTemplate, getParsingTemplate
@@ -42,22 +42,25 @@ class BulkUploadController {
       const { fileStoreId, startRow, endRow, templateName } = request.body;
       const result: any = await getTemplate(templateName, request.body.RequestInfo, response);
       const parseResult: any = await getParsingTemplate(templateName, request.body.RequestInfo, response);
-      var config, parsingConfig: any;
+      var TransformConfig, parsingConfig: any;
       if (result?.data?.mdms?.length > 0) {
-        config = result.data.mdms[0];
+        TransformConfig = result.data.mdms[0];
       }
       else {
         return errorResponder({ message: "No Transform Template found " }, request, response);
       }
+
       if (parseResult?.data?.mdms?.length > 0) {
         parsingConfig = parseResult.data.mdms[0]?.data?.path;
       }
+
       else {
         return errorResponder({ message: "No Parsing Template found " }, request, response);
       }
 
-      const url = `http://unified-uat.digit.org/filestore/v1/files/url?tenantId=mz&fileStoreIds=${fileStoreId}`;
-      const data: any = await getSheetData(url, startRow, endRow, config?.data?.Fields, config?.data?.sheetName);
+      const url = config.host.filestore + config.paths.filestore + `/url?tenantId=mz&fileStoreIds=${fileStoreId}`;
+
+      const data: any = await getSheetData(url, startRow, endRow, TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
       // Check if data is an array before using map
       if (Array.isArray(data)) {
         const updatedData = data.map((element) =>
@@ -70,7 +73,7 @@ class BulkUploadController {
         );
       } else {
         if (data?.code == "NO_SHEETNAME_FOUND") {
-          return errorResponder({ message: `No sheet found for  sheetName ${config?.data?.sheetName}` }, request, response);
+          return errorResponder({ message: `No sheet found for  sheetName ${TransformConfig?.data?.sheetName}` }, request, response);
         }
         return errorResponder({ message: 'Error fetching or processing data...Check Console' }, request, response);
       }
@@ -84,7 +87,6 @@ class BulkUploadController {
     response: express.Response
   ) => {
     try {
-
       const result = await axios.post(`http://127.0.0.1:8080/egov-bff/${this.path}/_transform`, request.body);
       const data = result?.data?.updatedData;
       // Check if data is an array before processing
@@ -126,9 +128,8 @@ class BulkUploadController {
           // Upload the file using axios
           try {
             var fileCreationResult;
-
             try {
-              fileCreationResult = await axios.post('https://unified-uat.digit.org/filestore/v1/files', formData, {
+              fileCreationResult = await axios.post(config.host.filestore + config.paths.filestore, formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                   'auth-token': request?.body?.RequestInfo?.authToken
