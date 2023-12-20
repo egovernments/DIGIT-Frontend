@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
-import { Header, Card, Loader, ViewComposer, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Header, Card, Loader, ViewComposer, ActionBar, SubmitBar, Toast } from "@egovernments/digit-ui-react-components";
 
 import { data } from "../../configs/ViewProjectConfig";
 import AssignCampaign from "../../components/AssignCampaign";
@@ -21,14 +21,12 @@ const ViewProject = () => {
       setStartDate(date);
 
       if (endDate && date > endDate) {
-        console.warn("From date should be before the to date. Adjusting to date.");
         setEndDate(date);
       }
     } else if (type === "endDate") {
       setEndDate(date);
 
       if (startDate && date < startDate) {
-        console.warn("To date should be after the from date. Adjusting from date.");
         setStartDate(date);
       }
     }
@@ -100,7 +98,8 @@ const ViewProject = () => {
           },
           {
             onSuccess: () => {
-              setShowToast({ label: "data updateds" });
+              setShowToast({ label: `${t("WBH_DATES_UPDATED_SUCCESS")}` });
+              setShowEditDateModal(false);
               closeToast();
             },
           }
@@ -136,6 +135,7 @@ const ViewProject = () => {
       <ActionBar>
         <SubmitBar label={t("WBH_ASSIGN_CAMPAIGN")} onSubmit={() => setShowEditDateModal(true)} />
       </ActionBar>
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
 };
