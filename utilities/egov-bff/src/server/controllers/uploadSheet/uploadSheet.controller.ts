@@ -87,7 +87,7 @@ class BulkUploadController {
     response: express.Response
   ) => {
     try {
-      const result = await axios.post(`http://127.0.0.1:8080/egov-bff/${this.path}/_transform`, request.body);
+      const result = await axios.post(`${config.host.serverHost}${config.app.contextPath}${this.path}/_transform`, request.body);
       const data = result?.data?.updatedData;
       // Check if data is an array before processing
       if (Array.isArray(data)) {
