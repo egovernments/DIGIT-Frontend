@@ -59,10 +59,12 @@ const WorkbenchBreadCrumb = ({ location ,defaultPath}) => {
       path: `/${window?.contextPath}/employee/hcmworkbench/project`,
       content: t("WORKBENCH_PROJECT"),
       show: location.pathname.includes("/hcmworkbench/project") ? true : false,
-
-
     },
-    
+    {
+      path: `/${window?.contextPath}/employee/hcmworkbench/microplan`,
+      content: t("WORKBENCH_MICROPLAN"),
+      show: location.pathname.includes("/hcmworkbench/microplan") ? true : false,
+    },
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
@@ -95,14 +97,12 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/facility`} component={() => <DataIngestionComponent ingestionType={"facility"} />} />
           <PrivateRoute path={`${path}/user`} component={() => <DataIngestionComponent ingestionType={"user"} />} />
           <PrivateRoute path={`${path}/ou`} component={() => <DataIngestionComponent ingestionType={"OU"} />} />
-
           <PrivateRoute path={`${path}/view`} component={() => <ErrorViewPage  />} />
-
           <PrivateRoute path={`${path}/inbox`} component={() => <IngestionInbox />} />
           <PrivateRoute path={`${path}/boundary`} component={() => <DataIngestionComponent ingestionType={"boundary"} />} />
           <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject  />} />
-
+          <PrivateRoute path={`${path}/microplan`} component={() => <DataIngestionComponent ingestionType={"microplan"} />} />
 
         </AppContainer>
       </Switch>
