@@ -40,28 +40,31 @@ const ProjectStaffComponent = (props) => {
     return (
         <div className="override-card">
             <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
-
-            
-            <table className="table reports-table sub-work-table">
-                <thead>
-                    <tr>
-                        {columns.map((column, index) => (
-                            <th key={index}>{column.label}</th>
+            {projectStaff?.ProjectStaff.length === 0 ? (
+                <h1>{t("NO_PROJECT_STAFF")}</h1>
+            ) : (
+                <table className="table reports-table sub-work-table">
+                    <thead>
+                        <tr>
+                            {columns.map((column, index) => (
+                                <th key={index}>{column.label}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {projectStaff?.ProjectStaff.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {columns.map((column, columnIndex) => (
+                                    <td key={columnIndex}>
+                                        {row[column.key] || "NA"}
+                                    </td>
+                                ))}
+                            </tr>
                         ))}
-                    </tr>
-                </thead>
-                <tbody>
-                {projectStaff?.ProjectStaff.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                        {columns.map((column, columnIndex) => (
-                            <td key={columnIndex}>
-                                {row[column.key]}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-            </tbody>
-            </table>
+                    </tbody>
+                </table>
+            )
+            }
 
         </div>
     )
