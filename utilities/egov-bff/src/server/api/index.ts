@@ -91,13 +91,13 @@ const getSheetData = async (
   return rowDatas;
 };
 
-const getTemplate = async (templateName: any, requestinfo: any, response: any) => {
+const getTemplate = async (transformTemplate: any, requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
 
   const data = {
     "MdmsCriteria": {
       "tenantId": requestinfo?.userInfo?.tenantId,
-      "uniqueIdentifiers": [templateName],
+      "uniqueIdentifiers": [transformTemplate],
       "schemaCode": "HCM.TransformTemplate"
     },
     "RequestInfo": requestinfo
@@ -111,19 +111,17 @@ const getTemplate = async (templateName: any, requestinfo: any, response: any) =
 
 }
 
-const getParsingTemplate = async (templateName: any, requestinfo: any, response: any) => {
+const getParsingTemplate = async (parsingTemplates: any[], requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
-
   const data = {
     "MdmsCriteria": {
       "tenantId": requestinfo?.userInfo?.tenantId,
-      "uniqueIdentifiers": [templateName],
+      "uniqueIdentifiers": parsingTemplates,
       "schemaCode": "HCM.ParsingTemplate"
     },
     "RequestInfo": requestinfo
   }
   try {
-
     const result = await axios.post(apiUrl, data);
     return result;
   } catch (error: any) {

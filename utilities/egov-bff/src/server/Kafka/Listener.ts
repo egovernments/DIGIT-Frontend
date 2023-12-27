@@ -1,4 +1,5 @@
-import { KafkaClient, Consumer, Producer, Message, ProduceRequest } from 'kafka-node';
+import { KafkaClient, Consumer, Message, ProduceRequest } from 'kafka-node';
+import { producer } from './Producer';
 import config from '../config';
 
 // Replace with the correct Kafka broker(s) and topic name
@@ -17,8 +18,6 @@ const kafkaClient = new KafkaClient(kafkaConfig);
 // Create a Kafka consumer
 const consumer = new Consumer(kafkaClient, [{ topic: topicName, partition: 0 }], { autoCommit: true });
 
-// Create a Kafka producer
-const producer = new Producer(kafkaClient);
 
 // Exported listener function
 export function listener() {
