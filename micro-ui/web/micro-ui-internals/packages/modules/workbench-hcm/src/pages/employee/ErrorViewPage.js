@@ -53,12 +53,14 @@ const ErrorViewPage = () => {
       };
     }, [jobid]); // Add jobid as a dependency if it's being used in fetchData
     
+
     const downloadExcel = async ()=>{
       const searchParams = {
         tenantId: Digit.ULBService.getCurrentTenantId(),
         fileStoreIds: allData?.EventHistory[0]?.fileStoreId
       }
       const fileStoreData = await Digit.IngestionService.fileStoreSearch(searchParams);
+
       downloadFile(fileStoreData?.fileStoreIds[0]?.url, 'Download.xlsx');
 
 
@@ -69,6 +71,7 @@ const ErrorViewPage = () => {
       link.href = url;
       link.download = fileName||'download.xlsx';
       link.target = '_blank';
+
     
       // Append the link to the document
       document.body.appendChild(link);
