@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { ProduceRequest } from "kafka-node";
+import { producer } from "../Kafka/Producer";
 
 import { logger } from "./logger";
 const NodeCache = require("node-cache");
@@ -192,6 +194,24 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
+const produceIngestion = (messages: any, topicName: string) => {
+  const payloads: ProduceRequest[] = [
+    {
+      topic: topicName,
+      messages: JSON.stringify(messages),
+    },
+  ];
+
+  producer.send(payloads, (err, data) => {
+    if (err) {
+      console.error(`Producer Error: ${err}`);
+    } else {
+      console.log('Produced modified messages successfully.');
+      console.log("Data : ", data)
+    }
+  });
+};
+
 export {
   errorResponder,
   errorLogger,
@@ -204,4 +224,5 @@ export {
   extractEstimateIds,
   cacheResponse,
   getCachedResponse,
+  produceIngestion
 };

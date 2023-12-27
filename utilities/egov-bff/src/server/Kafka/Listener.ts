@@ -1,17 +1,16 @@
-import { KafkaClient, Consumer, Producer, Message, ProduceRequest } from 'kafka-node';
-
-// TODO @ASHISH move consumer and producer outside folder 
+import { KafkaClient, Consumer, Message, ProduceRequest } from 'kafka-node';
+import { producer } from './Producer';
+import config from '../config';
 
 // Replace with the correct Kafka broker(s) and topic name
 const kafkaConfig = {
-    kafkaHost: 'localhost:9092', // Use the correct broker address and port
-    groupId: 'my-group',
+    kafkaHost: config.KAFKA_BROKER_HOST, // Use the correct broker address and port
     autoCommit: true,
     autoCommitIntervalMs: 5000,
     fromOffset: 'earliest', // Start reading from the beginning of the topic
 };
 
-const topicName = 'topic-one';
+const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
 
 // Create a Kafka client
 const kafkaClient = new KafkaClient(kafkaConfig);
@@ -19,8 +18,6 @@ const kafkaClient = new KafkaClient(kafkaConfig);
 // Create a Kafka consumer
 const consumer = new Consumer(kafkaClient, [{ topic: topicName, partition: 0 }], { autoCommit: true });
 
-// Create a Kafka producer
-const producer = new Producer(kafkaClient);
 
 // Exported listener function
 export function listener() {
@@ -28,33 +25,36 @@ export function listener() {
     consumer.on('message', async (message: Message) => {
         try {
             // Parse the message value as an array of objects
-            const messagesArray: any[] = JSON.parse(message.value?.toString() || '[]');
-            console.log("Message received:", messagesArray);
+            const messageObject: any = JSON.parse(message.value?.toString() || '{}');
+            const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
+            console.log("IngestionDetails received:", ingestionDetails);
 
             // Find the first message with state 'inprogress'
-            const inProgressIndex = messagesArray.findIndex((msg) => msg.state === 'inprogress');
+            const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
 
             // Find the first message with state 'not-started'
-            const notStartedIndex = messagesArray.findIndex((msg) => msg.state === 'not-started');
+            const notStartedIndex = ingestionDetails.findIndex((msg) => msg.state === 'not-started');
 
             if (inProgressIndex !== -1) {
                 // Change 'inprogress' to 'done'
-                messagesArray[inProgressIndex].state = 'done';
+                ingestionDetails[inProgressIndex].state = 'done';
 
                 // Log the modified message
-                console.log(`Modified message: ${JSON.stringify(messagesArray[inProgressIndex])}`);
+                console.log(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
+                messageObject.Job.ingestionDetails = ingestionDetails;
 
                 // Produce the modified messages back to the same topic
-                await produceModifiedMessages(messagesArray);
+                await produceModifiedMessages(messageObject);
             } else if (notStartedIndex !== -1) {
                 // Change 'not-started' to 'inprogress'
-                messagesArray[notStartedIndex].state = 'inprogress';
+                ingestionDetails[notStartedIndex].state = 'inprogress';
 
                 // Log the modified message
-                console.log(`Modified message: ${JSON.stringify(messagesArray[notStartedIndex])}`);
+                console.log(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
 
                 // Produce the modified messages back to the same topic
-                await produceModifiedMessages(messagesArray);
+                messageObject.Job.ingestionDetails = ingestionDetails;
+                await produceModifiedMessages(messageObject);
             } else {
                 // Log a message if no 'inprogress' or 'not-started' state is found
                 console.log('No message with state "inprogress" or "not-started" found.');
