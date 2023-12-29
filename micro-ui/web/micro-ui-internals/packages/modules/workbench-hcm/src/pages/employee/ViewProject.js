@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { Header, Card, Loader, ViewComposer, ActionBar, SubmitBar, Toast } from "@egovernments/digit-ui-react-components";
-
 import { data } from "../../configs/ViewProjectConfig";
 import AssignCampaign from "../../components/AssignCampaign";
 
