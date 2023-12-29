@@ -99,7 +99,7 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "ProjectStaffComponent",
-            props: { projectId: project?.Project?.[0]?.id },
+            props: { projectId: project?.Project?.[0]?.id, ...project },
           },
         ],
       },
