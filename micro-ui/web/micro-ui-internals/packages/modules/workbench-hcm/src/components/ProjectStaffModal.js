@@ -1,4 +1,4 @@
-import { Button, CustomDropdown, Modal, TextInput, Close, CloseSvg } from "@egovernments/digit-ui-react-components";
+import { Button, Modal, TextInput, Close, CloseSvg, Card, BreakLine } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 
 const ProjectStaffModal = ({ t, onClose, heading, onCancel, onSubmit, userName, onSearch, searchResult, onChange }) => {
@@ -28,10 +28,12 @@ const ProjectStaffModal = ({ t, onClose, heading, onCancel, onSubmit, userName, 
       actionCancelOnSubmit={onClose}
       actionSaveOnSubmit={onSubmit}
     >
-      <TextInput name={"name"} placeholder={"Search by name"} value={userName} onChange={onChange} />
-      <Button label={`${t("WBH_ACTION_SEARCH")}`} type="button" variation="primary" onButtonClick={onSearch} />
-
-      <TextInput name={"name"} value={searchResult} />
+      <Card style={{ boxShadow: "none" }}>
+        <TextInput name={"name"} placeholder={"Search by name"} value={userName} onChange={onChange} />
+        <Button label={`${t("WBH_ACTION_SEARCH")}`} type="button" variation="primary" onButtonClick={onSearch} />
+        <BreakLine />
+        <TextInput name={"name"} value={searchResult} />
+      </Card>
     </Modal>
   );
 };
