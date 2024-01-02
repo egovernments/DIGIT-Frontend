@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 const { object, string } = require("yup");
-const { errorResponder } = require("../utils");
+const { errorResponder } = require("../index");
 
 const requestSchema = object({
   apiId: string().nullable(),
@@ -11,7 +11,7 @@ const requestSchema = object({
   userInfo: object().nonNullable()
 });
 
-const requestMiddleware= (req:Request, res:Response, next:NextFunction) => {
+const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     requestSchema.validateSync(req.body.RequestInfo);
     next();

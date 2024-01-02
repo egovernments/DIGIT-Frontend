@@ -1,4 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { httpRequest } from "../utils/request";
+import config from "../config/index";
+
 
 import { logger } from "./logger";
 const NodeCache = require("node-cache");
@@ -192,6 +195,17 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
+const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo: any) => {
+  messages.Job.RequestInfo = RequestInfo
+  try {
+    // await httpRequest("http://127.0.0.1:8081" + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    await httpRequest(config.host.serverHost + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
+  } catch (error) {
+    console.log("Error during ingestion : ", error)
+  }
+
+};
+
 export {
   errorResponder,
   errorLogger,
@@ -204,4 +218,5 @@ export {
   extractEstimateIds,
   cacheResponse,
   getCachedResponse,
+  produceIngestion
 };
