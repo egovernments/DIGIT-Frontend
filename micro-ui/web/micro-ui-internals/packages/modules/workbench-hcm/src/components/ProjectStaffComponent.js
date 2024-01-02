@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Card, Header, Button, Loader, Toast, SVG, Modal } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
 import { data } from "../configs/ViewProjectConfig";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 const ProjectStaffComponent = (props) => {
   const { t } = useTranslation();
-  const { state } = props.location;
+  const [userIds, setUserIds] = useState([]);
+  const [userInfoMap, setUserInfoMap] = useState({});
 
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
@@ -92,6 +94,23 @@ const ProjectStaffComponent = (props) => {
   const handleInputChange = (event) => {
     setUserName(event.target.value);
   };
+
+  const isValidTimestamp = (timestamp) => timestamp !== 0 && !isNaN(timestamp);
+
+  //to convert epoch to date and to convert isDeleted boolean to string
+  projectStaff?.ProjectStaff.forEach((row) => {
+    row.formattedStartDate = isValidTimestamp(row.startDate) ? Digit.DateUtils.ConvertEpochToDate(row.startDate) : "NA";
+    row.formattedEndDate = isValidTimestamp(row.endDate) ? Digit.DateUtils.ConvertEpochToDate(row.endDate) : "NA";
+    row.isDeleted = row.isDeleted.toString();
+  });
+
+  useEffect(() => {
+    // Extract user IDs and save them in the state
+    if (projectStaff && projectStaff.ProjectStaff.length > 0) {
+      const userIdArray = projectStaff.ProjectStaff.map((row) => row.userId);
+      setUserIds(userIdArray);
+    }
+  }, [projectStaff]);
 
   const reqCriteria = {
     url: "/project/staff/v1/_create",

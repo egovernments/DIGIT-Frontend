@@ -87,6 +87,30 @@ export const data = (project) => {
           },
         ],
       },
+      {
+        navigationKey: "card4",
+        sections: [
+          {
+            navigationKey: "card4",
+
+            type: "COMPONENT",
+            component: "FacilityComponent",
+            props: { projectId: project?.Project?.[0]?.id },
+          },
+        ],
+      },
+      {
+        navigationKey: "card5",
+        sections: [
+          {
+            navigationKey: "card5",
+
+            type: "COMPONENT",
+            component: "ProductDeliveryComponent",
+            props: { projectId: project?.Project?.[0]?.id },
+          },
+        ],
+      },
     ],
     apiResponse: {},
     additionalDetails: {},
@@ -107,6 +131,16 @@ export const data = (project) => {
           name: "card3",
           active: true,
           code: "Children",
+        },
+        {
+          name: "card4",
+          active: true,
+          code: "Facility",
+        },
+        {
+          name: "card5",
+          active: true,
+          code: "Product Delivery",
         },
       ],
       activeByDefault: "card1",
