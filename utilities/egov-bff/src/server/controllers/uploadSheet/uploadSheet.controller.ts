@@ -168,7 +168,10 @@ class BulkUploadController {
     } catch (e: any) {
       return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
     }
-    produceIngestion({ Job }, config.KAFKA_DHIS_UPDATE_TOPIC)
+    const fileStoreId = request?.body?.fileStoreId;
+    const tenantId = request?.body?.RequestInfo?.userInfo?.tenantId;
+    Job.tenantId = tenantId
+    produceIngestion({ Job }, fileStoreId, request.body.RequestInfo)
     return sendResponse(
       response,
       { Job },

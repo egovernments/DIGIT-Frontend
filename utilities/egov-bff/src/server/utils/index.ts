@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { ProduceRequest } from "kafka-node";
-import { producer } from "../Kafka/Producer";
+import { httpRequest } from "../utils/request";
+import config from "../config/index";
+
 
 import { logger } from "./logger";
 const NodeCache = require("node-cache");
@@ -194,22 +195,9 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
-const produceIngestion = (messages: any, topicName: string) => {
-  const payloads: ProduceRequest[] = [
-    {
-      topic: topicName,
-      messages: JSON.stringify(messages),
-    },
-  ];
-
-  producer.send(payloads, (err, data) => {
-    if (err) {
-      console.error(`Producer Error: ${err}`);
-    } else {
-      console.log('Produced modified messages successfully.');
-      console.log("Data : ", data)
-    }
-  });
+const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo: any) => {
+  messages.Job.RequestInfo = RequestInfo
+  await httpRequest(config.host.serverHost + "/hcm-moz-impl/v1/ingest?ingestionType=user&fileStoreId=" + fileStoreId, messages.Job, undefined, undefined, undefined, undefined);
 };
 
 export {
