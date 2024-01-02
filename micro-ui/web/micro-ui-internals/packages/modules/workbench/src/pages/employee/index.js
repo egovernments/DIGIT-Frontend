@@ -13,13 +13,16 @@ import MDMSSearchv2 from "./MDMSSearchv2";
 import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
+import UploadBoundary from "./UploadBoundary";
+import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
+import BoundaryRelationshipSearch from "./BoundaryRelationshipSearch";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
-  const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
-  const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
 
   const crumbs = [
     {
@@ -37,7 +40,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       path: `/${window.contextPath}/employee/workbench/localisation-search`,
       content: t(`LOCALISATION_SEARCH`),
       show: pathVar.includes("localisation-") ? true : false,
-      isBack: pathVar.includes("localisation-search") ? true : false
+      isBack: pathVar.includes("localisation-search") ? true : false,
       // query:`moduleName=${moduleName}&masterName=${masterName}`
     },
 
@@ -45,21 +48,20 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       path: `/${window.contextPath}/employee/workbench/mdms-search-v2`,
       query: `moduleName=${moduleName}&masterName=${masterName}`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, masterName, moduleName)}`),
-      show: (masterName && moduleName) ? true : false,
-      isBack: pathVar.includes("mdms-search-v2") ? true : false
+      show: masterName && moduleName ? true : false,
+      isBack: pathVar.includes("mdms-search-v2") ? true : false,
     },
     {
       path: `/${window.contextPath}/employee/workbench/mdms-view`,
       content: t(`MDMS_VIEW`),
       show: pathVar.includes("mdms-edit") ? true : false,
-      query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`
+      query: `moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`,
     },
     {
       path: `/${window.contextPath}/employee/masters/response`,
       content: t(`${Digit.Utils.workbench.getMDMSLabel(pathVar, "", "")}`),
       show: Digit.Utils.workbench.getMDMSLabel(pathVar, "", "", ["mdms-search-v2", "localisation-search"]) ? true : false,
     },
-
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
@@ -70,28 +72,7 @@ const App = ({ path }) => {
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
   const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
-  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession
-
-  useEffect(() => {
-    // Function to clear session storage for keys with specific prefixes
-    const clearSessionStorageWithPrefix = (prefix) => {
-      Object.keys(sessionStorage).forEach((key) => {
-        if (key.startsWith(`Digit.${prefix}`)) {
-          sessionStorage.removeItem(key);
-        }
-      });
-    };
-    const currentUrl = window.location.href;
-    if (!currentUrl.includes("mdms-add-v2") && !currentUrl.includes("mdms-add-v4") && !currentUrl.includes("mdms-view")) {
-      clearSessionStorageWithPrefix('MDMS_add');
-    }
-    if (!currentUrl.includes("mdms-view")) {
-      clearSessionStorageWithPrefix('MDMS_view');
-    }
-    if (!currentUrl.includes("mdms-edit")) {
-      clearSessionStorageWithPrefix('MDMS_edit');
-    }
-  }, [window.location.href]);
+  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
 
   useEffect(() => {
     if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
@@ -121,7 +102,9 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/manage-master-data`} component={() => <MDMSManageMaster parentRoute={path} />} />
           <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path} />} />
           <PrivateRoute path={`${path}/localisation-add`} component={() => <LocalisationAdd parentRoute={path} />} />
-
+          <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
+          <PrivateRoute path={`${path}/create-boundary-hierarchy-type`} component={() => <BoundaryHierarchyTypeAdd />} />
+          <PrivateRoute path={`${path}/boundary-relationship-search`} component={() => <BoundaryRelationshipSearch />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

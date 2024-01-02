@@ -1,16 +1,16 @@
-export const Config = {
-  label: "WBH_LOCALISATION_SEARCH_HEADER",
+export const searchBoundaryRelationshipConfig = {
+  label: "WBH_BOUNDARY_SEARCH_HEADER",
   type: "search",
   actionLabel: "WBH_ADD_LOCALISATION",
   actionRole: "LOC_ADMIN",
   actionLink: "workbench/localisation-add",
   apiDetails: {
-    serviceName: "/localization/messages/v1/_search",
+    serviceName: "/boundary-service/boundary-relationships/_search",
     requestParam: {},
     requestBody: {},
     minParametersForSearchForm: 1,
     masterName: "commonUiConfig",
-    moduleName: "SearchLocalisationConfig",
+    moduleName: "SearchBoundaryHierarchyConfig",
     tableFormJsonPath: "requestBody.custom",
     filterFormJsonPath: "requestBody.custom",
     searchFormJsonPath: "requestParam",
@@ -37,41 +37,29 @@ export const Config = {
         },
         fields: [
           {
-            label: "WBH_LOC_LANG",
+            label: "WBH_HIERARCHY_TYPE",
             type: "dropdown",
             isMandatory: false,
             disable: false,
             populators: {
-              name: "locale",
-              optionsKey: "label",
+              name: "hierarchyType",
+              optionsKey: "hierarchyType",
               optionsCustomStyle: { top: "2.3rem" },
-              mdmsConfig: {
-                masterName: "StateInfo",
-                moduleName: "common-masters",
-                // localePrefix: "WBH_LOCALE_",
-                select: "(data)=>{ return data['common-masters'].StateInfo?.[0]?.languages }",
-              },
             },
           },
           {
-            label: "WBH_LOC_MODULE",
+            label: "WBH_BOUNDARY_TYPE",
             type: "dropdown",
             isMandatory: false,
             disable: false,
             populators: {
-              name: "module",
-              optionsKey: "label",
+              name: "boundaryType",
+              optionsKey: "boundaryType",
               optionsCustomStyle: { top: "2.3rem" },
-              mdmsConfig: {
-                masterName: "StateInfo",
-                moduleName: "common-masters",
-                // localePrefix: "WBH_LOCALE_",
-                select: "(data)=>{ return data['common-masters'].StateInfo?.[0]?.localizationModules }",
-              },
             },
           },
           {
-            label: "WBH_LOC_CODE",
+            label: "CORE_COMMON_NAME",
             type: "text",
             isMandatory: false,
             disable: false,
@@ -79,15 +67,6 @@ export const Config = {
               name: "codes",
             },
           },
-          // {
-          //   label: "WBH_LOC_MESSAGE",
-          //   type: "text",
-          //   isMandatory: false,
-          //   disable: false,
-          //   populators: {
-          //       name: "message",
-          //   }
-          // },
         ],
       },
       label: "",
@@ -100,21 +79,34 @@ export const Config = {
         tableClassName: "table-fixed-last-column table",
         columns: [
           {
-            label: "WBH_LOC_HEADER_CODE",
-            jsonPath: "boundary",
+            label: "WBH_LOCALISATION_VALUE",
+            jsonPath: "boundaryType",
+            additionalCustomization: true,
           },
           {
-            label: "WBH_LOC_HEADER_DEFAULT",
-            jsonPath: "message",
+            label: "WBH_CODE",
+            jsonPath: "code",
+            additionalCustomization: true,
           },
           {
-            label: "WBH_LOC_HEADER_MESSAGE",
-            jsonPath: "defaultMessage",
+            label: "WBH_PARENT_BOUNDARY_NAME",
+            jsonPath: "hierarchyType",
+            // additionalCustomization: true,
           },
+
           {
-            label: "WBH_LOC_HEADER_MODULENAME",
-            jsonPath: "module",
+            label: "WBH_LEVEL",
+            jsonPath: "",
+            // additionalCustomization: true,
           },
+          // {
+          //   label: "WBH_PARENT_BOUNDARY_NAME",
+          //   jsonPath: "",
+          // },
+          // {
+          //   label: "WBH_PARENT_BOUNDARY_LEVEL",
+          //   jsonPath: "boundaryType",
+          // },
           {
             label: "CS_COMMON_ACTION",
             // jsonPath: "message",
@@ -124,7 +116,7 @@ export const Config = {
         ],
         enableGlobalSearch: false,
         enableColumnSort: true,
-        resultsJsonPath: "messages",
+        resultsJsonPath: "TenantBoundary[0].boundary",
         manualPagination: false,
       },
       children: {},
@@ -132,5 +124,5 @@ export const Config = {
     },
   },
   additionalSections: {},
-  customHookName: "workbench.useLocalisationSearch",
+  customHookName: "",
 };
