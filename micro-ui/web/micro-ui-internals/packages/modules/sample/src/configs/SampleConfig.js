@@ -1,6 +1,6 @@
 export const newConfig = [
   {
-    head:"TEXT",
+    head: "TEXT",
     body: [
       {
         inline: true,
@@ -8,7 +8,7 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        populators: { name: "text-Default", error: "" },
+        populators: { name: "text-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -16,7 +16,7 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: true,
-        populators: { name: "text-Disabled", error: "" },
+        populators: { name: "text-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -25,12 +25,12 @@ export const newConfig = [
         type: "text",
         disable: false,
         nonEditable: true,
-        populators: { name: "text-Noneditable", error: "" },
+        populators: { name: "text-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         type: "text",
         disable: false,
         populators: { name: "text-Error", error: "Error!" },
@@ -41,8 +41,8 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        description: "Help text",
-        populators: { name: "text-With Description", error: "" },
+        description: "Help Text",
+        populators: { name: "text-With Description", error: "Error" },
       },
       {
         inline: true,
@@ -50,9 +50,8 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        value: "Value",
         charCount: true,
-        populators: { name: "text-With CharCount", error: "" },
+        populators: { name: "text-With CharCount", error: "Error!" },
       },
       {
         inline: true,
@@ -60,14 +59,14 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        description: "Help text",
+        description: "Help Text",
         charCount: true,
-        populators: { name: "text-With Des&CharCount", error: "" },
+        populators: { name: "text-With Des&CharCount", error: "Error!" },
       },
       {
         inline: true,
         label: "With Des&Err",
-        isMandatory: false,
+        isMandatory: true,
         type: "text",
         disable: false,
         description: "Help text",
@@ -80,16 +79,16 @@ export const newConfig = [
         isMandatory: true,
         type: "text",
         disable: false,
-        populators: { name: "text-Mandatory", error: "" },
+        populators: { name: "text-Mandatory", error: "Required" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         type: "text",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "text-With InfoMessage", error: "" },
+        infoMessage: "This is text field",
+        populators: { name: "text-With Info", error: "Error!" },
       },
       {
         inline: true,
@@ -97,29 +96,45 @@ export const newConfig = [
         isMandatory: true,
         type: "text",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "text-Info&Mandatory", error: "" },
+        infoMessage: "This is mandatory",
+        populators: { name: "text-Info&Mandatory", error: "Required" },
       },
       {
         inline: true,
         label: "With Innerlabel",
-        placeholder:"Enter Text",
+        placeholder: "Enter Text",
         isMandatory: false,
         type: "text",
         disable: false,
-        populators: { name: "text-With Innerlabel", error: "" },
+        populators: { name: "text-With Innerlabel", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "With Validation",
+        isMandatory: true,
+        type: "text",
+        disable: false,
+        populators: { name: "text-With Validation", error: "Error!", validation: { minlength: 2, maxlength: 10 } },
+      },
+      {
+        inline: true,
+        label: "With CustomIcon",
+        isMandatory: false,
+        type: "text",
+        disable: false,
+        populators: { name: "text-With CustomIcon", error: "Error!", customIcon: "DownloadIcon" },
       },
       {
         inline: true,
         label: "Complete",
-        placeholder:"Enter Text",
+        placeholder: "Enter Text",
         isMandatory: true,
         type: "text",
         disable: false,
-        infoMessage:"Information",
-        description:"Help Text",
-        charCount:true,
-        populators: { name: "text-Complete", error: "" },
+        infoMessage: "Complete text field",
+        description: "Help Text",
+        charCount: true,
+        populators: { name: "text-Complete", error: "Required" },
       },
       {
         inline: true,
@@ -129,12 +144,12 @@ export const newConfig = [
         disable: false,
         withoutLabel: true,
         description: "without label",
-        populators: { name: "text-Without Label", error: "" },
+        populators: { name: "text-Without Label", error: "Error!" },
       },
     ],
   },
   {
-    head:"DATE",
+    head: "DATE",
     body: [
       {
         inline: true,
@@ -143,7 +158,7 @@ export const newConfig = [
         description: "",
         type: "date",
         disable: false,
-        populators: { name: "date-Default", error: "" },
+        populators: { name: "date-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -152,7 +167,7 @@ export const newConfig = [
         description: "",
         type: "date",
         disable: true,
-        populators: { name: "date-Disabled", error: "" },
+        populators: { name: "date-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -162,12 +177,12 @@ export const newConfig = [
         type: "date",
         disable: false,
         nonEditable: true,
-        populators: { name: "date-Noneditable", error: "" },
+        populators: { name: "date-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "date",
         disable: false,
@@ -175,19 +190,19 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "date",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "date-With InfoMessage", error: "" },
+        infoMessage: "Select the date",
+        populators: { name: "date-With Info", error: "Error!" },
       },
     ],
   },
   {
-    head:"TIME",
-    body:[
+    head: "TIME",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -195,7 +210,7 @@ export const newConfig = [
         description: "",
         type: "time",
         disable: false,
-        populators: { name: "time-Default", error: "" },
+        populators: { name: "time-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -204,7 +219,7 @@ export const newConfig = [
         description: "",
         type: "time",
         disable: true,
-        populators: { name: "time-Disabled", error: "" },
+        populators: { name: "time-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -214,12 +229,12 @@ export const newConfig = [
         type: "time",
         disable: false,
         nonEditable: true,
-        populators: { name: "time-Noneditable", error: "" },
+        populators: { name: "time-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "time",
         disable: false,
@@ -227,19 +242,19 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "time",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "time-With InfoMessage", error: "" },
+        infoMessage: "Select time",
+        populators: { name: "time-With Info", error: "Error!" },
       },
-    ]
+    ],
   },
   {
-    head:"GEOLOACTION",
-    body:[
+    head: "GEOLOACTION",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -247,7 +262,7 @@ export const newConfig = [
         description: "",
         type: "geolocation",
         disable: false,
-        populators: { name: "geolocation-Default", error: "" },
+        populators: { name: "geolocation-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -256,7 +271,7 @@ export const newConfig = [
         description: "",
         type: "geolocation",
         disable: true,
-        populators: { name: "geolocation-Disabled", error: "" },
+        populators: { name: "geolocation-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -266,12 +281,12 @@ export const newConfig = [
         type: "geolocation",
         disable: false,
         nonEditable: true,
-        populators: { name: "geolocation-Noneditable", error: "" },
+        populators: { name: "geolocation-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "geolocation",
         disable: false,
@@ -279,19 +294,19 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "geolocation",
         disable: false,
-        infoMessage:"INformation",
-        populators: { name: "geolocation-With InfoMessage", error: "" },
+        infoMessage: "give your location details",
+        populators: { name: "geolocation-With Info", error: "Error!" },
       },
-    ]
+    ],
   },
   {
-    head:"NUMERIC",
-    body:[
+    head: "NUMERIC",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -299,7 +314,17 @@ export const newConfig = [
         description: "",
         type: "numeric",
         disable: false,
-        populators: { name: "numeric-Default", error: "" },
+        populators: { name: "numeric-Default", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "With Step Value",
+        isMandatory: false,
+        description: "",
+        type: "numeric",
+        disable: false,
+        step: "2",
+        populators: { name: "numeric-With Step Value", error: "Error!" },
       },
       {
         inline: true,
@@ -308,7 +333,7 @@ export const newConfig = [
         description: "",
         type: "numeric",
         disable: true,
-        populators: { name: "numeric-Disabled", error: "" },
+        populators: { name: "numeric-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -318,13 +343,12 @@ export const newConfig = [
         type: "numeric",
         disable: false,
         nonEditable: true,
-        value: 0,
-        populators: { name: "numeric-Noneditable", error: "" },
+        populators: { name: "numeric-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "numeric",
         disable: false,
@@ -332,19 +356,19 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "numeric",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "numeric-With InfoMessage", error: "" },
+        infoMessage: "this is numeric field",
+        populators: { name: "numeric-With Info", error: "Error!" },
       },
-    ]
+    ],
   },
   {
-    head:"PREFIX",
-    body:[
+    head: "PREFIX",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -352,7 +376,7 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: false,
-        populators: { name: "prefix-Default", error: "", prefix: "₹" },
+        populators: { name: "prefix-Default", error: "Error!", prefix: "₹" },
       },
       {
         inline: true,
@@ -361,7 +385,7 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: true,
-        populators: { name: "prefix-Disabled", error: "", prefix: "₹" },
+        populators: { name: "prefix-Disabled", error: "Error!", prefix: "₹" },
       },
       {
         inline: true,
@@ -371,12 +395,12 @@ export const newConfig = [
         type: "text",
         disable: false,
         nonEditable: true,
-        populators: { name: "prefix-Noneditable", error: "", prefix: "₹" },
+        populators: { name: "prefix-Noneditable", error: "Error!", prefix: "₹" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "text",
         disable: false,
@@ -389,24 +413,24 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: false,
-        description:"Help text",
-        populators: { name: "prefix-Default", error: "", prefix: "₹" },
+        description: "Help text",
+        populators: { name: "prefix-Default", error: "Error!", prefix: "₹" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "text",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "prefix-With InfoMessage", error: "", prefix: "₹" },
+        infoMessage: "text field with prefix",
+        populators: { name: "prefix-With Info", error: "Error!", prefix: "₹" },
       },
-    ]
+    ],
   },
   {
-    head:"SUFFIX",
-    body:[
+    head: "SUFFIX",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -414,7 +438,7 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: false,
-        populators: { name: "suffix-Default", error: "", suffix: "₹" },
+        populators: { name: "suffix-Default", error: "Error!", suffix: "₹" },
       },
       {
         inline: true,
@@ -423,7 +447,7 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: true,
-        populators: { name: "suffix-Disabled", error: "", suffix: "₹" },
+        populators: { name: "suffix-Disabled", error: "Error!", suffix: "₹" },
       },
       {
         inline: true,
@@ -433,12 +457,12 @@ export const newConfig = [
         type: "text",
         disable: false,
         nonEditable: true,
-        populators: { name: "suffix-Noneditable", error: "", suffix: "₹" },
+        populators: { name: "suffix-Noneditable", error: "Error!", suffix: "₹" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "text",
         disable: false,
@@ -451,24 +475,24 @@ export const newConfig = [
         description: "",
         type: "text",
         disable: false,
-        description:"Help Text",
-        populators: { name: "suffix-With Description", error: "", suffix: "₹" },
+        description: "Help Text",
+        populators: { name: "suffix-With Description", error: "Error!", suffix: "₹" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "text",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "suffix-With InfoMessage", error: "", suffix: "₹" },
+        infoMessage: "text field with suffix",
+        populators: { name: "suffix-With Info", error: "Error!", suffix: "₹" },
       },
-    ]
+    ],
   },
   {
-    head:"PASSWORD",
-    body:[
+    head: "PASSWORD",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -476,7 +500,7 @@ export const newConfig = [
         description: "",
         type: "password",
         disable: false,
-        populators: { name: "password-Default", error: "" },
+        populators: { name: "password-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -485,7 +509,7 @@ export const newConfig = [
         description: "",
         type: "password",
         disable: true,
-        populators: { name: "password-Disabled", error: "" },
+        populators: { name: "password-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -495,12 +519,12 @@ export const newConfig = [
         type: "password",
         disable: false,
         nonEditable: true,
-        populators: { name: "password-Noneditable", error: "" },
+        populators: { name: "password-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "password",
         disable: false,
@@ -513,24 +537,32 @@ export const newConfig = [
         description: "",
         type: "password",
         disable: false,
-        description:"Help Text",
-        populators: { name: "password-With Description", error: "" },
+        description: "Help Text",
+        populators: { name: "password-With Description", error: "Error!" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "password",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "password-With InfoMessage", error: "" },
+        infoMessage: "This is password field",
+        populators: { name: "password-With Info", error: "Error!" },
       },
-    ]
+      {
+        inline: true,
+        label: "With Validation",
+        isMandatory: false,
+        type: "password",
+        disable: false,
+        populators: { name: "password-With Validation", error: "Error!", validation: { minlength: 6 } },
+      },
+    ],
   },
   {
-    head:"SEARCH",
-    body:[
+    head: "SEARCH",
+    body: [
       {
         inline: true,
         label: "Default",
@@ -538,7 +570,7 @@ export const newConfig = [
         description: "",
         type: "search",
         disable: false,
-        populators: { name: "search-Default", error: "" },
+        populators: { name: "search-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -547,7 +579,7 @@ export const newConfig = [
         description: "",
         type: "search",
         disable: true,
-        populators: { name: "search-Disabled", error: "" },
+        populators: { name: "search-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -557,12 +589,12 @@ export const newConfig = [
         type: "search",
         disable: false,
         nonEditable: true,
-        populators: { name: "search-Noneditable", error: "" },
+        populators: { name: "search-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "search",
         disable: false,
@@ -575,23 +607,23 @@ export const newConfig = [
         description: "",
         type: "search",
         disable: false,
-        description:"Help Text",
-        populators: { name: "search-With Description", error: "" },
+        description: "Help Text",
+        populators: { name: "search-With Description", error: "Error!" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         description: "",
         type: "search",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "search-With InfoMessage", error: "" },
+        infoMessage: "serach field",
+        populators: { name: "search-With Info", error: "Error!" },
       },
-    ]
+    ],
   },
   {
-    head:"TEXTAREA",
+    head: "TEXTAREA",
     body: [
       {
         inline: true,
@@ -600,7 +632,7 @@ export const newConfig = [
         description: "",
         type: "textarea",
         disable: false,
-        populators: { name: "textarea-Default", error: "" },
+        populators: { name: "textarea-Default", error: "Error!" },
       },
       {
         inline: true,
@@ -609,7 +641,7 @@ export const newConfig = [
         description: "",
         type: "textarea",
         disable: true,
-        populators: { name: "textarea-Disabled", error: "" },
+        populators: { name: "textarea-Disabled", error: "Error!" },
       },
       {
         inline: true,
@@ -619,12 +651,12 @@ export const newConfig = [
         type: "textarea",
         disable: false,
         nonEditable: true,
-        populators: { name: "textarea-Noneditable", error: "" },
+        populators: { name: "textarea-Noneditable", error: "Error!" },
       },
       {
         inline: true,
         label: "Error",
-        isMandatory: false,
+        isMandatory: true,
         description: "",
         type: "textarea",
         disable: false,
@@ -637,7 +669,7 @@ export const newConfig = [
         type: "textarea",
         disable: false,
         description: "Help text",
-        populators: { name: "textarea-With Description", error: "" },
+        populators: { name: "textarea-With Description", error: "Error!" },
       },
       {
         inline: true,
@@ -645,24 +677,23 @@ export const newConfig = [
         isMandatory: false,
         type: "textarea",
         disable: false,
-        value: "Value",
         charCount: true,
-        populators: { name: "textarea-With CharCount", error: "" },
+        populators: { name: "textarea-With CharCount", error: "Error!" },
       },
       {
         inline: true,
-        label: "With Deas&CharCount",
+        label: "With Des&CharCount",
         isMandatory: false,
         type: "textarea",
         disable: false,
         description: "Help text",
         charCount: true,
-        populators: { name: "textarea-With Deas&CharCount", error: "" },
+        populators: { name: "textarea-With Des&CharCount", error: "Error!" },
       },
       {
         inline: true,
         label: "With Des&Err",
-        isMandatory: false,
+        isMandatory: true,
         type: "textarea",
         disable: false,
         description: "Help text",
@@ -675,46 +706,54 @@ export const newConfig = [
         isMandatory: true,
         type: "textarea",
         disable: false,
-        populators: { name: "textarea-Mandatory", error: "" },
+        populators: { name: "textarea-Mandatory", error: "Required" },
       },
       {
         inline: true,
-        label: "With InfoMessage",
+        label: "With Info",
         isMandatory: false,
         type: "textarea",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "textarea-With InfoMessage", error: "" },
+        infoMessage: "Textare field information",
+        populators: { name: "textarea-With Info", error: "Error!" },
       },
       {
         inline: true,
-        label: "With Info&Mandatory",
+        label: "Info&Mandatory",
         isMandatory: true,
         type: "textarea",
         disable: false,
-        infoMessage:"Information",
-        populators: { name: "textarea-With Info&Mandatory", error: "" },
+        infoMessage: "Textare field information",
+        populators: { name: "textarea-Info&Mandatory", error: "Required" },
       },
       {
         inline: true,
         label: "With InnerLabel",
-        placeholder:"Description",
+        placeholder: "Description",
         isMandatory: false,
         type: "textarea",
         disable: false,
-        populators: { name: "textarea-With InnerLabel", error: "" },
+        populators: { name: "textarea-With InnerLabel", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "With Validation",
+        isMandatory: false,
+        type: "textarea",
+        disable: false,
+        populators: { name: "textarea-With Validation", error: "Error!", validation: { minlength: 20, maxlength: 500 } },
       },
       {
         inline: true,
         label: "Complete",
-        placeholder:"Description",
+        placeholder: "Description",
         isMandatory: true,
         type: "textarea",
         disable: false,
-        infoMessage:"Information",
-        description:"Help Text",
-        charCount:true,
-        populators: { name: "textarea-Complete", error: "" },
+        infoMessage: "Textare field complete",
+        description: "Help Text",
+        charCount: true,
+        populators: { name: "textarea-Complete", error: "Required" },
       },
       {
         inline: true,
@@ -724,13 +763,13 @@ export const newConfig = [
         disable: false,
         withoutLabel: true,
         description: "without label",
-        populators: { name: "textarea-Withoutlabel", error: "" },
+        populators: { name: "textarea-Withoutlabel", error: "Error!" },
       },
     ],
   },
   {
-    head:"RADIO",
-    body:[
+    head: "RADIO",
+    body: [
       {
         isMandatory: false,
         type: "radio",
@@ -740,25 +779,7 @@ export const newConfig = [
         populators: {
           name: "radio-Deafult",
           optionsKey: "name",
-          error: "",
-          required: true,
-          mdmsConfig: {
-            masterName: "GenderType",
-            moduleName: "common-masters",
-            localePrefix: "COMMON_GENDER",
-          },
-        }
-      },
-      {
-        isMandatory: false,
-        type: "radio",
-        key: "genders",
-        label: "Disabled",
-        disable: true,
-        populators: {
-          name: "radio-Disabled",
-          optionsKey: "name",
-          error: "",
+          error: "Error!",
           required: true,
           mdmsConfig: {
             masterName: "GenderType",
@@ -769,6 +790,24 @@ export const newConfig = [
       },
       {
         isMandatory: false,
+        type: "radio",
+        key: "genders",
+        label: "Disabled",
+        disable: true,
+        populators: {
+          name: "radio-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: true,
+          mdmsConfig: {
+            masterName: "GenderType",
+            moduleName: "common-masters",
+            localePrefix: "COMMON_GENDER",
+          },
+        },
+      },
+      {
+        isMandatory: true,
         type: "radio",
         key: "genders",
         label: "Error",
@@ -794,7 +833,7 @@ export const newConfig = [
         populators: {
           name: "radio-Default-2",
           optionsKey: "name",
-          error: "",
+          error: "Error!",
           required: false,
           options: [
             {
@@ -812,11 +851,11 @@ export const newConfig = [
           ],
         },
       },
-    ]
+    ],
   },
   {
-    head:"TOGGLE",
-    body:[
+    head: "TOGGLE",
+    body: [
       {
         isMandatory: false,
         key: "toggle",
@@ -826,7 +865,7 @@ export const newConfig = [
         populators: {
           name: "toggle-Default",
           optionsKey: "name",
-          error: "",
+          error: "Error!",
           required: false,
           options: [
             {
@@ -844,11 +883,11 @@ export const newConfig = [
           ],
         },
       },
-    ]
+    ],
   },
   {
-    head:"DROPDOWN",
-    body:[
+    head: "DROPDOWN",
+    body: [
       {
         isMandatory: false,
         type: "dropdown",
@@ -886,7 +925,7 @@ export const newConfig = [
         },
       },
       {
-        isMandatory: false,
+        isMandatory: true,
         type: "dropdown",
         key: "genders",
         label: "Error",
@@ -903,6 +942,651 @@ export const newConfig = [
           },
         },
       },
-    ]
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "With Icons",
+        disable: false,
+        populators: {
+          name: "dropdown-WIth Icons",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          showIcon: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+              icon: "Article",
+            },
+            {
+              code: "2",
+              name: "Option2",
+              icon: "Article",
+            },
+            {
+              code: "3",
+              name: "Option3",
+              icon: "Article",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "NESTED DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default",
+        disable: false,
+        variant: "nesteddropdown",
+        populators: {
+          name: "nesteddropdown-Default",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Disabled",
+        disable: true,
+        variant: "nesteddropdown",
+        populators: {
+          name: "nesteddropdown-Disabled",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        type: "dropdown",
+        key: "genders",
+        label: "Error",
+        disable: false,
+        variant: "nesteddropdown",
+        populators: {
+          name: "nesteddropdown-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "With Icons",
+        disable: false,
+        variant: "nesteddropdown",
+        populators: {
+          name: "nesteddropdown-With Icons",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A", icon: "Article" },
+                { code: "Category A.Option B", name: "Option B", icon: "Article" },
+                { code: "Category A.Option C", name: "Option C", icon: "Article" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A", icon: "Article" },
+                { code: "Category B.Option 2", name: "Option 2", icon: "Article" },
+                { code: "Category B.Option 3", name: "Option 3", icon: "Article" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "MULTISELECT DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Default",
+        disable: false,
+        populators: {
+          name: "multiselectdropdown-Default",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+            },
+            {
+              code: "2",
+              name: "Option2",
+            },
+            {
+              code: "3",
+              name: "Option3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        populators: {
+          name: "multiselectdropdown-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+            },
+            {
+              code: "2",
+              name: "Option2",
+            },
+            {
+              code: "3",
+              name: "Option3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Error",
+        disable: false,
+        populators: {
+          name: "multiselectdropdown-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+            },
+            {
+              code: "2",
+              name: "Option2",
+            },
+            {
+              code: "3",
+              name: "Option3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "With Icons",
+        disable: false,
+        populators: {
+          name: "multiselectdropdown-With Icons",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+              icon: "Article",
+            },
+            {
+              code: "2",
+              name: "Option2",
+              icon: "Article",
+            },
+            {
+              code: "3",
+              name: "Option3",
+              icon: "Article",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "NESTED MULTISELECT DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Default",
+        disable: false,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-Default",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Error",
+        disable: false,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "With Icons",
+        disable: false,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-With Icons",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A", icon: "Article" },
+                { code: "Category A.Option B", name: "Option B", icon: "Article" },
+                { code: "Category A.Option C", name: "Option C", icon: "Article" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A", icon: "Article" },
+                { code: "Category B.Option 2", name: "Option 2", icon: "Article" },
+                { code: "Category B.Option 3", name: "Option 3", icon: "Article" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "TREE DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default",
+        disable: false,
+        variant: "treedropdown",
+        populators: {
+          name: "treedropdown-Default",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                {
+                  code: "Category A.Option A",
+                  name: "Option A",
+                  options: [
+                    { code: "Category A.Option A.Option 1", name: "Option 1" },
+                    { code: "Category A.Option A.Option 2", name: "Option 2" },
+                  ],
+                },
+                {
+                  code: "Category A.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category A.Option B.Option 1", name: "Option 1" },
+                    { code: "Category A.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                {
+                  code: "Category B.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category B.Option B.Option 1", name: "Option 1" },
+                    { code: "Category B.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [{ code: "Category C.Option A", name: "Option A" }],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Disabled",
+        disable: true,
+        variant: "treedropdown",
+        populators: {
+          name: "treedropdown-Disabled",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                {
+                  code: "Category A.Option A",
+                  name: "Option A",
+                  options: [
+                    { code: "Category A.Option A.Option 1", name: "Option 1" },
+                    { code: "Category A.Option A.Option 2", name: "Option 2" },
+                  ],
+                },
+                {
+                  code: "Category A.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category A.Option B.Option 1", name: "Option 1" },
+                    { code: "Category A.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                {
+                  code: "Category B.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category B.Option B.Option 1", name: "Option 1" },
+                    { code: "Category B.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [{ code: "Category C.Option A", name: "Option A" }],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        type: "dropdown",
+        key: "genders",
+        label: "Error",
+        disable: false,
+        variant: "treedropdown",
+        populators: {
+          name: "treedropdown-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                {
+                  code: "Category A.Option A",
+                  name: "Option A",
+                  options: [
+                    { code: "Category A.Option A.Option 1", name: "Option 1" },
+                    { code: "Category A.Option A.Option 2", name: "Option 2" },
+                  ],
+                },
+                {
+                  code: "Category A.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category A.Option B.Option 1", name: "Option 1" },
+                    { code: "Category A.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                {
+                  code: "Category B.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category B.Option B.Option 1", name: "Option 1" },
+                    { code: "Category B.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [{ code: "Category C.Option A", name: "Option A" }],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "CHECKBOX",
+    body: [
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: false,
+        withoutLabel: true,
+        populators: { name: "checkbox-Default", error: "Error!", title: "" },
+      },,
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: false,
+        withoutLabel: true,
+        populators: { name: "checkbox-Labelled", error: "Error!", title: "Labelled" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: true,
+        withoutLabel: true,
+        populators: { name: "checkbox-Disabled", error: "Error!", title: "Disabled" },
+      },
+    ],
   },
 ];

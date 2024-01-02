@@ -2,92 +2,181 @@
 
 .digit-button-primary {
   @extend .light-primary-button;
+  @apply text-center cursor-pointer outline-none inline-flex;
   height: fit-content;
-  @apply text-center cursor-pointer outline-none px-lg py-sm;
+  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
   box-shadow: 0px -2px 0px 0px theme(digitv2.lightTheme.text-color-primary) inset;
 
   &.disabled {
-    opacity: 0.5;
+    @apply opacity-50;
+    background: theme(digitv2.lightTheme.text-color-disabled);
   }
+
   &:focus {
     @apply outline-none;
   }
 
+  &:hover {
+    background: #EA631F;
+    box-shadow: none;
+  }
+
+  &:active {
+    @apply bg-primary-main;
+    box-shadow: 0px 0px 4.5px 0px theme(digitv2.lightTheme.primary);
+  }
+
   h2 {
-    @apply font-medium text-white;
-    display: flex;
+    @apply font-medium text-white flex leading-6;
     justify-content: center;
     align-items: center;
     margin: 0;
-    font-family: theme(digitv2.fontFamily.sans);
     font-size: 1.1875rem;
     font-style: theme(digitv2.fontStyle.normal);
-    line-height: 1.5rem;
+    font-family: theme(digitv2.fontFamily.sans)
   }
 }
 
 .digit-action-cancel {
-  background-color: #d6d5d4;
+  @apply bg-border text-center outline-none px-lg;
   text-align: center;
   border-color: #464646;
   border-bottom: 1px;
   border-style: solid;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  padding-left: 24px;
-  padding-right: 24px;
 
   &.disabled {
-    opacity: 0.5;
+    @apply opacity-50;
   }
+
   &:focus {
     @apply outline-none;
   }
 
   h2 {
-    @apply font-rc font-medium text-black;
+    @apply font-medium text-black;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
+    font-family: theme(digitv2.fontFamily.sans)
   }
 }
 
 .digit-button-secondary {
   @extend .light-paper-secondary;
+  @apply text-center cursor-pointer border-primary-main border border-solid outline-none bg-white inline-flex;
   height: fit-content;
-  @apply text-center cursor-pointer border-primary-main border-b-2 border-solid outline-none px-lg;
+  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
+
+  &:focus {
+    @apply outline-none;
+  }
+
+  &:hover {
+    @apply bg-white;
+    border: 2px solid theme(digitv2.lightTheme.primary);
+  }
+
+  &:active {
+    @apply bg-white;
+    border: 2px solid theme(digitv2.lightTheme.primary);
+    box-shadow: 0px 0px 4.5px 0px theme(digitv2.lightTheme.primary);
+  }
+
+  h2 {
+    @apply font-medium flex text-primary-main leading-6;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    font-size: 1.1875rem;
+    font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans)
+  }
+
+  &.disabled {
+    @apply opacity-50;
+    border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+
+    h2 {
+      color: theme(digitv2.lightTheme.text-color-disabled);
+    }
+  }
+}
+
+.digit-button-teritiary {
+  @extend .light-paper-secondary;
+  @apply text-center cursor-pointer outline-none inline-flex bg-grey-light;
+  height: fit-content;
+  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
 
   &:focus {
     @apply outline-none;
   }
 
   h2 {
-    @extend .light-primary;
-    @apply font-medium;
-    display: flex;
+    @apply font-medium flex leading-6 text-primary-main;
     justify-content: center;
     align-items: center;
     margin: 0;
-    font-family: theme(digitv2.fontFamily.sans);
     font-size: 1.1875rem;
     font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans)
   }
-  .disabled {
-    opacity: 0.5;
+
+  &.disabled {
+    @apply opacity-50;
+    border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+
+    h2 {
+      color: theme(digitv2.lightTheme.text-color-disabled);
+    }
   }
 }
 
+.digit-button-link {
+  @extend .light-paper-secondary;
+  @apply text-center cursor-pointer outline-none inline-flex bg-grey-light;
+  height: fit-content;
+  padding: 0.5rem 1.5rem;
+  gap: 0.5rem;
+
+  &:focus {
+    @apply outline-none;
+  }
+
+  h2 {
+    @apply font-regular flex text-primary-main leading-normal;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    font-size: 1rem;
+    font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans);
+    text-decoration-line: underline;
+  }
+
+  &.disabled {
+    @apply opacity-50;
+
+    h2 {
+      color: theme(digitv2.lightTheme.text-color-disabled);
+    }
+  }
+}
+
+.icon-label-container {
+  display: flex;
+}
+
 .digit-button-label {
-  width: 100%;
-  color: theme(digitv2.lightTheme.paper);
-  text-align: center;
-  font-family: theme(digitv2.fontFamily.sans);
+  @apply font-medium leading-6 text-center text-white w-full;
   font-size: 1.1875rem;
   font-style: theme(digitv2.fontStyle.normal);
-  font-weight: theme(digitv2.fontWeight.medium);
-  line-height: 1.5rem;
   text-transform: capitalize;
+  font-family: theme(digitv2.fontFamily.sans)
 }
 
 .digit-submit-bar {
@@ -101,8 +190,9 @@
   }
 
   h2 {
-    @apply font-rc font-medium text-legend text-white leading-10;
+    @apply font-medium text-legend text-white leading-10;
     margin: 0;
+    font-family: theme(digitv2.fontFamily.sans)
   }
 }
 
@@ -114,12 +204,14 @@
   }
 
   h2 {
-    @apply font-rc font-medium text-legend text-white leading-10;
+    @apply font-medium text-legend text-white leading-10;
     margin: 0;
+    font-family: theme(digitv2.fontFamily.sans)
   }
 }
 
 @screen dt {
+
   .digit-submit-bar,
   .digit-submit-bar-disabled {
     width: 240px;

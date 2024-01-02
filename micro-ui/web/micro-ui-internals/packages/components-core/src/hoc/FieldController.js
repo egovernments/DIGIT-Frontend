@@ -33,13 +33,15 @@ function FieldController(args) {
       )
     : null;
   const customRules = customValidation ? { validate: customValidation } : customValidations ? { validate: customValidation } : {};
+  const error = (populators?.name && errors && errors[populators?.name] && Object.keys(errors[populators?.name]).length) ? (populators?.error) : null
   const customProps = config?.customProps;
+
   return (
     <Controller
       defaultValue={formData?.[populators.name]}
       render={({ onChange, ref, value, onBlur }) => (
         <FieldV1
-          error= {populators.error}
+          error= {error}
           label={config.label}
           nonEditable = {config.nonEditable}
           placeholder={config.placeholder}
@@ -48,6 +50,7 @@ function FieldController(args) {
           charCount = {config.charCount}
           infoMessage={config.infoMessage}
           withoutLabel = {config.withoutLabel}
+          variant={config.variant}
           type={type}
           populators={populators}
           required={isMandatory}

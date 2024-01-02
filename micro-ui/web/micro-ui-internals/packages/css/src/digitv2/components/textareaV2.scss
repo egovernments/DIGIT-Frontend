@@ -32,10 +32,26 @@
 
 .digit-employee-card-textarea {
   @apply w-full;
-  width: 23.75rem;
   height: 6.25rem;
-  max-width: 37.5rem;
-  min-width: 12.5rem;
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+    min-width: 12.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    min-width: 9.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+    min-width: 12.5rem;
+  }
 }
 
 .digit-card-textarea:focus,

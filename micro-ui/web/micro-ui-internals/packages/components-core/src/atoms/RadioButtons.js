@@ -23,7 +23,7 @@ const RadioButtons = (props) => {
                   className="digit-radio-btn"
                   type="radio"
                   value={option}
-                  checked={isEqual(selected, option.code) ? 1 : 0}
+                  checked={(selected === option.code) || isEqual(selected, option) ? 1 : 0}
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props.name}

@@ -42,12 +42,17 @@ const Template = (args) => {
   }, [args.type]);
 
   const handleInputChange = (event) => {
-    const newValue = event.target.value;
-    const newType =event.target.type;
-    setValue(newValue);
-    setType(newType);
-
-    args.onChange({ ...event, target: { ...event.target, value: newValue , type:newType} });
+    if(event?.target){
+      const newValue= event?.target?.value;
+      const newType = event?.target?.type;
+      setValue(newValue);
+      setType(newType);
+      args.onChange({ ...event, target: { ...event.target, value: newValue, type:newType} });
+    }
+    else{
+      const newValue = event;
+      setValue(newValue);
+    }
   };
 
   return <FieldV1 {...args} value={value} onChange={handleInputChange} type={type}/>;
@@ -55,10 +60,17 @@ const Template = (args) => {
 
 const commonArgs ={
   type: "text",
+  config:{
+    step:"",
+  },
   populators: {
     prefix:"",
     suffix:"",
-    customIcon:""
+    customIcon:"",
+    validation:{
+      maxlength:"",
+      minlength:""
+    }
   },
   value:"",
   error:"",
@@ -109,4 +121,13 @@ export const Error = Template.bind({});
 Error.args = {
   ...commonArgs,
   error: "Error!"
+};
+
+export const WithCustomIcon  = Template.bind({});
+WithCustomIcon.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    customIcon:"DownloadIcon"
+  } 
 };

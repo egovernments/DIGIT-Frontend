@@ -1,57 +1,82 @@
-.digit-label-field-pair {
-  @apply mb-lg flex items-center;
+ .digit-label-field-pair {
+   @apply mb-lg flex;
 
-  & .label,
-  & header {
-    margin-right: 1.5rem;
-    width: 33%;
-    max-width: 17rem;
-    @media (max-width: 768px) {
-      /* Media query for tablets */
-      max-width: 12rem;
-    }
 
-    @media (max-width: 480px) {
-      /* Media query for mobile */
-      max-width: 10rem;
-    }
-  }
+   @media (min-width: 481px) {
+     align-items: center;
+   }
 
-  & .digit-field {
-    margin-right: 20%;
-    width: 60%;
-    max-width: 38rem;
-    @media (max-width: 768px) {
-      /* Media query for tablets */
-      max-width: 28rem;
-    }
-    @media (max-width: 480px) {
-      /* Media query for mobile */
-      max-width: 15rem;
-    }
-  }
-}
+   @media (max-width: 480px) {
+     flex-direction: column;
+     align-items: flex-start;
+     margin-left: 60px;
+   }
 
-@screen dt {
-  .digit-employee-card {
-    .digit-label-field-pair {
-      @apply mb-lg flex items-center;
+   & .label,
+   & header {
+     margin-right: 1.5rem;
+     width: 33%;
+     max-width: 17rem;
 
-      h2 {
-        width: 30%;
-      }
+     @media (max-width: 768px) {
+       /* Media query for tablets */
+       max-width: 12rem;
+     }
 
-      .digit-field {
-        width: 50%;
-        margin-right: 20%;
-        .field {
-          margin-right: unset;
-        }
-        .digit-field {
-          @apply mb-lg;
-          margin-right: unset;
-        }
-      }
-    }
-  }
-}
+     @media (max-width: 480px) {
+       /* Media query for mobile */
+       max-width: 10rem;
+     }
+   }
+
+   & .digit-field {
+     margin-right: 20%;
+     width: 60%;
+     max-width: 38rem;
+
+     @media (min-width: 481px) {
+       /* Media query for tablets */
+       max-width: 27.5rem;
+       min-width: 12.5rem;
+     }
+
+     @media (max-width: 480px) {
+       /* Media query for mobile */
+       max-width: 20.5rem;
+       min-width: 9.75rem;
+       width: 100%;
+     }
+
+     @media (min-width: 768px) {
+       /* Media query for desktop */
+       max-width: 37.5rem;
+       min-width: 12.5rem;
+     }
+   }
+ }
+
+ @screen dt {
+   .digit-employee-card {
+     .digit-label-field-pair {
+       @apply mb-lg flex items-center;
+
+       h2 {
+         width: 30%;
+       }
+
+       .digit-field {
+         width: 50%;
+         margin-right: 20%;
+
+         .field {
+           margin-right: unset;
+         }
+
+         .digit-field {
+           @apply mb-lg;
+           margin-right: unset;
+         }
+       }
+     }
+   }
+ }

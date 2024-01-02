@@ -7,7 +7,7 @@
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
-  color:theme(digitv2.lightTheme.text-color-primary);
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-text-input {
@@ -21,6 +21,7 @@
   }
 
   &.error {
+
     input,
     .digit-prefix,
     .digit-suffix,
@@ -71,6 +72,7 @@
   }
 
   &.noneditable {
+
     input,
     .digit-prefix,
     .digit-suffix,
@@ -81,13 +83,16 @@
       background: theme(digitv2.lightTheme.background);
       color: theme(digitv2.lightTheme.text-color-disabled);
     }
+
     input {
       color: theme(digitv2.lightTheme.text-color-secondary);
     }
+
     .digit-numeric-button-prefix,
     .digit-prefix {
       border-right-style: hidden;
     }
+
     .digit-numeric-button-suffix,
     .digit-suffix {
       border-left-style: hidden;
@@ -101,19 +106,18 @@
     position: absolute;
     width: 1.5rem;
     height: 1.5rem;
-    right:0.75rem;
+    right: 0.75rem;
   }
 
   input[type="date"]:disabled::-webkit-calendar-picker-indicator,
   input[type="time"]:disabled::-webkit-calendar-picker-indicator {
     visibility: visible;
-    color: theme(digitv2.lightTheme.divider);
   }
 
   input[type="date"]:in-range::-webkit-datetime-edit,
   input[type="time"]:in-range::-webkit-datetime-edit,
   input[type="date"]:disabled::-webkit-datetime-edit,
-  input[type="time"]:disabled::-webkit-datetime-edit{
+  input[type="time"]:disabled::-webkit-datetime-edit {
     display: none;
   }
 
@@ -141,7 +145,7 @@
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
-  color:theme(digitv2.lightTheme.text-color-primary);
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-employee-card-input {
@@ -154,7 +158,6 @@
 }
 
 .digit-employee-card-input:disabled {
-  @extend .typography.text-body-s;
   @apply border-grey-dark text-grey-dark !important;
   pointer-events: none !important;
 }
@@ -176,7 +179,7 @@
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
-  color:theme(digitv2.lightTheme.text-color-primary);
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-inputWrapper {
@@ -277,11 +280,30 @@
   position: relative;
   display: flex;
   align-items: center;
-  width: 23.75rem;
   height: 2.5rem;
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+    min-width: 12.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    min-width: 9.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+    min-width: 12.5rem;
+  }
 }
 
-.input-container:focus-within{
+.input-container:focus-within {
+
   .digit-numeric-button-prefix,
   .digit-numeric-button-suffix,
   .digit-prefix,
@@ -341,5 +363,5 @@
   width: 1.5rem;
   height: 1.5rem;
   top: 0.5rem;
-  left: 21.5rem;
+  right: 0.75rem;
 }

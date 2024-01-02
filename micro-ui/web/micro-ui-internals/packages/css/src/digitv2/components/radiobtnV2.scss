@@ -8,6 +8,10 @@
   justify-content: "flex-start";
   gap: "3rem";
 
+  @media (max-width: 480px) {
+    flex-direction: column;
+  }
+
   div {
     @apply block mb-md;
   }

@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { SVG } from "./SVG";
+import TreeSelect from "./TreeSelect";
 
 const TextField = (props) => {
   const [value, setValue] = useState(props.selectedVal ? props.selectedVal : "");
@@ -155,6 +156,92 @@ const Dropdown = (props) => {
     if (!isSelectedSameAsOptions) setSelectedOption(null);
   }
 
+  const IconRender = (iconReq) => {
+    try {
+      const components = require("@egovernments/digit-ui-react-components");
+      const DynamicIcon = components?.SVG[iconReq] || components?.[iconReq];
+      if (DynamicIcon) {
+        const svgElement = DynamicIcon({
+          width: "1.25rem",
+          height: "1.25rem",
+          fill: "#505A5F",
+          className: "",
+        });
+        return svgElement;
+      } else {
+        console.log("Icon not found");
+        return null;
+      }
+    } catch (error) {
+      console.error("Icon not found");
+      return null;
+    }
+  };
+
+  const flattenOptions = (options) => {
+    let flattened = [];
+
+    const flattenNestedOptions = (nestedOptions) => {
+      nestedOptions.forEach((nestedOption) => {
+        flattened.push(nestedOption);
+        if (nestedOption.options) {
+          flattenNestedOptions(nestedOption.options);
+        }
+      });
+    };
+
+    options.forEach((option) => {
+      if (option.options) {
+        flattened.push(option);
+        flattenNestedOptions(option.options);
+      } else {
+        flattened.push(option);
+      }
+    });
+
+    return flattened;
+  };
+
+  const flattenedOptions = flattenOptions(filteredOption);
+
+  const renderOption = (option, index) => {
+    return (
+      <div
+        className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`}
+        style={index === optionIndex ? { opacity: 1, backgroundColor: "rgba(238, 238, 238, var(--bg-opacity))" } : {}}
+        key={index}
+        onClick={() => onSelect(option)}
+      >
+        {props?.showIcon && option?.icon && IconRender(option?.icon)}
+        {props.isPropertyAssess ? (
+          <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
+        ) : (
+          <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
+        )}
+      </div>
+    );
+  };
+
+  const renderOptions = () => {
+    const optionsToRender = props.variant === "nesteddropdown" || props.variant === "treedropdown" ? flattenedOptions : filteredOption;
+
+    return optionsToRender.map((option, index) => {
+      if (option.options) {
+        return (
+          <div key={index} className="digit-nested-category">
+            <div className="digit-category-name">
+              {props.variant === "treedropdown" && option.options.length > 0 && (
+                <SVG.ArrowDropDown width="1.5rem" height="1.5rem" className="cp" fill="black" />
+              )}
+              {option.name}
+            </div>
+          </div>
+        );
+      } else {
+        return renderOption(option, index);
+      }
+    });
+  };
   return (
     <div
       className={`${user_type === "employee" ? "digit-employee-select-wrap" : "digit-select-wrap"} ${props?.className ? props?.className : ""}`}
@@ -189,7 +276,9 @@ const Dropdown = (props) => {
                 ? props.t
                   ? props.isMultiSelectEmp
                     ? `${selectedOption} ${t("BPA_SELECTED_TEXT")}`
-                    : props.t(props.optionKey ? selectedOption[props.optionKey] : selectedOption)
+                    : props.t(
+                        (props.variant === "nesteddropdown" ||  props.variant==="treedropdown") ? selectedOption.code : props.optionKey ? selectedOption[props.optionKey] : selectedOption
+                      )
                   : props.optionKey
                   ? selectedOption[props.optionKey]
                   : selectedOption
@@ -206,7 +295,9 @@ const Dropdown = (props) => {
             onBlur={props?.onBlur}
             inputRef={props.ref}
           />
-          {props.showSearchIcon ? null : <SVG.ArrowDropDown fill="black" onClick={dropdownSwitch} className="cp" disable={props.disabled} />}
+          {props.showSearchIcon ? null : (
+            <SVG.ArrowDropDown fill={props?.disabled ? "#B1B4B6" : "black"} onClick={dropdownSwitch} className="cp" disable={props.disabled} />
+          )}
           {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disabled} /> : null}
         </div>
       )}
@@ -218,36 +309,17 @@ const Dropdown = (props) => {
             style={{ ...props.optionCardStyles }}
             ref={optionRef}
           >
-            {filteredOption &&
-              filteredOption.map((option, index) => {
-                return (
-                  <div
-                    className={`cp profile-dropdown--item display: flex `}
-                    style={
-                      index === optionIndex
-                        ? {
-                            opacity: 1,
-                            backgroundColor: "rgba(238, 238, 238, var(--bg-opacity))",
-                          }
-                        : {}
-                    }
-                    key={index}
-                    onClick={() => onSelect(option)}
-                  >
-                    {option.icon && <span className="icon"> {option.icon} </span>}
-                    {props.isPropertyAssess ? (
-                      <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
-                    ) : (
-                      <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
-                    )}
-                  </div>
-                );
-              })}
-            {filteredOption && filteredOption.length === 0 && (
-              <div className={`cp profile-dropdown--item display: flex `} key={"-1"} onClick={() => {}}>
-                {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
-              </div>
+            {(props.variant === "treedropdown") ? (
+              <TreeSelect options={filteredOption} onSelect={onSelect} selectedOption={selectedOption} variant={props.variant}/>
+            ) : (
+              renderOptions()
             )}
+            {(props.variant === "nesteddropdown" ? flattenedOptions : filteredOption) &&
+              (props.variant === "nesteddropdown" ? flattenedOptions : filteredOption).length === 0 && (
+                <div className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`} key={"-1"} onClick={() => {}}>
+                  {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
+                </div>
+              )}
           </div>
         ) : (
           <div

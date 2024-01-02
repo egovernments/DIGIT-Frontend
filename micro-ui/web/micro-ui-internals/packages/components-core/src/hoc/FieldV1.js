@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, ToggleSwitch, SVG , MultiSelectDropdown, MobileNumber} from "../atoms";
+import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, SVG, MultiSelectDropdown, MobileNumber} from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { CustomDropdown } from "../molecules";
@@ -25,6 +25,12 @@ const FieldV1 = ({
   config,
   errors,
   infoMessage,
+  component,
+  sectionFormCategory,
+  formData,
+  selectedFormCategory,
+  controllerProps,
+  variant
 }) => {
   const { t } = useTranslation();
 
@@ -75,19 +81,24 @@ const FieldV1 = ({
           <TextInput
             type={type}
             value={value}
+            name={populators.name}
             onChange={onChange}
             error={error}
-            label={label}
             disabled={disabled}
             nonEditable={nonEditable}
             placeholder={placeholder}
             inline={inline}
             required={required}
-            description={description}
-            charCount={charCount}
-            withoutLabel={withoutLabel}
             populators={populators}
             inputRef={ref}
+            step={config?.step}
+            errorStyle={errors?.[populators.name]}
+            max={populators?.validation?.max}
+            min={populators?.validation?.min}
+            maxlength={populators?.validation?.maxlength}
+            minlength={populators?.validation?.minlength}
+            customIcon={populators?.customIcon}
+            customClass={populators?.customClass}
           />
         );
       case "textarea":
@@ -96,19 +107,19 @@ const FieldV1 = ({
             <TextArea
               type={type}
               value={value}
+              name={populators.name}
               onChange={onChange}
               error={error}
-              label={label}
               disabled={disabled}
               nonEditable={nonEditable}
               placeholder={placeholder}
               inline={inline}
               required={required}
-              description={description}
-              charCount={charCount}
-              withoutLabel={withoutLabel}
               populators={populators}
               inputRef={ref}
+              errorStyle={errors?.[populators.name]}
+              maxlength={populators?.validation?.maxlength}
+              minlength={populators?.validation?.minlength}
             />
           </div>
         );
@@ -129,6 +140,7 @@ const FieldV1 = ({
             config={populators}
             disabled={disabled}
             errorStyle={errors?.[populators.name]}
+            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "checkbox":
@@ -139,8 +151,8 @@ const FieldV1 = ({
                 onChange(e.target.checked);
               }}
               value={value}
-              checked={config.checked}
-              label={label}
+              checked={formData?.[populators.name]}
+              label={t(`${populators?.title}`)}
               styles={populators?.styles}
               style={populators?.labelStyles}
               customLabelMarkup={populators?.customLabelMarkup}
@@ -169,21 +181,17 @@ const FieldV1 = ({
               defaultLabel={t(populators?.defaultText)}
               defaultUnit={t(populators?.selectedText)}
               config={populators}
+              disabled={disabled}
+              variant={variant}
             />
           </div>
         );
-        case "mobileNumber":
-          return (
-            <div className="digit-field-container">
-              <MobileNumber
-                inputRef={ref}
-                onChange={onChange}
-                value={value}
-                disable={disabled}
-                errorStyle={errors?.[populators.name]}
-              />
-            </div>
-          );
+      case "mobileNumber":
+        return (
+          <div className="digit-field-container">
+            <MobileNumber inputRef={ref} onChange={onChange} value={value} disable={disabled} errorStyle={errors?.[populators.name]} />
+          </div>
+        );
       default:
         return null;
     }
@@ -207,7 +215,7 @@ const FieldV1 = ({
       )}
       <div style={withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
         {renderField()}
-        <div className={`${(charCount && !error && !description) ? "digit-charcount" : "digit-description"}`}>
+        <div className={`${charCount && !error && !description ? "digit-charcount" : "digit-description"}`}>
           {renderDescriptionOrError()}
           {renderCharCount()}
         </div>

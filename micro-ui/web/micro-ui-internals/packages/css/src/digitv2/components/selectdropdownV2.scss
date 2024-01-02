@@ -4,18 +4,21 @@
   .digit-select {
     @extend .light-input-border;
     @apply relative block w-full h-10 border border-solid border-input-border bg-white;
+
     &.digit-field-error {
       border: 1px solid;
       border-color: theme(digitv2.alert.error);
     }
+
     &.disabled {
       @apply border-grey-dark text-grey-dark !important;
       pointer-events: none !important;
     }
+
     &:hover {
-      @extend .light-input-border;
       @apply border-2 border-solid border-primary-main;
     }
+
     input[type="text"] {
       @extend .light-input-border;
       @extend .light-text-color-primary;
@@ -40,7 +43,6 @@
   }
 
   .digit-select-active {
-    @extend .light-input-border;
     @apply relative block w-full h-10 border-2 border-solid border-primary-main;
 
     input[type="text"] {
@@ -72,7 +74,7 @@
   .digit-options-card {
     width: 100% !important;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
-    max-height: 400px;
+    max-height: 440px;
     overflow: auto;
     @apply absolute z-20 bg-white max-w-full;
 
@@ -88,9 +90,54 @@
     }
   }
 }
-.profile-dropdown--item {    
+
+.digit-nested-category {
+  background: theme(digitv2.lightTheme.paper-secondary);
+  display: flex;
+  height: 2.4375rem;
+  padding: 1rem 0.625rem;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+.digit-nested-category:not(:first-child) {
+  margin-top: 1rem;
+}
+
+.digit-category-name {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: theme(digitv2.lineHeight.normal);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.profile-dropdown--item {
+  &:not(.nesteddropdown, .treedropdown):not(:active):nth-of-type(even) {
+    background: theme(digitv2.lightTheme.paper-secondary);
+  }
+
+  &.nesteddropdown {
+    border-bottom: 1px solid theme(digitv2.lightTheme.divider);
+  }
+
   &:hover {
-    background: theme(colors.grey.mid);
+    background: #FFFAF7;
+    border: 1px solid theme(digitv2.lightTheme.primary);
+  }
+
+  &:active {
+    background: theme(digitv2.lightTheme.primary);
+
+    span {
+      color: theme(digitv2.lightTheme.paper);
+      font-weight: theme(digitv2.fontWeight.bold);
+    }
   }
 }
 
@@ -103,8 +150,25 @@
 
 .digit-select-wrap {
   @apply mb-lg relative bg-white;
-  width:23.75rem;
-  max-width: 540px;
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+    min-width: 12.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    min-width: 9.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+    min-width: 12.5rem;
+  }
 
   .digit-select {
     @extend .light-input-border;
@@ -169,6 +233,8 @@
     width: 100% !important;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
     @apply absolute z-20 mt-xs bg-white;
+    max-height: 20vmax;
+    overflow: auto;
 
     p {
       @extend .light-text-color-primary;
@@ -182,5 +248,4 @@
   }
 }
 
-@screen dt {
-}
+@screen dt {}

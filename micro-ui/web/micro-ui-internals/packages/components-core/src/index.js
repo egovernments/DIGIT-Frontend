@@ -57,6 +57,7 @@ import {
   WhatsNewCard,
   Toggle,
   ToggleSwitch,
+  TreeSelect,
   // Numeric
 } from "./atoms";
 
@@ -160,6 +161,7 @@ export {
   SearchOnRadioButtons,
   TextInputCard,
   Toggle,
-  ToggleSwitch
+  ToggleSwitch,
+  TreeSelect,
   // Numeric
 };

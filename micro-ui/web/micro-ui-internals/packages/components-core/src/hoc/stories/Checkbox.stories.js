@@ -13,8 +13,10 @@ export default {
     value: { control: "text" },
     errorStyle: { control: "object" },
     disabled: { control: "boolean" },
-    type: { control: "select", options: ["checkbox"] },
+    type: { control: "text"},
     props: { control: "object" },
+    populators: { control: "object" },
+    formData: { control: "object" },
   },
 };
 
@@ -26,19 +28,100 @@ const Template = (args) => (
 const t = (key) => key;
 
 
-export const CheckBoxStory = Template.bind({});
-CheckBoxStory.args = {
+const commonArgs ={
   t: t,
-  config: {
-    checked: true
+  populators:{
+    title:"Value",
+    name:"checked"
+  },
+  formData:{
+    checked:true
   },
   inputRef: null,
-  label: "Label",
   onChange: () => { },
   value: " ",
   errorStyle: null,
   disabled: false,
   type: "checkbox",
   description:""
+}
+
+export const Default = Template.bind({});
+Default.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:""
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:false
+  },
 };
 
+export const DefaultLabelled = Template.bind({});
+DefaultLabelled.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:"Value"
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:false
+  },
+};
+
+export const DefaultDisabled = Template.bind({});
+DefaultDisabled.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:"Value"
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:false
+  },
+  disabled:true
+};
+
+export const Checked = Template.bind({});
+Checked.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:""
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:true
+  },
+};
+
+export const CheckedLabelled = Template.bind({});
+CheckedLabelled.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:"Value"
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:true
+  },
+};
+
+export const CheckedDisabled = Template.bind({});
+CheckedDisabled.args = {
+  ...commonArgs,
+  populators:{
+    ...commonArgs.populators,
+    title:"Value"
+  },
+  formData:{
+    ...commonArgs.formData,
+    checked:true
+  },
+  disabled:true
+};

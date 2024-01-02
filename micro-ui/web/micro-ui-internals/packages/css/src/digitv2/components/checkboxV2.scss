@@ -1,61 +1,95 @@
 @import url("../index.scss");
 
 .digit-checkbox-wrap {
-  @apply flex mb-md relative items-baseline;
+  @apply flex mb-md relative;
+  gap: 1rem;
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+    min-width: 12.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    min-width: 9.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+    min-width: 12.5rem;
+  }
 
   input {
+    @apply opacity-0 absolute;
     @extend .light-input-border;
-    width: 38px;
-    height: 38px;
-    @apply opacity-0 absolute top-0 left-0 z-10;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    top: 25%;
   }
 
   .input-emp {
-    @extend input;
-    width: 24px;
-    height: 24px;
+    @extend input ;
   }
 
   .digit-custom-checkbox {
-    @extend .light-input-border;
-    width: 38px;
-    height: 38px;
-    @apply absolute top-0 left-0 border border-solid border-input-border z-0;
+    @apply flex items-center border border-solid border-text-secondary;
+    width: 1.5rem;
+    height: 1.5rem;
+    justify-content: center;
 
-    img {
-      @apply opacity-0;
-    }
-
-    svg {
+    img,svg{
       @apply opacity-0;
     }
   }
 
   .digit-custom-checkbox-emp {
     @extend .digit-custom-checkbox;
-    width: 24px;
-    height: 24px;
   }
 
-  input:checked ~ .digit-custom-checkbox,
-  input:hover ~ .digit-custom-checkbox {
+  input:hover~.digit-custom-checkbox {
     @extend .light-input-border;
     @apply border-2 border-primary-main;
   }
 
-  input:checked ~ .digit-custom-checkbox img {
+  input:checked~.digit-custom-checkbox {
+    border: 2px solid theme(digitv2.lightTheme.primary);
+  }
+
+
+  input:checked~.digit-custom-checkbox img {
     @apply opacity-100;
   }
 
-  input:checked ~ .digit-custom-checkbox svg {
+  input:checked~.digit-custom-checkbox svg {
     @apply opacity-100;
-    width: 35px;
-    height: 35px;
+    width: 1rem;
+    height: 1rem;
   }
 
   .label {
     @extend .light-text-color-primary;
-    margin-left: 56px;
-    @apply text-form-field text-text-primary;
+    @apply text-text-primary font-regular leading-6;
+    font-size: 1rem;
+    font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans);
+  }
+
+  &.disabled {
+    .label {
+      color: theme(digitv2.lightTheme.text-color-disabled);
+    }
+
+    .digit-custom-checkbox{
+      border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+    }
+
+    input:checked~.digit-custom-checkbox {
+      border: 2px solid theme(digitv2.lightTheme.text-color-disabled);
+    }
   }
 }

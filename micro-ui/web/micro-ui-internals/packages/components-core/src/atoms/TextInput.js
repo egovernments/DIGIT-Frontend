@@ -17,16 +17,14 @@ const TextInput = (props) => {
     const { value } = event.target;
     setDate(getDDMMYYYY(value));
   };
-  
-
   const incrementCount = () => {
-    const newValue = Number(props.value) + 1;
-    props.onChange({ target: { value: newValue, type: props.type} });
+    const newValue = Number(props.value) + (Number(props?.step) ? Number(props?.step) : 1);
+    props.onChange(newValue);
   };
 
   const decrementCount = () => {
-    const newValue = Math.max(Number(props.value) - 1, 0);
-    props.onChange({ target: { value: newValue, type: props.type} });
+    const newValue = Math.max(Number(props.value) - (Number(props?.step) ? Number(props?.step) : 1), 0);
+    props.onChange(newValue)
   };
 
   const renderPrefix = () => {
@@ -70,12 +68,7 @@ const TextInput = (props) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          props.onChange({
-            target: {
-              value: `${latitude}, ${longitude}`,
-              type: "geolocation",
-            },
-          });
+          props.onChange(`${latitude}, ${longitude}`)
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -87,25 +80,36 @@ const TextInput = (props) => {
   };
 
   const renderIcon = () => {
-    const customIcon = props?.type;
+    const reqIcon = props?.type;
     const iconFill = props?.disabled ? "#D6D5D4" : props?.nonEditable ? "#b1b4b6" : "#505A5F";
-    if (customIcon) {
-      if (customIcon === "geolocation") {
+    if (reqIcon) {
+      if (reqIcon === "geolocation") {
         return <SVG.MyLocation fill={iconFill} onClick={handleLocationClick} className="digit-text-input-customIcon" />;
-      } else if (customIcon === "text" && visibility) {
+      } else if (reqIcon === "text" && visibility) {
         return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
-      } else if (customIcon === "password") {
+      } else if (reqIcon === "password") {
         return <SVG.Visibility fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
-      } else if (customIcon === "search") {
+      } else if (reqIcon === "search") {
         return <SVG.Search fill={iconFill} className="digit-text-input-customIcon" />;
       } else {
         try {
-          const DynamicIcon = require("@egovernments/digit-ui-react-components")?.[props?.populators?.customIcon];
+          const components = require("@egovernments/digit-ui-react-components");
+          const DynamicIcon = components?.SVG[props?.populators?.customIcon] || components?.[props?.populators?.customIcon];
           if (DynamicIcon) {
-            return <DynamicIcon fill={iconFill} className="digit-text-input-customIcon" />;
+            const svgElement = DynamicIcon({
+              width: "1.5rem",
+              height: "1.5rem",
+              fill: iconFill,
+              className: "digit-text-input-customIcon",
+            });
+            return svgElement;
+          } else {
+            console.log("Icon not found");
+            return null;
           }
         } catch (error) {
           console.error("Icon not found");
+          return null;
         }
       }
     }

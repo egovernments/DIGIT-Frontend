@@ -7,7 +7,7 @@ import Dropdown from "../atoms/Dropdown";
 import Toggle from "../atoms/Toggle";
 import { createFunction } from "./techMolecules/createFunction";
 
-const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyle, disabled, type, additionalWrapperClass = "" }) => {
+const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyle, disabled, type, additionalWrapperClass = "",variant }) => {
   const master = { name: config?.mdmsConfig?.masterName };
   if (config?.mdmsConfig?.filter) {
     master["filter"] = config?.mdmsConfig?.filter;
@@ -35,7 +35,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
         return (
           <RadioButtons
             inputRef={inputRef}
-            style={{ display: "flex", justifyContent: "flex-start", gap: "3rem", ...config.styles }}
+            style={{ display: "flex", justifyContent: "space-between", ...config.styles }}
             options={data || config?.options || []}
             key={config.name}
             optionsKey={config?.optionsKey}
@@ -51,7 +51,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             additionalWrapperClass={additionalWrapperClass}
             innerStyles={config?.innerStyles}
           />
-        )
+        );
       case "dropdown":
         return (
           <Dropdown
@@ -70,37 +70,35 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             t={t}
             errorStyle={errorStyle}
             optionCardStyles={config?.optionsCustomStyle}
-          />)
-          case "toggle":
-            return (
-              <Toggle
-                inputRef={inputRef}
-                options={data || config?.options || []}
-                key={config.name}
-                optionsKey={config?.optionsKey}
-                value={value}
-                onSelect={(e) => {
-                  onChange(e, config.name);
-                }}
-                disabled={disabled}
-                selectedOption={value}
-                defaultValue={value}
-                t={t}
-                errorStyle={errorStyle}
-                additionalWrapperClass={additionalWrapperClass}
-                innerStyles={config?.innerStyles}
-              />
-            )
+            showIcon={config?.showIcon}
+            variant={variant}
+          />
+        );
+      case "toggle":
+        return (
+         <Toggle
+            inputRef={inputRef}
+            options={data || config?.options || []}
+            key={config.name}
+            optionsKey={config?.optionsKey}
+            value={value}
+            onSelect={(e) => {
+              onChange(e, config.name);
+            }}
+            disabled={disabled}
+            selectedOption={value}
+            defaultValue={value}
+            t={t}
+            errorStyle={errorStyle}
+            additionalWrapperClass={additionalWrapperClass}
+            innerStyles={config?.innerStyles}
+          />
+        );
       default:
         return null;
-
     }
-  }
-  return (
-    <React.Fragment key={config.name}>
-      {renderField()}
-    </React.Fragment>
-  );
+  };
+  return <React.Fragment key={config.name}>{renderField()}</React.Fragment>;
 };
 
 CustomDropdown.propTypes = {

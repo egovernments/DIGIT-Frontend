@@ -57,6 +57,7 @@ import PageBasedInput from "./PageBasedInput";
 // import Numeric from "./Numeric";
 import Toggle from "./Toggle";
 import ToggleSwitch from "./ToggleSwitch";
+import TreeSelect from "./TreeSelect";
 export {
   PageBasedInput,
   ActionBar,
@@ -115,6 +116,7 @@ export {
   UploadFile,
   WhatsNewCard,
   Toggle,
-  ToggleSwitch
+  ToggleSwitch,
+  TreeSelect,
   // Numeric
 };
