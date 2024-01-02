@@ -59,6 +59,7 @@ module.exports = function (app) {
     "/tl-calculator",
     "/org-services",
     "/edcr",
+    "/hcm-moz-impl",
     "/bpa-services",
     "/noc-services",
     "/egov-user-event",
@@ -83,6 +84,8 @@ module.exports = function (app) {
     "/mdms-v2",
     "/boundary-service/",
     "/egov-mdms-service-legacy",
+    "/project/staff/v1/_create",
+    "/product/v1/_create",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

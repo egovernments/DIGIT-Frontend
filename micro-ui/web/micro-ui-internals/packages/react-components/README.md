@@ -88,6 +88,7 @@ Syntax for the FormComposersV2
 # Changelog
 
 ```bash
+1.8.0-beta.4 republished 
 1.8.0-beta.3 republished due to some issues
 1.8.0-beta.2 Added Some icons for pqm dashboard
 1.8.0-beta.1 fixed some topbar issues
