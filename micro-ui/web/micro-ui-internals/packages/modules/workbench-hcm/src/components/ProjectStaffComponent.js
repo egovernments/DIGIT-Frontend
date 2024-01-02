@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Header, Button, Loader, Toast, SVG, Modal } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { data } from "../configs/ViewProjectConfig";
@@ -7,17 +7,19 @@ import ConfirmationDialog from "./ConfirmationDialog";
 
 const ProjectStaffComponent = (props) => {
   const { t } = useTranslation();
+  const { state } = props.location;
 
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [showResult, setShowResult] = useState("");
-  const [userId, setUserId] = useState("");
   const [deletionDetails, setDeletionDetails] = useState({
     projectId: null,
     userId: null,
     id: null,
   });
+
+  const userId = Digit.UserService.getUser().info.uuid;
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -38,11 +40,10 @@ const ProjectStaffComponent = (props) => {
       ProjectStaff: {
         projectId: props.projectId,
       },
-      // apiOperation: "SEARCH"
     },
   };
 
-  const { isLoading, data: projectStaff } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+  const { isLoading, data: projectStaff, refetch } = Digit.Hooks.useCustomAPIHook(requestCriteria);
 
   const columns = [
     { label: t("PROJECT_STAFF_ID"), key: "id" },
@@ -53,14 +54,10 @@ const ProjectStaffComponent = (props) => {
   ];
 
   const searchCriteria = {
-    url: "/user/_search",
+    url: "/egov-hrms/employees/_search",
 
     config: {
       enable: true,
-    },
-    body: {
-      username: userName,
-      tenantId,
     },
   };
 
@@ -70,18 +67,16 @@ const ProjectStaffComponent = (props) => {
     try {
       await mutationHierarchy.mutate(
         {
-          params: {},
-          body: {
-            username: userName,
+          params: {
+            codes: userName,
             tenantId,
           },
+          body: {},
         },
         {
           onSuccess: async (data) => {
-            if (data?.user && data?.user?.length > 0) {
-              setUserId(data?.user[0]?.uuid);
-
-              setShowResult(data?.user[0]?.userName);
+            if (data?.Employees && data?.Employees?.length > 0) {
+              setShowResult(data?.Employees[0]?.code);
             } else {
               setShowToast({ label: "WBH_USER_NOT_FOUND", isError: true });
               setTimeout(() => setShowToast(null), 5000);
@@ -115,6 +110,8 @@ const ProjectStaffComponent = (props) => {
   const closeModal = () => {
     setShowModal(false);
     setShowPopup(false);
+    setUserName("");
+    setShowResult("");
   };
 
   const closeToast = () => {
@@ -122,24 +119,41 @@ const ProjectStaffComponent = (props) => {
       setShowToast(null);
     }, 5000);
   };
+
+  const onSuccess = () => {
+    closeToast();
+    refetch();
+    setShowToast({ key: "success", label: "WBH_PROJECT_STAFF_ADDED_SUCESSFULLY" });
+  };
+  const onError = (resp) => {
+    const label = resp?.response?.data?.Errors?.[0]?.code;
+    setShowToast({ isError: true, label });
+    refetch();
+  };
   const handleProjectStaffSubmit = async () => {
     try {
-      await mutation.mutate({
-        body: {
-          ProjectStaff: {
-            tenantId,
-            userId: userId,
-            projectId: projectId,
-            startDate: props?.Project[0]?.startDate,
-            endDate: props?.Project[0]?.endDate,
+      await mutation.mutate(
+        {
+          body: {
+            ProjectStaff: {
+              tenantId,
+              userId: userId,
+              projectId: projectId,
+              startDate: props?.Project[0]?.startDate,
+              endDate: props?.Project[0]?.endDate,
+            },
           },
         },
-      });
-      setShowToast({ key: "success", label: "WBH_USER_ADDED_SUCESSFULLY" });
-      closeToast();
+        {
+          onError,
+          onSuccess,
+        }
+      );
+
       setShowModal(false);
-    } catch {
-      throw error;
+    } catch (error) {
+      setShowToast({ label: "WBH_PROJECT_STAFF_FAILED", isError: true });
+      setShowModal(false);
     }
   };
 
@@ -155,37 +169,27 @@ const ProjectStaffComponent = (props) => {
                 id,
                 userId: staffId,
                 projectId: projectId,
-                startDate: props?.Project[0]?.startDate,
-                endDate: props?.Project[0]?.endDate,
-                isDeleted: true,
+                ...deletionDetails,
               },
             },
           },
           {
-            onError: (resp) => {
-              let label = `${t("WBH_USER_DELETION_FAIL")}: `;
-              resp?.response?.data?.Errors?.map((err, idx) => {
-                if (idx === resp?.response?.data?.Errors?.length - 1) {
-                  label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
-                } else {
-                  label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
-                }
-              });
-              setShowToast({ label, isError: true });
+            onSuccess: () => {
               closeToast();
+              refetch();
+              setShowToast({ key: "success", label: "WBH_PROJECT_STAFF_DELETED_SUCESSFULLY" });
             },
-          },
-          {
-            onSuccess: (data) => {
-              setShowToast({ label: `${t("WBH_PROJECT_DELETE_SUCCESS")}` });
-              closeToast();
+            onError: (resp) => {
+              const label = resp?.response?.data?.Errors?.[0]?.code;
+              setShowToast({ isError: true, label });
+              refetch();
             },
           }
         );
       }
-    } catch {
-      setShowToast({ key: "error", label: "WBH_ACTION_ERROR", isError: true });
-      closeToast();
+    } catch (error) {
+      setShowToast({ label: "WBH_PROJECT_STAFF_DELETION_FAILED", isError: true });
+      setShowModal(false);
     }
   };
 
@@ -196,7 +200,7 @@ const ProjectStaffComponent = (props) => {
   return (
     <div className="override-card">
       <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
-      <Button label={"Add Project Staff"} type="button" variation={"primary"} onButtonClick={() => setShowModal(true)} />
+      <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => setShowModal(true)} />
       {showModal && (
         <ProjectStaffModal
           t={t}
@@ -245,6 +249,7 @@ const ProjectStaffComponent = (props) => {
                       projectId: row.projectId,
                       userId: row.userId,
                       id: row.id,
+                      ...row,
                     });
                     setShowPopup(true);
                   }}
