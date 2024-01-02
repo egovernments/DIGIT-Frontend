@@ -50,7 +50,7 @@ class BulkUploadController {
       else {
         return errorResponder({ message: "No Transform Template found " }, request, response);
       }
-      const url = config.host.filestore + config.paths.filestore + `/url?tenantId=mz&fileStoreIds=${fileStoreId}`;
+      const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
       var updatedDatas: any[] = [];
       if (parseResult?.data?.mdms?.length > 0) {
         const mdmsArray = parseResult.data.mdms;
@@ -89,6 +89,7 @@ class BulkUploadController {
     response: express.Response
   ) => {
     try {
+      // const result = await httpRequest(`${"http://127.0.0.1:8080"}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
       const result = await httpRequest(`${config.host.serverHost}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
       const datas = result?.updatedDatas;
 
