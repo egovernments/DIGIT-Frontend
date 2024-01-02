@@ -52,4 +52,4 @@ config:
   - name: "builds/Digit-Frontend/utilities/egov-bff"
     build:
       - work-dir: "utilities/egov-bff"
-        image-name: "egov-bff"
+        image-name: "hcm-bff"
