@@ -62,8 +62,8 @@ const ProjectChildrenComponent = (props) => {
     if (!projectChildren?.Project[0]?.descendants) {
         return (
             <div>
-            <Header className="works-header-view">{t("PROJECT_CHILDREN")}</Header>
-            <h1>{t("NO_PROJECT_CHILDREN")}</h1>
+                <Header className="works-header-view">{t("PROJECT_CHILDREN")}</Header>
+                <h1>{t("NO_PROJECT_CHILDREN")}</h1>
             </div>
         )
     } else {
@@ -78,22 +78,21 @@ const ProjectChildrenComponent = (props) => {
                             ))}
                         </tr>
                     </thead>
-
                     <tbody>
                         {projectsArray.map((project, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {columns.map((column, columnIndex) => (
-                                    <td key={columnIndex}>
-                                        {column.key.includes("descendants.")
-                                            ? project.descendants?.map((descendant, descIndex) => (
-                                                <div key={descIndex}>
+                            <React.Fragment key={rowIndex}>
+                                {project.descendants?.map((descendant, descIndex) => (
+                                    <tr key={`${rowIndex}-${descIndex}`}>
+                                        {columns.map((column, columnIndex) => (
+                                            <td key={columnIndex}>
+                                                <div>
                                                     {column.key.split("descendants.")[1] === "projectNumber" && descendant[column.key.split("descendants.")[1]] ? (
                                                         <Link
                                                             to={{
                                                                 pathname: window.location.pathname,
                                                                 search: `?tenantId=${descendant.tenantId}&projectNumber=${descendant.projectNumber}`,
                                                             }}
-                                                            style={{ color: "#f37f12" }}
+                                                            style={{ color: "#f37f12" , textDecoration: "none" }}
                                                         >
                                                             {descendant[column.key.split("descendants.")[1]]}
                                                         </Link>
@@ -101,13 +100,14 @@ const ProjectChildrenComponent = (props) => {
                                                         descendant[column.key.split("descendants.")[1]] || "NA"
                                                     )}
                                                 </div>
-                                            ))
-                                            : project[column.key] || "NA"}
-                                    </td>
+                                            </td>
+                                        ))}
+                                    </tr>
                                 ))}
-                            </tr>
+                            </React.Fragment>
                         ))}
                     </tbody>
+
 
                 </table>
 

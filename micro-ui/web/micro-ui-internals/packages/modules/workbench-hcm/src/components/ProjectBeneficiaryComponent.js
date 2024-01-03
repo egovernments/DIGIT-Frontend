@@ -6,6 +6,7 @@ import { data } from "../configs/ViewProjectConfig";
 
 const ProjectBeneficiaryComponent = (props) => {
     const { t } = useTranslation();
+    const [productIds, setProductIds] = useState([]);
 
     const requestCriteria = {
         url: "/project/resource/v1/_search",
@@ -50,7 +51,38 @@ const ProjectBeneficiaryComponent = (props) => {
         }
     };
 
-    const { data: variantDetails } = Digit.Hooks.useCustomAPIHook(productVariantRequest);
+    const { isLoading: VariantLoading, data: variantDetails } = Digit.Hooks.useCustomAPIHook(productVariantRequest);
+
+    useEffect(() => {
+        // Extract product IDs from variantDetails and save them in the state
+        if (variantDetails && variantDetails?.ProductVariant.length > 0) {
+            const ProductIdArray = variantDetails.ProductVariant.map(row => row.productId);
+            setProductIds(ProductIdArray);
+        }
+    }, [variantDetails]);
+
+    console.log("productIds", productIds);
+
+    const productRequest = {
+        url: "/product/v1/_search",
+        changeQueryName: productIds,
+        params: {
+            tenantId: "mz",
+            offset: 0,
+            limit: 10,
+        },
+        body: {
+            Product: {
+                "id": productIds
+            },
+        }
+    };
+
+    const { data: product } = Digit.Hooks.useCustomAPIHook(productRequest);
+
+    console.log("product", product)
+    console.log("variantDetails", variantDetails);
+
 
     const userMap = {};
     variantDetails?.ProductVariant?.forEach(productVariant => {
@@ -58,21 +90,45 @@ const ProjectBeneficiaryComponent = (props) => {
     });
 
     // Map productVariantId to productVariantInfo
+    // const mappedProjectVariant = projectResource?.ProjectResources.map(resource => {
+    //     const productVariantInfo = userMap[resource.resource?.productVariantId];
+    //     if (productVariantInfo) {
+    //         return {
+    //             ...resource,
+    //             productVariant: productVariantInfo
+    //         };
+    //     } else {
+    //         // Handle the case where productVariant info is not found for a productVariantId
+    //         return {
+    //             ...resource,
+    //             productVariant: null
+    //         };
+    //     }
+    // });
+
     const mappedProjectVariant = projectResource?.ProjectResources.map(resource => {
         const productVariantInfo = userMap[resource.resource?.productVariantId];
-        if (productVariantInfo) {
+        const productInfo = product?.Product?.find(p => p.id === productVariantInfo?.productId);
+
+        if (productVariantInfo && productInfo) {
             return {
                 ...resource,
-                productVariant: productVariantInfo
+                productVariant: {
+                    ...productVariantInfo,
+                    product: productInfo
+                }
             };
         } else {
-            // Handle the case where productVariant info is not found for a productVariantId
+            // Handle the case where productVariant or product info is not found for a productVariantId
             return {
                 ...resource,
                 productVariant: null
             };
         }
     });
+
+
+    console.log("mapped", mappedProjectVariant);
 
     const isValidTimestamp = (timestamp) => timestamp !== 0 && !isNaN(timestamp);
 
@@ -93,38 +149,35 @@ const ProjectBeneficiaryComponent = (props) => {
         { label: t("PRODUCT_ID"), key: "productVariant.productId" },
         { label: t("SKU"), key: "productVariant.sku" },
         { label: t("PRODUCT_VARIATION"), key: "productVariant.variation" },
-        { label: t("IS_DELETED"), key: "isDeleted" },
+        // { label: t("IS_DELETED"), key: "isDeleted" },
         { label: t("START_DATE"), key: "formattedStartDate" },
         { label: t("END_DATE"), key: "formattedEndDate" },
-        { label: t("PRODUCT_TYPE"), key: "resource.type" },
-        { label: t("IS_BASE_UNIT_VARIANT"), key: "resource.isBaseUnitVariant" },
+        { label: t("RESOURCE_TYPE"), key: "resource.type" },
+        // { label: t("IS_BASE_UNIT_VARIANT"), key: "resource.isBaseUnitVariant" },
+        { label: t("NAME"), key: "productVariant.product.name" },
+        { label: t("MANUFACTURER"), key: "productVariant.product.manufacturer" },
+        { label: t("PRODUCT_TYPE"), key: "productVariant.product.type" }
     ];
 
     const getDetailFromProductVariant = (row, key) => {
-        const productVariantId = row.resource?.productVariantId;
         const productVariantDetail = row.productVariant || {};
-
-        // Check if the key is nested within "resource."
-        if (key.includes("resource.")) {
-            const resourceValue = row.resource[key.split("resource.")[1]];
-            return resourceValue !== undefined ? resourceValue.toString() : "NA";
-        }
-
-        // Check if the key is nested within "productVariant."
-        if (key.includes("productVariant.")) {
-            const detailValue = productVariantDetail[key.split("productVariant.")[1]];
-            return detailValue !== undefined ? detailValue.toString() : "NA";
-        }
-
-        // If not nested, try to get the value from the row or productVariantDetails
-        const rowValue = row[key];
-
+    
+        // Helper function to traverse nested keys
+        const getValue = (object, nestedKey) => {
+            const keys = nestedKey.split('.');
+            return keys.reduce((acc, curr) => acc?.[curr], object);
+        };
+    
+        // Check if the key is nested
+        const value = getValue(row, key);
+    
         // Handle boolean values
-        if (typeof rowValue === 'boolean') {
-            return rowValue.toString();
+        if (typeof value === 'boolean') {
+            return value.toString();
         }
-
-        return rowValue !== undefined ? rowValue : productVariantDetail[key] || "NA";
+    
+        // Check if the value exists, otherwise return 'NA'
+        return value !== undefined ? value.toString() : "NA";
     };
 
     if (isLoading) {
@@ -140,8 +193,8 @@ const ProjectBeneficiaryComponent = (props) => {
                 <table className="table reports-table sub-work-table">
                     <thead>
                         <tr>
-                            {columns.map((column, index) => (
-                                <th key={index}>{column.label}</th>
+                            {columns?.map((column, index) => (
+                                <th key={index}>{column?.label}</th>
                             ))}
                         </tr>
                     </thead>

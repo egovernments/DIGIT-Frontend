@@ -37,7 +37,7 @@ const ProjectStaffComponent = (props) => {
         row.formattedEndDate = isValidTimestamp(row.endDate)
             ? Digit.DateUtils.ConvertEpochToDate(row.endDate)
             : "NA";
-        row.isDeleted = row.isDeleted.toString();
+            row.isDeleted = row.isDeleted ? "Yes" : "No";
     });
 
 
@@ -49,7 +49,7 @@ const ProjectStaffComponent = (props) => {
         }
     }, [projectStaff]);
 
-    const requestCriteria1 = {
+    const userRequestCriteria = {
         url: "/user/_search",
         body: {
             "tenantId": "mz",
@@ -57,7 +57,7 @@ const ProjectStaffComponent = (props) => {
         }
     };
 
-    const { isLoading1,data: userInfo } = Digit.Hooks.useCustomAPIHook(requestCriteria1);
+    const { isLoading: isUserSearchLoading,data: userInfo } = Digit.Hooks.useCustomAPIHook(userRequestCriteria);
 
 
     const userMap = {};
@@ -96,30 +96,27 @@ const ProjectStaffComponent = (props) => {
         return path.split('.').reduce((acc, key) => (acc && acc[key]) ? acc[key] : "NA", obj);
     }
 
-    if (isLoading) {
+    if (isLoading && isUserSearchLoading) {
         return <Loader></Loader>;
     }
 
-    if (isLoading1) {
-        return <Loader></Loader>;
-    }
 
     return (
         <div className="override-card">
             <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
-            {mappedProjectStaff.length === 0 ? (
+            {mappedProjectStaff?.length === 0 ? (
                 <h1>{t("NO_PROJECT_STAFF")}</h1>
             ) : (
                 <table className="table reports-table sub-work-table">
                     <thead>
                         <tr>
-                            {columns.map((column, index) => (
-                                <th key={index}>{column.label}</th>
+                            {columns?.map((column, index) => (
+                                <th key={index}>{column?.label}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {mappedProjectStaff.map((row, rowIndex) => (
+                        {mappedProjectStaff?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                                 {columns.map((column, columnIndex) => (
                                     <td key={columnIndex}>
