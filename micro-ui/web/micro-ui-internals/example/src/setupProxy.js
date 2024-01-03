@@ -5,17 +5,17 @@ const createProxy = createProxyMiddleware({
   // target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
   target: process.env.REACT_APP_PROXY_API || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false,
 });
 const assetsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "https://works-dev.digit.org",
   changeOrigin: true,
-  secure:false
+  secure: false,
 });
 const mdmsProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8080",
   changeOrigin: true,
-  secure:false
+  secure: false,
 });
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

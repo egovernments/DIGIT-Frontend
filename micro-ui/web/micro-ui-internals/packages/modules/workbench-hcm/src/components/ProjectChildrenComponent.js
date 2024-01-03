@@ -4,57 +4,56 @@ import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-compo
 import { Link } from "react-router-dom";
 
 const ProjectChildrenComponent = (props) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    const requestCriteria = {
-        url: "/project/v1/_search",
-        changeQueryName: props.projectId,
-        params: {
-            tenantId: "mz",
-            offset: 0,
-            limit: 100,
-            includeDescendants: true
+  const requestCriteria = {
+    url: "/project/v1/_search",
+    changeQueryName: props.projectId,
+    params: {
+      tenantId: "mz",
+      offset: 0,
+      limit: 100,
+      includeDescendants: true,
+    },
+    body: {
+      Projects: [
+        {
+          tenantId: "mz",
+          id: props.projectId,
         },
-        body: {
-            Projects: [
-                {
-                    tenantId: "mz",
-                    id: props.projectId
-                }
-            ],
-            "apiOperation": "SEARCH"
-        }
-    };
+      ],
+      apiOperation: "SEARCH",
+    },
+  };
 
-    const { isLoading, data: projectChildren } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+  const { isLoading, data: projectChildren } = Digit.Hooks.useCustomAPIHook(requestCriteria);
 
-    const projectsArray = projectChildren?.Project || [];
+  const projectsArray = projectChildren?.Project || [];
 
-    //converts the descendant array into the object
-    const descendantsObject = {};
+  //converts the descendant array into the object
+  const descendantsObject = {};
 
-    projectsArray.forEach(project => {
-        const descendantsArray = project.descendants || [];
+  projectsArray.forEach((project) => {
+    const descendantsArray = project.descendants || [];
 
-        descendantsArray.forEach(descendant => {
-            descendantsObject[descendant.id] = descendant;
-        });
+    descendantsArray.forEach((descendant) => {
+      descendantsObject[descendant.id] = descendant;
     });
+  });
 
-    //converts the epoch to date
-    Object.values(descendantsObject).forEach(descendant => {
-        descendant.formattedStartDate = Digit.DateUtils.ConvertEpochToDate(descendant.startDate);
-        descendant.formattedEndDate = Digit.DateUtils.ConvertEpochToDate(descendant.endDate);
-    });
+  //converts the epoch to date
+  Object.values(descendantsObject).forEach((descendant) => {
+    descendant.formattedStartDate = Digit.DateUtils.ConvertEpochToDate(descendant.startDate);
+    descendant.formattedEndDate = Digit.DateUtils.ConvertEpochToDate(descendant.endDate);
+  });
 
-
-    const columns = [
-        { label: t("DESCENDANTS_PROJECT_NUMBER"), key: "descendants.projectNumber" },
-        { label: t("DESCENDANTS_PROJECT_NAME"), key: "descendants.name" },
-        { label: t("DESCENDANTS_PROJECT_TYPE"), key: "descendants.projectType" },
-        { label: t("DESCENDANTS_START_DATE"), key: "descendants.formattedStartDate" },
-        { label: t("DESCENDANTS_END_DATE"), key: "descendants.formattedEndDate" }
-    ];
+  const columns = [
+    { label: t("DESCENDANTS_PROJECT_NUMBER"), key: "descendants.projectNumber" },
+    { label: t("DESCENDANTS_PROJECT_NAME"), key: "descendants.name" },
+    { label: t("DESCENDANTS_PROJECT_TYPE"), key: "descendants.projectType" },
+    { label: t("DESCENDANTS_START_DATE"), key: "descendants.formattedStartDate" },
+    { label: t("DESCENDANTS_END_DATE"), key: "descendants.formattedEndDate" },
+  ];
 
     if (isLoading) {
         return <Loader></Loader>;
