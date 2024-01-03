@@ -1561,6 +1561,131 @@ export const newConfig = [
     ],
   },
   {
+    head:"TREE MULTISELECT DROPDOWN",
+    body:[
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Default",
+        disable: false,
+        variant:"treemultiselect",
+        populators: {
+          name: "treemultiselect-Default",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip:true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
+                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [
+                { code: "Category C.Option A", name: "Option A" },
+              ],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        variant:"treemultiselect",
+        populators: {
+          name: "treemultiselect-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip:true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
+                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [
+                { code: "Category C.Option A", name: "Option A" },
+              ],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Error",
+        disable: false,
+        variant:"treemultiselect",
+        populators: {
+          name: "treemultiselect-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip:true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
+                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+              ],
+              code: "Category B",
+            },
+            {
+              name: "Category C",
+              options: [
+                { code: "Category C.Option A", name: "Option A" },
+              ],
+              code: "Category C",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
     head: "CHECKBOX",
     body: [
       {

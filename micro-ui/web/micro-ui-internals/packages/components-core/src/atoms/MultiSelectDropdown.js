@@ -84,11 +84,25 @@ const MultiSelectDropdown = ({
   }
 
   function onSelectToAddToQueue(...props) {
-    const isChecked = arguments[0].target.checked;
-    isChecked
-      ? dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: arguments })
-      : dispatch({ type: "REMOVE_FROM_SELECTED_EVENT_QUEUE", payload: arguments });
+    if (variant === "treemultiselect") {
+      const options = props[0];
+      options.forEach((option) => {
+        const isAlreadySelected = alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code);
+  
+        if (!isAlreadySelected) {
+          dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: [null, option] });
+        } else {
+          dispatch({ type: "REMOVE_FROM_SELECTED_EVENT_QUEUE", payload: [null, option] });
+        }
+      });
+    } else {
+      const isChecked = arguments[0].target.checked;
+      isChecked
+        ? dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: arguments })
+        : dispatch({ type: "REMOVE_FROM_SELECTED_EVENT_QUEUE", payload: arguments });
+    }
   }
+
   const IconRender = (iconReq) => {
     try {
       const components = require("@egovernments/digit-ui-react-components");
@@ -186,11 +200,7 @@ const MultiSelectDropdown = ({
         <SVG.Check fill={"white"} />
       </div>
       {option?.icon && IconRender(option?.icon)}
-      <p
-        className="digit-label"
-      >
-        {t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}
-      </p>
+      <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
     </div>
   );
 
@@ -235,12 +245,7 @@ const MultiSelectDropdown = ({
         {active ? (
           <div className="digit-server" id="jk-dropdown-unique" style={ServerStyle ? ServerStyle : {}}>
             {variant === "treemultiselect" ? (
-              <TreeSelect 
-              options={options} 
-              onSelect={onSelectToAddToQueue} 
-              selectedOption={alreadyQueuedSelectedState} 
-              variant={variant} 
-              />
+              <TreeSelect options={options} onSelect={onSelectToAddToQueue} selectedOption={alreadyQueuedSelectedState} variant={variant} />
             ) : (
               <Menu />
             )}
@@ -255,7 +260,13 @@ const MultiSelectDropdown = ({
                 <RemoveableTag
                   key={index}
                   text={`${t(value.code).slice(0, 22)} ...`}
-                  onClick={isPropsNeeded ? (e) => onSelectToAddToQueue(e, value, props) : (e) => onSelectToAddToQueue(e, value)}
+                  onClick={
+                    variant === "treemultiselect"
+                      ? () => onSelectToAddToQueue([value])
+                      : isPropsNeeded
+                      ? (e) => onSelectToAddToQueue(e, value, props)
+                      : (e) => onSelectToAddToQueue(e, value)
+                  }
                   className="multiselectdropdown-tag"
                 />
               );
@@ -273,7 +284,7 @@ const MultiSelectDropdown = ({
                 alignItems: "center",
                 borderRadius: "3.125rem",
               }}
-              textStyles={{ fontSize: "0.875rem", fontWeight: "400" ,width:"100%"}}
+              textStyles={{ fontSize: "0.875rem", fontWeight: "400", width: "100%" }}
             />
           )}
         </div>
