@@ -271,77 +271,80 @@ const ProjectStaffComponent = (props) => {
     return (
         <div className="override-card">
             <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
-            {mappedProjectStaff?.length === 0 ? (
-                <h1>{t("NO_PROJECT_STAFF")}</h1>
-            ) : (
-                <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => setShowModal(true)} />
-      {showModal && (
-                <ProjectStaffModal
-                    t={t}
-                    userName={userName}
-                    onSearch={handleSearch}
-                    onChange={handleInputChange}
-                    searchResult={showResult}
-                    onSubmit={handleProjectStaffSubmit}
-                    onClose={closeModal}
-                    heading={"WBH_ASSIGN_PROJECT_STAFF"}
-                />
-            )}
-            {showPopup && (
-                <ConfirmationDialog
-                    t={t}
-                    heading={"WBH_DELETE_POPUP_HEADER"}
-                    closeModal={closeModal}
-                    onSubmit={(confirmed) => handleProjectStaffDelete(deletionDetails.projectId, deletionDetails.userId, deletionDetails.id, confirmed)}
-                />
-            )}
 
-            {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+            {mappedProjectStaff?.length === 0 ? <h1>{t("NO_PROJECT_STAFF")}</h1> :
+                <>
 
-            <table className="table reports-table sub-work-table">
-                <thead>
-                    <tr>
-                        {columns?.map((column, index) => (
-                            <th key={index}>{column.label}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {mappedProjectStaff.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {columns?.map((column, columnIndex) => (
-                                <td key={columnIndex}>
-                                    {column.render
-                                        ? column.render(row)
-                                        : column.key === "userInfo.roles"
-                                            ? row?.userInfo?.roles.slice(0, 2).map(role => role.name).join(', ') // to show 2 roles
-                                            : column.key.includes('.')
-                                                ? getNestedPropertyValue(row, column.key)
-                                                : row[column.key] || "NA"}
-                                </td>
+                    <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => setShowModal(true)} />
+                    {showModal && (
+                        <ProjectStaffModal
+                            t={t}
+                            userName={userName}
+                            onSearch={handleSearch}
+                            onChange={handleInputChange}
+                            searchResult={showResult}
+                            onSubmit={handleProjectStaffSubmit}
+                            onClose={closeModal}
+                            heading={"WBH_ASSIGN_PROJECT_STAFF"}
+                        />
+                    )}
+                    {showPopup && (
+                        <ConfirmationDialog
+                            t={t}
+                            heading={"WBH_DELETE_POPUP_HEADER"}
+                            closeModal={closeModal}
+                            onSubmit={(confirmed) => handleProjectStaffDelete(deletionDetails.projectId, deletionDetails.userId, deletionDetails.id, confirmed)}
+                        />
+                    )}
+
+                    {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+
+                    <table className="table reports-table sub-work-table">
+                        <thead>
+                            <tr>
+                                {columns?.map((column, index) => (
+                                    <th key={index}>{column.label}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {mappedProjectStaff.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {columns?.map((column, columnIndex) => (
+                                        <td key={columnIndex}>
+                                            {column.render
+                                                ? column.render(row)
+                                                : column.key === "userInfo.roles"
+                                                    ? row?.userInfo?.roles.slice(0, 2).map(role => role.name).join(', ') // to show 2 roles
+                                                    : column.key.includes('.')
+                                                        ? getNestedPropertyValue(row, column.key)
+                                                        : row[column.key] || "NA"}
+                                        </td>
+                                    ))}
+                                    <td>
+                                        <Button
+                                            label={`${t("WBH_DELETE_ACTION")}`}
+                                            type="button"
+                                            variation="secondary"
+                                            icon={<SVG.Delete width={"28"} height={"28"} />}
+                                            onButtonClick={() => {
+                                                setDeletionDetails({
+                                                    projectId: row.projectId,
+                                                    userId: row.userId,
+                                                    id: row.id,
+                                                    ...row,
+                                                });
+                                                setShowPopup(true);
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
                             ))}
-                            <td>
-                                <Button
-                                    label={`${t("WBH_DELETE_ACTION")}`}
-                                    type="button"
-                                    variation="secondary"
-                                    icon={<SVG.Delete width={"28"} height={"28"} />}
-                                    onButtonClick={() => {
-                                        setDeletionDetails({
-                                            projectId: row.projectId,
-                                            userId: row.userId,
-                                            id: row.id,
-                                            ...row,
-                                        });
-                                        setShowPopup(true);
-                                    }}
-                                />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            )}
+                        </tbody>
+                    </table>
+                </>
+
+            }
         </div>
     );
 };
