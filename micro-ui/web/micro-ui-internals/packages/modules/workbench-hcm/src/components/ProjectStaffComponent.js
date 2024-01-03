@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, Header, Button, Loader, Toast, SVG, Modal } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
 import { data } from "../configs/ViewProjectConfig";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
@@ -11,7 +9,6 @@ const ProjectStaffComponent = (props) => {
     const { t } = useTranslation();
     const [userIds, setUserIds] = useState([]);
     const [userInfoMap, setUserInfoMap] = useState({});
-
     const [showModal, setShowModal] = useState(false);
     const [userName, setUserName] = useState("");
     const [showToast, setShowToast] = useState(false);
@@ -111,15 +108,12 @@ const ProjectStaffComponent = (props) => {
         { label: t("IS_DELETED"), key: "isDeleted" },
         { label: t("START_DATE"), key: "formattedStartDate" },
         { label: t("END_DATE"), key: "formattedEndDate" },
+        // { label: t("ACTIONS") },
 
     ];
 
     function getNestedPropertyValue(obj, path) {
         return path.split('.').reduce((acc, key) => (acc && acc[key]) ? acc[key] : "NA", obj);
-    }
-
-    if (isLoading && isUserSearchLoading) {
-        return <Loader></Loader>;
     }
 
 
@@ -264,7 +258,7 @@ const ProjectStaffComponent = (props) => {
         }
     };
 
-    if (isLoading) {
+    if (isLoading && isUserSearchLoading) {
         return <Loader></Loader>;
     }
 
@@ -273,8 +267,7 @@ const ProjectStaffComponent = (props) => {
             <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
 
             {mappedProjectStaff?.length === 0 ? <h1>{t("NO_PROJECT_STAFF")}</h1> :
-                <>
-
+                <div>
                     <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => setShowModal(true)} />
                     {showModal && (
                         <ProjectStaffModal
@@ -303,21 +296,21 @@ const ProjectStaffComponent = (props) => {
                         <thead>
                             <tr>
                                 {columns?.map((column, index) => (
-                                    <th key={index}>{column.label}</th>
+                                    <th key={index}>{column?.label}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
-                            {mappedProjectStaff.map((row, rowIndex) => (
+                            {mappedProjectStaff?.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {columns?.map((column, columnIndex) => (
                                         <td key={columnIndex}>
-                                            {column.render
-                                                ? column.render(row)
-                                                : column.key === "userInfo.roles"
+                                            {column?.render
+                                                ? column?.render(row)
+                                                : column?.key === "userInfo.roles"
                                                     ? row?.userInfo?.roles.slice(0, 2).map(role => role.name).join(', ') // to show 2 roles
-                                                    : column.key.includes('.')
-                                                        ? getNestedPropertyValue(row, column.key)
+                                                    : column?.key.includes('.')
+                                                        ? getNestedPropertyValue(row, column?.key)
                                                         : row[column.key] || "NA"}
                                         </td>
                                     ))}
@@ -342,7 +335,7 @@ const ProjectStaffComponent = (props) => {
                             ))}
                         </tbody>
                     </table>
-                </>
+                </div>
 
             }
         </div>
