@@ -30,7 +30,7 @@ const throwError = (
   let error = new Error(message);
   //   error.status = status;
   //   error.code = code;
-  logger.info("Error : " + JSON.stringify(error));
+  logger.error("Error : " + error);
 
   throw error;
 };
@@ -201,7 +201,7 @@ const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo:
     // await httpRequest("http://127.0.0.1:8081" + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
     await httpRequest(config.host.serverHost + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
   } catch (error) {
-    logger.info("Error during ingestion : " + JSON.stringify(error))
+    logger.error("Error during ingestion : " + error)
   }
 
 };

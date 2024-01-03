@@ -71,7 +71,6 @@ const getSheetData = async (
   for (const file of response.fileStoreIds) {
     try {
       const workbook = await getWorkbook(file.url);
-      logger.info("Workbook : " + JSON.stringify(workbook))
 
       let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
 
