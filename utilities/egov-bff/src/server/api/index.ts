@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getErrorCodes } from "../config";
-import { Blob } from 'buffer';
 import * as XLSX from 'xlsx';
 import { errorResponder } from "../utils";
 import config from "../config";
@@ -43,17 +42,23 @@ async function getWorkbook(fileUrl: string) {
     'Content-Type': 'application/json',
     Accept: 'application/pdf',
   };
-  logger.info("FileUrl : " + fileUrl)
+
+  logger.info("FileUrl : " + fileUrl);
+
   const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
 
-  const fileXlsx = new Blob([responseFile], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;',
-  });
+  // Convert ArrayBuffer directly to Buffer
+  const fileBuffer = Buffer.from(responseFile);
 
-  const arrayBuffer = await fileXlsx.arrayBuffer();
+  // Assuming the response is a binary file, adjust the type accordingly
+  const fileXlsx = fileBuffer;
+
+  const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
   const data = new Uint8Array(arrayBuffer);
   const workbook = XLSX.read(data, { type: 'array' });
+
   return workbook;
+
 }
 
 

@@ -66,13 +66,13 @@ export function listener() {
     });
 
     // Set up error event handlers
-    consumer.on('error', (err) => {
-        logger.info(`Consumer Error: ${JSON.stringify(err)}`);
-    });
+    // consumer.on('error', (err) => {
+    //     logger.info(`Consumer Error: ${JSON.stringify(err)}`);
+    // });
 
-    consumer.on('offsetOutOfRange', (err) => {
-        logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
-    });
+    // consumer.on('offsetOutOfRange', (err) => {
+    //     logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
+    // });
 }
 
 // Function to produce modified messages back to the same topic

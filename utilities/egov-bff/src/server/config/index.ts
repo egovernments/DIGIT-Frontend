@@ -3,7 +3,9 @@
 
 import { getErrorCodes } from "./constants";
 
-const HOST = "https://unified-uat.digit.org";
+const HOST =
+  // "http://127.0.0.1:8080" ||
+  "https://unified-uat.digit.org";
 const serviceHost = "https://unified-uat.digit.org";
 
 if (!HOST) {
