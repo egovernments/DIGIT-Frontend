@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import isEqual from "lodash/isEqual";
 import { useTranslation } from "react-i18next";
 
 const RadioButtons = (props) => {
   const { t } = useTranslation();
+
   var selected = props.selectedOption;
   function selectOption(value) {
-    //selected = value;
     props.onSelect(value);
   }
+
 
   return (
     <div style={props?.style} className={`digit-radio-wrap ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
       {props?.options?.map((option, ind) => {
         if (props?.optionsKey && !props?.isDependent) {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"
                   value={option}
-                  checked={(props.isPTFlow && selected?.code === option.code) || isEqual(selected, option) ? 1 : 0}
+                  checked={(selected === option.code) || isEqual(selected, option) ? 1 : 0}
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props.name}
@@ -35,8 +36,8 @@ const RadioButtons = (props) => {
           );
         } else if (props?.optionsKey && props?.isDependent) {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"
@@ -54,8 +55,8 @@ const RadioButtons = (props) => {
           );
         } else {
           return (
-            <div style={props.innerStyles} key={ind}>
-              <span className="digit-radio-btn-wrap">
+            <div className={`radio-option-container ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`} key={ind}>
+              <span className={`digit-radio-btn-wrap ${props?.disabled ? "disabled" : ""} ${(props?.value === option.code && props?.disabled) ? "preselected" : ""}`}>
                 <input
                   className="digit-radio-btn"
                   type="radio"

@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { SVG } from "./SVG";
 
 const TextInput = (props) => {
-  const { variant } = props;
   const user_type = window?.Digit?.SessionStorage.get("userType");
   const [date, setDate] = useState(props?.type === "date" && props?.value);
+  const [visibility, setVisibility] = useState(false);
   const data = props?.watch
     ? {
         fromDate: props?.watch("fromDate"),
@@ -17,113 +17,234 @@ const TextInput = (props) => {
     const { value } = event.target;
     setDate(getDDMMYYYY(value));
   };
+  const incrementCount = () => {
+    const newValue = Number(props.value) + (Number(props?.step) ? Number(props?.step) : 1);
+    props.onChange(newValue);
+  };
+
+  const decrementCount = () => {
+    const newValue = Math.max(Number(props.value) - (Number(props?.step) ? Number(props?.step) : 1), 0);
+    props.onChange(newValue)
+  };
+
+  const renderPrefix = () => {
+    const prefixValue = props?.populators?.prefix || "";
+    if (props?.type === "numeric") {
+      return (
+        <button type="button" onClick={() => decrementCount()} className="digit-numeric-button-prefix">
+          -
+        </button>
+      );
+    }
+    if (prefixValue) {
+      return <button className="digit-prefix">{prefixValue}</button>;
+    }
+    return null;
+  };
+
+  const renderSuffix = () => {
+    const suffixValue = props?.populators?.suffix || "";
+    if (props?.type === "numeric") {
+      return (
+        <button type="button" onClick={() => incrementCount()} className="digit-numeric-button-suffix">
+          +
+        </button>
+      );
+    }
+    if (suffixValue) {
+      return <button className="digit-suffix">{suffixValue}</button>;
+    }
+    return null;
+  };
+
+  const handleVisibility = () => {
+    setVisibility(!visibility);
+    const newType = !visibility ? "text" : "password";
+    props.onChange({ target: { type: newType, value: props.value } });
+  };
+
+  const handleLocationClick = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          props.onChange(`${latitude}, ${longitude}`)
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported");
+    }
+  };
+
+  const renderIcon = () => {
+    const reqIcon = props?.type;
+    const iconFill = props?.disabled ? "#D6D5D4" : props?.nonEditable ? "#b1b4b6" : "#505A5F";
+    if (reqIcon) {
+      if (reqIcon === "geolocation") {
+        return <SVG.MyLocation fill={iconFill} onClick={handleLocationClick} className="digit-text-input-customIcon" />;
+      } else if (reqIcon === "text" && visibility) {
+        return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
+      } else if (reqIcon === "password") {
+        return <SVG.Visibility fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
+      } else if (reqIcon === "search") {
+        return <SVG.Search fill={iconFill} className="digit-text-input-customIcon" />;
+      } else {
+        try {
+          const components = require("@egovernments/digit-ui-react-components");
+          const DynamicIcon = components?.SVG[props?.populators?.customIcon] || components?.[props?.populators?.customIcon];
+          if (DynamicIcon) {
+            const svgElement = DynamicIcon({
+              width: "1.5rem",
+              height: "1.5rem",
+              fill: iconFill,
+              className: "digit-text-input-customIcon",
+            });
+            return svgElement;
+          } else {
+            console.log("Icon not found");
+            return null;
+          }
+        } catch (error) {
+          console.error("Icon not found");
+          return null;
+        }
+      }
+    }
+    return null;
+  };
+
+  const icon = renderIcon();
 
   const inputClassNameForMandatory = `${user_type ? "digit-employee-card-input-error" : "digit-card-input-error"} ${
-    props.disable ? "disabled" : ""
-  } ${props.customClass || ""}`;
+    props.disabled ? "disabled" : ""
+  } ${props.customClass || ""} ${props.nonEditable ? "noneditable" : ""}  ${props.type === "numeric" ? "numeric" : ""}`;
 
-  const inputClassName = `${user_type ? "digit-employee-card-input" : "digit-citizen-card-input"} ${props.disable ? "disabled" : ""} focus-visible ${
+  const inputClassName = `${user_type ? "digit-employee-card-input" : "digit-citizen-card-input"} ${props.disabled ? "disabled" : ""} focus-visible ${
     props.errorStyle ? "digit-employee-card-input-error" : ""
-  }`;
+  } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
   return (
     <React.Fragment>
       <div
         className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${
-          variant ? variant : ""
-        }`}
+          props.disabled ? "disabled" : ""
+        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props.type === "numeric" ? "numeric" : ""}`}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
-        {props.isMandatory ? (
-          <input
-            type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
-            name={props.name}
-            id={props.id}
-            className={inputClassNameForMandatory}
-            placeholder={props.placeholder}
-            onChange={(event) => {
-              if (props?.type === "number" && props?.maxlength) {
-                if (event.target.value.length > props?.maxlength) {
-                  event.target.value = event.target.value.slice(0, -1);
+        {props.required ? (
+          <div className="input-container">
+            {renderPrefix()}
+            <input
+              type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
+              name={props.name}
+              id={props.id}
+              className={inputClassNameForMandatory}
+              placeholder={props.placeholder}
+              onChange={(event) => {
+                if (props?.type === "number" && props?.maxlength) {
+                  if (event.target.value.length > props?.maxlength) {
+                    event.target.value = event.target.value.slice(0, -1);
+                  }
                 }
-              }
-              if (props?.onChange) {
-                props?.onChange(event);
-              }
-              if (props.type === "date") {
-                handleDate(event);
-              }
-            }}
-            ref={props.inputRef}
-            value={props.value}
-            style={{ ...props.style }}
-            defaultValue={props.defaultValue}
-            minLength={props.minlength}
-            maxLength={props.maxlength}
-            max={props.max}
-            pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
-            min={props.min}
-            readOnly={props.disable}
-            title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
-            step={props.step}
-            autoFocus={props.autoFocus}
-            onBlur={props.onBlur}
-            autoComplete="off"
-            disabled={props.disabled}
-            onFocus={props?.onFocus}
-          />
+                if (props?.onChange) {
+                  props?.onChange(event);
+                }
+                if (props.type === "date") {
+                  handleDate(event);
+                }
+              }}
+              ref={props.inputRef}
+              value={props?.value}
+              style={{ ...props.style }}
+              defaultValue={props.defaultValue}
+              minLength={props.minlength}
+              maxLength={props.maxlength}
+              max={props.max}
+              pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
+              min={props.min}
+              readOnly={props.disabled}
+              title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
+              step={props.step}
+              autoFocus={props.autoFocus}
+              onBlur={props.onBlur}
+              autoComplete="off"
+              disabled={props.disabled}
+              onFocus={props?.onFocus}
+              nonEditable={props.nonEditable}
+              config={props.config}
+              populators={props.populators}
+            />
+            {renderSuffix()}
+            {props.signature && props.signatureImg}
+            {icon && (
+              <span className="digit-cursor-pointer" onClick={props?.onIconSelection}>
+                {icon}
+              </span>
+            )}
+          </div>
+
         ) : (
-          <input
-            type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
-            name={props.name}
-            id={props.id}
-            className={inputClassName}
-            placeholder={props.placeholder}
-            onChange={(event) => {
-              if (props?.type === "number" && props?.maxlength) {
-                if (event.target.value.length > props?.maxlength) {
-                  event.target.value = event.target.value.slice(0, -1);
+          <div className="input-container">
+            {renderPrefix()}
+            <input
+              type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
+              name={props.name}
+              id={props.id}
+              className={inputClassName}
+              placeholder={props.placeholder}
+              onChange={(event) => {
+                if (props?.type === "number" && props?.maxlength) {
+                  if (event.target.value.length > props?.maxlength) {
+                    event.target.value = event.target.value.slice(0, -1);
+                  }
                 }
+                if (props?.onChange) {
+                  props?.onChange(event);
+                }
+                if (props.type === "date") {
+                  handleDate(event);
+                }
+              }}
+              ref={props.inputRef}
+              value={props?.value}
+              style={{ ...props.style }}
+              defaultValue={props.defaultValue}
+              minLength={props.minlength}
+              maxLength={props.maxlength}
+              max={props.max}
+              required={
+                props?.validation && props.ValidationRequired
+                  ? props?.validation?.isRequired
+                  : props.isRequired || (props.type === "date" && (props.name === "fromDate" ? data.toDate : data.fromDate))
               }
-              if (props?.onChange) {
-                props?.onChange(event);
-              }
-              if (props.type === "date") {
-                handleDate(event);
-              }
-            }}
-            ref={props.inputRef}
-            value={props.value}
-            style={{ ...props.style }}
-            defaultValue={props.defaultValue}
-            minLength={props.minlength}
-            maxLength={props.maxlength}
-            max={props.max}
-            required={
-              props?.validation && props.ValidationRequired
-                ? props?.validation?.isRequired
-                : props.isRequired || (props.type === "date" && (props.name === "fromDate" ? data.toDate : data.fromDate))
-            }
-            pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
-            min={props.min}
-            readOnly={props.disable}
-            title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
-            step={props.step}
-            autoFocus={props.autoFocus}
-            onBlur={props.onBlur}
-            onKeyPress={props.onKeyPress}
-            autoComplete="off"
-            disabled={props.disabled}
-            onFocus={props?.onFocus}
-          />
+              pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
+              min={props.min}
+              readOnly={props.disabled}
+              title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
+              step={props.step}
+              autoFocus={props.autoFocus}
+              onBlur={props.onBlur}
+              onKeyPress={props.onKeyPress}
+              autoComplete="off"
+              disabled={props.disabled}
+              onFocus={props?.onFocus}
+              nonEditable={props.nonEditable}
+              config={props.config}
+              populators={props.populators}
+            />
+            {renderSuffix()}
+            {props.signature && props.signatureImg}
+            {icon && (
+              <span className="digit-cursor-pointer" onClick={props?.onIconSelection}>
+                {icon}
+              </span>
+            )}
+          </div>
         )}
         {/* {props.type === "date" && <DatePicker {...props} date={date} setDate={setDate} data={data} />} */}
-        {props.signature && props.signatureImg}
-        {props.customIcon === "geolocation" && (
-          <span className="digit-cursor-pointer" onClick={props?.onIconSelection}>
-            <SVG.AddLocation className="digit-text-input-customIcon" />
-          </span>
-        )}
       </div>
     </React.Fragment>
   );
@@ -131,7 +252,7 @@ const TextInput = (props) => {
 
 TextInput.propTypes = {
   userType: PropTypes.string,
-  isMandatory: PropTypes.bool,
+  required: PropTypes.bool,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
@@ -144,7 +265,8 @@ TextInput.propTypes = {
   max: PropTypes.number,
   pattern: PropTypes.string,
   min: PropTypes.number,
-  disable: PropTypes.bool,
+  disabled: PropTypes.bool,
+  nonEditable: PropTypes.bool,
   errorStyle: PropTypes.bool,
   hideSpan: PropTypes.bool,
   title: PropTypes.string,
@@ -157,15 +279,19 @@ TextInput.propTypes = {
   customClass: PropTypes.string,
   signature: PropTypes.bool,
   signatureImg: PropTypes.node,
-  customIcon: PropTypes.string,
   onIconSelection: PropTypes.func,
   type: PropTypes.string,
   watch: PropTypes.func,
   onFocus: PropTypes.func,
+  charCount: PropTypes.bool,
+  errors: PropTypes.object,
+  config: PropTypes.object,
+  error: PropTypes.string,
 };
 
 TextInput.defaultProps = {
-  isMandatory: false,
+  required: false,
+  charCount: false
 };
 
 function DatePicker(props) {
@@ -182,7 +308,7 @@ function DatePicker(props) {
   return (
     <input
       type="text"
-      className={`${props.disable && "disabled"} digit-card-date-input`}
+      className={`${props.disabled && "disabled"} digit-card-date-input`}
       name={props.name}
       id={props.id}
       placeholder={props.placeholder}

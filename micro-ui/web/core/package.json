@@ -21,6 +21,7 @@
     "@egovernments/digit-ui-module-dss": "1.7.10",
     "@egovernments/digit-ui-module-core": "1.7.10",
     "@egovernments/digit-ui-module-hrms": "1.7.10",
+    "@egovernments/digit-ui-module-sample": "0.0.1",
     "@egovernments/digit-ui-react-components": "1.7.10",
     "@egovernments/digit-ui-svg-components": "0.0.8",
     "@egovernments/digit-ui-libraries-core": "0.0.1",
