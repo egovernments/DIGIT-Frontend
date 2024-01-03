@@ -4,6 +4,7 @@ import axios from "axios";
 import FormData from 'form-data';
 import config from "../../config/index";
 import * as XLSX from 'xlsx';
+import { logger } from "../../utils/logger";
 
 
 import {
@@ -48,6 +49,7 @@ class BulkUploadController {
         TransformConfig = result.data.mdms[0];
       }
       else {
+        logger.info("No Transform Template found");
         return errorResponder({ message: "No Transform Template found " }, request, response);
       }
       const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;

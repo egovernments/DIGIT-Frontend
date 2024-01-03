@@ -6,6 +6,7 @@ import { errorResponder } from "../utils";
 import config from "../config";
 
 import { httpRequest } from "../utils/request";
+import { logger } from "../utils/logger";
 
 
 function processExcelSheet(
@@ -42,7 +43,7 @@ async function getWorkbook(fileUrl: string) {
     'Content-Type': 'application/json',
     Accept: 'application/pdf',
   };
-
+  logger.info("FileUrl : " + fileUrl)
   const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
 
   const fileXlsx = new Blob([responseFile], {
@@ -70,11 +71,12 @@ const getSheetData = async (
   for (const file of response.fileStoreIds) {
     try {
       const workbook = await getWorkbook(file.url);
+      logger.info("Workbook : " + JSON.stringify(workbook))
 
       let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
 
       if (!desiredSheet) {
-        console.log(`Sheet "${sheetName}" not found in the workbook. Using the first sheet...`);
+        logger.info(`Sheet "${sheetName}" not found in the workbook.`);
         return getErrorCodes("WORKS", "NO_SHEETNAME_FOUND");
       }
 
@@ -85,7 +87,7 @@ const getSheetData = async (
       processExcelSheet(desiredSheet, startRow, endRow, config, rowDatas);
 
     } catch (error) {
-      console.error('Error fetching or processing file:', error);
+      logger.info('Error fetching or processing file:' + JSON.stringify(error));
     }
   }
   return rowDatas;
@@ -93,7 +95,7 @@ const getSheetData = async (
 
 const getTemplate = async (transformTemplate: any, requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
-
+  logger.info("Mdms url for TransformTemplate: " + apiUrl)
   const data = {
     "MdmsCriteria": {
       "tenantId": requestinfo?.userInfo?.tenantId,
@@ -113,6 +115,7 @@ const getTemplate = async (transformTemplate: any, requestinfo: any, response: a
 
 const getParsingTemplate = async (parsingTemplates: any[], requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
+  logger.info("Mdms url for ParsingTemplate: " + apiUrl)
   const data = {
     "MdmsCriteria": {
       "tenantId": requestinfo?.userInfo?.tenantId,

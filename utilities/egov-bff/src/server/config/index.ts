@@ -3,7 +3,8 @@
 
 import { getErrorCodes } from "./constants";
 
-const HOST = process.env.EGOV_HOST || "https://unified-dev.digit.org";
+const HOST = "https://unified-dev.digit.org";
+const serviceHost = "https://unified-dev.digit.org";
 
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -24,8 +25,8 @@ const config = {
   },
   host: {
     serverHost: HOST,
-    mdms: process.env.EGOV_MDMS_HOST || HOST || "https://unified-dev.digit.org",
-    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || HOST || "https://unified-dev.digit.org",
+    mdms: serviceHost || "https://unified-dev.digit.org",
+    filestore: serviceHost || "https://unified-dev.digit.org",
   },
   paths: {
     filestore: "/filestore/v1/files",

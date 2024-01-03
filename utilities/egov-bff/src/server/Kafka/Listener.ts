@@ -1,4 +1,5 @@
 import { KafkaClient, Consumer, Message, ProduceRequest } from 'kafka-node';
+import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import config from '../config';
 
@@ -27,7 +28,7 @@ export function listener() {
             // Parse the message value as an array of objects
             const messageObject: any = JSON.parse(message.value?.toString() || '{}');
             const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
-            console.log("IngestionDetails received:", ingestionDetails);
+            logger.info("IngestionDetails received:" + JSON.stringify(ingestionDetails));
 
             // Find the first message with state 'inprogress'
             const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
@@ -40,7 +41,7 @@ export function listener() {
                 ingestionDetails[inProgressIndex].state = 'done';
 
                 // Log the modified message
-                console.log(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
+                logger.info(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
                 messageObject.Job.ingestionDetails = ingestionDetails;
 
                 // Produce the modified messages back to the same topic
@@ -50,27 +51,27 @@ export function listener() {
                 ingestionDetails[notStartedIndex].state = 'inprogress';
 
                 // Log the modified message
-                console.log(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
+                logger.info(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
 
                 // Produce the modified messages back to the same topic
                 messageObject.Job.ingestionDetails = ingestionDetails;
                 await produceModifiedMessages(messageObject);
             } else {
                 // Log a message if no 'inprogress' or 'not-started' state is found
-                console.log('No message with state "inprogress" or "not-started" found.');
+                logger.info('No message with state "inprogress" or "not-started" found.');
             }
         } catch (error) {
-            console.error(`Error processing message: ${error}`);
+            logger.info(`Error processing message: ${JSON.stringify(error)}`);
         }
     });
 
     // Set up error event handlers
     consumer.on('error', (err) => {
-        console.error(`Consumer Error: ${err}`);
+        logger.info(`Consumer Error: ${JSON.stringify(err)}`);
     });
 
     consumer.on('offsetOutOfRange', (err) => {
-        console.error(`Offset out of range error: ${err}`);
+        logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
     });
 }
 
@@ -86,10 +87,10 @@ async function produceModifiedMessages(modifiedMessages: any[]) {
 
         producer.send(payloads, (err, data) => {
             if (err) {
-                console.error(`Producer Error: ${err}`);
+                logger.info(`Producer Error: ${JSON.stringify(err)}`);
                 reject(err);
             } else {
-                console.log('Produced modified messages successfully.');
+                logger.info('Produced modified messages successfully.');
                 resolve();
             }
         });
@@ -98,7 +99,7 @@ async function produceModifiedMessages(modifiedMessages: any[]) {
 
 // Gracefully disconnect from the Kafka broker when the process is terminated
 process.on('SIGINT', () => {
-    console.log('Disconnecting from Kafka...');
+    logger.info('Disconnecting from Kafka...');
     consumer.close(true, () => {
         producer.close(() => {
             process.exit();
