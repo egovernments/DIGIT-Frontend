@@ -87,7 +87,7 @@ const getSheetData = async (
       processExcelSheet(desiredSheet, startRow, endRow, config, rowDatas);
 
     } catch (error) {
-      logger.info('Error fetching or processing file:' + JSON.stringify(error));
+      logger.error('Error fetching or processing file: ' + error);
     }
   }
   return rowDatas;
@@ -108,6 +108,7 @@ const getTemplate = async (transformTemplate: any, requestinfo: any, response: a
     const result = await axios.post(apiUrl, data);
     return result;
   } catch (error: any) {
+    logger.error("Error: " + error?.response?.data?.Errors[0].message)
     return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
   }
 
@@ -128,6 +129,7 @@ const getParsingTemplate = async (parsingTemplates: any[], requestinfo: any, res
     const result = await axios.post(apiUrl, data);
     return result;
   } catch (error: any) {
+    logger.error("Error: " + error?.response?.data?.Errors[0].message)
     return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
   }
 

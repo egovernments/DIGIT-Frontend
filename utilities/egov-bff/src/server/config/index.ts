@@ -14,7 +14,7 @@ if (!HOST) {
 const config = {
   auth_token: process.env.AUTH_TOKEN,
   KAFKA_BROKER_HOST:
-    // "localhost:9092" || 
+    // "localhost:9092" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
     process.env.KAFKA_DHIS_UPDATE_TOPIC || "update-dhis2-job",
