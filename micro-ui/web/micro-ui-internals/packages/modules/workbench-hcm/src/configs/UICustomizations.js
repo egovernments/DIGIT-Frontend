@@ -235,8 +235,8 @@ export const UICustomizations = {
           return (
             <span className="link">
               <Link
-                to={`/${window.contextPath}/employee/hcmworkbench/campaign-view?tenantId=${row?.tenantId}&projectNumber=${row?.projectNumber}`}
-              >{row?.projectNumber}
+                to={`/${window.contextPath}/employee/hcmworkbench/campaign-view?tenantId=${row?.tenantId}&projectId=${row?.projectId}`}
+              >{row?.projectId}
 
               </Link>
             </span>
