@@ -790,24 +790,3 @@ input[type="number"] {
   max-height: 120px;
   margin-top: 90px;
 }
-
-.master-container {
-  display: flex;
-  grid-gap: 1rem;
-  .custom-master {
-    cursor: pointer;
-    width: 6.25rem;
-    height: 6.25rem;
-    display: flex;
-    a {
-      color: theme(colors.text.primary);
-      text-decoration: none;
-    }
-    .master-icon {
-      text-align: center;
-    }
-    &:hover {
-      background-color: theme(digitv2.lightTheme.primary-bg); /* Change this to the desired hover color */
-    }
-  }
-}
