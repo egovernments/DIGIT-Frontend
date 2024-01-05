@@ -103,6 +103,8 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.0-beta.9 Added new role to support hcm manage masters
+1.0.0-beta.8 minor fixes
 1.0.0-beta.7 Added Bulk Upload Ui for MDMS Add
 1.0.0-beta.6 Added Bulk Upload Ui for MDMS Add
 1.0.0-beta.5 Fixed some loading issue
