@@ -82,6 +82,7 @@ module.exports = function (app) {
     "/muster-roll",
     "/individual",
     "/mdms-v2",
+    "/facility/v1/_search",
     "/project/staff/v1/_create",
     "/product/v1/_create"
   ].forEach((location) => app.use(location, createProxy));

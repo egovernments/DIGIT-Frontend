@@ -48,7 +48,7 @@ useEffect(()=>{
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(Digit.Utils.workbench.getCriteriaForSelectData(props) );
   const optionsList = data || options?.enumOptions || options || [];
   const formattedOptions = React.useMemo(
-    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(prefix?.trim?.()!=""?`${prefix}_${e?.label}`:e?.label)), value: e.value })),
+    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(prefix?.trim?.()!=""?`${prefix}_${e?.label}`:e?.label)), value: e?.value })),
     [optionsList, prefix, data]
   );
   const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
