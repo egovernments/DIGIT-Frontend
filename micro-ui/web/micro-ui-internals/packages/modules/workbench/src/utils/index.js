@@ -437,7 +437,7 @@ const getCriteriaForSelectData = (allProps) => {
         _.set(
           newSchema,
           path,
-          keyValuePairs
+          keyValuePairs?.map((item) => item.value)
         );
         updateSchema(newSchema);
       }

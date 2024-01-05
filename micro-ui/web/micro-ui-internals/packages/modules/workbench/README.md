@@ -103,6 +103,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.0-beta.12 Added customisable label for custom dropdown through workbench ui schema
 1.0.0-beta.11 Added customisable label for custom dropdown through workbench ui schema
 1.0.0-beta.10 fixed the dropdown undefined issue 
 1.0.0-beta.9 Added new role to support hcm manage masters
