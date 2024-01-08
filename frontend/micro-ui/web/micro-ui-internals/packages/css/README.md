@@ -65,8 +65,8 @@ frontend/micro-ui/web/public/index.html
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core 
-Digit Core Repo (https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
+## Published from DIGIT Frontend 
+Digit Core Repo (https://github.com/egovernments/DIGIT-Frontend/tree/works-core)
 
 ## License
 

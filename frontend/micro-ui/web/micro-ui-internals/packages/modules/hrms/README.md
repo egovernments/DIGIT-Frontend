@@ -63,8 +63,8 @@ const initDigitUI = () => {
 
 [jagankumar-egov] [naveen-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core 
-Digit Dev Repo (https://github.com/egovernments/DIGIT-Dev/tree/digit-ui-core)
+## Published from DIGIT Frontend 
+Digit Dev Repo (https://github.com/egovernments/DIGIT-Frontend/tree/works-core)
 
 ## License
 

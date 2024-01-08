@@ -182,8 +182,8 @@ const useGetCustomFilterRequestValues = (filterConfigs, config={}) => {
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov]
 
-## Published from DIGIT Core 
-Digit Dev Repo (https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
+## Published from DIGIT Frontend 
+Digit Dev Repo (https://github.com/egovernments/DIGIT-Frontend/tree/works-core)
 
 ## License
 

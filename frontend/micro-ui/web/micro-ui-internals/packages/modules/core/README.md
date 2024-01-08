@@ -91,7 +91,7 @@ with
 
 ## Published from DIGIT Core
 
-Digit Dev Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
+Digit Dev Repo (<https://github.com/egovernments/DIGIT-Frontend/tree/works-core>)
 
 ## License
 
