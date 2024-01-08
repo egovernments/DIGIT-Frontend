@@ -91,8 +91,14 @@ class BulkUploadController {
     response: express.Response
   ) => {
     try {
-      // const result = await httpRequest(`${"http://127.0.0.1:8080"}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
-      const result = await httpRequest(`${config.host.serverHost}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
+      var result: any;
+      try {
+        // result = await httpRequest(`${"http://127.0.0.1:8080"}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
+        const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+        result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
+      } catch (e: any) {
+        return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+      }
       const datas = result?.updatedDatas;
 
       // Check if data is an array before processing

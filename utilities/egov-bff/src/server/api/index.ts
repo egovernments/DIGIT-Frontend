@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getErrorCodes } from "../config";
 import * as XLSX from 'xlsx';
-import { errorResponder } from "../utils";
 import config from "../config";
 
 import { httpRequest } from "../utils/request";
@@ -72,7 +71,6 @@ const getSheetData = async (
 ) => {
   const response = await httpRequest(fileUrl, undefined, undefined, 'get');
   const rowDatas: any[] = [];
-
   for (const file of response.fileStoreIds) {
     try {
       const workbook = await getWorkbook(file.url);
@@ -97,7 +95,7 @@ const getSheetData = async (
   return rowDatas;
 };
 
-const getTemplate = async (transformTemplate: any, requestinfo: any, response: any) => {
+const getTemplate: any = async (transformTemplate: any, requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
   logger.info("Mdms url for TransformTemplate: " + apiUrl)
   const data = {
@@ -113,12 +111,12 @@ const getTemplate = async (transformTemplate: any, requestinfo: any, response: a
     return result;
   } catch (error: any) {
     logger.error("Error: " + error?.response?.data?.Errors[0].message)
-    return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
+    return error?.response?.data?.Errors[0].message;
   }
 
 }
 
-const getParsingTemplate = async (parsingTemplates: any[], requestinfo: any, response: any) => {
+const getParsingTemplate: any = async (parsingTemplates: any[], requestinfo: any, response: any) => {
   const apiUrl = config.host.mdms + config.paths.mdms_search;
   logger.info("Mdms url for ParsingTemplate: " + apiUrl)
   const data = {
@@ -134,7 +132,7 @@ const getParsingTemplate = async (parsingTemplates: any[], requestinfo: any, res
     return result;
   } catch (error: any) {
     logger.error("Error: " + error?.response?.data?.Errors[0].message)
-    return errorResponder({ message: error?.response?.data?.Errors[0].message }, requestinfo, response);
+    return error?.response?.data?.Errors[0].message;
   }
 
 }

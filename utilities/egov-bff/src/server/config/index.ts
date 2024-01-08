@@ -3,10 +3,9 @@
 
 import { getErrorCodes } from "./constants";
 
-const HOST =
-  // "http://127.0.0.1:8080" ||
-  "https://unified-uat.digit.org";
-const serviceHost = "https://unified-uat.digit.org";
+const HOST = process.env.EGOV_HOST ||
+  // "http://127.0.0.1:8080/" ||
+  "https://unified-uat.digit.org/";
 
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -27,12 +26,13 @@ const config = {
   },
   host: {
     serverHost: HOST,
-    mdms: serviceHost || "https://unified-uat.digit.org",
-    filestore: serviceHost || "https://unified-uat.digit.org",
+    mdms: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
+    filestore: process.env.EGOV_MDMS_HOST || "https://unified-uat.digit.org/",
+    hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
   },
   paths: {
-    filestore: "/filestore/v1/files",
-    mdms_search: "/mdms-v2/v2/_search"
+    filestore: "filestore/v1/files",
+    mdms_search: "mdms-v2/v2/_search"
   },
 };
 
