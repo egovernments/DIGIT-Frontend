@@ -154,8 +154,8 @@ _Bill Module
 
 [jagankumar-egov] 
 
-## Published from DIGIT Core 
-Digit Dev Repo (https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
+#### Published from DIGIT Frontend  
+Digit Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ## License
 

@@ -135,8 +135,9 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 - [jagankumar-egov](https://www.github.com/jagankumar-egov)
 
 
-### Published from
-[Digit Core Repo](https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
+
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 
 
