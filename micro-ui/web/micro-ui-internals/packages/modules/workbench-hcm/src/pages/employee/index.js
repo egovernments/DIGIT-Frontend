@@ -10,7 +10,6 @@ import ErrorViewPage from "./ErrorViewPage";
 import IngestionInbox from "./IngestionInbox";
 import ViewProject from "./ViewProject";
 import CreateCampaign from "./CreateCampaign";
-
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
 
@@ -83,7 +82,6 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       show: location.pathname.includes("/hcmworkbench/microplan") ? true : false,
     },
     {
-
       path: `/${window?.contextPath}/employee/hcmworkbench/campaign`,
       content: t("WORKBENCH_CREATE_CAMPAIGN"),
       show: location.pathname.includes("/hcmworkbench/campaign") ? true : false,
