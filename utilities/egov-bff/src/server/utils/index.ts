@@ -198,8 +198,8 @@ const extractEstimateIds = (contract: any): any[] => {
 const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo: any) => {
   messages.Job.RequestInfo = RequestInfo
   try {
-    // await httpRequest("http://127.0.0.1:8081" + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
-    await httpRequest(config.host.serverHost + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    // await httpRequest("http://127.0.0.1:8081/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    await httpRequest(config.host.serverHost + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
   } catch (error) {
     logger.error("Error during ingestion : " + error)
   }
