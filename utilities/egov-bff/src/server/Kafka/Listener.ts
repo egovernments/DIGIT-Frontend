@@ -8,7 +8,7 @@ const kafkaConfig = {
     kafkaHost: config.KAFKA_BROKER_HOST, // Use the correct broker address and port
     autoCommit: true,
     autoCommitIntervalMs: 5000,
-    fromOffset: 'latest',
+    fromOffset: 'earliest', // Start reading from the beginning of the topic
 };
 
 const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
