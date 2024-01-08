@@ -44,6 +44,11 @@ const HCMWORKBENCHCard = () => {
       link: `/${window?.contextPath}/employee/hcmworkbench/project`,
       roles: ROLES.MDMS,
     },
+    {
+      label: t("WORKBENCH_CREATE_CAMPAIGN"),
+      link: `/${window?.contextPath}/employee/hcmworkbench/campaign`,
+      roles: ROLES.MDMS,
+    },
     // {
     //   label: t("WORKBENCH_MICROPLAN"),
     //   link: `/${window?.contextPath}/employee/hcmworkbench/microplan`,

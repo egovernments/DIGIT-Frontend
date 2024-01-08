@@ -8,6 +8,7 @@ import ErrorViewPage from "./ErrorViewPage";
 
 import IngestionInbox from "./IngestionInbox";
 import ViewProject from "./ViewProject";
+import CreateCampaign from "./CreateCampaign";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -52,6 +53,11 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       content: t("WORKBENCH_MICROPLAN"),
       show: location.pathname.includes("/hcmworkbench/microplan") ? true : false,
     },
+    {
+      path: `/${window?.contextPath}/employee/hcmworkbench/campaign`,
+      content: t("WORKBENCH_CREATE_CAMPAIGN"),
+      show: location.pathname.includes("/hcmworkbench/campaign") ? true : false,
+    },
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
@@ -89,6 +95,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
           <PrivateRoute path={`${path}/microplan`} component={() => <DataIngestionComponent ingestionType={"microplan"} />} />
+          <PrivateRoute path={`${path}/campaign`} component={() => <CreateCampaign />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
