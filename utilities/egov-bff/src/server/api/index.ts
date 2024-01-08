@@ -106,11 +106,11 @@ const getTemplate: any = async (transformTemplate: any, requestinfo: any, respon
     "RequestInfo": requestinfo
   }
   try {
-    const result = httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
+    const result = await httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
     logger.info("Transform Template search Result : " + result)
     return result;
   } catch (error: any) {
-    logger.error("Error: " + error?.response?.data?.Errors[0].message)
+    logger.error("Error: " + error)
     return error?.response?.data?.Errors[0].message;
   }
 
@@ -128,11 +128,11 @@ const getParsingTemplate: any = async (parsingTemplates: any[], requestinfo: any
     "RequestInfo": requestinfo
   }
   try {
-    const result = httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
+    const result = await httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
     logger.info("Parsing Template search Result : " + result)
     return result;
   } catch (error: any) {
-    logger.error("Error: " + error?.response?.data?.Errors[0].message)
+    logger.error("Error: " + error)
     return error?.response?.data?.Errors[0].message;
   }
 
