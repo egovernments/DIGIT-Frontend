@@ -1,6 +1,5 @@
 import * as express from "express";
 import { convertObjectForMeasurment, produceIngestion } from "../../utils";
-import axios from "axios";
 import FormData from 'form-data';
 import config from "../../config/index";
 import * as XLSX from 'xlsx';
@@ -42,20 +41,23 @@ class BulkUploadController {
   ) => {
     try {
       const { fileStoreId, startRow, endRow, transformTemplate, parsingTemplates } = request.body;
+      logger.info("Transform Template :" + transformTemplate)
       const result: any = await getTemplate(transformTemplate, request.body.RequestInfo, response);
       const parseResult: any = await getParsingTemplate(parsingTemplates, request.body.RequestInfo, response);
       var TransformConfig, parsingConfig: any;
-      if (result?.data?.mdms?.length > 0) {
-        TransformConfig = result.data.mdms[0];
+      if (result?.mdms?.length > 0) {
+        TransformConfig = result.mdms[0];
       }
       else {
         logger.info("No Transform Template found");
         return errorResponder({ message: "No Transform Template found " }, request, response);
       }
+      logger.info("Transform Config : ", TransformConfig);
       const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+      logger.info("File fetching url : " + url)
       var updatedDatas: any[] = [];
-      if (parseResult?.data?.mdms?.length > 0) {
-        const mdmsArray = parseResult.data.mdms;
+      if (parseResult?.mdms?.length > 0) {
+        const mdmsArray = parseResult.mdms;
 
         // Iterate through all elements in mdms array
         for (const mdmsElement of mdmsArray) {
@@ -73,7 +75,7 @@ class BulkUploadController {
             updatedDatas.push(updatedData);
           }
         }
-
+        logger.info("Updated Datas : " + updatedDatas)
         // After processing all mdms elements, send the response
         return sendResponse(response, { updatedDatas }, request);
       }
@@ -97,6 +99,7 @@ class BulkUploadController {
         const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
         result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${this.path}/_transform`, request.body, undefined, undefined, undefined, undefined);
       } catch (e: any) {
+        logger.error(String(e))
         return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
       }
       const datas = result?.updatedDatas;
@@ -138,17 +141,16 @@ class BulkUploadController {
             formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
             formData.append('module', 'pgr');
 
-            5
-            // Upload the file using axios
             try {
               var fileCreationResult;
               try {
-                fileCreationResult = await axios.post(config.host.filestore + config.paths.filestore, formData, {
-                  headers: {
+                logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+                fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+                  {
                     'Content-Type': 'multipart/form-data',
                     'auth-token': request?.body?.RequestInfo?.authToken
                   }
-                });
+                );
               } catch (error: any) {
 
                 return errorResponder(
@@ -157,7 +159,8 @@ class BulkUploadController {
                   response
                 );
               }
-              const responseData = fileCreationResult?.data?.files;
+              const responseData = fileCreationResult?.files;
+              logger.info("Response data after File Creation : " + JSON.stringify(responseData));
               if (Array.isArray(responseData) && responseData.length > 0) {
                 Job.ingestionDetails.push({ id: responseData[0].fileStoreId, tenanId: responseData[0].tenantId, state: "not-started", type: "xlsx" });
               }

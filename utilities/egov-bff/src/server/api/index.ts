@@ -1,4 +1,3 @@
-import axios from "axios";
 import { getErrorCodes } from "../config";
 import * as XLSX from 'xlsx';
 import config from "../config";
@@ -107,7 +106,8 @@ const getTemplate: any = async (transformTemplate: any, requestinfo: any, respon
     "RequestInfo": requestinfo
   }
   try {
-    const result = await axios.post(apiUrl, data);
+    const result = httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
+    logger.info("Transform Template search Result : " + result)
     return result;
   } catch (error: any) {
     logger.error("Error: " + error?.response?.data?.Errors[0].message)
@@ -128,7 +128,8 @@ const getParsingTemplate: any = async (parsingTemplates: any[], requestinfo: any
     "RequestInfo": requestinfo
   }
   try {
-    const result = await axios.post(apiUrl, data);
+    const result = httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
+    logger.info("Parsing Template search Result : " + result)
     return result;
   } catch (error: any) {
     logger.error("Error: " + error?.response?.data?.Errors[0].message)
