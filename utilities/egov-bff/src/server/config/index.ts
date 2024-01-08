@@ -26,8 +26,8 @@ const config = {
   },
   host: {
     serverHost: HOST,
-    mdms: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
-    filestore: process.env.EGOV_MDMS_HOST || "https://unified-uat.digit.org/",
+    mdms: process.env.EGOV_MDMS_HOST || "https://unified-uat.digit.org/",
+    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
     hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
   },
   paths: {
