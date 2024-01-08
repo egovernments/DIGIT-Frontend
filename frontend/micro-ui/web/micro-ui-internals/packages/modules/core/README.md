@@ -65,6 +65,7 @@ with
 # Changelog
 
 ```bash
+1.5.47 Corrected the redirection of links at sidebar when redirecting to something other than current path.
 1.5.46 added classname for topbar options dropdown.
 1.5.45 aligment issue in edit and logout
 1.5.44 updated login scss and alignment issues
