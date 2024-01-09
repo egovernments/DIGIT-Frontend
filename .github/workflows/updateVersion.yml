@@ -24,9 +24,9 @@ jobs:
           target_version="1.0.0-beta."
 
           # Check if the dependency is present in the package.json file
-          if jq -e --arg dep "$dependency" '.dependencies[$dep] | strings' "$json_file" >/dev/null; then
+          if jq -e --arg dep "$dependency" '.devDependencies[$dep] | strings' "$json_file" >/dev/null; then
             # Get the current version
-            current_version=$(jq -r --arg dep "$dependency" '.dependencies[$dep]' "$json_file")
+            current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$json_file")
 
             # Check if the version has been incremented from "1.0.0-beta.*"
             if [[ $current_version =~ ^$target_version ]]; then
