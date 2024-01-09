@@ -14,23 +14,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Add changes based on logic
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Check Dependency Version
         run: |
-          # Use your own logic here to determine whether to make changes
-          # For example, check if the file contains a specific keyword or pattern
-          if jq -e '.dependencies."@egovernments/digit-ui-module-workbench" |= (test("^[0-9]+\\.[0-9]+\\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0))' micro-ui/web/micro-ui-internals/example/package.json; then
-           # Logic to update the file or perform other actions
-            echo "Dependency version incremented"
+          dependency="@egovernments/digit-ui-module-workbench"
+          json_file="micro-ui/web/micro-ui-internals/example/package.json"
+
+          # Check if the dependency is present in the package.json file
+          if jq -e --arg dep "$dependency" '.dependencies[$dep] | strings' "$json_file" >/dev/null; then
+            # Check if the version follows semantic versioning and if the third segment is greater than 0
+            if jq -e --arg dep "$dependency" '.dependencies[$dep] | test("^[0-9]+\\.[0-9]+\\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0)' "$json_file"; then
+              echo "Dependency version incremented"
+              # Logic to perform actions when the version is incremented
+            else
+              echo "No need to update, or the version is not incremented"
+              # Logic to perform actions when the version is not incremented
+            fi
           else
-            echo "No need to update, or the version is not incremented"
-            # Modify the file or add a new file with the changes
-            # echo "Version 2.0" > path/to/your/file.updated
-            # Commit the changes
-            #   git config user.name "${{ github.actor }}"
-            #   git config user.email "${{ github.actor }}@users.noreply.github.com"
-            #   git add path/to/your/file.updated
-            #   git commit -m "Add changes based on logic"
-            #   git push
-            # else
-            #   echo "No changes needed based on logic."
+            echo "Dependency not found in $json_file"
+            # Logic to perform actions when the dependency is not found
           fi
