@@ -30,7 +30,7 @@ jobs:
           if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
-      
+            echo "CURRENT_VERSION=$current_version"
             # Check if the version has changed
             if [[ $(git diff -- "$SOURCE_JSON_FILE") ]]; then
               echo "Dependency version incremented"
