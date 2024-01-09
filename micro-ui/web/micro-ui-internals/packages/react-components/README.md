@@ -88,6 +88,7 @@ Syntax for the FormComposersV2
 # Changelog
 
 ```bash
+1.8.0-beta.5 added file type excel in multiUploadWrapper
 1.8.0-beta.4 republished 
 1.8.0-beta.3 republished due to some issues
 1.8.0-beta.2 Added Some icons for pqm dashboard
@@ -110,8 +111,8 @@ Syntax for the FormComposersV2
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core 
-Digit Dev Repo (https://github.com/egovernments/DIGIT-Dev/tree/digit-ui-core)
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ## License
 

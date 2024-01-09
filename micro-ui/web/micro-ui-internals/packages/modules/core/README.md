@@ -117,9 +117,9 @@ and add its related functions
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core
+### Published from DIGIT Frontend 
 
-Digit Dev Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
+DIGIT Frontend Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
 
 ## License
 
