@@ -74,7 +74,7 @@ const MasterComponent = () => {
 
   return (
     <div className="override-card">
-      <Header className="works-header-view">{screen === "master-landing-screen" ? t("WORKBENCH_MASTER") : t("WORKBENCH_USER")}</Header>
+      <Header className="works-header-view">{t(Digit.Utils.locale.getTransformedLocale(`WBH_${screen}`))}</Header>
       {RenderCard()}
     </div>
   );
