@@ -33,7 +33,7 @@ jobs:
             echo "CURRENT_VERSION=$current_version"
       
             # Get the commit hash of the last two commits for the specific file
-            commit_hash=$(git log -n 2 --pretty=format:%h -- "$SOURCE_JSON_FILE" | tail -n 1)
+            commit_hash=$(git log -n 2 --pretty=format:%h -- "$SOURCE_JSON_FILE" | tail -n 2)
             echo "Commit hash: $commit_hash"
       
             # Get the version from the commit
