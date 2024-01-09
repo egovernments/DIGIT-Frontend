@@ -54,7 +54,7 @@ jobs:
           new_version=$(npm version --no-git-tag-version "$current_version")
 
           # Update the package.json file with the new version
-          jq --arg dep "$target_dependency" --arg new_version "$new_version" '.devDependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
+          jq --arg dep "$target_dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
 
           # Commit the updated package.json
           git config user.name "${{ github.actor }}"
