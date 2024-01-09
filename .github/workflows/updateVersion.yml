@@ -31,8 +31,13 @@ jobs:
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
-            # Check if the version has changed
-            if [[ $(git diff -- "$SOURCE_JSON_FILE") ]]; then
+
+            # Get the version from the last commit for the specific file
+            last_commit_version=$(git show HEAD:"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
+            echo "last_commit_version=$last_commit_version"
+
+            # Check if the versions are different
+            if [[ "$current_version" != "$last_commit_version" ]]; then
               echo "Dependency version incremented"
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
             else
@@ -45,36 +50,6 @@ jobs:
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
-
-          - name: Check Dependency Change
-            id: check_change
-            run: |
-              dependency="@egovernments/digit-ui-module-workbench"
-          
-              # Check if the dependency is present in the package.json file
-              if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
-                # Get the current version
-                current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
-                echo "CURRENT_VERSION=$current_version"
-
-                # Get the version from the last commit for the specific file
-                last_commit_version=$(git show HEAD:"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
-                echo "last_commit_version=$last_commit_version"
-
-                # Check if the versions are different
-                if [[ "$current_version" != "$last_commit_version" ]]; then
-                  echo "Dependency version incremented"
-                  echo "VERSION_CHANGED=true" >> $GITHUB_ENV
-                else
-                  echo "Dependency version false"
-                  echo "VERSION_CHANGED=false" >> $GITHUB_ENV
-                fi
-          
-                echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
-              else
-                echo "Dependency not found in $SOURCE_JSON_FILE"
-                echo "VERSION_CHANGED=false" >> $GITHUB_ENV
-              fi
 
       - name: Increment Version
         if: steps.check_change.outputs.VERSION_CHANGED == 'true'
