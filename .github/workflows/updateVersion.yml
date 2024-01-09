@@ -32,8 +32,8 @@ jobs:
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
       
-            # Get the version from the last commit for the specific file
-            last_commit_version=$(git show HEAD:"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
+            # Get the version from the commit before the last one for the specific file
+            last_commit_version=$(git log -n 2 --pretty=format:%h -- "$SOURCE_JSON_FILE" | tail -n 1 | xargs git show | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
             echo "last_commit_version=$last_commit_version"
       
             # Check if the versions are different
