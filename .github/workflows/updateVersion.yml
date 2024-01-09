@@ -31,17 +31,17 @@ jobs:
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
-
+      
             # Get the version from the last commit for the specific file
             last_commit_version=$(git show HEAD:"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
             echo "last_commit_version=$last_commit_version"
-
+      
             # Check if the versions are different
             if [[ "$current_version" != "$last_commit_version" ]]; then
               echo "Dependency version incremented"
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
             else
-              echo "Dependency version false"
+              echo "Dependency version not incremented"
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             fi
       
@@ -59,6 +59,7 @@ jobs:
       
           # Increment the version
           new_version=$(npm version --no-git-tag-version "$current_version")
+          echo "New version: $new_version"
       
           # Update the package.json file with the new version
           jq --arg dep "$target_dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
