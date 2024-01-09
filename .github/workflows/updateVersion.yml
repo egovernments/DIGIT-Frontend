@@ -22,10 +22,10 @@ jobs:
           dependency="@egovernments/digit-ui-module-workbench"
           json_file="micro-ui/web/micro-ui-internals/example/package.json"
 
-          # Check if the dependency is present in the package.json file
-          if jq -e --arg dep "$dependency" '.dependencies[$dep] | strings' "$json_file" >/dev/null; then
+          # Check if the dependency is present in the package.json file (either in dependencies or devDependencies)
+          if jq -e --arg dep "$dependency" '.dependencies[$dep] // .devDependencies[$dep] | strings' "$json_file" >/dev/null; then
             # Check if the version follows semantic versioning and if the third segment is greater than 0
-            if jq -e --arg dep "$dependency" '.dependencies[$dep] | test("^[0-9]+\\.[0-9]+\\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0)' "$json_file"; then
+            if jq -e --arg dep "$dependency" '.dependencies[$dep] // .devDependencies[$dep] | test("^[0-9]+\\.[0-9]+\\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0)' "$json_file"; then
               echo "Dependency version incremented"
               # Logic to perform actions when the version is incremented
             else
