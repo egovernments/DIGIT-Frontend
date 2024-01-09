@@ -27,7 +27,7 @@ jobs:
           dependency="@egovernments/digit-ui-module-workbench"
       
           # Check if the dependency is present in the package.json file
-          if jq -e --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
+          if jq --arg dep "$dependency" '.devDependencies | keys | .[] | select(. == $dep)' "$SOURCE_JSON_FILE" >/dev/null; then
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
       
