@@ -18,6 +18,25 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const { screen } = useParams();
 
+ 
+  
+
+  const masterContent = () => {
+    switch (true) {
+      case location.pathname.includes("master-landing-screen"):
+        return t("WORKBENCH_MASTER");
+      case location.pathname.includes("user-landing-screen"):
+        return t("WORKBENCH_USER");
+      case location.pathname.includes("project-landing-screen"):
+        return t("WORKBENCH_PROJECT");
+      default:
+        return null;
+    }
+  };
+  
+
+  const isShow = location.pathname.includes("/hcmworkbench/master");
+
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -66,9 +85,9 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     },
       {
       path: `/${window?.contextPath}/employee/hcmworkbench/master`,
-      content: location.pathname.includes("master-landing-screen") ? t("WORKBENCH_MASTER") : t("WORKBENCH_USER"),
+      content: masterContent(),
       query: `landingscreen=${screen}`,
-      show: location.pathname.includes("/hcmworkbench/master") ? true : false,
+      show: isShow ? true : false,
     },
     
 
