@@ -25,19 +25,19 @@ jobs:
         id: check_change
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
-
+      
           # Check if the dependency is present in the package.json file
-          if jq -e --arg dep "$dependency" '.devDependencies[$dep] | strings' "$SOURCE_JSON_FILE" >/dev/null; then
+          if jq -e --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
-
+      
             # Check if the version has changed
             if git diff --exit-code "$SOURCE_JSON_FILE"; then
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             else
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
             fi
-
+      
             echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
           else
             echo "Dependency not found in $SOURCE_JSON_FILE"
