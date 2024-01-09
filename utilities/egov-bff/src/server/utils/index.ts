@@ -195,11 +195,15 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
-const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo: any) => {
+const produceIngestion = async (messages: any, fileStoreId: string, ingestionType: string, RequestInfo: any) => {
   messages.Job.RequestInfo = RequestInfo
+  logger.info("FileStoreId for ingestion : " + fileStoreId)
+  logger.info("Ingestion Type : " + ingestionType)
+  logger.info("Job Messages : " + JSON.stringify(messages))
   try {
-    // await httpRequest("http://127.0.0.1:8081/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
-    await httpRequest(config.host.serverHost + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    logger.info("Ingestion Url : " + config.host.serverHost + "hcm-moz-impl/v1/ingest");
+    // await httpRequest("http://localhost:8081/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    await httpRequest(config.host.serverHost + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
   } catch (error) {
     logger.error("Error during ingestion : " + error)
   }

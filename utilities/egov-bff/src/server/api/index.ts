@@ -29,7 +29,6 @@ function processExcelSheet(
       rowData[fieldConfig.title] = fieldValue;
       fieldConfig.default = fieldValue;
     }
-
     rowDatas.push(rowData);
   }
 }
@@ -60,11 +59,9 @@ async function getWorkbook(fileUrl: string) {
 }
 
 
-
 const getSheetData = async (
   fileUrl: string,
-  startRow: number = 1,
-  endRow?: number,
+  selectedRows: any[],
   config?: any,
   sheetName?: string
 ) => {
@@ -80,56 +77,35 @@ const getSheetData = async (
         logger.info(`Sheet "${sheetName}" not found in the workbook.`);
         return getErrorCodes("WORKS", "NO_SHEETNAME_FOUND");
       }
-
-      if (!endRow) {
-        const sheetRef = desiredSheet['!ref'];
-        endRow = sheetRef ? XLSX.utils.decode_range(sheetRef).e.r + 1 : 1;
+      for (const selectedRow of selectedRows) {
+        processExcelSheet(desiredSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
       }
-      processExcelSheet(desiredSheet, startRow, endRow, config, rowDatas);
 
     } catch (error) {
       logger.error('Error fetching or processing file: ' + error);
     }
   }
+  logger.info("RowDatas : " + JSON.stringify(rowDatas))
   return rowDatas;
 };
 
-const getTemplate: any = async (transformTemplate: any, requestinfo: any, response: any) => {
+const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, requestinfo: any, response: any) => {
+  if (!uniqueIdentifiers) {
+    return;
+  }
   const apiUrl = config.host.mdms + config.paths.mdms_search;
-  logger.info("Mdms url for TransformTemplate: " + apiUrl)
+  logger.info("Mdms url : " + apiUrl)
   const data = {
     "MdmsCriteria": {
       "tenantId": requestinfo?.userInfo?.tenantId,
-      "uniqueIdentifiers": [transformTemplate],
-      "schemaCode": "HCM.TransformTemplate"
+      "uniqueIdentifiers": uniqueIdentifiers,
+      "schemaCode": schemaCode
     },
     "RequestInfo": requestinfo
   }
   try {
     const result = await httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
-    logger.info("Transform Template search Result : " + result)
-    return result;
-  } catch (error: any) {
-    logger.error("Error: " + error)
-    return error?.response?.data?.Errors[0].message;
-  }
-
-}
-
-const getParsingTemplate: any = async (parsingTemplates: any[], requestinfo: any, response: any) => {
-  const apiUrl = config.host.mdms + config.paths.mdms_search;
-  logger.info("Mdms url for ParsingTemplate: " + apiUrl)
-  const data = {
-    "MdmsCriteria": {
-      "tenantId": requestinfo?.userInfo?.tenantId,
-      "uniqueIdentifiers": parsingTemplates,
-      "schemaCode": "HCM.ParsingTemplate"
-    },
-    "RequestInfo": requestinfo
-  }
-  try {
-    const result = await httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
-    logger.info("Parsing Template search Result : " + result)
+    logger.info("Parsing Template search Result : " + JSON.stringify(result))
     return result;
   } catch (error: any) {
     logger.error("Error: " + error)
@@ -141,6 +117,5 @@ const getParsingTemplate: any = async (parsingTemplates: any[], requestinfo: any
 
 export {
   getSheetData,
-  getTemplate,
-  getParsingTemplate
+  searchMDMS
 };

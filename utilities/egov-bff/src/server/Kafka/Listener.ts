@@ -8,7 +8,7 @@ const kafkaConfig = {
     kafkaHost: config.KAFKA_BROKER_HOST, // Use the correct broker address and port
     autoCommit: true,
     autoCommitIntervalMs: 5000,
-    fromOffset: 'earliest', // Start reading from the beginning of the topic
+    fromOffset: 'earliest',
 };
 
 const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
@@ -29,6 +29,7 @@ export function listener() {
             const messageObject: any = JSON.parse(message.value?.toString() || '{}');
             const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
             logger.info("IngestionDetails received:" + JSON.stringify(ingestionDetails));
+
 
             // Find the first message with state 'inprogress'
             const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
