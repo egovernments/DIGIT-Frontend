@@ -33,11 +33,14 @@ jobs:
       
             # Check if the version has changed
             if git diff --exit-code "$SOURCE_JSON_FILE"; then
+              echo "Dependency version false"
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             else
+              echo "Dependency version incremented"
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
             fi
-      
+
+            echo "Dependency version incremented and curr version"
             echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
           else
             echo "Dependency not found in $SOURCE_JSON_FILE"
