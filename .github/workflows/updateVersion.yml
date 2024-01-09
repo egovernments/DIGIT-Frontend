@@ -45,17 +45,17 @@ jobs:
           fi
 
       - name: Increment Version
-        if: env.VERSION_CHANGED == 'true'
+        if: steps.check_change.outputs.VERSION_CHANGED == 'true'
         run: |
-          current_version=${CURRENT_VERSION}
+          current_version=${{ steps.check_change.outputs.CURRENT_VERSION }}
           target_dependency="@egovernments/digit-ui-module-workbench"
-
+      
           # Increment the version
           new_version=$(npm version --no-git-tag-version "$current_version")
-
+      
           # Update the package.json file with the new version
           jq --arg dep "$target_dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
-
+      
           # Commit the updated package.json
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
