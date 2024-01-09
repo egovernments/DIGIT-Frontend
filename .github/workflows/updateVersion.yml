@@ -7,7 +7,7 @@ on:
       - 'micro-ui/web/micro-ui-internals/**' # Adjust this to the path of the file you want to monitor changes for
 
 jobs:
-  add_changes:
+  auto_increment_version:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,26 +17,45 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Check Dependency Version
+      - name: Check Dependency Change
+        id: check_change
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
           json_file="micro-ui/web/micro-ui-internals/example/package.json"
-          target_version="1.0.0-beta."
 
           # Check if the dependency is present in the package.json file
           if jq -e --arg dep "$dependency" '.devDependencies[$dep] | strings' "$json_file" >/dev/null; then
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$json_file")
 
-            # Check if the version has been incremented from "1.0.0-beta.*"
-            if [[ $current_version =~ ^$target_version ]]; then
-              echo "Dependency version incremented from $target_version"
-              # Logic to perform actions when the version is incremented
+            # Check if the version has changed
+            if git diff --exit-code "$json_file"; then
+              echo "::set-output name=version_changed::false"
             else
-              echo "No need to update, or the version is not incremented from $target_version"
-              # Logic to perform actions when the version is not incremented from $target_version
+              echo "::set-output name=version_changed::true"
             fi
+
+            echo "::set-output name=current_version::$current_version"
           else
             echo "Dependency not found in $json_file"
-            # Logic to perform actions when the dependency is not found
+            echo "::set-output name=version_changed::false"
           fi
+
+      - name: Increment Version
+        if: steps.check_change.outputs.version_changed == 'true'
+        run: |
+          json_file="micro-ui/web/workbench/package.json"
+          current_version=${{ steps.check_change.outputs.current_version }}
+
+          # Increment the version
+          new_version=$(npm version --no-git-tag-version "$current_version")
+
+          # Update the package.json file with the new version
+          jq --arg dep "@egovernments/digit-ui-module-workbench" --arg new_version "$new_version" '.devDependencies[$dep] = $new_version' "$json_file" > "$json_file.tmp" && mv "$json_file.tmp" "$json_file"
+
+          # Commit the updated package.json
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add "$json_file"
+          git commit -m "Auto increment @egovernments/digit-ui-module-workbench version to $new_version"
+          git push
