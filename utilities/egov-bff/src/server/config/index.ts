@@ -3,7 +3,9 @@
 
 import { getErrorCodes } from "./constants";
 
-const HOST = process.env.EGOV_HOST || "https://unified-dev.digit.org";
+const HOST = process.env.EGOV_HOST ||
+  // "http://127.0.0.1:8080/" ||
+  "https://unified-uat.digit.org/";
 
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -13,7 +15,7 @@ if (!HOST) {
 const config = {
   auth_token: process.env.AUTH_TOKEN,
   KAFKA_BROKER_HOST:
-    // "localhost:9092" || 
+    // "localhost:9092" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
     process.env.KAFKA_DHIS_UPDATE_TOPIC || "update-dhis2-job",
@@ -24,12 +26,18 @@ const config = {
   },
   host: {
     serverHost: HOST,
-    mdms: process.env.EGOV_MDMS_HOST || HOST || "https://unified-dev.digit.org",
-    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || HOST || "https://unified-dev.digit.org",
+    mdms: process.env.EGOV_MDMS_HOST
+      // || "http://localhost:8084/"
+      || "https://unified-uat.digit.org/",
+    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST
+      // || "http://localhost:8083/"
+      || "https://unified-uat.digit.org/",
+    hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
   },
   paths: {
-    filestore: "/filestore/v1/files",
-    mdms_search: "/mdms-v2/v2/_search"
+    filestore: "filestore/v1/files",
+    mdms_search: "egov-mdms-service/v2/_search"
+    // mdms_search: "mdms-v2/v2/_search"
   },
 };
 

@@ -48,7 +48,7 @@ Used to Make API call through axios library
 const httpRequest = async (
   _url: string,
   _requestBody: any,
-  _params: any={},
+  _params: any = {},
   _method: string = "post",
   responseType: string = "",
   headers: any = defaultheader
