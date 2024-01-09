@@ -1,11 +1,10 @@
-import { Button, Card, CardLabel, Header, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, CardLabel, Header, Loader } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui"];
 
-const mailTo = "";
 const navigateToRespectiveURL = (history = {}, url = "") => {
   if (url?.indexOf(`/${window?.contextPath}`) === -1) {
     const hostUrl = window.location.origin;
@@ -55,7 +54,7 @@ const HelpScreen = () => {
                 <Header> {t(Digit.Utils.locale.getTransformedLocale(`${screen}_${ele.data.screen}`))}</Header>
                 <CardLabel>{ele.data.message}</CardLabel>
                 {types ? (
-                  <a href="mailto:egov@egov.com">{t(Digit.Utils.locale.getTransformedLocale(`${screen}_${ele.data.link}`))}</a>
+                  <a href={`mailto:${ele.data.link}`}>{t(Digit.Utils.locale.getTransformedLocale(`${screen}_LINK`))}</a>
                 ) : (
                   <a
                     onClick={() => {
