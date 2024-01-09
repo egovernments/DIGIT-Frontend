@@ -1,0 +1,35 @@
+name: Add Changes Based on Logic
+
+on:
+  pull_request:
+    paths:
+      - 'micro-ui/web/micro-ui-internals/**' # Adjust this to the path of the file you want to monitor changes for
+
+jobs:
+  add_changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Add changes based on logic
+        run: |
+          # Use your own logic here to determine whether to make changes
+          # For example, check if the file contains a specific keyword or pattern
+          if jq -e '.dependencies."@egovernments/digit-ui-module-hcmworkbench" |= (test("^[0-9]+\.[0-9]+\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0))' package.json; then
+           # Logic to update the file or perform other actions
+            echo "Dependency version incremented"
+          else
+            echo "No need to update, or the version is not incremented"
+            # Modify the file or add a new file with the changes
+            # echo "Version 2.0" > path/to/your/file.updated
+            # Commit the changes
+            #   git config user.name "${{ github.actor }}"
+            #   git config user.email "${{ github.actor }}@users.noreply.github.com"
+            #   git add path/to/your/file.updated
+            #   git commit -m "Add changes based on logic"
+            #   git push
+            # else
+            #   echo "No changes needed based on logic."
+          fi
