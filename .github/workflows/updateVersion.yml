@@ -18,7 +18,7 @@ jobs:
         run: |
           # Use your own logic here to determine whether to make changes
           # For example, check if the file contains a specific keyword or pattern
-          if jq -e '.dependencies."@egovernments/digit-ui-module-workbench" |= (test("^[0-9]+\.[0-9]+\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0))' micro-ui/web/micro-ui-internals/example/package.json;  then
+          if jq -e '.dependencies."@egovernments/digit-ui-module-workbench" |= (test("^[0-9]+\\.[0-9]+\\.[0-9]+$") | . and (. | split(".") | map(tonumber) | .[2] > 0))' micro-ui/web/micro-ui-internals/example/package.json; then
            # Logic to update the file or perform other actions
             echo "Dependency version incremented"
           else
