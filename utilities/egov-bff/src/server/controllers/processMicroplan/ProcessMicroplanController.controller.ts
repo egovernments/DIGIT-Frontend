@@ -30,11 +30,11 @@ class BulkUploadController {
 
   // Initialize routes for MeasurementController
   public intializeRoutes() {
-    this.router.post(`${this.path}/_processmicroplan`, this.getTransformedXlsx);
+    this.router.post(`${this.path}/_processmicroplan`, this.processMicroplan);
   }
 
 
-  getTransformedXlsx = async (
+  processMicroplan = async (
     request: express.Request,
     response: express.Response
   ) => {
@@ -71,6 +71,7 @@ class BulkUploadController {
 
               return simplifiedObject;
             });
+            logger.info("SimplifiedData for sheet : " + JSON.stringify(simplifiedData))
             const ws = XLSX.utils.json_to_sheet(simplifiedData);
 
             // Create a new workbook

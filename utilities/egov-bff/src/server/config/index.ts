@@ -37,6 +37,7 @@ const config = {
   paths: {
     filestore: "filestore/v1/files",
     mdms_search: "egov-mdms-service/v2/_search"
+    // mdms_search: "mdms-v2/v2/_search"
   },
 };
 

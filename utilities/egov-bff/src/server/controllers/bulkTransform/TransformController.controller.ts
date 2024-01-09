@@ -32,7 +32,7 @@ class TransformController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/_transform`, this.getTransformedData);
-        this.router.post(`${this.path}/_process`, this.processMicroplan);
+        this.router.post(`${this.path}/_process`, this.process);
     }
     getTransformedData = async (
         request: express.Request,
@@ -65,30 +65,24 @@ class TransformController {
     };
 
 
-    processMicroplan = async (
+    process = async (
         request: express.Request,
         response: express.Response
     ) => {
         try {
-            var updatedDatas: any = [];
             const { data, parsingTemplate } = request?.body?.HCMConfig;
             const parsingResults: any = await searchMDMS([parsingTemplate], "HCM.ParsingTemplate", request.body.RequestInfo, response);
-            for (const parsingResult of parsingResults?.mdms) {
-                const parsingConfig = parsingResult?.data?.path;
-                logger.info("Parsing Config : " + JSON.stringify(parsingConfig))
+            const parsingConfig = parsingResults?.mdms?.[0]?.data?.path;
+            logger.info("Parsing Config : " + JSON.stringify(parsingConfig))
 
-                // Check if data is an array before using map
-                if (Array.isArray(data)) {
-                    const updatedData = data.map((element) =>
-                        convertObjectForMeasurment(element, parsingConfig)
-                    );
-
-                    // Add updatedData to the array
-                    updatedDatas.push(updatedData);
-                }
+            // Check if data is an array before using map
+            var updatedDatas: any[] = [];
+            if (Array.isArray(data)) {
+                updatedDatas = data.map((element) =>
+                    convertObjectForMeasurment(element, parsingConfig)
+                );
             }
             logger.info("Updated Datas : " + JSON.stringify(updatedDatas))
-            // After processing all mdms elements, send the response
             return sendResponse(response, { updatedDatas }, request);
         }
         catch (e: any) {
