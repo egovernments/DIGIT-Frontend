@@ -55,13 +55,13 @@ jobs:
               new_version=$(echo "$current_version" | awk -F. '{$NF++; OFS="."; print $0}')
           
               # Update the package.json file with the new version
-              jq --arg dep "$dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
+              jq --arg dep "$dependency" --arg new_version "$current_version" '.dependencies[$dep] = $current_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
           
               # Commit the updated package.json
               git config user.name "${{ github.actor }}"
               git config user.email "${{ github.actor }}@users.noreply.github.com"
               git add "$DESTIN_JSON_FILE"
-              git commit -m "Auto increment $dependency version to $new_version"
+              git commit -m "Auto increment $dependency version to $current_version"
               git push
             else
               echo "Dependency version not incremented"
@@ -75,20 +75,4 @@ jobs:
           fi
 
 
-      - name: Increment Version
-        run: |
-          current_version=${{ steps.check_change.outputs.CURRENT_VERSION }}
-          target_dependency="@egovernments/digit-ui-module-workbench"
-      
-          # Increment the version manually
-          new_version=$(echo "$current_version" | awk -F. '{$NF++; OFS="."; print $0}')
-      
-          # Update the package.json file with the new version
-          jq --arg dep "$target_dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
-      
-          # Commit the updated package.json
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git add "$DESTIN_JSON_FILE"
-          git commit -m "Auto increment $target_dependency version to $new_version"
-          git push
+
