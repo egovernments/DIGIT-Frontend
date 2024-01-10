@@ -203,6 +203,7 @@ const produceIngestion = async (messages: any, fileStoreId: string, ingestionTyp
   try {
     logger.info("Ingestion Url : " + config.host.serverHost + "hcm-moz-impl/v1/ingest");
     // const ingestionResult = await httpRequest("http://unified-uat.digit.org/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
+    // const ingestionResult = await httpRequest("http://localhost:8081/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
     const ingestionResult = await httpRequest(config.host.serverHost + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
     logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
   } catch (error) {

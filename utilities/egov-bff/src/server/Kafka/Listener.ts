@@ -27,7 +27,7 @@ const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
 const kafkaClient = new KafkaClient(kafkaConfig);
 
 // Create a Kafka consumer
-const consumer = new Consumer(kafkaClient, [{ topic: topicName, partition: 0 }], { autoCommit: true });
+const consumer = new Consumer(kafkaClient, [{ topic: topicName }], { autoCommit: true });
 
 
 // Exported listener function
