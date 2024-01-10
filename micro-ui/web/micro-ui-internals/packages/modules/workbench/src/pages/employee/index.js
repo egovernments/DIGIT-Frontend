@@ -21,7 +21,6 @@ const WorkbenchBreadCrumb = ({ location ,defaultPath}) => {
   const {masterName,moduleName,uniqueIdentifier} = Digit.Hooks.useQueryParams()
 
 
-console.log("scscscscsc",masterName);
 
   const crumbs = [
     {
