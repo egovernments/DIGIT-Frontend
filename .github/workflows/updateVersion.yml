@@ -13,11 +13,16 @@ jobs:
     env:
       SOURCE_JSON_FILE: "micro-ui/web/micro-ui-internals/example/package.json"
       DESTIN_JSON_FILE: "micro-ui/web/package.json"
-      TARGET_BRANCH: "test-action" # Change this to your desired branch name
+      TARGET_BRANCH: "test-action"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Fetch and merge changes from the remote repository
+        run: |
+          git fetch origin
+          git pull origin "$TARGET_BRANCH"
 
       - name: Install jq
         run: sudo apt-get install jq
@@ -71,6 +76,3 @@ jobs:
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
-
-
-
