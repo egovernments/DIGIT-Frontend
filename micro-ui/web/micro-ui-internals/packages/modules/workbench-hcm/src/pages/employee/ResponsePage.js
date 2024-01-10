@@ -7,7 +7,6 @@ const IngestionResponse = ({location}) => {
     const { t } = useTranslation();
    
      const responseObj= location?.state?.responseData;
-     console.log(location?.state?.responseData?.ingestionNumber);
  
 
     const isIngestionSubmitted = responseObj?.ResponseInfo?.status === "Success";
@@ -15,10 +14,10 @@ const IngestionResponse = ({location}) => {
     const ingestionNumber =isIngestionSubmitted? location?.state?.responseData?.ingestionNumber: "";
 
     const message = isIngestionSubmitted
-        ? t("Your request has been forwarded and it's under progress")
-        : t("Error while processing");
+        ? t("HCM_WORKBENCH_SUCCESS_MESSAGE")
+        : t("HCM_WORKBENCH_ERROR_MESSAGE");
     const applicationNumber = isIngestionSubmitted
-    ? "Ingestion Number: " + ingestionNumber
+    ? t("HCM_WORKBENCH_INGESTION_NUMBER")+ " :" + ingestionNumber
     : "";
 
     return (
