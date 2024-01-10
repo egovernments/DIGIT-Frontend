@@ -68,9 +68,8 @@ jobs:
           current_version=${{ steps.check_change.outputs.CURRENT_VERSION }}
           target_dependency="@egovernments/digit-ui-module-workbench"
       
-          # Increment the version
-          new_version=$(npm version --no-git-tag-version "$current_version")
-          echo "New version: $new_version"
+          # Increment the version manually
+          new_version=$(echo "$current_version" | awk -F. '{$NF++; OFS="."; print $0}')
       
           # Update the package.json file with the new version
           jq --arg dep "$target_dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
