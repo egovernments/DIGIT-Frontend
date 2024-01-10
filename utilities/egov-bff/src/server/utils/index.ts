@@ -202,7 +202,6 @@ const produceIngestion = async (messages: any, fileStoreId: string, ingestionTyp
   logger.info("Job Messages : " + JSON.stringify(messages))
   try {
     logger.info("Ingestion Url : " + config.host.serverHost + "hcm-moz-impl/v1/ingest");
-    // await httpRequest("http://localhost:8081/" + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
     await httpRequest(config.host.serverHost + "hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
   } catch (error) {
     logger.error("Error during ingestion : " + error)

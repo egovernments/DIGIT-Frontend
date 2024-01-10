@@ -109,6 +109,7 @@ class BulkUploadController {
                 tempJob.ingestionDetails.push({ id: responseData[0].fileStoreId, tenanId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType })
               }
               Job.tenantId = tenantId
+              tempJob.tenantId = tenantId
               produceIngestion({ Job: tempJob }, fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo)
             } catch (error: any) {
               return errorResponder(
