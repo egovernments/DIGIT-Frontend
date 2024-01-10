@@ -21,27 +21,25 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
+
       - name: Check Dependency Change
         id: check_change
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
+          branch="test-action" # replace with the branch you want to compare against
       
           # Check if the dependency is present in the package.json file
           if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
             # Get the current version
-            current_version=$(jq -r --arg dep "$dependency" '.devDependencies[$dep]' "$SOURCE_JSON_FILE")
+            current_version=$(jq -r --arg dep "$dependency" '.dependencies[$dep]' "$DESTIN_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
       
-            # Get the commit hash of the last two commits for the specific file
-            commit_hash=$(git log -n 2 --pretty=format:%h -- "$SOURCE_JSON_FILE" | tail -n 2)
-            echo "Commit hash: $commit_hash"
-      
-            # Get the version from the commit
-            last_commit_version=$(git show "$commit_hash":"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
-            echo "last_commit_version=$last_commit_version"
+            # Get the version from the specific branch for the specific file
+            branch_version=$(git show "origin/$branch":"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
+            echo "branch_version=$branch_version"
       
             # Check if the versions are different
-            if [[ "$current_version" != "$last_commit_version" ]]; then
+            if [[ "$current_version" != "$branch_version" ]]; then
               echo "Dependency version incremented"
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
             else
@@ -54,6 +52,8 @@ jobs:
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
+
+    
 
       - name: Increment Version
         if: steps.check_change.outputs.VERSION_CHANGED == 'true'
