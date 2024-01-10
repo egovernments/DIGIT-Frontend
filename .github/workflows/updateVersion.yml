@@ -32,17 +32,20 @@ jobs:
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
           branch="test-action" # replace with the branch you want to compare against
-      
+        
+          # Fetch the branch from the remote repository
+          git fetch origin "$branch"
+        
           # Check if the dependency is present in the package.json file
           if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
             # Get the current version
             current_version=$(jq -r --arg dep "$dependency" '.dependencies[$dep]' "$DESTIN_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
-      
+        
             # Get the version from the specified branch for the specific file
-            branch_version=$(git show "$branch":"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
+            branch_version=$(git show "origin/$branch":"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
             echo "branch_version=$branch_version"
-      
+        
             # Check if the versions are different
             if [[ "$current_version" != "$branch_version" ]]; then
               echo "Dependency version incremented"
@@ -51,12 +54,13 @@ jobs:
               echo "Dependency version not incremented"
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             fi
-      
+        
             echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
           else
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
+
 
       - name: Increment Version
         if: steps.check_change.outputs.VERSION_CHANGED == 'true'
