@@ -63,8 +63,8 @@ jobs:
 
       - name: Debug Version Changed
         run: |
-          echo "VERSION_CHANGED=${{ steps.check_change.outputs.VERSION_CHANGED }}"
-          echo "current_version=${{ steps.check_change.outputs.CURRENT_VERSION }}"
+          echo "VERSION ${{ steps.check_change.outputs.VERSION_CHANGED }}"
+          echo "current ${{ steps.check_change.outputs.CURRENT_VERSION }}"
 
       - name: Increment Version
         run: |
