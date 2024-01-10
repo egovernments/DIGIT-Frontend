@@ -7,6 +7,7 @@ const IngestionResponse = ({location}) => {
     const { t } = useTranslation();
    
      const responseObj= location?.state?.responseData;
+
  
 
     const isIngestionSubmitted = responseObj?.ResponseInfo?.status === "Success";
@@ -14,6 +15,7 @@ const IngestionResponse = ({location}) => {
     const ingestionNumber =isIngestionSubmitted? location?.state?.responseData?.ingestionNumber: "";
 
     const message = isIngestionSubmitted
+
         ? t("HCM_WORKBENCH_SUCCESS_MESSAGE")
         : t("HCM_WORKBENCH_ERROR_MESSAGE");
     const applicationNumber = isIngestionSubmitted
