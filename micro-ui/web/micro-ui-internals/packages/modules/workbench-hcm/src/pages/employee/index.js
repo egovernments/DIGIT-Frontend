@@ -114,7 +114,6 @@ const App = ({ path }) => {
 
           <PrivateRoute path={`${path}/response`} component={() => <IngestionResponse />} />
 
-
           <PrivateRoute path={`${path}/campaign`} component={() => <CreateCampaign />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
