@@ -52,10 +52,10 @@ jobs:
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
               
               # Increment the version manually
-              new_version=$(echo "$current_version" | awk -F. '{$NF++; OFS="."; print $0}')
+              new_version=$(echo "$current_version" )
           
               # Update the package.json file with the new version
-              jq --arg dep "$dependency" --arg new_version "$current_version" '.dependencies[$dep] = $current_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
+              jq --arg dep "$dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
           
               # Commit the updated package.json
               git config user.name "${{ github.actor }}"
@@ -68,7 +68,7 @@ jobs:
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             fi
         
-            echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
+            echo "CURRENT_VERSION=$new_version" >> $GITHUB_ENV
           else
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
