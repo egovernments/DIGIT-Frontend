@@ -61,10 +61,6 @@ jobs:
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
 
-      - name: Debug Version Changed
-        run: |
-          echo "VERSION ${{ steps.check_change.outputs.VERSION_CHANGED }}"
-          echo "current ${{ steps.check_change.outputs.CURRENT_VERSION }}"
 
       - name: Increment Version
         run: |
