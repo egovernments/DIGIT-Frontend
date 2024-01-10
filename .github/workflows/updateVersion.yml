@@ -21,6 +21,11 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
+      - name: Debug Information
+        run: |
+          git branch -a
+          git show
+          git show "$GITHUB_SHA"
 
       - name: Check Dependency Change
         id: check_change
@@ -34,7 +39,7 @@ jobs:
             current_version=$(jq -r --arg dep "$dependency" '.dependencies[$dep]' "$DESTIN_JSON_FILE")
             echo "CURRENT_VERSION=$current_version"
       
-            # Get the version from the specific branch for the specific file
+            # Get the version from the specified branch for the specific file
             branch_version=$(git show "$branch":"$SOURCE_JSON_FILE" | jq -r --arg dep "$dependency" '.devDependencies[$dep]')
             echo "branch_version=$branch_version"
       
@@ -52,8 +57,6 @@ jobs:
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
           fi
-
-    
 
       - name: Increment Version
         if: steps.check_change.outputs.VERSION_CHANGED == 'true'
