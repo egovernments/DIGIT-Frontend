@@ -63,7 +63,6 @@ jobs:
 
 
       - name: Increment Version
-        if: steps.check_change.outputs.VERSION_CHANGED == 'true'
         run: |
           current_version=${{ steps.check_change.outputs.CURRENT_VERSION }}
           target_dependency="@egovernments/digit-ui-module-workbench"
