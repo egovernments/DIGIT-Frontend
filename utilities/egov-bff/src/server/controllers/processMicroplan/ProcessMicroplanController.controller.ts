@@ -41,7 +41,6 @@ class BulkUploadController {
     var result: any, Job: any = { ingestionDetails: [] };
     try {
       try {
-        const fileStoreId = request?.body?.HCMConfig?.fileStoreId;
         const tenantId = request?.body?.RequestInfo?.userInfo?.tenantId;
         const { campaignType } = request?.body?.HCMConfig;
         const campaign: any = await searchMDMS([campaignType], "HCM.HCMTemplate", request.body.RequestInfo, response);
@@ -110,7 +109,7 @@ class BulkUploadController {
               }
               Job.tenantId = tenantId
               tempJob.tenantId = tenantId
-              produceIngestion({ Job: tempJob }, fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo)
+              produceIngestion({ Job: tempJob }, responseData[0].fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo)
             } catch (error: any) {
               return errorResponder(
                 { message: "Error in creating FileStoreId" },
