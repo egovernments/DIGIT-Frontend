@@ -1,41 +1,35 @@
-import { KafkaClient, Consumer, Message, ProduceRequest } from 'kafka-node';
+import { ConsumerGroup, ConsumerGroupOptions, Message, ProduceRequest } from 'kafka-node';
 import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import config from '../config';
 
-const kafkaConfig = {
-    // connect directly to kafka broker (instantiates a KafkaClient)
+const kafkaConfig: ConsumerGroupOptions = {
     kafkaHost: config.KAFKA_BROKER_HOST,
+    groupId: 'your_consumer_group',
     autoCommit: true,
     autoCommitIntervalMs: 5000,
     sessionTimeout: 15000,
-    fetchMaxBytes: 10 * 1024 * 1024, // 10 MB
-    // An array of partition assignment protocols ordered by preference. 'roundrobin' or 'range' string for
-    // built ins (see below to pass in custom assignment protocol)
-    protocol: ["roundrobin"],
-    // Offsets to use for new groups other options could be 'earliest' or 'none'
-    // (none will emit an error if no offsets were saved) equivalent to Java client's auto.offset.reset
-    fromOffset: "latest",
-    // how to recover from OutOfRangeOffset error (where save offset is past server retention)
-    // accepts same value as fromOffset
-    outOfRangeOffset: "earliest"
+    fetchMaxBytes: 10 * 1024 * 1024,
+    protocol: ['roundrobin'],
+    fromOffset: 'latest',
+    outOfRangeOffset: 'earliest',
 };
 
 const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
-
-// Create a Kafka client
-const kafkaClient = new KafkaClient(kafkaConfig);
-// Create a Kafka consumer
-const consumer = new Consumer(kafkaClient, [{ topic: topicName }], { autoCommit: true });
 
 
 // Exported listener function
 export function listener() {
 
-    logger.info('Kafka consumer connected');
+
+    // Log that the Kafka consumer is attempting to connect
+    logger.info('Kafka consumer is attempting to connect...');
+
+    // Create a Kafka consumer
+    const consumerGroup = new ConsumerGroup(kafkaConfig, [topicName]);
 
     // Set up a message event handler
-    consumer.on('message', async (message: Message) => {
+    consumerGroup.on('message', async (message: Message) => {
         try {
             // Parse the message value as an array of objects
             const messageObject: any = JSON.parse(message.value?.toString() || '{}');
@@ -79,13 +73,28 @@ export function listener() {
     });
 
     // Set up error event handlers
-    consumer.on('error', (err) => {
+    consumerGroup.on('error', (err) => {
         logger.info(`Consumer Error: ${JSON.stringify(err)}`);
     });
 
-    consumer.on('offsetOutOfRange', (err) => {
+    consumerGroup.on('offsetOutOfRange', (err) => {
         logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
     });
+    consumerGroup.on('connect', () => {
+        logger.info('Kafka consumer connected successfully!');
+    });
+
+    process.on('SIGINT', () => {
+        logger.info('Disconnecting from Kafka...');
+        consumerGroup.close(true, () => {
+            producer.close(() => {
+                process.exit();
+            });
+        });
+    });
+
+    // Keep the process running to allow the consumer to receive messages
+    process.stdin.resume();
 }
 
 // Function to produce modified messages back to the same topic
@@ -109,16 +118,3 @@ async function produceModifiedMessages(modifiedMessages: any[]) {
         });
     });
 }
-
-// Gracefully disconnect from the Kafka broker when the process is terminated
-process.on('SIGINT', () => {
-    logger.info('Disconnecting from Kafka...');
-    consumer.close(true, () => {
-        producer.close(() => {
-            process.exit();
-        });
-    });
-});
-
-// Keep the process running to allow the consumer to receive messages
-process.stdin.resume();
