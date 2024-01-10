@@ -26,7 +26,7 @@ jobs:
         id: check_change
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
-          branch="test-action" # replace with the branch you want to compare against
+          branch="origin/test-action" # replace with the branch you want to compare against
       
           # Check if the dependency is present in the package.json file
           if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
