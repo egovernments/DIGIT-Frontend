@@ -25,13 +25,15 @@ const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
 
 // Create a Kafka client
 const kafkaClient = new KafkaClient(kafkaConfig);
-
 // Create a Kafka consumer
 const consumer = new Consumer(kafkaClient, [{ topic: topicName }], { autoCommit: true });
 
 
 // Exported listener function
 export function listener() {
+
+    logger.info('Kafka consumer connected');
+
     // Set up a message event handler
     consumer.on('message', async (message: Message) => {
         try {
