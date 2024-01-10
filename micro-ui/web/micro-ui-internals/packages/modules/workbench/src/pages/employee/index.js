@@ -20,6 +20,9 @@ const WorkbenchBreadCrumb = ({ location ,defaultPath}) => {
   const pathVar=location.pathname.replace(defaultPath+'/',"").split("?")?.[0];
   const {masterName,moduleName,uniqueIdentifier} = Digit.Hooks.useQueryParams()
 
+
+console.log("scscscscsc",masterName);
+
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,

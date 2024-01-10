@@ -18,7 +18,6 @@ const MasterComponent = () => {
   const { t } = useTranslation();
   const { screen } = useParams();
   const history = useHistory();
-
   const tenantId = Digit.UserService.getUser()?.info?.tenantId;
   const MdmsCriteria = {
     tenantId: tenantId,
@@ -42,15 +41,14 @@ const MasterComponent = () => {
 
   const RenderCard = () => {
     const mdmsData = Schemadata?.mdms || [];
+    const sortedLinks =  mdmsData.length > 0 && mdmsData
+    ?.filter((e) => e.isActive)?.[0]
+    .data?.links?.sort((a, b) =>a.order - b.order);
 
     return (
       <div className="master-container">
-        {mdmsData.length > 0 &&
-          mdmsData
-            ?.filter((e) => e.isActive)?.[0]
-            .data?.links?.map((ele, index) => {
+          {sortedLinks?.length && sortedLinks?.map((ele, index) => {
               const icon = ele.icon;
-
               let IconComp = require("@egovernments/digit-ui-svg-components")?.[icon];
               IconComp = IconComp ? <IconComp /> : <SVG.Work />;
               return (

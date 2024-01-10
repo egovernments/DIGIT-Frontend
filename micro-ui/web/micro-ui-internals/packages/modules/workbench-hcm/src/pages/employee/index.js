@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation, useParams } from "react-router-dom";
+import { Switch, useLocation, useParams,useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import DataIngestionComponent from "../../components/IngestionComponents/DataIngestionComponent";
@@ -16,19 +16,22 @@ import HelpScreen from "../../components/HelpScreen";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
-  const { screen } = useParams();
+
+  const urlParts = location.pathname.split("/");
+  const screenValue = urlParts[urlParts.length - 1];
+
 
  
-  
+
 
   const masterContent = () => {
     switch (true) {
       case location.pathname.includes("master-landing-screen"):
-        return t("WORKBENCH_MASTER");
+        return t(Digit.Utils.locale.getTransformedLocale(`WBH_${screenValue}`));
       case location.pathname.includes("user-landing-screen"):
-        return t("WORKBENCH_USER");
+        return t(Digit.Utils.locale.getTransformedLocale(`WBH_${screenValue}`));
       case location.pathname.includes("project-landing-screen"):
-        return t("WORKBENCH_PROJECT");
+        return t(Digit.Utils.locale.getTransformedLocale(`WBH_${screenValue}`));
       default:
         return null;
     }
@@ -83,10 +86,16 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       content: t("WORKBENCH_CREATE_CAMPAIGN"),
       show: location.pathname.includes("/hcmworkbench/campaign") ? true : false,
     },
+    {
+
+      path: `/${window?.contextPath}/employee/hcmworkbench/campaign-view`,
+      content: t("WORKBENCH_VIEW_PROJECT"),
+      show: location.pathname.includes("/hcmworkbench/campaign-view") ? true : false,
+    },
       {
       path: `/${window?.contextPath}/employee/hcmworkbench/master`,
       content: masterContent(),
-      query: `landingscreen=${screen}`,
+      query: `landingscreen=${screenValue}`,
       show: isShow ? true : false,
     },
     
