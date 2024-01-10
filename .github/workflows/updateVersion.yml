@@ -13,6 +13,7 @@ jobs:
     env:
       SOURCE_JSON_FILE: "micro-ui/web/micro-ui-internals/example/package.json"
       DESTIN_JSON_FILE: "micro-ui/web/package.json"
+      TARGET_BRANCH: "test-action" # Change this to your desired branch name
 
     steps:
       - name: Checkout repository
@@ -31,10 +32,6 @@ jobs:
         id: check_change
         run: |
           dependency="@egovernments/digit-ui-module-workbench"
-          branch="test-action" # replace with the branch you want to compare against
-        
-          # Fetch the branch from the remote repository
-          git fetch origin "$branch"
         
           # Check if the dependency is present in the package.json file
           if jq --arg dep "$dependency" '.devDependencies | has($dep)' "$SOURCE_JSON_FILE" >/dev/null; then
@@ -43,7 +40,7 @@ jobs:
             echo "CURRENT_VERSION=$current_version"
         
             # Get the version from the specified branch for the specific file
-            branch_version=$(git show "origin/$branch":"$DESTIN_JSON_FILE" | jq -r --arg dep "$dependency" '.dependencies[$dep]')
+            branch_version=$(git show "$TARGET_BRANCH":"$DESTIN_JSON_FILE" | jq -r --arg dep "$dependency" '.dependencies[$dep]')
             echo "branch_version=$branch_version"
         
             # Check if the versions are different
@@ -60,15 +57,16 @@ jobs:
               # Commit the updated package.json
               git config user.name "${{ github.actor }}"
               git config user.email "${{ github.actor }}@users.noreply.github.com"
+              git checkout -b "$TARGET_BRANCH"
               git add "$DESTIN_JSON_FILE"
-              git commit -m "Auto increment $dependency version to $current_version"
-              git push
+              git commit -m "Auto increment $dependency version to $new_version"
+              git push origin "$TARGET_BRANCH"
             else
               echo "Dependency version not incremented"
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
             fi
         
-            echo "CURRENT_VERSION=$new_version" >> $GITHUB_ENV
+            echo "CURRENT_VERSION=$current_version" >> $GITHUB_ENV
           else
             echo "Dependency not found in $SOURCE_JSON_FILE"
             echo "VERSION_CHANGED=false" >> $GITHUB_ENV
