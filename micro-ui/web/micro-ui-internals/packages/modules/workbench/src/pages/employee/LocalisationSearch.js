@@ -127,7 +127,7 @@ const LocalisationSearch = () => {
           />
         )} */}
       {
-        Config && Digit.Utils.didEmployeeHasRole(Config?.actionRole) &&
+        Config && Digit.Utils.didEmployeeHasAtleastOneRole(Config?.actionRoles) &&
         <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
               history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
