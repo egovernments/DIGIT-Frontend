@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  
   "homepage": "digit-ui",
   "scripts": {
     "start": "react-scripts start"
