@@ -50,6 +50,19 @@ jobs:
             if [[ "$current_version" != "$branch_version" ]]; then
               echo "Dependency version incremented"
               echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+              
+              # Increment the version manually
+              new_version=$(echo "$current_version" | awk -F. '{$NF++; OFS="."; print $0}')
+          
+              # Update the package.json file with the new version
+              jq --arg dep "$dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
+          
+              # Commit the updated package.json
+              git config user.name "${{ github.actor }}"
+              git config user.email "${{ github.actor }}@users.noreply.github.com"
+              git add "$DESTIN_JSON_FILE"
+              git commit -m "Auto increment $dependency version to $new_version"
+              git push
             else
               echo "Dependency version not incremented"
               echo "VERSION_CHANGED=false" >> $GITHUB_ENV
