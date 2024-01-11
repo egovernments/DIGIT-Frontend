@@ -30,9 +30,19 @@ function processExcelSheet(
 
       if (fieldConfig.column.startsWith('!generate!')) {
         let columnsSpecification = fieldConfig.column.substring('!generate!'.length);
-        columnsSpecification = columnsSpecification.replace(/^[\(\)]+/g, '');
+        columnsSpecification = columnsSpecification = columnsSpecification.replace(/^[\(\)]+|[\(\)]+$/g, '');
+
+        // Split the specification by commas and trim whitespace
         const generatedColumns = columnsSpecification.split(',').map((col: any) => col.trim());
-        const valuesToHash = generatedColumns.map((col: any) => (row as any[])[XLSX.utils.decode_col(col)]);
+        logger.info("Generated Columns : " + JSON.stringify(generatedColumns));
+
+        // Extract values from the row for the specified columns
+        const valuesToHash: any[] = generatedColumns.map((col: any) => {
+          // Handle double-digit columns like 'AA', 'AB', etc.
+          const colIndex = XLSX.utils.decode_col(col);
+          return (row as any[])[colIndex];
+        });
+        logger.info("Values To Hash : " + JSON.stringify(valuesToHash));
 
         // Generate a hash using hash-sum of the extracted values
         const generatedCode = hashSum(valuesToHash);
