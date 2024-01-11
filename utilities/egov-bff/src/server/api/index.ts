@@ -25,19 +25,9 @@ function processExcelSheet(
     const rowData: any = {};
 
     for (const fieldConfig of config || []) {
-      const columnIndex = XLSX.utils.decode_col(fieldConfig.column);
-      const fieldValue = (row as any[])[columnIndex] || fieldConfig.default;
-
-      if (fieldConfig.column.startsWith('!generate!')) {
-        let columnsSpecification = fieldConfig.column.substring('!generate!'.length);
-        columnsSpecification = columnsSpecification = columnsSpecification.replace(/^[\(\)]+|[\(\)]+$/g, '');
-
-        // Split the specification by commas and trim whitespace
-        const generatedColumns = columnsSpecification.split(',').map((col: any) => col.trim());
-        logger.info("Generated Columns : " + JSON.stringify(generatedColumns));
-
+      if (fieldConfig.format === 'GENERATE_HASH') {
         // Extract values from the row for the specified columns
-        const valuesToHash: any[] = generatedColumns.map((col: any) => {
+        const valuesToHash: any[] = fieldConfig.column.map((col: any) => {
           // Handle double-digit columns like 'AA', 'AB', etc.
           const colIndex = XLSX.utils.decode_col(col);
           return (row as any[])[colIndex];
@@ -48,15 +38,31 @@ function processExcelSheet(
         const generatedCode = hashSum(valuesToHash);
         rowData[fieldConfig.title] = generatedCode;
         fieldConfig.default = generatedCode;
+      } else if (fieldConfig.format === 'AUTO_GENERATE') {
+        // Generate a 10-digit phone number starting with 8 or 9
+        const generatedPhoneNumber = '8' + Math.floor(100000000 + Math.random() * 900000000).toString();
+        rowData[fieldConfig.title] = generatedPhoneNumber;
+        fieldConfig.default = generatedPhoneNumber;
       } else {
-        // If it's not a generate column, use the regular logic
-        rowData[fieldConfig.title] = fieldValue;
-        fieldConfig.default = fieldValue;
+        // Concatenate values from the specified columns
+        const concatValue = fieldConfig.column.map((col: any) => {
+          // Handle double-digit columns like 'AA', 'AB', etc.
+          const colIndex = XLSX.utils.decode_col(col);
+          return (row as any[])[colIndex];
+        }).join('');
+        if (concatValue) {
+          rowData[fieldConfig.title] = concatValue;
+          fieldConfig.default = concatValue;
+        }
+        else {
+          rowData[fieldConfig.title] = fieldConfig.default;
+        }
       }
     }
     rowDatas.push(rowData);
   }
 }
+
 
 async function getWorkbook(fileUrl: string) {
 
