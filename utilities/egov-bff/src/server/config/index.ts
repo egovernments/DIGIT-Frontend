@@ -34,12 +34,27 @@ const config = {
       // || "http://localhost:8083/"
       || "https://unified-uat.digit.org/",
     hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
+    hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_HOST
+      // || "http://localhost:8082/"
+      || "https://unified-uat.digit.org/",
   },
   paths: {
-    filestore: "filestore/v1/files",
-    mdms_search: "egov-mdms-service/v2/_search"
-    // mdms_search: "mdms-v2/v2/_search"
+    filestore: process.env.EGOV_MDMS_SEARCH_ENDPOINT
+      || "filestore/v1/files",
+    mdms_search: process.env.FILE_STORE_SERVICE_END_POINT
+      || "egov-mdms-service/v2/_search",
+    // mdms_search: "mdms-v2/v2/_search",
+    hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
+      || "hcm-moz-impl/v1/ingest",
   },
+  values: {
+    parsingTemplate: process.env.HCM_PARSING_TEMPLATE
+      || "HCM.ParsingTemplate",
+    transfromTemplate: process.env.HCM_TRANSFORM_TEMPLATE
+      || "HCM.TransformTemplate",
+    campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
+      || "HCM.HCMTemplate"
+  }
 };
 
 export { getErrorCodes };

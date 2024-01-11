@@ -41,7 +41,7 @@ class TransformController {
         try {
             const { fileStoreId, transformTemplate, selectedRows } = request?.body?.HCMConfig;
             logger.info("TransformTemplate :" + transformTemplate)
-            const result: any = await searchMDMS([transformTemplate], "HCM.TransformTemplate", request.body.RequestInfo, response);
+            const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
             var TransformConfig: any;
             if (result?.mdms?.length > 0) {
                 TransformConfig = result.mdms[0];
@@ -71,7 +71,7 @@ class TransformController {
     ) => {
         try {
             const { data, parsingTemplate } = request?.body?.HCMConfig;
-            const parsingResults: any = await searchMDMS([parsingTemplate], "HCM.ParsingTemplate", request.body.RequestInfo, response);
+            const parsingResults: any = await searchMDMS([parsingTemplate], config.values.parsingTemplate, request.body.RequestInfo, response);
             const parsingConfig = parsingResults?.mdms?.[0]?.data?.path;
             logger.info("Parsing Config : " + JSON.stringify(parsingConfig))
 

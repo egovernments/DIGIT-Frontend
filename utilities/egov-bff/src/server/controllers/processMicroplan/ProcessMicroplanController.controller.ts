@@ -43,7 +43,7 @@ class BulkUploadController {
       try {
         const tenantId = request?.body?.RequestInfo?.userInfo?.tenantId;
         const { campaignType } = request?.body?.HCMConfig;
-        const campaign: any = await searchMDMS([campaignType], "HCM.HCMTemplate", request.body.RequestInfo, response);
+        const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
         request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
         const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
         logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
