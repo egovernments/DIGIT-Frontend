@@ -1,6 +1,7 @@
 import { getErrorCodes } from "../config";
 import * as XLSX from 'xlsx';
 import config from "../config";
+import hashSum from 'hash-sum';
 
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
@@ -26,8 +27,22 @@ function processExcelSheet(
     for (const fieldConfig of config || []) {
       const columnIndex = XLSX.utils.decode_col(fieldConfig.column);
       const fieldValue = (row as any[])[columnIndex] || fieldConfig.default;
-      rowData[fieldConfig.title] = fieldValue;
-      fieldConfig.default = fieldValue;
+
+      if (fieldConfig.column.startsWith('!generate!')) {
+        let columnsSpecification = fieldConfig.column.substring('!generate!'.length);
+        columnsSpecification = columnsSpecification.replace(/^[\(\)]+/g, '');
+        const generatedColumns = columnsSpecification.split(',').map((col: any) => col.trim());
+        const valuesToHash = generatedColumns.map((col: any) => (row as any[])[XLSX.utils.decode_col(col)]);
+
+        // Generate a hash using hash-sum of the extracted values
+        const generatedCode = hashSum(valuesToHash);
+        rowData[fieldConfig.title] = generatedCode;
+        fieldConfig.default = generatedCode;
+      } else {
+        // If it's not a generate column, use the regular logic
+        rowData[fieldConfig.title] = fieldValue;
+        fieldConfig.default = fieldValue;
+      }
     }
     rowDatas.push(rowData);
   }
