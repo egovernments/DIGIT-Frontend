@@ -15,7 +15,7 @@ if (!HOST) {
 const config = {
   auth_token: process.env.AUTH_TOKEN,
   KAFKA_BROKER_HOST:
-    // "localhost:9092" ||
+    "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
@@ -39,9 +39,9 @@ const config = {
       || "https://unified-uat.digit.org/",
   },
   paths: {
-    filestore: process.env.EGOV_MDMS_SEARCH_ENDPOINT
+    filestore: process.env.FILE_STORE_SERVICE_END_POINT
       || "filestore/v1/files",
-    mdms_search: process.env.FILE_STORE_SERVICE_END_POINT
+    mdms_search: process.env.EGOV_MDMS_SEARCH_ENDPOINT
       || "egov-mdms-service/v2/_search",
     // mdms_search: "mdms-v2/v2/_search",
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
