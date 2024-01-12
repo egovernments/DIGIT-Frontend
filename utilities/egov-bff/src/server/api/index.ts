@@ -7,6 +7,15 @@ import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 
 
+function processColumnValue(
+  col: any,
+  row: any[]
+): any {
+  // Handle double-digit columns like 'AA', 'AB', etc.
+  const colIndex = XLSX.utils.decode_col(col);
+  return (row as any[])[colIndex];
+}
+
 function processExcelSheet(
   desiredSheet: XLSX.WorkSheet,
   startRow: number,
@@ -19,19 +28,19 @@ function processExcelSheet(
 
   const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRow - 1, c: lastColumn } };
 
-  const rowDataArray = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
+  const rowDataArray: any[] = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
 
-  for (const row of rowDataArray) {
+  for (let index = 0; index < rowDataArray.length; index++) {
+    // Explicitly define the type for row as an array of any
+    const row: any[] = rowDataArray[index];
+
     const rowData: any = {};
 
     for (const fieldConfig of config || []) {
       if (fieldConfig.format === 'GENERATE_HASH') {
-        // Extract values from the row for the specified columns
-        const valuesToHash: any[] = fieldConfig.column.map((col: any) => {
-          // Handle double-digit columns like 'AA', 'AB', etc.
-          const colIndex = XLSX.utils.decode_col(col);
-          return (row as any[])[colIndex];
-        });
+        const valuesToHash: any[] = (fieldConfig.column as any[]).map((col: any) =>
+          processColumnValue(col, row)
+        );
         logger.info("Values To Hash : " + JSON.stringify(valuesToHash));
 
         // Generate a hash using hash-sum of the extracted values
@@ -44,19 +53,18 @@ function processExcelSheet(
         rowData[fieldConfig.title] = generatedPhoneNumber;
         fieldConfig.default = generatedPhoneNumber;
       } else {
-        // Concatenate values from the specified columns
-        const concatValue = fieldConfig.column.map((col: any) => {
-          // Handle double-digit columns like 'AA', 'AB', etc.
-          const colIndex = XLSX.utils.decode_col(col);
-          return (row as any[])[colIndex];
-        }).join('');
+        const concatValue = (fieldConfig.column as any[]).map((col: any) =>
+          processColumnValue(col, row)
+        ).join('');
+        logger.info("Concat Value : " + concatValue);
+
         if (concatValue) {
           rowData[fieldConfig.title] = concatValue;
           fieldConfig.default = concatValue;
-        }
-        else {
+        } else {
           rowData[fieldConfig.title] = fieldConfig.default;
         }
+
         if (fieldConfig.conditions) {
           for (const condition of fieldConfig.conditions) {
             if (rowData[fieldConfig.title] == condition.from) {
@@ -70,6 +78,7 @@ function processExcelSheet(
     rowDatas.push(rowData);
   }
 }
+
 
 
 async function getWorkbook(fileUrl: string) {
@@ -116,8 +125,16 @@ const getSheetData = async (
         logger.info(`Sheet "${sheetName}" not found in the workbook.`);
         return getErrorCodes("WORKS", "NO_SHEETNAME_FOUND");
       }
+
       for (const selectedRow of selectedRows) {
-        processExcelSheet(desiredSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
+        // Create a copy of the original sheet to modify
+        const modifiedSheet = { ...desiredSheet };
+
+        // Fill empty column values with the previous row's values
+        fillEmptyColumns(modifiedSheet);
+
+        // Process the modified sheet
+        processExcelSheet(modifiedSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
       }
 
     } catch (error) {
@@ -126,6 +143,28 @@ const getSheetData = async (
   }
   logger.info("RowDatas : " + JSON.stringify(rowDatas))
   return rowDatas;
+};
+
+const fillEmptyColumns = (sheet: XLSX.WorkSheet) => {
+  const range = XLSX.utils.decode_range(String(sheet['!ref']));
+  const lastColumn = range.e.c;
+  const lastRow = range.e.r;
+
+  for (let col = range.s.c; col <= lastColumn; col++) {
+    let previousValue: any = null;
+
+    for (let row = range.s.r; row <= lastRow; row++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+      const cellValue = sheet[cellAddress]?.v;
+
+      if (cellValue !== undefined && cellValue !== null && cellValue !== '') {
+        previousValue = cellValue;
+      } else if (previousValue !== null) {
+        // Fill empty cell with the previous row's value
+        sheet[cellAddress] = { t: 's', v: previousValue, w: String(previousValue) };
+      }
+    }
+  }
 };
 
 const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, requestinfo: any, response: any) => {
