@@ -30,7 +30,21 @@ export const defaultheader = {
 };
 
 const getServiceName = (url = "") => url && url.slice && url.slice(url.lastIndexOf(url.split("/")[3]));
-const cacheEnabled = true;
+const cacheEnabled = false;
+
+function removeCircularReferences(obj:any) {
+  const seen = new WeakSet();
+  return JSON.parse(JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular Reference]';
+      }
+      seen.add(value);
+    }
+    return value;
+  }));
+}
+
 /*
  
 Used to Make API call through axios library
@@ -67,19 +81,17 @@ const httpRequest = async (
     logger.info(
       "INTER-SERVICE :: REQUEST :: " +
       getServiceName(_url) +
-      " CRITERIA :: " +
-      JSON.stringify(_params)
+      " CRITERIA :: " + JSON.stringify(_requestBody)
     );
-    logger.debug(JSON.stringify(_requestBody))
+    const cleanData = removeCircularReferences(_requestBody);
     const response = await Axios({
       method: _method,
       url: _url,
-      data: _requestBody,
+      data: cleanData,
       params: _params,
       headers: { ...defaultheader, ...headers },
       responseType,
     });
-
     const responseStatus = parseInt(get(response, "status"), 10);
     logger.info(
       "INTER-SERVICE :: SUCCESS :: " +
@@ -89,9 +101,9 @@ const httpRequest = async (
     );
     if (responseStatus === 200 || responseStatus === 201 || responseStatus === 202) {
       if (headers && headers.cachekey) {
-        cacheResponse(response.data, headers.cachekey)
+        cacheResponse(response?.data, headers.cachekey)
       }
-      return response.data;
+      return response?.data;
     }
   } catch (error: any) {
     var errorResponse = error.response;
@@ -99,18 +111,18 @@ const httpRequest = async (
       "INTER-SERVICE :: FAILURE :: " +
       getServiceName(_url) +
       ":: CODE :: " +
-      errorResponse.status +
+      errorResponse?.status +
       ":: ERROR :: " +
-      errorResponse.data.Errors[0].code || error
+      errorResponse?.data?.Errors?.[0]?.code || error
     );
     logger.error(":: ERROR STACK :: " + error.stack || error);
     throwError(
       "error occured while making request to " +
       getServiceName(_url) +
       ": error response :" +
-      (errorResponse ? parseInt(errorResponse.status, 10) : error.message),
-      errorResponse.data.Errors[0].code,
-      errorResponse.status
+      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message),
+      errorResponse?.data?.Errors?.[0].code,
+      errorResponse?.status
     );
   }
 };
