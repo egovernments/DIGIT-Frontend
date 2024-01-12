@@ -6,34 +6,58 @@ import AssignTarget from "./AssignTarget";
 const TargetComponent = (props) => {
   const { t } = useTranslation();
 
-  console.log("propss", props?.targets);
   const [showModal, setShowModal] = useState(false);
-  const [editTargetIndex, setEditTargetIndex] = useState(null);
+
   const [formData, setFormData] = useState({
     beneficiaryType: "",
     totalNo: 0,
     targetNo: 0,
   });
 
-  const handleOnChange = (fieldName, value) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [fieldName]: value,
-    }));
+  const handleOnChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const columns = [
-    { label: t("BENEFICIARY_TYPE"), key: "beneficiaryType" },
-    { label: t("TOTAL_NUMBER"), key: "totalNo" },
-    { label: t("TARGET_NUMBER"), key: "targetNo" },
-    { label: t("ACTIONS"), key: "actions" },
+    { label: t("WBH_BENEFICIARY_TYPE"), key: "beneficiaryType" },
+    { label: t("WBH_TOTAL_NUMBER"), key: "totalNo" },
+    { label: t("WBH_TARGET_NUMBER"), key: "targetNo" },
+    { label: t("WBH_ACTIONS"), key: "actions" },
   ];
 
   const handleEditButtonClick = (index) => {
-    setEditTargetIndex(index);
     setFormData(props.targets[index]);
-
     setShowModal(true);
   };
+
+  const reqCriteria = {
+    url: "/project/v1/_update",
+    config: false,
+  };
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
+
+  const handleSubmitTarget = async () => {
+    const targets = {
+      beneficiaryType: formData?.beneficiaryType,
+      totalNo: Number(formData?.totalNo),
+      targetNo: Number(formData?.targetNo),
+      isDeleted: false,
+    };
+
+    const updatedProject = {
+      ...props?.project,
+      targets: [...props.project.targets, targets],
+    };
+
+    await mutation.mutate({
+      body: {
+        Projects: [updatedProject],
+      },
+    });
+
+    console.log(props?.project, targets);
+  };
+
   return (
     <div className="override-card">
       <Header className="works-header-view">{t("WBH_TARGET")}</Header>
@@ -44,14 +68,16 @@ const TargetComponent = (props) => {
           heading={"WBH_CAMPAIGN_ASSIGNMENT_EDIT_TARGET"}
           onClose={() => {
             setShowModal(false);
-            setEditTargetIndex(null);
           }}
-          data={props.targets[editTargetIndex]}
           onChange={handleOnChange}
+          beneficiaryType={formData?.beneficiaryType}
+          totalNo={formData?.totalNo}
+          targetNo={formData?.targetNo}
+          onSubmit={handleSubmitTarget}
         />
       )}
       {props?.targets?.length === 0 ? (
-        <h1>{t("NO_TARGETS_FOUND")}</h1>
+        <h1>{t("WBH_NO_TARGETS_FOUND")}</h1>
       ) : (
         <table className="table reports-table sub-work-table">
           <thead>

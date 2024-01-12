@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
-import { DatePicker, Modal, CardLabel, LabelFieldPair, CloseSvg, Close, TextInput } from "@egovernments/digit-ui-react-components";
-import { AssignTargetConfig } from "../configs/AssignTargetConfig";
+import { Modal, CardLabel, LabelFieldPair, CloseSvg, Close, TextInput } from "@egovernments/digit-ui-react-components";
 
-const AssignTarget = ({ t, onClose, heading, startDate, endDate, onChange, onCancel, onSubmit, data }) => {
+const AssignTarget = ({ t, onClose, heading, beneficiaryType, totalNo, targetNo, onChange, onCancel, onSubmit, data }) => {
   const CloseBtn = (props) => {
     return (
       <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
@@ -20,7 +19,6 @@ const AssignTarget = ({ t, onClose, heading, startDate, endDate, onChange, onCan
   const Heading = (props) => {
     return <h1 className="heading-m">{props.heading}</h1>;
   };
-  console.log("datadata", data);
 
   return (
     <Modal
@@ -32,21 +30,18 @@ const AssignTarget = ({ t, onClose, heading, startDate, endDate, onChange, onCan
       actionCancelOnSubmit={onCancel}
       actionSaveOnSubmit={onSubmit}
     >
-      {AssignTargetConfig?.map((input, index) => (
-        <LabelFieldPair key={index}>
-          <CardLabel>
-            {t(input.label)}
-            {input.isMandatory ? " * " : null}
-          </CardLabel>
-          <TextInput
-            key={input.populators.name}
-            value={data[input.populators.name] || ""}
-            onChange={(e) => onChange(input.populators.name, e.target.value)}
-            disable={false}
-            {...input.validation}
-          />
-        </LabelFieldPair>
-      ))}
+      <LabelFieldPair>
+        <CardLabel className={"card-label-smaller"}> {`${t("WBH_BENEFICIARY_TYPE_LABEL")}`} </CardLabel>
+        <TextInput type="text" name="beneficiaryType" value={beneficiaryType} onChange={onChange} />
+      </LabelFieldPair>
+      <LabelFieldPair>
+        <CardLabel className={"card-label-smaller"}> {`${t("WBH_TOTAL_NO_LABEL")}`} </CardLabel>
+        <TextInput type="number" name="totalNo" value={totalNo} onChange={onChange} />
+      </LabelFieldPair>
+      <LabelFieldPair>
+        <CardLabel className={"card-label-smaller"}> {`${t("WBH_TARGET_NO_LABEL")}`} </CardLabel>
+        <TextInput type="number" name="targetNo" value={targetNo} onChange={onChange} />
+      </LabelFieldPair>
     </Modal>
   );
 };

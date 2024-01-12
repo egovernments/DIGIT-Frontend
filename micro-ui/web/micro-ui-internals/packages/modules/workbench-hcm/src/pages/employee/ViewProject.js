@@ -21,6 +21,11 @@ const ViewProject = () => {
 
   const { tenantId, projectNumber, projectId } = Digit.Hooks.useQueryParams();
 
+  const [formData, setFormData] = useState({
+    beneficiaryType: "",
+    totalNo: 0,
+    targetNo: 0,
+  });
   function onActionSelect(action) {
     setSelectedAction(action);
     if (action === "DATE") {
@@ -59,7 +64,7 @@ const ViewProject = () => {
       tenantId,
       offset: 0,
       limit: 100,
-      includeAncestors: true,
+      // includeAncestors: true,
     },
     body: {
       Projects: [
@@ -139,9 +144,23 @@ const ViewProject = () => {
 
   const handleOnCancel = () => {
     setShowEditDateModal(false);
+    setShowTargetModal(false);
   };
 
-  const handleProjectTargetSubmit = async () => {};
+  const handleProjectTargetSubmit = async () => {
+    const targets = {
+      beneficiaryType: formData?.beneficiaryType,
+      totalNo: Number(formData?.totalNo),
+      targetNo: Number(formData?.targetNo),
+      isDeleted: false,
+    };
+
+    console.log("taregegege", targets);
+  };
+
+  const handleOnChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   return (
     <React.Fragment>
@@ -164,9 +183,9 @@ const ViewProject = () => {
           t={t}
           onClose={() => setShowTargetModal(false)}
           heading={"WBH_CAMPAIGN_ASSIGNMENT_TARGET"}
-          onChange={handleDateChange}
           onCancel={handleOnCancel}
           onSubmit={handleProjectTargetSubmit}
+          onChange={handleOnChange}
         />
       )}
 

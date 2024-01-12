@@ -119,7 +119,7 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "TargetComponent",
-            props: { targets: project?.Project?.[0]?.targets },
+            props: { targets: project?.Project?.[0]?.targets, project: project?.Project?.[0] },
           },
         ],
       },

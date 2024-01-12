@@ -1,5 +1,7 @@
 export const AssignTargetConfig = [
   {
+    body:[
+      {
     label: "WBH_BENEFICIARY_TYPE_LABEL",
     type: "text",
     isMandatory: false,
@@ -26,4 +28,6 @@ export const AssignTargetConfig = [
       validation: { pattern: {} },
     },
   },
+]
+  }
 ];
