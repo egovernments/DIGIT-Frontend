@@ -19,7 +19,6 @@ const ProjectStaffModal = ({ t, onClose, heading, onCancel, onSubmit, userName, 
     return <h1 className="heading-m">{props.heading}</h1>;
   };
 
-  console.log("search", showDepartment);
   return (
     <Modal
       formId="modal-action"
