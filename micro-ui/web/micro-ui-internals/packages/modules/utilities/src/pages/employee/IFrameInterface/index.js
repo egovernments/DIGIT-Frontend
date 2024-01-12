@@ -3,10 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-
 const IFrameInterface = (props) => {
   const { stateCode } = props;
   const { moduleName, pageName } = useParams();
+  const queryParams = Digit.Hooks.useQueryParams()
+
+  const exampleParamObject = {
+    "key" : "value",
+    "key2" : "value2"
+  }
 
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
@@ -27,9 +32,26 @@ const IFrameInterface = (props) => {
     const contextPath = pageObject?.["routePath"] || "";
     const title = pageObject?.["title"] || "";
     let url = `${domain}${contextPath}`;
-    setUrl(url);
+    if (queryParams.hasOwnProperty('query') && queryParams.query === 'true') {
+      addQueryParamsToUrl(url,exampleParamObject)
+    }
+    else {
+      setUrl(url);
+    }
     setTitle(title);
   }, [data, moduleName, pageName]);
+
+  function addQueryParamsToUrl(url, paramsObject) {
+
+    const hasQuestionMark = url.includes('?');
+  
+    const queryString = Object.entries(paramsObject)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&');
+  
+    const updatedUrl = hasQuestionMark ? `${url}&${queryString}` : `${url}?${queryString}`;
+    setUrl(updatedUrl)
+  }
 
   if (isLoading) {
     return <Loader />;
