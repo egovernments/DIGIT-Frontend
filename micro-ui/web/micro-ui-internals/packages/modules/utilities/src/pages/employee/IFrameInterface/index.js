@@ -6,12 +6,7 @@ import { useParams } from "react-router-dom";
 const IFrameInterface = (props) => {
   const { stateCode } = props;
   const { moduleName, pageName } = useParams();
-  const queryParams = Digit.Hooks.useQueryParams()
-
-  const exampleParamObject = {
-    "key" : "value",
-    "key2" : "value2"
-  }
+  const queryParams = Digit.Hooks.useQueryParams();
 
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
@@ -33,7 +28,7 @@ const IFrameInterface = (props) => {
     const title = pageObject?.["title"] || "";
     let url = `${domain}${contextPath}`;
     if (queryParams.hasOwnProperty('query') && queryParams.query === 'true') {
-      addQueryParamsToUrl(url,exampleParamObject)
+      addQueryParamsToUrl(url,queryParams)
     }
     else {
       setUrl(url);
@@ -46,6 +41,7 @@ const IFrameInterface = (props) => {
     const hasQuestionMark = url.includes('?');
   
     const queryString = Object.entries(paramsObject)
+      .filter(([key, value]) => key !== "query" || value !== "true")
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
   
