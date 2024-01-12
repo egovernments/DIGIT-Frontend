@@ -57,6 +57,14 @@ function processExcelSheet(
         else {
           rowData[fieldConfig.title] = fieldConfig.default;
         }
+        if (fieldConfig.conditions) {
+          for (const condition of fieldConfig.conditions) {
+            if (rowData[fieldConfig.title] == condition.from) {
+              rowData[fieldConfig.title] = condition.to;
+              fieldConfig.default = condition.to;
+            }
+          }
+        }
       }
     }
     rowDatas.push(rowData);
