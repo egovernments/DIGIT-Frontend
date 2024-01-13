@@ -11,6 +11,7 @@ if (!HOST) {
 }
 
 const config = {
+  stateTenantId:process.env.EGOV_STATE_TENANT_ID||"pg",
   auth_token: process.env.AUTH_TOKEN,
   KAFKA_BROKER_HOST:
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",

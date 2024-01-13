@@ -42,7 +42,7 @@ class DataController {
     try {
       const respo = await search_mdms_v2("WORKS-SOR.SOR", {});
       if (respo) {
-        return sendResponse(response, { resp: [...respo?.mdms] }, request);
+        return sendResponse(response, { "data": [...respo?.mdms] }, request);
       }
 
       throw new Error("Error fetching or processing data");

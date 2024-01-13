@@ -85,55 +85,45 @@ const search_mdms = async (
 /*
   This asynchronous function searches for contracts based on the provided parameters.
 */
-const search_mdms_v2 = async (
-  schemaCode: string,
-  filters: any = {}
-) => {
-  const reqBody= {  MdmsCriteria:{
-    tenantId: "od",
-    filters: filters,
-    schemaCode: schemaCode,
-    limit: 100,
-    offset: 0,
-  } };
+const search_mdms_v2 = async (schemaCode: string, filters: any = {}) => {
+  const reqBody = {
+    MdmsCriteria: {
+      tenantId: config.stateTenantId,
+      filters: filters,
+      schemaCode: schemaCode,
+      limit: 100,
+      offset: 0,
+    },
+  };
   // Send an HTTP request to the mdms search endpoint using the provided parameters and request information.
-  const mdmsResponse = await httpRequest(
-    url.resolve(config.host.mdmsV2, config.paths.mdmsV2_search),
-  reqBody
-   
-  );
-  // Check if there are contracts in the response.
-  if (mdmsResponse?.mdms?.length > 0) {
-    // If contracts are found, return the first one.
-    return mdmsResponse;
-  }
-
-  // If no contracts are found, return an error code.
-  return getErrorCodes("MDMS", "NO_MDMS_DATA_FOUND");
-
+    return await httpRequest(
+      url.resolve(config.host.mdmsV2, config.paths.mdmsV2_search),
+      reqBody
+    ); 
 };
 
 /*
   This asynchronous function searches for contracts based on the provided parameters.
 */
-const create_mdms_v2 = async (
-  schemaCode: string,
-  data: any = {}
-) => {
-  const reqBody={"Mdms": {
-    "tenantId": "pg",
-"schemaCode": schemaCode,
-"uniqueIdentifier": null,
-"data": {
-...data
-  },
-"isActive": true
-}};
+const create_mdms_v2 = async (schemaCode: string, data: any = {}) => {
+  const reqBody = {
+    Mdms: {
+      tenantId: config.stateTenantId,
+      schemaCode: schemaCode,
+      uniqueIdentifier: null,
+      data: {
+        ...data,
+      },
+      isActive: true,
+    },
+  };
   // Send an HTTP request to the mdms search endpoint using the provided parameters and request information.
   const mdmsResponse = await httpRequest(
-    url.resolve(config.host.mdmsV2, config.paths.mdmsV2_create+`/${schemaCode}`),
-  reqBody
-   
+    url.resolve(
+      config.host.mdmsV2,
+      config.paths.mdmsV2_create + `/${schemaCode}`
+    ),
+    reqBody
   );
   // Check if there are contracts in the response.
   if (mdmsResponse?.mdms?.length > 0) {
@@ -151,5 +141,5 @@ export {
   search_user,
   search_workflow,
   search_mdms_v2,
-  search_localization
+  search_localization,
 };
