@@ -109,7 +109,8 @@ const search_mdms_v2 = async (
   }
 
   // If no contracts are found, return an error code.
-  return getErrorCodes("DATA SERVICE", "NO_DATA_FOUND");
+  return getErrorCodes("MDMS", "NO_MDMS_DATA_FOUND");
+
 };
 
 /*
@@ -141,7 +142,7 @@ const create_mdms_v2 = async (
   }
 
   // If no contracts are found, return an error code.
-  return getErrorCodes("DATA SERVICE", "NO_DATA_FOUND");
+  return getErrorCodes("MDMS", "MDMS_DATA_CREATION_FAILED");
 };
 
 export {

@@ -27,8 +27,6 @@ const throwError = (
   let error = new Error(message);
   //   error.status = status;
   //   error.code = code;
-  console.log(error, "error");
-
   throw error;
 };
 
@@ -152,7 +150,11 @@ const errorResponder = (
 };
 
 // Convert the object to the format required for measurement
-const convertObjectForMeasurment = (obj: any, config: any, defaultValue?: any) => {
+const convertObjectForMeasurment = (
+  obj: any,
+  config: any,
+  defaultValue?: any
+) => {
   const resultBody: Record<string, any> = defaultValue || {};
 
   const assignValueAtPath = (obj: any, path: string, value: any) => {
@@ -204,4 +206,5 @@ export {
   extractEstimateIds,
   cacheResponse,
   getCachedResponse,
+  logger,
 };

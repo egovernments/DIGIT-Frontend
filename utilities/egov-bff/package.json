@@ -11,7 +11,7 @@
     "build-ts": "tsc",
     "clean": "rm -rf ./dist",
     "serve": "node dist/index.js",
-    "start": "yarn run dev",
+    "start": "yarn run dev && yarn run watch-ts",
     "test": "jest",
     "dev": "ts-node-dev --respawn src/server/index.ts",
     "prod": "yarn build && yarn serve",

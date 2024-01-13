@@ -29,20 +29,23 @@ export const defaultheader = {
   accept: "application/json, text/plain, */*",
 };
 
-const getServiceName = (url = "") => url && url.slice && url.slice(url.lastIndexOf(url.split("/")[3]));
+const getServiceName = (url = "") =>
+  url && url.slice && url.slice(url.lastIndexOf(url.split("/")[3]));
 const cacheEnabled = false;
 
-function removeCircularReferences(obj:any) {
+function removeCircularReferences(obj: any) {
   const seen = new WeakSet();
-  return JSON.parse(JSON.stringify(obj, (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return '[Circular Reference]';
+  return JSON.parse(
+    JSON.stringify(obj, (key, value) => {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+          return "[Circular Reference]";
+        }
+        seen.add(value);
       }
-      seen.add(value);
-    }
-    return value;
-  }));
+      return value;
+    })
+  );
 }
 
 /*
@@ -62,7 +65,7 @@ Used to Make API call through axios library
 const httpRequest = async (
   _url: string,
   _requestBody: any,
-  _params: any={},
+  _params: any = {},
   _method: string = "post",
   responseType: string = "",
   headers: any = defaultheader
@@ -74,14 +77,14 @@ const httpRequest = async (
         return cacheData;
       }
       logger.info(
-        "NO CACHE FOUND :: REQUEST :: " +
-        JSON.stringify(headers.cachekey)
+        "NO CACHE FOUND :: REQUEST :: " + JSON.stringify(headers.cachekey)
       );
     }
     logger.info(
       "INTER-SERVICE :: REQUEST :: " +
-      getServiceName(_url) +
-      " CRITERIA :: " + JSON.stringify(_requestBody)
+        getServiceName(_url) +
+        " CRITERIA :: " +
+        JSON.stringify(_requestBody)
     );
     const cleanData = removeCircularReferences(_requestBody);
     const response = await Axios({
@@ -95,13 +98,17 @@ const httpRequest = async (
     const responseStatus = parseInt(get(response, "status"), 10);
     logger.info(
       "INTER-SERVICE :: SUCCESS :: " +
-      getServiceName(_url) +
-      ":: CODE :: " +
-      responseStatus
+        getServiceName(_url) +
+        ":: CODE :: " +
+        responseStatus
     );
-    if (responseStatus === 200 || responseStatus === 201 || responseStatus === 202) {
+    if (
+      responseStatus === 200 ||
+      responseStatus === 201 ||
+      responseStatus === 202
+    ) {
       if (headers && headers.cachekey) {
-        cacheResponse(response?.data, headers.cachekey)
+        cacheResponse(response?.data, headers.cachekey);
       }
       return response?.data;
     }
@@ -109,19 +116,20 @@ const httpRequest = async (
     var errorResponse = error.response;
     logger.error(
       "INTER-SERVICE :: FAILURE :: " +
-      getServiceName(_url) +
-      ":: CODE :: " +
-      errorResponse?.status +
-      ":: ERROR :: " +
-      errorResponse?.data?.Errors?.[0]?.code || error
+        getServiceName(_url) +
+        ":: CODE :: " +
+        errorResponse?.status +
+        ":: ERROR :: " +
+        errorResponse?.data?.Errors?.[0]?.code || error
     );
     logger.error(":: ERROR STACK :: " + error.stack || error);
     throwError(
-      "error occured while making request to " +
-      getServiceName(_url) +
-      ": error response :" +
-      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message),
-      errorResponse?.data?.Errors?.[0].code,
+      "Error occured while making request to " +
+        getServiceName(_url) +
+        ": due to : " +
+        (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message) +
+        " : " +
+        errorResponse?.data?.Errors?.[0].code,
       errorResponse?.status
     );
   }

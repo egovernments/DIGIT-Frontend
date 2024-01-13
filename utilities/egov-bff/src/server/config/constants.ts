@@ -8,8 +8,11 @@ export const CONSTANTS:any={
             NO_CONTRACT_FOUND:"No Contract Found for given Criteria",
             NO_ESTIMATE_FOUND:"No Estimate Found for given Criteria",
             NO_MEASUREMENT_ROLL_FOUND:"No Measurement Found for given Criteria"
+        },
+        MDMS:{
+            NO_MDMS_DATA_FOUND:"No Data Found for given Criteria",
+            MDMS_DATA_CREATION_FAILED:"No Data Found for given Criteria",
         }
-
     }
 
 }

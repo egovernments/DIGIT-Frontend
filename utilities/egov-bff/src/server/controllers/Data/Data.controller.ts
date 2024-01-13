@@ -3,7 +3,7 @@ import * as express from "express";
 // Import necessary modules and libraries
 
 import { errorResponder, sendResponse } from "../../utils/index";
-import { search_mdms_v2 } from "../../api/index";
+import { create_mdms_v2, search_mdms_v2 } from "../../api/index";
 
 // Define the MeasurementController class
 class DataController {
@@ -26,21 +26,15 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   saveData = async (request: express.Request, response: express.Response) => {
     try {
-      const { DataSync }: { DataSync: Data } = request.body;
-
-      const respo = await search_mdms_v2("hrms.EmployeeType", DataSync);
+      const { DataSync } = request.body;
+      const respo = await create_mdms_v2("hrms.EmployeeType", DataSync);
       if (respo) {
         return sendResponse(response, { ...respo }, request);
       }
 
       throw new Error("Error fetching or processing data");
-    } catch (e) {
-      console.error(e);
-      return errorResponder(
-        { error: "Internal Server Error" },
-        request,
-        response
-      );
+    } catch (error: any) {
+      return errorResponder(error, request, response);
     }
   };
   // This function handles the HTTP request for retrieving all measurements.
@@ -52,12 +46,8 @@ class DataController {
       }
 
       throw new Error("Error fetching or processing data");
-    } catch (e) {
-      return errorResponder(
-        { error: "Internal Server Error" },
-        request,
-        response
-      );
+    } catch (error: any) {
+      return errorResponder(error, request, response);
     }
   };
 }
