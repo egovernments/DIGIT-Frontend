@@ -20,9 +20,24 @@ class DataController {
   // Initialize routes for MeasurementController
   public intializeRoutes() {
     this.router.post(`${this.path}/_save`, this.saveData);
+    this.router.get(`${this.path}/_save`, this.saveDataThroughGet);
     this.router.post(`${this.path}/_get`, this.getData);
   }
 
+  saveDataThroughGet = async (request: express.Request, response: express.Response) => {
+    try {
+      console.log(request)
+      // const { DataSync } = request.body;
+      // const respo = await create_mdms_v2("hrms.EmployeeType", DataSync);
+      // if (respo) {
+      //   return sendResponse(response, { ...respo }, request);
+      // }
+
+      throw new Error("Error fetching or processing data");
+    } catch (error: any) {
+      return errorResponder(error, request, response);
+    }
+  };
   // This function handles the HTTP request for retrieving all measurements.
   saveData = async (request: express.Request, response: express.Response) => {
     try {

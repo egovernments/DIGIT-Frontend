@@ -11,6 +11,10 @@ if (!HOST) {
 }
 
 const config = {
+  client:{
+    secret:"ZWdvdi11c2VyLWNsaWVudDo=",
+    checkDisabled:false,
+  },
   stateTenantId:process.env.EGOV_STATE_TENANT_ID||"pg",
   auth_token: process.env.AUTH_TOKEN,
   KAFKA_BROKER_HOST:
