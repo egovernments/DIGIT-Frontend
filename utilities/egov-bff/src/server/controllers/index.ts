@@ -1,4 +1,4 @@
-import DataController from "./Data/data.controller";
+import DataController from "./Data/Data.controller";
 
 
 
