@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { errorResponder } from "..";
+import { errorResponder, skipEnrichmentandChecks } from "..";
 import config from "../../config";
 
 const { object, string } = require("yup");
@@ -12,14 +12,14 @@ const requestSchema = object({
   clientSecret: config?.client?.checkDisabled
     ? string().required()
     : string().nullable(),
-  authToken: string().nullable(),
-  userInfo: object().nonNullable(),
+    uuid: string().nonNullable()
 });
 
 const checkForClientSecret = (req: Request, next: NextFunction) => {
+  const conditions= config?.client?.checkDisabled ||
+  req?.body?.RequestInfo?.clientSecret == config?.client?.secret || skipEnrichmentandChecks(req);
   if (
-    config?.client?.checkDisabled ||
-    req.body.RequestInfo.clientSecret == config?.client?.secret
+    conditions
   ) {
     next();
   } else {
@@ -29,7 +29,7 @@ const checkForClientSecret = (req: Request, next: NextFunction) => {
 
 const requestMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
-    requestSchema.validateSync(req.body.RequestInfo);
+    !skipEnrichmentandChecks(req) && requestSchema.validateSync(req.body.RequestInfo);
     //* added client secret check since we can add data without auth and user for MFORM */
     checkForClientSecret(req, next);
   } catch (error) {

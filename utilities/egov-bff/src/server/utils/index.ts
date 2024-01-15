@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { logger } from "./logger";
+import config from "../config";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 
@@ -194,6 +195,8 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
+const skipEnrichmentandChecks = (request:Request)=> request.method=="GET" &&request?.path?.includes(`${config.app.contextPath}${config.app.apiSpecPath}`);
+
 export {
   errorResponder,
   errorLogger,
@@ -207,4 +210,5 @@ export {
   cacheResponse,
   getCachedResponse,
   logger,
+  skipEnrichmentandChecks
 };

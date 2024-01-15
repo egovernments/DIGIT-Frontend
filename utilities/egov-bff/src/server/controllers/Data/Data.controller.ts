@@ -26,7 +26,6 @@ class DataController {
 
   saveDataThroughGet = async (request: express.Request, response: express.Response) => {
     try {
-      console.log(request)
       // const { DataSync } = request.body;
       // const respo = await create_mdms_v2("hrms.EmployeeType", DataSync);
       // if (respo) {

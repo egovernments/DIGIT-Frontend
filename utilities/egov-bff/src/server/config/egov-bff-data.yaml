@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: Unified Digit API for Service Integrations
+  version: 1.0.0
+paths:
+  /egov-bff/data/_save:
+    post:
+      summary: Save Data
+      description: Endpoint to save data through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                DataSync:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    type:
+                      type: string
+                    data:
+                      type: object
+                      properties:
+                        active:
+                          type: boolean
+                        description:
+                          type: string
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    clientSecret:
+                      type: string
+                    uuid:
+                      type: string
+                    msgId:
+                      type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "DIGIT"
+                  ver: null
+                  ts: null
+                  resMsgId: "uief87324"
+                  msgId: "1704344309835|en_IN"
+                  status: "successful"
+                mdms:
+                  - id: "af6421bf-e003-407d-beb4-191c2885195e"
+                    tenantId: "pg"
+                    schemaCode: "Integration.mForm"
+                    uniqueIdentifier: "test"
+                    data:
+                      key: "test"
+                      type: "Complaint"
+                      data:
+                        active: true
+                        description: "sample data added"
+                    isActive: true
+                    auditDetails:
+                      createdBy: "719afcd7-e04e-4b3b-97a9-143f9f8e9c6d"
+                      lastModifiedBy: "719afcd7-e04e-4b3b-97a9-143f9f8e9c6d"
+                      createdTime: 1705307496945
+                      lastModifiedTime: 1705307496945
+
+  /egov-bff/data/_get:
+    post:
+      summary: Retrieve Data
+      description: Endpoint to retrieve data through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                DataSync:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    type:
+                      type: string
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    clientSecret:
+                      type: string
+                    uuid:
+                      type: string
+                    msgId:
+                      type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "egov-bff"
+                  ver: "0.0.1"
+                  ts: 1705307638652
+                  status: "successful"
+                  desc: "new-response"
+                data:
+                  - id: "03dbe91d-2be5-41bd-bbf6-f8a79b9e527a"
+                    tenantId: "pg"
+                    schemaCode: "Integration.mForm"
+                    uniqueIdentifier: "string"
+                    data:
+                      key: "string"
+                      data:
+                        active: true
+                        description: "string"
+                      type: "string"
+                    isActive: true
+                    auditDetails:
+                      createdBy: "719afcd7-e04e-4b3b-97a9-143f9f8e9c6d"
+                      lastModifiedBy: "719afcd7-e04e-4b3b-97a9-143f9f8e9c6d"
+                      createdTime: 1705307588739
+                      lastModifiedTime: 1705307588739
+  
