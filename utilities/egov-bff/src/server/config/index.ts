@@ -29,7 +29,7 @@ const config = {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
     contextPath: process.env.CONTEXT_PATH || "/egov-bff",
-    apiSpecPath:"/api-docs"
+    apiSpecPath: "/api-docs",
   },
   configs: {
     DATA_CONFIG_URLS:
@@ -39,10 +39,10 @@ const config = {
   host: {
     serverHost: HOST,
     localization: process.env.EGOV_LOCALIZATION_HOST || HOST,
-    mdms: process.env.EGOV_MDMS_HOST ||  "http://localhost:8094/",
-    mdmsV2: process.env.EGOV_MDMS_V2_HOST  || "http://localhost:8082/",
+    mdms: process.env.EGOV_MDMS_HOST || "http://localhost:8094/",
+    mdmsV2: process.env.EGOV_MDMS_V2_HOST || HOST || "http://localhost:8082/",
     pdf: process.env.EGOV_PDF_HOST || HOST || "http://localhost:8087/",
-    user: process.env.EGOV_USER_HOST || "http://localhost:8081/",
+    user: process.env.EGOV_USER_HOST || HOST || "http://localhost:8081/",
     workflow:
       process.env.EGOV_WORKFLOW_HOST || HOST || "http://localhost:8091/",
     muster:
