@@ -53,7 +53,13 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   getData = async (request: express.Request, response: express.Response) => {
     try {
-      const respo = await search_mdms_v2(config.client.schemaCode, {});
+      const {DataSync={} }=request.body;
+      const {key="",type=""}=DataSync;
+      const filters={
+        ...(key && { key }),
+        ...(type && { type }),
+      }      
+      const respo = await search_mdms_v2(config.client.schemaCode, filters);
       if (respo) {
         return sendResponse(response, { "data": [...respo?.mdms] }, request);
       }
