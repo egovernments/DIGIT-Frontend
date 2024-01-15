@@ -4,13 +4,13 @@ import * as express from "express";
 
 import { errorResponder, sendResponse } from "../../utils/index";
 import { create_mdms_v2, search_mdms_v2 } from "../../api/index";
+import config from "../../config";
 
 // Define the MeasurementController class
 class DataController {
   // Define class properties
   public path = "/data";
   public router = express.Router();
-  public dayInMilliSecond = 86400000;
 
   // Constructor to initialize routes
   constructor() {
@@ -21,7 +21,7 @@ class DataController {
   public intializeRoutes() {
     this.router.post(`${this.path}/_save`, this.saveData);
     this.router.get(`${this.path}/_save`, this.saveDataThroughGet);
-    this.router.post(`${this.path}/_get`, this.getData);
+    this.router.get(`${this.path}/_get`, this.getData);
   }
 
   saveDataThroughGet = async (request: express.Request, response: express.Response) => {
@@ -41,8 +41,7 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   saveData = async (request: express.Request, response: express.Response) => {
     try {
-      const { DataSync } = request.body;
-      const respo = await create_mdms_v2("hrms.EmployeeType", DataSync);
+      const respo = await create_mdms_v2(config.client.schemaCode, request.body);
       if (respo) {
         return sendResponse(response, { ...respo }, request);
       }
@@ -55,7 +54,7 @@ class DataController {
   // This function handles the HTTP request for retrieving all measurements.
   getData = async (request: express.Request, response: express.Response) => {
     try {
-      const respo = await search_mdms_v2("WORKS-SOR.SOR", {});
+      const respo = await search_mdms_v2(config.client.schemaCode, {});
       if (respo) {
         return sendResponse(response, { "data": [...respo?.mdms] }, request);
       }

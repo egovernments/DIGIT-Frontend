@@ -9,11 +9,12 @@ if (!HOST) {
   console.log("You need to set the HOST variable");
   process.exit(1);
 }
-
+const checkEnabled=process.env.EGOV_CLIENT_SECRET_CHECK_ENABLED||true;
 const config = {
   client:{
-    secret:"ZWdvdi11c2VyLWNsaWVudDo=",
-    checkDisabled:false,
+    secret:process.env.EGOV_CLIENT_SECRET||"ZWdvdi11c2VyLWNsaWVudDo=",
+    checkDisabled:checkEnabled?false:true,
+    schemaCode:process.env.EGOV_CLIENT_SCHEMA_CODE||"hrms.EmployeeType"
   },
   stateTenantId:process.env.EGOV_STATE_TENANT_ID||"pg",
   auth_token: process.env.AUTH_TOKEN,

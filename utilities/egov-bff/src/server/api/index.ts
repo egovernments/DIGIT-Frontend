@@ -105,14 +105,16 @@ const search_mdms_v2 = async (schemaCode: string, filters: any = {}) => {
 /*
   This asynchronous function searches for contracts based on the provided parameters.
 */
-const create_mdms_v2 = async (schemaCode: string, data: any = {}) => {
+const create_mdms_v2 = async (schemaCode: string, body: any = {}) => {
+  const {RequestInfo,DataSync}=body;
   const reqBody = {
+    RequestInfo,
     Mdms: {
-      tenantId: config.stateTenantId,
+      tenantId: config?.stateTenantId,
       schemaCode: schemaCode,
       uniqueIdentifier: null,
       data: {
-        ...data,
+        ...DataSync,
       },
       isActive: true,
     },
