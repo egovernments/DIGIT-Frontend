@@ -21,7 +21,7 @@ class DataController {
   public intializeRoutes() {
     this.router.post(`${this.path}/_save`, this.saveData);
     this.router.get(`${this.path}/_save`, this.saveDataThroughGet);
-    this.router.get(`${this.path}/_get`, this.getData);
+    this.router.post(`${this.path}/_get`, this.getData);
   }
 
   saveDataThroughGet = async (request: express.Request, response: express.Response) => {
