@@ -16,6 +16,20 @@ function processColumnValue(
   return (row as any[])[colIndex];
 }
 
+function convertToFieldType(value: any, fieldType: string): any {
+  switch (fieldType) {
+    case 'number':
+      return Number(value);
+    case 'string':
+      return String(value);
+    case 'boolean':
+      return Boolean(value);
+    // Add more cases for other types as needed
+    default:
+      return value;
+  }
+}
+
 function processExcelSheet(
   desiredSheet: XLSX.WorkSheet,
   startRow: number,
@@ -30,9 +44,9 @@ function processExcelSheet(
 
   const rowDataArray: any[] = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
 
-  for (let index = 0; index < rowDataArray.length; index++) {
+  for (const element of rowDataArray) {
     // Explicitly define the type for row as an array of any
-    const row: any[] = rowDataArray[index];
+    const row: any[] = element;
 
     const rowData: any = {};
 
@@ -45,13 +59,13 @@ function processExcelSheet(
 
         // Generate a hash using hash-sum of the extracted values
         const generatedCode = hashSum(valuesToHash);
-        rowData[fieldConfig.title] = generatedCode;
-        fieldConfig.default = generatedCode;
+        rowData[fieldConfig.title] = convertToFieldType(generatedCode, typeof fieldConfig.default);
+        fieldConfig.default = rowData[fieldConfig.title];
       } else if (fieldConfig.format === 'AUTO_GENERATE') {
         // Generate a 10-digit phone number starting with 8 or 9
         const generatedPhoneNumber = '8' + Math.floor(100000000 + Math.random() * 900000000).toString();
-        rowData[fieldConfig.title] = generatedPhoneNumber;
-        fieldConfig.default = generatedPhoneNumber;
+        rowData[fieldConfig.title] = convertToFieldType(generatedPhoneNumber, typeof fieldConfig.default);
+        fieldConfig.default = rowData[fieldConfig.title];
       } else {
         const concatValue = (fieldConfig.column as any[]).map((col: any) =>
           processColumnValue(col, row)
@@ -59,8 +73,8 @@ function processExcelSheet(
         logger.info("Concat Value : " + concatValue);
 
         if (concatValue) {
-          rowData[fieldConfig.title] = concatValue;
-          fieldConfig.default = concatValue;
+          rowData[fieldConfig.title] = convertToFieldType(concatValue, typeof fieldConfig.default);
+          fieldConfig.default = rowData[fieldConfig.title];
         } else {
           rowData[fieldConfig.title] = fieldConfig.default;
         }
@@ -68,13 +82,14 @@ function processExcelSheet(
         if (fieldConfig.conditions) {
           for (const condition of fieldConfig.conditions) {
             if (rowData[fieldConfig.title] == condition.from) {
-              rowData[fieldConfig.title] = condition.to;
-              fieldConfig.default = condition.to;
+              rowData[fieldConfig.title] = convertToFieldType(condition.to, typeof fieldConfig.default);
+              fieldConfig.default = rowData[fieldConfig.title];
             }
           }
         }
       }
     }
+
     rowDatas.push(rowData);
   }
 }
