@@ -1,7 +1,7 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import config from './config';
-import { requestMiddleware } from './utils/middlewares';
+import { requestMiddleware, enrichRequestMiddleware } from './utils/middlewares';
 import { errorLogger, errorResponder, invalidPathHandler } from './utils';
 
 class App {
@@ -20,7 +20,8 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(requestMiddleware);
-
+    this.app.use(enrichRequestMiddleware);
+    
     // this.app.use(cacheMiddleware);
     // Attach the first Error handling Middleware
     // function defined above (which logs the error)
