@@ -21,11 +21,9 @@ paths:
                       type: string
                     type:
                       type: string
-                    data:
+                    values:
                       type: object
                       properties:
-                        active:
-                          type: boolean
                         description:
                           type: string
                 RequestInfo:
@@ -52,7 +50,7 @@ paths:
                   resMsgId: "uief87324"
                   msgId: "1704344309835|en_IN"
                   status: "successful"
-                mdms:
+                DataSync:
                   - id: "af6421bf-e003-407d-beb4-191c2885195e"
                     tenantId: "pg"
                     schemaCode: "Integration.mForm"
@@ -60,8 +58,7 @@ paths:
                     data:
                       key: "test"
                       type: "Complaint"
-                      data:
-                        active: true
+                      values:
                         description: "sample data added"
                     isActive: true
                     auditDetails:
@@ -111,15 +108,14 @@ paths:
                   ts: 1705307638652
                   status: "successful"
                   desc: "new-response"
-                data:
+                DataSync:
                   - id: "03dbe91d-2be5-41bd-bbf6-f8a79b9e527a"
                     tenantId: "pg"
                     schemaCode: "Integration.mForm"
                     uniqueIdentifier: "string"
                     data:
                       key: "string"
-                      data:
-                        active: true
+                      values:
                         description: "string"
                       type: "string"
                     isActive: true

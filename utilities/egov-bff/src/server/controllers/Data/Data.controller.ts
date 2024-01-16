@@ -42,7 +42,12 @@ class DataController {
     try {
       const respo = await create_mdms_v2(config.client.schemaCode, request.body);
       if (respo) {
-        return sendResponse(response, { ...respo }, request);
+        const newResponse={...respo};
+        if(newResponse?.mdms){
+          newResponse["DataSync"]=[...newResponse?.mdms];
+          delete newResponse?.mdms;
+        }
+        return sendResponse(response, { ...newResponse }, request);
       }
 
       throw new Error("Error fetching or processing data");
@@ -61,7 +66,7 @@ class DataController {
       }      
       const respo = await search_mdms_v2(config.client.schemaCode, filters);
       if (respo) {
-        return sendResponse(response, { "data": [...respo?.mdms] }, request);
+        return sendResponse(response, { "DataSync": [...respo?.mdms] }, request);
       }
 
       throw new Error("Error fetching or processing data");
