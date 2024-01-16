@@ -85,6 +85,8 @@ paths:
                       type: string
                     type:
                       type: string
+                    id:
+                      type: string
                 RequestInfo:
                   type: object
                   properties:

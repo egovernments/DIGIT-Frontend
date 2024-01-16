@@ -82,8 +82,10 @@ const httpRequest = async (
     }
     logger.info(
       "INTER-SERVICE :: REQUEST :: " +
-        getServiceName(_url) +
-        " CRITERIA :: " +
+        getServiceName(_url)
+    );
+    logger.debug(
+      "INTER-SERVICE :: CRITERIA :: " +
         JSON.stringify(_requestBody)
     );
     const cleanData = removeCircularReferences(_requestBody);

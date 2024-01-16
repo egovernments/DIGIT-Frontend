@@ -39,8 +39,8 @@ const config = {
   host: {
     serverHost: HOST,
     localization: process.env.EGOV_LOCALIZATION_HOST || HOST,
-    mdms: process.env.EGOV_MDMS_HOST || "http://localhost:8094/",
-    mdmsV2: process.env.EGOV_MDMS_V2_HOST || "http://localhost:8082/",
+    mdms: process.env.EGOV_MDMS_HOST|| HOST || "http://localhost:8094/",
+    mdmsV2: process.env.EGOV_MDMS_V2_HOST|| HOST || "http://localhost:8082/",
     pdf: process.env.EGOV_PDF_HOST || HOST || "http://localhost:8087/",
     user: process.env.EGOV_USER_HOST || HOST || "http://localhost:8081/",
     workflow:

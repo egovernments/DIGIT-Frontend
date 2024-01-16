@@ -59,12 +59,12 @@ class DataController {
   getData = async (request: express.Request, response: express.Response) => {
     try {
       const {DataSync={} }=request.body;
-      const {key="",type=""}=DataSync;
+      const {key="",type="",id=""}=DataSync;
       const filters={
         ...(key && { key }),
         ...(type && { type }),
       }      
-      const respo = await search_mdms_v2(config.client.schemaCode, filters);
+      const respo = await search_mdms_v2(config.client.schemaCode, filters,id);
       if (respo) {
         return sendResponse(response, { "DataSync": [...respo?.mdms] }, request);
       }

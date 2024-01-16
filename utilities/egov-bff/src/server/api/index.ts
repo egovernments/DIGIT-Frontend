@@ -85,7 +85,7 @@ const search_mdms = async (
 /*
   This asynchronous function searches for contracts based on the provided parameters.
 */
-const search_mdms_v2 = async (schemaCode: string, filters: any = {}) => {
+const search_mdms_v2 = async (schemaCode: string, filters: any = {},id:string ="") => {
   const reqBody = {
     MdmsCriteria: {
       tenantId: config.stateTenantId,
@@ -93,6 +93,7 @@ const search_mdms_v2 = async (schemaCode: string, filters: any = {}) => {
       schemaCode: schemaCode,
       limit: 100,
       offset: 0,
+      ...(id && { "ids": [id] }),
     },
   };
   // Send an HTTP request to the mdms search endpoint using the provided parameters and request information.
