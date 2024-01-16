@@ -77,13 +77,18 @@ function processExcelSheet(
           fieldConfig.default = rowData[fieldConfig.title];
         } else {
           rowData[fieldConfig.title] = fieldConfig.default;
+          if (!rowData[fieldConfig.title]) {
+            rowData[fieldConfig.title] = convertToFieldType("", typeof fieldConfig.default);
+          }
         }
 
         if (fieldConfig.conditions) {
           for (const condition of fieldConfig.conditions) {
             if (rowData[fieldConfig.title] == condition.from) {
               rowData[fieldConfig.title] = convertToFieldType(condition.to, typeof fieldConfig.default);
-              fieldConfig.default = rowData[fieldConfig.title];
+              if (!rowData[fieldConfig.title]) {
+                rowData[fieldConfig.title] = convertToFieldType("", typeof fieldConfig.default);
+              }
             }
           }
         }
