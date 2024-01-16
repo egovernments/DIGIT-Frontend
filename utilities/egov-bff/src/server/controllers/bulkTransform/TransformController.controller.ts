@@ -83,37 +83,51 @@ class TransformController {
                 );
             }
 
-
             // Create a set of unique keys
-            const uniqueUpdatedDatas: any[] = [];
-            const rejectedDatas: any[] = [];
+            const groupedData: any[] = [];
             const uniqueKeys = new Set<string>();
 
-            // Iterate through updatedDatas and filter out duplicates based on unique keys
+            // Iterate through updatedDatas and group based on unique keys
             updatedDatas.forEach((data) => {
                 const uniqueValues = parsingConfig
                     .filter((configItem: any) => configItem.unique)
                     .map((configItem: any) => data[configItem.path])
                     .join('!|!');
 
-                if (!uniqueKeys.has(uniqueValues)) {
-                    uniqueKeys.add(uniqueValues);
-                    uniqueUpdatedDatas.push(data);
+                const existingIndex = groupedData.findIndex((group) => uniqueKeys.has(uniqueValues));
+
+                if (existingIndex !== -1) {
+                    // Update consolidated fields
+                    parsingConfig.forEach((configItem: any) => {
+                        if (configItem.isConsolidate) {
+                            const currentValue = groupedData[existingIndex][configItem.path];
+                            const newValue = data[configItem.path];
+                            // Consolidate based on data type
+                            if (typeof currentValue === 'number' && typeof newValue === 'number') {
+                                groupedData[existingIndex][configItem.path] = currentValue + newValue;
+                            } else if (typeof currentValue === 'string' && typeof newValue === 'string') {
+                                groupedData[existingIndex][configItem.path] = currentValue + newValue;
+                            } else if (typeof currentValue === 'boolean' && typeof newValue === 'boolean') {
+                                groupedData[existingIndex][configItem.path] = currentValue || newValue;
+                            }
+                        }
+                    });
                 } else {
-                    rejectedDatas.push(data);
+                    // Add new group
+                    uniqueKeys.add(uniqueValues);
+                    groupedData.push(data);
                 }
             });
 
-            logger.info("Unique Updated Datas : " + JSON.stringify(uniqueUpdatedDatas));
-            logger.info("Rejected Datas : " + JSON.stringify(rejectedDatas));
+            logger.info("Grouped Data : " + JSON.stringify(groupedData));
 
-
-            return sendResponse(response, { updatedDatas: uniqueUpdatedDatas, rejectedDatas }, request);
+            return sendResponse(response, { updatedDatas: groupedData }, request);
         } catch (e: any) {
             logger.error("Error : " + JSON.stringify(e));
             return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
         }
     };
+
 }
 
 // Export the MeasurementController class
