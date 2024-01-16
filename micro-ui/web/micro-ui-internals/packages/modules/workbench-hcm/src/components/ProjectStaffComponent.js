@@ -11,6 +11,7 @@ const ProjectStaffComponent = (props) => {
   const [userInfoMap, setUserInfoMap] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
+  const [showCode, setShowCode] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [showResult, setShowResult] = useState("");
   const [deletionDetails, setDeletionDetails] = useState({
@@ -134,6 +135,8 @@ const ProjectStaffComponent = (props) => {
           onSuccess: async (data) => {
             if (data?.Employees && data?.Employees?.length > 0) {
               setShowResult(data?.Employees[0]?.jurisdictions?.[0]);
+              setShowCode(data?.Employees[0]?.code);
+
               const employeeDepartment = data?.Employees[0]?.assignments[0]?.department || [];
               if (employeeDepartment.length > 0) {
                 setShowDepartment(employeeDepartment);
@@ -175,6 +178,8 @@ const ProjectStaffComponent = (props) => {
     setShowPopup(false);
     setUserName("");
     setShowResult("");
+    setShowCode("");
+    setShowDepartment("");
   };
 
   const closeToast = () => {
@@ -270,6 +275,7 @@ const ProjectStaffComponent = (props) => {
           <ProjectStaffModal
             t={t}
             userName={userName}
+            showCode={showCode}
             onSearch={handleSearch}
             onChange={handleInputChange}
             searchResult={showResult}

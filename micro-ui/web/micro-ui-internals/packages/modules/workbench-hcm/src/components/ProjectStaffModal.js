@@ -1,7 +1,20 @@
 import { Button, Modal, TextInput, Close, CloseSvg, Card, BreakLine, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 
-const ProjectStaffModal = ({ t, onClose, heading, onCancel, onSubmit, userName, onSearch, searchResult, onChange, isDisabled, showDepartment }) => {
+const ProjectStaffModal = ({
+  t,
+  onClose,
+  heading,
+  onCancel,
+  onSubmit,
+  userName,
+  onSearch,
+  searchResult,
+  onChange,
+  isDisabled,
+  showDepartment,
+  showCode,
+}) => {
   const CloseBtn = (props) => {
     return (
       <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
@@ -37,16 +50,20 @@ const ProjectStaffModal = ({ t, onClose, heading, onCancel, onSubmit, userName, 
         <Button label={`${t("WBH_ACTION_SEARCH")}`} type="button" onButtonClick={onSearch} />
         <BreakLine />
         <LabelFieldPair>
+          <CardLabel>{`${t("WBH_USERNAME")}`}</CardLabel>
+          <TextInput name={"showCode"} value={showCode} disabled={true} />
+        </LabelFieldPair>
+        <LabelFieldPair>
           <CardLabel>{`${t("WBH_BOUNDARY")}`}</CardLabel>
-          <TextInput name={"name"} value={searchResult?.boundary} disabled={true} />
+          <TextInput name={"boundary"} value={searchResult?.boundary} disabled={true} />
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("WBH_BOUNDARY_TYPE")}`}</CardLabel>
-          <TextInput name={"name"} value={searchResult?.boundaryType} disabled={true} />
+          <TextInput name={"boundaryType"} value={searchResult?.boundaryType} disabled={true} />
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("WBH_DEPARTMENT")}`}</CardLabel>
-          <TextInput name={"name"} value={showDepartment} disabled={true} />
+          <TextInput name={"department"} value={showDepartment} disabled={true} />
         </LabelFieldPair>
       </Card>
     </Modal>
