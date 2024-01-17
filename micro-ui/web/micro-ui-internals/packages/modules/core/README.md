@@ -78,7 +78,7 @@ and add its related functions
 # Changelog
 
 ```bash
-1.8.0-beta.15 fixed the hardcoded logout message 
+1.8.0-beta.16 fixed the hardcoded logout message 
 1.8.0-beta.15 fixed the sidebar sort order issue 
 1.8.0-beta.14
 1.8.0-beta.13 
