@@ -171,10 +171,10 @@ const CreateCampaign = () => {
       },
     };
   
-    if (data?.campaignType?.campaignType === "MicroPlanCampaignBoundaryVillage") {
+    if (data?.campaignType?.campaignType === "MicroPlanBoundaryProvincia") {
       await handleMutation(commonParams, data?.campaignType?.campaignType);
-      await handleMutation(commonParams, "MicroPlanCampaignBoundaryPostoAdministrativo");
-      await handleMutation(commonParams, "MicroPlanCampaignBoundaryVillageReal");
+      await handleMutation(commonParams, "MicroPlanBoundaryPostoAdministrativo");
+      await handleMutation(commonParams, "MicroPlanBoundaryVillage");
     } else {
       await handleMutation(commonParams, data?.campaignType?.campaignType);
     }
