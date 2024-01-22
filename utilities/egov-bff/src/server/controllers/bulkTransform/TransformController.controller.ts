@@ -82,9 +82,47 @@ class TransformController {
                     convertObjectForMeasurment(element, parsingConfig)
                 );
             }
-
             // Create a set of unique keys
             const groupedData: any[] = [];
+            if (parsingConfig.some((configItem: any) => configItem.unique)) {
+                const uniqueKeys = new Set<string>();
+
+                // Iterate through updatedDatas and group based on unique keys
+                updatedDatas.forEach((data) => {
+                    const uniqueValues = parsingConfig
+                        .filter((configItem: any) => configItem.unique)
+                        .map((configItem: any) => data[configItem.path])
+                        .join('!|!');
+
+                    const existingIndex = groupedData.findIndex((group) => uniqueKeys.has(uniqueValues));
+
+                    if (existingIndex !== -1) {
+                        // Update consolidated fields
+                        parsingConfig.forEach((configItem: any) => {
+                            if (configItem.isConsolidate) {
+                                const currentValue = groupedData[existingIndex][configItem.path];
+                                const newValue = data[configItem.path];
+                                // Consolidate based on data type
+                                if (typeof currentValue === 'number' && typeof newValue === 'number') {
+                                    groupedData[existingIndex][configItem.path] = currentValue + newValue;
+                                } else if (typeof currentValue === 'string' && typeof newValue === 'string') {
+                                    groupedData[existingIndex][configItem.path] = currentValue + newValue;
+                                } else if (typeof currentValue === 'boolean' && typeof newValue === 'boolean') {
+                                    groupedData[existingIndex][configItem.path] = currentValue || newValue;
+                                }
+                            }
+                        });
+                    } else {
+                        // Add new group
+                        uniqueKeys.add(uniqueValues);
+                        groupedData.push(data);
+                    }
+                });
+            }
+            else {
+                // If none have unique as true, skip the unique concept
+                groupedData.push(...updatedDatas);
+            }
             const uniqueKeys = new Set<string>();
 
             // Iterate through updatedDatas and group based on unique keys

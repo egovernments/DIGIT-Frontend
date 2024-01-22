@@ -52,8 +52,8 @@ class BulkUploadController {
         for (const parsingTemplate of parsingTemplates) {
           request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
           request.body.HCMConfig['data'] = result?.updatedDatas;
-          result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
-          const updatedData = result?.updatedDatas;
+          var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+          const updatedData = processResult?.updatedDatas;
           if (Array.isArray(updatedData)) {
             // Create a new array with simplified objects
             const simplifiedData = updatedData.map((originalObject) => {
