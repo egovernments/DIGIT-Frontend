@@ -171,7 +171,7 @@ export const Link = Template.bind({});
 Link.args = {
   ...commonArgs,
   variation: "link",
-  label: "abcd",
+  label: "Link",
 };
 
 // Button with link variantion and with icon
