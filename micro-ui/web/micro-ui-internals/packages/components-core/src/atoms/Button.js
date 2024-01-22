@@ -2,8 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Button = (props) => {
+  
+const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  //Label truncated to maximum of 64chars
+  const truncateLabel = (label) => {
+    const maxLength = 64;
+    if (label.length > maxLength) {
+      return label.slice(0, maxLength) + " ...";
+    }
+    return label;
+  };
+
+
+  //To render the icon 
   const IconRender = () => {
-    const iconFill = props?.variation === "primary" ? "#FFFFFF" : (props?.isDisabled ? "#B1B4B6":"#F47738");
+    const iconFill = props?.variation === "primary" ? "#FFFFFF" : props?.isDisabled ? "#B1B4B6" : "#F47738";
     const iconReq = props?.icon;
     try {
       const components = require("@egovernments/digit-ui-react-components");
@@ -27,11 +43,12 @@ const Button = (props) => {
   };
 
   const icon = IconRender();
+  const formattedLabel = (props?.variation === "link") ? props?.label : capitalizeFirstLetter(truncateLabel(props?.label));
 
   return (
     <button
       ref={props?.ref}
-      className={`digit-button-${props?.variation ? props?.variation : ""} ${props?.className ? props?.className : ""} ${
+      className={`digit-button-${props?.variation ? props?.variation : "default"} ${props?.className ? props?.className : ""} ${
         props?.isDisabled ? "disabled" : ""
       }`}
       type={props?.submit ? "submit" : props.type || "button"}
@@ -43,7 +60,7 @@ const Button = (props) => {
       <div className="icon-label-container">
         {!props?.isSuffix && props?.icon && icon}
         <h2 style={{ ...props?.textStyles }} className="digit-button-label">
-          {props.label}
+          {formattedLabel}
         </h2>
         {props?.isSuffix && props?.icon && icon}
       </div>

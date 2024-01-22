@@ -24,11 +24,10 @@
   }
 
   input {
-    @apply opacity-0 absolute;
+    @apply opacity-0 absolute cursor-pointer;
     @extend .light-input-border;
     width: 1.5rem;
     height: 1.5rem;
-    cursor: pointer;
     top: 25%;
   }
 
@@ -37,10 +36,9 @@
   }
 
   .digit-custom-checkbox {
-    @apply flex items-center border border-solid border-text-secondary;
+    @apply flex items-center border border-solid border-text-secondary justify-center;
     width: 1.5rem;
     height: 1.5rem;
-    justify-content: center;
 
     img,svg{
       @apply opacity-0;
@@ -52,7 +50,6 @@
   }
 
   input:hover~.digit-custom-checkbox {
-    @extend .light-input-border;
     @apply border-2 border-primary-main;
   }
 

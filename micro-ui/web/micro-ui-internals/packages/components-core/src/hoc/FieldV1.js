@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, SVG, MultiSelectDropdown, MobileNumber} from "../atoms";
+import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, SVG, MultiSelectDropdown, MobileNumber } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { CustomDropdown } from "../molecules";
@@ -7,7 +7,7 @@ import { CustomDropdown } from "../molecules";
 const FieldV1 = ({
   type = "",
   value = "",
-  onChange = () => { },
+  onChange = () => {},
   error = "",
   label = "",
   disabled = false,
@@ -30,9 +30,17 @@ const FieldV1 = ({
   formData,
   selectedFormCategory,
   controllerProps,
-  variant
+  variant,
 }) => {
   const { t } = useTranslation();
+  let disableFormValidation = false;
+  if (sectionFormCategory && selectedFormCategory) {
+    disableFormValidation = sectionFormCategory !== selectedFormCategory ? true : false;
+  }
+  const Component = typeof component === "string" ? Digit.ComponentRegistryService.getComponent(component) : component;
+  const customValidation = config?.populators?.validation?.customValidation;
+  const customRules = customValidation ? { validate: customValidation } : {};
+  const customProps = config?.customProps;
 
   const [currentCharCount, setCurrentCharCount] = useState(0);
 
@@ -44,25 +52,38 @@ const FieldV1 = ({
     if (charCount) {
       const maxCharacters = populators?.validation?.maxlength || 50;
       return (
-        <CardText>
+        <CardText style={{ marginTop: "0px" }}>
           {currentCharCount}/{maxCharacters}
         </CardText>
       );
     }
   };
 
+  //To truncate the message upto maxlength
+  const truncateMessage = (message, maxLength) => {
+    if (message.length > maxLength) {
+      return message.slice(0, maxLength) + " ...";
+    }
+    return message;
+  };
+
+  // To render the description or the error message
   const renderDescriptionOrError = () => {
     if (error) {
       return (
-        <div className="digit-error">
+        <div className="digit-error" style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
           <div className="digit-error-icon">
             <SVG.Info width="1rem" height="1rem" fill="#D4351C" />
           </div>
-          <ErrorMessage message={t(error)} />
+          <ErrorMessage message={t(truncateMessage(error, 256))} />
         </div>
       );
     } else if (description) {
-      return <CardText>{t(description)}</CardText>;
+      return (
+        <CardText style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
+          {t(truncateMessage(description, 256))}
+        </CardText>
+      );
     }
     return null;
   };
@@ -99,6 +120,7 @@ const FieldV1 = ({
             minlength={populators?.validation?.minlength}
             customIcon={populators?.customIcon}
             customClass={populators?.customClass}
+            onIconSelection={populators?.onIconSelection}
           />
         );
       case "textarea":
@@ -192,6 +214,31 @@ const FieldV1 = ({
             <MobileNumber inputRef={ref} onChange={onChange} value={value} disable={disabled} errorStyle={errors?.[populators.name]} />
           </div>
         );
+      case "component":
+        return (
+          <Component
+            userType={"employee"}
+            t={t}
+            setValue={controllerProps?.setValue}
+            onSelect={controllerProps?.setValue}
+            config={config}
+            data={formData}
+            formData={formData}
+            register={controllerProps?.register}
+            errors={errors}
+            props={{ ...props, ...customProps }}
+            setError={controllerProps?.setError}
+            clearErrors={controllerProps?.clearErrors}
+            formState={controllerProps?.formState}
+            onBlur={onBlur}
+            control={controllerProps?.control}
+            sectionFormCategory={sectionFormCategory}
+            selectedFormCategory={selectedFormCategory}
+            getValues={controllerProps?.getValues}
+            watch={controllerProps?.watch}
+            unregister={controllerProps?.unregister}
+          />
+        );
       default:
         return null;
     }
@@ -201,16 +248,16 @@ const FieldV1 = ({
     <>
       {!withoutLabel && (
         <Header className={`label ${disabled ? "disabled" : ""} ${nonEditable ? "noneditable" : ""}`}>
-          <div>
-            {t(label)}
-            {required ? " * " : null}
-          </div>
-          {infoMessage ? (
+          <div style={{ width:"80%",display: "flex", gap: "0.25rem" }}>
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis",whiteSpace:"nowrap" }}>{t(truncateMessage(label, 64))}</div>
+            <div style={{color:"#D4351C"}}>{required ? " * " : null}</div>
+            {infoMessage ? (
             <div className="info-icon">
               <SVG.InfoOutline width="1.1875rem" height="1.1875rem" fill="#505A5F" />
               <span class="infotext">{infoMessage}</span>
             </div>
           ) : null}
+          </div>
         </Header>
       )}
       <div style={withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">

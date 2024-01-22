@@ -3,35 +3,33 @@
 .digit-header {
 
     &.label {
-        display: flex;
+        @apply flex font-regular;
         height: 1.1875rem;
-        font-weight: theme(digitv2.fontWeight.regular);
         color: theme(digitv2.lightTheme.text-color-primary);
         font-family: theme(digitv2.fontFamily.sans);
         font-size: 1rem;
         font-style: theme(digitv2.fontStyle.normal);
         line-height: theme(digitv2.lineHeight.normal);
         gap: 0.25rem;
-
+ 
         .info-icon {
-            position: relative;
-            cursor: pointer;
+            @apply relative cursor-pointer;
         }
 
         .info-icon .infotext {
+            @apply absolute font-regular;
             visibility: hidden;
             width: 120px;
-            background-color: theme(digitv2.lightTheme.primary);
+            background-color: #555555;
             color: theme(digitv2.lightTheme.paper);
             text-align: center;
             padding: 0.5rem 0;
-            position: absolute;
             z-index: 1;
             bottom: 100%;
             left: 50%;
             margin-left: -60px;
-            font-weight: theme(digitv2.fontWeight.regular);
             font-family: theme(digitv2.fontFamily.sans);
+            border-radius: 6px;
         }
 
         .info-icon:hover .infotext {
@@ -46,43 +44,39 @@
 
 .digit-field {
 
+    @apply flex flex-col;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     gap: 0.25rem;
 
     .digit-description,
     .digit-charcount{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @apply flex justify-between items-baseline leading-6;
         font-weight: theme(digitv2.fontWeight.regular);
         font-style: theme(digitv2.fontStyle.normal);
         font-size: 0.875rem;
-        line-height: 1.5rem;
         font-family: theme(digitv2.fontFamily.sans);
         color: theme(digitv2.lightTheme.text-color-secondary);
-        height: 1.5rem;
+        gap:"0.5rem";
 
 
         @media (min-width: 481px) {
             /* Media query for tablets */
             max-width: 27.5rem;
             min-width: 12.5rem;
-          }
-      
-          @media (max-width: 480px) {
+        }
+
+        @media (max-width: 480px) {
             /* Media query for mobile */
             max-width: 20.5rem;
             min-width: 9.75rem;
             width: 100%;
-          }
-      
-          @media (min-width: 768px) {
+        }
+
+        @media (min-width: 768px) {
             /* Media query for desktop */
             max-width: 37.5rem;
             min-width: 12.5rem;
-          }
+        }
     }
 
     .digit-charcount {
@@ -90,9 +84,9 @@
     }
 
     .digit-error {
+        @apply flex;
         gap: 0.25rem;
         height: 1.5rem;
-        display: flex;
 
         .digit-error-message {
             margin: 0px;

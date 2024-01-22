@@ -35,11 +35,7 @@ const Template = (args) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <FieldV1
-        {...args}
-        value={selectedOption}
-        onChange={handleSelectOption}
-      />
+      <FieldV1 {...args} value={selectedOption} onChange={handleSelectOption} />
     </QueryClientProvider>
   );
 };
@@ -67,12 +63,12 @@ const commonArgs = {
   type: "radio",
   additionalWrapperClass: "",
   error: "",
-  description:""
-}
+  description: "",
+};
 
 export const Default = Template.bind({});
 Default.args = {
-  ...commonArgs
+  ...commonArgs,
 };
 
 export const Disabled = Template.bind({});
@@ -87,7 +83,7 @@ Disabled.argTypes = {
 export const Filled = Template.bind({});
 Filled.args = {
   ...commonArgs,
-  value: "MALE"
+  value: "MALE",
 };
 
 export const PreSelected = Template.bind({});

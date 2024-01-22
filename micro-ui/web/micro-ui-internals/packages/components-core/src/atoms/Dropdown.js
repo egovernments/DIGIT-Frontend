@@ -20,7 +20,10 @@ const TextField = (props) => {
     if (props.freeze) return;
 
     setValue(e.target.value);
-    props.setFilter(e.target.value);
+    // the dropdown searchablility is made configurable through isSearchable prop
+    if (props.isSearchable) {
+      props.setFilter(e.target.value);
+    }
   }
 
   function broadcastToOpen() {
@@ -212,12 +215,31 @@ const Dropdown = (props) => {
         key={index}
         onClick={() => onSelect(option)}
       >
-        {props?.showIcon && option?.icon && IconRender(option?.icon)}
-        {props.isPropertyAssess ? (
-          <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
-        ) : (
-          <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
-        )}
+        {(props?.variant === "profiledropdown" || props?.variant === "profilenestedtext") ? (
+          <div
+          className={"profile-icon-container"}
+            style={{
+              width: `${(props?.variant === "profiledropdown") ? "2rem" : (props?.variant === "profilenestedtext" ? "2.935rem" : "")}`,
+              height: `${(props?.variant === "profiledropdown") ? "2rem" : (props?.variant === "profilenestedtext" ? "2.935rem" : "")}`,
+              backgroundImage: `url(${
+                option.profileIcon
+                  ? option.profileIcon
+                  : "https://s3-alpha-sig.figma.com/img/a353/e61a/922f0cbf41a57918ee98e5f003d2f9b8?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MmtDrFFMEexXuRiv~LIjrdvTBGtlOb-TqT4e6-pigcyH9ssnhhovhQa564Cp-~t9e6ZPtG33snEpEtOfVcElP-7VqK9HLqGJ7kVD3ZkR4jxGGkzVKLe7ItVqZeI3XD2HAWB2L~JY4s42dnm6658WWst~o6Fh8U9WuTJqB1iaOZyrvTf6VA2F66jcPozoTPjJeYyH0b3kGcxcGZEbkK-AbXwGkUsOJIKGr4dDVS7Gy2hgTabSd0mRkg0HTgntaLW0Zj~gzkgRTTPPUZst98npoIXE8cVimurJ4-KjYYRetx5li4O4PRl4uagRADIsxFxziDmMNv~~5IxEN4C2~0W9ew__"
+              })`,
+            }}
+          />
+        ) : null}
+        <div className="option-des-container">
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+            {props?.showIcon && option?.icon && IconRender(option?.icon)}
+            {props.isPropertyAssess ? (
+              <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
+            ) : (
+              <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
+            )}
+          </div>
+          {(props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ) && option.description && <div className="option-description">{option.description}</div>}
+        </div>
       </div>
     );
   };
@@ -265,6 +287,7 @@ const Dropdown = (props) => {
           }
         >
           <TextField
+            isSearchable={props?.isSearchable}
             autoComplete={props.autoComplete}
             setFilter={setFilter}
             forceSet={forceSet}
@@ -277,7 +300,11 @@ const Dropdown = (props) => {
                   ? props.isMultiSelectEmp
                     ? `${selectedOption} ${t("BPA_SELECTED_TEXT")}`
                     : props.t(
-                        (props.variant === "nesteddropdown" ||  props.variant==="treedropdown") ? selectedOption.code : props.optionKey ? selectedOption[props.optionKey] : selectedOption
+                        props.variant === "nesteddropdown" || props.variant === "treedropdown"
+                          ? selectedOption.code
+                          : props.optionKey
+                          ? selectedOption[props.optionKey]
+                          : selectedOption
                       )
                   : props.optionKey
                   ? selectedOption[props.optionKey]
@@ -309,8 +336,8 @@ const Dropdown = (props) => {
             style={{ ...props.optionCardStyles }}
             ref={optionRef}
           >
-            {(props.variant === "treedropdown") ? (
-              <TreeSelect options={filteredOption} onSelect={onSelect} selectedOption={selectedOption} variant={props.variant}/>
+            {props.variant === "treedropdown" ? (
+              <TreeSelect options={filteredOption} onSelect={onSelect} selectedOption={selectedOption} variant={props.variant} />
             ) : (
               renderOptions()
             )}

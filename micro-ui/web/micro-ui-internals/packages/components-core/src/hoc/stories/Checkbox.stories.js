@@ -13,115 +13,132 @@ export default {
     value: { control: "text" },
     errorStyle: { control: "object" },
     disabled: { control: "boolean" },
-    type: { control: "text"},
+    type: { control: "text" },
     props: { control: "object" },
     populators: { control: "object" },
     formData: { control: "object" },
   },
 };
 
-
-const Template = (args) => (
-  <FieldV1 {...args} />
-);
+const Template = (args) => <FieldV1 {...args} />;
 
 const t = (key) => key;
 
-
-const commonArgs ={
+const commonArgs = {
   t: t,
-  populators:{
-    title:"Value",
-    name:"checked"
+  populators: {
+    title: "Value",
+    name: "checked",
   },
-  formData:{
-    checked:true
+  formData: {
+    checked: true,
   },
   inputRef: null,
-  onChange: () => { },
+  onChange: () => {},
   value: " ",
   errorStyle: null,
   disabled: false,
   type: "checkbox",
-  description:""
-}
+  description: "",
+};
 
+//Default checkbox
 export const Default = Template.bind({});
 Default.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:""
+    title: "",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:false
+    checked: false,
   },
 };
 
+//checkbox with label
 export const DefaultLabelled = Template.bind({});
 DefaultLabelled.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:"Value"
+    title: "Value",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:false
+    checked: false,
   },
 };
 
+//checkbox disabled
 export const DefaultDisabled = Template.bind({});
 DefaultDisabled.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:"Value"
+    title: "Value",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:false
+    checked: false,
   },
-  disabled:true
+  disabled: true,
 };
 
+//checkbox when checked
 export const Checked = Template.bind({});
 Checked.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:""
+    title: "",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:true
+    checked: true,
   },
 };
 
+//checkbox labelled and checked
 export const CheckedLabelled = Template.bind({});
 CheckedLabelled.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:"Value"
+    title: "Value",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:true
+    checked: true,
   },
 };
 
+//checkbox checked and disabled
 export const CheckedDisabled = Template.bind({});
 CheckedDisabled.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    title:"Value"
+    title: "Value",
   },
-  formData:{
+  formData: {
     ...commonArgs.formData,
-    checked:true
+    checked: true,
   },
-  disabled:true
+  disabled: true,
+};
+
+//checkbox with paragrah as a label
+export const Labelled = Template.bind({});
+Labelled.args = {
+  ...commonArgs,
+  populators: {
+    ...commonArgs.populators,
+    title:
+      "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead.",
+  },
+  formData: {
+    ...commonArgs.formData,
+    checked: false,
+  },
 };

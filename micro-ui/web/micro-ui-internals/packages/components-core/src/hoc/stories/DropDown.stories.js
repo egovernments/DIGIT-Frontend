@@ -18,7 +18,19 @@ export default {
     additionalWrapperClass: { control: "text" },
     props: { control: "object" },
     type: { control: "select", options: ["dropdown", "multiselectdropdown"] },
-    variant: { control: "select", options: ["nesteddropdown", "nestedmultiselect","treedropdown","treemultiselect"] },
+    variant: {
+      control: "select",
+      options: [
+        "nesteddropdown",
+        "nestedmultiselect",
+        "treedropdown",
+        "treemultiselect",
+        "nestedtextmultiselect",
+        "nestedtextdropdown",
+        "profiledropdown",
+        "profilenestedtext",
+      ],
+    },
   },
 };
 const queryClient = new QueryClient();
@@ -37,13 +49,91 @@ const gendersOptions = [
   { code: "FEMALE", name: "FEMALE" },
   { code: "TRANSGENDER", name: "TRANSGENDER" },
 ];
-
+//options with icons
 const OptionsWithIcons = [
   { code: "Option1", name: "Option1", icon: "Article" },
   { code: "Option2", name: "Option2", icon: "Article" },
   { code: "Option3", name: "Option3", icon: "Article" },
 ];
-
+//options with profileIcon
+const OptionsWithProfile = [
+  {
+    code: "Option1",
+    name: "Option1",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+  {
+    code: "Option2",
+    name: "Option2",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+  {
+    code: "Option3",
+    name: "Option3",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+];
+//options with description
+const OptionsWithNestedText = [
+  {
+    code: "Option1",
+    name: "Option1",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+  {
+    code: "Option2",
+    name: "Option2",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+  {
+    code: "Option3",
+    name: "Option3",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+];
+//options with description and icon
+const NestedTextOptionWithIcons = [
+  {
+    code: "Option1",
+    name: "Option1",
+    icon: "Article",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+  {
+    code: "Option2",
+    name: "Option2",
+    icon: "Article",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+  {
+    code: "Option3",
+    name: "Option3",
+    icon: "Article",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+  },
+];
+//options with description and profileIcon 
+const NestedTextProfileOptions = [
+  {
+    code: "Option1",
+    name: "Option1",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+  {
+    code: "Option2",
+    name: "Option2",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+  {
+    code: "Option3",
+    name: "Option3",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+    profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+  },
+];
+//nested options
 const nestedOptions = [
   {
     name: "Category A",
@@ -64,7 +154,7 @@ const nestedOptions = [
     code: "Category B",
   },
 ];
-
+//nested options with icons
 const nestedOptionsWithIcons = [
   {
     name: "Category A",
@@ -85,13 +175,27 @@ const nestedOptionsWithIcons = [
     code: "Category B",
   },
 ];
-
+//tree select options
 const treeDropdownOptions = [
   {
     name: "Category A",
     options: [
-      { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
-      { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+      {
+        code: "Category A.Option A",
+        name: "Option A",
+        options: [
+          { code: "Category A.Option A.Option 1", name: "Option 1" },
+          { code: "Category A.Option A.Option 2", name: "Option 2" },
+        ],
+      },
+      {
+        code: "Category A.Option B",
+        name: "Option B",
+        options: [
+          { code: "Category A.Option B.Option 1", name: "Option 1" },
+          { code: "Category A.Option B.Option 2", name: "Option 2" },
+        ],
+      },
     ],
     code: "Category A",
   },
@@ -99,15 +203,20 @@ const treeDropdownOptions = [
     name: "Category B",
     options: [
       { code: "Category B.Option A", name: "Option A" },
-      { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+      {
+        code: "Category B.Option B",
+        name: "Option B",
+        options: [
+          { code: "Category B.Option B.Option 1", name: "Option 1" },
+          { code: "Category B.Option B.Option 2", name: "Option 2" },
+        ],
+      },
     ],
     code: "Category B",
   },
   {
     name: "Category C",
-    options: [
-      { code: "Category C.Option A", name: "Option A" },
-    ],
+    options: [{ code: "Category C.Option A", name: "Option A" },{ code: "Category C.Option B", name: "Option B" }],
     code: "Category C",
   },
 ];
@@ -121,6 +230,7 @@ const commonArgs = {
     optionsKey: "name",
     options: gendersOptions,
     showIcon: false,
+    isSearchable:true
   },
   error: "",
   inputRef: null,
@@ -134,7 +244,7 @@ const commonArgs = {
     isLoading: false,
     data: gendersOptions,
   },
-  description: ""
+  description: "",
 };
 
 export const Dropdown = Template.bind({});
@@ -277,6 +387,107 @@ TreeMultiselectDropdown.args = {
     ...commonArgs.populators,
     name: "treeoptions",
     options: treeDropdownOptions,
+    isDropdownWithChip: true,
   },
   variant: "treemultiselect",
+};
+
+export const NestedTextDropDown = Template.bind({});
+NestedTextDropDown.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "nestedtextoptions",
+    options: OptionsWithNestedText,
+  },
+  variant: "nestedtextdropdown",
+};
+
+export const NestedTextDropDownWithIcon = Template.bind({});
+NestedTextDropDownWithIcon.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "nestedtextoptions",
+    options: NestedTextOptionWithIcons,
+    showIcon: true,
+  },
+  variant: "nestedtextdropdown",
+};
+
+export const NestedTextMultiSelect = Template.bind({});
+NestedTextMultiSelect.args = {
+  ...commonArgs,
+  type: "multiselectdropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "nestedtextltiselect",
+    options: OptionsWithNestedText,
+    isDropdownWithChip: true,
+  },
+  variant: "nestedtextmultiselect",
+};
+
+export const NestedTextMultiSelectWithIcons = Template.bind({});
+NestedTextMultiSelectWithIcons.args = {
+  ...commonArgs,
+  type: "multiselectdropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "nestedtextltiselect",
+    options: NestedTextOptionWithIcons,
+    isDropdownWithChip: true,
+    showIcon: true,
+  },
+  variant: "nestedtextmultiselect",
+};
+
+export const ProfileDropdown = Template.bind({});
+ProfileDropdown.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "profiledropdown",
+    options: gendersOptions,
+  },
+  variant: "profiledropdown",
+};
+
+export const ProfileDropdownWithCustomIcon = Template.bind({});
+ProfileDropdownWithCustomIcon.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "profiledropdown",
+    options: OptionsWithProfile,
+  },
+  variant: "profiledropdown",
+};
+
+export const ProfileWithNestedText = Template.bind({});
+ProfileWithNestedText.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "profiledropdown",
+    options: OptionsWithNestedText,
+  },
+  variant: "profilenestedtext",
+};
+
+export const ProfileWithNestedTextWithCustomIcon = Template.bind({});
+ProfileWithNestedTextWithCustomIcon.args = {
+  ...commonArgs,
+  type: "dropdown",
+  populators: {
+    ...commonArgs.populators,
+    name: "profiledropdown",
+    options: NestedTextProfileOptions,
+  },
+  variant: "profilenestedtext",
 };

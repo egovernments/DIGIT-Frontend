@@ -15,8 +15,10 @@
 
   &.numeric {
     input {
-      pointer-events: none;
       text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
@@ -68,7 +70,6 @@
     .digit-suffix {
       border-left-style: hidden;
     }
-
   }
 
   &.noneditable {
@@ -117,22 +118,20 @@
   input[type="date"]:in-range::-webkit-datetime-edit,
   input[type="time"]:in-range::-webkit-datetime-edit,
   input[type="date"]:disabled::-webkit-datetime-edit,
-  input[type="time"]:disabled::-webkit-datetime-edit {
+  input[type="time"]:disabled::-webkit-datetime-edit,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-clear-button {
     display: none;
   }
 
   ::placeholder,
-  input[type="date"]:not(:placeholder-shown)::before,
-  input[type="time"]:not(:placeholder-shown)::before {
+  input[type="date"][value=""]:not(:placeholder-shown)::before,
+  input[type="time"]:not(:placeholder-shown)::before{
     content: attr(placeholder);
     color: theme(digitv2.lightTheme.text-color-disabled);
   }
-
 }
 
-.digit-text-input-width {
-  max-width: 540px;
-}
 
 .digit-card-input {
   @apply outline-none mt-sm block border w-full h-10 border-input-border border-solid bg-white leading-6 text-form-field text-text-primary;
@@ -197,7 +196,6 @@
     margin-right: 10%;
   }
 }
-
 
 @screen dt {
   .digit-card-input {
@@ -322,9 +320,7 @@
   .digit-suffix {
     border-left-style: hidden;
   }
-
 }
-
 
 .digit-prefix,
 .digit-suffix,

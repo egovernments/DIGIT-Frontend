@@ -39,7 +39,7 @@ const CheckBox = ({
           )}
         </p>
       ) : null}
-      <div>
+      <div style={{cursor:"pointer"}}>
         <input
           type="checkbox"
           className={`input ${userType === "employee" ? "input-emp" : ""}`}

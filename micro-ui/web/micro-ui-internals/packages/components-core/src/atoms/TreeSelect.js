@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { SVG } from "./SVG";
 
 const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level = 0 }) => {
@@ -15,13 +15,13 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
   return (
     <div style={{ marginLeft: `${level * 20}px`, borderLeft: "1px solid #D6D5D4" }}>
       <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
-        <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
-          {isExpanded ? (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" />
-          ) : (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" style={{ transform: "rotate(-90deg)" }} />
-          )}
-        </div>
+          <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
+            {isExpanded ? (
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" />
+            ) : (
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" style={{ transform: "rotate(-90deg)" }} />
+            )}
+          </div>
         <div className="digit-option-label" onClick={handleSelect}>
           {option.name}
         </div>
@@ -29,7 +29,8 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
       {isExpanded &&
         option.options &&
         option.options.length > 0 &&
-        renderOptions({ options: option.options, onSelect, isSelected, level: level + 1 })}
+        renderOptions({ options: option.options, onSelect, isSelected, level: level + 1 })
+      }
     </div>
   );
 };
@@ -43,7 +44,8 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
       const selectedOptions = getFlattenedOptions(option.options);
       if (isSelected(option)) {
         onSelect([option, ...selectedOptions]);
-      } else {
+      }
+      else {
         // Checking if any child is already selected
         const anyChildSelected = selectedOptions.some((child) => isSelected(child));
         // If any child is already selected, selecting only the unselected children
@@ -73,6 +75,17 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
   };
 
   const allChildrenSelected = option.options && option.options.every((child) => isSelected(child));
+
+  useEffect(() => {
+    if (allChildrenSelected && !isSelected(option)) {
+      // If all children are selected and the current option is not selected, select the option.
+      onSelect([option]);
+    } else if (isIntermediate(option) && isSelected(option)) {
+      // If the option is in an intermediate state and is currently selected, deselect the option.
+      onSelect([option]);
+    }
+  }, [allChildrenSelected, isSelected, isIntermediate, option, onSelect]);
+  
 
   const isIntermediate = () => {
     if (option.options) {

@@ -90,7 +90,7 @@ const TextInput = (props) => {
       } else if (reqIcon === "password") {
         return <SVG.Visibility fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
       } else if (reqIcon === "search") {
-        return <SVG.Search fill={iconFill} className="digit-text-input-customIcon" />;
+        return <SVG.Search fill={iconFill} onClick={props?.onIconSelection} className="digit-text-input-customIcon" />;
       } else {
         try {
           const components = require("@egovernments/digit-ui-react-components");
@@ -149,6 +149,9 @@ const TextInput = (props) => {
                     event.target.value = event.target.value.slice(0, -1);
                   }
                 }
+                if (props?.type === "numeric") {
+                  event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                } 
                 if (props?.onChange) {
                   props?.onChange(event);
                 }
@@ -200,6 +203,9 @@ const TextInput = (props) => {
                   if (event.target.value.length > props?.maxlength) {
                     event.target.value = event.target.value.slice(0, -1);
                   }
+                }
+                if (props?.type === "numeric") {
+                  event.target.value = event.target.value.replace(/[^0-9]/g, '');
                 }
                 if (props?.onChange) {
                   props?.onChange(event);

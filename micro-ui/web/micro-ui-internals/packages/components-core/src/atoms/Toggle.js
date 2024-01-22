@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 const Toggle = (props) => {
   const { t } = useTranslation();
-  var selected = props.selectedOption;
+  var selected = props.selectedOption ? props.selectedOption : (props.options.length > 0 ? props.options[0].code : null);;
 
   function toggleOption(option) {
     props.onSelect(option);
@@ -24,7 +24,7 @@ const Toggle = (props) => {
               disabled={props?.disabled}
               ref={props.inputRef}
             />
-            <span className="digit-toggle-label">{t(option[props.optionsKey])}</span>
+            <span className="digit-toggle-label">{(t(option[props.optionsKey]))}</span>
           </label>
         </div>
       ))}

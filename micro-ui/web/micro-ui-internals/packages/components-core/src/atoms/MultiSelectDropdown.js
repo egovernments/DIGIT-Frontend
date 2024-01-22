@@ -88,7 +88,6 @@ const MultiSelectDropdown = ({
       const options = props[0];
       options.forEach((option) => {
         const isAlreadySelected = alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code);
-  
         if (!isAlreadySelected) {
           dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: [null, option] });
         } else {
@@ -199,8 +198,13 @@ const MultiSelectDropdown = ({
       <div className="digit-custom-checkbox">
         <SVG.Check fill={"white"} />
       </div>
-      {option?.icon && IconRender(option?.icon)}
-      <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
+      <div className="option-des-container">
+        <div style={{display:"flex",gap:"0.25rem",alignItems:"center"}}>
+          {config?.showIcon && option?.icon && IconRender(option?.icon)}
+          <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
+        </div>
+        {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
+      </div>
     </div>
   );
 
@@ -227,7 +231,7 @@ const MultiSelectDropdown = ({
         ref={dropdownRef}
         style={props?.style}
       >
-        <div className={`digit-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}`}>
+        <div className={`digit-master${active ? `-active` : ``} ${disabled ? "disabled" : ""}  ${variant ? variant : ""}`}>
           <input
             className="digit-cursorPointer"
             style={{ opacity: 0 }}

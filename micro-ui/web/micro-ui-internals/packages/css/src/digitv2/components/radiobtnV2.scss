@@ -1,15 +1,11 @@
 @import url("../index.scss");
 
 .digit-radio-wrap {
-  @apply my-sm block leading-10 ;
-
-
-  display: "flex";
-  justify-content: "flex-start";
+  @apply my-sm leading-10 flex justify-start;
   gap: "3rem";
 
   @media (max-width: 480px) {
-    flex-direction: column;
+    @apply flex-col;
   }
 
   div {
@@ -27,8 +23,7 @@
   }
 
   .radio-option-container {
-    display: inline-flex;
-    align-items: center;
+    @apply inline-flex items-center;
     gap: 0.5rem;
 
     &.disabled,
