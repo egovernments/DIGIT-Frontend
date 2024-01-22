@@ -251,11 +251,6 @@ const InboxSearchComposer = ({ configs, headerLabel, additionalConfig, onFormVal
               <MediaQuery minWidth={426}>
                 {/* configs?.sections?.searchResult?.show &&  
                         <div style={data?.[configs?.sections?.searchResult?.uiConfig?.resultsJsonPath]?.length > 0 ? (!(isLoading || isFetching) ?{ overflowX: "scroll", borderRadius : "4px" }: {}) : {  }} > */}
-                {apiDetails?.moduleName === "SearchLocalisationConfig" && (
-                  <div className="localisationInfo">
-                  <InfoBanner label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} />
-                </div> 
-                )}
                 <ResultsTable
                   config={configs?.sections?.searchResult?.uiConfig}
                   data={data}
