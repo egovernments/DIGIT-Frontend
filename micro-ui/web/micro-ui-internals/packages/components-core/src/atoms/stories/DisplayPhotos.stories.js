@@ -8,6 +8,11 @@ export default {
 
 const Template = (args) => <DisplayPhotos {...args} />;
 
+export const Primary = Template.bind({});
+Primary.args = {
+  srcs: ["https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"],
+};
+
 export const PlayGround = Template.bind({});
 PlayGround.args = {
   srcs: [
@@ -17,9 +22,4 @@ PlayGround.args = {
   ],
   className: "custom",
   style: {},
-};
-
-export const Primary = Template.bind({});
-Primary.args = {
-  srcs: ["https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"],
 };

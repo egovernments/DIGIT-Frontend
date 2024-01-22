@@ -20,6 +20,12 @@ export default {
 
 const Template = (args) => <ActionBar {...args} />;
 
+
+export const Primary = Template.bind({});
+Primary.args = {
+  children: <p>Action Bar</p>,
+};
+
 export const Playground = Template.bind({});
 Playground.args = {
   className: "custom-class",
@@ -29,9 +35,4 @@ Playground.args = {
       <p>Action</p>
     </span>
   ),
-};
-
-export const Primary = Template.bind({});
-Primary.args = {
-  children: <p>Action Bar</p>,
 };

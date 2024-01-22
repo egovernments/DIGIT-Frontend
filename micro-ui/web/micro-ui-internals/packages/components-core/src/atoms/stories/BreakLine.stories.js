@@ -17,10 +17,10 @@ export default {
 
 const Template = (args) => <BreakLine {...args} />;
 
+export const Primary = Template.bind({});
+
 export const Playground = Template.bind({});
 Playground.args = {
   className: "custom-class",
   style: { border: "3px solid green" },
 };
-
-export const Primary = Template.bind({});

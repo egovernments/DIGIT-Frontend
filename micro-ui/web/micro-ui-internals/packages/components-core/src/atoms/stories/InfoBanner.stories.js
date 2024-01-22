@@ -8,14 +8,14 @@ export default {
 
 const Template = (args) => <InfoBanner {...args} />;
 
-export const PlayGround = Template.bind({});
-PlayGround.args = {
+export const Primary = Template.bind({});
+Primary.args = {
   label: "a default info message",
   text: "",
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const PlayGround = Template.bind({});
+PlayGround.args = {
   label: "a default info message",
   text: "",
 };
