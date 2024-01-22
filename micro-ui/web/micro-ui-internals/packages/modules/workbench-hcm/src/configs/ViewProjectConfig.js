@@ -3,6 +3,9 @@ import { useTranslation } from "react-i18next";
 
 export const data = (project) => {
   const { t } = useTranslation();
+  const ancestor = project?.Project?.[0]?.ancestors;
+  const lastAncestor = ancestor?.length  > 0 ? ancestor[ancestor?.length - 1] : { projectNumber: "NA" };
+  const isLink = ancestor?.length > 0 ? true: false;
 
   return {
     cards: [
@@ -37,7 +40,9 @@ export const data = (project) => {
               },
               {
                 key: "WORKBENCH_PROJECT_PARENT_PROJECT_NUMBER",
-                value: project?.Project?.[0]?.ancestors?.[0]?.projectNumber || "NA",
+                value: ancestor?.length > 0 ? ancestor[ancestor?.length - 1]?.projectNumber : "NA",
+                isLink: ancestor?.length > 0 ? true : false,
+                to: isLink? `campaign-view?tenantId=mz&projectNumber=${ancestor[ancestor?.length - 1].projectNumber}` : undefined
               },
               {
                 key: "WORKBENCH_PROJECT_PRIMARY_TARGET_NO",
@@ -47,11 +52,18 @@ export const data = (project) => {
                 key: "WORKBENCH_PROJECT_PRIMARY_TOTAL_NO",
                 value: project?.Project?.[0]?.targets?.[0]?.totalNo || "NA",
               },
+              {
+                key: "WORKBENCH_PROJECT_BOUNDARY",
+                value: project?.Project?.[0]?.address?.boundary || "NA",
+              },
+              {
+                key: "WORKBENCH_PROJECT_BOUNDARY_TYPE",
+                value: project?.Project?.[0]?.address?.boundaryType || "NA",
+              },
             ],
           },
         ],
       },
-
       {
         navigationKey: "card2",
         sections: [
@@ -83,7 +95,7 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "ProjectChildrenComponent",
-            props: { projectId: project?.Project?.[0]?.id },
+            props: { projectId: project?.Project?.[0]?.id, ...project },
           },
         ],
       },

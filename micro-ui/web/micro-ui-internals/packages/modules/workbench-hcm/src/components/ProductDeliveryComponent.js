@@ -16,15 +16,15 @@ const ProductDeliveryComponent = (props) => {
         },
         
         body: {
-            Product: {
-                
+            Product: {   
             },
-            // apiOperation: "SEARCH"
+        },
+        config:{
+            enabled: props.projectId ? true: false
         }
     };
 
     const {isLoading, data: product } = Digit.Hooks.useCustomAPIHook(requestCriteria);
-    // console.log("product",product);
 
 
     const columns = [

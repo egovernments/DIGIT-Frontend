@@ -179,3 +179,47 @@
     }
   }
 }
+
+.help-screen-container {
+  .help-screen-body {
+    a {
+      cursor: pointer;
+      color: theme(digitv2.lightTheme.primary);
+      text-decoration: none;
+    }
+  }
+}
+
+
+.card-details {
+  background-color:#fafafa !important;
+  position: relative;
+  width: -webkit-fill-available;
+}
+
+.CloseButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.startNumber{
+  padding-top: 25px;
+  display: flex;
+}
+.endNumber{
+  display: flex;
+}
+.start{
+  min-width: fit-content;
+  padding-right: 1.2rem;
+}
+.end{
+  min-width: fit-content;
+  padding-right: 1.55rem;
+}
+.workbench-add-row-detail-btn{
+  margin-bottom: 15px
+}
+
