@@ -147,6 +147,13 @@ const ViewProject = () => {
     setShowTargetModal(false);
   };
 
+  const reqCriteria = {
+    url: "/project/v1/_create",
+    config: false,
+  };
+
+  const mutationTarget = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
+
   const handleProjectTargetSubmit = async () => {
     const targets = {
       beneficiaryType: formData?.beneficiaryType,
@@ -155,7 +162,19 @@ const ViewProject = () => {
       isDeleted: false,
     };
 
-    console.log("taregegege", targets);
+    const updatedProject = {
+      ...project,
+      targets: [...project.targets, targets],
+    };
+
+    await mutation.mutate({
+      body: {
+        Projects: [{
+          ...project,
+          targets:[...project.targets,targets]
+        }],
+      },
+    });
   };
 
   const handleOnChange = (e) => {

@@ -31,7 +31,6 @@ const TargetComponent = (props) => {
 
   const reqCriteria = {
     url: "/project/v1/_update",
-    config: false,
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
@@ -51,7 +50,10 @@ const TargetComponent = (props) => {
 
     await mutation.mutate({
       body: {
-        Projects: [updatedProject],
+        Projects: [{
+          ...props?.project,
+          targets:[...props.project.targets,targets]
+        }],
       },
     });
 
