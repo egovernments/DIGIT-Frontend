@@ -110,6 +110,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.1 Fixes related to the limits
 1.0.0 Workbench v1.0 release
 1.0.0-beta workbench base version beta release
 0.0.3 readme updated
