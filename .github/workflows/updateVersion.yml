@@ -22,6 +22,7 @@ jobs:
       - name: Fetch and merge changes from the remote repository
         run: |
           git fetch origin
+          git config pull.ff only       # fast-forward only
           git pull origin "$TARGET_BRANCH"
 
       - name: Install jq
