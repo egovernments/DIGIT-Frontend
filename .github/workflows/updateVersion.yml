@@ -22,9 +22,8 @@ jobs:
       - name: Fetch and merge changes from the remote repository
         run: |
           git fetch origin
-          git config pull.ff only       # fast-forward only
-          git config merge.--no-ff only
-          git pull origin "$TARGET_BRANCH"
+          git rebase origin/"$TARGET_BRANCH"
+
 
       - name: Install jq
         run: sudo apt-get install jq
