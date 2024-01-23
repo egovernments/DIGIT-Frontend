@@ -1,4 +1,4 @@
-import { ConsumerGroup, ConsumerGroupOptions, Message, ProduceRequest } from 'kafka-node';
+import { ConsumerGroup, ConsumerGroupOptions } from 'kafka-node';
 import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import config from '../config';
@@ -17,60 +17,59 @@ const kafkaConfig: ConsumerGroupOptions = {
 
 const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
 
+// Log that the Kafka consumer is attempting to connect
+logger.info('Kafka consumer is attempting to connect...');
+
+// Create a Kafka consumer
+const consumerGroup = new ConsumerGroup(kafkaConfig, [topicName]);
+
 
 // Exported listener function
-export function listener() {
-
-
-    // Log that the Kafka consumer is attempting to connect
-    logger.info('Kafka consumer is attempting to connect...');
-
-    // Create a Kafka consumer
-    const consumerGroup = new ConsumerGroup(kafkaConfig, [topicName]);
+function listener() {
 
     // Set up a message event handler
-    consumerGroup.on('message', async (message: Message) => {
-        try {
-            // Parse the message value as an array of objects
-            const messageObject: any = JSON.parse(message.value?.toString() || '{}');
-            const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
-            logger.info("IngestionDetails received:" + JSON.stringify(ingestionDetails));
+    // consumerGroup.on('message', async (message: Message) => {
+    //     try {
+    //         // // Parse the message value as an array of objects
+    //         // const messageObject: any = JSON.parse(message.value?.toString() || '{}');
+    //         // const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
+    //         // logger.info("IngestionDetails received:" + JSON.stringify(ingestionDetails));
 
 
-            // Find the first message with state 'inprogress'
-            const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
+    //         // // Find the first message with state 'inprogress'
+    //         // const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
 
-            // Find the first message with state 'not-started'
-            const notStartedIndex = ingestionDetails.findIndex((msg) => msg.state === 'not-started');
+    //         // // Find the first message with state 'not-started'
+    //         // const notStartedIndex = ingestionDetails.findIndex((msg) => msg.state === 'not-started');
 
-            if (inProgressIndex !== -1) {
-                // Change 'inprogress' to 'done'
-                ingestionDetails[inProgressIndex].state = 'done';
+    //         // if (inProgressIndex !== -1) {
+    //         //     // Change 'inprogress' to 'done'
+    //         //     ingestionDetails[inProgressIndex].state = 'done';
 
-                // Log the modified message
-                logger.info(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
-                messageObject.Job.ingestionDetails = ingestionDetails;
+    //         //     // Log the modified message
+    //         //     logger.info(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
+    //         //     messageObject.Job.ingestionDetails = ingestionDetails;
 
-                // Produce the modified messages back to the same topic
-                await produceModifiedMessages(messageObject);
-            } else if (notStartedIndex !== -1) {
-                // Change 'not-started' to 'inprogress'
-                ingestionDetails[notStartedIndex].state = 'inprogress';
+    //         //     // Produce the modified messages back to the same topic
+    //         //     await produceModifiedMessages(messageObject);
+    //         // } else if (notStartedIndex !== -1) {
+    //         //     // Change 'not-started' to 'inprogress'
+    //         //     ingestionDetails[notStartedIndex].state = 'inprogress';
 
-                // Log the modified message
-                logger.info(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
+    //         //     // Log the modified message
+    //         //     logger.info(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
 
-                // Produce the modified messages back to the same topic
-                messageObject.Job.ingestionDetails = ingestionDetails;
-                await produceModifiedMessages(messageObject);
-            } else {
-                // Log a message if no 'inprogress' or 'not-started' state is found
-                logger.info('No message with state "inprogress" or "not-started" found.');
-            }
-        } catch (error) {
-            logger.info(`Error processing message: ${JSON.stringify(error)}`);
-        }
-    });
+    //         //     // Produce the modified messages back to the same topic
+    //         //     messageObject.Job.ingestionDetails = ingestionDetails;
+    //         //     await produceModifiedMessages(messageObject);
+    //         // } else {
+    //         //     // Log a message if no 'inprogress' or 'not-started' state is found
+    //         //     logger.info('No message with state "inprogress" or "not-started" found.');
+    //         // }
+    //     } catch (error) {
+    //         logger.info(`Error processing message: ${JSON.stringify(error)}`);
+    //     }
+    // });
 
     // Set up error event handlers
     consumerGroup.on('error', (err) => {
@@ -98,23 +97,25 @@ export function listener() {
 }
 
 // Function to produce modified messages back to the same topic
-async function produceModifiedMessages(modifiedMessages: any[]) {
-    return new Promise<void>((resolve, reject) => {
-        const payloads: ProduceRequest[] = [
-            {
-                topic: topicName,
-                messages: JSON.stringify(modifiedMessages),
-            },
-        ];
+// async function produceModifiedMessages(modifiedMessages: any[]) {
+//     return new Promise<void>((resolve, reject) => {
+//         const payloads: ProduceRequest[] = [
+//             {
+//                 topic: topicName,
+//                 messages: JSON.stringify(modifiedMessages),
+//             },
+//         ];
 
-        producer.send(payloads, (err, data) => {
-            if (err) {
-                logger.info(`Producer Error: ${JSON.stringify(err)}`);
-                reject(err);
-            } else {
-                logger.info('Produced modified messages successfully.');
-                resolve();
-            }
-        });
-    });
-}
+//         producer.send(payloads, (err, data) => {
+//             if (err) {
+//                 logger.info(`Producer Error: ${JSON.stringify(err)}`);
+//                 reject(err);
+//             } else {
+//                 logger.info('Produced modified messages successfully.');
+//                 resolve();
+//             }
+//         });
+//     });
+// }
+
+export { listener, consumerGroup }

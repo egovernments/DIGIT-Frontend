@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "../utils/request";
 import config from "../config/index";
+import { consumerGroup } from "../Kafka/Listener";
+import { Message } from 'kafka-node';
 
 
 import { logger } from "./logger";
@@ -206,11 +208,57 @@ const produceIngestion = async (messages: any, fileStoreId: string, ingestionTyp
     // const ingestionResult = await httpRequest("http://localhost:8081/" + config.paths.hcmMozImpl, messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
     const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
     logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
+    return ingestionResult;
   } catch (error) {
     logger.error("Error during ingestion : " + error)
   }
 
 };
+
+const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
+  const MAX_WAIT_TIME = 3 * 60 * 1000; // Maximum wait time: 3 minutes
+  const startTime = Date.now();
+  let isCompleted = "notReceived";
+
+  // Set up a one-time event handler for the first completion message
+  const messageHandler = async (message: Message) => {
+    const ingestionStatus: any = JSON.parse(message.value?.toString() || '{}');
+    if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber && ingestionStatus?.Job?.executionStatus === 'Completed') {
+      logger.info(`Ingestion ${ingestionNumber} is completed`);
+      isCompleted = "receivedTrue";
+    } else if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber) {
+      isCompleted = "receivedFalse";
+    }
+  };
+
+  // Register the message handler
+  consumerGroup.on('message', messageHandler);
+
+  // Set up error event handlers
+  consumerGroup.on('error', (err) => {
+    logger.info(`Consumer Error: ${JSON.stringify(err)}`);
+  });
+
+  consumerGroup.on('offsetOutOfRange', (err) => {
+    logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
+  });
+
+  // Keep checking for completion and waiting until MAX_WAIT_TIME
+  while (Date.now() - startTime < MAX_WAIT_TIME) {
+    // Check if completed
+    if (isCompleted !== "notReceived") {
+      return isCompleted;
+    }
+
+    // Add a delay (e.g., using setTimeout) before checking again.
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  // If not completed within the specified time, return the current status
+  return isCompleted;
+};
+
+
 
 export {
   errorResponder,
@@ -224,5 +272,6 @@ export {
   extractEstimateIds,
   cacheResponse,
   getCachedResponse,
-  produceIngestion
+  produceIngestion,
+  waitAndCheckIngestionStatus
 };

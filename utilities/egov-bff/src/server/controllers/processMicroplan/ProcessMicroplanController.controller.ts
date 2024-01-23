@@ -1,10 +1,9 @@
 import * as express from "express";
-import { produceIngestion } from "../../utils";
+import { produceIngestion, waitAndCheckIngestionStatus } from "../../utils";
 import FormData from 'form-data';
 import config from "../../config/index";
 import * as XLSX from 'xlsx';
 import { logger } from "../../utils/logger";
-
 
 import {
   searchMDMS
@@ -49,7 +48,9 @@ class BulkUploadController {
         logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
         const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
         result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_transform`, request.body, undefined, undefined, undefined, undefined);
-        for (const parsingTemplate of parsingTemplates) {
+        var parsingTemplatesLength = parsingTemplates.length
+        for (let i = 0; i < parsingTemplatesLength; i++) {
+          const parsingTemplate = parsingTemplates[i];
           request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
           request.body.HCMConfig['data'] = result?.updatedDatas;
           var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
@@ -109,7 +110,27 @@ class BulkUploadController {
               }
               Job.tenantId = tenantId
               tempJob.tenantId = tenantId
-              produceIngestion({ Job: tempJob }, responseData[0].fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo)
+              const ingestionResult: any = await produceIngestion({ Job: tempJob }, responseData[0].fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo);
+              if (ingestionResult?.ingestionNumber) {
+                const isCompleted = await waitAndCheckIngestionStatus(ingestionResult?.ingestionNumber);
+                if (isCompleted != "receivedTrue") {
+                  logger.error("Ingestion : " + isCompleted)
+                  logger.error("Error in creating Ingestion")
+                  return errorResponder(
+                    { message: "Error in creating Ingestion" },
+                    request,
+                    response
+                  );
+                }
+              }
+              else {
+                logger.error("Error in creating Ingestion")
+                return errorResponder(
+                  { message: "Error in creating Ingestion" },
+                  request,
+                  response
+                );
+              }
             } catch (error: any) {
               return errorResponder(
                 { message: "Error in creating FileStoreId" },
@@ -117,6 +138,9 @@ class BulkUploadController {
                 response
               );
             }
+          }
+          if (i != parsingTemplatesLength - 1) {
+            await new Promise(resolve => setTimeout(resolve, 90 * 1000));
           }
         }
       } catch (e: any) {
