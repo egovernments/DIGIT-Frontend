@@ -9,7 +9,8 @@
     "packages/react-components",
     "packages/modules/dss",
     "packages/modules/core",
-    "packages/modules/hrms"
+    "packages/modules/hrms",
+    "packages/modules/sample"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -33,6 +34,7 @@
     "dev:core": "cd packages/modules/core && yarn start",
     "dev:dss": "cd packages/modules/dss && yarn start",
     "dev:hrms": "cd packages/modules/hrms && yarn start",
+    "dev:sample": "cd packages/modules/sample && yarn start",
     "dev:common": "cd packages/modules/common && yarn start",
     "dev:utilities": "cd packages/modules/utilities && yarn start",
     "devD:workbench": "cd packages/modules/workbench && yarn start",
@@ -46,6 +48,7 @@
     "build:dss": "cd packages/modules/dss && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "build:hrms": "cd packages/modules/hrms && yarn build",
+    "build:sample": "cd packages/modules/sample && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
     "buildD:utilities": "cd packages/modules/utilities && yarn build",
     "buildD:engagement": "cd packages/modules/engagement && yarn build",

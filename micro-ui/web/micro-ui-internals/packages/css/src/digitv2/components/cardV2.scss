@@ -76,7 +76,7 @@
 
 .digit-employee-card {
   @extend .light-paper-primary;
-  @apply shadow-card p-md mb-xl;
+  @apply bg-white shadow-card p-md mb-xl;
   border-radius: 4px;
 
   .digit-card-header {

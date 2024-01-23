@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { EditPencilIcon, LogoutIcon } from "@egovernments/digit-ui-react-components";
 import TopBar from "./TopBar";
 import { useHistory } from "react-router-dom";
 import SideBar from "./SideBar";
@@ -36,8 +35,8 @@ const TopBarSideBar = ({
     history.push(`/${window?.contextPath}/employee/user/profile`);
   };
   const userOptions = [
-    { name: t("EDIT_PROFILE"), icon: <EditPencilIcon className="icon" />, func: userProfile },
-    { name: t("CORE_COMMON_LOGOUT"), icon: <LogoutIcon className="icon" />, func: handleLogout },
+    { name: t("EDIT_PROFILE"), icon: "EditPencilIcon", func: userProfile },
+    { name: t("CORE_COMMON_LOGOUT"), icon: "LogoutIcon", func: handleLogout },
   ];
   return (
     <React.Fragment>

@@ -118,11 +118,18 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "With CustomIcon",
+        label: "With CustomIcon and Action",
         isMandatory: false,
         type: "text",
         disable: false,
-        populators: { name: "text-With CustomIcon", error: "Error!", customIcon: "DownloadIcon" },
+        populators: {
+          name: "text-With CustomIcon",
+          error: "Error!",
+          customIcon: "DownloadIcon",
+          onIconSelection: (event) => {
+            console.log("Custom icon clicked!", event);
+          },
+        },
       },
       {
         inline: true,
@@ -135,6 +142,25 @@ export const newConfig = [
         description: "Help Text",
         charCount: true,
         populators: { name: "text-Complete", error: "Required" },
+      },
+      {
+        inline: true,
+        label: "qazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikl",
+        isMandatory: false,
+        type: "text",
+        disable: false,
+        populators: { name: "text-With MaxCharsLabel", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "With MaxDes&CharCount",
+        isMandatory: false,
+        type: "text",
+        disable: false,
+        description:
+          "qazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikl",
+        charCount: true,
+        populators: { name: "text-With MaxDes&CharCount", error: "Error!" },
       },
       {
         inline: true,
@@ -1092,271 +1118,7 @@ export const newConfig = [
           optionsKey: "name",
           error: "",
           required: true,
-          options: [
-            {
-              name: "Category A",
-              options: [
-                { code: "Category A.Option A", name: "Option A", icon: "Article" },
-                { code: "Category A.Option B", name: "Option B", icon: "Article" },
-                { code: "Category A.Option C", name: "Option C", icon: "Article" },
-              ],
-              code: "Category A",
-            },
-            {
-              name: "Category B",
-              options: [
-                { code: "Category B.Option A", name: "Option A", icon: "Article" },
-                { code: "Category B.Option 2", name: "Option 2", icon: "Article" },
-                { code: "Category B.Option 3", name: "Option 3", icon: "Article" },
-              ],
-              code: "Category B",
-            },
-          ],
-        },
-      },
-    ],
-  },
-  {
-    head: "MULTISELECT DROPDOWN",
-    body: [
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Default",
-        disable: false,
-        populators: {
-          name: "multiselectdropdown-Default",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              code: "1",
-              name: "Option1",
-            },
-            {
-              code: "2",
-              name: "Option2",
-            },
-            {
-              code: "3",
-              name: "Option3",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Disabled",
-        disable: true,
-        populators: {
-          name: "multiselectdropdown-Disabled",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              code: "1",
-              name: "Option1",
-            },
-            {
-              code: "2",
-              name: "Option2",
-            },
-            {
-              code: "3",
-              name: "Option3",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: true,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Error",
-        disable: false,
-        populators: {
-          name: "multiselectdropdown-Error",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              code: "1",
-              name: "Option1",
-            },
-            {
-              code: "2",
-              name: "Option2",
-            },
-            {
-              code: "3",
-              name: "Option3",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "With Icons",
-        disable: false,
-        populators: {
-          name: "multiselectdropdown-With Icons",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              code: "1",
-              name: "Option1",
-              icon: "Article",
-            },
-            {
-              code: "2",
-              name: "Option2",
-              icon: "Article",
-            },
-            {
-              code: "3",
-              name: "Option3",
-              icon: "Article",
-            },
-          ],
-        },
-      },
-    ],
-  },
-  {
-    head: "NESTED MULTISELECT DROPDOWN",
-    body: [
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Default",
-        disable: false,
-        variant: "nestedmultiselect",
-        populators: {
-          name: "nestedmultiselect-Default",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              name: "Category A",
-              options: [
-                { code: "Category A.Option A", name: "Option A" },
-                { code: "Category A.Option B", name: "Option B" },
-                { code: "Category A.Option C", name: "Option C" },
-              ],
-              code: "Category A",
-            },
-            {
-              name: "Category B",
-              options: [
-                { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option 2", name: "Option 2" },
-                { code: "Category B.Option 3", name: "Option 3" },
-              ],
-              code: "Category B",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Disabled",
-        disable: true,
-        variant: "nestedmultiselect",
-        populators: {
-          name: "nestedmultiselect-Disabled",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              name: "Category A",
-              options: [
-                { code: "Category A.Option A", name: "Option A" },
-                { code: "Category A.Option B", name: "Option B" },
-                { code: "Category A.Option C", name: "Option C" },
-              ],
-              code: "Category A",
-            },
-            {
-              name: "Category B",
-              options: [
-                { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option 2", name: "Option 2" },
-                { code: "Category B.Option 3", name: "Option 3" },
-              ],
-              code: "Category B",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: true,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "Error",
-        disable: false,
-        variant: "nestedmultiselect",
-        populators: {
-          name: "nestedmultiselect-Error",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
-          options: [
-            {
-              name: "Category A",
-              options: [
-                { code: "Category A.Option A", name: "Option A" },
-                { code: "Category A.Option B", name: "Option B" },
-                { code: "Category A.Option C", name: "Option C" },
-              ],
-              code: "Category A",
-            },
-            {
-              name: "Category B",
-              options: [
-                { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option 2", name: "Option 2" },
-                { code: "Category B.Option 3", name: "Option 3" },
-              ],
-              code: "Category B",
-            },
-          ],
-        },
-      },
-      {
-        isMandatory: false,
-        key: "multiselect",
-        type: "multiselectdropdown",
-        label: "With Icons",
-        disable: false,
-        variant: "nestedmultiselect",
-        populators: {
-          name: "nestedmultiselect-With Icons",
-          optionsKey: "name",
-          error: "Error!",
-          required: false,
-          isDropdownWithChip: true,
+          showIcon:true,
           options: [
             {
               name: "Category A",
@@ -1561,27 +1323,408 @@ export const newConfig = [
     ],
   },
   {
-    head:"TREE MULTISELECT DROPDOWN",
-    body:[
+    head: "NESTED TEXT DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default",
+        disable: false,
+        variant: "nestedtextdropdown",
+        populators: {
+          name: "nestedtextdropdown-Default",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Disabled",
+        disable: true,
+        variant: "nestedtextdropdown",
+        populators: {
+          name: "nestedtextdropdown-Disabled",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        type: "dropdown",
+        key: "genders",
+        label: "Error",
+        disable: false,
+        variant: "nestedtextdropdown",
+        populators: {
+          name: "nestedtextdropdown-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "With Icon",
+        disable: false,
+        variant: "nestedtextdropdown",
+        populators: {
+          name: "nestedtextdropdown-With Icon",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          showIcon:true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "PROFILE DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default",
+        disable: false,
+        variant: "profiledropdown",
+        populators: {
+          name: "profiledropdown-Default",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1"
+            },
+            {
+              code: "Option2",
+              name: "Option2"
+            },
+            {
+              code: "Option3",
+              name: "Option3"
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Disabled",
+        disable: true,
+        variant: "profiledropdown",
+        populators: {
+          name: "profiledropdown-Disabled",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1"
+            },
+            {
+              code: "Option2",
+              name: "Option2"
+            },
+            {
+              code: "Option3",
+              name: "Option3"
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: true,
+        type: "dropdown",
+        key: "genders",
+        label: "Error",
+        disable: false,
+        variant: "profiledropdown",
+        populators: {
+          name: "profiledropdown-Error",
+          optionsKey: "name",
+          error: "Error!",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1"
+            },
+            {
+              code: "Option2",
+              name: "Option2"
+            },
+            {
+              code: "Option3",
+              name: "Option3"
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "With CustomIcon",
+        disable: false,
+        variant: "profiledropdown",
+        populators: {
+          name: "profiledropdown-With CustomIcon",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "With NestedText",
+        disable: false,
+        variant: "profilenestedtext",
+        populators: {
+          name: "profiledropdown-With NestedText",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+              profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "MULTISELECT DROPDOWN",
+    body: [
       {
         isMandatory: false,
         key: "multiselect",
         type: "multiselectdropdown",
         label: "Default",
         disable: false,
-        variant:"treemultiselect",
         populators: {
-          name: "treemultiselect-Default",
+          name: "multiselectdropdown-Default",
           optionsKey: "name",
           error: "Error!",
           required: false,
-          isDropdownWithChip:true,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+            },
+            {
+              code: "2",
+              name: "Option2",
+            },
+            {
+              code: "3",
+              name: "Option3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        populators: {
+          name: "multiselectdropdown-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+            },
+            {
+              code: "2",
+              name: "Option2",
+            },
+            {
+              code: "3",
+              name: "Option3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "With Icons",
+        disable: false,
+        populators: {
+          name: "multiselectdropdown-With Icons",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          showIcon:true,
+          options: [
+            {
+              code: "1",
+              name: "Option1",
+              icon: "Article",
+            },
+            {
+              code: "2",
+              name: "Option2",
+              icon: "Article",
+            },
+            {
+              code: "3",
+              name: "Option3",
+              icon: "Article",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "NESTED MULTISELECT DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Default",
+        disable: false,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-Default",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
           options: [
             {
               name: "Category A",
               options: [
-                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
-                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
               ],
               code: "Category A",
             },
@@ -1589,15 +1732,144 @@ export const newConfig = [
               name: "Category B",
               options: [
                 { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "With Icons",
+        disable: false,
+        variant: "nestedmultiselect",
+        populators: {
+          name: "nestedmultiselect-With Icons",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          showIcon:true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A", icon: "Article" },
+                { code: "Category A.Option B", name: "Option B", icon: "Article" },
+                { code: "Category A.Option C", name: "Option C", icon: "Article" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A", icon: "Article" },
+                { code: "Category B.Option 2", name: "Option 2", icon: "Article" },
+                { code: "Category B.Option 3", name: "Option 3", icon: "Article" },
+              ],
+              code: "Category B",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    head: "TREE MULTISELECT DROPDOWN",
+    body: [
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Default",
+        disable: false,
+        variant: "treemultiselect",
+        populators: {
+          name: "treemultiselect-Default",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                {
+                  code: "Category A.Option A",
+                  name: "Option A",
+                  options: [
+                    { code: "Category A.Option A.Option 1", name: "Option 1" },
+                    { code: "Category A.Option A.Option 2", name: "Option 2" },
+                  ],
+                },
+                {
+                  code: "Category A.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category A.Option B.Option 1", name: "Option 1" },
+                    { code: "Category A.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                {
+                  code: "Category B.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category B.Option B.Option 1", name: "Option 1" },
+                    { code: "Category B.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
               ],
               code: "Category B",
             },
             {
               name: "Category C",
-              options: [
-                { code: "Category C.Option A", name: "Option A" },
-              ],
+              options: [{ code: "Category C.Option A", name: "Option A" }],
               code: "Category C",
             },
           ],
@@ -1609,19 +1881,33 @@ export const newConfig = [
         type: "multiselectdropdown",
         label: "Disabled",
         disable: true,
-        variant:"treemultiselect",
+        variant: "treemultiselect",
         populators: {
           name: "treemultiselect-Disabled",
           optionsKey: "name",
           error: "Error!",
           required: false,
-          isDropdownWithChip:true,
+          isDropdownWithChip: true,
           options: [
             {
               name: "Category A",
               options: [
-                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
-                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
+                {
+                  code: "Category A.Option A",
+                  name: "Option A",
+                  options: [
+                    { code: "Category A.Option A.Option 1", name: "Option 1" },
+                    { code: "Category A.Option A.Option 2", name: "Option 2" },
+                  ],
+                },
+                {
+                  code: "Category A.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category A.Option B.Option 1", name: "Option 1" },
+                    { code: "Category A.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
               ],
               code: "Category A",
             },
@@ -1629,56 +1915,126 @@ export const newConfig = [
               name: "Category B",
               options: [
                 { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
+                {
+                  code: "Category B.Option B",
+                  name: "Option B",
+                  options: [
+                    { code: "Category B.Option B.Option 1", name: "Option 1" },
+                    { code: "Category B.Option B.Option 2", name: "Option 2" },
+                  ],
+                },
               ],
               code: "Category B",
             },
             {
               name: "Category C",
-              options: [
-                { code: "Category C.Option A", name: "Option A" },
-              ],
+              options: [{ code: "Category C.Option A", name: "Option A" }],
               code: "Category C",
             },
           ],
         },
       },
+    ],
+  },
+  {
+    head: "NESTEDTEXT MULTISELECT DROPDOWN",
+    body: [
       {
-        isMandatory: true,
+        isMandatory: false,
         key: "multiselect",
         type: "multiselectdropdown",
-        label: "Error",
+        label: "Default",
         disable: false,
-        variant:"treemultiselect",
+        variant: "nestedtextmultiselect",
         populators: {
-          name: "treemultiselect-Error",
+          name: "nestedtextmultiselect-Default",
           optionsKey: "name",
           error: "Error!",
           required: false,
-          isDropdownWithChip:true,
+          isDropdownWithChip: true,
           options: [
             {
-              name: "Category A",
-              options: [
-                { code: "Category A.Option A", name: "Option A" ,options:[{code:"Category A.Option A.Option 1",name:"Option 1"},{code:"Category A.Option A.Option 2",name:"Option 2"}]},
-                { code: "Category A.Option B", name: "Option B" ,options:[{code:"Category A.Option B.Option 1",name:"Option 1"},{code:"Category A.Option B.Option 2",name:"Option 2"}]}
-              ],
-              code: "Category A",
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
             },
             {
-              name: "Category B",
-              options: [
-                { code: "Category B.Option A", name: "Option A" },
-                { code: "Category B.Option B", name: "Option B" ,options:[{code:"Category B.Option B.Option 1",name:"Option 1"},{code:"Category B.Option B.Option 2",name:"Option 2"}]}
-              ],
-              code: "Category B",
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
             },
             {
-              name: "Category C",
-              options: [
-                { code: "Category C.Option A", name: "Option A" },
-              ],
-              code: "Category C",
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "Disabled",
+        disable: true,
+        variant: "nestedtextmultiselect",
+        populators: {
+          name: "nestedtextmultiselect-Disabled",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "multiselect",
+        type: "multiselectdropdown",
+        label: "With Icons",
+        disable: false,
+        variant: "nestedtextmultiselect",
+        populators: {
+          name: "nestedtextmultiselect-With Icons",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          isDropdownWithChip: true,
+          showIcon:true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              icon:"Article",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
             },
           ],
         },
@@ -1695,7 +2051,7 @@ export const newConfig = [
         disable: false,
         withoutLabel: true,
         populators: { name: "checkbox-Default", error: "Error!", title: "" },
-      },,
+      },
       {
         inline: true,
         isMandatory: false,
@@ -1703,6 +2059,19 @@ export const newConfig = [
         disable: false,
         withoutLabel: true,
         populators: { name: "checkbox-Labelled", error: "Error!", title: "Labelled" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: false,
+        withoutLabel: true,
+        populators: {
+          name: "checkbox-LabelledTwo",
+          error: "Error!",
+          title:
+            "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead",
+        },
       },
       {
         inline: true,

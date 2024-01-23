@@ -58,7 +58,7 @@ import {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  // Numeric
+  SubmitBar
 } from "./atoms";
 
 import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer ,FieldV1} from "./hoc";
@@ -163,5 +163,5 @@ export {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  // Numeric
+  SubmitBar
 };

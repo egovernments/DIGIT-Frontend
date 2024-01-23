@@ -143,7 +143,7 @@
   }
 
   .option-des-container {
-    @apply flex flex-col justify-center items-center;
+    @apply flex flex-col justify-center items-start;
 
     .option-description {
       color: theme(digitv2.lightTheme.text-color-secondary);

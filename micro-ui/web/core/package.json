@@ -13,6 +13,7 @@
     "micro-ui-internals/packages/modules/core",
     "micro-ui-internals/packages/modules/dss",
     "micro-ui-internals/packages/modules/hrms",
+    "micro-ui-internals/packages/modules/sample",
     "micro-ui-internals/packages/libraries-core",
     "micro-ui-internals/packages/components-core"
   ],

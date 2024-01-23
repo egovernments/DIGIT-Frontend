@@ -144,6 +144,7 @@ const TopBar = ({
                       <img src={profilePic} style={{ height: "48px", width: "48px", borderRadius: "50%" }} />
                     )
                   }
+                  showIcon={true}
                 />
               </div>
             )}
