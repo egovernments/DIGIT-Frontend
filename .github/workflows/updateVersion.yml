@@ -23,6 +23,7 @@ jobs:
         run: |
           git fetch origin
           git config pull.ff only       # fast-forward only
+          git config merge.--no-ff only
           git pull origin "$TARGET_BRANCH"
 
       - name: Install jq
