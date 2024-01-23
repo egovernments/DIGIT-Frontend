@@ -56,13 +56,15 @@ jobs:
               # Increment the version manually
               new_version=$(echo "$current_version" )
           
-              # Update the package.json file with the new version
-              jq --arg dep "$dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
-          
+           
               # Commit the updated package.json
               git config user.name "${{ github.actor }}"
               git config user.email "${{ github.actor }}@users.noreply.github.com"
               git checkout -b "$TARGET_BRANCH"
+              
+              # Update the package.json file with the new version
+              jq --arg dep "$dependency" --arg new_version "$new_version" '.dependencies[$dep] = $new_version' "$DESTIN_JSON_FILE" > "$DESTIN_JSON_FILE.tmp" && mv "$DESTIN_JSON_FILE.tmp" "$DESTIN_JSON_FILE"
+          
               git add "$DESTIN_JSON_FILE"
               git commit -m "Auto increment $dependency version to $new_version"
               git push origin "$TARGET_BRANCH"
