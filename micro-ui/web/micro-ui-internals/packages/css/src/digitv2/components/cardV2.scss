@@ -91,7 +91,6 @@
   }
 
   .digit-card-section-header {
-    @extend .light-primary;
     @apply text-heading-m font-bold;
   }
 
@@ -335,7 +334,6 @@
 }
 
 .digit-card-section-header {
-  @extend .light-text-color-primary;
   @apply text-text-primary text-heading-m font-bold;
 }
 

@@ -1,6 +1,8 @@
 .digit-employee-select-wrap {
   @apply w-full relative;
 
+  max-width: 37.5rem;
+
   .digit-select {
     @extend .light-input-border;
     @apply relative block w-full h-10 border border-solid border-input-border bg-white;

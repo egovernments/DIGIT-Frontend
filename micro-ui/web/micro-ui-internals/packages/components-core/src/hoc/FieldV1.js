@@ -260,7 +260,7 @@ const FieldV1 = ({
           </div>
         </Header>
       )}
-      <div style={withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
+      <div style={withoutLabel ? { width: "100%", ...props?.fieldStyle,marginBottom:"24px" } : { ...props?.fieldStyle ,marginBottom:"24px"}} className="digit-field">
         {renderField()}
         <div className={`${charCount && !error && !description ? "digit-charcount" : "digit-description"}`}>
           {renderDescriptionOrError()}
