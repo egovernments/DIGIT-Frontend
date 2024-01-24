@@ -80,7 +80,7 @@ frontend/micro-ui/web/public/index.html
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ## License
 

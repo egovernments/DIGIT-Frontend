@@ -60,7 +60,7 @@ export default App;
 ```
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ### Contributors
 
