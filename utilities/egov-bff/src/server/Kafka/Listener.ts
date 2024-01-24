@@ -1,6 +1,7 @@
-import { ConsumerGroup, ConsumerGroupOptions } from 'kafka-node';
+import { ConsumerGroup, ConsumerGroupOptions, Message } from 'kafka-node';
 import { logger } from '../utils/logger';
 import { producer } from './Producer';
+import { produceIngestion } from '../utils';
 import config from '../config';
 
 const kafkaConfig: ConsumerGroupOptions = {
@@ -28,48 +29,39 @@ const consumerGroup = new ConsumerGroup(kafkaConfig, [topicName]);
 function listener() {
 
     // Set up a message event handler
-    // consumerGroup.on('message', async (message: Message) => {
-    //     try {
-    //         // // Parse the message value as an array of objects
-    //         // const messageObject: any = JSON.parse(message.value?.toString() || '{}');
-    //         // const ingestionDetails: any[] = messageObject?.Job?.ingestionDetails;
-    //         // logger.info("IngestionDetails received:" + JSON.stringify(ingestionDetails));
+    consumerGroup.on('message', async (message: Message) => {
+        try {
+            // Parse the message value as an array of objects
+            const messageObject: any = JSON.parse(message.value?.toString() || '{}');
+            logger.info("IngestionDetails received:" + JSON.stringify(messageObject?.Job?.ingestionDetails?.history));
+            if (messageObject?.Job?.executionStatus === "Completed") {
+                if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
+                    const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
+                        (detail: any) => detail.state === 'started'
+                    );
 
-
-    //         // // Find the first message with state 'inprogress'
-    //         // const inProgressIndex = ingestionDetails.findIndex((msg) => msg.state === 'inprogress');
-
-    //         // // Find the first message with state 'not-started'
-    //         // const notStartedIndex = ingestionDetails.findIndex((msg) => msg.state === 'not-started');
-
-    //         // if (inProgressIndex !== -1) {
-    //         //     // Change 'inprogress' to 'done'
-    //         //     ingestionDetails[inProgressIndex].state = 'done';
-
-    //         //     // Log the modified message
-    //         //     logger.info(`Modified message: ${JSON.stringify(ingestionDetails[inProgressIndex])}`);
-    //         //     messageObject.Job.ingestionDetails = ingestionDetails;
-
-    //         //     // Produce the modified messages back to the same topic
-    //         //     await produceModifiedMessages(messageObject);
-    //         // } else if (notStartedIndex !== -1) {
-    //         //     // Change 'not-started' to 'inprogress'
-    //         //     ingestionDetails[notStartedIndex].state = 'inprogress';
-
-    //         //     // Log the modified message
-    //         //     logger.info(`Modified message: ${JSON.stringify(ingestionDetails[notStartedIndex])}`);
-
-    //         //     // Produce the modified messages back to the same topic
-    //         //     messageObject.Job.ingestionDetails = ingestionDetails;
-    //         //     await produceModifiedMessages(messageObject);
-    //         // } else {
-    //         //     // Log a message if no 'inprogress' or 'not-started' state is found
-    //         //     logger.info('No message with state "inprogress" or "not-started" found.');
-    //         // }
-    //     } catch (error) {
-    //         logger.info(`Error processing message: ${JSON.stringify(error)}`);
-    //     }
-    // });
+                    if (startedIngestion) {
+                        startedIngestion.state = 'Completed';
+                        logger.info("Marked 'started' ingestion as 'Completed'.");
+                        const updatedJob: any = await produceIngestion(messageObject);
+                        logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
+                    } else {
+                        logger.info("No 'started' ingestion found.");
+                        const updatedJob: any = await produceIngestion(messageObject);
+                        logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
+                    }
+                }
+                else {
+                    logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
+                }
+            }
+            else {
+                logger.error("Some error occured in ingesting : " + JSON.stringify(messageObject));
+            }
+        } catch (error) {
+            logger.info(`Error processing message: ${JSON.stringify(error)}`);
+        }
+    });
 
     // Set up error event handlers
     consumerGroup.on('error', (err) => {

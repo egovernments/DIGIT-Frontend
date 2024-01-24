@@ -1,5 +1,5 @@
 import * as express from "express";
-import { produceIngestion, waitAndCheckIngestionStatus } from "../../utils";
+import { produceIngestion } from "../../utils";
 import FormData from 'form-data';
 import config from "../../config/index";
 import * as XLSX from 'xlsx';
@@ -37,10 +37,9 @@ class BulkUploadController {
     request: express.Request,
     response: express.Response
   ) => {
-    var result: any, Job: any = { ingestionDetails: [] };
+    var result: any, Job: any = { ingestionDetails: { userInfo: {}, history: [] } };
     try {
       try {
-        const tenantId = request?.body?.RequestInfo?.userInfo?.tenantId;
         const { campaignType } = request?.body?.HCMConfig;
         const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
         request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
@@ -103,33 +102,8 @@ class BulkUploadController {
               }
               const responseData = fileCreationResult?.files;
               logger.info("Response data after File Creation : " + JSON.stringify(responseData));
-              var tempJob: any = { ingestionDetails: [] }
               if (Array.isArray(responseData) && responseData.length > 0) {
-                Job.ingestionDetails.push({ id: responseData[0].fileStoreId, tenanId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
-                tempJob.ingestionDetails.push({ id: responseData[0].fileStoreId, tenanId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType })
-              }
-              Job.tenantId = tenantId
-              tempJob.tenantId = tenantId
-              const ingestionResult: any = await produceIngestion({ Job: tempJob }, responseData[0].fileStoreId, parsingTemplate.ingestionType, request.body.RequestInfo);
-              if (ingestionResult?.ingestionNumber) {
-                const isCompleted = await waitAndCheckIngestionStatus(ingestionResult?.ingestionNumber);
-                if (isCompleted != "receivedTrue") {
-                  logger.error("Ingestion : " + isCompleted)
-                  logger.error("Error in creating Ingestion")
-                  return errorResponder(
-                    { message: "Error in creating Ingestion" },
-                    request,
-                    response
-                  );
-                }
-              }
-              else {
-                logger.error("Error in creating Ingestion")
-                return errorResponder(
-                  { message: "Error in creating Ingestion" },
-                  request,
-                  response
-                );
+                Job.ingestionDetails.history.push({ id: responseData[0].fileStoreId, tenantId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
               }
             } catch (error: any) {
               return errorResponder(
@@ -139,9 +113,6 @@ class BulkUploadController {
               );
             }
           }
-          if (i != parsingTemplatesLength - 1) {
-            await new Promise(resolve => setTimeout(resolve, 90 * 1000));
-          }
         }
       } catch (e: any) {
         logger.error(String(e))
@@ -150,10 +121,11 @@ class BulkUploadController {
     } catch (e: any) {
       return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
     }
-
+    Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
+    const updatedJob: any = await produceIngestion({ Job });
     return sendResponse(
       response,
-      { Job },
+      { Job: updatedJob },
       request
     );
   };

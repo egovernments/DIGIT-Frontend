@@ -197,22 +197,25 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
-const produceIngestion = async (messages: any, fileStoreId: string, ingestionType: string, RequestInfo: any) => {
-  messages.Job.RequestInfo = RequestInfo
-  logger.info("FileStoreId for ingestion : " + fileStoreId)
-  logger.info("Ingestion Type : " + ingestionType)
-  logger.info("Job Messages : " + JSON.stringify(messages))
-  try {
-    logger.info("Ingestion Url : " + config.host.hcmMozImpl + config.paths.hcmMozImpl);
-    // const ingestionResult = await httpRequest("http://unified-uat.digit.org/" + config.paths.hcmMozImpl, messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
-    // const ingestionResult = await httpRequest("http://localhost:8081/" + config.paths.hcmMozImpl, messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
-    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: ingestionType, fileStoreId: fileStoreId }, undefined, undefined, undefined);
+const produceIngestion = async (messages: any) => {
+  const notStartedIngestion = messages?.Job?.ingestionDetails?.history.find(
+    (detail: any) => detail.state === 'not-started'
+  );
+  if (notStartedIngestion) {
+    logger.info("Next Ingestion : " + JSON.stringify(notStartedIngestion));
+    notStartedIngestion.state = "started";
+    messages.Job.tenantId = notStartedIngestion?.tenantId;
+    messages.Job.RequestInfo = { userInfo: messages?.Job?.ingestionDetails?.userInfo };
+    logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
+    logger.info("Ingestionurl : " + config.host.hcmMozImpl + config.paths.hcmMozImpl)
+    logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.id)
+    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.id }, undefined, undefined, undefined);
     logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
-    return ingestionResult;
-  } catch (error) {
-    logger.error("Error during ingestion : " + error)
   }
-
+  else {
+    logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
+  }
+  return messages.Job;
 };
 
 const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
