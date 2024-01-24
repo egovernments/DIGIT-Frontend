@@ -49,11 +49,12 @@ const initDigitUI = () => {
 };
 ```
 
-# Changelog
+### Changelog
 
 ```bash
 1.8.0-beta.3 republished due to some version issues
 1.8.0-beta.2 fixes
+1.8.0 workbench v1.0 release
 1.8.0-beta.01 fixed compilation issue
 1.8.0-beta workbench base version beta release
 1.7.0 urban 2.9
@@ -65,13 +66,20 @@ const initDigitUI = () => {
 1.5.23 base version
 ```
 
-# Contributors
+### Contributors
 
 [jagankumar-egov] [naveen-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [vamshikrishnakole-wtt-egov] 
 
-### Published from DIGIT Frontend  
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
+## Documentation
 
-## License
+Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
+## Maintainer
+
+- [jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

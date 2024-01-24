@@ -99,7 +99,6 @@ function splitArrayIntoDynamicSubsetsByPropertyAndKeys(array, propertyKey, keysT
   const uniquePropertyValuesSet = new Set(array.map(item => item[propertyKey]));
   const uniquePropertyValues = Array.from(uniquePropertyValuesSet)
   const numberOfSubsets = uniquePropertyValues.length;
-
   const subsets = Array.from({ length: numberOfSubsets }, () => []);
 
   array.forEach(item => {
@@ -341,7 +340,6 @@ const LocalisationAdd = () => {
     //same key validation
     const hasDuplicateKeycode = hasDuplicatesByKey(tableState, "code");
     const hasEmptyMessageOrCode = hasFalsyValueIgnoringZero(tableState);
-
     if (hasDuplicateKeycode) {
       setShowToast({
         label: t("WBH_LOC_SAME_KEY_VALIDATION_ERR"),

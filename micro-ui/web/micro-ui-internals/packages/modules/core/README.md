@@ -75,7 +75,7 @@ and add its related functions
 ```
 
 
-# Changelog
+### Changelog
 
 ```bash
 1.8.0-beta.16 fixed the hardcoded logout message 
@@ -88,6 +88,7 @@ and add its related functions
 1.8.0-beta.9 Updated How It works screen to take header from mdms config and show pdf card only when required
 1.8.0-beta.8 redefine addtional component to render only under employee home page 
 1.8.0-beta.6 added addtional component render for tqm modules
+1.8.0 workbench v1.0
 1.8.0-beta.5 fix for login screen alignments
 1.8.0-beta.4 made the default localisation in globalconfig
 1.8.0-beta workbench base version beta release
@@ -114,14 +115,21 @@ and add its related functions
 1.5.28 fixed the route issue for profile screen
 ```
 
-# Contributors
+### Contributors
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
+## Documentation
+
+Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+
+## Maintainer
+
+- [jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+
 ### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
 
-DIGIT Frontend Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
 
-## License
-
-MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

@@ -85,7 +85,7 @@ Syntax for the FormComposersV2
 ```
  
 
-# Changelog
+### Changelog
 
 ```bash
 1.8.0-beta.5 added file type excel in multiUploadWrapper
@@ -93,6 +93,7 @@ Syntax for the FormComposersV2
 1.8.0-beta.3 republished due to some issues
 1.8.0-beta.2 Added Some icons for pqm dashboard
 1.8.0-beta.1 fixed some topbar issues
+1.8.0 workbench v1.0 release
 1.8.0-beta workbench base version beta release
 1.7.0 urban 2.9
 1.6.0 urban 2.8
@@ -107,13 +108,21 @@ Syntax for the FormComposersV2
 1.5.23 base version
 ```
 
-# Contributors
+### Contributors
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
+## Documentation
+
+Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
+
+## Maintainer
+
+- [jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
 
-## License
 
-MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
