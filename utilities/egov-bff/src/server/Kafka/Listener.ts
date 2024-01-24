@@ -17,6 +17,8 @@ const kafkaConfig: ConsumerGroupOptions = {
 };
 
 const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
+const delayTime: any = config.delayTime;
+
 
 // Log that the Kafka consumer is attempting to connect
 logger.info('Kafka consumer is attempting to connect...');
@@ -43,11 +45,15 @@ function listener() {
                     if (startedIngestion) {
                         startedIngestion.state = 'Completed';
                         logger.info("Marked 'started' ingestion as 'Completed'.");
-                        const updatedJob: any = await produceIngestion(messageObject);
+                        logger.info("Waiting for " + config.delayTime + " miliSeconds");
+                        await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
+                        const updatedJob = await produceIngestion(messageObject);
                         logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
                     } else {
                         logger.info("No 'started' ingestion found.");
-                        const updatedJob: any = await produceIngestion(messageObject);
+                        logger.info("Waiting for " + config.delayTime + " miliSeconds");
+                        await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
+                        const updatedJob = await produceIngestion(messageObject);
                         logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
                     }
                 }
