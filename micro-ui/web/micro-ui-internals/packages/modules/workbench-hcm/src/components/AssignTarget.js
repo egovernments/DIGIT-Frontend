@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Modal, CardLabel, LabelFieldPair, CloseSvg, Close, TextInput } from "@egovernments/digit-ui-react-components";
 
-const AssignTarget = ({ t, onClose, heading, beneficiaryType, totalNo, targetNo, onChange, onCancel, onSubmit, data }) => {
+const AssignTarget = ({ t, onClose, heading, beneficiaryType, totalNo, targetNo, onChange, onCancel, onSubmit, data,isEdit,onSubmitTarget }) => {
   const CloseBtn = (props) => {
     return (
       <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
@@ -28,7 +28,7 @@ const AssignTarget = ({ t, onClose, heading, beneficiaryType, totalNo, targetNo,
       formId="modal-action"
       actionCancelLabel={t("CORE_COMMON_CANCEL")}
       actionCancelOnSubmit={onCancel}
-      actionSaveOnSubmit={onSubmit}
+      actionSaveOnSubmit={isEdit ? onSubmit : onSubmitTarget}
     >
       <LabelFieldPair>
         <CardLabel className={"card-label-smaller"}> {`${t("WBH_BENEFICIARY_TYPE_LABEL")}`} </CardLabel>

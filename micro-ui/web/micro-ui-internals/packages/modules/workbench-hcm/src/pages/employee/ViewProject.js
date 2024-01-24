@@ -76,8 +76,8 @@ const ViewProject = () => {
       apiOperation: "SEARCH",
     },
     config: {
-      enabled: projectId || projectNumber ? true: false
-    }
+      enabled: projectId || projectNumber ? true : false,
+    },
   };
 
   const closeToast = () => {
@@ -92,8 +92,8 @@ const ViewProject = () => {
   // Render the data once it's available
   let config = null;
 
-  const reqProjectUpdate = {
-    url: "/project/v1/_update",
+  const reqProjectCreate = {
+    url: "/project/v1/_create",
     params: {},
     body: {},
     config: {
@@ -101,7 +101,7 @@ const ViewProject = () => {
     },
   };
 
-  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqProjectUpdate);
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqProjectCreate);
 
   const handleAssignCampaignSubmit = async () => {
     try {
@@ -135,8 +135,9 @@ const ViewProject = () => {
           }
         );
       }
-    } catch {
-      throw error;
+    } catch (error) {
+      setShowToast({ label: "WBH_DATES_UPDATED_FAILED", isError: true });
+      // setShowTargetModal(false);
     }
   };
 
@@ -154,6 +155,17 @@ const ViewProject = () => {
 
   const mutationTarget = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
 
+  const onSuccess = () => {
+    closeToast();
+    refetch();
+    setShowToast({ key: "success", label: "WBH_PROJECT_TARGET_ADDED_SUCESSFULLY" });
+  };
+  const onError = (resp) => {
+    const label = resp?.response?.data?.Errors?.[0]?.code;
+    setShowToast({ isError: true, label });
+    refetch();
+  };
+
   const handleProjectTargetSubmit = async () => {
     const targets = {
       beneficiaryType: formData?.beneficiaryType,
@@ -162,19 +174,25 @@ const ViewProject = () => {
       isDeleted: false,
     };
 
-    const updatedProject = {
-      ...project,
-      targets: [...project.targets, targets],
-    };
+    const projectTarget = project?.Project?.[0];
 
-    await mutation.mutate({
-      body: {
-        Projects: [{
-          ...project,
-          targets:[...project.targets,targets]
-        }],
+    await mutation.mutate(
+      {
+        body: {
+          Projects: [
+            {
+              ...projectTarget,
+              targets: [...projectTarget?.targets, targets],
+            },
+          ],
+        },
       },
-    });
+      {
+        onError,
+        onSuccess,
+      }
+    );
+    setShowTargetModal(false);
   };
 
   const handleOnChange = (e) => {
@@ -200,10 +218,11 @@ const ViewProject = () => {
       {showTargetModal && (
         <AssignTarget
           t={t}
+          isEdit={false}
           onClose={() => setShowTargetModal(false)}
           heading={"WBH_CAMPAIGN_ASSIGNMENT_TARGET"}
           onCancel={handleOnCancel}
-          onSubmit={handleProjectTargetSubmit}
+          onSubmitTarget={handleProjectTargetSubmit}
           onChange={handleOnChange}
         />
       )}

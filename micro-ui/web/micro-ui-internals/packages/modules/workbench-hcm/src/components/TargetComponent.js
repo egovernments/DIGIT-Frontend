@@ -1,4 +1,4 @@
-import { Button, Header, SVG } from "@egovernments/digit-ui-react-components";
+import { Button, Header, SVG, Toast } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AssignTarget from "./AssignTarget";
@@ -7,12 +7,25 @@ const TargetComponent = (props) => {
   const { t } = useTranslation();
 
   const [showModal, setShowModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const [formData, setFormData] = useState({
     beneficiaryType: "",
     totalNo: 0,
     targetNo: 0,
   });
+
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(null);
+    }, 5000);
+  };
+
+  const handleOnCancel = () => {
+    setShowModal(false);
+  };
+
+  const targetIndex = props?.project?.targets?.findIndex((target) => target?.beneficiaryType === formData?.beneficiaryType);
 
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,6 +46,17 @@ const TargetComponent = (props) => {
     url: "/project/v1/_update",
   };
 
+  const onSuccess = () => {
+    closeToast();
+    refetch();
+    setShowToast({ key: "success", label: "WBH_PROJECT_TARGET_EDITED_SUCESSFULLY" });
+  };
+  const onError = (resp) => {
+    const label = resp?.response?.data?.Errors?.[0]?.code;
+    setShowToast({ isError: true, label });
+    refetch();
+  };
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteria);
 
   const handleSubmitTarget = async () => {
@@ -43,21 +67,36 @@ const TargetComponent = (props) => {
       isDeleted: false,
     };
 
-    const updatedProject = {
-      ...props?.project,
-      targets: [...props.project.targets, targets],
-    };
+    // Find the index of the target in the existing targets array
+    const targetIndex = props.project.targets.findIndex((target) => target.beneficiaryType === formData.beneficiaryType);
 
-    await mutation.mutate({
-      body: {
-        Projects: [{
-          ...props?.project,
-          targets:[...props.project.targets,targets]
-        }],
-      },
-    });
+    if (targetIndex !== -1) {
+      // If the target exists, update it
+      const updatedTargets = [...props.project.targets.slice(0, targetIndex), targets, ...props.project.targets.slice(targetIndex + 1)];
 
-    console.log(props?.project, targets);
+      const updatedProject = {
+        ...props?.project,
+        targets: updatedTargets,
+      };
+
+      await mutation.mutate(
+        {
+          body: {
+            Projects: [updatedProject],
+          },
+        },
+        {
+          onError,
+          onSuccess,
+        }
+      );
+
+      setShowModal(false);
+
+    } else {
+      // Handle case when the target doesn't exist (optional)
+      console.log("Target not found for update");
+    }
   };
 
   return (
@@ -67,6 +106,7 @@ const TargetComponent = (props) => {
       {showModal && (
         <AssignTarget
           t={t}
+          isEdit={true}
           heading={"WBH_CAMPAIGN_ASSIGNMENT_EDIT_TARGET"}
           onClose={() => {
             setShowModal(false);
@@ -76,8 +116,11 @@ const TargetComponent = (props) => {
           totalNo={formData?.totalNo}
           targetNo={formData?.targetNo}
           onSubmit={handleSubmitTarget}
+          onCancel={handleOnCancel}
         />
       )}
+
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       {props?.targets?.length === 0 ? (
         <h1>{t("WBH_NO_TARGETS_FOUND")}</h1>
       ) : (
