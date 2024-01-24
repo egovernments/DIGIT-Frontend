@@ -88,6 +88,7 @@ Syntax for the FormComposersV2
 ### Changelog
 
 ```bash
+1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0-beta.5 added file type excel in multiUploadWrapper
 1.8.0-beta.4 republished 
 1.8.0-beta.3 republished due to some issues
@@ -122,7 +123,7 @@ Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-g
 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-workbench":"0.1.0",
+"@egovernments/digit-ui-module-workbench":"1.0.0",
 ```
 
 then navigate to App.js
@@ -110,6 +110,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.1-beta.1 Republished after merging with Master due to version issues.
 1.0.0-beta.14 Added info message in localisation search
 1.0.0-beta.13 Added new role to support hcm localisation create
 1.0.0-beta.13 Added customisable label for custom dropdown through workbench ui schema

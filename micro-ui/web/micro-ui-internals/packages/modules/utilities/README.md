@@ -136,6 +136,7 @@ _Bill Module
 ### Changelog
 
 ```bash
+1.0.1-beta.1 Republished after merging with Master due to version issues.
 1.0.0-beta.3 added new support to view any document
 1.0.0-beta.2 republished due to some iframe issue
 1.0.0-beta.1 republished due to some version issues

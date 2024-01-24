@@ -78,6 +78,7 @@ and add its related functions
 ### Changelog
 
 ```bash
+1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0-beta.16 fixed the hardcoded logout message 
 1.8.0-beta.15 fixed the sidebar sort order issue 
 1.8.0-beta.14
@@ -129,7 +130,7 @@ Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-g
 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

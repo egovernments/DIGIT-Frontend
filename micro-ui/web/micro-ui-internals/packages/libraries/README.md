@@ -55,11 +55,12 @@ export default App;
 ### Changelog
 
 ```bash
+1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0 Released as part of workbench v1.0
 ```
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ### Contributors
 

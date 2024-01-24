@@ -42,6 +42,7 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0-beta.20 Added css for info message in localisation screen
 1.8.0-beta.19 Improved Bulk Upload and Bulk Upload Toast CSS
 1.8.0-beta.18 added bulk upload css
@@ -79,7 +80,7 @@ frontend/micro-ui/web/public/index.html
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ## License
 
