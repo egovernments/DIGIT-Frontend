@@ -29,7 +29,7 @@
     "devD:dss": "cd packages/modules/dss && yarn start",
     "devD:hrms": "cd packages/modules/hrms && yarn start",
     "devD:common": "cd packages/modules/common && yarn start",
-    "dev:utilities": "cd packages/modules/utilities && yarn start",
+    "devD:utilities": "cd packages/modules/utilities && yarn start",
     "dev:workbench": "cd packages/modules/workbench && yarn start",
     "devD:engagement": "cd packages/modules/engagement && yarn start",
     "build": "run-p build:**",
