@@ -208,8 +208,9 @@ const produceIngestion = async (messages: any) => {
     messages.Job.RequestInfo = { userInfo: messages?.Job?.ingestionDetails?.userInfo };
     logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
     logger.info("Ingestionurl : " + config.host.hcmMozImpl + config.paths.hcmMozImpl)
-    logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.id)
-    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.id }, undefined, undefined, undefined);
+    logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
+    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.fileStoreId }, undefined, undefined, undefined);
+    notStartedIngestion.ingestionNumber = ingestionResult?.ingestionNumber;
     logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
   }
   else {

@@ -58,7 +58,7 @@ function processExcelSheet(
         logger.info("Values To Hash : " + JSON.stringify(valuesToHash));
 
         // Generate a hash using hash-sum of the extracted values
-        const generatedCode = hashSum(valuesToHash);
+        const generatedCode = "h" + hashSum(valuesToHash);
         rowData[fieldConfig.title] = convertToFieldType(generatedCode, typeof fieldConfig.default);
         fieldConfig.default = rowData[fieldConfig.title];
       } else if (fieldConfig.format === 'AUTO_GENERATE') {

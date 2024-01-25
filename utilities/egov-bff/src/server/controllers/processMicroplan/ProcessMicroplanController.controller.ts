@@ -37,7 +37,7 @@ class BulkUploadController {
     request: express.Request,
     response: express.Response
   ) => {
-    var result: any, Job: any = { ingestionDetails: { userInfo: {}, history: [] } };
+    var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [] } };
     try {
       try {
         const { campaignType } = request?.body?.HCMConfig;
@@ -103,7 +103,7 @@ class BulkUploadController {
               const responseData = fileCreationResult?.files;
               logger.info("Response data after File Creation : " + JSON.stringify(responseData));
               if (Array.isArray(responseData) && responseData.length > 0) {
-                Job.ingestionDetails.history.push({ id: responseData[0].fileStoreId, tenantId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
+                Job.ingestionDetails.history.push({ fileStoreId: responseData[0].fileStoreId, tenantId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
               }
             } catch (error: any) {
               return errorResponder(
