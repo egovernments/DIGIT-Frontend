@@ -30,7 +30,7 @@ const LanguageSelection = () => {
 
           <p>{t(`TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
         </div>
-        <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
+        <div className="language-selector" style={{ justifyContent: "space-between", marginBottom: "24px", padding: "0 0" }}>
           {languages.map((language, index) => (
             <div className="language-button-container" key={index}>
               <CustomButton
