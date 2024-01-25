@@ -8,22 +8,16 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/libraries",
-    "micro-ui-internals/packages/react-components",
-    "micro-ui-internals/packages/modules/workbench",
     "micro-ui-internals/packages/modules/workbench-hcm"
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.0-beta.2",
-    "@egovernments/digit-ui-module-workbench": "1.0.0-beta.6",
-    "@egovernments/digit-ui-module-core": "1.8.0-beta.5",
-    "@egovernments/digit-ui-module-hrms": "1.8.0-beta.2",
-
-    "@egovernments/digit-ui-module-hcmworkbench": "0.0.26",
- 
-    "@egovernments/digit-ui-react-components": "1.8.0-beta.5",
-
+    "@egovernments/digit-ui-libraries": "1.8.1-beta.1",
+    "@egovernments/digit-ui-module-workbench": "1.0.1-beta.1",
+    "@egovernments/digit-ui-module-hcmworkbench": "0.0.36",
+    "@egovernments/digit-ui-module-core": "1.8.1-beta.1",
+    "@egovernments/digit-ui-module-utilities": "1.0.1-beta.1",
+    "@egovernments/digit-ui-react-components": "1.8.1-beta.1",
     "babel-loader": "8.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
