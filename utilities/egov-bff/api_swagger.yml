@@ -1,0 +1,389 @@
+openapi: 3.0.0
+info:
+  title: Unified Uat Api for ProcessMicroplan
+  version: 1.0.0
+paths:
+  /hcm-bff/bulk/_transform:
+    post:
+      summary: Transform Bulk Data
+      description: Endpoint to transform bulk data through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                HCMConfig:
+                  type: object
+                  properties:
+                    fileStoreId:
+                      type: string
+                    transformTemplate:
+                      type: string
+                    selectedRows:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          startRow:
+                            type: integer
+                          endRow:
+                            type: integer
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    authToken:
+                      type: string
+                    userInfo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        uuid:
+                          type: string
+                        userName:
+                          type: string
+                        name:
+                          type: string
+                        mobileNumber:
+                          type: string
+                        emailId:
+                          type: string
+                        locale:
+                          type: string
+                        type:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              code:
+                                type: string
+                              tenantId:
+                                type: string
+                        active:
+                          type: boolean
+                        tenantId:
+                          type: string
+                        permanentCity:
+                          type: string
+                    msgId:
+                      type: string
+                    plainAccessRequest: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "egov-bff"
+                  ver: "0.0.1"
+                  ts: 1705486256704
+                  status: "successful"
+                  desc: "new-response"
+                updatedDatas:
+                  - code: "0846904c"
+                    name_in_english: "CHIFUNDE "
+                    name: "CHIFUNDE "
+                    parent_code: "mz"
+                    boundary_type: "Provincia"
+                    boundary_level: 2
+                    campaign_start_date: "10/01/2024"
+                    campaign_end_date: "05/02/2024"
+                    total_households: 1
+                    targeted_households: 1
+                    total_individuals: 257
+                    targeted_individuals: 257
+                    estimated_bednets: 10
+                    checklist_target: ""
+                    insert_time: "09/01/2024"
+                    update_time: "14/02/2024"
+                    filename: "default.xlsx"
+                  - code: "0846904c"
+                    name_in_english: "CHIFUNDE "
+                    name: "CHIFUNDE "
+                    parent_code: "mz"
+                    boundary_type: "Provincia"
+                    boundary_level: 2
+                    campaign_start_date: "10/01/2024"
+                    campaign_end_date: "05/02/2024"
+                    total_households: 1
+                    targeted_households: 1
+                    total_individuals: 508
+                    targeted_individuals: 508
+                    estimated_bednets: 10
+                    checklist_target: ""
+                    insert_time: "09/01/2024"
+                    update_time: "14/02/2024"
+                    filename: "default.xlsx"
+        '500':
+          description: Error response
+          content:
+            application/json:
+              example:
+                ResponseInfo: null
+                Errors:
+                  - code: INTERNAL_SERVER_ERROR
+                    message: "detailed error response"
+                    description: null
+                    params: null
+  /hcm-bff/bulk/_process:
+    post:
+      summary: Process Bulk Data
+      description: Endpoint to process bulk data through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                HCMConfig:
+                  type: object
+                  properties:
+                    parsingTemplate:
+                      type: string
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+                          name_in_english:
+                            type: string
+                          name:
+                            type: string
+                          parent_code:
+                            type: string
+                          boundary_type:
+                            type: string
+                          boundary_level:
+                            type: integer
+                          campaign_start_date:
+                            type: string
+                          campaign_end_date:
+                            type: string
+                          total_households:
+                            type: integer
+                          targeted_households:
+                            type: integer
+                          total_individuals:
+                            type: number
+                          targeted_individuals:
+                            type: number
+                          estimated_bednets:
+                            type: integer
+                          checklist_target:
+                            type: string
+                          insert_time:
+                            type: string
+                          update_time:
+                            type: string
+                          filename:
+                            type: string
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    authToken:
+                      type: string
+                    userInfo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        uuid:
+                          type: string
+                        userName:
+                          type: string
+                        name:
+                          type: string
+                        mobileNumber:
+                          type: string
+                        emailId:
+                          type: string
+                        locale:
+                          type: string
+                        type:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              code:
+                                type: string
+                              tenantId:
+                                type: string
+                        active:
+                          type: boolean
+                        tenantId:
+                          type: string
+                        permanentCity:
+                          type: string
+                    msgId:
+                      type: string
+                    plainAccessRequest: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "egov-bff"
+                  ver: "0.0.1"
+                  ts: 1705403475334
+                  status: "successful"
+                  desc: "new-response"
+                groupedData:
+                  - code: "CHIFUNDE "
+                    name_in_english: "Bairro 1 Luia"
+                    name: "Bairro 1 Luia"
+                    parent_code: "mz"
+                    boundary_type: "Provincia"
+                    boundary_level: 2
+                    campaign_start_date: "10/01/2024"
+                    campaign_end_date: "05/02/2024"
+                    total_households: 518
+                    targeted_households: 518
+                    total_individuals: 2282.4
+                    targeted_individuals: 2282.4
+                    estimated_bednets: 200
+                    checklist_target: ""
+                    insert_time: "09/01/2024"
+                    update_time: "14/02/2024"
+                    filename: "default.xlsx"
+        '500':
+          description: Error response
+          content:
+            application/json:
+              example:
+                ResponseInfo: null
+                Errors:
+                  - code: INTERNAL_SERVER_ERROR
+                    message: "detailed error response"
+                    description: null
+                    params: null
+  /hcm-bff/hcm/_processmicroplan:
+    post:
+      summary: Process Micro Plan
+      description: Endpoint to process micro plan through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                HCMConfig:
+                  type: object
+                  properties:
+                    fileStoreId:
+                      type: string
+                    campaignName:
+                      type: string
+                    projectType:
+                      type: string
+                    projectTypeId:
+                      type: string
+                    campaignType:
+                      type: string
+                    selectedRows:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          startRow:
+                            type: integer
+                          endRow:
+                            type: integer
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    authToken:
+                      type: string
+                    userInfo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        uuid:
+                          type: string
+                        userName:
+                          type: string
+                        name:
+                          type: string
+                        mobileNumber:
+                          type: string
+                        emailId:
+                          type: string
+                        locale:
+                          type: string
+                        type:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              code:
+                                type: string
+                              tenantId:
+                                type: string
+                        active:
+                          type: boolean
+                        tenantId:
+                          type: string
+                        permanentCity:
+                          type: string
+                    msgId:
+                      type: string
+                    plainAccessRequest: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "Rainmaker"
+                  ver: "0.0.1"
+                  ts: 1705472735858
+                  status: "successful"
+                  desc: "new-response"
+                Job:
+                  ingestionDetails:
+                    - id: "25386562-78e9-44d4-ae09-042081bdcd38"
+                      tenantId: "mz"
+                      state: "not-started"
+                      type: "xlsx"
+                      ingestionType: "facility"
+                  tenantId: "mz"
+        '500':
+          description: Error response
+          content:
+            application/json:
+              example:
+                ResponseInfo: null
+                Errors:
+                  - code: INTERNAL_SERVER_ERROR
+                    message: "detailed error response"
+                    description: null
+                    params: null
+
