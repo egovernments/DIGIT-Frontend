@@ -275,6 +275,7 @@
           margin-right: unset;
         }
       }
+
     }
 
     .field-container {
@@ -332,6 +333,12 @@
   .button-sub-text {
     width: 240px;
   }
+}
+@media(min-width :360px){
+  .label-field-pair {
+    flex-direction :column;
+  }
+}
   .home-page-info-banner-wrap {
     max-width: 45%;
     min-width: 40%;
@@ -347,7 +354,7 @@
     max-width: 100%;
     padding: 0px 10px;
   }
-}
+
 
 .card-label-error {
   @apply block text-body-s text-error mb-md;
