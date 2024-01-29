@@ -314,8 +314,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   return (
     <div className="user-profile">
-      <section style={{ margin: userType === "citizen" ? "8px" : "24px" }}>
-        {userType === "citizen" ? (
+      <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "24px" }}>
+        {userType === "citizen" || isMobile ? (
           <BackButton></BackButton>
         ) : (
           <BreadCrumb
