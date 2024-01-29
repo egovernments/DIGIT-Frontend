@@ -334,11 +334,15 @@
     width: 240px;
   }
 }
-@media(min-width :360px){
-  .label-field-pair {
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .label-field-pair
+   {
+    display:flex;
     flex-direction :column;
   }
 }
+
+
   .home-page-info-banner-wrap {
     max-width: 45%;
     min-width: 40%;
