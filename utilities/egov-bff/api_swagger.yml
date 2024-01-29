@@ -362,28 +362,66 @@ paths:
             application/json:
               example:
                 ResponseInfo:
-                  apiId: "Rainmaker"
+                  apiId: "egov-bff"
                   ver: "0.0.1"
-                  ts: 1705472735858
+                  ts: 1706503224772
                   status: "successful"
                   desc: "new-response"
                 Job:
                   ingestionDetails:
-                    - id: "25386562-78e9-44d4-ae09-042081bdcd38"
+                    userInfo:
+                      id: 281
+                      uuid: "3ae47a59-ed1e-489d-b8fb-a78e7a167966"
+                      userName: "EMP54"
+                      name: "Jagan"
+                      type: "EMPLOYEE"
+                      mobileNumber: "6667776662"
+                      emailId: "xyz@egovernments.org"
                       tenantId: "mz"
-                      state: "not-started"
-                      type: "xlsx"
-                      ingestionType: "facility"
+                      roles:
+                        - id: null
+                          name: "Localisation admin"
+                          code: "LOC_ADMIN"
+                          tenantId: "pg"
+                        - id: null
+                          name: "System Administrator"
+                          code: "SYSTEM_ADMINISTRATOR"
+                          tenantId: "mz"
+                        - id: null
+                          name: "Super User"
+                          code: "SUPERUSER"
+                          tenantId: "mz"
+                    projectType: "LLIN-Default-Test2"
+                    projectTypeId: "dbd45c31-de9e-4e62-a9b6-abb818933333"
+                    projectName: "TestCampaign1"
+                    history:
+                      - fileStoreId: "aecc4be8-7a99-4c1c-ad6b-1bb2d5981852"
+                        tenantId: "mz"
+                        state: "started"
+                        type: "xlsx"
+                        ingestionType: "boundary"
+                        ingestionNumber: "ING-2024-01-29-001827"
                   tenantId: "mz"
-        '500':
-          description: Error response
-          content:
-            application/json:
-              example:
-                ResponseInfo: null
-                Errors:
-                  - code: INTERNAL_SERVER_ERROR
-                    message: "detailed error response"
-                    description: null
-                    params: null
-
+                  RequestInfo:
+                    userInfo:
+                      id: 281
+                      uuid: "3ae47a59-ed1e-489d-b8fb-a78e7a167966"
+                      userName: "EMP54"
+                      name: "Jagan"
+                      type: "EMPLOYEE"
+                      mobileNumber: "6667776662"
+                      emailId: "xyz@egovernments.org"
+                      tenantId: "mz"
+                      roles:
+                        - id: null
+                          name: "Localisation admin"
+                          code: "LOC_ADMIN"
+                          tenantId: "pg"
+                        - id: null
+                          name: "System Administrator"
+                          code: "SYSTEM_ADMINISTRATOR"
+                          tenantId: "mz"
+                        - id: null
+                          name: "Super User"
+                          code: "SUPERUSER"
+                          tenantId: "mz"
