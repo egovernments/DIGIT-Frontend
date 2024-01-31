@@ -1,0 +1,635 @@
+{
+	"info": {
+		"_postman_id": "37ce0965-4420-40ad-9bbf-6cc7d93995d5",
+		"name": "HCM-BFF",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18845214"
+	},
+	"item": [
+		{
+			"name": "transform",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "unified-dev.digit.org"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-GB,en-US;q=0.9,en;q=0.8"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+					},
+					{
+						"key": "origin",
+						"value": "https://unified-dev.digit.org"
+					},
+					{
+						"key": "referer",
+						"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Linux\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    //  43cfaf3f-f31f-492f-afeb-cebe4f4301e8\n    // d71a1963-27a8-4300-a1c4-2ec99e95331b   multiplesheet\n    // 6c091ddb-523e-4afd-8a81-afe94196d080 without matching sheetName\n    // for unifieddev\n    // 1d27af7d-3736-408d-b9bc-796c92fd5f4b multiplesheet\n    \"HCMConfig\": {\n        \"fileStoreId\": \"bfa9e928-4137-45fc-83f8-107203bd9190\",\n        \"transformTemplate\": \"MicroPlanCampaignBoundaryVillageReal\",\n        \"selectedRows\": [\n            {\n                \"startRow\": 1,\n                \"endRow\": 2\n            }\n        ]\n    },\n    \"RequestInfo\":{\n        \"apiId\": \"Rainmaker\",\n        \"authToken\": \"c4f4d0ff-7004-4cd6-b242-353d6e06ffa1\",\n        \"userInfo\": {\n            \"id\": 281,\n            \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n            \"userName\": \"EMP54\",\n            \"name\": \"Jagan\",\n            \"mobileNumber\": \"6667776662\",\n            \"emailId\": \"xyz@egovernments.org\",\n            \"locale\": \"string\",\n            \"type\": \"EMPLOYEE\",\n            \"roles\": [\n                {\n                    \"name\": \"System Administrator\",\n                    \"code\": \"SYSTEM_ADMINISTRATOR\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Super User\",\n                    \"code\": \"SUPERUSER\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Localisation admin\",\n                    \"code\": \"LOC_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Campaign Admin\",\n                    \"code\": \"CAMPAIGN_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"MDMS ADMIN\",\n                    \"code\": \"MDMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"HRMS Admin\",\n                    \"code\": \"HRMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                }\n            ],\n            \"active\": true,\n            \"tenantId\": \"mz\",\n            \"permanentCity\": \"Amritsar\"\n        },\n        \"msgId\": \"1705643578032|en_IN\",\n        \"plainAccessRequest\": {}\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/hcm-bff/bulk/_transform",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hcm-bff",
+						"bulk",
+						"_transform"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "transform",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authority",
+								"value": "unified-dev.digit.org"
+							},
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "en-GB,en-US;q=0.9,en;q=0.8"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "cookie",
+								"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+							},
+							{
+								"key": "origin",
+								"value": "https://unified-dev.digit.org"
+							},
+							{
+								"key": "referer",
+								"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Linux\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-origin"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    //  43cfaf3f-f31f-492f-afeb-cebe4f4301e8\n    // d71a1963-27a8-4300-a1c4-2ec99e95331b   multiplesheet\n    // 6c091ddb-523e-4afd-8a81-afe94196d080 without matching sheetName\n    // for unifieddev\n    // 1d27af7d-3736-408d-b9bc-796c92fd5f4b multiplesheet\n    \"HCMConfig\": {\n        \"fileStoreId\": \"bfa9e928-4137-45fc-83f8-107203bd9190\",\n        \"transformTemplate\": \"ProjectUserFacilityTransform\",\n        \"selectedRows\": [\n            {\n                \"startRow\": 1,\n                \"endRow\": 2\n            }\n        ]\n    },\n    \"RequestInfo\":{\n        \"apiId\": \"Rainmaker\",\n        \"authToken\": \"50def521-84eb-4667-b08a-930db9918744\",\n        \"userInfo\": {\n            \"id\": 281,\n            \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n            \"userName\": \"EMP54\",\n            \"name\": \"Jagan\",\n            \"mobileNumber\": \"6667776662\",\n            \"emailId\": \"xyz@egovernments.org\",\n            \"locale\": \"string\",\n            \"type\": \"EMPLOYEE\",\n            \"roles\": [\n                {\n                    \"name\": \"System Administrator\",\n                    \"code\": \"SYSTEM_ADMINISTRATOR\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Super User\",\n                    \"code\": \"SUPERUSER\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Localisation admin\",\n                    \"code\": \"LOC_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Campaign Admin\",\n                    \"code\": \"CAMPAIGN_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"MDMS ADMIN\",\n                    \"code\": \"MDMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"HRMS Admin\",\n                    \"code\": \"HRMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                }\n            ],\n            \"active\": true,\n            \"tenantId\": \"mz\",\n            \"permanentCity\": \"Amritsar\"\n        },\n        \"msgId\": \"1705643578032|en_IN\",\n        \"plainAccessRequest\": {}\n    }\n}"
+						},
+						"url": {
+							"raw": "https://unified-uat.digit.org/hcm-bff/bulk/_transform",
+							"protocol": "https",
+							"host": [
+								"unified-uat",
+								"digit",
+								"org"
+							],
+							"path": [
+								"hcm-bff",
+								"bulk",
+								"_transform"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 29 Jan 2024 05:24:44 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"9d7-zJHBDD53WSWUktZb/Q9HLkeU0vU\""
+						},
+						{
+							"key": "x-correlation-id",
+							"value": "f0c72191-a96f-4be6-999a-5c3d284eecdc"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15724800; includeSubDomains"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ResponseInfo\": {\n        \"apiId\": \"egov-bff\",\n        \"ver\": \"0.0.1\",\n        \"ts\": 1706505884901,\n        \"status\": \"successful\",\n        \"desc\": \"new-response\"\n    },\n    \"updatedDatas\": [\n        {\n            \"code\": \"h2d1d73d2\",\n            \"name_in_english\": \"Bairro 1 Luia\",\n            \"name\": \"Bairro 1 Luia\",\n            \"parent_code\": \"h23fba820\",\n            \"boundary_type\": \"Localidade\",\n            \"boundary_level\": 4,\n            \"campaign_start_date\": \"10/01/2024\",\n            \"campaign_end_date\": \"05/02/2024\",\n            \"total_households\": 1,\n            \"targeted_households\": 1,\n            \"total_individuals\": 257,\n            \"targeted_individuals\": 257,\n            \"estimated_bednets\": 10,\n            \"checklist_target\": \"\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\",\n            \"username\": \"EM1Bairro 1 Luia\",\n            \"password\": \"eGov@123\",\n            \"nameForUser\": \"EM1Bairro 1 Luia\",\n            \"mobile_number\": \"8325059703\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 1 Luia\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h2d1d73d2\",\n            \"facility_name\": \"Bairro 1 LuiaAC1/AD Armazem do INGD\",\n            \"is_permanent\": \"True\",\n            \"facility_type\": \"Monitor Local\",\n            \"address_line_1\": \"\",\n            \"address_line_2\": \"\",\n            \"landmark\": \"\",\n            \"city\": \"\",\n            \"pincode\": \"000000\",\n            \"building_name\": \"\",\n            \"street\": \"\",\n            \"storage\": 0,\n            \"latitude\": \"\",\n            \"longitude\": \"\",\n            \"uuid\": \"\",\n            \"target\": 1,\n            \"parent_code_facility\": \"\"\n        },\n        {\n            \"code\": \"h5def887b\",\n            \"name_in_english\": \"Bairro 2\",\n            \"name\": \"Bairro 2\",\n            \"parent_code\": \"h3e20b420\",\n            \"boundary_type\": \"Localidade\",\n            \"boundary_level\": 4,\n            \"campaign_start_date\": \"10/01/2024\",\n            \"campaign_end_date\": \"05/02/2024\",\n            \"total_households\": 1,\n            \"targeted_households\": 1,\n            \"total_individuals\": 257,\n            \"targeted_individuals\": 257,\n            \"estimated_bednets\": 10,\n            \"checklist_target\": \"\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\",\n            \"username\": \"EM2Bairro 2\",\n            \"password\": \"eGov@123\",\n            \"nameForUser\": \"EM2Bairro 2\",\n            \"mobile_number\": \"8820814044\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 2\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h5def887b\",\n            \"facility_name\": \"Bairro 2AC1/AD Armazem do INGD\",\n            \"is_permanent\": \"True\",\n            \"facility_type\": \"Monitor Local\",\n            \"address_line_1\": \"\",\n            \"address_line_2\": \"\",\n            \"landmark\": \"\",\n            \"city\": \"\",\n            \"pincode\": \"000000\",\n            \"building_name\": \"\",\n            \"street\": \"\",\n            \"storage\": 0,\n            \"latitude\": \"\",\n            \"longitude\": \"\",\n            \"uuid\": \"\",\n            \"target\": 1,\n            \"parent_code_facility\": \"\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "unified-dev.digit.org"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-GB,en-US;q=0.9,en;q=0.8"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+					},
+					{
+						"key": "origin",
+						"value": "https://unified-dev.digit.org"
+					},
+					{
+						"key": "referer",
+						"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Linux\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"HCMConfig\": {\n        \"parsingTemplate\":\"MicroPlanTransformBoundary\",\n        \"data\": [\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Bairro 1 Luia\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M1\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Bairro 2\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M2,M1,M3\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Bairro 3\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M3\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Canverere\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M4\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chipapi\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M5,M4\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chirambwe\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M4,M6\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Ntchenga\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M6\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chiuyo\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M6\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassamandola 1\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M6\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassamandola 2\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M6\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Madziangona\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M7\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Mpundo\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M7\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Malizansenge\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M7\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chitukula\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M7\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chiritse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M8\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Chidjeule\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M7\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Banda\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M8\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Ntchenga wa guwa\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M8\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cesar\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"CHIFUNDE \",\n                \"locality\": \"CAMUENJE\",\n                \"village\": \"Cassequesse\",\n                \"faciltyName\": \"AC1/AD Armazem do INGD\",\n                \"facilityIsPermanent\": \"S\",\n                \"user\": \"M9\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Bene 1\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M10\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Bene 2\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M10\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Angkoko\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M11\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Moeza\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M11\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Calira\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M11\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Sitriti\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M11\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Cawambo\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M11\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Chipuri\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M12\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Bene 3\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M12\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            },\n            {\n                \"district\": \"Chifunde\",\n                \"locality\": \"Camuenje\",\n                \"village\": \"Nhanguphiri\",\n                \"faciltyName\": \"AS2/Bene\",\n                \"facilityIsPermanent\": \"N\",\n                \"user\": \"M12\",\n                \"campaignStartDate\": \"29/12/2023\",\n                \"campaignEndDate\": \"04/12/2024\",\n                \"totalHouseHolds\": 0,\n                \"targetHouseHolds\": 0,\n                \"totalIndividuals\": 0,\n                \"targetIndividuals\": 0,\n                \"estimatedBednets\": 0,\n                \"checklistTarget\": 0,\n                \"boundaryType\": \"Localidade\",\n                \"parentBoundaryType\": \"Posto Administrativo\",\n                \"rootBoundaryType\": \"Distrito\"\n            }\n        ]\n    },\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"authToken\": \"7d3214a4-578c-4409-9e2d-b692c2a0b5bc\",\n        \"userInfo\": {\n            \"id\": 207,\n            \"uuid\": \"caad2332-b4f7-44b1-bf95-3b772502f210\",\n            \"userName\": \"EMP48\",\n            \"name\": \"Jagan\",\n            \"mobileNumber\": \"6667776662\",\n            \"emailId\": \"xyz@egovernments.org\",\n            \"locale\": \"string\",\n            \"type\": \"EMPLOYEE\",\n            \"roles\": [\n                {\n                    \"name\": \"System Administrator\",\n                    \"code\": \"SYSTEM_ADMINISTRATOR\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Super User\",\n                    \"code\": \"SUPERUSER\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Localisation admin\",\n                    \"code\": \"LOC_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"MDMS ADMIN\",\n                    \"code\": \"MDMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"HRMS Admin\",\n                    \"code\": \"HRMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                }\n            ],\n            \"active\": true,\n            \"tenantId\": \"mz\",\n            \"permanentCity\": \"Amritsar\"\n        },\n        \"msgId\": \"1704782650066|en_IN\",\n        \"plainAccessRequest\": {}\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/hcm-bff/hcm/_processmicroplan",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"hcm-bff",
+						"hcm",
+						"_processmicroplan"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "process",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authority",
+								"value": "unified-dev.digit.org"
+							},
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "en-GB,en-US;q=0.9,en;q=0.8"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "cookie",
+								"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+							},
+							{
+								"key": "origin",
+								"value": "https://unified-dev.digit.org"
+							},
+							{
+								"key": "referer",
+								"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Linux\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-origin"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"HCMConfig\": {\n        \"parsingTemplate\":\"UserParsingCombined\",\n        \"data\": [\n        {\n            \"code\": \"h2d1d73d2\",\n            \"name_in_english\": \"Bairro 1 Luia\",\n            \"name\": \"Bairro 1 Luia\",\n            \"parent_code\": \"h23fba820\",\n            \"boundary_type\": \"Localidade\",\n            \"boundary_level\": 4,\n            \"campaign_start_date\": \"10/01/2024\",\n            \"campaign_end_date\": \"05/02/2024\",\n            \"total_households\": 1,\n            \"targeted_households\": 1,\n            \"total_individuals\": 257,\n            \"targeted_individuals\": 257,\n            \"estimated_bednets\": 10,\n            \"checklist_target\": \"\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\",\n            \"username\": \"EM1Bairro 1 Luia\",\n            \"password\": \"eGov@123\",\n            \"nameForUser\": \"EM1Bairro 1 Luia\",\n            \"mobile_number\": \"8325059703\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 1 Luia\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h2d1d73d2\",\n            \"facility_name\": \"Bairro 1 LuiaAC1/AD Armazem do INGD\",\n            \"is_permanent\": \"True\",\n            \"facility_type\": \"Monitor Local\",\n            \"address_line_1\": \"\",\n            \"address_line_2\": \"\",\n            \"landmark\": \"\",\n            \"city\": \"\",\n            \"pincode\": \"000000\",\n            \"building_name\": \"\",\n            \"street\": \"\",\n            \"storage\": 0,\n            \"latitude\": \"\",\n            \"longitude\": \"\",\n            \"uuid\": \"\",\n            \"target\": 1,\n            \"parent_code_facility\": \"\"\n        },\n        {\n            \"code\": \"h5def887b\",\n            \"name_in_english\": \"Bairro 2\",\n            \"name\": \"Bairro 2\",\n            \"parent_code\": \"h3e20b420\",\n            \"boundary_type\": \"Localidade\",\n            \"boundary_level\": 4,\n            \"campaign_start_date\": \"10/01/2024\",\n            \"campaign_end_date\": \"05/02/2024\",\n            \"total_households\": 1,\n            \"targeted_households\": 1,\n            \"total_individuals\": 257,\n            \"targeted_individuals\": 257,\n            \"estimated_bednets\": 10,\n            \"checklist_target\": \"\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\",\n            \"username\": \"EM2Bairro 2\",\n            \"password\": \"eGov@123\",\n            \"nameForUser\": \"EM2Bairro 2\",\n            \"mobile_number\": \"8820814044\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 2\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h5def887b\",\n            \"facility_name\": \"Bairro 2AC1/AD Armazem do INGD\",\n            \"is_permanent\": \"True\",\n            \"facility_type\": \"Monitor Local\",\n            \"address_line_1\": \"\",\n            \"address_line_2\": \"\",\n            \"landmark\": \"\",\n            \"city\": \"\",\n            \"pincode\": \"000000\",\n            \"building_name\": \"\",\n            \"street\": \"\",\n            \"storage\": 0,\n            \"latitude\": \"\",\n            \"longitude\": \"\",\n            \"uuid\": \"\",\n            \"target\": 1,\n            \"parent_code_facility\": \"\"\n        }\n    ]\n    },\n    \"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"authToken\": \"50def521-84eb-4667-b08a-930db9918744\",\n    \"userInfo\": {\n        \"id\": 281,\n        \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n        \"userName\": \"EMP54\",\n        \"name\": \"Jagan\",\n        \"mobileNumber\": \"6667776662\",\n        \"emailId\": \"xyz@egovernments.org\",\n        \"locale\": \"string\",\n        \"type\": \"EMPLOYEE\",\n        \"roles\": [\n            {\n                \"name\": \"System Administrator\",\n                \"code\": \"SYSTEM_ADMINISTRATOR\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Super User\",\n                \"code\": \"SUPERUSER\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Localisation admin\",\n                \"code\": \"LOC_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Campaign Admin\",\n                \"code\": \"CAMPAIGN_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"MDMS ADMIN\",\n                \"code\": \"MDMS_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"HRMS Admin\",\n                \"code\": \"HRMS_ADMIN\",\n                \"tenantId\": \"mz\"\n            }\n        ],\n        \"active\": true,\n        \"tenantId\": \"mz\",\n        \"permanentCity\": \"Amritsar\"\n    },\n    \"msgId\": \"1706505994460|en_IN\",\n    \"plainAccessRequest\": {}\n}\n}"
+						},
+						"url": {
+							"raw": "https://unified-uat.digit.org/hcm-bff/bulk/_process",
+							"protocol": "https",
+							"host": [
+								"unified-uat",
+								"digit",
+								"org"
+							],
+							"path": [
+								"hcm-bff",
+								"bulk",
+								"_process"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 29 Jan 2024 05:31:49 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"49e-5Otjn9CF/M3PHmzjcS5tAhfOJy0\""
+						},
+						{
+							"key": "x-correlation-id",
+							"value": "29336b50-aa94-4383-9058-287063dc6cf0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15724800; includeSubDomains"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ResponseInfo\": {\n        \"apiId\": \"egov-bff\",\n        \"ver\": \"0.0.1\",\n        \"ts\": 1706506309484,\n        \"status\": \"successful\",\n        \"desc\": \"new-response\"\n    },\n    \"updatedDatas\": [\n        {\n            \"username\": \"EM1Bairro 1 Luia\",\n            \"password\": \"eGov@123\",\n            \"name\": \"EM1Bairro 1 Luia\",\n            \"mobile_number\": \"8325059703\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 1 Luia\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h2d1d73d2\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\"\n        },\n        {\n            \"username\": \"EM2Bairro 2\",\n            \"password\": \"eGov@123\",\n            \"name\": \"EM2Bairro 2\",\n            \"mobile_number\": \"8820814044\",\n            \"gender\": \"Male\",\n            \"date_of_birth\": \"05/03/2002\",\n            \"email\": \"default@gmail.com\",\n            \"correspondence_address\": \"Bairro 2\",\n            \"roles\": \"SYSTEM_ADMINISTRATOR\",\n            \"employment_type\": \"TEMPORARY\",\n            \"date_of_joining\": \"29/10/2023\",\n            \"department\": \"OTHER\",\n            \"designation\": \"LLINMozambique2\",\n            \"campaign_name\": \"TEST_HCM1\",\n            \"administrative_area\": \"tete\",\n            \"boundary_code\": \"h5def887b\",\n            \"insert_time\": \"09/01/2024\",\n            \"update_time\": \"14/02/2024\",\n            \"filename\": \"default.xlsx\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "processMicroplan",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "unified-dev.digit.org"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-GB,en-US;q=0.9,en;q=0.8"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+					},
+					{
+						"key": "origin",
+						"value": "https://unified-dev.digit.org"
+					},
+					{
+						"key": "referer",
+						"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Linux\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    //  43cfaf3f-f31f-492f-afeb-cebe4f4301e8\n    // d71a1963-27a8-4300-a1c4-2ec99e95331b   multiplesheet\n    // 6c091ddb-523e-4afd-8a81-afe94196d080 without matching sheetName\n    // for unifieddev\n    // 1d27af7d-3736-408d-b9bc-796c92fd5f4b multiplesheet\n    // new file 6d3cb4ec-d98a-4e57-8085-36aff16d5190\n    // working facility fa8b313f-dc61-44b0-9934-ab272f2898ee\n    \"HCMConfig\": {\n        \"fileStoreId\": \"6d3cb4ec-d98a-4e57-8085-36aff16d5190\",\n        \"campaignName\":\t\"dskjjkdf\",\n\"projectType\":\t\"LLIN-Default-Test2\",\n\"projectTypeId\":\t\"dbd45c31-de9e-4e62-a9b6-abb818933333\"\n        \"campaignType\": \"ProjectUserFacilityMicroplan\",\n        \"selectedRows\": [\n            {\n                \"startRow\": 15,\n                \"endRow\": 16\n            }\n        ]\n    },\n\t\"RequestInfo\": {\n    \"apiId\": \"Rainmaker\",\n    \"authToken\": \"02659414-5b7c-4427-9cb5-4a1568d38bf6\",\n    \"userInfo\": {\n        \"id\": 281,\n        \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n        \"userName\": \"EMP54\",\n        \"name\": \"Jagan\",\n        \"mobileNumber\": \"6667776662\",\n        \"emailId\": \"xyz@egovernments.org\",\n        \"locale\": \"string\",\n        \"type\": \"EMPLOYEE\",\n        \"roles\": [\n            {\n                \"name\": \"System Administrator\",\n                \"code\": \"SYSTEM_ADMINISTRATOR\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Super User\",\n                \"code\": \"SUPERUSER\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Localisation admin\",\n                \"code\": \"LOC_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"Campaign Admin\",\n                \"code\": \"CAMPAIGN_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"MDMS ADMIN\",\n                \"code\": \"MDMS_ADMIN\",\n                \"tenantId\": \"mz\"\n            },\n            {\n                \"name\": \"HRMS Admin\",\n                \"code\": \"HRMS_ADMIN\",\n                \"tenantId\": \"mz\"\n            }\n        ],\n        \"active\": true,\n        \"tenantId\": \"mz\",\n        \"permanentCity\": \"Amritsar\"\n    },\n    \"msgId\": \"1706083860289|en_IN\",\n    \"plainAccessRequest\": {}\n}\n}"
+				},
+				"url": {
+					"raw": "https://unified-uat.digit.org/hcm-bff/hcm/_processmicroplan",
+					"protocol": "https",
+					"host": [
+						"unified-uat",
+						"digit",
+						"org"
+					],
+					"path": [
+						"hcm-bff",
+						"hcm",
+						"_processmicroplan"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "processMicroplan",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "authority",
+								"value": "unified-dev.digit.org"
+							},
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "en-GB,en-US;q=0.9,en;q=0.8"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "cookie",
+								"value": "_ga_XBQP06FR8V=GS1.1.1691570094.3.1.1691570094.60.0.0; _ga=GA1.1.2124364284.1689669598; _ga_P1TZCPKF6S=GS1.1.1691648339.2.0.1691648339.60.0.0; __cuid=fe28d9c8c84c4d2487b9cb6c9e4cdec1; amp_fef1e8=f4a3f3ed-50f2-409b-be4f-a1ce1dbb59f2R...1hgs4r9gr.1hgs4robc.nu.1r.pp; _ga_H9YC8FEN6F=GS1.1.1701751656.77.1.1701751677.39.0.0"
+							},
+							{
+								"key": "origin",
+								"value": "https://unified-dev.digit.org"
+							},
+							{
+								"key": "referer",
+								"value": "https://unified-dev.digit.org/works-ui/employee/measurement/update?tenantId=pg.citya&workOrderNumber=WO/2023-24/000894&mbNumber=MB/2023-24/001252"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Linux\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-origin"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    //  43cfaf3f-f31f-492f-afeb-cebe4f4301e8\n    // d71a1963-27a8-4300-a1c4-2ec99e95331b   multiplesheet\n    // 6c091ddb-523e-4afd-8a81-afe94196d080 without matching sheetName\n    // for unifieddev\n    // 1d27af7d-3736-408d-b9bc-796c92fd5f4b multiplesheet\n    // new file 6d3cb4ec-d98a-4e57-8085-36aff16d5190\n    // working facility fa8b313f-dc61-44b0-9934-ab272f2898ee\n    \"HCMConfig\": {\n        \"fileStoreId\": \"6d3cb4ec-d98a-4e57-8085-36aff16d5190\",\n        \"campaignName\": \"dskjjkdf\",\n        \"projectType\": \"LLIN-Default-Test2\",\n        \"projectTypeId\": \"dbd45c31-de9e-4e62-a9b6-abb818933333\",\n        \"campaignType\": \"ProjectUserFacilityMicroplan\",\n        \"selectedRows\": [\n            {\n                \"startRow\": 15,\n                \"endRow\": 16\n            }\n        ]\n    },\n    \"RequestInfo\": {\n        \"apiId\": \"Rainmaker\",\n        \"authToken\": \"50def521-84eb-4667-b08a-930db9918744\",\n        \"userInfo\": {\n            \"id\": 281,\n            \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n            \"userName\": \"EMP54\",\n            \"name\": \"Jagan\",\n            \"mobileNumber\": \"6667776662\",\n            \"emailId\": \"xyz@egovernments.org\",\n            \"locale\": \"string\",\n            \"type\": \"EMPLOYEE\",\n            \"roles\": [\n                {\n                    \"name\": \"System Administrator\",\n                    \"code\": \"SYSTEM_ADMINISTRATOR\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Super User\",\n                    \"code\": \"SUPERUSER\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Localisation admin\",\n                    \"code\": \"LOC_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"Campaign Admin\",\n                    \"code\": \"CAMPAIGN_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"MDMS ADMIN\",\n                    \"code\": \"MDMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                },\n                {\n                    \"name\": \"HRMS Admin\",\n                    \"code\": \"HRMS_ADMIN\",\n                    \"tenantId\": \"mz\"\n                }\n            ],\n            \"active\": true,\n            \"tenantId\": \"mz\",\n            \"permanentCity\": \"Amritsar\"\n        },\n        \"msgId\": \"1706083860289|en_IN\",\n        \"plainAccessRequest\": {}\n    }\n}"
+						},
+						"url": {
+							"raw": "https://unified-uat.digit.org/hcm-bff/hcm/_processmicroplan",
+							"protocol": "https",
+							"host": [
+								"unified-uat",
+								"digit",
+								"org"
+							],
+							"path": [
+								"hcm-bff",
+								"hcm",
+								"_processmicroplan"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Mon, 29 Jan 2024 05:22:48 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"a1f-INQoRPktYKKRVSZkD2C0V7tu7u8\""
+						},
+						{
+							"key": "x-correlation-id",
+							"value": "0eccfee5-3631-4585-adc4-eff418d110a2"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15724800; includeSubDomains"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ResponseInfo\": {\n        \"apiId\": \"egov-bff\",\n        \"ver\": \"0.0.1\",\n        \"ts\": 1706505768932,\n        \"status\": \"successful\",\n        \"desc\": \"new-response\"\n    },\n    \"Job\": {\n        \"ingestionDetails\": {\n            \"userInfo\": {\n                \"id\": 281,\n                \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n                \"userName\": \"EMP54\",\n                \"name\": \"Jagan\",\n                \"type\": \"EMPLOYEE\",\n                \"mobileNumber\": \"6667776662\",\n                \"emailId\": \"xyz@egovernments.org\",\n                \"tenantId\": \"mz\",\n                \"roles\": [\n                    {\n                        \"id\": null,\n                        \"name\": \"Localisation admin\",\n                        \"code\": \"LOC_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"System Administrator\",\n                        \"code\": \"SYSTEM_ADMINISTRATOR\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Super User\",\n                        \"code\": \"SUPERUSER\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Localisation admin\",\n                        \"code\": \"LOC_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Campaign Admin\",\n                        \"code\": \"CAMPAIGN_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"MDMS ADMIN\",\n                        \"code\": \"MDMS_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"HRMS Admin\",\n                        \"code\": \"HRMS_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"MDMS ADMIN\",\n                        \"code\": \"MDMS_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Super User\",\n                        \"code\": \"SUPERUSER\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"HRMS Admin\",\n                        \"code\": \"HRMS_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    }\n                ]\n            },\n            \"projectType\": \"LLIN-Default-Test2\",\n            \"projectTypeId\": \"dbd45c31-de9e-4e62-a9b6-abb818933333\",\n            \"projectName\": \"dskjjkdf\",\n            \"history\": [\n                {\n                    \"fileStoreId\": \"37968a87-7930-4e4c-ac7a-6cfced7c7d56\",\n                    \"tenantId\": \"mz\",\n                    \"state\": \"started\",\n                    \"type\": \"xlsx\",\n                    \"ingestionType\": \"project\",\n                    \"ingestionNumber\": \"ING-2024-01-29-001828\"\n                },\n                {\n                    \"fileStoreId\": \"3fff605f-3ec1-4682-b083-66c11f9849c5\",\n                    \"tenantId\": \"mz\",\n                    \"state\": \"not-started\",\n                    \"type\": \"xlsx\",\n                    \"ingestionType\": \"user\"\n                },\n                {\n                    \"fileStoreId\": \"4bad419f-5ad1-4eac-a16c-2830542422f9\",\n                    \"tenantId\": \"mz\",\n                    \"state\": \"not-started\",\n                    \"type\": \"xlsx\",\n                    \"ingestionType\": \"facility\"\n                }\n            ]\n        },\n        \"tenantId\": \"mz\",\n        \"RequestInfo\": {\n            \"userInfo\": {\n                \"id\": 281,\n                \"uuid\": \"3ae47a59-ed1e-489d-b8fb-a78e7a167966\",\n                \"userName\": \"EMP54\",\n                \"name\": \"Jagan\",\n                \"type\": \"EMPLOYEE\",\n                \"mobileNumber\": \"6667776662\",\n                \"emailId\": \"xyz@egovernments.org\",\n                \"tenantId\": \"mz\",\n                \"roles\": [\n                    {\n                        \"id\": null,\n                        \"name\": \"Localisation admin\",\n                        \"code\": \"LOC_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"System Administrator\",\n                        \"code\": \"SYSTEM_ADMINISTRATOR\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Super User\",\n                        \"code\": \"SUPERUSER\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Localisation admin\",\n                        \"code\": \"LOC_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Campaign Admin\",\n                        \"code\": \"CAMPAIGN_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"MDMS ADMIN\",\n                        \"code\": \"MDMS_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"HRMS Admin\",\n                        \"code\": \"HRMS_ADMIN\",\n                        \"tenantId\": \"mz\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"MDMS ADMIN\",\n                        \"code\": \"MDMS_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"Super User\",\n                        \"code\": \"SUPERUSER\",\n                        \"tenantId\": \"pg\"\n                    },\n                    {\n                        \"id\": null,\n                        \"name\": \"HRMS Admin\",\n                        \"code\": \"HRMS_ADMIN\",\n                        \"tenantId\": \"pg\"\n                    }\n                ]\n            }\n        }\n    }\n}"
+				}
+			]
+		}
+	]
+}

@@ -1,4 +1,4 @@
-import { ConsumerGroup, ConsumerGroupOptions, Message } from 'kafka-node';
+import { ConsumerGroup, ConsumerGroupOptions, Message, ProduceRequest } from 'kafka-node';
 import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import { produceIngestion } from '../utils';
@@ -16,7 +16,10 @@ const kafkaConfig: ConsumerGroupOptions = {
     outOfRangeOffset: 'earliest',
 };
 
-const topicName = config.KAFKA_DHIS_UPDATE_TOPIC;
+const dhistopicName = config.KAFKA_DHIS_UPDATE_TOPIC;
+// const saveIngestionTopic = config.KAFKA_SAVE_INGESTION__TOPIC;
+// const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
+const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 const delayTime: any = config.delayTime;
 
 
@@ -24,7 +27,7 @@ const delayTime: any = config.delayTime;
 logger.info('Kafka consumer is attempting to connect...');
 
 // Create a Kafka consumer
-const consumerGroup = new ConsumerGroup(kafkaConfig, [topicName]);
+const consumerGroup = new ConsumerGroup(kafkaConfig, [dhistopicName]);
 
 
 // Exported listener function
@@ -59,10 +62,22 @@ function listener() {
                 }
                 else {
                     logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
+                    // 4th completed
+                    messageObject.Job.ingestionDetails.campaignDetails.status = "Completed";
+                    messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+                    const saveHistory: any = { "history": [messageObject.Job.ingestionDetails.campaignDetails] };
+                    logger.info("Updating campaign details  with status complete: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
+                    produceModifiedMessages(saveHistory, updateCampaignTopic);
                 }
             }
             else {
                 logger.error("Some error occured in ingesting : " + JSON.stringify(messageObject));
+                // 3rd Failed
+                messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
+                messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+                const updateHistory: any = { "history": [messageObject.Job.ingestionDetails.campaignDetails] };
+                logger.info("Updating campaign details  with status failed: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
+                produceModifiedMessages(updateHistory, updateCampaignTopic);
             }
         } catch (error) {
             logger.info(`Error processing message: ${JSON.stringify(error)}`);
@@ -95,25 +110,25 @@ function listener() {
 }
 
 // Function to produce modified messages back to the same topic
-// async function produceModifiedMessages(modifiedMessages: any[]) {
-//     return new Promise<void>((resolve, reject) => {
-//         const payloads: ProduceRequest[] = [
-//             {
-//                 topic: topicName,
-//                 messages: JSON.stringify(modifiedMessages),
-//             },
-//         ];
+async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
+    return new Promise<void>((resolve, reject) => {
+        const payloads: ProduceRequest[] = [
+            {
+                topic: topic,
+                messages: JSON.stringify(modifiedMessages),
+            },
+        ];
 
-//         producer.send(payloads, (err, data) => {
-//             if (err) {
-//                 logger.info(`Producer Error: ${JSON.stringify(err)}`);
-//                 reject(err);
-//             } else {
-//                 logger.info('Produced modified messages successfully.');
-//                 resolve();
-//             }
-//         });
-//     });
-// }
+        producer.send(payloads, (err, data) => {
+            if (err) {
+                logger.info(`Producer Error: ${JSON.stringify(err)}`);
+                reject(err);
+            } else {
+                logger.info('Produced modified messages successfully.');
+                resolve();
+            }
+        });
+    });
+}
 
-export { listener, consumerGroup }
+export { listener, consumerGroup, produceModifiedMessages }
