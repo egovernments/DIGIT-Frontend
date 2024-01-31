@@ -3,11 +3,16 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { consumerGroup } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
+import { v4 as uuidv4 } from 'uuid';
+import { produceModifiedMessages } from '../Kafka/Listener'
 
 
 import { logger } from "./logger";
+// import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
+
+const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 
 /*
   stdTTL: (default: 0) the standard ttl as number in seconds for every generated
@@ -198,6 +203,11 @@ const extractEstimateIds = (contract: any): any[] => {
 };
 
 const produceIngestion = async (messages: any) => {
+  // 2nd InProgress after check
+  const ifNoneStartedIngestion = !messages?.Job?.ingestionDetails?.history.some(
+    (detail: any) => detail.state === 'started'
+  );
+
   const notStartedIngestion = messages?.Job?.ingestionDetails?.history.find(
     (detail: any) => detail.state === 'not-started'
   );
@@ -211,10 +221,27 @@ const produceIngestion = async (messages: any) => {
     logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
     const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.fileStoreId }, undefined, undefined, undefined);
     notStartedIngestion.ingestionNumber = ingestionResult?.ingestionNumber;
+    // check boolean then put InProgress
+    if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
+      messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
+      messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+      const updateHistory: any = { "history": [messages.Job.ingestionDetails.campaignDetails] };
+      logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+      produceModifiedMessages(updateHistory, updateCampaignTopic);
+    }
+    // if not ingestion number(failed) ...3rd 2 part..Failed
+    else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
+      messages.Job.ingestionDetails.campaignDetails.status = "Failed";
+      messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+      const updateHistory: any = { "history": [messages.Job.ingestionDetails.campaignDetails] };
+      logger.info("Updating campaign details  with status failed: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+      produceModifiedMessages(updateHistory, updateCampaignTopic);
+    }
     logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
   }
   else {
     logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
+    // 4th Completed
   }
   return messages.Job;
 };
@@ -262,6 +289,31 @@ const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
   return isCompleted;
 };
 
+function getCampaignDetails(requestBody: any): any {
+  const hcmConfig: any = requestBody?.HCMConfig;
+  const userInfo: any = requestBody?.RequestInfo?.userInfo;
+  const additionalDetails = { selectedRows: hcmConfig?.selectedRows };
+  // Extract details from HCMConfig 
+  const campaignDetails = {
+    id: uuidv4(),
+    tenantId: hcmConfig.tenantId,
+    fileStoreId: hcmConfig.fileStoreId,
+    campaignType: hcmConfig.campaignType,
+    status: "started",
+    projectTypeId: hcmConfig.projectTypeId,
+    campaignName: hcmConfig.campaignName,
+    campaignNumber: hcmConfig.campaignNumber,
+    createdBy: userInfo.createdby,
+    lastModifiedBy: userInfo?.lastModifiedBy,
+    createdTime: new Date().getTime(),
+    lastModifiedTime: new Date().getTime(),
+    additionalDetails: additionalDetails ? JSON.stringify(additionalDetails) : ""
+  };
+
+  return campaignDetails;
+}
+
+
 
 
 export {
@@ -277,5 +329,6 @@ export {
   cacheResponse,
   getCachedResponse,
   produceIngestion,
-  waitAndCheckIngestionStatus
+  waitAndCheckIngestionStatus,
+  getCampaignDetails
 };

@@ -4,7 +4,8 @@ import FormData from 'form-data';
 import config from "../../config/index";
 import * as XLSX from 'xlsx';
 import { logger } from "../../utils/logger";
-
+import { produceModifiedMessages } from '../../Kafka/Listener';
+import { getCampaignDetails } from '../../utils/index'
 import {
   searchMDMS
 } from "../../api/index";
@@ -15,6 +16,7 @@ import {
 } from "../../utils/index";
 import { httpRequest } from "../../utils/request";
 
+const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
 // Define the MeasurementController class
 class BulkUploadController {
   // Define class properties
@@ -38,9 +40,14 @@ class BulkUploadController {
     response: express.Response
   ) => {
     var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [] } };
+    const campaignDetails = getCampaignDetails(request?.body);
+    // 1st started
     try {
       try {
         const { campaignType } = request?.body?.HCMConfig;
+        const saveHistory: any = { "history": [campaignDetails] };
+        logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
+        produceModifiedMessages(saveHistory, saveCampaignTopic);
         const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
         request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
         const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
@@ -122,6 +129,7 @@ class BulkUploadController {
       return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
     }
     Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
+    Job.ingestionDetails.campaignDetails = campaignDetails;
     const updatedJob: any = await produceIngestion({ Job });
     return sendResponse(
       response,
