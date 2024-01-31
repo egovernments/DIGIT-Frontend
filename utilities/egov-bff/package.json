@@ -33,6 +33,7 @@
     "loadash": "^1.0.0",
     "morgan": "^1.10.0",
     "node-cache": "^5.1.2",
+    "uuid": "^9.0.1",
     "winston": "^3.8.2",
     "xlsx": "^0.18.5",
     "yup": "^1.0.2"
@@ -45,6 +46,7 @@
     "@types/jest": "^26.0.19",
     "@types/morgan": "^1.9.4",
     "@types/node": "^14.14.14",
+    "@types/uuid": "^9.0.8",
     "eslint": "^7.16.0",
     "jest": "^26.6.3",
     "ts-node-dev": "^2.0.0",
