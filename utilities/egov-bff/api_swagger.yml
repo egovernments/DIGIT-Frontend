@@ -425,3 +425,153 @@ paths:
                           name: "Super User"
                           code: "SUPERUSER"
                           tenantId: "mz"
+  /hcm-bff/hcm/_searchmicroplan:
+    post:
+      summary: Search Micro Plan
+      description: Endpoint to search micro plan through the API
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                HCMConfig:
+                  type: object
+                  properties:
+                    campaignId:
+                      type: array
+                      items:
+                        type: string
+                    campaignName:
+                      type: string
+                    campaignType:
+                      type: string
+                    campaignNumber:
+                      type: string
+                    ingestionType:
+                      type: string
+                RequestInfo:
+                  type: object
+                  properties:
+                    apiId:
+                      type: string
+                    authToken:
+                      type: string
+                    userInfo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        uuid:
+                          type: string
+                        userName:
+                          type: string
+                        name:
+                          type: string
+                        mobileNumber:
+                          type: string
+                        emailId:
+                          type: string
+                        locale:
+                          type: string
+                        type:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              code:
+                                type: string
+                              tenantId:
+                                type: string
+                        active:
+                          type: boolean
+                        tenantId:
+                          type: string
+                        permanentCity:
+                          type: string
+                    msgId:
+                      type: string
+                    plainAccessRequest: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                ResponseInfo:
+                  apiId: "egov-bff"
+                  ver: "0.0.1"
+                  ts: 1706503224772
+                  status: "successful"
+                  desc: "new-response"
+                campaignDetails:
+                - id: "cf3bd20c-5ac3-4af1-a303-55445049b289"
+                  fileStoreId: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                  tenantId: "mz"
+                  status: "In Progress"
+                  campaignType: "type_1"
+                  projectTypeId: "16e50b0b-4869-49c0-8a86-5a5e8731b6d5"
+                  campaignName: "campaign_name_1"
+                  campaignNumber: "cmp-050-788-099"
+                  createdby: "8800c6e3-2a35-41aa-ae2f-28ee6a8b9dd0"
+                  lastmodifiedby: "d860d4c5-d1ad-4c7b-81b5-63a270b09c2a"
+                  createdtime: 123456789
+                  lastmodifiedtime: 987654321
+                  additionalDetails: "{}"
+                  ingestionDetails:
+                    - id: "9c41be22-6c69-4f70-b3ad-6a5a9f1b868a"
+                      campaignId: "cf3bd20c-5ac3-4af1-a303-55445049b289"
+                      fileStoreId: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                      tenantId: "mz"
+                      ingestionNumber: "ING-2024-01-31-001896"
+                      jobId: "f43a5ed4-1c07-4a2c-94c5-71f68e15466a"
+                      status: "started"
+                      ingestionType: "facility"
+                      createdby: "8800c6e3-2a35-41aa-ae2f-28ee6a8b9dd0"
+                      lastmodifiedby: "d860d4c5-d1ad-4c7b-81b5-63a270b09c2a"
+                      createdtime: 123456789
+                      lastmodifiedtime: 987654321
+                      additionalDetails: "{}"
+                - id: "6cd6f62e-8c66-4f61-854b-87287d0b8f42"
+                  fileStoreId: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                  tenantId: "mz"
+                  status: "Completed"
+                  campaignType: "type_1"
+                  projectTypeId: "16e50b0b-4869-49c0-8a86-5a5e8731b6d5"
+                  campaignName: "campaign_name_1"
+                  campaignNumber: "cmp-050-789-098"
+                  createdby: "8800c6e3-2a35-41aa-ae2f-28ee6a8b9dd0"
+                  lastmodifiedby: "d860d4c5-d1ad-4c7b-81b5-63a270b09c2a"
+                  createdtime: 123456789
+                  lastmodifiedtime: 987654321
+                  additionalDetails: "{}"
+                  ingestionDetails:
+                    - id: "5d6f2921-d1b5-4c44-aae6-0e5a50eac0b3"
+                      campaignId: "6cd6f62e-8c66-4f61-854b-87287d0b8f42"
+                      fileStoreId: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                      tenantId: "mz"
+                      ingestionNumber: "ING-2024-01-31-001897"
+                      jobId: "7cbf9a5b-9060-4f14-8d3b-24bc82d3790b"
+                      status: "Completed"
+                      ingestionType: "facility"
+                      createdby: "8800c6e3-2a35-41aa-ae2f-28ee6a8b9dd0"
+                      lastmodifiedby: "d860d4c5-d1ad-4c7b-81b5-63a270b09c2a"
+                      createdtime: 123456789
+                      lastmodifiedtime: 987654321
+                      additionalDetails: "{}"
+        '500':
+          description: Error response
+          content:
+            application/json:
+              example:
+                ResponseInfo: null
+                Errors:
+                  - code: INTERNAL_SERVER_ERROR
+                    message: "detailed error response"
+                    description: null
+                    params: null
