@@ -14,7 +14,7 @@ export default {
     value: { control: "text" },
     errorStyle: { control: "object" },
     disable: { control: "boolean" },
-    type: { control: "radio", options: ["radio", "dropdown"] },
+    type: { control: "radio", options: ["radio", "dropdown","toggle"] },
     additionalWrapperClass: { control: "text" },
     props: { control: "object" },
   },
@@ -52,7 +52,7 @@ CustomDropdownRadioStory.args = {
   onChange: (e, name) => console.log("Selected value:", e, "Name:", name),
   value: "MALE",
   errorStyle: null,
-  disable: false,
+  disabled: false,
   type: "radio",
   additionalWrapperClass: "",
 };
@@ -63,10 +63,9 @@ CustomDropdownDropdownStory.args = {
   t,
   config: {
     name: "genders",
-
-    styles: { display: "flex", justifyContent: "space-between" },
+    styles: {},
     defaultValue: "FEMALE",
-    optionsCustomStyle: { color: "blue", fontSize: "14px" },
+    optionsCustomStyle: {},
     optionsKey: "name",
     options: gendersOptions,
   },
@@ -74,11 +73,32 @@ CustomDropdownDropdownStory.args = {
   label: "Enter Gender",
   onChange: (e, name) => console.log("Selected value:", e, "Name:", name),
   errorStyle: null,
-  disable: false,
+  disabled: false,
   type: "dropdown",
   additionalWrapperClass: "",
   props: {
     isLoading: false,
     data: gendersOptions,
   },
+};
+
+
+// Story for CustomDropdown with Toggle type
+export const CustomDropdownToggleStory = Template.bind({});
+CustomDropdownToggleStory.args = {
+  t: t,
+  config: {
+    name: "gederOptions",
+    optionsKey: "name",
+    options: gendersOptions,
+  },
+  inputRef: null,
+  label: "Label",
+  value: "",
+  errorStyle: null,
+  disabled: false,
+  type: "toggle",
+  additionalWrapperClass: "",
+  error: "",
+  description: "",
 };

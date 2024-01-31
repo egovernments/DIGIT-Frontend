@@ -1,8 +1,10 @@
 import React, { Fragment } from "react";
-import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, SVG, MultiSelectDropdown, MobileNumber } from "../atoms";
+import { CardText, ErrorMessage, Header, TextArea, TextInput, CheckBox, SVG, MultiSelectDropdown, MobileNumber,InputTextAmount } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import UploadFileComposer from "./UploadFileComposer";
 import { CustomDropdown } from "../molecules";
+import { Controller } from "react-hook-form";
 
 const FieldV1 = ({
   type = "",
@@ -52,7 +54,7 @@ const FieldV1 = ({
     if (charCount) {
       const maxCharacters = populators?.validation?.maxlength || 50;
       return (
-        <CardText style={{ marginTop: "0px" }}>
+        <CardText style={{ marginTop: "0px", fontSize: "0.875rem", lineHeight: "1.5rem" }}>
           {currentCharCount}/{maxCharacters}
         </CardText>
       );
@@ -80,7 +82,9 @@ const FieldV1 = ({
       );
     } else if (description) {
       return (
-        <CardText style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
+        <CardText
+          style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px", fontSize: "0.875rem", lineHeight: "1.5rem" }}
+        >
           {t(truncateMessage(description, 256))}
         </CardText>
       );
@@ -239,6 +243,46 @@ const FieldV1 = ({
             unregister={controllerProps?.unregister}
           />
         );
+      case "documentUpload":
+        return (
+          <UploadFileComposer
+            module={config?.module}
+            config={config}
+            Controller={Controller} // TODO: NEED TO DISCUSS ON THIS
+            register={controllerProps?.register}
+            formData={formData}
+            errors={errors}
+            control={controllerProps?.control}
+            customClass={config?.customClass}
+            customErrorMsg={config?.error}
+            localePrefix={config?.localePrefix}
+            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+          />
+        );
+      case "custom":
+        return populators.component;
+      case "amount":
+        return (
+          <InputTextAmount
+            value={formData?.[populators.name]}
+            type={"text"}
+            name={populators.name}
+            onChange={onChange}
+            inputRef={ref}
+            errorStyle={errors?.[populators.name]}
+            max={populators?.validation?.max}
+            min={populators?.validation?.min}
+            disable={disabled}
+            style={type === "date" ? { paddingRight: "3px" } : ""}
+            maxlength={populators?.validation?.maxlength}
+            minlength={populators?.validation?.minlength}
+            customIcon={populators?.customIcon}
+            customClass={populators?.customClass}
+            prefix={populators?.prefix}
+            intlConfig={populators?.intlConfig}
+            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+          />
+        );
       default:
         return null;
     }
@@ -248,19 +292,22 @@ const FieldV1 = ({
     <>
       {!withoutLabel && (
         <Header className={`label ${disabled ? "disabled" : ""} ${nonEditable ? "noneditable" : ""}`}>
-          <div style={{ width:"80%",display: "flex", gap: "0.25rem" }}>
-            <div style={{ overflow: "hidden", textOverflow: "ellipsis",whiteSpace:"nowrap" }}>{t(truncateMessage(label, 64))}</div>
-            <div style={{color:"#D4351C"}}>{required ? " * " : null}</div>
+          <div style={{ width: "80%", display: "flex", gap: "0.25rem" }}>
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t(truncateMessage(label, 64))}</div>
+            <div style={{ color: "#D4351C" }}>{required ? " * " : null}</div>
             {infoMessage ? (
-            <div className="info-icon">
-              <SVG.InfoOutline width="1.1875rem" height="1.1875rem" fill="#505A5F" />
-              <span class="infotext">{infoMessage}</span>
-            </div>
-          ) : null}
+              <div className="info-icon">
+                <SVG.InfoOutline width="1.1875rem" height="1.1875rem" fill="#505A5F" />
+                <span class="infotext">{infoMessage}</span>
+              </div>
+            ) : null}
           </div>
         </Header>
       )}
-      <div style={withoutLabel ? { width: "100%", ...props?.fieldStyle,marginBottom:"24px" } : { ...props?.fieldStyle ,marginBottom:"24px"}} className="digit-field">
+      <div
+        style={withoutLabel ? { width: "100%", ...props?.fieldStyle, marginBottom: "24px" } : { ...props?.fieldStyle, marginBottom: "24px" }}
+        className="digit-field"
+      >
         {renderField()}
         <div className={`${charCount && !error && !description ? "digit-charcount" : "digit-description"}`}>
           {renderDescriptionOrError()}

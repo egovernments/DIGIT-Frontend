@@ -59,6 +59,7 @@ import Toggle from "./Toggle";
 import ToggleSwitch from "./ToggleSwitch";
 import TreeSelect from "./TreeSelect";
 import SubmitBar from "./SubmitBar";
+import ButtonSelector from "./ButtonSelector";
 export {
   PageBasedInput,
   ActionBar,
@@ -119,6 +120,7 @@ export {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  SubmitBar
+  SubmitBar,
+  ButtonSelector
   // Numeric
 };

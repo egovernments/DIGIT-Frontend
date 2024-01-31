@@ -263,7 +263,7 @@ const MultiSelectDropdown = ({
               return (
                 <RemoveableTag
                   key={index}
-                  text={`${t(value.code).slice(0, 22)} ...`}
+                  text={t(value.code).length > 64 ? `${t(value.code).slice(0, 64)} ...` : t(value.code)}
                   onClick={
                     variant === "treemultiselect"
                       ? () => onSelectToAddToQueue([value])

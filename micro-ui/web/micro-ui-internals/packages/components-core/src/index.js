@@ -58,7 +58,8 @@ import {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  SubmitBar
+  SubmitBar,
+  ButtonSelector
 } from "./atoms";
 
 import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer ,FieldV1} from "./hoc";
@@ -163,5 +164,6 @@ export {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  SubmitBar
+  SubmitBar,
+  ButtonSelector
 };

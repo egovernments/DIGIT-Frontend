@@ -11,7 +11,6 @@
         font-style: theme(digitv2.fontStyle.normal);
         line-height: theme(digitv2.lineHeight.normal);
         gap: 0.25rem;
- 
         .info-icon {
             @apply relative cursor-pointer;
         }
@@ -86,11 +85,15 @@
     .digit-error {
         @apply flex;
         gap: 0.25rem;
-        height: 1.5rem;
 
         .digit-error-message {
+            @apply font-regular leading-6;
             margin: 0px;
+            font-style: theme(digitv2.fontStyle.normal);
+            font-size: 0.875rem;
             font-family: theme(digitv2.fontFamily.sans);
+            color: #D4351C;
+            width: 100%;
         }
 
         .digit-error-icon {

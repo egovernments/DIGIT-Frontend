@@ -53,6 +53,8 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
           />
         );
       case "dropdown":
+      case "radioordropdown":
+      case "select":
         return (
           <Dropdown
             inputRef={inputRef}
