@@ -62,12 +62,6 @@ function listener() {
                 }
                 else {
                     logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
-                    // 4th completed
-                    messageObject.Job.ingestionDetails.campaignDetails.status = "Completed";
-                    messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
-                    const saveHistory: any = { "history": [messageObject.Job.ingestionDetails.campaignDetails] };
-                    logger.info("Updating campaign details  with status complete: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
-                    produceModifiedMessages(saveHistory, updateCampaignTopic);
                 }
             }
             else {
@@ -75,7 +69,7 @@ function listener() {
                 // 3rd Failed
                 messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
                 messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
-                const updateHistory: any = { "history": [messageObject.Job.ingestionDetails.campaignDetails] };
+                const updateHistory: any = messageObject.Job.ingestionDetails;
                 logger.info("Updating campaign details  with status failed: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
                 produceModifiedMessages(updateHistory, updateCampaignTopic);
             }

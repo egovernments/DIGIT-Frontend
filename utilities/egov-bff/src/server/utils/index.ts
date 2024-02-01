@@ -225,7 +225,7 @@ const produceIngestion = async (messages: any) => {
     if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
       messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
-      const updateHistory: any = { "history": [messages.Job.ingestionDetails.campaignDetails] };
+      const updateHistory: any = messages.Job.ingestionDetails;
       logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
       produceModifiedMessages(updateHistory, updateCampaignTopic);
     }
@@ -233,7 +233,7 @@ const produceIngestion = async (messages: any) => {
     else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "Failed";
       messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
-      const updateHistory: any = { "history": [messages.Job.ingestionDetails.campaignDetails] };
+      const updateHistory: any = messages.Job.ingestionDetails;
       logger.info("Updating campaign details  with status failed: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
       produceModifiedMessages(updateHistory, updateCampaignTopic);
     }
@@ -241,7 +241,12 @@ const produceIngestion = async (messages: any) => {
   }
   else {
     logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
-    // 4th Completed
+    // 4th completed
+    messages.Job.ingestionDetails.campaignDetails.status = "Completed";
+    messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+    const updateHistory: any = messages.Job.ingestionDetails;
+    logger.info("Updating campaign details  with status complete: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+    produceModifiedMessages(updateHistory, updateCampaignTopic);
   }
   return messages.Job;
 };
@@ -302,9 +307,10 @@ function getCampaignDetails(requestBody: any): any {
     status: "started",
     projectTypeId: hcmConfig.projectTypeId,
     campaignName: hcmConfig.campaignName,
-    campaignNumber: hcmConfig.campaignNumber,
-    createdBy: userInfo.createdby,
-    lastModifiedBy: userInfo?.lastModifiedBy,
+    // FIX: get campaign number via id gen 
+    campaignNumber: "CMP-000-000-001",
+    createdBy: userInfo?.uuid,
+    lastModifiedBy: userInfo?.uuid,
     createdTime: new Date().getTime(),
     lastModifiedTime: new Date().getTime(),
     additionalDetails: additionalDetails ? JSON.stringify(additionalDetails) : ""

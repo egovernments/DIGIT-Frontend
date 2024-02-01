@@ -22,11 +22,11 @@ const config = {
   KAFKA_DHIS_UPDATE_TOPIC:
     process.env.KAFKA_DHIS_UPDATE_TOPIC || "update-dhis2-job",
   KAFKA_SAVE_INGESTION__TOPIC:
-    process.env.KAFKA_SAVE_INGESTION__TOPIC || "save_ingestion_details",  
+    process.env.KAFKA_SAVE_INGESTION__TOPIC || "save_ingestion_details",
   KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC:
-    process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save_camapign_details",  
+    process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save_campaign_details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
-    process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update_camapign_details",   
+    process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update_campaign_details",
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,

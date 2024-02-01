@@ -39,15 +39,15 @@ class BulkUploadController {
     request: express.Request,
     response: express.Response
   ) => {
-    var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [] } };
     const campaignDetails = getCampaignDetails(request?.body);
+    var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
+    const saveHistory: any = Job.ingestionDetails;
+    logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
+    produceModifiedMessages(saveHistory, saveCampaignTopic);
     // 1st started
     try {
       try {
         const { campaignType } = request?.body?.HCMConfig;
-        const saveHistory: any = { "history": [campaignDetails] };
-        logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
-        produceModifiedMessages(saveHistory, saveCampaignTopic);
         const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
         request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
         const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
@@ -137,7 +137,6 @@ class BulkUploadController {
       request
     );
   };
-
 }
 
 // Export the MeasurementController class
