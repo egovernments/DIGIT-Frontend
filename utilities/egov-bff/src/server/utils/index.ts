@@ -5,7 +5,7 @@ import { consumerGroup } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-
+import { getCampaignNumber } from "../api/index";
 
 import { logger } from "./logger";
 // import { userInfo } from "os";
@@ -291,10 +291,15 @@ const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
   return isCompleted;
 };
 
-function getCampaignDetails(requestBody: any): any {
+async function getCampaignDetails(requestBody: any): Promise<any> {
   const hcmConfig: any = requestBody?.HCMConfig;
   const userInfo: any = requestBody?.RequestInfo?.userInfo;
   const additionalDetails = { selectedRows: hcmConfig?.selectedRows };
+  const campaignNumber = await getCampaignNumber(requestBody, config.values.idgen.format, config.values.idgen.idName);
+  if (typeof campaignNumber !== 'string') {
+    return "INVALID_CAMPAIGN_NUMBER"
+  }
+  logger.info("Campaign number : " + campaignNumber)
   // Extract details from HCMConfig 
   const campaignDetails = {
     id: uuidv4(),
@@ -304,8 +309,7 @@ function getCampaignDetails(requestBody: any): any {
     status: "started",
     projectTypeId: hcmConfig.projectTypeId,
     campaignName: hcmConfig.campaignName,
-    // FIX: get campaign number via id gen 
-    campaignNumber: "CMP-000-000-001",
+    campaignNumber: campaignNumber,
     createdBy: userInfo?.uuid,
     lastModifiedBy: userInfo?.uuid,
     createdTime: new Date().getTime(),

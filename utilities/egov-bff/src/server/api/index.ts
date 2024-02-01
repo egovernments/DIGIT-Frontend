@@ -213,7 +213,36 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
 }
 
 
+const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName: string) => {
+  const data = {
+    RequestInfo,
+    "idRequests": [
+      {
+        "idName": idName,
+        "tenantId": RequestInfo?.HCMConfig?.tenantId,
+        "format": idFormat
+      }
+    ]
+  }
+  const idGenUrl = config.host.idGenHost + config.paths.idGen;
+  logger.info("IdGen url : " + idGenUrl)
+  logger.info("Idgen Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.idResponses?.[0]?.id) {
+      return result?.idResponses?.[0]?.id;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
+
 export {
   getSheetData,
-  searchMDMS
+  searchMDMS,
+  getCampaignNumber
 };
