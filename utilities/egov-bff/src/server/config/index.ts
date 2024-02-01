@@ -44,6 +44,9 @@ const config = {
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_HOST
       // || "http://localhost:8082/"
       || "https://unified-uat.digit.org/",
+    idGenHost: process.env.EGOV_IDGEN_HOST
+      // || "http://localhost:8085/"
+      || "https://unified-uat.digit.org/",
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
@@ -53,6 +56,8 @@ const config = {
     // mdms_search: "mdms-v2/v2/_search",
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
       || "hcm-moz-impl/v1/ingest",
+    idGen: process.env.EGOV_IDGEN_PATH
+      || "egov-idgen/id/_generate"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE
@@ -60,7 +65,11 @@ const config = {
     transfromTemplate: process.env.HCM_TRANSFORM_TEMPLATE
       || "HCM.TransformTemplate",
     campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
-      || "HCM.HCMTemplate"
+      || "HCM.HCMTemplate",
+    idgen: {
+      format: process.env.CMP_IDGEN_FORMAT || "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]",
+      idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
+    }
   }
 };
 

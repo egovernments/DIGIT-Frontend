@@ -39,13 +39,15 @@ class BulkUploadController {
     request: express.Request,
     response: express.Response
   ) => {
-    const campaignDetails = getCampaignDetails(request?.body);
-    var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
-    const saveHistory: any = Job.ingestionDetails;
-    logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
-    produceModifiedMessages(saveHistory, saveCampaignTopic);
-    // 1st started
     try {
+      const campaignDetails = await getCampaignDetails(request?.body);
+      if (campaignDetails == "INVALID_CAMPAIGN_NUMBER") {
+        throw new Error("Error during Campaign Number generation");
+      }
+      var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
+      const saveHistory: any = Job.ingestionDetails;
+      logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
+      produceModifiedMessages(saveHistory, saveCampaignTopic);
       try {
         const { campaignType } = request?.body?.HCMConfig;
         const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
@@ -125,17 +127,18 @@ class BulkUploadController {
         logger.error(String(e))
         return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
       }
+      Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
+      Job.ingestionDetails.campaignDetails = campaignDetails;
+      const updatedJob: any = await produceIngestion({ Job });
+      return sendResponse(
+        response,
+        { Job: updatedJob },
+        request
+      );
     } catch (e: any) {
-      return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
+      logger.error(String(e))
+      return errorResponder({ message: String(e) }, request, response);
     }
-    Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
-    Job.ingestionDetails.campaignDetails = campaignDetails;
-    const updatedJob: any = await produceIngestion({ Job });
-    return sendResponse(
-      response,
-      { Job: updatedJob },
-      request
-    );
   };
 }
 
