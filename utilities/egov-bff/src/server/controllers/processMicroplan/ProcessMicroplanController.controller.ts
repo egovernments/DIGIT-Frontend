@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import { logger } from "../../utils/logger";
 import { produceModifiedMessages } from '../../Kafka/Listener';
 import { getCampaignDetails } from '../../utils/index'
+import { validateProcessMicroplan } from '../../utils/validator'
 import {
   searchMDMS
 } from "../../api/index";
@@ -39,31 +40,40 @@ class BulkUploadController {
     request: express.Request,
     response: express.Response
   ) => {
+    await validateProcessMicroplan(request, response);
     const campaignDetails = getCampaignDetails(request?.body);
     var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
     const saveHistory: any = Job.ingestionDetails;
     logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
     produceModifiedMessages(saveHistory, saveCampaignTopic);
-    // 1st started
     try {
       try {
         const { campaignType } = request?.body?.HCMConfig;
         const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
+        if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
+          throw new Error("Invalid Campaign Type");
+        }
         request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
         const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
         logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
         const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
         result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_transform`, request.body, undefined, undefined, undefined, undefined);
+        if (result.Error) {
+          throw new Error(result.Error);
+        }
         var parsingTemplatesLength = parsingTemplates.length
         for (let i = 0; i < parsingTemplatesLength; i++) {
           const parsingTemplate = parsingTemplates[i];
           request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
           request.body.HCMConfig['data'] = result?.updatedDatas;
           var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+          if (processResult.Error) {
+            throw new Error(processResult.Error);
+          }
           const updatedData = processResult?.updatedDatas;
           if (Array.isArray(updatedData)) {
             // Create a new array with simplified objects
-            const simplifiedData = updatedData.map((originalObject) => {
+            const simplifiedData = updatedData.map((originalObject: any) => {
               // Initialize acc with an explicit type annotation
               const acc: { [key: string]: any } = {};
 

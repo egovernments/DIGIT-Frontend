@@ -49,7 +49,7 @@ class TransformController {
             }
             else {
                 logger.info("No Transform Template found");
-                return errorResponder({ message: "No Transform Template found " }, request, response);
+                return sendResponse(response, { "Error": "Transform Template error" }, request);
             }
             logger.info("Transform Config : ", TransformConfig);
             const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
@@ -72,9 +72,15 @@ class TransformController {
         try {
             const { data, parsingTemplate } = request?.body?.HCMConfig;
             const parsingResults: any = await searchMDMS([parsingTemplate], config.values.parsingTemplate, request.body.RequestInfo, response);
-            const parsingConfig = parsingResults?.mdms?.[0]?.data?.path;
-            logger.info("Parsing Config : " + JSON.stringify(parsingConfig))
-
+            var parsingConfig: any;
+            if (parsingResults?.mdms?.length > 0) {
+                parsingConfig = parsingResults?.mdms?.[0]?.data?.path;
+                logger.info("parsingConfig : " + JSON.stringify(parsingConfig))
+            }
+            else {
+                logger.info("Parsing Template Error");
+                return sendResponse(response, { "Error": "Parsing Template Error" }, request);
+            }
             // Check if data is an array before using map
             var updatedDatas: any[] = [];
             if (Array.isArray(data)) {

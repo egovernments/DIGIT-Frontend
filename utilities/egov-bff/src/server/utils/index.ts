@@ -203,7 +203,6 @@ const extractEstimateIds = (contract: any): any[] => {
 };
 
 const produceIngestion = async (messages: any) => {
-  // 2nd InProgress after check
   const ifNoneStartedIngestion = !messages?.Job?.ingestionDetails?.history.some(
     (detail: any) => detail.state === 'started'
   );
@@ -221,7 +220,7 @@ const produceIngestion = async (messages: any) => {
     logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
     const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.fileStoreId }, undefined, undefined, undefined);
     notStartedIngestion.ingestionNumber = ingestionResult?.ingestionNumber;
-    // check boolean then put InProgress
+
     if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
       messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
@@ -229,7 +228,6 @@ const produceIngestion = async (messages: any) => {
       logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
       produceModifiedMessages(updateHistory, updateCampaignTopic);
     }
-    // if not ingestion number(failed) ...3rd 2 part..Failed
     else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "Failed";
       messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
@@ -241,7 +239,6 @@ const produceIngestion = async (messages: any) => {
   }
   else {
     logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
-    // 4th completed
     messages.Job.ingestionDetails.campaignDetails.status = "Completed";
     messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
     const updateHistory: any = messages.Job.ingestionDetails;

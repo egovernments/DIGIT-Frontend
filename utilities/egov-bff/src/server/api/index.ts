@@ -203,7 +203,7 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
   }
   try {
     const result = await httpRequest(apiUrl, data, undefined, undefined, undefined, undefined);
-    logger.info("Parsing Template search Result : " + JSON.stringify(result))
+    logger.info("Template search Result : " + JSON.stringify(result))
     return result;
   } catch (error: any) {
     logger.error("Error: " + error)

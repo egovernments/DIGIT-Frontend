@@ -60,7 +60,7 @@ const config = {
     transfromTemplate: process.env.HCM_TRANSFORM_TEMPLATE
       || "HCM.TransformTemplate",
     campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
-      || "HCM.HCMTemplate"
+      || "HCM.HCMTemplate"    
   }
 };
 

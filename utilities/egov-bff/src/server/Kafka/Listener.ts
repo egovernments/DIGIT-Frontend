@@ -17,8 +17,6 @@ const kafkaConfig: ConsumerGroupOptions = {
 };
 
 const dhistopicName = config.KAFKA_DHIS_UPDATE_TOPIC;
-// const saveIngestionTopic = config.KAFKA_SAVE_INGESTION__TOPIC;
-// const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 const delayTime: any = config.delayTime;
 
@@ -66,7 +64,6 @@ function listener() {
             }
             else {
                 logger.error("Some error occured in ingesting : " + JSON.stringify(messageObject));
-                // 3rd Failed
                 messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
                 messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
                 const updateHistory: any = messageObject.Job.ingestionDetails;
