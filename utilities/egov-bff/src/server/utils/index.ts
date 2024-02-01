@@ -6,6 +6,8 @@ import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
 import { getCampaignNumber } from "../api/index";
+import * as XLSX from 'xlsx';
+import FormData from 'form-data';
 
 import { logger } from "./logger";
 // import { userInfo } from "os";
@@ -319,6 +321,61 @@ async function getCampaignDetails(requestBody: any): Promise<any> {
 
   return campaignDetails;
 }
+async function processFile(request: any, parsingTemplates: any[], result: any, hostHcmBff: string, Job: any) {
+  var parsingTemplatesLength = parsingTemplates.length
+  for (let i = 0; i < parsingTemplatesLength; i++) {
+    const parsingTemplate = parsingTemplates[i];
+    request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
+    request.body.HCMConfig['data'] = result?.updatedDatas;
+    var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+    if (processResult.Error) {
+      throw new Error(processResult.Error);
+    }
+    const updatedData = processResult?.updatedDatas;
+    if (Array.isArray(updatedData)) {
+      // Create a new array with simplified objects
+      const simplifiedData = updatedData.map((originalObject: any) => {
+        // Initialize acc with an explicit type annotation
+        const acc: { [key: string]: any } = {};
+
+        // Extract key-value pairs where values are not arrays or objects
+        const simplifiedObject = Object.entries(originalObject).reduce((acc, [key, value]) => {
+          if (!Array.isArray(value) && typeof value !== 'object') {
+            acc[key] = value;
+          }
+          return acc;
+        }, acc);
+
+        return simplifiedObject;
+      });
+      logger.info("SimplifiedData for sheet : " + JSON.stringify(simplifiedData))
+      const ws = XLSX.utils.json_to_sheet(simplifiedData);
+
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+      const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+      const formData = new FormData();
+      formData.append('file', buffer, 'filename.xlsx');
+      formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+      formData.append('module', 'pgr');
+
+      logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+      var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+        {
+          'Content-Type': 'multipart/form-data',
+          'auth-token': request?.body?.RequestInfo?.authToken
+        }
+      );
+      const responseData = fileCreationResult?.files;
+      logger.info("Response data after File Creation : " + JSON.stringify(responseData));
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        Job.ingestionDetails.history.push({ fileStoreId: responseData[0].fileStoreId, tenantId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
+      }
+    }
+  }
+
+}
 
 
 
@@ -337,5 +394,6 @@ export {
   getCachedResponse,
   produceIngestion,
   waitAndCheckIngestionStatus,
-  getCampaignDetails
+  getCampaignDetails,
+  processFile
 };
