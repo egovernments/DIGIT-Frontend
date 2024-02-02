@@ -308,7 +308,7 @@ async function getCampaignDetails(requestBody: any): Promise<any> {
     tenantId: hcmConfig.tenantId,
     fileStoreId: hcmConfig.fileStoreId,
     campaignType: hcmConfig.campaignType,
-    status: "started",
+    status: "not-started",
     projectTypeId: hcmConfig.projectTypeId,
     campaignName: hcmConfig.campaignName,
     campaignNumber: campaignNumber,

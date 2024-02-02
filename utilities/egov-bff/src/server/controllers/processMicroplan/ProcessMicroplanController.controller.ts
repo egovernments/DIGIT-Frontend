@@ -16,6 +16,8 @@ import {
 import { httpRequest } from "../../utils/request";
 
 const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
+const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
+
 // Define the MeasurementController class
 class BulkUploadController {
   // Define class properties
@@ -62,6 +64,8 @@ class BulkUploadController {
         if (result.Error) {
           throw new Error(result.Error);
         }
+        Job.ingestionDetails.campaignDetails.status = "started"
+        produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
         await processFile(request, parsingTemplates, result, hostHcmBff, Job);
       } catch (e: any) {
         logger.error(String(e))
