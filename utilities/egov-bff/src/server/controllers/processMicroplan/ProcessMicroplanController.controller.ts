@@ -64,7 +64,8 @@ class BulkUploadController {
         if (result.updatedDatas.error) {
           throw new Error(result.updatedDatas.error);
         }
-        Job.ingestionDetails.campaignDetails.status = "started"
+        Job.ingestionDetails.campaignDetails.status = "Started"
+        Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
         produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
         await processFile(request, parsingTemplates, result, hostHcmBff, Job);
       } catch (e: any) {
