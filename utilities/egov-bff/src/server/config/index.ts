@@ -21,8 +21,12 @@ const config = {
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
     process.env.KAFKA_DHIS_UPDATE_TOPIC || "update-dhis2-job",
-  KAFKA_SAVE_INGESTION__TOPIC:
-    process.env.KAFKA_SAVE_INGESTION__TOPIC || "save_ingestion_details",
+  KAFKA_DHIS_CREATE_TOPIC:
+    process.env.KAFKA_DHIS_CREATE_TOPIC || "create-dhis2-job",
+  KAFKA_SAVE_INGESTION_TOPIC:
+    process.env.KAFKA_SAVE_INGESTION_TOPIC || "save_ingestion_details",
+  KAFKA_UPDATE_INGESTION_TOPIC:
+    process.env.KAFKA_UPDATE_INGESTION_TOPIC || "update_ingestion_details",
   KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save_campaign_details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:

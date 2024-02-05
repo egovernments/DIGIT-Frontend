@@ -16,8 +16,11 @@ const kafkaConfig: ConsumerGroupOptions = {
     outOfRangeOffset: 'earliest',
 };
 
-const dhistopicName = config.KAFKA_DHIS_UPDATE_TOPIC;
+const dhisUpdateTopicName = config.KAFKA_DHIS_UPDATE_TOPIC;
+const dhisCreateTopicName = config.KAFKA_DHIS_CREATE_TOPIC;
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
+const saveIngestionTopic = config.KAFKA_SAVE_INGESTION_TOPIC;
+const updateIngestionTopic = config.KAFKA_UPDATE_INGESTION_TOPIC;
 const delayTime: any = config.delayTime;
 
 
@@ -25,50 +28,101 @@ const delayTime: any = config.delayTime;
 logger.info('Kafka consumer is attempting to connect...');
 
 // Create a Kafka consumer
-const consumerGroup = new ConsumerGroup(kafkaConfig, [dhistopicName]);
+const consumerGroupUpdate = new ConsumerGroup(kafkaConfig, [dhisUpdateTopicName, dhisCreateTopicName]);
 
 
 // Exported listener function
 function listener() {
 
     // Set up a message event handler
-    consumerGroup.on('message', async (message: Message) => {
+    consumerGroupUpdate.on('message', async (message: Message) => {
         try {
             // Parse the message value as an array of objects
             const messageObject: any = JSON.parse(message.value?.toString() || '{}');
-            logger.info("IngestionDetails received:" + JSON.stringify(messageObject?.Job?.ingestionDetails?.history));
-            if (messageObject?.Job?.executionStatus === "Completed") {
-                if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
-                    const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
-                        (detail: any) => detail.state === 'started'
-                    );
+            if (message?.topic == dhisUpdateTopicName) {
+                logger.info("IngestionDetails received:" + JSON.stringify(messageObject?.Job?.ingestionDetails?.history));
+                if (messageObject?.Job?.executionStatus === "Completed") {
+                    if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
+                        const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
+                            (detail: any) => detail.state === 'Started'
+                        );
 
-                    if (startedIngestion) {
-                        startedIngestion.state = 'Completed';
-                        logger.info("Marked 'started' ingestion as 'Completed'.");
-                        logger.info("Waiting for " + config.delayTime + " miliSeconds");
-                        await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
-                        const updatedJob = await produceIngestion(messageObject);
-                        logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
-                    } else {
-                        logger.info("No 'started' ingestion found.");
-                        logger.info("Waiting for " + config.delayTime + " miliSeconds");
-                        await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
-                        const updatedJob = await produceIngestion(messageObject);
-                        logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
+                        if (startedIngestion) {
+                            startedIngestion.state = 'Completed';
+                            logger.info("Marked 'Started' ingestion as 'Completed'.");
+                            logger.info("Waiting for " + config.delayTime + " miliSeconds");
+                            await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
+                            const updatedJob = await produceIngestion(messageObject);
+                            logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
+
+
+                            const ingestionData = JSON.parse(JSON.stringify(startedIngestion));
+                            ingestionData.campaignId = messageObject?.Job?.ingestionDetails?.campaignDetails?.id;
+                            ingestionData.ingestionNumber = messageObject?.Job?.ingestionNumber;
+                            ingestionData.jobId = messageObject?.Job?.jobID;
+                            messageObject.Job.ingestionDetails.ingestionData = ingestionData;
+                            logger.info("Updating Ingestion details to Completed, ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
+                            produceModifiedMessages(messageObject.Job.ingestionDetails, updateIngestionTopic)
+                        } else {
+                            logger.info("No 'Started' ingestion found.");
+                            logger.info("Waiting for " + config.delayTime + " miliSeconds");
+                            await new Promise(resolve => setTimeout(resolve, parseInt(delayTime, 10)));
+                            const updatedJob = await produceIngestion(messageObject);
+                            logger.info("Updated Ingestion details : " + JSON.stringify(updatedJob?.ingestionDetails?.history));
+                        }
+                    }
+                    else {
+                        logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
+
                     }
                 }
                 else {
-                    logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
+                    logger.error("Some error occured in ingesting : " + JSON.stringify(messageObject));
+                    messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
+                    messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+                    const updateHistory: any = messageObject.Job.ingestionDetails;
+                    logger.info("Updating campaign details  with status failed: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
+                    produceModifiedMessages(updateHistory, updateCampaignTopic);
+
+                    const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
+                        (detail: any) => detail.state === 'Started'
+                    );
+
+                    if (startedIngestion) {
+                        startedIngestion.state = messageObject?.Job?.executionStatus;
+                        logger.info("Marked 'Started' ingestion as " + String(messageObject?.Job?.executionStatus));
+
+                        const ingestionData = JSON.parse(JSON.stringify(startedIngestion));
+                        ingestionData.campaignId = messageObject?.Job?.ingestionDetails?.campaignDetails?.id;
+                        ingestionData.ingestionNumber = messageObject?.Job?.ingestionNumber;
+                        ingestionData.jobId = messageObject?.Job?.jobID;
+                        messageObject.Job.ingestionDetails.ingestionData = ingestionData;
+                        logger.info("Updating Ingestion details to Completed, ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
+                        produceModifiedMessages(messageObject.Job.ingestionDetails, updateIngestionTopic)
+                    }
                 }
             }
-            else {
-                logger.error("Some error occured in ingesting : " + JSON.stringify(messageObject));
-                messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
-                messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
-                const updateHistory: any = messageObject.Job.ingestionDetails;
-                logger.info("Updating campaign details  with status failed: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
-                produceModifiedMessages(updateHistory, updateCampaignTopic);
+            else if (message?.topic == dhisCreateTopicName) {
+                if (messageObject?.Job?.executionStatus === "Started") {
+                    if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
+                        const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
+                            (detail: any) => detail.state === 'Started'
+                        );
+
+                        if (startedIngestion) {
+                            const ingestionData = JSON.parse(JSON.stringify(startedIngestion));
+                            ingestionData.campaignId = messageObject?.Job?.ingestionDetails?.campaignDetails?.id;
+                            ingestionData.ingestionNumber = messageObject?.Job?.ingestionNumber;
+                            ingestionData.jobId = messageObject?.Job?.jobID;
+                            messageObject.Job.ingestionDetails.ingestionData = ingestionData;
+                            logger.info("Saving Ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
+                            produceModifiedMessages(messageObject.Job.ingestionDetails, saveIngestionTopic)
+                        }
+                    }
+                    else {
+                        logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
+                    }
+                }
             }
         } catch (error) {
             logger.info(`Error processing message: ${JSON.stringify(error)}`);
@@ -76,20 +130,20 @@ function listener() {
     });
 
     // Set up error event handlers
-    consumerGroup.on('error', (err) => {
+    consumerGroupUpdate.on('error', (err) => {
         logger.info(`Consumer Error: ${JSON.stringify(err)}`);
     });
 
-    consumerGroup.on('offsetOutOfRange', (err) => {
+    consumerGroupUpdate.on('offsetOutOfRange', (err) => {
         logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
     });
-    consumerGroup.on('connect', () => {
+    consumerGroupUpdate.on('connect', () => {
         logger.info('Kafka consumer connected successfully!');
     });
 
     process.on('SIGINT', () => {
         logger.info('Disconnecting from Kafka...');
-        consumerGroup.close(true, () => {
+        consumerGroupUpdate.close(true, () => {
             producer.close(() => {
                 process.exit();
             });
@@ -122,4 +176,4 @@ async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
     });
 }
 
-export { listener, consumerGroup, produceModifiedMessages }
+export { listener, consumerGroupUpdate, produceModifiedMessages }

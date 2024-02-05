@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "../utils/request";
 import config from "../config/index";
-import { consumerGroup } from "../Kafka/Listener";
+import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
@@ -206,15 +206,15 @@ const extractEstimateIds = (contract: any): any[] => {
 
 const produceIngestion = async (messages: any) => {
   const ifNoneStartedIngestion = !messages?.Job?.ingestionDetails?.history.some(
-    (detail: any) => detail.state === 'started'
+    (detail: any) => detail.state === 'Started'
   );
 
   const notStartedIngestion = messages?.Job?.ingestionDetails?.history.find(
-    (detail: any) => detail.state === 'not-started'
+    (detail: any) => detail.state === 'Not-Started'
   );
   if (notStartedIngestion) {
     logger.info("Next Ingestion : " + JSON.stringify(notStartedIngestion));
-    notStartedIngestion.state = "started";
+    notStartedIngestion.state = "Started";
     messages.Job.tenantId = notStartedIngestion?.tenantId;
     messages.Job.RequestInfo = { userInfo: messages?.Job?.ingestionDetails?.userInfo };
     logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
@@ -225,14 +225,14 @@ const produceIngestion = async (messages: any) => {
 
     if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
-      messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
       const updateHistory: any = messages.Job.ingestionDetails;
       logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
       produceModifiedMessages(updateHistory, updateCampaignTopic);
     }
     else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
       messages.Job.ingestionDetails.campaignDetails.status = "Failed";
-      messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
       const updateHistory: any = messages.Job.ingestionDetails;
       logger.info("Updating campaign details  with status failed: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
       produceModifiedMessages(updateHistory, updateCampaignTopic);
@@ -242,7 +242,7 @@ const produceIngestion = async (messages: any) => {
   else {
     logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
     messages.Job.ingestionDetails.campaignDetails.status = "Completed";
-    messages.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
+    messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
     const updateHistory: any = messages.Job.ingestionDetails;
     logger.info("Updating campaign details  with status complete: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
     produceModifiedMessages(updateHistory, updateCampaignTopic);
@@ -267,14 +267,14 @@ const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
   };
 
   // Register the message handler
-  consumerGroup.on('message', messageHandler);
+  consumerGroupUpdate.on('message', messageHandler);
 
   // Set up error event handlers
-  consumerGroup.on('error', (err) => {
+  consumerGroupUpdate.on('error', (err) => {
     logger.info(`Consumer Error: ${JSON.stringify(err)}`);
   });
 
-  consumerGroup.on('offsetOutOfRange', (err) => {
+  consumerGroupUpdate.on('offsetOutOfRange', (err) => {
     logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
   });
 
@@ -308,14 +308,16 @@ async function getCampaignDetails(requestBody: any): Promise<any> {
     tenantId: hcmConfig.tenantId,
     fileStoreId: hcmConfig.fileStoreId,
     campaignType: hcmConfig.campaignType,
-    status: "not-started",
+    status: "Not-Started",
     projectTypeId: hcmConfig.projectTypeId,
     campaignName: hcmConfig.campaignName,
     campaignNumber: campaignNumber,
-    createdBy: userInfo?.uuid,
-    lastModifiedBy: userInfo?.uuid,
-    createdTime: new Date().getTime(),
-    lastModifiedTime: new Date().getTime(),
+    auditDetails: {
+      createdBy: userInfo?.uuid,
+      lastModifiedBy: userInfo?.uuid,
+      createdTime: new Date().getTime(),
+      lastModifiedTime: new Date().getTime(),
+    },
     additionalDetails: additionalDetails ? JSON.stringify(additionalDetails) : ""
   };
 
@@ -370,7 +372,22 @@ async function processFile(request: any, parsingTemplates: any[], result: any, h
       const responseData = fileCreationResult?.files;
       logger.info("Response data after File Creation : " + JSON.stringify(responseData));
       if (Array.isArray(responseData) && responseData.length > 0) {
-        Job.ingestionDetails.history.push({ fileStoreId: responseData[0].fileStoreId, tenantId: responseData[0].tenantId, state: "not-started", type: "xlsx", ingestionType: parsingTemplate.ingestionType });
+        Job.ingestionDetails.history.push({
+          id: uuidv4(),
+          campaignId: Job.ingestionDetails.campaignDetails.id,
+          fileStoreId: responseData[0].fileStoreId,
+          tenantId: responseData[0].tenantId,
+          state: "Not-Started",
+          fileType: "xlsx",
+          ingestionType: parsingTemplate.ingestionType,
+          additionalDetails: "{}",
+          auditDetails: {
+            createdBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdBy,
+            createdTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdTime,
+            lastModifiedBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedBy,
+            lastModifiedTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedTime
+          }
+        });
       }
     }
   }
