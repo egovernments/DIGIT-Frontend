@@ -73,28 +73,29 @@ config:
         dockerfile: micro-ui/web/health/Dockerfile
         image-name: health-ui
 
-  - name: builds/Digit-Frontend/modules/core
+  #micro frontends
+  - name: builds/Digit-Frontend/modules/core-digit-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: core
+        image-name: core-digit-ui
   
-  - name: builds/Digit-Frontend/modules/dss
+  - name: builds/Digit-Frontend/modules/dss-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: dss
+        image-name: dss-ui
 
   
-  - name: builds/Digit-Frontend/modules/workbench
+  - name: builds/Digit-Frontend/modules/workbench-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: workbench
+        image-name: workbench-ui
 
   
-  - name: builds/Digit-Frontend/modules/hrms
+  - name: builds/Digit-Frontend/modules/hrms-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: hrms
+        image-name: hrms-ui
