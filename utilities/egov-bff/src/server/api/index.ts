@@ -133,36 +133,46 @@ const getSheetData = async (
   config?: any,
   sheetName?: string
 ) => {
-  const response = await httpRequest(fileUrl, undefined, undefined, 'get');
-  const rowDatas: any[] = [];
-  for (const file of response.fileStoreIds) {
-    try {
-      const workbook = await getWorkbook(file.url);
-
-      let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
-
-      if (!desiredSheet) {
-        logger.info(`Sheet "${sheetName}" not found in the workbook.`);
-        return getErrorCodes("WORKS", "NO_SHEETNAME_FOUND");
-      }
-
-      for (const selectedRow of selectedRows) {
-        // Create a copy of the original sheet to modify
-        const modifiedSheet = { ...desiredSheet };
-
-        // Fill empty column values with the previous row's values
-        fillEmptyColumns(modifiedSheet);
-
-        // Process the modified sheet
-        processExcelSheet(modifiedSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
-      }
-
-    } catch (error) {
-      logger.error('Error fetching or processing file: ' + error);
+  try {
+    const response = await httpRequest(fileUrl, undefined, undefined, 'get');
+    if (response?.fileStoreIds.length === 0) {
+      throw new Error("File store Id invalid");
     }
+    //  return "";
+    const rowDatas: any[] = [];
+    for (const file of response.fileStoreIds) {
+      try {
+        const workbook = await getWorkbook(file.url);
+
+        let desiredSheet = workbook.Sheets[sheetName || workbook.SheetNames[0]];
+
+        if (!desiredSheet) {
+          logger.info(`Sheet "${sheetName}" not found in the workbook.`);
+          return getErrorCodes("WORKS", "NO_SHEETNAME_FOUND");
+        }
+
+        for (const selectedRow of selectedRows) {
+          // Create a copy of the original sheet to modify
+          const modifiedSheet = { ...desiredSheet };
+
+          // Fill empty column values with the previous row's values
+          fillEmptyColumns(modifiedSheet);
+
+          // Process the modified sheet
+          processExcelSheet(modifiedSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
+        }
+
+      } catch (error) {
+        logger.error('Error fetching or processing file: ' + error);
+      }
+    }
+    logger.info("RowDatas : " + JSON.stringify(rowDatas))
+    return rowDatas;
   }
-  logger.info("RowDatas : " + JSON.stringify(rowDatas))
-  return rowDatas;
+  catch (error: any) {
+    logger.error('Error:', error.message); // Log the error message
+    return { success: false, error: error.message }; // Return error response with message
+  }
 };
 
 const fillEmptyColumns = (sheet: XLSX.WorkSheet) => {

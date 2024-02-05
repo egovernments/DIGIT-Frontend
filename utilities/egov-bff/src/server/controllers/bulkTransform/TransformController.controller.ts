@@ -51,7 +51,7 @@ class TransformController {
                 logger.info("No Transform Template found");
                 return sendResponse(response, { "Error": "Transform Template error" }, request);
             }
-            logger.info("Transform Config : ", TransformConfig);
+            // logger.info("Transform Config : ", TransformConfig);
             const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
             logger.info("File fetching url : " + url)
             const updatedDatas: any = await getSheetData(url, selectedRows, TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
@@ -59,8 +59,8 @@ class TransformController {
             // After processing all mdms elements, send the response
             return sendResponse(response, { updatedDatas }, request);
         }
-        catch (e: any) {
-            return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
+        catch (error: any) {
+            return errorResponder({ message: error?.response?.data?.Errors[0].message }, request, response);
         }
     };
 

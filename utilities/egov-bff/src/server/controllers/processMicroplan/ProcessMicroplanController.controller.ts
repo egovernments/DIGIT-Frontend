@@ -61,8 +61,8 @@ class BulkUploadController {
         logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
         const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
         result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_transform`, request.body, undefined, undefined, undefined, undefined);
-        if (result.Error) {
-          throw new Error(result.Error);
+        if (result.updatedDatas.error) {
+          throw new Error(result.updatedDatas.error);
         }
         Job.ingestionDetails.campaignDetails.status = "started"
         produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
