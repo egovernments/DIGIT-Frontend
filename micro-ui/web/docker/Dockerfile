@@ -1,5 +1,5 @@
-FROM egovio/alpine-node-builder-16:yarn AS build
-# FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
+# FROM egovio/alpine-node-builder-16:yarn AS build
+FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
 
 
 # Install Yarn globally
