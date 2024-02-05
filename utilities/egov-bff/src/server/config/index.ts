@@ -4,7 +4,7 @@
 import { getErrorCodes } from "./constants";
 
 const HOST = process.env.EGOV_HOST ||
-  // "http://127.0.0.1:8080/" ||
+  "http://127.0.0.1:8080/" ||
   "https://unified-uat.digit.org/";
 
 if (!HOST) {
@@ -16,7 +16,7 @@ const config = {
   auth_token: process.env.AUTH_TOKEN,
   delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || 90000,
   KAFKA_BROKER_HOST:
-    // "localhost:9092" ||
+    "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
@@ -39,14 +39,14 @@ const config = {
   host: {
     serverHost: HOST,
     mdms: process.env.EGOV_MDMS_HOST
-      // || "http://localhost:8084/"
+      || "http://localhost:8084/"
       || "https://unified-uat.digit.org/",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST
-      // || "http://localhost:8083/"
+      || "http://localhost:8083/"
       || "https://unified-uat.digit.org/",
     hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_HOST
-      // || "http://localhost:8082/"
+      || "http://localhost:8082/"
       || "https://unified-uat.digit.org/",
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"

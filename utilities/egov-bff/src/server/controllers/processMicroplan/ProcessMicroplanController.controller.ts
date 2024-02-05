@@ -14,6 +14,7 @@ import {
   sendResponse,
 } from "../../utils/index";
 import { httpRequest } from "../../utils/request";
+import { Pool, QueryResult } from 'pg';
 
 const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
@@ -33,7 +34,92 @@ class BulkUploadController {
   // Initialize routes for MeasurementController
   public intializeRoutes() {
     this.router.post(`${this.path}/_processmicroplan`, this.processMicroplan);
+    this.router.post(`${this.path}/_searchmicroplan`, this.searchMicroplan)
   }
+
+
+
+  searchMicroplan = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    try {
+      const pool = new Pool({
+        user: 'postgres',
+        host: 'localhost',
+        database: 'postgres2',
+        password: '1234',
+        port: 5432,
+      });
+      let criteria = request?.body?.HCMConfig;
+      const userInfo = request?.body?.RequestInfo.userInfo;
+      criteria.createdBy=userInfo.uuid;
+      console.log(criteria.createdBy,"ppppppp")
+      const { campaignId, campaignName, campaignType, campaignNumber, ingestionType , createdBy} = criteria;
+      const client = await pool.connect();
+      let queryString = 'SELECT * FROM eg_campaign_details WHERE 1=1';
+
+      if (campaignId && campaignId.length > 0) {
+        const idList = campaignId.map((id: any) => `'${id}'`).join(', ');
+        queryString += ` AND id IN (${idList})`;
+      }
+
+      if (campaignName) {
+        queryString += ` AND campaignName = '${campaignName}'`;
+      }
+
+      if (campaignNumber) {
+        queryString += ` AND campaignNumber = '${campaignNumber}'`;
+      }
+
+      if (campaignType) {
+        queryString += ` AND campaignType = '${campaignType}'`;
+      }
+      if (userInfo && userInfo.uuid) {
+        queryString += ` AND createdBy = '${createdBy}'`; // Assuming createdby field is used for uuid
+      }
+      console.log(createdBy,"cccccrrrrrrreateeeddddddd")
+
+      console.log(queryString, "wwwwwwwwwwwww");
+
+      const campaignResult: QueryResult = await client.query(queryString);
+      // console.log(campaignResult, "rrrrrrrrrrrrr");
+
+      const campaignDetails: any = campaignResult.rows;
+      console.log(campaignDetails, "ccccccccccccccccc");
+
+      // Query 'eg_campaign_ingestionDetails' based on the campaignDetails
+      if (campaignDetails.length > 0) {
+        const idListForIngestion = campaignDetails.map((campaign: { id: any; }) => `'${campaign.id}'`).join(', ');
+        let ingestionQueryString = `SELECT * FROM eg_campaign_ingestionDetails WHERE campaignId IN (${idListForIngestion})`;
+
+        if (ingestionType) {
+          ingestionQueryString += ` AND ingestionType = '${ingestionType}'`;
+        }
+        console.log(ingestionQueryString,"iiiiiiiiiiiiiiiiiiii")
+
+        const ingestionResult: QueryResult = await client.query(ingestionQueryString);
+        const ingestionDetails: any = ingestionResult.rows;
+        console.log(ingestionDetails, "ingestionnnnnnnnnnnnnnn");
+        const responseData = {
+          campaignDetails,
+          ingestionDetails,
+        }
+        if (!ingestionType ||ingestionDetails?.[0]?.ingestiontype == ingestionType)
+          return response.json(responseData);
+        else {
+          return response.json({ error: 'No matching campaigns found.' });
+        }
+      } else {
+        return response.json({ error: 'No matching campaigns found.' });
+      }
+    } catch (error) {
+      console.error('Error searching campaigns:', error);
+      return response.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+
 
 
   processMicroplan = async (
