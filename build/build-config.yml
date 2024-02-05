@@ -53,3 +53,5 @@ config:
     build:
       - work-dir: "utilities/egov-bff"
         image-name: "hcm-bff"
+      - work-dir: "utilities/egov-bff/migration"
+        image-name: "hcm-bff-db"
