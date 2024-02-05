@@ -7,15 +7,18 @@
     "serve": "^13.0.2",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.8.1",
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack",
-    "serve": "serve dist -p 5000"
+    "serve": "serve dist -p 9000"
   },
   "dependencies": {
+    "@egovernments/digit-ui-libraries": "1.4.0",
     "react-query": "^3.38.0",
-    "single-spa": "^5.9.3"
+    "single-spa": "^5.9.3",
+    "react": "18.2.0"
   }
 }

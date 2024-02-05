@@ -2,6 +2,7 @@ const path = require("path");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
+const packageJson = require("./package.json");
 
 module.exports = {
   mode: "production",
@@ -27,10 +28,10 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
-    modules: ["node_modules", path.resolve(__dirname, "src")],
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
   },
   devServer: {
-    port: "3002",
+    port: "6005",
     hot: false,
   },
   devtool: "source-map",
@@ -46,11 +47,11 @@ module.exports = {
         "./App": "./src/singleSpaEntry",
       },
       shared: [
-        //
-        "react-dom",
-        "react-query",
-        "react",
-        "single-spa-react",
+        // packageJson.dependencies,
+        // "react-dom",
+        // "react-query",
+        // "react",
+        // "single-spa-react",
       ],
     }),
   ],

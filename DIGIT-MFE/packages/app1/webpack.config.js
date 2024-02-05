@@ -30,7 +30,7 @@ module.exports = {
     modules: ["node_modules", path.resolve(__dirname, "src")],
   },
   devServer: {
-    port: "3001",
+    port: "6001",
     hot: false,
   },
   devtool: "source-map",
@@ -47,10 +47,11 @@ module.exports = {
       },
       shared: [
         //
-        "react-dom",
-        "react-query",
-        "react",
-        "single-spa-react",
+        //   "react-dom",
+        //   "react-query",
+        //   "react",
+        //   "single-spa-react",
+        //
       ],
     }),
   ],

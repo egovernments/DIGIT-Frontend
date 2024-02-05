@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import singleSpaReact from "single-spa-react";
-
-import App from "./App";
-
+// import HRMSWrapper from "./ModuleWrapper";
+// import Dummy from "./Dummy";
+import App from "./ModuleWrapper";
+// singleSpaReact.millis(1000000000);
 const appLifeCycles = singleSpaReact({
   React,
   ReactDOM,
