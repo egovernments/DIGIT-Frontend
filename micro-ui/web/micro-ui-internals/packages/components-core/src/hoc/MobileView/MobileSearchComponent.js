@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InboxContext } from "../InboxSearchComposerContext";
-import { FilterIcon, SearchIcon, CloseSvg, RefreshIcon } from "../../../../react-components/src/atoms/svgindex";
+import { FilterIcon, SearchIcon, CloseSvg, RefreshIcon } from "../../atoms/svgindex"
 import ActionBar from "../../atoms/ActionBar";
 import SubmitBar from "../../atoms/SubmitBar";
-import LinkLabel from "../../../../react-components/src/atoms/LinkLabel";
+import LinkLabel from "../../atoms/LinkLabel";
 import RenderFormFields from "../../molecules/RenderFormFields";
 import Toast from "../../atoms/Toast"; 
 import _ from "lodash";

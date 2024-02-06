@@ -1,6 +1,6 @@
 import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from "react-table";
 import React, { useEffect, useState, useRef, forwardRef } from "react";
-import { ArrowBack, ArrowForward, ArrowToFirst, ArrowToLast, SortDown, SortUp, DoubleTickIcon } from "../../../react-components/src/atoms/svgindex";
+import { ArrowBack, ArrowForward, ArrowToFirst, ArrowToLast, SortDown, SortUp, DoubleTickIcon } from "../atoms/svgindex"
 import CheckBox from "./CheckBox";
 import ActionBar from "./ActionBar";
 import Toast from "./Toast";

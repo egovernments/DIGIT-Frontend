@@ -2,13 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { InboxContext } from "../hoc/InboxSearchComposerContext";
-// import RenderFormFields from "../../../react-components/src/molecules/RenderFormFields";
 import RenderFormFields from "../molecules/RenderFormFields";
 import Header from "../atoms/Header";
-import LinkLabel from '../../../react-components/src/atoms/LinkLabel';
+import LinkLabel from "../atoms/LinkLabel";
 import SubmitBar from "../atoms/SubmitBar";
 import Toast from "../atoms/Toast";
-import { FilterIcon, RefreshIcon } from "@egovernments/digit-ui-react-components/src/atoms/svgindex";
+import { FilterIcon, RefreshIcon } from "../atoms/svgindex";
 
 const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data }) => {
   const { t } = useTranslation();
