@@ -9,13 +9,18 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.js?$/,
+      //   loader: "babel-loader",
+      //   exclude: /node_modules/,
+      //   options: {
+      //     presets: ["@babel/preset-react"],
+      //   },
+      // },
       {
-        test: /\.js?$/,
-        loader: "babel-loader",
+        test: /\.(js)$/,
         exclude: /node_modules/,
-        options: {
-          presets: ["@babel/preset-react"],
-        },
+        use: ["babel-loader"],
       },
     ],
   },
