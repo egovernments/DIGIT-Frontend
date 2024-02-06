@@ -97,7 +97,7 @@ function listener() {
                         ingestionData.ingestionNumber = messageObject?.Job?.ingestionNumber;
                         ingestionData.jobId = messageObject?.Job?.jobID;
                         messageObject.Job.ingestionDetails.ingestionData = ingestionData;
-                        logger.info("Updating Ingestion details to Completed, ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
+                        logger.info("Updating Ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
                         produceModifiedMessages(messageObject.Job.ingestionDetails, updateIngestionTopic)
                     }
                 }
