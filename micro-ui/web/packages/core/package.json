@@ -26,6 +26,7 @@
     "@digit-ui/digit-ui-libraries-mfe": "1.0.0",
     "@digit-ui/digit-ui-module-hrms-mfe": "1.0.0",
     "@digit-ui/digit-ui-module-workbench-mfe": "1.0.0",
+    "@egovernments/digit-ui-react-components":"1.4.101",
     "@digit-ui/digit-ui-module-dss-mfe": "1.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
