@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "@egovernments/digit-ui-module-hrms",
+    "name": "@digit-ui/digit-ui-module-hrms-mfe",
     "version": "1.5.27",
     "description": "HRMS",
     "main": "dist/index.js",
@@ -1437,7 +1437,7 @@ Lockfile:
       redux "4.1.2"
       xlsx "0.17.5"
   
-  "@egovernments/digit-ui-module-hrms@file:C:\\Users\\MEHAR\\Documents\\integ\\UI\\packages\\hrms":
+  "@digit-ui/digit-ui-module-hrms-mfe@file:C:\\Users\\MEHAR\\Documents\\integ\\UI\\packages\\hrms":
     version "1.5.27"
     resolved "file:packages/hrms"
     dependencies:
@@ -6925,7 +6925,7 @@ Lockfile:
     version "1.0.1"
     resolved "file:packages/core"
     dependencies:
-      "@egovernments/digit-ui-libraries" "1.4.100"
+      "@digit-ui/digit-ui-libraries-mfe" "1.4.100"
       react "17.0.1"
       react-dom "17.0.1"
       react-router-dom "5.2.0"

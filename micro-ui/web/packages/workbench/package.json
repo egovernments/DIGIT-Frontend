@@ -1,6 +1,6 @@
 {
-  "name": "workbench",
-  "version": "0.0.3",
+  "name": "@digit-ui/digit-ui-module-workbench-mfe",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {

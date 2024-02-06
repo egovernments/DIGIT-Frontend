@@ -1,6 +1,6 @@
 {
-  "name": "dss",
-  "version": "1.8.0-beta",
+  "name": "@digit-ui/digit-ui-module-dss-mfe",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {

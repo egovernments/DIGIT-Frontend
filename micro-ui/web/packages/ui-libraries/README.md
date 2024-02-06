@@ -12,7 +12,7 @@ npm install --save @egovernments/digit-ui-libraries
 
 ```jsx
 import React from "react";
-import initLibraries from "@egovernments/digit-ui-libraries";
+import initLibraries from "@digit-ui/digit-ui-libraries-mfe";
 
 import defaultConfig from "./config";
 

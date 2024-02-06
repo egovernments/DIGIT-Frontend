@@ -7,7 +7,7 @@ module.exports = {
     filename: "main.js", // Output file name
     path: path.resolve(__dirname, "dist"), // Output directory
     library: {
-      name: "@egovernments/digit-ui-libraries",
+      name: "@digit-ui/digit-ui-libraries-mfe",
       type: "umd",
     },
   },

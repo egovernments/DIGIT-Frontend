@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "core-digit-ui",
   "version": "1.0.1",
   "description": "",
   "main": "index.js",
@@ -23,10 +23,10 @@
     "babel-plugin-react-html-attrs": "^3.0.5"
   },
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.4.100",
-    "@egovernments/digit-ui-module-hrms": "1.5.27",
-    "@egovernments/digit-ui-module-workbench": "0.0.3",
-    "@egovernments/digit-ui-module-dss": "1.8.0-beta",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.0",
+    "@digit-ui/digit-ui-module-hrms-mfe": "1.0.0",
+    "@digit-ui/digit-ui-module-workbench-mfe": "1.0.0",
+    "@digit-ui/digit-ui-module-dss-mfe": "1.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-router-dom": "5.2.0",

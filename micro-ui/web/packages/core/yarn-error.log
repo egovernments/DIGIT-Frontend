@@ -51,8 +51,8 @@ npm manifest:
       "html-webpack-plugin": "4.5.1"
     },
     "dependencies": {
-      "@egovernments/digit-ui-libraries": "1.4.100",
-      "@egovernments/digit-ui-module-hrms": "1.5.27",
+      "@digit-ui/digit-ui-libraries-mfe": "1.0.0",
+      "@digit-ui/digit-ui-module-hrms-mfe": "1.5.27",
       "react": "17.0.1",
       "react-dom": "17.0.1",
       "react-router-dom": "5.2.0",
@@ -1420,9 +1420,9 @@ Lockfile:
     resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
     integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
   
-  "@egovernments/digit-ui-module-hrms@1.5.27":
+  "@digit-ui/digit-ui-module-hrms-mfe@1.5.27":
     version "1.5.27"
-    resolved "https://registry.yarnpkg.com/@egovernments/digit-ui-module-hrms/-/digit-ui-module-hrms-1.5.27.tgz#f6734a26a9abbc7a54dbeb19bdd232f2a61b1f29"
+    resolved "https://registry.yarnpkg.com/@digit-ui/digit-ui-module-hrms-mfe/-/digit-ui-module-hrms-1.5.27.tgz#f6734a26a9abbc7a54dbeb19bdd232f2a61b1f29"
     integrity sha512-EQx2L/mWh6o/W60bah1L3p6nq3I26svLA4CTazubyVcRa3xpgSN1Gmdd4BprOjd6NxXOLUaToC5M3CNbDkphOg==
     dependencies:
       "@egovernments/digit-ui-react-components" "1.5.27"

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { DigitUI } from "@egovernments/digit-ui-module-core-temp";
-import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initMeasurementComponents } from "./Module.js";
 
 

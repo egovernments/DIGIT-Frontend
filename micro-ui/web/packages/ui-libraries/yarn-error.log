@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "@egovernments/digit-ui-libraries",
+    "name": "@digit-ui/digit-ui-libraries-mfe",
     "version": "1.4.100",
     "main": "dist/main.js",
     "module": "dist/main.js",

@@ -1,6 +1,6 @@
 {
-  "name": "@egovernments/digit-ui-libraries",
-  "version": "1.4.100",
+  "name": "@digit-ui/digit-ui-libraries-mfe",
+  "version": "1.0.0",
   "main": "dist/main.js",
   "module": "dist/main.js",
   "source": "src/index.js",
