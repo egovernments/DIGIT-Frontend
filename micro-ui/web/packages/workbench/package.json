@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-module-workbench-mfe",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@digit-ui/digit-ui-module-core-base": "1.0.0",
-    "@egovernments/digit-ui-react-components": "1.4.101",
+    "@egovernments/digit-ui-react-components": "1.4.102",
     "@egovernments/digit-ui-svg-components": "0.0.8",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
