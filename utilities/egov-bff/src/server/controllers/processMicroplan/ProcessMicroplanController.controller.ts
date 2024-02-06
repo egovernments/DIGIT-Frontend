@@ -101,77 +101,79 @@ class BulkUploadController {
         const ingestionResult: QueryResult = await client.query(ingestionQueryString);
         const ingestionDetails: any = ingestionResult.rows;
         console.log(ingestionDetails, "ingestionnnnnnnnnnnnnnn");
-        const responseData = {
-          campaignDetails,
-          ingestionDetails,
-        }
-        if (!ingestionType ||ingestionDetails?.[0]?.ingestiontype == ingestionType)
-          return response.json(responseData);
-        else {
-          return response.json({ error: 'No matching campaigns found.' });
-        }
-      } else {
-        return response.json({ error: 'No matching campaigns found.' });
-      }
-    } catch (error) {
-      console.error('Error searching campaigns:', error);
-      return response.status(500).json({ error: 'Internal server error' });
-    }
+        const responseData = campaignDetails.map((campaign: any) => {
+          console.log(campaign.id, "ccccccccaaaaaammppp");
+          const filteredIngestionDetails = ingestionDetails.filter((ingestion: any) => {
+              console.log("Ingestion Campaign ID:", ingestion.campaignid);
+              return ingestion.campaignid === campaign.id;
+          });
+          return {
+              ...campaign,
+              ingestionDetails: filteredIngestionDetails
+          };
+      });
+      return response.json(responseData);
   }
+else{
+      return response.json({ error: 'No matching campaigns found.' })
+} }catch(error) {
+    console.error('Error searching campaigns:', error);
+    return response.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
 
-
-  processMicroplan = async (
-    request: express.Request,
-    response: express.Response
-  ) => {
+processMicroplan = async (
+  request: express.Request,
+  response: express.Response
+) => {
+  try {
+    await validateProcessMicroplan(request, response);
+    const campaignDetails = await getCampaignDetails(request?.body);
+    if (campaignDetails == "INVALID_CAMPAIGN_NUMBER") {
+      throw new Error("Error during Campaign Number generation");
+    }
+    var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
+    const saveHistory: any = Job.ingestionDetails;
+    logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
+    produceModifiedMessages(saveHistory, saveCampaignTopic);
     try {
-      await validateProcessMicroplan(request, response);
-      const campaignDetails = await getCampaignDetails(request?.body);
-      if (campaignDetails == "INVALID_CAMPAIGN_NUMBER") {
-        throw new Error("Error during Campaign Number generation");
+      const { campaignType } = request?.body?.HCMConfig;
+      const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
+      if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
+        throw new Error("Invalid Campaign Type");
       }
-      var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
-      const saveHistory: any = Job.ingestionDetails;
-      logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
-      produceModifiedMessages(saveHistory, saveCampaignTopic);
-      try {
-        const { campaignType } = request?.body?.HCMConfig;
-        const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
-        if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
-          throw new Error("Invalid Campaign Type");
-        }
-        request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
-        const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
-        logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
-        const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
-        result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_transform`, request.body, undefined, undefined, undefined, undefined);
-        if (result.updatedDatas.error) {
-          throw new Error(result.updatedDatas.error);
-        }
-        Job.ingestionDetails.campaignDetails.status = "Started"
-        Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
-        produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
-        await processFile(request, parsingTemplates, result, hostHcmBff, Job);
-      } catch (e: any) {
-        logger.error(String(e))
-        return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+      request.body.HCMConfig['transformTemplate'] = campaign?.mdms?.[0]?.data?.transformTemplate;
+      const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
+      logger.info("ParsingTemplates : " + JSON.stringify(parsingTemplates))
+      const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+      result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_transform`, request.body, undefined, undefined, undefined, undefined);
+      if (result.updatedDatas.error) {
+        throw new Error(result.updatedDatas.error);
       }
-      Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
-      Job.ingestionDetails.campaignDetails = campaignDetails;
-      const updatedJob: any = await produceIngestion({ Job });
-      return sendResponse(
-        response,
-        { Job: updatedJob },
-        request
-      );
+      Job.ingestionDetails.campaignDetails.status = "Started"
+      Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
+      produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
+      await processFile(request, parsingTemplates, result, hostHcmBff, Job);
     } catch (e: any) {
       logger.error(String(e))
-      return errorResponder({ message: String(e) }, request, response);
+      return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
     }
-  };
-}
+    Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
+    Job.ingestionDetails.campaignDetails = campaignDetails;
+    const updatedJob: any = await produceIngestion({ Job });
+    return sendResponse(
+      response,
+      { Job: updatedJob },
+      request
+    );
+  } catch (e: any) {
+    logger.error(String(e))
+    return errorResponder({ message: String(e) }, request, response);
+  }
+};
 
+}
 // Export the MeasurementController class
 export default BulkUploadController;
