@@ -2,7 +2,7 @@ name: core ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build" ]
+    branches: [ "mf-build-docker" ]
   pull_request:
     branches: [ "mf-build" ]
 
