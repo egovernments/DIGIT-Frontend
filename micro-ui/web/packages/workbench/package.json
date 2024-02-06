@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-module-workbench-mfe",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "html-webpack-plugin": "4.5.1"
   },
   "dependencies": {
-    "@digit-ui/digit-ui-module-core-base": "1.0.0",
-    "@egovernments/digit-ui-react-components": "1.4.102",
+    "@digit-ui/digit-ui-module-core-base": "1.0.5",
+    "@egovernments/digit-ui-react-components": "1.4.105",
     "@egovernments/digit-ui-svg-components": "0.0.8",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
