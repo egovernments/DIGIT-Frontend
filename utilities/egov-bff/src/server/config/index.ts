@@ -14,7 +14,7 @@ if (!HOST) {
 
 const config = {
   auth_token: process.env.AUTH_TOKEN,
-  delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || 90000,
+  delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || 120000,
   KAFKA_BROKER_HOST:
     // "localhost:9092" ||
     // "localhost:9093" ||

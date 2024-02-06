@@ -1,33 +1,20 @@
-import { Producer, KafkaClient } from 'kafka-node';
 import config from '../config';
+import { Producer, KafkaClient } from 'kafka-node';
 
-const kafkaConfig = {
+const kafkaClient = new KafkaClient({
     kafkaHost: config.KAFKA_BROKER_HOST,
-    autoCommit: true,
-    autoCommitIntervalMs: 5000,
-    sessionTimeout: 15000,
-    fetchMaxBytes: 10 * 1024 * 1024,
-    protocol: ['roundrobin'],
-    fromOffset: 'latest',
-    outOfRangeOffset: 'earliest',
-    groupId: 'your_producer_group',
-};
-
-// Create a Kafka client
-const kafkaClient = new KafkaClient(kafkaConfig);
-
-// Create a Kafka producer
-export const producer = new Producer(kafkaClient);
-
-// Event handler for producer errors
-producer.on('error', (error) => {
-    console.error('Error in Kafka producer:', error);
+    connectRetryOptions: { retries: 1 },
 });
 
-// Event handler for producer ready
+const producer = new Producer(kafkaClient, { partitionerType: 2 });
+
 producer.on('ready', () => {
-    console.log('Kafka producer is ready.');
+    console.log('Producer is ready');
 });
 
-// Make sure to wait for the 'ready' event before sending messages
-// This ensures that the producer is ready to send messages to Kafka
+producer.on('error', (err) => {
+    console.log('Producer is in error state');
+    console.log(err.stack || err);
+});
+
+export { producer };
