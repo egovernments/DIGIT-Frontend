@@ -1,18 +1,18 @@
 import {
   SVG,
-  CardLabel,
   Dropdown,
   LabelFieldPair,
   MobileNumber,
   TextInput,
   Toast,
   CardLabelError,
-  BreadCrumb,
   BackButton,
   Loader,
   Button,
+  SubmitBar,
+  CardLabel
 } from "@egovernments/digit-ui-components-core";
-import { CameraIcon } from "@egovernments/digit-ui-react-components";
+import { CameraIcon, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -497,7 +497,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       type: "text",
                       title: t("CORE_COMMON_PROFILE_NAME_ERROR_MESSAGE"),
                     })}
-                    disable={editScreen}
+                    disabled={editScreen}
                   />
                   {errors?.userName && <CardLabelError style={{ margin: 0, padding: 0 }}> {t(errors?.userName?.message)} </CardLabelError>}
                 </div>
@@ -507,17 +507,18 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <CardLabel className="profile-label-margin" style={editScreen ? { color: "#B1B4B6", width: "300px" } : { width: "300px" }}>{`${t(
                   "CORE_COMMON_PROFILE_GENDER"
                 )}`}</CardLabel>
-                <Dropdown
-                  style={{ width: "100%" }}
-                  selected={gender?.length === 1 ? gender[0] : gender}
-                  disable={gender?.length === 1 || editScreen}
-                  option={menu}
-                  select={setGenderName}
-                  value={gender}
-                  optionKey="code"
-                  t={t}
-                  name="gender"
-                />
+                <div style={{ width: "100%" }}>
+                  <Dropdown
+                    selected={gender?.length === 1 ? gender[0] : gender}
+                    disable={gender?.length === 1 || editScreen}
+                    option={menu}
+                    select={setGenderName}
+                    value={gender}
+                    optionKey="code"
+                    t={t}
+                    name="gender"
+                  />
+                </div>
               </LabelFieldPair>
 
               <LabelFieldPair style={{ display: "flex" }}>
@@ -539,13 +540,13 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       type: "text",
                       title: t("CORE_COMMON_PROFILE_CITY_ERROR_MESSAGE"),
                     })}
-                    disable={true}
+                    disabled={true}
                   />
                   <CardLabelError></CardLabelError>
                 </div>
               </LabelFieldPair>
 
-              <LabelFieldPair style={{ display: "flex" }}>
+              <LabelFieldPair style={{ display: "flex"  }}>
                 <CardLabel className="profile-label-margin" style={{ width: "300px" }}>{`${t("CORE_COMMON_PROFILE_MOBILE_NUMBER")}*`}</CardLabel>
                 <div style={{ width: "100%" }}>
                   <MobileNumber
@@ -575,14 +576,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     name="email"
                     value={email}
                     onChange={(e) => setUserEmailAddress(e.target.value)}
-                    disable={editScreen}
+                    disabled={editScreen}
                   />
                   {errors?.emailAddress && <CardLabelError> {t(errors?.emailAddress?.message)} </CardLabelError>}
                 </div>
               </LabelFieldPair>
 
               <LabelFieldPair>
-                <div>
+                <div style={{width:"100%"}}>
                   <a style={{ color: "orange", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
                     {t("CORE_COMMON_CHANGE_PASSWORD")}
                   </a>
@@ -601,7 +602,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             name="name"
                             pattern="^([a-zA-Z0-9@#$%])+$"
                             onChange={(e) => setUserCurrentPassword(e.target.value)}
-                            disable={editScreen}
+                            disabled={editScreen}
                           />
                           {errors?.currentPassword && <CardLabelError>{t(errors?.currentPassword?.message)}</CardLabelError>}
                         </div>
@@ -620,7 +621,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             name="name"
                             pattern="^([a-zA-Z0-9@#$%])+$"
                             onChange={(e) => setUserNewPassword(e.target.value)}
-                            disable={editScreen}
+                            disabled={editScreen}
                           />
                           {errors?.newPassword && <CardLabelError>{t(errors?.newPassword?.message)}</CardLabelError>}
                         </div>
@@ -639,7 +640,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                             name="name"
                             pattern="^([a-zA-Z0-9@#$%])+$"
                             onChange={(e) => setUserConfirmPassword(e.target.value)}
-                            disable={editScreen}
+                            disabled={editScreen}
                           />
                           {errors?.confirmPassword && <CardLabelError>{t(errors?.confirmPassword?.message)}</CardLabelError>}
                         </div>
@@ -657,7 +658,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
       {userType === "employee" ? (
         <div className="action-bar-wrap">
-          <Button className="digit-submit-bar" t={t} label={t("CORE_COMMON_SAVE")} onClick={updateProfile} />
+          <SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />
           {/* <button
             onClick={updateProfile}
             style={{

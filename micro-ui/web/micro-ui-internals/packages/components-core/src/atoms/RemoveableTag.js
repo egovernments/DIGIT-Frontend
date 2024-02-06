@@ -12,8 +12,8 @@ const RemoveableTag = ({ className, text, onClick, extraStyles, disabled = false
       <span className="digit-text" style={textStyles}>
         {text}
       </span>
-      <span onClick={disabled ? null : onClick}>
-        <SVG.Close className="close" style={closeIconStyles} />
+      <span onClick={disabled ? null : onClick} className="close-icon">
+        <SVG.Close fill="#d6d5d4" className="close" style={closeIconStyles} />
       </span>
     </div>
   );

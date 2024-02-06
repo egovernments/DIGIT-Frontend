@@ -62,7 +62,7 @@ const EmployeeApp = ({
             className={isUserProfile ? "grounded-container" : "loginContainer"}
             style={
               isUserProfile
-                ? { padding: 0, paddingTop: "80px", marginLeft: mobileView ? "" : "64px" }
+                ? { padding: 0, paddingTop: "80px" }
                 : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
             }
           >

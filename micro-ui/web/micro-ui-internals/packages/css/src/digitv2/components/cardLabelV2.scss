@@ -1,7 +1,8 @@
 @import url("../typography.scss");
 
 .digit-card-label {
-  @extend .light-primary;
-  @extend .typography.text-label;
-  @apply text-legend mb-sm;
+  font-weight: theme(digitv2.fontWeight.regular);
+  font-size: 16px;
+  line-height: 19px;
+  color: theme(digitv2.lightTheme.text-color-primary);
 }

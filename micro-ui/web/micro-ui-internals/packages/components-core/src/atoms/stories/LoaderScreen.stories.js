@@ -13,9 +13,9 @@ export default {
 
 const Template = (args) => <LoaderScreen {...args} />;
 
+export const Primary = Template.bind({});
+
 export const Playground = Template.bind({});
 Playground.args = {
   page: true,
 };
-
-export const Primary = Template.bind({});

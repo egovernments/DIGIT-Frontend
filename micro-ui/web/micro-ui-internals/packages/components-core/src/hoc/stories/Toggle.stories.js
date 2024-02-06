@@ -35,22 +35,17 @@ const Template = (args) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <FieldV1
-        {...args}
-        value={selectedOption}
-        onChange={handleSelectOption}
-      />
+      <FieldV1 {...args} value={selectedOption} onChange={handleSelectOption} />
     </QueryClientProvider>
   );
 };
 
 const t = (key) => key;
 
-
 const Options = [
   { code: "Toggle1", name: "Toggle1" },
   { code: "Toggle2", name: "Toggle2" },
-  { code: "Toggle3", name: "Toggle3" }
+  { code: "Toggle3", name: "Toggle3" },
 ];
 
 const commonArgs = {
@@ -68,16 +63,12 @@ const commonArgs = {
   type: "toggle",
   additionalWrapperClass: "",
   error: "",
-  description:""
-}
-
-export const Default = Template.bind({});
-Default.args = {
-  ...commonArgs
+  description: "",
 };
 
-export const Filled = Template.bind({});
-Filled.args = {
+
+//Default Toggle 
+export const Default = Template.bind({});
+Default.args = {
   ...commonArgs,
-  value: "Toggle1"
 };

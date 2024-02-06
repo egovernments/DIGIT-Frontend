@@ -249,8 +249,8 @@ function ApplicationDetailsContent({
         <CollapseAndExpandGroups groupElements={detail?.expandAndCollapse?.groupComponents} groupHeader={detail?.expandAndCollapse?.groupHeader} headerLabel={detail?.expandAndCollapse?.headerLabel} headerValue={detail?.expandAndCollapse?.headerValue} customClass={detail?.expandAndCollapse?.customClass}>
           <React.Fragment key={index}>
           <div style={getMainDivStyles()}>
-            {index === 0 && !detail.asSectionHeader ? (
-              <CardSubHeader style={{ marginBottom: "16px", fontSize: "24px" }}>{t(detail.title)}</CardSubHeader>
+            {index === 0 && !detail?.asSectionHeader ? (
+              <CardSubHeader style={{ marginBottom: "16px", fontSize: "24px" }}>{t(detail?.title)}</CardSubHeader>
             ) : (
               <React.Fragment>
                 <CardSectionHeader
@@ -260,7 +260,7 @@ function ApplicationDetailsContent({
                       (sectionHeadStyle ? sectionHeadStyle : { marginBottom: "16px", marginTop: "32px", fontSize: "24px" })
                   }
                 >
-                  {isNocLocation ? `${t(detail.title)}` : t(detail.title)}
+                  {isNocLocation ? `${t(detail?.title)}` : t(detail?.title)}
                   {detail?.Component ? <detail.Component /> : null}
                 </CardSectionHeader>
               </React.Fragment>

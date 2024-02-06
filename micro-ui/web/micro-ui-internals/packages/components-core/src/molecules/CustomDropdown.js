@@ -53,6 +53,8 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
           />
         );
       case "dropdown":
+      case "radioordropdown":
+      case "select":
         return (
           <Dropdown
             inputRef={inputRef}
@@ -72,6 +74,7 @@ const CustomDropdown = ({ t, config, inputRef, label, onChange, value, errorStyl
             optionCardStyles={config?.optionsCustomStyle}
             showIcon={config?.showIcon}
             variant={variant}
+            isSearchable={config?.isSearchable}
           />
         );
       case "toggle":

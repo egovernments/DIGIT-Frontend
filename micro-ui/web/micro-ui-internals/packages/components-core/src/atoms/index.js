@@ -58,6 +58,11 @@ import PageBasedInput from "./PageBasedInput";
 import Toggle from "./Toggle";
 import ToggleSwitch from "./ToggleSwitch";
 import TreeSelect from "./TreeSelect";
+import SubmitBar from "./SubmitBar";
+import ButtonSelector from "./ButtonSelector";
+import InboxSearchLinks from "./InboxSearchLinks";
+import SearchComponent from "./SearchComponent";
+
 export {
   PageBasedInput,
   ActionBar,
@@ -118,5 +123,9 @@ export {
   Toggle,
   ToggleSwitch,
   TreeSelect,
+  SubmitBar,
+  ButtonSelector,
+  InboxSearchLinks,
+  SearchComponent
   // Numeric
 };

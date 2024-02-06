@@ -4,11 +4,8 @@
 }
 
 .digit-tree-select-option {
-    position: relative;
-    cursor: pointer;
-    display: flex;
+    @apply relative cursor-pointer flex items-center;
     height: 2.4375rem;
-    align-items: center;
     gap: 0.25rem;
 
     &:hover {
@@ -25,26 +22,6 @@
         }
     }
 
-    &:active {
-        background: theme(digitv2.lightTheme.primary);
-
-        .digit-option-label {
-            color: theme(digitv2.lightTheme.paper);
-            font-weight: theme(digitv2.fontWeight.bold);
-        }
-
-        .digit-custom-checkbox {
-            border: 2px solid theme(digitv2.lightTheme.paper);
-            background-color: theme(digitv2.lightTheme.primary);
-        }
-
-        .digit-custom-checkbox svg {
-            @apply opacity-100;
-            width: 1rem;
-            height: 1rem;
-        }
-    }
-
     input {
         @apply absolute opacity-0 cursor-pointer;
         margin: 0;
@@ -53,16 +30,14 @@
     .digit-custom-checkbox {
         height: 1.25rem;
         width: 1.25rem;
-        @apply border border-solid border-input-border m-sm;
+        @apply border border-solid border-input-border m-sm flex items-center justify-center;
 
         svg {
             @apply opacity-0 z-10;
         }
-    }
 
-    .digit-custom-checkbox {
         &.checked {
-            background-color: theme(digitv2.lightTheme.primary);
+            border: 2px solid theme(digitv2.lightTheme.primary);
 
             svg {
                 @apply opacity-100;
@@ -70,15 +45,18 @@
                 height: 1rem;
             }
         }
-    }
 
-    &.child {
-        .digit-option-label {
-            padding-left: 0.62rem;
+        &.intermediate{
+            border: 2px solid theme(digitv2.lightTheme.primary);
+
+            .intermediate-state {
+                width: 0.75rem;
+                height: 0.75rem;
+                background-color: theme(digitv2.lightTheme.primary);
+                opacity: 1;
+            }
         }
     }
-
-
 }
 
 .digit-option-label {

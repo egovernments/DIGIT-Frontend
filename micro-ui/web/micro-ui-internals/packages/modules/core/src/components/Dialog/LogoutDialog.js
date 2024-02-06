@@ -68,7 +68,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
         position: "absolute",
         left: 0,
         bottom: 0,
-        padding: "18px",
+        padding: "5px",
       }}
       style={{
         flex: 1,

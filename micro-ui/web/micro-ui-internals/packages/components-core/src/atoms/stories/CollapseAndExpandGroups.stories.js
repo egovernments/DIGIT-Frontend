@@ -8,9 +8,9 @@ export default {
 
 const Template = (args) => <CollapseAndExpandGroups {...args} />;
 
-export const PlayGround = Template.bind({});
-PlayGround.args = {
-  children: <p>sdjkhfsdjkfhjkshfjksdhkjfgsdjhsfgdjfsdgjsdfgjhdfgjhdgsjhgjhgsdjhkfjksdfklsjflkflkasjfklhsdlkh</p>,
+export const Primary = Template.bind({});
+Primary.args = {
+  children: <p>askhfasj kjasdhjasdh kjsafhsdja</p>,
   groupElements: true,
   groupHeader: "",
   headerLabel: "Lorem",
@@ -18,9 +18,9 @@ PlayGround.args = {
   customClass: "sdklfhasdkhfjsdasdajkhfsdhfhjkashjhksdf",
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
-  children: <p>askhfasj kjasdhjasdh kjsafhsdja</p>,
+export const PlayGround = Template.bind({});
+PlayGround.args = {
+  children: <p>sdjkhfsdjkfhjkshfjksdhkjfgsdjhsfgdjfsdgjsdfgjhdfgjhdgsjhgjhgsdjhkfjksdfklsjflkflkasjfklhsdlkh</p>,
   groupElements: true,
   groupHeader: "",
   headerLabel: "Lorem",

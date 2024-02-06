@@ -85,7 +85,6 @@ const Create = () => {
       })}
       defaultValues={defaultValues}
       onSubmit={onSubmit}
-      fieldStyle={{ marginRight: 0 }}
     />
   );
 };

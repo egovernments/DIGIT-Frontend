@@ -39,7 +39,7 @@ const MobileNumber = (props) => {
             max={props.max}
             pattern={props.pattern}
             min={props.min}
-            disable={props.disable}
+            disabled={props.disable}
             hideSpan={props.hideSpan}
             title={props.title}
             step={props.step}

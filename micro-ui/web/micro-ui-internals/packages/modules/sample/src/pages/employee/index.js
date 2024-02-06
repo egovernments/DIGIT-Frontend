@@ -1,4 +1,5 @@
-import { AppContainer, BreadCrumb,PrivateRoute } from "@egovernments/digit-ui-components-core";
+import { AppContainer,PrivateRoute } from "@egovernments/digit-ui-components-core";
+import {BreadCrumb} from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";

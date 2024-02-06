@@ -22,11 +22,11 @@ export default {
 
 const Template = (args) => <BackButton {...args} />;
 
+export const Primary = Template.bind({});
+
 export const Playground = Template.bind({});
 Playground.args = {
   className: "custom-class",
   style: { "font-size": "20px" },
   onClick: () => console.log("clicked"),
 };
-
-export const Primary = Template.bind({});

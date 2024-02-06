@@ -9,27 +9,17 @@ export default {
     type: {
       control: {
         type: "select",
-        options: [
-          "text",
-          "date",
-          "time",
-          "geolocation",
-          "numeric",
-          "password",
-          "search",
-          "textarea",
-        ],
+        options: ["text", "date", "time", "geolocation", "numeric", "password", "search", "textarea","number"],
       },
     },
-    disabled: {control: "boolean"},
-    nonEditable:{control:"boolean"},
+    disabled: { control: "boolean" },
+    nonEditable: { control: "boolean" },
     charCount: { control: "boolean" },
     onChange: { action: "onChange" },
   },
 };
 
 const Template = (args) => {
-
   const [value, setValue] = useState(args.value || "");
   const [type, setType] = useState(args.type || "");
 
@@ -42,66 +32,70 @@ const Template = (args) => {
   }, [args.type]);
 
   const handleInputChange = (event) => {
-    if(event?.target){
-      const newValue= event?.target?.value;
-      const newType = event?.target?.type;
+    if (event?.target) {
+      const newValue = event?.target?.value;
+      const  newType = type=="numeric"? type : event?.target?.type;
       setValue(newValue);
       setType(newType);
-      args.onChange({ ...event, target: { ...event.target, value: newValue, type:newType} });
-    }
-    else{
+      args.onChange({ ...event, target: { ...event.target, value: newValue, type: newType } });
+    } else {
       const newValue = event;
       setValue(newValue);
     }
   };
 
-  return <FieldV1 {...args} value={value} onChange={handleInputChange} type={type}/>;
+  return <FieldV1 {...args} value={value} onChange={handleInputChange} type={type} />;
 };
 
-const commonArgs ={
+const commonArgs = {
   type: "text",
-  config:{
-    step:"",
+  config: {
+    step: "",
   },
   populators: {
-    prefix:"",
-    suffix:"",
-    customIcon:"",
-    validation:{
-      maxlength:"",
-      minlength:""
-    }
+    prefix: "",
+    suffix: "",
+    customIcon: "",
+    validation: {
+      maxlength: "",
+      minlength: "",
+    },
   },
-  value:"",
-  error:"",
-  label:"",
+  value: "",
+  error: "",
+  label: "",
   disabled: false,
-  nonEditable:false,
-  placeholder:"",
-  inline:false,
+  nonEditable: false,
+  placeholder: "",
+  inline: false,
   required: false,
-  description:"",
-  charCount:false,
-  withoutLabel:false,
-  infoMessage:""
-}
-
+  description: "",
+  charCount: false,
+  withoutLabel: false,
+  infoMessage: "",
+};
 
 export const Default = Template.bind({});
 Default.args = {
   ...commonArgs,
+  populators: {
+    ...commonArgs.populators,
+    onIconSelection: () => {
+      console.log("Icon Clicked");
+    },
+  },
 };
 
 export const Filled = Template.bind({});
 Filled.args = {
   ...commonArgs,
-  value:"Input Value"
+  value: "Input Value",
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
   ...commonArgs,
-  disabled: true
+  disabled: true,
 };
 Disabled.argTypes = {
   disabled: { control: { disable: true } },
@@ -110,8 +104,8 @@ Disabled.argTypes = {
 export const NonEditable = Template.bind({});
 NonEditable.args = {
   ...commonArgs,
-  nonEditable:true,
-  value:"Input Value"
+  nonEditable: true,
+  value: "Input Value",
 };
 NonEditable.argTypes = {
   nonEditable: { control: { disable: true } },
@@ -120,14 +114,17 @@ NonEditable.argTypes = {
 export const Error = Template.bind({});
 Error.args = {
   ...commonArgs,
-  error: "Error!"
+  error: "Error!",
 };
 
-export const WithCustomIcon  = Template.bind({});
+export const WithCustomIcon = Template.bind({});
 WithCustomIcon.args = {
   ...commonArgs,
-  populators:{
+  populators: {
     ...commonArgs.populators,
-    customIcon:"DownloadIcon"
-  } 
+    customIcon: "Article",
+    onIconSelection: () => {
+      console.log("Icon Clicked");
+    },
+  },
 };

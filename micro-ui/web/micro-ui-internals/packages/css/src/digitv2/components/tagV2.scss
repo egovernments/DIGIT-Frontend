@@ -1,6 +1,7 @@
 .digit-tag-container {
   @apply flex flex-wrap mb-md;
   gap: 0.5rem;
+  margin-top:1rem;
 
   @media (min-width: 481px) {
     /* Media query for tablets */
@@ -22,37 +23,9 @@
   }
 
   .digit-tag {
-    @apply bg-grey-mid rounded-2xl pt-sm pb-sm flex justify-between items-center;
-    padding-left: 12px;
-    padding-right: 12px;
-    font-size: 14px;
-    margin-left: 2px;
-    height: 2rem;
-    margin-top: 1rem;
-
-    .digit-text {
-      padding-right: 5px;
-      max-width: calc(100% - 24px);
-      height: 22px;
-      overflow: hidden;
-      text-overflow: clip;
-    }
-
-    &:hover {
-      @apply cursor-pointer;
-
-      .close {
-        fill: black;
-      }
-    }
-  }
-
-
-  .digit-tag.multiselectdropdown-tag {
+    @apply inline-flex items-center;
     padding: 0.5rem;
     gap: 0.5rem;
-    align-items: center;
-    display: inline-flex;
     border-radius: 3.125rem;
     background: theme(digitv2.lightTheme.divider);
     height: 2.5rem;
@@ -72,9 +45,13 @@
       height: 1rem;
     }
 
-    .close {
+    .close-icon {
+      @apply flex items-center;
       width: 1.5rem;
       height: 1.5rem;
+      border: 1px solid theme(digitv2.lightTheme.text-color-secondary);;
+      border-radius: 50%;
+      background-color: theme(digitv2.lightTheme.text-color-secondary);;
     }
   }
 }

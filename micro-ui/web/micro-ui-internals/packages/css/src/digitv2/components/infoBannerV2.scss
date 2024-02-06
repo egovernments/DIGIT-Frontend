@@ -24,6 +24,10 @@
   p {
     @extend .typography.text-body-l;
     @apply text-body-l text-link-normal whitespace-pre-line;
+    font-weight: theme(digitv2.fontWeight.regular);
+    color: theme(digitv2.lightTheme.text-color-secondary);
+    font-style: theme(digitv2.fontStyle.normal);
+    margin: 0px;
   }
   &.digit-core-variant {
     margin: 2rem 0px;

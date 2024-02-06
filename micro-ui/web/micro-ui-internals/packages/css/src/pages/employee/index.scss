@@ -1,13 +1,16 @@
 @import "./login.scss";
+
 /* TODO: convert using tailwind */
 .employee {
   .breadcrumb {
     @apply ml-sm mb-lg;
   }
+
   .ground-container {
     margin-bottom: 56px;
     @apply flex flex-col;
   }
+
   .card-home {
     font-size: 16px;
     padding: 0 0 16px 0;
@@ -15,10 +18,12 @@
     display: inline-block;
     margin: 8px auto;
   }
+
   .home-action-cards {
     height: auto !important;
     min-height: 263px;
   }
+
   .topbar {
     position: fixed;
     top: 0;
@@ -68,6 +73,19 @@
 
   .loginContainer {
     padding-top: 88px;
+  }
+
+
+  @media screen and (max-width: 640px) {
+    .grounded-container {
+      margin-left: 0px;
+    }
+  }
+
+  @media screen and (min-width: 641px) {
+    .grounded-container {
+      margin-left: 64px;
+    }
   }
 
   .react-time-picker {
@@ -125,9 +143,11 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+
       .tooltip {
         margin-left: 16px;
       }
+
       margin-bottom: 0px;
     }
 
@@ -136,9 +156,11 @@
       height: 24px;
       fill: theme(colors.white);
     }
+
     a {
       display: flex;
     }
+
     .sidebar-link {
       display: flex;
       color: theme(colors.white);
@@ -146,10 +168,11 @@
       align-items: center;
       padding: 20px;
       font-size: 14px;
-      
+
       &.level-0 {
-        margin:0 0.3rem 0 0.3rem;
-        &.select-level{
+        margin: 0 0.3rem 0 0.3rem;
+
+        &.select-level {
           border-top: 1px solid;
           border-bottom: 1px solid;
         }
@@ -159,19 +182,23 @@
         color: theme(colors.primary.main) !important;
 
         border-right: none;
+
         svg {
           fill: theme(colors.primary.main) !important;
         }
       }
+
       .employee-search-input {
         border: none;
         outline: none;
         background-color: rgba(0, 0, 0, 0);
         margin-left: 13px;
       }
+
       .custom-link {
         .tooltip {
           margin-left: 16px;
+
           span {
             margin-left: unset !important;
             left: unset !important;
@@ -186,26 +213,30 @@
       }
 
       &:hover {
-        
+
         background-color: #0B4B66;
 
         cursor: pointer;
-        
+
       }
+
       .search-icon-wrapper {
         border: 2px solid theme(colors.white);
         border-radius: 4px;
         padding: 5px;
+
         svg {
           fill: theme(colors.white) !important;
           width: 21px;
           height: 21px;
+
           path {
             fill: theme(colors.white) !important;
           }
         }
       }
     }
+
     .dropdown-link {
       height: 40px;
       display: flex;
@@ -214,21 +245,25 @@
       text-decoration: none;
       color: theme(colors.white);
       font-size: 14px;
+
       .actions {
         .tooltiptext {
           left: unset;
           right: 1%;
         }
       }
+
       svg {
         width: 20px;
         height: 20px;
         fill: theme(colors.white);
       }
+
       &:hover {
         background-color: #6A8E9D;
         opacity: 0.8;
         cursor: pointer;
+
         svg {
           fill: #fe7a51 !important;
         }
@@ -237,26 +272,28 @@
 
       &.active {
         border-left: 4px solid theme(colors.primary.main);
-        &.level-0 {
-        
-        }
+
+        &.level-0 {}
+
         &.level-1 {
           border-left: 8.5px solid theme(colors.primary.main);
         }
+
         &.level-2 {
           border-left: 4px solid theme(colors.primary.main);
         }
 
-        &.level-3{
+        &.level-3 {}
 
-        }
         color: theme(colors.primary.main) !important;
         border-right: none;
+
         svg {
           fill: theme(colors.primary.main) !important;
         }
       }
     }
+
     span {
       margin-left: 16px;
       text-overflow: ellipsis;
@@ -359,6 +396,7 @@
   .sidebar {
     margin-top: 54px;
     min-width: 200px;
+
     .actions {
       display: flex;
       align-items: center;
@@ -377,19 +415,24 @@
 
 .RightMostTopBarOptions {
   @apply flex;
+
   .EventNotificationWrapper {
     @apply relative cursor-pointer ml-md;
+
     span {
       top: -10px;
       right: -10px;
       @apply absolute bg-error h-5 w-5 rounded-full text-center;
+
       p {
         line-height: 20px;
       }
     }
   }
+
   .select-wrap {
     margin-bottom: unset;
+
     svg {
       fill: theme(colors.white);
     }
@@ -401,21 +444,25 @@
     .ground-container {
       @apply block;
     }
+
     .breadcrumb {
       @apply mb-lg;
       margin-left: 0;
     }
+
     .card-home {
       width: 270px;
       margin-right: 10px;
       margin-bottom: 10px;
     }
+
     .card-home-hrms {
       width: 405px;
       padding: 0px;
       margin-right: 16px;
       margin-bottom: 16px;
     }
+
     .main {
       display: flex;
       flex-direction: column;
@@ -423,6 +470,7 @@
       margin-left: 72px;
       width: calc(100%-83px);
     }
+
     .citizen-home-container {
       display: flex;
       flex-direction: unset !important;
@@ -441,8 +489,7 @@
       justify-content: center;
     }
 
-    .center-container {
-    }
+    .center-container {}
   }
 }
 
@@ -481,6 +528,7 @@
 .mb-50 {
   margin-bottom: 50px;
 }
+
 .mb-25 {
   margin-bottom: 25px;
 }
@@ -493,12 +541,15 @@
     margin-bottom: 0px;
     color: theme(colors.white);
     margin-right: 1em;
+
     & svg {
       fill: theme(colors.white);
     }
   }
+
   .hambuger-back-wrapper {
     display: flex;
+
     @media (min-width: 780px) {
       .hamburger-span {
         display: none;
@@ -523,50 +574,53 @@
 }
 
 .link {
-  a{
+  a {
     color: inherit;
     text-decoration: inherit
-    }
+  }
 }
 
 .breadcrumb {
-  a{
+  a {
     color: inherit;
     text-decoration: inherit
-    }
+  }
 }
 
-.sidebar-link.active{
-.custom-link{
-  text-decoration: none;
-  div{
-    span{
-      color: theme(colors.primary.main) !important;
-      text-decoration: none;
+.sidebar-link.active {
+  .custom-link {
+    text-decoration: none;
+
+    div {
+      span {
+        color: theme(colors.primary.main) !important;
+        text-decoration: none;
+      }
     }
   }
 }
-}
+
 .bread-crumb {
-  a{
+  a {
     color: inherit;
     text-decoration: inherit
-    }
+  }
 }
 
-.sidebar-link{
-  .custom-link{
+.sidebar-link {
+  .custom-link {
     text-decoration: none;
-    div{
-      span{
+
+    div {
+      span {
         color: theme(colors.white);
         text-decoration: none;
       }
     }
   }
-  }
-  
+}
+
 /* TODO fix required NABEEL/ANIL for home screen card */
-  .customEmployeeCard {
-    @apply m-sm !important;
-  }
+.customEmployeeCard {
+  @apply m-sm !important;
+}

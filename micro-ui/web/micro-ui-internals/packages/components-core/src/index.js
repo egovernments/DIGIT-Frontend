@@ -58,10 +58,13 @@ import {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  // Numeric
+  SubmitBar,
+  ButtonSelector,
+  InboxSearchLinks,
+  SearchComponent
 } from "./atoms";
 
-import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer ,FieldV1} from "./hoc";
+import { FieldComposer, FieldController, Fields, FormComposerV2, Modal, UploadFileComposer ,FieldV1, InboxSearchComposer,ResultsTable} from "./hoc";
 
 import {
   ApiDropdown,
@@ -163,5 +166,10 @@ export {
   Toggle,
   ToggleSwitch,
   TreeSelect,
-  // Numeric
+  SubmitBar,
+  ButtonSelector,
+  InboxSearchLinks,
+  SearchComponent,
+  InboxSearchComposer,
+  ResultsTable
 };

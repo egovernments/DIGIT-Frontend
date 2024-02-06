@@ -22,15 +22,16 @@ export default {
 
 const Template = (args) => <Amount {...args} />;
 
+
+export const Primary = Template.bind({});
+Playground.args = {
+  value: 55000,
+};
+
 export const Playground = Template.bind({});
 Playground.args = {
   className: "custom-class",
   style: { color: "green" },
   roundOff: true,
   value: 550010,
-};
-
-export const Primary = Template.bind({});
-Playground.args = {
-  value: 55000,
 };

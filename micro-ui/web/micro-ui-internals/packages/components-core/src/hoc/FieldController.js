@@ -38,7 +38,7 @@ function FieldController(args) {
 
   return (
     <Controller
-      defaultValue={formData?.[populators.name]}
+      defaultValue={formData?.[populators?.name]}
       render={({ onChange, ref, value, onBlur }) => (
         <FieldV1
           error= {error}
@@ -69,8 +69,8 @@ function FieldController(args) {
           controllerProps={controllerProps}
         />
       )}
-      name={populators.name}
-      rules={!disableFormValidation ? { required: isMandatory, ...populators.validation, ...customRules } : {}}
+      name={populators?.name}
+      rules={!disableFormValidation ? { required: isMandatory, ...populators?.validation, ...customRules } : {}}
       control={control}
     />
   );

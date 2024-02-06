@@ -2,47 +2,48 @@
 
 
 .digit-toggle-toolbar {
-  display: flex;
-  justify-content: flex-start;
+  @apply flex justify-start
 }
 
 
 .toggle-option-container {
-  display: inline-flex;
-  align-items: center;
+  @apply inline-flex items-center;
   gap: 0.5rem;
 }
 
 .digit-toggle-btn-wrap {
-  cursor: pointer;
+  @apply cursor-pointer font-regular leading-6 bg-white;
   color: theme(digitv2.lightTheme.text-color-disabled);
   text-align: center;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 0.875rem;
   font-style: theme(digitv2.fontStyle.normal);
-  font-weight: theme(digitv2.fontWeight.regular);
-  line-height: 1.5rem;
   padding: 0.125rem 0rem;
   width: 7rem;
   height: 2rem;
   border: 1px solid theme(digitv2.lightTheme.divider);
-  background: theme(digitv2.lightTheme.paper);
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-  &:hover {
+  &:hover,
+  &:active {
     border: 1px solid theme(digitv2.lightTheme.primary);
     background: theme(digitv2.lightTheme.paper);
-    box-shadow: 0px 0px 6px 0px rgba(244, 119, 56, 0.25);
     width: 7.125rem;
+    color: theme(digitv2.lightTheme.primary);
 
-    .digit-toggle-label{
-      color:theme(digitv2.lightTheme.primary);
+    .digit-toggle-label {
+      color:theme(digitv2.lightTheme.primary) !important;
     }
+  }
 
+  &:active {
+    box-shadow: 0px 0px 6px 0px rgba(244, 119, 56, 0.25);
   }
 
   input:checked+.digit-toggle-label {
     background-color: theme(digitv2.lightTheme.primary);
-    color: theme(digitv2.lightTheme.paper);
+    color: theme(digitv2.lightTheme.paper) !important;
     font-weight: theme(digitv2.fontWeight.bold);
   }
 
@@ -50,6 +51,7 @@
     background-color: theme(digitv2.lightTheme.primary);
     padding: 0.125rem;
     width: 7.125rem;
+    color: theme(digitv2.lightTheme.paper);
   }
 }
 
