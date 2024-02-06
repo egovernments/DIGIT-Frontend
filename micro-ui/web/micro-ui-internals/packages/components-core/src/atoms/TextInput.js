@@ -93,8 +93,8 @@ const TextInput = (props) => {
         return <SVG.Search fill={iconFill} onClick={props?.onIconSelection} className="digit-text-input-customIcon" />;
       } else {
         try {
-          const components = require("@egovernments/digit-ui-react-components");
-          const DynamicIcon = components?.SVG[props?.populators?.customIcon] || components?.[props?.populators?.customIcon];
+          const components = require("@egovernments/digit-ui-svg-components");
+          const DynamicIcon = components?.[props?.populators?.customIcon];
           if (DynamicIcon) {
             const svgElement = DynamicIcon({
               width: "1.5rem",

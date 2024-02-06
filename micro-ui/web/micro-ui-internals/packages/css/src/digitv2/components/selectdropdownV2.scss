@@ -167,12 +167,12 @@
   }
 
   &:hover {
-    background: #FFFAF7;
+    background: #FFFAF7 !important;
     border: 1px solid theme(digitv2.lightTheme.primary);
   }
 
   &:active {
-    background: theme(digitv2.lightTheme.primary);
+    background:theme(digitv2.lightTheme.primary) !important;
 
     span,
     .option-description {
@@ -183,7 +183,6 @@
       font-weight: theme(digitv2.fontWeight.bold);
     }
   }
-
 }
 
 .digit-employee-select-wrap--elipses {

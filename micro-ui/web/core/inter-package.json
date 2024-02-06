@@ -10,7 +10,8 @@
     "packages/modules/dss",
     "packages/modules/core",
     "packages/modules/hrms",
-    "packages/modules/sample"
+    "packages/modules/sample",
+    "packages/modules/Project"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -35,6 +36,7 @@
     "dev:dss": "cd packages/modules/dss && yarn start",
     "dev:hrms": "cd packages/modules/hrms && yarn start",
     "dev:sample": "cd packages/modules/sample && yarn start",
+    "dev:project": "cd packages/modules/Project && yarn start",
     "dev:common": "cd packages/modules/common && yarn start",
     "dev:utilities": "cd packages/modules/utilities && yarn start",
     "devD:workbench": "cd packages/modules/workbench && yarn start",
@@ -48,6 +50,7 @@
     "build:dss": "cd packages/modules/dss && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "build:hrms": "cd packages/modules/hrms && yarn build",
+    "build:project": "cd packages/modules/Project && yarn build",
     "build:sample": "cd packages/modules/sample && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
     "buildD:utilities": "cd packages/modules/utilities && yarn build",

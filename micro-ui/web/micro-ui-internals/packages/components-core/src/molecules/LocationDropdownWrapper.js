@@ -85,7 +85,7 @@ const LocationDropdownWrapper = ({ populators, formData, props, inputRef, errors
       {!populators.allowMultiSelect && (
         <Dropdown
           inputRef={inputRef}
-          style={{ display: "flex", justifyContent: "space-between" }}
+          style={{}}
           option={options}
           key={populators.name}
           optionKey={populators?.optionsKey}

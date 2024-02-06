@@ -22,8 +22,8 @@ const capitalizeFirstLetter = (str) => {
     const iconFill = props?.variation === "primary" ? "#FFFFFF" : props?.isDisabled ? "#B1B4B6" : "#F47738";
     const iconReq = props?.icon;
     try {
-      const components = require("@egovernments/digit-ui-react-components");
-      const DynamicIcon = components?.SVG[iconReq] || components?.[iconReq];
+      const components = require("@egovernments/digit-ui-svg-components");
+      const DynamicIcon = components?.[iconReq];
       if (DynamicIcon) {
         const svgElement = DynamicIcon({
           width: "1.5rem",

@@ -104,8 +104,8 @@ const MultiSelectDropdown = ({
 
   const IconRender = (iconReq) => {
     try {
-      const components = require("@egovernments/digit-ui-react-components");
-      const DynamicIcon = components?.SVG[iconReq] || components?.[iconReq];
+      const components = require("@egovernments/digit-ui-svg-components");
+      const DynamicIcon = components?.[iconReq];
       if (DynamicIcon) {
         const svgElement = DynamicIcon({
           width: "1.25rem",

@@ -279,25 +279,7 @@
   display: flex;
   align-items: center;
   height: 2.5rem;
-
-  @media (min-width: 481px) {
-    /* Media query for tablets */
-    max-width: 27.5rem;
-    min-width: 12.5rem;
-  }
-
-  @media (max-width: 480px) {
-    /* Media query for mobile */
-    max-width: 20.5rem;
-    min-width: 9.75rem;
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    /* Media query for desktop */
-    max-width: 37.5rem;
-    min-width: 12.5rem;
-  }
+  max-width:37.5rem;
 }
 
 .input-container:focus-within {

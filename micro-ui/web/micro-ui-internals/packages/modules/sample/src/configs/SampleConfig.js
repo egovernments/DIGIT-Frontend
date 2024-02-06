@@ -125,7 +125,7 @@ export const newConfig = [
         populators: {
           name: "text-With CustomIcon",
           error: "Error!",
-          customIcon: "DownloadIcon",
+          customIcon: "Article",
           onIconSelection: (event) => {
             console.log("Custom icon clicked!", event);
           },
@@ -149,6 +149,7 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
+        description:"text-With MaxCharsLabel",
         populators: { name: "text-With MaxCharsLabel", error: "Error!" },
       },
       {
@@ -161,6 +162,16 @@ export const newConfig = [
           "qazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikl",
         charCount: true,
         populators: { name: "text-With MaxDes&CharCount", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "With MaxErr&CharCount",
+        isMandatory: true,
+        type: "text",
+        disable: false,
+        description:"",
+        charCount: true,
+        populators: { name: "text-With MaxErr&CharCount", error: "qazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikqazwsxedcrfvtgbyhnujmikolpplmoknijbuhvygctfxrdzeswaqedfrtgyhujikl" },
       },
       {
         inline: true,
