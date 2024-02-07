@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       working-directory: ./micro-ui/web/packages/core
-      run: docker build . --file docker/Dockerfile --tag jaganegov/core-digit-ui:latest
+      run: docker build . --file docker/Dockerfile --tag egovio/core-digit-ui:latest
 
     - name: Login to Docker Hub and Push Docker Image
       working-directory: ./micro-ui/web/packages/core
@@ -28,5 +28,5 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           
           # Push the image to Docker Hub
-          docker push  jaganegov/core-digit-ui:latest
+          docker push  egovio/core-digit-ui:latest
 
