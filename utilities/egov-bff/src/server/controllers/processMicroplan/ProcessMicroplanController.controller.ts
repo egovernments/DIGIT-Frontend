@@ -4,7 +4,7 @@ import config from "../../config/index";
 import { logger } from "../../utils/logger";
 import { produceModifiedMessages } from '../../Kafka/Listener';
 import { getCampaignDetails } from '../../utils/index'
-import { validateProcessMicroplan } from '../../utils/validator'
+import { validateProcessMicroplan, validateTransformedData } from '../../utils/validator'
 import { generateSortingAndPaginationClauses } from '../../utils/index'
 
 import {
@@ -141,6 +141,7 @@ class BulkUploadController {
         Job.ingestionDetails.campaignDetails.status = "Started"
         Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
         produceModifiedMessages(Job.ingestionDetails, updateCampaignTopic);
+        validateTransformedData(result?.updatedDatas);
         await processFile(request, parsingTemplates, result, hostHcmBff, Job);
       } catch (e: any) {
         logger.error(String(e))

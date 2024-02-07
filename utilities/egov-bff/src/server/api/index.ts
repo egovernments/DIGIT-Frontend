@@ -44,11 +44,19 @@ function processExcelSheet(
 
   const rowDataArray: any[] = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
 
-  for (const element of rowDataArray) {
+  for (let rowIndex = 0; rowIndex < rowDataArray.length; rowIndex++) {
     // Explicitly define the type for row as an array of any
-    const row: any[] = element;
+    const row: any[] = rowDataArray[rowIndex];
 
     const rowData: any = {};
+    rowData['#row!number#'] = startRow + rowIndex;
+    // if in row array any element equals to #skip!skip# make skipValue = true
+    if (row.includes('#skip!skip#')) {
+      logger.info("Row " + (startRow + rowIndex) + " is empty.");
+      continue;
+    }
+    logger.info(JSON.stringify(row) + " Row data for row " + (startRow + rowIndex));
+
 
     for (const fieldConfig of config || []) {
       if (fieldConfig.format === 'GENERATE_HASH') {
@@ -95,6 +103,10 @@ function processExcelSheet(
       }
     }
 
+    //if any key value pair have value as '#skip!skip#' in rowData then dont push that row
+    if (Object.values(rowData).some((value) => value === '#skip!skip#')) {
+      continue;
+    }
     rowDatas.push(rowData);
   }
 }
@@ -153,10 +165,10 @@ const getSheetData = async (
 
         for (const selectedRow of selectedRows) {
           // Create a copy of the original sheet to modify
-          const modifiedSheet = { ...desiredSheet };
+          const modifiedSheet: any = { ...desiredSheet };
 
           // Fill empty column values with the previous row's values
-          fillEmptyColumns(modifiedSheet);
+          fillEmptyColumns(modifiedSheet, config);
 
           // Process the modified sheet
           processExcelSheet(modifiedSheet, selectedRow.startRow, selectedRow.endRow, config, rowDatas);
@@ -175,15 +187,59 @@ const getSheetData = async (
   }
 };
 
-const fillEmptyColumns = (sheet: XLSX.WorkSheet) => {
-  const range = XLSX.utils.decode_range(String(sheet['!ref']));
-  const lastColumn = range.e.c;
-  const lastRow = range.e.r;
+const fillEmptyColumns = (sheet: XLSX.WorkSheet, config: any[]) => {
+  var columnsAll: any[] = config.reduce((acc, element) => {
+    if (element.hasOwnProperty('column')) {
+      for (const c of element.column) {
+        acc.push(c);
+      }
+    }
+    return acc;
+  }, []);
 
-  for (let col = range.s.c; col <= lastColumn; col++) {
+  // Use Set to remove duplicates and convert it back to an array using Array.from
+
+  const columns: any[] = Array.from(new Set(columnsAll));
+  const normalizedColumns: any[] = columns.map(colName => XLSX.utils.decode_col(colName));
+  logger.info("NormalizedColumns : " + JSON.stringify(normalizedColumns))
+
+  // Get the actual range of used cells in the sheet
+  const usedRange = XLSX.utils.decode_range(String(sheet['!ref']));
+
+  // Track skipped rows to avoid overwriting
+  const skippedRows: Set<number> = new Set();
+
+  // Iterate over each row
+  for (let row = usedRange.s.r; row <= usedRange.e.r; row++) {
+
+    // Check if the current row is already marked as skipped
+    if (skippedRows.has(row)) {
+      continue;
+    }
+
+    var allColumnsEmpty = true;
+    for (const col of normalizedColumns) {
+      const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+      const cellValue = sheet[cellAddress]?.v;
+      if (cellValue !== undefined && cellValue !== null && cellValue !== '') {
+        allColumnsEmpty = false;
+        break;
+      }
+    }
+    if (allColumnsEmpty) {
+      skippedRows.add(row);
+      for (const col of normalizedColumns) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+        const cellValue = '#skip!skip#';
+        sheet[cellAddress] = { t: 's', v: cellValue, w: cellValue };
+      }
+    }
+  }
+
+  for (let col = usedRange.s.c; col <= usedRange.e.c; col++) {
     let previousValue: any = null;
 
-    for (let row = range.s.r; row <= lastRow; row++) {
+    for (let row = usedRange.s.r; row <= usedRange.e.r; row++) {
       const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
       const cellValue = sheet[cellAddress]?.v;
 
@@ -196,6 +252,8 @@ const fillEmptyColumns = (sheet: XLSX.WorkSheet) => {
     }
   }
 };
+
+
 
 const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, requestinfo: any, response: any) => {
   if (!uniqueIdentifiers) {
