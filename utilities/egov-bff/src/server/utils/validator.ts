@@ -66,5 +66,48 @@ const validateProjectType = async (projectTypeId: any, request: express.Request,
     }
 }
 
+const validateTransformedData = (transformedData: any[]): void => {
+    const duplicates: Map<string, number[]> = new Map(); // Map to store duplicates
 
-export { validateProcessMicroplan };
+    for (let i = 0; i < transformedData.length; i++) {
+        const rowData1 = transformedData[i];
+        const rowNumber1 = rowData1['#row!number#']; // Get the row number of rowData1
+
+        // Iterate over other elements to compare with rowData1
+        for (let j = i + 1; j < transformedData.length; j++) {
+            const rowData2 = transformedData[j];
+            const rowNumber2 = rowData2['#row!number#']; // Get the row number of rowData2
+
+            // Check if rowData1 and rowData2 have the same values for all keys except '#row!number#'
+            let isDuplicate = true;
+            for (const key of Object.keys(rowData1)) {
+                if (key !== '#row!number#' && rowData1[key] !== rowData2[key]) {
+                    isDuplicate = false;
+                    break;
+                }
+            }
+
+            // If rowData1 and rowData2 are duplicates, store the row numbers in the duplicates map
+            if (isDuplicate) {
+                if (!duplicates.has(rowNumber1.toString())) {
+                    duplicates.set(rowNumber1.toString(), [rowNumber1]);
+                }
+                duplicates.get(rowNumber1.toString())?.push(rowNumber2);
+            }
+        }
+    }
+
+    // If duplicates are found, throw an error
+    if (duplicates.size > 0) {
+        const errorMessage = Array.from(duplicates.entries())
+            .map(([rowNumber, duplicateRowNumbers]) => {
+                return `Duplicate data in row ${rowNumber} and ${duplicateRowNumbers.slice(1).join(', ')}`;
+            })
+            .join('; ');
+        throw new Error(errorMessage);
+    }
+};
+
+
+
+export { validateProcessMicroplan, validateTransformedData };
