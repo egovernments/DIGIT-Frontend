@@ -52,6 +52,14 @@ const config = {
       // || "http://localhost:8085/"
       || "https://unified-uat.digit.org/",
   },
+  db:{
+    DB_USER:
+    process.env.DB_USER || 'postgres',
+    DB_LOCALHOST : process.env.DB_HOST || 'localhost',
+    DB_DATABASE : process.env.DB_NAME || 'postres2',
+    DB_PASSWORD : process.env.DB_PASSWORD || '1234',
+    DB_PORT : process.env.DB_PORT || '5432'
+  },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
       || "filestore/v1/files",

@@ -47,11 +47,11 @@ class BulkUploadController {
   ) => {
     try {
       const pool = new Pool({
-        user: 'postgres',
-        host: 'localhost',
-        database: 'postgres2',
-        password: '1234',
-        port: 5432,
+        user: config.db.DB_USER,
+        host: config.db.DB_LOCALHOST,
+        database: config.db.DB_DATABASE,
+        password: config.db.DB_PASSWORD,
+        port: parseInt(config.db.DB_PORT)
       });
       let criteria = request?.body?.CampaignDetails;
       const { campaignIds, campaignName, campaignType, campaignNumber, createdBy, projectTypeId, pagination } = criteria;
