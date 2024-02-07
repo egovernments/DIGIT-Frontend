@@ -872,7 +872,10 @@ export const FormComposer = (props) => {
       }
       {!props.submitInForm && props.label && (
         <ActionBar>
-          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
+          {props.secondaryLabel && props.showSecondaryLabel && (
+            <LinkButton className="secondary-action-btn" label={t(props.secondaryLabel)} onClick={props.onSecondayActionClick} />
+          )}
+          {props.label && <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />}
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}

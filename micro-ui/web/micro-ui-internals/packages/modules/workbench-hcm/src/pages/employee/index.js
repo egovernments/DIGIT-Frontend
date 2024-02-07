@@ -10,6 +10,7 @@ import ViewProject from "./ViewProject";
 import CreateCampaign from "./CreateCampaign";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
+import SetupCampaign from "./SetupCampaign";
 
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
@@ -167,6 +168,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/campaign`} component={() => <CreateCampaign />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
+          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
