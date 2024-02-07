@@ -5,6 +5,8 @@ import { logger } from "../../utils/logger";
 import { produceModifiedMessages } from '../../Kafka/Listener';
 import { getCampaignDetails } from '../../utils/index'
 import { validateProcessMicroplan, validateTransformedData } from '../../utils/validator'
+import { generateSortingAndPaginationClauses } from '../../utils/index'
+
 import {
   searchMDMS
 } from "../../api/index";
@@ -14,6 +16,7 @@ import {
   sendResponse,
 } from "../../utils/index";
 import { httpRequest } from "../../utils/request";
+import { Pool, QueryResult } from 'pg';
 
 const saveCampaignTopic = config.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC;
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
@@ -33,7 +36,78 @@ class BulkUploadController {
   // Initialize routes for MeasurementController
   public intializeRoutes() {
     this.router.post(`${this.path}/_processmicroplan`, this.processMicroplan);
+    this.router.post(`${this.path}/_searchmicroplan`, this.searchMicroplan)
   }
+
+
+
+  searchMicroplan = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    try {
+      const pool = new Pool({
+        user: 'postgres',
+        host: 'localhost',
+        database: 'postgres2',
+        password: '1234',
+        port: 5432,
+      });
+      let criteria = request?.body?.CampaignDetails;
+      const { campaignIds, campaignName, campaignType, campaignNumber, createdBy, projectTypeId, pagination } = criteria;
+      const client = await pool.connect();
+      let queryString = 'SELECT * FROM eg_campaign_details WHERE 1=1';
+      if (campaignIds && campaignIds.length > 0) {
+        const idList = campaignIds.map((id: any) => `'${id}'`).join(', ');
+        queryString += ` AND id IN (${idList})`;
+      }
+      if (campaignName) {
+        queryString += ` AND campaignName = '${campaignName}'`;
+      }
+      if (campaignNumber) {
+        queryString += ` AND campaignNumber = '${campaignNumber}'`;
+      }
+      if (campaignType) {
+        queryString += ` AND campaignType = '${campaignType}'`;
+      }
+      if (createdBy) {
+        queryString += ` AND createdBy = '${createdBy}'`;
+      }
+      if (projectTypeId) {
+        queryString += ` AND projectTypeId = '${projectTypeId}'`;
+      }
+      const sortingAndPaginationClauses = generateSortingAndPaginationClauses(pagination);
+      queryString += sortingAndPaginationClauses;
+      const campaignResult: QueryResult = await client.query(queryString);
+      const campaignDetails: any = campaignResult.rows;
+
+
+      // Query 'eg_campaign_ingestionDetails' based on the campaignDetails
+      if (campaignDetails.length > 0) {
+        const idListForIngestion = campaignDetails.map((campaign: { id: any; }) => `'${campaign.id}'`).join(', ');
+        let ingestionQueryString = `SELECT * FROM eg_campaign_ingestionDetails WHERE campaignId IN (${idListForIngestion})`;
+        const ingestionResult: QueryResult = await client.query(ingestionQueryString);
+        const ingestionDetails: any = ingestionResult.rows;
+        const responseData = campaignDetails.map((campaign: any) => {
+          const filteredIngestionDetails = ingestionDetails.filter((ingestion: any) => {
+            return ingestion.campaignid === campaign.id;
+          });
+          return {
+            ...campaign,
+            ingestionDetails: filteredIngestionDetails
+          };
+        });
+        return sendResponse(response, { CampaignDetails: responseData }, request);
+      }
+      else {
+        return sendResponse(response, { CampaignDetails: [] }, request);
+      }
+    } catch (error) {
+      console.error('Error searching campaigns:', error);
+      return sendResponse(response, { CampaignDetails: [] }, request);
+    }
+  };
+
 
 
   processMicroplan = async (
@@ -86,7 +160,7 @@ class BulkUploadController {
       return errorResponder({ message: String(e) }, request, response);
     }
   };
-}
 
+}
 // Export the MeasurementController class
 export default BulkUploadController;

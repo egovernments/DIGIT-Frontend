@@ -8,6 +8,7 @@ import { produceModifiedMessages } from '../Kafka/Listener'
 import { getCampaignNumber } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
+import { Pagination } from "../utils/Pagination";
 
 import { logger } from "./logger";
 // import { userInfo } from "os";
@@ -394,6 +395,25 @@ async function processFile(request: any, parsingTemplates: any[], result: any, h
 
 }
 
+function generateSortingAndPaginationClauses(pagination: Pagination): string {
+  let clauses = '';
+
+  if (pagination && pagination.sortBy && pagination.sortOrder) {
+    clauses += ` ORDER BY ${pagination.sortBy} ${pagination.sortOrder}`;
+  }
+
+  if (pagination && pagination.limit !== undefined) {
+    clauses += ` LIMIT ${pagination.limit}`;
+  }
+
+  if (pagination && pagination.offset !== undefined) {
+    clauses += ` OFFSET ${pagination.offset}`;
+  }
+
+  return clauses;
+}
+
+
 
 
 
@@ -412,5 +432,6 @@ export {
   produceIngestion,
   waitAndCheckIngestionStatus,
   getCampaignDetails,
-  processFile
+  processFile,
+  generateSortingAndPaginationClauses
 };
