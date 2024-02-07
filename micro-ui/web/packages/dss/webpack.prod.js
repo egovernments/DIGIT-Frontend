@@ -17,7 +17,7 @@ module.exports = () => {
         exposes: {
           "./DssModule": "./src/bootstrap",
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies,
       }),
     ],
   };

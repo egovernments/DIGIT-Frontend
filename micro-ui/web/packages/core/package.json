@@ -24,10 +24,10 @@
     "@babel/preset-env":"7.23.9"
   },
   "dependencies": {
-    "@digit-ui/digit-ui-libraries-mfe": "1.0.5",
-    "@digit-ui/digit-ui-module-hrms-mfe": "1.0.5",
-    "@digit-ui/digit-ui-module-workbench-mfe": "1.0.5",
-    "@egovernments/digit-ui-react-components":"1.4.105",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.6",
+    "@digit-ui/digit-ui-module-hrms-mfe": "1.0.6",
+    "@digit-ui/digit-ui-module-workbench-mfe": "1.0.6",
+    "@egovernments/digit-ui-react-components":"1.4.106",
     "@digit-ui/digit-ui-module-dss-mfe": "1.0.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",

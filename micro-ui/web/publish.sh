@@ -17,6 +17,9 @@ cd "$BASEDIR/packages/ui-components" && rm -rf dist && yarn && npm publish --tag
 msg "Building and publishing libraries"
 cd "$BASEDIR/packages/ui-libraries" && rm -rf dist && yarn && npm publish --tag mfe
 
+# msg "Building and publishing Core module"
+cd "$BASEDIR/packages/ui-core" &&   rm -rf dist && yarn&& npm publish --tag mfe
+
 
 
 # msg "Building and publishing hrms module"
@@ -24,9 +27,6 @@ cd "$BASEDIR/packages/hrms" &&   rm -rf dist && yarn&& npm publish --tag mfe
 
 # msg "Building and publishing DSS module"
 cd "$BASEDIR/packages/dss" &&  rm -rf dist && yarn&& npm publish --tag mfe
-
-# msg "Building and publishing Core module"
-cd "$BASEDIR/packages/ui-core" &&   rm -rf dist && yarn&& npm publish --tag mfe
 
 
 # msg "Building and publishing Utilities module"

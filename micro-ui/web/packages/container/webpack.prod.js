@@ -20,7 +20,7 @@ module.exports = () => {
           // header: `header@${domain}/header/remoteEntry.js`,
           dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies,
       }),
     ],
   };

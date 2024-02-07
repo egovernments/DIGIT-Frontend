@@ -17,7 +17,7 @@ module.exports = () => {
         exposes: {
           "./WorkbenchModule": "./src/bootstrap",
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies,
       }),
     ],
   };

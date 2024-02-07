@@ -17,7 +17,7 @@ module.exports = () => {
         exposes: {
           "./AuthModule": "./src/bootstrap",
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies,
       }),
     ],
   };

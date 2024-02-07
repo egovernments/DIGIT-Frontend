@@ -24,7 +24,7 @@ module.exports = () => {
           dss : `dss@${domain}/dss/remoteEntry.js`,
           measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies,
       }),
     ],
   };
