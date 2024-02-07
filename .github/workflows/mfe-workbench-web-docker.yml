@@ -1,0 +1,32 @@
+name: dss ui service docker Image CI
+
+on:
+  push:
+    branches: [ "mf-build-docker" ]
+  pull_request:
+    branches: [ "mf-build" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      working-directory: ./micro-ui/web/packages/workbench
+      run: docker build . --file docker/Dockerfile --tag egovio/workbench-web:latest
+
+    - name: Login to Docker Hub and Push Docker Image
+      working-directory: ./micro-ui/web/packages/workbench
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |      
+          # Authenticate with Docker Hub
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          
+          # Push the image to Docker Hub
+          docker push  egovio/workbench-web:latest
+
