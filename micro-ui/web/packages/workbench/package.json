@@ -18,7 +18,9 @@
     "@babel/preset-react": "7.12.10",
     "babel-loader": "8.2.2",
     "gh-pages": "^5.0.0",
-    "html-webpack-plugin": "4.5.1"
+    "html-webpack-plugin": "4.5.1",
+    "babel-plugin-react-html-attrs": "^3.0.5",
+    "@babel/preset-env":"7.23.9"
   },
   "dependencies": {
     "@digit-ui/digit-ui-module-core-base": "1.0.5",
