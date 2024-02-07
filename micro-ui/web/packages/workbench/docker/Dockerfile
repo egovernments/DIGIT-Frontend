@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+# clear cache
+RUN yarn cache clean
+
 # Install dependencies
 RUN yarn install
 
