@@ -1,4 +1,4 @@
-name: dss ui service docker Image CI
+name: hrms ui service docker Image CI
 
 on:
   push:
