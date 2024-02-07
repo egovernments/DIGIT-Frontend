@@ -17,7 +17,7 @@ module.exports = () => {
         exposes: {
           "./HrmsModule": "./src/bootstrap",
         },
-        shared: packageJson.dependencies,
+        // shared: packageJson.dependencies, removed the shared logic for now will be enabled later for optimization
       }),
     ],
   };
