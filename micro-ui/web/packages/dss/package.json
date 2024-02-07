@@ -38,6 +38,10 @@
     "react-simple-maps": "2.0.0",
     "react-time-picker": "4.2.1",
     "react-tooltip": "4.1.2",
-    "recharts": "^2.0.9"
+    "recharts": "^2.0.9",
+    "webpack": "5.11.1",
+    "webpack-cli": "4.10",
+    "webpack-dev-server": "3.11.1",
+    "webpack-merge": "5.7.3"
   }
 }
