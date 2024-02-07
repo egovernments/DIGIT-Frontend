@@ -14,7 +14,7 @@ if (!HOST) {
 
 const config = {
   auth_token: process.env.AUTH_TOKEN,
-  delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || 90000,
+  delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || 120000,
   KAFKA_BROKER_HOST:
     // "localhost:9092" ||
     // "localhost:9093" ||
@@ -24,13 +24,13 @@ const config = {
   KAFKA_DHIS_CREATE_TOPIC:
     process.env.KAFKA_DHIS_CREATE_TOPIC || "create-dhis2-job",
   KAFKA_SAVE_INGESTION_TOPIC:
-    process.env.KAFKA_SAVE_INGESTION_TOPIC || "save_ingestion_details",
+    process.env.KAFKA_SAVE_INGESTION_TOPIC || "save-ingestion-details",
   KAFKA_UPDATE_INGESTION_TOPIC:
-    process.env.KAFKA_UPDATE_INGESTION_TOPIC || "update_ingestion_details",
+    process.env.KAFKA_UPDATE_INGESTION_TOPIC || "update-ingestion-details",
   KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC:
-    process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save_campaign_details",
+    process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
-    process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update_campaign_details",
+    process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,

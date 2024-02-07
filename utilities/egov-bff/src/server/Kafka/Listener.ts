@@ -1,4 +1,4 @@
-import { ConsumerGroup, ConsumerGroupOptions, Message, ProduceRequest } from 'kafka-node';
+import { ConsumerGroup, ConsumerGroupOptions, Message } from 'kafka-node';
 import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import { produceIngestion } from '../utils';
@@ -97,7 +97,7 @@ function listener() {
                         ingestionData.ingestionNumber = messageObject?.Job?.ingestionNumber;
                         ingestionData.jobId = messageObject?.Job?.jobID;
                         messageObject.Job.ingestionDetails.ingestionData = ingestionData;
-                        logger.info("Updating Ingestion details to Completed, ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
+                        logger.info("Updating Ingestion details : " + JSON.stringify(messageObject?.Job?.ingestionDetails));
                         produceModifiedMessages(messageObject.Job.ingestionDetails, updateIngestionTopic)
                     }
                 }
@@ -157,14 +157,14 @@ function listener() {
 // Function to produce modified messages back to the same topic
 async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
     return new Promise<void>((resolve, reject) => {
-        const payloads: ProduceRequest[] = [
+        const payloads = [
             {
                 topic: topic,
                 messages: JSON.stringify(modifiedMessages),
             },
         ];
 
-        producer.send(payloads, (err, data) => {
+        producer.send(payloads, (err) => {
             if (err) {
                 logger.info(`Producer Error: ${JSON.stringify(err)}`);
                 reject(err);
