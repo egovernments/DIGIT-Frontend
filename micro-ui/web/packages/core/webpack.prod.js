@@ -13,7 +13,7 @@ module.exports = () => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "core",
+        name: "core-digit-ui",
         remotes: {
           // landing: `landing@${domain}/landing/remoteEntry.js`,
           auth: `auth@${domain}/auth/remoteEntry.js`,
