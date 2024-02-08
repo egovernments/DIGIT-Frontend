@@ -41,6 +41,35 @@ export const UICustomizations = {
       }
     },
   },
+  InboxCampaignConfig: {
+    preProcess: (data) => {
+      // let ingestionSearchCriteria = data.body.IngestionSearchCriteria;
+      // data.params = {
+      //   recordCount: data.state.tableForm.limit,
+      //   sortBy: "createdTime",
+      //   order: data?.body?.IngestionSearchCriteria?.SortBy?.code == "ASC" ? "ASC" : "DESC",
+      //   offset: data?.body?.IngestionSearchCriteria?.offset,
+      // };
+
+      // const { ingestionType, ingestionStatus } = ingestionSearchCriteria;
+      // if (ingestionType?.code) ingestionSearchCriteria.ingestionType = ingestionType.code;
+      // if (ingestionStatus?.code) ingestionSearchCriteria.ingestionStatus = ingestionStatus.code;
+
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "WORKBENCH_INGESTION_ID":
+          return <span className="link">{statusBasedNavigation(row?.executionStatus, row?.jobID, value)}</span>;
+
+        case "WORKBENCH_CREATED_TIME":
+          return <span>{Digit.DateUtils.ConvertEpochToDate(value)}</span>;
+
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+  },
   SearchDefaultConfig: {
     customValidationCheck: (data) => {
       //checking both to and from date are present

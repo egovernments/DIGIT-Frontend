@@ -46,8 +46,13 @@ const HCMWORKBENCHCard = () => {
       roles: ROLES.HCM,
     },
     {
-      label: t("WORKBENCH_INBOX"),
+      label: t("WORKBENCH_INGESTION_INBOX"),
       link: `/${window?.contextPath}/employee/hcmworkbench/inbox`,
+      roles: ROLES.HCM,
+    },
+    {
+      label: t("WORKBENCH_CAMPAIGN_INBOX"),
+      link: `/${window?.contextPath}/employee/hcmworkbench/inbox-campaign`,
       roles: ROLES.HCM,
     },
    
