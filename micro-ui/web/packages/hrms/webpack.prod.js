@@ -7,20 +7,20 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/hrms/",
+      publicPath: "/hrms-ui/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "hrms",
+        name: "hrms-ui",
         filename: "remoteEntry.js",
         exposes: {
           "./HrmsModule": "./src/bootstrap",
         },
-        // shared: packageJson.dependencies, removed the shared logic for now will be enabled later for optimization
+        shared: packageJson.dependencies, //removed the shared logic for now will be enabled later for optimization
       }),
     ],
   };
 
   return merge(commonConfig, prodConfig);
-};
+
