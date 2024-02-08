@@ -33,7 +33,7 @@ const config = {
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
     DB_USER:
     process.env.DB_USER || "postgres",
-    DB_HOST : process.env.DB_HOST || "localhost",
+    DB_HOST : process.env.DB_HOST?.split(':')[0] || "localhost",
     DB_NAME : process.env.DB_NAME || "postgres",
     DB_PASSWORD : process.env.DB_PASSWORD || "1234",
     DB_PORT : process.env.DB_PORT || "5432",
