@@ -1,10 +1,11 @@
-import {
-  Header,
-  InboxSearchComposer,
-} from "@egovernments/digit-ui-react-components";
+// import {
+//   Header,
+//   InboxSearchComposer,
+// } from "@egovernments/digit-ui-react-components";
+import InboxSearchComposer from "../components/react-components/src/hoc/InboxSearchComposer.js";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import Header from "../components/react-components/src/atoms/Header.js";
 // Define default values for search fields
 const defaultSearchValues = {
   individualName: "",
@@ -18,10 +19,16 @@ export const searchconfig = () => {
     type: "search",
     apiDetails: {
       serviceName: "/individual/v1/_search",
-      requestParam: {},
+      requestParam: {
+        tenantId:"pg.citya"
+      },
       requestBody: {
         apiOperation: "SEARCH",
-        Individual: {},
+        tenantId: "pg.citya",
+        Individual: {
+          tenantId:"pg.citya"
+
+        },
       },
       masterName: "commonUiConfig",
       moduleName: "SearchIndividualConfig",
@@ -91,7 +98,7 @@ export const searchconfig = () => {
             {
               label: "Address",
               jsonPath: "address",
-              additionalCustomization: true,
+              // additionalCustomization: true,
             },
           ],
 
@@ -105,7 +112,7 @@ export const searchconfig = () => {
 };
 
 const SearchIndividual = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
   const indConfigs = searchconfig();
 
@@ -116,12 +123,12 @@ const SearchIndividual = () => {
 
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>{t(indConfigs?.label)}</Header>
+      <Header styles={{ fontSize: "32px" }}>{(indConfigs?.label)}</Header>
       <div className="inbox-search-wrapper">
         {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer
           configs={indConfigs}
-          defaultValues={defaultValues}
+          // defaultValues={defaultValues}
         ></InboxSearchComposer>
       </div>
     </React.Fragment>

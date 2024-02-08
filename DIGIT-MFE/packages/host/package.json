@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.4.0",
+    "http-proxy-middleware": "^1.0.5",
     "react-query": "^3.38.0",
     "single-spa": "^5.9.3",
     "react": "18.2.0"

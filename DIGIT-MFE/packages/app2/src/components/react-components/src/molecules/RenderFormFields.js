@@ -14,6 +14,7 @@ import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
 import LocationDropdownWrapper from './LocationDropdownWrapper';
 import WorkflowStatusFilter from './WorkflowStatusFilter';
 import ApiDropdown from './ApiDropdown';
+import { getCurrentTenantId } from '../../../molecules/Ulb';
 const RenderFormFields = ({data,...props}) => {
   
     const { t } = useTranslation();
@@ -119,7 +120,7 @@ const RenderFormFields = ({data,...props}) => {
                         <MultiUploadWrapper
                           t={t}
                           module="works"
-                          tenantId={Digit.ULBService.getCurrentTenantId()}
+                          tenantId={getCurrentTenantId()}
                           getFormState={getFileStoreData}
                           showHintBelow={populators?.showHintBelow ? true : false}
                           setuploadedstate={value}

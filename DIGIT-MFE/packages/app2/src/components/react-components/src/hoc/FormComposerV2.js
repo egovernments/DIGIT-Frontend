@@ -31,6 +31,7 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
+import { getCurrentTenantId } from "../../../molecules/Ulb";
 
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { validateResolver } from "./validateResolver";
@@ -365,7 +366,7 @@ export const FormComposer = (props) => {
                 <MultiUploadWrapper
                   t={t}
                   module="works"
-                  tenantId={Digit.ULBService.getCurrentTenantId()}
+                  tenantId={getCurrentTenantId()}
                   getFormState={getFileStoreData}
                   showHintBelow={populators?.showHintBelow ? true : false}
                   setuploadedstate={value || []}

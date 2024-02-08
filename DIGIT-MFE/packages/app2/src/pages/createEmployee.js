@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { newConfig } from "../components/config/config";
 import _ from "lodash";
-
+import { getCurrentTenantId } from "../components/molecules/Ulb";
 const CreateEmployee = () => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);

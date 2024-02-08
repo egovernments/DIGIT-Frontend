@@ -3,9 +3,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DesktopInbox from "../components/inbox/DesktopInbox";
 import MobileInbox from "../components/inbox/MobileInbox";
-
+import { getCurrentTenantId } from "../components/molecules/Ulb";
 const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filterComponent, isInbox }) => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = getCurrentTenantId();
   const { isLoading: isLoading, Errors, data: res } = Digit.Hooks.hrms.useHRMSCount(tenantId);
 
   const { t } = useTranslation();

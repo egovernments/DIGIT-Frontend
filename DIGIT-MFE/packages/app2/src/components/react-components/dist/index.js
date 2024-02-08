@@ -1,5 +1,5 @@
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
+import useCustomAPIHook from '../../../../../ui-libraries/src/hooks/useCustomAPIHook';
 var React = require('react');
 var React__default = _interopDefault(React);
 var reactRouterDom = require('react-router-dom');
@@ -19109,7 +19109,7 @@ const ApiDropdown = _ref => {
     data: apiData,
     revalidate,
     isFetching: isApiFetching
-  } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  } = useCustomAPIHook(reqCriteria);
   React.useEffect(() => {
     setOptions(apiData);
   }, [apiData]);
@@ -25623,7 +25623,7 @@ const InboxSearchComposer = _ref => {
       revalidate,
       isFetching,
       error
-    } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+    } = useCustomAPIHook(updatedReqCriteria);
   }
   const closeToast = () => {
     setTimeout(() => {

@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { Loader } from '../atoms/Loader';
 import NoResultsFound from '../atoms/NoResultsFound';
 import { InfoIcon,EditIcon } from "../atoms/svgindex";
-
+import { getCurrentTenantId } from '../../../../../../../DIGIT-MFE/packages/app2/src/components/molecules/Ulb';
 const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,additionalConfig }) => {
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
@@ -20,8 +20,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     let searchResult = _.get(data,resultsKey,[])
     searchResult = searchResult?.length>0 ? searchResult : []
     searchResult = searchResult.reverse();
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
+    const tenantId = getCurrentTenantId();
+    // const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
 
     //reversing reason -> for some reason if we enable sorting on columns results from the api are reversed and shown, for now -> reversing the results(max size 50 so not a performance issue)
     

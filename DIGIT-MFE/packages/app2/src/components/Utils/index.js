@@ -1,4 +1,4 @@
-
+import { getCurrentTenantId } from "../molecules/Ulb";
 export const pdfDownloadLink = (documents = {}, fileStoreId = "", format = "") => {
   /* Need to enhance this util to return required format*/
 
@@ -62,7 +62,7 @@ export const getCityThatUserhasAccess = (cities = []) => {
   const userInfo = Digit.UserService.getUser();
   let roleObject = {};
   userInfo?.info?.roles.map((roleData) => { roleObject[roleData?.code] = roleObject[roleData?.code] ? [...roleObject[roleData?.code], roleData?.tenantId] : [roleData?.tenantId] });
-  const tenant = Digit.ULBService.getCurrentTenantId();
+  const tenant = getCurrentTenantId();
   if (roleObject[Digit.Utils?.hrmsRoles?.[0]].includes(Digit.ULBService.getStateId())) {
     return cities;
   }

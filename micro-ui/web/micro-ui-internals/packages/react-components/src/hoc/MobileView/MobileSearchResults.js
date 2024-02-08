@@ -8,7 +8,7 @@ import { Loader } from "../../atoms/Loader";
 import _ from "lodash";
 import { InboxContext } from '../InboxSearchComposerContext';
 import Table from "../../atoms/Table";
-
+import { getCurrentTenantId } from '../../../../../../../../DIGIT-MFE/packages/app2/src/components/molecules/Ulb';
 const MobileSearchResults = ({ config, data, isLoading, isFetching,fullConfig }) => {
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
@@ -20,8 +20,8 @@ const MobileSearchResults = ({ config, data, isLoading, isFetching,fullConfig })
     let searchResult = _.get(data,resultsKey,[])
     searchResult = searchResult?.length>0 ? searchResult : []
     searchResult = searchResult.reverse();
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
+    const tenantId = getCurrentTenantId();
+    // const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
     //reversing reason -> for some reason if we enable sorting on columns results from the api are reversed and shown, for now -> reversing the results(max size 50 so not a performance issue)
     
     // if (fullConfig?.postProcessResult){

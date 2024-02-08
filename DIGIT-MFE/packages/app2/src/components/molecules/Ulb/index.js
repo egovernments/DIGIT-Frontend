@@ -9,6 +9,26 @@ import globalConfigs from "../../config/globalConfigs";
  * get citizen selected tenant
  * get all ulbs of employee
  *
+  * @example
+   * Digit.ULBService.getCurrentTenantId()
+   *
+   * @returns {String}
+   */
+export const getCurrentTenantId= () => {
+  // TODO: change when setter is done.
+  const user = UserService.getUser();
+  if (user?.extraRoleInfo) {
+    const isDsoRoute = Digit.Utils.detectDsoRoute(window.location.pathname);
+    if (isDsoRoute) {
+      return user.extraRoleInfo?.tenantId;
+    }
+  }
+  //TODO: fix tenant id from userinfo
+  const tenantId =
+    user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
+  return tenantId;
+}
+/** 
  * @author jagankumar-egov
  *
  * @example
@@ -22,25 +42,7 @@ export const ULBService = {
    *
    * @author jagankumar-egov
    *
-   * @example
-   * Digit.ULBService.getCurrentTenantId()
-   *
-   * @returns {String}
-   */
-  getCurrentTenantId: () => {
-    // TODO: change when setter is done.
-    const user = UserService.getUser();
-    if (user?.extraRoleInfo) {
-      const isDsoRoute = Digit.Utils.detectDsoRoute(window.location.pathname);
-      if (isDsoRoute) {
-        return user.extraRoleInfo?.tenantId;
-      }
-    }
-    //TODO: fix tenant id from userinfo
-    const tenantId =
-      user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
-    return tenantId;
-  },
+  
   /**
    * Custom method to get current environment home / state tenant
    *

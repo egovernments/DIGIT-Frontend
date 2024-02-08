@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Card, Banner, CardText, SubmitBar, Loader, LinkButton, ActionBar } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getCurrentTenantId } from "../components/molecules/Ulb";
 
 const GetMessage = (type, action, isSuccess, isEmployee, t) => {
   return t(`EMPLOYEE_RESPONSE_${action ? action : "CREATE"}_${type}${isSuccess ? "" : "_ERROR"}`);
@@ -31,7 +32,7 @@ const BannerPicker = (props) => {
 
 const Response = (props) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = getCurrentTenantId();
   const stateId = Digit.ULBService.getStateId();
   const { state } = props.location;
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);

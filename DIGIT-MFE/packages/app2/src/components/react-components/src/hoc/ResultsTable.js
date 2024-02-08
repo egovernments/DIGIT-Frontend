@@ -21,7 +21,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     searchResult = searchResult?.length>0 ? searchResult : []
     searchResult = searchResult.reverse();
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
+    // const headerLocale = Digit.Utils.locale.getTransformedLocale(tenantId);
 
     //reversing reason -> for some reason if we enable sorting on columns results from the api are reversed and shown, for now -> reversing the results(max size 50 so not a performance issue)
     
@@ -98,7 +98,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         },
     });
     
-    const isMobile = window.Digit.Utils.browser.isMobile();
+    // const isMobile = window.Digit.Utils.browser.isMobile();
     const [searchQuery, onSearch] = useState("");
 
     const filterValue = useCallback((rows, id, filterValue = "") => {

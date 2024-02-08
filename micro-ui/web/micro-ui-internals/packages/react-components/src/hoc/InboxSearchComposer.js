@@ -10,14 +10,14 @@ import SearchAction from "../molecules/SearchAction";
 import FilterAction from "../molecules/FilterAction";
 import MobileSearchComponent from "./MobileView/MobileSearchComponent";
 import MobileSearchResults from "./MobileView/MobileSearchResults";
-import MediaQuery from 'react-responsive';
+import MediaQuery from "react-responsive";
 import _ from "lodash";
 import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
-
+import useCustomAPIHook from "../../../../../../../DIGIT-MFE/packages/ui-libraries/src/hooks/useCustomAPIHook.js";
 
 const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{}}) => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
     const [state, dispatch] = useReducer(reducer, initialInboxState);
@@ -115,7 +115,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
         var { isLoading, data, revalidate,isFetching,refetch,error } = eval(`Digit.Hooks.${configs.customHookName}(updatedReqCriteria)`);
     }
     else {
-       var { isLoading, data, revalidate,isFetching,error } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+       var { isLoading, data, revalidate,isFetching,error } = useCustomAPIHook(updatedReqCriteria);
         
     }
 
