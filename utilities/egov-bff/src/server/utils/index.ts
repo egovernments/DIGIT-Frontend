@@ -9,9 +9,9 @@ import { getCampaignNumber } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
+// import { getWorkbook } from "../api/index";
 
 import { logger } from "./logger";
-// import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 
@@ -217,7 +217,6 @@ const produceIngestion = async (messages: any) => {
     logger.info("Next Ingestion : " + JSON.stringify(notStartedIngestion));
     notStartedIngestion.state = "Started";
     messages.Job.tenantId = notStartedIngestion?.tenantId;
-    messages.Job.RequestInfo = { userInfo: messages?.Job?.ingestionDetails?.userInfo };
     logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
     logger.info("Ingestionurl : " + config.host.hcmMozImpl + config.paths.hcmMozImpl)
     logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
@@ -413,6 +412,60 @@ function generateSortingAndPaginationClauses(pagination: Pagination): string {
   return clauses;
 }
 
+const handleEventHistoryMessage = async (messageObject: any, eventHistoryMessage: string) => {
+  logger.info("Event history message : " + eventHistoryMessage)
+  let additionalDetails = JSON.parse(messageObject?.Job?.ingestionDetails?.campaignDetails?.additionalDetails);
+  additionalDetails.errorMessage = eventHistoryMessage;
+  messageObject.Job.ingestionDetails.campaignDetails.additionalDetails = JSON.stringify(additionalDetails);
+  produceModifiedMessages(messageObject.Job.ingestionDetails, config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC)
+
+  // Check if the eventHistoryMessage contains "INVALID_BOUNDARY_DATA"
+  // if (eventHistoryMessage && eventHistoryMessage.includes("INVALID_BOUNDARY_DATA")) {
+  //   // Find the index after "400 :"
+  //   const jsonStartIndex = eventHistoryMessage.indexOf("400 : ") + 5;
+  //   if (jsonStartIndex !== -1) {
+  //     try {
+  //       // Extract JSON data after "400 :" and parse it
+  //       const jsonString = eventHistoryMessage.substring(jsonStartIndex).trim();
+  //       const parsedMessage = JSON.parse(jsonString);
+
+  //       // Access the boundary code from the parsed message
+  //       if (parsedMessage?.[0]?.Errors?.[0]?.message) {
+  //         const codeMessage = parsedMessage?.[0]?.Errors?.[0]?.message;
+  //         const words = codeMessage.split(' ');
+  //         const boundaryCode = words[6];
+  //         logger.info(codeMessage)
+  //         logger.info("Error Boundary Code : " + boundaryCode)
+  //         const fileStoreId = messageObject?.Job?.fileStoreId;
+  //         if (fileStoreId) {
+  //           const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${messageObject?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+  //           logger.info("File fetching url : " + url)
+  //           const fileResponse = await httpRequest(url, undefined, undefined, 'get');
+  //           if (fileResponse?.fileStoreIds.length === 0) {
+  //             throw new Error("File store Id invalid");
+  //           }
+  //           const workbook = await getWorkbook(fileResponse.fileStoreIds[0].url);
+  //         } else {
+  //           console.error("fileStoreId not found in messageObject:", messageObject);
+  //         }
+  //       } else {
+  //         console.error("Invalid event history message format:", eventHistoryMessage);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error parsing JSON:", error);
+  //     }
+  //   } else {
+  //     console.error("Unknown event history message format for INVALID_BOUNDARY_DATA:", eventHistoryMessage);
+  //   }
+  // }
+  // else {
+  //   logger.info("Unknown event history message : " + eventHistoryMessage)
+  // }
+}
+
+
+
+
 
 
 
@@ -433,5 +486,6 @@ export {
   waitAndCheckIngestionStatus,
   getCampaignDetails,
   processFile,
-  generateSortingAndPaginationClauses
+  generateSortingAndPaginationClauses,
+  handleEventHistoryMessage
 };

@@ -51,7 +51,7 @@ class BulkUploadController {
         host: config.db.DB_LOCALHOST,
         database: config.db.DB_DATABASE,
         password: config.db.DB_PASSWORD,
-        port: parseInt(config.db.DB_PORT)
+        // port: parseInt(config.db.DB_PORT)
       });
       let criteria = request?.body?.CampaignDetails;
       const { campaignIds, campaignName, campaignType, campaignNumber, createdBy, projectTypeId, pagination } = criteria;
@@ -120,7 +120,7 @@ class BulkUploadController {
       if (campaignDetails == "INVALID_CAMPAIGN_NUMBER") {
         throw new Error("Error during Campaign Number generation");
       }
-      var result: any, Job: any = { ingestionDetails: { userInfo: {}, projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
+      var result: any, Job: any = { ingestionDetails: { projectType: request?.body?.HCMConfig?.projectType, projectTypeId: request?.body?.HCMConfig?.projectTypeId, projectName: request?.body?.HCMConfig?.campaignName, history: [], campaignDetails: campaignDetails } };
       const saveHistory: any = Job.ingestionDetails;
       logger.info("Saving campaign details : " + JSON.stringify(campaignDetails));
       produceModifiedMessages(saveHistory, saveCampaignTopic);
@@ -147,9 +147,10 @@ class BulkUploadController {
         logger.error(String(e))
         return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
       }
-      Job.ingestionDetails.userInfo = request?.body?.RequestInfo?.userInfo;
       Job.ingestionDetails.campaignDetails = campaignDetails;
+      Job.RequestInfo = request?.body?.RequestInfo
       const updatedJob: any = await produceIngestion({ Job });
+      delete updatedJob.RequestInfo
       return sendResponse(
         response,
         { Job: updatedJob },
@@ -160,7 +161,6 @@ class BulkUploadController {
       return errorResponder({ message: String(e) }, request, response);
     }
   };
-
 }
 // Export the MeasurementController class
 export default BulkUploadController;

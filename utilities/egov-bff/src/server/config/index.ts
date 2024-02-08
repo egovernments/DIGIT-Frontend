@@ -31,6 +31,8 @@ const config = {
     process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
+  KAFKA_CREATE_HCM_EVENT_HISTORY_TOPIC:
+    process.env.KAFKA_UPDATE_CAMPAIGN_ERROR_TOPIC || "update-campaign-errors",
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
@@ -52,13 +54,13 @@ const config = {
       // || "http://localhost:8085/"
       || "https://unified-uat.digit.org/",
   },
-  db:{
+  db: {
     DB_USER:
-    process.env.DB_USER || 'postgres',
-    DB_LOCALHOST : process.env.DB_HOST || 'localhost',
-    DB_DATABASE : process.env.DB_NAME || 'postgres',
-    DB_PASSWORD : process.env.DB_PASSWORD || 'postgres',
-    DB_PORT : process.env.DB_PORT || '5432'
+      process.env.DB_USER || 'postgres',
+    DB_LOCALHOST: process.env.DB_HOST || 'localhost',
+    DB_DATABASE: process.env.DB_NAME || 'postgres',
+    DB_PASSWORD: process.env.DB_PASSWORD || 'postgres',
+    DB_PORT: process.env.DB_PORT || '5432'
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
@@ -69,7 +71,9 @@ const config = {
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
       || "hcm-moz-impl/v1/ingest",
     idGen: process.env.EGOV_IDGEN_PATH
-      || "egov-idgen/id/_generate"
+      || "egov-idgen/id/_generate",
+    eventHistory: process.env.HCM_MOZ_IMPL_EVENT_HISTORY
+      || "hcm-moz-impl/v1/eventHistory/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE

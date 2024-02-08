@@ -3,6 +3,8 @@ import { logger } from '../utils/logger';
 import { producer } from './Producer';
 import { produceIngestion } from '../utils';
 import config from '../config';
+import { getEventHistory } from '../api';
+import { handleEventHistoryMessage } from '../utils';
 
 const kafkaConfig: ConsumerGroupOptions = {
     kafkaHost: config.KAFKA_BROKER_HOST,
@@ -42,7 +44,7 @@ function listener() {
             if (message?.topic == dhisUpdateTopicName) {
                 logger.info("IngestionDetails received:" + JSON.stringify(messageObject?.Job?.ingestionDetails?.history));
                 if (messageObject?.Job?.executionStatus === "Completed") {
-                    if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
+                    if (messageObject?.Job?.ingestionDetails?.history) {
                         const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
                             (detail: any) => detail.state === 'Started'
                         );
@@ -73,7 +75,6 @@ function listener() {
                     }
                     else {
                         logger.info("Ingestion details not found for Job : " + JSON.stringify(messageObject));
-
                     }
                 }
                 else {
@@ -81,6 +82,9 @@ function listener() {
                     messageObject.Job.ingestionDetails.campaignDetails.status = "Failed";
                     messageObject.Job.ingestionDetails.campaignDetails.lastModifiedTime = new Date().getTime();
                     const updateHistory: any = messageObject.Job.ingestionDetails;
+                    const jobId = messageObject?.Job?.jobID;
+                    const eventHistoryMessage = await getEventHistory(messageObject?.RequestInfo, jobId);
+                    handleEventHistoryMessage(messageObject, eventHistoryMessage);
                     logger.info("Updating campaign details  with status failed: " + JSON.stringify(messageObject.Job.ingestionDetails.campaignDetails));
                     produceModifiedMessages(updateHistory, updateCampaignTopic);
 
@@ -104,7 +108,7 @@ function listener() {
             }
             else if (message?.topic == dhisCreateTopicName) {
                 if (messageObject?.Job?.executionStatus === "Started") {
-                    if (messageObject?.Job?.ingestionDetails?.history && messageObject?.Job?.ingestionDetails?.userInfo) {
+                    if (messageObject?.Job?.ingestionDetails?.history) {
                         const startedIngestion = messageObject?.Job?.ingestionDetails?.history.find(
                             (detail: any) => detail.state === 'Started'
                         );

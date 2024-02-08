@@ -309,8 +309,28 @@ const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName
 }
 
 
+const getEventHistory: any = async (RequestInfo: any, jobId: string) => {
+  const data = {
+    RequestInfo: RequestInfo
+  }
+  const eventHistoryUrl = config.host.hcmMozImpl + config.paths.eventHistory;
+  logger.info("EventHistoryUrl search url : " + eventHistoryUrl)
+  logger.info("EventHistoryUrl Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(eventHistoryUrl, data, { jobId: jobId }, undefined, undefined, undefined);
+    return result?.EventHistory?.[0]?.message;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
+
 export {
   getSheetData,
   searchMDMS,
-  getCampaignNumber
+  getCampaignNumber,
+  getEventHistory,
+  getWorkbook
 };
