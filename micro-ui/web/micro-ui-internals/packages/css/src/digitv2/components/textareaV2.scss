@@ -1,7 +1,7 @@
 .digit-card-textarea,
 .digit-employee-card-textarea {
-  @apply block outline-none  border w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
-  @extend .light-input-border;
+  @apply block outline-none  w-full bg-white h-24 text-form-field p-sm;
+
 
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
@@ -9,6 +9,8 @@
   font-weight: theme(digitv2.fontWeight.regular);
   line-height: 1.5rem;
   padding:0.75rem;
+  color: theme(digitv2.lightTheme.text-color-primary);
+  border:1px solid theme(digitv2.lightTheme.text-color-secondary);
 
   &.disabled {
     @apply border-grey-dark text-grey-dark !important;
@@ -25,7 +27,7 @@
   }
 
   &.error {
-    border: 1px solid theme(digitv2.alert.error);
+    border: 1.5px solid theme(digitv2.alert.error);
   }
 }
 
@@ -56,5 +58,5 @@
 
 .digit-card-textarea:focus,
 .digit-employee-card-textarea:focus {
-  border: 1px solid theme(digitv2.lightTheme.primary);
+  border: 1.5px solid theme(digitv2.lightTheme.primary);
 }
