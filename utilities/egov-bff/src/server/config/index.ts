@@ -33,6 +33,14 @@ const config = {
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
   KAFKA_CREATE_HCM_EVENT_HISTORY_TOPIC:
     process.env.KAFKA_UPDATE_CAMPAIGN_ERROR_TOPIC || "update-campaign-errors",
+
+  DB_USER:
+    process.env.DB_USER || "postgres",
+  DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
+  DB_NAME: process.env.DB_NAME || "postgres",
+  DB_PASSWORD: process.env.DB_PASSWORD || "1234",
+  DB_PORT: process.env.DB_PORT || "5432",
+
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
@@ -53,14 +61,6 @@ const config = {
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
       || "https://unified-uat.digit.org/",
-  },
-  db: {
-    DB_USER:
-      process.env.DB_USER || 'postgres',
-    DB_LOCALHOST: process.env.DB_HOST || 'localhost',
-    DB_DATABASE: process.env.DB_NAME || 'postgres',
-    DB_PASSWORD: process.env.DB_PASSWORD || 'postgres',
-    DB_PORT: process.env.DB_PORT || '5432'
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
