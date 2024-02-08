@@ -46,10 +46,11 @@ class BulkUploadController {
     response: express.Response
   ) => {
     try {
+      const hostname = config.DB_HOST.split(':')[0];
       const pool = new Pool({
         user: config.DB_USER,
-        host: config.DB_LOCALHOST,
-        database: config.DB_DATABASE,
+        host: hostname,
+        database: config.DB_NAME,
         password: config.DB_PASSWORD,
         port: parseInt(config.DB_PORT)
       });
