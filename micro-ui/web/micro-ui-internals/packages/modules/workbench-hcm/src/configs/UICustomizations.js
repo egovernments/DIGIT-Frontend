@@ -43,27 +43,53 @@ export const UICustomizations = {
   },
   InboxCampaignConfig: {
     preProcess: (data) => {
-      // let ingestionSearchCriteria = data.body.IngestionSearchCriteria;
-      // data.params = {
-      //   recordCount: data.state.tableForm.limit,
-      //   sortBy: "createdTime",
-      //   order: data?.body?.IngestionSearchCriteria?.SortBy?.code == "ASC" ? "ASC" : "DESC",
-      //   offset: data?.body?.IngestionSearchCriteria?.offset,
-      // };
+      console.log("data" , data);
+      let campaignDetails = data?.body?.CampaignDetails;
 
-      // const { ingestionType, ingestionStatus } = ingestionSearchCriteria;
-      // if (ingestionType?.code) ingestionSearchCriteria.ingestionType = ingestionType.code;
-      // if (ingestionStatus?.code) ingestionSearchCriteria.ingestionStatus = ingestionStatus.code;
+      const pagination = {
+        sortBy: "",
+        sortOrder: "",
+        offset: "0",
+        limit: "10"
+      };
+      campaignDetails.pagination = pagination;
+    
+      if(data?.state?.filterForm?.sortBy?.code){
+        data.body.CampaignDetails.pagination.sortBy = "createdtime",
+        data.body.CampaignDetails.pagination.sortOrder = "ASC" ? "ASC" : "DESC"
+      }
+     
+      const {projectTypeId , campaignType } = campaignDetails;
+      if(projectTypeId?.id) campaignDetails.projectTypeId = projectTypeId.id;
+      if(campaignType?.campaignType) campaignDetails.campaignType = campaignType.campaignType;
 
+      const objectSize = Object.keys(campaignDetails).length;
+      console.log(objectSize);
+      if(objectSize>3){
+        data.body.CampaignDetails.offset=0;
+        data.body.CampaignDetails.limit=10;
+        data.state.tableForm.limit=10;
+        data.state.tableForm.offset=0;
+
+      }
+    
+      data.body.CampaignDetails.pagination.offset= data?.body?.CampaignDetails?.offset
+      data.body.CampaignDetails.pagination.limit= data?.body?.CampaignDetails?.limit
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       switch (key) {
-        case "WORKBENCH_INGESTION_ID":
-          return <span className="link">{statusBasedNavigation(row?.executionStatus, row?.jobID, value)}</span>;
-
+        case "WORKBENCH_CAMPAIGN_NUMBER":
+          return (
+            <span className="link">
+              <Link
+                to={`/${window.contextPath}/employee/hcmworkbench/view-campaign?tenantId=${row?.tenantid}&campaignNumber=${row?.campaignnumber}`}
+              >{row?.campaignnumber}
+              </Link>
+            </span>
+          );
         case "WORKBENCH_CREATED_TIME":
-          return <span>{Digit.DateUtils.ConvertEpochToDate(value)}</span>;
+          return <span>{Digit.DateUtils.ConvertEpochToDate(row.createdtime)}</span>;
 
         default:
           return t("ES_COMMON_NA");

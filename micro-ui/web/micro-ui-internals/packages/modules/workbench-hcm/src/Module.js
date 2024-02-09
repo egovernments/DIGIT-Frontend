@@ -10,6 +10,7 @@ import ProjectChildrenComponent from "./components/ProjectChildrenComponent";
 import ProjectStaffComponent from "./components/ProjectStaffComponent";
 import FacilityComponent from "./components/FacilityComponent";
 import RowDetails from "./components/RowDetails";
+import ViewIngestionComponent from "./components/ViewIngestionComponent";
 
 import TargetComponent from "./components/TargetComponent";
 
@@ -40,6 +41,7 @@ const componentsToRegister = {
   FacilityComponent,
   RowDetails,
   TargetComponent,
+  ViewIngestionComponent
 };
 
 const overrideHooks = () => {

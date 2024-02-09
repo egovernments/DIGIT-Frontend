@@ -58,7 +58,7 @@ const CampaignInboxConfig = () => {
                 disable: false,
                 populators: {
                   name: "projectTypeId",
-                  optionsKey: "campaignType",
+                  optionsKey: "code",
                   mdmsConfig: {
                    moduleName: "HCM-PROJECT-TYPES",
                    masterName: "projectTypes",
@@ -66,9 +66,9 @@ const CampaignInboxConfig = () => {
                 },
               },
               {
-                isMandatory: true,
+                isMandatory: false,
                 key: "campaignType",
-                type: "radioordropdown",
+                type: "dropdown",
                 label: "CAMPAIGN_TYPE",
                 disable: false,
                 populators: {
@@ -88,35 +88,50 @@ const CampaignInboxConfig = () => {
           children: {},
           show: true,
         },
-        // links: {
-        //   uiConfig: {
-        //     links: [
-        //       {
-        //         text: "WORKBENCH_BOUNDARY",
-        //         url: "/employee/hcmworkbench/boundary",
-        //         roles: ["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"],
-        //       },
-        //       {
-        //         text: "WORKBENCH_PROJECT",
-        //         url: "/employee/hcmworkbench/project",
-        //         roles: ["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"],
-        //       },
-        //       {
-        //         text: "WORKBENCH_USER",
-        //         url: "/employee/hcmworkbench/user",
-        //         roles: ["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"],
-        //       },
-        //       {
-        //         text: "WORKBENCH_FACILITY",
-        //         url: "/employee/hcmworkbench/facility",
-        //         roles: ["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"],
-        //       }
-  
-        //     ],
-        //   },
-        //   children: {},
-        //   show: true,
-        // },
+        searchResult: {
+            label: "",
+            uiConfig: {
+              columns: [
+                {
+                  label: "WORKBENCH_CAMPAIGN_NUMBER",
+                  jsonPath: "campaignnumber",
+                  additionalCustomization: true,
+                },
+                {
+                  label: "WORKBENCH_CAMPAIGN_TYPE",
+                  jsonPath: "campaigntype",
+                },
+                {
+                  label: "WORKBENCH_CREATED_TIME",
+                  jsonPath: "createdtime",
+                  additionalCustomization: true,
+                },
+                {
+                  label: "WORKBENCH_CAMPAIGN_STATUS",
+                  jsonPath: "status",
+                //   additionalCustomization: true,
+                },
+              ],
+              enableGlobalSearch: false,
+              enableColumnSort: true,
+              resultsJsonPath: "CampaignDetails",
+            },
+            children: {},
+            show: true,
+          },
+        links: {
+          uiConfig: {
+            links: [
+              {
+                text: "WORKBENCH_CREATE_CAMPAIGN",
+                url: "/employee/hcmworkbench/campaign",
+                roles: ["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"],
+              }
+            ],
+          },
+          children: {},
+          show: true,
+        },
         filter: {
           uiConfig: {
             type: "filter",
@@ -125,22 +140,23 @@ const CampaignInboxConfig = () => {
             secondaryLabel: "",
             minReqFields: 1,
             defaultValues: {
-              state: "",
-              ward: [],
-              locality: [],
-              SortBy: {
-                code: "empty",
-                name: "SortBy",
+              sortBy: {
+                code: "",
+                name: "sortBy",
+              },
+              assign: {
+                code: "ASSIGNED_TO_ALL",
+                name: "EST_INBOX_ASSIGNED_TO_ALL",
               },
             },
             fields: [
               {
-                label: "",
+                label: "Sort By",
                 type: "radio",
                 isMandatory: false,
                 disable: false,
                 populators: {
-                  name: "SortBy",
+                  name: "sortBy",
                   options: [
                     {
                       code: "ASC",
@@ -161,60 +177,39 @@ const CampaignInboxConfig = () => {
                   },
                 },
               },
-              {
-                label: "ES_COMMON_CREATED_BY",
-                type: "dropdown",
-                isMandatory: false,
-                disable: false,
-                populators: {
-                  name: "createdBy",
-                  optionsKey: "name",
-                  optionsCustomStyle : {
-                    top : "2.3rem"
+            {
+              label: "Assign",
+              type: "radio",
+              isMandatory: false,
+              disable: false,
+              populators: {
+                name: "assign",
+                options: [
+                  {
+                    code: "ME",
+                    name: "WORKBENCH_ASSIGN_TO_ME",
                   },
-                  mdmsConfig: {
-                    masterName: "NatureOfWork",
-                    moduleName: "works",
-                    localePrefix: "COMMON_MASTERS"
-                  }
-                }
+                  {
+                    code: "ALL",
+                    name: "WORKBENCH_ASSIGN_TO_ALL",
+                  },
+                ],
+                optionsKey: "name",
+                styles: {
+                  gap: "1rem",
+                  flexDirection: "column",
+                },
+                innerStyles: {
+                  display: "flex",
+                },
+              },
             },
             ],
           },
           label: "Sort By",
           show: true,
         },
-        searchResult: {
-          label: "",
-          uiConfig: {
-            columns: [
-              {
-                label: "WORKBENCH_CAMPAIGN_NUMBER",
-                jsonPath: "campaignnumber",
-                additionalCustomization: true,
-              },
-              {
-                label: "WORKBENCH_CAMPAIGN_TYPE",
-                jsonPath: "campaigntype",
-              },
-              {
-                label: "WORKBENCH_CREATED_TIME",
-                jsonPath: "createdTime",
-                additionalCustomization: true,
-              },
-              {
-                label: "WORKBENCH_CAMPAIGN_STATUS",
-                jsonPath: "status",
-              //   additionalCustomization: true,
-              },
-            ],
-            enableGlobalSearch: false,
-            enableColumnSort: true,
-            resultsJsonPath: "job",
-          },
-          children: {},
-          show: true,
-        },
+        
       },
     };
   };
