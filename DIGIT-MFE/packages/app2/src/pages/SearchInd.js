@@ -20,7 +20,7 @@ export const searchconfig = () => {
     apiDetails: {
       serviceName: "/individual/v1/_search",
       requestParam: {
-        tenantId:"pg.citya"
+        // tenantId:"pg.citya"
       },
       requestBody: {
         apiOperation: "SEARCH",

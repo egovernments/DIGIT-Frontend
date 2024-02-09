@@ -30,8 +30,30 @@ module.exports = {
     modules: ["node_modules", path.resolve(__dirname, "src")],
   },
   devServer: {
-    port: "6001",
+    port: 6001,
     hot: false,
+    proxy: [
+      {
+        context: () => true,
+        target: "https://unified-dev.digit.org",
+        secure: true,
+        changeOrigin: true,
+        bypass: function (req, res, proxyOptions) {
+          if (req.headers.accept.indexOf("html") !== -1) {
+            console.log("Skipping proxy for browser request.");
+            return "/index.html";
+          }
+          return null;
+        },
+        headers: {
+          Connection: "keep-alive",
+        },
+      },
+    ],
+    https: false, // Enable HTTPS
+
+    // port: "6005",
+    // hot: false,
   },
   devtool: "source-map",
 

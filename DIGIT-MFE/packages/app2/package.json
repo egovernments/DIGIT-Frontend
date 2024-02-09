@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack",
-    "serve": "serve dist -p 3002"
+    "serve": "serve dist -p 6005"
   },
   "keywords": [],
   "author": "",

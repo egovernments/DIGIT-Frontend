@@ -32,7 +32,7 @@ registerApplication({
 registerApplication({
   name: "app3",
   app: () => import("app3/App"),
-  activeWhen: "/",
+  activeWhen: "/first-page",
   customProps: {
     title: "App 3 running on host",
     queryClient,
