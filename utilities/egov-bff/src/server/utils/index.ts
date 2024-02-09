@@ -1,11 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "../utils/request";
 import config from "../config/index";
-
+import { consumerGroupUpdate } from "../Kafka/Listener";
+import { Message } from 'kafka-node';
+import { v4 as uuidv4 } from 'uuid';
+import { produceModifiedMessages } from '../Kafka/Listener'
+import { getCampaignNumber } from "../api/index";
+import * as XLSX from 'xlsx';
+import FormData from 'form-data';
+import { Pagination } from "../utils/Pagination";
+// import { getWorkbook } from "../api/index";
 
 import { logger } from "./logger";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
+
+const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 
 /*
   stdTTL: (default: 0) the standard ttl as number in seconds for every generated
@@ -30,7 +40,7 @@ const throwError = (
   let error = new Error(message);
   //   error.status = status;
   //   error.code = code;
-  console.log(error, "error");
+  logger.error("Error : " + error);
 
   throw error;
 };
@@ -195,16 +205,270 @@ const extractEstimateIds = (contract: any): any[] => {
   return Array.from(allEstimateIds);
 };
 
-const produceIngestion = async (messages: any, fileStoreId: string, RequestInfo: any) => {
-  messages.Job.RequestInfo = RequestInfo
-  try {
-    // await httpRequest("http://127.0.0.1:8081" + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
-    await httpRequest(config.host.serverHost + "/hcm-moz-impl/v1/ingest", messages.Job, { ingestionType: "user", fileStoreId: fileStoreId }, undefined, undefined, undefined);
-  } catch (error) {
-    console.log("Error during ingestion : ", error)
+const produceIngestion = async (messages: any) => {
+  const ifNoneStartedIngestion = !messages?.Job?.ingestionDetails?.history.some(
+    (detail: any) => detail.state === 'Started'
+  );
+
+  const notStartedIngestion = messages?.Job?.ingestionDetails?.history.find(
+    (detail: any) => detail.state === 'Not-Started'
+  );
+  if (notStartedIngestion) {
+    logger.info("Next Ingestion : " + JSON.stringify(notStartedIngestion));
+    notStartedIngestion.state = "Started";
+    messages.Job.tenantId = notStartedIngestion?.tenantId;
+    logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
+    logger.info("Ingestionurl : " + config.host.hcmMozImpl + config.paths.hcmMozImpl)
+    logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
+    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.fileStoreId }, undefined, undefined, undefined);
+    notStartedIngestion.ingestionNumber = ingestionResult?.ingestionNumber;
+
+    if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
+      messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
+      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
+      const updateHistory: any = messages.Job.ingestionDetails;
+      logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+      produceModifiedMessages(updateHistory, updateCampaignTopic);
+    }
+    else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
+      messages.Job.ingestionDetails.campaignDetails.status = "Failed";
+      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
+      const updateHistory: any = messages.Job.ingestionDetails;
+      logger.info("Updating campaign details  with status failed: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+      produceModifiedMessages(updateHistory, updateCampaignTopic);
+    }
+    logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
+  }
+  else {
+    logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
+    messages.Job.ingestionDetails.campaignDetails.status = "Completed";
+    messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
+    const updateHistory: any = messages.Job.ingestionDetails;
+    logger.info("Updating campaign details  with status complete: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
+    produceModifiedMessages(updateHistory, updateCampaignTopic);
+  }
+  return messages.Job;
+};
+
+const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
+  const MAX_WAIT_TIME = 3 * 60 * 1000; // Maximum wait time: 3 minutes
+  const startTime = Date.now();
+  let isCompleted = "notReceived";
+
+  // Set up a one-time event handler for the first completion message
+  const messageHandler = async (message: Message) => {
+    const ingestionStatus: any = JSON.parse(message.value?.toString() || '{}');
+    if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber && ingestionStatus?.Job?.executionStatus === 'Completed') {
+      logger.info(`Ingestion ${ingestionNumber} is completed`);
+      isCompleted = "receivedTrue";
+    } else if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber) {
+      isCompleted = "receivedFalse";
+    }
+  };
+
+  // Register the message handler
+  consumerGroupUpdate.on('message', messageHandler);
+
+  // Set up error event handlers
+  consumerGroupUpdate.on('error', (err) => {
+    logger.info(`Consumer Error: ${JSON.stringify(err)}`);
+  });
+
+  consumerGroupUpdate.on('offsetOutOfRange', (err) => {
+    logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
+  });
+
+  // Keep checking for completion and waiting until MAX_WAIT_TIME
+  while (Date.now() - startTime < MAX_WAIT_TIME) {
+    // Check if completed
+    if (isCompleted !== "notReceived") {
+      return isCompleted;
+    }
+
+    // Add a delay (e.g., using setTimeout) before checking again.
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
+  // If not completed within the specified time, return the current status
+  return isCompleted;
 };
+
+async function getCampaignDetails(requestBody: any): Promise<any> {
+  const hcmConfig: any = requestBody?.HCMConfig;
+  const userInfo: any = requestBody?.RequestInfo?.userInfo;
+  const additionalDetails = { selectedRows: hcmConfig?.selectedRows };
+  const campaignNumber = await getCampaignNumber(requestBody, config.values.idgen.format, config.values.idgen.idName);
+  if (typeof campaignNumber !== 'string') {
+    return "INVALID_CAMPAIGN_NUMBER"
+  }
+  logger.info("Campaign number : " + campaignNumber)
+  // Extract details from HCMConfig 
+  const campaignDetails = {
+    id: uuidv4(),
+    tenantId: hcmConfig.tenantId,
+    fileStoreId: hcmConfig.fileStoreId,
+    campaignType: hcmConfig.campaignType,
+    status: "Not-Started",
+    projectTypeId: hcmConfig.projectTypeId,
+    campaignName: hcmConfig.campaignName,
+    campaignNumber: campaignNumber,
+    auditDetails: {
+      createdBy: userInfo?.uuid,
+      lastModifiedBy: userInfo?.uuid,
+      createdTime: new Date().getTime(),
+      lastModifiedTime: new Date().getTime(),
+    },
+    additionalDetails: additionalDetails ? JSON.stringify(additionalDetails) : ""
+  };
+
+  return campaignDetails;
+}
+async function processFile(request: any, parsingTemplates: any[], result: any, hostHcmBff: string, Job: any) {
+  var parsingTemplatesLength = parsingTemplates.length
+  for (let i = 0; i < parsingTemplatesLength; i++) {
+    const parsingTemplate = parsingTemplates[i];
+    request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
+    request.body.HCMConfig['data'] = result?.updatedDatas;
+    var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+    if (processResult.Error) {
+      throw new Error(processResult.Error);
+    }
+    const updatedData = processResult?.updatedDatas;
+    if (Array.isArray(updatedData)) {
+      // Create a new array with simplified objects
+      const simplifiedData = updatedData.map((originalObject: any) => {
+        // Initialize acc with an explicit type annotation
+        const acc: { [key: string]: any } = {};
+
+        // Extract key-value pairs where values are not arrays or objects
+        const simplifiedObject = Object.entries(originalObject).reduce((acc, [key, value]) => {
+          if (!Array.isArray(value) && typeof value !== 'object') {
+            acc[key] = value;
+          }
+          return acc;
+        }, acc);
+
+        return simplifiedObject;
+      });
+      logger.info("SimplifiedData for sheet : " + JSON.stringify(simplifiedData))
+      const ws = XLSX.utils.json_to_sheet(simplifiedData);
+
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+      const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+      const formData = new FormData();
+      formData.append('file', buffer, 'filename.xlsx');
+      formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+      formData.append('module', 'pgr');
+
+      logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+      var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+        {
+          'Content-Type': 'multipart/form-data',
+          'auth-token': request?.body?.RequestInfo?.authToken
+        }
+      );
+      const responseData = fileCreationResult?.files;
+      logger.info("Response data after File Creation : " + JSON.stringify(responseData));
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        Job.ingestionDetails.history.push({
+          id: uuidv4(),
+          campaignId: Job.ingestionDetails.campaignDetails.id,
+          fileStoreId: responseData[0].fileStoreId,
+          tenantId: responseData[0].tenantId,
+          state: "Not-Started",
+          fileType: "xlsx",
+          ingestionType: parsingTemplate.ingestionType,
+          additionalDetails: "{}",
+          auditDetails: {
+            createdBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdBy,
+            createdTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdTime,
+            lastModifiedBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedBy,
+            lastModifiedTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedTime
+          }
+        });
+      }
+    }
+  }
+
+}
+
+function generateSortingAndPaginationClauses(pagination: Pagination): string {
+  let clauses = '';
+
+  if (pagination && pagination.sortBy && pagination.sortOrder) {
+    clauses += ` ORDER BY ${pagination.sortBy} ${pagination.sortOrder}`;
+  }
+
+  if (pagination && pagination.limit !== undefined) {
+    clauses += ` LIMIT ${pagination.limit}`;
+  }
+
+  if (pagination && pagination.offset !== undefined) {
+    clauses += ` OFFSET ${pagination.offset}`;
+  }
+
+  return clauses;
+}
+
+const handleEventHistoryMessage = async (messageObject: any, eventHistoryMessage: string) => {
+  logger.info("Event history message : " + eventHistoryMessage)
+  let additionalDetails = JSON.parse(messageObject?.Job?.ingestionDetails?.campaignDetails?.additionalDetails);
+  additionalDetails.errorMessage = eventHistoryMessage;
+  messageObject.Job.ingestionDetails.campaignDetails.additionalDetails = JSON.stringify(additionalDetails);
+  produceModifiedMessages(messageObject.Job.ingestionDetails, config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC)
+
+  // Check if the eventHistoryMessage contains "INVALID_BOUNDARY_DATA"
+  // if (eventHistoryMessage && eventHistoryMessage.includes("INVALID_BOUNDARY_DATA")) {
+  //   // Find the index after "400 :"
+  //   const jsonStartIndex = eventHistoryMessage.indexOf("400 : ") + 5;
+  //   if (jsonStartIndex !== -1) {
+  //     try {
+  //       // Extract JSON data after "400 :" and parse it
+  //       const jsonString = eventHistoryMessage.substring(jsonStartIndex).trim();
+  //       const parsedMessage = JSON.parse(jsonString);
+
+  //       // Access the boundary code from the parsed message
+  //       if (parsedMessage?.[0]?.Errors?.[0]?.message) {
+  //         const codeMessage = parsedMessage?.[0]?.Errors?.[0]?.message;
+  //         const words = codeMessage.split(' ');
+  //         const boundaryCode = words[6];
+  //         logger.info(codeMessage)
+  //         logger.info("Error Boundary Code : " + boundaryCode)
+  //         const fileStoreId = messageObject?.Job?.fileStoreId;
+  //         if (fileStoreId) {
+  //           const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${messageObject?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+  //           logger.info("File fetching url : " + url)
+  //           const fileResponse = await httpRequest(url, undefined, undefined, 'get');
+  //           if (fileResponse?.fileStoreIds.length === 0) {
+  //             throw new Error("File store Id invalid");
+  //           }
+  //           const workbook = await getWorkbook(fileResponse.fileStoreIds[0].url);
+  //         } else {
+  //           console.error("fileStoreId not found in messageObject:", messageObject);
+  //         }
+  //       } else {
+  //         console.error("Invalid event history message format:", eventHistoryMessage);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error parsing JSON:", error);
+  //     }
+  //   } else {
+  //     console.error("Unknown event history message format for INVALID_BOUNDARY_DATA:", eventHistoryMessage);
+  //   }
+  // }
+  // else {
+  //   logger.info("Unknown event history message : " + eventHistoryMessage)
+  // }
+}
+
+
+
+
+
+
+
 
 export {
   errorResponder,
@@ -218,5 +482,10 @@ export {
   extractEstimateIds,
   cacheResponse,
   getCachedResponse,
-  produceIngestion
+  produceIngestion,
+  waitAndCheckIngestionStatus,
+  getCampaignDetails,
+  processFile,
+  generateSortingAndPaginationClauses,
+  handleEventHistoryMessage
 };

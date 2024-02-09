@@ -1,0 +1,724 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation"
+basePath: "/api/v1"
+schemes:
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /hcm-bff/api/_create:
+    post:
+      summary: "This API endpoint facilitates the creation of API resources"
+      description: "This API endpoint facilitates the creation of API resources"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                  authToken:
+                    type: "string"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                      uuid:
+                        type: "string"
+                      userName:
+                        type: "string"
+                      name:
+                        type: "string"
+                      mobileNumber:
+                        type: "string"
+                      emailId:
+                        type: "string"
+                      locale:
+                        type: "string"
+                      type:
+                        type: "string"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                            code:
+                              type: "string"
+                            tenantId:
+                              type: "string"
+                      active:
+                        type: "boolean"
+                      tenantId:
+                        type: "string"
+                      permanentCity:
+                        type: "string"
+                  msgId:
+                    type: "string"
+                  plainAccessRequest:
+                    type: "object"
+              ResourceDetails:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                  fileStoreId:
+                    type: "string"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                    example: "Rainmaker"
+                  authToken:
+                    type: "string"
+                    example: "4647c997-849a-4126-9ee6-b7f0783d35ce"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                        example: 281
+                      uuid:
+                        type: "string"
+                        example: "3ae47a59-ed1e-489d-b8fb-a78e7a167966"
+                      userName:
+                        type: "string"
+                        example: "EMP54"
+                      name:
+                        type: "string"
+                        example: "Jagan"
+                      mobileNumber:
+                        type: "string"
+                        example: "6667776662"
+                      emailId:
+                        type: "string"
+                        example: "xyz@egovernments.org"
+                      locale:
+                        type: "string"
+                        example: "en_US"
+                      type:
+                        type: "string"
+                        example: "EMPLOYEE"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                              example: "System Administrator"
+                            code:
+                              type: "string"
+                              example: "SYSTEM_ADMINISTRATOR"
+                            tenantId:
+                              type: "string"
+                              example: "mz"
+                      active:
+                        type: "boolean"
+                        example: true
+                      tenantId:
+                        type: "string"
+                        example: "mz"
+                      permanentCity:
+                        type: "string"
+                        example: "Amritsar"
+                  msgId:
+                    type: "string"
+                    example: "1707459080569|en_IN"
+                  plainAccessRequest:
+                    type: "object"
+                    example: {}
+              ResponseDetails:
+                type: "object"
+                properties:
+                  status:
+                    type: "string"
+                    example: "data-accepted"
+                  id:
+                    type: "string"
+                    example: "cf3bd20c-5ac3-4af1-a303-55445049b289"
+                  processReferenceNumber:
+                    type: "string"
+                    example: "PRO-001-001-001"
+                  fileStoreId:
+                    type: "string"
+                    example: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                  type:
+                    type: "string"
+                    example: "facility"
+        400:
+          description: "Error response"
+          schema:
+            type: "object"
+            properties:
+              ResponseInfo:
+                type: "object"
+                example: null
+              Errors:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    code:
+                      type: "string"
+                      example: "IDGEN_ERROR"
+                    message:
+                      type: "string"
+                      example: "No ids returned from idgen Service"
+                    description:
+                      type: "string"
+                      example: null
+                    params:
+                      type: "string"
+                      example: null
+  /hcm-bff/api/_search:
+    post:
+      summary: "This API endpoint searches for API resources"
+      description: "This API endpoint searches for API resources"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request body"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                  authToken:
+                    type: "string"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                      uuid:
+                        type: "string"
+                      userName:
+                        type: "string"
+                      name:
+                        type: "string"
+                      mobileNumber:
+                        type: "string"
+                      emailId:
+                        type: "string"
+                      locale:
+                        type: "string"
+                      type:
+                        type: "string"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                            code:
+                              type: "string"
+                            tenantId:
+                              type: "string"
+                      active:
+                        type: "boolean"
+                      tenantId:
+                        type: "string"
+                      permanentCity:
+                        type: "string"
+                  msgId:
+                    type: "string"
+                  plainAccessRequest:
+                    type: "object"
+              SearchCriteria:
+                type: "object"
+                properties:
+                  id:
+                    type: array
+                    items:
+                      type: string
+                  processReferenceNumber:
+                    type: "string"
+                  type:
+                    type: "string"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                    example: "Rainmaker"
+                  authToken:
+                    type: "string"
+                    example: "4647c997-849a-4126-9ee6-b7f0783d35ce"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                        example: 281
+                      uuid:
+                        type: "string"
+                        example: "3ae47a59-ed1e-489d-b8fb-a78e7a167966"
+                      userName:
+                        type: "string"
+                        example: "EMP54"
+                      name:
+                        type: "string"
+                        example: "Jagan"
+                      mobileNumber:
+                        type: "string"
+                        example: "6667776662"
+                      emailId:
+                        type: "string"
+                        example: "xyz@egovernments.org"
+                      locale:
+                        type: "string"
+                        example: "en_US"
+                      type:
+                        type: "string"
+                        example: "EMPLOYEE"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                              example: "System Administrator"
+                            code:
+                              type: "string"
+                              example: "SYSTEM_ADMINISTRATOR"
+                            tenantId:
+                              type: "string"
+                              example: "mz"
+                      active:
+                        type: "boolean"
+                        example: true
+                      tenantId:
+                        type: "string"
+                        example: "mz"
+                      permanentCity:
+                        type: "string"
+                        example: "Amritsar"
+                  msgId:
+                    type: "string"
+                    example: "1707459080569|en_IN"
+                  plainAccessRequest:
+                    type: "object"
+                    example: {}
+              ResponseDetails:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    status:
+                      type: "string"
+                      example: "data-accepted"
+                    id:
+                      type: "string"
+                      example: "cf3bd20c-5ac3-4af1-a303-55445049b289"
+                    processReferenceNumber:
+                      type: "string"
+                      example: "PRO-001-001-001"
+                    fileStoreId:
+                      type: "string"
+                      example: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                    type:
+                      type: "string"
+                      example: "facility"
+                    additionalDetails:
+                      type: "object"
+                      example: {}
+                    auditDetails:
+                      type: "object"
+                      properties:
+                        createdBy:
+                          type: "string"
+                          example: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        lastModifiedBy:
+                          type: "string"
+                          example: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        createdTime:
+                          type: "string"
+                          example: "1644426612"
+                        lastModifiedTime:
+                          type: "string"
+                          example: "1644426612"
+                  example:
+                    - status: "data-accepted"
+                      id: "cf3bd20c-5ac3-4af1-a303-55445049b289"
+                      processReferenceNumber: "PRO-001-001-001"
+                      fileStoreId: "a47e3f92-5c05-4abf-bf4e-17d2d4a35a72"
+                      type: "facility"
+                      additionalDetails: {}
+                      auditDetails:
+                        createdBy: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        lastModifiedBy: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        createdTime: "1644426612"
+                        lastModifiedTime: "1644426612"
+                    - status: "data-rejected"
+                      id: "7cb9e05f-0cb4-4386-b221-1f8a001d4e0c"
+                      processReferenceNumber: "PRO-001-001-002"
+                      fileStoreId: "5a2e0b15-fd7d-44ee-8ef7-811722a15e6f"
+                      type: "service"
+                      additionalDetails: {}
+                      auditDetails:
+                        createdBy: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        lastModifiedBy: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        createdTime: "1644426612"
+                        lastModifiedTime: "1644426612"
+        400:
+          description: "Error response"
+          schema:
+            type: "object"
+            properties:
+              ResponseInfo:
+                type: "object"
+                example: null
+              Errors:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    code:
+                      type: "string"
+                      example: "SEARCH_ERROR"
+                    message:
+                      type: "string"
+                      example: "Some error occured in search"
+                    description:
+                      type: "string"
+                      example: null
+                    params:
+                      type: "string"
+                      example: null
+  /hcm-bff/api/_generate:
+    post:
+      summary: "This API endpoint updates the API resources table"
+      description: "This API endpoint updates the API resources table"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request body for update"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                  authToken:
+                    type: "string"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                      uuid:
+                        type: "string"
+                      userName:
+                        type: "string"
+                      name:
+                        type: "string"
+                      mobileNumber:
+                        type: "string"
+                      emailId:
+                        type: "string"
+                      locale:
+                        type: "string"
+                      type:
+                        type: "string"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                            code:
+                              type: "string"
+                            tenantId:
+                              type: "string"
+                      active:
+                        type: "boolean"
+                      tenantId:
+                        type: "string"
+                      permanentCity:
+                        type: "string"
+                  msgId:
+                    type: "string"
+                  plainAccessRequest:
+                    type: "object"
+        - in: "query"
+          name: "type"
+          description: "Type parameter"
+          required: true
+          type: "string"
+        - in: "query"
+          name: "forceUpdate"
+          description: "ForceUpdate parameter"
+          type: "boolean"
+      responses:
+        200:
+          description: "Successful response for update"
+          schema:
+            type: "object"
+            properties:
+              ResponseDetails:
+                type: "object"
+                properties:
+                  type:
+                    type: "string"
+                    example: "facility"
+                  status:
+                    type: "string"
+                    example: "Table up to date"
+
+
+        400:
+          description: "Error response for update"
+          schema:
+            type: "object"
+            properties:
+              ResponseInfo:
+                type: "object"
+                example: null
+              Errors:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    code:
+                      type: "string"
+                      example: "GENERATION_ERROR"
+                    message:
+                      type: "string"
+                      example: "Some problem in generation"
+                    description:
+                      type: "string"
+                      example: null
+                    params:
+                      type: "string"
+                      example: null
+  /hcm-bff/api/_download:
+    post:
+      summary: "To Download API resources"
+      description: "This API endpoint fetches the download url for excel file that contains API Resources"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Request body for update"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                  authToken:
+                    type: "string"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                      uuid:
+                        type: "string"
+                      userName:
+                        type: "string"
+                      name:
+                        type: "string"
+                      mobileNumber:
+                        type: "string"
+                      emailId:
+                        type: "string"
+                      locale:
+                        type: "string"
+                      type:
+                        type: "string"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                            code:
+                              type: "string"
+                            tenantId:
+                              type: "string"
+                      active:
+                        type: "boolean"
+                      tenantId:
+                        type: "string"
+                      permanentCity:
+                        type: "string"
+                  msgId:
+                    type: "string"
+                  plainAccessRequest:
+                    type: "object"
+        - in: "query"
+          name: "type"
+          description: "Type parameter"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful response for update"
+          schema:
+            type: "object"
+            properties:
+              RequestInfo:
+                type: "object"
+                properties:
+                  apiId:
+                    type: "string"
+                    example: "Rainmaker"
+                  authToken:
+                    type: "string"
+                    example: "4647c997-849a-4126-9ee6-b7f0783d35ce"
+                  userInfo:
+                    type: "object"
+                    properties:
+                      id:
+                        type: "integer"
+                        example: 281
+                      uuid:
+                        type: "string"
+                        example: "3ae47a59-ed1e-489d-b8fb-a78e7a167966"
+                      userName:
+                        type: "string"
+                        example: "EMP54"
+                      name:
+                        type: "string"
+                        example: "Jagan"
+                      mobileNumber:
+                        type: "string"
+                        example: "6667776662"
+                      emailId:
+                        type: "string"
+                        example: "xyz@egovernments.org"
+                      locale:
+                        type: "string"
+                        example: "en_US"
+                      type:
+                        type: "string"
+                        example: "EMPLOYEE"
+                      roles:
+                        type: "array"
+                        items:
+                          type: "object"
+                          properties:
+                            name:
+                              type: "string"
+                              example: "System Administrator"
+                            code:
+                              type: "string"
+                              example: "SYSTEM_ADMINISTRATOR"
+                            tenantId:
+                              type: "string"
+                              example: "mz"
+                      active:
+                        type: "boolean"
+                        example: true
+                      tenantId:
+                        type: "string"
+                        example: "mz"
+                      permanentCity:
+                        type: "string"
+                        example: "Amritsar"
+                  msgId:
+                    type: "string"
+                    example: "1707459080569|en_IN"
+                  plainAccessRequest:
+                    type: "object"
+                    example: {}
+              fileStoreIds:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    fileStoreid:
+                      type: "string"
+                      example: "c0ab3641-97bb-4601-9a8a-60bb9db59708"
+                    type:
+                      type: "string"
+                      example: "facility"
+                    url:
+                      type: "string"
+                      example: "https://unified-uat-filestore.s3-ap-south-1.amazonaws.com/mz/pgr/February/8/1707393265007mXVKObMAqy.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCURO6LLX5SS6CNF%2F20240209%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20240209T091624Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=507dd50aa25be05789aaf0c0f4cdcb1555f59053b299fef5228f218eb67e3218"
+                    additionalDetails:
+                      type: "object"
+                      example : {}
+                    auditDetails:
+                      type: "object"
+                      properties:
+                        createdBy:
+                          type: "string"
+                          example: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        lastModifiedBy:
+                          type: "string"
+                          example: "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6"
+                        createdTime:
+                          type: "string"
+                          example: "1644426612"
+                        lastModifiedTime:
+                          type: "string"
+                          example: "1644426612"
+
+
+
+        400:
+          description: "Error response for update"
+          schema:
+            type: "object"
+            properties:
+              ResponseInfo:
+                type: "object"
+                example: null
+              Errors:
+                type: "array"
+                items:
+                  type: "object"
+                  properties:
+                    code:
+                      type: "string"
+                      example: "GENERATION_ERROR"
+                    message:
+                      type: "string"
+                      example: "Some problem in generation"
+                    description:
+                      type: "string"
+                      example: null
+                    params:
+                      type: "string"
+                      example: null
