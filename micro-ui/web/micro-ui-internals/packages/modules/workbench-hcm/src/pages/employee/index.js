@@ -10,6 +10,8 @@ import ViewProject from "./ViewProject";
 import CreateCampaign from "./CreateCampaign";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
+import CampaignInbox from "./CampaignInbox";
+import ViewCampaign from "./ViewCampaign";
 
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
@@ -162,11 +164,13 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/boundary`} component={() => <DataIngestionComponent ingestionType={"boundary"} />} />
           <PrivateRoute path={`${path}/project`} component={() => <DataIngestionComponent ingestionType={"project"} />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
+          <PrivateRoute path={`${path}/view-campaign`} component={() => <ViewCampaign />} />
           <PrivateRoute path={`${path}/microplan`} component={() => <DataIngestionComponent ingestionType={"microplan"} />} />
           <PrivateRoute path={`${path}/response`} component={() => <IngestionResponse />} />
           <PrivateRoute path={`${path}/campaign`} component={() => <CreateCampaign />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
+          <PrivateRoute path={`${path}/inbox-campaign`} component={() => <CampaignInbox />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
