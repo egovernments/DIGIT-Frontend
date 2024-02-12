@@ -60,6 +60,9 @@ const commonArgs = {
       maxlength: "",
       minlength: "",
     },
+    onIconSelection: () => {
+      console.log("Icon Clicked");
+    },
   },
   value: "",
   error: "",
@@ -80,9 +83,6 @@ Default.args = {
   ...commonArgs,
   populators: {
     ...commonArgs.populators,
-    onIconSelection: () => {
-      console.log("Icon Clicked");
-    },
   },
 };
 

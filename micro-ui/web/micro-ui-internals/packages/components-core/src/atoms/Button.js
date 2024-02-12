@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Button = (props) => {
-  
-const capitalizeFirstLetter = (str) => {
+  const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
@@ -16,18 +15,19 @@ const capitalizeFirstLetter = (str) => {
     return label;
   };
 
-
-  //To render the icon 
+  //To render the icon
   const IconRender = () => {
     const iconFill = props?.variation === "primary" ? "#FFFFFF" : props?.isDisabled ? "#B1B4B6" : "#F47738";
     const iconReq = props?.icon;
+    const width = props?.variation === "link" ? "1.25" : "1.5rem";
+    const height = props?.variation === "link" ? "1.25" : "1.5rem";
     try {
       const components = require("@egovernments/digit-ui-svg-components");
       const DynamicIcon = components?.[iconReq];
       if (DynamicIcon) {
         const svgElement = DynamicIcon({
-          width: "1.5rem",
-          height: "1.5rem",
+          width: width,
+          height: height,
           fill: iconFill,
           className: "digit-button-customIcon",
         });
@@ -43,7 +43,7 @@ const capitalizeFirstLetter = (str) => {
   };
 
   const icon = IconRender();
-  const formattedLabel = (props?.variation === "link") ? props?.label : capitalizeFirstLetter(truncateLabel(props?.label));
+  const formattedLabel = props?.variation === "link" ? props?.label : capitalizeFirstLetter(truncateLabel(props?.label));
 
   return (
     <button
@@ -57,7 +57,7 @@ const capitalizeFirstLetter = (str) => {
       disabled={props?.isDisabled || null}
       style={props.style ? props.style : null}
     >
-      <div className="icon-label-container">
+      <div className={`icon-label-container ${props?.variation ? props?.variation : ""}`}>
         {!props?.isSuffix && props?.icon && icon}
         <h2 style={{ ...props?.textStyles }} className="digit-button-label">
           {formattedLabel}

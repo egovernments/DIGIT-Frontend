@@ -15,6 +15,12 @@
 .digit-text-input {
   @apply relative w-full;
 
+  &.geolocation {
+    input {
+      pointer-events: none;
+    }
+  }
+
   &.numeric {
     input {
       text-align: center;
@@ -22,26 +28,36 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
+    .input-container:focus-within {
+      input {
+        border-left-style: hidden;
+        border-right-style: hidden;
+      }
+    }
   }
 
-  &.error {
-
-    input,
-    .digit-prefix,
-    .digit-suffix,
-    .digit-numeric-button-prefix,
-    .digit-numeric-button-suffix {
-      border: 1.5px solid theme(digitv2.alert.error);
+  &.prefix {
+    .input-container:focus-within {
+      input {
+        border-left-style: hidden;
+      }
     }
+  }
 
-    .digit-numeric-button-prefix,
-    .digit-prefix {
-      border-right-style: hidden;
+  &.suffix {
+    .input-container:focus-within {
+      input {
+        border-right-style: hidden;
+      }
     }
+  }
 
-    .digit-numeric-button-suffix,
-    .digit-suffix {
-      border-left-style: hidden;
+  &.password {
+    input {
+      font-size: 24px;
+      font-weight: theme(digitv2.fontWeight.bold);
+      line-height: 28px;
     }
   }
 
@@ -52,11 +68,11 @@
     .digit-suffix,
     .digit-numeric-button-prefix,
     .digit-numeric-button-suffix {
-      @apply border-grey-dark text-grey-dark !important;
       pointer-events: none !important;
       cursor: not-allowed;
       background-color: theme(digitv2.lightTheme.background);
       border: 1px solid theme(digitv2.lightTheme.divider);
+      color: theme(digitv2.lightTheme.divider);
     }
 
     input {
@@ -144,6 +160,47 @@
       filter: invert(74%) sepia(7%) saturate(64%) hue-rotate(144deg) brightness(98%) contrast(89%);
     }
   }
+
+  &.error {
+
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
+      border: 1.5px solid theme(digitv2.alert.error);
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right: 1px solid theme(digitv2.lightTheme.text-color-secondary);
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left: 1px solid theme(digitv2.lightTheme.text-color-secondary);
+    }
+
+    &.numeric {
+      input {
+        border-left-style: hidden;
+        border-right-style: hidden;
+      }
+    }
+
+    &.suffix {
+      input {
+        border-right-style: hidden;
+      }
+    }
+
+    &.prefix {
+      input {
+        border-left-style: hidden;
+      }
+    }
+  }
+
 }
 
 
@@ -299,10 +356,6 @@
   border: 1.5px solid theme(digitv2.alert.error);
 }
 
-.disabled {
-  @apply border-grey-dark text-grey-dark !important;
-  pointer-events: none !important;
-}
 
 .input-container {
   position: relative;
@@ -325,12 +378,12 @@
 
   .digit-numeric-button-prefix,
   .digit-prefix {
-    border-right-style: hidden;
+    border-right: 1px solid theme(digitv2.lightTheme.text-color-secondary);
   }
 
   .digit-numeric-button-suffix,
   .digit-suffix {
-    border-left-style: hidden;
+    border-left: 1px solid theme(digitv2.lightTheme.text-color-secondary);
   }
 }
 
