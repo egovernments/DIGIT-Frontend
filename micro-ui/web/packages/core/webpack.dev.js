@@ -8,11 +8,11 @@ module.exports = () => {
   const devConfig = {
     mode: "development",
     output: {
-      publicPath: `https://localhost:${process.env.REACT_APP_PORT}/`,
+      publicPath: `https://localhost:8000/`,
       filename: "[name].[contenthash].js",
     },
     devServer: {
-      port: process.env.REACT_APP_PORT,
+      port: 8000,
       proxy: [
         {
           context: () => true,

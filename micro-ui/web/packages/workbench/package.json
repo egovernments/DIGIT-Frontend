@@ -23,6 +23,7 @@
     "@babel/preset-env":"7.23.9"
   },
   "dependencies": {
+    "single-spa": "^5.9.3",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.6",
     "@digit-ui/digit-ui-module-core-base": "1.0.8",
     "@egovernments/digit-ui-react-components": "1.4.106",

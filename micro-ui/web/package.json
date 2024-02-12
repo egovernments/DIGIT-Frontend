@@ -19,10 +19,7 @@
     "packages/dss",
     "packages/hrms",
     "packages/core",
-    "packages/workbench",
-    "packages/ui-components",
-    "packages/ui-libraries",
-    "packages/ui-core"
+    "packages/workbench"
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -30,7 +27,8 @@
     "build:core":"cd packages/core && yarn build",
     "build:hrms":"cd packages/hrms && yarn build",
     "build:workbench":"cd packages/workbench && yarn build",
-    "build:dss":"cd packages/dss && yarn build"
+    "build:dss":"cd packages/dss && yarn build",
+    "start:core":"cd packages/core && yarn start"
   },
   "dependencies": {
     "dotenv": "^16.3.1"

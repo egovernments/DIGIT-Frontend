@@ -6,18 +6,27 @@ import useAuth from "./hooks/useAuth";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
+import { QueryClient } from "react-query";
+import registerRemotes from "./modules/registerRemotes"
+
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
-const AuthLazy = lazy(() => import("./modules/Auth"));
-const DashboardLazy = lazy(() => import("./modules/Dashboard"));
-const HrmsLazy = lazy(()  => import("./modules/Hrms"));
-const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
-const DssLazy = lazy(() => import("./modules/Dss"));
-const MeasurementLazy = lazy(() => import("./modules/Measurement"));
+// const AuthLazy = lazy(() => import("./modules/Auth"));
+// const DashboardLazy = lazy(() => import("./modules/Dashboard"));
+// const HrmsLazy = lazy(()  => import("./modules/Hrms"));
+// const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
+// const DssLazy = lazy(() => import("./modules/Dss"));
+// const MeasurementLazy = lazy(() => import("./modules/Measurement"));
+
 
 initLibraries().then(() => {
   initDigitUI();
 });
+
+//registering remote apps
+const queryClient = new QueryClient();
+registerRemotes(queryClient)
+
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
@@ -28,6 +37,7 @@ const App = () => {
   
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   
+
   return (
     <div>
       <div
@@ -47,7 +57,7 @@ const App = () => {
    
         <Suspense fallback={<Loader />}>
           <Switch>
-            <Route path="/auth">
+            {/* <Route path="/auth">
               <AuthLazy login={login} history={history} />
             </Route>
             <Route path="/dashboard">
@@ -64,7 +74,7 @@ const App = () => {
             </Route>
             <Route path="/measurement">
               <MeasurementLazy />
-            </Route>
+            </Route> */}
 
             <Route path="/">{
               <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />

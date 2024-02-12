@@ -25,10 +25,8 @@
   },
   "dependencies": {
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
-    
-    
+    "single-spa": "^5.9.3",
     "@egovernments/digit-ui-react-components":"1.4.107",
-    
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-query": "3.6.1",
