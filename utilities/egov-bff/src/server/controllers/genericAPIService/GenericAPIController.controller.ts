@@ -14,7 +14,10 @@ import {
     sendResponse,
 } from "../../utils/index";
 // import { httpRequest } from "../../utils/request";
-
+import { Pool } from 'pg';
+import { generateXlsxFromJson } from "../../utils/index"
+import { errorResponder } from "../../utils/index";
+import { generateAuditDetails } from "../../utils/index";
 // Define the MeasurementController class
 class genericAPIController {
     // Define class properties
@@ -30,6 +33,7 @@ class genericAPIController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/_validate`, this.validateData);
+        this.router.post(`${this.path}/_download`, this.downloadData);
     }
     validateData = async (
         request: express.Request,
@@ -57,7 +61,51 @@ class genericAPIController {
         return sendResponse(response, {}, request);
     };
 
-}
 
+
+    downloadData = async (request: express.Request, response: express.Response) => {
+        try {
+            const type = request.query.type;
+            const pool = new Pool({
+                user: config.DB_USER,
+                host: config.DB_HOST,
+                database: config.DB_NAME,
+                password: config.DB_PASSWORD,
+                port: parseInt(config.DB_PORT)
+            });
+            let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1";
+            console.log(queryString)
+            const queryResult = await pool.query(queryString, [type]);
+            console.log(queryResult, "qqqqqqqqqqqqqqq");
+            // response.json(queryResult.rows);
+            const responseData = queryResult.rows;
+            console.log(responseData, "mmmmmmmmmmmmmmmmmmmmmmmm")
+            await pool.end();
+            if (responseData.length > 0) {
+                let  result = [];
+                result=  await generateXlsxFromJson(request, response, responseData);
+                console.log(result,"resssssuuuuultt")
+                const auditDetails = await generateAuditDetails(request);
+                const transformedResponse = result.map((item: any) => {
+                    return {
+                        fileStoreId: item.fileStoreId,
+                        additionalDetails: {},
+                        type: type,
+                        url: config.host.filestore + config.paths.filestore + "?" + type,
+                        auditDetails: auditDetails // Use the generated audit details for each item
+                    };
+                });
+                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+            }
+            else {
+                return errorResponder({ message: "No data present of  given type " + "    Check Logs" }, request, response);
+            }
+        } catch (e: any) {
+            logger.error(String(e));
+            return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+        }
+    };
+}
 // Export the MeasurementController class
 export default genericAPIController;
+
