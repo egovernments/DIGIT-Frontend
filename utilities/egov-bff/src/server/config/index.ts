@@ -57,6 +57,9 @@ const config = {
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
       || "https://unified-uat.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST
+      // || "http://localhost:8086/"
+      || "https://unified-uat.digit.org/",
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT

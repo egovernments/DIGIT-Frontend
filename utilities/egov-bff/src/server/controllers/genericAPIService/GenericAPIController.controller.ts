@@ -7,7 +7,8 @@ import {
     getSheetData,
     //     getSheetData,
     searchMDMS,
-    getSchema
+    getSchema,
+    createValidatedData
 } from "../../api/index";
 
 import {
@@ -37,9 +38,35 @@ class genericAPIController {
 
     // Initialize routes for MeasurementController
     public intializeRoutes() {
+        this.router.post(`${this.path}/_create`, this.createData);
         this.router.post(`${this.path}/_validate`, this.validateData);
         this.router.post(`${this.path}/_download`, this.downloadData);
     }
+    createData = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            const { type } = request?.body?.ResourceDetails;
+            const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+            const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
+            if (result?.validationResult == "VALID_DATA") {
+                const createdResult = await createValidatedData(result?.data, type, request.body)
+                logger.info(type + " creation result : " + createdResult)
+                return sendResponse(response, {}, request);
+            }
+            else if (result?.validationResult == "INVALID_DATA") {
+                throw new Error(result?.validationResult);
+            }
+            else {
+                throw new Error("Error during validated data, Check Logs");
+            }
+        } catch (error: any) {
+            logger.error(error);
+            return sendResponse(response, {}, request);
+        }
+    }
+
     validateData = async (
         request: express.Request,
         response: express.Response
@@ -91,8 +118,6 @@ class genericAPIController {
                     logger.error(processResult.Error);
                     throw new Error(processResult.Error);
                 }
-
-                // Further processing with processResult here if needed
             }
 
             const healthMaster = `Health.${type.charAt(0).toUpperCase()}${type.slice(1)}`;
@@ -102,10 +127,14 @@ class genericAPIController {
 
             // Validate data with schema
             const validationErrors: any[] = [];
+            const validatedData: any[] = [];
             processResult.updatedDatas.forEach((data: any) => {
                 const validationResult = validateDataWithSchema(data, schemaDef);
                 if (!validationResult.isValid) {
                     validationErrors.push({ data, error: validationResult.error });
+                }
+                else {
+                    validatedData.push(data)
                 }
             });
 
@@ -117,14 +146,13 @@ class genericAPIController {
                 const errors = [...validationErrors, ...mdmsErrors];
                 return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
             } else {
-                return sendResponse(response, { "validationResult": "VALID_DATA" }, request);
+                return sendResponse(response, { "validationResult": "VALID_DATA", "data": validatedData }, request);
             }
         } catch (error: any) {
             logger.error(error);
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
     };
-
 
     downloadData = async (request: express.Request, response: express.Response) => {
         try {

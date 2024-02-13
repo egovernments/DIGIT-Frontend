@@ -336,10 +336,57 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
+const getTypeUrl = (type: string): string => {
+  if (type === "facility") {
+    return "facility/v1/bulk/_create";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const getCreationType = (type: string): string => {
+  if (type === "facility") {
+    return "bulk";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const getCreationKey = (type: string): string => {
+  if (type === "facility") {
+    return "Facilities";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const createValidatedData: any = async (data: any[], type: string, request: any, response: any) => {
+  const url = getTypeUrl(type);
+  const creationType = getCreationType(type);
+  const creationKey = getCreationKey(type)
+  if (creationType == "bulk") {
+    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: data };
+    logger.info("Creation Request : " + JSON.stringify(creationRequest))
+    logger.info("Creation url : " + config.host.facilityHost + url);
+    const result = await httpRequest(`${config.host.facilityHost}${url}`, creationRequest, undefined, undefined, undefined, undefined);
+    if (result?.status == "successful") {
+      return "SUCCESS"
+    }
+    return "FAILED";
+  }
+  else {
+    return "FAILED";
+  }
+}
+
 
 export {
   getSheetData,
   searchMDMS,
   getCampaignNumber,
-  getSchema
+  getSchema,
+  createValidatedData
 };
