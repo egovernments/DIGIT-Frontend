@@ -17,6 +17,8 @@ RUN yarn cache clean
 # Install dependencies
 RUN yarn install
 
+RUN yarn add @digit-ui/digit-ui-module-core-base@1.0.8
+
 # Copy the rest of the application
 COPY . .
 
