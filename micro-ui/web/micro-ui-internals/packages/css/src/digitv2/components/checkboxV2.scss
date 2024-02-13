@@ -4,31 +4,12 @@
   @apply flex mb-md relative;
   gap: 1rem;
 
-  @media (min-width: 481px) {
-    /* Media query for tablets */
-    max-width: 27.5rem;
-    min-width: 12.5rem;
-  }
-
-  @media (max-width: 480px) {
-    /* Media query for mobile */
-    max-width: 20.5rem;
-    min-width: 9.75rem;
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    /* Media query for desktop */
-    max-width: 37.5rem;
-    min-width: 12.5rem;
-  }
-
   input {
-    @apply opacity-0 absolute cursor-pointer;
+    @apply opacity-0 absolute cursor-pointer top-0 z-10;
     @extend .light-input-border;
-    width: 1.5rem;
-    height: 1.5rem;
-    top: 25%;
+    width: 2.5rem;
+    height: 2.5rem;
+    left:-1%;
   }
 
   .input-emp {
@@ -36,12 +17,16 @@
   }
 
   .digit-custom-checkbox {
-    @apply flex items-center border border-solid border-text-secondary justify-center;
+    @apply flex items-center border border-solid border-text-secondary justify-center ;
     width: 1.5rem;
     height: 1.5rem;
 
     img,svg{
       @apply opacity-0;
+    }
+
+    &:hover{
+      @apply border-2 border-primary-main;
     }
   }
 
@@ -74,6 +59,7 @@
     font-size: 1rem;
     font-style: theme(digitv2.fontStyle.normal);
     font-family: theme(digitv2.fontFamily.sans);
+    word-break: break-word;
   }
 
   &.disabled {

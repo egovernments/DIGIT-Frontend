@@ -39,7 +39,7 @@ const CheckBox = ({
           )}
         </p>
       ) : null}
-      <div style={{cursor:"pointer"}}>
+      <div style={{ cursor: "pointer", display:"flex",position:"relative" }}>
         <input
           type="checkbox"
           className={`input ${userType === "employee" ? "input-emp" : ""}`}
@@ -51,7 +51,7 @@ const CheckBox = ({
           checked={checked}
         />
         <p className={`digit-custom-checkbox ${userType === "employee" ? "digit-custom-checkbox-emp" : ""}`}>
-          <SVG.Check fill={disabled ? "#B1B4B6" : "#F47738"}/>
+          <SVG.Check fill={disabled ? "#B1B4B6" : "#F47738"} />
         </p>
       </div>
       {!isLabelFirst ? (

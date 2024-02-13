@@ -183,6 +183,7 @@ const FieldV1 = ({
               style={populators?.labelStyles}
               customLabelMarkup={populators?.customLabelMarkup}
               disabled={disabled}
+              isLabelFirst={populators?.isLabelFirst}
             />
           </div>
         );
