@@ -26,7 +26,8 @@
   "dependencies": {
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
     
-    
+    "@digit-ui/digit-ui-module-core-base":"1.0.8",
+
     "@egovernments/digit-ui-react-components":"1.4.107",
     
     "react": "17.0.1",
