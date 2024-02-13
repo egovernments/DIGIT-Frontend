@@ -89,7 +89,7 @@ import useGetFAQsJSON from "./useGetFAQsJSON";
 import useGetHowItWorksJSON from "./useHowItWorksJSON";
 import { usePrivacyContext } from "./usePrivacyContext";
 import useStaticData from "./useStaticData";
-
+import useScrollPersistence from "./useScrollPersistence";
 
 
 const pgr = {
@@ -210,7 +210,8 @@ const Hooks = {
   useStaticData,
   useDynamicData,
   useBulkPdfDetails,
-  useLocation
+  useLocation,
+  useScrollPersistence
 };
 
 export default Hooks;
