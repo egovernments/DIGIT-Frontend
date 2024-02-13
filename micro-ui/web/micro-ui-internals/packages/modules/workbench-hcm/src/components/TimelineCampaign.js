@@ -22,6 +22,7 @@ const getAction = (flow) => {
   }
 };
 const TimelineCampaign = ({ currentStep = 1, flow = "" , onStepClick }) => {
+  // console.log("currentStep", currentStep);
   const { t } = useTranslation();
   const isMobile = window.Digit.Utils.browser.isMobile();
   getAction(flow);

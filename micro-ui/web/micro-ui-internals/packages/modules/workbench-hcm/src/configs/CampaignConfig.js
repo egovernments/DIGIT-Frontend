@@ -6,11 +6,11 @@ export const CampaignConfig = [
             body: [
                 {
                   isMandatory: false,
-                  key: "campaignName",
+                  key: "campaignName0",
                   type: "text",
                   label: "CAMPAIGN_NAME",
                   populators: {
-                    name: "campaignName",
+                    name: "campaignName0",
                     error: "ES_TQM_REQUIRED",
                     required: true,
                   },
@@ -22,24 +22,22 @@ export const CampaignConfig = [
             "body": [
                 {
                   isMandatory: false,
-                  key: "campaignName",
+                  key: "campaignName2",
                   type: "text",
                   label: "CAMPAIGN_NAME",
                   populators: {
-                    name: "campaignName",
+                    name: "campaignName2",
                     error: "ES_TQM_REQUIRED",
                     required: true,
                   },
                 }, 
                 {
                     isMandatory: false,
-                    key: "campaignName",
+                    key: "campaignType2",
                     type: "text",
-                    label: "CAMPAIGN_NAME",
-                  //   di sable: false,
-                  //   stepCount: "1",
+                    label: "CAMPAIGN_TYPE",
                     populators: {
-                      name: "campaignName",
+                      name: "campaignType2",
                       error: "ES_TQM_REQUIRED",
                       required: true,
                     },
@@ -51,24 +49,22 @@ export const CampaignConfig = [
             "body": [
                 {
                   isMandatory: false,
-                  key: "campaignName",
+                  key: "campaignName1",
                   type: "text",
                   label: "CAMPAIGN_NAME",
                   populators: {
-                    name: "campaignName",
+                    name: "campaignName1",
                     error: "ES_TQM_REQUIRED",
                     required: true,
                   },
                 }, 
                 {
                     isMandatory: false,
-                    key: "campaignName",
+                    key: "campaigntType1",
                     type: "text",
-                    label: "CAMPAIGN_NAME",
-                  //   di sable: false,
-                  //   stepCount: "1",
+                    label: "CAMPAIGN_TYPE",
                     populators: {
-                      name: "campaignName",
+                      name: "campaigntType1",
                       error: "ES_TQM_REQUIRED",
                       required: true,
                     },
@@ -94,8 +90,6 @@ export const CampaignConfig = [
                     key: "deliveryNumber",
                     type: "number",
                     label: "HCM_NO_OF_DELIVERIES",
-                  //   di sable: false,
-                  //   stepCount: "1",
                     populators: {
                       name: "deliveryNumber",
                       error: "ES_TQM_REQUIRED",
@@ -118,6 +112,17 @@ export const CampaignConfig = [
                         label: "CAMPAIGN_NAME",
                         populators: {
                           name: "campaignName",
+                          error: "ES_TQM_REQUIRED",
+                          required: true,
+                        },
+                      }, 
+                      {
+                        isMandatory: false,
+                        key: "campaigntype",
+                        type: "text",
+                        label: "CAMPAIGN_TYPE",
+                        populators: {
+                          name: "campaigntype",
                           error: "ES_TQM_REQUIRED",
                           required: true,
                         },

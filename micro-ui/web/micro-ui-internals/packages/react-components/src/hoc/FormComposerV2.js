@@ -71,6 +71,7 @@ const wrapperStyles = {
  */
 
 export const FormComposer = (props) => {
+  console.log("props" , props);
   const { t } = useTranslation();
 /* added an enhancement for validate data with schema still some issue with sometype we have to solve it*/
   const inputProps={
