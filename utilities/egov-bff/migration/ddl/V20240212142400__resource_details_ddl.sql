@@ -32,6 +32,7 @@ CREATE TABLE eg_resource_activity (
 CREATE TABLE eg_generated_resource_details (
     id varchar(128) PRIMARY KEY,
     fileStoreId varchar(128),
+    "status" varchar(128),
     "type" varchar(64),
     createdBy varchar(128),
     createdTime bigint,
