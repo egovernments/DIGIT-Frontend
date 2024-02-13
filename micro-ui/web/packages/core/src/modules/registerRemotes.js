@@ -16,6 +16,16 @@ export default (queryClient) => {
     },
   });
 
+  registerApplication({
+    name: "app1",
+    app: () => import("app1/App"),
+    activeWhen: "/",
+    customProps: {
+      title: "App 1 running on host",
+      queryClient,
+    },
+  });
+
   start();
 }
 

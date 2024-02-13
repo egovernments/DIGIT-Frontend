@@ -129,16 +129,16 @@ import {
                 {storeData?.tenants.map((i) => {
                   i.code === tenantId ? (
                     <div className="link">
-                      <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
+                      <a href={`tel:${storeData?.tenants[i]?.contactNumber}`}>{storeData?.tenants[i]?.contactNumber}</a>
                     </div>
                   ) : (
                     <div className="link">
-                      <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                      <a href={`tel:${storeData?.tenants[0]?.contactNumber}`}>{storeData?.tenants[0]?.contactNumber}</a>
                     </div>
                   );
                 })}
                 <div className="link">
-                  <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                  <a href={`tel:${storeData?.tenants[0]?.contactNumber}`}>{storeData?.tenants[0]?.contactNumber}</a>
                 </div>
               </div>
             </React.Fragment>

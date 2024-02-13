@@ -103,7 +103,6 @@ const EmployeeSideBar = () => {
     }
     return res?.map((item, index) => {
       // return <SubMenu item={item} key={index + 1} />;
-      // return null
     });
   };
 

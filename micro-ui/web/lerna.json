@@ -2,11 +2,16 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "0.0.0",
   "packages":[
-    "packages/dss",
-    "packages/hrms",
     "packages/core",
-    "packages/workbench"
+    "packages/workbench",
+    "packages/ui-core",
+    "packages/app1"
   ],
+  "command": {
+    "run": {
+      "npmClient": "yarn"
+    }
+  },
   "npmClient": "yarn",
   "stream": true
 }

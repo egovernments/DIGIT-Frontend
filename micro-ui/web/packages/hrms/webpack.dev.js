@@ -34,7 +34,7 @@ module.exports = () => {
       historyApiFallback: {
         index: "/",
       },
-      https: true, // Enable HTTPS
+      server:"https", //Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({
