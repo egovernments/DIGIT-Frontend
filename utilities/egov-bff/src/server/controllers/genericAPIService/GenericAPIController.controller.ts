@@ -137,7 +137,7 @@ class genericAPIController {
                 port: parseInt(config.DB_PORT)
             });
             let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1";
-            console.log(queryString)
+            logger.info("queryString : " + queryString)
             const queryResult = await pool.query(queryString, [type]);
             logger.info("queryResult : " + JSON.stringify(queryResult.rows))
             // response.json(queryResult.rows);

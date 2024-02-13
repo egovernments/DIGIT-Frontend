@@ -405,32 +405,30 @@ function generateSortingAndPaginationClauses(pagination: Pagination): string {
 
   return clauses;
 }
-async function generateXlsxFromJson( request : any , response: any,  simplifiedData: any)
-{ 
-  try{
-  const ws = XLSX.utils.json_to_sheet(simplifiedData);
+async function generateXlsxFromJson(request: any, response: any, simplifiedData: any) {
+  try {
+    const ws = XLSX.utils.json_to_sheet(simplifiedData);
 
-  // Create a new workbook
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-  const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-  const formData = new FormData();
-  formData.append('file', buffer, 'filename.xlsx');
-  formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
-  formData.append('module', 'pgr');
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+    const formData = new FormData();
+    formData.append('file', buffer, 'filename.xlsx');
+    formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+    formData.append('module', 'pgr');
 
-  logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
-  var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
-    {
-      'Content-Type': 'multipart/form-data',
-      'auth-token': request?.body?.RequestInfo?.authToken
-    }
-  );
-  const responseData = fileCreationResult?.files;
-  console.log(responseData,"fileeeeeeee");
-  logger.info("Response data after File Creation : " + JSON.stringify(responseData));
-  return responseData;
-  }catch (e: any) {
+    logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+    var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+      {
+        'Content-Type': 'multipart/form-data',
+        'auth-token': request?.body?.RequestInfo?.authToken
+      }
+    );
+    const responseData = fileCreationResult?.files;
+    logger.info("Response data after File Creation : " + JSON.stringify(responseData));
+    return responseData;
+  } catch (e: any) {
     logger.error(String(e))
     return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
   }
@@ -441,12 +439,12 @@ async function generateAuditDetails(request: any) {
   const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
   const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
 
-  
+
   const auditDetails = {
-      createdBy: createdBy,
-      lastModifiedBy: lastModifiedBy,
-      createdTime: Date.now(), 
-      lastModifiedTime: Date.now()
+    createdBy: createdBy,
+    lastModifiedBy: lastModifiedBy,
+    createdTime: Date.now(),
+    lastModifiedTime: Date.now()
   }
 
   return auditDetails;
@@ -472,7 +470,7 @@ export {
   waitAndCheckIngestionStatus,
   getCampaignDetails,
   processFile,
-  generateSortingAndPaginationClauses, 
+  generateSortingAndPaginationClauses,
   generateXlsxFromJson,
-   generateAuditDetails
+  generateAuditDetails
 };
