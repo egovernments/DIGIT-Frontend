@@ -67,7 +67,9 @@ const config = {
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
       || "hcm-moz-impl/v1/ingest",
     idGen: process.env.EGOV_IDGEN_PATH
-      || "egov-idgen/id/_generate"
+      || "egov-idgen/id/_generate",
+    mdmsSchema: process.env.EGOV_MDMS_SCHEMA_PATH
+      || "egov-mdms-service/schema/v1/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE

@@ -2,6 +2,7 @@ import * as express from "express";
 import { searchMDMS } from "../api";
 import { errorResponder } from "../utils/index";
 import { logger } from "../utils/logger";
+import Ajv from "ajv";
 
 
 
@@ -108,6 +109,17 @@ const validateTransformedData = (transformedData: any[]): void => {
     }
 };
 
+function validateDataWithSchema(data: any, schema: any): { isValid: boolean; error: Ajv.ErrorObject[] | null | undefined } {
+    const ajv = new Ajv();
+    const validate = ajv.compile(schema);
+    const isValid: any = validate(data);
+    if (!isValid) {
+        console.error(validate.errors);
+    }
+    return { isValid, error: validate.errors };
+}
 
 
-export { validateProcessMicroplan, validateTransformedData };
+
+
+export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema };

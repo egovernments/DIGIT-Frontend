@@ -14,6 +14,7 @@ import { logger } from "./logger";
 // import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
+const _ = require('lodash');
 
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 
@@ -168,18 +169,10 @@ const errorResponder = (
 const convertObjectForMeasurment = (obj: any, config: any, defaultValue?: any) => {
   const resultBody: Record<string, any> = defaultValue || {};
 
-  const assignValueAtPath = (obj: any, path: string, value: any) => {
-    const pathSegments = path.split(".");
-    let current = obj;
-    for (let i = 0; i < pathSegments.length - 1; i++) {
-      const segment = pathSegments[i];
-      if (!current[segment]) {
-        current[segment] = {};
-      }
-      current = current[segment];
-    }
-    current[pathSegments[pathSegments.length - 1]] = value;
+  const assignValueAtPath = (obj: any, path: any, value: any) => {
+    _.set(obj, path, value);
   };
+
 
   config.forEach((configObj: any) => {
     const { path, jsonPath } = configObj;

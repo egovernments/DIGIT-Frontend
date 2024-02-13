@@ -38,9 +38,10 @@ function processExcelSheet(
   rowDatas: any[] = []
 ) {
   const sheetRef = desiredSheet['!ref'];
+  const endRowMin = Math.min(XLSX.utils.decode_range(String(desiredSheet['!ref'])).e.r + 1, endRow);
   const lastColumn = sheetRef ? XLSX.utils.decode_range(sheetRef).e.c : 0;
 
-  const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRow - 1, c: lastColumn } };
+  const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRowMin - 1, c: lastColumn } };
 
   const rowDataArray: any[] = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
 
@@ -308,9 +309,37 @@ const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName
 
 }
 
+const getSchema: any = async (code: string, RequestInfo: any) => {
+  const data = {
+    RequestInfo,
+    SchemaDefCriteria: {
+      "tenantId": RequestInfo?.userInfo?.tenantId,
+      "limit": 200,
+      "codes": [
+        code
+      ]
+    }
+  }
+  const mdmsSearchUrl = config.host.mdms + config.paths.mdmsSchema;
+  logger.info("Schema search url : " + mdmsSearchUrl)
+  logger.info("Schema search Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(mdmsSearchUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.SchemaDefinitions?.[0]?.definition) {
+      return result?.SchemaDefinitions?.[0]?.definition;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
 
 export {
   getSheetData,
   searchMDMS,
-  getCampaignNumber
+  getCampaignNumber,
+  getSchema
 };

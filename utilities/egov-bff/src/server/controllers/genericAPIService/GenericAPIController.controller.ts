@@ -6,14 +6,17 @@ import { logger } from "../../utils/logger";
 import {
     getSheetData,
     //     getSheetData,
-    searchMDMS
+    searchMDMS,
+    getSchema
 } from "../../api/index";
 
 import {
+    // processFile,
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-// import { httpRequest } from "../../utils/request";
+import { validateDataWithSchema, validateTransformedData } from "../../utils/validator";
+import { httpRequest } from "../../utils/request";
 
 // Define the MeasurementController class
 class genericAPIController {
@@ -35,27 +38,90 @@ class genericAPIController {
         request: express.Request,
         response: express.Response
     ) => {
-        const { type, fileStoreId } = request?.body?.ResourceDetails;
-        const campaignType = "generic_" + type;
-        const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
-        if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
-            throw new Error("Invalid Campaign Type");
+        try {
+            const { type, fileStoreId } = request?.body?.ResourceDetails;
+            const campaignType = "generic_" + type;
+
+            // Search for campaign in MDMS
+            const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
+            if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
+                const errorMessage = "Invalid Campaign Type";
+                logger.error(errorMessage);
+                throw new Error(errorMessage);
+            }
+
+            const transformTemplate = campaign?.mdms?.[0]?.data?.transformTemplate;
+
+            // Search for transform template
+            const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
+            const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+            logger.info("File fetching url : " + url);
+
+            const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
+            let TransformConfig: any;
+            if (result?.mdms?.length > 0) {
+                TransformConfig = result.mdms[0];
+                logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
+            }
+
+            // Get data from sheet
+            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, "Sheet 1");
+            validateTransformedData(updatedDatas);
+
+            const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+            const parsingTemplatesLength = parsingTemplates.length;
+            let processResult: any;
+
+            // Iterate over parsing templates
+            for (let i = 0; i < parsingTemplatesLength; i++) {
+                const parsingTemplate = parsingTemplates[i];
+                request.body.HCMConfig = {};
+                request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
+                request.body.HCMConfig['data'] = updatedDatas;
+
+                // Process data
+                processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+                if (processResult.Error) {
+                    logger.error(processResult.Error);
+                    throw new Error(processResult.Error);
+                }
+
+                // Further processing with processResult here if needed
+            }
+
+            const healthMaster = `Health.${type.charAt(0).toUpperCase()}${type.slice(1)}`;
+
+            // Get schema definition
+            const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
+
+            // Validate data with schema
+            const validationErrors: any[] = [];
+            processResult.updatedDatas.forEach((data: any) => {
+                const validationResult = validateDataWithSchema(data, schemaDef);
+                if (!validationResult.isValid) {
+                    validationErrors.push({ data, error: validationResult.error });
+                }
+            });
+
+            // Include error messages from MDMS service
+            const mdmsErrors = processResult?.mdmsErrors || [];
+
+            // Send response
+            if (validationErrors.length > 0 || mdmsErrors.length > 0) {
+                const errors = [...validationErrors, ...mdmsErrors];
+                return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
+            } else {
+                return sendResponse(response, { "validationResult": "VALID_DATA" }, request);
+            }
+        } catch (error: any) {
+            logger.error(error);
+            return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
-        const transformTemplate = campaign?.mdms?.[0]?.data?.transformTemplate;
-        const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
-        console.log(transformTemplate, fileStoreId, " tttttttttttttttttttttttttttt")
-        const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-        console.log("File fetching url : " + url)
-        var TransformConfig: any;
-        if (result?.mdms?.length > 0) {
-            TransformConfig = result.mdms[0];
-            logger.info("TransformConfig : " + JSON.stringify(TransformConfig))
-        }
-        const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, "Sheet 1");
-        console.log(updatedDatas, " uuuuuuuuuuuuddddddddddddddddd")
-        // await processFile(request, parsingTemplates, result, hostHcmBff, Job);
-        return sendResponse(response, {}, request);
     };
+
+
+
+
 
 }
 
