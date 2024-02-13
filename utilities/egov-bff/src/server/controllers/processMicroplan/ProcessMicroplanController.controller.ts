@@ -160,7 +160,6 @@ class BulkUploadController {
       return errorResponder({ message: String(e) }, request, response);
     }
   };
-
 }
 // Export the MeasurementController class
 export default BulkUploadController;
