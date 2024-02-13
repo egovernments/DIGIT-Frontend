@@ -24,7 +24,7 @@ const Template = (args) => <Amount {...args} />;
 
 
 export const Primary = Template.bind({});
-Playground.args = {
+Primary.args = {
   value: 55000,
 };
 

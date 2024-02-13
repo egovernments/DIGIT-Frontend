@@ -84,7 +84,7 @@ const TextInput = (props) => {
     const iconFill = props?.disabled ? "#D6D5D4" : props?.nonEditable ? "#b1b4b6" : "#505A5F";
     if (reqIcon) {
       if (reqIcon === "geolocation") {
-        return <SVG.MyLocation fill={iconFill} onClick={handleLocationClick} className="digit-text-input-customIcon" />;
+        return <SVG.MyLocation fill={iconFill} onClick={props?.onIconSelection ? props?.onIconSelection : handleLocationClick} className="digit-text-input-customIcon" />;
       } else if (reqIcon === "text" && visibility) {
         return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
       } else if (reqIcon === "password") {
@@ -94,7 +94,7 @@ const TextInput = (props) => {
       } else {
         try {
           const components = require("@egovernments/digit-ui-svg-components");
-          const DynamicIcon = components?.[props?.populators?.customIcon];
+          const DynamicIcon = props?.type === "text" && components?.[props?.populators?.customIcon];
           if (DynamicIcon) {
             const svgElement = DynamicIcon({
               width: "1.5rem",
@@ -131,7 +131,7 @@ const TextInput = (props) => {
       <div
         className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${
           props.disabled ? "disabled" : ""
-        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props.type === "numeric" ? "numeric" : ""}`}
+        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props?.type ? props?.type : ""} ${props?.populators?.prefix ? "prefix" : ""} ${props?.populators?.suffix ? "suffix" : ""}`} 
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
         {props.required ? (

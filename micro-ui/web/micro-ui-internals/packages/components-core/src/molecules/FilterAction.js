@@ -1,6 +1,6 @@
 import React from "react";
-import { FilterSvg } from "../../../react-components/src/atoms/svgindex";
-import RoundedLabel from "../../../react-components/src/atoms/RoundedLabel";
+import { FilterSvg } from "../atoms/svgindex";
+import { RoundedLabel } from "../atoms";
 
 const FilterAction = ({ text, handleActionClick, ...props }) => (
   <div className="digit-search-action" onClick={handleActionClick}>

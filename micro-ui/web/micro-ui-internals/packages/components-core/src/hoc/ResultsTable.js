@@ -7,7 +7,7 @@ import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
 import { Loader } from '../atoms/Loader';
 import NoResultsFound from '../atoms/NoResultsFound';
-import { InfoIcon,EditIcon } from '@egovernments/digit-ui-react-components/src/atoms/svgindex';
+import { InfoIcon,EditIcon } from "../atoms/svgindex";
 
 
 const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,additionalConfig }) => {

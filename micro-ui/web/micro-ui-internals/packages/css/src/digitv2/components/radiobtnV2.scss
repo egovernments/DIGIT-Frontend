@@ -20,25 +20,41 @@
         @apply border-primary-main;
       }
     }
+
+    &:active {
+      .digit-radio-btn-checkmark {
+        @apply border-primary-main;
+        outline: 3px solid #FFFAF7;
+      }
+    }
+
   }
 
   .radio-option-container {
     @apply inline-flex items-center;
     gap: 0.5rem;
 
-    &.disabled,
-    &.preselected {
+    &.disabled {
       .digit-radio-btn-checkmark {
         border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
-      }
-
-      label {
-        color: theme(digitv2.lightTheme.text-color-disabled);
+        background-color: theme(digitv2.lightTheme.paper-secondary);
       }
     }
 
+
     &.preselected {
+      .digit-radio-btn-checkmark {
+        border: 2px solid theme(digitv2.lightTheme.text-color-disabled);
+      }
+
       pointer-events: none !important;
+    }
+
+    &.disabled,
+    &.preselected {
+      label {
+        color: theme(digitv2.lightTheme.text-color-disabled);
+      }
     }
 
   }
@@ -54,7 +70,9 @@
 
   label {
     @extend .light-text-color-primary;
-    @apply text-text-primary text-form-field;
+    @apply text-text-primary;
+    font-size: 16px;
+    line-height: 19px;
   }
 
   .digit-radio-btn-checkmark:after {
@@ -62,25 +80,23 @@
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
-    /* @extend .light-input-border; */
     @apply border-2 border-primary-main;
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
-    /* @extend .light-background; */
     @apply block bg-primary-main h-3 w-3 rounded-full absolute;
-    top:25%;
-    left:25%
+    top: 25%;
+    left: 25%
   }
 
   .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
-    @apply border-border;
+    border: 2px solid theme(digitv2.lightTheme.divider);
   }
 
   .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
-    @apply block h-3 w-3 rounded-full absolute ;
-    top:25%;
-    left:25%;
+    @apply block h-3 w-3 rounded-full absolute;
+    top: 25%;
+    left: 25%;
     background-color: theme(digitv2.lightTheme.text-color-disabled);
   }
 }

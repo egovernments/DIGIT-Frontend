@@ -29,6 +29,7 @@ const commonArgs = {
   populators: {
     title: "Value",
     name: "checked",
+    isLabelFirst:false
   },
   formData: {
     checked: true,
@@ -63,6 +64,21 @@ DefaultLabelled.args = {
   populators: {
     ...commonArgs.populators,
     title: "Value",
+  },
+  formData: {
+    ...commonArgs.formData,
+    checked: false,
+  },
+};
+
+//checkbox with label before
+export const DefaultLabelFirst = Template.bind({});
+DefaultLabelFirst.args = {
+  ...commonArgs,
+  populators: {
+    ...commonArgs.populators,
+    title: "Value",
+    isLabelFirst:true
   },
   formData: {
     ...commonArgs.formData,
