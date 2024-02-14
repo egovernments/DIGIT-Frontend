@@ -5,7 +5,7 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber } from "../api/index";
+import { getCampaignNumber, getResouceNumber } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -450,6 +450,48 @@ async function generateAuditDetails(request: any) {
   return auditDetails;
 }
 
+async function generateResourceMessage(requestBody: any, status: string) {
+
+  const resourceMessage = {
+    id: uuidv4(),
+    status: status,
+    tenantId: requestBody?.RequestInfo?.userInfo?.tenantId,
+    processReferenceNumber: await getResouceNumber(requestBody?.RequestInfo, "RD-[cy:yyyy-MM-dd]-[SEQ_EG_RD_ID]", "resource.number"),
+    fileStoreId: requestBody?.ResourceDetails?.fileStoreId,
+    type: requestBody?.ResourceDetails?.type,
+    auditDetails: {
+      createdBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      lastModifiedBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      createdTime: Date.now(),
+      lastModifiedTime: Date.now()
+    },
+    additionalDetails: {}
+  }
+  return resourceMessage;
+}
+
+async function generateActivityMessage(createdResult: any, successMessage: any, requestBody: any, status: string) {
+
+  const activityMessage = {
+    id: uuidv4(),
+    status: createdResult?.status,
+    retryCount: 0,
+    type: requestBody?.ResourceDetails?.type,
+    url: createdResult?.url,
+    requestPayload: createdResult?.requestPayload,
+    responsePayload: createdResult?.responsePayload,
+    auditDetails: {
+      createdBy: successMessage?.auditDetails?.createdBy,
+      lastModifiedBy: successMessage?.auditDetails?.lastModifiedBy,
+      createdTime: successMessage?.auditDetails?.createdTime,
+      lastModifiedTime: successMessage?.auditDetails?.lastModifiedTime
+    },
+    additionalDetails: {},
+    resourceDetailsId: successMessage?.id
+  }
+  return activityMessage;
+}
+
 
 
 
@@ -472,5 +514,7 @@ export {
   processFile,
   generateSortingAndPaginationClauses,
   generateXlsxFromJson,
-  generateAuditDetails
+  generateAuditDetails,
+  generateResourceMessage,
+  generateActivityMessage
 };

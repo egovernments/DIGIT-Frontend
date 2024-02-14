@@ -31,6 +31,10 @@ const config = {
     process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
+  KAFKA_CREATE_RESOURCE_DETAILS_TOPIC:
+    process.env.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC || "create-resource-details",
+  KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC:
+    process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
   DB_USER:
     process.env.DB_USER || "postgres",
   DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",

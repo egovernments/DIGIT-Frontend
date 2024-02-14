@@ -12,6 +12,8 @@ import {
 } from "../../api/index";
 
 import {
+    generateActivityMessage,
+    generateResourceMessage,
     // processFile,
     // errorResponder,
     sendResponse,
@@ -23,6 +25,7 @@ import { Pool } from 'pg';
 import { generateXlsxFromJson } from "../../utils/index"
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
+import { produceModifiedMessages } from "../../Kafka/Listener";
 
 // Define the MeasurementController class
 class genericAPIController {
@@ -53,7 +56,21 @@ class genericAPIController {
             if (result?.validationResult == "VALID_DATA") {
                 const createdResult = await createValidatedData(result?.data, type, request.body)
                 logger.info(type + " creation result : " + createdResult)
-                return sendResponse(response, {}, request);
+                if (createdResult?.status == "SUCCESS") {
+                    const successMessage: any = await generateResourceMessage(request.body, "Completed")
+                    const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+                    produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+                    const activities: any = {
+                        activities: [activityMessage]
+                    }
+                    logger.info("Activity Message : " + JSON.stringify(activities))
+                    produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+                    logger.info("Success Message : " + JSON.stringify(successMessage))
+                    return sendResponse(response, { "result": successMessage }, request);
+                }
+                else {
+                    return sendResponse(response, { error: "Some error occured during creation. Check Logs" }, request);
+                }
             }
             else if (result?.validationResult == "INVALID_DATA") {
                 throw new Error(result?.validationResult);
@@ -63,7 +80,7 @@ class genericAPIController {
             }
         } catch (error: any) {
             logger.error(error);
-            return sendResponse(response, {}, request);
+            return sendResponse(response, { error: error }, request);
         }
     }
 

@@ -309,6 +309,33 @@ const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName
 
 }
 
+const getResouceNumber: any = async (RequestInfo: any, idFormat: String, idName: string) => {
+  const data = {
+    RequestInfo,
+    "idRequests": [
+      {
+        "idName": idName,
+        "tenantId": RequestInfo?.userInfo?.tenantId,
+        "format": idFormat
+      }
+    ]
+  }
+  const idGenUrl = config.host.idGenHost + config.paths.idGen;
+  logger.info("IdGen url : " + idGenUrl)
+  logger.info("Idgen Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.idResponses?.[0]?.id) {
+      return result?.idResponses?.[0]?.id;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
 const getSchema: any = async (code: string, RequestInfo: any) => {
   const data = {
     RequestInfo,
@@ -373,12 +400,12 @@ const createValidatedData: any = async (data: any[], type: string, request: any,
     logger.info("Creation url : " + config.host.facilityHost + url);
     const result = await httpRequest(`${config.host.facilityHost}${url}`, creationRequest, undefined, undefined, undefined, undefined);
     if (result?.status == "successful") {
-      return "SUCCESS"
+      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
     }
-    return "FAILED";
+    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
   }
   else {
-    return "FAILED";
+    return { status: "FAILED", type: type, url: url, requestPayload: null, responsePayload: null }
   }
 }
 
@@ -388,5 +415,6 @@ export {
   searchMDMS,
   getCampaignNumber,
   getSchema,
-  createValidatedData
+  createValidatedData,
+  getResouceNumber
 };
