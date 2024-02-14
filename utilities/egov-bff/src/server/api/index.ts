@@ -5,6 +5,7 @@ import hashSum from 'hash-sum';
 
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
+import axios from "axios";
 
 
 function processColumnValue(
@@ -395,17 +396,35 @@ const createValidatedData: any = async (data: any[], type: string, request: any,
   const creationType = getCreationType(type);
   const creationKey = getCreationKey(type)
   if (creationType == "bulk") {
+    var retry: number = 0;
     const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: data };
-    logger.info("Creation Request : " + JSON.stringify(creationRequest))
-    logger.info("Creation url : " + config.host.facilityHost + url);
-    const result = await httpRequest(`${config.host.facilityHost}${url}`, creationRequest, undefined, undefined, undefined, undefined);
-    if (result?.status == "successful") {
-      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+    const retryCount = parseInt(config.values.retryCount)
+    let success = false;
+    let creationResponse: any = {};
+    while (retry <= retryCount && !success) {
+      logger.info("Creation Attempt : " + retry + 1)
+      logger.info("Creation Request : " + JSON.stringify(creationRequest))
+      logger.info("Creation url : " + config.host.facilityHost + url);
+      await axios.post(`${config.host.facilityHost}${url}`, creationRequest).then(response => {
+        if (response?.data?.status == "successful") {
+          creationResponse = response?.data;
+          success = true;
+        }
+        retry++;
+      })
+        .catch(error => {
+          creationResponse = error?.response?.data;
+          console.error("Error occurred during creation attempt:", error?.response?.data);
+          retry++;
+        });
     }
-    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+    if (success) {
+      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
+    }
+    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
   }
   else {
-    return { status: "FAILED", type: type, url: url, requestPayload: null, responsePayload: null }
+    return { status: "NOT_ATTEMPTED", type: type, url: url, requestPayload: null, responsePayload: null, retryCount: 0 }
   }
 }
 

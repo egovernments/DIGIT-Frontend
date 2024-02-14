@@ -60,22 +60,31 @@ class genericAPIController {
                     const successMessage: any = await generateResourceMessage(request.body, "Completed")
                     const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
                     produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                    const activities: any = {
-                        activities: [activityMessage]
-                    }
+                    const activities: any = { activities: [activityMessage] }
                     logger.info("Activity Message : " + JSON.stringify(activities))
                     produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
                     logger.info("Success Message : " + JSON.stringify(successMessage))
                     return sendResponse(response, { "result": successMessage }, request);
                 }
                 else {
-                    return sendResponse(response, { error: "Some error occured during creation. Check Logs" }, request);
+                    const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
+                    const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
+                    produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+                    const activities: any = { activities: [activityMessage] }
+                    logger.info("Activity Message : " + JSON.stringify(activities))
+                    produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+                    logger.info("Success Message : " + JSON.stringify(failedMessage))
+                    return sendResponse(response, { error: createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs" }, request);
                 }
             }
             else if (result?.validationResult == "INVALID_DATA") {
+                const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
+                produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
                 throw new Error(result?.validationResult);
             }
             else {
+                const failedMessage: any = await generateResourceMessage(request.body, "OTHER_ERROR")
+                produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
                 throw new Error("Error during validated data, Check Logs");
             }
         } catch (error: any) {

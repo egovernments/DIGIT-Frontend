@@ -475,7 +475,7 @@ async function generateActivityMessage(createdResult: any, successMessage: any, 
   const activityMessage = {
     id: uuidv4(),
     status: createdResult?.status,
-    retryCount: 0,
+    retryCount: createdResult?.retryCount || 0,
     type: requestBody?.ResourceDetails?.type,
     url: createdResult?.url,
     requestPayload: createdResult?.requestPayload,
