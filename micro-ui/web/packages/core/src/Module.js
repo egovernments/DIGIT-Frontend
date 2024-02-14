@@ -6,10 +6,12 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp } from "./pages/index";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
-
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
+
+import { ReactQueryDevtools } from 'react-query/devtools';
+//here add react-query dev tools
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -99,6 +101,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
               }}
             >
               <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
+              <ReactQueryDevtools initialIsOpen={true} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

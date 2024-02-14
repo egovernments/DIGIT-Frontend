@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation,BrowserRouter as Router} from "react-router-dom";
+import { Switch, useLocation} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import LocalisationSearch from "./LocalisationSearch";
@@ -11,7 +11,6 @@ import MDMSView from "./MDMSView";
 import MDMSSearchv2 from "./MDMSSearchv2";
 
 const MastersBreadCrumb = ({ location ,defaultPath}) => {
-  // debugger
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
@@ -40,31 +39,25 @@ const MastersBreadCrumb = ({ location ,defaultPath}) => {
 };
 
 const App = ({ path }) => {
+   const location = useLocation()
+  const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
   
-//   const location = {
-//     "pathname": "/workbench-ui/employee/workbench/",
-//     "search": "",
-//     "hash": "#/"
-// }
-  // const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
-  // const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
-  
-  // const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
-  // const [sessionFormDataView,setSessionFormDataView,clearSessionFormDataView] = MDMSViewSession
+  const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
+  const [sessionFormDataView,setSessionFormDataView,clearSessionFormDataView] = MDMSViewSession
 
-  // useEffect(() => {
-  //   if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
-  //     clearSessionFormData();
-  //   }
-  //   if (!window.location.href.includes("mdms-view") && sessionFormDataView ) {
-  //     clearSessionFormDataView();
-  //   }
-  // }, [location]);
+  useEffect(() => {
+    if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
+      clearSessionFormData();
+    }
+    if (!window.location.href.includes("mdms-view") && sessionFormDataView ) {
+      clearSessionFormDataView();
+    }
+  }, [location]);
 
   return (
     <React.Fragment>
-      {/* <MastersBreadCrumb location={location} defaultPath={path} /> */}
-      <Router>
+      <MastersBreadCrumb location={location} defaultPath={path} />
       <Switch>
         <div>
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
@@ -77,7 +70,6 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path}/>} />
         </div>
       </Switch>
-      </Router>
     </React.Fragment>
   );
 };
