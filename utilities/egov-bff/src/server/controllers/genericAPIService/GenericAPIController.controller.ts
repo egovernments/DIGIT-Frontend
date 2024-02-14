@@ -44,6 +44,8 @@ class genericAPIController {
         this.router.post(`${this.path}/_create`, this.createData);
         this.router.post(`${this.path}/_validate`, this.validateData);
         this.router.post(`${this.path}/_download`, this.downloadData);
+        this.router.post(`${this.path}/_generate`, this.generateData);
+
     }
     createData = async (
         request: express.Request,
@@ -178,6 +180,35 @@ class genericAPIController {
             logger.error(error);
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
+    };
+
+
+    generateData = async (request: express.Request, response: express.Response) => {
+        try {
+            const pool = new Pool({
+                user: config.DB_USER,
+                host: config.DB_HOST,
+                database: config.DB_NAME,
+                password: config.DB_PASSWORD,
+                port: parseInt(config.DB_PORT)
+            });
+            const { type, forceUpdate } = request.query; console.log(forceUpdate, "fff")
+            console.log(type, "ttttt");
+            let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
+            const status = 'completed';
+            const queryResult = await pool.query(queryString, [type, status]);
+            const responseData = queryResult.rows;
+            console.log(responseData,"ressp")
+            if(responseData.length>0)
+            {
+                let expiredResponse = responseData;
+                expiredResponse[0].status = "expired";
+            }
+
+
+
+        } catch
+        { }
     };
 
     downloadData = async (request: express.Request, response: express.Response) => {
