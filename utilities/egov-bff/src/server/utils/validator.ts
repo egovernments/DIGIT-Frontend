@@ -114,7 +114,7 @@ function validateDataWithSchema(data: any, schema: any): { isValid: boolean; err
     const validate = ajv.compile(schema);
     const isValid: any = validate(data);
     if (!isValid) {
-        console.error(validate.errors);
+        logger.error(JSON.stringify(validate.errors));
     }
     return { isValid, error: validate.errors };
 }

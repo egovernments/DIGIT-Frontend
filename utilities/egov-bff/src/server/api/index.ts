@@ -5,6 +5,7 @@ import hashSum from 'hash-sum';
 
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
+import axios from "axios";
 
 
 function processColumnValue(
@@ -363,49 +364,40 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
-const getTypeUrl = (type: string): string => {
-  if (type === "facility") {
-    return "facility/v1/bulk/_create";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const getCreationType = (type: string): string => {
-  if (type === "facility") {
-    return "bulk";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const getCreationKey = (type: string): string => {
-  if (type === "facility") {
-    return "Facilities";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const createValidatedData: any = async (data: any[], type: string, request: any, response: any) => {
-  const url = getTypeUrl(type);
-  const creationType = getCreationType(type);
-  const creationKey = getCreationKey(type)
-  if (creationType == "bulk") {
-    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: data };
-    logger.info("Creation Request : " + JSON.stringify(creationRequest))
-    logger.info("Creation url : " + config.host.facilityHost + url);
-    const result = await httpRequest(`${config.host.facilityHost}${url}`, creationRequest, undefined, undefined, undefined, undefined);
-    if (result?.status == "successful") {
-      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+const createValidatedData: any = async (result: any, type: string, request: any, response: any) => {
+  const url = result?.url;
+  const isBulkCreate = result?.isBulkCreate;
+  const creationKey = result?.keyName
+  if (isBulkCreate) {
+    var retry: number = 0;
+    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: result?.data };
+    const retryCount = parseInt(config.values.retryCount)
+    let success = false;
+    let creationResponse: any = {};
+    while (retry <= retryCount && !success) {
+      logger.info("Creation Attempt : " + retry + 1)
+      logger.info("Creation Request : " + JSON.stringify(creationRequest))
+      logger.info("Creation url : " + config.host.facilityHost + url);
+      await axios.post(`${config.host.facilityHost}${url}`, creationRequest).then(response => {
+        if (response?.data?.status == "successful") {
+          creationResponse = response?.data;
+          success = true;
+        }
+        retry++;
+      })
+        .catch(error => {
+          creationResponse = error?.response?.data;
+          logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
+          retry++;
+        });
     }
-    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+    if (success) {
+      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
+    }
+    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
   }
   else {
-    return { status: "FAILED", type: type, url: url, requestPayload: null, responsePayload: null }
+    return { status: "NOT_ATTEMPTED", type: type, url: url, requestPayload: null, responsePayload: null, retryCount: 0 }
   }
 }
 
