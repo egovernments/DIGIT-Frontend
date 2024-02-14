@@ -31,6 +31,10 @@ const config = {
     process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
+  KAFKA_CREATE_RESOURCE_DETAILS_TOPIC:
+    process.env.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC || "create-resource-details",
+  KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC:
+    process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
   DB_USER:
     process.env.DB_USER || "postgres",
   DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
@@ -57,6 +61,9 @@ const config = {
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
       || "https://unified-uat.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST
+      // || "http://localhost:8086/"
+      || "https://unified-uat.digit.org/",
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
@@ -67,7 +74,9 @@ const config = {
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
       || "hcm-moz-impl/v1/ingest",
     idGen: process.env.EGOV_IDGEN_PATH
-      || "egov-idgen/id/_generate"
+      || "egov-idgen/id/_generate",
+    mdmsSchema: process.env.EGOV_MDMS_SCHEMA_PATH
+      || "egov-mdms-service/schema/v1/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE

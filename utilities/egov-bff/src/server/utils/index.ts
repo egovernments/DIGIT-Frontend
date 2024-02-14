@@ -5,7 +5,7 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber } from "../api/index";
+import { getCampaignNumber, getResouceNumber } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -14,6 +14,7 @@ import { logger } from "./logger";
 // import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
+const _ = require('lodash');
 
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 
@@ -168,18 +169,10 @@ const errorResponder = (
 const convertObjectForMeasurment = (obj: any, config: any, defaultValue?: any) => {
   const resultBody: Record<string, any> = defaultValue || {};
 
-  const assignValueAtPath = (obj: any, path: string, value: any) => {
-    const pathSegments = path.split(".");
-    let current = obj;
-    for (let i = 0; i < pathSegments.length - 1; i++) {
-      const segment = pathSegments[i];
-      if (!current[segment]) {
-        current[segment] = {};
-      }
-      current = current[segment];
-    }
-    current[pathSegments[pathSegments.length - 1]] = value;
+  const assignValueAtPath = (obj: any, path: any, value: any) => {
+    _.set(obj, path, value);
   };
+
 
   config.forEach((configObj: any) => {
     const { path, jsonPath } = configObj;
@@ -412,32 +405,30 @@ function generateSortingAndPaginationClauses(pagination: Pagination): string {
 
   return clauses;
 }
-async function generateXlsxFromJson( request : any , response: any,  simplifiedData: any)
-{ 
-  try{
-  const ws = XLSX.utils.json_to_sheet(simplifiedData);
+async function generateXlsxFromJson(request: any, response: any, simplifiedData: any) {
+  try {
+    const ws = XLSX.utils.json_to_sheet(simplifiedData);
 
-  // Create a new workbook
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-  const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-  const formData = new FormData();
-  formData.append('file', buffer, 'filename.xlsx');
-  formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
-  formData.append('module', 'pgr');
+    // Create a new workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+    const formData = new FormData();
+    formData.append('file', buffer, 'filename.xlsx');
+    formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+    formData.append('module', 'pgr');
 
-  logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
-  var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
-    {
-      'Content-Type': 'multipart/form-data',
-      'auth-token': request?.body?.RequestInfo?.authToken
-    }
-  );
-  const responseData = fileCreationResult?.files;
-  console.log(responseData,"fileeeeeeee");
-  logger.info("Response data after File Creation : " + JSON.stringify(responseData));
-  return responseData;
-  }catch (e: any) {
+    logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+    var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+      {
+        'Content-Type': 'multipart/form-data',
+        'auth-token': request?.body?.RequestInfo?.authToken
+      }
+    );
+    const responseData = fileCreationResult?.files;
+    logger.info("Response data after File Creation : " + JSON.stringify(responseData));
+    return responseData;
+  } catch (e: any) {
     logger.error(String(e))
     return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
   }
@@ -448,15 +439,57 @@ async function generateAuditDetails(request: any) {
   const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
   const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
 
-  
+
   const auditDetails = {
-      createdBy: createdBy,
-      lastModifiedBy: lastModifiedBy,
-      createdTime: Date.now(), 
-      lastModifiedTime: Date.now()
+    createdBy: createdBy,
+    lastModifiedBy: lastModifiedBy,
+    createdTime: Date.now(),
+    lastModifiedTime: Date.now()
   }
 
   return auditDetails;
+}
+
+async function generateResourceMessage(requestBody: any, status: string) {
+
+  const resourceMessage = {
+    id: uuidv4(),
+    status: status,
+    tenantId: requestBody?.RequestInfo?.userInfo?.tenantId,
+    processReferenceNumber: await getResouceNumber(requestBody?.RequestInfo, "RD-[cy:yyyy-MM-dd]-[SEQ_EG_RD_ID]", "resource.number"),
+    fileStoreId: requestBody?.ResourceDetails?.fileStoreId,
+    type: requestBody?.ResourceDetails?.type,
+    auditDetails: {
+      createdBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      lastModifiedBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      createdTime: Date.now(),
+      lastModifiedTime: Date.now()
+    },
+    additionalDetails: {}
+  }
+  return resourceMessage;
+}
+
+async function generateActivityMessage(createdResult: any, successMessage: any, requestBody: any, status: string) {
+
+  const activityMessage = {
+    id: uuidv4(),
+    status: createdResult?.status,
+    retryCount: 0,
+    type: requestBody?.ResourceDetails?.type,
+    url: createdResult?.url,
+    requestPayload: createdResult?.requestPayload,
+    responsePayload: createdResult?.responsePayload,
+    auditDetails: {
+      createdBy: successMessage?.auditDetails?.createdBy,
+      lastModifiedBy: successMessage?.auditDetails?.lastModifiedBy,
+      createdTime: successMessage?.auditDetails?.createdTime,
+      lastModifiedTime: successMessage?.auditDetails?.lastModifiedTime
+    },
+    additionalDetails: {},
+    resourceDetailsId: successMessage?.id
+  }
+  return activityMessage;
 }
 
 
@@ -479,7 +512,9 @@ export {
   waitAndCheckIngestionStatus,
   getCampaignDetails,
   processFile,
-  generateSortingAndPaginationClauses, 
+  generateSortingAndPaginationClauses,
   generateXlsxFromJson,
-   generateAuditDetails
+  generateAuditDetails,
+  generateResourceMessage,
+  generateActivityMessage
 };

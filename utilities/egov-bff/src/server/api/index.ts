@@ -38,9 +38,10 @@ function processExcelSheet(
   rowDatas: any[] = []
 ) {
   const sheetRef = desiredSheet['!ref'];
+  const endRowMin = Math.min(XLSX.utils.decode_range(String(desiredSheet['!ref'])).e.r + 1, endRow);
   const lastColumn = sheetRef ? XLSX.utils.decode_range(sheetRef).e.c : 0;
 
-  const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRow - 1, c: lastColumn } };
+  const range = { s: { r: startRow - 1, c: 0 }, e: { r: endRowMin - 1, c: lastColumn } };
 
   const rowDataArray: any[] = XLSX.utils.sheet_to_json(desiredSheet, { header: 1, range });
 
@@ -308,9 +309,112 @@ const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName
 
 }
 
+const getResouceNumber: any = async (RequestInfo: any, idFormat: String, idName: string) => {
+  const data = {
+    RequestInfo,
+    "idRequests": [
+      {
+        "idName": idName,
+        "tenantId": RequestInfo?.userInfo?.tenantId,
+        "format": idFormat
+      }
+    ]
+  }
+  const idGenUrl = config.host.idGenHost + config.paths.idGen;
+  logger.info("IdGen url : " + idGenUrl)
+  logger.info("Idgen Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.idResponses?.[0]?.id) {
+      return result?.idResponses?.[0]?.id;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
+const getSchema: any = async (code: string, RequestInfo: any) => {
+  const data = {
+    RequestInfo,
+    SchemaDefCriteria: {
+      "tenantId": RequestInfo?.userInfo?.tenantId,
+      "limit": 200,
+      "codes": [
+        code
+      ]
+    }
+  }
+  const mdmsSearchUrl = config.host.mdms + config.paths.mdmsSchema;
+  logger.info("Schema search url : " + mdmsSearchUrl)
+  logger.info("Schema search Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(mdmsSearchUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.SchemaDefinitions?.[0]?.definition) {
+      return result?.SchemaDefinitions?.[0]?.definition;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
+const getTypeUrl = (type: string): string => {
+  if (type === "facility") {
+    return "facility/v1/bulk/_create";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const getCreationType = (type: string): string => {
+  if (type === "facility") {
+    return "bulk";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const getCreationKey = (type: string): string => {
+  if (type === "facility") {
+    return "Facilities";
+  } else {
+    // handle other cases if needed
+    return ""; // return default or handle error
+  }
+}
+
+const createValidatedData: any = async (data: any[], type: string, request: any, response: any) => {
+  const url = getTypeUrl(type);
+  const creationType = getCreationType(type);
+  const creationKey = getCreationKey(type)
+  if (creationType == "bulk") {
+    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: data };
+    logger.info("Creation Request : " + JSON.stringify(creationRequest))
+    logger.info("Creation url : " + config.host.facilityHost + url);
+    const result = await httpRequest(`${config.host.facilityHost}${url}`, creationRequest, undefined, undefined, undefined, undefined);
+    if (result?.status == "successful") {
+      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+    }
+    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: result }
+  }
+  else {
+    return { status: "FAILED", type: type, url: url, requestPayload: null, responsePayload: null }
+  }
+}
+
 
 export {
   getSheetData,
   searchMDMS,
-  getCampaignNumber
+  getCampaignNumber,
+  getSchema,
+  createValidatedData,
+  getResouceNumber
 };
