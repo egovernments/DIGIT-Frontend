@@ -36,23 +36,23 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding}) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 15 * 60 * 1000,
-        cacheTime: 50 * 60 * 1000,
-        retry: false,
-        retryDelay: (attemptIndex) => Infinity,
-        /*
-          enable this to have auto retry incase of failure
-          retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-         */
-      },
-    },
-  });
+  // const queryClient = new QueryClient({
+  //   defaultOptions: {
+  //     queries: {
+  //       staleTime: 15 * 60 * 1000,
+  //       cacheTime: 50 * 60 * 1000,
+  //       retry: false,
+  //       retryDelay: (attemptIndex) => Infinity,
+  //       /*
+  //         enable this to have auto retry incase of failure
+  //         retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
+  //        */
+  //     },
+  //   },
+  // });
 
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;

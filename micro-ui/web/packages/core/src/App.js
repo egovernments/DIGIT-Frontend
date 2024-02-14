@@ -6,7 +6,7 @@ import useAuth from "./hooks/useAuth";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
-import { QueryClient } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import registerRemotes from "./modules/registerRemotes"
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
@@ -24,7 +24,20 @@ initLibraries().then(() => {
 });
 
 //registering remote apps
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 15 * 60 * 1000,
+      cacheTime: 50 * 60 * 1000,
+      retry: false,
+      retryDelay: (attemptIndex) => Infinity,
+      /*
+        enable this to have auto retry incase of failure
+        retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
+       */
+    },
+  },
+});
 registerRemotes(queryClient)
 
 
@@ -77,12 +90,12 @@ const App = () => {
             </Route> */}
 
             <Route path="/">{
-              <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
+              <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} queryClient={queryClient}/>
             }</Route>
           </Switch>
         </Suspense>
       </div>
-    </div>
+      </div>
   );
 };
 

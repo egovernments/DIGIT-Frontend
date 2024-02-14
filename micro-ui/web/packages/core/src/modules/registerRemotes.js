@@ -9,22 +9,22 @@ export default (queryClient) => {
   registerApplication({
     name: "Workbench",
     app: () => import("workbench/WorkbenchModule"),
-    activeWhen: "/",
+    activeWhen: "/workbench-ui/employee/workbench",
     customProps: {
       title: "Workbench is running on host",
       queryClient,
     },
   });
 
-  registerApplication({
-    name: "app1",
-    app: () => import("app1/App"),
-    activeWhen: "/",
-    customProps: {
-      title: "App 1 running on host",
-      queryClient,
-    },
-  });
+  // registerApplication({
+  //   name: "app1",
+  //   app: () => import("app1/App"),
+  //   activeWhen: "/",
+  //   customProps: {
+  //     title: "App 1 running on host",
+  //     queryClient,
+  //   },
+  // });
 
   start();
 }
