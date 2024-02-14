@@ -15,6 +15,9 @@ const SetupCampaign = () => {
   const [deliveryNumber, setDeliveryNumber] = useState(undefined);
   const [cycleNumber, setCycleNumber] = useState(undefined);
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig);
+  const [arrayData, setArrayData] = useState([{},{},{},{}]);
+
+  console.log(arrayData," aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
   
   const onSubmit = async (formData) => {
     console.log("form11", formData);
@@ -22,8 +25,6 @@ const SetupCampaign = () => {
   
     // Assuming formData is an object, set the cycles property dynamically
     formData["cycles"] = {};
-  
-    // Generate properties like cycle1, cycle2, etc. based on deliveryNumber
     for (let cycle = 1; cycle <= cycleNumber; cycle++) {
       const cycleKey = `cycle${cycle}`;
       formData["cycles"][cycleKey] = {};
@@ -36,8 +37,6 @@ const SetupCampaign = () => {
         // Populate delivery-specific properties
         formData["cycles"][cycleKey][deliveryKey]["campaignName"] = formData[`campaignName_${cycle}_${delivery}`];
         formData["cycles"][cycleKey][deliveryKey]["campaignType"] = formData[`campaigntype_${cycle}_${delivery}`];
-  
-        // Add any other specific properties for each delivery here
       }
     }
     console.log(currentStep,"current");
@@ -48,6 +47,8 @@ const SetupCampaign = () => {
 
   const onStepClick = (step) => {
     console.log("step", step);
+    onFormValueChange
+
     setCurrentStep(step);
   };
 
@@ -115,9 +116,10 @@ const SetupCampaign = () => {
     }
   }, [currentStep, deliveryNumber, CampaignConfig, cycleNumber]);
 
-  useEffect(() => {
-
-  },[currentStep])
+  // useEffect(() => {
+  //   onFormValueChange
+  //   console.log("hello")
+  // },[currentStep])
   
   const filteredConfig = campaignConfig.map((config) => {
     return {
@@ -133,8 +135,12 @@ const SetupCampaign = () => {
 
   const onFormValueChange = (setValue, formData) => {
     const { deliveryNumber, cycleNumber , campaignName ,  campaigntype} = formData;
+    console.log(setValue," sssssssssssss")
     setDeliveryNumber(deliveryNumber);
     setCycleNumber(cycleNumber);
+    var newArrayData=arrayData;
+    newArrayData[currentStep]=formData;
+    setArrayData(newArrayData);
     console.log("formData", formData);
   };
   
