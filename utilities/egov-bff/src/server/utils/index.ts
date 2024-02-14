@@ -9,6 +9,7 @@ import { getCampaignNumber, getResouceNumber } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
+import { Pool } from 'pg';
 
 import { logger } from "./logger";
 // import { userInfo } from "os";
@@ -492,7 +493,56 @@ async function generateActivityMessage(createdResult: any, successMessage: any, 
   return activityMessage;
 }
 
+async function getResponseFromDb(request: any, response: any) {
+  const pool = new Pool({
+    user: config.DB_USER,
+    host: config.DB_HOST,
+    database: config.DB_NAME,
+    password: config.DB_PASSWORD,
+    port: parseInt(config.DB_PORT)
+  });
+  const { type } = request.query;
 
+  let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
+  const status = 'completed';
+  const queryResult = await pool.query(queryString, [type, status]);
+  const responseData = queryResult.rows;
+  const modifiedResponse = responseData.map(item => {
+    return {
+      ...item,
+      lastmodifiedtime: parseInt(item.lastmodifiedtime),
+      createdtime: parseInt(item.createdtime)
+    };
+  })
+  const modifiedResponseForNewEntry =
+    [
+      {
+        id: uuidv4(),
+        filestoreid: null,
+        type: type,
+        status: "In Progress",
+        lastmodifiedtime: Date.now(),
+        createdtime: Date.now(),
+        createdby: request?.body?.RequestInfo?.userInfo.uuid,
+        lastmodifiedby: request?.body?.RequestInfo?.userInfo.uuid,
+        additionaldetails: null
+      }
+    ];
+  const modifiedResponseForOldEntry = modifiedResponse.map(item => {
+    return {
+      ...item,
+      status: "expired",
+      lastmodifiedtime: Date.now()
+    };
+  });
+  const combinedResponse = {
+    responseData: modifiedResponse,
+    newEntryResponse: modifiedResponseForNewEntry,
+    oldEntryResponse: modifiedResponseForOldEntry
+  };
+  return combinedResponse;
+
+}
 
 
 
@@ -516,5 +566,6 @@ export {
   generateXlsxFromJson,
   generateAuditDetails,
   generateResourceMessage,
-  generateActivityMessage
+  generateActivityMessage,
+  getResponseFromDb
 };

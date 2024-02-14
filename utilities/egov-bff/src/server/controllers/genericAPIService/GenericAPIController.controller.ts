@@ -1,6 +1,7 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
+import { getResponseFromDb } from '../../utils/index'
 
 
 import {
@@ -26,6 +27,11 @@ import { generateXlsxFromJson } from "../../utils/index"
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
+const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
+const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
+
+
+
 
 // Define the MeasurementController class
 class genericAPIController {
@@ -176,30 +182,37 @@ class genericAPIController {
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {
-            const pool = new Pool({
-                user: config.DB_USER,
-                host: config.DB_HOST,
-                database: config.DB_NAME,
-                password: config.DB_PASSWORD,
-                port: parseInt(config.DB_PORT)
-            });
-            const { type, forceUpdate } = request.query; console.log(forceUpdate, "fff")
-            console.log(type, "ttttt");
-            let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
-            const status = 'completed';
-            const queryResult = await pool.query(queryString, [type, status]);
-            const responseData = queryResult.rows;
-            console.log(responseData,"ressp")
-            if(responseData.length>0)
-            {
-                let expiredResponse = responseData;
-                expiredResponse[0].status = "expired";
+            const responseObject = await getResponseFromDb(request, response);
+            const responseData = responseObject.responseData;
+            const newEntryResponse = responseObject.newEntryResponse;
+            const oldEntryResponse = responseObject.oldEntryResponse;
+            const { forceUpdate } = request.query;
+            const forceUpdateBool: boolean = forceUpdate === 'true';
+            let generatedResource: any;
+
+            if (forceUpdateBool) {
+                if (responseData.length > 0) {
+                    generatedResource = { generatedResource: oldEntryResponse }
+                    produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+                    generatedResource = { generatedResource: newEntryResponse }
+                    produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                }
+                else {
+                    generatedResource = { generatedResource: newEntryResponse }
+                    produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                }
+            }
+            else {
+                if (responseData.length == 0) {
+                    generatedResource = { generatedResource: newEntryResponse };
+                    produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                }
             }
 
-
-
-        } catch
-        { }
+        } catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) }, request, response);
+        }
     };
 
     downloadData = async (request: express.Request, response: express.Response) => {

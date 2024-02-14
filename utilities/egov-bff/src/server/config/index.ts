@@ -35,6 +35,10 @@ const config = {
     process.env.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC || "create-resource-details",
   KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC:
     process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
+  KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC:
+    process.env.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC || "update-generated-resource-details",  
+  KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC:
+    process.env.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC || "create-generated-resource-details",
   DB_USER:
     process.env.DB_USER || "postgres",
   DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
