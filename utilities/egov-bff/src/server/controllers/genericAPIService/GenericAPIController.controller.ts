@@ -85,7 +85,7 @@ class genericAPIController {
                     return sendResponse(response, { error: createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs" }, request);
                 }
             }
-            else if (result?.validationResult == "INVALID_DAT") {
+            else if (result?.validationResult == "INVALID_DATA") {
                 const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
                 produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
                 return sendResponse(response, { "error": result?.errors, result: failedMessage }, request);
