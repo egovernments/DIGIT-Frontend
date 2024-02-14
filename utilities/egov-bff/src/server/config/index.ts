@@ -85,6 +85,8 @@ const config = {
       || "HCM.TransformTemplate",
     campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
       || "HCM.HCMTemplate",
+    APIResource: process.env.HCM_API_RESOURCE
+      || "HCM.APIResouceTemplate",
     idgen: {
       format: process.env.CMP_IDGEN_FORMAT || "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]",
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"

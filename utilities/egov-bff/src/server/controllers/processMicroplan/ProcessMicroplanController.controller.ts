@@ -103,7 +103,7 @@ class BulkUploadController {
         return sendResponse(response, { CampaignDetails: [] }, request);
       }
     } catch (error) {
-      console.error('Error searching campaigns:', error);
+      logger.error('Error searching campaigns:' + JSON.stringify(error));
       return sendResponse(response, { CampaignDetails: [] }, request);
     }
   };

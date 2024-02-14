@@ -56,7 +56,7 @@ class genericAPIController {
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
             if (result?.validationResult == "VALID_DATA") {
-                const createdResult = await createValidatedData(result?.data, type, request.body)
+                const createdResult = await createValidatedData(result, type, request.body)
                 logger.info(type + " creation result : " + createdResult)
                 if (createdResult?.status == "SUCCESS") {
                     const successMessage: any = await generateResourceMessage(request.body, "Completed")
@@ -79,19 +79,19 @@ class genericAPIController {
                     return sendResponse(response, { error: createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs" }, request);
                 }
             }
-            else if (result?.validationResult == "INVALID_DATA") {
+            else if (result?.validationResult == "INVALID_DAT") {
                 const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
                 produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                throw new Error(result?.validationResult);
+                return sendResponse(response, { "error": result?.errors, result: failedMessage }, request);
             }
             else {
                 const failedMessage: any = await generateResourceMessage(request.body, "OTHER_ERROR")
                 produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                throw new Error("Error during validated data, Check Logs");
+                return sendResponse(response, { "error": "Error during validated data, Check Logs", result: failedMessage }, request);
             }
         } catch (error: any) {
             logger.error(error);
-            return sendResponse(response, { error: error }, request);
+            return sendResponse(response, { "error": error.message }, request);
         }
     }
 
@@ -101,24 +101,24 @@ class genericAPIController {
     ) => {
         try {
             const { type, fileStoreId } = request?.body?.ResourceDetails;
-            const campaignType = "generic_" + type;
+            const APIResourceName = type;
 
             // Search for campaign in MDMS
-            const campaign: any = await searchMDMS([campaignType], config.values.campaignType, request.body.RequestInfo, response);
-            if (!campaign.mdms || Object.keys(campaign.mdms).length === 0) {
-                const errorMessage = "Invalid Campaign Type";
+            const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
+            if (!APIResource.mdms || Object.keys(APIResource.mdms).length === 0) {
+                const errorMessage = "Invalid APIResourceType Type";
                 logger.error(errorMessage);
                 throw new Error(errorMessage);
             }
 
-            const transformTemplate = campaign?.mdms?.[0]?.data?.transformTemplate;
+            const transformTemplate = APIResource?.mdms?.[0]?.data?.transformTemplateName;
 
             // Search for transform template
             const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
             const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
             logger.info("File fetching url : " + url);
 
-            const parsingTemplates = campaign?.mdms?.[0]?.data?.parsingTemplates;
+            const parsingTemplate = APIResource?.mdms?.[0]?.data?.parsingTemplateName;
             let TransformConfig: any;
             if (result?.mdms?.length > 0) {
                 TransformConfig = result.mdms[0];
@@ -130,25 +130,19 @@ class genericAPIController {
             validateTransformedData(updatedDatas);
 
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
-            const parsingTemplatesLength = parsingTemplates.length;
             let processResult: any;
+            request.body.HCMConfig = {}
+            request.body.HCMConfig['parsingTemplate'] = parsingTemplate;
+            request.body.HCMConfig['data'] = updatedDatas;
 
-            // Iterate over parsing templates
-            for (let i = 0; i < parsingTemplatesLength; i++) {
-                const parsingTemplate = parsingTemplates[i];
-                request.body.HCMConfig = {};
-                request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
-                request.body.HCMConfig['data'] = updatedDatas;
-
-                // Process data
-                processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
-                if (processResult.Error) {
-                    logger.error(processResult.Error);
-                    throw new Error(processResult.Error);
-                }
+            // Process data
+            processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+            if (processResult.Error) {
+                logger.error(processResult.Error);
+                throw new Error(processResult.Error);
             }
 
-            const healthMaster = `Health.${type.charAt(0).toUpperCase()}${type.slice(1)}`;
+            const healthMaster = APIResource?.mdms?.[0]?.data?.masterDetails?.masterName + "." + APIResource?.mdms?.[0]?.data?.masterDetails?.moduleName;
 
             // Get schema definition
             const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
@@ -174,7 +168,13 @@ class genericAPIController {
                 const errors = [...validationErrors, ...mdmsErrors];
                 return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
             } else {
-                return sendResponse(response, { "validationResult": "VALID_DATA", "data": validatedData }, request);
+                return sendResponse(response, {
+                    "validationResult": "VALID_DATA",
+                    "data": validatedData,
+                    url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
+                    keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
+                    isBulkCreate: APIResource?.mdms?.[0]?.data?.isBulkCreate
+                }, request);
             }
         } catch (error: any) {
             logger.error(error);
@@ -192,15 +192,12 @@ class genericAPIController {
                 password: config.DB_PASSWORD,
                 port: parseInt(config.DB_PORT)
             });
-            const { type, forceUpdate } = request.query; console.log(forceUpdate, "fff")
-            console.log(type, "ttttt");
+            const { type } = request.query;
             let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
             const status = 'completed';
             const queryResult = await pool.query(queryString, [type, status]);
             const responseData = queryResult.rows;
-            console.log(responseData,"ressp")
-            if(responseData.length>0)
-            {
+            if (responseData.length > 0) {
                 let expiredResponse = responseData;
                 expiredResponse[0].status = "expired";
             }

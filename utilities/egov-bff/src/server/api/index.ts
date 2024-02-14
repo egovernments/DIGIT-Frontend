@@ -364,40 +364,13 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
-const getTypeUrl = (type: string): string => {
-  if (type === "facility") {
-    return "facility/v1/bulk/_create";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const getCreationType = (type: string): string => {
-  if (type === "facility") {
-    return "bulk";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const getCreationKey = (type: string): string => {
-  if (type === "facility") {
-    return "Facilities";
-  } else {
-    // handle other cases if needed
-    return ""; // return default or handle error
-  }
-}
-
-const createValidatedData: any = async (data: any[], type: string, request: any, response: any) => {
-  const url = getTypeUrl(type);
-  const creationType = getCreationType(type);
-  const creationKey = getCreationKey(type)
-  if (creationType == "bulk") {
+const createValidatedData: any = async (result: any, type: string, request: any, response: any) => {
+  const url = result?.url;
+  const isBulkCreate = result?.isBulkCreate;
+  const creationKey = result?.keyName
+  if (isBulkCreate) {
     var retry: number = 0;
-    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: data };
+    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: result?.data };
     const retryCount = parseInt(config.values.retryCount)
     let success = false;
     let creationResponse: any = {};
@@ -414,7 +387,7 @@ const createValidatedData: any = async (data: any[], type: string, request: any,
       })
         .catch(error => {
           creationResponse = error?.response?.data;
-          console.error("Error occurred during creation attempt:", error?.response?.data);
+          logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
           retry++;
         });
     }
