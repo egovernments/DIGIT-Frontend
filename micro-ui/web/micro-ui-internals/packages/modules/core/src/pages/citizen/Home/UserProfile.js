@@ -314,8 +314,8 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   return (
     <div className="user-profile">
-      <section style={{ margin: userType === "citizen" ? "8px" : "24px" }}>
-        {userType === "citizen" ? (
+      <section style={{ margin: userType === "citizen" || isMobile ? "8px" : "24px" }}>
+        {userType === "citizen" || isMobile ? (
           <BackButton></BackButton>
         ) : (
           <BreadCrumb
@@ -582,9 +582,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div>
-                  <a style={{ color: "orange", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
+                {changepassword==false ? <a style={{ color: "orange", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
                     {t("CORE_COMMON_CHANGE_PASSWORD")}
-                  </a>
+                  </a> : null }
                   {changepassword ? (
                     <div style={{ marginTop: "10px" }}>
                       <LabelFieldPair style={{ display: "flex" }}>
@@ -646,12 +646,31 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                   )}
                 </div>
               </LabelFieldPair>
+              { userType === "employee" && isMobile ? ( 
+                <button
+                  onClick={updateProfile}
+                  style={{
+                    marginTop: "24px",
+                    backgroundColor: "#F47738",
+                    width: "100%",
+                    height: "40px",
+                    color: "white",
+                    maxWidth : isMobile? "100%":"240px",
+                    borderBottom: "1px solid black",
+                    fontWeight: "700",
+                    fontSize: "17px"    
+                  }}
+                >
+                  {t("CORE_COMMON_SAVE")}
+                </button>
+              ) : null
+            }
             </React.Fragment>
           )}
         </section>
       </div>
 
-      {userType === "employee" ? (
+      { userType === "employee" && !isMobile ? (
         <div className="action-bar-wrap">
       
           <SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />
@@ -673,9 +692,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           </button> */}
      
         </div>
-      ) : (
-        ""
-      )}
+      ) : null }
       {toast && (
         <Toast
           error={toast.key === "error"}
