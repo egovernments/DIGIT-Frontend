@@ -102,7 +102,7 @@ const EmployeeSideBar = () => {
       res.sort((a, b) => a.moduleName.localeCompare(b.moduleName));
     }
     return res?.map((item, index) => {
-      return <SubMenu item={item} key={index + 1} />;
+      // return <SubMenu item={item} key={index + 1} />;
     });
   };
 

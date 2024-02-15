@@ -16,13 +16,13 @@ module.exports = () => {
         name: "core-digit-ui",
         remotes: {
           // landing: `landing@${domain}/landing/remoteEntry.js`,
-          auth: `auth@${domain}/auth/remoteEntry.js`,
+          // auth: `auth@${domain}/auth/remoteEntry.js`,
           // header: `header@${domain}/header/remoteEntry.js`,
-          dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
-          hrms: `hrms@${domain}/hrms/remoteEntry.js`,
+          // dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
+          // hrms: `hrms@${domain}/hrms/remoteEntry.js`,
           workbench : `workbench@${domain}/workbench/remoteEntry.js`,
-          dss : `dss@${domain}/dss/remoteEntry.js`,
-          measurement : `measurement@${domain}/measurement/remoteEntry.js`
+          // dss : `dss@${domain}/dss/remoteEntry.js`,
+          // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
         shared: packageJson.dependencies,
       }),

@@ -34,14 +34,14 @@ module.exports = () => {
       historyApiFallback: {
         index: "/",
       },
-      https: true, // Enable HTTPS
+      server:"https", //Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({
         name: "workbench",
         filename: "remoteEntry.js",
         exposes: {
-          "./WorkbenchModule": "./src/bootstrap",
+          "./WorkbenchModule": "./src/SingleSpaEntry",
         },
         shared: packageJson.dependencies,
       }),

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation } from "react-router-dom";
+import { Switch, useLocation} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import LocalisationSearch from "./LocalisationSearch";
@@ -39,7 +39,7 @@ const MastersBreadCrumb = ({ location ,defaultPath}) => {
 };
 
 const App = ({ path }) => {
-  const location = useLocation();
+   const location = useLocation()
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
   

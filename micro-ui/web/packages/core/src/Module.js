@@ -6,10 +6,12 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp } from "./pages/index";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
-
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
+
+import { ReactQueryDevtools } from 'react-query/devtools';
+//here add react-query dev tools
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -36,23 +38,23 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding}) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 15 * 60 * 1000,
-        cacheTime: 50 * 60 * 1000,
-        retry: false,
-        retryDelay: (attemptIndex) => Infinity,
-        /*
-          enable this to have auto retry incase of failure
-          retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-         */
-      },
-    },
-  });
+  // const queryClient = new QueryClient({
+  //   defaultOptions: {
+  //     queries: {
+  //       staleTime: 15 * 60 * 1000,
+  //       cacheTime: 50 * 60 * 1000,
+  //       retry: false,
+  //       retryDelay: (attemptIndex) => Infinity,
+  //       /*
+  //         enable this to have auto retry incase of failure
+  //         retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
+  //        */
+  //     },
+  //   },
+  // });
 
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
@@ -99,6 +101,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
               }}
             >
               <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
+              <ReactQueryDevtools initialIsOpen={false} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

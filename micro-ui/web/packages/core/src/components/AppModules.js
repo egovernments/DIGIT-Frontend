@@ -27,13 +27,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
       <Route key={index} path={`${path}/${code.toLowerCase()}`}>
         <Module stateCode={stateCode} moduleCode={code} userType={userType} tenants={getTenants(tenants, appTenants)} />
       </Route>
-    ) : (
-      <Route key={index} path={`${path}/${code.toLowerCase()}`}>
-        <Redirect
-          to={`/${window?.contextPath}/employee/user/error?type=notfound&module=${code}` }
-        />
-      </Route>
-    );
+    ) : null
   });
 
   return (
