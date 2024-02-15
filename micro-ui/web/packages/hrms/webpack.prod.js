@@ -24,3 +24,4 @@ module.exports = () => {
 
   return merge(commonConfig, prodConfig);
 
+}
