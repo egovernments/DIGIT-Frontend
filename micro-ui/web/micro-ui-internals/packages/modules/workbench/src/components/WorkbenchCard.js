@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
+  LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN", "PQM_ADMIN"],
   MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
 };
@@ -26,6 +26,11 @@ const WorkbenchCard = () => {
     {
       label: t("ACTION_TEST_LOCALISATION"),
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
+      roles: ROLES.LOCALISATION,
+    },
+    {
+      label: t("tqmSearch"),
+      link: `/${window?.contextPath}/employee/workbench/tqm-search`,
       roles: ROLES.LOCALISATION,
     },
     // {

@@ -34,11 +34,13 @@ function isFalsyOrEmpty(input) {
     
     return false;
   }
-
+// debugger;
+//  const InboxSearchComposer = ({configs,scrollPosition,browserSession = []}) => {
+    
+//      const [session,setSession,clearSession] = browserSession
 const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
     
-    const [session,setSession,clearSession] = browserSession || []
-   
+   const [session,setSession,clearSession] = browserSession || []
     const {t} = useTranslation()
     const presets = Digit.Hooks.useQueryParams();
     // if(Object.keys(presets).length > 0) configs = Digit.Utils.configUpdater(configs)
@@ -96,7 +98,8 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
         if(_.isEqual(state, initialInboxState)){
             dispatch({
                 type:"obj",
-                updatedState:Object?.keys(session)?.length > 0 ? session : initialInboxState
+               // updatedState: session && Object?.keys(session)?.length > 0 ? session : initialInboxState
+               updatedState:Object?.keys(session)?.length > 0 ? session : initialInboxState
             })
         } 
     },[])
@@ -110,6 +113,7 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
         //     return 
         // }
         setSession(() => state)
+       // setSession ? setSession(() => state) : null
         // if(!_.isEqual(state, session)){
         //     // setSession(()=>{
         //     //     return {
@@ -143,7 +147,8 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
         return () => {
             revalidate();
             setEnable(false);
-            if(!location.pathname.includes("tqm") && Digit.Utils.tqm.isUlbAdminLoggedIn()){
+           if(!location.pathname.includes("tqm") && Digit.Utils.tqm.isUlbAdminLoggedIn()){
+            //if(!location.pathname.includes("tqm")){  // removing isUlbAdminLoggedIn check as not needed.
                 sessionStorage.removeItem("Digit.TQM_INBOX_SESSION")
             }
         };

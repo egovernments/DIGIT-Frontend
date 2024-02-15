@@ -16,7 +16,146 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+function cleanObject(obj) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (Array.isArray(obj[key])) {
+        if (obj[key].length === 0) {
+          delete obj[key];
+        }
+      } else if (obj[key] === undefined || obj[key] === null || obj[key] === false || obj[key] === '' || (typeof obj[key] === 'object' && Object.keys(obj[key]).length === 0)) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
+
+//this is a recursive function , test it out before you use this
+function cleanObjectNested(obj) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        // Recursively clean nested objects
+        cleanObjectNested(obj[key]);
+        // If the nested object becomes empty, remove it
+        if (Object.keys(obj[key]).length === 0) {
+          delete obj[key];
+        }
+      } else if (Array.isArray(obj[key]) && obj[key].length === 0) {
+        // Remove empty arrays
+        delete obj[key];
+      } else if (
+        obj[key] === undefined ||
+        obj[key] === null ||
+        obj[key] === false ||
+        obj[key] === '' ||
+        (typeof obj[key] === 'object' && Object.keys(obj[key]).length === 0)
+      ) {
+        // Remove falsy values (except 0)
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
 export const UICustomizations = {
+  
+  SearchTestResultsUlbAdmin: {
+    preProcess: (data,additionalDetails) => {
+      
+      // const { id,plantCodes:selectedPlantCodes, processCodes, testType, dateRange } = data.body.custom || {};
+
+      const { id,plantCodes:selectedPlantCodes, processCodes, testType, dateRange } = data?.state?.searchForm || {};
+      const {limit,offset} = data?.state?.tableForm || {}
+      data.body.testSearchCriteria={}
+
+      //update testSearchCriteria
+
+      //test id
+      // data.body.testSearchCriteria.testIds = id ? [id] : []
+      //test id with part search enabled 
+      data.body.testSearchCriteria.testId = id ? id : ""
+      //plantcodes
+      // data.body.testSearchCriteria.plantCodes = plantCodes?.map(plantCode => plantCode.code)
+
+      data.body.testSearchCriteria.plantCodes = Digit.SessionStorage.get("user_plants")?.filter(row=>row?.plantCode)?.map(row => row?.plantCode)
+      //plantCodes 
+      if(selectedPlantCodes?.length>0){
+        data.body.testSearchCriteria.plantCodes = selectedPlantCodes?.filter(row=>row?.plantCode)?.map(row => row?.plantCode)
+      }
+      data.body.testSearchCriteria.wfStatus = ["SUBMITTED"];
+      //processcodes
+      data.body.testSearchCriteria.processCodes = processCodes?.map(processCode => processCode.code)
+      //testType
+      data.body.testSearchCriteria.testType = testType?.map(sourceType => sourceType.code)
+      //dataRange //fromDate //toDate
+      // const {fromDate,toDate} = {fromDate:1704067200,toDate:1706745599}
+      // data.body.testSearchCriteria.fromDate = fromDate
+      // data.body.testSearchCriteria.toDate = toDate
+
+      //tenantId
+      data.body.testSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+
+      //sorting by scheduled date
+    //   if(data.body.pagination){
+    //   data.body.pagination.sortBy = "scheduledDate"
+    //   data.body.pagination.sortOrder = "DESC"
+    // }
+
+    const isMobile = window.Digit.Utils.browser.isMobile();
+      if(isMobile){
+        data.body.pagination={}
+        data.body.pagination.limit = 100
+        data.body.pagination.offset = 0
+      }else{
+        data.body.pagination={}
+        data.body.pagination.limit = limit
+        data.body.pagination.offset = offset
+      }
+
+      cleanObject(data.body.testSearchCriteria)
+      cleanObject(data.body.pagination)
+
+      //delete custom
+      delete data.body.custom;
+      return data
+    },
+    MobileDetailsOnClick:() => {
+      return ""
+    },
+    onCardClick:(obj,row)=> {
+      return `view-test-results?tenantId=${obj?.apiResponse?.tenantId}&id=${obj?.apiResponse?.testId}&from=TQM_BREAD_PAST_TESTS&type=${obj?.apiResponse?.testType === "LAB_ADHOC" ? "adhoc" : ""}`
+     
+    },
+    onCardActionClick:(obj,row)=> {
+      return `view-test-results?tenantId=${obj?.apiResponse?.tenantId}&id=${obj?.apiResponse?.testId}&from=TQM_BREAD_PAST_TESTS&type=${obj?.apiResponse?.testType === "LAB_ADHOC" ? "adhoc" : ""}`
+    },
+    getCustomActionLabel:(obj,row) => {
+      return ""
+    },
+    additionalCustomizations:(row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "TQM_TEST_RESULTS":
+          return value?.includes("PASS")  ? <span className="sla-cell-success">{t(`TQM_TEST_RESULT_${value}`)}</span> : <span className="sla-cell-error">{t(`TQM_TEST_RESULT_${value}`)}</span>;
+          
+        case "ES_TQM_TEST_DATE":
+          return  Digit.DateUtils.ConvertEpochToDate(value)
+        
+        case "TQM_TEST_ID":
+          return <span className="link">
+            <Link
+              to={`/${window.contextPath}/employee/tqm/view-test-results?tenantId=${Digit.ULBService.getCurrentTenantId()}&id=${value}&from=TQM_BREAD_PAST_TESTS&type=${row?.testType === "LAB_ADHOC" ? "adhoc" : ""}`}
+            >
+              {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+            </Link>
+          </span>
+
+        default:
+          return "case_not_found"
+      }
+    }
+  },
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
     if (businessService === businessServiceMap.estimate) {
