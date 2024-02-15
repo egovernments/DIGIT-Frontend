@@ -1,7 +1,7 @@
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React,{ useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Switch, useLocation } from "react-router-dom";
+import { Link, Switch, useLocation,  BrowserRouter as Router } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-react-components";
 
 const {SixFtApart,Rotate360}=SVG;
@@ -33,8 +33,9 @@ const EmployeeApp = ({ path, url, userType }) => {
 },[location]);
 
   return (
-    <Switch>
       <React.Fragment>
+        <Router>
+        <Switch>
         <div className="ground-container">
           <p className="breadcrumb" style={{ marginLeft: mobileView ? "1vw" : "0px" }}>
             <Link to= {`/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
@@ -53,8 +54,9 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute path={`${path}/details/:tenantId/:id`} component={() => <HRMSDetails />} />
           <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <EditEmpolyee />} />
         </div>
+        </Switch>
+      </Router>
       </React.Fragment>
-    </Switch>
   );
 };
 
