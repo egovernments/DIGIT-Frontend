@@ -15,7 +15,7 @@ module.exports = () => {
         name: "hrms-ui",
         filename: "remoteEntry.js",
         exposes: {
-          "./HrmsModule": "./src/bootstrap",
+          "./HRMSModule": "./src/SingleSpaEntry",
         },
         shared: packageJson.dependencies, //removed the shared logic for now will be enabled later for optimization
       }),
@@ -24,3 +24,4 @@ module.exports = () => {
 
   return merge(commonConfig, prodConfig);
 
+}
