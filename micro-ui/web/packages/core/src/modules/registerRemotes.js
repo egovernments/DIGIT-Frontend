@@ -6,12 +6,22 @@ import { registerApplication,start } from "single-spa";
 
 export default (queryClient) => {
 
+  // registerApplication({
+  //   name: "Workbench",
+  //   app: () => import("workbench/WorkbenchModule"),
+  //   activeWhen: "/workbench-ui/employee/workbench",
+  //   customProps: {
+  //     title: "Workbench is running on host",
+  //     queryClient,
+  //   },
+  // });
+
   registerApplication({
-    name: "Workbench",
-    app: () => import("workbench/WorkbenchModule"),
-    activeWhen: "/workbench-ui/employee/workbench",
+    name: "hrms",
+    app: () => import("hrms/HrmsModule"),
+    activeWhen: "/workbench-ui/employee/hrms",
     customProps: {
-      title: "Workbench is running on host",
+      title: "HRMS is running on host",
       queryClient,
     },
   });
