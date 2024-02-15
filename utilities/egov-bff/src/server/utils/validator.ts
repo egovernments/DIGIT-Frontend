@@ -119,7 +119,19 @@ function validateDataWithSchema(data: any, schema: any): { isValid: boolean; err
     return { isValid, error: validate.errors };
 }
 
+function processValidationWithSchema(processResult: any, validationErrors: any, validatedData: any, schemaDef: any) {
+    processResult.updatedDatas.forEach((data: any) => {
+        const validationResult = validateDataWithSchema(data, schemaDef);
+        if (!validationResult.isValid) {
+            validationErrors.push({ data, error: validationResult.error });
+        }
+        else {
+            validatedData.push(data)
+        }
+    });
+}
 
 
 
-export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema };
+
+export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema };

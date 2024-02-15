@@ -6,6 +6,8 @@ import hashSum from 'hash-sum';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
+import { generateActivityMessage, generateResourceMessage } from "../utils/index";
+import { produceModifiedMessages } from "../Kafka/Listener";
 const _ = require('lodash');
 
 
@@ -366,7 +368,8 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
-const createValidatedData: any = async (result: any, type: string, request: any, response: any) => {
+const createValidatedData: any = async (result: any, type: string, request: any) => {
+  let host = result?.host;
   const url = result?.url;
   const isBulkCreate = result?.isBulkCreate;
   const creationKey = result?.keyName
@@ -379,8 +382,9 @@ const createValidatedData: any = async (result: any, type: string, request: any,
     while (retry <= retryCount && !success) {
       logger.info("Creation Attempt : " + retry + 1)
       logger.info("Creation Request : " + JSON.stringify(creationRequest))
-      logger.info("Creation url : " + config.host.facilityHost + url);
-      await axios.post(`${config.host.facilityHost}${url}`, creationRequest).then(response => {
+      // host = 'http://localhost:8086/'
+      logger.info("Creation url : " + host + url);
+      await axios.post(`${host}${url}`, creationRequest).then(response => {
         if (response?.data?.status == "successful") {
           creationResponse = response?.data;
           success = true;
@@ -418,6 +422,68 @@ const getCount: any = async (responseData: any, request : any , response: any) =
 
 }
 
+const processCreateData: any = async (result: any, type: string, request: any) => {
+  if (result?.creationLimit) {
+    let currentIndex = 0;
+    let finalResponse: any[] = [];
+    while (currentIndex < result?.data?.length) {
+      let batchResult = JSON.parse(JSON.stringify(result));
+      batchResult.data = result?.data?.slice(currentIndex, currentIndex + result?.creationLimit);
+      const createdResult = await createValidatedData(batchResult, type, request.body)
+      logger.info(type + " creation result : " + createdResult)
+      if (createdResult?.status == "SUCCESS") {
+        const successMessage: any = await generateResourceMessage(request.body, "Completed")
+        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+        produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+        const activities: any = { activities: [activityMessage] }
+        logger.info("Activity Message : " + JSON.stringify(activities))
+        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+        logger.info("Success Message : " + JSON.stringify(successMessage))
+        successMessage.batchNumber = currentIndex / result?.creationLimit + 1;
+        finalResponse.push(successMessage);
+      }
+      else {
+        const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
+        const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
+        produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+        const activities: any = { activities: [activityMessage] }
+        logger.info("Activity Message : " + JSON.stringify(activities))
+        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+        logger.info("Failed Message : " + JSON.stringify(failedMessage))
+        failedMessage.error = createdResult?.responsePayload?.Errors
+        failedMessage.batchNumber = currentIndex / result?.creationLimit + 1;
+        finalResponse.push(failedMessage);
+      }
+      currentIndex += result?.creationLimit;
+    }
+    return finalResponse;
+  }
+  else {
+    const createdResult = await createValidatedData(result, type, request.body)
+    logger.info(type + " creation result : " + createdResult)
+    if (createdResult?.status == "SUCCESS") {
+      const successMessage: any = await generateResourceMessage(request.body, "Completed")
+      const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+      produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+      const activities: any = { activities: [activityMessage] }
+      logger.info("Activity Message : " + JSON.stringify(activities))
+      produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+      logger.info("Success Message : " + JSON.stringify(successMessage))
+      return successMessage
+    }
+    else {
+      const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
+      const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
+      produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+      const activities: any = { activities: [activityMessage] }
+      logger.info("Activity Message : " + JSON.stringify(activities))
+      produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+      logger.info("Success Message : " + JSON.stringify(failedMessage))
+      return createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs"
+    }
+  }
+}
+
 
 export {
   getSheetData,
@@ -426,5 +492,6 @@ export {
   getSchema,
   createValidatedData,
   getResouceNumber,
-  getCount
+  getCount,
+  processCreateData
 };

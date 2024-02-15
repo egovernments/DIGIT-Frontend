@@ -9,17 +9,16 @@ import {
     //     getSheetData,
     searchMDMS,
     getSchema,
-    createValidatedData
+    processCreateData
 } from "../../api/index";
 
 import {
-    generateActivityMessage,
     generateResourceMessage,
     // processFile,
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { validateDataWithSchema, validateTransformedData } from "../../utils/validator";
+import { processValidationWithSchema, validateTransformedData } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
 // import { httpRequest } from "../../utils/request";
 import { Pool } from 'pg';
@@ -52,7 +51,6 @@ class genericAPIController {
         this.router.post(`${this.path}/_validate`, this.validateData);
         this.router.post(`${this.path}/_download`, this.downloadData);
         this.router.post(`${this.path}/_generate`, this.generateData);
-
     }
     createData = async (
         request: express.Request,
@@ -63,38 +61,22 @@ class genericAPIController {
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
             if (result?.validationResult == "VALID_DATA") {
-                const createdResult = await createValidatedData(result, type, request.body)
-                logger.info(type + " creation result : " + createdResult)
-                if (createdResult?.status == "SUCCESS") {
-                    const successMessage: any = await generateResourceMessage(request.body, "Completed")
-                    const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
-                    produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                    const activities: any = { activities: [activityMessage] }
-                    logger.info("Activity Message : " + JSON.stringify(activities))
-                    produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-                    logger.info("Success Message : " + JSON.stringify(successMessage))
-                    return sendResponse(response, { "result": successMessage }, request);
-                }
-                else {
-                    const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
-                    const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
-                    produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                    const activities: any = { activities: [activityMessage] }
-                    logger.info("Activity Message : " + JSON.stringify(activities))
-                    produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-                    logger.info("Success Message : " + JSON.stringify(failedMessage))
-                    return sendResponse(response, { error: createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs" }, request);
-                }
+                const ResponseDetails = await processCreateData(result, type, request);
+                return sendResponse(response, { ResponseDetails }, request);
             }
             else if (result?.validationResult == "INVALID_DATA") {
                 const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
                 produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                return sendResponse(response, { "error": result?.errors, result: failedMessage }, request);
+                const ResponseDetails = failedMessage;
+                ResponseDetails.error = result?.errors || "Error during validation of data, Check Logs";
+                return sendResponse(response, { ResponseDetails }, request);
             }
             else {
                 const failedMessage: any = await generateResourceMessage(request.body, "OTHER_ERROR")
                 produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                return sendResponse(response, { "error": "Error during validated data, Check Logs", result: failedMessage }, request);
+                const ResponseDetails = failedMessage;
+                ResponseDetails.error = "Some other error, Check Logs";
+                return sendResponse(response, { ResponseDetails }, request);
             }
         } catch (error: any) {
             logger.error(error);
@@ -157,15 +139,7 @@ class genericAPIController {
             // Validate data with schema
             const validationErrors: any[] = [];
             const validatedData: any[] = [];
-            processResult.updatedDatas.forEach((data: any) => {
-                const validationResult = validateDataWithSchema(data, schemaDef);
-                if (!validationResult.isValid) {
-                    validationErrors.push({ data, error: validationResult.error });
-                }
-                else {
-                    validatedData.push(data)
-                }
-            });
+            processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
 
             // Include error messages from MDMS service
             const mdmsErrors = processResult?.mdmsErrors || [];
@@ -178,9 +152,11 @@ class genericAPIController {
                 return sendResponse(response, {
                     "validationResult": "VALID_DATA",
                     "data": validatedData,
+                    host: APIResource?.mdms?.[0]?.data?.host,
                     url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
                     keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
-                    isBulkCreate: APIResource?.mdms?.[0]?.data?.isBulkCreate
+                    isBulkCreate: APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate,
+                    creationLimit: APIResource?.mdms?.[0]?.data?.creationConfig?.limit
                 }, request);
             }
         } catch (error: any) {

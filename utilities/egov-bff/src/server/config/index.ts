@@ -36,7 +36,7 @@ const config = {
   KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC:
     process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
   KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC:
-    process.env.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC || "update-generated-resource-details",  
+    process.env.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC || "update-generated-resource-details",
   KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC:
     process.env.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC || "create-generated-resource-details",
   DB_USER:
@@ -90,7 +90,7 @@ const config = {
     campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
       || "HCM.HCMTemplate",
     APIResource: process.env.HCM_API_RESOURCE
-      || "HCM.APIResouceTemplate",
+      || "HCM.APIResouceTemplate5",
     idgen: {
       format: process.env.CMP_IDGEN_FORMAT || "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]",
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
