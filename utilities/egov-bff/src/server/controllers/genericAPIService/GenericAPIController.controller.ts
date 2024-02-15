@@ -27,6 +27,7 @@ import { generateXlsxFromJson } from "../../utils/index"
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
+import { callSearchApi } from  '../../utils/index'
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
@@ -99,7 +100,7 @@ class genericAPIController {
             logger.error(error);
             return sendResponse(response, { "error": error.message }, request);
         }
-    }
+    };
 
     validateData = async (
         request: express.Request,
@@ -205,16 +206,26 @@ class genericAPIController {
                     produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
                     generatedResource = { generatedResource: newEntryResponse }
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                   await  callSearchApi(request, response);
                 }
                 else {
                     generatedResource = { generatedResource: newEntryResponse }
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                   await callSearchApi(request, response);
+
                 }
             }
             else {
                 if (responseData.length == 0) {
                     generatedResource = { generatedResource: newEntryResponse };
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+                   const responseDatas: any = await  callSearchApi(request, response);
+                   console.log(responseDatas.length,"pppppp")
+                   return sendResponse(
+                    response,
+                    { "count": responseDatas.length },
+                    request
+                  );
                 }
             }
 

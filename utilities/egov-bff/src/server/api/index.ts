@@ -6,6 +6,8 @@ import hashSum from 'hash-sum';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
+const _ = require('lodash');
+
 
 
 function processColumnValue(
@@ -401,6 +403,21 @@ const createValidatedData: any = async (result: any, type: string, request: any,
   }
 }
 
+const getCount: any = async (responseData: any, request : any , response: any) => {
+  try{
+  const host = responseData?.host;
+  const url = responseData?.searchConfig?.countUrl;
+  const requestInfo = {"RequestInfo" : request?.body?.RequestInfo}
+   const result = await httpRequest(host+url, requestInfo, undefined, undefined, undefined, undefined);
+   const count = _.get(result, responseData?.searchConfig?.countPath);
+   return count;
+  }catch (error: any) {
+    logger.error("Error: " + error)
+    return error?.response?.data?.Errors[0].message;
+  }
+
+}
+
 
 export {
   getSheetData,
@@ -408,5 +425,6 @@ export {
   getCampaignNumber,
   getSchema,
   createValidatedData,
-  getResouceNumber
+  getResouceNumber,
+  getCount
 };
