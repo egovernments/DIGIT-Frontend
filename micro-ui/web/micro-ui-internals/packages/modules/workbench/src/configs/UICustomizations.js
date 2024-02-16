@@ -93,7 +93,7 @@ export const UICustomizations = {
       // const {fromDate,toDate} = {fromDate:1704067200,toDate:1706745599}
       // data.body.testSearchCriteria.fromDate = fromDate
       // data.body.testSearchCriteria.toDate = toDate
-
+      
       //tenantId
       data.body.testSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
 

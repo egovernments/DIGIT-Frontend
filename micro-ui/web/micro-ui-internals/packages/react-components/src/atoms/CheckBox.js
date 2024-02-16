@@ -51,8 +51,16 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
             <CheckSvg />
           </p>
         </div>
-        <p className="label" style={style ? style : null}>
-          {label}
+           <p className="label" style={style ? style : {}}>
+          
+          {customLabelMarkup ? 
+          <>
+            <p>{t("COMMON_CERTIFY_ONE")}</p>
+            <br />
+            <p>
+            <b> {t("ES_COMMON_NOTE")}</b>{t("COMMON_CERTIFY_TWO")}
+            </p>
+            </> : label}
         </p>
       </div>
     );

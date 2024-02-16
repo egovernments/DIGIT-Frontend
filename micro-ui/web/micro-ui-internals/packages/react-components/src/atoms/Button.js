@@ -24,9 +24,11 @@ const Button = (props) => {
       className={`${className} ${(props?.className && props?.className) || ""} ${(props?.isDisabled && "jk-digit-disabled-btn") || ""}`}
       type={props.type || "button"}
       form={props.formId}
-      onClick={props.onButtonClick}
+    
+        onClick={props.onButtonClick}
       disabled={props?.isDisabled}
       style={props.style ? props.style : null}
+      onChange={props?.onChange}
     >
       {props?.icon && props.icon}
       <h2 style={{ ...props?.textStyles, ...{ width: "100%" } }}>{props.label}</h2>

@@ -28,11 +28,11 @@ const WorkbenchCard = () => {
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
     },
-    {
-      label: t("tqmSearch"),
-      link: `/${window?.contextPath}/employee/workbench/tqm-search`,
-      roles: ROLES.LOCALISATION,
-    },
+    // {
+    //   label: t("tqmSearch"),
+    //   link: `/${window?.contextPath}/employee/workbench/tqm-search`,
+    //   roles: ROLES.LOCALISATION,
+    // },
     // {
     //   label: t("Sample Create master"),
     //   link: `/${window?.contextPath}/employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Sample`,
