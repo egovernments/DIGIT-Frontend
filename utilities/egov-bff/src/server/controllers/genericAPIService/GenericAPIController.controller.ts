@@ -26,7 +26,7 @@ import { generateXlsxFromJson } from "../../utils/index"
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
-import { callSearchApi } from  '../../utils/index'
+import { callSearchApi } from '../../utils/index'
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
@@ -115,7 +115,7 @@ class genericAPIController {
             }
 
             // Get data from sheet
-            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, "Sheet 1");
+            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
             validateTransformedData(updatedDatas);
 
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
@@ -161,7 +161,8 @@ class genericAPIController {
                         responsePathToCheck: APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck,
                         checkOnlyExistence: APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence,
                         matchDataLength: APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength,
-                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch
+                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch,
+                        createBody: APIResource?.mdms?.[0]?.data?.creationConfig?.createBody
                     }
                 }, request);
             }
@@ -188,12 +189,12 @@ class genericAPIController {
                     produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
                     generatedResource = { generatedResource: newEntryResponse }
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                   await  callSearchApi(request, response);
+                    await callSearchApi(request, response);
                 }
                 else {
                     generatedResource = { generatedResource: newEntryResponse }
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                   await callSearchApi(request, response);
+                    await callSearchApi(request, response);
 
                 }
             }
@@ -201,13 +202,13 @@ class genericAPIController {
                 if (responseData.length == 0) {
                     generatedResource = { generatedResource: newEntryResponse };
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                   const responseDatas: any = await  callSearchApi(request, response);
-                   console.log(responseDatas.length,"pppppp")
-                   return sendResponse(
-                    response,
-                    { "count": responseDatas.length },
-                    request
-                  );
+                    const responseDatas: any = await callSearchApi(request, response);
+                    console.log(responseDatas.length, "pppppp")
+                    return sendResponse(
+                        response,
+                        { "count": responseDatas.length },
+                        request
+                    );
                 }
             }
 

@@ -357,10 +357,7 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
   logger.info("Schema search Request : " + JSON.stringify(data))
   try {
     const result = await httpRequest(mdmsSearchUrl, data, undefined, undefined, undefined, undefined);
-    if (result?.SchemaDefinitions?.[0]?.definition) {
-      return result?.SchemaDefinitions?.[0]?.definition;
-    }
-    return result;
+    return result?.SchemaDefinitions?.[0]?.definition;
   } catch (error: any) {
     logger.error("Error: " + error)
     return error;
@@ -368,25 +365,54 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
+function matchLength(result: any, existingDataToCheck: any): boolean {
+  // Get length of the first element
+  const resultLength = Array.isArray(result) ? result.length : (result ? 1 : 0);
+  // Get length of the second element
+  const existingDataLength = Array.isArray(existingDataToCheck) ? existingDataToCheck.length : (existingDataToCheck ? 1 : 0);
+  // Check if lengths match
+  return resultLength === existingDataLength;
+}
+
 const createValidatedData: any = async (result: any, type: string, request: any) => {
   let host = result?.creationDetails?.host;
   const url = result?.creationDetails?.url;
   const creationKey = result?.creationDetails?.keyName
   var retry: number = 0;
-  const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: result?.data };
+  const creationRequest = { RequestInfo: request.RequestInfo };
+  var params: any = {};
+  _.set(creationRequest, creationKey, result?.data);
+  for (const createItem of result?.creationDetails?.createBody) {
+    if (createItem.isInParams) {
+      params[createItem.path] = createItem.value;
+    }
+    if (createItem.isInBody) {
+      _.set(creationRequest, createItem.path, createItem.value);
+    }
+  }
   const retryCount = parseInt(config.values.retryCount)
   let success = false;
   let creationResponse: any = {};
   while (retry <= retryCount && !success) {
     logger.info("Creation Attempt : " + Number(retry + 1))
     logger.info("Creation Request : " + JSON.stringify(creationRequest))
+    logger.info("Creation Params : " + JSON.stringify(params))
     // host = 'http://localhost:8086/'
     logger.info("Creation url : " + host + url);
-    await axios.post(`${host}${url}`, creationRequest).then(response => {
+    await axios.post(`${host}${url}`, creationRequest, params).then(response => {
       // FIXME : need to complete logic
       if (result?.creationDetails?.checkOnlyExistence) {
         if (result?.creationDetails?.matchDataLength) {
-
+          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
+          if (matchLength(result?.data, existingDataToCheck)) {
+            logger.info("Existing Data To Check: " + existingDataToCheck)
+            creationResponse = response?.data;
+            success = true;
+          }
+          else {
+            logger.error("Number of attempted data not matching with created data.")
+            creationResponse = response?.data;
+          }
         }
         else {
           const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
@@ -397,26 +423,22 @@ const createValidatedData: any = async (result: any, type: string, request: any)
           }
           else {
             logger.error("Existing Data To Check: " + existingDataToCheck)
+            creationResponse = response?.data;
           }
         }
       }
       else {
-        if (result?.creationDetails?.matchDataLength) {
-
+        const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
+        if (existingDataToCheck == result?.creationDetails?.responseToMatch) {
+          logger.info("Existing Data To Check: " + existingDataToCheck)
+          logger.info("Existing Data Matching.")
+          creationResponse = response?.data;
+          success = true;
         }
         else {
-          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
-          if (existingDataToCheck == result?.creationDetails?.responseToMatch) {
-            logger.info("Existing Data To Check: " + existingDataToCheck)
-            logger.info("Existing Data Matching.")
-            creationResponse = response?.data;
-            success = true;
-          }
-          else {
-            logger.error("Existing Data To Check: " + existingDataToCheck)
-            logger.error("Existing Data Not Matching.")
-            creationResponse = response?.data;
-          }
+          logger.error("Existing Data To Check: " + existingDataToCheck)
+          logger.error("Existing Data Not Matching.")
+          creationResponse = response?.data;
         }
       }
       retry++;
