@@ -548,36 +548,54 @@ async function getResponseFromDb(request: any, response: any) {
 async function callSearchApi(request: any, response: any) {
   try {
     let result: any;
-    result = await searchMDMS(["user"], "HCM.APIResouceTemplate5", request.body.RequestInfo, response);
+    const { type } = request.query;
+    result = await searchMDMS([type], "HCM.APIResourceTemplate3", request.body.RequestInfo, response);
     console.log(result, "rrrrrrrrrrrr");
     const mdmsArray = result?.mdms;
     if (mdmsArray.length > 0) {
+      const requestBody = { "RequestInfo": request?.body?.RequestInfo };
       const responseData = mdmsArray[0]?.data;
       const host = responseData?.host;
       const url = responseData?.searchConfig?.url;
-      const countknown = responseData?.searchConfig?.isCountGiven === true;
-      console.log(countknown, "lllllll")
-      const limit = 50;
-      let responseDatas: any[] = [];
-      const searchPath = responseData?.searchConfig?.keyName;
-      const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
-      if (countknown) {
-        const count = await getCount(responseData, request, response);
-        let noOfTimesToFetchApi = Math.ceil(count / limit);
-        while (noOfTimesToFetchApi > 0) {
-          try{
-          const responseObject = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
-          const responseData = _.get(responseObject, searchPath);
-          responseData.forEach((item : any) => {
-            responseDatas.push(responseData);
-        }); 
-        }catch (error) {
-            console.error("Error occurred while fetching data:", error);
-            break; 
-          }
-          noOfTimesToFetchApi--;
+      // const tenantId = mdmsArray[0]?.tenantId;
+      var queryParams: any = {};
+      var limit = 50;
+
+      for (const searchItem of responseData?.searchConfig?.searchBody) {
+        console.log(searchItem, " searcchhhhhhhhhhhhhhhhh")
+        if (searchItem.isInParams) {
+          queryParams[searchItem.path] = searchItem.value;
+        }
+        else if (searchItem.isInBody) {
+          _.set(requestBody, `${searchItem.path}`, searchItem.value);
         }
       }
+      const countknown = responseData?.searchConfig?.isCountGiven === true;
+      let responseDatas: any[] = [];
+      const searchPath = responseData?.searchConfig?.keyName;
+
+      if (countknown) {
+        const count = await getCount(responseData, request, response);
+        console.log(count,"cccccccccccccc")
+        let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
+        for (let i = 0; i < noOfTimesToFetchApi; i++){
+          try {
+              // console.log(requestBody, " resssssssssssssssssssss")
+              const responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+              // console.log(queryParams, " qqqqqqqqqqerrrrrrrrrrrrrrrrrrrr")
+              const responseData = _.get(responseObject, searchPath);
+              console.log(responseData.length, "oooooooooooooo")
+              responseData.forEach((item: any) => {
+                  responseDatas.push(item);
+              });
+              queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
+          } catch (error) {
+              console.error("Error occurred while fetching data:", error);
+              break;
+          }
+      }
+    }
+      
       else {
         let noOfTimesToFetchApi = 56;
         while (true) {
@@ -590,15 +608,14 @@ async function callSearchApi(request: any, response: any) {
       return responseDatas;
     }
     else {
-      return []; 
-       }
+      return [];
+    }
   }
   catch (error) {
     console.error("Error occurred:", error);
-    // Handle error
     return [];
-  } 
-  
+  }
+
 }
 
 
