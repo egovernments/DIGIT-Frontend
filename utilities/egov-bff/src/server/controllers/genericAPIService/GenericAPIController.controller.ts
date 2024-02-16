@@ -151,11 +151,17 @@ class genericAPIController {
                 return sendResponse(response, {
                     "validationResult": "VALID_DATA",
                     "data": validatedData,
-                    host: APIResource?.mdms?.[0]?.data?.host,
-                    url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
-                    keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
-                    isBulkCreate: APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate,
-                    creationLimit: APIResource?.mdms?.[0]?.data?.creationConfig?.limit
+                    creationDetails: {
+                        host: APIResource?.mdms?.[0]?.data?.host,
+                        url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
+                        keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
+                        isBulkCreate: APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate,
+                        creationLimit: APIResource?.mdms?.[0]?.data?.creationConfig?.limit,
+                        responsePathToCheck: APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck,
+                        checkOnlyExistence: APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence,
+                        matchDataLength: APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength,
+                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch
+                    }
                 }, request);
             }
         } catch (error: any) {

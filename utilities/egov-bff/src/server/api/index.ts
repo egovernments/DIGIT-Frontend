@@ -8,6 +8,7 @@ import { logger } from "../utils/logger";
 import axios from "axios";
 import { generateActivityMessage, generateResourceMessage } from "../utils/index";
 import { produceModifiedMessages } from "../Kafka/Listener";
+const jp = require("jsonpath");
 
 
 function processColumnValue(
@@ -367,51 +368,137 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 }
 
 const createValidatedData: any = async (result: any, type: string, request: any) => {
-  let host = result?.host;
-  const url = result?.url;
-  const isBulkCreate = result?.isBulkCreate;
-  const creationKey = result?.keyName
-  if (isBulkCreate) {
-    var retry: number = 0;
-    const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: result?.data };
-    const retryCount = parseInt(config.values.retryCount)
-    let success = false;
-    let creationResponse: any = {};
-    while (retry <= retryCount && !success) {
-      logger.info("Creation Attempt : " + retry + 1)
-      logger.info("Creation Request : " + JSON.stringify(creationRequest))
-      // host = 'http://localhost:8086/'
-      logger.info("Creation url : " + host + url);
-      await axios.post(`${host}${url}`, creationRequest).then(response => {
-        if (response?.data?.status == "successful") {
-          creationResponse = response?.data;
-          success = true;
+  let host = result?.creationDetails?.host;
+  const url = result?.creationDetails?.url;
+  const creationKey = result?.creationDetails?.keyName
+  var retry: number = 0;
+  const creationRequest = { RequestInfo: request.RequestInfo, [creationKey]: result?.data };
+  const retryCount = parseInt(config.values.retryCount)
+  let success = false;
+  let creationResponse: any = {};
+  while (retry <= retryCount && !success) {
+    logger.info("Creation Attempt : " + Number(retry + 1))
+    logger.info("Creation Request : " + JSON.stringify(creationRequest))
+    host = 'http://localhost:8086/'
+    logger.info("Creation url : " + host + url);
+    await axios.post(`${host}${url}`, creationRequest).then(response => {
+      // FIXME : need to complete logic
+      if (result?.creationDetails?.checkOnlyExistence) {
+        if (result?.creationDetails?.matchDataLength) {
+
         }
+        else {
+          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
+          if (existingDataToCheck) {
+            logger.info("Existing Data To Check: " + existingDataToCheck)
+            creationResponse = response?.data;
+            success = true;
+          }
+          else {
+            logger.error("Existing Data To Check: " + existingDataToCheck)
+          }
+        }
+      }
+      else {
+        if (result?.creationDetails?.matchDataLength) {
+
+        }
+        else {
+          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
+          if (existingDataToCheck == result?.creationDetails?.responseToMatch) {
+            logger.info("Existing Data To Check: " + existingDataToCheck)
+            logger.info("Existing Data Matching.")
+            creationResponse = response?.data;
+            success = true;
+          }
+          else {
+            logger.error("Existing Data To Check: " + existingDataToCheck)
+            logger.error("Existing Data Not Matching.")
+            creationResponse = response?.data;
+          }
+        }
+      }
+      retry++;
+    })
+      .catch(error => {
+        creationResponse = error?.response?.data;
+        logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
         retry++;
-      })
-        .catch(error => {
-          creationResponse = error?.response?.data;
-          logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
-          retry++;
-        });
-    }
-    if (success) {
-      return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
-    }
-    return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
+      });
   }
-  else {
-    return { status: "NOT_ATTEMPTED", type: type, url: url, requestPayload: null, responsePayload: null, retryCount: 0 }
+  if (success) {
+    return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
   }
+  return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
 }
 
 const processCreateData: any = async (result: any, type: string, request: any) => {
-  if (result?.creationLimit) {
-    let currentIndex = 0;
-    let finalResponse: any[] = [];
-    while (currentIndex < result?.data?.length) {
+  if (result?.creationDetails?.isBulkCreate) {
+    if (result?.creationDetails?.creationLimit) {
+      let currentIndex = 0;
+      let finalResponse: any[] = [];
+      while (currentIndex < result?.data?.length) {
+        let batchResult = JSON.parse(JSON.stringify(result));
+        batchResult.data = result?.data?.slice(currentIndex, currentIndex + result?.creationDetails?.creationLimit);
+        const createdResult = await createValidatedData(batchResult, type, request.body)
+        logger.info(type + " creation result : " + createdResult)
+        if (createdResult?.status == "SUCCESS") {
+          const successMessage: any = await generateResourceMessage(request.body, "Completed")
+          const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+          produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+          const activities: any = { activities: [activityMessage] }
+          logger.info("Activity Message : " + JSON.stringify(activities))
+          produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+          logger.info("Success Message : " + JSON.stringify(successMessage))
+          successMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
+          finalResponse.push(successMessage);
+        }
+        else {
+          const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
+          const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
+          produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+          const activities: any = { activities: [activityMessage] }
+          logger.info("Activity Message : " + JSON.stringify(activities))
+          produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+          logger.info("Failed Message : " + JSON.stringify(failedMessage))
+          failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
+          failedMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
+          finalResponse.push(failedMessage);
+        }
+        currentIndex += result?.creationDetails?.creationLimit;
+      }
+      return finalResponse;
+    }
+    else {
+      const createdResult = await createValidatedData(result, type, request.body)
+      logger.info(type + " creation result : " + createdResult)
+      if (createdResult?.status == "SUCCESS") {
+        const successMessage: any = await generateResourceMessage(request.body, "Completed")
+        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+        produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+        const activities: any = { activities: [activityMessage] }
+        logger.info("Activity Message : " + JSON.stringify(activities))
+        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+        logger.info("Success Message : " + JSON.stringify(successMessage))
+        return successMessage
+      }
+      else {
+        const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
+        const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
+        produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+        const activities: any = { activities: [activityMessage] }
+        logger.info("Activity Message : " + JSON.stringify(activities))
+        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+        logger.info("Success Message : " + JSON.stringify(failedMessage))
+        return createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs"
+      }
+    }
+  }
+  else {
+    var finalResponse: any[] = [];
+    for (let currentIndex = 0; currentIndex < result?.data?.length; currentIndex++) {
       let batchResult = JSON.parse(JSON.stringify(result));
-      batchResult.data = result?.data?.slice(currentIndex, currentIndex + result?.creationLimit);
+      batchResult.data = result?.data?.[currentIndex];
       const createdResult = await createValidatedData(batchResult, type, request.body)
       logger.info(type + " creation result : " + createdResult)
       if (createdResult?.status == "SUCCESS") {
@@ -422,7 +509,6 @@ const processCreateData: any = async (result: any, type: string, request: any) =
         logger.info("Activity Message : " + JSON.stringify(activities))
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         logger.info("Success Message : " + JSON.stringify(successMessage))
-        successMessage.batchNumber = currentIndex / result?.creationLimit + 1;
         finalResponse.push(successMessage);
       }
       else {
@@ -432,38 +518,12 @@ const processCreateData: any = async (result: any, type: string, request: any) =
         const activities: any = { activities: [activityMessage] }
         logger.info("Activity Message : " + JSON.stringify(activities))
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-        logger.info("Failed Message : " + JSON.stringify(failedMessage))
-        failedMessage.error = createdResult?.responsePayload?.Errors
-        failedMessage.batchNumber = currentIndex / result?.creationLimit + 1;
+        logger.info("Success Message : " + JSON.stringify(failedMessage))
+        failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
         finalResponse.push(failedMessage);
       }
-      currentIndex += result?.creationLimit;
     }
     return finalResponse;
-  }
-  else {
-    const createdResult = await createValidatedData(result, type, request.body)
-    logger.info(type + " creation result : " + createdResult)
-    if (createdResult?.status == "SUCCESS") {
-      const successMessage: any = await generateResourceMessage(request.body, "Completed")
-      const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
-      produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-      const activities: any = { activities: [activityMessage] }
-      logger.info("Activity Message : " + JSON.stringify(activities))
-      produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-      logger.info("Success Message : " + JSON.stringify(successMessage))
-      return successMessage
-    }
-    else {
-      const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
-      const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
-      produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-      const activities: any = { activities: [activityMessage] }
-      logger.info("Activity Message : " + JSON.stringify(activities))
-      produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-      logger.info("Success Message : " + JSON.stringify(failedMessage))
-      return createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs"
-    }
   }
 }
 
