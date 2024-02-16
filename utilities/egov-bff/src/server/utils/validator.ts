@@ -120,15 +120,23 @@ function validateDataWithSchema(data: any, schema: any): { isValid: boolean; err
 }
 
 function processValidationWithSchema(processResult: any, validationErrors: any, validatedData: any, schemaDef: any) {
-    processResult.updatedDatas.forEach((data: any) => {
-        const validationResult = validateDataWithSchema(data, schemaDef);
-        if (!validationResult.isValid) {
-            validationErrors.push({ data, error: validationResult.error });
-        }
-        else {
+    if (schemaDef) {
+        processResult.updatedDatas.forEach((data: any) => {
+            const validationResult = validateDataWithSchema(data, schemaDef);
+            if (!validationResult.isValid) {
+                validationErrors.push({ data, error: validationResult.error });
+            }
+            else {
+                validatedData.push(data)
+            }
+        });
+    }
+    else {
+        logger.info("Skipping Validation of Data as Schema is not defined");
+        processResult.updatedDatas.forEach((data: any) => {
             validatedData.push(data)
-        }
-    });
+        });
+    }
 }
 
 

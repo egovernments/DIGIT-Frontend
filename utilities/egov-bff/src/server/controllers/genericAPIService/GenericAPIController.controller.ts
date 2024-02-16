@@ -115,7 +115,7 @@ class genericAPIController {
             }
 
             // Get data from sheet
-            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, "Sheet 1");
+            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
             validateTransformedData(updatedDatas);
 
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
@@ -161,7 +161,8 @@ class genericAPIController {
                         responsePathToCheck: APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck,
                         checkOnlyExistence: APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence,
                         matchDataLength: APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength,
-                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch
+                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch,
+                        createBody: APIResource?.mdms?.[0]?.data?.creationConfig?.createBody
                     }
                 }, request);
             }
