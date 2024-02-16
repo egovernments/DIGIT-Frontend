@@ -380,7 +380,7 @@ const createValidatedData: any = async (result: any, type: string, request: any)
   while (retry <= retryCount && !success) {
     logger.info("Creation Attempt : " + Number(retry + 1))
     logger.info("Creation Request : " + JSON.stringify(creationRequest))
-    host = 'http://localhost:8086/'
+    // host = 'http://localhost:8086/'
     logger.info("Creation url : " + host + url);
     await axios.post(`${host}${url}`, creationRequest).then(response => {
       // FIXME : need to complete logic
