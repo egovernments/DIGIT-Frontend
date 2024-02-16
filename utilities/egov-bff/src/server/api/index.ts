@@ -9,6 +9,7 @@ import axios from "axios";
 import { generateActivityMessage, generateResourceMessage } from "../utils/index";
 import { produceModifiedMessages } from "../Kafka/Listener";
 const jp = require("jsonpath");
+const _ = require('lodash');
 
 
 function processColumnValue(
@@ -432,6 +433,21 @@ const createValidatedData: any = async (result: any, type: string, request: any)
   return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
 }
 
+const getCount: any = async (responseData: any, request: any, response: any) => {
+  try {
+    const host = responseData?.host;
+    const url = responseData?.searchConfig?.countUrl;
+    const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
+    const result = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
+    const count = _.get(result, responseData?.searchConfig?.countPath);
+    return count;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error?.response?.data?.Errors[0].message;
+  }
+
+}
+
 const processCreateData: any = async (result: any, type: string, request: any) => {
   if (result?.creationDetails?.isBulkCreate) {
     if (result?.creationDetails?.creationLimit) {
@@ -535,5 +551,6 @@ export {
   getSchema,
   createValidatedData,
   getResouceNumber,
+  getCount,
   processCreateData
 };

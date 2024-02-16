@@ -5,11 +5,12 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber, getResouceNumber } from "../api/index";
+import { getCampaignNumber, getResouceNumber, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
+import { getCount } from '../api/index'
 
 import { logger } from "./logger";
 // import { userInfo } from "os";
@@ -544,6 +545,61 @@ async function getResponseFromDb(request: any, response: any) {
 
 }
 
+async function callSearchApi(request: any, response: any) {
+  try {
+    let result: any;
+    result = await searchMDMS(["user"], "HCM.APIResouceTemplate5", request.body.RequestInfo, response);
+    console.log(result, "rrrrrrrrrrrr");
+    const mdmsArray = result?.mdms;
+    if (mdmsArray.length > 0) {
+      const responseData = mdmsArray[0]?.data;
+      const host = responseData?.host;
+      const url = responseData?.searchConfig?.url;
+      const countknown = responseData?.searchConfig?.isCountGiven === true;
+      console.log(countknown, "lllllll")
+      const limit = 50;
+      let responseDatas: any[] = [];
+      const searchPath = responseData?.searchConfig?.keyName;
+      const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
+      if (countknown) {
+        const count = await getCount(responseData, request, response);
+        let noOfTimesToFetchApi = Math.ceil(count / limit);
+        while (noOfTimesToFetchApi > 0) {
+          try{
+          const responseObject = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
+          const responseData = _.get(responseObject, searchPath);
+          responseData.forEach((item : any) => {
+            responseDatas.push(responseData);
+        }); 
+        }catch (error) {
+            console.error("Error occurred while fetching data:", error);
+            break; 
+          }
+          noOfTimesToFetchApi--;
+        }
+      }
+      else {
+        let noOfTimesToFetchApi = 56;
+        while (true) {
+          console.log("search");
+          if (noOfTimesToFetchApi < limit)
+            break;
+          noOfTimesToFetchApi -= limit;
+        }
+      }
+      return responseDatas;
+    }
+    else {
+      return []; 
+       }
+  }
+  catch (error) {
+    console.error("Error occurred:", error);
+    // Handle error
+    return [];
+  } 
+  
+}
 
 
 export {
@@ -567,5 +623,6 @@ export {
   generateAuditDetails,
   generateResourceMessage,
   generateActivityMessage,
-  getResponseFromDb
+  getResponseFromDb,
+  callSearchApi
 };
