@@ -1,7 +1,7 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { getResponseFromDb } from '../../utils/index'
+import { getCreationDetails, getResponseFromDb } from '../../utils/index'
 
 
 import {
@@ -61,7 +61,7 @@ class genericAPIController {
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
             if (result?.validationResult == "VALID_DATA") {
-                const ResponseDetails = await processCreateData(result, type, request);
+                const ResponseDetails = await processCreateData(result, type, request, response);
                 return sendResponse(response, { ResponseDetails }, request);
             }
             else if (result?.validationResult == "INVALID_DATA") {
@@ -149,21 +149,11 @@ class genericAPIController {
                 const errors = [...validationErrors, ...mdmsErrors];
                 return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
             } else {
+                const creationDetails = getCreationDetails(APIResource);
                 return sendResponse(response, {
                     "validationResult": "VALID_DATA",
                     "data": validatedData,
-                    creationDetails: {
-                        host: APIResource?.mdms?.[0]?.data?.host,
-                        url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
-                        keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
-                        isBulkCreate: APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate,
-                        creationLimit: APIResource?.mdms?.[0]?.data?.creationConfig?.limit,
-                        responsePathToCheck: APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck,
-                        checkOnlyExistence: APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence,
-                        matchDataLength: APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength,
-                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch,
-                        createBody: APIResource?.mdms?.[0]?.data?.creationConfig?.createBody
-                    }
+                    creationDetails
                 }, request);
             }
         } catch (error: any) {

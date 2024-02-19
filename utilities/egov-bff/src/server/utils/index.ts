@@ -11,7 +11,6 @@ import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
 import { getCount } from '../api/index'
-
 import { logger } from "./logger";
 // import { userInfo } from "os";
 const NodeCache = require("node-cache");
@@ -548,57 +547,136 @@ async function getResponseFromDb(request: any, response: any) {
 async function callSearchApi(request: any, response: any) {
   try {
     let result: any;
-    result = await searchMDMS(["user"], "HCM.APIResouceTemplate5", request.body.RequestInfo, response);
+    const { type } = request.query;
+    result = await searchMDMS([type], "HCM.APIResourceTemplate3", request.body.RequestInfo, response);
     console.log(result, "rrrrrrrrrrrr");
-    const mdmsArray = result?.mdms;
-    if (mdmsArray.length > 0) {
-      const responseData = mdmsArray[0]?.data;
+    const mdmsData = result?.mdms;
+    if (mdmsData.length > 0) {
+      const requestBody = { "RequestInfo": request?.body?.RequestInfo };
+      const responseData = mdmsData[0]?.data;
+      console.log(responseData, "ppppppppppp")
       const host = responseData?.host;
       const url = responseData?.searchConfig?.url;
-      const countknown = responseData?.searchConfig?.isCountGiven === true;
-      console.log(countknown, "lllllll")
-      const limit = 50;
-      let responseDatas: any[] = [];
-      const searchPath = responseData?.searchConfig?.keyName;
-      const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
-      if (countknown) {
-        const count = await getCount(responseData, request, response);
-        let noOfTimesToFetchApi = Math.ceil(count / limit);
-        while (noOfTimesToFetchApi > 0) {
-          try{
-          const responseObject = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
-          const responseData = _.get(responseObject, searchPath);
-          responseData.forEach((item : any) => {
-            responseDatas.push(responseData);
-        }); 
-        }catch (error) {
-            console.error("Error occurred while fetching data:", error);
-            break; 
-          }
-          noOfTimesToFetchApi--;
+      var queryParams: any = {};
+      for (const searchItem of responseData?.searchConfig?.searchBody) {
+        if (searchItem.isInParams) {
+          queryParams[searchItem.path] = searchItem.value;
+        }
+        else if (searchItem.isInBody) {
+          _.set(requestBody, `${searchItem.path}`, searchItem.value);
         }
       }
-      else {
-        let noOfTimesToFetchApi = 56;
-        while (true) {
-          console.log("search");
-          if (noOfTimesToFetchApi < limit)
+      const countknown = responseData?.searchConfig?.isCountGiven === true;
+      let responseDatas: any[] = [];
+      const searchPath = responseData?.searchConfig?.keyName;
+
+      if (countknown) {
+        const count = await getCount(responseData, request, response);
+        console.log(count, "cccccccccccccc")
+        let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
+        for (let i = 0; i < noOfTimesToFetchApi; i++) {
+          try {
+            const responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+            const responseData = _.get(responseObject, searchPath);
+            console.log(responseData.length, "oooooooooooooo")
+            responseData.forEach((item: any) => {
+              responseDatas.push(item);
+            });
+            queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
+          } catch (error) {
+            console.error("Error occurred while fetching data:", error);
             break;
-          noOfTimesToFetchApi -= limit;
+          }
+        }
+      }
+
+      else {
+        while (true) {
+          try {
+            const responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+            const responseData = _.get(responseObject, searchPath);
+            responseData.forEach((item: any) => {
+              responseDatas.push(item);
+            });
+            queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
+            if (responseData.length < parseInt(queryParams.limit)) {
+              break;
+            }
+          }
+          catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+          }
         }
       }
       return responseDatas;
     }
     else {
-      return []; 
-       }
+      return errorResponder({ message: String("Invalid ApiResource Type") + "    Check Logs" }, request, response);
+    }
   }
-  catch (error) {
-    console.error("Error occurred:", error);
-    // Handle error
-    return [];
-  } 
-  
+  catch (e: any) {
+    logger.error(String(e))
+    return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+  }
+
+}
+
+async function matchWithProcessId(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
+  const waitTime = config.waitTime;
+  logger.info("Waiting for " + waitTime + "ms before Checking Persistence");
+  await new Promise(resolve => setTimeout(resolve, parseInt(waitTime)));
+  var requestWithParams = { ...request }
+  requestWithParams.query = { ...requestWithParams.query, type: request?.body?.ResourceDetails?.type, forceUpdate: true }
+  const rows: any = await callSearchApi(requestWithParams, response);
+  var count = 0;
+  logger.info("Checking Persistence with createdBy for  " + request?.body?.RequestInfo?.userInfo?.uuid + " and createdTime " + creationTime);
+  rows.forEach((item: any) => {
+    if (item?.auditDetails?.createdBy && item?.auditDetails?.createdTime) {
+      if (item?.auditDetails?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.auditDetails?.createdTime >= creationTime)
+        count++;
+    }
+    else if (item?.createdBy && item?.createdTime) {
+      if (item?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.createdTime >= creationTime)
+        count++;
+    }
+  })
+  logger.info("Got " + count + " rows with recent persistence");
+  if (count >= rowsToMatch) {
+    return ResponseDetails;
+  }
+  else {
+    ResponseDetails.status = "PERSISTING_ERROR";
+    return ResponseDetails;
+  }
+}
+
+function getCreationDetails(APIResource: any) {
+  // Assuming APIResource has the necessary structure to extract creation details
+  // Replace the following lines with the actual logic to extract creation details
+  const host = APIResource?.mdms?.[0]?.data?.host;
+  const url = APIResource?.mdms?.[0]?.data?.creationConfig?.url;
+  const keyName = APIResource?.mdms?.[0]?.data?.creationConfig?.keyName;
+  const isBulkCreate = APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate;
+  const creationLimit = APIResource?.mdms?.[0]?.data?.creationConfig?.limit;
+  const responsePathToCheck = APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck;
+  const checkOnlyExistence = APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence;
+  const matchDataLength = APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength;
+  const responseToMatch = APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch;
+  const createBody = APIResource?.mdms?.[0]?.data?.creationConfig?.createBody;
+
+  return {
+    host,
+    url,
+    keyName,
+    isBulkCreate,
+    creationLimit,
+    responsePathToCheck,
+    checkOnlyExistence,
+    matchDataLength,
+    responseToMatch,
+    createBody
+  };
 }
 
 
@@ -624,5 +702,7 @@ export {
   generateResourceMessage,
   generateActivityMessage,
   getResponseFromDb,
-  callSearchApi
+  callSearchApi,
+  matchWithProcessId,
+  getCreationDetails
 };
