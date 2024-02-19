@@ -8,8 +8,6 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/libraries",
-    "micro-ui-internals/packages/react-components",
     "micro-ui-internals/packages/modules/*"
   ],
   "homepage": "/digit-ui",
@@ -19,10 +17,7 @@
     "@egovernments/digit-ui-module-core": "1.8.0",
     "@egovernments/digit-ui-module-hrms": "1.8.0",
     "@egovernments/digit-ui-react-components": "1.8.0",
-    "@egovernments/digit-ui-module-dss": "1.8.0",
-    "@egovernments/digit-ui-module-common": "1.8.0",
-    "@egovernments/digit-ui-module-utilities": "1.0.0",
-    "@egovernments/digit-ui-module-engagement": "1.8.0",
+    "@egovernments/digit-ui-module-sample": "1.0.0",
     "babel-loader": "8.1.0",
     "clean-webpack-plugin": "4.0.0",
     "react": "17.0.2",

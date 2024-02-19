@@ -6,10 +6,8 @@ import {
   PaymentModule,
 } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
@@ -20,7 +18,7 @@ const enabledModules = [
   "NDSS",
   "Utilities",
   "HRMS",
-  "Engagement",
+  "Sample",
   "Workbench",
 ];
 
@@ -35,10 +33,8 @@ const initDigitUI = () => {
     PaymentLinks,
   });
 
-  initDSSComponents();
   initHRMSComponents();
-  initEngagementComponents();
-  initUtilitiesComponents();
+  initSampleComponents();
   initWorkbenchComponents();
 
   window.Digit.Customizations = {
