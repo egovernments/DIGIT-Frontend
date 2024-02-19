@@ -502,47 +502,66 @@ async function getResponseFromDb(request: any, response: any) {
     password: config.DB_PASSWORD,
     port: parseInt(config.DB_PORT)
   });
-  const { type } = request.query;
+ 
+  try {
+    const { type } = request.query;
 
-  let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
-  const status = 'completed';
-  const queryResult = await pool.query(queryString, [type, status]);
-  const responseData = queryResult.rows;
-  const modifiedResponse = responseData.map(item => {
+    let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
+    const status = 'Completed';
+    const queryResult = await pool.query(queryString, [type, status]);
+    const responseData = queryResult.rows;
+    console.log(responseData,"firstttttttttttttttttt");
+    return responseData;
+  } finally {
+    await pool.end();
+  }
+}
+async function getModifiedResponse(responseData: any) {
+  return responseData.map((item: any) => {
     return {
       ...item,
       lastmodifiedtime: parseInt(item.lastmodifiedtime),
       createdtime: parseInt(item.createdtime)
     };
-  })
-  const modifiedResponseForNewEntry =
-    [
-      {
-        id: uuidv4(),
-        filestoreid: null,
-        type: type,
-        status: "In Progress",
-        lastmodifiedtime: Date.now(),
-        createdtime: Date.now(),
-        createdby: request?.body?.RequestInfo?.userInfo.uuid,
-        lastmodifiedby: request?.body?.RequestInfo?.userInfo.uuid,
-        additionaldetails: null
-      }
-    ];
-  const modifiedResponseForOldEntry = modifiedResponse.map(item => {
+  });
+}
+
+async function getNewEntryResponse(modifiedResponse: any, request: any) {
+  const { type } = request.query;
+  const newEntry = {
+    id: uuidv4(),
+    filestoreid: null,
+    type: type,
+    status: "In Progress",
+    lastmodifiedtime: Date.now(),
+    createdtime: Date.now(),
+    createdby: request?.body?.RequestInfo?.userInfo.uuid,
+    lastmodifiedby: request?.body?.RequestInfo?.userInfo.uuid,
+    additionaldetails: null
+  };
+  return [newEntry];
+}
+async function getOldEntryResponse(modifiedResponse: any[], request : any) {
+  return modifiedResponse.map((item: any) => {
+    const newItem = { ...item };
+    newItem.status = "expired";
+    newItem.lastmodifiedtime = Date.now();
+    newItem.lastmodifiedby = request?.body?.RequestInfo?.userInfo?.uuid;
+    return newItem;
+  });
+}
+async function getFinalUpdatedResponse(result: any, responseData: any , request : any) {
+  console.log(responseData,"final")
+  return responseData.map((item: any) => {
     return {
       ...item,
-      status: "expired",
-      lastmodifiedtime: Date.now()
+      lastmodifiedtime: Date.now(),
+      createdtime: Date.now(),
+      filestoreid: result[0]?.fileStoreId,
+      status: "Completed",
+      lastmodifiedby :request?.body?.RequestInfo?.userInfo?.uuid
     };
   });
-  const combinedResponse = {
-    responseData: modifiedResponse,
-    newEntryResponse: modifiedResponseForNewEntry,
-    oldEntryResponse: modifiedResponseForOldEntry
-  };
-  return combinedResponse;
-
 }
 
 async function callSearchApi(request: any, response: any) {
@@ -550,70 +569,60 @@ async function callSearchApi(request: any, response: any) {
     let result: any;
     const { type } = request.query;
     result = await searchMDMS([type], "HCM.APIResourceTemplate3", request.body.RequestInfo, response);
-    console.log(result, "rrrrrrrrrrrr");
-    const mdmsArray = result?.mdms;
-    if (mdmsArray.length > 0) {
-      const requestBody = { "RequestInfo": request?.body?.RequestInfo };
-      const responseData = mdmsArray[0]?.data;
-      const host = responseData?.host;
-      const url = responseData?.searchConfig?.url;
-      // const tenantId = mdmsArray[0]?.tenantId;
-      var queryParams: any = {};
-      var limit = 50;
-
-      for (const searchItem of responseData?.searchConfig?.searchBody) {
-        console.log(searchItem, " searcchhhhhhhhhhhhhhhhh")
-        if (searchItem.isInParams) {
-          queryParams[searchItem.path] = searchItem.value;
-        }
-        else if (searchItem.isInBody) {
-          _.set(requestBody, `${searchItem.path}`, searchItem.value);
-        }
+    const mdmsData = result?.mdms;
+    const requestBody = { "RequestInfo": request?.body?.RequestInfo };
+    const responseData = mdmsData[0]?.data;
+    if (!responseData || responseData.length === 0) {
+      return errorResponder({ message: "Invalid ApiResource Type. Check Logs" }, request, response);
+    }
+    const host = responseData?.host;
+    const url = responseData?.searchConfig?.url;
+    var queryParams: any = {};
+    for (const searchItem of responseData?.searchConfig?.searchBody) {
+      if (searchItem.isInParams) {
+        queryParams[searchItem.path] = searchItem.value;
       }
-      const countknown = responseData?.searchConfig?.isCountGiven === true;
-      let responseDatas: any[] = [];
-      const searchPath = responseData?.searchConfig?.keyName;
-
-      if (countknown) {
-        const count = await getCount(responseData, request, response);
-        console.log(count,"cccccccccccccc")
-        let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
-        for (let i = 0; i < noOfTimesToFetchApi; i++){
-          try {
-              // console.log(requestBody, " resssssssssssssssssssss")
-              const responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
-              // console.log(queryParams, " qqqqqqqqqqerrrrrrrrrrrrrrrrrrrr")
-              const responseData = _.get(responseObject, searchPath);
-              console.log(responseData.length, "oooooooooooooo")
-              responseData.forEach((item: any) => {
-                  responseDatas.push(item);
-              });
-              queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
-          } catch (error) {
-              console.error("Error occurred while fetching data:", error);
-              break;
-          }
+      else if (searchItem.isInBody) {
+        _.set(requestBody, `${searchItem.path}`, searchItem.value);
       }
     }
-      
-      else {
-        let noOfTimesToFetchApi = 56;
-        while (true) {
-          console.log("search");
-          if (noOfTimesToFetchApi < limit)
-            break;
-          noOfTimesToFetchApi -= limit;
-        }
+    const countknown = responseData?.searchConfig?.isCountGiven === true;
+    let responseDatas: any[] = [];
+    const searchPath = responseData?.searchConfig?.keyName;
+    let fetchedData: any;
+    let responseObject: any;
+
+    if (countknown) {
+      const count = await getCount(responseData, request, response);
+      let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
+      for (let i = 0; i < noOfTimesToFetchApi; i++) {
+        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+        fetchedData = _.get(responseObject, searchPath);
+        fetchedData.forEach((item: any) => {
+          responseDatas.push(item);
+        });
+        queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
       }
-      return responseDatas;
     }
+
     else {
-      return [];
+      while (true) {
+        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+        fetchedData = _.get(responseObject, searchPath);
+        fetchedData.forEach((item: any) => {
+          responseDatas.push(item);
+        });
+        queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
+        if (fetchedData.length < parseInt(queryParams.limit)) {
+          break;
+        }
+      }
     }
+    return responseDatas;
   }
-  catch (error) {
-    console.error("Error occurred:", error);
-    return [];
+  catch (e: any) {
+    logger.error(String(e))
+    return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
   }
 
 }
@@ -641,5 +650,9 @@ export {
   generateResourceMessage,
   generateActivityMessage,
   getResponseFromDb,
-  callSearchApi
+  callSearchApi,
+  getModifiedResponse,
+  getNewEntryResponse,
+  getOldEntryResponse,
+  getFinalUpdatedResponse
 };

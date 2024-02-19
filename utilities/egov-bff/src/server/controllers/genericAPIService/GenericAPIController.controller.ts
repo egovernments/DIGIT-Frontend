@@ -1,7 +1,7 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { getResponseFromDb } from '../../utils/index'
+import { getFinalUpdatedResponse, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb } from '../../utils/index'
 
 
 import {
@@ -175,26 +175,40 @@ class genericAPIController {
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {
-            const responseObject = await getResponseFromDb(request, response);
-            const responseData = responseObject.responseData;
-            const newEntryResponse = responseObject.newEntryResponse;
-            const oldEntryResponse = responseObject.oldEntryResponse;
-            const { forceUpdate } = request.query;
+            const responseData = await getResponseFromDb(request, response);
+            const modifiedResponse = await getModifiedResponse(responseData);
+            const newEntryResponse = await getNewEntryResponse(modifiedResponse, request);
+            const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
+            const { forceUpdate , type} = request.query;
             const forceUpdateBool: boolean = forceUpdate === 'true';
             let generatedResource: any;
-
+            let result: any;
+            let responseDatas: any;
+            let finalResponse: any;
+            let generatedResourceNew: any;
             if (forceUpdateBool) {
                 if (responseData.length > 0) {
                     generatedResource = { generatedResource: oldEntryResponse }
                     produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+                    console.log(oldEntryResponse, "olllllllllldddddddd")
                     generatedResource = { generatedResource: newEntryResponse }
+                    console.log(newEntryResponse, "newwwwwwwww")
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                    await callSearchApi(request, response);
+                    responseDatas = await callSearchApi(request, response);
+                    result = await generateXlsxFromJson(request, response, responseDatas);
+                    finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+                    console.log(finalResponse, "finallllllllll")
+                    generatedResourceNew = { generatedResource: finalResponse }
+                    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
                 }
                 else {
                     generatedResource = { generatedResource: newEntryResponse }
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                    await callSearchApi(request, response);
+                    responseDatas = await callSearchApi(request, response);
+                    result = await generateXlsxFromJson(request, response, responseDatas);
+                    finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+                    generatedResourceNew = { generatedResource: finalResponse }
+                    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
 
                 }
             }
@@ -202,15 +216,14 @@ class genericAPIController {
                 if (responseData.length == 0) {
                     generatedResource = { generatedResource: newEntryResponse };
                     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-                    const responseDatas: any = await callSearchApi(request, response);
-                    console.log(responseDatas.length, "pppppp")
-                    return sendResponse(
-                        response,
-                        { "count": responseDatas.length },
-                        request
-                    );
+                    responseDatas = await callSearchApi(request, response);
+                    result = await generateXlsxFromJson(request, response, responseDatas);
+                    finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+                    generatedResourceNew = { generatedResource: finalResponse }
+                    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
                 }
             }
+            return sendResponse(response, { ResponseDetails: { type: type, status: 'Table up to date' } }, request);
 
         } catch (e: any) {
             logger.error(String(e))
