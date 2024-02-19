@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 //here add react-query dev tools
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
+  // debugger
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
@@ -100,8 +101,8 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
-              <ReactQueryDevtools initialIsOpen={false} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
