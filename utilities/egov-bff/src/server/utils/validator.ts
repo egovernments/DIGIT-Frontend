@@ -139,7 +139,21 @@ function processValidationWithSchema(processResult: any, validationErrors: any, 
     }
 }
 
+async function getTransformAndParsingTemplates(APIResource: any, request: any, response: any) {
+    if (!APIResource.mdms || Object.keys(APIResource.mdms).length === 0) {
+        const errorMessage = "Invalid APIResourceType Type";
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+    }
+
+    const transformTemplate = APIResource?.mdms?.[0]?.data?.transformTemplateName;
+    const parsingTemplate = APIResource?.mdms?.[0]?.data?.parsingTemplateName;
+
+    return { transformTemplate, parsingTemplate };
+}
 
 
 
-export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema };
+
+
+export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema, getTransformAndParsingTemplates };

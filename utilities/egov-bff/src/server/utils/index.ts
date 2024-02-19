@@ -5,7 +5,7 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber, getResouceNumber, searchMDMS } from "../api/index";
+import { getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -622,7 +622,7 @@ async function callSearchApi(request: any, response: any) {
 
 }
 
-async function matchWithProcessId(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
+async function matchWithCreatedDetails(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
   const waitTime = config.waitTime;
   logger.info("Waiting for " + waitTime + "ms before Checking Persistence");
   await new Promise(resolve => setTimeout(resolve, parseInt(waitTime)));
@@ -630,13 +630,16 @@ async function matchWithProcessId(request: any, response: any, ResponseDetails: 
   requestWithParams.query = { ...requestWithParams.query, type: request?.body?.ResourceDetails?.type, forceUpdate: true }
   const rows: any = await callSearchApi(requestWithParams, response);
   var count = 0;
+  var createdDetailsPresent = false;
   logger.info("Checking Persistence with createdBy for  " + request?.body?.RequestInfo?.userInfo?.uuid + " and createdTime " + creationTime);
   rows.forEach((item: any) => {
     if (item?.auditDetails?.createdBy && item?.auditDetails?.createdTime) {
+      createdDetailsPresent = true;
       if (item?.auditDetails?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.auditDetails?.createdTime >= creationTime)
         count++;
     }
     else if (item?.createdBy && item?.createdTime) {
+      createdDetailsPresent = true;
       if (item?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.createdTime >= creationTime)
         count++;
     }
@@ -645,10 +648,13 @@ async function matchWithProcessId(request: any, response: any, ResponseDetails: 
   if (count >= rowsToMatch) {
     return ResponseDetails;
   }
-  else {
+  else if (createdDetailsPresent) {
     ResponseDetails.status = "PERSISTING_ERROR";
     return ResponseDetails;
   }
+  logger.info("No createdBy and createdTime found in Rows.");
+  ResponseDetails.status = "PERSISTENCE_CHECK_REQUIRED";
+  return ResponseDetails;
 }
 
 function getCreationDetails(APIResource: any) {
@@ -680,6 +686,29 @@ function getCreationDetails(APIResource: any) {
 }
 
 
+async function getSchemaAndProcessResult(request: any, parsingTemplate: any, updatedDatas: any, APIResource: any) {
+  const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+  let processResult;
+  request.body.HCMConfig = {};
+  request.body.HCMConfig['parsingTemplate'] = parsingTemplate;
+  request.body.HCMConfig['data'] = updatedDatas;
+
+  // Process data
+  processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+  if (processResult.Error) {
+    logger.error(processResult.Error);
+    throw new Error(processResult.Error);
+  }
+
+  const healthMaster = APIResource?.mdms?.[0]?.data?.masterDetails?.masterName + "." + APIResource?.mdms?.[0]?.data?.masterDetails?.moduleName;
+
+  // Get schema definition
+  const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
+
+  return { processResult, schemaDef };
+}
+
+
 export {
   errorResponder,
   errorLogger,
@@ -703,6 +732,7 @@ export {
   generateActivityMessage,
   getResponseFromDb,
   callSearchApi,
-  matchWithProcessId,
-  getCreationDetails
+  matchWithCreatedDetails,
+  getCreationDetails,
+  getSchemaAndProcessResult
 };

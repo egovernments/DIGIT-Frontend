@@ -6,7 +6,7 @@ import hashSum from 'hash-sum';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
-import { generateActivityMessage, generateResourceMessage, matchWithProcessId } from "../utils/index";
+import { generateActivityMessage, generateResourceMessage, matchWithCreatedDetails } from "../utils/index";
 import { produceModifiedMessages } from "../Kafka/Listener";
 const jp = require("jsonpath");
 const _ = require('lodash');
@@ -484,13 +484,13 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         const createdResult = await createValidatedData(batchResult, type, request.body)
         logger.info(type + " creation result : " + JSON.stringify(createdResult))
         if (createdResult?.status == "SUCCESS") {
-          var successMessage: any = await generateResourceMessage(request.body, "Completed")
-          const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+          var successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
+          const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
           const activities: any = { activities: [activityMessage] }
           logger.info("Activity Message : " + JSON.stringify(activities))
           logger.info("Success Message : " + JSON.stringify(successMessage))
           successMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
-          successMessage = await matchWithProcessId(request, response, successMessage, creationTime, batchResult?.data?.length);
+          successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, batchResult?.data?.length);
           produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
           produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
           finalResponse.push(successMessage);
@@ -516,12 +516,12 @@ const processCreateData: any = async (result: any, type: string, request: any, r
       const createdResult = await createValidatedData(result, type, request.body)
       logger.info(type + " creation result : " + createdResult)
       if (createdResult?.status == "SUCCESS") {
-        var successMessage: any = await generateResourceMessage(request.body, "Completed")
-        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+        var successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
+        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
         const activities: any = { activities: [activityMessage] }
         logger.info("Activity Message : " + JSON.stringify(activities));
         logger.info("Success Message : " + JSON.stringify(successMessage))
-        successMessage = await matchWithProcessId(request, response, successMessage, creationTime, result?.data?.length);
+        successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, result?.data?.length);
         produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         return successMessage
@@ -546,8 +546,8 @@ const processCreateData: any = async (result: any, type: string, request: any, r
       const createdResult = await createValidatedData(batchResult, type, request.body)
       logger.info(type + " creation result : " + createdResult)
       if (createdResult?.status == "SUCCESS") {
-        const successMessage: any = await generateResourceMessage(request.body, "Completed")
-        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "Completed")
+        const successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
+        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
         const activities: any = { activities: [activityMessage] }
         logger.info("Activity Message : " + JSON.stringify(activities))
         logger.info("Success Message : " + JSON.stringify(successMessage))

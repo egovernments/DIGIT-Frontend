@@ -1,14 +1,12 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { getCreationDetails, getResponseFromDb } from '../../utils/index'
+import { getCreationDetails, getResponseFromDb, getSchemaAndProcessResult } from '../../utils/index'
 
 
 import {
     getSheetData,
-    //     getSheetData,
     searchMDMS,
-    getSchema,
     processCreateData
 } from "../../api/index";
 
@@ -18,7 +16,7 @@ import {
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { processValidationWithSchema, validateTransformedData } from "../../utils/validator";
+import { getTransformAndParsingTemplates, processValidationWithSchema, validateTransformedData } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
 // import { httpRequest } from "../../utils/request";
 import { Pool } from 'pg';
@@ -84,6 +82,7 @@ class genericAPIController {
         }
     };
 
+
     validateData = async (
         request: express.Request,
         response: express.Response
@@ -94,20 +93,14 @@ class genericAPIController {
 
             // Search for campaign in MDMS
             const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
-            if (!APIResource.mdms || Object.keys(APIResource.mdms).length === 0) {
-                const errorMessage = "Invalid APIResourceType Type";
-                logger.error(errorMessage);
-                throw new Error(errorMessage);
-            }
+            const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
 
-            const transformTemplate = APIResource?.mdms?.[0]?.data?.transformTemplateName;
 
             // Search for transform template
             const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
             const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-            logger.info("File fetching url : " + url);
 
-            const parsingTemplate = APIResource?.mdms?.[0]?.data?.parsingTemplateName;
+            logger.info("File fetching url : " + url);
             let TransformConfig: any;
             if (result?.mdms?.length > 0) {
                 TransformConfig = result.mdms[0];
@@ -117,24 +110,8 @@ class genericAPIController {
             // Get data from sheet
             const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
             validateTransformedData(updatedDatas);
+            const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
 
-            const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
-            let processResult: any;
-            request.body.HCMConfig = {}
-            request.body.HCMConfig['parsingTemplate'] = parsingTemplate;
-            request.body.HCMConfig['data'] = updatedDatas;
-
-            // Process data
-            processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
-            if (processResult.Error) {
-                logger.error(processResult.Error);
-                throw new Error(processResult.Error);
-            }
-
-            const healthMaster = APIResource?.mdms?.[0]?.data?.masterDetails?.masterName + "." + APIResource?.mdms?.[0]?.data?.masterDetails?.moduleName;
-
-            // Get schema definition
-            const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
 
             // Validate data with schema
             const validationErrors: any[] = [];
