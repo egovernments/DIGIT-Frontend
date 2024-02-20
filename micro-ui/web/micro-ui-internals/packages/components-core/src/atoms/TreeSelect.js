@@ -17,9 +17,9 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
       <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
           <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
             {isExpanded ? (
-              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" />
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" }/>
             ) : (
-              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" style={{ transform: "rotate(-90deg)" }} />
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" } style={{ transform: "rotate(-90deg)" }} />
             )}
           </div>
         <div className="digit-option-label" onClick={handleSelect}>
@@ -97,12 +97,12 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
   };
   return (
     <div style={{ marginLeft: `${level * 20}px`, borderLeft: "1px solid #D6D5D4" }}>
-      <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
+      <div className={`digit-tree-multiselect-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
         <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
           {isExpanded ? (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" />
+            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4"} />
           ) : (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill="#0B0C0C" style={{ transform: "rotate(-90deg)" }} />
+            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" } style={{ transform: "rotate(-90deg)" }} />
           )}
         </div>
         <div

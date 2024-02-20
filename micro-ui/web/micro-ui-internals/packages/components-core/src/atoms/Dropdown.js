@@ -97,6 +97,7 @@ const Dropdown = (props) => {
   const [dropdownStatus, setDropdownStatus] = useState(false);
   const [selectedOption, setSelectedOption] = useState(props.selected ? props.selected : null);
   const [filterVal, setFilterVal] = useState("");
+  const [isActive, setIsActive] = useState(-1);
   const [forceSet, setforceSet] = useState(0);
   const [optionIndex, setOptionIndex] = useState(-1);
   const optionRef = useRef(null);
@@ -159,7 +160,8 @@ const Dropdown = (props) => {
     if (!isSelectedSameAsOptions) setSelectedOption(null);
   }
 
-  const IconRender = (iconReq) => {
+  const IconRender = (iconReq, isActive) => {
+    const iconFill = isActive ? "#FFFFFF" : "#505A5F";
     try {
       const components = require("@egovernments/digit-ui-svg-components");
       const DynamicIcon = components?.[iconReq];
@@ -167,7 +169,7 @@ const Dropdown = (props) => {
         const svgElement = DynamicIcon({
           width: "1.25rem",
           height: "1.25rem",
-          fill: "#505A5F",
+          fill: iconFill,
           className: "",
         });
         return svgElement;
@@ -208,19 +210,28 @@ const Dropdown = (props) => {
   const flattenedOptions = flattenOptions(filteredOption);
 
   const renderOption = (option, index) => {
+    const handleMouseDown = () => {
+      setIsActive(index);
+    };
+    const handleMouseUp = () => {
+      setIsActive(-1);
+    };
+
     return (
       <div
         className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`}
-        style={index === optionIndex ? { opacity: 1, backgroundColor: "rgba(238, 238, 238, var(--bg-opacity))" } : {}}
+        style={index === optionIndex ? { opacity: 1, backgroundColor: "#FFFAF7", border: "0.5px solid #F47738" } : {}}
         key={index}
         onClick={() => onSelect(option)}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
       >
-        {(props?.variant === "profiledropdown" || props?.variant === "profilenestedtext") ? (
+        {props?.variant === "profiledropdown" || props?.variant === "profilenestedtext" ? (
           <div
-          className={"profile-icon-container"}
+            className={"profile-icon-container"}
             style={{
-              width: `${(props?.variant === "profiledropdown") ? "2rem" : (props?.variant === "profilenestedtext" ? "2.935rem" : "")}`,
-              height: `${(props?.variant === "profiledropdown") ? "2rem" : (props?.variant === "profilenestedtext" ? "2.935rem" : "")}`,
+              width: `${props?.variant === "profiledropdown" ? "2rem" : props?.variant === "profilenestedtext" ? "2.935rem" : ""}`,
+              height: `${props?.variant === "profiledropdown" ? "2rem" : props?.variant === "profilenestedtext" ? "2.935rem" : ""}`,
               backgroundImage: `url(${
                 option.profileIcon
                   ? option.profileIcon
@@ -230,15 +241,19 @@ const Dropdown = (props) => {
           />
         ) : null}
         <div className="option-des-container">
-          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
-            {props?.showIcon && option?.icon && IconRender(option?.icon)}
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", minHeight: "18px" }}>
+            {props?.showIcon && option?.icon && IconRender(option?.icon, index === isActive)}
             {props.isPropertyAssess ? (
               <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
             ) : (
-              <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
+              <span style={{ minHeight: "18px", lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px" }}>
+                {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}
+              </span>
             )}
           </div>
-          {(props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ) && option.description && <div className="option-description">{option.description}</div>}
+          {(props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext") && option.description && (
+            <div className="option-description">{option.description}</div>
+          )}
         </div>
       </div>
     );
@@ -253,7 +268,7 @@ const Dropdown = (props) => {
           <div key={index} className="digit-nested-category">
             <div className="digit-category-name">
               {props.variant === "treedropdown" && option.options.length > 0 && (
-                <SVG.ArrowDropDown width="1.5rem" height="1.5rem" className="cp" fill="black" />
+                <SVG.ArrowDropDown width="1.5rem" height="1.5rem" className="cp" fill="#505a5f" />
               )}
               {option.name}
             </div>
@@ -272,7 +287,7 @@ const Dropdown = (props) => {
       {hasCustomSelector && (
         <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch}>
           {props.customSelector}
-          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disabled && "disabled"} fill="black" />}
+          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disabled && "disabled"} fill="#505a5f" />}
         </div>
       )}
       {!hasCustomSelector && (
@@ -323,7 +338,7 @@ const Dropdown = (props) => {
             inputRef={props.ref}
           />
           {props.showSearchIcon ? null : (
-            <SVG.ArrowDropDown fill={props?.disabled ? "#B1B4B6" : "black"} onClick={dropdownSwitch} className="cp" disable={props.disabled} />
+            <SVG.ArrowDropDown fill={props?.disabled ? "#D6D5D4" : "#505A5F"} onClick={dropdownSwitch} className="cp" disable={props.disabled} />
           )}
           {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disabled} /> : null}
         </div>
