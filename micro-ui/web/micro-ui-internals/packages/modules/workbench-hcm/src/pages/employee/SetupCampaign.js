@@ -135,7 +135,6 @@ const SetupCampaign = () => {
 
   const onFormValueChange = (setValue, formData) => {
     const { deliveryNumber, cycleNumber , campaignName ,  campaigntype} = formData;
-    console.log(setValue," sssssssssssss")
     setDeliveryNumber(deliveryNumber);
     setCycleNumber(cycleNumber);
     var newArrayData=arrayData;

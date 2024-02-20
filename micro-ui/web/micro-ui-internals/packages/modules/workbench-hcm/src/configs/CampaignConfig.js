@@ -6,15 +6,81 @@ export const CampaignConfig = [
             body: [
                 {
                   isMandatory: false,
-                  key: "campaignName0",
+                  key: "campaignName",
                   type: "text",
-                  label: "CAMPAIGN_NAME",
+                  label: "WBH_NAME_CAMPAIGN",
                   populators: {
-                    name: "campaignName0",
+                    name: "campaignName",
                     error: "ES_TQM_REQUIRED",
                     required: true,
                   },
-                }
+                },
+                {
+                  isMandatory: false,
+                  key: "description",
+                  type: "textarea",
+                  label: "WBH_CAMPAIGN_DESCRIPTION",
+                  populators: {
+                    name: "description",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
+                {
+                  isMandatory: false,
+                  key: "startDate",
+                  type: "date",
+                  label: "WBH_CAMPAIGN_START_DATE",
+                  populators: {
+                    name: "startDate",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
+                {
+                  isMandatory: false,
+                  key: "endDate",
+                  type: "date",
+                  label: "WBH_CAMPAIGN_END_DATE",
+                  populators: {
+                    name: "endDate",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
+                {
+                  isMandatory: false,
+                  key: "beneficiaryType",
+                  type: "dropdown",
+                  label: "WBH_CAMPAIGN_BENEFICIARY_TYPE",
+                  populators: {
+                    name: "beneficiaryType",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
+                {
+                  isMandatory: false,
+                  key: "campaignType",
+                  type: "dropdown",
+                  label: "WBH_CAMPAIGN_TYPE",
+                  populators: {
+                    name: "campaignType",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
+                {
+                  isMandatory: false,
+                  key: "resourceType",
+                  type: "dropdown",
+                  label: "WBH_CAMPAIGN_RESOURCE_TYPE",
+                  populators: {
+                    name: "resourceType",
+                    error: "ES_TQM_REQUIRED",
+                    required: true,
+                  },
+                },
               ],
         },
         {
