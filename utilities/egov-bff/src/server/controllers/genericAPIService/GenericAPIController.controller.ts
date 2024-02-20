@@ -1,11 +1,10 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { getFinalUpdatedResponse, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb, getCreationDetails, getSchemaAndProcessResult } from '../../utils/index'
+import { fetchDataAndUpdate, getFinalUpdatedResponse, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb, processValidationResultsAndSendResponse } from '../../utils/index'
 
 
 import {
-    getSheetData,
     searchMDMS,
     processCreateData
 } from "../../api/index";
@@ -16,7 +15,7 @@ import {
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { getTransformAndParsingTemplates, processValidationWithSchema, validateTransformedData } from "../../utils/validator";
+import { getTransformAndParsingTemplates } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
 // import { httpRequest } from "../../utils/request";
 import { Pool } from 'pg';
@@ -58,7 +57,7 @@ class genericAPIController {
             const { type } = request?.body?.ResourceDetails;
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
-            if (result?.validationResult == "VALID_DATA") {
+            if (result?.validationResult == "VALID_DATA" || result?.validationResult == "NO_VALIDATION_SCHEMA_FOUND") {
                 const ResponseDetails = await processCreateData(result, type, request, response);
                 return sendResponse(response, { ResponseDetails }, request);
             }
@@ -93,54 +92,16 @@ class genericAPIController {
 
             // Search for campaign in MDMS
             const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
+
             const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
-
-
-            // Search for transform template
-            const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
-            const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-
-            logger.info("File fetching url : " + url);
-            let TransformConfig: any;
-            if (result?.mdms?.length > 0) {
-                TransformConfig = result.mdms[0];
-                logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
-            }
-
-            // Get data from sheet
-            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
-            if (!Array.isArray(updatedDatas)) {
-                throw new Error(JSON.stringify(updatedDatas));
-            }
-            validateTransformedData(updatedDatas);
-            const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
-
-
-            // Validate data with schema
-            const validationErrors: any[] = [];
-            const validatedData: any[] = [];
-            processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
-
-            // Include error messages from MDMS service
-            const mdmsErrors = processResult?.mdmsErrors || [];
-
-            // Send response
-            if (validationErrors.length > 0 || mdmsErrors.length > 0) {
-                const errors = [...validationErrors, ...mdmsErrors];
-                return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
-            } else {
-                const creationDetails = getCreationDetails(APIResource);
-                return sendResponse(response, {
-                    "validationResult": "VALID_DATA",
-                    "data": validatedData,
-                    creationDetails
-                }, request);
-            }
+            const { processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
+            return processValidationResultsAndSendResponse(processResult, schemaDef, APIResource, response, request);
         } catch (error: any) {
             logger.error(error);
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
     };
+
 
 
     generateData = async (request: express.Request, response: express.Response) => {

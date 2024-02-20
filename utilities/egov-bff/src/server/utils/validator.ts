@@ -133,6 +133,7 @@ function processValidationWithSchema(processResult: any, validationErrors: any, 
     }
     else {
         logger.info("Skipping Validation of Data as Schema is not defined");
+        validationErrors.push("NO_VALIDATION_SCHEMA_FOUND");
         processResult.updatedDatas.forEach((data: any) => {
             validatedData.push(data)
         });

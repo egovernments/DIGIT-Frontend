@@ -5,13 +5,14 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
+import { getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
 import { getCount } from '../api/index'
 import { logger } from "./logger";
+import { processValidationWithSchema, validateTransformedData } from "./validator";
 // import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
@@ -754,6 +755,65 @@ async function getSchemaAndProcessResult(request: any, parsingTemplate: any, upd
   return { processResult, schemaDef };
 }
 
+async function processValidationResultsAndSendResponse(processResult: any, schemaDef: any, APIResource: any, response: any, request: any) {
+  const validationErrors: any[] = [];
+  const validatedData: any[] = [];
+  processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
+
+  // Include error messages from MDMS service
+  const mdmsErrors = processResult?.mdmsErrors || [];
+
+  // Send response
+  if (validationErrors.length > 0 || mdmsErrors.length > 0) {
+    if (validationErrors?.[0] == "NO_VALIDATION_SCHEMA_FOUND") {
+      const creationDetails = getCreationDetails(APIResource);
+      return sendResponse(response, {
+        "validationResult": "NO_VALIDATION_SCHEMA_FOUND",
+        "data": validatedData,
+        creationDetails
+      }, request);
+    }
+    const errors = [...validationErrors, ...mdmsErrors];
+    return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
+  } else {
+    const creationDetails = getCreationDetails(APIResource);
+    return sendResponse(response, {
+      "validationResult": "VALID_DATA",
+      "data": validatedData,
+      creationDetails
+    }, request);
+  }
+}
+
+
+const fetchDataAndUpdate = async (
+  transformTemplate: any,
+  parsingTemplate: any,
+  fileStoreId: any,
+  APIResource: any,
+  request: any,
+  response: any
+) => {
+  const result = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
+  const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+  logger.info("File fetching url : " + url);
+
+  let TransformConfig;
+  if (result?.mdms?.length > 0) {
+    TransformConfig = result.mdms[0];
+    logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
+  }
+
+  const updatedDatas = await getSheetData(url, [{ startRow: 2, endRow: 1000 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
+  if (!Array.isArray(updatedDatas)) {
+    throw new Error(JSON.stringify(updatedDatas));
+  }
+  validateTransformedData(updatedDatas);
+  const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
+
+  return { processResult, schemaDef };
+};
+
 
 export {
   errorResponder,
@@ -784,5 +844,7 @@ export {
   getModifiedResponse,
   getNewEntryResponse,
   getOldEntryResponse,
-  getFinalUpdatedResponse
+  getFinalUpdatedResponse,
+  processValidationResultsAndSendResponse,
+  fetchDataAndUpdate
 };
