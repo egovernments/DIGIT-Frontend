@@ -133,13 +133,28 @@ function processValidationWithSchema(processResult: any, validationErrors: any, 
     }
     else {
         logger.info("Skipping Validation of Data as Schema is not defined");
+        validationErrors.push("NO_VALIDATION_SCHEMA_FOUND");
         processResult.updatedDatas.forEach((data: any) => {
             validatedData.push(data)
         });
     }
 }
 
+async function getTransformAndParsingTemplates(APIResource: any, request: any, response: any) {
+    if (!APIResource.mdms || Object.keys(APIResource.mdms).length === 0) {
+        const errorMessage = "Invalid APIResourceType Type";
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+    }
+
+    const transformTemplate = APIResource?.mdms?.[0]?.data?.transformTemplateName;
+    const parsingTemplate = APIResource?.mdms?.[0]?.data?.parsingTemplateName;
+
+    return { transformTemplate, parsingTemplate };
+}
 
 
 
-export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema };
+
+
+export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema, getTransformAndParsingTemplates };

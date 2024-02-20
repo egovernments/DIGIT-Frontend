@@ -1,14 +1,11 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { fullProcessFlowForNewEntry, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb } from '../../utils/index'
+import { fetchDataAndUpdate, fullProcessFlowForNewEntry, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb, processValidationResultsAndSendResponse } from '../../utils/index'
 
 
 import {
-    getSheetData,
-    //     getSheetData,
     searchMDMS,
-    getSchema,
     processCreateData
 } from "../../api/index";
 
@@ -18,7 +15,7 @@ import {
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { processValidationWithSchema, validateTransformedData } from "../../utils/validator";
+import { getTransformAndParsingTemplates } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
 // import { httpRequest } from "../../utils/request";
 import { Pool } from 'pg';
@@ -58,8 +55,8 @@ class genericAPIController {
             const { type } = request?.body?.ResourceDetails;
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
-            if (result?.validationResult == "VALID_DATA") {
-                const ResponseDetails = await processCreateData(result, type, request);
+            if (result?.validationResult == "VALID_DATA" || result?.validationResult == "NO_VALIDATION_SCHEMA_FOUND") {
+                const ResponseDetails = await processCreateData(result, type, request, response);
                 return sendResponse(response, { ResponseDetails }, request);
             }
             else if (result?.validationResult == "INVALID_DATA") {
@@ -82,6 +79,7 @@ class genericAPIController {
         }
     };
 
+
     validateData = async (
         request: express.Request,
         response: express.Response
@@ -92,83 +90,16 @@ class genericAPIController {
 
             // Search for campaign in MDMS
             const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
-            if (!APIResource.mdms || Object.keys(APIResource.mdms).length === 0) {
-                const errorMessage = "Invalid APIResourceType Type";
-                logger.error(errorMessage);
-                throw new Error(errorMessage);
-            }
 
-            const transformTemplate = APIResource?.mdms?.[0]?.data?.transformTemplateName;
-
-            // Search for transform template
-            const result: any = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
-            const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-            logger.info("File fetching url : " + url);
-
-            const parsingTemplate = APIResource?.mdms?.[0]?.data?.parsingTemplateName;
-            let TransformConfig: any;
-            if (result?.mdms?.length > 0) {
-                TransformConfig = result.mdms[0];
-                logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
-            }
-
-            // Get data from sheet
-            const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
-            validateTransformedData(updatedDatas);
-
-            const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
-            let processResult: any;
-            request.body.HCMConfig = {}
-            request.body.HCMConfig['parsingTemplate'] = parsingTemplate;
-            request.body.HCMConfig['data'] = updatedDatas;
-
-            // Process data
-            processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
-            if (processResult.Error) {
-                logger.error(processResult.Error);
-                throw new Error(processResult.Error);
-            }
-
-            const healthMaster = APIResource?.mdms?.[0]?.data?.masterDetails?.masterName + "." + APIResource?.mdms?.[0]?.data?.masterDetails?.moduleName;
-
-            // Get schema definition
-            const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
-
-            // Validate data with schema
-            const validationErrors: any[] = [];
-            const validatedData: any[] = [];
-            processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
-
-            // Include error messages from MDMS service
-            const mdmsErrors = processResult?.mdmsErrors || [];
-
-            // Send response
-            if (validationErrors.length > 0 || mdmsErrors.length > 0) {
-                const errors = [...validationErrors, ...mdmsErrors];
-                return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
-            } else {
-                return sendResponse(response, {
-                    "validationResult": "VALID_DATA",
-                    "data": validatedData,
-                    creationDetails: {
-                        host: APIResource?.mdms?.[0]?.data?.host,
-                        url: APIResource?.mdms?.[0]?.data?.creationConfig?.url,
-                        keyName: APIResource?.mdms?.[0]?.data?.creationConfig?.keyName,
-                        isBulkCreate: APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate,
-                        creationLimit: APIResource?.mdms?.[0]?.data?.creationConfig?.limit,
-                        responsePathToCheck: APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck,
-                        checkOnlyExistence: APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence,
-                        matchDataLength: APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength,
-                        responseToMatch: APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch,
-                        createBody: APIResource?.mdms?.[0]?.data?.creationConfig?.createBody
-                    }
-                }, request);
-            }
+            const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
+            const { processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
+            return processValidationResultsAndSendResponse(processResult, schemaDef, APIResource, response, request);
         } catch (error: any) {
             logger.error(error);
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
     };
+
 
 
     generateData = async (request: express.Request, response: express.Response) => {

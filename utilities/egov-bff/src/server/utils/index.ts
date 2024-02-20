@@ -3,16 +3,16 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber, getResouceNumber, searchMDMS } from "../api/index";
+import { getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
 import { getCount } from '../api/index'
-
 import { logger } from "./logger";
+import { processValidationWithSchema, validateTransformedData } from "./validator";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
@@ -630,7 +630,6 @@ async function callSearchApi(request: any, response: any) {
     logger.error(String(e))
     return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
   }
-
 }
 
 async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, response: any) {
@@ -644,7 +643,194 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
   } catch (error) {
     throw error;
+  }}
+
+function isEpoch(value: any): boolean {
+  // Check if the value is a number
+  if (typeof value !== 'number') {
+    return false;
   }
+
+  // Create a new Date object from the provided value
+  const date = new Date(value);
+
+  // Check if the date is valid and the value matches the provided epoch time
+  return !isNaN(date.getTime()) && date.getTime() === value;
+}
+
+function dateToEpoch(dateString: string): number | null {
+  // Parse the date string
+  const parsedDate = Date.parse(dateString);
+
+  // Check if the parsing was successful
+  if (!isNaN(parsedDate)) {
+    // Convert milliseconds since epoch to seconds since epoch
+    return parsedDate / 1000;
+  } else {
+    return null; // Parsing failed, return null
+  }
+}
+
+async function matchWithCreatedDetails(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
+  const waitTime = config.waitTime;
+  logger.info("Waiting for " + waitTime + "ms before Checking Persistence");
+  await new Promise(resolve => setTimeout(resolve, parseInt(waitTime)));
+  var requestWithParams = { ...request }
+  requestWithParams.query = { ...requestWithParams.query, type: request?.body?.ResourceDetails?.type, forceUpdate: true }
+  const rows: any = await callSearchApi(requestWithParams, response);
+  var count = 0;
+  var createdDetailsPresent = false;
+  logger.info("Checking Persistence with createdBy for  " + request?.body?.RequestInfo?.userInfo?.uuid + " and createdTime " + creationTime);
+  rows.forEach((item: any) => {
+    var createdBy = item?.auditDetails?.createdBy || item?.createdBy;
+    var createdTime = item?.auditDetails?.createdTime || item?.createdTime || item?.auditDetails?.createdDate || item?.createdDate;
+    if (createdBy && createdTime) {
+      var userMatch = false;
+      var timeMatch = false;
+      if (validate(createdBy)) {
+        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.uuid
+      }
+      else {
+        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.id
+      }
+      if (isEpoch(createdTime)) {
+        timeMatch = createdTime >= creationTime
+      }
+      else {
+        createdTime = dateToEpoch(createdBy);
+        if (createdTime) {
+          timeMatch = createdTime >= creationTime
+        }
+      }
+      if (userMatch && timeMatch) {
+        count++;
+      }
+    }
+    if (createdBy && createdTime) {
+      createdDetailsPresent = true;
+    }
+  })
+  logger.info("Got " + count + " rows with recent persistence");
+  if (count >= rowsToMatch) {
+    return ResponseDetails;
+  }
+  else if (createdDetailsPresent) {
+    ResponseDetails.status = "PERSISTING_ERROR";
+    return ResponseDetails;
+  }
+  logger.info("No createdBy and createdTime found in Rows.");
+  ResponseDetails.status = "PERSISTENCE_CHECK_REQUIRED";
+  return ResponseDetails;
+}
+
+function getCreationDetails(APIResource: any) {
+  // Assuming APIResource has the necessary structure to extract creation details
+  // Replace the following lines with the actual logic to extract creation details
+  const host = APIResource?.mdms?.[0]?.data?.host;
+  const url = APIResource?.mdms?.[0]?.data?.creationConfig?.url;
+  const keyName = APIResource?.mdms?.[0]?.data?.creationConfig?.keyName;
+  const isBulkCreate = APIResource?.mdms?.[0]?.data?.creationConfig?.isBulkCreate;
+  const creationLimit = APIResource?.mdms?.[0]?.data?.creationConfig?.limit;
+  const responsePathToCheck = APIResource?.mdms?.[0]?.data?.creationConfig?.responsePathToCheck;
+  const checkOnlyExistence = APIResource?.mdms?.[0]?.data?.creationConfig?.checkOnlyExistence;
+  const matchDataLength = APIResource?.mdms?.[0]?.data?.creationConfig?.matchDataLength;
+  const responseToMatch = APIResource?.mdms?.[0]?.data?.creationConfig?.responseToMatch;
+  const createBody = APIResource?.mdms?.[0]?.data?.creationConfig?.createBody;
+
+  return {
+    host,
+    url,
+    keyName,
+    isBulkCreate,
+    creationLimit,
+    responsePathToCheck,
+    checkOnlyExistence,
+    matchDataLength,
+    responseToMatch,
+    createBody
+  };
+}
+
+
+async function getSchemaAndProcessResult(request: any, parsingTemplate: any, updatedDatas: any, APIResource: any) {
+  const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+  let processResult;
+  request.body.HCMConfig = {};
+  request.body.HCMConfig['parsingTemplate'] = parsingTemplate;
+  request.body.HCMConfig['data'] = updatedDatas;
+
+  // Process data
+  processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+  if (processResult.Error) {
+    logger.error(processResult.Error);
+    throw new Error(processResult.Error);
+  }
+
+  const healthMaster = APIResource?.mdms?.[0]?.data?.masterDetails?.masterName + "." + APIResource?.mdms?.[0]?.data?.masterDetails?.moduleName;
+
+  // Get schema definition
+  const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
+
+  return { processResult, schemaDef };
+}
+
+async function processValidationResultsAndSendResponse(processResult: any, schemaDef: any, APIResource: any, response: any, request: any) {
+  const validationErrors: any[] = [];
+  const validatedData: any[] = [];
+  processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
+
+  // Include error messages from MDMS service
+  const mdmsErrors = processResult?.mdmsErrors || [];
+
+  // Send response
+  if (validationErrors.length > 0 || mdmsErrors.length > 0) {
+    if (validationErrors?.[0] == "NO_VALIDATION_SCHEMA_FOUND") {
+      const creationDetails = getCreationDetails(APIResource);
+      return sendResponse(response, {
+        "validationResult": "NO_VALIDATION_SCHEMA_FOUND",
+        "data": validatedData,
+        creationDetails
+      }, request);
+    }
+    const errors = [...validationErrors, ...mdmsErrors];
+    return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
+  } else {
+    const creationDetails = getCreationDetails(APIResource);
+    return sendResponse(response, {
+      "validationResult": "VALID_DATA",
+      "data": validatedData,
+      creationDetails
+    }, request);
+  }
+}
+
+
+const fetchDataAndUpdate = async (
+  transformTemplate: any,
+  parsingTemplate: any,
+  fileStoreId: any,
+  APIResource: any,
+  request: any,
+  response: any
+) => {
+  const result = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
+  const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+  logger.info("File fetching url : " + url);
+
+  let TransformConfig;
+  if (result?.mdms?.length > 0) {
+    TransformConfig = result.mdms[0];
+    logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
+  }
+
+  const updatedDatas = await getSheetData(url, [{ startRow: 2, endRow: 1000 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
+  if (!Array.isArray(updatedDatas)) {
+    throw new Error(JSON.stringify(updatedDatas));
+  }
+  validateTransformedData(updatedDatas);
+  const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
+
+  return { processResult, schemaDef };
 };
 
 
@@ -671,9 +857,14 @@ export {
   generateActivityMessage,
   getResponseFromDb,
   callSearchApi,
+  matchWithCreatedDetails,
+  getCreationDetails,
+  getSchemaAndProcessResult,
   getModifiedResponse,
   getNewEntryResponse,
   getOldEntryResponse,
   getFinalUpdatedResponse,
-  fullProcessFlowForNewEntry
+  fullProcessFlowForNewEntry,
+  processValidationResultsAndSendResponse,
+  fetchDataAndUpdate
 };
