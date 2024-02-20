@@ -41,7 +41,7 @@ module.exports = () => {
         name: "hrms",
         filename: "remoteEntry.js",
         exposes: {
-          "./HrmsModule": "./src/bootstrap",
+          "./HRMSModule": "./src/SingleSpaEntry",
         },
         shared: packageJson.dependencies,
       }),

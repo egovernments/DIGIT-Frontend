@@ -5,6 +5,7 @@
     "packages/core",
     "packages/workbench",
     "packages/ui-core",
+    "packages/hrms",
     "packages/app1",
     "packages/common"
   ],
