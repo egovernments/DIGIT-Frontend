@@ -100,8 +100,8 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
-              <ReactQueryDevtools initialIsOpen={false} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

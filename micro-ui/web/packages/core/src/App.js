@@ -23,7 +23,6 @@ initLibraries().then(() => {
   initDigitUI();
 });
 
-//registering remote apps
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -38,6 +37,7 @@ const queryClient = new QueryClient({
     },
   },
 });
+//registering remote apps
 registerRemotes(queryClient)
 
 
