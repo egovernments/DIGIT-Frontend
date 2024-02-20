@@ -63,6 +63,7 @@ const commonArgs = {
     onIconSelection: () => {
       console.log("Icon Clicked");
     },
+    resizeSmart:false
   },
   value: "",
   error: "",

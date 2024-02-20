@@ -1,8 +1,9 @@
 @import url("../index.scss");
 
 .digit-radio-wrap {
-  @apply my-sm leading-10 flex justify-start;
+  @apply  leading-10 flex justify-start;
   gap: "3rem";
+  margin-bottom: 8px;
 
   @media (max-width: 480px) {
     @apply flex-col;
@@ -80,7 +81,7 @@
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
-    @apply border-2 border-primary-main;
+    border: 2px solid theme(digitv2.lightTheme.primary);
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
