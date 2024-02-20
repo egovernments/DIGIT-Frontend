@@ -109,6 +109,9 @@ class genericAPIController {
 
             // Get data from sheet
             const updatedDatas: any = await getSheetData(url, [{ startRow: 2, endRow: 50 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
+            if (!Array.isArray(updatedDatas)) {
+                throw new Error(JSON.stringify(updatedDatas));
+            }
             validateTransformedData(updatedDatas);
             const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
 

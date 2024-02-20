@@ -3,7 +3,7 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
 import { getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
@@ -625,6 +625,32 @@ async function callSearchApi(request: any, response: any) {
   }
 }
 
+function isEpoch(value: any): boolean {
+  // Check if the value is a number
+  if (typeof value !== 'number') {
+    return false;
+  }
+
+  // Create a new Date object from the provided value
+  const date = new Date(value);
+
+  // Check if the date is valid and the value matches the provided epoch time
+  return !isNaN(date.getTime()) && date.getTime() === value;
+}
+
+function dateToEpoch(dateString: string): number | null {
+  // Parse the date string
+  const parsedDate = Date.parse(dateString);
+
+  // Check if the parsing was successful
+  if (!isNaN(parsedDate)) {
+    // Convert milliseconds since epoch to seconds since epoch
+    return parsedDate / 1000;
+  } else {
+    return null; // Parsing failed, return null
+  }
+}
+
 async function matchWithCreatedDetails(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
   const waitTime = config.waitTime;
   logger.info("Waiting for " + waitTime + "ms before Checking Persistence");
@@ -636,15 +662,32 @@ async function matchWithCreatedDetails(request: any, response: any, ResponseDeta
   var createdDetailsPresent = false;
   logger.info("Checking Persistence with createdBy for  " + request?.body?.RequestInfo?.userInfo?.uuid + " and createdTime " + creationTime);
   rows.forEach((item: any) => {
-    if (item?.auditDetails?.createdBy && item?.auditDetails?.createdTime) {
-      createdDetailsPresent = true;
-      if (item?.auditDetails?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.auditDetails?.createdTime >= creationTime)
+    var createdBy = item?.auditDetails?.createdBy || item?.createdBy;
+    var createdTime = item?.auditDetails?.createdTime || item?.createdTime || item?.auditDetails?.createdDate || item?.createdDate;
+    if (createdBy && createdTime) {
+      var userMatch = false;
+      var timeMatch = false;
+      if (validate(createdBy)) {
+        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.uuid
+      }
+      else {
+        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.id
+      }
+      if (isEpoch(createdTime)) {
+        timeMatch = createdTime >= creationTime
+      }
+      else {
+        createdTime = dateToEpoch(createdBy);
+        if (createdTime) {
+          timeMatch = createdTime >= creationTime
+        }
+      }
+      if (userMatch && timeMatch) {
         count++;
+      }
     }
-    else if (item?.createdBy && item?.createdTime) {
+    if (createdBy && createdTime) {
       createdDetailsPresent = true;
-      if (item?.createdBy == request?.body?.RequestInfo?.userInfo?.uuid && item?.createdTime >= creationTime)
-        count++;
     }
   })
   logger.info("Got " + count + " rows with recent persistence");
