@@ -27,7 +27,7 @@
     "dev:libraries": "cd packages/libraries && yarn start",
     "dev:corelibraries": "cd packages/libraries-core && yarn start",
     "dev:components": "cd packages/react-components && yarn start",
-    "dev:corecomponents": "cd packages/components-core && yarn start",
+    "dev:corecomponents" : "cd packages/components-core && yarn start",
     "dev:svgcomponents": "cd packages/svg-components && yarn start",
     "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
