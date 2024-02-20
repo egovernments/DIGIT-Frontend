@@ -33,6 +33,7 @@
     "start:workbench": "cd packages/workbench && yarn start"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "yarn": "^1.22.21"
   }
 }

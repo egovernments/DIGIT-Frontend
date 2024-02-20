@@ -12,9 +12,8 @@ import IFrameInterface from "./IFrameInterface";
 
 // subFormRegistry.addSubForm("testForm", testForm);
 
-const EmployeePayment = ({ stateCode, cityCode, moduleCode }) => {
+const EmployeePayment = ({ stateCode, cityCode, moduleCode,path:currentPath }) => {
   const userType = "employee";
-  const { path: currentPath } = useRouteMatch();
 
   const { t } = useTranslation();
 
@@ -32,6 +31,9 @@ const EmployeePayment = ({ stateCode, cityCode, moduleCode }) => {
         {isFsm ? <Link to={`/${window?.contextPath}/employee/fsm/inbox`}>/ {t("ES_TITLE_INBOX")}</Link> : null}/ {link}
       </p>
       <Switch>
+        <Route path={`${currentPath}/sampleroute`}>
+          <div>Common Module Sample route</div>
+        </Route>
         <Route path={`${currentPath}/collect/:businessService/:consumerCode`}>
           <CollectPayment {...commonProps} basePath={currentPath} />
         </Route>
@@ -44,6 +46,7 @@ const EmployeePayment = ({ stateCode, cityCode, moduleCode }) => {
         <Route path={`${currentPath}/failure`}>
           <FailedPayment {...commonProps} />
         </Route>
+        
       </Switch>
     </React.Fragment>
   );
