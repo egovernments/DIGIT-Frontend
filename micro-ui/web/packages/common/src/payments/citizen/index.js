@@ -7,8 +7,8 @@ import { MyBills } from "./bills";
 import { SelectPaymentType } from "./payment-type/index";
 import { SuccessfulPayment, FailedPayment } from "./response";
 
-const CitizenPayment = ({ stateCode, cityCode, moduleCode }) => {
-  const { path: currentPath } = useRouteMatch();
+const CitizenPayment = ({ stateCode, cityCode, moduleCode,path:currentPath,url }) => {
+  // const { path: currentPath } = useRouteMatch();
   const commonProps = { stateCode, cityCode, moduleCode };
 
   return (

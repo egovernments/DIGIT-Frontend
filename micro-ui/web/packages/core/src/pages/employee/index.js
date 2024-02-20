@@ -30,7 +30,6 @@ const EmployeeApp = ({
   pathname,
   initData,
 }) => {
-  // debugger
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();
