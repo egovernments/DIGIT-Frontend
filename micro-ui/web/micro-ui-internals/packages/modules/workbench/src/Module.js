@@ -8,6 +8,7 @@ import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import * as parsingUtils from "../src/utils/ParsingUtils"
+import LevelCards from "./components/LevelCards";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench","mdms","schema"];
@@ -32,6 +33,7 @@ const componentsToRegister = {
   WorkbenchModule,
   WorkbenchCard,
   DigitJSONForm,
+  LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
   // HRMSCard // Overridden the HRMS card as per workbench
 };

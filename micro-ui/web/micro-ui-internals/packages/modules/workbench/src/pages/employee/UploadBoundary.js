@@ -42,6 +42,8 @@ const UploadBoundary = () => {
   };
   const { data: hierarchyTypeData } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
+  // console.log("hhhh" , hierarchyTypeData);
+
   const filteredXlsxData = hierarchyTypeData?.BoundaryHierarchy?.filter((item) => {
     return item.hierarchyType === selectedValue?.hierarchyType;
   });
@@ -91,95 +93,242 @@ const UploadBoundary = () => {
     }, 5000);
   };
 
+  // const onBulkUploadSubmit = async (file) => {
+  //   try {
+  //     const results = await Digit.Utils.parsingUtils.parseMultipleXlsToJson(file);
+  //     console.log("results" , results);
+  //     const flattenedArray = results.flatMap((item) => Object.values(item));
+  //     const uniqueValues = Array.from(new Set(flattenedArray));
+
+  //     await mutation.mutate(
+  //       {
+  //         params: {},
+  //         body: {
+  //           Boundary: uniqueValues.map((value) => ({
+  //             tenantId: stateId,
+  //             code: value,
+  //             geometry: {
+  //               type: "Polygon",
+  //               coordinates: [
+  //                 [
+  //                   [77.17291599436169, 28.56784947815504],
+  //                   [70.11625206763327, 22.50321664965992],
+  //                   [77.5811911123439, 13.05708693840623],
+  //                   [86.42557425986286, 23.774571851935193],
+  //                   [77.17291599436169, 28.56784947815504],
+  //                 ],
+  //               ],
+  //             },
+  //           })),
+  //         },
+  //       },
+  //       {
+  //         onError: (resp) => {
+  //           console.log("rrr", resp);
+  //           let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
+  //           resp?.response?.data?.Errors?.map((err, idx) => {
+  //             if (idx === resp?.response?.data?.Errors?.length - 1) {
+  //               label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
+  //             } else {
+  //               label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+  //             }
+  //           });
+  //           setShowToast({ label, isError: true });
+  //           closeToast();
+  //         },
+  //         onSuccess: async (data) => {
+  //           console.log("data", data);
+  //           if (data?.ResponseInfo?.status === "successful") {
+  //             const dynamicParentType = Digit.Utils.workbench.generateDynamicParentType(results);
+  //             const transformedData = Digit.Utils.workbench.transformBoundary(results, dynamicParentType);
+
+  //             setShowToast({ label: "Loading..." });
+
+  //             await Promise.all(
+  //               Object.keys(transformedData).map(async (key) => {
+  //                 for (const entry of transformedData[key]) {
+  //                   console.log(`Before delay for entry ${entry.code}`);
+  //                   // console.log(`parent ${entry.parent}` )
+  //                   console.log(`parent ${entry.parent}` )
+  //                   await mutationHierarchy.mutate(
+  //                     {
+  //                       params: {},
+  //                       body: {
+  //                         BoundaryRelationship: {
+  //                           tenantId: stateId,
+  //                           code: entry.code,
+  //                           hierarchyType: selectedValue?.hierarchyType,
+  //                           boundaryType: key,
+  //                           parent: entry.parent || null,
+  //                         },
+  //                       },
+  //                     },
+  //                     {
+  //                       onError: (error, variables) => {
+  //                         setShowToast({
+  //                           label: t('WBH_BOUNDARY_CREATION_FAILED'),
+  //                           isError: true
+  //                         });
+  //                         setTimeout(() => {
+  //                           setShowToast(false);
+  //                         }, 5000);
+  //                       },
+  //                       onSuccess: (resp) => {
+
+  //                         console.log("ressss", resp);
+  //                       },
+  //                     }
+  //                   );
+  //                   await new Promise((resolve) => setTimeout(resolve, 60000));
+  //                   console.log(`After mutation for entry ${entry.code}`);
+  //                 }
+  //               })
+  //             );
+  //               // Object.keys(transformedData).map(async (key) => {
+  //               //     transformedData[key].map(async (entry) => {
+  //               //       console.log(`Before delay for entry ${entry.code}`);
+  //               //       console.log(`parent ${entry.parent}`);
+  //               //       await mutationHierarchy.mutate(
+  //               //         {
+  //               //           params: {},
+  //               //           body: {
+  //               //             BoundaryRelationship: {
+  //               //               tenantId: stateId,
+  //               //               code: entry.code,
+  //               //               hierarchyType: selectedValue?.hierarchyType,
+  //               //               boundaryType: key,
+  //               //               parent: entry.parent || null,
+  //               //             },
+  //               //           },
+  //               //         },
+  //               //         {
+  //               //           onError: (error, variables) => {
+  //               //             setShowToast({
+  //               //               label: t('WBH_BOUNDARY_CREATION_FAILED'),
+  //               //               isError: true
+  //               //             });
+  //               //             setTimeout(() => {
+  //               //               setShowToast(false);
+  //               //             }, 5000);
+  //               //           },
+  //               //           onSuccess: () => {
+  //               //             console.log("ressss");
+  //               //           },
+  //               //         }
+  //               //       );
+  //               //       await new Promise((resolve) => setTimeout(resolve, 60000));
+  //               //       console.log(`After mutation for entry ${entry.code}`);
+  //               //     })
+  //               // })
+              
+
+  //             setShowToast({ label: `${t("WBH_BOUNDARY_CREATION_SUCCESS")}` });
+  //             closeToast();
+  //           }
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
+
+  //     setShowToast({ label, isError: true });
+  //   }
+  // };
+
+
   const onBulkUploadSubmit = async (file) => {
     try {
       const results = await Digit.Utils.parsingUtils.parseMultipleXlsToJson(file);
+      console.log("results", results);
       const flattenedArray = results.flatMap((item) => Object.values(item));
+      console.log("fff", flattenedArray);
       const uniqueValues = Array.from(new Set(flattenedArray));
-
-      await mutation.mutate(
-        {
+      console.log("uu", uniqueValues);
+      for (const value of uniqueValues) {
+        await mutation.mutate({
           params: {},
           body: {
-            Boundary: uniqueValues.map((value) => ({
-              tenantId: stateId,
-              code: value,
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [77.17291599436169, 28.56784947815504],
-                    [70.11625206763327, 22.50321664965992],
-                    [77.5811911123439, 13.05708693840623],
-                    [86.42557425986286, 23.774571851935193],
-                    [77.17291599436169, 28.56784947815504],
+            Boundary: [
+              {
+                tenantId: stateId,
+                code: value,
+                geometry: {
+                  type: "Polygon",
+                  coordinates: [
+                    [
+                      [77.17291599436169, 28.56784947815504],
+                      [70.11625206763327, 22.50321664965992],
+                      [77.5811911123439, 13.05708693840623],
+                      [86.42557425986286, 23.774571851935193],
+                      [77.17291599436169, 28.56784947815504],
+                    ],
                   ],
-                ],
+                },
               },
-            })),
+            ],
           },
-        },
-        {
-          onError: (resp) => {
-            let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
-            resp?.response?.data?.Errors?.map((err, idx) => {
-              if (idx === resp?.response?.data?.Errors?.length - 1) {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ".";
-              } else {
-                label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
+        });
+      }
+      
+  
+      const dynamicParentType = Digit.Utils.workbench.generateDynamicParentType(results);
+      const transformedData = Digit.Utils.workbench.transformBoundary(results, dynamicParentType);
+  
+      setShowToast({ label: "Loading..." });
+  
+      await Promise.all(
+        Object.keys(transformedData).map(async (key) => {
+          for (const entry of transformedData[key]) {
+            await new Promise((resolve) => setTimeout(resolve, 90000));
+            console.log(`Before delay for entry ${entry.code}`);
+            console.log(`parent ${entry.parent}`);
+            await mutationHierarchy.mutate(
+              {
+                params: {},
+                body: {
+                  BoundaryRelationship: {
+                    tenantId: stateId,
+                    code: entry.code,
+                    hierarchyType: selectedValue?.hierarchyType,
+                    boundaryType: key,
+                    parent: entry.parent || null,
+                  },
+                },
+              },
+              {
+                onError: (error, variables) => {
+                  setShowToast({
+                    label: t('WBH_BOUNDARY_CREATION_FAILED'),
+                    isError: true,
+                  });
+                  setTimeout(() => {
+                    setShowToast(false);
+                  }, 5000);
+                },
+                onSuccess: (resp) => {
+                  setShowToast({
+                    label: t('WBH_BOUNDARY_CREATION_SUCCESS'),
+                    isError: false,
+                  });
+                  setTimeout(() => {
+                    setShowToast(false);
+                  }, 50000);
+                },
               }
-            });
-            setShowToast({ label, isError: true });
-            closeToast();
-          },
-          onSuccess: async (data) => {
-            if (data?.ResponseInfo?.status === "successful") {
-              const dynamicParentType = Digit.Utils.workbench.generateDynamicParentType(results);
-              const transformedData = Digit.Utils.workbench.transformBoundary(results, dynamicParentType);
-
-              setShowToast({ label: "Loading..." });
-
-              await Promise.all(
-                Object.keys(transformedData).map(async (key) => {
-                  for (const entry of transformedData[key]) {
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                    await mutationHierarchy.mutate(
-                      {
-                        params: {},
-                        body: {
-                          BoundaryRelationship: {
-                            tenantId: stateId,
-                            code: entry.code,
-                            hierarchyType: selectedValue?.hierarchyType,
-                            boundaryType: key,
-                            parent: entry.parent || null,
-                          },
-                        },
-                      },
-                      {
-                        onError: () => {},
-                        onSuccess: (resp) => {
-                          console.log("ressss", resp);
-                        },
-                      }
-                    );
-                  }
-                })
-              );
-
-              setShowToast({ label: `${t("WBH_BOUNDARY_CREATION_SUCCESS")}` });
-              closeToast();
-            }
-          },
-        }
+            );
+            await new Promise((resolve) => setTimeout(resolve, 90000));
+            console.log(`After mutation for entry ${entry.code}`);
+          }
+        })
       );
+  
     } catch (error) {
       let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
-
       setShowToast({ label, isError: true });
     }
   };
+  
+  
 
   return (
     <React.Fragment>

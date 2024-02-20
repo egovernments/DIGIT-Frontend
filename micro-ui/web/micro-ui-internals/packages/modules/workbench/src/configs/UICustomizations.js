@@ -1,6 +1,6 @@
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { Button } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -815,14 +815,16 @@ export const UICustomizations = {
   },
   SearchBoundaryHierarchyConfig: {
     preProcess: (data, additionalDetails) => {
+      const { hierarchyType, boundaryType, boundaryCode } = Digit.Hooks.useQueryParams();
       const tenantId = Digit.ULBService.getCurrentTenantId();
+      console.log("ppp", boundaryCode);
 
       console.log("hierarchyType", data);
 
-      const hierarchyType = data.params.hierarchyType?.hierarchyType;
-      const boundaryType = data.params.boundaryType?.boundaryType;
+      // const hierarchyType = data.state?.searchForm?.hierarchyType;
+      // const boundaryType = data.params.boundaryType?.boundaryType;
 
-      data.params = { hierarchyType: hierarchyType, boundaryType: boundaryType, tenantId, includeParents: true, includeChildren: true };
+      data.params = { hierarchyType: hierarchyType, boundaryType: boundaryType, codes:boundaryCode, tenantId, includeParents: false, includeChildren: true };
       // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       const currentUrl = new URL(window.location.href);
       if (hierarchyType !== undefined) {
@@ -836,10 +838,14 @@ export const UICustomizations = {
       console.log("responseArray", responseArray, uiConfig);
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log("row", row);
       const [selectedLinkPath, setSelectedLinkPath] = useState(null);
 
       const [currentLevel, setCurrentLevel] = useState(0);
       const [selectedNodePath, setSelectedNodePath] = useState("");
+
+      const [sessionFormData, setSessionFormData, clearSessionFormData] = Digit.Hooks.useSessionStorage("hierarchyData", {});
+      const hierarchyType = sessionFormData?.hierarchyType;
 
       // const onSelect = (node) => {
       //   // const existingPath = selectedNodePath || "";
@@ -911,56 +917,96 @@ export const UICustomizations = {
       // Get a specific query parameter value
       const getHierarchyType = queryParams.get("hierarchyType");
 
-      const generateLink = (node) => (
-        <div key={node.id}>
-          <span className="link" onClick={() => onSelect(node)}>
-            {String(`${Digit.ULBService.getCurrentTenantId().toUpperCase()}_${getHierarchyType}_${node.boundaryType}_${node.code}`)}
-          </span>
+      // const generateLink = (node) => (
+      //   <div key={node.id}>
+      //     <span className="link" onClick={() => onSelect(node)}>
+      //       {String(`${Digit.ULBService.getCurrentTenantId().toUpperCase()}_${getHierarchyType}_${node.boundaryType}_${node.code}`)}
+      //     </span>
 
-          {selectedNodePath.includes(`${node.boundaryType}_${node.code}`) && node.children && node.children.length > 0 ? (
-            <ul>
-              {node.children.map((child) => (
-                <li key={child.id}>{generateLink(child)}</li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-      );
+      //     {selectedNodePath.includes(`${node.boundaryType}_${node.code}`) && node.children && node.children.length > 0 ? (
+      //       <ul>
+      //         {node.children.map((child) => (
+      //           <li key={child.id}>{generateLink(child)}</li>
+      //         ))}
+      //       </ul>
+      //     ) : null}
+      //   </div>
+      // );
 
       switch (key) {
-        case "WBH_LOCALISATION_VALUE":
-          return generateLink(row);
+        case "WBH_LEVEL":
+          return (
+            <span className={row.children && row.children.length > 0 ? "link" : ""}>
+              {row.children && row.children.length > 0 ? (
+                <Link
+                  to={`/${window.contextPath}/employee/workbench/boundary-relationship-search?hierarchyType=${hierarchyType}&boundaryType=${row?.children?.[0]?.boundaryType}`}
+                >
+                  {row.boundaryType}
+                </Link>
+              ) : (
+                <span>{row.boundaryType}</span>
+              )}
+            </span>
+          );
+
         case "WBH_CODE":
-          // value?.map((row) => {
-          console.log("dhfhd", row, value);
-          return value === "N/A" ? currentLevel : currentLevel;
-        // });
-
-        case "MASTERS_SOCIAL_CATEGORY":
-          return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(`MASTERS_${value}`))}</span> : t("ES_COMMON_NA");
-
-        case "CORE_COMMON_PROFILE_CITY":
-          return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getCityLocale(value)))}</span> : t("ES_COMMON_NA");
-
-        case "MASTERS_WARD":
-          return value ? (
-            <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
-          ) : (
-            t("ES_COMMON_NA")
+          return (
+            <span className={row.children && row.children.length > 0 ? "link" : ""}>
+              {row.children && row.children.length > 0 ? (
+                <Link
+                  to={`/${window.contextPath}/employee/workbench/boundary-relationship-search?hierarchyType=${hierarchyType}&boundaryType=${row?.children?.[0]?.boundaryType}&boundaryCode=${row.code}`}
+                >
+                  {row.code}
+                </Link>
+              ) : (
+                <span>{row.code}</span>
+              )}
+            </span>
           );
 
-        case "MASTERS_LOCALITY":
-          return value ? (
-            <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
-          ) : (
-            t("ES_COMMON_NA")
-          );
         default:
           return t("ES_COMMON_NA");
       }
     },
     selectionHandler: async (selectedRows) => {
       console.log("selectedRows", selectedRows);
+    },
+  },
+  SearchHierarchyConfig: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+
+      console.log("hierarchyType", data);
+
+      const hierarchyType = data.params.hierarchyType?.hierarchyType;
+      const boundaryType = data.params.boundaryType?.boundaryType;
+
+      data.params = { hierarchyType: hierarchyType, boundaryType: boundaryType, tenantId, includeParents: true, includeChildren: false };
+      // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      const currentUrl = new URL(window.location.href);
+      if (hierarchyType !== undefined) {
+        currentUrl.searchParams.set("hierarchyType", hierarchyType);
+      }
+      window.history.pushState({}, "", currentUrl.toString());
+      return data;
+    },
+
+    // postProcess: (responseArray, uiConfig) => {
+    //   console.log("responseArray", responseArray, uiConfig);
+    // },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "WBH_HIERARCHY_TYPE":
+          return (
+            <span className="link">
+              <Link to={`/${window.contextPath}/employee/workbench/boundary-relationship-search?hierarchyType=${row?.hierarchyType}`}>
+                {row?.hierarchyType}
+              </Link>
+            </span>
+          );
+        default:
+          return t("ES_COMMON_NA");
+      }
     },
   },
 };

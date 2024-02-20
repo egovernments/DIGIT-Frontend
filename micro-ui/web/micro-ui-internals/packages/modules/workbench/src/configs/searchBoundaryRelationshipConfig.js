@@ -29,22 +29,22 @@ export const searchBoundaryRelationshipConfig = {
         formClassName: "", //"custom-both-clear-search",
         primaryLabel: "ES_COMMON_SEARCH",
         secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-        minReqFields: 1,
+        minReqFields: 0,
         defaultValues: {
-          locale: "",
-          module: "",
+          hierarchyType: "",
+          boundaryType: "",
           codes: "",
         },
         fields: [
           {
             label: "WBH_HIERARCHY_TYPE",
-            type: "dropdown",
+            type: "text",
             isMandatory: false,
-            disable: false,
+            disable: true,
             populators: {
               name: "hierarchyType",
-              optionsKey: "hierarchyType",
-              optionsCustomStyle: { top: "2.3rem" },
+              // optionsKey: "hierarchyType",
+              // optionsCustomStyle: { top: "2.3rem" },
             },
           },
           {
@@ -79,7 +79,7 @@ export const searchBoundaryRelationshipConfig = {
         tableClassName: "table-fixed-last-column table",
         columns: [
           {
-            label: "WBH_LOCALISATION_VALUE",
+            label: "WBH_LEVEL",
             jsonPath: "boundaryType",
             additionalCustomization: true,
           },

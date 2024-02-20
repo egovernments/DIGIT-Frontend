@@ -16,6 +16,7 @@ import WorkbenchHeader from "../../components/WorkbenchHeader";
 import UploadBoundary from "./UploadBoundary";
 import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import BoundaryRelationshipSearch from "./BoundaryRelationshipSearch";
+import BoundaryHierarchySearch from "./BoundaryHierarchySearch";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -105,6 +106,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
           <PrivateRoute path={`${path}/create-boundary-hierarchy-type`} component={() => <BoundaryHierarchyTypeAdd />} />
           <PrivateRoute path={`${path}/boundary-relationship-search`} component={() => <BoundaryRelationshipSearch />} />
+          <PrivateRoute path={`${path}/hierarchy-search`} component={() => <BoundaryHierarchySearch />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

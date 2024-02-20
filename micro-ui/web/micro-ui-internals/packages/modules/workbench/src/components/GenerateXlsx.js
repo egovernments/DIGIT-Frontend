@@ -2,7 +2,6 @@ import React from "react";
 import XLSX from "xlsx";
 
 const GenerateXlsx = ({ inputRef, jsonData }) => {
-  console.log("jsonData", jsonData);
 
   const handleExport = () => {
     // Sample JSON data
