@@ -13,12 +13,13 @@ import { Pool } from 'pg';
 import { getCount } from '../api/index'
 
 import { logger } from "./logger";
-// import { userInfo } from "os";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
 
 const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
+const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
+const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
 /*
   stdTTL: (default: 0) the standard ttl as number in seconds for every generated
@@ -431,8 +432,9 @@ async function generateXlsxFromJson(request: any, response: any, simplifiedData:
     logger.info("Response data after File Creation : " + JSON.stringify(responseData));
     return responseData;
   } catch (e: any) {
-    logger.error(String(e))
-    return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+    const errorMessage = "Error occurred while fetching the file store ID: " + e.message;
+    logger.error(errorMessage)
+    return errorResponder({ message: errorMessage + "    Check Logs" }, request, response);
   }
 }
 
@@ -502,7 +504,7 @@ async function getResponseFromDb(request: any, response: any) {
     password: config.DB_PASSWORD,
     port: parseInt(config.DB_PORT)
   });
- 
+
   try {
     const { type } = request.query;
 
@@ -510,10 +512,16 @@ async function getResponseFromDb(request: any, response: any) {
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
-    console.log(responseData,"firstttttttttttttttttt");
     return responseData;
+  } catch (error) {
+    logger.error('Error fetching data from the database:', error);
+    throw error;
   } finally {
-    await pool.end();
+    try {
+      await pool.end();
+    } catch (error) {
+      logger.error('Error closing the database connection pool:', error);
+    }
   }
 }
 async function getModifiedResponse(responseData: any) {
@@ -541,7 +549,7 @@ async function getNewEntryResponse(modifiedResponse: any, request: any) {
   };
   return [newEntry];
 }
-async function getOldEntryResponse(modifiedResponse: any[], request : any) {
+async function getOldEntryResponse(modifiedResponse: any[], request: any) {
   return modifiedResponse.map((item: any) => {
     const newItem = { ...item };
     newItem.status = "expired";
@@ -550,16 +558,15 @@ async function getOldEntryResponse(modifiedResponse: any[], request : any) {
     return newItem;
   });
 }
-async function getFinalUpdatedResponse(result: any, responseData: any , request : any) {
-  console.log(responseData,"final")
+async function getFinalUpdatedResponse(result: any, responseData: any, request: any) {
   return responseData.map((item: any) => {
     return {
       ...item,
       lastmodifiedtime: Date.now(),
       createdtime: Date.now(),
-      filestoreid: result[0]?.fileStoreId,
+      filestoreid: result?.[0]?.fileStoreId,
       status: "Completed",
-      lastmodifiedby :request?.body?.RequestInfo?.userInfo?.uuid
+      lastmodifiedby: request?.body?.RequestInfo?.userInfo?.uuid
     };
   });
 }
@@ -569,9 +576,8 @@ async function callSearchApi(request: any, response: any) {
     let result: any;
     const { type } = request.query;
     result = await searchMDMS([type], "HCM.APIResourceTemplate3", request.body.RequestInfo, response);
-    const mdmsData = result?.mdms;
     const requestBody = { "RequestInfo": request?.body?.RequestInfo };
-    const responseData = mdmsData[0]?.data;
+    const responseData = result?.mdms?.[0]?.data;
     if (!responseData || responseData.length === 0) {
       return errorResponder({ message: "Invalid ApiResource Type. Check Logs" }, request, response);
     }
@@ -596,7 +602,7 @@ async function callSearchApi(request: any, response: any) {
       const count = await getCount(responseData, request, response);
       let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
       for (let i = 0; i < noOfTimesToFetchApi; i++) {
-        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
+        responseObject = await httpRequest(host+ url, requestBody, queryParams, undefined, undefined, undefined);
         fetchedData = _.get(responseObject, searchPath);
         fetchedData.forEach((item: any) => {
           responseDatas.push(item);
@@ -627,6 +633,20 @@ async function callSearchApi(request: any, response: any) {
 
 }
 
+async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, response: any) {
+  try {
+    const generatedResource: any = { generatedResource: newEntryResponse }
+    produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+   const responseDatas = await callSearchApi(request, response);
+    const result = await generateXlsxFromJson(request, response, responseDatas);
+    const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+    const generatedResourceNew: any = { generatedResource: finalResponse }
+    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 export {
   errorResponder,
@@ -654,5 +674,6 @@ export {
   getModifiedResponse,
   getNewEntryResponse,
   getOldEntryResponse,
-  getFinalUpdatedResponse
+  getFinalUpdatedResponse,
+  fullProcessFlowForNewEntry
 };

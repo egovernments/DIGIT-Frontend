@@ -281,7 +281,7 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
     return result;
   } catch (error: any) {
     logger.error("Error: " + error)
-    return error?.response?.data?.Errors[0].message;
+        return error?.response?.data?.Errors[0].message;
   }
 
 }
@@ -460,12 +460,12 @@ const getCount: any = async (responseData: any, request: any, response: any) => 
     const host = responseData?.host;
     const url = responseData?.searchConfig?.countUrl;
     const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
-    const result = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
+    const result = await httpRequest(host+url , requestInfo, undefined, undefined, undefined, undefined);
     const count = _.get(result, responseData?.searchConfig?.countPath);
     return count;
   } catch (error: any) {
-    logger.error("Error: " + error)
-    return error?.response?.data?.Errors[0].message;
+    logger.error("Error: " + error )
+    throw error;
   }
 
 }
