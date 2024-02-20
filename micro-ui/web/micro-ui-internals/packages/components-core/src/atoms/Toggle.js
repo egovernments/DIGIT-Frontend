@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 const Toggle = (props) => {
   const { t } = useTranslation();
-  var selected = props.selectedOption ? props.selectedOption : (props.options.length > 0 ? props.options[0].code : null);;
+  var selected = props.selectedOption ? props.selectedOption : props.options.length > 0 ? props.options[0].code : null;
+
+  // Calculate the maximum label length among all options
+  const maxLabelLength = Math.max(...props.options.map((option) => t(option[props.optionsKey]).length));
+  // Set a fixed maximum width of 200px or the calculated maxLabelLength, whichever is smaller
+  const maxWidth = Math.min(200, maxLabelLength * 14.9);
+  // minWidth should be 40px
+  const finalWidth = (maxWidth<40) ? "40" : maxWidth
 
   function toggleOption(option) {
     props.onSelect(option);
   }
   return (
-    <div style={props?.style} className={`digit-toggle-toolbar ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
+    <div
+      style={props?.style}
+      className={`digit-toggle-toolbar ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}
+    >
       {props?.options?.map((option, ind) => (
-        <div className={`toggle-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
-          <label className={`digit-toggle-btn-wrap ${selected === option.code ? "checked" : ""}`}>
+        <div style={{ width: `${finalWidth}px` }} className={`toggle-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
+          <label style={{ width: `${finalWidth}px` }} className={`digit-toggle-btn-wrap ${selected === option.code ? "checked" : ""}`}>
             <input
               className="digit-toggle-input"
               type="radio"
@@ -24,7 +34,7 @@ const Toggle = (props) => {
               disabled={props?.disabled}
               ref={props.inputRef}
             />
-            <span className="digit-toggle-label">{(t(option[props.optionsKey]))}</span>
+            <span className="digit-toggle-label">{t(option[props.optionsKey])}</span>
           </label>
         </div>
       ))}
