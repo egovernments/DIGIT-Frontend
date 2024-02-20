@@ -102,7 +102,8 @@ const MultiSelectDropdown = ({
     }
   }
 
-  const IconRender = (iconReq) => {
+  const IconRender = (iconReq, isActive) => {
+    const iconFill = isActive ? "#FFFFFF" : "#505A5F";
     try {
       const components = require("@egovernments/digit-ui-svg-components");
       const DynamicIcon = components?.[iconReq];
@@ -110,16 +111,16 @@ const MultiSelectDropdown = ({
         const svgElement = DynamicIcon({
           width: "1.25rem",
           height: "1.25rem",
-          fill: "#505A5F",
+          fill: iconFill,
           className: "",
         });
         return svgElement;
       } else {
-        console.log("Icon not found");
+        console.log("Icon not Found");
         return null;
       }
     } catch (error) {
-      console.error("Icon not found");
+      console.error("Error in fetching icon");
       return null;
     }
   };
@@ -127,6 +128,14 @@ const MultiSelectDropdown = ({
     dispatch({ type: "REPLACE_COMPLETE_STATE", payload: [] });
     onSelect([], props);
   };
+
+  const replaceDotWithColon = (inputString) => {
+    if (inputString) {
+      const updatedInputString = inputString.replace(".", ":");
+      return updatedInputString;
+    }
+  };
+
   /* Custom function to scroll and select in the dropdowns while using key up and down */
   const keyChange = (e) => {
     if (e.key == "ArrowDown") {
@@ -175,7 +184,7 @@ const MultiSelectDropdown = ({
 
   const flattenedOptions = flattenOptions(filteredOptions);
 
-  const MenuItem = ({ option, index }) => (
+  const MenuItem = ({ option, index }) => {
     <div
       key={index}
       className={`multiselect-dropodwn-menuitem ${variant ? variant : ""} ${
@@ -186,27 +195,29 @@ const MultiSelectDropdown = ({
         type="checkbox"
         value={option.code}
         checked={alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false}
-        onChange={(e) =>
+        onChange={(e) => {
           isPropsNeeded
             ? onSelectToAddToQueue(e, option, props)
             : isOBPSMultiple
             ? onSelectToAddToQueue(e, option, BlockNumber)
-            : onSelectToAddToQueue(e, option)
-        }
+            : onSelectToAddToQueue(e, option);
+        }}
         className={`digit-multi-select-dropdown-menuitem ${variant ? variant : ""}`}
       />
       <div className="digit-custom-checkbox">
-        <SVG.Check fill={"white"} />
+        <SVG.Check width="20px" height="20px" fill={"#FFFFFF"} />
       </div>
       <div className="option-des-container">
-        <div style={{display:"flex",gap:"0.25rem",alignItems:"center"}}>
-          {config?.showIcon && option?.icon && IconRender(option?.icon)}
+        <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+          {config?.showIcon &&
+            option?.icon &&
+            IconRender(option?.icon, alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
           <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
         </div>
         {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
       </div>
-    </div>
-  );
+    </div>;
+  };
 
   const Menu = () => {
     const optionsToRender = variant === "nestedmultiselect" ? flattenedOptions : filteredOptions;
@@ -243,7 +254,7 @@ const MultiSelectDropdown = ({
           />
           <div className="digit-label">
             <p>{alreadyQueuedSelectedState.length > 0 ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected` : defaultLabel}</p>
-            <SVG.ArrowDropDown fill={disabled ? "#B1B4B6" : "black"} />
+            <SVG.ArrowDropDown fill={disabled ? "#B1B4B6" : "#505A5F"} />
           </div>
         </div>
         {active ? (
@@ -260,10 +271,12 @@ const MultiSelectDropdown = ({
         <div className="digit-tag-container">
           {alreadyQueuedSelectedState.length > 0 &&
             alreadyQueuedSelectedState.map((value, index) => {
+              const translatedText = t(value.code);
+              const replacedText = replaceDotWithColon(translatedText);
               return (
                 <RemoveableTag
                   key={index}
-                  text={t(value.code).length > 64 ? `${t(value.code).slice(0, 64)} ...` : t(value.code)}
+                  text={replacedText.length > 64 ? `${replacedText.slice(0, 64)} ...` : replacedText}
                   onClick={
                     variant === "treemultiselect"
                       ? () => onSelectToAddToQueue([value])
@@ -279,7 +292,7 @@ const MultiSelectDropdown = ({
             <Button
               label={t("Clear All")}
               onClick={handleClearAll}
-              variation="secondary"
+              variation=""
               style={{
                 width: "4.75rem",
                 height: "2.375rem",
@@ -287,8 +300,10 @@ const MultiSelectDropdown = ({
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: "3.125rem",
+                border: "1px solid #F47738",
+                background: "#FAFAFA",
               }}
-              textStyles={{ fontSize: "0.875rem", fontWeight: "400", width: "100%" }}
+              textStyles={{ fontSize: "0.875rem", fontWeight: "400", width: "100%", lineHeight: "16px", color: "#F47738" }}
             />
           )}
         </div>
