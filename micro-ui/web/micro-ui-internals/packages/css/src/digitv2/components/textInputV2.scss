@@ -363,6 +363,13 @@
   align-items: center;
   height: 2.5rem;
   max-width: 37.5rem;
+
+  &.date,&.time,&.geolocation,&.password,&.search,&.withIcon {
+      input {
+        padding-right: 2.5rem;
+      }
+  }
+
 }
 
 .input-container:focus-within {
@@ -395,13 +402,20 @@
   font-size: 1.5rem;
   font-weight: theme(digitv2.fontWeight.bold);
   text-align: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
   border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-style: theme(digitv2.fontStyle.normal);
-  line-height: theme(digitv2.lineHeight.normal);
+  line-height: 24px;
   background: theme(colors.grey.mid);
+  max-width: none !important;
+  flex: 0 0 2.5rem;
+}
+
+.digit-numeric-button-prefix,
+.digit-numeric-button-suffix{
+  line-height: 28px;
 }
 
 .digit-prefix,
