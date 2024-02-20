@@ -64,6 +64,8 @@ import InboxSearchLinks from "./InboxSearchLinks";
 import SearchComponent from "./SearchComponent";
 import LinkLabel from "./LinkLabel";
 import RoundedLabel from "./RoundedLabel";
+import Stepper from "./Stepper";
+
 import {
   AnnouncementIcon,
   Calender,
@@ -263,6 +265,7 @@ export {
   TreeSelect,
   SubmitBar,
   ButtonSelector,
+  Stepper,
   InboxSearchLinks,
   SearchComponent,
   LinkLabel,
