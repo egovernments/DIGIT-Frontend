@@ -18,7 +18,7 @@ module.exports = () => {
           './CommonModule': './src/SingleSpaEntry',
         },
         shared: {
-          react: '17.0.1',
+          'react': '17.0.1',
           'react-dom': '17.0.1',
           'react-hook-form': '6.15.8',
           'react-i18next': '11.16.2',
