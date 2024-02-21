@@ -18,6 +18,7 @@ import registerRemotes from "./modules/registerRemotes";
 // const DssLazy = lazy(() => import("./modules/Dss"));
 // const MeasurementLazy = lazy(() => import("./modules/Measurement"));
 
+
 initLibraries().then(() => {
   initDigitUI();
 });
@@ -37,7 +38,9 @@ const queryClient = new QueryClient({
     },
   },
 });
-registerRemotes(queryClient);
+//registering remote apps
+registerRemotes(queryClient)
+
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
@@ -47,6 +50,7 @@ const App = () => {
   const moduleReducers = (initData) => initData;
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  
 
   return (
     <div>
@@ -91,7 +95,7 @@ const App = () => {
           </Switch>
         </Suspense>
       </div>
-    </div>
+      </div>
   );
 };
 

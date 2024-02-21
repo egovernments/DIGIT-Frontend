@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { DigitUI } from "@digit-ui/digit-ui-module-core-base";
+// import { DigitUI } from "@digit-ui/digit-ui-module-core-base";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initWorkbenchComponents } from "./Module";
 
@@ -19,7 +19,7 @@ const mount = (el, { history, login }) => {
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   //console.log(stateCode,'ststcode');
   ReactDOM.render(
-    <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
+    <div>Workbench in isolation</div>,
     el
   );
 };

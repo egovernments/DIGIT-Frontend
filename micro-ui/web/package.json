@@ -21,6 +21,7 @@
     "packages/pgr",
     "packages/ui-core",
     "packages/app1"
+    "packages/common"
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -35,6 +36,7 @@
     "start:pgr": "cd packages/pgr && yarn start"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "yarn": "^1.22.21"
   }
 }

@@ -6,7 +6,9 @@
     "packages/workbench",
     "packages/pgr",
     "packages/ui-core",
-    "packages/app1"
+    "packages/hrms",
+    "packages/app1",
+    "packages/common"
   ],
   "command": {
     "run": {
