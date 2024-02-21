@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-module-common-mfe",
-  "version": "1.8.0",
+  "version": "1.0.0",
   "license": "ISC",
   "main": "index.js",
   "scripts": {
@@ -32,5 +32,6 @@
     "babel-plugin-react-html-attrs": "^3.0.5",
     "@babel/preset-env":"7.23.9"
   },
+  "keywords": [],
   "author": ""
 }
