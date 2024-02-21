@@ -17,12 +17,10 @@ import {
 } from "../../utils/index";
 import { getTransformAndParsingTemplates } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
-// import { httpRequest } from "../../utils/request";
-import { Pool } from 'pg';
-import { generateXlsxFromJson } from "../../utils/index"
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
+import axios from "axios";
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
 
@@ -132,45 +130,36 @@ class genericAPIController {
     downloadData = async (request: express.Request, response: express.Response) => {
         try {
             const type = request.query.type;
-            const pool = new Pool({
-                user: config.DB_USER,
-                host: config.DB_HOST,
-                database: config.DB_NAME,
-                password: config.DB_PASSWORD,
-                port: parseInt(config.DB_PORT)
+            const responseData = await getResponseFromDb(request, response);
+            if (!responseData || responseData.length === 0) {
+                logger.error("No data of type  " + type + " with status Completed present in db")
+                throw new Error('First Generate then Download');
+            }
+            const auditDetails = await generateAuditDetails(request);
+            const apiResponse = await axios.get(config.host.filestore + config.paths.filestore + '/url', {
+                params: {
+                    tenantId: 'mz',
+                    fileStoreIds: responseData.map(item => item.filestoreid).join(',')
+                }
             });
-            let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1";
-            logger.info("queryString : " + queryString)
-            const queryResult = await pool.query(queryString, [type]);
-            logger.info("queryResult : " + JSON.stringify(queryResult.rows))
-            // response.json(queryResult.rows);
-            const responseData = queryResult.rows;
-            await pool.end();
-            if (responseData.length > 0) {
-                let result = [];
-                result = await generateXlsxFromJson(request, response, responseData);
-                const auditDetails = await generateAuditDetails(request);
-                const transformedResponse = result.map((item: any) => {
-                    return {
-                        fileStoreId: item.fileStoreId,
-                        additionalDetails: {},
-                        type: type,
-                        url: config.host.filestore + config.paths.filestore + "?" + type,
-                        auditDetails: auditDetails // Use the generated audit details for each item
-                    };
-                });
-                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
-            }
-            else {
-                return errorResponder({ message: "No data present of  given type " + "    Check Logs" }, request, response);
-            }
+            const fileStoreUrl = apiResponse.data;
+            const transformedResponse = responseData.map((item: any) => {
+                return {
+                    fileStoreId: item.filestoreid,
+                    additionalDetails: {},
+                    type: type,
+                    url: fileStoreUrl[item.filestoreid],
+                    auditDetails: auditDetails 
+                };
+            });
+            return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+
         } catch (e: any) {
             logger.error(String(e));
             return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
         }
-    };
-}
-// Export the MeasurementController class
+    }
+};
 export default genericAPIController;
 
 
