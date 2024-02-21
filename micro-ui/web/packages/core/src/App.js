@@ -7,7 +7,7 @@ import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
-import registerRemotes from "./modules/registerRemotes"
+import registerRemotes from "./modules/registerRemotes";
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
@@ -17,7 +17,6 @@ import registerRemotes from "./modules/registerRemotes"
 // const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
 // const DssLazy = lazy(() => import("./modules/Dss"));
 // const MeasurementLazy = lazy(() => import("./modules/Measurement"));
-
 
 initLibraries().then(() => {
   initDigitUI();
@@ -38,18 +37,16 @@ const queryClient = new QueryClient({
     },
   },
 });
-registerRemotes(queryClient)
-
+registerRemotes(queryClient);
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
+  const enabledModules = ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR"];
 
   const moduleReducers = (initData) => initData;
-  
+
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  
 
   return (
     <div>
@@ -67,7 +64,6 @@ const App = () => {
       </div>
 
       <div>
-   
         <Suspense fallback={<Loader />}>
           <Switch>
             {/* <Route path="/auth">
@@ -89,31 +85,27 @@ const App = () => {
               <MeasurementLazy />
             </Route> */}
 
-            <Route path="/">{
-              <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} queryClient={queryClient}/>
-            }</Route>
+            <Route path="/">
+              {<DigitUI stateCode={stateCode} enabledModules={enabledModules} defaultLanding="employee" moduleReducers={moduleReducers} queryClient={queryClient} />}
+            </Route>
           </Switch>
         </Suspense>
       </div>
-      </div>
+    </div>
   );
 };
 
-
-
 const initDigitUI = () => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {
-
-  };
+  window.Digit.Customizations = {};
   window?.Digit.ComponentRegistryService.setupRegistry({
     // PaymentModule,
     // ...paymentConfigs,
     // PaymentLinks,
   });
 
- // initHRMSComponents();
-  const enabledModules=["PT"];
+  // initHRMSComponents();
+  const enabledModules = ["PT"];
 
   const moduleReducers = (initData) => initData;
 
@@ -123,7 +115,4 @@ const initDigitUI = () => {
   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
 };
 
-
-
 export default App;
-

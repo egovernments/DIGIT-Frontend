@@ -4,6 +4,7 @@
   "packages":[
     "packages/core",
     "packages/workbench",
+    "packages/pgr",
     "packages/ui-core",
     "packages/app1"
   ],
