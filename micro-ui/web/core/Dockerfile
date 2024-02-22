@@ -19,11 +19,16 @@ RUN cd web/ \
     && yarn install \ 
     && yarn build:webpack 
 
-FROM nginx:mainline-alpine
+# FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
+FROM odhub/nginx-unprivileged
+
 ENV WORK_DIR=/var/web/core-ui
 
-RUN mkdir -p ${WORK_DIR}
+WORKDIR /var/web/core-ui
+
+
+# RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
 COPY --from=build /app/web/core/nginx.conf /etc/nginx/conf.d/default.conf
