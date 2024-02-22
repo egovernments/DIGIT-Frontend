@@ -15,7 +15,7 @@ RUN cd web/ \
     && yarn install \
     && yarn build:webpack 
 
-FROM nginx:mainline-alpine
+# FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
 FROM odhub/nginx-unprivileged
 ENV WORK_DIR=/var/web/digit-ui
