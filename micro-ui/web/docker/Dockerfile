@@ -17,6 +17,7 @@ RUN cd web/ \
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
+FROM odhub/nginx-unprivileged
 ENV WORK_DIR=/var/web/digit-ui
 
 RUN mkdir -p ${WORK_DIR}
