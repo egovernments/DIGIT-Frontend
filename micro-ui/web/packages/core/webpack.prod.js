@@ -19,7 +19,7 @@ module.exports = () => {
           // auth: `auth@${domain}/auth/remoteEntry.js`,
           // header: `header@${domain}/header/remoteEntry.js`,
           // dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
-          hrms: `hrms@${domain}/hrms/remoteEntry.js`,
+          // hrms: `hrms@${domain}/hrms/remoteEntry.js`,
           common: `common@${domain}/common/remoteEntry.js`,
           workbench : `workbench@${domain}/workbench/remoteEntry.js`,
           // dss : `dss@${domain}/dss/remoteEntry.js`,
