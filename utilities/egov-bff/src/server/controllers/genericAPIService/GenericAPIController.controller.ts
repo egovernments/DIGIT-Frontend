@@ -6,7 +6,8 @@ import { fetchDataAndUpdate, fullProcessFlowForNewEntry, getModifiedResponse, ge
 
 import {
     searchMDMS,
-    processCreateData
+    processCreateData,
+    updateFile
 } from "../../api/index";
 
 import {
@@ -52,12 +53,13 @@ class genericAPIController {
         response: express.Response
     ) => {
         try {
-            const { type } = request?.body?.ResourceDetails;
+            const { type, fileStoreId } = request?.body?.ResourceDetails;
             const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
             const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
             if (result?.validationResult == "VALID_DATA" || result?.validationResult == "NO_VALIDATION_SCHEMA_FOUND") {
-                const ResponseDetails = await processCreateData(result, type, request, response);
-                return sendResponse(response, { ResponseDetails }, request);
+                const finalResponse = await processCreateData(result, type, request, response);
+                await updateFile(fileStoreId, finalResponse, result?.creationDetails?.sheetName, request);
+                return sendResponse(response, { ResponseDetails: finalResponse.ResponseDetails }, request);
             }
             else if (result?.validationResult == "INVALID_DATA") {
                 const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
@@ -92,8 +94,8 @@ class genericAPIController {
             const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
 
             const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
-            const { processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
-            return processValidationResultsAndSendResponse(processResult, schemaDef, APIResource, response, request);
+            const { sheetName, processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
+            return processValidationResultsAndSendResponse(sheetName, processResult, schemaDef, APIResource, response, request);
         } catch (error: any) {
             logger.error(error);
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);

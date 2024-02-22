@@ -2,6 +2,7 @@ import { getErrorCodes } from "../config";
 import * as XLSX from 'xlsx';
 import config from "../config";
 import hashSum from 'hash-sum';
+import FormData from 'form-data';
 
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
@@ -281,7 +282,7 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
     return result;
   } catch (error: any) {
     logger.error("Error: " + error)
-        return error?.response?.data?.Errors[0].message;
+    return error?.response?.data?.Errors[0].message;
   }
 
 }
@@ -374,6 +375,11 @@ function matchLength(result: any, existingDataToCheck: any): boolean {
   return resultLength === existingDataLength;
 }
 
+function getAffectedRows(data: any[]): number[] {
+  if (!data) return [];
+  return data.map(item => item['#row!number#']).filter(rowNumber => !!rowNumber) as number[];
+}
+
 const createValidatedData: any = async (result: any, type: string, request: any) => {
   let host = result?.creationDetails?.host;
   const url = result?.creationDetails?.url;
@@ -395,6 +401,7 @@ const createValidatedData: any = async (result: any, type: string, request: any)
   const retryCount = parseInt(config.values.retryCount)
   let success = false;
   let creationResponse: any = {};
+  const affectedRows = getAffectedRows(result?.data);
   while (retry <= retryCount && !success) {
     logger.info("Creation Attempt : " + Number(retry + 1))
     logger.info("Creation Request : " + JSON.stringify(creationRequest))
@@ -445,16 +452,16 @@ const createValidatedData: any = async (result: any, type: string, request: any)
       }
       retry++;
     })
-      .catch(error => {
+      .catch((error: any) => {
         creationResponse = error?.response?.data;
         logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
         retry++;
       });
   }
   if (success) {
-    return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
+    return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1, affectedRows: affectedRows }
   }
-  return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1 }
+  return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1, affectedRows: affectedRows }
 }
 
 const getCount: any = async (responseData: any, request: any, response: any) => {
@@ -462,21 +469,107 @@ const getCount: any = async (responseData: any, request: any, response: any) => 
     const host = responseData?.host;
     const url = responseData?.searchConfig?.countUrl;
     const requestInfo = { "RequestInfo": request?.body?.RequestInfo }
-    const result = await httpRequest(host+url , requestInfo, undefined, undefined, undefined, undefined);
+    const result = await httpRequest(host + url, requestInfo, undefined, undefined, undefined, undefined);
     const count = _.get(result, responseData?.searchConfig?.countPath);
     return count;
   } catch (error: any) {
-    logger.error("Error: " + error )
+    logger.error("Error: " + error)
     throw error;
   }
 
 }
 
+async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any) {
+  const buffer = XLSX.write(updatedWorkbook, { bookType: 'xlsx', type: 'buffer' });
+  const formData = new FormData();
+  formData.append('file', buffer, 'filename.xlsx');
+  formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+  formData.append('module', 'pgr');
+
+  logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+  var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+    {
+      'Content-Type': 'multipart/form-data',
+      'auth-token': request?.body?.RequestInfo?.authToken
+    }
+  );
+  const responseData = fileCreationResult?.files;
+  return responseData;
+}
+
+async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, request: any) {
+  try {
+    const fileUrl = `${config.host.filestore}${config.paths.filestore}/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
+    const response = await httpRequest(fileUrl, undefined, undefined, 'get');
+
+    if (response?.fileStoreIds.length === 0) {
+      throw new Error("No file found with the provided file store ID");
+    }
+
+    for (const file of response.fileStoreIds) {
+      try {
+        const workbook = await getWorkbook(file.url);
+        const desiredSheet: any = workbook.Sheets[sheetName || workbook.SheetNames[0]];
+
+        if (desiredSheet) {
+          const range = XLSX.utils.decode_range(desiredSheet['!ref']);
+          const emptyColumnIndex = range.e.c + 1;
+          const statusColumn = String.fromCharCode(65 + emptyColumnIndex); // Get next column letter
+
+          // Add header for status column
+          desiredSheet[statusColumn + '1'] = { v: '#status#', t: 's', r: '<t xml:space="preserve">#status#</t>', h: '#status#', w: '#status#' };
+
+          // Populate status values for affected rows
+          const activities = finalResponse?.Activities || [];
+          activities.forEach((activity: any) => {
+            activity.affectedRows.forEach((row: any) => {
+              const rowIndex = row - 1; // Adjust for zero-based 
+              desiredSheet[statusColumn + (rowIndex + 1)] = { v: activity.status, t: 's', r: `<t xml:space="preserve">${activity.status}</t>`, h: activity.status, w: activity.status }; // Adjust row index and add status value
+            });
+          });
+
+          // Update range
+          desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + statusColumn);
+          workbook.Sheets[sheetName] = desiredSheet;
+
+          // Call the function to create and upload the file with the updated sheet
+          const responseData = await createAndUploadFile(workbook, request);
+          logger.info('File updated successfully:' + JSON.stringify(responseData));
+          if (responseData?.[0]?.fileStoreId) {
+            const statusFileStoreId = responseData?.[0]?.fileStoreId;
+
+            // Update finalResponse.ResponseDetails with statusFileStoreId
+            finalResponse.ResponseDetails.forEach((detail: any) => {
+              detail.statusFileStoreId = statusFileStoreId;
+            });
+          }
+          else {
+            throw new Error("Error in Creatring Status File");
+          }
+
+        }
+
+      } catch (error) {
+        logger.error('Error processing file:' + error);
+      }
+    }
+  } catch (error) {
+    logger.error('Error fetching file information:' + JSON.stringify(error));
+  }
+}
+
+
+
+
+
+
+
+
 const processCreateData: any = async (result: any, type: string, request: any, response: any) => {
+  var finalResponse: any = { ResponseDetails: [], Activities: [] };
   if (result?.creationDetails?.isBulkCreate) {
     if (result?.creationDetails?.creationLimit) {
       let currentIndex = 0;
-      let finalResponse: any[] = [];
       while (currentIndex < result?.data?.length) {
         const creationTime = Date.now();
         let batchResult = JSON.parse(JSON.stringify(result));
@@ -493,7 +586,8 @@ const processCreateData: any = async (result: any, type: string, request: any, r
           successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, batchResult?.data?.length);
           produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
           produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-          finalResponse.push(successMessage);
+          finalResponse.Activities.push(activityMessage);
+          finalResponse.ResponseDetails.push(successMessage);
         }
         else {
           var failedMessage: any = await generateResourceMessage(request.body, "FAILED")
@@ -505,7 +599,8 @@ const processCreateData: any = async (result: any, type: string, request: any, r
           failedMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
           produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
           produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-          finalResponse.push(failedMessage);
+          finalResponse.Activities.push(activityMessage);
+          finalResponse.ResponseDetails.push(failedMessage);
         }
         currentIndex += result?.creationDetails?.creationLimit;
       }
@@ -524,7 +619,9 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, result?.data?.length);
         produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-        return successMessage
+        finalResponse.Activities.push(activityMessage);
+        finalResponse.ResponseDetails.push(successMessage);
+        return finalResponse;
       }
       else {
         const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
@@ -534,12 +631,13 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         logger.info("Success Message : " + JSON.stringify(failedMessage))
         produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-        return createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs"
+        finalResponse.Activities.push(activityMessage);
+        finalResponse.ResponseDetails.push(createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs")
+        return finalResponse;
       }
     }
   }
   else {
-    var finalResponse: any[] = [];
     for (let currentIndex = 0; currentIndex < result?.data?.length; currentIndex++) {
       let batchResult = JSON.parse(JSON.stringify(result));
       batchResult.data = result?.data?.[currentIndex];
@@ -553,7 +651,8 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         logger.info("Success Message : " + JSON.stringify(successMessage))
         produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-        finalResponse.push(successMessage);
+        finalResponse.Activities.push(activityMessage);
+        finalResponse.ResponseDetails.push(successMessage);
       }
       else {
         const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
@@ -564,7 +663,8 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
         produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
         produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-        finalResponse.push(failedMessage);
+        finalResponse.Activities.push(activityMessage);
+        finalResponse.ResponseDetails.push(failedMessage);
       }
     }
     return finalResponse;
@@ -580,5 +680,6 @@ export {
   createValidatedData,
   getResouceNumber,
   getCount,
-  processCreateData
+  processCreateData,
+  updateFile
 };

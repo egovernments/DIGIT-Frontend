@@ -4,6 +4,7 @@ CREATE TABLE eg_resource_details (
     tenantId varchar(128),
     processReferenceNumber varchar(128),
     fileStoreId varchar(128),
+    statusFileStoreId varchar(128),
     "type" varchar(64),
     createdBy varchar(128),
     createdTime bigint,
@@ -25,6 +26,7 @@ CREATE TABLE eg_resource_activity (
     lastModifiedBy varchar(128),
     lastModifiedTime bigint,
     additionalDetails jsonb,
+    affectedRows jsonb,
     resourceDetailsId varchar(128),
     FOREIGN KEY (resourceDetailsId) REFERENCES eg_resource_details(id)
 );

@@ -462,6 +462,7 @@ async function generateResourceMessage(requestBody: any, status: string) {
     tenantId: requestBody?.RequestInfo?.userInfo?.tenantId,
     processReferenceNumber: await getResouceNumber(requestBody?.RequestInfo, "RD-[cy:yyyy-MM-dd]-[SEQ_EG_RD_ID]", "resource.number"),
     fileStoreId: requestBody?.ResourceDetails?.fileStoreId,
+    statusFileStoreId: null,
     type: requestBody?.ResourceDetails?.type,
     auditDetails: {
       createdBy: requestBody?.RequestInfo?.userInfo?.uuid,
@@ -475,7 +476,6 @@ async function generateResourceMessage(requestBody: any, status: string) {
 }
 
 async function generateActivityMessage(createdResult: any, successMessage: any, requestBody: any, status: string) {
-
   const activityMessage = {
     id: uuidv4(),
     status: createdResult?.status,
@@ -491,6 +491,7 @@ async function generateActivityMessage(createdResult: any, successMessage: any, 
       lastModifiedTime: successMessage?.auditDetails?.lastModifiedTime
     },
     additionalDetails: {},
+    affectedRows: createdResult?.affectedRows || [],
     resourceDetailsId: successMessage?.id
   }
   return activityMessage;
@@ -602,7 +603,7 @@ async function callSearchApi(request: any, response: any) {
       const count = await getCount(responseData, request, response);
       let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
       for (let i = 0; i < noOfTimesToFetchApi; i++) {
-        responseObject = await httpRequest(host+ url, requestBody, queryParams, undefined, undefined, undefined);
+        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
         fetchedData = _.get(responseObject, searchPath);
         fetchedData.forEach((item: any) => {
           responseDatas.push(item);
@@ -636,14 +637,15 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
   try {
     const generatedResource: any = { generatedResource: newEntryResponse }
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-   const responseDatas = await callSearchApi(request, response);
+    const responseDatas = await callSearchApi(request, response);
     const result = await generateXlsxFromJson(request, response, responseDatas);
     const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
     const generatedResourceNew: any = { generatedResource: finalResponse }
     produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
   } catch (error) {
     throw error;
-  }}
+  }
+}
 
 function isEpoch(value: any): boolean {
   // Check if the value is a number
@@ -723,7 +725,7 @@ async function matchWithCreatedDetails(request: any, response: any, ResponseDeta
   return ResponseDetails;
 }
 
-function getCreationDetails(APIResource: any) {
+function getCreationDetails(APIResource: any, sheetName: any) {
   // Assuming APIResource has the necessary structure to extract creation details
   // Replace the following lines with the actual logic to extract creation details
   const host = APIResource?.mdms?.[0]?.data?.host;
@@ -747,8 +749,18 @@ function getCreationDetails(APIResource: any) {
     checkOnlyExistence,
     matchDataLength,
     responseToMatch,
-    createBody
+    createBody,
+    sheetName
   };
+}
+
+function addRowDetails(processResultUpdatedDatas: any[], updatedDatas: any[]): void {
+  if (!processResultUpdatedDatas) return;
+  processResultUpdatedDatas.forEach((item, index) => {
+    if (index < updatedDatas.length) {
+      item['#row!number#'] = updatedDatas[index]['#row!number#'];
+    }
+  });
 }
 
 
@@ -761,6 +773,7 @@ async function getSchemaAndProcessResult(request: any, parsingTemplate: any, upd
 
   // Process data
   processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
+  addRowDetails(processResult?.updatedDatas, updatedDatas);
   if (processResult.Error) {
     logger.error(processResult.Error);
     throw new Error(processResult.Error);
@@ -774,7 +787,7 @@ async function getSchemaAndProcessResult(request: any, parsingTemplate: any, upd
   return { processResult, schemaDef };
 }
 
-async function processValidationResultsAndSendResponse(processResult: any, schemaDef: any, APIResource: any, response: any, request: any) {
+async function processValidationResultsAndSendResponse(sheetName: any, processResult: any, schemaDef: any, APIResource: any, response: any, request: any) {
   const validationErrors: any[] = [];
   const validatedData: any[] = [];
   processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
@@ -785,7 +798,7 @@ async function processValidationResultsAndSendResponse(processResult: any, schem
   // Send response
   if (validationErrors.length > 0 || mdmsErrors.length > 0) {
     if (validationErrors?.[0] == "NO_VALIDATION_SCHEMA_FOUND") {
-      const creationDetails = getCreationDetails(APIResource);
+      const creationDetails = getCreationDetails(APIResource, sheetName);
       return sendResponse(response, {
         "validationResult": "NO_VALIDATION_SCHEMA_FOUND",
         "data": validatedData,
@@ -795,7 +808,7 @@ async function processValidationResultsAndSendResponse(processResult: any, schem
     const errors = [...validationErrors, ...mdmsErrors];
     return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
   } else {
-    const creationDetails = getCreationDetails(APIResource);
+    const creationDetails = getCreationDetails(APIResource, sheetName);
     return sendResponse(response, {
       "validationResult": "VALID_DATA",
       "data": validatedData,
@@ -830,7 +843,7 @@ const fetchDataAndUpdate = async (
   validateTransformedData(updatedDatas);
   const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
 
-  return { processResult, schemaDef };
+  return { sheetName: TransformConfig?.data?.sheetName, processResult, schemaDef };
 };
 
 
