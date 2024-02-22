@@ -170,6 +170,7 @@ const MDMSSearchv2 = () => {
   if (isLoading) return <Loader />;
   return (
     <React.Fragment>
+        {/* <Header className="works-header-search">{t(Config?.label)}</Header> */}
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
       {
         updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) &&
