@@ -57,21 +57,23 @@ class genericAPIController {
             if (result?.validationResult == "VALID_DATA" || result?.validationResult == "NO_VALIDATION_SCHEMA_FOUND") {
                 const finalResponse = await processCreateData(result, type, request, response);
                 await updateFile(fileStoreId, finalResponse, result?.creationDetails?.sheetName, request);
+                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
                 return sendResponse(response, { ResponseDetails: finalResponse.ResponseDetails }, request);
             }
             else if (result?.validationResult == "INVALID_DATA") {
                 const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
-                produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                const ResponseDetails = failedMessage;
-                ResponseDetails.error = result?.errors || "Error during validation of data, Check Logs";
-                return sendResponse(response, { ResponseDetails }, request);
+                failedMessage.error = result?.errors || "Error during validation of data, Check Logs";
+                const finalResponse: any = { ResponseDetails: [failedMessage] };
+                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+                return sendResponse(response, finalResponse, request);
             }
             else {
                 const failedMessage: any = await generateResourceMessage(request.body, "OTHER_ERROR")
-                produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                const ResponseDetails = failedMessage;
-                ResponseDetails.error = "Some other error, Check Logs";
-                return sendResponse(response, { ResponseDetails }, request);
+                failedMessage.error = "Some other error, Check Logs";
+                const finalResponse: any = { ResponseDetails: [failedMessage] };
+                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+                return sendResponse(response, finalResponse, request);
             }
         } catch (error: any) {
             logger.error(error);
@@ -151,7 +153,7 @@ class genericAPIController {
                     additionalDetails: {},
                     type: type,
                     url: fileStoreUrl[item.filestoreid],
-                    auditDetails: auditDetails 
+                    auditDetails: auditDetails
                 };
             });
             return sendResponse(response, { fileStoreIds: transformedResponse }, request);

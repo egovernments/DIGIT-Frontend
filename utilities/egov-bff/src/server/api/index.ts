@@ -8,7 +8,6 @@ import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
 import { generateActivityMessage, generateResourceMessage, matchWithCreatedDetails } from "../utils/index";
-import { produceModifiedMessages } from "../Kafka/Listener";
 const jp = require("jsonpath");
 const _ = require('lodash');
 
@@ -584,8 +583,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
           logger.info("Success Message : " + JSON.stringify(successMessage))
           successMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
           successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, batchResult?.data?.length);
-          produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-          produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
           finalResponse.Activities.push(activityMessage);
           finalResponse.ResponseDetails.push(successMessage);
         }
@@ -597,8 +594,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
           logger.info("Failed Message : " + JSON.stringify(failedMessage))
           failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
           failedMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
-          produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-          produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
           finalResponse.Activities.push(activityMessage);
           finalResponse.ResponseDetails.push(failedMessage);
         }
@@ -617,8 +612,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         logger.info("Activity Message : " + JSON.stringify(activities));
         logger.info("Success Message : " + JSON.stringify(successMessage))
         successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, result?.data?.length);
-        produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         finalResponse.Activities.push(activityMessage);
         finalResponse.ResponseDetails.push(successMessage);
         return finalResponse;
@@ -629,8 +622,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         const activities: any = { activities: [activityMessage] }
         logger.info("Activity Message : " + JSON.stringify(activities))
         logger.info("Success Message : " + JSON.stringify(failedMessage))
-        produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         finalResponse.Activities.push(activityMessage);
         finalResponse.ResponseDetails.push(createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs")
         return finalResponse;
@@ -649,8 +640,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         const activities: any = { activities: [activityMessage] }
         logger.info("Activity Message : " + JSON.stringify(activities))
         logger.info("Success Message : " + JSON.stringify(successMessage))
-        produceModifiedMessages(successMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         finalResponse.Activities.push(activityMessage);
         finalResponse.ResponseDetails.push(successMessage);
       }
@@ -661,8 +650,6 @@ const processCreateData: any = async (result: any, type: string, request: any, r
         logger.info("Activity Message : " + JSON.stringify(activities))
         logger.info("Success Message : " + JSON.stringify(failedMessage))
         failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
-        produceModifiedMessages(failedMessage, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-        produceModifiedMessages(activities, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
         finalResponse.Activities.push(activityMessage);
         finalResponse.ResponseDetails.push(failedMessage);
       }
