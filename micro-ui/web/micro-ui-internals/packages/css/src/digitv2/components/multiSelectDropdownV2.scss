@@ -78,11 +78,12 @@
   .digit-server {
     top: 40px;
     margin-top: 4px;
-    @apply absolute min-w-full z-20 bg-white;
-    max-height: 20vmax;
+    @apply absolute z-20 bg-white;
+    max-height: 25vmax;
     overflow-x: hidden;
     overflow-y: auto;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
+    width: 100% !important;
   }
 
   .digit-server::-webkit-scrollbar-track {
@@ -130,6 +131,18 @@
 
     @apply flex w-full bg-white justify-start items-center;
     min-height: 39px;
+
+    .option-des-container{
+      width:100%;
+
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+
+      .svg{
+        flex-shrink: 0;
+      }
+    }
 
     &.nestedmultiselect {
       position: relative;
@@ -188,6 +201,10 @@
       font-weight: theme(digitv2.fontWeight.regular);
       line-height: 18px;
       color: theme(digitv2.lightTheme.text-color-primary);
+
+      width:100%;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     &.checked {
@@ -238,6 +255,7 @@
 
       .option-des-container {
         @apply flex flex-col justify-center items-start;
+        width: 100% !important;
 
         p {
           color: theme(digitv2.lightTheme.text-color-secondary);
@@ -253,6 +271,10 @@
           font-style: theme(digitv2.fontStyle.normal);
           font-weight: theme(digitv2.fontWeight.regular);
           line-height: 18px;
+        }
+
+        .svg{
+          flex-shrink: 0;
         }
       }
 

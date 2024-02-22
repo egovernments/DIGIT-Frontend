@@ -82,7 +82,8 @@
     width: 100% !important;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
     max-height: 440px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     margin-top: 2px;
     @apply absolute z-20 bg-white max-w-full;
 
@@ -140,6 +141,9 @@
   font-style: theme(digitv2.fontStyle.normal);
   line-height: 19px;
   gap: 0.25rem;
+  height:19px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .profile-dropdown--item {
@@ -157,6 +161,12 @@
   .option-des-container {
     @apply flex flex-col justify-center items-start;
     min-height: 18px;
+    width:100%;
+
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+
 
     .option-description {
       color: theme(digitv2.lightTheme.text-color-secondary);
@@ -176,6 +186,10 @@
   &.nesteddropdown {
     position: relative;
     height: 2.4375rem;
+
+    .option-des-container{
+      height:18px;
+    }
 
     &::before {
       content: "";
@@ -208,7 +222,6 @@
     }
 
     .svg {
-      fill: #ffffff;
       width: 100px;
     }
 
@@ -220,6 +233,14 @@
   &.nestedtextdropdown {
     min-height: 76px;
     padding: 8px 10px 8px 10px;
+
+    &:hover {
+      border: 1px solid theme(digitv2.lightTheme.primary);
+    }
+
+    .option-des-container{
+      padding-right: 2px !important;
+    }
   }
 
   &.profiledropdown {
@@ -333,8 +354,9 @@
     width: 100% !important;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
     @apply absolute z-20 mt-xs bg-white;
-    max-height: 20vmax;
-    overflow: auto;
+    max-height: 25vmax;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     p {
       @extend .light-text-color-primary;

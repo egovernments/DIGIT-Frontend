@@ -210,8 +210,8 @@ const Dropdown = (props) => {
   const flattenedOptions = flattenOptions(filteredOption);
 
   const renderOption = (option, index) => {
-    const handleMouseDown = () => {
-      setIsActive(index);
+    const handleMouseDown = (e) => {
+      if(e.button === 0 ) setIsActive(index);
     };
     const handleMouseUp = () => {
       setIsActive(-1);
@@ -241,12 +241,12 @@ const Dropdown = (props) => {
           />
         ) : null}
         <div className="option-des-container">
-          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", minHeight: "18px" }}>
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%",minHeight:"18px" }}>
             {props?.showIcon && option?.icon && IconRender(option?.icon, index === isActive)}
             {props.isPropertyAssess ? (
               <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
             ) : (
-              <span style={{ minHeight: "18px", lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px" }}>
+              <span style={{ width: "100%", minHeight:"18px",overflow:"hidden",whiteSpace:"nowrap",lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px" }}>
                 {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}
               </span>
             )}

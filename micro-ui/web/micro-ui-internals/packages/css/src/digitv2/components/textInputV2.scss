@@ -402,7 +402,6 @@
   font-size: 1.5rem;
   font-weight: theme(digitv2.fontWeight.bold);
   text-align: center;
-  width: 2.5rem !important;
   height: 2.5rem !important;
   border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
   font-family: theme(digitv2.fontFamily.sans);
@@ -415,6 +414,7 @@
 
 .digit-numeric-button-prefix,
 .digit-numeric-button-suffix{
+  width: 2.5rem !important;
   line-height: 28px;
 }
 

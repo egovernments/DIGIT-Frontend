@@ -11,6 +11,27 @@
         font-style: theme(digitv2.fontStyle.normal);
         line-height: theme(digitv2.lineHeight.normal);
         gap: 0.25rem;
+
+
+        &.wraplabel {
+
+            @media (min-width: 481px) {
+                height: fit-content;
+                word-break: break-word;
+            }
+        }
+
+        .label-container {
+            width: 80%;
+            display: flex;
+            gap: 0.25rem;
+
+            @media (max-width: 480px) {
+                /* Media query for mobile */
+                width: 100%;
+            }
+        }
+
         .info-icon {
             @apply relative cursor-pointer;
         }
@@ -34,6 +55,18 @@
         .info-icon:hover .infotext {
             visibility: visible;
         }
+
+        .label-styles {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &.wraplabel {
+                @media (min-width: 481px) {
+                    white-space: normal;
+                }
+            }
+        }
     }
 }
 
@@ -44,14 +77,14 @@
     gap: 0.25rem;
 
     .digit-description,
-    .digit-charcount{
+    .digit-charcount {
         @apply flex justify-between items-baseline leading-6;
         font-weight: theme(digitv2.fontWeight.regular);
         font-style: theme(digitv2.fontStyle.normal);
         font-size: 0.875rem;
         font-family: theme(digitv2.fontFamily.sans);
         color: theme(digitv2.lightTheme.text-color-secondary);
-        gap:"0.5rem";
+        gap: "0.5rem";
 
 
         @media (min-width: 481px) {

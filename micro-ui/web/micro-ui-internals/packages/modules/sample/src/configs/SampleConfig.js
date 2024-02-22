@@ -8,7 +8,15 @@ export const newConfig = [
         isMandatory: false,
         type: "text",
         disable: false,
-        populators: { name: "text-Default", error: "Error!" },
+        populators: { name: "text-Default", error: "Error!"},
+      },
+      {
+        inline: true,
+        label: "Label wrapnnnnnn nnnnnbhrgreuif gufhwioedhwejdpwodpoedioefdeufhrjjjjjjjjjbjqdbwqjdgwudywuqdsbxnbxppppppuwqwieywuirhdjsbxnsbncvshdftydfwqtdfyudgxsuigxwoquixjknbdjwhiodjwpoqdhsjbxshxsyfvadrqduydwvhbc",
+        isMandatory: false,
+        type: "text",
+        disable: false,
+        populators: { name: "text-labelwrap", error: "Error!" ,wrapLabel:true},
       },
       {
         inline: true,
@@ -133,7 +141,7 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "Complete",
+        label: "Complete hufiewgfruefgweochwioecheihcowecjkncjkrncnfekjjsiwhsuwyduyodweydpxiwoecbhiorbiocrbhiobciorfciorexfibwfyxiowebfyxyfpiweqbdzpuwdpwefyewixbfefhxwioexfbhwebfiweh",
         placeholder: "Enter Text",
         isMandatory: true,
         type: "text",
@@ -141,7 +149,7 @@ export const newConfig = [
         infoMessage: "Complete text field",
         description: "Help Text",
         charCount: true,
-        populators: { name: "text-Complete", error: "Required" },
+        populators: { name: "text-Complete", error: "Required" ,wrapLabel:true},
       },
       {
         inline: true,
@@ -417,6 +425,15 @@ export const newConfig = [
       },
       {
         inline: true,
+        label: "Large Prefix",
+        isMandatory: false,
+        description: "",
+        type: "text",
+        disable: false,
+        populators: { name: "prefix-Large Prefix", error: "Error!", prefix: "1234567890" },
+      },
+      {
+        inline: true,
         label: "Disabled",
         isMandatory: false,
         description: "",
@@ -476,6 +493,15 @@ export const newConfig = [
         type: "text",
         disable: false,
         populators: { name: "suffix-Default", error: "Error!", suffix: "₹" },
+      },
+      {
+        inline: true,
+        label: "Large Suffix",
+        isMandatory: false,
+        description: "",
+        type: "text",
+        disable: false,
+        populators: { name: "suffix-Large Suffix", error: "Error!", suffix: "1234567890" },
       },
       {
         inline: true,
@@ -670,6 +696,15 @@ export const newConfig = [
         type: "textarea",
         disable: false,
         populators: { name: "textarea-Default", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "Smart Resize",
+        isMandatory: false,
+        description: "",
+        type: "textarea",
+        disable: false,
+        populators: { name: "textarea-Smart Resize", error: "Error!" ,resizeSmart:true},
       },
       {
         inline: true,
@@ -916,6 +951,33 @@ export const newConfig = [
             {
               code: "3",
               name: "Toggle3",
+            },
+          ],
+        },
+      },
+      {
+        isMandatory: false,
+        key: "toggle",
+        type: "toggle",
+        label: "Max Label",
+        disable: false,
+        populators: {
+          name: "toggle-Max Label",
+          optionsKey: "name",
+          error: "Error!",
+          required: false,
+          options: [
+            {
+              code: "1",
+              name: "maxlabeloneuiuichjkdcbd",
+            },
+            {
+              code: "2",
+              name: "maxlabeltwogyyegegxye",
+            },
+            {
+              code: "3",
+              name: "maxlabelthree",
             },
           ],
         },

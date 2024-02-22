@@ -185,38 +185,40 @@ const MultiSelectDropdown = ({
   const flattenedOptions = flattenOptions(filteredOptions);
 
   const MenuItem = ({ option, index }) => {
-    <div
-      key={index}
-      className={`multiselect-dropodwn-menuitem ${variant ? variant : ""} ${
-        alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
-      }`}
-    >
-      <input
-        type="checkbox"
-        value={option.code}
-        checked={alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false}
-        onChange={(e) => {
-          isPropsNeeded
-            ? onSelectToAddToQueue(e, option, props)
-            : isOBPSMultiple
-            ? onSelectToAddToQueue(e, option, BlockNumber)
-            : onSelectToAddToQueue(e, option);
-        }}
-        className={`digit-multi-select-dropdown-menuitem ${variant ? variant : ""}`}
-      />
-      <div className="digit-custom-checkbox">
-        <SVG.Check width="20px" height="20px" fill={"#FFFFFF"} />
-      </div>
-      <div className="option-des-container">
-        <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
-          {config?.showIcon &&
-            option?.icon &&
-            IconRender(option?.icon, alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
-          <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
+    return (
+      <div
+        key={index}
+        className={`multiselect-dropodwn-menuitem ${variant ? variant : ""} ${
+          alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
+        }`}
+      >
+        <input
+          type="checkbox"
+          value={option.code}
+          checked={alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false}
+          onChange={(e) => {
+            isPropsNeeded
+              ? onSelectToAddToQueue(e, option, props)
+              : isOBPSMultiple
+              ? onSelectToAddToQueue(e, option, BlockNumber)
+              : onSelectToAddToQueue(e, option);
+          }}
+          className={`digit-multi-select-dropdown-menuitem ${variant ? variant : ""}`}
+        />
+        <div className="digit-custom-checkbox">
+          <SVG.Check width="20px" height="20px" fill={"#FFFFFF"} />
         </div>
-        {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
+        <div className="option-des-container">
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center",width:"100%" }}>
+            {config?.showIcon &&
+              option?.icon &&
+              IconRender(option?.icon,alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
+            <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
+          </div>
+          {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
+        </div>
       </div>
-    </div>;
+    );
   };
 
   const Menu = () => {
