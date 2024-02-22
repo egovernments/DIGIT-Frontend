@@ -1,0 +1,95 @@
+.digit-stepper-container {
+  @apply flex;
+  margin: 0px 8px 15px;
+  height: 64px;
+
+  .digit-stepper-checkpoint {
+    @apply relative flex-1;
+    height: 64px;
+    z-index: 1;
+  }
+
+  .digit-stepper-content {
+    @apply flex flex-col items-center;
+    height: 64px;
+
+    span {
+      text-align: center;
+      color: theme(digitv2.lightTheme.paper);
+    }
+
+    .secondary-color {
+      padding: 5px;
+      color: theme(digitv2.lightTheme.text-color-secondary);
+      font-family: theme(digitv2.fontFamily.sans);
+      font-size: 16px;
+      font-weight: theme(digitv2.fontWeight.regular);
+      line-height: 24px;
+      letter-spacing: 0px;
+      text-align: center;
+      height: 24px;
+
+      &.text-active {
+        color: theme(digitv2.lightTheme.text-color-primary);
+
+        font-weight: 700;
+        line-height: 19px;
+
+      }
+    }
+  }
+
+  .line {
+    @apply absolute;
+    top: 15px;
+    left: calc(50% + 8px);
+    right: calc(-50% + 8px);
+    border-top: 4px solid theme(colors.border);
+    z-index: -1;
+  }
+
+  .circle {
+    width: 32px;
+    height: 32px;
+    background-color: theme(digitv2.lightTheme.text-color-disabled);
+    border-radius: 50%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+  }
+
+  .active {
+    background-color: theme(digitv2.lightTheme.primary);
+    border-color: theme(digitv2.lightTheme.primary);
+    font-weight: 700;
+  }
+}
+
+.TLComments {
+  max-width: 360px;
+  @apply mb-sm p-sm bg-grey-light;
+
+  h3 {
+    @apply font-bold text-caption-m;
+  }
+
+  p {
+    @apply text-body-l;
+  }
+}
+
+@screen dt {
+  .TLComments {
+    width: 360px;
+
+    h3 {
+      @apply text-caption-m-dt;
+    }
+
+    p {
+      @apply text-body-l-dt;
+    }
+  }
+}

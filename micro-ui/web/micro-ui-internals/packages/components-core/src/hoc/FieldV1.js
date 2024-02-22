@@ -292,9 +292,11 @@ const FieldV1 = ({
   return (
     <>
       {!withoutLabel && (
-        <Header className={`label ${disabled ? "disabled" : ""} ${nonEditable ? "noneditable" : ""}`}>
-          <div style={{ width: "80%", display: "flex", gap: "0.25rem" }}>
-            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t(truncateMessage(label, 64))}</div>
+        <Header className={`label ${disabled ? "disabled" : ""} ${nonEditable ? "noneditable" : ""} ${populators?.wrapLabel ? "wraplabel" : ""}`}>
+          <div className={"label-container"}>
+            <div className={`label-styles ${populators?.wrapLabel ? "wraplabel" : ""}`}>
+              {populators?.wrapLabel ? t(label) : t(truncateMessage(label, 64))}
+            </div>
             <div style={{ color: "#D4351C" }}>{required ? " * " : null}</div>
             {infoMessage ? (
               <div className="info-icon">

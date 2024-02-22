@@ -5,10 +5,24 @@ import { SVG } from "./SVG";
 const TextArea = (props) => {
   const user_type = window?.Digit?.SessionStorage.get("userType");
 
+  function textAreaAdjust(event) {
+    const element = event.target;
+    const initialHeight = 6.25 * parseFloat(getComputedStyle(element).fontSize);
+  
+    element.style.height = "auto"; // Setting height to auto to get the natural height
+    const contentHeight = element.scrollHeight;
+    // Set the height only if the content height exceeds the initial height
+    if (contentHeight > initialHeight) {
+      element.style.height = `${contentHeight}px`;
+    } else {
+      element.style.height = `${initialHeight}px`;
+    }
+  }
 
   return (
     <React.Fragment>
       <textarea
+        onInput={props.populators?.resizeSmart && textAreaAdjust}
         placeholder={props.placeholder}
         name={props.name}
         ref={props.inputRef}
@@ -20,9 +34,9 @@ const TextArea = (props) => {
             props?.onChange(event);
           }
         }}
-        className={`${user_type !== "citizen" ? "digit-employee-card-textarea" : "digit-card-textarea"} ${props?.className ? props?.className : ""
-          } ${props.disabled ? "disabled" : ""
-          } ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""}`}
+        className={`${user_type !== "citizen" ? "digit-employee-card-textarea" : "digit-card-textarea"} ${props?.className ? props?.className : ""} ${
+          props.disabled ? "disabled" : ""
+        } ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props.populators?.resizeSmart ? "resize-smart" : ""}`}
         minLength={props.minlength}
         maxLength={props.maxlength}
         autoComplete="off"
@@ -54,12 +68,14 @@ TextArea.propTypes = {
   hintText: PropTypes.string,
   charCount: PropTypes.bool,
   errors: PropTypes.object,
-  error:PropTypes.string
+  error: PropTypes.string,
+  resizeSmart: PropTypes.bool,
 };
 
 TextArea.defaultProps = {
   inputRef: undefined,
   onChange: undefined,
+  resizeSmart: false,
 };
 
 export default TextArea;

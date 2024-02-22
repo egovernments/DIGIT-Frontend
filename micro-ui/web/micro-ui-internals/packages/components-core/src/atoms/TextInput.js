@@ -126,6 +126,8 @@ const TextInput = (props) => {
     props.errorStyle ? "digit-employee-card-input-error" : ""
   } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
+  const inputContainerClass = `input-container ${props.type ? props.type : ''} ${props.populators?.customIcon ? 'withIcon' : ''}`;
+
   return (
     <React.Fragment>
       <div
@@ -135,7 +137,7 @@ const TextInput = (props) => {
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
         {props.required ? (
-          <div className="input-container">
+          <div className={inputContainerClass} >
             {renderPrefix()}
             <input
               type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
@@ -190,7 +192,7 @@ const TextInput = (props) => {
           </div>
 
         ) : (
-          <div className="input-container">
+          <div className={inputContainerClass}>
             {renderPrefix()}
             <input
               type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}

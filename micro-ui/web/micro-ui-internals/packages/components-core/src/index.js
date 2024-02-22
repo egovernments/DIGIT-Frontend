@@ -64,6 +64,7 @@ import {
   SearchComponent,
   LinkLabel,
   RoundedLabel,
+  Stepper
 } from "./atoms";
 
 import {
@@ -307,6 +308,7 @@ export {
   TreeSelect,
   SubmitBar,
   ButtonSelector,
+  Stepper,
   InboxSearchLinks,
   SearchComponent,
   InboxSearchComposer,
