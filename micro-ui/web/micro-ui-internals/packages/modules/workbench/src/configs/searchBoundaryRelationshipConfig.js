@@ -8,7 +8,7 @@ export const searchBoundaryRelationshipConfig = {
     serviceName: "/boundary-service/boundary-relationships/_search",
     requestParam: {},
     requestBody: {},
-    minParametersForSearchForm: 1,
+    minParametersForSearchForm: 0,
     masterName: "commonUiConfig",
     moduleName: "SearchBoundaryHierarchyConfig",
     tableFormJsonPath: "requestBody.custom",
@@ -79,7 +79,7 @@ export const searchBoundaryRelationshipConfig = {
         tableClassName: "table-fixed-last-column table",
         columns: [
           {
-            label: "WBH_LEVEL",
+            label: "WBH_BOUNDARY_TYPE",
             jsonPath: "boundaryType",
             additionalCustomization: true,
           },
@@ -88,17 +88,17 @@ export const searchBoundaryRelationshipConfig = {
             jsonPath: "code",
             additionalCustomization: true,
           },
-          {
-            label: "WBH_PARENT_BOUNDARY_NAME",
-            jsonPath: "hierarchyType",
-            // additionalCustomization: true,
-          },
+          // {
+          //   label: "WBH_PARENT_BOUNDARY_NAME",
+          //   jsonPath: "hierarchyType",
+          //   // additionalCustomization: true,
+          // },
 
-          {
-            label: "WBH_LEVEL",
-            jsonPath: "",
-            // additionalCustomization: true,
-          },
+          // {
+          //   label: "WBH_LEVEL",
+          //   jsonPath: "",
+          //   additionalCustomization: true,
+          // },
           // {
           //   label: "WBH_PARENT_BOUNDARY_NAME",
           //   jsonPath: "",

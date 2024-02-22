@@ -817,12 +817,6 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       const { hierarchyType, boundaryType, boundaryCode } = Digit.Hooks.useQueryParams();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      console.log("ppp", boundaryCode);
-
-      console.log("hierarchyType", data);
-
-      // const hierarchyType = data.state?.searchForm?.hierarchyType;
-      // const boundaryType = data.params.boundaryType?.boundaryType;
 
       data.params = { hierarchyType: hierarchyType, boundaryType: boundaryType, codes:boundaryCode, tenantId, includeParents: false, includeChildren: true };
       // data.body.BoundaryTypeHierarchySearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
@@ -838,7 +832,6 @@ export const UICustomizations = {
       console.log("responseArray", responseArray, uiConfig);
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("row", row);
       const [selectedLinkPath, setSelectedLinkPath] = useState(null);
 
       const [currentLevel, setCurrentLevel] = useState(0);
@@ -934,7 +927,7 @@ export const UICustomizations = {
       // );
 
       switch (key) {
-        case "WBH_LEVEL":
+        case "WBH_BOUNDARY_TYPE":
           return (
             <span className={row.children && row.children.length > 0 ? "link" : ""}>
               {row.children && row.children.length > 0 ? (
@@ -964,6 +957,22 @@ export const UICustomizations = {
             </span>
           );
 
+          case "WBH_LEVEL":
+          return (
+            // <span className={row.children && row.children.length > 0 ? "link" : ""}>
+            //   {row.children && row.children.length > 0 ? (
+            //     <Link
+            //       to={`/${window.contextPath}/employee/workbench/boundary-relationship-search?hierarchyType=${hierarchyType}&boundaryType=${row?.children?.[0]?.boundaryType}`}
+            //     >
+            //       {row.boundaryType}
+            //     </Link>
+            //   ) : (
+            //     <span>{row.boundaryType}</span>
+            //   )}
+            // </span>
+            null
+          );
+
         default:
           return t("ES_COMMON_NA");
       }
@@ -975,8 +984,6 @@ export const UICustomizations = {
   SearchHierarchyConfig: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-
-      console.log("hierarchyType", data);
 
       const hierarchyType = data.params.hierarchyType?.hierarchyType;
       const boundaryType = data.params.boundaryType?.boundaryType;

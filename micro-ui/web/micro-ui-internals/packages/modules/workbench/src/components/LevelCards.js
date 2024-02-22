@@ -7,7 +7,6 @@ const LevelCards = ({ onSelect, formData, props }) => {
   const [showToast, setShowToast] = useState(false);
   const [cardDetails, setCardDetails] = useState([{ level: "" }]);
 
-  console.log("hh",formData);
 
   const closeToast = () => {
     setTimeout(() => {

@@ -47,7 +47,6 @@ const BoundaryRelationshipSearch = () => {
   };
   const { data: hierarchyTypeDataresult } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
-  console.log("data", hierarchyTypeDataresult);
 
   // const formattedHierarchyTypes = hierarchyTypeDataresult?.BoundaryHierarchy?.map((item) => ({ hierarchyType: item.hierarchyType }));
 

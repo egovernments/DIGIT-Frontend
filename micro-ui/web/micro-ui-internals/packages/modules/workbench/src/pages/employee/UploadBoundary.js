@@ -239,11 +239,11 @@ const UploadBoundary = () => {
   const onBulkUploadSubmit = async (file) => {
     try {
       const results = await Digit.Utils.parsingUtils.parseMultipleXlsToJson(file);
-      console.log("results", results);
+      // console.log("results", results);
       const flattenedArray = results.flatMap((item) => Object.values(item));
-      console.log("fff", flattenedArray);
+      // console.log("fff", flattenedArray);
       const uniqueValues = Array.from(new Set(flattenedArray));
-      console.log("uu", uniqueValues);
+      // console.log("uu", uniqueValues);
       for (const value of uniqueValues) {
         await mutation.mutate({
           params: {},
@@ -280,8 +280,8 @@ const UploadBoundary = () => {
         Object.keys(transformedData).map(async (key) => {
           for (const entry of transformedData[key]) {
             await new Promise((resolve) => setTimeout(resolve, 90000));
-            console.log(`Before delay for entry ${entry.code}`);
-            console.log(`parent ${entry.parent}`);
+            // console.log(`Before delay for entry ${entry.code}`);
+            // console.log(`parent ${entry.parent}`);
             await mutationHierarchy.mutate(
               {
                 params: {},
@@ -317,7 +317,7 @@ const UploadBoundary = () => {
               }
             );
             await new Promise((resolve) => setTimeout(resolve, 90000));
-            console.log(`After mutation for entry ${entry.code}`);
+            // console.log(`After mutation for entry ${entry.code}`);
           }
         })
       );

@@ -18,7 +18,6 @@ const BoundaryHierarchyTypeAdd = () => {
   const [config, setConfig] = useState([...addBoundaryHierarchyConfig]);
   const levelCounter = useRef(2);
 
-  console.log("confififif", config);
 
   // const handleAddField = () => {
   //   const newField = {
@@ -57,11 +56,9 @@ const BoundaryHierarchyTypeAdd = () => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaBoundaryHierarchyTypeAdd);
   const generateDynamicParentType = (data) => {
-    console.log("data", data.levelcards);
     const dynamicParentType = {};
     // const levelKeys = Object.keys(data).filter((key) => key.startsWith("Level"));
     const levelKeys = data.levelcards;
-    console.log("llll",levelKeys);
 
     for (let i = 1; i < levelKeys.length; i++) {
       const currentLevel = levelKeys[i].level;
@@ -85,13 +82,8 @@ const BoundaryHierarchyTypeAdd = () => {
 
   const handleFormSubmit = async (formData) => {
 
-    console.log("formData", formData);
-    // Handle form submission
-
     try {
       const parentTypeMapping = generateDynamicParentType(formData);
-
-      console.log("pp",parentTypeMapping)
 
       const boundaryHierarchy = formData.levelcards.map((level, index) => {
         const currentLevel = level.level;
@@ -142,7 +134,6 @@ const BoundaryHierarchyTypeAdd = () => {
   };
 
   const onFormValueChange = (setValue, formData) => {
-    console.log("formData", formData);
   };
 
   // const shouldShowHeader = config[0].body && config[0].body.length > 0 && config[0].body[0]?.label === "Level 1";

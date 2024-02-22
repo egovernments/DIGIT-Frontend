@@ -16,7 +16,6 @@ const BoundaryHierarchySearch = () => {
   const [selectedBoundaryType, setSelectedBoundaryType] = useState(null);
 
   const config = searchHierarchyConfig;
-  console.log("config", config);
 
   const reqCriteriaBoundaryHierarchySearch = {
     url: '/boundary-service/boundary-hierarchy-definition/_search',
@@ -32,8 +31,6 @@ const BoundaryHierarchySearch = () => {
   };
   const { data: hierarchyTypeDataresult } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
-  console.log("hierarchyTypeDataresult" , hierarchyTypeDataresult);
-
   const formattedHierarchyTypes = hierarchyTypeDataresult?.BoundaryHierarchy?.map((item) => ({ hierarchyType: item.hierarchyType }));
 
   const hierarchyTypeField = modifiedConfig.sections.search.uiConfig.fields.find((field) => field.label === "WBH_HIERARCHY_TYPE");
@@ -41,10 +38,8 @@ const BoundaryHierarchySearch = () => {
     hierarchyTypeField.populators.options = formattedHierarchyTypes;
   }
 
-  console.log("ooo",hierarchyTypeDataresult )
 
   const handleWatchValueChanged = (formData) => {
-    console.log("formData", formData);
     const hierarchyType = formData?.hierarchyType?.hierarchyType;
     setSelectedHierarchyType(hierarchyType);
     setSelectedBoundaryType(null);
@@ -74,7 +69,6 @@ const BoundaryHierarchySearch = () => {
   return (
     <React.Fragment>
       <Header className="works-header-search">{t("WBH_HIERARCHY_SEARCH")}</Header>
-
       <div className="inbox-search-wrapper">
         <InboxSearchComposer configs={modifiedConfig} onWatchValueChanged={handleWatchValueChanged}></InboxSearchComposer>
       </div>
