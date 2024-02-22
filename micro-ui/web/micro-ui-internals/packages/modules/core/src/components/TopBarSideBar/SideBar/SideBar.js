@@ -22,6 +22,32 @@ import { useHistory, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui","mgramseva-web"];
+
+// Function to recursively get the key of a nested object based on a parent key
+const getKey = (obj, parent) => {
+  // Use Object.keys to get an array of keys in the object
+  const key = Object.keys(obj).map((key) => 
+    // Check if the object has an 'item' property with a 'path' property
+    obj[key]?.item?.path?.split(parent ? `${parent}.${key}` : `.${key}`) || 
+    // If not, recursively call getKey on the nested object
+    getKey(obj[key], key)
+  );
+  // Return the first element of the array (the key)
+  return key?.[0];
+};
+
+// Function to find the last key in a dot-separated key string
+const findKey = (key = "") => {
+  // Split the key string into an array using dot as a separator
+  const newSplitedList = key?.split(".");
+  // Check if the key string ends with a dot
+  return key?.endsWith?.(".") ? 
+    // If it ends with a dot, return the first element of the array
+    newSplitedList[0] : 
+    // If not, return the last element of the array
+    newSplitedList[newSplitedList?.length - 1];
+};
+
 /*
 Used to navigate to other mission's ui if user has access
 */
@@ -101,9 +127,26 @@ const Sidebar = ({ data }) => {
     return null; // Return null if no non-empty leftIcon is found
   }
   const renderSidebarItems = (items, parentKey = null, flag = true, level = 0) => {
+    /* added the logic to sort the side bar items based on the ordernumber */
+  const keysArray = Object.values(items)
+    .sort((x, y) => {
+      if (x?.item && y?.item) {
+        return x?.item?.orderNumber - y?.item?.orderNumber;
+      } else {
+        if (x?.[0] < y?.[0]) {
+          return -1;
+        }
+        if (x?.[0] > y?.[0]) {
+          return 1;
+        }
+        return 0;
+      }
+    })
+    .map((x) => (x?.item?.path && findKey(x?.item?.path)) || findKey(getKey(x)?.[0]));
+
     return (
       <div className={`submenu-container level-${level}`}>
-        {Object.keys(items).map((key, index) => {
+        {keysArray.map((key, index) => {
           const subItems = items[key];
           const subItemKeys = Object.keys(subItems)[0] === "item";
           const isSubItemOpen = openItems[key] || false;

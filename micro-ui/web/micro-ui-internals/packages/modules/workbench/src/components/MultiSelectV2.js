@@ -36,7 +36,7 @@ const CustomSelectWidget = (props) => {
   const { configs, updateConfigs, updateSchema, schema: formSchema, formData } = Digit.Hooks.workbench.useWorkbenchFormContext();
 useEffect(()=>{
   const customConfig = configs?.customUiConfigs?.custom?.filter((data) => data?.fieldPath == fieldPath)?.[0] || {};
-  const newPrefix = customConfig?.prefix;
+  const newPrefix = customConfig?.prefix || prefix;
   const suffix = customConfig?.suffix;
 
   newPrefix != prefix && setPrefix(newPrefix);
@@ -48,7 +48,7 @@ useEffect(()=>{
   const { isLoading, data } = Digit.Hooks.useCustomAPIHook(Digit.Utils.workbench.getCriteriaForSelectData(props) );
   const optionsList = data || options?.enumOptions || options || [];
   const formattedOptions = React.useMemo(
-    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${prefix}_${e?.label}`)), value: e.value })),
+    () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(prefix?.trim?.()!=""?`${prefix}_${e?.label}`:e?.label)), value: e?.value })),
     [optionsList, prefix, data]
   );
   const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));

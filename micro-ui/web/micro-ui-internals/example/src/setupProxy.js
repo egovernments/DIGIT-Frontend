@@ -84,6 +84,7 @@ module.exports = function (app) {
     "/mdms-v2",
     "/boundary-service/",
     "/egov-mdms-service-legacy",
+    "/facility/v1/_search",
     "/project/staff/v1/_create",
     "/product/v1/_create",
   ].forEach((location) => app.use(location, createProxy));

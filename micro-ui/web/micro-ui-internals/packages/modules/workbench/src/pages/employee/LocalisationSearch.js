@@ -140,18 +140,14 @@ const LocalisationSearch = () => {
             className={'header-btn'}
           />
         )} */}
-        {Config && Digit.Utils.didEmployeeHasRole(Config?.actionRole) && (
-          <ActionBar>
-            <SubmitBar
-              disabled={false}
-              className="mdms-add-btn"
-              onSubmit={() => {
-                history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
-              }}
-              label={t("WBH_ADD_LOCALISATION")}
-            />
-          </ActionBar>
-        )}
+      {
+        Config && Digit.Utils.didEmployeeHasAtleastOneRole(Config?.actionRoles) &&
+        <ActionBar >
+          <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
+              history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
+            }} label={t("WBH_ADD_LOCALISATION")} />
+        </ActionBar>
+      }
       </div>
       {Config && (
         <div className="inbox-search-wrapper">

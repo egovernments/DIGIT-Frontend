@@ -61,10 +61,28 @@ with
  .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
 
 ```
+ *   Digit.Hooks.Utils.getDefaultLanguage()
+
+```
+from 1.8.0 beta version add the following utility method in micro-ui/web/micro-ui-internals/packages/libraries/src/utils/index.js
+
+const getDefaultLanguage = () => {
+  return  `${getLocaleDefault()}_${getLocaleRegion()}`;
+};
+
+and add its related functions
+
+```
+
 
 # Changelog
 
 ```bash
+1.8.0-beta.16 fixed the hardcoded logout message 
+1.8.0-beta.15 fixed the sidebar sort order issue 
+1.8.0-beta.14
+1.8.0-beta.13 
+1.8.0-beta.12
 1.8.0-beta.11 republished due to some version issues
 1.8.0-beta.10 Constants updated for mgramsewa
 1.8.0-beta.9 Updated How It works screen to take header from mdms config and show pdf card only when required
@@ -100,9 +118,9 @@ with
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core
+### Published from DIGIT Frontend 
 
-Digit Dev Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
+DIGIT Frontend Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
 
 ## License
 
