@@ -133,12 +133,14 @@ _Bill Module
 2. View Screen
 
 
-# Changelog
+### Changelog
 
 ```bash
+1.0.1-beta.1 Republished after merging with Master due to version issues.
 1.0.0-beta.3 added new support to view any document
 1.0.0-beta.2 republished due to some iframe issue
 1.0.0-beta.1 republished due to some version issues
+1.0.0 Workbench v1.0 release
 1.0.0-beta workbench base version beta release
 0.0.8 fix response data for custom compnent in inbox composer
 0.0.7 updated the readme content
@@ -150,13 +152,17 @@ _Bill Module
 0.0.1 base version
 ```
 
-# Contributors
+### Contributors
 
 [jagankumar-egov] 
 
-## Published from DIGIT Core 
-Digit Dev Repo (https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
 
-## License
+## Maintainer
 
-MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
+- [jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+
+
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

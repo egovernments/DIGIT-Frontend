@@ -1,15 +1,4 @@
-import {
-  AddFilled,
-  Button,
-  Header,
-  InboxSearchComposer,
-  Loader,
-  Dropdown,
-  Toast,
-  WorkflowModal,
-  ActionBar,
-  SubmitBar,
-} from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,Toast,WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -140,54 +129,31 @@ const LocalisationSearch = () => {
             className={'header-btn'}
           />
         )} */}
-        {Config && Digit.Utils.didEmployeeHasRole(Config?.actionRole) && (
-          <ActionBar>
-            <SubmitBar
-              disabled={false}
-              className="mdms-add-btn"
-              onSubmit={() => {
-                history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
-              }}
-              label={t("WBH_ADD_LOCALISATION")}
-            />
-          </ActionBar>
-        )}
+      {
+        Config && Digit.Utils.didEmployeeHasAtleastOneRole(Config?.actionRoles) &&
+        <ActionBar >
+          <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
+              history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
+            }} label={t("WBH_ADD_LOCALISATION")} />
+        </ActionBar>
+      }
       </div>
-      {Config && (
-        <div className="inbox-search-wrapper">
-          <InboxSearchComposer
-            onFormValueChange={formUpdate}
-            configs={Config}
-            additionalConfig={{
-              resultsTable: {
-                onClickSvg,
-              },
-              search: {
-                callRefetch,
-                setCallRefetch,
-              },
-            }}
-          ></InboxSearchComposer>
-        </div>
-      )}
-      {showModal && modalConfig && (
-        <WorkflowModal
-          closeModal={() => setShowModal(false)}
-          onSubmit={onModalSubmit}
-          config={modalConfig}
-          popupModuleActionBarStyles={{ marginTop: "-1rem" }}
-          popupModuleMianStyles={{ marginTop: "-2rem" }}
-        />
-      )}
-      {showToast && (
-        <Toast
-          label={showToast.label}
-          error={showToast?.isError}
-          isDleteBtn={true}
-          onClose={() => setShowToast(null)}
-          style={showToast?.style}
-        ></Toast>
-      )}
+      <div className="localisation-info">
+        <InfoBanner label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} />
+      </div>
+      {Config && <div className="inbox-search-wrapper">
+        <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig = {{
+          resultsTable:{
+            onClickSvg
+          },
+          search:{
+            callRefetch,
+            setCallRefetch
+          }
+        }}></InboxSearchComposer>
+      </div>}
+      {showModal && modalConfig && <WorkflowModal closeModal={() => setShowModal(false)} onSubmit={onModalSubmit} config={modalConfig} popupModuleActionBarStyles={{marginTop:"-1rem"}} popupModuleMianStyles={{marginTop:"-2rem"}} />}
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=>setShowToast(null)} style={showToast?.style}></Toast>}
     </React.Fragment>
   );
 };

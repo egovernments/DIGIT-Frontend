@@ -61,15 +61,37 @@ with
  .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
 
 ```
+ *   Digit.Hooks.Utils.getDefaultLanguage()
 
-# Changelog
+```
+from 1.8.0 beta version add the following utility method in micro-ui/web/micro-ui-internals/packages/libraries/src/utils/index.js
+
+const getDefaultLanguage = () => {
+  return  `${getLocaleDefault()}_${getLocaleRegion()}`;
+};
+
+and add its related functions
+
+```
+
+
+### Changelog
 
 ```bash
+1.8.1-beta.3 User profile back button fixes for mobile view
+1.8.1-beta.2 User profile Save and change password button fixes for mobile view
+1.8.1-beta.1 Republished after merging with Master due to version issues.
+1.8.0-beta.16 fixed the hardcoded logout message 
+1.8.0-beta.15 fixed the sidebar sort order issue 
+1.8.0-beta.14
+1.8.0-beta.13 
+1.8.0-beta.12
 1.8.0-beta.11 republished due to some version issues
 1.8.0-beta.10 Constants updated for mgramsewa
 1.8.0-beta.9 Updated How It works screen to take header from mdms config and show pdf card only when required
 1.8.0-beta.8 redefine addtional component to render only under employee home page 
 1.8.0-beta.6 added addtional component render for tqm modules
+1.8.0 workbench v1.0
 1.8.0-beta.5 fix for login screen alignments
 1.8.0-beta.4 made the default localisation in globalconfig
 1.8.0-beta workbench base version beta release
@@ -96,14 +118,21 @@ with
 1.5.28 fixed the route issue for profile screen
 ```
 
-# Contributors
+### Contributors
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core
+## Documentation
 
-Digit Dev Repo (<https://github.com/egovernments/Digit-Core/tree/digit-ui-core>)
+Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-## License
+## Maintainer
 
-MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
+- [jagankumar-egov](https://www.github.com/jagankumar-egov)
+
+
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
+
+
+![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)

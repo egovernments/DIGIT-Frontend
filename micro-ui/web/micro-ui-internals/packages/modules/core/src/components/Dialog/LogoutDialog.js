@@ -105,7 +105,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
       <div>
         <CardText style={{ marginBottom: "54px", marginLeft: "8px", marginRight: "8px" }}>
           {t("CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE") + " "}
-          <strong>{t("CORE_LOGOUT_MESSAGE")}?</strong>
+          <strong>{t("CORE_LOGOUT_MESSAGE")}</strong>
         </CardText>
       </div>
     </Modal>

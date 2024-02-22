@@ -33,11 +33,11 @@ const MDMSSearchv2 = () => {
   const [updatedConfig, setUpdatedConfig] = useState(null);
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
-    tenantId: tenantId,
-    limit: 100,
-  };
-  if (master && modulee) {
-    SchemaDefCriteria.codes = [`${master}.${modulee}`];
+    tenantId:tenantId ,
+    limit:200
+  }
+  if(master && modulee ) {
+    SchemaDefCriteria.codes = [`${master}.${modulee}`] 
   }
   const { isLoading, data: dropdownData } = Digit.Hooks.useCustomAPIHook({
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
@@ -170,62 +170,13 @@ const MDMSSearchv2 = () => {
   if (isLoading) return <Loader />;
   return (
     <React.Fragment>
-      {/* <Header className="works-header-search">{t(Config?.label)}</Header> */}
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
-      {/* <div className="jk-header-btn-wrapper">
-        <Dropdown
-          option={masterOptions}
-          style={{width:"25%",marginRight:"1rem" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master) : masterName}
-          select={(e) => {
-            setMasterName(e);
-            setModuleName(null)
-            setUpdatedConfig(null)
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MODULE_NAME")}
-          
-          disable={master ? true : false}
-        />
-        <Dropdown
-          option={moduleOptions}
-          style={{width:"25%",marginRight:"auto" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
-          select={(e) => {
-            setModuleName(e);
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MASTER_NAME")}
-          
-          disable = {modulee ? true : false}
-        />
-       {updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && (
-          <Button
-            label={t(updatedConfig?.actionLabel)}
-            variation="secondary"
-            icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
-            onButtonClick={() => {
-              let actionLink=updatedConfig?.actionLink
-              if(modulee&&master){
-                actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
-              }
-              history.push(`/${window?.contextPath}/employee/${actionLink}`);
-            }}
-            type="button"
-          />
-        )}
-      </div> */}
-      {updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && (
-        <ActionBar>
+      {
+        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) &&
+        <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
-      )}
+      }
       {updatedConfig && (
         <div className="inbox-search-wrapper">
           <InboxSearchComposer
