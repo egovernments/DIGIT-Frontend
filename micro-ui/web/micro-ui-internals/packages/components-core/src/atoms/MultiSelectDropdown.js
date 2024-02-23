@@ -296,8 +296,10 @@ const MultiSelectDropdown = ({
               onClick={handleClearAll}
               variation=""
               style={{
-                width: "4.75rem",
-                height: "2.375rem",
+                width: "4.188rem",
+                height: "2rem",
+                minWidth:"4.188rem",
+                minHeight:"2rem",
                 padding: "0.5rem",
                 justifyContent: "center",
                 alignItems: "center",

@@ -22,7 +22,7 @@ const Toggle = (props) => {
       className={`digit-toggle-toolbar ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}
     >
       {props?.options?.map((option, ind) => (
-        <div style={{ width: `${finalWidth}px` }} className={`toggle-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
+        <div style={{ width: `${finalWidth}px`, maxWidth: `${(100 / props.options.length)}%` }} className={`toggle-option-container ${props?.disabled ? "disabled" : ""}`} key={ind}>
           <label style={{ width: `${finalWidth}px` }} className={`digit-toggle-btn-wrap ${selected === option.code ? "checked" : ""}`}>
             <input
               className="digit-toggle-input"

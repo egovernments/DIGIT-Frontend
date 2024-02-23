@@ -2,7 +2,10 @@
 
 
 .digit-toggle-toolbar {
-  @apply flex justify-start
+  @apply flex justify-start;
+  max-width: 37.5rem;
+  min-width: 7.5rem;
+  width:100%;
 }
 
 
@@ -49,7 +52,6 @@
 
   &.checked{
     background-color: theme(digitv2.lightTheme.primary-orange);
-    padding: 0.125rem;
     width: 7.125rem;
     color: theme(digitv2.lightTheme.paper-primary);
   }
@@ -63,4 +65,5 @@
 
 .digit-toggle-label {
   color: theme(digitv2.lightTheme.text-disabled);
+  padding:8px 12px;
 }
