@@ -5,7 +5,7 @@
     &.label {
         @apply flex font-regular;
         height: 1.1875rem;
-        color: theme(digitv2.lightTheme.text-color-primary);
+        color: theme(digitv2.lightTheme.text-primary);
         font-family: theme(digitv2.fontFamily.sans);
         font-size: 1rem;
         font-style: theme(digitv2.fontStyle.normal);
@@ -41,7 +41,7 @@
             visibility: hidden;
             width: 120px;
             background-color: #555555;
-            color: theme(digitv2.lightTheme.paper);
+            color: theme(digitv2.lightTheme.paper-primary);
             text-align: center;
             padding: 0.5rem 0;
             z-index: 1;
@@ -83,7 +83,7 @@
         font-style: theme(digitv2.fontStyle.normal);
         font-size: 0.875rem;
         font-family: theme(digitv2.fontFamily.sans);
-        color: theme(digitv2.lightTheme.text-color-secondary);
+        color: theme(digitv2.lightTheme.text-secondary);
         gap: "0.5rem";
 
 

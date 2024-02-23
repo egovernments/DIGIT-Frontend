@@ -261,6 +261,7 @@ const Dropdown = (props) => {
                   overflow: "hidden",
                   whiteSpace: "nowrap",
                   lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px",
+                  fontSize: props.variant === "nestedtextdropdown" || props.varinat === "profilenestedtext" ? "16px" : "14px"
                 }}
               >
                 {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}

@@ -15,20 +15,20 @@
   align-items: center;
   gap: 0.78125rem;
   flex-shrink: 0;
-  border: 1px solid theme(digitv2.lightTheme.divider);
-  background: theme(digitv2.lightTheme.paper);
+  border: 1px solid theme(digitv2.lightTheme.generic-divider);
+  background: theme(digitv2.lightTheme.paper-primary);
   border-radius: 0px;
 
   &:hover {
     width: 7.125rem;
-    border: 1px solid theme(digitv2.lightTheme.primary);
-    background: theme(digitv2.lightTheme.paper);
+    border: 1px solid theme(digitv2.lightTheme.primary-orange);
+    background: theme(digitv2.lightTheme.paper-primary);
     box-shadow: 0px 0px 6px 0px rgba(244, 119, 56, 0.25);
   }
 }
 
 .digit-toggle-label {
-  color: theme(digitv2.lightTheme.text-color-disabled);
+  color: theme(digitv2.lightTheme.text-disabled);
   text-align: center;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 0.875rem;
@@ -43,7 +43,7 @@
 
 .react-switch-checkbox:checked+.react-switch-label {
   width: 7.125rem;
-  background: theme(digitv2.lightTheme.primary);
+  background: theme(digitv2.lightTheme.primary-orange);
 }
 
 .react-switch-label:active .react-switch-button {

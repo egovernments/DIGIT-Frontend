@@ -2,7 +2,7 @@
 
 .bread-crumb.workbench-bredcrumb{
 a{
-  color: theme(digitv2.lightTheme.primary);
+  color: theme(digitv2.lightTheme.primary-orange);
 }
 }
 .workbench{
@@ -142,7 +142,7 @@ a{
                 }
 
                 .digit__control--is-focused {
-                  border-color: theme(digitv2.lightTheme.primary) !important;
+                  border-color: theme(digitv2.lightTheme.primary-orange) !important;
                   box-shadow: none;
                   box-sizing: unset;
                   @apply outline-none;
@@ -158,10 +158,10 @@ a{
                 }
 
                 .digit__control:focus {
-                  border-color: theme(digitv2.lightTheme.primary);
+                  border-color: theme(digitv2.lightTheme.primary-orange);
 
                   .digit__value-container:focus {
-                    border-color: theme(digitv2.lightTheme.primary);
+                    border-color: theme(digitv2.lightTheme.primary-orange);
 
                   }
                 }
@@ -169,20 +169,20 @@ a{
 
               &.form-select:focus {
                 @apply outline-none;
-                border-color: theme(digitv2.lightTheme.primary);
+                border-color: theme(digitv2.lightTheme.primary-orange);
 
               }
             }
 
             .form-control:read-only {
-              background-color: theme(digitv2.lightTheme.background);
-              color: theme(digitv2.lightTheme["text-color-secondary"]);
+              background-color: theme(digitv2.lightTheme.generic-background);
+              color: theme(digitv2.lightTheme.text-secondary);
             }
 
             .form-control:focus {
 
               @apply outline-none;
-              border-color: theme(digitv2.lightTheme.primary);
+              border-color: theme(digitv2.lightTheme.primary-orange);
             }
 
             textarea.form-control {
@@ -236,7 +236,7 @@ a{
                 }
          
                 input[type="checkbox"]#digit_root_active {
-                  accent-color: theme(digitv2.lightTheme.primary);
+                  accent-color: theme(digitv2.lightTheme.primary-orange);
                 }
 
                 input:checked,
@@ -549,7 +549,7 @@ a{
   padding-left:0.8rem ;
   padding-right:0.8rem ;
   &-row-mdms:hover{
-    background-color:  theme(digitv2.lightTheme.primary-bg); /* Change this to the desired hover color */
+    background-color:  theme(digitv2.lightTheme.primary-orangebg); /* Change this to the desired hover color */
     cursor: pointer;
   }
 }

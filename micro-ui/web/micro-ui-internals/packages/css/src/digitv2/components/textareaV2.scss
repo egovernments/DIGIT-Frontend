@@ -1,6 +1,6 @@
 .digit-card-textarea,
 .digit-employee-card-textarea {
-  @apply block outline-none  w-full bg-white text-form-field p-sm;
+  @apply block outline-none  w-full bg-white text-form-field;
 
 
   font-family: theme(digitv2.fontFamily.sans);
@@ -8,15 +8,20 @@
   font-style: theme(digitv2.fontStyle.normal);
   font-weight: theme(digitv2.fontWeight.regular);
   line-height: 1.5rem;
-  padding: 0.75rem;
-  color: theme(digitv2.lightTheme.text-color-primary);
-  border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
+  padding: 0.75rem !important;
+  padding-top: 0.5rem !important;
+  color: theme(digitv2.lightTheme.text-primary);
+  border: 1px solid theme(digitv2.lightTheme.text-secondary);
   height: 6.25rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: pre-wrap;  
+  overflow-wrap: break-word; 
 
 
   &.disabled {
     @apply text-grey-dark !important;
-    border: 1px solid theme(digitv2.lightTheme.divider);
+    border: 1px solid theme(digitv2.lightTheme.generic-divider);
     pointer-events: none !important;
     cursor: not-allowed;            
 
@@ -24,13 +29,13 @@
 
   &.noneditable {
     pointer-events: none !important;
-    border: 1px solid theme(digitv2.lightTheme.input-border);
-    background: theme(digitv2.lightTheme.background);
-    color: theme(digitv2.lightTheme.text-color-secondary);
+    border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+    background: theme(digitv2.lightTheme.generic-background);
+    color: theme(digitv2.lightTheme.text-secondary);
   }
 
   &.error {
-    border: 1.5px solid theme(digitv2.alert.error);
+    border: 1.5px solid theme(digitv2.lightTheme.alert-error);
   }
 
   &.resize-smart{
@@ -38,8 +43,11 @@
     overflow: hidden;
     resize: none;
   }
-}
 
+  &:hover{
+    overflow-y: auto;
+  }
+}
 
 textarea::-webkit-scrollbar {
   width: 10px;
@@ -86,5 +94,6 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 .digit-card-textarea:focus,
 .digit-employee-card-textarea:focus {
-  border: 1.5px solid theme(digitv2.lightTheme.primary);
+  border: 1.5px solid theme(digitv2.lightTheme.primary-orange);
+  overflow-y: auto;
 }

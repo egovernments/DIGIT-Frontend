@@ -271,9 +271,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 input[readonly] {
-  background-color:  theme(digitv2.lightTheme.background);
-  border-color: theme(digitv2.lightTheme.text-color-secondary);
-  color: theme(digitv2.lightTheme.text-color-secondary);
+  background-color:  theme(digitv2.lightTheme.generic-background);
+  border-color: theme(digitv2.lightTheme.text-secondary);
+  color: theme(digitv2.lightTheme.text-secondary);
   --border-opacity: 1;
   border-color: #9E9E9E;
   border-color: rgba(158, 158, 158, var(--border-opacity));
