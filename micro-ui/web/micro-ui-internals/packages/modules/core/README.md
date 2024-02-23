@@ -78,6 +78,7 @@ and add its related functions
 ### Changelog
 
 ```bash
+1.8.1-beta.4 Added a null check for homescreen landing issue
 1.8.1-beta.3 User profile back button fixes for mobile view
 1.8.1-beta.2 User profile Save and change password button fixes for mobile view
 1.8.1-beta.1 Republished after merging with Master due to version issues.
