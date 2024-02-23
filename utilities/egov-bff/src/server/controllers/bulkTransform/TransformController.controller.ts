@@ -7,6 +7,8 @@ import { logger } from "../../utils/logger";
 
 
 import {
+    createAndUploadFile,
+    getBoundarySheetData,
     getSheetData, searchMDMS
 } from "../../api/index";
 
@@ -33,6 +35,7 @@ class TransformController {
     public intializeRoutes() {
         this.router.post(`${this.path}/_transform`, this.getTransformedData);
         this.router.post(`${this.path}/_process`, this.process);
+        this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
     }
     getTransformedData = async (
         request: express.Request,
@@ -60,7 +63,8 @@ class TransformController {
             return sendResponse(response, { updatedDatas }, request);
         }
         catch (error: any) {
-            return errorResponder({ message: error?.response?.data?.Errors[0].message }, request, response);
+            logger.error(String(error));
+            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
         }
     };
 
@@ -133,9 +137,25 @@ class TransformController {
             logger.info("Grouped Data : " + JSON.stringify(groupedData));
 
             return sendResponse(response, { updatedDatas: groupedData }, request);
-        } catch (e: any) {
-            logger.error("Error : " + JSON.stringify(e));
-            return errorResponder({ message: e?.response?.data?.Errors[0].message }, request, response);
+        } catch (error: any) {
+            logger.error(String(error));
+            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
+        }
+    };
+
+    getBoundaryData = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            const { hierarchyType, tenantId } = request?.body?.BoundaryDetails;
+            const boundarySheetData: any = await getBoundarySheetData(hierarchyType, tenantId, request);
+            const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
+            return sendResponse(response, { BoundaryFileDetails }, request);
+        }
+        catch (error: any) {
+            logger.error(String(error));
+            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
         }
     };
 

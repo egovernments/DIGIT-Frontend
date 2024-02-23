@@ -69,6 +69,10 @@ const config = {
     facilityHost: process.env.EGOV_FACILITY_HOST
       // || "http://localhost:8086/"
       || "https://unified-uat.digit.org/",
+    boundaryHost: process.env.EGOV_BOUNDARY_HOST
+      // || "http://localhost:8087/"
+      || "https://unified-dev.digit.org/",
+
   },
   paths: {
     filestore: process.env.FILE_STORE_SERVICE_END_POINT
@@ -81,7 +85,11 @@ const config = {
     idGen: process.env.EGOV_IDGEN_PATH
       || "egov-idgen/id/_generate",
     mdmsSchema: process.env.EGOV_MDMS_SCHEMA_PATH
-      || "egov-mdms-service/schema/v1/_search"
+      || "egov-mdms-service/schema/v1/_search",
+    boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
+      || "boundary-service/boundary-relationships/_search",
+    boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
+      || "boundary-service/boundary-hierarchy-definition/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE

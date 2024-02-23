@@ -496,6 +496,136 @@ async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any)
   return responseData;
 }
 
+function generateHierarchyList(data: any[], parentChain: any = []) {
+  let result: any[] = [];
+
+  // Iterate over each boundary in the current level
+  for (let boundary of data) {
+    let currentChain = [...parentChain, boundary.code];
+
+    // Add the current chain to the result
+    result.push(currentChain.join(','));
+
+    // If there are children, recursively call the function
+    if (boundary.children.length > 0) {
+      let childResults = generateHierarchyList(boundary.children, currentChain);
+      result = result.concat(childResults);
+    }
+  }
+
+  return result;
+}
+
+function generateHierarchy(boundaries: any[]) {
+  // Create an object to store boundary types and their parents
+  const parentMap: any = {};
+
+  // Populate the object with boundary types and their parents
+  for (const boundary of boundaries) {
+    parentMap[boundary.boundaryType] = boundary.parentBoundaryType;
+  }
+
+  // Traverse the hierarchy to generate the hierarchy list
+  const hierarchyList = [];
+  for (const boundaryType in parentMap) {
+    if (Object.prototype.hasOwnProperty.call(parentMap, boundaryType)) {
+      const parentBoundaryType = parentMap[boundaryType];
+      if (parentBoundaryType === null) {
+        // This boundary type has no parent, add it to the hierarchy list
+        hierarchyList.push(boundaryType);
+        // Traverse its children recursively
+        traverseChildren(boundaryType, parentMap, hierarchyList);
+      }
+    }
+  }
+
+  return hierarchyList;
+}
+
+function traverseChildren(parent: any, parentMap: any, hierarchyList: any[]) {
+  for (const boundaryType in parentMap) {
+    if (Object.prototype.hasOwnProperty.call(parentMap, boundaryType)) {
+      const parentBoundaryType = parentMap[boundaryType];
+      if (parentBoundaryType === parent) {
+        // This boundary type has the current parent, add it to the hierarchy list
+        hierarchyList.push(boundaryType);
+        // Traverse its children recursively
+        traverseChildren(boundaryType, parentMap, hierarchyList);
+      }
+    }
+  }
+}
+
+const getHierarchy = async (hierarchyType: any, tenantId: any, request: any) => {
+  const url = `${config.host.boundaryHost}${config.paths.boundaryHierarchy}`;
+
+  // Create request body
+  const requestBody = {
+    "RequestInfo": request?.body?.RequestInfo,
+    "BoundaryTypeHierarchySearchCriteria": {
+      "tenantId": tenantId,
+      "limit": 5,
+      "offset": 0,
+      "hierarchyType": hierarchyType
+    }
+  };
+
+  try {
+    // Make API call using httpRequest function
+    const response = await httpRequest(url, requestBody);
+
+    // Extract data from the response as needed
+    const boundaryList = response?.BoundaryHierarchy?.[0].boundaryHierarchy; // Assuming the response has a field named boundaryList
+    return generateHierarchy(boundaryList);
+  } catch (error) {
+    // Handle errors
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+
+
+async function createExcelSheet(data: any, headers: any) {
+  const workbook = XLSX.utils.book_new();
+  const sheetName = 'Sheet1';
+  const sheetData = [headers, ...data.map((row: any) => [...row, ''])]; // Adding empty Boundary Code column
+
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  XLSX.utils.book_append_sheet(workbook, ws, sheetName);
+  return { wb: workbook, ws: ws, sheetName: sheetName }
+}
+
+async function getBoundarySheetData(hierarchyType: any, tenantId: any, request: any) {
+  const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
+  const params = {
+    "tenantId": tenantId,
+    "hierarchyType": hierarchyType,
+    "includeChildren": true
+  }
+  const response = await httpRequest(url, request.body, params);
+  if (response?.TenantBoundary?.[0]?.boundary) {
+    const boundaryList = generateHierarchyList(response?.TenantBoundary?.[0]?.boundary)
+    if (Array.isArray(boundaryList) && boundaryList.length > 0) {
+      const hierarchy = await getHierarchy(hierarchyType, tenantId, request);
+      const headers = [...hierarchy, 'Boundary Code', "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+      const data = boundaryList.map(boundary => {
+        const boundaryParts = boundary.split(',');
+        const rowData = [];
+        for (let i = 0; i < boundaryParts.length; i++) {
+          rowData.push(boundaryParts[i]);
+        }
+        return rowData;
+      });
+      return await createExcelSheet(data, headers);
+    }
+  }
+  return { wb: null, ws: null, sheetName: null }; // Return null if no data found
+}
+
+
+
+
 async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, request: any) {
   try {
     const fileUrl = `${config.host.filestore}${config.paths.filestore}/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
@@ -556,6 +686,9 @@ async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, 
     logger.error('Error fetching file information:' + JSON.stringify(error));
   }
 }
+
+
+
 
 
 
@@ -668,5 +801,7 @@ export {
   getResouceNumber,
   getCount,
   processCreateData,
-  updateFile
+  updateFile,
+  getBoundarySheetData,
+  createAndUploadFile
 };
