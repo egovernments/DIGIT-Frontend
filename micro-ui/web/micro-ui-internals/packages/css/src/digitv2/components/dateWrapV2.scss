@@ -11,7 +11,7 @@
     @apply mb-lg pl-sm outline-none block w-full h-10 bg-white leading-10 text-form-field;
     width: calc(100%-62px);
     padding-right: 9px;
-    border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
-    color: theme(digitv2.lightTheme.text-color-primary);
+    border: 1px solid theme(digitv2.lightTheme.text-secondary);
+    color: theme(digitv2.lightTheme.text-primary);
   }
 }

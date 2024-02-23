@@ -37,7 +37,7 @@
 
     &.disabled {
       .digit-radio-btn-checkmark {
-        border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+        border: 1px solid theme(digitv2.lightTheme.text-disabled);
         background-color: theme(digitv2.lightTheme.paper-secondary);
       }
     }
@@ -45,7 +45,7 @@
 
     &.preselected {
       .digit-radio-btn-checkmark {
-        border: 2px solid theme(digitv2.lightTheme.text-color-disabled);
+        border: 2px solid theme(digitv2.lightTheme.text-disabled);
       }
 
       pointer-events: none !important;
@@ -54,7 +54,7 @@
     &.disabled,
     &.preselected {
       label {
-        color: theme(digitv2.lightTheme.text-color-disabled);
+        color: theme(digitv2.lightTheme.text-disabled);
       }
     }
 
@@ -70,10 +70,9 @@
   }
 
   label {
-    @extend .light-text-color-primary;
-    @apply text-text-primary;
     font-size: 16px;
     line-height: 19px;
+    color:theme(digitv2.lightTheme.text-primary);
   }
 
   .digit-radio-btn-checkmark:after {
@@ -81,7 +80,7 @@
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
-    border: 2px solid theme(digitv2.lightTheme.primary);
+    border: 2px solid theme(digitv2.lightTheme.primary-orange);
   }
 
   .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
@@ -91,14 +90,14 @@
   }
 
   .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
-    border: 2px solid theme(digitv2.lightTheme.divider);
+    border: 2px solid theme(digitv2.lightTheme.generic-divider);
   }
 
   .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
     @apply block h-3 w-3 rounded-full absolute;
     top: 25%;
     left: 25%;
-    background-color: theme(digitv2.lightTheme.text-color-disabled);
+    background-color: theme(digitv2.lightTheme.text-disabled);
   }
 }
 

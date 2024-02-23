@@ -36,6 +36,14 @@ const TextField = (props) => {
     props.dropdownDisplay(false);
   }
 
+  const replaceDotWithColon = (inputString) => {
+    if (props?.variant === "nesteddropdown" && inputString) {
+      const updatedInputString = inputString.replace(".", ":");
+      return updatedInputString;
+    }
+    return inputString;
+  };
+
   /* Custom function to scroll and select in the dropdowns while using key up and down */
   const keyChange = (e) => {
     if (e.key == "ArrowDown") {
@@ -65,7 +73,7 @@ const TextField = (props) => {
       ref={props.inputRef}
       className={`digit-employee-select-wrap--elipses ${props.disable && "disabled"}`}
       type="text"
-      value={value}
+      value={replaceDotWithColon(value)}
       onChange={inputChange}
       onClick={props.onClick}
       onFocus={broadcastToOpen}
@@ -211,7 +219,7 @@ const Dropdown = (props) => {
 
   const renderOption = (option, index) => {
     const handleMouseDown = (e) => {
-      if(e.button === 0 ) setIsActive(index);
+      if (e.button === 0) setIsActive(index);
     };
     const handleMouseUp = () => {
       setIsActive(-1);
@@ -241,12 +249,21 @@ const Dropdown = (props) => {
           />
         ) : null}
         <div className="option-des-container">
-          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%",minHeight:"18px" }}>
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%", minHeight: "18px" }}>
             {props?.showIcon && option?.icon && IconRender(option?.icon, index === isActive)}
             {props.isPropertyAssess ? (
               <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
             ) : (
-              <span style={{ width: "100%", minHeight:"18px",overflow:"hidden",whiteSpace:"nowrap",lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px" }}>
+              <span
+                style={{
+                  width: "100%",
+                  minHeight: "18px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px",
+                  fontSize: props.variant === "nestedtextdropdown" || props.varinat === "profilenestedtext" ? "16px" : "14px"
+                }}
+              >
                 {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}
               </span>
             )}
@@ -302,6 +319,7 @@ const Dropdown = (props) => {
           }
         >
           <TextField
+            variant={props?.variant}
             isSearchable={props?.isSearchable}
             autoComplete={props.autoComplete}
             setFilter={setFilter}

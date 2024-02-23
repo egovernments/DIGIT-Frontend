@@ -15,12 +15,12 @@
 
     span {
       text-align: center;
-      color: theme(digitv2.lightTheme.paper);
+      color: theme(digitv2.lightTheme.paper-primary);
     }
 
     .secondary-color {
       padding: 5px;
-      color: theme(digitv2.lightTheme.text-color-secondary);
+      color: theme(digitv2.lightTheme.text-secondary);
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 16px;
       font-weight: theme(digitv2.fontWeight.regular);
@@ -30,7 +30,7 @@
       height: 24px;
 
       &.text-active {
-        color: theme(digitv2.lightTheme.text-color-primary);
+        color: theme(digitv2.lightTheme.text-primary);
 
         font-weight: 700;
         line-height: 19px;
@@ -51,7 +51,7 @@
   .circle {
     width: 32px;
     height: 32px;
-    background-color: theme(digitv2.lightTheme.text-color-disabled);
+    background-color: theme(digitv2.lightTheme.text-disabled);
     border-radius: 50%;
     text-align: center;
     display: flex;
@@ -61,8 +61,8 @@
   }
 
   .active {
-    background-color: theme(digitv2.lightTheme.primary);
-    border-color: theme(digitv2.lightTheme.primary);
+    background-color: theme(digitv2.lightTheme.primary-orange);
+    border-color: theme(digitv2.lightTheme.primary-orange);
     font-weight: 700;
   }
 }

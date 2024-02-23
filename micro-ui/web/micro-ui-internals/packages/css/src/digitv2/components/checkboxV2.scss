@@ -39,7 +39,7 @@
   }
 
   input:checked~.digit-custom-checkbox {
-    border: 2px solid theme(digitv2.lightTheme.primary);
+    border: 2px solid theme(digitv2.lightTheme.primary-orange);
   }
 
 
@@ -64,15 +64,15 @@
 
   &.disabled {
     .label {
-      color: theme(digitv2.lightTheme.text-color-disabled);
+      color: theme(digitv2.lightTheme.text-disabled);
     }
 
     .digit-custom-checkbox{
-      border: 1px solid theme(digitv2.lightTheme.text-color-disabled);
+      border: 1px solid theme(digitv2.lightTheme.text-disabled);
     }
 
     input:checked~.digit-custom-checkbox {
-      border: 2px solid theme(digitv2.lightTheme.text-color-disabled);
+      border: 2px solid theme(digitv2.lightTheme.text-disabled);
     }
   }
 }

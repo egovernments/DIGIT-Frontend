@@ -125,6 +125,8 @@ const FieldV1 = ({
             customIcon={populators?.customIcon}
             customClass={populators?.customClass}
             onIconSelection={populators?.onIconSelection}
+            editableDate={populators?.editableDate}
+            editableTime={populators?.editableTime}
           />
         );
       case "textarea":

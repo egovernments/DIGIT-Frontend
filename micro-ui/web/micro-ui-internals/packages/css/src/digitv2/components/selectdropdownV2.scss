@@ -6,17 +6,17 @@
   .digit-select {
     @extend .light-input-border;
     @apply relative block w-full h-10 bg-white;
-    border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
+    border: 1px solid theme(digitv2.lightTheme.text-secondary);
 
     &.digit-field-error {
       border: 1px solid;
-      border-color: theme(digitv2.alert.error);
+      border-color: theme(digitv2.lightTheme.alert-error);
     }
 
     &.disabled {
       pointer-events: none !important;
-      border: 1px solid theme(digitv2.lightTheme.divider) !important;
-      color: theme(digitv2.lightTheme.divider) !important;
+      border: 1px solid theme(digitv2.lightTheme.generic-divider) !important;
+      color: theme(digitv2.lightTheme.generic-divider) !important;
     }
 
 
@@ -25,9 +25,12 @@
       @extend .light-text-color-primary;
       width: calc(100% - 32px);
       background-color: transparent;
-      @apply absolute z-10 w-full h-full outline-none text-text-primary pl-sm;
+      @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
+      padding-top:8px;
+      padding-bottom: 8px;
+      padding-left:12px;
     }
 
     p {
@@ -55,9 +58,12 @@
       width: calc(100% - 32px);
       background-color: transparent;
 
-      @apply absolute z-10 w-full h-full outline-none text-text-primary pl-sm;
+      @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
+      padding-top:8px;
+      padding-bottom: 8px;
+      padding-left:12px;
     }
 
     p {
@@ -84,7 +90,6 @@
     max-height: 440px;
     overflow-y: auto;
     overflow-x: hidden;
-    margin-top: 2px;
     @apply absolute z-20 bg-white max-w-full;
 
     p {
@@ -135,7 +140,7 @@
 
 .digit-category-name {
   @apply flex items-center font-bold;
-  color: theme(digitv2.lightTheme.text-color-secondary);
+  color: theme(digitv2.lightTheme.text-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
   font-style: theme(digitv2.fontStyle.normal);
@@ -149,7 +154,7 @@
 .profile-dropdown--item {
 
   min-height: 39px;
-  color: theme(digitv2.lightTheme.text-color-primary) !important;
+  color: theme(digitv2.lightTheme.text-primary) !important;
 
   .profile-icon-container {
     flex-shrink: 0;
@@ -169,7 +174,7 @@
 
 
     .option-description {
-      color: theme(digitv2.lightTheme.text-color-secondary);
+      color: theme(digitv2.lightTheme.text-secondary);
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 0.75rem;
       font-style: theme(digitv2.fontStyle.normal);
@@ -197,7 +202,7 @@
       bottom: 0;
       left: 10px;
       right: 10px;
-      border-bottom: 1px solid theme(digitv2.lightTheme.divider);
+      border-bottom: 1px solid theme(digitv2.lightTheme.generic-divider);
     }
 
     &:hover,
@@ -210,15 +215,15 @@
 
   &:hover {
     background: #FFFAF7 !important;
-    border: 0.5px solid theme(digitv2.lightTheme.primary);
+    border: 0.5px solid theme(digitv2.lightTheme.primary-orange);
   }
 
   &:active {
-    background: theme(digitv2.lightTheme.primary) !important;
+    background: theme(digitv2.lightTheme.primary-orange) !important;
 
     span,
     .option-description {
-      color: theme(digitv2.lightTheme.paper);
+      color: theme(digitv2.lightTheme.paper-primary);
     }
 
     .svg {
@@ -235,7 +240,7 @@
     padding: 8px 10px 8px 10px;
 
     &:hover {
-      border: 1px solid theme(digitv2.lightTheme.primary);
+      border: 1px solid theme(digitv2.lightTheme.primary-orange);
     }
 
     .option-des-container{
@@ -251,6 +256,7 @@
   &.profilenestedtext {
     min-height: 76px;
     padding: 8px 16px;
+    gap:16px;
   }
 }
 
@@ -286,22 +292,25 @@
   .digit-select {
     @extend .light-input-border;
     @apply relative block w-full h-10;
-    border: 1px solid theme(digitv2.lightTheme.text-color-secondary);
+    border: 1px solid theme(digitv2.lightTheme.text-secondary);
 
     input[type="text"] {
       @extend .light-text-color-primary;
       width: calc(100% - 32px);
       background-color: transparent;
-      @apply absolute z-10 w-full h-full outline-none text-text-primary pl-sm;
+      @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
+      padding-top:8px;
+      padding-bottom: 8px;
+      padding-left:12px;
     }
 
 
     &.disabled {
       pointer-events: none !important;
-      border: 1px solid theme(digitv2.lightTheme.divider) !important;
-      color: theme(digitv2.lightTheme.divider) !important;
+      border: 1px solid theme(digitv2.lightTheme.generic-divider) !important;
+      color: theme(digitv2.lightTheme.generic-divider) !important;
     }
 
     p {
@@ -327,9 +336,12 @@
       @extend .light-text-color-primary;
       width: calc(100% - 32px);
       background-color: transparent;
-      @apply absolute z-10 w-full h-full outline-none text-text-primary pl-sm;
+      @apply absolute z-10 w-full h-full outline-none text-text-primary ;
       line-height: 24px;
       font-size: 16px;
+      padding-top:8px;
+      padding-bottom: 8px;
+      padding-left:12px;
     }
 
     p {
@@ -353,7 +365,7 @@
   .digit-options-card {
     width: 100% !important;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
-    @apply absolute z-20 mt-xs bg-white;
+    @apply absolute z-20 bg-white;
     max-height: 25vmax;
     overflow-y: auto;
     overflow-x: hidden;
