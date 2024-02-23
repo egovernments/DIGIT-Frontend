@@ -201,6 +201,25 @@
     }
   }
 
+  &.editableTime{
+    input[type="time"]:in-range::-webkit-datetime-edit,
+    input[type="time"]:disabled::-webkit-datetime-edit{
+      display: block !important;
+    }
+    input[type="time"][value=""]:not(:placeholder-shown)::before {
+      display: none !important;
+    }
+  }
+
+  &.editableDate{
+    input[type="date"]:in-range::-webkit-datetime-edit,
+    input[type="date"]:disabled::-webkit-datetime-edit{
+      display: block !important;
+    }
+    input[type="date"][value=""]:not(:placeholder-shown)::before{
+      display: none !important;
+    }
+  }
 }
 
 

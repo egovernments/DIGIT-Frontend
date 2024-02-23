@@ -24,7 +24,7 @@ const TextInput = (props) => {
 
   const decrementCount = () => {
     const newValue = Math.max(Number(props.value) - (Number(props?.step) ? Number(props?.step) : 1), 0);
-    props.onChange(newValue)
+    props.onChange(newValue);
   };
 
   const renderPrefix = () => {
@@ -68,7 +68,7 @@ const TextInput = (props) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          props.onChange(`${latitude}, ${longitude}`)
+          props.onChange(`${latitude}, ${longitude}`);
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -84,7 +84,13 @@ const TextInput = (props) => {
     const iconFill = props?.disabled ? "#D6D5D4" : props?.nonEditable ? "#b1b4b6" : "#505A5F";
     if (reqIcon) {
       if (reqIcon === "geolocation") {
-        return <SVG.MyLocation fill={iconFill} onClick={props?.onIconSelection ? props?.onIconSelection : handleLocationClick} className="digit-text-input-customIcon" />;
+        return (
+          <SVG.MyLocation
+            fill={iconFill}
+            onClick={props?.onIconSelection ? props?.onIconSelection : handleLocationClick}
+            className="digit-text-input-customIcon"
+          />
+        );
       } else if (reqIcon === "text" && visibility) {
         return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
       } else if (reqIcon === "password") {
@@ -118,6 +124,18 @@ const TextInput = (props) => {
 
   const icon = renderIcon();
 
+  const openPicker = () => {
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelector('input[type="date"]').addEventListener("click", (event) => {
+        try {
+          event.target.showPicker();
+        } catch (error) {
+          window.alert(error);
+        }
+      });
+    });
+  };
+
   const inputClassNameForMandatory = `${user_type ? "digit-employee-card-input-error" : "digit-card-input-error"} ${
     props.disabled ? "disabled" : ""
   } ${props.customClass || ""} ${props.nonEditable ? "noneditable" : ""}  ${props.type === "numeric" ? "numeric" : ""}`;
@@ -126,18 +144,20 @@ const TextInput = (props) => {
     props.errorStyle ? "digit-employee-card-input-error" : ""
   } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
-  const inputContainerClass = `input-container ${props.type ? props.type : ''} ${props.populators?.customIcon ? 'withIcon' : ''}`;
+  const inputContainerClass = `input-container ${props.type ? props.type : ""} ${props.populators?.customIcon ? "withIcon" : ""}`;
 
   return (
     <React.Fragment>
       <div
         className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${
           props.disabled ? "disabled" : ""
-        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props?.type ? props?.type : ""} ${props?.populators?.prefix ? "prefix" : ""} ${props?.populators?.suffix ? "suffix" : ""}`} 
+        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props?.type ? props?.type : ""} ${
+          props?.populators?.prefix ? "prefix" : ""
+        } ${props?.populators?.suffix ? "suffix" : ""} ${props?.editableTime ? "editableTime" : ""} ${props?.editableDate ? "editableDate" : ""}`}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
         {props.required ? (
-          <div className={inputContainerClass} >
+          <div className={inputContainerClass}>
             {renderPrefix()}
             <input
               type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
@@ -152,8 +172,8 @@ const TextInput = (props) => {
                   }
                 }
                 if (props?.type === "numeric") {
-                  event.target.value = event.target.value.replace(/[^0-9]/g, '');
-                } 
+                  event.target.value = event.target.value.replace(/[^0-9]/g, "");
+                }
                 if (props?.onChange) {
                   props?.onChange(event);
                 }
@@ -181,6 +201,7 @@ const TextInput = (props) => {
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
+              onclick={(props.type === "date" && !props?.editableDate) || (props.type === "time" && !props?.editableTime) ? openPicker() : null}
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -190,7 +211,6 @@ const TextInput = (props) => {
               </span>
             )}
           </div>
-
         ) : (
           <div className={inputContainerClass}>
             {renderPrefix()}
@@ -207,7 +227,7 @@ const TextInput = (props) => {
                   }
                 }
                 if (props?.type === "numeric") {
-                  event.target.value = event.target.value.replace(/[^0-9]/g, '');
+                  event.target.value = event.target.value.replace(/[^0-9]/g, "");
                 }
                 if (props?.onChange) {
                   props?.onChange(event);
@@ -242,6 +262,7 @@ const TextInput = (props) => {
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
+              onClick={(props.type === "date" && !props?.editableDate) || (props.type === "time" && !props?.editableTime) ? openPicker() : null}
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -299,7 +320,7 @@ TextInput.propTypes = {
 
 TextInput.defaultProps = {
   required: false,
-  charCount: false
+  charCount: false,
 };
 
 function DatePicker(props) {
