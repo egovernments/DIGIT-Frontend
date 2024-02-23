@@ -81,7 +81,6 @@ class genericAPIController {
         }
     };
 
-
     validateData = async (
         request: express.Request,
         response: express.Response
@@ -101,8 +100,6 @@ class genericAPIController {
             return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
         }
     };
-
-
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {

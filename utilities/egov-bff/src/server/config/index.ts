@@ -97,7 +97,8 @@ const config = {
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
     },
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
-  }
+  },
+   SEARCH_TEMPLATE : "HCM.APIResourceTemplate3"
 };
 
 export { getErrorCodes };

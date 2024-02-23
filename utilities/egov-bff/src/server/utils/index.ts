@@ -576,7 +576,7 @@ async function callSearchApi(request: any, response: any) {
   try {
     let result: any;
     const { type } = request.query;
-    result = await searchMDMS([type], "HCM.APIResourceTemplate3", request.body.RequestInfo, response);
+    result = await searchMDMS([type], config.SEARCH_TEMPLATE, request.body.RequestInfo, response);
     const requestBody = { "RequestInfo": request?.body?.RequestInfo };
     const responseData = result?.mdms?.[0]?.data;
     if (!responseData || responseData.length === 0) {
@@ -638,7 +638,8 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     const generatedResource: any = { generatedResource: newEntryResponse }
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
     const responseDatas = await callSearchApi(request, response);
-    const result = await generateXlsxFromJson(request, response, responseDatas);
+    const modifiedDatas = await modifyData(request, response, responseDatas);
+    const result = await generateXlsxFromJson(request, response, modifiedDatas);
     const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
     const generatedResourceNew: any = { generatedResource: finalResponse }
     produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
@@ -646,6 +647,43 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     throw error;
   }
 }
+async function modifyData(request: any, response: any, responseDatas: any) {
+  try {
+    let result: any;
+    const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+    const { type } = request.query;
+    result = await searchMDMS([type], config.SEARCH_TEMPLATE, request.body.RequestInfo, response);
+    const modifiedParsingTemplate = result?.mdms?.[0]?.data?.modificationParsingTemplateName;
+    if (!request.body.HCMConfig) {
+      request.body.HCMConfig = {};
+    }
+    const batchSize = 50;
+    const totalBatches = Math.ceil(responseDatas.length / batchSize);
+    const allUpdatedData = [];
+
+    for (let i = 0; i < totalBatches; i++) {
+      const batchData = responseDatas.slice(i * batchSize, (i + 1) * batchSize);
+      const batchRequestBody = { ...request.body };
+      batchRequestBody.HCMConfig.parsingTemplate = modifiedParsingTemplate;
+      batchRequestBody.HCMConfig.data = batchData;
+
+      try {
+        const processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}/bulk/_process`, batchRequestBody, undefined, undefined, undefined, undefined);
+        if (processResult.Error) {
+          throw new Error(processResult.Error);
+        }
+        allUpdatedData.push(...processResult.updatedDatas);
+      } catch (error: any) {
+        throw error;           
+      }
+    }
+    return allUpdatedData;
+  }
+  catch (e: any){
+   throw e;
+  }
+}
+
 
 function isEpoch(value: any): boolean {
   // Check if the value is a number
@@ -879,5 +917,6 @@ export {
   getFinalUpdatedResponse,
   fullProcessFlowForNewEntry,
   processValidationResultsAndSendResponse,
-  fetchDataAndUpdate
+  fetchDataAndUpdate,
+  modifyData
 };
