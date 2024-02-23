@@ -15,15 +15,15 @@ export default (queryClient) => {
       queryClient,
     },
   });
-  // registerApplication({
-  //   name: "Common",
-  //   app: () => import("common/CommonModule"),
-  //   activeWhen: "/workbench-ui/employee/common",
-  //   customProps: {
-  //     title: "Common Module is running on host",
-  //     queryClient,
-  //   },
-  // });
+  registerApplication({
+    name: "Common",
+    app: () => import("common/CommonModule"),
+    activeWhen: "/workbench-ui/employee/common",
+    customProps: {
+      title: "Common Module is running on host",
+      queryClient,
+    },
+  });
 
   // registerApplication({
   //   name: "app1",
