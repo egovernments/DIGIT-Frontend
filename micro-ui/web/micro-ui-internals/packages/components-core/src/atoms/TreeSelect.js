@@ -3,8 +3,10 @@ import { SVG } from "./SVG";
 
 const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level = 0 }) => {
   const [isExpanded, setExpanded] = useState(false);
-  const handleToggleDropdown = () => {
-    setExpanded(!isExpanded);
+const handleToggleDropdown = () => {
+    if(option.options){
+      setExpanded(!isExpanded);
+    }
   };
   const handleSelect = () => {
     if (!option.options) {
@@ -14,8 +16,8 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
 
   return (
     <div style={{ marginLeft: `${level * 20}px`, borderLeft: "1px solid #D6D5D4" }}>
-      <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
-          <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
+      <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`} onClick={handleToggleDropdown}>
+          <div className="digit-toggle-dropdown">
             {isExpanded ? (
               <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" }/>
             ) : (

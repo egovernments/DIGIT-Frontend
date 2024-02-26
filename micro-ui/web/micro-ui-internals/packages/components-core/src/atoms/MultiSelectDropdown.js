@@ -131,7 +131,7 @@ const MultiSelectDropdown = ({
 
   const replaceDotWithColon = (inputString) => {
     if (inputString) {
-      const updatedInputString = inputString.replace(".", ":");
+      const updatedInputString = inputString.replace(/\./g, ":");
       return updatedInputString;
     }
   };

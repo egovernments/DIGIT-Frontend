@@ -37,8 +37,8 @@ const TextField = (props) => {
   }
 
   const replaceDotWithColon = (inputString) => {
-    if (props?.variant === "nesteddropdown" && inputString) {
-      const updatedInputString = inputString.replace(".", ":");
+    if (props?.variant === "nesteddropdown" || props?.variant === "treedropdown" && inputString) {
+      const updatedInputString = inputString.replace(/\./g, ":");
       return updatedInputString;
     }
     return inputString;
