@@ -4,12 +4,11 @@ import {
   } from "@egovernments/digit-ui-react-components";
   import React, { useState, useEffect } from "react";
   import { useTranslation } from "react-i18next";
-
-  // Define default values for search fields
+  
   const defaultSearchValues = {
     individualName: "",
     mobileNumber: "",
-    individualId: ""
+    IndividualID: ""
   };
 
   export const searchconfig = () => 
@@ -82,12 +81,15 @@ import {
           uiConfig: {
             columns: [
               {
-                label: "Individual ID",
-                jsonPath: "individualId"
+                label: "IndividualID",
+                jsonPath: "individualId",
+                "additionalCustomization": true
               },
+              
               {
                 label: "Name",
-                jsonPath: "name.givenName"
+                jsonPath: "name.givenName",
+                
               },
               {
                 label: "Address",

@@ -14,29 +14,14 @@ const SampleCard = () => {
     ],
     links: [
    
+     
       {
-        label: t("Create"),
-        link: `/${window?.contextPath}/employee/sample/create`,
-      },
-      {
-        label: t("Inbox"),
-        link: `/${window?.contextPath}/employee/sample/inbox`,
-      },
-      {
-        label: t("Search"),
-        link: `/${window?.contextPath}/employee/sample/search`,
-      },
-      {
-        label: t("Advanced Form"),
-        link: `/${window?.contextPath}/employee/sample/advanced`,
-      },
-      {
-        label: t("Search individual"),
+        label: t("Sample Search"),
         link: `/${window?.contextPath}/employee/sample/search-individual`,
 
       },
       {
-        label: t("Create Individual"),
+        label: t("Sample Create"),
         link: `/${window?.contextPath}/employee/sample/create-individual`,
 
       },
