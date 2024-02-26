@@ -53,6 +53,7 @@ const DatePicker = (props) => {
           min={props.min}
           max={props.max}
           required={props.isRequired || false}
+          onBlur={props.onBlur}
         />
       </React.Fragment>
     </div>

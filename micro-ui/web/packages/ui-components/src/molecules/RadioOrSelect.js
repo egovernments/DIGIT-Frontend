@@ -14,11 +14,10 @@ const RadioOrSelect = ({
   isDependent = false,
   disabled = false,
   optionCardStyles,
-  isPTFlow = false,
+  isPTFlow=false,
   isDropDown = false,
   innerStyles = {},
-  inputStyle = {},
-  style = {},
+  inputStyle = {}
 }) => {
   return (
     <React.Fragment>
@@ -35,7 +34,6 @@ const RadioOrSelect = ({
           t={t}
           innerStyles={innerStyles}
           inputStyle={inputStyle}
-          style={style}
         />
       ) : (
         <Dropdown

@@ -21,7 +21,7 @@ const Toast = (props) => {
           {!props?.isWarningButtons ?
             <div className="toast-success" style={{ backgroundColor: "#EA8A3B", ...props.style }}>
               <ErrorIcon />
-              <h2 style={{ marginLeft: "10px" ,display: "contents"}}>{props.label}</h2>
+              <h2 style={{ marginLeft: "10px" }}>{props.label}</h2>
               {props.isDleteBtn ? <DeleteBtn fill="none" className="toast-close-btn" onClick={props.onClose} /> : null}
             </div> : <div style={{ display: "flex" }}>
               <ErrorIcon />
@@ -44,7 +44,7 @@ const Toast = (props) => {
     <div className="toast-success" style={{ ...props.style }}>
       <RoundedCheck />
       <h2>{props.label}</h2>
-      { props.isDleteBtn ? <DeleteBtn fill="none" className="toast-close-btn" onClick={props.onClose} /> : null}
+      <DeleteBtn fill="none" className="toast-close-btn" onClick={props.onClose} />
     </div>
   );
 };
@@ -52,13 +52,13 @@ const Toast = (props) => {
 Toast.propTypes = {
   label: PropTypes.string,
   onClose: PropTypes.func,
-  isDleteBtn: PropTypes.string
+  isDleteBtn: PropTypes.bool
 };
 
 Toast.defaultProps = {
   label: "",
   onClose: undefined,
-  isDleteBtn: ""
+  isDleteBtn: false
 };
 
 export default Toast;

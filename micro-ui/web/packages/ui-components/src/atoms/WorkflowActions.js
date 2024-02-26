@@ -13,7 +13,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
   const { estimateNumber } = Digit.Hooks.useQueryParams();
   applicationNo = applicationNo ? applicationNo : estimateNumber 
 
-  const { mutate } = Digit.Hooks.works.useUpdateCustom(url)
+  const { mutate } = Digit.Hooks.useUpdateCustom(url)
 
   const [displayMenu,setDisplayMenu] = useState(false)
   const [showModal,setShowModal] = useState(false)
@@ -26,7 +26,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
   const { t } = useTranslation();
   let user = Digit.UserService.getUser();
 
-  let workflowDetails = Digit.Hooks.useWorkflowDetailsFSM(
+  let workflowDetails = Digit.Hooks.useWorkflowDetailsV2(
     {
       tenantId: tenantId,
       id: applicationNo,

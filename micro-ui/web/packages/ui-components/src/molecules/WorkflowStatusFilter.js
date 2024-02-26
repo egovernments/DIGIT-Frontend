@@ -16,24 +16,24 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse }) 
        return {
          uuid:row.statusid,
          state: row.state || row.applicationstatus,
-         businessService:row?.businessservice,
-            count: row?.count,
+         businessService:row?.businessservice
        }
       }))
     }
   }, [inboxResponse])
+  
 
   if (!statusMap && !inboxResponse) return <Loader />;
 
   return (
     <>
-      {statusMap && statusMap.length > 0 && populators?.componentLabel && (
-        <CardLabel style={{ ...props.labelStyle, marginBottom: "0.4rem" }}>
-          {t(populators?.componentLabel)}
-          {populators?.isMandatory ? " * " : null}
-        </CardLabel>
-      )}
-      {statusMap?.map((row) => {
+
+{ statusMap&&statusMap.length>0&&populators?.componentLabel && (
+                  <CardLabel style={{...props.labelStyle,marginBottom:"0.4rem"}}>
+                    {t(populators?.componentLabel)}{ populators?.isMandatory ? " * " : null }
+                  </CardLabel>) 
+                }
+        {statusMap?.map((row) => {
         return (
           <CheckBox
             onChange={(e) => {
@@ -42,16 +42,15 @@ const WorkflowStatusFilter = ({ props, t, populators, formData,inboxResponse }) 
                 [e.target.value]: e.target.checked,
               };
               props.onChange(obj);
-              // TODO:: set formData in such a way that it's an array of objects instead of array of ids so that we are able to show removable crumbs for this
             }}
             value={row.uuid}
-            checked={formData?.[populators.name]?.[row.uuid] ? true : false}
-            label={`${t(Digit.Utils.locale.getTransformedLocale(`${populators.labelPrefix}${row?.businessService}_STATE_${row?.state}`))} (${row?.count || 0})`}
+            checked={formData?.[populators.name]?.[row.uuid]}
+            label={t(Digit.Utils.locale.getTransformedLocale(`${populators.labelPrefix}${row?.businessService}_STATE_${row?.state}`))}
           />
         );
       })}
     </>
-  );
+  )
 };
 
 export default WorkflowStatusFilter;

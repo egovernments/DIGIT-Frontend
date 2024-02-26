@@ -14,13 +14,13 @@ function isStartDateFocused(focusNumber) {
     return focusNumber === 0;
 }
 
-const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label, customStyles, inputRef}) => {
+const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyles, inputRef}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [focusedRange, setFocusedRange] = useState([0, 0]);
     const [selectionRange, setSelectionRange] = useState({
         ...values,
-        startDate: typeof values?.startDate === "string" ? new Date(values?.startDate) : values?.startDate,
-        endDate: typeof values?.endDate === "string" ? new Date(values?.endDate) : values?.endDate
+        startDate: values?.startDate,
+        endDate: values?.endDate
     });
     const wrapperRef = useRef(inputRef);
 
@@ -41,7 +41,7 @@ const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label,
             const startDate = selectionRange?.startDate;
             const endDate = selectionRange?.endDate;
             const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
-            const title = `${format(selectionRange?.startDate, 'dd/MM/yyyy')} - ${format(selectionRange?.endDate, 'dd/MM/yyyy')}`;
+            const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
             onFilterChange({ range: { startDate, endDate, duration, title }, requestDate: { startDate, endDate, duration, title } });
         }
     }, [selectionRange, isModalOpen]);
@@ -143,12 +143,12 @@ const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label,
                     <Calender className="cursorPointer" onClick={() => setIsModalOpen((prevState) => !prevState)} />
                 </div>
                 {isModalOpen && (
-                    <div className="options-card date-range" style={{ overflow: "visible", width: "unset"}}>
+                    <div className="options-card" style={{ overflow: "visible", width: "unset"}}>
                         <DateRange
                             className="pickerShadow"
                             focusedRange={focusedRange}
                             ranges={[selectionRange]}
-                            rangeColors={["#F47738"]}
+                            rangeColors={["#9E9E9E"]}
                             onChange={handleSelect}
                             onRangeFocusChange={setFocusedRange}
                             retainEndDateOnFirstSelection={true}
@@ -156,10 +156,6 @@ const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label,
                             staticRanges={staticRanges}
                             inputRanges={[]}
                             weekStartsOn={1}
-                            maxDate={populators?.maxDate}
-                            minDate={populators?.minDate}
-                            startDatePlaceholder={t("EVENTS_START_DATE_LABEL")}
-                            endDatePlaceholder={t("EVENTS_END_DATE_LABEL")}
                         />
                     </div>
                 )}

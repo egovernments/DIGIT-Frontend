@@ -1,8 +1,12 @@
 import React, {useState} from 'react'
 import { useTranslation } from 'react-i18next'
-import BreakLine from './BreakLine'
+
+
+
+
 const HorizontalNav = ({ configNavItems, activeLink, setActiveLink, showNav = false, children, customStyle = {}, customClassName = "", inFormComposer = true, navClassName = "", navStyles = {},fromSearchComp=false }) => {
     const { t } = useTranslation()
+
     const setActive = (item) => {
         setActiveLink(item.name)
     }

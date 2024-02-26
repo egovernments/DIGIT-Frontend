@@ -11,53 +11,35 @@ import MobileSearchComponent from "./MobileView/MobileSearchComponent";
 import MobileSearchResults from "./MobileView/MobileSearchResults";
 import MediaQuery from 'react-responsive';
 import _ from "lodash";
+import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
-import MobileSearchResultsv1 from "./MobileView/MobileSearchResultsv1";
-import RemovableTags from "./RemovableTags";
 
-function isFalsyOrEmpty(input) {
-    if (input === false) {
-      return true;
-    }
 
-    if(!input) {
-      return true;
-    }
-    
-    if (Array.isArray(input) && input.length === 0) {
-      return true;
-    }
-    
-    if (typeof input === 'object' && Object.keys(input).length === 0) {
-      return true;
-    }
-    
-    return false;
-  }
-
-const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
-    
-    const [session,setSession,clearSession] = browserSession || []
-   
-    const {t} = useTranslation()
-    const presets = Digit.Hooks.useQueryParams();
-    // if(Object.keys(presets).length > 0) configs = Digit.Utils.configUpdater(configs)
+const InboxSearchComposer = ({configs,headerLabel}) => {
+    const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
     const [state, dispatch] = useReducer(reducer, initialInboxState);
-    
+
     //for mobile view
     const [type, setType] = useState("");
     const [popup, setPopup] = useState(false);
    
     const apiDetails = configs?.apiDetails
 
-    const [activeLink,setActiveLink] = useState(configs?.sections?.search?.uiConfig?.configNavItems?.filter(row=>row.activeByDefault)?.[0])
-    
+    const mobileSearchSession = Digit.Hooks.useSessionStorage("MOBILE_SEARCH_MODAL_FORM", 
+        {}
+    );
+    const [sessionFormData, setSessionFormData, clearSessionFormData] = mobileSearchSession;
+
     //for mobile view
     useEffect(() => {
         if (type) setPopup(true);
       }, [type]);
+    
+    useEffect(()=>{
+        clearSessionFormData();
+    },[]);
     
     useEffect(() => {
         //here if jsonpaths for search & table are same then searchform gets overridden
@@ -80,47 +62,16 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
         if(Object.keys(state.tableForm)?.length >= 0) {
             _.set(apiDetails, apiDetails?.tableFormJsonPath, { ..._.get(apiDetails, apiDetails?.tableFormJsonPath, {}),...state.tableForm })  
         }
-        const searchFormParamCount = Object.keys(state.searchForm).reduce((count,key)=>isFalsyOrEmpty(state.searchForm[key])?count:count+1,0)
-        const filterFormParamCount = Object.keys(state.filterForm).reduce((count, key) =>isFalsyOrEmpty(state.filterForm[key]) ? count : count + 1, 0)
+        const searchFormParamCount = Object.keys(state.searchForm).reduce((count,key)=>state.searchForm[key]===""?count:count+1,0)
+        const filterFormParamCount = Object.keys(state.filterForm).reduce((count, key) => state.filterForm[key] === "" ? count : count + 1, 0)
         
-        if (Object.keys(state.tableForm)?.length > 0 && (searchFormParamCount >= ( activeLink ?activeLink?.minParametersForSearchForm : apiDetails?.minParametersForSearchForm) || filterFormParamCount >= apiDetails?.minParametersForFilterForm)){
+        if (Object.keys(state.tableForm)?.length > 0 && (searchFormParamCount >= apiDetails?.minParametersForSearchForm || filterFormParamCount >= apiDetails?.minParametersForFilterForm)){
             setEnable(true)
         }
 
         if(configs?.type === 'inbox' || configs?.type === 'download') setEnable(true)
 
     },[state])
-    
-    //adding this effect in case of screen refresh
-    useEffect(() => {
-        if(_.isEqual(state, initialInboxState)){
-            dispatch({
-                type:"obj",
-                updatedState:Object?.keys(session)?.length > 0 ? session : initialInboxState
-            })
-        } 
-    },[])
-
-    //adding another effect to sync session with state, the component invoking InboxSearchComposer will be passing session as prop
-    useEffect(() => {
-        // if(_.isEqual(state, initialInboxState)){
-        //     return 
-        // }
-        // if(_.isEqual(state, session)){
-        //     return 
-        // }
-        setSession(() => state)
-        // if(!_.isEqual(state, session)){
-        //     // setSession(()=>{
-        //     //     return {
-        //     //         ...state
-        //     //     }
-        //     // })
-        //     setSession(state)
-        // }
-        
-    },[state])
-
     
 
     let requestCriteria = {
@@ -133,51 +84,57 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
         state
     };
 
-    const updatedReqCriteria = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess(requestCriteria,configs?.sections?.search?.uiConfig?.defaultValues,activeLink?.name) : requestCriteria 
+    //clear the reducer state when user moves away from inbox screen(it already resets when component unmounts)(keeping this code here for reference)
+    // useEffect(() => {
+    //     return () => {
+    //         if (!window.location.href.includes("/inbox")) {
+                
+    //             dispatch({
+    //                 type: "clearSearchForm",
+    //                 state:  configs?.sections?.search?.uiConfig?.defaultValues 
+    //                 //need to pass form with empty strings 
+    //             })
+    //             dispatch({
+    //                 type: "clearFilterForm",
+    //                 state: configs?.sections?.filter?.uiConfig?.defaultValues 
+    //                 //need to pass form with empty strings 
+    //             })
+    //         }
+    //     };
+    // }, [location]);
+    
 
-    
-    const { isLoading, data, revalidate,isFetching } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
-    
+
+    const updatedReqCriteria = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess(requestCriteria,configs.additionalDetails) : requestCriteria 
+
+    if(configs.customHookName){
+        var { isLoading, data, revalidate,isFetching } = eval(`Digit.Hooks.${configs.customHookName}(updatedReqCriteria)`);
+    }
+    else {
+       var { isLoading, data, revalidate,isFetching } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+        
+    }
     
     useEffect(() => {
         return () => {
             revalidate();
             setEnable(false);
-            if(!location.pathname.includes("tqm") && Digit.Utils.tqm.isUlbAdminLoggedIn()){
-                sessionStorage.removeItem("Digit.TQM_INBOX_SESSION")
-            }
         };
-    });
+    })
 
     //for mobile view
     const handlePopupClose = () => {
         setPopup(false);
         setType("");
-    };
-
-    let fieldsForRemovableTags = []
-    if((configs?.type === 'inbox' || configs?.type === 'search') && (configs?.showAsRemovableTagsInMobile)){
-        if(configs?.sections?.search?.uiConfig?.fields) {
-            fieldsForRemovableTags = configs?.sections?.search?.uiConfig?.fields
-        }
-        if(configs?.sections?.filter?.uiConfig?.fields) {
-            fieldsForRemovableTags = [...fieldsForRemovableTags,...configs?.sections?.filter?.uiConfig?.fields]
-        }
     }
-    
-    useEffect(() => {
-        // Implement to scroll if scroll persistent is enabled 
-        window.scrollTo(0, scrollPosition)
-    })
 
     return (
         <InboxContext.Provider value={{state,dispatch}} >
-            {/* <Header className="works-header-search">{t(configs?.label)}</Header> */}
+                          {headerLabel&&<Header className="digit-form-composer-header">{ t(headerLabel)}</Header>}
             <div className="inbox-search-component-wrapper ">
             <div className={`sections-parent ${configs?.type}`}>
                 {
                     configs?.sections?.links?.show &&  
-                    <MediaQuery minWidth={426}>
                         <div className="section links">
                             <InboxSearchLinks 
                               headerText={configs?.sections?.links?.uiConfig?.label} 
@@ -186,11 +143,9 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                               logoIcon={configs?.sections?.links?.uiConfig?.logoIcon}
                             ></InboxSearchLinks>
                         </div>
-                    </MediaQuery>   
                 }
                 {
                     configs?.type === 'search' && configs?.sections?.search?.show &&
-                    <MediaQuery minWidth={426}>
                         <div className="section search">
                             <SearchComponent 
                                 uiConfig={ configs?.sections?.search?.uiConfig} 
@@ -198,16 +153,13 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                activeLink={activeLink}
-                                setActiveLink={setActiveLink}
-                                browserSession={browserSession}
                                 />
                         </div>
-                    </MediaQuery>
+
                 }
                 {   
                     configs?.type === 'search' && configs?.sections?.filter?.show && 
-                    <MediaQuery minWidth={426}>
+
                         <div className="section filter">
                             <SearchComponent 
                                 uiConfig={ configs?.sections?.filter?.uiConfig} 
@@ -215,13 +167,8 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                activeLink={activeLink}
-                                setActiveLink={setActiveLink}
-                                browserSession={browserSession}
                                 />
                         </div> 
-                    </MediaQuery>
-
                 }
                 {
                     configs?.type === 'inbox' && configs?.sections?.search?.show &&
@@ -233,7 +180,6 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                browserSession={browserSession}
                                 />
                         </div>
                      </MediaQuery>
@@ -248,43 +194,32 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
-                                browserSession={browserSession}
                                 />
                         </div> 
                     </MediaQuery>
                 }
-                {   (configs?.type === 'inbox' || configs?.type === 'search') && 
-                    <MediaQuery maxWidth={426}>
-                        <div className="searchBox">
-                        {
-                        configs?.sections?.search?.show && (
-                            <SearchAction 
-                            text={t(configs?.sections?.search?.labelMobile)}
-                            handleActionClick={() => {
-                            setType("SEARCH");
+                {   configs?.type === 'inbox' && <MediaQuery maxWidth={426}>
+                    <div className="searchBox">
+                    {
+                      configs?.sections?.search?.show && (
+                        <SearchAction 
+                        text="SEARCH" 
+                        handleActionClick={() => {
+                          setType("SEARCH");
+                          setPopup(true);
+                        }}
+                        />
+                    )}
+                    {configs?.sections?.filter?.show && (
+                      <FilterAction
+                        text="FILTER"
+                          handleActionClick={() => {
+                            setType("FILTER");
                             setPopup(true);
-                            }}
-                            />
-                        )}
-                        {configs?.sections?.filter?.show && (
-                        <FilterAction
-                            text={t(configs?.sections?.filter?.labelMobile)}
-                            handleActionClick={() => {
-                                setType("FILTER");
-                                setPopup(true);
-                            }}
-                        />
-                        )}
-                    </div>
-                   </MediaQuery>
-                }
-                {
-                    (configs?.type === 'inbox' || configs?.type === 'search') && (configs?.showAsRemovableTagsInMobile) &&
-                    <MediaQuery maxWidth={426}>
-                        <RemovableTags config={configs} browserSession={browserSession} data={data} 
-                        // fields={[...configs?.sections?.search?.uiConfig?.fields,...configs?.sections?.filter?.uiConfig?.fields]} 
-                        fields={fieldsForRemovableTags}
-                        />
+                          }}
+                      />
+                    )}
+                   </div>
                    </MediaQuery>
                 }
                 {   
@@ -299,20 +234,10 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                                 data={data} 
                                 isLoading={isLoading} 
                                 isFetching={isFetching} 
-                                fullConfig={configs}
-                                type={configs?.type}
-                                activeLink={activeLink}
-                                browserSession={browserSession}
-                                />
+                                fullConfig={configs}/>
                             </MediaQuery>
                             <MediaQuery maxWidth={426}>
-                            {/* <MobileSearchResults
-                              config={configs?.sections?.searchResult?.uiConfig} 
-                              data={data} 
-                              isLoading={isLoading} 
-                              isFetching={isFetching} 
-                              fullConfig={configs}/> */}
-                              <MobileSearchResultsv1
+                            <MobileSearchResults
                               config={configs?.sections?.searchResult?.uiConfig} 
                               data={data} 
                               isLoading={isLoading} 
@@ -334,7 +259,6 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                     data={data}
                     onClose={handlePopupClose}
                     defaultValues={configs?.sections?.filter?.uiConfig?.defaultValues}
-                    browserSession={browserSession}
                     />
                 </div>
               )}
@@ -354,7 +278,6 @@ const InboxSearchComposer = ({configs,scrollPosition,browserSession}) => {
                     data={data}
                     onClose={handlePopupClose}
                     defaultValues={configs?.sections?.search?.uiConfig?.defaultValues}
-                    browserSession={browserSession}
                     />
                 </div>
               )}

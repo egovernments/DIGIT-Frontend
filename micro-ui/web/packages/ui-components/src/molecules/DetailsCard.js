@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import CitizenInfoLabel from "../atoms/CitizenInfoLabel";
 import  ActionBar from "../atoms/ActionBar";
 import SubmitBar from "../atoms/SubmitBar";
-import Button from "../atoms/Button";
 export const Details = ({ label, name, onClick}) => {
   return (
     <div className="detail" onClick={onClick}>
@@ -16,7 +15,7 @@ export const Details = ({ label, name, onClick}) => {
   );
 };
 
-const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, selectedItems, keyForSelected, handleDetailCardClick, isTwoDynamicPrefix = false, getRedirectionLink, handleClickEnabled = true, t, showActionBar = true, showCitizenInfoLabel = false,submitButtonLabel,mode="default",apiDetails }) => {
+const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, selectedItems, keyForSelected, handleDetailCardClick, isTwoDynamicPrefix = false, getRedirectionLink, handleClickEnabled = true, t, showActionBar = true, showCitizenInfoLabel = false,submitButtonLabel }) => {
   if (linkPrefix && serviceRequestIdKey) {
     return (
       <div>
@@ -58,73 +57,23 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
         return (
           <div
             key={itemIndex}
-            style={{
-              border: selectedItems?.includes(object[keyForSelected])
-                ? '2px solid #f47738'
-                : '2px solid #fff',
-            }}
+            style={{ border: selectedItems?.includes(object[keyForSelected]) ? "2px solid #f47738" : "2px solid #fff" }}
             className="details-container"
-            onClick={(e) =>{
-              e.stopPropagation()
-              handleClickEnabled && handleSelect(object)
-              }}
+            onClick={() =>handleClickEnabled && handleSelect(object)}
           >
-            {Object.keys(object)
-              .filter(
-                (rowEle) =>
-                  !(
-                    typeof object[rowEle] == 'object' &&
-                    object[rowEle]?.hidden == true
-                  )
-              )
-              .map((name, index) => {
-                return (
-                  <Details
-                    label={name}
-                    name={object[name]}
-                    key={index}
-                    onClick={(e) =>{
-                      e.stopPropagation()
-                      handleClickEnabled && handleSelect(object)
-                    }
-                    }
-                  />
-                );
-              })}
-            {showCitizenInfoLabel ? (
-              <CitizenInfoLabel
-                style={{
-                  margin: ' 2rem 0px',
-                  padding: '10px',
-                  backgroundColor: '#FFE2B5',
-                  borderRadius: '0.25rem',
-                }}
-                textStyle={{ color: '#CC7B2F' }}
-                info={t('ATM_INFO_LABEL')}
-                text={t(`ATM_INFO_TEXT`)}
-                fill={'#CC7B2F'}
-              />
-            ) : null}
-            {showActionBar && mode==="default" ? (
-              <SubmitBar
-                onSubmit={() => handleDetailCardClick(object)}
-                label={submitButtonLabel}
-              />
-            ) : null}
-            {showActionBar && mode==="tqm" && (
-              <Button
-                label={t(Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.getCustomActionLabel(object) || submitButtonLabel)}
-                variation="secondary"
-                type="button"
-                onButtonClick={(e) => {
-                  e.stopPropagation()
-                  handleDetailCardClick(object)
-                }}
-                className={'header-btn'}
-                style={{width:"100%"}}
-                textStyles={{fontWeight:700}}
-              />
-            )}
+            {Object.keys(object).filter(rowEle => !(typeof object[rowEle] == "object" && object[rowEle]?.hidden == true)).map((name, index) => {
+              return <Details label={name} name={object[name]} key={index} onClick={() =>handleClickEnabled && handleDetailCardClick(object)} />;
+            })}
+            {showCitizenInfoLabel ?<CitizenInfoLabel
+              style={{ margin: " 2rem 0px", padding: "10px", backgroundColor: "#FFE2B5", borderRadius: "0.25rem" }}
+              textStyle={{ color: "#CC7B2F" }}
+              info={t("ATM_INFO_LABEL")}
+              text={t(`ATM_INFO_TEXT`)}
+              fill={"#CC7B2F"}
+            />:null}
+            {showActionBar ? 
+              <SubmitBar onSubmit={() => handleDetailCardClick(object)} label={submitButtonLabel} />
+            :null}
           </div>
         );
       })}

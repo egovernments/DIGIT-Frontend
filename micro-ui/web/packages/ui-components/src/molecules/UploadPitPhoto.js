@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import UploadImages from "../atoms/UploadImages";
-import Toast from "../atoms/Toast";
 
 const UploadPitPhoto = (props) => {
     const { t } = useTranslation();
@@ -35,11 +34,7 @@ const UploadPitPhoto = (props) => {
 
     useEffect(() => {
         if (imageFile && imageFile.size > 2097152) {
-            setError("FSM_MAXIMUM_PIT_UPLOAD_SIZE_EXCEEDED");
-            setTimeout(() => {
-                setError(null);
-              }, 3000);
-            
+            setError("File is too large");
         } else {
             setImage(imageFile);
         }
@@ -112,7 +107,6 @@ const UploadPitPhoto = (props) => {
             hiddenFileInput.current.click();
         } 
     }
-
     const hiddenFileInput = React.useRef(null);
 
     // Upload photo from storage by clicking the button 
@@ -137,7 +131,6 @@ const UploadPitPhoto = (props) => {
                 <input
                     style={{ display: "none" }}
                     type="file"
-                    accept="image/*"
                     ref={hiddenFileInput}
                     onChange={getImage}
                 />
@@ -145,7 +138,7 @@ const UploadPitPhoto = (props) => {
 
             </button>
 
-            {error && <Toast error={true} label={t(error)} onClose={() => setError(null)} />}
+            {error && <Toast error={true} label={error} onClose={() => setError(null)} />}
         </div>
     );
 };

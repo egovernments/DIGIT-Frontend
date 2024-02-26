@@ -1,21 +1,22 @@
 import React, { useMemo, useCallback, useState, useEffect, Fragment,useContext } from 'react'
 import { useTranslation } from 'react-i18next';
+import DetailsCard from '../molecules/DetailsCard'
 import Table from '../atoms/Table'
 import TextInput from '../atoms/TextInput'
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
+import { Link } from "react-router-dom";
 import { Loader } from '../atoms/Loader';
 import NoResultsFound from '../atoms/NoResultsFound';
 import { InfoIcon } from "../atoms/svgindex";
 
-const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession }) => {
+const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate }) => {
     
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
     const resultsKey = config.resultsJsonPath
-    const [showResultsTable,setShowResultsTable] = useState(true)
-    const [session,setSession,clearSession] = browserSession || []
+    
     // let searchResult = data?.[resultsKey]?.length>0 ? data?.[resultsKey] : []
     let searchResult = _.get(data,resultsKey,[])
     searchResult = searchResult?.length>0 ? searchResult : []
@@ -41,30 +42,15 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
 
     const {state,dispatch} = useContext(InboxContext)
     
-    //here I am just checking state.searchForm has all empty keys or not(when clicked on clear search)
-    useEffect(() => {
-        if(apiDetails?.minParametersForSearchForm !== 0 && Object.keys(state.searchForm).length > 0 && !Object.keys(state.searchForm).some(key => state.searchForm[key]!=="") && type==="search" && activeLink?.minParametersForSearchForm !== 0){
-            setShowResultsTable(false)
-        }
-        // else{
-        //     setShowResultsTable(true)
-        // }
-        return ()=>{
-            setShowResultsTable(true)
-        }
-    }, [state])
-   
-    
-
     const tableColumns = useMemo(() => {
         //test if accessor can take jsonPath value only and then check sort and global search work properly
         return config?.columns?.map(column => {
+            
             if (column.additionalCustomization){
                 return {
                     Header: t(column?.label) || t("ES_COMMON_NA"),
                     accessor:column.jsonPath,
                     headerAlign: column?.headerAlign,
-                    disableSortBy:column?.disableSortBy ? column?.disableSortBy :false,
                     Cell: ({ value, col, row }) => {
                         return  Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.additionalCustomizations(row.original,column?.label,column, value,t, searchResult);
                     }
@@ -74,15 +60,13 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 Header: t(column?.label) || t("ES_COMMON_NA"),
                 accessor: column.jsonPath,
                 headerAlign: column?.headerAlign,
-                disableSortBy:column?.disableSortBy ? column?.disableSortBy :false,
                 Cell: ({ value, col, row }) => {
-                    return String(value ? column.translate? t(Digit.Utils.locale.getTransformedLocale(column.prefix?`${column.prefix}${value}`:value)) : value : t("ES_COMMON_NA"));
+                    return String(value ? column.translate? t(column.prefix?`${column.prefix}${value}`:value) : value : column?.dontShowNA ? " " : t("ES_COMMON_NA"));
                 }
             }
         })
     }, [config, searchResult])
 
-    const defaultValuesFromSession = session?.tableForm ? {...session?.tableForm} : {limit:10,offset:0}
     const {
         register,
         handleSubmit,
@@ -98,19 +82,12 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         clearErrors,
         unregister,
     } = useForm({
-        defaultValues: defaultValuesFromSession
+        defaultValues: {
+            offset: 0,
+            limit: 10, 
+        },
     });
     
-     //call this fn whenever session gets updated
-  const setDefaultValues = () => {
-    reset(defaultValuesFromSession)
-  }
-
-  //adding this effect because simply setting session to default values is not working
-  useEffect(() => {
-    setDefaultValues()
-  }, [session])
-
     const isMobile = window.Digit.Utils.browser.isMobile();
     const [searchQuery, onSearch] = useState("");
 
@@ -138,8 +115,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     }, []);
 
     useEffect(() => {
-        register("offset",session?.tableForm?.offset || 0);
-        register("limit",session?.tableForm?.limit || 10);
+        register("offset", 0);
+        register("limit", 10);
     }, [register]);
 
     function onPageSizeChange(e) {
@@ -172,7 +149,6 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     
     if (isLoading || isFetching ) return <Loader />
     if(!data) return <></>
-    if(!showResultsTable) return <></>
     if (searchResult?.length === 0) return <NoResultsFound/>
     return (
         <div style={{width : "100%"}}>
@@ -188,23 +164,24 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
             {searchResult?.length > 0 && <Table
                 className={config?.tableClassName ? config?.tableClassName: "table"}
                 t={t}
-                customTableWrapperClassName={"search-component-table"}
+                customTableWrapperClassName={"dss-table-wrapper"}
                 disableSort={config?.enableColumnSort ? false : true}
                 autoSort={config?.enableColumnSort ? true : false}
                 globalSearch={config?.enableGlobalSearch ? filterValue : undefined}
                 onSearch={config?.enableGlobalSearch ? searchQuery : undefined}
                 data={searchResult}
-                totalRecords={data?.count || data?.TotalCount || data?.totalCount || searchResult?.length}
+                totalRecords={data?.count || data?.TotalCount || data?.totalCount}
                 columns={tableColumns}
                 isPaginationRequired={true}
                 onPageSizeChange={onPageSizeChange}
-                currentPage={parseInt(getValues("offset") / getValues("limit"))}
+                currentPage={getValues("offset") / getValues("limit")}
                 onNextPage={nextPage}
                 onPrevPage={previousPage}
                 pageSizeLimit={getValues("limit")}
                 showCheckBox={config?.showCheckBox ? true : false}
                 actionLabel={config?.checkBoxActionLabel}
                 tableSelectionHandler={Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.selectionHandler}
+                manualPagination={config.manualPagination}
                 getCellProps={(cellInfo) => {
                     return {
                         style: {
