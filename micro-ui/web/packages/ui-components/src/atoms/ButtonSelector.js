@@ -3,12 +3,16 @@ import PropTypes from "prop-types";
 
 const ButtonSelector = (props) => {
   let theme = "selector-button-primary";
+  const customTheme = props?.customTheme || "";
   switch (props.theme) {
     case "border":
-      theme = "selector-button-border";
+      theme = `selector-button-border ${customTheme}`;
+      break;
+    case "secondary":
+      theme = `selector-button-secondary ${customTheme}`;
       break;
     default:
-      theme = "selector-button-primary";
+      theme = `selector-button-primary ${customTheme}`;
       break;
   }
   return (

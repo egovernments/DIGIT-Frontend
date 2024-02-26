@@ -58,7 +58,7 @@ const WorkflowTimeline = ({ businessService, tenantId,applicationNo, timelineSta
         
     };
 
-    let workflowDetails = Digit.Hooks.useWorkflowDetailsV2(
+    let workflowDetails = Digit.Hooks.useWorkflowDetailsFSM(
         {
             tenantId: tenantId,
             id: applicationNo,
@@ -97,6 +97,7 @@ const WorkflowTimeline = ({ businessService, tenantId,applicationNo, timelineSta
                                                     {
                                                         index === 0 && !checkpoint?.isTerminateState &&
                                                             <React.Fragment>
+                                                                <div className="checkpoint-connect-wrap">
                                                                 <CheckPoint
                                                                     keyValue={index}
                                                                     isCompleted={index === 0}
@@ -106,17 +107,19 @@ const WorkflowTimeline = ({ businessService, tenantId,applicationNo, timelineSta
                                                                     // customChild={getTimelineCaptions(checkpoint, -1)}
                                                                     customClassName="checkpoint-connect-wrap"
                                                                 />
+                                                                <div class="checkpoint-connect"></div>
+                                                                </div>
                                                             </React.Fragment>
                                                     }   
-                                                    <CheckPoint
-                                                        keyValue={index}
-                                                        isCompleted={checkpoint?.isTerminateState && index === 0}
-                                                        label={t(
-                                                            Digit.Utils.locale.getTransformedLocale(`${timelineStatusPrefix}STATUS_${checkpoint?.performedAction === "EDIT" ? `${checkpoint?.performedAction}` :   `${checkpoint?.performedAction}`
-                                                            }`)
-                                                        )}
-                                                        customChild={getTimelineCaptions(checkpoint, index)}
-                                                    />
+                                                        <CheckPoint
+                                                            keyValue={index}
+                                                            isCompleted={checkpoint?.isTerminateState && index === 0}
+                                                            label={t(
+                                                                Digit.Utils.locale.getTransformedLocale(`${timelineStatusPrefix}STATUS_${checkpoint?.performedAction === "EDIT" ? `${checkpoint?.performedAction}` :   `${checkpoint?.performedAction}`
+                                                                }`)
+                                                            )}
+                                                            customChild={getTimelineCaptions(checkpoint, index)}
+                                                        />
                                                 </React.Fragment>
                                             );  
                                         })}

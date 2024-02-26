@@ -5,7 +5,12 @@ import { useTranslation } from "react-i18next";
 
 const RadioButtons = (props) => {
   const { t } = useTranslation();
-  var selected = props.selectedOption;
+  const [selected, setSelected] = useState(null);
+  
+  useEffect(() => {
+    setSelected(props.selectedOption)
+  }, [props.selectedOption]);
+
   function selectOption(value) {
     //selected = value;
     props.onSelect(value);
@@ -22,7 +27,7 @@ const RadioButtons = (props) => {
                   className="radio-btn"
                   type="radio"
                   value={option}
-                  checked={(props.isPTFlow && selected?.code === option.code) || isEqual(selected, option) ? 1 : 0}
+                  checked={selected?.code === option.code || isEqual(selected, option) ? 1 : 0}
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props.name}
@@ -41,7 +46,7 @@ const RadioButtons = (props) => {
                   className="radio-btn"
                   type="radio"
                   value={option}
-                  checked={selected?.code === option.code ? 1 : 0}
+                  checked={props?.isTLFlow ? (selected?.code === option.code || selected?.i18nKey === option.i18nKey) : selected?.code === option.code ? 1 : 0}
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props.name}

@@ -9,14 +9,14 @@ import { Loader } from '../atoms/Loader'
 import MultiUploadWrapper from '../molecules/MultiUploadWrapper'
 import TextInput from '../atoms/TextInput'
 
-const UploadFileComposer = ({module, config, Controller, control, register, formData, errors, localePrefix, customClass, customErrorMsg}) => {
+const UploadFileComposer = ({master= "works", module, config, Controller, control, register, formData, errors, localePrefix, customClass, customErrorMsg}) => {
   const { t } = useTranslation()
   
   //fetch mdms config based on module name
   const tenant = Digit.ULBService.getStateId();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(
       tenant,
-      "works",
+      master,
       [
           {
               "name": "DocumentConfig",
@@ -27,7 +27,7 @@ const UploadFileComposer = ({module, config, Controller, control, register, form
 
 
 
-  const docConfig = data?.works?.DocumentConfig?.[0]
+  const docConfig = data?.[master]?.DocumentConfig?.[0]
 
   let documentFileTypeMappings = {
     docx : "vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -42,19 +42,6 @@ const UploadFileComposer = ({module, config, Controller, control, register, form
   }
   
   const getRegex = (allowedFormats) => {
-    // console.log(allowedFormats);
-    // if(allowedFormats?.length) {
-    //   const obj = { "expression" : `/(.*?)(${allowedFormats?.join('|')})$/`}
-    //   const stringified = JSON.stringify(obj);
-    //   console.log(new RegExp(JSON.parse(stringified).expression.slice(1, -1)));
-    //   return new RegExp(JSON.parse(stringified).expression.slice(1, -1));
-    // } else if(docConfig?.allowedFileTypes?.length) {
-    //   const obj = { "expression" : `/(.*?)(${docConfig?.allowedFileTypes?.join('|')})$/`}
-    //   const stringified = JSON.stringify(obj);
-    //   console.log(new RegExp(JSON.parse(stringified).expression.slice(1, -1)))
-    //   return new RegExp(JSON.parse(stringified).expression.slice(1, -1));
-    // } 
-    // return /(.*?)(pdf|docx|jpeg|jpg|png|msword|openxmlformats-officedocument|wordprocessingml|document|spreadsheetml|sheet)$/
     if(allowedFormats?.length) {
       let exceptedFileTypes = [];
       allowedFormats?.forEach(allowedFormat=>{
@@ -69,8 +56,8 @@ const UploadFileComposer = ({module, config, Controller, control, register, form
   // if(isLoading) return <Loader />
   return (
     <React.Fragment>
-      <Header styles={{fontSize: "24px", marginTop : "40px"}}>{t('WORKS_RELEVANT_DOCUMENTS')}</Header>
-      <CitizenInfoLabel info={t("ES_COMMON_INFO")} text={t(docConfig?.bannerLabel)} className="doc-banner"></CitizenInfoLabel>
+      {!docConfig?.hideHeader && <Header styles={{fontSize: "24px", marginTop : "40px"}}>{t('WORKS_RELEVANT_DOCUMENTS')}</Header>}
+      {docConfig?.bannerLabel && <CitizenInfoLabel info={t("ES_COMMON_INFO")} text={t(docConfig?.bannerLabel)} className="doc-banner"></CitizenInfoLabel>}
       {
         docConfig?.documents?.map((item, index) => {
           if(!item?.active) return
@@ -87,13 +74,29 @@ const UploadFileComposer = ({module, config, Controller, control, register, form
             
               <div className="field">
                 {
-                  item?.showTextInput ? 
-                    <TextInput 
-                      style={{ "marginBottom": "16px" }} 
-                      name={`${config?.name}.${item?.name}_name`} 
-                      placeholder={t('ES_COMMON_ENTER_NAME')}
-                      inputRef={register({minLength: 2})}/> : 
-                    null  
+                  item?.showTextInput &&
+                  <div>
+                    <Controller
+                      defaultValue={formData?.[`${config.name}`]?.[`${item?.name}_name`] || ""}
+                      render={({ onChange, ref, value }) => (
+                        <TextInput
+                          value={formData?.[`${config.name}`]?.[`${item?.name}_name`]}
+                          name={`${config?.name}.${item?.name}_name`}
+                          onChange={onChange}
+                          inputRef={register({minLength: 2})}
+                          errorStyle={errors?.[`${config.name}`]?.[`${item?.name}_name`]}
+                        />
+                      )}
+                      name={`${config?.name}.${item?.name}_name`}
+                      rules={{ pattern: /^[a-zA-Z0-9\. ]*$/, required: false }}
+                      control={control}
+                    />
+                    {formData?.[`${config.name}`]?.[`${item?.name}_name`] && errors && errors?.[`${config.name}`]?.[`${item?.name}_name`] && Object.keys(errors?.[`${config.name}`]?.[`${item?.name}_name`]).length ? (
+                      <CardLabelError style={{ fontSize: "12px", marginTop: "-20px" }}>
+                        {t("COMMON_PATTERN_ERR_MSG_DOCS_INPUT_TEXT")}
+                      </CardLabelError>) : null
+                    }
+                  </div>
                 }
                 <div  style={{marginBottom: '24px'}}>
                   <Controller

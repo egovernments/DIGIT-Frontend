@@ -3,7 +3,7 @@ import { Loader } from "../atoms/Loader";
 import Dropdown from "../atoms/Dropdown";
 import { useTranslation } from "react-i18next";
 
-const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected, optionCardStyles, style, disable, disableLoader, sortFn }) => {
+const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected, optionCardStyles, className, style, disable, disableLoader, sortFn }) => {
   const { t } = useTranslation();
 
   const { data: tenantlocalties, isLoading } = Digit.Hooks.useBoundaryLocalities(tenantId, boundaryType, { enabled: !disable }, t);
@@ -21,6 +21,7 @@ const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected
       optionKey="i18nkey"
       style={style}
       disable={!tenantlocalties?.length || disable}
+      className={className}
     />
   );
   //  <h1>ABCD</h1>

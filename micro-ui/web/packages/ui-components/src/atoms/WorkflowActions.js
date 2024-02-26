@@ -13,7 +13,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
   const { estimateNumber } = Digit.Hooks.useQueryParams();
   applicationNo = applicationNo ? applicationNo : estimateNumber 
 
-  const { mutate } = Digit.Hooks.useUpdateCustom(url)
+  const { mutate } = Digit.Hooks.works.useUpdateCustom(url)
 
   const [displayMenu,setDisplayMenu] = useState(false)
   const [showModal,setShowModal] = useState(false)
@@ -26,7 +26,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
   const { t } = useTranslation();
   let user = Digit.UserService.getUser();
 
-  let workflowDetails = Digit.Hooks.useWorkflowDetailsV2(
+  let workflowDetails = Digit.Hooks.useWorkflowDetailsFSM(
     {
       tenantId: tenantId,
       id: applicationNo,
@@ -87,6 +87,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
     const bsEstimate = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("estimate")
     const bsAttendance = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("muster roll")
     const bsPurchaseBill = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("works.purchase")
+    const bsRevisedWO = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("revisedWO");
     
     
     setDisplayMenu(false)
@@ -111,6 +112,11 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
 
     if(bsPurchaseBill === businessService && action?.action==="RE-SUBMIT"){
       history.push(`/${window?.contextPath}/employee/expenditure/create-purchase-bill?tenantId=${tenantId}&billNumber=${editApplicationNumber}`);
+      return 
+    }
+
+    if(bsRevisedWO === businessService && action?.action === "EDIT"){
+      editCallback()
       return 
     }
     //here we can add cases of toast messages,edit application and more...
@@ -167,6 +173,7 @@ const WorkflowActions = ({ businessService, tenantId, applicationNo, forcedActio
               t={t}
               onSelect={onActionSelect}
               style={MenuStyle}
+              actionStyle={{height:"auto",width:"100%"}}
             />
           ) : null}
           <SubmitBar ref={menuRef} label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />

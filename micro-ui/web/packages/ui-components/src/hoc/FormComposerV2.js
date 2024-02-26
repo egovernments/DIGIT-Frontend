@@ -21,20 +21,14 @@ import MobileNumber from "../atoms/MobileNumber";
 import _ from "lodash";
 import CustomDropdown from "../molecules/CustomDropdown";
 import MultiUploadWrapper from "../molecules/MultiUploadWrapper";
-import HorizontalNav  from "../atoms/HorizontalNav"
+import HorizontalNav from "../atoms/HorizontalNav";
 import Toast from "../atoms/Toast";
 import UploadFileComposer from "./UploadFileComposer";
 import CheckBox from "../atoms/CheckBox";
-import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
+import MultiSelectDropdown from "../atoms/MultiSelectDropdown";
 import Paragraph from "../atoms/Paragraph";
 import InputTextAmount from "../atoms/InputTextAmount";
-import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
-import Header from "../atoms/Header";
-
-import { yupResolver } from '@hookform/resolvers/yup';
-// import { validateResolver } from "./validateResolver";
-import { buildYupConfig } from "./formUtils";
 
 const wrapperStyles = {
   // "display":"flex",
@@ -70,52 +64,27 @@ const wrapperStyles = {
  *
  */
 
-export const FormComposer = (props) => {
-  const { t } = useTranslation();
-/* added an enhancement for validate data with schema still some issue with sometype we have to solve it*/
-  const inputProps={
-    // context: "contactForm",
+export const FormComposerV2 = (props) => {
+  const { register, handleSubmit, setValue, getValues, reset, watch, trigger, control, formState, errors, setError, clearErrors, unregister } = useForm({
     defaultValues: props.defaultValues,
-    // resolver: validateResolver,
-  }
-  if(props?.jsonSchema){
-    const yupSchema=props?.jsonSchema&&buildYupConfig(props?.jsonSchema,t);
-    inputProps["resolver"]=yupResolver(yupSchema);
-  }
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    reset,
-    watch,
-    trigger,
-    control,
-    formState,
-    errors,
-    setError,
-    clearErrors,
-    unregister,
-  } = useForm(inputProps);
-  // console.log(formState,'formState');
+  });
+  const { t } = useTranslation();
   const formData = watch();
   const selectedFormCategory = props?.currentFormCategory;
-  const [showErrorToast, setShowErrorToast] = useState(false); 
-  const [customToast, setCustomToast] = useState(false); 
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
-  //clear all errors if user has changed the form category. 
+  //clear all errors if user has changed the form category.
   //This is done in case user first click on submit and have errors in cat 1, switches to cat 2 and hit submit with errors
   //So, he should not get error prompts from previous cat 1 on cat 2 submit.
-  useEffect(()=>{
+  useEffect(() => {
     clearErrors();
-  },[selectedFormCategory]);
+  }, [selectedFormCategory]);
 
-  useEffect(()=>{
-    if(Object.keys(formState?.errors).length > 0 && formState?.submitCount > 0) {
+  useEffect(() => {
+    if (Object.keys(formState?.errors).length > 0 && formState?.submitCount > 0) {
       setShowErrorToast(true);
     }
-  },[formState?.errors, formState?.submitCount]);
+  }, [formState?.errors, formState?.submitCount]);
 
   useEffect(() => {
     if (
@@ -131,20 +100,18 @@ export const FormComposer = (props) => {
     props.getFormAccessors && props.getFormAccessors({ setValue, getValues });
   }, []);
 
-  useEffect(()=>{
-    setCustomToast(props?.customToast);
-  },[props?.customToast])
-
   function onSubmit(data) {
     props.onSubmit(data);
   }
 
-  function onSecondayActionClick(data) {
-    props.onSecondayActionClick();
+  async function onSecondayActionClick() {
+    if (props?.checkSecondaryValidation !== true) return;
+    const isValid = await trigger();
+    isValid ? props.onSecondayActionClick() : null;
   }
 
   useEffect(() => {
-    props.onFormValueChange && props.onFormValueChange(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues);
+    props.onFormValueChange && props.onFormValueChange(setValue, formData, errors, formState, reset, setError, clearErrors, trigger, getValues);
   }, [formData]);
 
   const fieldSelector = (type, populators, isMandatory, disable = false, component, config, sectionFormCategory) => {
@@ -157,7 +124,7 @@ export const FormComposer = (props) => {
     }
     const Component = typeof component === "string" ? Digit.ComponentRegistryService.getComponent(component) : component;
     const customValidation = config?.populators?.validation?.customValidation;
-    const customRules = customValidation ? {validate : customValidation} : {};
+    const customRules = customValidation ? { validate: customValidation } : {};
     const customProps = config?.customProps;
     switch (type) {
       case "date":
@@ -168,9 +135,7 @@ export const FormComposer = (props) => {
         // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
         return (
           <div className="field-container">
-            {populators?.componentInFront ? (
-              <span className={`component-in-front ${disable && "disabled"}`}>{populators.componentInFront}</span>
-            ) : null}
+            {populators?.componentInFront ? <span className={`component-in-front ${disable && "disabled"}`}>{populators.componentInFront}</span> : null}
             <Controller
               defaultValue={formData?.[populators.name]}
               render={({ onChange, ref, value }) => (
@@ -187,8 +152,10 @@ export const FormComposer = (props) => {
                   style={type === "date" ? { paddingRight: "3px" } : ""}
                   maxlength={populators?.validation?.maxlength}
                   minlength={populators?.validation?.minlength}
+                  pattern={populators?.pattern}
                   customIcon={populators?.customIcon}
                   customClass={populators?.customClass}
+                  defaultValue={formData?.[populators.name]}
                 />
               )}
               name={populators.name}
@@ -198,40 +165,38 @@ export const FormComposer = (props) => {
           </div>
         );
       case "amount":
-      // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
-      return (
-        <div className="field-container">
-          {populators?.componentInFront ? (
-            <span className={`component-in-front ${disable && "disabled"}`}>{populators.componentInFront}</span>
-          ) : null}
-          <Controller
-            defaultValue={formData?.[populators.name]}
-            render={({ onChange, ref, value }) => (
-              <InputTextAmount
-                value={formData?.[populators.name]}
-                type={"text"}
-                name={populators.name}
-                onChange={onChange}
-                inputRef={ref}
-                errorStyle={errors?.[populators.name]}
-                max={populators?.validation?.max}
-                min={populators?.validation?.min}
-                disable={disable}
-                style={type === "date" ? { paddingRight: "3px" } : ""}
-                maxlength={populators?.validation?.maxlength}
-                minlength={populators?.validation?.minlength}
-                customIcon={populators?.customIcon}
-                customClass={populators?.customClass}
-                prefix={populators?.prefix}
-                intlConfig={populators?.intlConfig}
-              />
-            )}
-            name={populators.name}
-            rules={!disableFormValidation ? { required: isMandatory, ...populators.validation, ...customRules } : {}}
-            control={control}
-          />
-        </div>
-      );
+        // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
+        return (
+          <div className="field-container">
+            {populators?.componentInFront ? <span className={`component-in-front ${disable && "disabled"}`}>{populators.componentInFront}</span> : null}
+            <Controller
+              defaultValue={formData?.[populators.name]}
+              render={({ onChange, ref, value }) => (
+                <InputTextAmount
+                  value={formData?.[populators.name]}
+                  type={"text"}
+                  name={populators.name}
+                  onChange={onChange}
+                  inputRef={ref}
+                  errorStyle={errors?.[populators.name]}
+                  max={populators?.validation?.max}
+                  min={populators?.validation?.min}
+                  disable={disable}
+                  style={type === "date" ? { paddingRight: "3px" } : ""}
+                  maxlength={populators?.validation?.maxlength}
+                  minlength={populators?.validation?.minlength}
+                  customIcon={populators?.customIcon}
+                  customClass={populators?.customClass}
+                  prefix={populators?.prefix}
+                  intlConfig={populators?.intlConfig}
+                />
+              )}
+              name={populators.name}
+              rules={!disableFormValidation ? { required: isMandatory, ...populators.validation, ...customRules } : {}}
+              control={control}
+            />
+          </div>
+        );
       case "textarea":
         // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
         return (
@@ -247,7 +212,7 @@ export const FormComposer = (props) => {
                 inputRef={ref}
                 disable={disable}
                 errorStyle={errors?.[populators.name]}
-                style={{marginTop: 0}}
+                style={{ marginTop: 0 }}
                 maxlength={populators?.validation?.maxlength}
                 minlength={populators?.validation?.minlength}
               />
@@ -263,13 +228,7 @@ export const FormComposer = (props) => {
             <Controller
               defaultValue={formData?.[populators.name]}
               render={({ onChange, ref, value }) => (
-                <Paragraph
-                  value={formData?.[populators.name]}
-                  name={populators.name}
-                  inputRef={ref}
-                  customClass={populators?.customClass}
-                  customStyle={populators?.customStyle}
-                />
+                <Paragraph value={formData?.[populators.name]} name={populators.name} inputRef={ref} customClass={populators?.customClass} customStyle={populators?.customStyle} />
               )}
               name={populators.name}
               rules={!disableFormValidation ? { required: isMandatory, ...populators.validation } : {}}
@@ -315,7 +274,6 @@ export const FormComposer = (props) => {
             defaultValue={formData?.[populators.name]}
             rules={{ required: populators?.isMandatory }}
             render={(props) => {
-              
               return (
                 <div style={{ display: "grid", gridAutoFlow: "row" }}>
                   <CheckBox
@@ -324,13 +282,13 @@ export const FormComposer = (props) => {
                       //   ...props.value,
                       //   [e.target.value]: e.target.checked
                       // }
-                      
-                      props.onChange(e.target.checked)
+
+                      props.onChange(e.target.checked);
                     }}
-                    value={formData?.[populators.name] }
+                    value={formData?.[populators.name]}
                     checked={formData?.[populators.name]}
                     label={t(`${populators?.title}`)}
-                    styles = {populators?.styles}
+                    styles={populators?.styles}
                     style={populators?.labelStyles}
                     customLabelMarkup={populators?.customLabelMarkup}
                   />
@@ -359,7 +317,7 @@ export const FormComposer = (props) => {
                   });
                 }
                 //here we need to update the form the same way as the state of the reducer in multiupload, since Upload component within the multiupload wrapper uses that same format of state so we need to set the form data as well in the same way. Previously we were altering it and updating the formData
-                onChange(numberOfFiles>0?filesData:[]);
+                onChange(numberOfFiles > 0 ? filesData : []);
               }
               return (
                 <MultiUploadWrapper
@@ -376,7 +334,7 @@ export const FormComposer = (props) => {
                   extraStyleName={{ padding: "0.5rem" }}
                   customClass={populators?.customClass}
                   customErrorMsg={populators?.errorMessage}
-                  containerStyles={{...populators?.containerStyles}}
+                  containerStyles={{ ...populators?.containerStyles }}
                 />
               );
             }}
@@ -388,17 +346,19 @@ export const FormComposer = (props) => {
       case "radioordropdown":
         return (
           <Controller
-            render={(props) =>(<CustomDropdown
+            render={(props) => (
+              <CustomDropdown
                 t={t}
                 label={config?.label}
                 type={type}
-                onBlur={props.onBlur}
-                value={props.value}
-                inputRef={props.ref}
-                onChange={props.onChange}
+                onBlur={props?.onBlur}
+                value={props?.value}
+                inputRef={props?.ref}
+                onChange={props?.onChange}
                 config={populators}
                 disable={config?.disable}
                 errorStyle={errors?.[populators.name]}
+                mdmsv2={populators?.mdmsv2 ? populators.mdmsv2 : false}
               />
             )}
             rules={!disableFormValidation ? { required: isMandatory, ...populators.validation } : {}}
@@ -421,7 +381,7 @@ export const FormComposer = (props) => {
                 formData={formData}
                 register={register}
                 errors={errors}
-                props={{...props, ...customProps}}
+                props={{ ...props, ...customProps }}
                 setError={setError}
                 clearErrors={clearErrors}
                 formState={formState}
@@ -435,7 +395,6 @@ export const FormComposer = (props) => {
               />
             )}
             name={config.key}
-            rules={!disableFormValidation ? { required: isMandatory, ...populators.validation } : {}}
             control={control}
           />
         );
@@ -443,6 +402,7 @@ export const FormComposer = (props) => {
         return (
           <UploadFileComposer
             module={config?.module}
+            master={config?.master}
             config={config}
             Controller={Controller}
             register={register}
@@ -473,60 +433,9 @@ export const FormComposer = (props) => {
               control={control}
             />
           </form>
-        ); 
-      case "object":
-        return <Controller
-        name={`${populators.name}`}
-        control={control}
-        defaultValue={formData?.[populators.name]}
-        rules={{ required: populators?.isMandatory, ...populators.validation }}
-        render={(props) => {
-          return (
-            <div style={{ display: "grid", gridAutoFlow: "row" }}>
-              object
-            </div>
-          );
-        }}
-      />
-      case "array":
-        return <Controller
-        name={`${populators.name}`}
-        control={control}
-        defaultValue={formData?.[populators.name]}
-        rules={{ required: populators?.isMandatory, ...populators.validation }}
-        render={(props) => {
-          return (
-            <div style={{ display: "grid", gridAutoFlow: "row" }}>
-              array
-            </div>
-          );
-        }}
-      />
-      case "locationdropdown":
-        return (
-          <Controller
-            name={`${populators.name}`}
-            control={control}
-            defaultValue={formData?.[populators.name]}
-            rules={{ required: populators?.isMandatory, ...populators.validation }}
-            render={(props) => {
-              return (
-                <div style={{ display: "grid", gridAutoFlow: "row" }}>
-                  <LocationDropdownWrapper
-                    props={props}
-                    populators={populators}
-                    formData={formData}
-                    inputRef={props.ref}
-                    errors={errors}
-                    setValue={setValue}
-                  />
-                </div>
-              );
-            }}
-          />
         );
 
-        case "apidropdown":
+      case "apidropdown":
         return (
           <Controller
             name={`${populators.name}`}
@@ -557,7 +466,8 @@ export const FormComposer = (props) => {
             }}
           />
         );
-        case "multiselectdropdown":
+
+      case "multiselectdropdown":
         return (
           <Controller
             name={`${populators.name}`}
@@ -573,7 +483,13 @@ export const FormComposer = (props) => {
                     props={props}
                     isPropsNeeded={true}
                     onSelect={(e) => {
-                      props.onChange(e?.map(row=>{return row?.[1] ? row[1] : null}).filter(e=>e))
+                      props.onChange(
+                        e
+                          ?.map((row) => {
+                            return row?.[1] ? row[1] : null;
+                          })
+                          .filter((e) => e)
+                      );
                     }}
                     selected={props?.value || []}
                     defaultLabel={t(populators?.defaultText)}
@@ -647,7 +563,7 @@ export const FormComposer = (props) => {
     } else if (section.head) {
       return (
         <>
-          <CardSectionHeader style={props?.sectionHeadStyle ? props?.sectionHeadStyle : {}} id={section.headId}>
+          <CardSectionHeader style={props?.sectionHeadStyle ? props?.sectionHeadStyle : {}} className={props?.sectionHeaderClassName} id={section.headId}>
             {t(section.head)}
           </CardSectionHeader>
         </>
@@ -659,25 +575,23 @@ export const FormComposer = (props) => {
 
   const closeToast = () => {
     setShowErrorToast(false);
-    setCustomToast(false);
-    props?.updateCustomToast&&props?.updateCustomToast(false);
-  }
+  };
 
   //remove Toast from 3s
-  useEffect(()=>{
-    if(showErrorToast){
-      setTimeout(()=>{
+  useEffect(() => {
+    if (showErrorToast) {
+      setTimeout(() => {
         closeToast();
-      },3000)
+      }, 3000);
     }
-  },[showErrorToast])
+  }, [showErrorToast]);
 
   const formFields = useCallback(
     (section, index, array, sectionFormCategory) => (
       <React.Fragment key={index}>
         {section && getCombinedComponent(section)}
         {section.body.map((field, index) => {
-          if(field?.populators?.hideInForm) return null
+          if (field?.populators?.hideInForm) return null;
           if (props.inline)
             return (
               <React.Fragment key={index}>
@@ -685,7 +599,7 @@ export const FormComposer = (props) => {
                   {!field.withoutLabel && (
                     <CardLabel
                       style={{ color: field.isSectionText ? "#505A5F" : "", marginBottom: props.inline ? "8px" : "revert" }}
-                      className={field?.disable ? `disabled ${props?.labelBold ? 'bolder' : ""}` : `${props?.labelBold ? 'bolder' : ""}`}
+                      className={field?.disable ? `disabled ${props?.labelBold ? "bolder" : ""}` : `${props?.labelBold ? "bolder" : ""}`}
                     >
                       {t(field.label)}
                       {field.isMandatory ? " * " : null}
@@ -722,21 +636,22 @@ export const FormComposer = (props) => {
                 style={
                   props?.showWrapperContainers && !field.hideContainer
                     ? { ...wrapperStyles, ...field?.populators?.customStyle }
-                    : {  border: "none", background: "white", ...field?.populators?.customStyle }
+                    : { border: "none", background: "white", ...field?.populators?.customStyle }
                 }
               >
                 {!field.withoutLabel && (
                   <CardLabel
                     style={{
                       color: field.isSectionText ? "#505A5F" : "",
-                      marginBottom: props.inline ? "8px" : "revert",
+                      marginBottom: "0.5rem",
                       fontWeight: props.isDescriptionBold ? "600" : null,
                     }}
                     className="bolder"
                   >
                     {t(field.label)}
-                    {field?.appendColon ? ' : ' : null}
+                    {field?.appendColon ? " : " : null}
                     {field.isMandatory ? " * " : null}
+                    {field?.labelChildren ? field?.labelChildren : null}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
@@ -745,9 +660,7 @@ export const FormComposer = (props) => {
                 </div>
               </LabelFieldPair>
               {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
-                <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
-                  {t( errors?.[field?.populators?.name]?.message || field?.populators?.error)}
-                </CardLabelError>
+                <CardLabelError className="custom-formcomposer">{t(field?.populators?.error)}</CardLabelError>
               ) : null}
             </Fragment>
           );
@@ -755,14 +668,82 @@ export const FormComposer = (props) => {
         {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine style={props?.breaklineStyle ? props?.breaklineStyle : {}} />)}
       </React.Fragment>
     ),
-    [props.config, formData]
+    [props?.config, formData]
   );
-
+  const formFieldsAll = useMemo(
+    () =>
+      props?.config?.map((section, index, array) => {
+        return (
+          <React.Fragment key={index}>
+            {section && getCombinedComponent(section)}
+            {section.body.map((field, index) => {
+              if (props.inline)
+                return (
+                  <React.Fragment key={index}>
+                    <div style={field.isInsideBox ? getCombinedStyle(field?.placementinbox) : {}}>
+                      {!field.withoutLabel && (
+                        <CardLabel
+                          style={{ color: field.isSectionText ? "#505A5F" : "", marginBottom: props.inline ? "8px" : "revert" }}
+                          className={field?.disable ? "disabled" : ""}
+                        >
+                          {t(field.label)}
+                          {field.isMandatory ? " * " : null}
+                          {field.labelChildren && field.labelChildren}
+                        </CardLabel>
+                      )}
+                      {errors && errors[field.populators?.name] && Object.keys(errors[field.populators?.name]).length ? (
+                        <CardLabelError>{t(field.populators.error || errors[field.populators?.name]?.message)}</CardLabelError>
+                      ) : null}
+                      <div style={field.withoutLabel ? { width: "100%" } : {}} className="field">
+                        {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field)}
+                        {field?.description && (
+                          <CardLabel
+                            style={{
+                              marginTop: "-24px",
+                              fontSize: "16px",
+                              fontWeight: "bold",
+                              color: "#505A5F",
+                              ...field?.descriptionStyles,
+                            }}
+                          >
+                            {t(field.description)}
+                          </CardLabel>
+                        )}
+                      </div>
+                    </div>
+                  </React.Fragment>
+                );
+              return (
+                <Fragment>
+                  <LabelFieldPair key={index}>
+                    {!field.withoutLabel && (
+                      <CardLabel style={{ color: field.isSectionText ? "#505A5F" : "", marginBottom: props.inline ? "8px" : "revert", ...props.fieldStyle }}>
+                        {t(field.label)}
+                        {field.isMandatory ? " * " : null}
+                      </CardLabel>
+                    )}
+                    <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : {}} className="field">
+                      {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field)}
+                      {field?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(field?.description)}</CardText>}
+                    </div>
+                  </LabelFieldPair>
+                  {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
+                    <CardLabelError className="custom-formcomposer">{t(field?.populators?.error)}</CardLabelError>
+                  ) : null}
+                </Fragment>
+              );
+            })}
+            {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine style={props?.breaklineStyle ? props?.breaklineStyle : {}} />)}
+          </React.Fragment>
+        );
+      }),
+    [props?.config, formData]
+  );
 
   const getCardStyles = (shouldDisplay = true) => {
     let styles = props.cardStyle || {};
     if (props.noBoxShadow) styles = { ...styles, boxShadow: "none" };
-    if(!shouldDisplay) styles = {...styles, display : "none"}
+    if (!shouldDisplay) styles = { ...styles, display: "none" };
     return styles;
   };
 
@@ -770,115 +751,107 @@ export const FormComposer = (props) => {
   const checkKeyDown = (e) => {
     const keyCode = e.keyCode ? e.keyCode : e.key ? e.key : e.which;
     if (keyCode === 13) {
-      // e.preventDefault();
+      e.preventDefault();
     }
   };
 
   const setActiveNavByDefault = (configNav) => {
-    
-    let setActiveByDefaultRow = null
-    configNav?.forEach(row => {
-      if(row?.activeByDefault){
-        setActiveByDefaultRow = row
+    let setActiveByDefaultRow = null;
+    configNav?.forEach((row) => {
+      if (row?.activeByDefault) {
+        setActiveByDefaultRow = row;
       }
-    })
+    });
 
-    if(setActiveByDefaultRow){
-      return setActiveByDefaultRow?.name
+    if (setActiveByDefaultRow) {
+      return setActiveByDefaultRow?.name;
     }
-    
-    return configNav?.[0]?.name
-  }
 
-  const [activeLink, setActiveLink] = useState(props.horizontalNavConfig?setActiveNavByDefault(props.horizontalNavConfig):null);
+    return configNav?.[0]?.name;
+  };
 
-  useEffect(()=>{
+  const [activeLink, setActiveLink] = useState(props.horizontalNavConfig ? setActiveNavByDefault(props.horizontalNavConfig) : null);
+
+  useEffect(() => {
     setActiveLink(setActiveNavByDefault(props.horizontalNavConfig));
-  },[props.horizontalNavConfig]);
-  
+  }, [props.horizontalNavConfig]);
+
   const renderFormFields = (props, section, index, array, sectionFormCategory) => (
-      <React.Fragment key={index}>
-          {!props.childrenAtTheBottom && props.children}
-          {props.heading && <CardSubHeader style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
-          {props.description && <CardLabelDesc className={"repos"}> {props.description} </CardLabelDesc>}
-          {props.text && <CardText>{props.text}</CardText>}
-          {formFields(section, index, array, sectionFormCategory)}
-          {props.childrenAtTheBottom && props.children}
-          {props.submitInForm && (
-            <SubmitBar label={t(props.label)} style={{ ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full" />
-          )}
-          {props.secondaryActionLabel && (
-          <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
-            {props.secondaryActionLabel}
-          </div>)}
-      </React.Fragment>  
+    <React.Fragment key={index}>
+      {!props.childrenAtTheBottom && props.children}
+      {props.heading && <CardSubHeader style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
+      {props.description && <CardLabelDesc className={"repos"}> {props.description} </CardLabelDesc>}
+      {props.text && <CardText>{props.text}</CardText>}
+      {formFields(section, index, array, sectionFormCategory)}
+      {props.childrenAtTheBottom && props.children}
+      {props.submitInForm && <SubmitBar label={t(props.label)} style={{ ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full" />}
+      {props.submitInForm && props.secondaryActionLabel && (
+        <div className="primary-label-btn" style={{ margin: "20px auto 0 auto", ...props?.secondaryActionStyle }} onClick={onSecondayActionClick}>
+          {t(props.secondaryActionLabel)}
+        </div>
+      )}
+    </React.Fragment>
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={props.formId} className={props.className}>        
-              {props?.headerLabel&&<Header className="digit-form-composer-header">{ t(props.headerLabel)}</Header>}
-
+    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={props.formId} className={props.className}>
       {props?.showMultipleCardsWithoutNavs ? (
-          props?.config?.map((section, index, array) => {
-            return !section.navLink && (
+        props?.config?.map((section, index, array) => {
+          return (
+            !section.navLink && (
               <Card style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
                 {renderFormFields(props, section, index, array)}
               </Card>
             )
-          })
-        ) :  (         
-          <Card style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
-            {
-              props?.config?.map((section, index, array) => {
-                return !section.navLink && (
-                    <>
-                      {renderFormFields(props, section, index, array)}
-                    </>
-                )
-              })
-            }
-          </Card>
-          )
-      }
-      { props?.showFormInNav && props.horizontalNavConfig && (
-           <HorizontalNav configNavItems={props.horizontalNavConfig?props.horizontalNavConfig:null} showNav={props?.showNavs} activeLink={activeLink} setActiveLink={setActiveLink}>
-           {props?.showMultipleCardsInNavs ? (
-             props?.config?.map((section, index, array) => {
-               return section.navLink ? (
-                 <Card style={section.navLink !== activeLink ? getCardStyles(false) : getCardStyles()} noCardStyle={props.noCardStyle}>
-                    {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
-                 </Card>
-               ) : null
-             })
-           ) :   
-             ( 
-                 <Card style={getCardStyles()} noCardStyle={props.noCardStyle}>
-                   {
-                     props?.config?.map((section, index, array) => {
-                      return section.navLink ?  (
-                         <>
-                            <div style={section.navLink !== activeLink ? {display : "none"} : {}}>
-                              {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
-                            </div>
-                         </>
-                       ) : null
-                     })
-                   }
-                 </Card>
-             )
-           }
-           </HorizontalNav>
-        )
-      }
+          );
+        })
+      ) : (
+        <Card style={getCardStyles()} noCardStyle={props.noCardStyle} className={props.cardClassName}>
+          {props?.config?.map((section, index, array) => {
+            return !section.navLink && <>{renderFormFields(props, section, index, array)}</>;
+          })}
+        </Card>
+      )}
+      {props?.showFormInNav && props.horizontalNavConfig && (
+        <HorizontalNav
+          configNavItems={props.horizontalNavConfig ? props.horizontalNavConfig : null}
+          showNav={props?.showNavs}
+          activeLink={activeLink}
+          setActiveLink={setActiveLink}
+        >
+          {props?.showMultipleCardsInNavs ? (
+            props?.config?.map((section, index, array) => {
+              return section.navLink ? (
+                <Card style={section.navLink !== activeLink ? getCardStyles(false) : getCardStyles()} noCardStyle={props.noCardStyle}>
+                  {renderFormFields(props, section, index, array, section?.sectionFormCategory)}
+                </Card>
+              ) : null;
+            })
+          ) : (
+            <Card style={getCardStyles()} noCardStyle={props.noCardStyle}>
+              {props?.config?.map((section, index, array) => {
+                return section.navLink ? (
+                  <>
+                    <div style={section.navLink !== activeLink ? { display: "none" } : {}}>{renderFormFields(props, section, index, array, section?.sectionFormCategory)}</div>
+                  </>
+                ) : null;
+              })}
+            </Card>
+          )}
+        </HorizontalNav>
+      )}
       {!props.submitInForm && props.label && (
-        <ActionBar>
+        <ActionBar style={props.secondaryActionLabel ? { display: "flex", flexDirection: "row-reverse" } : {}}>
           <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
+          {props.secondaryActionLabel && (
+            <div className="primary-label-btn" style={{ width: "fit-content", border: "1px solid", padding: "0.4rem", marginRight: "10px" }} onClick={onSecondayActionClick}>
+              {t(props.secondaryActionLabel)}
+            </div>
+          )}
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}
       {showErrorToast && <Toast error={true} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
-      {customToast && <Toast error={customToast?.error} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
-
     </form>
   );
 };

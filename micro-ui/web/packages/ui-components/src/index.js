@@ -204,6 +204,19 @@ import {
   PaymentIcon,
   HistoryIcon,
   WarningIcon,
+  InfoIcon,
+  LoginIcon,
+  TqmHomePageCardIcon,
+  TqmInboxIcon,
+  TreatmentQualityIcon,
+  MaintainanceIcon,
+  IssueIcon,
+  ViewReportsIcon,
+  HelpOutlineIcon,
+  VehicleLogIcon,
+  ArrowDownward,
+  ArrowUpward,
+  DocumentRect,
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
@@ -223,6 +236,7 @@ import PopupHeadingLabel from "./atoms/PopupHeadingLabel";
 
 import { FormComposer } from "./hoc/FormComposer";
 import { FormComposer as FormComposerV2 } from "./hoc/FormComposerV2";
+import ViewComposer from "./hoc/ViewComposer";
 import RenderFormFields from "./molecules/RenderFormFields";
 import Modal from "./hoc/Modal";
 import ResponseComposer from "./hoc/ResponseComposer";
@@ -242,6 +256,7 @@ import PitDimension from "./molecules/PitDimension";
 import RadioOrSelect from "./molecules/RadioOrSelect";
 import RatingCard from "./molecules/RatingCard";
 import RemoveableTag from "./atoms/RemoveableTag";
+import RemoveableTagNew from "./atoms/RemovableTagNew";
 import SearchAction from "./molecules/SearchAction";
 import SortAction from "./molecules/SortAction";
 import { SearchField, SearchForm } from "./molecules/SearchForm";
@@ -252,6 +267,7 @@ import SearchOnRadioButtons from "./molecules/SearchOnRadioButtons";
 import OnGroundEventCard from "./molecules/OnGroundEventCard";
 import MultiUploadWrapper from "./molecules/MultiUploadWrapper";
 import { FilterForm, FilterFormField } from "./molecules/FilterForm";
+import WrapUnMaskComponent from "./molecules/WrapUnMaskComponent";
 import OpenLinkContainer from "./atoms/OpenLinkContainer";
 import UploadPitPhoto from "./molecules/UploadPitPhoto";
 import { DownloadBtnCommon } from "./atoms/svgindex";
@@ -262,6 +278,7 @@ import HorizontalNav from "./atoms/HorizontalNav";
 import NoResultsFound from "./atoms/NoResultsFound";
 import { ViewImages } from "./atoms/ViewImages";
 import InboxSearchComposer from "./hoc/InboxSearchComposer";
+import NotificationComponent from "./atoms/NotificationComponent";
 import MobileSearchResults from "./hoc/MobileView/MobileSearchResults";
 import MobileSearchComponent from "./hoc/MobileView/MobileSearchComponent";
 import ResultsTable from "./hoc/ResultsTable";
@@ -276,7 +293,16 @@ import CitizenConsentForm from "./atoms/CitizenConsentForm";
 // Importing From SVG Library
 import {SVG} from "./atoms/SVG";
 
+import Notification from "./atoms/Notification";
+import Tutorial from "./hoc/Tutorial/Tutorial";
+import { useTourState, TourProvider } from "./hoc/Tutorial/TourProvider";
+import Help from "./hoc/Tutorial/Help";
 export {
+  Help,
+  Tutorial,
+  useTourState,
+  TourProvider,
+  Notification,
   InputTextAmount,
   Button,
   ViewImages,
@@ -421,6 +447,7 @@ export {
   FilterAction,
   ApplyFilterBar,
   RemoveableTag,
+  RemoveableTagNew,
   RadioOrSelect,
   Localities,
   SearchForm,
@@ -461,6 +488,7 @@ export {
   ResultsTable,
   InboxSearchLinks,
   UploadFileComposer,
+  ViewComposer,
   // Icons
   FilterIcon,
   FilterSvg,
@@ -530,6 +558,7 @@ export {
   ViewReportIcon,
   InboxIcon,
   UnMaskComponent,
+  WrapUnMaskComponent,
   PrivacyMaskIcon,
   DeathIcon,
   BirthIcon,
@@ -540,6 +569,8 @@ export {
 
   /* Works Management  */
 
+  InfoIcon,
+  LoginIcon,
   NoResultsFoundIcon,
   WorksMgmtIcon,
   BioMetricIcon,
@@ -556,7 +587,19 @@ export {
   ExpenditureIcon,
   PaymentIcon,
   HistoryIcon,
+  NotificationComponent,
+  TqmHomePageCardIcon,
+  TqmInboxIcon,
+  TreatmentQualityIcon,
+  MaintainanceIcon,
+  IssueIcon,
+  ViewReportsIcon,
+  HelpOutlineIcon,
+  VehicleLogIcon,
+  ArrowDownward,
+  ArrowUpward,
   WarningIcon,
+  DocumentRect,
 
 
   // Exported all svgs from svg-component library
