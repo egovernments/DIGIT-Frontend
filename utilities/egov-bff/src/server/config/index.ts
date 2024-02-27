@@ -4,7 +4,7 @@
 import { getErrorCodes } from "./constants";
 
 const HOST = process.env.EGOV_HOST ||
-  // "http://127.0.0.1:8080/" ||
+  "http://127.0.0.1:8080/" ||
   "https://unified-uat.digit.org/";
 
 if (!HOST) {
@@ -17,7 +17,7 @@ const config = {
   delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || "90000",
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   KAFKA_BROKER_HOST:
-    // "localhost:9092" ||
+    "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
@@ -70,7 +70,10 @@ const config = {
       // || "http://localhost:8086/"
       || "https://unified-uat.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST
-      // || "http://localhost:8087/"
+      || "http://localhost:8087/"
+      || "https://unified-dev.digit.org/",
+    projectHost: process.env.EGOV_PROJECT_HOST
+      || "http://localhost:8088/"
       || "https://unified-dev.digit.org/",
 
   },
@@ -89,7 +92,9 @@ const config = {
     boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
       || "boundary-service/boundary-relationships/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
-      || "boundary-service/boundary-hierarchy-definition/_search"
+      || "boundary-service/boundary-hierarchy-definition/_search",
+    projectCreate: process.env.EGOV_PROJECT_CREATE_PATH
+      || "project/v1/_create"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE
@@ -106,7 +111,7 @@ const config = {
     },
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
   },
-   SEARCH_TEMPLATE : "HCM.APIResourceTemplate3"
+  SEARCH_TEMPLATE: "HCM.APIResourceTemplate3"
 };
 
 export { getErrorCodes };
