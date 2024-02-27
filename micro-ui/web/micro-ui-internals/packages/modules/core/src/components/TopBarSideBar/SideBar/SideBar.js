@@ -267,7 +267,6 @@ const Sidebar = ({ data }) => {
       </div>
     );
   };
-
   return (
     <div className={`new-sidebar ${openItems ? "show" : ""}`} onMouseEnter={openSidebar} onMouseLeave={closeSidebar}>
       {renderSidebarItems(data)}
