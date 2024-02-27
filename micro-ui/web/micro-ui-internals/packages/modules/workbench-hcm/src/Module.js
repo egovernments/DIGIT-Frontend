@@ -14,6 +14,8 @@ import RowDetails from "./components/RowDetails";
 import TargetComponent from "./components/TargetComponent";
 import TimelineCampaign from "./components/TimelineCampaign";
 import DeliveryRules from "./components/DeliveryRules";
+import HierarchyType from "./components/HierarchyType";
+import UploadBoundaryData from "./components/UploadBoundaryData";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench-hcm"];
@@ -43,7 +45,9 @@ const componentsToRegister = {
   RowDetails,
   TargetComponent,
   TimelineCampaign,
-  DeliveryRules
+  DeliveryRules,
+  HierarchyType,
+  UploadBoundaryData
 };
 
 const overrideHooks = () => {

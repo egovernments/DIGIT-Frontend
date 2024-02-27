@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import TimelineCampaign from "../../components/TimelineCampaign";
 import { CampaignConfig } from "../../configs/CampaignConfig";
+import HierarchyType from "../../components/HierarchyType";
 
 
 const SetupCampaign = () => {
@@ -116,11 +117,6 @@ const SetupCampaign = () => {
     }
   }, [currentStep, deliveryNumber, CampaignConfig, cycleNumber]);
 
-  // useEffect(() => {
-  //   onFormValueChange
-  //   console.log("hello")
-  // },[currentStep])
-  
   const filteredConfig = campaignConfig.map((config) => {
     return {
       ...config,
