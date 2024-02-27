@@ -40,12 +40,7 @@ const EmployeeSideBar = () => {
           }
           mergeObjects(obj1[key], obj2[key]);
         } else {
-          if (obj1[key]) {
-            if (!Array.isArray(obj1[key])) {
-              obj1[key] = [obj1[key]];
-            }
-            obj1[key].push(obj2[key]);
-          } else {
+          if (!obj1[key]) {
             obj1[key] = obj2[key];
           }
         }
@@ -98,8 +93,8 @@ const EmployeeSideBar = () => {
     // Sort the array based on the 'orderNumber' or the length of the object if 'orderNumber' is not present
     // sort logic updated to sort the parent item by alphabetical
     objectArray.sort((a, b) => {
-      if(a[0] < b[0]) { return -1; }
-      if(a[0] > b[0]) { return 1; }
+      if (a[0] < b[0]) { return -1; }
+      if (a[0] > b[0]) { return 1; }
       return 0;
       // const orderNumberA = a[1].item
       //   ? a[1].item.orderNumber || Object.keys(configEmployeeSideBar).length + 1
