@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: 'production',
     output: {
-      publicPath: '/common/',
+      publicPath: '/common-ui/',
       filename: '[name].[contenthash].js',
     },
     plugins: [
