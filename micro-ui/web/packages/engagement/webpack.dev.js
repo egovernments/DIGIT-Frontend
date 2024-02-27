@@ -37,7 +37,7 @@ module.exports = () => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "engagement",
+        name: "engagement_ui",
         filename: "remoteEntry.js",
         exposes: {
           "./EngagementModule": "./src/SingleSpaEntry",

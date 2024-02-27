@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/hrms-ui/",
+      publicPath: "hrms-ui",
       filename: "[name].[contenthash].js",
     },
     plugins: [
