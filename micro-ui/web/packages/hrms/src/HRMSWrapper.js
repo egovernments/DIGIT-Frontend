@@ -11,7 +11,7 @@ initHRMSComponents();
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <EmployeeApp path={'/digit-ui/employee/hrms/'} />
+        <EmployeeApp path={'/workbench-ui/employee/hrms/'} />
       </Router>
     </QueryClientProvider>
   );

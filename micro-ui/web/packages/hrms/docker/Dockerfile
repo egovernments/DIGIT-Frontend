@@ -27,7 +27,7 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/hrms-ui
+ENV WORK_DIR=/var/web/hrms_ui
 
 RUN mkdir -p ${WORK_DIR}
 

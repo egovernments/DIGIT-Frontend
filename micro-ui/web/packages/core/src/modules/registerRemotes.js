@@ -9,7 +9,7 @@ export default (queryClient) => {
   registerApplication({
     name: "Workbench",
     app: () => import("workbench/WorkbenchModule"),
-    activeWhen: "/digit-ui/employee/workbench",
+    activeWhen: "/workbench-ui/employee/workbench",
     customProps: {
       title: "Workbench is running on host",
       queryClient,
@@ -29,7 +29,7 @@ export default (queryClient) => {
   registerApplication({
     name: "HRMS",
     app: () => import("hrms/HRMSModule"),
-    activeWhen: "/digit-ui/employee/hrms",
+    activeWhen: "/workbench-ui/employee/hrms",
     customProps: {
       title: "HRMS is running on host",
       queryClient,
@@ -40,7 +40,7 @@ export default (queryClient) => {
   registerApplication({
     name: "Engagement",
     app: () => import("engagement/EngagementModule"),
-    activeWhen: "/digit-ui/employee/engagement",
+    activeWhen: "/workbench-ui/employee/engagement",
     customProps: {
       title: "Engagement is running on host",
       queryClient,

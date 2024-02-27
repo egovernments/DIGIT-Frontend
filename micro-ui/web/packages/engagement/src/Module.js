@@ -24,7 +24,7 @@ import EventsListOnGround from "./pages/citizen/EventsListOnGround";
 import EmployeeEventDetails from "./pages/employee/Events/EventDetails";
 import CitizenApp from "./pages/citizen";
 import EventDetails from "./pages/citizen/EventsListOnGround/EventDetails";
-import DocumenetCreate from "./pages/employee/Documents/documents-create";
+import DocumentCreate from "./pages/employee/Documents/documents-create";
 import DocumentUpdate from "./pages/employee/Documents/documents-update";
 import DocumentResponse from "./pages/employee/Documents/response";
 import DocUpdateResponse from "./pages/employee/Documents/update-response";
@@ -77,16 +77,16 @@ const EventsBreadCrumb = ({ location }) => {
       content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
       show: location.pathname.includes("event/response") ? true : false,
     },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/inbox`,
-      content: t("ES_EVENT_INBOX"),
-      show: location.pathname.includes("/documents/inbox") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/new-doc`,
-      content: t("NEW_DOCUMENT_TEXT"),
-      show: location.pathname.includes("/documents/new-doc") ? true : false,
-    },
+    // {
+    //   path: `/${window?.contextPath}/employee/engagement/documents/inbox`,
+    //   content: t("ES_EVENT_INBOX"),
+    //   show: location.pathname.includes("/documents/inbox") ? true : false,
+    // },
+    // {
+    //   path: `/${window?.contextPath}/employee/engagement/documents/new-doc`,
+    //   content: t("NEW_DOCUMENT_TEXT"),
+    //   show: location.pathname.includes("/documents/new-doc") ? true : false,
+    // },
     {
       path: `/${window?.contextPath}/employee/engagement/documents/inbox/new-doc`,
       content: t("NEW_DOCUMENT_TEXT"),
@@ -226,8 +226,8 @@ console.log("Useroutematch", useRouteMatch());
           <EmployeeEventDetails />
         </Route>
         <Route exact path={`${path}/documents/inbox/update`} component={(props) => <DocumentUpdate {...props} />} />
-        <Route exact path={`${path}/documents/inbox/new-doc`} component={() => <DocumenetCreate {...{ path }} />} />
-        <Route exact path={`${path}/documents/new-doc`} component={() => <DocumenetCreate {...{ path }} />} />
+        {/* <Route exact path={`${path}/documents/inbox/new-doc`} component={() => <DocumentCreate {...{ path }} />} /> */}
+        {/* <Route exact path={`${path}/documents/new-doc`} component={() => <DocumentCreate {...{ path }} />} /> */}
         <Route path={`${path}/documents/inbox/details/:id`} component={(props) => <DocumentDetails {...props} />} />
         <Route path={`${path}/documents/response`} component={(props) => <DocumentResponse {...props} />} />
         <Route path={`${path}/documents/update-response`} component={(props) => <DocUpdateResponse {...props} />} />
