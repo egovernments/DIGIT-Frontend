@@ -18,6 +18,7 @@
   "workspaces": [
     "packages/core",
     "packages/workbench",
+    "packages/common",
     "packages/ui-core",
     "packages/app1",
     "packages/engagement"
@@ -27,11 +28,13 @@
     "start": "yarn lerna run start --parallel",
     "build:core": "cd packages/core && yarn build",
     "start:engagement": "cd packages/engagement && yarn start",
+    "build:common": "cd packages/common && yarn build",
     "build:hrms": "cd packages/hrms && yarn build",
     "build:engagement": "cd packages/engagement && yarn build",
     "build:workbench": "cd packages/workbench && yarn build",
     "build:dss": "cd packages/dss && yarn build",
     "start:core": "cd packages/core && yarn start",
+    "start:common": "cd packages/common && yarn start",
     "start:workbench": "cd packages/workbench && yarn start"
   },
   "dependencies": {
