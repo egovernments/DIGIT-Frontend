@@ -44,7 +44,17 @@ export default (queryClient) => {
   //     queryClient,
   //   },
   // }); 
+  registerApplication({
+    name: "Engagement",
+    app: () => import("engagement/EngagementModule"),
+    activeWhen: "/workbench-ui/employee/engagement",
+    customProps: {
+      title: "Engagement is running on host",
+      queryClient,
+    },
+  }); 
 
   start();
 }
+
 
