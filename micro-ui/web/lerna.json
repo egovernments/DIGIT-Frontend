@@ -3,12 +3,11 @@
   "version": "0.0.0",
   "packages":[
     "packages/core",
+    "packages/common",
     "packages/workbench",
     "packages/pgr",
     "packages/ui-core",
-    "packages/hrms",
-    "packages/app1",
-    "packages/common"
+    "packages/app1"
   ],
   "command": {
     "run": {
