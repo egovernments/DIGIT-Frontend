@@ -6,15 +6,15 @@ import { registerApplication,start } from "single-spa";
 
 export default (queryClient) => {
 
-  registerApplication({
-    name: "Workbench",
-    app: () => import("workbench/WorkbenchModule"),
-    activeWhen: "/workbench-ui/employee/workbench",
-    customProps: {
-      title: "Workbench is running on host",
-      queryClient,
-    },
-  });
+  // registerApplication({
+  //   name: "Workbench",
+  //   app: () => import("workbench/WorkbenchModule"),
+  //   activeWhen: "/workbench-ui/employee/workbench",
+  //   customProps: {
+  //     title: "Workbench is running on host",
+  //     queryClient,
+  //   },
+  // });
 
   registerApplication({
     name: "PGR",
