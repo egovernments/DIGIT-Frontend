@@ -1,0 +1,86 @@
+@import url("../index.scss");
+@import url("../typography.scss");
+
+.digit-info-banner-wrap {
+  @apply m-sm p-md;
+  max-width: 960px;
+  border-radius: 4px;
+  top: 20px;
+  left: 20px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  background-color: #C7E0F1;
+
+  div {
+    @apply flex items-center;
+    gap: 0.5rem;
+    min-height: 24px;
+
+    svg{
+      flex-shrink: 0;
+    }
+  }
+
+  h2 {
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 16px;
+    font-weight: theme(digitv2.fontWeight.bold);
+    line-height: 19px;
+    letter-spacing: 0px;
+    text-align: left;
+    color: theme(digitv2.lightTheme.text-primary);
+    min-height: 19px;
+  }
+
+  p {
+    @apply whitespace-pre-line;
+    font-weight: theme(digitv2.fontWeight.regular);
+    color: theme(digitv2.lightTheme.text-secondary);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
+    margin: 0px;
+  }
+
+  &.digit-core-variant {
+    margin: 2rem 0px;
+    padding: 10px;
+    background-color: #ffe2b5;
+    border-radius: 0.25rem;
+  }
+
+  &.success {
+    background-color: #BAD6C9;
+  }
+
+  &.warning {
+    background-color: #F8E5C8;
+  }
+
+  &.error {
+    background-color: #EFC7C1;
+  }
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    max-width: 44.5rem;
+    min-width: 22.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 21.5rem;
+    min-width: 15rem;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 87rem;
+    min-width: 25rem;
+  }
+
+}

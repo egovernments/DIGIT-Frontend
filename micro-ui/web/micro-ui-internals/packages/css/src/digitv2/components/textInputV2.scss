@@ -55,9 +55,11 @@
 
   &.password {
     input {
-      font-size: 24px;
-      font-weight: theme(digitv2.fontWeight.bold);
-      line-height: 28px;
+      font-family: theme(digitv2.fontFamily.sans);
+      line-height: 1rem;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 24px;
     }
   }
 
@@ -201,22 +203,26 @@
     }
   }
 
-  &.editableTime{
+  &.editableTime {
+
     input[type="time"]:in-range::-webkit-datetime-edit,
-    input[type="time"]:disabled::-webkit-datetime-edit{
+    input[type="time"]:disabled::-webkit-datetime-edit {
       display: block !important;
     }
+
     input[type="time"][value=""]:not(:placeholder-shown)::before {
       display: none !important;
     }
   }
 
-  &.editableDate{
+  &.editableDate {
+
     input[type="date"]:in-range::-webkit-datetime-edit,
-    input[type="date"]:disabled::-webkit-datetime-edit{
+    input[type="date"]:disabled::-webkit-datetime-edit {
       display: block !important;
     }
-    input[type="date"][value=""]:not(:placeholder-shown)::before{
+
+    input[type="date"][value=""]:not(:placeholder-shown)::before {
       display: none !important;
     }
   }

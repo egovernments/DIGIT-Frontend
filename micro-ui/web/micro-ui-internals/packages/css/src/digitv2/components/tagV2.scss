@@ -1,7 +1,7 @@
 .digit-tag-container {
   @apply flex flex-wrap mb-md items-center;
   gap: 0.5rem;
-  margin-top:1rem;
+  margin-top:0.5rem;
 
   @media (min-width: 481px) {
     /* Media query for tablets */
@@ -49,9 +49,10 @@
       @apply flex items-center;
       width: 1.25rem;
       height: 1.25rem;
-      border: 1px solid theme(digitv2.lightTheme.text-secondary);;
+      border: 1px solid theme(digitv2.lightTheme.text-secondary);
       border-radius: 50%;
-      background-color: theme(digitv2.lightTheme.text-secondary);;
+      background-color: theme(digitv2.lightTheme.text-secondary);
+      cursor: pointer;
     }
   }
 }

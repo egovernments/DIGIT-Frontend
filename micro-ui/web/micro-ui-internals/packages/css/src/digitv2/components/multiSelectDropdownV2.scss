@@ -1,7 +1,7 @@
 @import url("../index.scss");
 
 .digit-multi-select-dropdown-wrap {
-  margin-bottom: 24px;
+  margin-bottom: 10px;
 
   @media (min-width: 481px) {
     /* Media query for tablets */
@@ -27,7 +27,8 @@
 
   .digit-master,
   .digit-master-active {
-    @apply relative border border-solid border-input-border h-10 w-full bg-white;
+    @apply relative h-10 w-full bg-white;
+    border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
 
     input[type="text"] {
       @apply absolute top-0 left-0 p-sm pl-sm min-h-full min-w-full opacity-0;
@@ -43,7 +44,7 @@
     }
 
     .digit-label {
-      @apply flex justify-between p-sm w-full h-full;
+      @apply flex justify-between p-sm w-full h-full items-center;
 
       svg {
         @apply h-6 w-6;
@@ -61,18 +62,12 @@
   }
 
   .digit-master-active {
-    @apply border-2 border-primary-main;
+    border: 1px solid theme(digitv2.lightTheme.primary-orange);
 
     input[type="text"] {
       @apply opacity-100;
     }
 
-    .digit-label {
-
-      p{
-        visibility: hidden;
-      }
-    }
   }
 
   .digit-server {
@@ -262,6 +257,7 @@
           font-size: 1rem;
           line-height: 1.5rem;
           padding: 0px;
+          margin-bottom:0px;
         }
 
         .option-description {
@@ -275,6 +271,8 @@
 
         .svg{
           flex-shrink: 0;
+
+          
         }
       }
 

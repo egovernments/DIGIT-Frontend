@@ -38,7 +38,7 @@ const TextField = (props) => {
 
   const replaceDotWithColon = (inputString) => {
     if (props?.variant === "nesteddropdown" || props?.variant === "treedropdown" && inputString) {
-      const updatedInputString = inputString.replace(/\./g, ":");
+      const updatedInputString = inputString.replace(/\./g, ": ");
       return updatedInputString;
     }
     return inputString;
@@ -377,7 +377,7 @@ const Dropdown = (props) => {
             {(props.variant === "nesteddropdown" ? flattenedOptions : filteredOption) &&
               (props.variant === "nesteddropdown" ? flattenedOptions : filteredOption).length === 0 && (
                 <div className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`} key={"-1"} onClick={() => {}}>
-                  {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
+                  {<span> {"NO RESULTS FOUND"}</span>}
                 </div>
               )}
           </div>

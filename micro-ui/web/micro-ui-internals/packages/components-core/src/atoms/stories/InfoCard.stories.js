@@ -1,12 +1,12 @@
 import React from "react";
-import InfoBanner from "../InfoBanner";
+import InfoCard from "../InfoCard";
 
 export default {
-  title: "Atoms/InfoBanner",
-  component: InfoBanner,
+  title: "Atoms/InfoCard",
+  component: InfoCard,
 };
 
-const Template = (args) => <InfoBanner {...args} />;
+const Template = (args) => <InfoCard {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

@@ -131,9 +131,19 @@ const MultiSelectDropdown = ({
 
   const replaceDotWithColon = (inputString) => {
     if (inputString) {
-      const updatedInputString = inputString.replace(/\./g, ":");
+      const updatedInputString = inputString.replace(/\./g, ": ");
       return updatedInputString;
     }
+  };
+
+  const countFinalChildOptions = (totalselectedOptions) => {
+    let count = 0;
+    totalselectedOptions.forEach((option) => {
+      if (!option.propsData[1]?.options) {
+        count += 1;
+      }
+    });
+    return count;
   };
 
   /* Custom function to scroll and select in the dropdowns while using key up and down */
@@ -209,10 +219,10 @@ const MultiSelectDropdown = ({
           <SVG.Check width="20px" height="20px" fill={"#FFFFFF"} />
         </div>
         <div className="option-des-container">
-          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center",width:"100%" }}>
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%" }}>
             {config?.showIcon &&
               option?.icon &&
-              IconRender(option?.icon,alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
+              IconRender(option?.icon, alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
             <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
@@ -255,8 +265,12 @@ const MultiSelectDropdown = ({
             onChange={onSearch}
           />
           <div className="digit-label">
-            <p>{alreadyQueuedSelectedState.length > 0 ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected` : defaultLabel}</p>
-            <SVG.ArrowDropDown fill={disabled ? "#B1B4B6" : "#505A5F"} />
+            {variant === "treemultiselect" ? (
+              <p>{alreadyQueuedSelectedState.length > 0 ? `${countFinalChildOptions(alreadyQueuedSelectedState)} ${defaultUnit} Selected` : defaultLabel}</p>
+            ) : (
+              <p>{alreadyQueuedSelectedState.length > 0 ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected` : defaultLabel}</p>
+            )}
+            <SVG.ArrowDropDown fill={disabled ? "#D6D5D4" : "#505A5F"} />
           </div>
         </div>
         {active ? (
@@ -273,33 +287,35 @@ const MultiSelectDropdown = ({
         <div className="digit-tag-container">
           {alreadyQueuedSelectedState.length > 0 &&
             alreadyQueuedSelectedState.map((value, index) => {
-              const translatedText = t(value.code);
-              const replacedText = replaceDotWithColon(translatedText);
-              return (
-                <RemoveableTag
-                  key={index}
-                  text={replacedText.length > 64 ? `${replacedText.slice(0, 64)} ...` : replacedText}
-                  onClick={
-                    variant === "treemultiselect"
-                      ? () => onSelectToAddToQueue([value])
-                      : isPropsNeeded
-                      ? (e) => onSelectToAddToQueue(e, value, props)
-                      : (e) => onSelectToAddToQueue(e, value)
-                  }
-                  className="multiselectdropdown-tag"
-                />
-              );
+              if (!value.propsData[1]?.options) {
+                const translatedText = t(value.code);
+                const replacedText = replaceDotWithColon(translatedText);
+                return (
+                  <RemoveableTag
+                    key={index}
+                    text={replacedText.length > 64 ? `${replacedText.slice(0, 64)} ...` : replacedText}
+                    onClick={
+                      variant === "treemultiselect"
+                        ? () => onSelectToAddToQueue([value])
+                        : isPropsNeeded
+                        ? (e) => onSelectToAddToQueue(e, value, props)
+                        : (e) => onSelectToAddToQueue(e, value)
+                    }
+                    className="multiselectdropdown-tag"
+                  />
+                );
+              }
+              return null;
             })}
           {alreadyQueuedSelectedState.length > 0 && (
             <Button
-              label={t("Clear All")}
+              label={t(config?.clearLabel ? config?.clearLabel : "Clear All")}
               onClick={handleClearAll}
               variation=""
               style={{
-                width: "4.188rem",
                 height: "2rem",
-                minWidth:"4.188rem",
-                minHeight:"2rem",
+                minWidth: "4.188rem",
+                minHeight: "2rem",
                 padding: "0.5rem",
                 justifyContent: "center",
                 alignItems: "center",
