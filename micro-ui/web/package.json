@@ -18,9 +18,10 @@
   "workspaces": [
     "packages/core",
     "packages/workbench",
-    "packages/common",
+    "packages/pgr",
     "packages/ui-core",
     "packages/app1"
+    "packages/common"
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -30,9 +31,11 @@
     "build:hrms": "cd packages/hrms && yarn build",
     "build:workbench": "cd packages/workbench && yarn build",
     "build:dss": "cd packages/dss && yarn build",
+    "build:pgr": "cd packages/pgr && yarn build",
     "start:core": "cd packages/core && yarn start",
+    "start:workbench": "cd packages/workbench && yarn start",
+    "start:pgr": "cd packages/pgr && yarn start"
     "start:common": "cd packages/common && yarn start",
-    "start:workbench": "cd packages/workbench && yarn start"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

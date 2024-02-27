@@ -15,7 +15,17 @@ export default (queryClient) => {
       queryClient,
     },
   });
-  
+
+  registerApplication({
+    name: "PGR",
+    app: () => import("pgr/PGRModule"),
+    activeWhen: "/workbench-ui/employee/pgr",
+    customProps: {
+      title: "PGR is running on host",
+      queryClient,
+    },
+   });
+
   registerApplication({
     name: "Common",
     app: () => import("common/CommonModule"),
