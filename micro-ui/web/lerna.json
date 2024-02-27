@@ -6,7 +6,8 @@
     "packages/common",
     "packages/workbench",
     "packages/ui-core",
-    "packages/app1"
+    "packages/app1",
+    "packages/engagement"
   ],
   "command": {
     "run": {

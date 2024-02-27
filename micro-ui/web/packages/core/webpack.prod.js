@@ -24,6 +24,8 @@ module.exports = () => {
           workbench : `workbench_web@${domain}/workbench/remoteEntry.js`,
           // dss : `dss@${domain}/dss/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
+          engagement: `engagement_ui@${domain}/workbench/remoteEntry.js`
+
         },
         // shared: packageJson.dependencies,
       }),
