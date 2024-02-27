@@ -30,12 +30,13 @@ const getKey = (obj, parent) => {
     return null;
   }
   // Use Object.keys to get an array of keys in the object
-  const key = Object.keys(obj).map((key) =>
+  const key = Object.keys(obj).map((key) => {
     // Check if the object has an 'item' property with a 'path' property
-    obj[key]?.item?.path?.split(parent ? `${parent}.${key}` : `.${key}`) ||
-    // If not, recursively call getKey on the nested object
-    getKey(obj[key], key)
-  );
+    if (typeof obj[key]?.item?.path === 'string') {
+      return obj[key]?.item?.path?.split(parent ? `${parent}.${key}` : `.${key}`) || getKey(obj[key], key);
+    }
+    return null; // or return some default value if neither condition is met
+  });
   // Return the first element of the array (the key)
   return key?.[0];
 };
