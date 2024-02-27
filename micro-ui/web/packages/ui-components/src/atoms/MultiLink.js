@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useRef } from "react";
+import React, { forwardRef, useCallback, useRef } from "react";
 import LinkButton from "./LinkButton";
 import { PrimaryDownlaodIcon } from "./svgindex";
 import { useTranslation } from "react-i18next";

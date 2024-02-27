@@ -99,7 +99,7 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
       );
     }
     if (item.type === "link") {
-      if (item.link.indexOf("/digit-ui") === -1 && isEmployee) {
+      if (item.link.indexOf(`/${window?.contextPath}`) === -1 && isEmployee) {
         const getOrigin = window.location.origin;
         return (
           <a href={getOrigin + "/employee/" + item.link}>
@@ -181,16 +181,16 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
           }}
         >
           {profileItem}
-          <div className="drawer-list" id="sideBarMenu">
+          <div className="drawer-list">
             {isEmployee ? renderSearch() : null}
             {menuItems?.map((item, index) => (
               <div className={`sidebar-list ${pathname === item.link ? "active" : ""}`} key={index}>
                 <MenuItem item={item} />
               </div>
             ))}
-          </div>
-          <div className={`sidebar-list-footer`}>
-            <div className="side-bar-footer">{Footer}</div>
+            <div className={`sidebar-list`}>
+              <div className="side-bar-footer">{Footer}</div>
+            </div>
           </div>
         </div>
       </div>

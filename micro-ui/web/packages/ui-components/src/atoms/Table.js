@@ -1,19 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import {
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-  useSortBy,
-  useTable,
-} from 'react-table';
-import {
-  ArrowBack,
-  ArrowForward,
-  ArrowToFirst,
-  ArrowToLast,
-  SortDown,
-  SortUp,
-} from './svgindex';
+import React, { useEffect, useState, useRef, forwardRef } from "react";
+import { useGlobalFilter, usePagination, useRowSelect, useSortBy, useTable } from "react-table";
+import { ArrowBack, ArrowForward, ArrowToFirst, ArrowToLast, SortDown, SortUp, DoubleTickIcon } from "./svgindex";
 import CheckBox from "./CheckBox";
 import ActionBar from "./ActionBar";
 import SubmitBar from "./SubmitBar";
@@ -70,7 +57,6 @@ const Table = ({
   tableTopComponent,
   tableRef,
   isReportTable = false,
-  inboxStyles,
   showCheckBox = false,
   actionLabel = 'CS_COMMON_DOWNLOAD',
   tableSelectionHandler = () => {}
@@ -148,7 +134,6 @@ const Table = ({
 
 
   useEffect(() => setGlobalFilter(onSearch), [onSearch, setGlobalFilter,data]);
-  const tref = useRef();
   
   const handleSelection = async () => {
     const selectedRows = rows?.filter(ele => Object.keys(selectedRowIds)?.includes(ele?.id))
