@@ -3,7 +3,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
 
-const domain = process.env.PRODUCTION_DOMAIN || "https://unified-dev.digit.org";
+const domain = process.env.PRODUCTION_DOMAIN || "https://staging.digit.org";
 
 module.exports = () => {
   const prodConfig = {
@@ -21,6 +21,8 @@ module.exports = () => {
           // dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
           hrms: `hrms@${domain}/hrms/remoteEntry.js`,
           workbench : `workbench@${domain}/workbench/remoteEntry.js`,
+          engagement : `engagement@${domain}/engagement/remoteEntry.js`,
+
           // dss : `dss@${domain}/dss/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },

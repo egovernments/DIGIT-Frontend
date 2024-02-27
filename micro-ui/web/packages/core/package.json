@@ -20,13 +20,16 @@
     "@babel/preset-react": "7.12.10",
     "babel-loader": "8.2.2",
     "babel-plugin-react-html-attrs": "^3.0.5",
+    "css-loader": "^6.10.0",
     "gh-pages": "^5.0.0",
     "html-webpack-plugin": "^5.5.0",
-    "react-query-devtools": "^2.6.3"
+    "react-query-devtools": "^2.6.3",
+    "style-loader": "^3.3.4"
   },
   "dependencies": {
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
     "@egovernments/digit-ui-react-components": "1.4.107",
+    "css-loader": "^6.10.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-i18next": "11.16.2",

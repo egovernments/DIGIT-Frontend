@@ -16,7 +16,7 @@ module.exports = () => {
       proxy: [
         {
           context: () => true,
-          target:  'https://unified-dev.digit.org',
+          target:  'https://staging.digit.org',
           secure: true,
           changeOrigin:true,
           bypass: function (req, res, proxyOptions) {
@@ -48,6 +48,8 @@ module.exports = () => {
           // app1: "app1@https://localhost:8001/remoteEntry.js",
           // dss: "dss@https://localhost:8087/remoteEntry.js",
           // measurement : "measurement@https://localhost:8088/remoteEntry.js"
+          engagement: "engagement@https://localhost:8089/remoteEntry.js"
+
         },
         shared: packageJson.dependencies,
       }),

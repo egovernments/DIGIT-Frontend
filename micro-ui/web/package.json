@@ -19,6 +19,8 @@
     "packages/core",
     "packages/workbench",
     "packages/ui-core",
+    "packages/hrms",
+    "packages/engagement",
     "packages/app1"
   ],
   "scripts": {

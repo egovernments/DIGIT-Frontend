@@ -20,8 +20,9 @@ const mount = (el, { history,login }) => {
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   ReactDOM.render(
-    <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
-    el
+    <div>HRMS running</div>
+    // <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
+    ,el
   );
 };
 

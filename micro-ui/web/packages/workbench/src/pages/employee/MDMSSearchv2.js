@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
+import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
 
 const toDropdownObj = (master = "", mod = "") => {
   return {
@@ -22,7 +23,7 @@ const MDMSSearchv2 = () => {
   let Config = _.clone(Configg)
   const { t } = useTranslation();
   const history = useHistory();
-  
+  console.log("useroutematch", useRouteMatch);
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
   
   const [availableSchemas, setAvailableSchemas] = useState([]);

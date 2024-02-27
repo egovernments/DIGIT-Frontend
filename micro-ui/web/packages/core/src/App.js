@@ -44,7 +44,7 @@ registerRemotes(queryClient)
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
+  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement","Engagement"]
 
   const moduleReducers = (initData) => initData;
   

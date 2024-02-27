@@ -25,7 +25,7 @@ import Response from "./pages/Response";
 
 var Digit = window.Digit || {};
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = "HR";
+  const moduleCode = "hrms";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
    

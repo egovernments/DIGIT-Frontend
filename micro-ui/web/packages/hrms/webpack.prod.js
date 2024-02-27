@@ -17,7 +17,7 @@ module.exports = () => {
         exposes: {
           "./HRMSModule": "./src/SingleSpaEntry",
         },
-        // shared: packageJson.dependencies, //removed the shared logic for now will be enabled later for optimization
+         shared: packageJson.dependencies, //removed the shared logic for now will be enabled later for optimization
       }),
     ],
   };
