@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/pgr/",
+      publicPath: "/pgr-ui/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
