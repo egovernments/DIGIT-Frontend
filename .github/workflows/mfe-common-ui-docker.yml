@@ -28,7 +28,7 @@ jobs:
       id: docker_build
       working-directory: ./micro-ui/web/packages/common
       run: |
-        IMAGE_TAG=egovio/core-digit-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        IMAGE_TAG=egovio/common-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
           --file docker/Dockerfile \
           --tag $IMAGE_TAG
