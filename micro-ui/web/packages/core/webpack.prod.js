@@ -21,8 +21,8 @@ module.exports = () => {
           // dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
           pgr : `pgr@${domain}/pgr/remoteEntry.js`,
           // hrms: `hrms@${domain}/hrms/remoteEntry.js`,
-          common: `common-ui@${domain}/common/remoteEntry.js`,
-          workbench : `workbench_web@${domain}/workbench/remoteEntry.js`,
+          common: `common-ui@${domain}/common-ui/remoteEntry.js`,
+          // workbench : `workbench_web@${domain}/workbench/remoteEntry.js`,
           // dss : `dss@${domain}/dss/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
