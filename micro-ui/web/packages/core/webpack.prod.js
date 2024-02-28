@@ -9,7 +9,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/"
+      publicPath: "/core-digit-ui/"
     },
     plugins: [
       new ModuleFederationPlugin({
