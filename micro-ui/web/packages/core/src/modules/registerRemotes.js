@@ -26,13 +26,16 @@ export default (queryClient) => {
     },
    });
 
+  const userType = Digit.UserService.getType();
+
   registerApplication({
     name: "Common",
     app: () => import("common/CommonModule"),
-    activeWhen: "/workbench-ui/employee/common",
+    activeWhen: `/workbench-ui/${userType}/common`, //change to userType here
     customProps: {
       title: "Common Module is running on host",
       queryClient,
+      userType
     },
   });
 

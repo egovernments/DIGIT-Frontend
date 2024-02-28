@@ -8,8 +8,9 @@ import EmployeePayment from "./employee";
 
 
 export const PaymentModule = ({ deltaConfig = {}, stateCode, cityCode, moduleCode = "Payment", userType,path }) => {
+  // const {pathname:url} = useLocation()
+  const url = `${window.contextPath}/citizen/common/`
   
-  const {pathname:url} = useLocation()
   const store = { data: {} }; //Digit.Services.useStore({}, { deltaConfig, stateCode, cityCode, moduleCode, language });
 
   if (Object.keys(store).length === 0) {
@@ -18,6 +19,7 @@ export const PaymentModule = ({ deltaConfig = {}, stateCode, cityCode, moduleCod
   }
 
   const getPaymentHome = () => {
+    
     if (userType === "citizen") return <CitizenPayment {...{ stateCode, moduleCode, cityCode, path, url }} />;
     else return <EmployeePayment {...{ stateCode, cityCode, moduleCode,path }} />;
   };
