@@ -512,7 +512,6 @@ function generateHierarchyList(data: any[], parentChain: any = []) {
       result = result.concat(childResults);
     }
   }
-
   return result;
 }
 
@@ -538,7 +537,6 @@ function generateHierarchy(boundaries: any[]) {
       }
     }
   }
-
   return hierarchyList;
 }
 
@@ -571,14 +569,10 @@ const getHierarchy = async (hierarchyType: any, tenantId: any, request: any) => 
   };
 
   try {
-    // Make API call using httpRequest function
     const response = await httpRequest(url, requestBody);
-
-    // Extract data from the response as needed
-    const boundaryList = response?.BoundaryHierarchy?.[0].boundaryHierarchy; // Assuming the response has a field named boundaryList
+    const boundaryList = response?.BoundaryHierarchy?.[0].boundaryHierarchy;
     return generateHierarchy(boundaryList);
   } catch (error) {
-    // Handle errors
     console.error('Error:', error);
     throw error;
   }
@@ -589,8 +583,7 @@ const getHierarchy = async (hierarchyType: any, tenantId: any, request: any) => 
 async function createExcelSheet(data: any, headers: any) {
   const workbook = XLSX.utils.book_new();
   const sheetName = 'Sheet1';
-  const sheetData = [headers, ...data.map((row: any) => [...row, ''])]; // Adding empty Boundary Code column
-
+  const sheetData = [headers, ...data];
   const ws = XLSX.utils.aoa_to_sheet(sheetData);
   XLSX.utils.book_append_sheet(workbook, ws, sheetName);
   return { wb: workbook, ws: ws, sheetName: sheetName }
@@ -607,15 +600,28 @@ async function getBoundarySheetData(hierarchyType: any, tenantId: any, request: 
   if (response?.TenantBoundary?.[0]?.boundary) {
     const boundaryList = generateHierarchyList(response?.TenantBoundary?.[0]?.boundary)
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
+
+      const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
+      const string = boundaryCodes.join(', ');
+      const boundaryResponse = await httpRequest('http://localhost:8087/boundary-service/boundary/_search', request.body, { tenantId: "pg", codes: string });
+
+      const mp: { [key: string]: string } = {};
+      boundaryResponse?.Boundary?.forEach((data: any) => {
+        mp[data?.code] = data?.additionalDetails?.name;
+      });
+
       const hierarchy = await getHierarchy(hierarchyType, tenantId, request);
-      const headers = [...hierarchy, 'Boundary Code', "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+      const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
       const data = boundaryList.map(boundary => {
         const boundaryParts = boundary.split(',');
-        const rowData = [];
-        for (let i = 0; i < boundaryParts.length; i++) {
-          rowData.push(boundaryParts[i]);
-        }
-        return rowData;
+        const boundaryCode = boundaryParts[boundaryParts.length - 1];
+        const rowData = boundaryParts.concat(Array(Math.max(0, hierarchy.length - boundaryParts.length)).fill(''));
+        const mappedRowData = rowData.map((cell: any, index: number) =>
+          index === hierarchy.length ? '' : cell !== '' ? mp[cell] || cell : ''
+        );
+        const boundaryCodeIndex = hierarchy.length;
+        mappedRowData[boundaryCodeIndex] = boundaryCode;
+        return mappedRowData;
       });
       return await createExcelSheet(data, headers);
     }
