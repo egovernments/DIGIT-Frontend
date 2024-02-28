@@ -9,7 +9,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "auto"
+      publicPath: "/"
     },
     plugins: [
       new ModuleFederationPlugin({
