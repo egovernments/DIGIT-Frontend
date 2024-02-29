@@ -1,28 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+import { ViewComposer, Header, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { useIndividualView } from "../hooks/useIndividualView";
 
-export const data = (individual) => {
+function ViewIndividual() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const searchParams = new URLSearchParams(location.search);
+  const [individualId, setIndividualId] = useState(null); // Define individualId state
 
-  return {
-    cards: [
-      {
-        sections: [
+  useEffect(() => {
+    const id = searchParams.get("id");
+    console.log("id", id);
+    setIndividualId(id); // Set individualId state with the value from URL
+  }, [searchParams]);
+
+  const { isLoading, data: testData, revalidate, isFetching } = useIndividualView({
+    t,
+    tenantId: tenantId,
+    individualId: searchParams.get("id"), // Use individualId here
+    config: {
+      select: (data) => ({
+        cards: [
           {
-            type: "DATA",
-            values: [
+            sections: [
               {
-                key: "Applicant name",
-                value: individual?.Individual?.[0]?.name?.givenName || "NA" ,
+                type: "DATA",
+                
+                values: data?.details,
               },
-              {
-                key : "Applicant Id",
-                value :individual?.Individual?.[0]?.identifiers?.[0].id || "NA",
-              }
             ],
           },
         ],
-      },
-    ]
-  };
-};
+       
+       }),
+      
+
+     },
+
+  });
+  console.log("testData",testData);
+
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
+
+  return (
+    <>
+      <Header>{t("Individual details")}</Header>
+      {!isLoading && individualId && <ViewComposer data={testData} isLoading={isLoading} />}
+    </>
+  );
+}
+
+export default ViewIndividual;

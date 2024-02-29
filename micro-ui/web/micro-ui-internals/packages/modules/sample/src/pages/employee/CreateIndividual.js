@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import useCustomAPIMutationHook from "../../../../../libraries/src/hooks/useCustomAPIMutationHook";
+import useCustomAPIMutationHook from "../../hooks/useCustomAPIMutationHook";
 
 
 

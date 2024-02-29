@@ -9,7 +9,8 @@ import AdvancedCreate from "./AdvancedForm";
 import Response from "./Response";
 import SearchIndividual from "./SearchIndividual";
 import CreateIndividual from "./CreateIndividual";
-import IndividualDetails from "./IndividualDetail";
+//import IndividualDetails from "./IndividualDetail";
+import ViewIndividual from "../../configs/ViewIndividual";
 
 
 
@@ -48,7 +49,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
         <PrivateRoute path={`${path}/create-individual`} component={() => <CreateIndividual />} />
         <PrivateRoute path={`${path}/search-individual`} component={() => <SearchIndividual></SearchIndividual>} />
-        <PrivateRoute path={`${path}/individual-details`} component={() => <IndividualDetails />} />
+        <PrivateRoute path={`${path}/individual-details`} component={() => <ViewIndividual />} />
         
       </AppContainer>
     </Switch>
