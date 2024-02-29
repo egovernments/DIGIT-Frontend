@@ -13,7 +13,7 @@ import getStore from "./redux/store";
 import { ReactQueryDevtools } from 'react-query/devtools';
 //here add react-query dev tools
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
+const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
   // debugger
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
