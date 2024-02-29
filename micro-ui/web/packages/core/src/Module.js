@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 //here add react-query dev tools
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
+  // debugger
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
@@ -39,6 +40,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
 };
 
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+  // debugger
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   // const queryClient = new QueryClient({

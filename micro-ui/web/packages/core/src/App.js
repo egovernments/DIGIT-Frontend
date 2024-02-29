@@ -43,14 +43,14 @@ registerRemotes(queryClient)
 
 
 const App = () => {
-  const { login, history, isSignedIn$, logout } = useAuth();
+  // const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
   const enabledModules = ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR"];
 
   const moduleReducers = (initData) => initData;
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  
+  console.log("stateCode",stateCode);
 
   return (
     <div>
@@ -109,11 +109,11 @@ const initDigitUI = () => {
   });
 
   // initHRMSComponents();
-  const enabledModules = ["PT"];
+  // const enabledModules = ["PT"];
 
-  const moduleReducers = (initData) => initData;
+  // const moduleReducers = (initData) => initData;
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   // initTokens(stateCode);
 
   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
