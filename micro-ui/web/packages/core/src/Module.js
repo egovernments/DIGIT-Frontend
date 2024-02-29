@@ -102,7 +102,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
