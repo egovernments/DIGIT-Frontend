@@ -7,7 +7,8 @@ import FormData from 'form-data';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
-import { generateActivityMessage, generateResourceMessage, matchWithCreatedDetails } from "../utils/index";
+import { correctParentValues, generateActivityMessage, generateResourceMessage, matchWithCreatedDetails, sortCampaignDetails } from "../utils/index";
+import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const jp = require("jsonpath");
 const _ = require('lodash');
 
@@ -791,6 +792,130 @@ const processCreateData: any = async (result: any, type: string, request: any, r
   }
 }
 
+async function createProjectAndUpdateId(projectBody: any, boundaryProjectIdMapping: any, boundaryCode: any, campaignDetails: any) {
+  const projectCreateUrl = `${config.host.projectHost}` + `${config.paths.projectCreate}`
+  logger.info("Project Creation url " + projectCreateUrl)
+  logger.info("Project Creation body " + JSON.stringify(projectBody))
+  const projectResponse = await httpRequest(projectCreateUrl, projectBody, undefined, "post", undefined, undefined);
+  logger.info("Project Creation response" + JSON.stringify(projectResponse))
+  validatedProjectResponseAndUpdateId(projectResponse, projectBody, campaignDetails);
+  boundaryProjectIdMapping[boundaryCode] = projectResponse?.Project[0]?.id
+  await new Promise(resolve => setTimeout(resolve, 10000));
+}
+
+async function createProjectIfNotExists(requestBody: any) {
+  const { projectType, tenantId } = requestBody?.Campaign
+  sortCampaignDetails(requestBody?.Campaign?.CampaignDetails)
+  correctParentValues(requestBody?.Campaign?.CampaignDetails)
+  var boundaryProjectIdMapping: any = {};
+  for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+    const projectBody: any = {
+      RequestInfo: requestBody.RequestInfo,
+      Projects: []
+    }
+    var { projectId, startDate, endDate, boundaryCode, boundaryType, parentBoundaryCode, description, department, referenceID, projectSubType, isTaskEnabled = true, documents = [], rowVersion = 0 } = campaignDetails;
+    const address = {
+      tenantId,
+      boundary: boundaryCode,
+      boundaryType
+    }
+    startDate = parseInt(startDate);
+    endDate = parseInt(endDate);
+    if (!projectId) {
+      projectBody.Projects.push({
+        tenantId, parent: boundaryProjectIdMapping[parentBoundaryCode] || null, address, description, department, referenceID, projectSubType, projectType, startDate, endDate, isTaskEnabled, documents, rowVersion
+      })
+      await createProjectAndUpdateId(projectBody, boundaryProjectIdMapping, boundaryCode, campaignDetails)
+    }
+  }
+}
+
+async function createStaff(resouceBody: any) {
+  const staffCreateUrl = `${config.host.projectHost}` + `${config.paths.staffCreate}`
+  logger.info("Staff Creation url " + staffCreateUrl)
+  logger.info("Staff Creation body " + JSON.stringify(resouceBody))
+  const staffResponse = await httpRequest(staffCreateUrl, resouceBody, undefined, "post", undefined, undefined);
+  logger.info("Staff Creation response" + JSON.stringify(staffResponse))
+  validateStaffResponse(staffResponse);
+}
+
+async function createProjectResource(resouceBody: any) {
+  const projectResourceCreateUrl = `${config.host.projectHost}` + `${config.paths.projectResourceCreate}`
+  logger.info("Project Resource Creation url " + projectResourceCreateUrl)
+  logger.info("Project Resource Creation body " + JSON.stringify(resouceBody))
+  const projectResourceResponse = await httpRequest(projectResourceCreateUrl, resouceBody, undefined, "post", undefined, undefined);
+  logger.info("Project Resource Creation response" + JSON.stringify(projectResourceResponse))
+  validateProjectResourceResponse(projectResourceResponse);
+}
+
+async function createProjectFacility(resouceBody: any) {
+  const projectFacilityCreateUrl = `${config.host.projectHost}` + `${config.paths.projectFacilityCreate}`
+  logger.info("Project Facility Creation url " + projectFacilityCreateUrl)
+  logger.info("Project Facility Creation body " + JSON.stringify(resouceBody))
+  const projectFacilityResponse = await httpRequest(projectFacilityCreateUrl, resouceBody, undefined, "post", undefined, undefined);
+  logger.info("Project Facility Creation response" + JSON.stringify(projectFacilityResponse))
+  validateProjectFacilityResponse(projectFacilityResponse);
+}
+async function createRelatedEntity(resources: any, tenantId: any, projectId: any, startDate: any, endDate: any, resouceBody: any) {
+  for (const resource of resources) {
+    const type = resource?.type
+    for (const resourceId of resource?.resourceIds) {
+      if (type == "staff") {
+        const ProjectStaff = {
+          // FIXME : Tenant Id should not be splitted
+          tenantId: tenantId.split('.')?.[0],
+          projectId,
+          userId: resourceId,
+          startDate,
+          endDate
+        }
+        resouceBody.ProjectStaff = ProjectStaff
+        await createStaff(resouceBody)
+      }
+      else if (type == "resource") {
+        const ProjectResource = {
+          // FIXME : Tenant Id should not be splitted
+          tenantId: tenantId.split('.')?.[0],
+          projectId,
+          resource: {
+            productVariantId: resourceId,
+            type: "DRUG",
+            "isBaseUnitVariant": false
+          },
+          startDate,
+          endDate
+        }
+        resouceBody.ProjectResource = ProjectResource
+        await createProjectResource(resouceBody)
+      }
+      else if (type == "facility") {
+        const ProjectFacility = {
+          // FIXME : Tenant Id should not be splitted
+          tenantId: tenantId.split('.')?.[0],
+          projectId,
+          facilityId: resourceId
+        }
+        resouceBody.ProjectFacility = ProjectFacility
+        await createProjectFacility(resouceBody)
+      }
+    }
+  }
+}
+
+async function createRelatedResouce(requestBody: any) {
+  const { tenantId } = requestBody?.Campaign
+
+  for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+    const resouceBody: any = {
+      RequestInfo: requestBody.RequestInfo,
+    }
+    var { projectId, startDate, endDate, resources } = campaignDetails;
+    startDate = parseInt(startDate);
+    endDate = parseInt(endDate);
+    await createRelatedEntity(resources, tenantId, projectId, startDate, endDate, resouceBody);
+  }
+}
+
 
 export {
   getSheetData,
@@ -803,5 +928,7 @@ export {
   processCreateData,
   updateFile,
   getBoundarySheetData,
-  createAndUploadFile
+  createAndUploadFile,
+  createProjectIfNotExists,
+  createRelatedResouce
 };

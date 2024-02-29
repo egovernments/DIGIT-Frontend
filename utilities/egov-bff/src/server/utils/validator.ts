@@ -154,7 +154,84 @@ async function getTransformAndParsingTemplates(APIResource: any, request: any, r
 }
 
 
+function validateBoundaries(requestBody: any) {
+    const { boundaryCode } = requestBody?.Campaign;
+    if (!boundaryCode) {
+        throw new Error("Enter BoundaryCode In Campaign")
+    }
+    for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+        const { boundaryCode: campaignBoundaryCode, parentBoundaryCode } = campaignDetails;
+        if (!parentBoundaryCode && boundaryCode != campaignBoundaryCode) {
+            throw new Error("Enter ParentBoundaryCode In CampaignDetails")
+        }
+        if (!campaignBoundaryCode) {
+            throw new Error("Enter BoundaryCode In CampaignDetails")
+        }
+    }
+}
+function validateCampaignRequest(requestBody: any) {
+    validateBoundaries(requestBody)
+    const { projectType } = requestBody?.Campaign
+    if (!projectType) {
+        throw new Error("Enter ProjectType")
+    }
+    for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+        var { startDate, endDate } = campaignDetails;
+        startDate = parseInt(startDate);
+        endDate = parseInt(endDate);
+
+        // Check if startDate and endDate are valid integers
+        if (isNaN(startDate) || isNaN(endDate)) {
+            throw new Error("Start date or end date is not a valid epoch timestamp");
+        }
+    }
+
+}
+
+
+function validatedProjectResponseAndUpdateId(projectResponse: any, projectBody: any, campaignDetails: any) {
+    if (projectBody?.Projects?.length != projectResponse?.Project?.length) {
+        throw new Error("Project creation failed. Check Logs")
+    }
+    else {
+        for (const project of projectResponse?.Project) {
+            if (!project?.id) {
+                throw new Error("Project creation failed. Check Logs")
+            }
+            else {
+                campaignDetails.projectId = project.id;
+            }
+        }
+    }
+}
+function validateStaffResponse(staffResponse: any) {
+    if (!staffResponse?.ProjectStaff?.id) {
+        throw new Error("Project staff creation failed. Check Logs")
+    }
+}
+function validateProjectResourceResponse(projectResouceResponse: any) {
+    if (!projectResouceResponse?.ProjectResource?.id) {
+        throw new Error("Project Resource creation failed. Check Logs")
+    }
+}
+function validateProjectFacilityResponse(projectFacilityResponse: any) {
+    if (!projectFacilityResponse?.ProjectFacility?.id) {
+        throw new Error("Project Facility creation failed. Check Logs")
+    }
+}
 
 
 
-export { validateProcessMicroplan, validateTransformedData, validateDataWithSchema, processValidationWithSchema, getTransformAndParsingTemplates };
+
+export {
+    validateProcessMicroplan,
+    validateTransformedData,
+    validateDataWithSchema,
+    processValidationWithSchema,
+    getTransformAndParsingTemplates,
+    validateCampaignRequest,
+    validatedProjectResponseAndUpdateId,
+    validateStaffResponse,
+    validateProjectFacilityResponse,
+    validateProjectResourceResponse
+};
