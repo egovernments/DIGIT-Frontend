@@ -45,6 +45,7 @@ const Home = ({
   pathname,
   initData,
 }) => {
+  // debugger
   const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getStateId(),
     "ACCESSCONTROL-ACTIONS-TEST",
