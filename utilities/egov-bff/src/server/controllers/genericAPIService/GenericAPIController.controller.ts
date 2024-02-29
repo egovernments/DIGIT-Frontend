@@ -21,7 +21,6 @@ import { httpRequest } from "../../utils/request";
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
-import axios from "axios";
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
 
@@ -137,19 +136,11 @@ class genericAPIController {
                 throw new Error('First Generate then Download');
             }
             const auditDetails = await generateAuditDetails(request);
-            const apiResponse = await axios.get(config.host.filestore + config.paths.filestore + '/url', {
-                params: {
-                    tenantId: 'mz',
-                    fileStoreIds: responseData.map(item => item.filestoreid).join(',')
-                }
-            });
-            const fileStoreUrl = apiResponse.data;
             const transformedResponse = responseData.map((item: any) => {
                 return {
                     fileStoreId: item.filestoreid,
                     additionalDetails: {},
                     type: type,
-                    url: fileStoreUrl[item.filestoreid],
                     auditDetails: auditDetails
                 };
             });

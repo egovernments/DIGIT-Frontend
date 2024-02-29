@@ -13,6 +13,7 @@ import { Pool } from 'pg';
 import { getCount } from '../api/index'
 import { logger } from "./logger";
 import { processValidationWithSchema, validateTransformedData } from "./validator";
+import TransformController from '../controllers/bulkTransform/TransformController.controller'
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
@@ -425,7 +426,8 @@ async function generateXlsxFromJson(request: any, response: any, simplifiedData:
     var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
       {
         'Content-Type': 'multipart/form-data',
-        'auth-token': request?.body?.RequestInfo?.authToken
+        // 'auth-token': request?.body?.RequestInfo?.authToken
+        'auth-token': "00604336-6ed1-44b7-8a93-632101657d33"
       }
     );
     const responseData = fileCreationResult?.files;
@@ -635,14 +637,29 @@ async function callSearchApi(request: any, response: any) {
 
 async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, response: any) {
   try {
+    const type = request?.query?.type;
     const generatedResource: any = { generatedResource: newEntryResponse }
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-    const responseDatas = await callSearchApi(request, response);
-    const modifiedDatas = await modifyData(request, response, responseDatas);
-    const result = await generateXlsxFromJson(request, response, modifiedDatas);
-    const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
-    const generatedResourceNew: any = { generatedResource: finalResponse }
-    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+    if (type === 'boundary') {
+      const BoundaryDetails = {
+        hierarchyType: "NITISH",
+        tenantId: "pg"
+      };
+      request.body.BoundaryDetails = BoundaryDetails;
+      const transformController = new TransformController();
+      const result = await transformController.getBoundaryData(request, response);
+      const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+      const generatedResourceNew: any = { generatedResource: finalResponse }
+      produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+    }
+    else {
+      const responseDatas = await callSearchApi(request, response);
+      const modifiedDatas = await modifyData(request, response, responseDatas);
+      const result = await generateXlsxFromJson(request, response, modifiedDatas);
+      const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+      const generatedResourceNew: any = { generatedResource: finalResponse }
+      produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+    }
   } catch (error) {
     throw error;
   }
@@ -958,3 +975,5 @@ export {
   correctParentValues,
   sortCampaignDetails
 };
+
+
