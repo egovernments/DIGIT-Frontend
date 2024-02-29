@@ -49,7 +49,8 @@ const App = () => {
 
   const moduleReducers = (initData) => initData;
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode ="pg"
   console.log("stateCode",stateCode);
 
   return (

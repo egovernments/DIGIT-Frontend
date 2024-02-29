@@ -23,7 +23,7 @@ const EmployeeApp = ({
   handleUserDropdownSelection,
   logoUrl,
   DSO,
-  stateCode,
+  stateCode="pg",
   modules,
   appTenants,
   sourceUrl,

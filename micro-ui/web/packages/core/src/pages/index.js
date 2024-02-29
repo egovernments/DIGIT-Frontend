@@ -3,7 +3,7 @@ import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-d
 import CitizenApp from "./citizen";
 import EmployeeApp from "./employee";
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, initData ,defaultLanding="citizen"}) => {
+export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="citizen"}) => {
   // debugger
   const history = useHistory();
   const { pathname } = useLocation();

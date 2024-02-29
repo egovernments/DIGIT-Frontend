@@ -10,7 +10,7 @@ const getTenants = (codes, tenants) => {
   return tenants.filter((tenant) => codes?.map?.((item) => item.code).includes(tenant.code));
 };
 
-export const AppModules = ({ stateCode, userType, modules, appTenants }) => {
+export const AppModules = ({ stateCode="pg", userType, modules, appTenants }) => {
   // debugger
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const { path } = useRouteMatch();
