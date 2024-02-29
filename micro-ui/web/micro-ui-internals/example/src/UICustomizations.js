@@ -173,7 +173,154 @@ export const UICustomizations = {
       return inboxModuleNameMap;
     }
   },
+  
+  // SearchTestResult: {
+  //   preProcess: (data, additionalDetails) => {
+  //     // Remove any custom properties from the request body
+  //     delete data.body.custom;
+    
+  //     // Get the current tenant ID using Digit's ULBService
+  //     const tenant = Digit.ULBService.getCurrentTenantId();
+    
+  //     // Destructure properties from 'data.params' with default values
+  //     const { individualId = undefined, apiOperation = undefined } = data.params;
+    
+  //     // Remove specific properties from 'data.params'
+  //     delete data.params.individualId;
+  //     delete data.params.apiOperation;
+    
+  //     // Set the 'tenantId' in 'data.params' to the current tenant ID
+  //     data.params.tenantId = tenant;
+    
+  //     // If 'individualId' is provided, set it in 'data.params'
+  //     if (individualId) {
+  //       data.params.individualId = individualId;
+  //     }
+    
+  //     // If 'apiOperation' is provided, set it in 'data.params'
+  //     if (apiOperation) {
+  //       data.params.apiOperation = apiOperation;
+  //     }
+    
+  //     // Additional modifications based on your data structure
+    
+  //     // Return the modified data
+  //     return data;
+  //   },
+   
+  //   additionalCustomizations: (row, key, column, value, t, searchResult) => {
+  //     console.log(searchResult);
+  //     console.log(key, "key");
+  //     console.log(value, "value");
+  //     console.log(row, 'ccccccccccccccccc');
+    
+  //     switch (key) {
+  //       // case "TQM_TEST_RESULTS":
+  //       //   return value?.includes("PASS")  ? <span className="sla-cell-success">{t(`TQM_TEST_RESULT_${value}`)}</span> : <span className="sla-cell-error">{t(`TQM_TEST_RESULT_${value}`)}</span>;
+          
+  //       // case "ES_TQM_TEST_DATE":
+  //       //   return  Digit.DateUtils.ConvertEpochToDate(value)
+        
+  //       case "Individual ID":
+  //         return <span className="link">
+  //           <Link
+  //             to={`/${window.contextPath}/employee/sample/search-individual?tenantId=${Digit.ULBService.getCurrentTenantId()}&id=${value}&from=TQM_BREAD_PAST_TESTS&type=${row?.testType === "LAB_ADHOC" ? "adhoc" : ""}`}
+  //           >
+  //             {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+  //           </Link>
+  //         </span>
 
+  //       default:
+  //         return "case_not_found"
+  //     }
+  //   }
+  // },
+  SearchIndividualConfig: {
+    // 
+    // },
+    preProcess: (data, additionalDetails) => {
+      // Remove any custom properties from the request body
+      delete data.body.custom;
+    
+      // Get the current tenant ID using Digit's ULBService
+      const tenant = Digit.ULBService.getCurrentTenantId();
+    
+      // Destructure properties from 'data.params' with default values
+      const { individualId = undefined, apiOperation = undefined } = data.params;
+    
+      // Remove specific properties from 'data.params'
+      delete data.params.individualId;
+      delete data.params.apiOperation;
+    
+      // Set the 'tenantId' in 'data.params' to the current tenant ID
+      data.params.tenantId = tenant;
+    
+      // If 'individualId' is provided, set it in 'data.params'
+      if (individualId) {
+        data.params.individualId = individualId;
+      }
+    
+      // If 'apiOperation' is provided, set it in 'data.params'
+      if (apiOperation) {
+        data.params.apiOperation = apiOperation;
+      }
+    
+      // Additional modifications based on your data structure
+    
+      // Return the modified data
+      return data;
+    },
+    onCardClick:(obj)=> {
+      return `summary?id=${obj?.apiResponse?.individualId}`
+    },
+    onCardActionClick:(obj)=> {
+      return `summary?id=${obj?.apiResponse?.individualId}`
+    },
+    getCustomActionLabel:(obj,row) => {
+      return ""
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+  
+      console.log(key,"key");
+      switch (key) {
+        case "IndividualID":
+          return (
+            <span className="link">
+              <Link
+              to={`/${window.contextPath}/employee/sample/individual-details?id=${value}`}
+               >
+                {value ? value : t("ES_COMMON_NA")}
+              </Link>
+            </span>
+          );
+        case "Address":
+          const addressData = value && value.length > 0 ? value[0] : null;
+         
+          if (addressData) {
+            console.log(addressData, "addressData");
+            const { doorNo, street, locality, city, pincode } = addressData;
+            const formattedAddress = [
+              String(doorNo),
+              String(street),
+              String(locality.code),
+              String(city),
+              String(pincode)
+            ].filter(Boolean).join(', ');
+    
+            console.log(formattedAddress, "formattedAddress");
+    
+            return formattedAddress || t("ES_COMMON_NA");
+          } else {
+            return t("ES_COMMON_NA");
+          }
+    
+        // Add more cases for other columns as needed...
+    
+        default:
+          return value !== undefined && value !== null ? String(value) : t("ES_COMMON_NA");
+      }
+    },
+    
   AttendanceInboxConfig: {
     preProcess: (data) => {
       //set tenantId
@@ -417,4 +564,5 @@ export const UICustomizations = {
       }
     },
   },
-};
+},
+}
