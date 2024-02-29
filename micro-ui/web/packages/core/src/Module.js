@@ -39,7 +39,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   // debugger
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
