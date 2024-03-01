@@ -31,9 +31,13 @@ const EmployeeApp = ({
   initData,
 }) => {
   // debugger
+  console.log("came into Employee App");
+  console.log("stateInfo",stateInfo);
+  stateInfo.stateCode = "pg"
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();
+  console.log("path in employee app", path);
   const location = useLocation();
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));

@@ -71,25 +71,6 @@ const App = () => {
       <div>
         <Suspense fallback={<Loader />}>
           <Switch>
-            {/* <Route path="/auth">
-              <AuthLazy login={login} history={history} />
-            </Route>
-            <Route path="/dashboard">
-              <DashboardLazy />
-            </Route>
-            <Route path="/hrms">
-              <HrmsLazy />
-            </Route>
-            <Route path="/workbench">
-              <WorkbenchLazy />
-            </Route>
-            <Route path="/dss">
-              <DssLazy />
-            </Route>
-            <Route path="/measurement">
-              <MeasurementLazy />
-            </Route> */}
-
             <Route path="/">
               {<DigitUI stateCode={stateCode} enabledModules={enabledModules} defaultLanding="employee" moduleReducers={moduleReducers} queryClient={queryClient} />}
             </Route>
@@ -101,23 +82,11 @@ const App = () => {
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {};
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
+  // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  // window.Digit.Customizations = {};
+  // window?.Digit.ComponentRegistryService.setupRegistry({
+  // });
 
-  // initHRMSComponents();
-  // const enabledModules = ["PT"];
-
-  // const moduleReducers = (initData) => initData;
-
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  // initTokens(stateCode);
-
-  // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
 };
 
 export default App;
