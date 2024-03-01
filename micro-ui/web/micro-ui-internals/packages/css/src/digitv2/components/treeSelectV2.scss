@@ -1,6 +1,5 @@
-.digit-tree-select-options-container {
-    width: 100%;
-    background: theme(digitv2.lightTheme.paper-primary);
+.container.innerlevel {
+    border-left: 1px solid #D6D5D4;
 }
 
 .digit-tree-select-option,
@@ -77,6 +76,22 @@
 }
 
 .digit-tree-multiselect-option {
+
+
+    /*&.checked {
+        background-color: theme(digitv2.lightTheme.primary-orange);
+
+        .digit-custom-checkbox {
+            border: 2px solid theme(digitv2.lightTheme.paper-primary);
+        }
+
+        .digit-option-label {
+            color: theme(digitv2.lightTheme.paper-primary);
+            font-size: 16px;
+            font-weight: theme(digitv2.fontWeight.bold);
+            line-height: 19px;
+        }
+    }*/
 
     &.child {
         .digit-custom-checkbox {
