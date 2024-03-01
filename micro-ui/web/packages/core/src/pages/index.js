@@ -5,6 +5,7 @@ import EmployeeApp from "./employee";
 
 export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="citizen"}) => {
   // debugger
+ 
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -65,6 +66,7 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
     pathname,
     initData,
   };
+  console.log("came till digit App");
   return (
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>

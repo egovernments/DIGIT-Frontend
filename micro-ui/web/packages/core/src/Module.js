@@ -15,11 +15,13 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
   // debugger
+  console.log("came till here 1");
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
   }
 
+  
   const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
@@ -42,22 +44,6 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
 export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   // debugger
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
-  const userType = Digit.UserService.getType();
-  // const queryClient = new QueryClient({
-  //   defaultOptions: {
-  //     queries: {
-  //       staleTime: 15 * 60 * 1000,
-  //       cacheTime: 50 * 60 * 1000,
-  //       retry: false,
-  //       retryDelay: (attemptIndex) => Infinity,
-  //       /*
-  //         enable this to have auto retry incase of failure
-  //         retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-  //        */
-  //     },
-  //   },
-  // });
-
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
 
