@@ -1699,15 +1699,15 @@ export const newConfig = [
           isDropdownWithChip: true,
           options: [
             {
-              code: "1",
+              code: "Option1",
               name: "Option1",
             },
             {
-              code: "2",
+              code: "Option2",
               name: "Option2",
             },
             {
-              code: "3",
+              code: "Option3",
               name: "Option3",
             },
           ],
@@ -1727,15 +1727,15 @@ export const newConfig = [
           isDropdownWithChip: true,
           options: [
             {
-              code: "1",
+              code: "Option1",
               name: "Option1",
             },
             {
-              code: "2",
+              code: "Option2",
               name: "Option2",
             },
             {
-              code: "3",
+              code: "Option3",
               name: "Option3",
             },
           ],
@@ -1756,17 +1756,17 @@ export const newConfig = [
           showIcon:true,
           options: [
             {
-              code: "1",
+              code: "Option1",
               name: "Option1",
               icon: "Article",
             },
             {
-              code: "2",
+              code: "Option2",
               name: "Option2",
               icon: "Article",
             },
             {
-              code: "3",
+              code: "Option3",
               name: "Option3",
               icon: "Article",
             },

@@ -1,36 +1,88 @@
+
 .digit-toast-success {
   max-width: 480px;
   width: calc(100% - 20px);
   bottom: 64px;
   left: 0;
   margin: 0 10px;
-  gap: 16px;
-  border-radius: 4px;
+  gap: 8px;
   min-height: 48px;
-  @apply fixed flex bg-success leading-7 z-20 items-center pl-md pr-sm;
+  @apply fixed flex z-20 items-center;
+  padding: 12px 8px;
+  background-color: theme(digitv2.lightTheme.alert-success);
+
+
+  @media (min-width: 481px) {
+    /* Media query for tablets */
+    min-width: 30rem;
+    max-width: 46.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    min-width: 22.5rem;
+    max-width: 22.5rem;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    min-width: 50rem;
+    max-width: 90rem;
+  }
+
 
   &.digit-error {
-    background-color: red;
+    background-color: theme(digitv2.lightTheme.alert-error);
   }
+
   &.digit-warning {
-    background-color: #ea8a3b;
+    background-color: #E98C02;
+
     &.digit-warning-buttons {
       display: block;
     }
   }
 
-  svg {
-    height: 20px;
-    width: 20px;
-  }
-
   .digit-toast-close-btn {
     margin-left: auto;
+    margin-right: 8px;
   }
 
   h2 {
-    @apply text-body-s-dt text-white;
-    margin-left: 10px;
+    
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 16px;
+    font-weight: theme(digitv2.fontWeight.medium);
+    letter-spacing: 0px;
+    text-align: left;
+    color: theme(digitv2.lightTheme.paper-primary);
+    margin: 0px;
+    min-height: 19px;
+    font-style: theme(digitv2.fontStyle.italic);
+    line-height: 19px;
+    flex-grow: 1; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+    
+
+    @media (min-width: 481px){
+      /* Media query for tablets */
+      min-height: 23px;
+      line-height: 24px;
+    }
+  
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+     min-height:19px;
+    }
+  
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      min-height: 23px;
+      line-height: 24px;
+    }
+
   }
 
   .digit-warning-button-container {
@@ -46,11 +98,15 @@
   .digit-toast-sub-container {
     display: flex;
   }
+
+  svg{
+    flex-shrink: 0;
+  }
 }
 
-@screen dt {
+/*@screen dt {
   .digit-toast-success {
     width: 100%;
     left: calc(50% - 240px);
   }
-}
+}*/

@@ -3,8 +3,10 @@ import { SVG } from "./SVG";
 
 const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level = 0 }) => {
   const [isExpanded, setExpanded] = useState(false);
-  const handleToggleDropdown = () => {
-    setExpanded(!isExpanded);
+const handleToggleDropdown = () => {
+    if(option.options){
+      setExpanded(!isExpanded);
+    }
   };
   const handleSelect = () => {
     if (!option.options) {
@@ -13,15 +15,15 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
   };
 
   return (
-    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "1px solid #D6D5D4" }}>
-      <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
-          <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
+    <div style={{marginLeft: `${level !== 0 ? 22 : 0}px`, borderLeft: "1px solid #D6D5D4" }}>
+      <div className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} level-${level}`} onClick={handleToggleDropdown}>
+      {option.options && <div className="digit-toggle-dropdown">
             {isExpanded ? (
-              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" }/>
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={"#0B0C0C"}/>
             ) : (
-              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" } style={{ transform: "rotate(-90deg)" }} />
+              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={ "#0B0C0C"  } style={{ transform: "rotate(-90deg)" }} />
             )}
-          </div>
+          </div>}
         <div className="digit-option-label" onClick={handleSelect}>
           {option.name}
         </div>
@@ -96,15 +98,15 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
     return false;
   };
   return (
-    <div style={{ marginLeft: `${level * 20}px`, borderLeft: "1px solid #D6D5D4" }}>
-      <div className={`digit-tree-multiselect-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"}`}>
-        <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
+    <div style={{ marginLeft: `${level !== 0 ? 22 : 0}px`,borderLeft: "1px solid #D6D5D4" }}>
+      <div className={`digit-tree-multiselect-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} ${allChildrenSelected || isSelected(option) ? "checked" : ""} level-${level}`} style={{gap:`${level !== 0 ? 12 : 4}px`}}>
+       { option.options && <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
           {isExpanded ? (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4"} />
+            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={"#0B0C0C"} />
           ) : (
-            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={option.options ? "#0B0C0C" : "#D6D5D4" } style={{ transform: "rotate(-90deg)" }} />
+            <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={"#0B0C0C"} style={{ transform: "rotate(-90deg)" }} />
           )}
-        </div>
+        </div>}
         <div
           className={`digit-option-checkbox ${isIntermediate() ? "intermediate" : ""} ${allChildrenSelected || isSelected(option) ? "checked" : ""}`}
         >
@@ -113,11 +115,12 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
         <div
           className={`digit-custom-checkbox ${allChildrenSelected || isSelected(option) ? "checked" : ""} ${isIntermediate() ? "intermediate" : ""}`}
           onClick={handleSelect}
+          style={{ marginRight: `${level == 0 ? 8 : 0}px`}}
         >
           {isIntermediate() ? (
             <div className="intermediate-state"></div>
           ) : (
-            <SVG.Check fill={allChildrenSelected || isSelected(option) ? "#F47738" : "white"} />
+            <SVG.Check fill={allChildrenSelected || isSelected(option) ? "#F47738" : "#FFFFFF"} />
           )}
         </div>
         <div className="digit-option-label" onClick={handleSelect}>

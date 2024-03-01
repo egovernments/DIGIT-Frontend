@@ -8,22 +8,26 @@ export default {
   argTypes: {
     config: { control: "object" },
     inputRef: { control: false },
-    label: { control: "text" },
     onChange: { action: "onChange" },
     value: { control: "text" },
-    errorStyle: { control: "object" },
-    disabled: { control: "boolean" },
     type: { control: "text" },
     props: { control: "object" },
     populators: { control: "object" },
     formData: { control: "object" },
-    currentStep:{control:"text"},
+    currentStep:{control:"number"},
     onStepClick:{action:"onChange"},
-    flow:{control:"text"}
+    totalSteps:{action:"number"},
+    customSteps:{control:"object"},
+    direction: {
+      control: {
+        type: "select",
+        options: ["vertical", "horizontal"],
+      },
+    },
   },
 };
 
-const Template = (args) => <Stepper {...args} />;
+const Template = (args) => <FieldV1 {...args} />;
 
 const t = (key) => key;
 
@@ -32,12 +36,14 @@ const commonArgs = {
     name: "stepper",
   },
   type: "stepper",
-  currentStep:1,
-  flow:"",
-  onStepClick: () => {console.log("step clicked")},
+  currentStep: 1,
+  customSteps: {},
+  totalSteps: 5,
+  direction:"horizontal",
+  onStepClick: () => { console.log("step clicked") },
 };
 
-//Default checkbox
+//Default stepper
 export const Default = Template.bind({});
 Default.args = {
   ...commonArgs

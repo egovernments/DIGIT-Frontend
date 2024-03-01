@@ -28,9 +28,9 @@
       @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
-      padding-top:8px;
+      padding-top: 8px;
       padding-bottom: 8px;
-      padding-left:12px;
+      padding-left: 12px;
     }
 
     p {
@@ -61,9 +61,9 @@
       @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
-      padding-top:8px;
+      padding-top: 8px;
       padding-bottom: 8px;
-      padding-left:12px;
+      padding-left: 12px;
     }
 
     p {
@@ -146,7 +146,7 @@
   font-style: theme(digitv2.fontStyle.normal);
   line-height: 19px;
   gap: 0.25rem;
-  height:19px;
+  height: 19px;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -166,7 +166,7 @@
   .option-des-container {
     @apply flex flex-col justify-center items-start;
     min-height: 18px;
-    width:100%;
+    width: 100%;
 
     max-width: 100%;
     overflow: hidden;
@@ -192,8 +192,8 @@
     position: relative;
     height: 2.4375rem;
 
-    .option-des-container{
-      height:18px;
+    .option-des-container {
+      height: 18px;
     }
 
     &::before {
@@ -232,6 +232,8 @@
 
     span {
       font-weight: theme(digitv2.fontWeight.bold);
+      font-size: 16px;
+      line-height: 19px;
     }
   }
 
@@ -243,7 +245,7 @@
       border: 1px solid theme(digitv2.lightTheme.primary-orange);
     }
 
-    .option-des-container{
+    .option-des-container {
       padding-right: 2px !important;
     }
   }
@@ -256,7 +258,8 @@
   &.profilenestedtext {
     min-height: 76px;
     padding: 8px 16px;
-    gap:16px;
+    gap: 16px;
+    align-items: center;
   }
 }
 
@@ -301,9 +304,9 @@
       @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
-      padding-top:8px;
+      padding-top: 8px;
       padding-bottom: 8px;
-      padding-left:12px;
+      padding-left: 12px;
     }
 
 
@@ -336,12 +339,12 @@
       @extend .light-text-color-primary;
       width: calc(100% - 32px);
       background-color: transparent;
-      @apply absolute z-10 w-full h-full outline-none text-text-primary ;
+      @apply absolute z-10 w-full h-full outline-none text-text-primary;
       line-height: 24px;
       font-size: 16px;
-      padding-top:8px;
+      padding-top: 8px;
       padding-bottom: 8px;
-      padding-left:12px;
+      padding-left: 12px;
     }
 
     p {

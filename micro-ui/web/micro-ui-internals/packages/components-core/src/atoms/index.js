@@ -28,7 +28,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import HeaderBar from "./HeaderBar";
 import HorizontalNav from "./HorizontalNav";
-import InfoBanner from "./InfoBanner";
+import InfoCard from "./InfoCard";
 import InputTextAmount from "./InputTextAmount";
 import KeyNote from "./KeyNote";
 import LabelFieldPair from "./LabelFieldPair";
@@ -235,7 +235,7 @@ export {
   Header,
   HeaderBar,
   HorizontalNav,
-  InfoBanner,
+  InfoCard,
   InputTextAmount,
   KeyNote,
   LabelFieldPair,

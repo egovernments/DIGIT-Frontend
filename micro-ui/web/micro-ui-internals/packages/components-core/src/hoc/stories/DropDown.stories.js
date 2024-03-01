@@ -230,7 +230,8 @@ const commonArgs = {
     optionsKey: "name",
     options: gendersOptions,
     showIcon: false,
-    isSearchable:true
+    isSearchable:true,
+    clearLabel:"Clear All"
   },
   error: "",
   inputRef: null,
