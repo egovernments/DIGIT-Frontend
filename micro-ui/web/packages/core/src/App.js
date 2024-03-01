@@ -84,8 +84,8 @@ const App = () => {
 const initDigitUI = () => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   window.Digit.Customizations = {};
-  window?.Digit.ComponentRegistryService.setupRegistry({
-  });
+  // window?.Digit.ComponentRegistryService.setupRegistry({
+  // });
 
 };
 
