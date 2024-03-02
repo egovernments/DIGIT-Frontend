@@ -1,8 +1,8 @@
-name: workbench ui service docker Image CI
+name: pgr ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker","mf-stable" ]
+    branches: [ "mf-build-docker" ,"mf-stable"]
   pull_request:
     branches: [ "mf-build" ]
 
@@ -26,16 +26,16 @@ jobs:
 
     - name: Build the Docker image
       id: docker_build
-      working-directory: ./micro-ui/web/packages/workbench
+      working-directory: ./micro-ui/web/packages/pgr
       run: |
-        IMAGE_TAG=egovio/workbench-web:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        IMAGE_TAG=egovio/pgr-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
           --file docker/Dockerfile \
           --tag $IMAGE_TAG
         echo "::set-output name=image_name::$IMAGE_TAG"
 
     - name: Login to Docker Hub and Push Docker Image
-      working-directory: ./micro-ui/web/packages/workbench
+      working-directory: ./micro-ui/web/packages/pgr
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
