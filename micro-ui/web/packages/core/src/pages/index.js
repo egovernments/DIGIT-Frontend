@@ -3,9 +3,7 @@ import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-d
 import CitizenApp from "./citizen";
 import EmployeeApp from "./employee";
 
-export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="citizen"}) => {
-  // debugger
- 
+export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="employee"}) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -66,7 +64,10 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
     pathname,
     initData,
   };
-  console.log("came till digit App");
+  
+  return (
+    <div>Core Module</div>
+  )
   return (
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>
