@@ -20,9 +20,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
   if (isLoading) {
     return <Loader page={true} />;
   }
-
   
-  const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
       <Router>
@@ -48,54 +46,66 @@ export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLandi
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
 
 
-  return (
-    <div>
+  // return (
+  //   <div>
+  //     <ErrorBoundary>
+  //       <QueryClientProvider client={queryClient}>
+  //         <ComponentProvider.Provider value={registry}>
+  //           <PrivacyProvider.Provider
+  //             value={{
+  //               privacy: privacy?.[window.location.pathname],
+  //               resetPrivacy: (_data) => {
+  //                 Digit.Utils.setPrivacyObject({});
+  //                 setPrivacy({});
+  //               },
+  //               getPrivacy: () => {
+  //                 const privacyObj = Digit.Utils.getPrivacyObject();
+  //                 setPrivacy(privacyObj);
+  //                 return privacyObj;
+  //               },
+  //               /*  Descoped method to update privacy object  */
+  //               updatePrivacyDescoped: (_data) => {
+  //                 const privacyObj = Digit.Utils.getAllPrivacyObject();
+  //                 const newObj = { ...privacyObj, [window.location.pathname]: _data };
+  //                 Digit.Utils.setPrivacyObject({ ...newObj });
+  //                 setPrivacy(privacyObj?.[window.location.pathname] || {});
+  //               },
+  //               /**
+  //                * Main Method to update the privacy object anywhere in the application
+  //                *
+  //                * @author jagankumar-egov
+  //                *
+  //                * Feature :: Privacy
+  //                *
+  //                * @example
+  //                *    const { privacy , updatePrivacy } = Digit.Hooks.usePrivacyContext();
+  //                */
+  //               updatePrivacy: (uuid, fieldName) => {
+  //                 setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
+  //               },
+  //             }}
+  //           >
+  //             <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+  //             {/* <div>Core Module Dummy</div> */}
+  //             {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+  //           </PrivacyProvider.Provider>
+  //         </ComponentProvider.Provider>
+  //       </QueryClientProvider>
+  //     </ErrorBoundary>
+  //   </div>
+  // );
+
+  <div>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
-            <PrivacyProvider.Provider
-              value={{
-                privacy: privacy?.[window.location.pathname],
-                resetPrivacy: (_data) => {
-                  Digit.Utils.setPrivacyObject({});
-                  setPrivacy({});
-                },
-                getPrivacy: () => {
-                  const privacyObj = Digit.Utils.getPrivacyObject();
-                  setPrivacy(privacyObj);
-                  return privacyObj;
-                },
-                /*  Descoped method to update privacy object  */
-                updatePrivacyDescoped: (_data) => {
-                  const privacyObj = Digit.Utils.getAllPrivacyObject();
-                  const newObj = { ...privacyObj, [window.location.pathname]: _data };
-                  Digit.Utils.setPrivacyObject({ ...newObj });
-                  setPrivacy(privacyObj?.[window.location.pathname] || {});
-                },
-                /**
-                 * Main Method to update the privacy object anywhere in the application
-                 *
-                 * @author jagankumar-egov
-                 *
-                 * Feature :: Privacy
-                 *
-                 * @example
-                 *    const { privacy , updatePrivacy } = Digit.Hooks.usePrivacyContext();
-                 */
-                updatePrivacy: (uuid, fieldName) => {
-                  setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
-                },
-              }}
-            >
-              {/* <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/> */}
-              <div>Core Module Dummy</div>
+              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              {/* <div>Core Module Dummy</div> */}
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-            </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
       </ErrorBoundary>
     </div>
-  );
 };
 
 const componentsToRegister = {
