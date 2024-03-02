@@ -47,7 +47,6 @@ export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLandi
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
 
-  const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 
   return (
     <div>
@@ -88,7 +87,8 @@ export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLandi
                 },
               }}
             >
-              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              {/* <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/> */}
+              <div>Core Module Dummy</div>
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
