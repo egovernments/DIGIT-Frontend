@@ -39,7 +39,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
   );
 };
 
-export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   // debugger
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const ComponentProvider = Digit.Contexts.ComponentProvider;
@@ -95,17 +95,17 @@ export const DigitUI = ({ registry, enabledModules, moduleReducers ,defaultLandi
   //   </div>
   // );
 
-  <div>
+  return (<div>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
-              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient}/>
               {/* <div>Core Module Dummy</div> */}
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           </ComponentProvider.Provider>
         </QueryClientProvider>
       </ErrorBoundary>
-    </div>
+    </div>)
 };
 
 const componentsToRegister = {

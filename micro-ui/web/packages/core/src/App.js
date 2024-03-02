@@ -1,22 +1,11 @@
 import React, { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import { Loader } from "./components";
-import useAuth from "./hooks/useAuth";
-// import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
 import registerRemotes from "./modules/registerRemotes";
-
-//import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
-// const LandingLazy = lazy(() => import("./modules/Landing"));
-// const AuthLazy = lazy(() => import("./modules/Auth"));
-// const DashboardLazy = lazy(() => import("./modules/Dashboard"));
-// const HrmsLazy = lazy(()  => import("./modules/Hrms"));
-// const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
-// const DssLazy = lazy(() => import("./modules/Dss"));
-// const MeasurementLazy = lazy(() => import("./modules/Measurement"));
 
 
 initLibraries().then(() => {
@@ -49,10 +38,8 @@ const App = () => {
 
   const moduleReducers = (initData) => initData;
 
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  const stateCode ="pg"
-  console.log("stateCode",stateCode);
-
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pg";
+  
   return (
     <div>
       <div
@@ -82,8 +69,8 @@ const App = () => {
 };
 
 const initDigitUI = () => {
-  // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  // window.Digit.Customizations = {};
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
+  window.Digit.Customizations = {};
   // window?.Digit.ComponentRegistryService.setupRegistry({
   // });
 

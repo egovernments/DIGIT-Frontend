@@ -32,8 +32,6 @@ const EmployeeApp = ({
 }) => {
   // debugger
   console.log("came into Employee App");
-  console.log("stateInfo",stateInfo);
-  stateInfo.stateCode = "pg"
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();
