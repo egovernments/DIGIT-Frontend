@@ -21,7 +21,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
     return <Loader page={true} />;
   }
 
-  debugger
+  
   const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>

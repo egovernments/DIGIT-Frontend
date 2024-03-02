@@ -8,7 +8,6 @@ export const useStore = ({ stateCode, moduleCode, language }) => {
 };
 
 export const useInitStore = (stateCode, enabledModules) => {
-  console.log("inside initStore", stateCode, enabledModules);
   const { isLoading, error, isError, data } = useQuery(
     ["initStore", stateCode, enabledModules],
     () => StoreService.digitInitData(stateCode, enabledModules),
