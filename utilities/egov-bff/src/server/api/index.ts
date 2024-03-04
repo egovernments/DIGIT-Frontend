@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import config from "../config";
 import hashSum from 'hash-sum';
 import FormData from 'form-data';
-
+import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
@@ -288,13 +288,40 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
 }
 
 
-const getCampaignNumber: any = async (RequestInfo: any, idFormat: String, idName: string) => {
+const getCampaignNumber: any = async (requestBody: any, idFormat: String, idName: string) => {
   const data = {
-    RequestInfo,
+    RequestInfo: requestBody?.RequestInfo,
     "idRequests": [
       {
         "idName": idName,
-        "tenantId": RequestInfo?.HCMConfig?.tenantId,
+        "tenantId": requestBody?.HCMConfig?.tenantId,
+        "format": idFormat
+      }
+    ]
+  }
+  const idGenUrl = config.host.idGenHost + config.paths.idGen;
+  logger.info("IdGen url : " + idGenUrl)
+  logger.info("Idgen Request : " + JSON.stringify(data))
+  try {
+    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
+    if (result?.idResponses?.[0]?.id) {
+      return result?.idResponses?.[0]?.id;
+    }
+    return result;
+  } catch (error: any) {
+    logger.error("Error: " + error)
+    return error;
+  }
+
+}
+
+const getCampaignNumberForCampaignController: any = async (requestBody: any, idFormat: String, idName: string) => {
+  const data = {
+    RequestInfo: requestBody?.RequestInfo,
+    "idRequests": [
+      {
+        "idName": idName,
+        "tenantId": requestBody?.Campaign?.tenantId,
         "format": idFormat
       }
     ]
@@ -922,6 +949,16 @@ async function createRelatedResouce(requestBody: any) {
   }
 }
 
+async function enrichCampaign(requestBody: any) {
+  if (requestBody?.Campaign) {
+    requestBody.Campaign.id = uuidv4();
+    requestBody.Campaign.campaignNo = await getCampaignNumberForCampaignController(requestBody, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number")
+    for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+      campaignDetails.id = uuidv4();
+    }
+  }
+}
+
 
 export {
   getSheetData,
@@ -936,5 +973,6 @@ export {
   getBoundarySheetData,
   createAndUploadFile,
   createProjectIfNotExists,
-  createRelatedResouce
+  createRelatedResouce,
+  enrichCampaign
 };

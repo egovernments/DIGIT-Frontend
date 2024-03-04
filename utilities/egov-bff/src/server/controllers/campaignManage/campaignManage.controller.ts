@@ -4,7 +4,7 @@ import {
     sendResponse,
 } from "../../utils/index";
 import { validateCampaignRequest } from "../../utils/validator";
-import { createProjectIfNotExists, createRelatedResouce } from "../../api";
+import { createProjectIfNotExists, createRelatedResouce, enrichCampaign } from "../../api";
 
 
 
@@ -30,12 +30,12 @@ class campaignManageController {
         request: express.Request,
         response: express.Response
     ) => {
-
         try {
             validateCampaignRequest(request.body)
             await createProjectIfNotExists(request.body)
             await createRelatedResouce(request.body)
-            return sendResponse(response, {}, request);
+            await enrichCampaign(request.body)
+            return sendResponse(response, { Campaign: request?.body?.Campaign }, request);
         }
         catch (error: any) {
             logger.error(error);

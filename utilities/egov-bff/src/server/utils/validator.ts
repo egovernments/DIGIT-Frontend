@@ -170,20 +170,25 @@ function validateBoundaries(requestBody: any) {
     }
 }
 function validateCampaignRequest(requestBody: any) {
-    validateBoundaries(requestBody)
-    const { projectType } = requestBody?.Campaign
-    if (!projectType) {
-        throw new Error("Enter ProjectType")
-    }
-    for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
-        var { startDate, endDate } = campaignDetails;
-        startDate = parseInt(startDate);
-        endDate = parseInt(endDate);
-
-        // Check if startDate and endDate are valid integers
-        if (isNaN(startDate) || isNaN(endDate)) {
-            throw new Error("Start date or end date is not a valid epoch timestamp");
+    if (requestBody?.Campaign) {
+        validateBoundaries(requestBody)
+        const { projectType } = requestBody?.Campaign
+        if (!projectType) {
+            throw new Error("Enter ProjectType")
         }
+        for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+            var { startDate, endDate } = campaignDetails;
+            startDate = parseInt(startDate);
+            endDate = parseInt(endDate);
+
+            // Check if startDate and endDate are valid integers
+            if (isNaN(startDate) || isNaN(endDate)) {
+                throw new Error("Start date or end date is not a valid epoch timestamp");
+            }
+        }
+    }
+    else {
+        throw new Error("Campaign is required")
     }
 
 }
