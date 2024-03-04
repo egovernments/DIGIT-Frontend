@@ -952,7 +952,7 @@ async function createRelatedResouce(requestBody: any) {
 async function enrichCampaign(requestBody: any) {
   if (requestBody?.Campaign) {
     requestBody.Campaign.id = uuidv4();
-    requestBody.Campaign.campaignNo = await getCampaignNumberForCampaignController(requestBody, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number")
+    requestBody.Campaign.campaignNo = await getCampaignNumberForCampaignController(requestBody, config.values.idgen.format, config.values.idgen.idName)
     for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
       campaignDetails.id = uuidv4();
     }

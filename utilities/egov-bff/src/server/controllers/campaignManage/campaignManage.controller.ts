@@ -31,7 +31,7 @@ class campaignManageController {
         response: express.Response
     ) => {
         try {
-            validateCampaignRequest(request.body)
+            await validateCampaignRequest(request.body)
             await createProjectIfNotExists(request.body)
             await createRelatedResouce(request.body)
             await enrichCampaign(request.body)

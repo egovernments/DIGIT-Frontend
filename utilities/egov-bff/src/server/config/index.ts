@@ -65,7 +65,7 @@ const config = {
       || "https://unified-uat.digit.org/",
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
-      || "https://unified-uat.digit.org/",
+      || "https://unified-dev.digit.org/",
     facilityHost: process.env.EGOV_FACILITY_HOST
       // || "http://localhost:8086/"
       || "https://unified-uat.digit.org/",
@@ -74,6 +74,12 @@ const config = {
       || "https://unified-dev.digit.org/",
     projectHost: process.env.EGOV_PROJECT_HOST
       // || "http://localhost:8088/"
+      || "https://unified-dev.digit.org/",
+    userHost: process.env.EGOV_USER_HOST
+      // || "http://localhost:8089/"
+      || "https://unified-dev.digit.org/",
+    productHost: process.env.EGOV_PRODUCT_HOST
+      // || "http://localhost:8090/"
       || "https://unified-dev.digit.org/",
 
   },
@@ -100,7 +106,13 @@ const config = {
     projectResourceCreate: process.env.EGOV_PROJECT_RESOURCE_CREATE_PATH
       || "project/resource/v1/_create",
     projectFacilityCreate: process.env.EGOV_PROJECT_RESOURCE_FACILITY_PATH
-      || "project/facility/v1/_create"
+      || "project/facility/v1/_create",
+    userSearch: process.env.EGOV_USER_SEARCH_PATH
+      || "user/_search",
+    facilitySearch: process.env.EGOV_FACILITY_SEARCH_PATH
+      || "facility/v1/_search",
+    productVariantSearch: process.env.EGOV_PRODUCT_VARIANT_SEARCH_PATH
+      || "product/variant/v1/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE
