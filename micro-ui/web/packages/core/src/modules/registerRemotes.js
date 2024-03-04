@@ -39,6 +39,16 @@ export default (queryClient) => {
   //   },
   // });
 
+  registerApplication({
+    name: "Dss",
+    app: () => import("dss/DSSModule"),
+    activeWhen: "/workbench-ui/employee/dss",
+    customProps: {
+      title: "DSS is running on host",
+      queryClient,
+    },
+  });
+
   // registerApplication({
   //   name: "app1",
   //   app: () => import("app1/App"),

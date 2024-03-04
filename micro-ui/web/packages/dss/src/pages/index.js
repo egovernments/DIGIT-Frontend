@@ -303,7 +303,7 @@ import {
               closeFilters={() => setIsFilterModalOpen(false)}
               isNational={isNational}
             />
-          ) : dashboardConfig[0]?.filter == 'CustomFilter' && dashboardConfig[0]?.filterConfig ? (
+          ) : dashboardConfig?.[0]?.filter == 'CustomFilter' && dashboardConfig[0]?.filterConfig ? (
           <CustomFilter
             t={t}
             filterConfig={dashboardConfig[0]?.filterConfig}

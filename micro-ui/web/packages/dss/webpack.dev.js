@@ -38,10 +38,10 @@ module.exports = () => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "dss",
+        name: "dss_ui",
         filename: "remoteEntry.js",
         exposes: {
-          "./DssModule": "./src/bootstrap",
+          "./DSSModule": "./src/SingleSpaEntry",
         },
         shared: packageJson.dependencies,
       }),

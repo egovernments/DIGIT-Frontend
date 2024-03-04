@@ -10,12 +10,13 @@ import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
-import { ReactQueryDevtools } from 'react-query/devtools';
 //here add react-query dev tools
 
+
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
-  console.log("came till here 1");
+
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+
   if (isLoading) {
     return <Loader page={true} />;
   }
@@ -84,8 +85,10 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
                 },
               }}
             >
+
               <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
               {/* <div>Core Module Dummy</div> */}
+
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
