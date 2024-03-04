@@ -102,7 +102,9 @@ const App = () => {
 
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
+  window.contextPath =  "core-digit-ui";
+
   window.Digit.Customizations = {
 
   };

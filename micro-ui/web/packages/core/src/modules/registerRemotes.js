@@ -24,7 +24,7 @@ export default (queryClient) => {
   registerApplication({
     name: "Common",
     app: () => import("common/CommonModule"),
-    activeWhen: `/workbench-ui/${userType}/common`, //change to userType here
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/common`, //change to userType here
     customProps: {
       title: "Common Module is running on host",
       queryClient,
