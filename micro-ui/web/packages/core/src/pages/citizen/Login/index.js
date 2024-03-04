@@ -30,7 +30,8 @@ const getFromLocation = (state, searchParams) => {
   return state?.from || searchParams?.from || DEFAULT_REDIRECT_URL;
 };
 
-const Login = ({ stateCode, isUserRegistered = true }) => {
+const Login = ({ stateCode="pg", isUserRegistered = true }) => {
+  // debugger
   const { t } = useTranslation();
   const location = useLocation();
   const { path, url } = useRouteMatch();
