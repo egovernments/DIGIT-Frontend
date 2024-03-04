@@ -66,12 +66,21 @@ const config = {
       || "https://unified-uat.digit.org/",
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
-      || "https://unified-uat.digit.org/",
+      || "https://unified-dev.digit.org/",
     facilityHost: process.env.EGOV_FACILITY_HOST
       // || "http://localhost:8086/"
       || "https://unified-uat.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST
       // || "http://localhost:8087/"
+      || "https://unified-dev.digit.org/",
+    projectHost: process.env.EGOV_PROJECT_HOST
+      // || "http://localhost:8088/"
+      || "https://unified-dev.digit.org/",
+    userHost: process.env.EGOV_USER_HOST
+      // || "http://localhost:8089/"
+      || "https://unified-dev.digit.org/",
+    productHost: process.env.EGOV_PRODUCT_HOST
+      // || "http://localhost:8090/"
       || "https://unified-dev.digit.org/",
 
   },
@@ -91,6 +100,21 @@ const config = {
       || "boundary-service/boundary-relationships/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
       || "boundary-service/boundary-hierarchy-definition/_search",
+    projectCreate: process.env.EGOV_PROJECT_CREATE_PATH
+      || "project/v1/_create",
+    staffCreate: process.env.EGOV_PROJECT_STAFF_CREATE_PATH
+      || "project/staff/v1/_create",
+    projectResourceCreate: process.env.EGOV_PROJECT_RESOURCE_CREATE_PATH
+      || "project/resource/v1/_create",
+    projectFacilityCreate: process.env.EGOV_PROJECT_RESOURCE_FACILITY_PATH
+      || "project/facility/v1/_create",
+    userSearch: process.env.EGOV_USER_SEARCH_PATH
+      || "user/_search",
+    facilitySearch: process.env.EGOV_FACILITY_SEARCH_PATH
+      || "facility/v1/_search",
+    productVariantSearch: process.env.EGOV_PRODUCT_VARIANT_SEARCH_PATH
+      || "product/variant/v1/_search"
+      || "boundary-service/boundary-hierarchy-definition/_search",
     boundaryEntity: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH
       || "boundary-service/boundary/_search"  
   },
@@ -109,7 +133,7 @@ const config = {
     },
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
   },
-  SEARCH_TEMPLATE: "HCM.APIResourceTemplate4"
+   SEARCH_TEMPLATE : "HCM.APIResourceTemplate3"
 };
 
 export { getErrorCodes };
