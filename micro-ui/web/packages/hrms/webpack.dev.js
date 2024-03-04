@@ -37,7 +37,7 @@ module.exports = () => {
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "hrms_ui",
+        name: "hrms",
         filename: "remoteEntry.js",
         exposes: {
           "./HRMSModule": "./src/SingleSpaEntry",

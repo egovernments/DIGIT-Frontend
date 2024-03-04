@@ -7,12 +7,12 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "engagement",
+      publicPath: "/engagement/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "engagement_ui",
+        name: "engagement",
         filename: "remoteEntry.js",
         exposes: {
           "./EngagementModule": "./src/SingleSpaEntry",
