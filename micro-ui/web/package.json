@@ -20,7 +20,8 @@
     "packages/workbench",
     "packages/ui-core",
     "packages/app1",
-    "packages/common"
+    "packages/common",
+    "packages/pgr"
   ],
   "scripts": {
     "build": "yarn lerna run build",

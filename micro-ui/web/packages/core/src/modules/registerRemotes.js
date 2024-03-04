@@ -32,6 +32,16 @@ export default (queryClient) => {
     },
   });
 
+  registerApplication({
+    name: "PGR",
+    app: () => import("pgr/PGRModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr`,
+    customProps: {
+      title: "PGR is running on host",
+      queryClient,
+      userType
+    },
+   });
 
   start();
 }
