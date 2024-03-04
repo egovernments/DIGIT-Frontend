@@ -20,7 +20,8 @@
     "packages/workbench",
     "packages/common",
     "packages/ui-core",
-    "packages/app1"
+    "packages/app1",
+    "packages/dss"
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -29,6 +30,7 @@
     "build:common": "cd packages/common && yarn build",
     "build:hrms": "cd packages/hrms && yarn build",
     "build:workbench": "cd packages/workbench && yarn build",
+    "start:dss": "cd packages/dss && yarn start",
     "build:dss": "cd packages/dss && yarn build",
     "start:core": "cd packages/core && yarn start",
     "start:common": "cd packages/common && yarn start",

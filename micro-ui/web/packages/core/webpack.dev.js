@@ -16,10 +16,10 @@ module.exports = () => {
       proxy: [
         {
           context: () => true,
-          // target:  'https://unified-dev.digit.org',
-          target: 'https://unified-dev.digit.org',
+          // target:  'https://mukta-uat.digit.org',
+          target: "https://unified-dev.digit.org",
           secure: false,
-          changeOrigin:true,
+          changeOrigin: true,
           bypass: function (req, res, proxyOptions) {
             if (req.headers.accept.indexOf('html') !== -1) {
               console.log('Skipping proxy for browser request.');
@@ -34,7 +34,7 @@ module.exports = () => {
       historyApiFallback: {
         index: "/",
       },
-      server:"https", //Enable HTTPS
+      server: "https", //Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({
@@ -46,9 +46,9 @@ module.exports = () => {
           // dashboard: "dashboard@http://localhost:8084/remoteEntry.js",
           // hrms: "hrms@https://localhost:8085/remoteEntry.js",
           workbench: "workbench@https://localhost:8086/remoteEntry.js",
-          common:"common@https://localhost:8090/remoteEntry.js"
+          common: "common@https://localhost:8090/remoteEntry.js",
           // app1: "app1@https://localhost:8001/remoteEntry.js",
-          // dss: "dss@https://localhost:8087/remoteEntry.js",
+          dss: "dss_ui@https://localhost:8087/remoteEntry.js",
           // measurement : "measurement@https://localhost:8088/remoteEntry.js"
         },
         shared: packageJson.dependencies,
