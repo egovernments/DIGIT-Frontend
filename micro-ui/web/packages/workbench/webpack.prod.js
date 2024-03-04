@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/workbench/",
+      publicPath: "/workbench_web/",
       filename: "[name].[contenthash].js",
     },
     plugins: [

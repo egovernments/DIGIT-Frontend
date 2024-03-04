@@ -6,6 +6,9 @@ import { registerApplication,start } from "single-spa";
 
 export default (queryClient) => {
 
+  const userType = Digit.UserService.getType();
+
+
   // registerApplication({
   //   name: "Workbench",
   //   app: () => import("workbench/WorkbenchModule"),
@@ -13,19 +16,23 @@ export default (queryClient) => {
   //   customProps: {
   //     title: "Workbench is running on host",
   //     queryClient,
+  //     userType
   //   },
   // });
 
-  // registerApplication({
-  //   name: "app1",
-  //   app: () => import("app1/App"),
-  //   activeWhen: "/",
-  //   customProps: {
-  //     title: "App 1 running on host",
-  //     queryClient,
-  //   },
-  // });
 
-  // start();
+  registerApplication({
+    name: "Common",
+    app: () => import("common/CommonModule"),
+    activeWhen: `/workbench-ui/${userType}/common`, //change to userType here
+    customProps: {
+      title: "Common Module is running on host",
+      queryClient,
+      userType
+    },
+  });
+
+
+  start();
 }
 
