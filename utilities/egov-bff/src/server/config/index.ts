@@ -40,6 +40,7 @@ const config = {
     process.env.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC || "update-generated-resource-details",
   KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC:
     process.env.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC || "create-generated-resource-details",
+  hierarchyType: "NITISH",
   DB_USER:
     process.env.DB_USER || "postgres",
   DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
@@ -89,7 +90,9 @@ const config = {
     boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
       || "boundary-service/boundary-relationships/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
-      || "boundary-service/boundary-hierarchy-definition/_search"
+      || "boundary-service/boundary-hierarchy-definition/_search",
+    boundaryEntity: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH
+      || "boundary-service/boundary/_search"  
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE
@@ -106,7 +109,7 @@ const config = {
     },
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
   },
-   SEARCH_TEMPLATE : "HCM.APIResourceTemplate3"
+  SEARCH_TEMPLATE: "HCM.APIResourceTemplate4"
 };
 
 export { getErrorCodes };

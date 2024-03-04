@@ -148,8 +148,7 @@ class TransformController {
         response: express.Response  
     ) => {
         try {
-            const { hierarchyType, tenantId } = request?.body?.BoundaryDetails;
-            const boundarySheetData: any = await getBoundarySheetData(hierarchyType, tenantId, request);
+            const boundarySheetData: any = await getBoundarySheetData( request);
             const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
             return  BoundaryFileDetails;
         }
