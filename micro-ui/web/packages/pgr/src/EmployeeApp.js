@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import getStore from "./redux/store";
 import { PGRReducers } from "./Module";
 
-const App = () => {
+const App = ({ path }) => {
   const { isLoading, data: initData } = Digit.Hooks.useInitStore("pg", ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR"]);
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
@@ -14,7 +14,7 @@ const App = () => {
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
       <EmployeeAppContainer>
-        <Complaint />
+        <Complaint path={path} />
       </EmployeeAppContainer>
     </Provider>
   );
