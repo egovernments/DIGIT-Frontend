@@ -81,7 +81,7 @@ const FieldV1 = ({
   //To truncate the message upto maxlength
   const truncateMessage = (message, maxLength) => {
     if (message.length > maxLength) {
-      return message.slice(0, maxLength) + " ...";
+      return message.slice(0, maxLength) + "...";
     }
     return message;
   };

@@ -18,7 +18,7 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
     <div style={{marginLeft: `${level !== 0 ? 22 : 0}px`, borderLeft: "1px solid #D6D5D4" }}>
       <div
         className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} level-${level}`}
-        onClick={handleToggleDropdown}
+        onClick={option.options ? handleToggleDropdown : handleSelect}
 
       >
         {option.options && (
@@ -30,7 +30,7 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
             )}
           </div>
         )}
-        <div className="digit-option-label" onClick={handleSelect}>
+        <div className="digit-option-label">
           {option.name}
         </div>
       </div>
