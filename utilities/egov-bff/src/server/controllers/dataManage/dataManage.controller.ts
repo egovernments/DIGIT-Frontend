@@ -23,6 +23,7 @@ class dataManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/generate`, this.generate);
+        this.router.post(`${this.path}/generateBoundaryCode`, this.generateBoundaryCode);
     }
     generate = async (
         request: express.Request,
@@ -55,6 +56,10 @@ class dataManageController {
             return sendResponse(response, { "error": error.message }, request);
         }
     };
+    generateBoundaryCode = async (request: any, response: any) => {
+      
+    }
+
 };
 export default dataManageController;
 
