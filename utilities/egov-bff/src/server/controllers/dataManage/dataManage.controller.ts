@@ -29,6 +29,7 @@ class dataManageController {
     public intializeRoutes() {
         this.router.post(`${this.path}/_generate`, this.generate);
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
+        this.router.post(`${this.path}/generateBoundaryCode`, this.generateBoundaryCode);
     }
     generate = async (
         request: express.Request,
@@ -45,13 +46,13 @@ class dataManageController {
         }
     };
 
+
     getBoundaryData = async (
         request: express.Request,
         response: express.Response
     ) => {
         try {
-            const { hierarchyType, tenantId } = request?.body?.BoundaryDetails;
-            const boundarySheetData: any = await getBoundarySheetData(hierarchyType, tenantId, request);
+            const boundarySheetData: any = await getBoundarySheetData(request);
             const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
             return BoundaryFileDetails;
         }
@@ -60,6 +61,11 @@ class dataManageController {
             return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
         }
     };
+
+    generateBoundaryCode = async (request: any, response: any) => {
+
+    }
+
 };
 export default dataManageController;
 

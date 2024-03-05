@@ -426,8 +426,7 @@ async function generateXlsxFromJson(request: any, response: any, simplifiedData:
     var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
       {
         'Content-Type': 'multipart/form-data',
-        // 'auth-token': request?.body?.RequestInfo?.authToken
-        'auth-token': "00604336-6ed1-44b7-8a93-632101657d33"
+        'auth-token': request?.body?.RequestInfo?.authToken
       }
     );
     const responseData = fileCreationResult?.files;
@@ -579,7 +578,8 @@ async function callSearchApi(request: any, response: any) {
     let result: any;
     const { type } = request.query;
     result = await searchMDMS([type], config.SEARCH_TEMPLATE, request.body.RequestInfo, response);
-    const requestBody = { "RequestInfo": request?.body?.RequestInfo };
+    const filter = request?.body?.Filters;
+    const requestBody = { "RequestInfo": request?.body?.RequestInfo, filter };
     const responseData = result?.mdms?.[0]?.data;
     if (!responseData || responseData.length === 0) {
       return errorResponder({ message: "Invalid ApiResource Type. Check Logs" }, request, response);
@@ -969,7 +969,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any) 
   // Get facility and boundary data
   const allFacilities = await getAllFacilities(tenantId, request.body);
   const facilitySheetData: any = await createFacilitySheet(allFacilities);
-  const boundarySheetData: any = await getBoundarySheetData("office", tenantId, request);
+  const boundarySheetData: any = await getBoundarySheetData(request);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
 }
 async function processGenerateRequest(request: any) {
