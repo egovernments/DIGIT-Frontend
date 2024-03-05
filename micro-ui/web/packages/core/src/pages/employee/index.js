@@ -23,16 +23,19 @@ const EmployeeApp = ({
   handleUserDropdownSelection,
   logoUrl,
   DSO,
-  stateCode,
+  stateCode="pg",
   modules,
   appTenants,
   sourceUrl,
   pathname,
   initData,
 }) => {
+  // debugger
+  console.log("came into Employee App");
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();
+  console.log("path in employee app", path);
   const location = useLocation();
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));

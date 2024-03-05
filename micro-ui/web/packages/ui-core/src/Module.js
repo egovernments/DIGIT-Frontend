@@ -98,7 +98,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
+              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>

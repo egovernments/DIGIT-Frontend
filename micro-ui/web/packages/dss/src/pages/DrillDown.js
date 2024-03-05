@@ -23,7 +23,7 @@ const getInitialRange = () => {
 };
 
 const DrillDown = ({ stateCode }) => {
-  const [searchQuery, onSearch] = useState("");
+   const [searchQuery, onSearch] = useState("");
   const { ulb, chart, title, type = "table", fillColor = "", isNational = "NO" } = Digit.Hooks.useQueryParams();
   const { t } = useTranslation();
   const nationalDB = isNational == "YES" ? true : false;
@@ -121,7 +121,7 @@ const DrillDown = ({ stateCode }) => {
 
   return (
     <FilterContext.Provider value={provided}>
-      <Header>{t(title)}</Header>
+            <Header>{t(title)}</Header>
       {isNational ? (
         <FiltersNational t={t} ulbTenants={nationalInfo} isNational={isNational} />
       ) : (

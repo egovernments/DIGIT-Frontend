@@ -7,11 +7,17 @@ WORKDIR /app
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+RUN rm -rf node_modules/
+
+RUN rm -rf yarn.lock
+
 # clear cache
 RUN yarn cache clean
 
 # Install dependencies
 RUN yarn install
+
+RUN yarn add @digit-ui/digit-ui-module-core-base@1.0.8
 
 # Copy the rest of the application
 COPY . .

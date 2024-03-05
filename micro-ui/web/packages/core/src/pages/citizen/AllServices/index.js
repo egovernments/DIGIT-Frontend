@@ -11,12 +11,13 @@ const CitizenApp = ({
   handleUserDropdownSelection,
   logoUrl,
   DSO,
-  stateCode,
+  stateCode="pg",
   modules,
   appTenants,
   sourceUrl,
   pathname,
 }) => {
+  // debugger
   const { t } = useTranslation();
 
   return <AppModules stateCode={stateCode} userType="citizen" modules={modules} appTenants={appTenants} />;

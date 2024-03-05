@@ -15,6 +15,7 @@ const configEstimateModal = (
     const bsContract = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("contract");
     const bsMuster = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("muster roll");
     const bsPurchaseBill = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("works.purchase");
+    const bsRevisedWO = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("revisedWO");
     
     const configMap = {
         [bsEstimate]: {
@@ -91,6 +92,93 @@ const configEstimateModal = (
             }
         },
         [bsContract]: {
+            "default":{
+                comments:{
+                    isMandatory:false,
+                    show:true,
+                },
+                assignee:{
+                    isMandatory:false,
+                    show:true
+                },
+                upload:{
+                    isMandatory:false,
+                    show:true,
+                    allowedFileTypes:/(.*?)(pdf|vnd.openxmlformats-officedocument.wordprocessingml.document|msword|vnd.ms-excel|vnd.openxmlformats-officedocument.spreadsheetml.sheet|csv|jpeg)$/i
+                }
+            },
+            "REJECT": {
+                comments: {
+                    isMandatory: true,
+                    show: true,
+                },
+                assignee: {
+                    isMandatory: false,
+                    show: false
+                },
+                upload: {
+                    isMandatory: false,
+                    show: true
+                }
+            },
+            "SEND_BACK": {
+                comments: {
+                    isMandatory: false,
+                    show: true,
+                },
+                assignee: {
+                    isMandatory: false,
+                    show: false
+                },
+                upload: {
+                    isMandatory: false,
+                    show: true
+                }
+            },
+            "VERIFY_AND_FORWARD": {
+                comments:{
+                    isMandatory:false,
+                    show:true,
+                },
+                assignee:{
+                    isMandatory:false,
+                    show:true
+                },
+                upload:{
+                    isMandatory:false,
+                    show:true
+                }
+            },
+            "SEND_BACK_TO_ORIGINATOR": {
+                comments: {
+                    isMandatory: false,
+                    show: true,
+                },
+                assignee: {
+                    isMandatory: false,
+                    show: false
+                },
+                upload: {
+                    isMandatory: false,
+                    show: true
+                }
+            },
+            "APPROVE": {
+                comments: {
+                    isMandatory: false,
+                    show: true,
+                },
+                assignee: {
+                    isMandatory: false,
+                    show: false
+                },
+                upload: {
+                    isMandatory: false,
+                    show: true
+                }
+            },
+        },
+        [bsRevisedWO]:{
             "default":{
                 comments:{
                     isMandatory:false,

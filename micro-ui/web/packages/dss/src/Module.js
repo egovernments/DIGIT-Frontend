@@ -48,33 +48,34 @@ const DssBreadCrumb = ({ location }) => {
     } 
   ];
 
-  return <BreadCrumb crumbs={crumbs?.filter(ele=>ele.show)} />;
+return <BreadCrumb crumbs={crumbs?.filter(ele=>ele.show)} />;
 };
 
 const Routes = ({ path, stateCode }) => {
   const location = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
   return (
+    <React.Fragment>
+   
     <div className="chart-wrapper" style={isMobile ? {marginTop:"unset"} : {}}>
-      <DssBreadCrumb location={location} />
+      <DssBreadCrumb location={location} defaultPath={path} />
       <Switch>
-        <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} />
-        <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
-        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown  stateCode={stateCode}  />} />
-        <Route key={"national-faq"} path={`${path}/national-faqs`}>
-          <FAQsSection/>
-        </Route>
-        <Route key={"national-about"} path={`${path}/national-about`}>
-          <About/>
-        </Route>
-      </Switch>
-    </div>
+       <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} /> 
+       <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} /> 
+        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown  stateCode={stateCode}  />} /> 
+        <PrivateRoute path={`${path}/national-faq`} component={() => <FAQsSection  stateCode={stateCode}  />} /> 
+        <PrivateRoute path={`${path}/national-about`} component={() => <About  stateCode={stateCode}  />} /> 
+
+      </Switch>     
+    </div> 
+    </React.Fragment>
   );
 };
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   // const { path, url } = useRouteMatch();
   const { path, url } = useRouteMatch();
+ 
   const language = Digit.StoreData.getCurrentLanguage();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleCode = ["DSS","common-masters",tenantId];
@@ -98,13 +99,11 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   DSSModule,
   DSSCard,
-  NDSSCard
+NDSSCard
 };
 
-const initDSSComponents = () => {
+export const initDSSComponents = () => {
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };
-
-export {initDSSComponents};

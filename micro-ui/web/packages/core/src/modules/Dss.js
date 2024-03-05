@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { mount } from "dss/DssModule";
+import { mount } from "dss/DSSModule";
 import { History } from "history";
 
 // interface AuthProps {
