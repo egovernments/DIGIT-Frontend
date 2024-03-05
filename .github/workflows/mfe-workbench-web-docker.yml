@@ -2,7 +2,7 @@ name: workbench ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker", "mf-stable" ]
+    branches: [ "mf-build-docker", "mf-stable","mf-stable-common-module" ]
   pull_request:
     branches: [ "mf-build" ]
 
