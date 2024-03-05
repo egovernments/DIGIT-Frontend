@@ -547,22 +547,22 @@ function generateCodes(hierarchy: any[], prefix: string = "ADMIN", levelCount: {
   const codeMappings: any[] = [];
 
   hierarchy.forEach((item: any, index: number) => {
-      let currentLevel: string;
-      let code: string;
-      if (prefix === "ADMIN") {
-          currentLevel = `${prefix}_${item.code}`;
-          code = `${currentLevel}`;
-      } else {
-          currentLevel = `${prefix}_${String(levelCount[prefix] || index + 1).padStart(2, '0')}`;
-          levelCount[prefix] = (levelCount[prefix] || index + 1) + 1;
-          code = `${currentLevel}_${item.code}`;
-      }
-      codeMappings.push({ originalCode: item.code, newCode: code });
+    let currentLevel: string;
+    let code: string;
+    if (prefix === "ADMIN") {
+      currentLevel = `${prefix}_${item.code}`;
+      code = `${currentLevel}`;
+    } else {
+      currentLevel = `${prefix}_${String(levelCount[prefix] || index + 1).padStart(2, '0')}`;
+      levelCount[prefix] = (levelCount[prefix] || index + 1) + 1;
+      code = `${currentLevel}_${item.code}`;
+    }
+    codeMappings.push({ originalCode: item.code, newCode: code });
 
-      if (item.children.length > 0) {
-          const childCodeMappings = generateCodes(item.children, currentLevel, levelCount);
-          codeMappings.push(...childCodeMappings);
-      }
+    if (item.children.length > 0) {
+      const childCodeMappings = generateCodes(item.children, currentLevel, levelCount);
+      codeMappings.push(...childCodeMappings);
+    }
   });
 
   return codeMappings;
@@ -656,16 +656,16 @@ async function getBoundarySheetData(request: any) {
   const params = request?.body?.Filters;
   const boundaryType = request?.body?.Filters?.boundaryType;
   const response = await httpRequest(url, request.body, params);
-  const data =response?.TenantBoundary?.[0]?.boundary;
+  const data = response?.TenantBoundary?.[0]?.boundary;
   if (data) {
     const boundaryCodeMappings = generateCodes(data)
-    console.log(boundaryCodeMappings,"mapppingggggggg")
+    console.log(boundaryCodeMappings, "mapppingggggggg")
     boundaryCodeMappings.forEach(mapping => {
       if (data.code === mapping.originalCode) {
         data.code = mapping.newCode;
       }
-  });
-  console.log(data,"daaaaaaaaaaaaaaaaaaaaaaaaaa")
+    });
+    console.log(data, "daaaaaaaaaaaaaaaaaaaaaaaaaa")
     const boundaryList = generateHierarchyList(data)
     console.log(boundaryList, "bbbbbbbbbbbbbb")
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
