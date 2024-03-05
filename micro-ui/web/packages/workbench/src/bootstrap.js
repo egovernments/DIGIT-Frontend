@@ -14,7 +14,7 @@ initWorkbenchComponents();
 const mount = (el, { history, login }) => {
   const moduleReducers = (initData) => {
   };
-  const enabledModules=["PT","Workbench"]
+  const enabledModules=["PT","Workbench","TQM"]
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   //console.log(stateCode,'ststcode');
@@ -47,7 +47,7 @@ const initDigitUI = () => {
   });
 
  // initHRMSComponents();
-  const enabledModules=["PT"]
+  const enabledModules=["PT","TQM"]
 
   const moduleReducers = (initData) => initData;
 

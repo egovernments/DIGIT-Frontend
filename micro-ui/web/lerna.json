@@ -5,6 +5,7 @@
     "packages/core",
     "packages/workbench",
     "packages/ui-core",
+    "packages/tqm",
     "packages/app1"
   ],
   "command": {

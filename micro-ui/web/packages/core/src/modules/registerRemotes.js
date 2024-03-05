@@ -16,6 +16,16 @@ export default (queryClient) => {
     },
   });
 
+  registerApplication({
+    name: "TQM",
+    app: () => import("tqm/TQMModule"),
+    activeWhen: "/workbench-ui/employee/tqm",
+    customProps: {
+      title: "TQM is running on host",
+      queryClient,
+    },
+  });
+
   // registerApplication({
   //   name: "app1",
   //   app: () => import("app1/App"),

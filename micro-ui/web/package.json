@@ -19,16 +19,19 @@
     "packages/core",
     "packages/workbench",
     "packages/ui-core",
-    "packages/app1"
+    "packages/app1",
+    "packages/tqm"
   ],
   "scripts": {
     "build": "yarn lerna run build",
     "start": "yarn lerna run start --parallel",
     "build:core": "cd packages/core && yarn build",
     "build:hrms": "cd packages/hrms && yarn build",
+    "build:tqm": "cd packages/tqm && yarn build",
     "build:workbench": "cd packages/workbench && yarn build",
     "build:dss": "cd packages/dss && yarn build",
     "start:core": "cd packages/core && yarn start",
+    "start:tqm": "cd packages/tqm && yarn start",
     "start:workbench": "cd packages/workbench && yarn start"
   },
   "dependencies": {

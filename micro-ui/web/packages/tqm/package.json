@@ -1,5 +1,5 @@
 {
-  "name": "@digit-ui/digit-ui-module-workbench-mfe",
+  "name": "@digit-ui/digit-ui-module-tqm-mfe",
   "version": "1.0.6",
   "description": "",
   "main": "index.js",
@@ -20,14 +20,13 @@
     "gh-pages": "^5.0.0",
     "html-webpack-plugin": "^5.5.0",
     "babel-plugin-react-html-attrs": "^3.0.5",
-    "@babel/preset-env":"7.23.9"
+    "@babel/preset-env": "7.23.9"
   },
   "dependencies": {
     "single-spa-react": "^4.6.1",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
     "@digit-ui/digit-ui-module-core-base": "1.0.8",
-    "@egovernments/digit-ui-react-components": "1.4.106",
-    "@egovernments/digit-ui-svg-components": "0.0.8",
+    "@egovernments/digit-ui-react-components": "2.0.0-fsm.2.1",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
     "@rjsf/validator-ajv8": "5.10.0",
@@ -42,6 +41,8 @@
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.8.1",
-    "webpack-merge": "5.7.3"
+    "webpack-merge": "5.7.3",
+    "react-table": "7.7.0",
+    "react-time-picker": "4.2.1"
   }
 }

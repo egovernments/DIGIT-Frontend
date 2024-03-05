@@ -44,7 +44,7 @@ registerRemotes(queryClient)
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
+  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement", "TQM"]
 
   const moduleReducers = (initData) => initData;
   
@@ -113,7 +113,7 @@ const initDigitUI = () => {
   });
 
  // initHRMSComponents();
-  const enabledModules=["PT"];
+  const enabledModules=["PT", "TQM"];
 
   const moduleReducers = (initData) => initData;
 
