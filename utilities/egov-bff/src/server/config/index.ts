@@ -4,7 +4,7 @@
 import { getErrorCodes } from "./constants";
 
 const HOST = process.env.EGOV_HOST ||
-  // "http://127.0.0.1:8080/" ||
+  "http://127.0.0.1:8080/" ||
   "https://unified-uat.digit.org/";
 
 if (!HOST) {
@@ -17,7 +17,7 @@ const config = {
   delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || "90000",
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   KAFKA_BROKER_HOST:
-    // "localhost:9092" ||
+    "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
@@ -49,7 +49,7 @@ const config = {
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
-    contextPath: process.env.CONTEXT_PATH || "/hcm-bff",
+    contextPath: process.env.CONTEXT_PATH || "/campaign-manager",
   },
   host: {
     serverHost: HOST,
