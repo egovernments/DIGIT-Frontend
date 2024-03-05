@@ -209,7 +209,9 @@ import {
   FileIcon,
   DeleteIconv2,
   InfoIconOutline,
-  HelpOutlineIcon
+  HelpOutlineIcon,
+  InputIcon,
+  TreatmentQualityIcon,
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
@@ -293,6 +295,8 @@ import ViewComposer from "./hoc/ViewComposer";
 export {
   ViewComposer,
   HelpOutlineIcon,
+  InputIcon,
+  TreatmentQualityIcon,
   Help,
   Tutorial,
   useTourState,

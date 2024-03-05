@@ -54,6 +54,7 @@ const SetupCampaign = () => {
   };
 
   const onSecondayActionClick = () => {
+    console.log(currentStep,"curre");
     // Ensure not to go below the first step
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);

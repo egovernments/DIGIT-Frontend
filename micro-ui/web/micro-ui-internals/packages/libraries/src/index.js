@@ -3,6 +3,7 @@ import Enums from "./enums/index";
 import mergeConfig from "./config/mergeConfig";
 import { useStore } from "./services/index";
 import { initI18n } from "./translations/index";
+import { Request } from "./services/atoms/Utils/Request";
 
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
@@ -37,7 +38,7 @@ import Hooks from "./hooks";
 import Utils from "./utils";
 import { subFormRegistry } from "./subFormRegistry";
 import AccessControlService from "./services/elements/Access";
-import { Request } from "./services/atoms/Utils/Request";
+
 
 const setupLibraries = (Library, props) => {
   window.Digit = window.Digit || {};

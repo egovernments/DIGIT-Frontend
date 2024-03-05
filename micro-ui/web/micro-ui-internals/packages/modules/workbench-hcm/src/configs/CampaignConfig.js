@@ -16,7 +16,7 @@ export const CampaignConfig = [
             },
           },
           {
-            isMandatory: true,
+            isMandatory: false,
             key: "hierarchyType",
             type: "component",
             component: "HierarchyType",
@@ -105,28 +105,6 @@ export const CampaignConfig = [
         body: [
           {
             isMandatory: false,
-            key: "campaignName2",
-            type: "text",
-            label: "CAMPAIGN_NAME",
-            populators: {
-              name: "campaignName2",
-              error: "ES_TQM_REQUIRED",
-              required: true,
-            },
-          },
-          {
-            isMandatory: false,
-            key: "campaignType2",
-            type: "text",
-            label: "CAMPAIGN_TYPE",
-            populators: {
-              name: "campaignType2",
-              error: "ES_TQM_REQUIRED",
-              required: true,
-            },
-          },
-          {
-            isMandatory: true,
             key: "uploadBoundary",
             type: "component",
             component: "UploadBoundaryData",
@@ -139,33 +117,6 @@ export const CampaignConfig = [
               name: "uploadBoundary",
               // optionsKey: "code",
               error: "ES__REQUIRED",
-              required: true,
-            },
-          },
-        ],
-      },
-      {
-        stepCount: "2",
-        body: [
-          {
-            isMandatory: false,
-            key: "campaignName1",
-            type: "text",
-            label: "CAMPAIGN_NAME",
-            populators: {
-              name: "campaignName1",
-              error: "ES_TQM_REQUIRED",
-              required: true,
-            },
-          },
-          {
-            isMandatory: false,
-            key: "campaigntType1",
-            type: "text",
-            label: "CAMPAIGN_TYPE",
-            populators: {
-              name: "campaigntType1",
-              error: "ES_TQM_REQUIRED",
               required: true,
             },
           },

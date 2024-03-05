@@ -17,8 +17,6 @@ function getDate(timestamp) {
 
 const monthNames = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-
-
 /*
 Digit.Utils.date.convertDateToEpoch()
 * @params dateString date as string
@@ -55,5 +53,4 @@ const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
   return `${day}/${month}/${year}`;
 };
 
-export { getDate, monthNames, convertEpochToDate, convertDateToEpoch };
-
+export { getDate, monthNames ,convertDateToEpoch , convertEpochToDate };

@@ -1,4 +1,4 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,Toast,WorkflowModal,ActionBar,SubmitBar } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,Toast,WorkflowModal,ActionBar,SubmitBar, InfoBanner } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -127,13 +127,16 @@ const LocalisationSearch = () => {
           />
         )} */}
       {
-        Config && Digit.Utils.didEmployeeHasRole(Config?.actionRole) &&
+        Config && Digit.Utils.didEmployeeHasAtleastOneRole(Config?.actionRoles) &&
         <ActionBar >
-          <SubmitBar disabled={false} onSubmit={() => {
+          <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
               history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
             }} label={t("WBH_ADD_LOCALISATION")} />
         </ActionBar>
       }
+      </div>
+      <div className="localisation-info">
+        <InfoBanner label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} />
       </div>
       {Config && <div className="inbox-search-wrapper">
         <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig = {{

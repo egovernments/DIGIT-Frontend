@@ -21,7 +21,38 @@ import { set } from "lodash";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui"];
+const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web"];
+
+// Function to recursively get the key of a nested object based on a parent key
+const getKey = (obj, parent) => {
+  if (typeof obj !== 'object' || obj === null) {
+    // If obj is not an object or is null, return null
+    return null;
+  }
+  // Use Object.keys to get an array of keys in the object
+  const key = Object.keys(obj).map((key) => {
+    // Check if the object has an 'item' property with a 'path' property
+    if (typeof obj[key]?.item?.path === 'string') {
+      return obj[key]?.item?.path?.split(parent ? `${parent}.${key}` : `.${key}`) || getKey(obj[key], key);
+    }
+    return null; // or return some default value if neither condition is met
+  });
+  // Return the first element of the array (the key)
+  return key?.[0];
+};
+
+// Function to find the last key in a dot-separated key string
+const findKey = (key = "") => {
+  // Split the key string into an array using dot as a separator
+  const newSplitedList = key?.split(".");
+  // Check if the key string ends with a dot
+  return key?.endsWith?.(".") ?
+    // If it ends with a dot, return the first element of the array
+    newSplitedList[0] :
+    // If not, return the last element of the array
+    newSplitedList[newSplitedList?.length - 1];
+};
+
 /*
 Used to navigate to other mission's ui if user has access
 */
@@ -101,9 +132,26 @@ const Sidebar = ({ data }) => {
     return null; // Return null if no non-empty leftIcon is found
   }
   const renderSidebarItems = (items, parentKey = null, flag = true, level = 0) => {
+    /* added the logic to sort the side bar items based on the ordernumber */
+    const keysArray = Object.values(items)
+      .sort((x, y) => {
+        if (x?.item && y?.item) {
+          return x?.item?.orderNumber - y?.item?.orderNumber;
+        } else {
+          if (x?.[0] < y?.[0]) {
+            return -1;
+          }
+          if (x?.[0] > y?.[0]) {
+            return 1;
+          }
+          return 0;
+        }
+      })
+      .map((x) => (x?.item?.path && findKey(x?.item?.path)) || findKey(getKey(x)?.[0]));
+
     return (
       <div className={`submenu-container level-${level}`}>
-        {Object.keys(items).map((key, index) => {
+        {keysArray.map((key, index) => {
           const subItems = items[key];
           const subItemKeys = Object.keys(subItems)[0] === "item";
           const isSubItemOpen = openItems[key] || false;
@@ -130,23 +178,24 @@ const Sidebar = ({ data }) => {
                 style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}
               >
                 <div
-                  className={`actions ${
-                    isChildActive && level === 1 ? `selected-action-level-1` : isParentActive ? `default-${level} active` : `default-${level}`
-                  }`}
+                  className={`actions ${isChildActive && level === 1 ? `selected-action-level-1` : isParentActive ? `default-${level} active` : `default-${level}`}`}
                   // className={`actions`}
 
                   onClick={(e) => {
                     toggleSidebar(key);
                     setSelectedParent((prevItem) => {
                       if (prevItem === itemKey) {
-                        return null;
-                      } else return itemKey;
+                        return null
+                      }
+                      else return itemKey
+
                     });
-                    const itemToHighlight = e.target.innerText;
+                    const itemToHighlight = e.target.innerText
                     setSelectedChildLevelOne((prevItem) => {
                       if (prevItem === itemToHighlight || isSubItemOpen) {
-                        return null;
-                      } else return itemToHighlight;
+                        return null
+                      }
+                      else return itemToHighlight
                     });
                     setSelectedChild(null);
                     // setOpenItems(prevState => {
@@ -168,10 +217,7 @@ const Sidebar = ({ data }) => {
                       </ReactTooltip>
                     )}
                   </div>
-                  <div
-                    style={{ position: "relative", marginLeft: "auto" }}
-                    className={`arrow ${isSubItemOpen && subNav ? "" : ""} ${isChildActive && level === 1 ? "selected-arrow" : ""} `}
-                  >
+                  <div style={{ position: "relative", marginLeft: "auto" }} className={`arrow ${isSubItemOpen && subNav ? "" : ""} ${isChildActive && level === 1 ? "selected-arrow" : ""} `}>
                     {isSubItemOpen ? <ArrowVectorDown height="28px" width="28px" /> : <ArrowForward />}
                   </div>
                 </div>

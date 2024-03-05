@@ -46,7 +46,8 @@ const DynamicSearchComponent = () => {
             variation="secondary"
             icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}`);
+              history.push(`/${updatedConfig?.actionLink}`);
+              // history.push(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}`);
             }}
             type="button"
           />

@@ -39,11 +39,19 @@ frontend/micro-ui/web/public/index.html
   <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.5.22/dist/index.css" />
 
 ```
-# Changelog
+### Changelog
 
 ```bash
+1.8.1-beta.1 Republished after merging with Master due to version issues.
+1.8.0-beta.20 Added css for info message in localisation screen
+1.8.0-beta.19 Improved Bulk Upload and Bulk Upload Toast CSS
+1.8.0-beta.18 added bulk upload css
+1.8.0-beta.17 fiexed mobile view issue for detail modals
+1.8.0-beta.16 styles for detail modals
+1.8.0-beta.15 styles for multi select dropdowns
 1.8.0-beta.14 added tour help styles
 1.8.0-beta.13 fixed the login text styling issue
+1.8.0 Workbench v1.0
 1.8.0-beta.1 styles for login dropdown and homepage dropdowns
 1.8.0-beta added workbench related css and some new Digit v2 constants based on em
 1.7.0 urban 2.9
@@ -67,12 +75,12 @@ frontend/micro-ui/web/public/index.html
 1.5.24 added the readme file
 1.5.23 base version
 ```
-# Contributors
+## Contributors
 
 [jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
 
-## Published from DIGIT Core 
-Digit Core Repo (https://github.com/egovernments/Digit-Core/tree/digit-ui-core)
+### Published from DIGIT Frontend 
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 ## License
 
