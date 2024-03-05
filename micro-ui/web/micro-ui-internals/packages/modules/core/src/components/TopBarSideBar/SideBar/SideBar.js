@@ -153,7 +153,7 @@ const Sidebar = ({ data }) => {
       <div className={`submenu-container level-${level}`}>
         {keysArray.map((key, index) => {
           const subItems = items[key];
-          const subItemKeys = Object.keys(subItems)[0] === "item";
+          const subItemKeys = subItems ? Object.keys(subItems)[0] === "item" : null;
           const isSubItemOpen = openItems[key] || false;
           var itemKey = parentKey ? `${parentKey}` : key;
           const getModuleName = key?.replace(/[ -]/g, "_");

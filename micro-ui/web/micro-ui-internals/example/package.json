@@ -18,6 +18,7 @@
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.1",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
     "@egovernments/digit-ui-react-components": "1.8.1-beta.2",
+    "@egovernments/digit-ui-module-campaign-manager": "1.0.0",
     "http-proxy-middleware": "^1.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
