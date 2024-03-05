@@ -24,7 +24,7 @@ const CheckBox = ({
   return (
     <div className={`digit-checkbox-wrap ${disabled ? "disabled" : " "}`}>
       {isLabelFirst ? (
-        <p className="label">
+        <p className="label" style={{ maxWidth: "100%", width: "100%" }}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
@@ -39,7 +39,7 @@ const CheckBox = ({
           )}
         </p>
       ) : null}
-      <div style={{ cursor: "pointer", display:"flex",position:"relative" }}>
+      <div style={{ cursor: "pointer", display: "flex", position: "relative" }}>
         <input
           type="checkbox"
           className={`input ${userType === "employee" ? "input-emp" : ""}`}
@@ -50,12 +50,12 @@ const CheckBox = ({
           disabled={disabled}
           checked={checked}
         />
-        <p className={`digit-custom-checkbox ${userType === "employee" ? "digit-custom-checkbox-emp" : ""}`}>
-          <SVG.Check fill={disabled ? "#B1B4B6" : "#F47738"} />
-        </p>
+          <p className={`digit-custom-checkbox ${userType === "employee" ? "digit-custom-checkbox-emp" : ""}`}>
+            <SVG.Check fill={disabled ? "#B1B4B6" : "#F47738"} />
+          </p>
       </div>
       {!isLabelFirst ? (
-        <p className="label">
+        <p className="label" style={{ maxWidth: "100%", width: "100%" }}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>

@@ -173,6 +173,22 @@
     box-sizing: border-box;
 
 
+    .main-option{
+      white-space: nowrap;
+      line-height: 18px;
+      font-size: 14px;
+      width: 100%;
+      min-height:18px;
+      overflow: hidden;
+
+      &.nestedtextdropdown,
+      &.profilenestedtext{
+        line-height: 24px;
+        font-size: 16px;
+      }
+    }
+
+
     .option-description {
       color: theme(digitv2.lightTheme.text-secondary);
       font-family: theme(digitv2.fontFamily.sans);
@@ -230,7 +246,7 @@
       width: 100px;
     }
 
-    span {
+    .main-option {
       font-weight: theme(digitv2.fontWeight.bold);
       font-size: 16px;
       line-height: 19px;
@@ -240,6 +256,7 @@
   &.nestedtextdropdown {
     min-height: 76px;
     padding: 8px 10px 8px 10px;
+    color: theme(digitv2.lightTheme.text-secondary) !important;
 
     &:hover {
       border: 1px solid theme(digitv2.lightTheme.primary-orange);
@@ -260,6 +277,7 @@
     padding: 8px 16px;
     gap: 16px;
     align-items: center;
+    color: theme(digitv2.lightTheme.text-secondary) !important;
   }
 }
 
@@ -268,6 +286,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &.treedropdown{
+    pointer-events:none;
+  }
 }
 
 .digit-select-wrap {
@@ -362,6 +384,13 @@
 
     svg {
       @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm;
+    }
+  }
+
+  .digit-select,
+  .digit-select-active{
+    &.treedropdown{
+      cursor: pointer;
     }
   }
 

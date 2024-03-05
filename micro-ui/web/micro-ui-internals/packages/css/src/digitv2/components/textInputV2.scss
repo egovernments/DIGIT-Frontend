@@ -131,7 +131,6 @@
 
   &.noneditable {
 
-    input,
     .digit-prefix,
     .digit-suffix,
     .digit-numeric-button-prefix,
@@ -144,6 +143,9 @@
 
     input {
       color: theme(digitv2.lightTheme.text-secondary);
+      border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+      background: theme(digitv2.lightTheme.generic-background);
+      color: theme(digitv2.lightTheme.text-disabled);
     }
 
     .digit-numeric-button-prefix,
@@ -404,25 +406,26 @@
 
 .input-container:focus-within {
 
-  .digit-numeric-button-prefix,
-  .digit-numeric-button-suffix,
-  .digit-prefix,
-  .digit-suffix,
-  input {
+  .digit-numeric-button-prefix:not([readonly]),
+  .digit-numeric-button-suffix:not([readonly]),
+  .digit-prefix:not([readonly]),
+  .digit-suffix:not([readonly]),
+  input:not([readonly]) {
     outline: none;
     border: 1.5px solid theme(digitv2.lightTheme.primary-orange);
   }
 
   .digit-numeric-button-prefix,
   .digit-prefix {
-    border-right: 1px solid theme(digitv2.lightTheme.text-secondary);
+    border-right: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 
   .digit-numeric-button-suffix,
   .digit-suffix {
-    border-left: 1px solid theme(digitv2.lightTheme.text-secondary);
+    border-left: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
   }
-}
+}/
+
 
 .digit-prefix,
 .digit-suffix,

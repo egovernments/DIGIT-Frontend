@@ -258,6 +258,7 @@
           line-height: 1.5rem;
           padding: 0px;
           margin-bottom:0px;
+          margin-top:0px;
         }
 
         .option-description {
@@ -271,13 +272,12 @@
 
         .svg{
           flex-shrink: 0;
-
-          
         }
       }
 
       .digit-custom-checkbox{
-        margin-right: 0px;
+        margin: 0px;
+        margin-top: 3px;;
       }
 
       &:active,
@@ -291,6 +291,7 @@
         p {
           font-weight: theme(digitv2.fontWeight.bold);
           font-size: 16px;
+          line-height: 19px;
         }
       }
 

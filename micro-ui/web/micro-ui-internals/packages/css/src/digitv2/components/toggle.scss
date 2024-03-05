@@ -41,7 +41,7 @@
   }
 
   &:active {
-    box-shadow: 0px 0px 6px 0px rgba(244, 119, 56, 0.25);
+    box-shadow: 0px 0px 6px 0px #F4773840;
   }
 
   input:checked+.digit-toggle-label {
@@ -54,6 +54,7 @@
     background-color: theme(digitv2.lightTheme.primary-orange);
     width: 7.125rem;
     color: theme(digitv2.lightTheme.paper-primary);
+    border: 1px solid theme(digitv2.lightTheme.primary-orange);
   }
 }
 
