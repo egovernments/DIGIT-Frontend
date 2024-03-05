@@ -265,16 +265,20 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.bold);
 
-    @media (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.heading-xl.desktop);
+
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-xl.mobile);
     }
 
-    @media (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.heading-xl.tablet);
     }
 
-    @media (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.heading-xl.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-xl.desktop);
     }
   }
 
@@ -283,16 +287,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.bold);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.heading-l.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-l.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.heading-l.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.heading-l.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-l.desktop);
     }
   }
 
@@ -301,16 +308,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.bold);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.heading-m.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-m.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.heading-m.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.heading-m.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-m.desktop);
     }
   }
 
@@ -319,26 +329,27 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.bold);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.heading-s.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-s.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.heading-s.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.heading-s.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-s.desktop);
     }
   }
 
   &.heading-xs {
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.heading-xs.mobile);
-      font-family: theme(digitv2.fontFamily.sans);
-      font-style: theme(digitv2.fontStyle.normal);
-      font-weight: theme(digitv2.fontWeight.bold);
-    }
+    font-size: theme(digitv2.fontSize.heading-xs.mobile);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-weight: theme(digitv2.fontWeight.bold);
   }
 
   &.caption-l {
@@ -346,16 +357,19 @@
     font-style: theme(digitv2.fontStyle.italic);
     font-weight: theme(digitv2.fontWeight.medium);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.caption-l.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.caption-l.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.caption-l.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.caption-l.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.caption-l.desktop);
     }
   }
 
@@ -364,17 +378,21 @@
     font-style: theme(digitv2.fontStyle.italic);
     font-weight: theme(digitv2.fontWeight.medium);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.caption-m.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.caption-m.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.caption-m.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.caption-m.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.caption-m.desktop);
     }
+
   }
 
   &.caption-s {
@@ -382,17 +400,21 @@
     font-style: theme(digitv2.fontStyle.italic);
     font-weight: theme(digitv2.fontWeight.medium);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.caption-s.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.caption-s.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px){
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.caption-s.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.caption-s.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.caption-s.desktop);
     }
+
   }
 
   &.body-l {
@@ -400,16 +422,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.regular);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.body-l.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.body-l.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px){
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.body-l.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.body-l.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.body-l.desktop);
     }
   }
 
@@ -418,16 +443,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.regular);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.body-s.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.body-s.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.body-s.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.body-s.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.body-s.desktop);
     }
   }
 
@@ -436,16 +464,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.regular);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.body-xs.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.body-xs.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.body-xs.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.body-xs.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.body-xs.desktop);
     }
   }
 
@@ -454,16 +485,19 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.regular);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.label.desktop);
+    @media (max-width: 480px) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.label.mobile);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
+    @media (min-width: 481px) and (max-width: 767px) {
+      /* Media query for tablets */
       font-size: theme(digitv2.fontSize.label.tablet);
     }
 
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.label.mobile);
+    @media (min-width: 768px) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.label.desktop);
     }
   }
 
@@ -472,35 +506,14 @@
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.regular);
     text-decoration: theme(digitv2.textDecorationLine.underline);
+    font-size: theme(digitv2.fontSize.link.desktop);
 
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.link.desktop);
-    }
-
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
-      font-size: theme(digitv2.fontSize.link.tablet);
-    }
-
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.link.mobile);
-    }
   }
 
   &.button {
     font-family: theme(digitv2.fontFamily.sans);
     font-style: theme(digitv2.fontStyle.normal);
     font-weight: theme(digitv2.fontWeight.medium);
-
-    @media screen and (min-width: theme(digitv2.screens.desktop)) {
-      font-size: theme(digitv2.fontSize.button.desktop);
-    }
-
-    @media screen and (min-width: theme(digitv2.screens.tablet)) {
-      font-size: theme(digitv2.fontSize.button.tablet);
-    }
-
-    @media screen and (min-width: theme(digitv2.screens.mobile)) {
-      font-size: theme(digitv2.fontSize.button.mobile);
-    }
+    font-size: theme(digitv2.fontSize.button.desktop);
   }
 }
