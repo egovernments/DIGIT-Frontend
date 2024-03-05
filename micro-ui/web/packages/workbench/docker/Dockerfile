@@ -21,7 +21,7 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/workbench-web
+ENV WORK_DIR=/var/web/workbench-mfe
 
 RUN mkdir -p ${WORK_DIR}
 

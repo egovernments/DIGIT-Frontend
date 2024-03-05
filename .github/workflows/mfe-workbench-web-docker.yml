@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       working-directory: ./micro-ui/web/packages/workbench
-      run: docker build . --file docker/Dockerfile --tag egovio/workbench-web:latest
+      run: docker build . --file docker/Dockerfile --tag egovio/workbench-mfe:latest
 
     - name: Login to Docker Hub and Push Docker Image
       working-directory: ./micro-ui/web/packages/workbench
@@ -28,5 +28,5 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           
           # Push the image to Docker Hub
-          docker push  egovio/workbench-web:latest
+          docker push  egovio/workbench-mfe:latest
 

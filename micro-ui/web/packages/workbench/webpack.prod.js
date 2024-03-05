@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/workbench_web/",
+      publicPath: "/workbench-mfe/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
@@ -17,7 +17,6 @@ module.exports = () => {
         exposes: {
           "./WorkbenchModule": "./src/SingleSpaEntry",
         },
-        // shared: packageJson.dependencies,
         shared: packageJson.dependencies
       }),
     ],
