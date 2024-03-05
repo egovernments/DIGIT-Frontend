@@ -13,7 +13,7 @@ import { Pool } from 'pg';
 import { getCount } from '../api/index'
 import { logger } from "./logger";
 import { processValidationWithSchema, validateTransformedData } from "./validator";
-import TransformController from '../controllers/bulkTransform/TransformController.controller'
+import dataManageController from "../controllers/dataManage/dataManage.controller";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
@@ -646,8 +646,8 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
         tenantId: "pg"
       };
       request.body.BoundaryDetails = BoundaryDetails;
-      const transformController = new TransformController();
-      const result = await transformController.getBoundaryData(request, response);
+      const dataManagerController = new dataManageController();
+      const result = await dataManagerController.getBoundaryData(request, response);
       const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
       produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
