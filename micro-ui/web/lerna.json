@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "packages":[
     "packages/core",
+    "packages/tqm",
     "packages/common",
     "packages/workbench",
     "packages/pgr",

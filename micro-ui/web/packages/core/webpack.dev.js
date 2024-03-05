@@ -2,7 +2,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const { merge } = require("webpack-merge");
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
-require('dotenv').config({ path: '../../.env' }); 
+require("dotenv").config({ path: "../../.env" });
 
 module.exports = () => {
   const devConfig = {
@@ -18,18 +18,18 @@ module.exports = () => {
         {
           context: () => true,
           // target:  'https://mukta-uat.digit.org',
-          target: 'https://unified-dev.digit.org',
+          target: "https://unified-dev.digit.org",
           secure: false,
           changeOrigin: true,
           bypass: function (req, res, proxyOptions) {
-            if (req.headers.accept.indexOf('html') !== -1) {
-              console.log('Skipping proxy for browser request.');
-              return '/index.html';
+            if (req.headers.accept.indexOf("html") !== -1) {
+              console.log("Skipping proxy for browser request.");
+              return "/index.html";
             }
           },
           headers: {
-            "Connection": "keep-alive"
-        },
+            Connection: "keep-alive",
+          },
         },
       ],
       historyApiFallback: {
@@ -50,7 +50,7 @@ module.exports = () => {
 
           // workbench: "workbench@https://localhost:8086/remoteEntry.js",
           // common:"common@https://localhost:8090/remoteEntry.js"
-
+          // tqm: "tqm@https://localhost:8089/remoteEntry.js",
           // app1: "app1@https://localhost:8001/remoteEntry.js",
           //dss: "dss_ui@https://localhost:8087/remoteEntry.js",
           // measurement : "measurement@https://localhost:8088/remoteEntry.js"

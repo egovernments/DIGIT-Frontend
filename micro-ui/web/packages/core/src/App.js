@@ -34,12 +34,13 @@ registerRemotes(queryClient)
 const App = () => {
   // const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules = ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR"];
+  const enabledModules = ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR", "TQM"];
 
   const moduleReducers = (initData) => initData;
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pg";
   
+
   return (
     <div>
       <div

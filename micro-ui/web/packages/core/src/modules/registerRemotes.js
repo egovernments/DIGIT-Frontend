@@ -2,10 +2,18 @@
 //routing and all we have to handle in remote app itself
 //need to share history obj i think(we need to rethink the routing part)
 
-import { registerApplication,start } from "single-spa";
+import { registerApplication, start } from "single-spa";
 
 export default (queryClient) => {
-
+  registerApplication({
+    name: "TQM",
+    app: () => import("tqm/TQMModule"),
+    activeWhen: "/workbench-ui/employee/tqm",
+    customProps: {
+      title: "TQM is running on host",
+      queryClient,
+    },
+  });
   // registerApplication({
   //   name: "Workbench",
   //   app: () => import("workbench/WorkbenchModule"),
@@ -67,8 +75,7 @@ export default (queryClient) => {
   //     title: "HRMS is running on host",
   //     queryClient,
   //   },
-  // }); 
+  // });
 
   start();
-}
-
+};
