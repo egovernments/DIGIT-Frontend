@@ -2,7 +2,7 @@ import React from "react";
 import { SVG } from "./SVG";
 import PropTypes from "prop-types";
 
-const InfoCard = ({ label, text, variant , style}) => {
+const InfoCard = ({ label, text, variant , style, textStyle,additionalElements}) => {
 
   const getIconByVariant = (variant) => {
     switch (variant) {
@@ -25,7 +25,11 @@ const InfoCard = ({ label, text, variant , style}) => {
         {icon}
         <h2>{label}</h2>
       </div>
-      {text && <p>{text}</p>}
+      {text && <p style={{ ...textStyle }}>{text}</p>}
+      {additionalElements &&
+        additionalElements.map((element, index) => (
+          <div key={index}>{element}</div>
+        ))}
     </div>
   );
 };
@@ -35,12 +39,17 @@ InfoCard.propTypes = {
   text: PropTypes.string,
   variant:PropTypes.string,
   style:PropTypes.object,
+  textStyle:PropTypes.object,
+  additionalElements: PropTypes.arrayOf(PropTypes.node),
 };
 
 InfoCard.defaultProps = {
   label: "",
   text:"",
-  varinat:""
+  varinat:"",
+  styles:{},
+  textStyle:{},
+  additionalElements: [],
 };
 
 export default InfoCard;

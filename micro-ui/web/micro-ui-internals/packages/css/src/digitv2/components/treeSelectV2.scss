@@ -1,3 +1,18 @@
+.digit-tree-select-options-container.first-level:nth-of-type(even) {
+    .digit-tree-select-option.level-0,
+    .digit-tree-multiselect-option.level-0:not(.checked){
+        background-color: theme(digitv2.lightTheme.paper-secondary);
+    }
+}
+
+.digit-tree-select-options-container.first-level:nth-of-type(odd) {
+    .digit-tree-select-option.level-0,
+    .digit-tree-multiselect-option.level-0:not(.checked){
+        background-color: theme(digitv2.lightTheme.paper-primary);
+    }
+}
+
+
 .container.innerlevel {
     border-left: 1px solid #D6D5D4;
 }
@@ -66,8 +81,38 @@
     }
 }
 
+.container .digit-tree-multiselect-option.parent.checked.all-child-selected+.child-options-container,
+.container .digit-tree-multiselect-option.parent.checked.all-child-selected .child-options-container {
+    background-color: #FFFAF7;
+
+    .digit-tree-multiselect-option.checked {
+        background: #FFFAF7 !important;
+
+        .digit-toggle-dropdown.svg {
+            fill: #0B0C0C;
+        }
+
+        .digit-custom-checkbox {
+            border: 2px solid theme(digitv2.lightTheme.primary-orange);
+        }
+
+        .digit-option-label {
+            color: theme(digitv2.lightTheme.text-primary);
+        }
+    }
+
+    .container {
+        border: none;
+    }
+}
+
 .digit-tree-select-option {
 
+    &.expanded{
+        &.level-0{
+            background-color: theme(digitv2.lightTheme.paper-secondary) !important;
+        }
+    }
     &.child {
         .digit-option-label {
             padding-left: 1.75rem;
@@ -77,8 +122,13 @@
 
 .digit-tree-multiselect-option {
 
+    &.expanded{
+        &.level-0:not(.checked){
+            background-color: theme(digitv2.lightTheme.paper-secondary) !important;
+        }
+    }
 
-    /*&.checked {
+    &.checked {
         background-color: theme(digitv2.lightTheme.primary-orange);
 
         .digit-custom-checkbox {
@@ -91,7 +141,7 @@
             font-weight: theme(digitv2.fontWeight.bold);
             line-height: 19px;
         }
-    }*/
+    }
 
     &.child {
         .digit-custom-checkbox {

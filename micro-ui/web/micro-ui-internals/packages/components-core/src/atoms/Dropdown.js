@@ -71,7 +71,7 @@ const TextField = (props) => {
   return (
     <input
       ref={props.inputRef}
-      className={`digit-employee-select-wrap--elipses ${props.disable && "disabled"}`}
+      className={`digit-employee-select-wrap--elipses ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
       type="text"
       value={replaceDotWithColon(value)}
       onChange={inputChange}
@@ -255,14 +255,7 @@ const Dropdown = (props) => {
               <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
             ) : (
               <span
-                style={{
-                  width: "100%",
-                  minHeight: "18px",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  lineHeight: props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext" ? "24px" : "18px",
-                  fontSize: props.variant === "nestedtextdropdown" || props.varinat === "profilenestedtext" ? "16px" : "14px"
-                }}
+                className={`main-option ${props.variant ? props?.variant : ""}`}
               >
                 {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}
               </span>
@@ -317,6 +310,7 @@ const Dropdown = (props) => {
               ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}) }
               : { ...(props.noBorder ? { border: "none" } : {}) }
           }
+          onClick={props.variant === "treedropdown" ? dropdownSwitch : null}
         >
           <TextField
             variant={props?.variant}

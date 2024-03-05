@@ -31,28 +31,28 @@ const TextInput = (props) => {
     const prefixValue = props?.populators?.prefix || "";
     if (props?.type === "numeric") {
       return (
-        <button type="button" onClick={() => decrementCount()} className="digit-numeric-button-prefix">
+        <button type="button" onClick={() => decrementCount()} className="digit-numeric-button-prefix" readOnly={props.nonEditable}>
           -
         </button>
       );
     }
     if (prefixValue) {
-      return <button className="digit-prefix">{prefixValue}</button>;
+      return <button className="digit-prefix" readOnly={props.nonEditable}>{prefixValue}</button>;
     }
-    return null;
+    return null;  
   };
 
   const renderSuffix = () => {
     const suffixValue = props?.populators?.suffix || "";
     if (props?.type === "numeric") {
       return (
-        <button type="button" onClick={() => incrementCount()} className="digit-numeric-button-suffix">
+        <button type="button" onClick={() => incrementCount()} className="digit-numeric-button-suffix" readOnly={props.nonEditable}>
           +
         </button>
       );
     }
     if (suffixValue) {
-      return <button className="digit-suffix">{suffixValue}</button>;
+      return <button className="digit-suffix" readOnly={props.nonEditable}>{suffixValue}</button>;
     }
     return null;
   };
@@ -190,7 +190,7 @@ const TextInput = (props) => {
               max={props.max}
               pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
               min={props.min}
-              readOnly={props.disabled}
+              readOnly={props.nonEditable}
               title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
               step={props.step}
               autoFocus={props.autoFocus}
@@ -250,7 +250,7 @@ const TextInput = (props) => {
               }
               pattern={props?.validation && props.ValidationRequired ? props?.validation?.pattern : props.pattern}
               min={props.min}
-              readOnly={props.disabled}
+              readOnly={props.nonEditable}
               title={props?.validation && props.ValidationRequired ? props?.validation?.title : props.title}
               step={props.step}
               autoFocus={props.autoFocus}

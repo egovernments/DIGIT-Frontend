@@ -56,10 +56,9 @@
   &.password {
     input {
       font-family: theme(digitv2.fontFamily.sans);
-      line-height: 1rem;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 900;
-      line-height: 24px;
+      line-height: 1.5rem;
     }
   }
 
@@ -125,13 +124,12 @@
     color: theme(digitv2.lightTheme.text-disabled);
     font-family: theme(digitv2.fontFamily.sans);
     font-weight: theme(digitv2.fontWeight.regular);
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   &.noneditable {
 
-    input,
     .digit-prefix,
     .digit-suffix,
     .digit-numeric-button-prefix,
@@ -144,6 +142,9 @@
 
     input {
       color: theme(digitv2.lightTheme.text-secondary);
+      border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+      background: theme(digitv2.lightTheme.generic-background);
+      color: theme(digitv2.lightTheme.text-disabled);
     }
 
     .digit-numeric-button-prefix,
@@ -404,26 +405,25 @@
 
 .input-container:focus-within {
 
-  .digit-numeric-button-prefix,
-  .digit-numeric-button-suffix,
-  .digit-prefix,
-  .digit-suffix,
-  input {
+  .digit-numeric-button-prefix:not([readonly]),
+  .digit-numeric-button-suffix:not([readonly]),
+  .digit-prefix:not([readonly]),
+  .digit-suffix:not([readonly]),
+  input:not([readonly]) {
     outline: none;
     border: 1.5px solid theme(digitv2.lightTheme.primary-orange);
   }
 
   .digit-numeric-button-prefix,
   .digit-prefix {
-    border-right: 1px solid theme(digitv2.lightTheme.text-secondary);
+    border-right: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 
   .digit-numeric-button-suffix,
   .digit-suffix {
-    border-left: 1px solid theme(digitv2.lightTheme.text-secondary);
+    border-left: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 }
-
 .digit-prefix,
 .digit-suffix,
 .digit-numeric-button-prefix,
@@ -436,7 +436,7 @@
   border: 1px solid theme(digitv2.lightTheme.text-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-style: theme(digitv2.fontStyle.normal);
-  line-height: 24px;
+  line-height: 1.5rem;
   background: theme(colors.grey.mid);
   max-width: none !important;
   flex: 0 0 2.5rem;
@@ -445,7 +445,7 @@
 .digit-numeric-button-prefix,
 .digit-numeric-button-suffix {
   width: 2.5rem !important;
-  line-height: 28px;
+  line-height: 1.75rem;
 }
 
 .digit-prefix,

@@ -5,10 +5,10 @@
   bottom: 64px;
   left: 0;
   margin: 0 10px;
-  gap: 8px;
+  gap: 0.5rem;
   min-height: 48px;
   @apply fixed flex z-20 items-center;
-  padding: 12px 8px;
+  padding: 0.75rem 0.5rem;
   background-color: theme(digitv2.lightTheme.alert-success);
 
 
@@ -49,17 +49,16 @@
   }
 
   h2 {
-    
     font-family: theme(digitv2.fontFamily.sans);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: theme(digitv2.fontWeight.medium);
+    font-style: theme(digitv2.fontStyle.italic);
     letter-spacing: 0px;
     text-align: left;
     color: theme(digitv2.lightTheme.paper-primary);
     margin: 0px;
     min-height: 19px;
-    font-style: theme(digitv2.fontStyle.italic);
-    line-height: 19px;
+    line-height: 1.188rem;
     flex-grow: 1; 
     overflow: hidden; 
     white-space: nowrap; 
@@ -69,7 +68,7 @@
     @media (min-width: 481px){
       /* Media query for tablets */
       min-height: 23px;
-      line-height: 24px;
+      line-height: 1.5rem;
     }
   
     @media (max-width: 480px) {
@@ -80,7 +79,7 @@
     @media (min-width: 768px) {
       /* Media query for desktop */
       min-height: 23px;
-      line-height: 24px;
+      line-height: 1.5rem;
     }
 
   }
@@ -103,10 +102,3 @@
     flex-shrink: 0;
   }
 }
-
-/*@screen dt {
-  .digit-toast-success {
-    width: 100%;
-    left: calc(50% - 240px);
-  }
-}*/

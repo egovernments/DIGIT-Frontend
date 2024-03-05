@@ -3,7 +3,7 @@
 .digit-radio-wrap {
   @apply  leading-10 flex justify-start;
   gap: "3rem";
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 
   @media (max-width: 480px) {
     @apply flex-col;
@@ -70,8 +70,8 @@
   }
 
   label {
-    font-size: 16px;
-    line-height: 19px;
+    font-size: 1rem;
+    line-height: 1.188rem;
     color:theme(digitv2.lightTheme.text-primary);
   }
 
