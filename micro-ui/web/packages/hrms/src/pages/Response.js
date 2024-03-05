@@ -37,7 +37,7 @@ const Response = (props) => {
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
-  const mutation = state.key === "UPDATE" ? Digit.Hooks.hrms.useHRMSUpdate(tenantId) : Digit.Hooks.hrms.useHRMSCreate(tenantId);
+  const mutation = state?.key === "UPDATE" ? Digit.Hooks.hrms.useHRMSUpdate(tenantId) : Digit.Hooks.hrms.useHRMSCreate(tenantId);
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
   const [sessionFormData,setSessionFormData, clearSessionFormData] = employeeCreateSession;
@@ -63,7 +63,7 @@ const Response = (props) => {
       setMutationHappened(true);
     };
     if (!mutationHappened ) {
-      if (state.key === "UPDATE") {
+      if (state?.key === "UPDATE") {
         mutation.mutate(
           {
             Employees: state.Employees,
@@ -97,12 +97,12 @@ const Response = (props) => {
       <BannerPicker
         t={t}
         data={mutation?.data|| successData}
-        action={state.action}
+        action={state?.action}
         isSuccess={!successData ? mutation?.isSuccess : true}
         isLoading={(mutation.isIdle && !mutationHappened) || mutation?.isLoading}
         isEmployee={props.parentRoute.includes("employee")}
       />
-      <CardText>{t(DisplayText(state.action, mutation.isSuccess || !!successData, props.parentRoute.includes("employee"), t), t)}</CardText>
+      <CardText>{t(DisplayText(state?.action, mutation.isSuccess || !!successData, props.parentRoute.includes("employee"), t), t)}</CardText>
 
       <ActionBar>
         <Link to={`${props.parentRoute.includes("employee") ?  `/${window?.contextPath}/employee` :  `/${window?.contextPath}/citizen`}`}>

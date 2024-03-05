@@ -38,7 +38,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
     )[0];
   });
   const { isLoading, isError, errors, data: data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(
-    tenantId ? tenantId.code : searchParams?.tenantId,
+    tenantId ? tenantId?.code : searchParams?.tenantId,
     "egov-hrms",
     "HRMSRolesandDesignation"
   );
@@ -54,8 +54,8 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   });
 
   useEffect(() => {
-    if (tenantId.code) {
-      setSearchParams({ ..._searchParams, tenantId: tenantId.code });
+    if (tenantId?.code) {
+      setSearchParams({ ..._searchParams, tenantId: tenantId?.code });
     }
   }, [tenantId]);
 
