@@ -7,7 +7,7 @@ const FAQsSection = () => {
   const tenantId = user?.info?.tenantId || Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
    const { isLoading, data } = Digit.Hooks.useGetDSSFAQsJSON(Digit.ULBService.getStateId());
-   const moduleFAQs = data?.MdmsRes["dss-dashboard"]?.FAQs[0]?.[`DSS`].FAQs;
+   const moduleFAQs = data?.MdmsRes["dss-dashboard"]?.FAQs?.[0]?.[`DSS`].FAQs;
 
    if(isLoading){
    return <Loader/>

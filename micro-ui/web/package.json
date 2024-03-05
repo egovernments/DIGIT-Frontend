@@ -18,23 +18,33 @@
   "workspaces": [
     "packages/core",
     "packages/workbench",
+    "packages/tqm",
+    "packages/pgr",
     "packages/ui-core",
     "packages/app1",
-    "packages/tqm"
+    "packages/dss",
+    "packages/common"
+
   ],
   "scripts": {
     "build": "yarn lerna run build",
     "start": "yarn lerna run start --parallel",
     "build:core": "cd packages/core && yarn build",
-    "build:hrms": "cd packages/hrms && yarn build",
     "build:tqm": "cd packages/tqm && yarn build",
-    "build:workbench": "cd packages/workbench && yarn build",
-    "build:dss": "cd packages/dss && yarn build",
-    "start:core": "cd packages/core && yarn start",
     "start:tqm": "cd packages/tqm && yarn start",
-    "start:workbench": "cd packages/workbench && yarn start"
+    "build:common": "cd packages/common && yarn build",
+    "build:hrms": "cd packages/hrms && yarn build",
+    "build:workbench": "cd packages/workbench && yarn build",
+    "start:dss": "cd packages/dss && yarn start",
+    "build:dss": "cd packages/dss && yarn build",
+    "build:pgr": "cd packages/pgr && yarn build",
+    "start:core": "cd packages/core && yarn start",
+    "start:workbench": "cd packages/workbench && yarn start",
+    "start:pgr": "cd packages/pgr && yarn start",
+    "start:common": "cd packages/common && yarn start"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "yarn": "^1.22.21"
   }
 }

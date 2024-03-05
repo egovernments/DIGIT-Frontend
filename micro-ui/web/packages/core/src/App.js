@@ -1,22 +1,11 @@
 import React, { lazy, Suspense } from "react";
 import { Switch, Route } from "react-router-dom";
 import { Loader } from "./components";
-import useAuth from "./hooks/useAuth";
-// import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
-import registerRemotes from "./modules/registerRemotes"
-
-//import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
-// const LandingLazy = lazy(() => import("./modules/Landing"));
-// const AuthLazy = lazy(() => import("./modules/Auth"));
-// const DashboardLazy = lazy(() => import("./modules/Dashboard"));
-// const HrmsLazy = lazy(()  => import("./modules/Hrms"));
-// const WorkbenchLazy = lazy(() => import("./modules/Workbench"));
-// const DssLazy = lazy(() => import("./modules/Dss"));
-// const MeasurementLazy = lazy(() => import("./modules/Measurement"));
+import registerRemotes from "./modules/registerRemotes";
 
 
 initLibraries().then(() => {
@@ -38,17 +27,18 @@ const queryClient = new QueryClient({
     },
   },
 });
+//registering remote apps
 registerRemotes(queryClient)
 
 
 const App = () => {
-  const { login, history, isSignedIn$, logout } = useAuth();
+  // const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
-  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement", "TQM"]
+  const enabledModules = ["PT", "HRMS", "Workbench", "DSS", "Measurement", "PGR", "TQM"];
 
   const moduleReducers = (initData) => initData;
-  
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pg";
   
 
   return (
@@ -67,31 +57,11 @@ const App = () => {
       </div>
 
       <div>
-   
         <Suspense fallback={<Loader />}>
           <Switch>
-            {/* <Route path="/auth">
-              <AuthLazy login={login} history={history} />
+            <Route path="/">
+              {<DigitUI stateCode={stateCode} enabledModules={enabledModules} defaultLanding="employee" moduleReducers={moduleReducers} queryClient={queryClient} />}
             </Route>
-            <Route path="/dashboard">
-              <DashboardLazy />
-            </Route>
-            <Route path="/hrms">
-              <HrmsLazy />
-            </Route>
-            <Route path="/workbench">
-              <WorkbenchLazy />
-            </Route>
-            <Route path="/dss">
-              <DssLazy />
-            </Route>
-            <Route path="/measurement">
-              <MeasurementLazy />
-            </Route> */}
-
-            <Route path="/">{
-              <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} queryClient={queryClient}/>
-            }</Route>
           </Switch>
         </Suspense>
       </div>
@@ -99,31 +69,12 @@ const App = () => {
   );
 };
 
-
-
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
+  window.Digit.Customizations = {};
+  // window?.Digit.ComponentRegistryService.setupRegistry({
+  // });
 
-  };
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
-
- // initHRMSComponents();
-  const enabledModules=["PT", "TQM"];
-
-  const moduleReducers = (initData) => initData;
-
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  // initTokens(stateCode);
-
-  // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
 };
 
-
-
 export default App;
-

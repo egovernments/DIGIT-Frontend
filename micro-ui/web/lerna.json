@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "packages":[
     "packages/core",
-    "packages/workbench",
-    "packages/ui-core",
     "packages/tqm",
-    "packages/app1"
+    "packages/common",
+    "packages/workbench",
+    "packages/pgr",
+    "packages/ui-core",
+    "packages/app1",
+    "packages/dss"
   ],
   "command": {
     "run": {

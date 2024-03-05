@@ -21,7 +21,7 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/dss-ui
+ENV WORK_DIR=/var/web/pgr-ui
 
 RUN mkdir -p ${WORK_DIR}
 
