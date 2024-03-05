@@ -26,16 +26,16 @@
       padding: 5px;
       color: theme(digitv2.lightTheme.text-secondary);
       font-family: theme(digitv2.fontFamily.sans);
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: theme(digitv2.fontWeight.regular);
-      line-height: 24px;
+      line-height: 1.5rem;
       letter-spacing: 0px;
       text-align: center;
-      height: 24px;
+      height: 1.5rem;
 
       @media (max-width: 480px) {
-        font-size: 14px;
-        line-height: 18px;
+        font-size: 0.875rem;
+        line-height: 1.125rem;
       }
 
       &.text-done {
@@ -45,10 +45,10 @@
       &.text-active{
         color: theme(digitv2.lightTheme.text-primary);
         font-weight: theme(digitv2.fontWeight.bold);
-        line-height: 19px;
+        line-height: 1.188rem;
 
         @media (max-width: 480px) {
-          font-size: 16px;
+          font-size: 1rem;
         }
       }
     }
@@ -138,9 +138,9 @@
     .text-done {
       color: theme(digitv2.lightTheme.text-primary);
       font-weight: theme(digitv2.fontWeight.bold);
-      line-height: 19px;
+      line-height: 1.188rem;
       @media (max-width: 480px) {
-        font-size: 16px;
+        font-size: 1rem;
       }
     }
   }

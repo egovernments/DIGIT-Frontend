@@ -51,18 +51,18 @@
 }
 
 textarea::-webkit-scrollbar {
-  width: 10px;
+  width: 0.625rem;
   background-color: #F5F5F5;
 }
 
 textarea::-webkit-scrollbar-track {
   background-color: #F5F5F5;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 textarea::-webkit-scrollbar-thumb {
   background-color: #C1C1C1;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 textarea::-webkit-scrollbar-thumb:hover {

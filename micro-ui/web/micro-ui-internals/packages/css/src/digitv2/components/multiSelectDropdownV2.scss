@@ -33,9 +33,9 @@
     input[type="text"] {
       @apply absolute top-0 left-0 p-sm pl-sm min-h-full min-w-full opacity-0;
       font-family: theme(digitv2.fontFamily.sans);
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: theme(digitv2.fontWeight.regular);
-      line-height: 24px;
+      line-height: 1.5rem;
       letter-spacing: 0px;
 
       &:focus {
@@ -82,17 +82,17 @@
 
   .digit-server::-webkit-scrollbar-track {
     background-color: #F5F5F5;
-    border-radius: 10px;
+    border-radius: 0.625rem;
   }
 
   .digit-server::-webkit-scrollbar {
-    width: 10px;
+    width: 0.625rem;
     background-color: #F5F5F5;
   }
 
   .digit-server::-webkit-scrollbar-thumb {
     background-color: #C1C1C1;
-    border-radius: 10px;
+    border-radius: 0.625rem;
   }
 
   .digit-server::-webkit-scrollbar-thumb:hover {
@@ -175,8 +175,8 @@
       p {
         color: theme(digitv2.lightTheme.paper-primary);
         font-weight: theme(digitv2.fontWeight.bold);
-        font-size: 16px;
-        line-height: 19px;
+        font-size: 1rem;
+        line-height: 1.188rem;
       }
     }
 
@@ -186,14 +186,14 @@
     }
 
     p {
-      padding: 8px 8px 8px 0px;
+      padding: 0.5rem 0.5rem 0.5rem 0rem;
       margin-top: 5px;
       margin-bottom: 5px;
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 0.875rem;
       font-style: theme(digitv2.fontStyle.normal);
       font-weight: theme(digitv2.fontWeight.regular);
-      line-height: 18px;
+      line-height: 1.125rem;
       color: theme(digitv2.lightTheme.text-primary);
 
       width:100%;
@@ -207,8 +207,8 @@
       p {
         color: theme(digitv2.lightTheme.paper-primary);
         font-weight: theme(digitv2.fontWeight.bold);
-        font-size: 16px;
-        line-height: 19px;
+        font-size: 1rem;
+        line-height: 1.188rem;
       }
     }
 
@@ -267,7 +267,7 @@
           font-size: 0.75rem;
           font-style: theme(digitv2.fontStyle.normal);
           font-weight: theme(digitv2.fontWeight.regular);
-          line-height: 18px;
+          line-height: 1.125rem;
         }
 
         .svg{
@@ -290,8 +290,8 @@
 
         p {
           font-weight: theme(digitv2.fontWeight.bold);
-          font-size: 16px;
-          line-height: 19px;
+          font-size: 1rem;
+          line-height: 1.188rem;
         }
       }
 
@@ -312,8 +312,8 @@
         margin: auto;
         margin-left: 0px;
         padding-left: 1%;
-        font-size: 16px;
-        line-height: 24px;
+        font-size: 1rem;
+        line-height: 1.5rem;
       }
     }
   }

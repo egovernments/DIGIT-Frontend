@@ -7,7 +7,7 @@
   border-radius: 4px;
   top: 20px;
   left: 20px;
-  gap: 8px;
+  gap: 0.5rem;
   display: flex;
   flex-direction: column;
   background-color: #C7E0F1;
@@ -24,9 +24,9 @@
 
   h2 {
     font-family: theme(digitv2.fontFamily.sans);
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: theme(digitv2.fontWeight.bold);
-    line-height: 19px;
+    line-height: 1.188rem;
     letter-spacing: 0px;
     text-align: left;
     color: theme(digitv2.lightTheme.text-primary);
@@ -39,8 +39,8 @@
     color: theme(digitv2.lightTheme.text-secondary);
     font-style: theme(digitv2.fontStyle.normal);
     font-family: theme(digitv2.fontFamily.sans);
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
     letter-spacing: 0px;
     text-align: left;
     margin: 0px;

@@ -56,10 +56,9 @@
   &.password {
     input {
       font-family: theme(digitv2.fontFamily.sans);
-      line-height: 1rem;
-      font-size: 16px;
+      font-size: 1rem;
       font-weight: 900;
-      line-height: 24px;
+      line-height: 1.5rem;
     }
   }
 
@@ -125,8 +124,8 @@
     color: theme(digitv2.lightTheme.text-disabled);
     font-family: theme(digitv2.fontFamily.sans);
     font-weight: theme(digitv2.fontWeight.regular);
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   &.noneditable {
@@ -437,7 +436,7 @@
   border: 1px solid theme(digitv2.lightTheme.text-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-style: theme(digitv2.fontStyle.normal);
-  line-height: 24px;
+  line-height: 1.5rem;
   background: theme(colors.grey.mid);
   max-width: none !important;
   flex: 0 0 2.5rem;
@@ -446,7 +445,7 @@
 .digit-numeric-button-prefix,
 .digit-numeric-button-suffix {
   width: 2.5rem !important;
-  line-height: 28px;
+  line-height: 1.75rem;
 }
 
 .digit-prefix,
