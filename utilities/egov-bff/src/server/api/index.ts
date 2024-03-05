@@ -635,14 +635,21 @@ const getHierarchy = async (request: any) => {
 
 
 
-async function createExcelSheet(data: any, headers: any) {
+async function createExcelSheet(data: any, headers: any, sheetName: string = 'Sheet1') {
   const workbook = XLSX.utils.book_new();
-  const sheetName = 'Sheet1';
   const sheetData = [headers, ...data];
   const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+  // Define column widths (in pixels)
+  const columnWidths = headers.map(() => ({ width: 30 }));
+
+  // Apply column widths to the sheet
+  ws['!cols'] = columnWidths;
+
   XLSX.utils.book_append_sheet(workbook, ws, sheetName);
-  return { wb: workbook, ws: ws, sheetName: sheetName }
+  return { wb: workbook, ws: ws, sheetName: sheetName };
 }
+
 
 async function getBoundarySheetData(request: any) {
   const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
@@ -663,9 +670,8 @@ async function getBoundarySheetData(request: any) {
     console.log(boundaryList, "bbbbbbbbbbbbbb")
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
-      const codes = boundaryCodes.join(', ');
-      const boundaryResponseUrl = `${config.host.boundaryHost}${config.paths.boundaryEntity}`;
-      const boundaryResponse = await httpRequest(boundaryResponseUrl, request.body.RequestInfo, { tenantId: request?.body?.Filters?.tenantId, codes: codes });
+      const string = boundaryCodes.join(', ');
+      const boundaryResponse = await httpRequest('https://unified-dev.digit.org/boundary-service/boundary/_search', request.body, { tenantId: "pg", codes: string });
 
       const mp: { [key: string]: string } = {};
       boundaryResponse?.Boundary?.forEach((data: any) => {
@@ -757,15 +763,6 @@ async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, 
     logger.error('Error fetching file information:' + JSON.stringify(error));
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 const processCreateData: any = async (result: any, type: string, request: any, response: any) => {
@@ -996,6 +993,43 @@ async function enrichCampaign(requestBody: any) {
   }
 }
 
+async function getAllFacilitiesInLoop(searchAgain: boolean, searchedFacilities: any[], facilitySearchParams: any, facilitySearchBody: any) {
+  await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+  logger.info("facilitySearchParams : " + JSON.stringify(facilitySearchParams));
+  const response = await httpRequest(config.host.facilityHost + config.paths.facilitySearch, facilitySearchBody, facilitySearchParams);
+
+  if (Array.isArray(response?.Facilities)) {
+    searchedFacilities.push(...response?.Facilities);
+    return response.Facilities.length >= 50; // Return true if there are more facilities to fetch, false otherwise
+  } else {
+    throw new Error("Search failed for Facility. Check Logs");
+  }
+}
+
+async function getAllFacilities(tenantId: string, requestBody: any) {
+  const facilitySearchBody = {
+    RequestInfo: requestBody?.RequestInfo,
+    Facility: {}
+  };
+
+  const facilitySearchParams = {
+    limit: 50,
+    offset: 0,
+    tenantId: tenantId?.split('.')?.[0]
+  };
+
+  logger.info("Facility search url : " + config.host.facilityHost + config.paths.facilitySearch);
+  logger.info("facilitySearchBody : " + JSON.stringify(facilitySearchBody));
+  const searchedFacilities: any[] = [];
+  let searchAgain = true;
+
+  while (searchAgain) {
+    searchAgain = await getAllFacilitiesInLoop(searchAgain, searchedFacilities, facilitySearchParams, facilitySearchBody);
+  }
+
+  return searchedFacilities;
+}
+
 
 export {
   getSheetData,
@@ -1011,5 +1045,7 @@ export {
   createAndUploadFile,
   createProjectIfNotExists,
   createRelatedResouce,
-  enrichCampaign
+  enrichCampaign,
+  createExcelSheet,
+  getAllFacilities
 };
