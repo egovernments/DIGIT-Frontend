@@ -1,8 +1,11 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import {
+    processGenerateRequest,
     sendResponse,
 } from "../../utils/index";
+import { validateGenerateRequest } from "../../utils/validator";
+
 
 
 
@@ -22,33 +25,16 @@ class dataManageController {
 
     // Initialize routes for MeasurementController
     public intializeRoutes() {
-        this.router.post(`${this.path}/generate`, this.generate);
+        this.router.post(`${this.path}/_generate`, this.generate);
     }
     generate = async (
         request: express.Request,
         response: express.Response
     ) => {
-        function validateGenerateRequest(request: express.Request) {
-            const { tenantId, type } = request.params;
-            if (!tenantId) {
-                throw new Error("tenantId is required");
-            }
-            if (!(type == "facility" || type == "user" || type == "boundary")) {
-                throw new Error("type should be facility or user or boundary");
-            }
-        }
-        async function generateFacility(type: string, tenantId: string, requestBody: any) {
-
-        }
-        async function processGenerateRequest(request: express.Request) {
-            const { type, tenantId } = request.params
-            if (type == "facility") {
-                await generateFacility(type, tenantId, request.body);
-            }
-        }
         try {
             validateGenerateRequest(request);
             await processGenerateRequest(request);
+            return sendResponse(response, { fileDetails: request?.body?.fileDetails }, request);
         }
         catch (error: any) {
             logger.error(error);

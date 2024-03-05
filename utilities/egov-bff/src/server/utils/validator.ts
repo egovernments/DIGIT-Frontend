@@ -316,6 +316,16 @@ function validateProjectFacilityResponse(projectFacilityResponse: any) {
     }
 }
 
+function validateGenerateRequest(request: express.Request) {
+    const { tenantId, type } = request.query;
+    if (!tenantId) {
+        throw new Error("tenantId is required");
+    }
+    if (!["facility", "user", "boundary"].includes(String(type))) {
+        throw new Error("type should be facility, user, or boundary");
+    }
+}
+
 
 
 
@@ -329,5 +339,6 @@ export {
     validatedProjectResponseAndUpdateId,
     validateStaffResponse,
     validateProjectFacilityResponse,
-    validateProjectResourceResponse
+    validateProjectResourceResponse,
+    validateGenerateRequest
 };

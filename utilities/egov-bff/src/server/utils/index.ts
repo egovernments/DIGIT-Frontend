@@ -5,7 +5,7 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -937,6 +937,48 @@ function correctParentValues(campaignDetails: any) {
   return campaignDetails;
 }
 
+async function createFacilitySheet(allFacilities: any[]) {
+  const headers = ["Facility Code", "Facility Name", "Facility Type", "Facility Status", "Facility Capacity", "Boundary Code"]
+  const facilities = allFacilities.map((facility: any) => {
+    return [
+      facility?.id,
+      facility?.name,
+      facility?.usage,
+      facility?.isPermanent ? "Perm" : "Temp",
+      facility?.storageCapacity,
+      ""
+    ]
+  })
+  logger.info("facilities : " + JSON.stringify(facilities));
+  const facilitySheetData: any = await createExcelSheet(facilities, headers, "List of Available Facilities");
+  return facilitySheetData;
+}
+
+async function createFacilityAndBoundaryFile(facilitySheetData: any, boundarySheetData: any, request: any) {
+  const workbook = XLSX.utils.book_new();
+  // Add facility sheet to the workbook
+  XLSX.utils.book_append_sheet(workbook, facilitySheetData.ws, 'List of Available Facilities');
+  // Add boundary sheet to the workbook
+  XLSX.utils.book_append_sheet(workbook, boundarySheetData.ws, 'List of Campaign Boundaries');
+  const fileDetails = await createAndUploadFile(workbook, request)
+  request.body.fileDetails = fileDetails;
+}
+
+
+async function generateFacilityAndBoundarySheet(tenantId: string, request: any) {
+  // Get facility and boundary data
+  const allFacilities = await getAllFacilities(tenantId, request.body);
+  const facilitySheetData: any = await createFacilitySheet(allFacilities);
+  const boundarySheetData: any = await getBoundarySheetData("office", tenantId, request);
+  await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
+}
+async function processGenerateRequest(request: any) {
+  const { type, tenantId } = request.query
+  if (type == "facility") {
+    await generateFacilityAndBoundarySheet(String(tenantId), request);
+  }
+}
+
 
 export {
   errorResponder,
@@ -973,7 +1015,8 @@ export {
   fetchDataAndUpdate,
   modifyData,
   correctParentValues,
-  sortCampaignDetails
+  sortCampaignDetails,
+  processGenerateRequest
 };
 
 
