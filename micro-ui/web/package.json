@@ -21,7 +21,8 @@
     "packages/ui-core",
     "packages/app1",
     "packages/common",
-    "packages/pgr"
+    "packages/pgr",
+    "packages/dss"
   ],
   "scripts": {
     "build": "yarn lerna run build",

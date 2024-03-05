@@ -48,7 +48,7 @@ module.exports = () => {
           common:"common@https://localhost:8090/remoteEntry.js",
           pgr:"pgr@https://localhost:8087/remoteEntry.js",
           // app1: "app1@https://localhost:8001/remoteEntry.js",
-          // dss: "dss@https://localhost:8087/remoteEntry.js",
+          dss: "dss@https://localhost:8088/remoteEntry.js",
           // measurement : "measurement@https://localhost:8088/remoteEntry.js"
         },
         shared: packageJson.dependencies,

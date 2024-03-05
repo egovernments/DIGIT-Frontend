@@ -8,11 +8,11 @@ module.exports = () => {
   const devConfig = {
     mode: "development",
     output: {
-      publicPath: "https://localhost:8087/",
+      publicPath: "https://localhost:8088/",
       filename: "[name].[contenthash].js",
     },
     devServer: {
-      port: 8087,
+      port: 8088,
       proxy: [
         {
           context: () => true,
@@ -41,7 +41,7 @@ module.exports = () => {
         name: "dss",
         filename: "remoteEntry.js",
         exposes: {
-          "./DssModule": "./src/bootstrap",
+          "./DSSModule": "./src/SingleSpaEntry",
         },
         shared: packageJson.dependencies,
       }),
