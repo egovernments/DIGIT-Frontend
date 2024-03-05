@@ -9,7 +9,7 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "auto"
+      publicPath: "/core-digit-ui/"
     },
     plugins: [
       new ModuleFederationPlugin({
@@ -19,9 +19,19 @@ module.exports = () => {
           // auth: `auth@${domain}/auth/remoteEntry.js`,
           // header: `header@${domain}/header/remoteEntry.js`,
           // dashboard: `dashboard@${domain}/dashboard/remoteEntry.js`,
-          hrms: `hrms_ui@${domain}/hrms/remoteEntry.js`,
-          // workbench : `workbench@${domain}/workbench/remoteEntry.js`,
+
+//           hrms: `hrms_ui@${domain}/hrms/remoteEntry.js`,
+         
+
+          // pgr : `pgr-ui@${domain}/pgr/remoteEntry.js`,
+          // hrms: `hrms@${domain}/hrms/remoteEntry.js`,
+           //dss : `dss_ui@${domain}/dss/remoteEntry.js`,
+
+          // common: `common-ui@${domain}/common-ui/remoteEntry.js`,
+          // workbench : `workbench_web@${domain}/workbench/remoteEntry.js`,
+
           // dss : `dss@${domain}/dss/remoteEntry.js`,
+
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
         // shared: packageJson.dependencies,

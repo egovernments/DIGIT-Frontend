@@ -16,6 +16,41 @@ export default (queryClient) => {
   //   },
   // });
 
+
+
+  // registerApplication({
+  //   name: "PGR",
+  //   app: () => import("pgr/PGRModule"),
+  //   activeWhen: "/workbench-ui/employee/pgr",
+  //   customProps: {
+  //     title: "PGR is running on host",
+  //     queryClient,
+  //   },
+  //  });
+
+  const userType = Digit.UserService.getType();
+
+  // registerApplication({
+  //   name: "Common",
+  //   app: () => import("common/CommonModule"),
+  //   activeWhen: `/workbench-ui/${userType}/common`, //change to userType here
+  //   customProps: {
+  //     title: "Common Module is running on host",
+  //     queryClient,
+  //     userType
+  //   },
+  // });
+
+//   registerApplication({
+//     name: "Dss",
+//     app: () => import("dss/DSSModule"),
+//     activeWhen: "/workbench-ui/employee/dss",
+//     customProps: {
+//       title: "DSS is running on host",
+//       queryClient,
+//     },
+//   });
+
   // registerApplication({
   //   name: "app1",
   //   app: () => import("app1/App"),
@@ -26,15 +61,16 @@ export default (queryClient) => {
   //   },
   // });
 
-  registerApplication({
-    name: "HRMS",
-    app: () => import("hrms/HRMSModule"),
-    activeWhen: "/workbench-ui/employee/hrms",
-    customProps: {
-      title: "HRMS is running on host",
-      queryClient,
-    },
-  }); 
+
+//   registerApplication({
+//     name: "HRMS",
+//     app: () => import("hrms/HRMSModule"),
+//     activeWhen: "/workbench-ui/employee/hrms",
+//     customProps: {
+//       title: "HRMS is running on host",
+//       queryClient,
+//     },
+//   }); 
 
   start();
 }

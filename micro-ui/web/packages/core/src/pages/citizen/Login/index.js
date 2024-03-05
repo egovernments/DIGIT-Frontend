@@ -30,7 +30,8 @@ const getFromLocation = (state, searchParams) => {
   return state?.from || searchParams?.from || DEFAULT_REDIRECT_URL;
 };
 
-const Login = ({ stateCode, isUserRegistered = true }) => {
+const Login = ({ stateCode="pg", isUserRegistered = true }) => {
+  // debugger
   const { t } = useTranslation();
   const location = useLocation();
   const { path, url } = useRouteMatch();
@@ -70,7 +71,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.SessionStorage.set("citizen.userRequestObject", user);
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
-    const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
+    
+   
+    const redirectPath = window.contextPath ?  `/${window.contextPath}/citizen` : DEFAULT_REDIRECT_URL;
+    
     if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
       history.replace(`/${window?.contextPath}/citizen/select-location`, {
         redirectBackTo: redirectPath,
