@@ -22,10 +22,8 @@
 }
 
 .digit-button-label {
-  @apply font-medium leading-6 text-center text-white w-full;
-  font-size: 1.1875rem;
-  font-style: theme(digitv2.fontStyle.normal);
-  font-family: theme(digitv2.fontFamily.sans);
+  @extend .typography.button;
+  @apply leading-6 text-center text-white w-full;
   white-space: nowrap;
 }
 
@@ -39,11 +37,9 @@
   min-height: 2.5rem;
 
   h2 {
-    @apply text-black flex leading-6 justify-center items-center font-regular;
+    @extend .typography.button;
+    @apply text-black flex leading-6 justify-center items-center;
     margin: 0;
-    font-size: 1.1875rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
     height: 1.5rem;
   }
 }
@@ -78,11 +74,9 @@
   }
 
   h2 {
-    @apply font-medium text-white flex leading-6 justify-center items-center;
+    @extend .typography.button;
+    @apply text-white flex leading-6 justify-center items-center;
     margin: 0;
-    font-size: 1.1875rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
     height: 1.5rem;
   }
 }
@@ -138,11 +132,9 @@
   }
 
   h2 {
-    @apply font-medium flex text-primary-main leading-6 justify-center items-center;
+    @extend .typography.button;
+    @apply flex text-primary-main leading-6 justify-center items-center;
     margin: 0;
-    font-size: 1.1875rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
     height: 1.5rem;
   }
 
@@ -170,11 +162,9 @@
   }
 
   h2 {
-    @apply font-medium flex leading-6 text-primary-main justify-center items-center;
+    @extend .typography.button;
+    @apply flex leading-6 text-primary-main justify-center items-center;
     margin: 0;
-    font-size: 1.1875rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
     height: 1.5rem;
   }
 
@@ -205,23 +195,17 @@
   }
 
   h2 {
-    @apply font-regular flex text-primary-main justify-center items-center;
+    @extend .typography.link;
+    @apply flex text-primary-main justify-center items-center;
     margin: 0;
-    font-size: 1rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
-    text-decoration-line: underline;
     height: 1.188rem;
   }
 
   &:hover {
     h2 {
-      @apply font-regular flex text-primary-main justify-center items-center;
+      @extend .typography.link;
+      @apply flex text-primary-main justify-center items-center;
       margin: 0;
-      font-size: 1rem;
-      font-style: theme(digitv2.fontStyle.normal);
-      font-family: theme(digitv2.fontFamily.sans);
-      text-decoration-line: underline;
       height: 1.188rem;
     }
   }

@@ -22,9 +22,9 @@ const CheckBox = ({
   const userType = pageType || window?.Digit?.SessionStorage.get("userType");
   let styles = props.styles;
   return (
-    <div className={`digit-checkbox-wrap ${disabled ? "disabled" : " "}`}>
+    <div className={`digit-checkbox-wrap ${!isLabelFirst ? "checkboxFirst" : "labelFirst"} ${disabled ? "disabled" : " "}`}>
       {isLabelFirst ? (
-        <p className="label" style={{ maxWidth: "100%", width: "100%" }}>
+        <p className="label" style={{ maxWidth: "100%" }}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
