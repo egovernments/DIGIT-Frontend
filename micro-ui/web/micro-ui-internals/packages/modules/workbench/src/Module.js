@@ -7,6 +7,7 @@ import { UICustomizations } from "./configs/UICustomizations";
 import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
+import LevelCards from "./components/LevelCards";
 import * as parsingUtils from "../src/utils/ParsingUtils"
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
@@ -32,6 +33,7 @@ const componentsToRegister = {
   WorkbenchModule,
   WorkbenchCard,
   DigitJSONForm,
+  LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
   // HRMSCard // Overridden the HRMS card as per workbench
 };
