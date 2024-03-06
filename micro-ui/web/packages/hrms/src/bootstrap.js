@@ -2,10 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { DigitUI } from "@digit-ui/digit-ui-module-core-base";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initHRMSComponents } from "./Module.js";
-import { HRMSModule } from "./Module.js";
 
 initLibraries().then(() => {
   initDigitUI();
@@ -20,7 +18,8 @@ const mount = (el, { history,login }) => {
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   ReactDOM.render(
-    <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
+    // <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
+    <div>HRMS MODULE</div>,
     el
   );
 };
