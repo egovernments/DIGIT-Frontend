@@ -54,6 +54,17 @@ export default (queryClient) => {
     },
   });
 
+    registerApplication({
+    name: "HRMS",
+    app: () => import("hrms/HRMSModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/hrms`,
+    customProps: {
+      title: "HRMS is running on host",
+      queryClient,
+      userType
+    },
+  }); 
+
   start();
 }
 

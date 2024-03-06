@@ -113,7 +113,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function gethierarchylistdata() {
-    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map((ele) => ele.hierarchyType);
+    return data?.MdmsRes?.["egov-location"]["TenantBoundary"]?.map((ele) => ele.hierarchyType);
   }
 
   function getboundarydata() {
@@ -173,8 +173,7 @@ function Jurisdiction({
   const [Boundary, selectboundary] = useState([]);
   useEffect(() => {
     selectBoundaryType(
-      data?.MdmsRes?.["egov-location"]["TenantBoundary"]
-        .filter((ele) => {
+      data?.MdmsRes?.["egov-location"]["TenantBoundary"]?.filter((ele) => {
           return ele?.hierarchyType?.code == jurisdiction?.hierarchy?.code;
         })
         .map((item) => { return { ...item.boundary, i18text: Digit.Utils.locale.convertToLocale(item.boundary.label, 'EGOV_LOCATION_BOUNDARYTYPE') } })

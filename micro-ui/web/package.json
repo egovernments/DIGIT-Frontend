@@ -22,7 +22,8 @@
     "packages/app1",
     "packages/common",
     "packages/pgr",
-    "packages/dss"
+    "packages/dss",
+    "packages/hrms"
   ],
   "scripts": {
     "build": "yarn lerna run build",
