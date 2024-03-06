@@ -5,7 +5,9 @@ import { initHRMSComponents } from './Module';
 import EmployeeApp from './pages';
 
 const App = ({ queryClient, title }) => {
+
     console.log("qc in remote hrms",queryClient);
+
 initHRMSComponents();
 
   return (

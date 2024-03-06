@@ -7,8 +7,12 @@
     "packages/workbench",
     "packages/pgr",
     "packages/ui-core",
+
+    "packages/hrms",
+
     "packages/app1",
     "packages/dss"
+
   ],
   "command": {
     "run": {

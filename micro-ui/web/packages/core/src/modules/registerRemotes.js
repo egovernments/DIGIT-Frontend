@@ -16,6 +16,8 @@ export default (queryClient) => {
   //   },
   // });
 
+
+
   // registerApplication({
   //   name: "PGR",
   //   app: () => import("pgr/PGRModule"),
@@ -39,15 +41,15 @@ export default (queryClient) => {
   //   },
   // });
 
-  registerApplication({
-    name: "Dss",
-    app: () => import("dss/DSSModule"),
-    activeWhen: "/workbench-ui/employee/dss",
-    customProps: {
-      title: "DSS is running on host",
-      queryClient,
-    },
-  });
+//   registerApplication({
+//     name: "Dss",
+//     app: () => import("dss/DSSModule"),
+//     activeWhen: "/workbench-ui/employee/dss",
+//     customProps: {
+//       title: "DSS is running on host",
+//       queryClient,
+//     },
+//   });
 
   // registerApplication({
   //   name: "app1",
@@ -59,15 +61,16 @@ export default (queryClient) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "HRMS",
-  //   app: () => import("hrms/HRMSModule"),
-  //   activeWhen: "/workbench-ui/employee/hrms",
-  //   customProps: {
-  //     title: "HRMS is running on host",
-  //     queryClient,
-  //   },
-  // }); 
+
+//   registerApplication({
+//     name: "HRMS",
+//     app: () => import("hrms/HRMSModule"),
+//     activeWhen: "/workbench-ui/employee/hrms",
+//     customProps: {
+//       title: "HRMS is running on host",
+//       queryClient,
+//     },
+//   }); 
 
   start();
 }
