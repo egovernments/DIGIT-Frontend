@@ -498,6 +498,27 @@ async function generateActivityMessage(createdResult: any, successMessage: any, 
   return activityMessage;
 }
 
+function modifyAuditdetailsAndCases(responseData: any) {
+  responseData.forEach((item: any) => {
+    item.auditDetails = {
+      lastModifiedTime: item.lastmodifiedtime,
+      createdTime: item.createdtime,
+      lastModifiedBy: item.lastmodifiedby,
+      createdBy: item.createdby
+    }
+    item.tenantId = item.tenantid;
+    item.additionalDetails = item.additionaldetails;
+    item.fileStoreid = item.filestoreid;
+    delete item.additionaldetails;
+    delete item.lastmodifiedtime;
+    delete item.createdtime;
+    delete item.lastmodifiedby;
+    delete item.createdby;
+    delete item.filestoreid;
+    delete item.tenantid;
+  })
+}
+
 async function getResponseFromDb(request: any, response: any) {
   const pool = new Pool({
     user: config.DB_USER,
@@ -514,6 +535,7 @@ async function getResponseFromDb(request: any, response: any) {
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
+    modifyAuditdetailsAndCases(responseData);
     return responseData;
   } catch (error) {
     logger.error('Error fetching data from the database:', error);
@@ -530,8 +552,12 @@ async function getModifiedResponse(responseData: any) {
   return responseData.map((item: any) => {
     return {
       ...item,
-      lastmodifiedtime: parseInt(item.lastmodifiedtime),
-      createdtime: parseInt(item.createdtime)
+      count: parseInt(item.count),
+      auditDetails: {
+        ...item.auditDetails,
+        lastModifiedTime: parseInt(item.auditDetails.lastModifiedTime),
+        createdTime: parseInt(item.auditDetails.createdTime)
+      }
     };
   });
 }
@@ -540,14 +566,17 @@ async function getNewEntryResponse(modifiedResponse: any, request: any) {
   const { type } = request.query;
   const newEntry = {
     id: uuidv4(),
-    filestoreid: null,
+    fileStoreid: null,
     type: type,
     status: "In Progress",
-    lastmodifiedtime: Date.now(),
-    createdtime: Date.now(),
-    createdby: request?.body?.RequestInfo?.userInfo.uuid,
-    lastmodifiedby: request?.body?.RequestInfo?.userInfo.uuid,
-    additionaldetails: null
+    tenantId: request?.query?.tenantId,
+    auditDetails: {
+      lastModifiedTime: Date.now(),
+      createdTime: Date.now(),
+      createdBy: request?.body?.RequestInfo?.userInfo.uuid,
+      lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
+    },
+    additionalDetails: {}
   };
   return [newEntry];
 }
@@ -555,8 +584,8 @@ async function getOldEntryResponse(modifiedResponse: any[], request: any) {
   return modifiedResponse.map((item: any) => {
     const newItem = { ...item };
     newItem.status = "expired";
-    newItem.lastmodifiedtime = Date.now();
-    newItem.lastmodifiedby = request?.body?.RequestInfo?.userInfo?.uuid;
+    newItem.auditDetails.lastModifiedTime = Date.now();
+    newItem.auditDetails.lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
     return newItem;
   });
 }
@@ -564,11 +593,16 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
   return responseData.map((item: any) => {
     return {
       ...item,
-      lastmodifiedtime: Date.now(),
-      createdtime: Date.now(),
-      filestoreid: result?.[0]?.fileStoreId,
+      tenantId: request?.query?.tenantId,
+      count: parseInt(request?.body?.generatedResourceCount ? request?.body?.generatedResourceCount : null),
+      auditDetails: {
+        ...item.auditDetails,
+        lastModifiedTime: Date.now(),
+        createdTime: Date.now(),
+        lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid
+      },
+      fileStoreid: result?.[0]?.fileStoreId,
       status: "Completed",
-      lastmodifiedby: request?.body?.RequestInfo?.userInfo?.uuid
     };
   });
 }
@@ -651,6 +685,13 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
       produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+    }
+    else if (type == "facilityWithBoundary") {
+      await processGenerateRequest(request);
+      const finalResponse = await getFinalUpdatedResponse(request?.body?.fileDetails, newEntryResponse, request);
+      const generatedResourceNew: any = { generatedResource: finalResponse }
+      produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+      request.body.generatedResource = finalResponse;
     }
     else {
       const responseDatas = await callSearchApi(request, response);
@@ -968,15 +1009,42 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
 async function generateFacilityAndBoundarySheet(tenantId: string, request: any) {
   // Get facility and boundary data
   const allFacilities = await getAllFacilities(tenantId, request.body);
+  request.body.generatedResourceCount = allFacilities.length;
   const facilitySheetData: any = await createFacilitySheet(allFacilities);
+  request.body.Filters = { tenantId: tenantId, hierarchyType: "office", includeChildren: true }
   const boundarySheetData: any = await getBoundarySheetData(request);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
 }
 async function processGenerateRequest(request: any) {
   const { type, tenantId } = request.query
-  if (type == "facility") {
+  if (type == "facilityWithBoundary") {
     await generateFacilityAndBoundarySheet(String(tenantId), request);
   }
+}
+
+async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, response: any) {
+  const { forceUpdate } = request.query;
+  const forceUpdateBool: boolean = forceUpdate === 'true';
+  let generatedResource: any;
+  if (forceUpdateBool && responseData.length > 0) {
+    generatedResource = { generatedResource: oldEntryResponse };
+    produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+    request.body.generatedResource = oldEntryResponse;
+  }
+  if (responseData.length === 0 || forceUpdateBool) {
+    await fullProcessFlowForNewEntry(newEntryResponse, request, response);
+  }
+  else {
+    request.body.generatedResource = responseData
+  }
+}
+
+async function processGenerate(request: any, response: any) {
+  const responseData = await getResponseFromDb(request, response);
+  const modifiedResponse = await getModifiedResponse(responseData);
+  const newEntryResponse = await getNewEntryResponse(modifiedResponse, request);
+  const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
+  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response);
 }
 
 
@@ -1016,7 +1084,8 @@ export {
   modifyData,
   correctParentValues,
   sortCampaignDetails,
-  processGenerateRequest
+  processGenerateRequest,
+  processGenerate
 };
 
 

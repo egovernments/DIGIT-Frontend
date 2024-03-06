@@ -45,7 +45,7 @@ const config = {
     process.env.DB_USER || "postgres",
   DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
   DB_NAME: process.env.DB_NAME || "postgres",
-  DB_PASSWORD: process.env.DB_PASSWORD || "1234",
+  DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
   DB_PORT: process.env.DB_PORT || "5432",
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
@@ -116,7 +116,7 @@ const config = {
       || "product/variant/v1/_search"
       || "boundary-service/boundary-hierarchy-definition/_search",
     boundaryEntity: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH
-      || "boundary-service/boundary/_search"  
+      || "boundary-service/boundary/_search"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE
@@ -133,7 +133,7 @@ const config = {
     },
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
   },
-   SEARCH_TEMPLATE : "HCM.APIResourceTemplate3"
+  SEARCH_TEMPLATE: "HCM.APIResourceTemplate3"
 };
 
 export { getErrorCodes };

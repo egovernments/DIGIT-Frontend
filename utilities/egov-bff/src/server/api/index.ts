@@ -625,7 +625,6 @@ const getHierarchy = async (request: any) => {
   try {
     const response = await httpRequest(url, requestBody);
     const boundaryList = response?.BoundaryHierarchy?.[0].boundaryHierarchy;
-    console.log(boundaryList, "listtttttttttttttt")
     return generateHierarchy(boundaryList);
   } catch (error) {
     console.error('Error:', error);
@@ -659,15 +658,12 @@ async function getBoundarySheetData(request: any) {
   const data = response?.TenantBoundary?.[0]?.boundary;
   if (data) {
     const boundaryCodeMappings = generateCodes(data)
-    console.log(boundaryCodeMappings, "mapppingggggggg")
     boundaryCodeMappings.forEach(mapping => {
       if (data.code === mapping.originalCode) {
         data.code = mapping.newCode;
       }
     });
-    console.log(data, "daaaaaaaaaaaaaaaaaaaaaaaaaa")
     const boundaryList = generateHierarchyList(data)
-    console.log(boundaryList, "bbbbbbbbbbbbbb")
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
@@ -681,7 +677,6 @@ async function getBoundarySheetData(request: any) {
       const hierarchy = await getHierarchy(request);
       const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
       const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
-      console.log(reducedHierarchy, "hieeeeeeeeeerrrrrrrrrrrrrrrr")
       const headers = [...reducedHierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
       const data = boundaryList.map(boundary => {
         const boundaryParts = boundary.split(',');

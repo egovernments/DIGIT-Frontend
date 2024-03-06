@@ -94,7 +94,6 @@ const httpRequest = async (
       return response.data;
     }
   } catch (error: any) {
-    console.log(error?.response?.data, " eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     var errorResponse = error.response;
     logger.error(
       "INTER-SERVICE :: FAILURE :: " +
