@@ -543,30 +543,30 @@ function generateHierarchyList(data: any[], parentChain: any = []) {
   return result;
 
 }
-function generateCodes(hierarchy: any[], prefix: string = "ADMIN", levelCount: { [level: string]: number } = {}): any[] {
-  const codeMappings: any[] = [];
+// function generateCodes(hierarchy: any[], prefix: string = "ADMIN", levelCount: { [level: string]: number } = {}): any[] {
+//   const codeMappings: any[] = [];
 
-  hierarchy.forEach((item: any, index: number) => {
-      let currentLevel: string;
-      let code: string;
-      if (prefix === "ADMIN") {
-          currentLevel = `${prefix}_${item.code}`;
-          code = `${currentLevel}`;
-      } else {
-          currentLevel = `${prefix}_${String(levelCount[prefix] || index + 1).padStart(2, '0')}`;
-          levelCount[prefix] = (levelCount[prefix] || index + 1) + 1;
-          code = `${currentLevel}_${item.code}`;
-      }
-      codeMappings.push({ originalCode: item.code, newCode: code });
+//   hierarchy.forEach((item: any, index: number) => {
+//     let currentLevel: string;
+//     let code: string;
+//     if (prefix === "ADMIN") {
+//       currentLevel = `${prefix}_${item.code}`;
+//       code = `${currentLevel}`;
+//     } else {
+//       currentLevel = `${prefix}_${String(levelCount[prefix] || index + 1).padStart(2, '0')}`;
+//       levelCount[prefix] = (levelCount[prefix] || index + 1) + 1;
+//       code = `${currentLevel}_${item.code}`;
+//     }
+//     codeMappings.push({ originalCode: item.code, newCode: code });
 
-      if (item.children.length > 0) {
-          const childCodeMappings = generateCodes(item.children, currentLevel, levelCount);
-          codeMappings.push(...childCodeMappings);
-      }
-  });
+//     if (item.children.length > 0) {
+//       const childCodeMappings = generateCodes(item.children, currentLevel, levelCount);
+//       codeMappings.push(...childCodeMappings);
+//     }
+//   });
 
-  return codeMappings;
-}
+//   return codeMappings;
+// }
 
 
 function generateHierarchy(boundaries: any[]) {
@@ -651,23 +651,80 @@ async function createExcelSheet(data: any, headers: any, sheetName: string = 'Sh
 }
 
 
+function getBoundaryCodes(boundaryList: any) {
+  const childParentMap: Map<string, string> = new Map();
+  for (let i = 1; i < boundaryList.length; i++) {
+    const child = boundaryList[i][boundaryList[i].length - 1]; // Last element is the child
+    const parent = boundaryList[i][boundaryList[i].length - 2]; // Second last element is the parent
+    childParentMap.set(child, parent);
+  }
+  const columnsData: string[][] = [];
+  for (const row of boundaryList) {
+    row.forEach((element: any, index: any) => {
+      if (!columnsData[index]) {
+        columnsData[index] = [];
+      }
+      if (!columnsData[index].includes(element)) {
+        columnsData[index].push(element);
+      }
+    });
+  }
+
+  const elementSet = new Set<string>();
+  columnsData.forEach(column => {
+    column.forEach(element => {
+      elementSet.add(element);
+    });
+  });
+  let countMap = new Map();
+  const elementCodesMap = new Map();
+  elementCodesMap.set("IN", "ADMIN_IN");
+  let parentCode; // Default parent code
+  for (let i = 1; i < columnsData.length; i++) {
+    const column = columnsData[i];
+    for (const element of column) {
+      parentCode = childParentMap.get(element)!; // Update parent code for the next element
+      if (elementSet.has(parentCode)) {
+        if (countMap.has(parentCode)) {
+          countMap.set(parentCode, countMap.get(parentCode)! + 1);
+        } else {
+          countMap.set(parentCode, 1);
+        }
+      }
+      let code;
+      if (parentCode != 'IN') {
+        let parentBoundaryCodeTrimmed;
+        const parentBoundaryCode = elementCodesMap.get(parentCode);
+        const lastUnderscoreIndex = parentBoundaryCode.lastIndexOf('_');
+        if (lastUnderscoreIndex !== -1) {
+          parentBoundaryCodeTrimmed = parentBoundaryCode.substring(0, lastUnderscoreIndex);
+        }
+        code = generateElementCode(countMap.get(parentCode), parentBoundaryCodeTrimmed, element); // Generate code for the element
+      } else {
+        code = generateElementCode(countMap.get(parentCode), elementCodesMap.get(parentCode), element);
+      }// Generate code for the element
+      elementCodesMap.set(element, code); // Store the code of the element in the map
+    }
+  }
+  console.log(elementCodesMap, "elllllleeeeeeeeemeeeeeentsssssss")
+}
+
+function generateElementCode(sequence : any, parentCode:any, element : any) {
+  let paddedSequence = sequence.toString().padStart(2, '0'); // Pad single-digit numbers with leading zero
+  return parentCode + '_' + paddedSequence + '_' + element;
+}
+
 async function getBoundarySheetData(request: any) {
   const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
   const params = request?.body?.Filters;
   const boundaryType = request?.body?.Filters?.boundaryType;
   const response = await httpRequest(url, request.body, params);
-  const data =response?.TenantBoundary?.[0]?.boundary;
+  const data = response?.TenantBoundary?.[0]?.boundary;
   if (data) {
-    const boundaryCodeMappings = generateCodes(data)
-    console.log(boundaryCodeMappings,"mapppingggggggg")
-    boundaryCodeMappings.forEach(mapping => {
-      if (data.code === mapping.originalCode) {
-        data.code = mapping.newCode;
-      }
-  });
-  console.log(data,"daaaaaaaaaaaaaaaaaaaaaaaaaa")
     const boundaryList = generateHierarchyList(data)
-    console.log(boundaryList, "bbbbbbbbbbbbbb")
+    const newArray = boundaryList.map(item => item.split(','))
+    const result = getBoundaryCodes(newArray);
+    console.log(result, "reeeeeeeeeeeeeeeee");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
