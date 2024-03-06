@@ -1,10 +1,10 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SVG } from "./SVG";
 
 const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level = 0 }) => {
   const [isExpanded, setExpanded] = useState(false);
   const handleToggleDropdown = () => {
-    if(option.options){
+    if (option.options) {
       setExpanded(!isExpanded);
     }
   };
@@ -15,11 +15,10 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
   };
 
   return (
-    <div style={{marginLeft: `${level !== 0 ? 22 : 0}px`, borderLeft: "1px solid #D6D5D4" }}>
+    <div style={{ marginLeft: `${level !== 0 ? 22 : 0}px`, borderLeft: "1px solid #D6D5D4" }}>
       <div
         className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} level-${level}`}
         onClick={option.options ? handleToggleDropdown : handleSelect}
-
       >
         {option.options && (
           <div className="digit-toggle-dropdown">
@@ -30,9 +29,7 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
             )}
           </div>
         )}
-        <div className="digit-option-label">
-          {option.name}
-        </div>
+        <div className="digit-option-label">{option.name}</div>
       </div>
       {isExpanded &&
         option.options &&
@@ -40,8 +37,8 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
         renderOptions({ options: option.options, onSelect, isSelected, level: level + 1 })}
     </div>
   );
-};  
-const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 0 ,isParentSelected, setParentSelected}) => {
+};
+const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 0, isParentSelected, setParentSelected }) => {
   const [isExpanded, setExpanded] = useState(false);
   const handleToggleDropdown = () => {
     setExpanded(!isExpanded);
@@ -57,8 +54,7 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
       const selectedOptions = getFlattenedOptions(option.options);
       if (isSelected(option)) {
         onSelect([option, ...selectedOptions]);
-      }
-      else {
+      } else {
         // Checking if any child is already selected
         const anyChildSelected = selectedOptions.some((child) => isSelected(child));
         // If any child is already selected, selecting only the unselected children
@@ -99,7 +95,6 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
     }
   }, [allChildrenSelected, isSelected, isIntermediate, option, onSelect]);
 
-
   const isIntermediate = () => {
     if (option.options) {
       const selectedOptions = getFlattenedOptions(option.options);
@@ -115,16 +110,27 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
           isSelected(option) ? "checked" : ""
         } ${allChildrenSelected ? "all-child-selected" : ""} level-${level}`}
         style={{ gap: `${level !== 0 ? 12 : 4}px` }}
+        onClick={handleSelect}
       >
         {option.options && (
-          <div className="digit-toggle-dropdown" onClick={handleToggleDropdown}>
+          <div
+            className="digit-toggle-dropdown"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleDropdown();
+            }}
+          >
             {isExpanded ? (
-              <SVG.ArrowDropDown width="1.5rem" height="1.5rem" fill={isParentSelected ? "#0B0C0C" : (allChildrenSelected || isSelected(option)) ? "#FFFFFF" : "#0B0C0C"} />
+              <SVG.ArrowDropDown
+                width="1.5rem"
+                height="1.5rem"
+                fill={isParentSelected ? "#0B0C0C" : allChildrenSelected || isSelected(option) ? "#FFFFFF" : "#0B0C0C"}
+              />
             ) : (
               <SVG.ArrowDropDown
                 width="1.5rem"
                 height="1.5rem"
-                fill={isParentSelected ? "#0B0C0C" : (allChildrenSelected || isSelected(option)) ? "#FFFFFF" : "#0B0C0C"}
+                fill={isParentSelected ? "#0B0C0C" : allChildrenSelected || isSelected(option) ? "#FFFFFF" : "#0B0C0C"}
                 style={{ transform: "rotate(-90deg)" }}
               />
             )}
@@ -137,7 +143,6 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
         </div>
         <div
           className={`digit-custom-checkbox ${allChildrenSelected || isSelected(option) ? "checked" : ""} ${isIntermediate() ? "intermediate" : ""}`}
-          onClick={handleSelect}
           style={{ marginRight: `${level == 0 ? 8 : 0}px` }}
         >
           {isIntermediate() ? (
@@ -146,24 +151,37 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
             <SVG.Check fill={(allChildrenSelected || isSelected(option)) && !isParentSelected ? "#FFFFFF" : "#F47738"} />
           )}
         </div>
-        <div className="digit-option-label" onClick={handleSelect}>
-          {option.name}
-        </div>
+        <div className="digit-option-label">{option.name}</div>
       </div>
       {isExpanded && option.options && option.options.length > 0 && (
-        <div className="child-options-container">{renderOptions({ options: option.options, onSelect, isSelected, level: level + 1, isParentSelected: isSelected(option), setParentSelected  })}</div>
+        <div className="child-options-container">
+          {renderOptions({
+            options: option.options,
+            onSelect,
+            isSelected,
+            level: level + 1,
+            isParentSelected: isSelected(option),
+            setParentSelected,
+          })}
+        </div>
       )}
-      
     </div>
   );
 };
 const TreeSelect = ({ options, onSelect, selectedOption, variant }) => {
   const renderOptions = ({ options, onSelect, isSelected, level, isParentSelected, setParentSelected }) => {
     return options.map((option) => (
-      <div key={option.id} className={`digit-tree-select-options-container ${level === 0 ? 'first-level' : ''}`}>
+      <div key={option.id} className={`digit-tree-select-options-container ${level === 0 ? "first-level" : ""}`}>
         {variant === "treemultiselect" ? (
-          <TreeMultiSelect option={option} onSelect={onSelect} isSelected={isSelected} renderOptions={renderOptions} level={level} isParentSelected={isParentSelected}
-          setParentSelected={setParentSelected}/>
+          <TreeMultiSelect
+            option={option}
+            onSelect={onSelect}
+            isSelected={isSelected}
+            renderOptions={renderOptions}
+            level={level}
+            isParentSelected={isParentSelected}
+            setParentSelected={setParentSelected}
+          />
         ) : (
           <TreeSelectOption option={option} onSelect={onSelect} isSelected={isSelected} renderOptions={renderOptions} level={level} />
         )}
@@ -174,6 +192,6 @@ const TreeSelect = ({ options, onSelect, selectedOption, variant }) => {
     if (variant === "treemultiselect") return selectedOption && selectedOption.some((selected) => selected.code === option.code);
     else return selectedOption && selectedOption.code === option.code;
   };
-  return <div>{renderOptions({ options, onSelect, isSelected, level: 0, isParentSelected: false, setParentSelected: () => {}  })}</div>;
+  return <div>{renderOptions({ options, onSelect, isSelected, level: 0, isParentSelected: false, setParentSelected: () => {} })}</div>;
 };
 export default TreeSelect;

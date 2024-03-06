@@ -71,7 +71,7 @@ const TextField = (props) => {
   return (
     <input
       ref={props.inputRef}
-      className={`digit-employee-select-wrap--elipses ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
+      className={`digit-employee-select-wrap--elipses ${!props.isSearchable ? "notSearchable" : ""} ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
       type="text"
       value={replaceDotWithColon(value)}
       onChange={inputChange}
@@ -91,7 +91,7 @@ const TextField = (props) => {
       autoFocus={props.autoFocus}
       placeholder={props.placeholder}
       autoComplete={"off"}
-      style={props.style}
+      style={{ ...props.style, ...(props.isSearchable ? {} : { pointerEvents: "none" }) }}
     />
   );
 };
@@ -302,15 +302,15 @@ const Dropdown = (props) => {
       )}
       {!hasCustomSelector && (
         <div
-          className={`${dropdownStatus ? "digit-select-active" : "digit-select"} ${props?.variant ? props?.variant : ""} ${
+          className={`${dropdownStatus ? "digit-select-active" : "digit-select"} ${props?.variant ? props?.variant : ""} ${!props?.isSearchable ? "notSearchable" : ""} ${
             props.disabled && "disabled"
           }`}
           style={
             props.errorStyle
-              ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}) }
-              : { ...(props.noBorder ? { border: "none" } : {}) }
+              ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}), ...(!props.isSearchable ? { cursor: "pointer" } : {}) }
+              : { ...(props.noBorder ? { border: "none" } : {}) ,  ...(!props.isSearchable ? { cursor: "pointer" } : {}) }
           }
-          onClick={props.variant === "treedropdown" ? dropdownSwitch : null}
+          onClick={props.variant === "treedropdown" || !props.isSearchable ? dropdownSwitch : null}
         >
           <TextField
             variant={props?.variant}

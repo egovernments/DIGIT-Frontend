@@ -85,13 +85,17 @@ const MultiSelectDropdown = ({
 
   function onSelectToAddToQueue(...props) {
     if (variant === "treemultiselect") {
-      const options = props[0];
-      options.forEach((option) => {
+      const currentoptions = props[0];
+      currentoptions.forEach((option) => {
         const isAlreadySelected = alreadyQueuedSelectedState.some((selectedOption) => selectedOption.code === option.code);
         if (!isAlreadySelected) {
           dispatch({ type: "ADD_TO_SELECTED_EVENT_QUEUE", payload: [null, option] });
         } else {
           dispatch({ type: "REMOVE_FROM_SELECTED_EVENT_QUEUE", payload: [null, option] });
+          const parentOption = findParentOption(option, options);
+          if (parentOption) {
+            dispatch({ type: "REMOVE_FROM_SELECTED_EVENT_QUEUE", payload: [null, parentOption] });
+          }
         }
       });
     } else {
@@ -194,6 +198,21 @@ const MultiSelectDropdown = ({
 
   const flattenedOptions = flattenOptions(filteredOptions);
 
+  function findParentOption(childOption, options) {
+    for (const option of options) {
+      if (option.options && option.options.some((child) => child.code === childOption.code)) {
+        return option;
+      }
+      if (option.options) {
+        const parentOption = findParentOption(childOption, option.options);
+        if (parentOption) {
+          return parentOption;
+        }
+      }
+    }
+    return null;
+  }
+
   const MenuItem = ({ option, index }) => {
     return (
       <div
@@ -266,7 +285,11 @@ const MultiSelectDropdown = ({
           />
           <div className="digit-label">
             {variant === "treemultiselect" ? (
-              <p>{alreadyQueuedSelectedState.length > 0 ? `${countFinalChildOptions(alreadyQueuedSelectedState)} ${defaultUnit} Selected` : defaultLabel}</p>
+              <p>
+                {alreadyQueuedSelectedState.length > 0
+                  ? `${countFinalChildOptions(alreadyQueuedSelectedState)} ${defaultUnit} Selected`
+                  : defaultLabel}
+              </p>
             ) : (
               <p>{alreadyQueuedSelectedState.length > 0 ? `${alreadyQueuedSelectedState.length} ${defaultUnit} Selected` : defaultLabel}</p>
             )}
