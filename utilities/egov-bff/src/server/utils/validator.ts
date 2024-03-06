@@ -321,8 +321,8 @@ function validateGenerateRequest(request: express.Request) {
     if (!tenantId) {
         throw new Error("tenantId is required");
     }
-    if (!["facility", "user", "boundary"].includes(String(type))) {
-        throw new Error("type should be facility, user, or boundary");
+    if (!["facility", "user", "boundary", "facilityWithBoundary"].includes(String(type))) {
+        throw new Error("type should be facility, user, boundary or facilityWithBoundary");
     }
 }
 

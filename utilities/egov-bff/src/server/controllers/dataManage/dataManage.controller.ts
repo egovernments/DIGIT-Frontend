@@ -1,10 +1,13 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import {
-    processGenerateRequest,
+    errorResponder,
+    processGenerate,
     sendResponse,
 } from "../../utils/index";
 import { validateGenerateRequest } from "../../utils/validator";
+import { createAndUploadFile, getBoundarySheetData } from "../../api/index";
+
 
 
 
@@ -25,25 +28,42 @@ class dataManageController {
 
     // Initialize routes for MeasurementController
     public intializeRoutes() {
-        this.router.post(`${this.path}/generate`, this.generate);
+        this.router.post(`${this.path}/_generate`, this.generateData);
+        this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
         this.router.post(`${this.path}/generateBoundaryCode`, this.generateBoundaryCode);
     }
-    generate = async (
+
+
+    generateData = async (request: express.Request, response: express.Response) => {
+        try {
+            validateGenerateRequest(request);
+            await processGenerate(request, response);
+            return sendResponse(response, { GeneratedResource: request?.body?.generatedResource }, request);
+
+        } catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) }, request, response);
+        }
+    };
+
+
+    getBoundaryData = async (
         request: express.Request,
         response: express.Response
     ) => {
         try {
-            validateGenerateRequest(request);
-            await processGenerateRequest(request);
-            return sendResponse(response, { fileDetails: request?.body?.fileDetails }, request);
+            const boundarySheetData: any = await getBoundarySheetData(request);
+            const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
+            return BoundaryFileDetails;
         }
         catch (error: any) {
-            logger.error(error);
-            return sendResponse(response, { "error": error.message }, request);
+            logger.error(String(error));
+            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
         }
     };
+
     generateBoundaryCode = async (request: any, response: any) => {
-      
+
     }
 
 };
