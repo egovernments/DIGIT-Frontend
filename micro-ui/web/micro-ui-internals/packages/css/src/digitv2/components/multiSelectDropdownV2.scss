@@ -31,7 +31,7 @@
     border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
 
     input[type="text"] {
-      @apply absolute top-0 left-0 p-sm pl-sm min-h-full min-w-full opacity-0;
+      @apply absolute top-0 left-0 p-sm min-h-full min-w-full opacity-0;
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 1rem;
       font-weight: theme(digitv2.fontWeight.regular);
@@ -44,7 +44,7 @@
     }
 
     .digit-label {
-      @apply flex justify-between p-sm w-full h-full items-center;
+      @apply flex justify-between p-sm w-full h-full;
 
       svg {
         @apply h-6 w-6;
@@ -63,10 +63,6 @@
 
   .digit-master-active {
     border: 1px solid theme(digitv2.lightTheme.primary-orange);
-
-    input[type="text"] {
-      @apply opacity-100;
-    }
 
   }
 
@@ -132,6 +128,7 @@
       max-width: 100%;
       overflow: hidden;
       box-sizing: border-box;
+      margin: 9.5px 0px 9.5px 0px;
 
       .svg{
         flex-shrink: 0;
@@ -186,15 +183,13 @@
     }
 
     p {
-      padding: 0.5rem 0.5rem 0.5rem 0rem;
-      margin-top: 5px;
-      margin-bottom: 5px;
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 0.875rem;
       font-style: theme(digitv2.fontStyle.normal);
       font-weight: theme(digitv2.fontWeight.regular);
       line-height: 1.125rem;
       color: theme(digitv2.lightTheme.text-primary);
+      margin: 1px 0px 1px 0px;
 
       width:100%;
       overflow: hidden;
@@ -215,9 +210,8 @@
     .digit-custom-checkbox {
       height: 1.25rem;
       width: 1.25rem;
-      @apply m-sm;
       border: 1px solid theme(digitv2.lightTheme.text-secondary);
-      margin-right: 12px;
+      margin: 9.5px 12px 9.5px 10px;
 
       svg {
         @apply opacity-0 z-10;
@@ -251,6 +245,7 @@
       .option-des-container {
         @apply flex flex-col justify-center items-start;
         width: 100% !important;
+        margin: 0px;
 
         p {
           color: theme(digitv2.lightTheme.text-secondary);
@@ -277,7 +272,7 @@
 
       .digit-custom-checkbox{
         margin: 0px;
-        margin-top: 3px;;
+        margin-top: 2px;
       }
 
       &:active,
@@ -293,6 +288,10 @@
           font-size: 1rem;
           line-height: 1.188rem;
         }
+
+        .digit-custom-checkbox{
+          margin-top: 0px;
+        }
       }
 
       &:active {
@@ -305,7 +304,8 @@
     @apply cursor-pointer;
   }
 
-  .digit-master {
+  .digit-master ,
+  .digit-master-active{
     .digit-label {
       p {
         white-space: pre;

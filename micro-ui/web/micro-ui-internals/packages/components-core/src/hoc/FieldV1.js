@@ -90,7 +90,7 @@ const FieldV1 = ({
   const renderDescriptionOrError = () => {
     if (error) {
       return (
-        <div className="digit-error" style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
+        <div className="digit-error" style={{width: !charCount ? "100%" : "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
           <div className="digit-error-icon">
             <SVG.Info width="1rem" height="1rem" fill="#D4351C" />
           </div>
@@ -100,7 +100,14 @@ const FieldV1 = ({
     } else if (description) {
       return (
         <CardText
-          style={{ width: "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px", fontSize: "0.875rem", lineHeight: "1.5rem" }}
+          style={{
+            width: !charCount ? "100%" : "90%",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            marginTop: "0px",
+            fontSize: "0.875rem",
+            lineHeight: "1.5rem",
+          }}
         >
           {t(truncateMessage(description, 256))}
         </CardText>

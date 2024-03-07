@@ -91,7 +91,7 @@ const TextField = (props) => {
       autoFocus={props.autoFocus}
       placeholder={props.placeholder}
       autoComplete={"off"}
-      style={{ ...props.style, ...(props.isSearchable ? {} : { pointerEvents: "none" }) }}
+      style={props.style}
     />
   );
 };
@@ -307,8 +307,8 @@ const Dropdown = (props) => {
           }`}
           style={
             props.errorStyle
-              ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}), ...(!props.isSearchable ? { cursor: "pointer" } : {}) }
-              : { ...(props.noBorder ? { border: "none" } : {}) ,  ...(!props.isSearchable ? { cursor: "pointer" } : {}) }
+            ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}) }
+            : { ...(props.noBorder ? { border: "none" } : {}) }
           }
           onClick={props.variant === "treedropdown" || !props.isSearchable ? dropdownSwitch : null}
         >

@@ -44,7 +44,7 @@
     }
 
     svg {
-      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm;
+      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm mb-sm;
     }
   }
 
@@ -80,7 +80,7 @@
     }
 
     svg {
-      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm;
+      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm mb-sm;
     }
   }
 
@@ -287,7 +287,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  &.treedropdown{
+  &.treedropdown,
+  &.notSearchable{
     pointer-events:none;
   }
 }
@@ -316,7 +317,7 @@
 
   .digit-select {
     @extend .light-input-border;
-    @apply relative block w-full h-10;
+    @apply relative block w-full h-10 bg-white;
     border: 1px solid theme(digitv2.lightTheme.text-secondary);
 
     input[type="text"] {
@@ -349,7 +350,7 @@
     }
 
     svg {
-      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm;
+      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm mb-sm;
     }
   }
 
@@ -383,13 +384,14 @@
     }
 
     svg {
-      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm;
+      @apply absolute right-0 float-right h-6 w-6 mt-sm mr-sm mb-sm;
     }
   }
 
   .digit-select,
   .digit-select-active{
-    &.treedropdown{
+    &.treedropdown,
+    &.notSearchable{
       cursor: pointer;
     }
   }

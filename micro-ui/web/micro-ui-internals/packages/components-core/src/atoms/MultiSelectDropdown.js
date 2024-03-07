@@ -106,8 +106,8 @@ const MultiSelectDropdown = ({
     }
   }
 
-  const IconRender = (iconReq, isActive) => {
-    const iconFill = isActive ? "#FFFFFF" : "#505A5F";
+  const IconRender = (iconReq, isActive,isSelected) => {
+    const iconFill = isActive || isSelected ? "#FFFFFF" : "#505A5F";
     try {
       const components = require("@egovernments/digit-ui-svg-components");
       const DynamicIcon = components?.[iconReq];
@@ -214,12 +214,16 @@ const MultiSelectDropdown = ({
   }
 
   const MenuItem = ({ option, index }) => {
+    const [isActive, setIsActive] = useState(false);
     return (
       <div
         key={index}
         className={`multiselect-dropodwn-menuitem ${variant ? variant : ""} ${
           alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
         }`}
+        onMouseDown={() => setIsActive(true)}
+      onMouseUp={() => setIsActive(false)}
+      onMouseLeave={() => setIsActive(false)}
       >
         <input
           type="checkbox"
@@ -241,7 +245,7 @@ const MultiSelectDropdown = ({
           <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%" }}>
             {config?.showIcon &&
               option?.icon &&
-              IconRender(option?.icon, alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
+              IconRender(option?.icon, isActive,alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
             <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
