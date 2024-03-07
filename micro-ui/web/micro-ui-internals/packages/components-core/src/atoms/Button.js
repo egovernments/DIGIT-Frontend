@@ -7,10 +7,9 @@ const Button = (props) => {
   };
 
   //Label truncated to maximum of 64chars
-  const truncateLabel = (label) => {
-    const maxLength = 64;
+  const truncateLabel = (label,maxLength) => {
     if (label.length > maxLength) {
-      return label.slice(0, maxLength) + " ...";
+      return label.slice(0, maxLength) + "...";
     }
     return label;
   };
@@ -43,7 +42,7 @@ const Button = (props) => {
   };
 
   const icon = IconRender();
-  const formattedLabel = props?.variation === "link" ? props?.label : capitalizeFirstLetter(truncateLabel(props?.label));
+  const formattedLabel = props?.variation === "link" ? props?.label : capitalizeFirstLetter(truncateLabel(props?.label,64));
 
   return (
     <button

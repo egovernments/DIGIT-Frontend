@@ -71,6 +71,22 @@ DefaultLabelled.args = {
   },
 };
 
+//checkbox with paragrah as a label
+export const Labelled = Template.bind({});
+Labelled.args = {
+  ...commonArgs,
+  populators: {
+    ...commonArgs.populators,
+    title:
+      "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead.",
+  },
+  formData: {
+    ...commonArgs.formData,
+    checked: false,
+  },
+};
+
+
 //checkbox with label before
 export const DefaultLabelFirst = Template.bind({});
 DefaultLabelFirst.args = {
@@ -87,8 +103,8 @@ DefaultLabelFirst.args = {
 };
 
 //checkbox with label before
-export const DefaultLabelFirstTwo = Template.bind({});
-DefaultLabelFirstTwo.args = {
+export const LabelFirst = Template.bind({});
+LabelFirst.args = {
   ...commonArgs,
   populators: {
     ...commonArgs.populators,
@@ -158,19 +174,4 @@ CheckedDisabled.args = {
     checked: true,
   },
   disabled: true,
-};
-
-//checkbox with paragrah as a label
-export const Labelled = Template.bind({});
-Labelled.args = {
-  ...commonArgs,
-  populators: {
-    ...commonArgs.populators,
-    title:
-      "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead.",
-  },
-  formData: {
-    ...commonArgs.formData,
-    checked: false,
-  },
 };

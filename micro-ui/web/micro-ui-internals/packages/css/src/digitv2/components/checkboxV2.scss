@@ -3,9 +3,6 @@
 .digit-checkbox-wrap {
   @apply flex mb-md relative;
   gap: 1rem;
-  &.checkboxFirst{
-    align-items: center;
-  }
 
   input {
     @apply opacity-0 absolute cursor-pointer z-10;

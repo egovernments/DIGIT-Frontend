@@ -6,7 +6,7 @@ const Stepper = ({ currentStep = 1, onStepClick, totalSteps , customSteps, direc
   const { t } = useTranslation();
     const truncateStepLabel = (stepLabel,maxLength) => {
       if (stepLabel.length > maxLength) {
-        return stepLabel.slice(0, maxLength) + " ...";
+        return stepLabel.slice(0, maxLength) + "...";
       }
       return stepLabel;
     };
