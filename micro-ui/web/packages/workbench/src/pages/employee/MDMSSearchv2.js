@@ -139,6 +139,7 @@ const MDMSSearchv2 = () => {
   return (
     <React.Fragment>
         <Header className="works-header-search">{t(Config?.label)}</Header>
+        <h2 className="text-blue-600">Blue Title (should be blue)</h2>
       <div className="jk-header-btn-wrapper">
         <Dropdown
           option={masterOptions}
