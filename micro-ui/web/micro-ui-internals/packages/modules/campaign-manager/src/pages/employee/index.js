@@ -22,6 +22,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
 const App = ({ path }) => {
   const location = useLocation();
+  const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
 
   return (
     <React.Fragment>
@@ -31,6 +32,7 @@ const App = ({ path }) => {
       </div>
       <Switch>
         <AppContainer className="campaign">
+          <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
           <PrivateRoute path={`${path}/sample`} component={() => <div>Home Campaign Loaded</div>} />
         </AppContainer>
       </Switch>
