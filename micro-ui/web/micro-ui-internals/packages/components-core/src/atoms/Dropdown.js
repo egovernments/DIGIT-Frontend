@@ -423,6 +423,7 @@ Dropdown.propTypes = {
 Dropdown.defaultProps = {
   customSelector: null,
   showArrow: true,
+  isSearchable:true,
 };
 
 export default Dropdown;

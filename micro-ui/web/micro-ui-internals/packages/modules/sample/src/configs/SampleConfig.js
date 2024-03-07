@@ -12,14 +12,6 @@ export const newConfig = [
       },
       {
         inline: true,
-        label: "Label wrapnnnnnn nnnnnbhrgreuif gufhwioedhwejdpwodpoedioefdeufhrjjjjjjjjjbjqdbwqjdgwudywuqdsbxnbxppppppuwqwieywuirhdjsbxnsbncvshdftydfwqtdfyudgxsuigxwoquixjknbdjwhiodjwpoqdhsjbxshxsyfvadrqduydwvhbc",
-        isMandatory: false,
-        type: "text",
-        disable: false,
-        populators: { name: "text-labelwrap", error: "Error!" ,wrapLabel:true},
-      },
-      {
-        inline: true,
         label: "Disabled",
         isMandatory: false,
         type: "text",
@@ -183,6 +175,14 @@ export const newConfig = [
       },
       {
         inline: true,
+        label: "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead",
+        isMandatory: false,
+        type: "text",
+        disable: false,
+        populators: { name: "text-labelwrap", error: "Error!" ,wrapLabel:true},
+      },
+      {
+        inline: true,
         label: "Without Label",
         isMandatory: false,
         type: "text",
@@ -243,6 +243,15 @@ export const newConfig = [
         infoMessage: "Select the date",
         populators: { name: "date-With Info", error: "Error!" },
       },
+      {
+        inline: true,
+        label: "EditableDate",
+        isMandatory: false,
+        description: "",
+        type: "date",
+        disable: false,
+        populators: { name: "date-EditableDate", error: "Error!" ,editableDate:true},
+      },
     ],
   },
   {
@@ -294,6 +303,15 @@ export const newConfig = [
         disable: false,
         infoMessage: "Select time",
         populators: { name: "time-With Info", error: "Error!" },
+      },
+      {
+        inline: true,
+        label: "EditableTime",
+        isMandatory: false,
+        description: "",
+        type: "time",
+        disable: false,
+        populators: { name: "time-EditableTime", error: "Error!" ,editableTime:true},
       },
     ],
   },
@@ -1072,6 +1090,25 @@ export const newConfig = [
           ],
         },
       },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default-NotSearchable",
+        disable: false,
+        populators: {
+          name: "dropdown-DefaultNotSearchable",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          mdmsConfig: {
+            masterName: "GenderType",
+            moduleName: "common-masters",
+            localePrefix: "COMMON_GENDER",
+          },
+          isSearchable:false
+        },
+      },
     ],
   },
   {
@@ -1212,6 +1249,41 @@ export const newConfig = [
               code: "Category B",
             },
           ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default-NotSearchable",
+        disable: false,
+        variant: "nesteddropdown",
+        populators: {
+          name: "nesteddropdown-DefaultNotSearchable",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              name: "Category A",
+              options: [
+                { code: "Category A.Option A", name: "Option A" },
+                { code: "Category A.Option B", name: "Option B" },
+                { code: "Category A.Option C", name: "Option C" },
+              ],
+              code: "Category A",
+            },
+            {
+              name: "Category B",
+              options: [
+                { code: "Category B.Option A", name: "Option A" },
+                { code: "Category B.Option 2", name: "Option 2" },
+                { code: "Category B.Option 3", name: "Option 3" },
+              ],
+              code: "Category B",
+            },
+          ],
+          isSearchable:false
         },
       },
     ],
@@ -1526,6 +1598,38 @@ export const newConfig = [
           ],
         },
       },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default-NotSearchable",
+        disable: false,
+        variant: "nestedtextdropdown",
+        populators: {
+          name: "nestedtextdropdown-DefaultNotSearchable",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option2",
+              name: "Option2",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+            {
+              code: "Option3",
+              name: "Option3",
+              description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna",
+            },
+          ],
+          isSearchable:false
+        },
+      },
     ],
   },
   {
@@ -1678,6 +1782,35 @@ export const newConfig = [
               profileIcon: "https://www.freeiconspng.com/uploads/am-a-19-year-old-multimedia-artist-student-from-manila--21.png",
             },
           ],
+        },
+      },
+      {
+        isMandatory: false,
+        type: "dropdown",
+        key: "genders",
+        label: "Default-NotSearchable",
+        disable: false,
+        variant: "profiledropdown",
+        populators: {
+          name: "profiledropdown-DefaultNotSearchable",
+          optionsKey: "name",
+          error: "",
+          required: true,
+          options: [
+            {
+              code: "Option1",
+              name: "Option1"
+            },
+            {
+              code: "Option2",
+              name: "Option2"
+            },
+            {
+              code: "Option3",
+              name: "Option3"
+            },
+          ],
+          isSearchable:false
         },
       },
     ],
@@ -2150,6 +2283,43 @@ export const newConfig = [
         inline: true,
         isMandatory: false,
         type: "checkbox",
+        disable: true,
+        withoutLabel: true,
+        populators: { name: "checkbox-DefaultDisabled", error: "Error!", title: "" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: true,
+        withoutLabel: true,
+        populators: { name: "checkbox-Disabled", error: "Error!", title: "Disabled" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: true,
+        withoutLabel: true,
+        populators: {
+          name: "checkbox-LabelledTwoDisabled",
+          error: "Error!",
+          title:
+            "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead",
+        },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: false,
+        withoutLabel: true,
+        populators: { name: "checkbox-LabelledFirst", isLabelFirst:true, error: "Error!", title: "LabelledFirst" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
         disable: false,
         withoutLabel: true,
         populators: {
@@ -2166,7 +2336,21 @@ export const newConfig = [
         type: "checkbox",
         disable: true,
         withoutLabel: true,
-        populators: { name: "checkbox-Disabled", error: "Error!", title: "Disabled" },
+        populators: { name: "checkbox-LabelledFirstDisabled", isLabelFirst:true, error: "Error!", title: "LabelledFirstDisabled" },
+      },
+      {
+        inline: true,
+        isMandatory: false,
+        type: "checkbox",
+        disable: true,
+        withoutLabel: true,
+        populators: {
+          name: "checkbox-LabelFirstDisabled",
+          isLabelFirst:true,
+          error: "Error!",
+          title:
+            "In the quiet glow of dawn, the city stirred to life. A gentle breeze carried whispers of possibility through the streets, as if the day itself held secrets waiting to unfold. Birds painted ribbons of melody across the sky, joining the symphony of a waking world. The first rays of sunlight tiptoed over the horizon, casting a warm, golden hue on the buildings and trees below. In this tranquil moment, the promise of a new day hung in the air, inviting everyone to embrace the journey ahead",
+        },
       },
     ],
   },

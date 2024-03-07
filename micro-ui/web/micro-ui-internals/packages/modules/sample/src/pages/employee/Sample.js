@@ -8,7 +8,6 @@ const Create = () => {
 
   const defaultValues = {
     "text-Default": "Sample Text Input",
-    "text-Disabled": "Sample Text Input Disabled",
     "text-Noneditable": "Sample Text Input Noneditable",
     "text-Error": "Sample Text Input Error",
     "text-With Description": "Sample Text Input with description",
@@ -24,7 +23,6 @@ const Create = () => {
     "text-Complete": "Sample Text Input Complete",
 
     "textarea-Default": "Sample TextArea",
-    "textarea-Disabled": "Sample TextArea Disabled",
     "textarea-Noneditable": "Sample TextArea Noneditable",
     "textarea-Error": "Sample TextArea Error",
     "textarea-With Description": "Sample TextArea with description",
@@ -41,27 +39,23 @@ const Create = () => {
 
     "numeric-Default": 0,
     "numeric-With Step Value": 0,
-    "numeric-Disabled": 0,
     "numeric-Noneditable": 0,
     "numeric-Error": 0,
     "numeric-With InfoMessage": 0,
 
     "prefix-Default": 1000,
-    "prefix-Disabled": 1000,
     "prefix-Noneditable": 1000,
     "prefix-Error": 1000,
     "prefix-With Description": 1000,
     "prefix-With InfoMessage": 1000,
 
     "suffix-Default": 1000,
-    "suffix-Disabled": 1000,
     "suffix-Noneditable": 1000,
     "suffix-Error": 1000,
     "suffix-With Description": 1000,
-    "suffix-With InfoMessage": 1000,
+    "suffix-With Info": 1000,
 
     "password-Default": "password",
-    "password-Disabled": "password",
     "password-Noneditable": "password",
     "password-Error": "password",
     "password-With Description": "password",

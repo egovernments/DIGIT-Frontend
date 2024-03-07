@@ -6,6 +6,7 @@ const TextInput = (props) => {
   const user_type = window?.Digit?.SessionStorage.get("userType");
   const [date, setDate] = useState(props?.type === "date" && props?.value);
   const [visibility, setVisibility] = useState(false);
+  const [inputType, setInputType] = useState(props?.type || "text");
   const data = props?.watch
     ? {
         fromDate: props?.watch("fromDate"),
@@ -37,9 +38,13 @@ const TextInput = (props) => {
       );
     }
     if (prefixValue) {
-      return <button className="digit-prefix" readOnly={props.nonEditable}>{prefixValue}</button>;
+      return (
+        <button className="digit-prefix" readOnly={props.nonEditable}>
+          {prefixValue}
+        </button>
+      );
     }
-    return null;  
+    return null;
   };
 
   const renderSuffix = () => {
@@ -52,7 +57,11 @@ const TextInput = (props) => {
       );
     }
     if (suffixValue) {
-      return <button className="digit-suffix" readOnly={props.nonEditable}>{suffixValue}</button>;
+      return (
+        <button className="digit-suffix" readOnly={props.nonEditable}>
+          {suffixValue}
+        </button>
+      );
     }
     return null;
   };
@@ -60,7 +69,8 @@ const TextInput = (props) => {
   const handleVisibility = () => {
     setVisibility(!visibility);
     const newType = !visibility ? "text" : "password";
-    props.onChange({ target: { type: newType, value: props.value } });
+    setInputType(newType);
+    props.onChange(props?.value);
   };
 
   const handleLocationClick = () => {
@@ -91,12 +101,30 @@ const TextInput = (props) => {
             className="digit-text-input-customIcon"
           />
         );
-      } else if (reqIcon === "text" && visibility) {
-        return <SVG.VisibilityOff fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
+      } else if (reqIcon === "password" && inputType === "text" && visibility) {
+        return (
+          <SVG.VisibilityOff
+            fill={iconFill}
+            onClick={handleVisibility}
+            className={` digit-text-input-customIcon ${props.disabled ? "disabled" : ""} ${props.nonEditable ? "nonEditable" : ""}`}
+          />
+        );
       } else if (reqIcon === "password") {
-        return <SVG.Visibility fill={iconFill} onClick={handleVisibility} className="digit-text-input-customIcon" />;
+        return (
+          <SVG.Visibility
+            fill={iconFill}
+            onClick={handleVisibility}
+            className={` digit-text-input-customIcon ${props.disabled ? "disabled" : ""} ${props.nonEditable ? "nonEditable" : ""}`}
+          />
+        );
       } else if (reqIcon === "search") {
-        return <SVG.Search fill={iconFill} onClick={props?.onIconSelection} className="digit-text-input-customIcon" />;
+        return (
+          <SVG.Search
+            fill={iconFill}
+            onClick={props?.onIconSelection}
+            className={` digit-text-input-customIcon ${props.disabled ? "disabled" : ""} ${props.nonEditable ? "nonEditable" : ""}`}
+          />
+        );
       } else {
         try {
           const components = require("@egovernments/digit-ui-svg-components");
@@ -106,7 +134,7 @@ const TextInput = (props) => {
               width: "1.5rem",
               height: "1.5rem",
               fill: iconFill,
-              className: "digit-text-input-customIcon",
+              className: `digit-text-input-customIcon ${props.disabled ? "disabled" : ""} ${props.nonEditable ? "nonEditable" : ""}`,
             });
             return svgElement;
           } else {
@@ -144,14 +172,16 @@ const TextInput = (props) => {
     props.errorStyle ? "digit-employee-card-input-error" : ""
   } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
-  const inputContainerClass = `input-container ${props.type ? props.type : ""} ${props.populators?.customIcon ? "withIcon" : ""}`;
+  const defaultType = props.type === "password" && inputType === "text" ? inputType : props.type;
+
+  const inputContainerClass = `input-container ${defaultType ? defaultType : ""} ${props.populators?.customIcon ? "withIcon" : ""}`;
 
   return (
     <React.Fragment>
       <div
         className={`digit-text-input ${user_type === "employee" ? "" : "digit-text-input-width"} ${props?.className ? props?.className : ""} ${
           props.disabled ? "disabled" : ""
-        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${props?.type ? props?.type : ""} ${
+        }  ${props.nonEditable ? "noneditable" : ""} ${props.error ? "error" : ""} ${defaultType ? defaultType : ""} ${
           props?.populators?.prefix ? "prefix" : ""
         } ${props?.populators?.suffix ? "suffix" : ""} ${props?.editableTime ? "editableTime" : ""} ${props?.editableDate ? "editableDate" : ""}`}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
@@ -160,7 +190,7 @@ const TextInput = (props) => {
           <div className={inputContainerClass}>
             {renderPrefix()}
             <input
-              type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
+              type={props?.validation && props.ValidationRequired ? props?.validation?.type : defaultType || "text"}
               name={props.name}
               id={props.id}
               className={inputClassNameForMandatory}
@@ -215,7 +245,7 @@ const TextInput = (props) => {
           <div className={inputContainerClass}>
             {renderPrefix()}
             <input
-              type={props?.validation && props.ValidationRequired ? props?.validation?.type : props.type || "text"}
+              type={props?.validation && props.ValidationRequired ? props?.validation?.type : defaultType || "text"}
               name={props.name}
               id={props.id}
               className={inputClassName}
