@@ -5,9 +5,10 @@ import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
+import UploadBoundaryData from "./pages/employee/UploadBoundaryData";
 
 const CampaignModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["campaign", "Campaign", "workbench", "mdms", "schema"];
+  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -32,6 +33,7 @@ const componentsToRegister = {
   campaignModule: CampaignModule,
   campaignCard: CampaignCard,
   CampaignCard: CampaignCard,
+  UploadBoundaryData,
 };
 
 const overrideHooks = () => {
