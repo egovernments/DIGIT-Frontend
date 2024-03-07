@@ -5,7 +5,7 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundaryCodesHandler, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -1019,6 +1019,28 @@ async function processGenerate(request: any, response: any) {
   await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response);
 }
 
+async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) {
+  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+  if (!fileResponse?.fileStoreIds?.[0]?.url) {
+    throw new Error("Invalid file")
+  }
+  const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1")
+  console.log(boundaryData, "bbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+  const outputData: string[][] = [];
+
+  for (const obj of boundaryData) {
+    const row: string[] = [];
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        row.push(obj[key]);
+      }
+    }
+    outputData.push(row);
+  }
+  const res = await getBoundaryCodesHandler(outputData);
+  console.log(res, "pppppppppppppppppppppppp")
+  return res;
+}
 
 export {
   errorResponder,
@@ -1056,7 +1078,8 @@ export {
   correctParentValues,
   sortCampaignDetails,
   processGenerateRequest,
-  processGenerate
+  processGenerate,
+  autoGenerateBoundaryCodes
 };
 
 
