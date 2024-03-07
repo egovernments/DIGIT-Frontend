@@ -3,7 +3,7 @@ import { UploadIcon, FileIcon, DeleteIconv2, Toast, Button, DownloadIcon, PopUp,
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 import XLSX from "xlsx";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import XlsPreview from "./XlsPreview";
 
 const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileDownload }) => {
   const { t } = useTranslation();
@@ -151,44 +151,7 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
         <FileUploader multiple={multiple} handleChange={handleChange} name="file" types={fileTypes} children={dragDropJSX} />
       )}
       {fileData?.length > 0 && renderFileCards}
-      {showPreview && (
-        <PopUp style={{ flexDirection: "column" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginLeft: "2.5rem", marginRight: "2.5rem", marginTop: "2.5rem" }}>
-            <Button
-              label={t("BACK")}
-              variation="secondary"
-              icon={<SVG.ArrowBackIos styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
-              type="button"
-              className="workbench-download-template-btn"
-              onButtonClick={() => setShowPreview(false)}
-            />
-            <Button
-              label={t("WBH_DOWNLOAD")}
-              variation="secondary"
-              icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
-              type="button"
-              className="workbench-download-template-btn"
-              onButtonClick={() => handleFileDownload(fileUrl)}
-            />
-          </div>
-          <div className="campaign-popup-module" style={{ marginTop: "1.5rem" }}>
-            <DocViewer
-              style={{ height: "80vh", overflowY: "hidden" }}
-              theme={{
-                primary: "#F47738",
-                secondary: "#feefe7",
-                tertiary: "#feefe7",
-                textPrimary: "#0B0C0C",
-                textSecondary: "#505A5F",
-                textTertiary: "#00000099",
-                disableThemeScrollbar: true,
-              }}
-              documents={documents}
-              pluginRenderers={DocViewerRenderers}
-            />
-          </div>
-        </PopUp>
-      )}
+      {showPreview && <XlsPreview file={fileUrl} onDownload={() => handleFileDownload(fileUrl)} onBack={() => setShowPreview(false)} />}
       {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
