@@ -1,0 +1,52 @@
+{
+    "tenantId": "pg",
+    "moduleName": "hcm-microplanning",
+    "UploadConfiguration": {
+        "UploadSections": [
+            {
+                "id": "Population",
+                "title": "Population",
+                "code": "POPULATION",
+                "iconName": "Population"
+            },
+            {
+                "id": "Facility",
+                "title": "Facility",
+                "code": "FACILITY",
+                "iconName": "Facility"
+            },
+            {
+                "id": "WareHouses",
+                "title": "Ware Houses",
+                "code": "WARE_HOUSES",
+                "iconName": "WareHouses"
+            },
+            {
+                "id": "IncidentRate",
+                "title": "Incident Rate",
+                "code": "INCIDENT_RATE",
+                "iconName": "BarChart"
+            }
+        ],
+        "UploadFileTypes": [
+            {
+                "id": "Excel",
+                "title": "Excel",
+                "code": "EXCEL",
+                "iconName": "Excel"
+            },
+            {
+                "id": "ShapeFiles",
+                "title": "Shape Files",
+                "code": "SHAPE_FILES",
+                "iconName": "SpatialDocument"
+            },
+            {
+                "id": "GeoJson",
+                "title": "Geo Json",
+                "code": "GEOJSON",
+                "iconName": "SpatialDocument"
+            }
+        ]
+    }
+}

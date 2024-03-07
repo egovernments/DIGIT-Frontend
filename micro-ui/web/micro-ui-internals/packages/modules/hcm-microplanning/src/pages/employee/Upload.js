@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 // import { Config } from "../../configs/UploadConfig";
-import * as Icons from "@egovernments/digit-ui-react-components";
-
+// import { SVG as Icons } from "@egovernments/digit-ui-react-components";
+// import * as Icons from "@egovernments/digit-ui-react-components";
+// import * as Icons from '@egovernments/digit-ui-svg-components'
+import Config from "../../configs/UploadConfiguration.json"
+console.log(Icons)
 const Upload = ({ MicroplanName = "default" }) => {
     // Fetching data using custom MDMS hook
     const { isLoading, data } = Digit.Hooks.useCustomMDMS(Digit.ULBService.getCurrentTenantId(), "hcm-microplanning", [
@@ -13,19 +16,15 @@ const Upload = ({ MicroplanName = "default" }) => {
     const [sections, setSections] = useState([]);
     const [uploadOptions, setUploadOptions] = useState([]);
     const [selectedSection, setSelectedSection] = useState(null);
-
+    const [modal, setModal] = useState("none");
     // Effect to update sections and selected section when data changes
     useEffect(() => {
         if (data) {
             const uploadSections = data["hcm-microplanning"]["UploadSections"];
-            setSections(uploadSections);
             setSelectedSection(uploadSections.length > 0 ? uploadSections[0].id : null);
-
-            setUploadOptions([
-                { id: "Excel", title: "Excel", code: "EXCEL", iconName: "ExcelIcon" },
-                { id: "ShapeFiles", title: "Shape Files", code: "SHAPE_FILES", iconName: "SpatialDocumentIcon" },
-                { id: "GeoJson", title: "Geo Json", code: "GEOJSON", iconName: "SpatialDocumentIcon" }
-            ])
+            // setSections(uploadSections);
+            setSections(Config.UploadConfiguration.UploadSections);
+            setUploadOptions(Config.UploadConfiguration.UploadFileTypes)
         }
     }, [data]);
 
@@ -40,9 +39,14 @@ const Upload = ({ MicroplanName = "default" }) => {
 
     // Memoized section components to prevent unnecessary re-renders
     const sectionComponents = useMemo(
-        () => sections.map((item) => <UploadComponents MicroplanName={MicroplanName} key={item.id} item={item} selected={selectedSection === item.id} uploadOptions={uploadOptions} />),
+        () => sections.map((item) => <UploadComponents MicroplanName={MicroplanName} key={item.id} item={item} selected={selectedSection === item.id} uploadOptions={uploadOptions} setModal={setModal} />),
         [sections, selectedSection, uploadOptions]
     );
+
+    const closeModal = () => {
+        setModal("none");
+    }
+    const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
     return (
         <div className="jk-header-btn-wrapper microplanning">
@@ -50,6 +54,23 @@ const Upload = ({ MicroplanName = "default" }) => {
                 <div className="upload-component">{sectionComponents}</div>
                 <div className="upload-section-option">{sectionOptions}</div>
             </div>
+
+            {modal === "upload-modal" &&
+                // <Icons.CustomModal/>
+                <Icons.Modal
+                    // headerBarMain={<Heading label={""} />}
+                    headerBarMain={"s"}
+                    headerBarEnd={<CloseBtn onClick={closeModal} />}
+                    actionCancelOnSubmit={closeModal}
+                    formId="modal-action"
+                    popupStyles={{  }}
+                    style={{  }}
+                    hideSubmit={false}
+                    headerBarMainStyle={{ }}
+                >
+{/* asda */}
+                </Icons.Modal>
+            }
         </div>
     );
 };
@@ -76,7 +97,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
 };
 
 // Component for rendering individual upload option
-const UploadComponents = ({ MicroplanName, item, selected, uploadOptions }) => {
+const UploadComponents = ({ MicroplanName, item, selected, uploadOptions, setModal }) => {
     const { t } = useTranslation();
     const title = item.title.toUpperCase();
 
@@ -84,7 +105,7 @@ const UploadComponents = ({ MicroplanName, item, selected, uploadOptions }) => {
     // Component for rendering individual upload option container
     const UploadOptionContainer = ({ item }) => {
         return (
-            <div key={item.id} className="upload-option">
+            <div key={item.id} className="upload-option" onClick={() => setModal("upload-modal")}>
                 <CustomIcon key={item.id} Icon={Icons[item.iconName]} color={"rgba(244, 119, 56, 1)"} />
                 <p>{t("UPLOAD")} {t(item.code)}</p>
             </div>
@@ -107,6 +128,20 @@ const UploadComponents = ({ MicroplanName, item, selected, uploadOptions }) => {
 // Custom icon component
 const CustomIcon = ({ Icon, color }) => {
     if (!Icon) return null;
-    return <Icon style={{ outerWidth: "62px", outerHeight: "62px", fill: color }} />;
+    return <Icon  fill={color} style={{ outerWidth: "62px", outerHeight: "62px", }} />;
+};
+
+const Close = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#0B0C0C" />
+    </svg>
+);
+
+const CloseBtn = (props) => {
+    return (
+        <div className="icon-bg-secondary" onClick={props.onClick} style={{ backgroundColor: "#FFFFFF" }}>
+            <Close />
+        </div>
+    );
 };
 export default Upload;
