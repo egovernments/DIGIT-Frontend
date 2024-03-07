@@ -1,11 +1,10 @@
 import * as express from "express";
 import config from "../../config/index";
 import { logger } from "../../utils/logger";
-import { fetchDataAndUpdate, fullProcessFlowForNewEntry, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb, processValidationResultsAndSendResponse } from '../../utils/index'
+import { fullProcessFlowForNewEntry, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb } from '../../utils/index'
 
 
 import {
-    searchMDMS,
     processCreateData,
     updateFile
 } from "../../api/index";
@@ -16,7 +15,6 @@ import {
     // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { getTransformAndParsingTemplates } from "../../utils/validator";
 import { httpRequest } from "../../utils/request";
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
@@ -41,7 +39,6 @@ class genericAPIController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/_create`, this.createData);
-        this.router.post(`${this.path}/_validate`, this.validateData);
         this.router.post(`${this.path}/_download`, this.downloadData);
         this.router.post(`${this.path}/_generate`, this.generateData);
     }
@@ -80,25 +77,25 @@ class genericAPIController {
         }
     };
 
-    validateData = async (
-        request: express.Request,
-        response: express.Response
-    ) => {
-        try {
-            const { type, fileStoreId } = request?.body?.ResourceDetails;
-            const APIResourceName = type;
+    // validateData = async (
+    //     request: express.Request,
+    //     response: express.Response
+    // ) => {
+    //     try {
+    //         const { type, fileStoreId } = request?.body?.ResourceDetails;
+    //         const APIResourceName = type;
 
-            // Search for campaign in MDMS
-            const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
+    //         // Search for campaign in MDMS
+    //         const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
 
-            const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
-            const { sheetName, processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
-            return processValidationResultsAndSendResponse(sheetName, processResult, schemaDef, APIResource, response, request);
-        } catch (error: any) {
-            logger.error(error);
-            return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
-        }
-    };
+    //         const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
+    //         const { sheetName, processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
+    //         return processValidationResultsAndSendResponse(sheetName, processResult, schemaDef, APIResource, response, request);
+    //     } catch (error: any) {
+    //         logger.error(error);
+    //         return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
+    //     }
+    // };
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {

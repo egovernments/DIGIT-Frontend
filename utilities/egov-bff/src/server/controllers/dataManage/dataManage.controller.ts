@@ -77,13 +77,17 @@ class dataManageController {
                 throw new Error("Invalid action")
             }
         }
+
+        function convertToFacilityCreateData(facilityData: any[]) {
+            console.log(facilityData, " fffffffffffffffffffffffffff")
+        }
         async function validateFileStoreId(fileStoreId: string, tenantId: string) {
             const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
             if (!fileResponse?.fileStoreIds?.[0]?.url) {
                 throw new Error("Invalid file")
             }
             const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-            console.log(facilityData, " ffffffffffffffffffff")
+            convertToFacilityCreateData(facilityData)
         }
         async function validateCreateRequest(request: any) {
             if (!request?.body?.ResourceDetails) {
