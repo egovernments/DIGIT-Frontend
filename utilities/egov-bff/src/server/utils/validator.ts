@@ -326,6 +326,99 @@ function validateGenerateRequest(request: express.Request) {
     }
 }
 
+function validateFacilityData(data: any) {
+    const requiredKeys = ['Facility Name', 'Facility Type', 'Facility Status', 'Facility Capacity'];
+
+    for (const facility of data) {
+        const missingFields = requiredKeys.filter(key => !Object.keys(facility).includes(key));
+        if (missingFields.length > 0) {
+            throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+        }
+    }
+}
+function validateBooleanField(obj: any, fieldName: any, index: any) {
+    if (!obj.hasOwnProperty(fieldName)) {
+        throw new Error(`Object at index ${index} is missing field "${fieldName}".`);
+    }
+    if (typeof obj[fieldName] !== 'boolean') {
+        throw new Error(`Object at index ${index} has invalid type for field "${fieldName}". It should be a boolean.`);
+    }
+}
+
+function validateStringField(obj: any, fieldName: any, index: any) {
+    if (!obj.hasOwnProperty(fieldName)) {
+        throw new Error(`Object at index ${index} is missing field "${fieldName}".`);
+    }
+    if (typeof obj[fieldName] !== 'string') {
+        throw new Error(`Object at index ${index} has invalid type for field "${fieldName}". It should be a string.`);
+    }
+    if (obj[fieldName].length < 1) {
+        throw new Error(`Object at index ${index} has empty value for field "${fieldName}".`);
+    }
+    if (obj[fieldName].length > 128) {
+        throw new Error(`Object at index ${index} has value for field "${fieldName}" that exceeds the maximum length of 128 characters.`);
+    }
+}
+
+function validateStorageCapacity(obj: any, index: any) {
+    if (!obj.hasOwnProperty('storageCapacity')) {
+        throw new Error(`Object at index ${index} is missing field "storageCapacity".`);
+    }
+    if (typeof obj.storageCapacity !== 'number') {
+        throw new Error(`Object at index ${index} has invalid type for field "storageCapacity". It should be a number.`);
+    }
+}
+
+function validateAction(action: string) {
+    if (!(action == "create" || action == "validate")) {
+        throw new Error("Invalid action")
+    }
+}
+
+function validateResourceType(type: string) {
+    if (!(type == "facility" || type == "user" || type == "boundary")) {
+        throw new Error("Invalid resource type")
+    }
+}
+
+async function validateCreateRequest(request: any) {
+    if (!request?.body?.ResourceDetails) {
+        throw new Error("ResourceDetails is missing")
+    }
+    else {
+        if (!request?.body?.ResourceDetails?.fileStoreId) {
+            throw new Error("fileStoreId is missing")
+        }
+        if (!request?.body?.ResourceDetails?.type) {
+            throw new Error("type is missing")
+        }
+        if (!request?.body?.ResourceDetails?.tenantId) {
+            throw new Error("tenantId is missing")
+        }
+        if (!request?.body?.ResourceDetails?.action) {
+            throw new Error("action is missing")
+        }
+        validateAction(request?.body?.ResourceDetails?.action);
+        validateResourceType(request?.body?.ResourceDetails?.type);
+    }
+}
+
+function validateFacilityCreateData(data: any) {
+    data.forEach((obj: any, index: any) => {
+        // Validate string fields
+        const stringFields = ['tenantId', 'name', 'usage'];
+        stringFields.forEach(field => {
+            validateStringField(obj, field, index);
+        });
+
+        // Validate storageCapacity
+        validateStorageCapacity(obj, index);
+
+        // Validate isPermanent
+        validateBooleanField(obj, 'isPermanent', index);
+    });
+}
+
 
 
 
@@ -340,5 +433,8 @@ export {
     validateStaffResponse,
     validateProjectFacilityResponse,
     validateProjectResourceResponse,
-    validateGenerateRequest
+    validateGenerateRequest,
+    validateCreateRequest,
+    validateFacilityData,
+    validateFacilityCreateData
 };

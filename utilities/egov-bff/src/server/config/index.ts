@@ -4,7 +4,7 @@
 import { getErrorCodes } from "./constants";
 
 const HOST = process.env.EGOV_HOST ||
-  "http://127.0.0.1:8080/" ||
+  // "http://127.0.0.1:8080/" ||
   "https://unified-uat.digit.org/";
 
 if (!HOST) {
@@ -17,7 +17,7 @@ const config = {
   delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || "90000",
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   KAFKA_BROKER_HOST:
-    "localhost:9092" ||
+    // "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
   KAFKA_DHIS_UPDATE_TOPIC:
@@ -58,7 +58,7 @@ const config = {
       // || "http://localhost:8084/"
       || "https://unified-uat.digit.org/",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST
-      || "http://localhost:8083/"
+      // || "http://localhost:8083/"
       || "https://unified-dev.digit.org/",
     hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
     hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_HOST
@@ -68,7 +68,7 @@ const config = {
       // || "http://localhost:8085/"
       || "https://unified-dev.digit.org/",
     facilityHost: process.env.EGOV_FACILITY_HOST
-      || "http://localhost:8086/"
+      // || "http://localhost:8086/"
       || "https://unified-uat.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST
       // || "http://localhost:8087/"
@@ -98,6 +98,8 @@ const config = {
       || "egov-mdms-service/schema/v1/_search",
     boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH
       || "boundary-service/boundary-relationships/_search",
+    boundaryServiceSearch: process.env.EGOV_BOUNDARY_SERVICE_SEARCHPATH
+      || "boundary-service/boundary/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
       || "boundary-service/boundary-hierarchy-definition/_search",
     projectCreate: process.env.EGOV_PROJECT_CREATE_PATH
@@ -116,7 +118,9 @@ const config = {
       || "product/variant/v1/_search"
       || "boundary-service/boundary-hierarchy-definition/_search",
     boundaryEntity: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH
-      || "boundary-service/boundary/_search"
+      || "boundary-service/boundary/_search",
+    facilityBulkCreate: process.env.EGOV_FACILITY_BULK_CREATE
+      || "facility/v1/bulk/_create"
   },
   values: {
     parsingTemplate: process.env.HCM_PARSING_TEMPLATE

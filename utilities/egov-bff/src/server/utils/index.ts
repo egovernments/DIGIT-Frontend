@@ -983,7 +983,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any) 
   const allFacilities = await getAllFacilities(tenantId, request.body);
   request.body.generatedResourceCount = allFacilities.length;
   const facilitySheetData: any = await createFacilitySheet(allFacilities);
-  request.body.Filters = { tenantId: tenantId, hierarchyType: "office", includeChildren: true }
+  request.body.Filters = { tenantId: tenantId, hierarchyType: "NITISH", includeChildren: true }
   const boundarySheetData: any = await getBoundarySheetData(request);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
 }
@@ -1018,6 +1018,30 @@ async function processGenerate(request: any, response: any) {
   const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
   await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response);
 }
+
+function convertToFacilityCreateData(facilityData: any[], tenantId: string) {
+  const facilityCreateData = facilityData.map(facility => ({
+    "tenantId": tenantId,
+    "isPermanent": facility['Facility Status'] === 'Perm',
+    "name": facility['Facility Name'],
+    "usage": facility['Facility Type'],
+    "storageCapacity": facility['Facility Capacity']
+  }));
+  logger.info("facilityCreateData : " + JSON.stringify(facilityCreateData));
+  return facilityCreateData;
+}
+
+async function enrichResourceDetails(request: any) {
+  request.body.ResourceDetails.id = uuidv4();
+  request.body.ResourceDetails.auditDetails = {
+    createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    createdTime: Date.now(),
+    lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    lastModifiedTime: Date.now()
+  }
+}
+
+
 
 
 export {
@@ -1056,7 +1080,9 @@ export {
   correctParentValues,
   sortCampaignDetails,
   processGenerateRequest,
-  processGenerate
+  processGenerate,
+  convertToFacilityCreateData,
+  enrichResourceDetails
 };
 
 

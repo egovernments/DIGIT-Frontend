@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import axios from "axios";
-import { correctParentValues, generateActivityMessage, generateResourceMessage, matchWithCreatedDetails, sortCampaignDetails } from "../utils/index";
-import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
+import { convertToFacilityCreateData, correctParentValues, generateActivityMessage, generateResourceMessage, matchWithCreatedDetails, sortCampaignDetails } from "../utils/index";
+import { validateFacilityCreateData, validateFacilityData, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const jp = require("jsonpath");
 const _ = require('lodash');
 
@@ -16,30 +16,30 @@ const _ = require('lodash');
 
 
 
-  async function getWorkbook(fileUrl: string) {
+async function getWorkbook(fileUrl: string) {
 
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/pdf',
-    };
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/pdf',
+  };
 
-    logger.info("FileUrl : " + fileUrl);
+  logger.info("FileUrl : " + fileUrl);
 
-    const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+  const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
 
-    // Convert ArrayBuffer directly to Buffer
-    const fileBuffer = Buffer.from(responseFile);
+  // Convert ArrayBuffer directly to Buffer
+  const fileBuffer = Buffer.from(responseFile);
 
-    // Assuming the response is a binary file, adjust the type accordingly
-    const fileXlsx = fileBuffer;
+  // Assuming the response is a binary file, adjust the type accordingly
+  const fileXlsx = fileBuffer;
 
-    const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
-    const data = new Uint8Array(arrayBuffer);
-    const workbook = XLSX.read(data, { type: 'array' });
+  const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
+  const data = new Uint8Array(arrayBuffer);
+  const workbook = XLSX.read(data, { type: 'array' });
 
-    return workbook;
+  return workbook;
 
-  }
+}
 
 
 const getSheetData = async (
@@ -60,6 +60,7 @@ const getSheetData = async (
     });
     return rowData;
   });
+  logger.info("Sheet Data : " + JSON.stringify(jsonData))
   return jsonData;
 };
 
@@ -324,7 +325,6 @@ async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any)
     }
   );
   const responseData = fileCreationResult?.files;
-  console.log(responseData);
   return responseData;
 }
 
@@ -484,7 +484,6 @@ function getBoundaryCodes(boundaryList: any) {
       elementCodesMap.set(element, code); // Store the code of the element in the map
     }
   }
-  console.log(elementCodesMap, "elllllleeeeeeeeemeeeeeentsssssss")
 }
 
 function generateElementCode(sequence: any, parentCode: any, element: any) {
@@ -502,11 +501,10 @@ async function getBoundarySheetData(request: any) {
     const boundaryList = generateHierarchyList(data)
     const newArray = boundaryList.map(item => item.split(','))
     getBoundaryCodes(newArray);
-    console.log(boundaryList, "reeeeeeeeeeeeeeeee");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
-      const boundaryResponse = await httpRequest('http://localhost:8087/boundary-service/boundary/_search', request.body, { tenantId: "pg", codes: string });
+      const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: "pg", codes: string });
 
       const mp: { [key: string]: string } = {};
       boundaryResponse?.Boundary?.forEach((data: any) => {
@@ -528,7 +526,6 @@ async function getBoundarySheetData(request: any) {
         mappedRowData[boundaryCodeIndex] = boundaryCode;
         return mappedRowData;
       });
-      console.log(data)
       return await createExcelSheet(data, headers);
     }
   }
@@ -865,6 +862,43 @@ async function getAllFacilities(tenantId: string, requestBody: any) {
   return searchedFacilities;
 }
 
+async function processFacilityCreate(facilityCreateData: any[], request: any) {
+  request.body.Facilities = facilityCreateData;
+  logger.info("facility bulk create url : " + config.host.facilityHost + config.paths.facilityBulkCreate);
+  const response = await httpRequest(config.host.facilityHost + config.paths.facilityBulkCreate, request.body);
+  if (response?.status != "successful") {
+    throw new Error("Error occured during facility create")
+  }
+}
+
+
+
+async function createFacilityData(request: any) {
+  const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
+  const tenantId = request?.body?.ResourceDetails?.tenantId
+  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+  if (!fileResponse?.fileStoreIds?.[0]?.url) {
+    throw new Error("Not any download url returned for given fileStoreId")
+  }
+  const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
+  validateFacilityData(facilityData)
+  const facilityCreateData = convertToFacilityCreateData(facilityData, request?.body?.ResourceDetails?.tenantId)
+  validateFacilityCreateData(facilityCreateData)
+  await processFacilityCreate(facilityCreateData, request)
+}
+
+
+
+async function processAction(request: any) {
+  if (request?.body?.ResourceDetails?.action == "create") {
+    if (request?.body?.ResourceDetails?.type == "facility") {
+      await createFacilityData(request)
+    }
+  }
+  else {
+
+  }
+}
 
 export {
   getSheetData,
@@ -882,5 +916,7 @@ export {
   createRelatedResouce,
   enrichCampaign,
   createExcelSheet,
-  getAllFacilities
+  getAllFacilities,
+  createFacilityData,
+  processAction
 };
