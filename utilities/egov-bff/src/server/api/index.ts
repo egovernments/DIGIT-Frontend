@@ -16,30 +16,30 @@ const _ = require('lodash');
 
 
 
-async function getWorkbook(fileUrl: string) {
+  async function getWorkbook(fileUrl: string) {
 
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/pdf',
-  };
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/pdf',
+    };
 
-  logger.info("FileUrl : " + fileUrl);
+    logger.info("FileUrl : " + fileUrl);
 
-  const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+    const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
 
-  // Convert ArrayBuffer directly to Buffer
-  const fileBuffer = Buffer.from(responseFile);
+    // Convert ArrayBuffer directly to Buffer
+    const fileBuffer = Buffer.from(responseFile);
 
-  // Assuming the response is a binary file, adjust the type accordingly
-  const fileXlsx = fileBuffer;
+    // Assuming the response is a binary file, adjust the type accordingly
+    const fileXlsx = fileBuffer;
 
-  const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
-  const data = new Uint8Array(arrayBuffer);
-  const workbook = XLSX.read(data, { type: 'array' });
+    const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, { type: 'array' });
 
-  return workbook;
+    return workbook;
 
-}
+  }
 
 
 const getSheetData = async (
@@ -324,6 +324,7 @@ async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any)
     }
   );
   const responseData = fileCreationResult?.files;
+  console.log(responseData);
   return responseData;
 }
 
@@ -346,31 +347,6 @@ function generateHierarchyList(data: any[], parentChain: any = []) {
   return result;
 
 }
-// function generateCodes(hierarchy: any[], prefix: string = "ADMIN", levelCount: { [level: string]: number } = {}): any[] {
-//   const codeMappings: any[] = [];
-
-//   hierarchy.forEach((item: any, index: number) => {
-//     let currentLevel: string;
-//     let code: string;
-//     if (prefix === "ADMIN") {
-//       currentLevel = `${prefix}_${item.code}`;
-//       code = `${currentLevel}`;
-//     } else {
-//       currentLevel = `${prefix}_${String(levelCount[prefix] || index + 1).padStart(2, '0')}`;
-//       levelCount[prefix] = (levelCount[prefix] || index + 1) + 1;
-//       code = `${currentLevel}_${item.code}`;
-//     }
-//     codeMappings.push({ originalCode: item.code, newCode: code });
-
-//     if (item.children.length > 0) {
-//       const childCodeMappings = generateCodes(item.children, currentLevel, levelCount);
-//       codeMappings.push(...childCodeMappings);
-//     }
-//   });
-
-//   return codeMappings;
-// }
-
 
 function generateHierarchy(boundaries: any[]) {
   // Create an object to store boundary types and their parents
@@ -511,7 +487,7 @@ function getBoundaryCodes(boundaryList: any) {
   console.log(elementCodesMap, "elllllleeeeeeeeemeeeeeentsssssss")
 }
 
-function generateElementCode(sequence : any, parentCode:any, element : any) {
+function generateElementCode(sequence: any, parentCode: any, element: any) {
   let paddedSequence = sequence.toString().padStart(2, '0'); // Pad single-digit numbers with leading zero
   return parentCode + '_' + paddedSequence + '_' + element;
 }
@@ -525,12 +501,12 @@ async function getBoundarySheetData(request: any) {
   if (data) {
     const boundaryList = generateHierarchyList(data)
     const newArray = boundaryList.map(item => item.split(','))
-    const result = getBoundaryCodes(newArray);
-    console.log(result, "reeeeeeeeeeeeeeeee");
+    getBoundaryCodes(newArray);
+    console.log(boundaryList, "reeeeeeeeeeeeeeeee");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
-      const boundaryResponse = await httpRequest('https://unified-dev.digit.org/boundary-service/boundary/_search', request.body, { tenantId: "pg", codes: string });
+      const boundaryResponse = await httpRequest('http://localhost:8087/boundary-service/boundary/_search', request.body, { tenantId: "pg", codes: string });
 
       const mp: { [key: string]: string } = {};
       boundaryResponse?.Boundary?.forEach((data: any) => {
@@ -552,6 +528,7 @@ async function getBoundarySheetData(request: any) {
         mappedRowData[boundaryCodeIndex] = boundaryCode;
         return mappedRowData;
       });
+      console.log(data)
       return await createExcelSheet(data, headers);
     }
   }
