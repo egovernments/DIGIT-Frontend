@@ -5,14 +5,14 @@ import { consumerGroupUpdate } from "../Kafka/Listener";
 import { Message } from 'kafka-node';
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
 import { getCount } from '../api/index'
 import { logger } from "./logger";
-import { processValidationWithSchema, validateTransformedData } from "./validator";
+import { processValidationWithSchema } from "./validator";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
@@ -914,34 +914,6 @@ async function processValidationResultsAndSendResponse(sheetName: any, processRe
 }
 
 
-const fetchDataAndUpdate = async (
-  transformTemplate: any,
-  parsingTemplate: any,
-  fileStoreId: any,
-  APIResource: any,
-  request: any,
-  response: any
-) => {
-  const result = await searchMDMS([transformTemplate], config.values.transfromTemplate, request.body.RequestInfo, response);
-  const url = config.host.filestore + config.paths.filestore + `/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-  logger.info("File fetching url : " + url);
-
-  let TransformConfig;
-  if (result?.mdms?.length > 0) {
-    TransformConfig = result.mdms[0];
-    logger.info("TransformConfig : " + JSON.stringify(TransformConfig));
-  }
-
-  const updatedDatas = await getSheetData(url, [{ startRow: 2, endRow: 1000 }], TransformConfig?.data?.Fields, TransformConfig?.data?.sheetName);
-  if (!Array.isArray(updatedDatas)) {
-    throw new Error(JSON.stringify(updatedDatas));
-  }
-  validateTransformedData(updatedDatas);
-  const { processResult, schemaDef } = await getSchemaAndProcessResult(request, parsingTemplate, updatedDatas, APIResource);
-
-  return { sheetName: TransformConfig?.data?.sheetName, processResult, schemaDef };
-};
-
 function sortCampaignDetails(campaignDetails: any) {
   campaignDetails.sort((a: any, b: any) => {
     // If a is a child of b, a should come after b
@@ -1080,7 +1052,6 @@ export {
   getFinalUpdatedResponse,
   fullProcessFlowForNewEntry,
   processValidationResultsAndSendResponse,
-  fetchDataAndUpdate,
   modifyData,
   correctParentValues,
   sortCampaignDetails,

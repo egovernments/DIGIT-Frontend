@@ -6,7 +6,10 @@ import {
     sendResponse,
 } from "../../utils/index";
 import { validateGenerateRequest } from "../../utils/validator";
-import { createAndUploadFile, getBoundarySheetData } from "../../api/index";
+import { createAndUploadFile, getBoundarySheetData, getSheetData } from "../../api/index";
+import config from "../../config/index";
+import { httpRequest } from "../../utils/request";
+
 
 
 
@@ -31,6 +34,7 @@ class dataManageController {
         this.router.post(`${this.path}/_generate`, this.generateData);
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
         this.router.post(`${this.path}/generateBoundaryCode`, this.generateBoundaryCode);
+        this.router.post(`${this.path}/_create`, this.createData);
     }
 
 
@@ -64,6 +68,52 @@ class dataManageController {
 
     generateBoundaryCode = async (request: any, response: any) => {
 
+    }
+
+    createData = async (request: any, response: any) => {
+
+        function validateAction(action: string) {
+            if (!(action == "create" || action == "validate")) {
+                throw new Error("Invalid action")
+            }
+        }
+        async function validateFileStoreId(fileStoreId: string, tenantId: string) {
+            const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+            if (!fileResponse?.fileStoreIds?.[0]?.url) {
+                throw new Error("Invalid file")
+            }
+            const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
+            console.log(facilityData, " ffffffffffffffffffff")
+        }
+        async function validateCreateRequest(request: any) {
+            if (!request?.body?.ResourceDetails) {
+                throw new Error("ResourceDetails is missing")
+            }
+            else {
+                if (!request?.body?.ResourceDetails?.fileStoreId) {
+                    throw new Error("fileStoreId is missing")
+                }
+                if (!request?.body?.ResourceDetails?.type) {
+                    throw new Error("type is missing")
+                }
+                if (!request?.body?.ResourceDetails?.tenantId) {
+                    throw new Error("tenantId is missing")
+                }
+                if (!request?.body?.ResourceDetails?.action) {
+                    throw new Error("action is missing")
+                }
+                validateAction(request?.body?.ResourceDetails?.action);
+                await validateFileStoreId(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId);
+            }
+        }
+        try {
+            await validateCreateRequest(request);
+            return sendResponse(response, { GeneratedResource: request?.body?.generatedResource }, request);
+
+        } catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) }, request, response);
+        }
     }
 
 };
