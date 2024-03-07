@@ -1,10 +1,9 @@
-import { Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import {Dropdown} from "@egovernments/digit-ui-react-components";
 
-const stringReplaceAll = (str = "", searcher = "", replaceWith = "") =>
- {
-  if (searcher == "") return str;
+const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
+  if (searcher === "") return str;
   while (str?.includes(searcher)) {
     str = str?.replace(searcher, replaceWith);
   }
@@ -19,11 +18,6 @@ const ChangeCity = (prop) => {
   const [selectCityData, setSelectCityData] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State to store search query
   const history = useHistory();
-  const isDropdown = prop.dropdown || false;
-  let selectedCities = [];
-
-  const { data: data = {}, isLoading } =
-    Digit.Hooks.hrms.useHrmsMDMS(Digit.ULBService.getCurrentTenantId(), "egov-hrms", "HRMSRolesandDesignation") || {};
 
   const handleChangeCity = (city) => {
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
@@ -50,25 +44,13 @@ const ChangeCity = (prop) => {
     let unique = teantsArray.filter((item, i, ar) => ar.indexOf(item) === i);
 
     unique?.forEach((uniCode) => {
-      data?.MdmsRes?.["tenant"]["tenants"]?.map((items) => {
-        if (items?.code !== "pb" && items?.code === uniCode) {
-          filteredArray.push({
-            label: `${prop?.t(Digit.Utils.locale.convertToLocale(items?.divisionCode, "EGOV_LOCATION_DIVISION"))} - ${prop?.t(
-              `TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`
-            )}`,
-            value: uniCode,
-          });
-        } else if (items?.code === "pb" && items?.code === uniCode) {
-          filteredArray.push({
-            label: `TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`,
-            value: uniCode,
-          });
-        }
+      filteredArray.push({
+        label: `TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`,
+        value: uniCode,
       });
     });
-    selectedCities = filteredArray?.filter((select) => select.value == Digit.SessionStorage.get("Employee.tenantId"));
     setSelectCityData(filteredArray);
-  }, [dropDownData, data?.MdmsRes]);
+  }, []);
 
   // Filter options based on search query
   const filteredOptions = selectCityData.filter(option =>
