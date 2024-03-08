@@ -5,7 +5,7 @@ import HeaderBar from "../atoms/HeaderBar";
 import ButtonSelector from "../atoms/ButtonSelector";
 import Toast from "../atoms/Toast";
 
-const Modal = ({
+const CustomModal = ({
   headerBarMain,
   headerBarEnd,
   popupStyles,
@@ -20,6 +20,8 @@ const Modal = ({
   isDisabled,
   hideSubmit,
   style={},
+  footerLeftButtonstyle={},
+  footerRightButtonstyle={},
   popupModuleMianStyles,
   headerBarMainStyle,
   isOBPSFlow = false,
@@ -35,6 +37,7 @@ const Modal = ({
       document.body.style.overflowY = 'auto';
     }
   }, [])
+  console.log(style)
   return (
     <PopUp>
       <div className="popup-module" style={popupStyles}>
@@ -42,8 +45,8 @@ const Modal = ({
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
           <div className="popup-module-action-bar" style={isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles}>
-            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style}/> : null}
-            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style}/> : null}
+            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style?style:footerLeftButtonstyle}/> : null}
+            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style?style:footerRightButtonstyle}/> : null}
           </div>
         </div>
       </div>
@@ -52,4 +55,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default CustomModal;

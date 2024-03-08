@@ -288,7 +288,6 @@ import Tutorial from "./hoc/Tutorial/Tutorial";
 import { useTourState,TourProvider } from "./hoc/Tutorial/TourProvider";
 import Help from "./hoc/Tutorial/Help";
 
-import CustomModal from "./hoc/CustomModal";
 //View Composer
 import ViewComposer from "./hoc/ViewComposer";
 export {
@@ -587,7 +586,5 @@ export {
 
 
   // Exported all svgs from svg-component library
-  SVG,
-
-  CustomModal
+  SVG
 };
