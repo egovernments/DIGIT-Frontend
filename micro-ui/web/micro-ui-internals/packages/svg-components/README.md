@@ -10,7 +10,7 @@ npm install --save @egovernments/digit-ui-svg-components
 ## Limitation
 
 ```bash
-This Package is more specific to DIGIT-UI's can be used across mission's
+ This package is specifically designed for DIGIT-UI but can be used across various missions.
 ```
 
 ## Usage
@@ -76,7 +76,10 @@ const { Accessibility } = SVG;
 
 ### Contributors
 
-[nabeelmd-egov] [anil-egov] [jagankumar-egov]
+
+ [nabeelmd-egov](https://github.com/nabeelmd-egov)
+ [anil-egov](https://github.com/anil-egov)
+ [jagankumar-egov](https://github.com/jagankumar-egov)
 
 ## Documentation
 
@@ -92,7 +95,7 @@ Home Page (https://unified-dev.digit.org/storybook-svg/)
 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
+DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
