@@ -5,6 +5,11 @@ import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
 
+//importing css modularization stuff
+import './../../styles.tw.css';
+import './../../career.css';
+import { prefixClasses as cx } from './../../lib/prefix-classes'
+
 const toDropdownObj = (master = "", mod = "") => {
   return {
     name: mod || master,
@@ -138,6 +143,8 @@ const MDMSSearchv2 = () => {
   if (isLoading) return <Loader />;
   return (
     <React.Fragment>
+      <h1 className="careerTitle">CSS Modularization 1</h1>
+      <div className={cx('underline decoration-sky-500')}>CSS Modularization 2</div>
         <Header className="works-header-search">{t(Config?.label)}</Header>
       <div className="jk-header-btn-wrapper">
         <Dropdown
