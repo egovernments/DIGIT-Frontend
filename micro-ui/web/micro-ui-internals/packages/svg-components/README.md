@@ -62,7 +62,7 @@ const { Accessibility } = SVG;
 ### Changelog
 
 ```bash
-1.0.1 Added Icons form Microplanning module
+1.0.1 Added Icons from Microplanning module
 1.0.0 Released as part of workbench v1.0
 1.0.0-beta workbench base version beta release
 0.0.8 Added RoundedCheck Icon and DeleteBtn icon with stories
