@@ -1,6 +1,6 @@
 import * as express from "express";
-import { searchMDMS } from "../api";
-import { errorResponder } from "../utils/index";
+import { getFacilitiesViaIds, searchMDMS } from "../api";
+import { errorResponder, getFacilityIds, matchFacilityData } from "../utils/index";
 import { logger } from "../utils/logger";
 import Ajv from "ajv";
 import config from "../config/index";
@@ -336,6 +336,17 @@ function validateFacilityData(data: any) {
         }
     }
 }
+
+function validateFacilityDataWithCode(data: any) {
+    const requiredKeys = ['Facility Code', 'Facility Name', 'Facility Type', 'Facility Status', 'Facility Capacity'];
+
+    for (const facility of data) {
+        const missingFields = requiredKeys.filter(key => !Object.keys(facility).includes(key));
+        if (missingFields.length > 0) {
+            throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+        }
+    }
+}
 function validateBooleanField(obj: any, fieldName: any, index: any) {
     if (!obj.hasOwnProperty(fieldName)) {
         throw new Error(`Object at index ${index} is missing field "${fieldName}".`);
@@ -419,6 +430,12 @@ function validateFacilityCreateData(data: any) {
     });
 }
 
+async function validateFacilityViaSearch(tenantId: string, data: any, requestBody: any) {
+    const ids = getFacilityIds(data);
+    const searchedFacilities = await getFacilitiesViaIds(tenantId, ids, requestBody)
+    matchFacilityData(data, searchedFacilities)
+}
+
 
 
 
@@ -436,5 +453,7 @@ export {
     validateGenerateRequest,
     validateCreateRequest,
     validateFacilityData,
-    validateFacilityCreateData
+    validateFacilityDataWithCode,
+    validateFacilityCreateData,
+    validateFacilityViaSearch
 };

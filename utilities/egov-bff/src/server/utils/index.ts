@@ -1031,13 +1031,54 @@ function convertToFacilityCreateData(facilityData: any[], tenantId: string) {
   return facilityCreateData;
 }
 
+function convertToFacilityExsistingData(facilityData: any[]) {
+  const facilityExsistingData = facilityData.map(facility => ({
+    "id": facility['Facility Code'],
+    "isPermanent": facility['Facility Status'] === 'Perm',
+    "name": facility['Facility Name'],
+    "usage": facility['Facility Type'],
+    "storageCapacity": facility['Facility Capacity']
+  }));
+  logger.info("facilityExsistingData : " + JSON.stringify(facilityExsistingData));
+  return facilityExsistingData;
+}
+
 async function enrichResourceDetails(request: any) {
   request.body.ResourceDetails.id = uuidv4();
+  if (request?.body?.ResourceDetails?.action == "create") {
+    request.body.ResourceDetails.status = "data-accepted"
+  }
+  else {
+    request.body.ResourceDetails.status = "data-validated"
+  }
   request.body.ResourceDetails.auditDetails = {
     createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
     createdTime: Date.now(),
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now()
+  }
+}
+
+function getFacilityIds(data: any) {
+  return data.map((obj: any) => obj["id"])
+}
+
+function matchFacilityData(data: any, searchedFacilities: any) {
+  for (let i = 0; i < data.length; i++) {
+    const dataFacility = data[i];
+    const searchedFacility = searchedFacilities.find((facility: any) => facility.id === dataFacility.id);
+
+    if (!searchedFacility) {
+      throw new Error(`Facility with ID "${dataFacility.id}" not found in searched facilities.`);
+    }
+
+    const keys = Object.keys(dataFacility);
+
+    for (const key of keys) {
+      if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
+        throw new Error(`Value mismatch for key "${key}" at index ${i}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
+      }
+    }
   }
 }
 
@@ -1082,7 +1123,10 @@ export {
   processGenerateRequest,
   processGenerate,
   convertToFacilityCreateData,
-  enrichResourceDetails
+  convertToFacilityExsistingData,
+  enrichResourceDetails,
+  getFacilityIds,
+  matchFacilityData
 };
 
 

@@ -4,10 +4,8 @@ import FormData from 'form-data';
 import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
-import axios from "axios";
-import { convertToFacilityCreateData, correctParentValues, generateActivityMessage, generateResourceMessage, matchWithCreatedDetails, sortCampaignDetails } from "../utils/index";
-import { validateFacilityCreateData, validateFacilityData, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
-const jp = require("jsonpath");
+import { convertToFacilityCreateData, convertToFacilityExsistingData, correctParentValues, sortCampaignDetails } from "../utils/index";
+import { validateFacilityCreateData, validateFacilityData, validateFacilityDataWithCode, validateFacilityViaSearch, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const _ = require('lodash');
 
 
@@ -42,16 +40,20 @@ async function getWorkbook(fileUrl: string) {
 }
 
 
-const getSheetData = async (
-  fileUrl: string,
-  sheetName: string
-) => {
+const getSheetData = async (fileUrl: string, sheetName: string) => {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/pdf',
   };
+
   const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
   const workbook = XLSX.read(responseFile, { type: 'buffer' });
+
+  // Check if the specified sheet exists in the workbook
+  if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+    throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+  }
+
   const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
   const jsonData = sheetData.map((row: any) => {
     const rowData: any = {};
@@ -63,6 +65,7 @@ const getSheetData = async (
   logger.info("Sheet Data : " + JSON.stringify(jsonData))
   return jsonData;
 };
+
 
 
 
@@ -197,103 +200,7 @@ const getSchema: any = async (code: string, RequestInfo: any) => {
 
 }
 
-function matchLength(result: any, existingDataToCheck: any): boolean {
-  // Get length of the first element
-  const resultLength = Array.isArray(result) ? result.length : (result ? 1 : 0);
-  // Get length of the second element
-  const existingDataLength = Array.isArray(existingDataToCheck) ? existingDataToCheck.length : (existingDataToCheck ? 1 : 0);
-  // Check if lengths match
-  return resultLength === existingDataLength;
-}
 
-function getAffectedRows(data: any[]): number[] {
-  if (!data) return [];
-  return data.map(item => item['#row!number#']).filter(rowNumber => !!rowNumber) as number[];
-}
-
-const createValidatedData: any = async (result: any, type: string, request: any) => {
-  let host = result?.creationDetails?.host;
-  const url = result?.creationDetails?.url;
-  const creationKey = result?.creationDetails?.keyName
-  var retry: number = 0;
-  const creationRequest = { RequestInfo: request.RequestInfo };
-  var params: any = {};
-  _.set(creationRequest, creationKey, result?.data);
-  if (result?.creationDetails?.createBody) {
-    for (const createItem of result?.creationDetails?.createBody) {
-      if (createItem.isInParams) {
-        params[createItem.path] = createItem.value;
-      }
-      if (createItem.isInBody) {
-        _.set(creationRequest, createItem.path, createItem.value);
-      }
-    }
-  }
-  const retryCount = parseInt(config.values.retryCount)
-  let success = false;
-  let creationResponse: any = {};
-  const affectedRows = getAffectedRows(result?.data);
-  while (retry <= retryCount && !success) {
-    logger.info("Creation Attempt : " + Number(retry + 1))
-    logger.info("Creation Request : " + JSON.stringify(creationRequest))
-    logger.info("Creation Params : " + JSON.stringify(params))
-    // host = 'http://localhost:8086/'
-    logger.info("Creation url : " + host + url);
-    await axios.post(`${host}${url}`, creationRequest, params).then(response => {
-      // FIXME : need to complete logic
-      if (result?.creationDetails?.checkOnlyExistence) {
-        if (result?.creationDetails?.matchDataLength) {
-          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
-          if (matchLength(result?.data, existingDataToCheck)) {
-            logger.info("Existing Data To Check: " + existingDataToCheck)
-            creationResponse = response?.data;
-            success = true;
-          }
-          else {
-            logger.error("Number of attempted data not matching with created data.")
-            creationResponse = response?.data;
-          }
-        }
-        else {
-          const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
-          if (existingDataToCheck) {
-            logger.info("Existing Data To Check: " + existingDataToCheck)
-            creationResponse = response?.data;
-            success = true;
-          }
-          else {
-            logger.error("Existing Data To Check: " + existingDataToCheck)
-            creationResponse = response?.data;
-          }
-        }
-      }
-      else {
-        const existingDataToCheck = jp.query(response?.data, result?.creationDetails?.responsePathToCheck);
-        if (existingDataToCheck == result?.creationDetails?.responseToMatch) {
-          logger.info("Existing Data To Check: " + existingDataToCheck)
-          logger.info("Existing Data Matching.")
-          creationResponse = response?.data;
-          success = true;
-        }
-        else {
-          logger.error("Existing Data To Check: " + existingDataToCheck)
-          logger.error("Existing Data Not Matching.")
-          creationResponse = response?.data;
-        }
-      }
-      retry++;
-    })
-      .catch((error: any) => {
-        creationResponse = error?.response?.data;
-        logger.error("Error occurred during creation attempt:" + JSON.stringify(error?.response?.data));
-        retry++;
-      });
-  }
-  if (success) {
-    return { status: "SUCCESS", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1, affectedRows: affectedRows }
-  }
-  return { status: "FAILED", type: type, url: url, requestPayload: creationRequest, responsePayload: creationResponse, retryCount: retry - 1, affectedRows: affectedRows }
-}
 
 const getCount: any = async (responseData: any, request: any, response: any) => {
   try {
@@ -597,100 +504,6 @@ async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, 
 }
 
 
-const processCreateData: any = async (result: any, type: string, request: any, response: any) => {
-  var finalResponse: any = { ResponseDetails: [], Activities: [] };
-  if (result?.creationDetails?.isBulkCreate) {
-    if (result?.creationDetails?.creationLimit) {
-      let currentIndex = 0;
-      while (currentIndex < result?.data?.length) {
-        const creationTime = Date.now();
-        let batchResult = JSON.parse(JSON.stringify(result));
-        batchResult.data = result?.data?.slice(currentIndex, currentIndex + result?.creationDetails?.creationLimit);
-        const createdResult = await createValidatedData(batchResult, type, request.body)
-        logger.info(type + " creation result : " + JSON.stringify(createdResult))
-        if (createdResult?.status == "SUCCESS") {
-          var successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
-          const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
-          const activities: any = { activities: [activityMessage] }
-          logger.info("Activity Message : " + JSON.stringify(activities))
-          logger.info("Success Message : " + JSON.stringify(successMessage))
-          successMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
-          successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, batchResult?.data?.length);
-          finalResponse.Activities.push(activityMessage);
-          finalResponse.ResponseDetails.push(successMessage);
-        }
-        else {
-          var failedMessage: any = await generateResourceMessage(request.body, "FAILED")
-          const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
-          const activities: any = { activities: [activityMessage] }
-          logger.info("Activity Message : " + JSON.stringify(activities))
-          logger.info("Failed Message : " + JSON.stringify(failedMessage))
-          failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
-          failedMessage.batchNumber = currentIndex / result?.creationDetails?.creationLimit + 1;
-          finalResponse.Activities.push(activityMessage);
-          finalResponse.ResponseDetails.push(failedMessage);
-        }
-        currentIndex += result?.creationDetails?.creationLimit;
-      }
-      return finalResponse;
-    }
-    else {
-      const creationTime = Date.now();
-      const createdResult = await createValidatedData(result, type, request.body)
-      logger.info(type + " creation result : " + createdResult)
-      if (createdResult?.status == "SUCCESS") {
-        var successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
-        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
-        const activities: any = { activities: [activityMessage] }
-        logger.info("Activity Message : " + JSON.stringify(activities));
-        logger.info("Success Message : " + JSON.stringify(successMessage))
-        successMessage = await matchWithCreatedDetails(request, response, successMessage, creationTime, result?.data?.length);
-        finalResponse.Activities.push(activityMessage);
-        finalResponse.ResponseDetails.push(successMessage);
-        return finalResponse;
-      }
-      else {
-        const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
-        const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
-        const activities: any = { activities: [activityMessage] }
-        logger.info("Activity Message : " + JSON.stringify(activities))
-        logger.info("Success Message : " + JSON.stringify(failedMessage))
-        finalResponse.Activities.push(activityMessage);
-        finalResponse.ResponseDetails.push(createdResult?.responsePayload?.Errors || "Some error occured during creation. Check Logs")
-        return finalResponse;
-      }
-    }
-  }
-  else {
-    for (let currentIndex = 0; currentIndex < result?.data?.length; currentIndex++) {
-      let batchResult = JSON.parse(JSON.stringify(result));
-      batchResult.data = result?.data?.[currentIndex];
-      const createdResult = await createValidatedData(batchResult, type, request.body)
-      logger.info(type + " creation result : " + createdResult)
-      if (createdResult?.status == "SUCCESS") {
-        const successMessage: any = await generateResourceMessage(request.body, "COMPLETED")
-        const activityMessage: any = await generateActivityMessage(createdResult, successMessage, request.body, "COMPLETED")
-        const activities: any = { activities: [activityMessage] }
-        logger.info("Activity Message : " + JSON.stringify(activities))
-        logger.info("Success Message : " + JSON.stringify(successMessage))
-        finalResponse.Activities.push(activityMessage);
-        finalResponse.ResponseDetails.push(successMessage);
-      }
-      else {
-        const failedMessage: any = await generateResourceMessage(request.body, "FAILED")
-        const activityMessage: any = await generateActivityMessage(createdResult, failedMessage, request.body, "FAILED")
-        const activities: any = { activities: [activityMessage] }
-        logger.info("Activity Message : " + JSON.stringify(activities))
-        logger.info("Success Message : " + JSON.stringify(failedMessage))
-        failedMessage.error = createdResult?.responsePayload?.Errors || "Some error occured. Check logs"
-        finalResponse.Activities.push(activityMessage);
-        finalResponse.ResponseDetails.push(failedMessage);
-      }
-    }
-    return finalResponse;
-  }
-}
-
 async function createProjectAndUpdateId(projectBody: any, boundaryProjectIdMapping: any, boundaryCode: any, campaignDetails: any) {
   const projectCreateUrl = `${config.host.projectHost}` + `${config.paths.projectCreate}`
   logger.info("Project Creation url " + projectCreateUrl)
@@ -825,7 +638,7 @@ async function enrichCampaign(requestBody: any) {
   }
 }
 
-async function getAllFacilitiesInLoop(searchAgain: boolean, searchedFacilities: any[], facilitySearchParams: any, facilitySearchBody: any) {
+async function getAllFacilitiesInLoop(searchedFacilities: any[], facilitySearchParams: any, facilitySearchBody: any) {
   await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
   logger.info("facilitySearchParams : " + JSON.stringify(facilitySearchParams));
   const response = await httpRequest(config.host.facilityHost + config.paths.facilitySearch, facilitySearchBody, facilitySearchParams);
@@ -856,11 +669,39 @@ async function getAllFacilities(tenantId: string, requestBody: any) {
   let searchAgain = true;
 
   while (searchAgain) {
-    searchAgain = await getAllFacilitiesInLoop(searchAgain, searchedFacilities, facilitySearchParams, facilitySearchBody);
+    searchAgain = await getAllFacilitiesInLoop(searchedFacilities, facilitySearchParams, facilitySearchBody);
+    facilitySearchParams.offset += 50;
   }
 
   return searchedFacilities;
 }
+
+async function getFacilitiesViaIds(tenantId: string, ids: any[], requestBody: any) {
+  const facilitySearchBody: any = {
+    RequestInfo: requestBody?.RequestInfo,
+    Facility: {}
+  };
+
+  const facilitySearchParams = {
+    limit: 50,
+    offset: 0,
+    tenantId: tenantId?.split('.')?.[0]
+  };
+
+  logger.info("Facility search url : " + config.host.facilityHost + config.paths.facilitySearch);
+  const searchedFacilities: any[] = [];
+
+  // Split ids into chunks of 50
+  for (let i = 0; i < ids.length; i += 50) {
+    const chunkIds = ids.slice(i, i + 50);
+    facilitySearchBody.Facility.id = chunkIds;
+    logger.info("facilitySearchBody : " + JSON.stringify(facilitySearchBody));
+    await getAllFacilitiesInLoop(searchedFacilities, facilitySearchParams, facilitySearchBody);
+  }
+
+  return searchedFacilities;
+}
+
 
 async function processFacilityCreate(facilityCreateData: any[], request: any) {
   request.body.Facilities = facilityCreateData;
@@ -887,6 +728,19 @@ async function createFacilityData(request: any) {
   await processFacilityCreate(facilityCreateData, request)
 }
 
+async function validateExistingFacilityData(request: any) {
+  const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
+  const tenantId = request?.body?.ResourceDetails?.tenantId
+  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+  if (!fileResponse?.fileStoreIds?.[0]?.url) {
+    throw new Error("Not any download url returned for given fileStoreId")
+  }
+  const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
+  validateFacilityDataWithCode(facilityData)
+  const facilityExsistingData = convertToFacilityExsistingData(facilityData)
+  await validateFacilityViaSearch(tenantId, facilityExsistingData, request.body)
+}
+
 
 
 async function processAction(request: any) {
@@ -896,7 +750,9 @@ async function processAction(request: any) {
     }
   }
   else {
-
+    if (request?.body?.ResourceDetails?.type == "facility") {
+      await validateExistingFacilityData(request)
+    }
   }
 }
 
@@ -905,10 +761,8 @@ export {
   searchMDMS,
   getCampaignNumber,
   getSchema,
-  createValidatedData,
   getResouceNumber,
   getCount,
-  processCreateData,
   updateFile,
   getBoundarySheetData,
   createAndUploadFile,
@@ -918,5 +772,6 @@ export {
   createExcelSheet,
   getAllFacilities,
   createFacilityData,
-  processAction
+  processAction,
+  getFacilitiesViaIds
 };

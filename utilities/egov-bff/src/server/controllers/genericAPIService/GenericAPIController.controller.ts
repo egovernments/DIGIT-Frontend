@@ -4,18 +4,10 @@ import { logger } from "../../utils/logger";
 import { fullProcessFlowForNewEntry, getModifiedResponse, getNewEntryResponse, getOldEntryResponse, getResponseFromDb } from '../../utils/index'
 
 
-import {
-    processCreateData,
-    updateFile
-} from "../../api/index";
 
 import {
-    generateResourceMessage,
-    // processFile,
-    // errorResponder,
     sendResponse,
 } from "../../utils/index";
-import { httpRequest } from "../../utils/request";
 import { errorResponder } from "../../utils/index";
 import { generateAuditDetails } from "../../utils/index";
 import { produceModifiedMessages } from "../../Kafka/Listener";
@@ -38,64 +30,9 @@ class genericAPIController {
 
     // Initialize routes for MeasurementController
     public intializeRoutes() {
-        this.router.post(`${this.path}/_create`, this.createData);
         this.router.post(`${this.path}/_download`, this.downloadData);
         this.router.post(`${this.path}/_generate`, this.generateData);
     }
-    createData = async (
-        request: express.Request,
-        response: express.Response
-    ) => {
-        try {
-            const { type, fileStoreId } = request?.body?.ResourceDetails;
-            const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
-            const result = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/hcm'}/_validate`, request.body, undefined, undefined, undefined, undefined);
-            if (result?.validationResult == "VALID_DATA" || result?.validationResult == "NO_VALIDATION_SCHEMA_FOUND") {
-                const finalResponse = await processCreateData(result, type, request, response);
-                await updateFile(fileStoreId, finalResponse, result?.creationDetails?.sheetName, request);
-                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-                return sendResponse(response, { ResponseDetails: finalResponse.ResponseDetails }, request);
-            }
-            else if (result?.validationResult == "INVALID_DATA") {
-                const failedMessage: any = await generateResourceMessage(request.body, "INVALID_DATA")
-                failedMessage.error = result?.errors || "Error during validation of data, Check Logs";
-                const finalResponse: any = { ResponseDetails: [failedMessage] };
-                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                return sendResponse(response, finalResponse, request);
-            }
-            else {
-                const failedMessage: any = await generateResourceMessage(request.body, "OTHER_ERROR")
-                failedMessage.error = "Some other error, Check Logs";
-                const finalResponse: any = { ResponseDetails: [failedMessage] };
-                produceModifiedMessages(finalResponse, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
-                return sendResponse(response, finalResponse, request);
-            }
-        } catch (error: any) {
-            logger.error(error);
-            return sendResponse(response, { "error": error.message }, request);
-        }
-    };
-
-    // validateData = async (
-    //     request: express.Request,
-    //     response: express.Response
-    // ) => {
-    //     try {
-    //         const { type, fileStoreId } = request?.body?.ResourceDetails;
-    //         const APIResourceName = type;
-
-    //         // Search for campaign in MDMS
-    //         const APIResource: any = await searchMDMS([APIResourceName], config.values.APIResource, request.body.RequestInfo, response);
-
-    //         const { transformTemplate, parsingTemplate } = await getTransformAndParsingTemplates(APIResource, request, response);
-    //         const { sheetName, processResult, schemaDef } = await fetchDataAndUpdate(transformTemplate, parsingTemplate, fileStoreId, APIResource, request, response);
-    //         return processValidationResultsAndSendResponse(sheetName, processResult, schemaDef, APIResource, response, request);
-    //     } catch (error: any) {
-    //         logger.error(error);
-    //         return sendResponse(response, { "validationResult": "ERROR", "errorDetails": error.message }, request);
-    //     }
-    // };
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {
