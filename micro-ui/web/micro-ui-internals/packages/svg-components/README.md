@@ -1,4 +1,3 @@
-<!-- TODO: update this -->
 
 # digit-ui-svg-components
 
