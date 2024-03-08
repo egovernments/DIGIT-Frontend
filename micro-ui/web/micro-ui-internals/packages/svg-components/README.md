@@ -95,7 +95,7 @@ Home Page (https://unified-dev.digit.org/storybook-svg/)
 
 
 ### Published from DIGIT Frontend 
-DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
+ Branch details (https://github.com/egovernments/Digit-Frontend/tree/develop)
 
 
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
