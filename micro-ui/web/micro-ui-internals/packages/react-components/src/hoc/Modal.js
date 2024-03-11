@@ -5,7 +5,7 @@ import HeaderBar from "../atoms/HeaderBar";
 import ButtonSelector from "../atoms/ButtonSelector";
 import Toast from "../atoms/Toast";
 
-const CustomModal = ({
+const Modal = ({
   headerBarMain,
   headerBarEnd,
   popupStyles,
@@ -22,6 +22,8 @@ const CustomModal = ({
   style={},
   footerLeftButtonstyle={},
   footerRightButtonstyle={},
+  footerLeftButtonBody,
+  footerRightButtonBody,
   popupModuleMianStyles,
   headerBarMainStyle,
   isOBPSFlow = false,
@@ -37,7 +39,7 @@ const CustomModal = ({
       document.body.style.overflowY = 'auto';
     }
   }, [])
-  console.log(style)
+
   return (
     <PopUp>
       <div className="popup-module" style={popupStyles}>
@@ -45,8 +47,8 @@ const CustomModal = ({
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
           <div className="popup-module-action-bar" style={isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles}>
-            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style?style:footerLeftButtonstyle}/> : null}
-            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style?style:footerRightButtonstyle}/> : null}
+            {actionCancelLabel || footerLeftButtonBody ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerLeftButtonBody} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={Object.keys(style).length>0?style:footerLeftButtonstyle}/> : null}
+            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerRightButtonBody} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={Object.keys(style).length>0?style:footerRightButtonstyle}/> : null}
           </div>
         </div>
       </div>
@@ -55,4 +57,4 @@ const CustomModal = ({
   );
 };
 
-export default CustomModal;
+export default Modal;
