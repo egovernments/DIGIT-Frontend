@@ -1,7 +1,7 @@
 @import url("../index.scss");
 
 .digit-radio-wrap {
-  @apply  leading-10 flex justify-start;
+  @apply leading-10 flex justify-start;
   gap: "3rem";
   margin-bottom: 0.5rem;
 
@@ -70,9 +70,9 @@
   }
 
   label {
-    font-size: 1rem;
-    line-height: 1.188rem;
-    color:theme(digitv2.lightTheme.text-primary);
+    @extend .typography.body-s;
+    line-height: 1.172rem;
+    color: theme(digitv2.lightTheme.text-primary);
   }
 
   .digit-radio-btn-checkmark:after {

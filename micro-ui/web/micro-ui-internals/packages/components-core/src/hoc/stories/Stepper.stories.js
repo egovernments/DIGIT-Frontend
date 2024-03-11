@@ -27,7 +27,7 @@ export default {
   },
 };
 
-const Template = (args) => <FieldV1 {...args} />;
+const Template = (args) => <Stepper {...args} />;
 
 const t = (key) => key;
 

@@ -55,14 +55,11 @@
   }
 
   .label {
-    font-size: 1rem;
-    font-style: theme(digitv2.fontStyle.normal);
-    font-family: theme(digitv2.fontFamily.sans);
+    @extend .typography.body-s;
+    @apply text-left;
     word-break: break-word;
-    font-weight: theme(digitv2.fontWeight.regular);
     line-height: 1.5rem;
     letter-spacing: 0px;
-    text-align: left;
     color: theme(digitv2.lightTheme.text-primary);
   }
 

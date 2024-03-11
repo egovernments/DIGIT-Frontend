@@ -88,9 +88,7 @@
     width: 100% !important;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
     max-height: 440px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    @apply absolute z-20 bg-white max-w-full;
+    @apply absolute z-20 bg-white max-w-full overflow-y-auto overflow-x-hidden;
 
     p {
       @extend .light-text-color-primary;
@@ -101,6 +99,15 @@
         @extend .light-background;
         @apply bg-grey-mid;
       }
+    }
+  }
+
+  .digit-select,
+  .digit-select-active {
+
+    &.treedropdown,
+    &.notSearchable {
+      @apply cursor-pointer;
     }
   }
 }
@@ -126,12 +133,11 @@
 
 
 .digit-nested-category {
-  @apply flex items-center;
+  @apply flex items-center flex-shrink-0;
   background: theme(digitv2.lightTheme.paper-secondary);
   height: 2.4375rem;
   padding: 1rem 0.625rem;
   gap: 0.625rem;
-  flex-shrink: 0;
 }
 
 .digit-nested-category:not(:first-child) {
@@ -139,7 +145,7 @@
 }
 
 .digit-category-name {
-  @apply flex items-center font-bold;
+  @apply flex items-center font-bold overflow-hidden whitespace-no-wrap;
   color: theme(digitv2.lightTheme.text-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
@@ -147,8 +153,6 @@
   line-height: 1.188rem;
   gap: 0.25rem;
   height: 1.188rem;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .profile-dropdown--item {
@@ -164,25 +168,18 @@
   }
 
   .option-des-container {
-    @apply flex flex-col justify-center items-start;
+    @apply flex flex-col justify-center items-start w-full max-w-full overflow-hidden box-border;
     min-height: 18px;
-    width: 100%;
-
-    max-width: 100%;
-    overflow: hidden;
-    box-sizing: border-box;
 
 
-    .main-option{
-      white-space: nowrap;
+    .main-option {
+      @apply whitespace-no-wrap w-full overflow-hidden;
       line-height: 1.125rem;
       font-size: 0.875rem;
-      width: 100%;
-      min-height:18px;
-      overflow: hidden;
+      min-height: 18px;
 
       &.nestedtextdropdown,
-      &.profilenestedtext{
+      &.profilenestedtext {
         line-height: 1.5rem;
         font-size: 1rem;
       }
@@ -282,21 +279,20 @@
 }
 
 .digit-employee-select-wrap--elipses {
+  @apply overflow-hidden whitespace-no-wrap;
   width: 85% !important;
-  overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 
   &.treedropdown,
-  &.notSearchable{
-    pointer-events:none;
+  &.notSearchable {
+    @apply pointer-events-none;
   }
 }
 
 .digit-select-wrap {
   @apply mb-lg relative bg-white;
 
-  @media (min-width: 481px) {
+  @media (min-width: 481px) and (max-width: 767px) {
     /* Media query for tablets */
     max-width: 27.5rem;
     min-width: 12.5rem;
@@ -389,20 +385,19 @@
   }
 
   .digit-select,
-  .digit-select-active{
+  .digit-select-active {
+
     &.treedropdown,
-    &.notSearchable{
-      cursor: pointer;
+    &.notSearchable {
+      @apply cursor-pointer;
     }
   }
 
   .digit-options-card {
     width: 100% !important;
     box-shadow: 0px 1px 4.400000095367432px 0px #00000026;
-    @apply absolute z-20 bg-white;
+    @apply absolute z-20 bg-white overflow-y-auto overflow-x-hidden;
     max-height: 25vmax;
-    overflow-y: auto;
-    overflow-x: hidden;
 
     p {
       @extend .light-text-color-primary;
@@ -415,5 +410,3 @@
     }
   }
 }
-
-@screen dt {}

@@ -56,7 +56,7 @@ const TextInput = (props) => {
         </button>
       );
     }
-    if (suffixValue) {
+    if (props?.type === "text" && !props?.populators?.customIcon && suffixValue) {
       return (
         <button className="digit-suffix" readOnly={props.nonEditable}>
           {suffixValue}
@@ -172,7 +172,7 @@ const TextInput = (props) => {
     props.errorStyle ? "digit-employee-card-input-error" : ""
   } ${props.nonEditable ? "noneditable" : ""} ${props.type === "numeric" ? "numeric" : ""}`;
 
-  const defaultType = props.type === "password" && inputType === "text" ? inputType : props.type;
+  const defaultType = props.type === "password" && inputType === "text" ? "passwordToText" : props.type;
 
   const inputContainerClass = `input-container ${defaultType ? defaultType : ""} ${props.populators?.customIcon ? "withIcon" : ""}`;
 
