@@ -786,6 +786,7 @@ import { BarChart } from "./svg/BarChart";
 import { TickMarkBackgroundFilled } from "./svg/TickMarkBackgroundFilled";
 import { Excel } from "./svg/Excel";
 import { SpatialDocument } from "./svg/SpatialDocument";
+import { Trash } from "./svg/Trash";
 
 export {
   Success,
@@ -1576,4 +1577,5 @@ export {
   TickMarkBackgroundFilled,
   Excel,
   SpatialDocument,
+  Trash
 };
