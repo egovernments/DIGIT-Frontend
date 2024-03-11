@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "../utils/request";
 import config from "../config/index";
-import { consumerGroupUpdate } from "../Kafka/Listener";
-import { Message } from 'kafka-node';
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
 import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, searchMDMS } from "../api/index";
@@ -18,7 +16,6 @@ const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
 
-const updateCampaignTopic = config.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC;
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
@@ -189,106 +186,6 @@ const convertObjectForMeasurment = (obj: any, config: any, defaultValue?: any) =
   });
 
   return resultBody;
-};
-
-// Extract estimateIds from all contracts
-const extractEstimateIds = (contract: any): any[] => {
-  const allEstimateIds = new Set();
-  const contractEstimateIds = contract.lineItems.map(
-    (item: { estimateId: any }) => item.estimateId
-  );
-  contractEstimateIds.forEach((id: any) => allEstimateIds.add(id));
-
-  return Array.from(allEstimateIds);
-};
-
-const produceIngestion = async (messages: any) => {
-  const ifNoneStartedIngestion = !messages?.Job?.ingestionDetails?.history.some(
-    (detail: any) => detail.state === 'Started'
-  );
-
-  const notStartedIngestion = messages?.Job?.ingestionDetails?.history.find(
-    (detail: any) => detail.state === 'Not-Started'
-  );
-  if (notStartedIngestion) {
-    logger.info("Next Ingestion : " + JSON.stringify(notStartedIngestion));
-    notStartedIngestion.state = "Started";
-    messages.Job.tenantId = notStartedIngestion?.tenantId;
-    messages.Job.RequestInfo = { userInfo: messages?.Job?.ingestionDetails?.userInfo };
-    logger.info("Ingestion Job : " + JSON.stringify(messages.Job))
-    logger.info("Ingestionurl : " + config.host.hcmMozImpl + config.paths.hcmMozImpl)
-    logger.info("Ingestion Params : " + notStartedIngestion?.ingestionType + "   " + notStartedIngestion?.fileStoreId)
-    const ingestionResult = await httpRequest(config.host.hcmMozImpl + config.paths.hcmMozImpl, messages.Job, { ingestionType: notStartedIngestion?.ingestionType, fileStoreId: notStartedIngestion?.fileStoreId }, undefined, undefined, undefined);
-    notStartedIngestion.ingestionNumber = ingestionResult?.ingestionNumber;
-
-    if (ifNoneStartedIngestion && notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
-      messages.Job.ingestionDetails.campaignDetails.status = "In Progress";
-      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
-      const updateHistory: any = messages.Job.ingestionDetails;
-      logger.info("Updating campaign details with status in progress: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
-      produceModifiedMessages(updateHistory, updateCampaignTopic);
-    }
-    else if (!notStartedIngestion?.ingestionNumber && messages?.Job?.ingestionDetails?.campaignDetails) {
-      messages.Job.ingestionDetails.campaignDetails.status = "Failed";
-      messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
-      const updateHistory: any = messages.Job.ingestionDetails;
-      logger.info("Updating campaign details  with status failed: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
-      produceModifiedMessages(updateHistory, updateCampaignTopic);
-    }
-    logger.info("Ingestion Result : " + JSON.stringify(ingestionResult))
-  }
-  else {
-    logger.info("No incomplete ingestion found for Job : " + JSON.stringify(messages.Job))
-    messages.Job.ingestionDetails.campaignDetails.status = "Completed";
-    messages.Job.ingestionDetails.campaignDetails.auditDetails.lastModifiedTime = new Date().getTime();
-    const updateHistory: any = messages.Job.ingestionDetails;
-    logger.info("Updating campaign details  with status complete: " + JSON.stringify(messages.Job.ingestionDetails.campaignDetails));
-    produceModifiedMessages(updateHistory, updateCampaignTopic);
-  }
-  return messages.Job;
-};
-
-const waitAndCheckIngestionStatus = async (ingestionNumber: String) => {
-  const MAX_WAIT_TIME = 3 * 60 * 1000; // Maximum wait time: 3 minutes
-  const startTime = Date.now();
-  let isCompleted = "notReceived";
-
-  // Set up a one-time event handler for the first completion message
-  const messageHandler = async (message: Message) => {
-    const ingestionStatus: any = JSON.parse(message.value?.toString() || '{}');
-    if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber && ingestionStatus?.Job?.executionStatus === 'Completed') {
-      logger.info(`Ingestion ${ingestionNumber} is completed`);
-      isCompleted = "receivedTrue";
-    } else if (ingestionStatus?.Job?.ingestionNumber == ingestionNumber) {
-      isCompleted = "receivedFalse";
-    }
-  };
-
-  // Register the message handler
-  consumerGroupUpdate.on('message', messageHandler);
-
-  // Set up error event handlers
-  consumerGroupUpdate.on('error', (err) => {
-    logger.info(`Consumer Error: ${JSON.stringify(err)}`);
-  });
-
-  consumerGroupUpdate.on('offsetOutOfRange', (err) => {
-    logger.info(`Offset out of range error: ${JSON.stringify(err)}`);
-  });
-
-  // Keep checking for completion and waiting until MAX_WAIT_TIME
-  while (Date.now() - startTime < MAX_WAIT_TIME) {
-    // Check if completed
-    if (isCompleted !== "notReceived") {
-      return isCompleted;
-    }
-
-    // Add a delay (e.g., using setTimeout) before checking again.
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  }
-
-  // If not completed within the specified time, return the current status
-  return isCompleted;
 };
 
 async function getCampaignDetails(requestBody: any): Promise<any> {
@@ -1094,11 +991,8 @@ export {
   sendResponse,
   appCache,
   convertObjectForMeasurment,
-  extractEstimateIds,
   cacheResponse,
   getCachedResponse,
-  produceIngestion,
-  waitAndCheckIngestionStatus,
   getCampaignDetails,
   processFile,
   generateSortingAndPaginationClauses,
