@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import { convertToFacilityCreateData, convertToFacilityExsistingData, correctParentValues, sortCampaignDetails } from "../utils/index";
-import { validateFacilityCreateData, validateFacilityData, validateFacilityDataWithCode, validateFacilityViaSearch, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
+import { validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const _ = require('lodash');
 
 
@@ -654,7 +654,7 @@ async function getAllFacilitiesInLoop(searchedFacilities: any[], facilitySearchP
 async function getAllFacilities(tenantId: string, requestBody: any) {
   const facilitySearchBody = {
     RequestInfo: requestBody?.RequestInfo,
-    Facility: {}
+    Facility: { isPermanent: true }
   };
 
   const facilitySearchParams = {
@@ -705,6 +705,7 @@ async function getFacilitiesViaIds(tenantId: string, ids: any[], requestBody: an
 
 async function processFacilityCreate(facilityCreateData: any[], request: any) {
   request.body.Facilities = facilityCreateData;
+  logger.info("Facility create data : " + JSON.stringify(facilityCreateData));
   logger.info("facility bulk create url : " + config.host.facilityHost + config.paths.facilityBulkCreate);
   const response = await httpRequest(config.host.facilityHost + config.paths.facilityBulkCreate, request.body);
   if (response?.status != "successful") {
@@ -721,11 +722,16 @@ async function createFacilityData(request: any) {
   if (!fileResponse?.fileStoreIds?.[0]?.url) {
     throw new Error("Not any download url returned for given fileStoreId")
   }
-  const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-  validateFacilityData(facilityData)
-  const facilityCreateData = convertToFacilityCreateData(facilityData, request?.body?.ResourceDetails?.tenantId)
-  validateFacilityCreateData(facilityCreateData)
-  await processFacilityCreate(facilityCreateData, request)
+  var facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
+  await validateFacilityData(facilityData, request)
+  if (request?.body?.facilityToCreate && Array.isArray(request?.body?.facilityToCreate) && request?.body?.facilityToCreate?.length > 0) {
+    const facilityCreateData = convertToFacilityCreateData(request?.body?.facilityToCreate, request?.body?.ResourceDetails?.tenantId)
+    validateFacilityCreateData(facilityCreateData)
+    await processFacilityCreate(facilityCreateData, request)
+  }
+  else {
+    logger.info("No Facility Creation is needed as there is no such row with empty Facility Code.")
+  }
 }
 
 async function validateExistingFacilityData(request: any) {
@@ -736,8 +742,8 @@ async function validateExistingFacilityData(request: any) {
     throw new Error("Not any download url returned for given fileStoreId")
   }
   const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-  validateFacilityDataWithCode(facilityData)
-  const facilityExsistingData = convertToFacilityExsistingData(facilityData)
+  await validateFacilityData(facilityData, request)
+  const facilityExsistingData = convertToFacilityExsistingData(request?.body?.facilityToSearch)
   await validateFacilityViaSearch(tenantId, facilityExsistingData, request.body)
 }
 

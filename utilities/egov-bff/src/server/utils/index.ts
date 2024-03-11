@@ -1037,7 +1037,8 @@ function convertToFacilityExsistingData(facilityData: any[]) {
     "isPermanent": facility['Facility Status'] === 'Perm',
     "name": facility['Facility Name'],
     "usage": facility['Facility Type'],
-    "storageCapacity": facility['Facility Capacity']
+    "storageCapacity": facility['Facility Capacity'],
+    originalIndex: facility.originalIndex
   }));
   logger.info("facilityExsistingData : " + JSON.stringify(facilityExsistingData));
   return facilityExsistingData;
@@ -1064,19 +1065,18 @@ function getFacilityIds(data: any) {
 }
 
 function matchFacilityData(data: any, searchedFacilities: any) {
-  for (let i = 0; i < data.length; i++) {
-    const dataFacility = data[i];
+  for (const dataFacility of data) {
     const searchedFacility = searchedFacilities.find((facility: any) => facility.id === dataFacility.id);
 
     if (!searchedFacility) {
       throw new Error(`Facility with ID "${dataFacility.id}" not found in searched facilities.`);
     }
-
-    const keys = Object.keys(dataFacility);
-
-    for (const key of keys) {
-      if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
-        throw new Error(`Value mismatch for key "${key}" at index ${i}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
+    if (config?.values?.matchFacilityData) {
+      const keys = Object.keys(dataFacility);
+      for (const key of keys) {
+        if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
+          throw new Error(`Value mismatch for key "${key}" at index ${dataFacility.originalIndex}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
+        }
       }
     }
   }

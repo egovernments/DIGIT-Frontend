@@ -1,10 +1,11 @@
 import * as express from "express";
 import { getFacilitiesViaIds, searchMDMS } from "../api";
-import { errorResponder, getFacilityIds, matchFacilityData } from "../utils/index";
+import { convertToFacilityExsistingData, errorResponder, getFacilityIds, matchFacilityData } from "../utils/index";
 import { logger } from "../utils/logger";
 import Ajv from "ajv";
 import config from "../config/index";
 import { httpRequest } from "./request";
+import facilityTemplateSchema from "../config/facilityTemplateSchema";
 
 
 
@@ -326,26 +327,106 @@ function validateGenerateRequest(request: express.Request) {
     }
 }
 
-function validateFacilityData(data: any) {
-    const requiredKeys = ['Facility Name', 'Facility Type', 'Facility Status', 'Facility Capacity'];
+async function fetchBoundariesInChunks(uniqueBoundaries: any[], request: any) {
+    const tenantId = request.body.ResourceDetails.tenantId;
+    const boundaryEnitiySearchParams: any = {
+        tenantId
+    };
+    const responseBoundaries: any[] = [];
 
-    for (const facility of data) {
-        const missingFields = requiredKeys.filter(key => !Object.keys(facility).includes(key));
-        if (missingFields.length > 0) {
-            throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+    for (let i = 0; i < uniqueBoundaries.length; i += 10) {
+        const chunk = uniqueBoundaries.slice(i, i + 10);
+        const concatenatedString = chunk.join(',');
+        boundaryEnitiySearchParams.codes = concatenatedString;
+
+        const response = await httpRequest(config.host.boundaryHost + config.paths.boundaryEntity, request.body, boundaryEnitiySearchParams);
+
+        if (!Array.isArray(response?.Boundary)) {
+            throw new Error("Error in Boundary Search. Check Boundary codes");
+        }
+
+        responseBoundaries.push(...response.Boundary);
+    }
+
+    return responseBoundaries;
+}
+
+function compareBoundariesWithUnique(uniqueBoundaries: any[], responseBoundaries: any[]) {
+    if (responseBoundaries.length >= uniqueBoundaries.length) {
+        logger.info("Boundary codes exist");
+    } else {
+        const responseCodes = responseBoundaries.map(boundary => boundary.code);
+        const missingCodes = uniqueBoundaries.filter(code => !responseCodes.includes(code));
+        if (missingCodes.length > 0) {
+            throw new Error(`Boundary codes ${missingCodes.join(', ')} do not exist`);
+        } else {
+            throw new Error("Error in Boundary Search. Check Boundary codes");
         }
     }
 }
 
-function validateFacilityDataWithCode(data: any) {
-    const requiredKeys = ['Facility Code', 'Facility Name', 'Facility Type', 'Facility Status', 'Facility Capacity'];
+async function validateUniqueBoundaries(uniqueBoundaries: any[], request: any) {
+    const responseBoundaries = await fetchBoundariesInChunks(uniqueBoundaries, request);
+    compareBoundariesWithUnique(uniqueBoundaries, responseBoundaries);
+}
 
-    for (const facility of data) {
-        const missingFields = requiredKeys.filter(key => !Object.keys(facility).includes(key));
-        if (missingFields.length > 0) {
-            throw new Error(`Missing fields: ${missingFields.join(', ')}`);
+
+
+async function validateBoundaryData(data: any[], request: any) {
+    const boundarySet = new Set(); // Create a Set to store unique boundaries
+
+    data.forEach((element, index) => {
+        const boundaries = element['Boundary Code'];
+        if (!boundaries) {
+            throw new Error(`Boundary Code is required for element at index ${index}`);
         }
+
+        const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
+        if (boundaryList.length === 0) {
+            throw new Error(`At least 1 boundary is required for element at index ${index}`);
+        }
+
+        for (const boundary of boundaryList) {
+            if (!boundary) {
+                throw new Error(`Boundary format is invalid at ${index}. Put it with one comma between boundary codes`);
+            }
+            boundarySet.add(boundary); // Add boundary to the set
+        }
+    });
+    const uniqueBoundaries = Array.from(boundarySet);
+    await validateUniqueBoundaries(uniqueBoundaries, request);
+}
+
+async function validateViaSchema(data: any, schema: any) {
+    const ajv = new Ajv();
+    const validate = ajv.compile(schema);
+    const validationErrors: any[] = [];
+    data.forEach((facility: any, index: any) => {
+        if (!validate(facility)) {
+            validationErrors.push({ index, errors: validate.errors });
+        }
+    });
+
+    // Throw errors if any
+    if (validationErrors.length > 0) {
+        const errorMessage = validationErrors.map(({ index, errors }) => `Facility at index ${index}: ${JSON.stringify(errors)}`).join('\n');
+        throw new Error(`Validation errors:\n${errorMessage}`);
+    } else {
+        logger.info("All Facilities rows are valid.");
     }
+}
+
+async function validateFacilityData(data: any, request: any) {
+    await validateViaSchema(data, facilityTemplateSchema);
+    const facilityDataWithCode = data.map((facility: any, index: number) => ({ ...facility, originalIndex: index }))
+        .filter((facility: any) => 'Facility Code' in facility)
+    const facilityDataWithoutCode = data.map((facility: any, index: number) => ({ ...facility, originalIndex: index }))
+        .filter((facility: any) => !('Facility Code' in facility))
+    const facilityExsistingData = convertToFacilityExsistingData(facilityDataWithCode)
+    await validateFacilityViaSearch(request?.body?.ResourceDetails?.tenantId, facilityExsistingData, request.body)
+    await validateBoundaryData(data, request);
+    request.body.facilityToCreate = facilityDataWithoutCode;
+    request.body.facilityToSearch = facilityDataWithCode;
 }
 function validateBooleanField(obj: any, fieldName: any, index: any) {
     if (!obj.hasOwnProperty(fieldName)) {
@@ -415,19 +496,22 @@ async function validateCreateRequest(request: any) {
 }
 
 function validateFacilityCreateData(data: any) {
-    data.forEach((obj: any, index: any) => {
+    data.forEach((obj: any) => {
+        const originalIndex = obj.originalIndex;
+
         // Validate string fields
         const stringFields = ['tenantId', 'name', 'usage'];
         stringFields.forEach(field => {
-            validateStringField(obj, field, index);
+            validateStringField(obj, field, originalIndex);
         });
 
         // Validate storageCapacity
-        validateStorageCapacity(obj, index);
+        validateStorageCapacity(obj, originalIndex);
 
         // Validate isPermanent
-        validateBooleanField(obj, 'isPermanent', index);
+        validateBooleanField(obj, 'isPermanent', originalIndex);
     });
+
 }
 
 async function validateFacilityViaSearch(tenantId: string, data: any, requestBody: any) {
@@ -453,7 +537,6 @@ export {
     validateGenerateRequest,
     validateCreateRequest,
     validateFacilityData,
-    validateFacilityDataWithCode,
     validateFacilityCreateData,
     validateFacilityViaSearch
 };
