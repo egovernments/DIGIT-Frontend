@@ -86,7 +86,6 @@ Toast.defaultProps = {
   label: "",
   onClose: undefined,
   isDleteBtn: false,
-  transitionTime: 5000
 };
 
 export default Toast;

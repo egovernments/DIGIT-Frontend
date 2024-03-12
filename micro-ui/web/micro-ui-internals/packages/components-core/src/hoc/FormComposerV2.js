@@ -212,14 +212,6 @@ export const FormComposer = (props) => {
     setShowErrorToast(false);
   };
 
-  //remove Toast from 3s
-  useEffect(() => {
-    if (showErrorToast) {
-      setTimeout(() => {
-        closeToast();
-      }, 3000);
-    }
-  }, [showErrorToast]);
 
   const formFields = useCallback(
     (section, index, array, sectionFormCategory) => (

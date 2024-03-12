@@ -41,7 +41,9 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
 const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 0, isParentSelected, setParentSelected }) => {
   const [isExpanded, setExpanded] = useState(false);
   const handleToggleDropdown = () => {
-    setExpanded(!isExpanded);
+    if (option.options) {
+      setExpanded(!isExpanded);
+    }
   };
 
   useEffect(() => {
@@ -110,15 +112,11 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
           isSelected(option) ? "checked" : ""
         } ${allChildrenSelected ? "all-child-selected" : ""} level-${level}`}
         style={{ gap: `${level !== 0 ? 12 : 4}px` }}
-        onClick={handleSelect}
+        onClick={!option.options ? handleSelect : handleToggleDropdown}
       >
         {option.options && (
           <div
             className="digit-toggle-dropdown"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleDropdown();
-            }}
           >
             {isExpanded ? (
               <SVG.ArrowDropDown
@@ -143,6 +141,10 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
         </div>
         <div
           className={`digit-custom-checkbox ${allChildrenSelected || isSelected(option) ? "checked" : ""} ${isIntermediate() ? "intermediate" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelect();
+            }}
           style={{ marginRight: `${level == 0 ? 8 : 0}px` }}
         >
           {isIntermediate() ? (

@@ -4,6 +4,11 @@ import { Toast } from "../../atoms";
 export default {
   title: "Atom-Groups/Toast",
   component: Toast,
+  argTypes: {
+    populators: { control: "object" },
+    label: { control: "text" },
+    error:{control:"boolean"}
+  },
 };
 
 const Template = (args) => <Toast {...args} />;
@@ -13,9 +18,8 @@ const commonArgs = {
       name: "toast",
     },
     label: "",
-    error: "",
+    error: false,
     warning:"",
-    tarnsitionTime: 50000
   };
   
   export const SuccessToast = Template.bind({});
@@ -37,4 +41,28 @@ const commonArgs = {
     ...commonArgs,
     label: "Error Toast Message",
     error:true
+  };
+
+  export const SuccessToastWithTransitionTime = Template.bind({});
+  SuccessToastWithTransitionTime.args = {
+    ...commonArgs,
+    label:"Success Toast Message",
+    transitionTime:600000 
+  };
+  
+  export const WarningToastWithTransitionTime = Template.bind({});
+  WarningToastWithTransitionTime.args = {
+    ...commonArgs,
+    label: "Warning Toast Message",
+    warning:"warning",
+    transitionTime:600000 
+  };
+
+  
+  export const ErrorToastWithTrnasitionTime = Template.bind({});
+  ErrorToastWithTrnasitionTime.args = {
+    ...commonArgs,
+    label: "Error Toast Message",
+    error:true,
+    transitionTime:600000 
   };

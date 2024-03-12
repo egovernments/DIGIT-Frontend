@@ -1,18 +1,16 @@
-
 .digit-toast-success {
-  max-width: 480px;
+  @apply fixed flex z-20 items-center;
   width: calc(100% - 20px);
   bottom: 64px;
   left: 0;
   margin: 0 10px;
   gap: 0.5rem;
-  min-height: 48px;
-  @apply fixed flex z-20 items-center;
-  padding: 0.75rem 0.5rem;
+  height: 48px;
+  padding: 0.75rem 0.5rem 0.75rem 0.75rem !important;
   background-color: theme(digitv2.lightTheme.alert-success);
 
 
-  @media (min-width: 481px) {
+  @media (min-width: 481px) and (max-width: 767px) {
     /* Media query for tablets */
     min-width: 30rem;
     max-width: 46.5rem;
@@ -30,64 +28,50 @@
     max-width: 90rem;
   }
 
-
   &.digit-error {
     background-color: theme(digitv2.lightTheme.alert-error);
   }
 
   &.digit-warning {
-    background-color: #E98C02;
+    background-color: #F19100;
 
     &.digit-warning-buttons {
-      display: block;
+      @apply block;
     }
-  }
-
-  .digit-toast-close-btn {
-    margin-left: auto;
-    margin-right: 8px;
   }
 
   h2 {
-    font-family: theme(digitv2.fontFamily.sans);
-    font-size: 1rem;
-    font-weight: theme(digitv2.fontWeight.medium);
-    font-style: theme(digitv2.fontStyle.italic);
+    @extend .typography.caption-s;
+    @apply text-left overflow-hidden whitespace-no-wrap flex-grow;
     letter-spacing: 0px;
-    text-align: left;
     color: theme(digitv2.lightTheme.paper-primary);
     margin: 0px;
     min-height: 19px;
-    line-height: 1.188rem;
-    flex-grow: 1; 
-    overflow: hidden; 
-    white-space: nowrap; 
-    text-overflow: ellipsis; 
-    
+    text-overflow: ellipsis;
 
-    @media (min-width: 481px){
+
+    @media (min-width: 481px) and (max-width: 767px) {
       /* Media query for tablets */
       min-height: 23px;
-      line-height: 1.5rem;
+      line-height: 23.44px
     }
-  
+
     @media (max-width: 480px) {
       /* Media query for mobile */
-     min-height:19px;
+      min-height: 19px;
+      line-height: 18.75px;
     }
-  
+
     @media (min-width: 768px) {
       /* Media query for desktop */
       min-height: 23px;
-      line-height: 1.5rem;
+      line-height: 23.44px
     }
 
   }
 
   .digit-warning-button-container {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    @apply w-full flex justify-end;
 
     button {
       margin-left: 10px;
@@ -95,10 +79,10 @@
   }
 
   .digit-toast-sub-container {
-    display: flex;
+    @apply flex;
   }
 
-  svg{
-    flex-shrink: 0;
+  svg {
+    @apply flex-shrink-0;
   }
 }

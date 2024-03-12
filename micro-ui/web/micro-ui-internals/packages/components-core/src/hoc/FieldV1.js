@@ -45,11 +45,6 @@ const FieldV1 = ({
   selectedFormCategory,
   controllerProps,
   variant,
-  currentStep,
-  customSteps,
-  totalSteps,
-  direction,
-  onStepClick = () => {}
 }) => {
   const { t } = useTranslation();
   let disableFormValidation = false;
@@ -308,18 +303,6 @@ const FieldV1 = ({
             prefix={populators?.prefix}
             intlConfig={populators?.intlConfig}
             variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
-          />
-        );
-      case "stepper":
-        return (
-          <Stepper
-            populators={populators}
-            type={type}
-            currentStep={currentStep}
-            customSteps={customSteps}
-            totalSteps={totalSteps}
-            direction={direction}
-            onStepClick={onStepClick}
           />
         );
       default:

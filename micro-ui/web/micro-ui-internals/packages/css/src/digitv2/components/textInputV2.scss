@@ -2,7 +2,7 @@
 @import url("../typography.scss");
 
 .digit-card-input-error {
-  @apply block w-full h-10 outline-none bg-white text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-text-primary;
   font-style: theme(digitv2.fontStyle.normal);
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
@@ -17,15 +17,13 @@
 
   &.geolocation {
     input {
-      pointer-events: none;
+      @apply pointer-events-none;
     }
   }
 
   &.numeric {
     input {
-      text-align: center;
-      overflow: hidden;
-      white-space: nowrap;
+      @apply text-center overflow-hidden whitespace-no-wrap;
       text-overflow: ellipsis;
     }
 
@@ -95,11 +93,8 @@
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="date"]:disabled::-webkit-calendar-picker-indicator,
   input[type="time"]:disabled::-webkit-calendar-picker-indicator {
-    position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
+    @apply absolute cursor-pointer w-6 h-6;
     right: 0.75rem;
-    cursor: pointer;
   }
 
   input[type="date"]:disabled::-webkit-calendar-picker-indicator,
@@ -141,7 +136,6 @@
     }
 
     input {
-      color: theme(digitv2.lightTheme.text-secondary);
       border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
       background: theme(digitv2.lightTheme.generic-background);
       color: theme(digitv2.lightTheme.text-disabled);
@@ -268,9 +262,8 @@
 
 .digit-employee-card-input--front {
   @extend .typography.text-body-s;
+  @apply flex items-center;
   width: fit-content !important;
-  display: flex;
-  align-items: center;
   background: theme(colors.grey.mid);
   border-right: 0;
   padding-right: 5px;
@@ -289,8 +282,7 @@
 }
 
 .digit-inputWrapper {
-  display: flex;
-  justify-content: flex-start;
+  @apply flex justify-start;
   max-width: 500px;
 
   div {
@@ -349,9 +341,8 @@
 
 .digit-citizen-card-input--front {
   @extend .typography.text-body-s;
+  @apply flex items-center;
   width: fit-content !important;
-  display: flex;
-  align-items: center;
   background: theme(colors.grey.mid);
   border-right: 0;
   padding-right: 5px;
@@ -384,10 +375,7 @@
 
 
 .input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  height: 2.5rem;
+  @apply relative flex items-center h-10;
   max-width: 37.5rem;
 
   &.date,
@@ -395,10 +383,27 @@
   &.geolocation,
   &.password,
   &.search,
+  &.passwordToText,
   &.withIcon {
     input {
       padding-right: 2.5rem;
     }
+  }
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+  }
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
   }
 
 }
@@ -424,19 +429,19 @@
     border-left: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 }
+
 .digit-prefix,
 .digit-suffix,
 .digit-numeric-button-prefix,
 .digit-numeric-button-suffix {
-  color: theme(digitv2.lightTheme.text-secondary);
-  font-size: 1.5rem;
-  font-weight: theme(digitv2.fontWeight.bold);
-  text-align: center;
-  height: 2.5rem !important;
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  @apply font-bold text-center;
   font-family: theme(digitv2.fontFamily.sans);
   font-style: theme(digitv2.fontStyle.normal);
-  line-height: 1.5rem;
+  color: theme(digitv2.lightTheme.text-secondary);
+  font-size: 1.25rem;
+  height: 2.5rem !important;
+  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  line-height: 1.172rem;
   background: theme(colors.grey.mid);
   max-width: none !important;
   flex: 0 0 2.5rem;
@@ -445,7 +450,7 @@
 .digit-numeric-button-prefix,
 .digit-numeric-button-suffix {
   width: 2.5rem !important;
-  line-height: 1.75rem;
+  font-size: 1.5rem;
 }
 
 .digit-prefix,
@@ -460,14 +465,16 @@
 
 .digit-prefix,
 .digit-suffix {
-  pointer-events: none;
+  @apply pointer-events-none;
 }
 
 .digit-text-input-customIcon {
-  position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
+  @apply absolute w-6 h-6 cursor-pointer;
   top: 0.5rem;
   right: 0.75rem;
-  cursor: pointer;
+
+  &.nonEditable,
+  &.disabled {
+    @apply pointer-events-none;
+  }
 }

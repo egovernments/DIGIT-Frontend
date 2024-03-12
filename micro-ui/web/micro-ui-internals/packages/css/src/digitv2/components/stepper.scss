@@ -1,10 +1,9 @@
 .digit-stepper-container {
-  @apply flex;
+  @apply flex overflow-auto;
   min-height: 64px;
-  overflow: auto;
 
   &.vertical {
-    flex-direction: column;
+    @apply flex-col;
   }
 
   .digit-stepper-checkpoint {
@@ -16,36 +15,35 @@
   .digit-stepper-content {
     @apply flex flex-col items-center;
     min-height: 64px;
+    gap: 0.5rem;
 
     span {
-      text-align: center;
+      @apply text-center;
       color: theme(digitv2.lightTheme.paper-primary);
     }
 
     .secondary-color {
-      padding: 5px;
+      @apply text-center font-regular;
       color: theme(digitv2.lightTheme.text-secondary);
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 1rem;
-      font-weight: theme(digitv2.fontWeight.regular);
       line-height: 1.5rem;
       letter-spacing: 0px;
-      text-align: center;
       height: 1.5rem;
 
       @media (max-width: 480px) {
         font-size: 0.875rem;
-        line-height: 1.125rem;
+        line-height: 1.25rem;
       }
 
       &.text-done {
         color: theme(digitv2.lightTheme.text-primary);
       }
 
-      &.text-active{
+      &.text-active {
         color: theme(digitv2.lightTheme.text-primary);
         font-weight: theme(digitv2.fontWeight.bold);
-        line-height: 1.188rem;
+        line-height: 1.172rem;
 
         @media (max-width: 480px) {
           font-size: 1rem;
@@ -54,20 +52,16 @@
     }
 
     &.vertical {
-      flex-direction: row;
+      @apply flex-row;
     }
   }
 
   .circle {
+    @apply flex text-center justify-center items-center font-regular;
     width: 32px;
     height: 32px;
     background-color: theme(digitv2.lightTheme.text-disabled);
     border-radius: 50%;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
 
     @media (max-width: 480px) {
       width: 24px;
@@ -76,22 +70,21 @@
   }
 
   .active {
+    @apply font-bold;
     background-color: theme(digitv2.lightTheme.primary-orange);
     border-color: theme(digitv2.lightTheme.primary-orange);
-    font-weight: 700;
   }
 
   .line {
     @apply absolute;
-    top: 15px;
+    top: 16px;
     left: calc(50% + 8px);
     right: calc(-50% + 8px);
     border-top: 4px solid theme(colors.border);
     z-index: -1;
     height: 4px;
 
-
-    @media (min-width: 481px) {
+    @media (min-width: 481px) and (max-width: 767px) {
       /* Media query for tablets */
       min-width: 101px;
       max-width: 631px;
@@ -101,7 +94,7 @@
       /* Media query for mobile */
       min-width: 69px;
       max-width: 270px;
-      top:10px;
+      top: 10px;
     }
 
     @media (min-width: 768px) {
@@ -132,15 +125,17 @@
 
   .digit-stepper-content:hover {
     .circle.active {
-      outline: 4px solid rgba(244, 119, 56, 0.12);
+      outline: 4px solid #F477381F;
     }
 
     .text-done {
       color: theme(digitv2.lightTheme.text-primary);
       font-weight: theme(digitv2.fontWeight.bold);
       line-height: 1.188rem;
+
       @media (max-width: 480px) {
         font-size: 1rem;
+        line-height: 1.172rem;
       }
     }
   }

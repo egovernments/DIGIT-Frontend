@@ -350,7 +350,7 @@ const MultiSelectDropdown = ({
                 border: "1px solid #F47738",
                 background: "#FAFAFA",
               }}
-              textStyles={{ fontSize: "0.875rem", fontWeight: "400", width: "100%", lineHeight: "16px", color: "#F47738" }}
+              textStyles={{height:"auto",fontSize: "0.875rem", fontWeight: "400", width: "100%", lineHeight: "16px", color: "#F47738" }}
             />
           )}
         </div>

@@ -2,10 +2,9 @@
 
 
 .digit-toggle-toolbar {
-  @apply flex justify-start;
+  @apply flex justify-start w-full;
   max-width: 37.5rem;
   min-width: 7.5rem;
-  width:100%;
 }
 
 
@@ -15,18 +14,20 @@
 }
 
 .digit-toggle-btn-wrap {
-  @apply cursor-pointer font-regular leading-6 bg-white;
-  color: theme(digitv2.lightTheme.text-disabled);
-  text-align: center;
-  font-family: theme(digitv2.fontFamily.sans);
-  font-size: 0.875rem;
-  font-style: theme(digitv2.fontStyle.normal);
+  @apply flex items-center justify-center cursor-pointer bg-white overflow-hidden text-center;
   padding: 0.125rem 0rem;
   width: 7rem;
   height: 2rem;
   border: 1px solid theme(digitv2.lightTheme.generic-divider);
-  overflow: hidden;
   text-overflow: ellipsis;
+
+  .digit-toggle-label {
+    @extend .typography.body-xs;
+    @apply w-full overflow-hidden;
+    line-height: 1.25rem;
+    color: theme(digitv2.lightTheme.text-disabled);
+    text-overflow: ellipsis;
+  }
 
   &:hover,
   &:active {
@@ -36,7 +37,7 @@
     color: theme(digitv2.lightTheme.primary-orange);
 
     .digit-toggle-label {
-      color:theme(digitv2.lightTheme.primary-orange) !important;
+      color: theme(digitv2.lightTheme.primary-orange) !important;
     }
   }
 
@@ -45,26 +46,31 @@
   }
 
   input:checked+.digit-toggle-label {
+    @extend .typography.heading-s;
     background-color: theme(digitv2.lightTheme.primary-orange);
     color: theme(digitv2.lightTheme.paper-primary) !important;
-    font-weight: theme(digitv2.fontWeight.bold);
+    line-height: 1.172rem;
   }
 
-  &.checked{
+  &.checked {
     background-color: theme(digitv2.lightTheme.primary-orange);
     width: 7.125rem;
-    color: theme(digitv2.lightTheme.paper-primary);
     border: 1px solid theme(digitv2.lightTheme.primary-orange);
+
+    .digit-toggle-label {
+      @extend .typography.heading-s;
+      line-height: 1.172rem;
+      color: theme(digitv2.lightTheme.paper-primary);
+    }
   }
 }
 
 
 .digit-toggle-input {
-  position: absolute;
-  opacity: 0;
+  @apply absolute opacity-0;
 }
 
 .digit-toggle-label {
   color: theme(digitv2.lightTheme.text-disabled);
-  padding:0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
 }

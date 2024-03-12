@@ -24,7 +24,7 @@ const CheckBox = ({
   return (
     <div className={`digit-checkbox-wrap ${!isLabelFirst ? "checkboxFirst" : "labelFirst"} ${disabled ? "disabled" : " "}`}>
       {isLabelFirst ? (
-        <p className="label" style={{ maxWidth: "100%" }}>
+        <p className="label" style={{ maxWidth: "100%", width: "auto" }}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>

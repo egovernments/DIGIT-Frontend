@@ -73,7 +73,7 @@ textarea::-webkit-scrollbar-thumb:hover {
   @apply w-full;
   height: 6.25rem;
 
-  @media (min-width: 481px) {
+  @media (min-width: 481px) and (max-width: 767px) {
     /* Media query for tablets */
     max-width: 27.5rem;
     min-width: 12.5rem;

@@ -3,18 +3,15 @@
 .digit-header {
 
     &.label {
+        @extend .typography.body-s;
         @apply flex font-regular;
         height: 1.1875rem;
         color: theme(digitv2.lightTheme.text-primary);
-        font-family: theme(digitv2.fontFamily.sans);
-        font-size: 1rem;
-        font-style: theme(digitv2.fontStyle.normal);
-        line-height: theme(digitv2.lineHeight.normal);
+        line-height: 1.172rem;
         gap: 0.25rem;
 
 
         &.wraplabel {
-
             @media (min-width: 481px) {
                 height: fit-content;
                 word-break: break-word;
@@ -22,8 +19,8 @@
         }
 
         .label-container {
+            @apply flex;
             width: 80%;
-            display: flex;
             gap: 0.25rem;
 
             @media (max-width: 480px) {
@@ -37,12 +34,11 @@
         }
 
         .info-icon .infotext {
-            @apply absolute font-regular;
+            @apply absolute font-regular text-center;
             visibility: hidden;
             width: 120px;
             background-color: #555555;
             color: theme(digitv2.lightTheme.paper-primary);
-            text-align: center;
             padding: 0.5rem 0;
             z-index: 1;
             bottom: 100%;
@@ -53,17 +49,16 @@
         }
 
         .info-icon:hover .infotext {
-            visibility: visible;
+            @apply visible;
         }
 
         .label-styles {
-            overflow: hidden;
+            @apply overflow-hidden whitespace-no-wrap;
             text-overflow: ellipsis;
-            white-space: nowrap;
 
             &.wraplabel {
                 @media (min-width: 481px) {
-                    white-space: normal;
+                    @apply whitespace-normal;
                 }
             }
         }
@@ -72,43 +67,37 @@
 
 .digit-field {
 
-    @apply flex flex-col;
-    width: 100%;
+    @apply flex flex-col w-full;
     gap: 0.25rem;
 
     .digit-description,
     .digit-charcount {
-        @apply flex justify-between items-baseline leading-6;
-        font-weight: theme(digitv2.fontWeight.regular);
-        font-style: theme(digitv2.fontStyle.normal);
-        font-size: 0.875rem;
-        font-family: theme(digitv2.fontFamily.sans);
+        @extend .typography.body-xs;
+        @apply flex justify-between items-baseline;
+        line-height: 1.174rem;
         color: theme(digitv2.lightTheme.text-secondary);
-        gap: "0.5rem";
+        gap: 0.5rem;
 
 
-        @media (min-width: 481px) {
+        @media (min-width: 481px) and (max-width: 767px) {
             /* Media query for tablets */
             max-width: 27.5rem;
-            min-width: 12.5rem;
         }
 
         @media (max-width: 480px) {
             /* Media query for mobile */
             max-width: 20.5rem;
-            min-width: 9.75rem;
             width: 100%;
         }
 
         @media (min-width: 768px) {
             /* Media query for desktop */
             max-width: 37.5rem;
-            min-width: 12.5rem;
         }
     }
 
     .digit-charcount {
-        justify-content: flex-end;
+        @apply justify-end;
     }
 
     .digit-error {
@@ -116,17 +105,11 @@
         gap: 0.25rem;
 
         .digit-error-message {
-            @apply font-regular leading-6;
+            @extend .typography.body-xs;
+            @apply font-regular w-full;
+            line-height: 1.174rem;
             margin: 0px;
-            font-style: theme(digitv2.fontStyle.normal);
-            font-size: 0.875rem;
-            font-family: theme(digitv2.fontFamily.sans);
-            color: #D4351C;
-            width: 100%;
-        }
-
-        .digit-error-icon {
-            margin-top: 3px;
+            color: theme(digitv2.lightTheme.alert-error)
         }
     }
 }

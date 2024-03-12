@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import Fields from "../Fields";
 import FieldV1 from "../FieldV1";
 
 export default {
@@ -34,10 +33,8 @@ const Template = (args) => {
   const handleInputChange = (event) => {
     if (event?.target) {
       const newValue = event?.target?.value;
-      const  newType = type=="numeric"? type : event?.target?.type;
       setValue(newValue);
-      setType(newType);
-      args.onChange({ ...event, target: { ...event.target, value: newValue, type: newType } });
+      args.onChange({ ...event, target: { ...event.target, value: newValue } });
     } else {
       const newValue = event;
       setValue(newValue);

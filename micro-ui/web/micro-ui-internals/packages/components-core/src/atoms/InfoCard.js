@@ -2,34 +2,41 @@ import React from "react";
 import { SVG } from "./SVG";
 import PropTypes from "prop-types";
 
-const InfoCard = ({ label, text, variant , style, textStyle,additionalElements}) => {
+const InfoCard = ({ label, text, variant , style, textStyle,additionalElements,inline}) => {
 
-  const getIconByVariant = (variant) => {
+  const getIconAndLabelByVariant = (variant) => {
     switch (variant) {
       case "warning":
-        return <SVG.Warning fill={"#F19100"}/>;
+        return { icon: <SVG.Warning fill={"#F19100"} />, defaultLabel: "Warning" };
       case "success":
-        return <SVG.CheckCircle fill={"#00703C"} />;
+        return { icon: <SVG.CheckCircle fill={"#00703C"} />, defaultLabel: "Success" };
       case "error":
-        return <SVG.Error fill={"#D4351C"} />;
+        return { icon: <SVG.Error fill={"#D4351C"} />, defaultLabel: "Error" };
       default:
-        return <SVG.Info fill={"#3498DB"} />;
+        return { icon: <SVG.Info fill={"#3498DB"} />, defaultLabel: "Info" };
     }
   };
+  const { icon, defaultLabel } = getIconAndLabelByVariant(variant);
 
-  const icon = getIconByVariant(variant);
+  const hasAdditionalElements = additionalElements && additionalElements.length > 0;
+
+  const displayedLabel = label || defaultLabel;
+
 
   return (
     <div className={`digit-info-banner-wrap ${variant ? variant : "default"}`} style={style}>
-      <div>
+      <div height="24px">
         {icon}
-        <h2>{label}</h2>
+        <h2>{displayedLabel}</h2>
       </div>
       {text && <p style={{ ...textStyle }}>{text}</p>}
-      {additionalElements &&
-        additionalElements.map((element, index) => (
-          <div key={index}>{element}</div>
-        ))}
+      {hasAdditionalElements && (
+        <div className={inline ? 'additional-elements-inline' : 'additional-elements-column'}>
+          {additionalElements.map((element, index) => (
+            <div className="individualElement" key={index}>{element}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -41,6 +48,7 @@ InfoCard.propTypes = {
   style:PropTypes.object,
   textStyle:PropTypes.object,
   additionalElements: PropTypes.arrayOf(PropTypes.node),
+  inline: PropTypes.bool,
 };
 
 InfoCard.defaultProps = {
@@ -50,6 +58,7 @@ InfoCard.defaultProps = {
   styles:{},
   textStyle:{},
   additionalElements: [],
+  inline: false,
 };
 
 export default InfoCard;

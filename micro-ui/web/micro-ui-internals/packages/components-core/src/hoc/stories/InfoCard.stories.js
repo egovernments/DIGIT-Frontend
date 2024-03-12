@@ -1,6 +1,5 @@
 import React from "react";
-import { InfoCard } from "../../atoms";
-import {Button} from "../../atoms";
+import { InfoCard, TextArea } from "../../atoms";
 
 export default {
   title: "Atom-Groups/InfoCard",
@@ -12,16 +11,19 @@ export default {
     variant: { control: "select", options: ["default", "success", "warning", "error"] },
     text: { control: "text" },
     style: {
-        control: "object",
+      control: "object",
     },
     textStyle: {
       control: "object",
-  },
+    },
     additionalElements: {
       control: {
         type: "array",
         separator: ",",
       },
+    },
+    inline: {
+      control: "boolean",
     },
   },
 };
@@ -32,7 +34,7 @@ const commonArgs = {
   label: "Info",
   text:
     "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect theservice to get completed in 24 hrs from the time of payment.",
-    variant: "default",
+  variant: "default",
 };
 
 // Info default
@@ -47,12 +49,38 @@ InfoWithAdditionalElements.args = {
   ...commonArgs,
   additionalElements: [
     <p key="1">Additional Element 1</p>,
-    <img key="2" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 2" />,
-    // <img key="2" src="https://egov-website-content.s3.ap-south-1.amazonaws.com/wp-content/uploads/2022/08/29093012/core-digit-web.png" alt="Additional Element 2" />,
-    <img key="2" src="https://store-images.s-microsoft.com/image/apps.65390.de79d184-f01a-4f7f-86a0-973923703d85.587613a3-c0da-45fe-a245-2564e595eba1.ae394e50-d730-453a-8a16-4e8d263b326b" alt="Additional Element 2" />,
-    // <img key="2" src="https://2650579244-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Mj5Rt0VXmfqKdJwsrck%2Fuploads%2FrBdhHqYV0NWliG3H3CEf%2Fimage.png?alt=media&token=a7d39f47-52e0-41e8-b70e-4db172963a28" alt="Additional Element 2" />,
-    <Button variation="default" label ="Button" />,
-    // Add more elements as needed
+    <img
+      key="2"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 2"
+    />,
+    <img
+      key="3"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 3"
+    />,
+    <img
+      key="4"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 4"
+    />,
+    <img
+      key="5"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 5"
+    />,
+    <img
+      key="6"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 6"
+    />,
+    <img
+      key="7"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 7"
+    />,
+    <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+    <TextArea type="textarea" disabled={false} populators={{ resizeSmart: true }}></TextArea>,
   ],
 };
 
@@ -60,6 +88,49 @@ InfoWithAdditionalElements.args = {
 export const InfoSuccess = Template.bind({});
 InfoSuccess.args = {
   ...commonArgs,
+  label: "Success",
+  variant: "success",
+};
+
+// InfoSuccess with additional elements
+export const InfoSuccessWithAdditionalElements = Template.bind({});
+InfoSuccessWithAdditionalElements.args = {
+  ...commonArgs,
+  additionalElements: [
+    <p key="1">Additional Element 1</p>,
+    <img
+      key="2"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 2"
+    />,
+    <img
+      key="3"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 3"
+    />,
+    <img
+      key="4"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 4"
+    />,
+    <img
+      key="5"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 5"
+    />,
+    <img
+      key="6"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 6"
+    />,
+    <img
+      key="7"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 7"
+    />,
+    <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+    <TextArea type="textarea" disabled={false} populators={{ resizeSmart: true }}></TextArea>,
+  ],
   label: "Success",
   variant: "success",
 };
@@ -72,10 +143,95 @@ InfoWarning.args = {
   variant: "warning",
 };
 
+// InfoWarning with additional elements
+export const InfoWarningWithAdditionalElements = Template.bind({});
+InfoWarningWithAdditionalElements.args = {
+  ...commonArgs,
+  additionalElements: [
+    <p key="1">Additional Element 1</p>,
+    <img
+      key="2"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 2"
+    />,
+    <img
+      key="3"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 3"
+    />,
+    <img
+      key="4"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 4"
+    />,
+    <img
+      key="5"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 5"
+    />,
+    <img
+      key="6"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 6"
+    />,
+    <img
+      key="7"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 7"
+    />,
+    <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+    <TextArea type="textarea" disabled={false} populators={{ resizeSmart: true }}></TextArea>,
+  ],
+  label: "Warning",
+  variant: "warning",
+};
+
 // Info Error
 export const InfoError = Template.bind({});
 InfoError.args = {
   ...commonArgs,
+  label: "Error",
+  variant: "error",
+};
+
+// InfoError with additional elements
+export const InfoErrorWithAdditionalElements = Template.bind({});
+InfoErrorWithAdditionalElements.args = {
+  ...commonArgs,
+  additionalElements: [
+    <p key="1">Additional Element 1</p>,
+    <img
+      key="2"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 2"
+    />,
+    <img
+      key="3"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 3"
+    />,
+    <img
+      key="4"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 4"
+    />,
+    <img
+      key="5"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 5"
+    />,
+    <img
+      key="6"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 6"
+    />,
+    <img
+      key="7"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+      alt="Additional Element 7"
+    />,
+    <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+  ],
   label: "Error",
   variant: "error",
 };
