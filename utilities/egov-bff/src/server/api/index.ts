@@ -4,10 +4,11 @@ import FormData from 'form-data';
 import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
-import { convertToFacilityCreateData, convertToFacilityExsistingData, correctParentValues, sortCampaignDetails } from "../utils/index";
-import { validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 import createAndSearch from '../config/createAndSearch';
 import genericApiManageController from '../controllers/genericApiManage/genericApiManage.controller';
+import { convertToFacilityCreateData, convertToFacilityExsistingData, autoGenerateBoundaryCodes, correctParentValues, sortCampaignDetails } from "../utils/index";
+import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch } from "../utils/validator";
+const jp = require("jsonpath");
 const _ = require('lodash');
 
 
@@ -17,7 +18,6 @@ const _ = require('lodash');
 
 
 async function getWorkbook(fileUrl: string) {
-
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/pdf',
@@ -337,14 +337,25 @@ async function createExcelSheet(data: any, headers: any, sheetName: string = 'Sh
   return { wb: workbook, ws: ws, sheetName: sheetName };
 }
 
+async function getBoundaryCodesHandler(boundaryList: any) {
+  try {
+    const elementCodesMap = await getBoundaryCodes(boundaryList);
+    // Handle the result here
+    return elementCodesMap;
+  } catch (error) {
+    console.error("Error in getBoundaryCodesHandler:", error);
+    throw error; // Propagate the error
+  }
+}
 
-function getBoundaryCodes(boundaryList: any) {
+async function getBoundaryCodes(boundaryList: any) {
   const childParentMap: Map<string, string> = new Map();
   for (let i = 1; i < boundaryList.length; i++) {
     const child = boundaryList[i][boundaryList[i].length - 1]; // Last element is the child
     const parent = boundaryList[i][boundaryList[i].length - 2]; // Second last element is the parent
     childParentMap.set(child, parent);
   }
+
   const columnsData: string[][] = [];
   for (const row of boundaryList) {
     row.forEach((element: any, index: any) => {
@@ -363,14 +374,15 @@ function getBoundaryCodes(boundaryList: any) {
       elementSet.add(element);
     });
   });
-  let countMap = new Map();
+
+  const countMap = new Map();
   const elementCodesMap = new Map();
-  elementCodesMap.set("IN", "ADMIN_IN");
-  let parentCode; // Default parent code
+  elementCodesMap.set("INDIA", "ADMIN_IN");
+
   for (let i = 1; i < columnsData.length; i++) {
     const column = columnsData[i];
     for (const element of column) {
-      parentCode = childParentMap.get(element)!; // Update parent code for the next element
+      const parentCode = childParentMap.get(element)!; // Update parent code for the next element
       if (elementSet.has(parentCode)) {
         if (countMap.has(parentCode)) {
           countMap.set(parentCode, countMap.get(parentCode)! + 1);
@@ -378,22 +390,24 @@ function getBoundaryCodes(boundaryList: any) {
           countMap.set(parentCode, 1);
         }
       }
+
       let code;
-      if (parentCode != 'IN') {
-        let parentBoundaryCodeTrimmed;
+      if (parentCode != 'INDIA') {
         const parentBoundaryCode = elementCodesMap.get(parentCode);
         const lastUnderscoreIndex = parentBoundaryCode.lastIndexOf('_');
-        if (lastUnderscoreIndex !== -1) {
-          parentBoundaryCodeTrimmed = parentBoundaryCode.substring(0, lastUnderscoreIndex);
-        }
-        code = generateElementCode(countMap.get(parentCode), parentBoundaryCodeTrimmed, element); // Generate code for the element
+        const parentBoundaryCodeTrimmed = lastUnderscoreIndex !== -1 ? parentBoundaryCode.substring(0, lastUnderscoreIndex) : parentBoundaryCode;
+        code = generateElementCode(countMap.get(parentCode), parentBoundaryCodeTrimmed, element);
       } else {
         code = generateElementCode(countMap.get(parentCode), elementCodesMap.get(parentCode), element);
-      }// Generate code for the element
+      }
+
       elementCodesMap.set(element, code); // Store the code of the element in the map
     }
   }
+
+  return elementCodesMap;
 }
+
 
 function generateElementCode(sequence: any, parentCode: any, element: any) {
   let paddedSequence = sequence.toString().padStart(2, '0'); // Pad single-digit numbers with leading zero
@@ -408,8 +422,9 @@ async function getBoundarySheetData(request: any) {
   const data = response?.TenantBoundary?.[0]?.boundary;
   if (data) {
     const boundaryList = generateHierarchyList(data)
-    const newArray = boundaryList.map(item => item.split(','))
-    getBoundaryCodes(newArray);
+    const newArray = boundaryList.map(item => item.split(','));
+    console.log(newArray, "array for boundary code generation")
+    await autoGenerateBoundaryCodes("pg", "dc63c934-0c1c-42fa-b8f9-9ddbfbf27c0e");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
@@ -924,5 +939,7 @@ export {
   confirmCreation,
   getParamsViaElements,
   changeBodyViaElements,
-  processCreate
+  processCreate,
+  getBoundaryCodes,
+  getBoundaryCodesHandler
 };
