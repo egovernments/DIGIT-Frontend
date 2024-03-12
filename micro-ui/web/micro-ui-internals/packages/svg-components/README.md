@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-svg-components":"0.0.1",
+"@egovernments/digit-ui-svg-components":"1.0.2",
 ```
 
 then navigate to App.js
@@ -61,6 +61,7 @@ const { Accessibility } = SVG;
 ### Changelog
 
 ```bash
+1.0.2 Added Trash Icon
 1.0.1 Added Icons from Microplanning module
 1.0.0 Released as part of workbench v1.0
 1.0.0-beta workbench base version beta release
