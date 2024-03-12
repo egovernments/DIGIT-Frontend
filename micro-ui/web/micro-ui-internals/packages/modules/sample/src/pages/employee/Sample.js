@@ -1,4 +1,4 @@
-import { FormComposerV2, Stepper } from "@egovernments/digit-ui-components-core";
+import { FormComposerV2, InfoCard, Stepper } from "@egovernments/digit-ui-components-core";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { newConfig } from "../../configs/SampleConfig";
@@ -12,6 +12,16 @@ const Create = () => {
   const onStepClick = (step) => {
     console.log("step", step);
     setCurrentStep(step);
+  };
+
+  const commonDivStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    backgroundColor: "#FFFFFF",
+    padding: "16px",
+    marginBottom: "64px",
+    borderRadius: "4px",
   };
 
   const defaultValues = {
@@ -89,17 +99,7 @@ const Create = () => {
         defaultValues={defaultValues}
         onSubmit={onSubmit}
       />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          backgroundColor: "#FFFFFF",
-          padding: "16px",
-          marginBottom: "64px",
-          borderRadius: "4px",
-        }}
-      >
+      <div style={commonDivStyle}>
         <Button variation="primary" label={"Primary"} type="button" />
         <Button variation="primary" label={"Primary"} type="button" icon="MyLocation" />
         <Button variation="primary" label={"Primary"} type="button" icon="MyLocation" isSuffix={true} />
@@ -189,23 +189,13 @@ const Create = () => {
           isSuffix={true}
         />
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          backgroundColor: "#FFFFFF",
-          padding: "16px",
-          marginBottom: "64px",
-          borderRadius: "4px",
-        }}
-      >
+      <div style={commonDivStyle}>
         <Stepper
           populators={{
             name: "stepper",
           }}
           type="stepper"
-          currentStep={currentStep+1}
+          currentStep={currentStep + 1}
           customSteps={{}}
           totalSteps={5}
           direction="horizontal"
@@ -223,6 +213,139 @@ const Create = () => {
           onStepClick={() => {
             console.log("step clicked");
           }}
+        />
+      </div>
+      <div style={commonDivStyle}>
+        <InfoCard
+          populators={{
+            name: "infocard",
+          }}
+          variant="default"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect theservice to get completed in 24 hrs from the time of payment."
+          }
+          label={"Info"}
+        />
+        <InfoCard
+          populators={{
+            name: "infocardsuccess",
+          }}
+          variant="success"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect theservice to get completed in 24 hrs from the time of payment."
+          }
+          label={"Success"}
+        />
+        <InfoCard
+          populators={{
+            name: "infocardwarning",
+          }}
+          variant="warning"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect theservice to get completed in 24 hrs from the time of payment."
+          }
+          label={"Warning"}
+        />
+        <InfoCard
+          populators={{
+            name: "infocarderror",
+          }}
+          variant="error"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect theservice to get completed in 24 hrs from the time of payment."
+          }
+          label={"Error"}
+        />
+
+        <InfoCard
+          populators={{
+            name: "infocardwithelements",
+          }}
+          variant="default"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect the service to get completed in 24 hrs from the time of payment."
+          }
+          label={"Info"}
+          additionalElements={[
+            <p key="1">Additional Element 1</p>,
+            <img
+              key="2"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 2"
+            />,
+            <img
+              key="3"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 3"
+            />,
+            <img
+              key="4"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 4"
+            />,
+            <img
+              key="5"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 5"
+            />,
+            <img
+              key="6"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 6"
+            />,
+            <img
+              key="7"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 7"
+            />,
+            <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+          ]}
+        />
+
+<InfoCard
+          populators={{
+            name: "infocardwithelements",
+          }}
+          variant="default"
+          text={
+            "Application process will take a minute to complete. It might cost around Rs.500/- to Rs.1000/- to clean your septic tank and you can expect the service to get completed in 24 hrs from the time of payment."
+          }
+          label={"Info"}
+          inline={true}
+          additionalElements={[
+            <p key="1">Additional Element 1</p>,
+            <img
+              key="2"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 2"
+            />,
+            <img
+              key="3"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 3"
+            />,
+            <img
+              key="4"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 4"
+            />,
+            <img
+              key="5"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 5"
+            />,
+            <img
+              key="6"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 6"
+            />,
+            <img
+              key="7"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIGMLufj86aep95KwMzr3U0QShg7oxdAG8gBPJ9ALIFQ&s"
+              alt="Additional Element 7"
+            />,
+            <img key="8" src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png" alt="Additional Element 8" />,
+          ]}
         />
       </div>
     </React.Fragment>
