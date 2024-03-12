@@ -8,7 +8,6 @@ import createAndSearch from '../config/createAndSearch';
 import genericApiManageController from '../controllers/genericApiManage/genericApiManage.controller';
 import { convertToFacilityCreateData, convertToFacilityExsistingData, autoGenerateBoundaryCodes, correctParentValues, sortCampaignDetails } from "../utils/index";
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch } from "../utils/validator";
-const jp = require("jsonpath");
 const _ = require('lodash');
 
 
