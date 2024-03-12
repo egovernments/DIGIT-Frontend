@@ -42,6 +42,7 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+1.8.1-beta.2 Added CSS for create hierarchy
 1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0-beta.20 Added css for info message in localisation screen
 1.8.0-beta.19 Improved Bulk Upload and Bulk Upload Toast CSS
