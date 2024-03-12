@@ -13,7 +13,7 @@ import { createProjectIfNotExists, createRelatedResouce, enrichCampaign } from "
 // Define the MeasurementController class
 class campaignManageController {
     // Define class properties
-    public path = "/process/v1";
+    public path = "/v1/process";
     public router = express.Router();
     public dayInMilliSecond = 86400000;
 
@@ -25,6 +25,7 @@ class campaignManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/create`, this.createCampaign);
+        this.router.post(`${this.path}/project-type/create`, this.createCampaign);
     }
     createCampaign = async (
         request: express.Request,
@@ -40,6 +41,25 @@ class campaignManageController {
         catch (error: any) {
             logger.error(error);
             return sendResponse(response, { "error": error.message }, request);
+
+        }
+    };
+
+    createProjectTypeCampaign = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            await validateCampaignRequest(request.body)
+            await createProjectIfNotExists(request.body)
+            await createRelatedResouce(request.body)
+            await enrichCampaign(request.body)
+            return sendResponse(response, { Campaign: request?.body?.Campaign }, request);
+        }
+        catch (error: any) {
+            logger.error(error);
+            return sendResponse(response, { "error": error.message }, request);
+
         }
     };
 };

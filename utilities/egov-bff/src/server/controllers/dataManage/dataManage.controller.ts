@@ -14,7 +14,7 @@ import { createAndUploadFile, getBoundarySheetData, processAction } from "../../
 // Define the MeasurementController class
 class dataManageController {
     // Define class properties
-    public path = "/data/v1";
+    public path = "/v1/data";
     public router = express.Router();
     public dayInMilliSecond = 86400000;
 

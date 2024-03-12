@@ -50,7 +50,7 @@ const config = {
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
-    contextPath: process.env.CONTEXT_PATH || "/campaign-manager",
+    contextPath: process.env.CONTEXT_PATH || "/project-factory",
   },
   host: {
     serverHost: HOST,

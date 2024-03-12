@@ -880,7 +880,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any) 
   const allFacilities = await getAllFacilities(tenantId, request.body);
   request.body.generatedResourceCount = allFacilities.length;
   const facilitySheetData: any = await createFacilitySheet(allFacilities);
-  request.body.Filters = { tenantId: tenantId, hierarchyType: "NITISH", includeChildren: true }
+  request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
   const boundarySheetData: any = await getBoundarySheetData(request);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
 }
