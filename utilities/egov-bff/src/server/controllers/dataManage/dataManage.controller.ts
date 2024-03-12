@@ -67,7 +67,7 @@ class dataManageController {
     createData = async (request: any, response: any) => {
         try {
             await validateCreateRequest(request);
-            await processAction(request);
+            await processAction(request, response);
             await enrichResourceDetails(request)
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {

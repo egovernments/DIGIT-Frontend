@@ -6,6 +6,8 @@ import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import { convertToFacilityCreateData, convertToFacilityExsistingData, correctParentValues, sortCampaignDetails } from "../utils/index";
 import { validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
+import createAndSearch from '../config/createAndSearch';
+import genericApiManageController from '../controllers/genericApiManage/genericApiManage.controller';
 const _ = require('lodash');
 
 
@@ -702,20 +704,138 @@ async function getFacilitiesViaIds(tenantId: string, ids: any[], requestBody: an
   return searchedFacilities;
 }
 
+function getParamsViaElements(elements: any, request: any) {
+  var params: any = {};
+  if (!elements) {
+    return params;
+  }
+  for (const element of elements) {
+    if (element?.isInParams) {
+      if (element?.value) {
+        _.set(params, element?.keyPath, element?.value);
+      }
+      else if (element?.getValueViaPath) {
+        _.set(params, element?.keyPath, _.get(request.body, element?.getValueViaPath))
+      }
+    }
+  }
+  return params
+}
 
-async function processFacilityCreate(facilityCreateData: any[], request: any) {
-  request.body.Facilities = facilityCreateData;
-  logger.info("Facility create data : " + JSON.stringify(facilityCreateData));
-  logger.info("facility bulk create url : " + config.host.facilityHost + config.paths.facilityBulkCreate);
-  const response = await httpRequest(config.host.facilityHost + config.paths.facilityBulkCreate, request.body);
-  if (response?.status != "successful") {
-    throw new Error("Error occured during facility create")
+function changeBodyViaElements(elements: any, request: any) {
+  if (!elements) {
+    return;
+  }
+  for (const element of elements) {
+    if (element?.isInBody) {
+      if (element?.value) {
+        _.set(request.body, element?.keyPath, element?.value);
+      }
+      else if (element?.getValueViaPath) {
+        _.set(request.body, element?.keyPath, _.get(request.body, element?.getValueViaPath))
+      }
+      else {
+        _.set(request.body, element?.keyPath, {})
+      }
+    }
+  }
+}
+function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any) {
+  const userUuid = request?.body?.RequestInfo?.userInfo?.uuid
+  var count = 0;
+  for (const data of searchedData) {
+    if (data?.auditDetails?.createdBy == userUuid && data?.auditDetails?.createdTime >= creationTime) {
+      count++;
+    }
+  }
+  if (count < createdData.length) {
+    throw new Error("Persisting Error")
+  }
+  logger.info("New created resources count : " + count);
+}
+
+async function processSearch(createAndSearchConfig: any, request: any, params: any) {
+  setSearchLimits(createAndSearchConfig, request, params);
+
+  logger.info("Search url : " + createAndSearchConfig?.searchDetails?.url);
+
+  const arraysToMatch = await performSearch(createAndSearchConfig, request, params);
+
+  return arraysToMatch;
+}
+
+function setSearchLimits(createAndSearchConfig: any, request: any, params: any) {
+  setLimitOrOffset(createAndSearchConfig?.searchDetails?.searchLimit, params, request.body);
+  setLimitOrOffset(createAndSearchConfig?.searchDetails?.searchOffset, params, request.body);
+}
+
+function setLimitOrOffset(limitOrOffsetConfig: any, params: any, requestBody: any) {
+  if (limitOrOffsetConfig) {
+    if (limitOrOffsetConfig?.isInParams) {
+      _.set(params, limitOrOffsetConfig?.keyPath, parseInt(limitOrOffsetConfig?.value));
+    }
+    if (limitOrOffsetConfig?.isInBody) {
+      _.set(requestBody, limitOrOffsetConfig?.keyPath, parseInt(limitOrOffsetConfig?.value));
+    }
+  }
+}
+
+async function performSearch(createAndSearchConfig: any, request: any, params: any) {
+  const arraysToMatch: any[] = [];
+  let searchAgain = true;
+
+  while (searchAgain) {
+    logger.info("Search url : " + createAndSearchConfig?.searchDetails?.url);
+    logger.info("Search params : " + JSON.stringify(params));
+    logger.info("Search body : " + JSON.stringify(request.body));
+
+    const response = await httpRequest(createAndSearchConfig?.searchDetails?.url, request.body, params);
+    const resultArray = _.get(response, createAndSearchConfig?.searchDetails?.searchPath);
+
+    if (resultArray && Array.isArray(resultArray)) {
+      arraysToMatch.push(...resultArray);
+      if (resultArray.length < parseInt(createAndSearchConfig?.searchDetails?.searchLimit?.value)) {
+        searchAgain = false;
+      }
+    } else {
+      searchAgain = false;
+    }
+    updateOffset(createAndSearchConfig, params, request.body);
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  }
+
+  return arraysToMatch;
+}
+
+function updateOffset(createAndSearchConfig: any, params: any, requestBody: any) {
+  const offsetConfig = createAndSearchConfig?.searchDetails?.searchOffset
+  const limit = createAndSearchConfig?.searchDetails?.searchLimit?.value
+  if (offsetConfig) {
+    if (offsetConfig?.isInParams) {
+      _.set(params, offsetConfig?.keyPath, parseInt(_.get(params, offsetConfig?.keyPath) + parseInt(limit)));
+    }
+    if (offsetConfig?.isInBody) {
+      _.set(requestBody, offsetConfig?.keyPath, parseInt(_.get(requestBody, offsetConfig?.keyPath) + parseInt(limit)));
+    }
   }
 }
 
 
+async function confirmCreation(createAndSearchConfig: any, request: any, facilityCreateData: any[], creationTime: any) {
+  // wait for 5 seconds
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  const params: any = getParamsViaElements(createAndSearchConfig?.searchDetails?.searchElements, request);
+  changeBodyViaElements(createAndSearchConfig?.searchDetails?.searchElements, request)
+  const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
+  matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime)
+}
 
-async function createFacilityData(request: any) {
+
+
+
+
+
+async function createFacilityData(request: any, response: any) {
   const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
   const tenantId = request?.body?.ResourceDetails?.tenantId
   const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
@@ -727,7 +847,9 @@ async function createFacilityData(request: any) {
   if (request?.body?.facilityToCreate && Array.isArray(request?.body?.facilityToCreate) && request?.body?.facilityToCreate?.length > 0) {
     const facilityCreateData = convertToFacilityCreateData(request?.body?.facilityToCreate, request?.body?.ResourceDetails?.tenantId)
     validateFacilityCreateData(facilityCreateData)
-    await processFacilityCreate(facilityCreateData, request)
+    request.body.ResourceDetails.dataToCreate = facilityCreateData;
+    const genericApiManage = new genericApiManageController();
+    await genericApiManage.create(request, response)
   }
   else {
     logger.info("No Facility Creation is needed as there is no such row with empty Facility Code.")
@@ -749,10 +871,10 @@ async function validateExistingFacilityData(request: any) {
 
 
 
-async function processAction(request: any) {
+async function processAction(request: any, response: any) {
   if (request?.body?.ResourceDetails?.action == "create") {
     if (request?.body?.ResourceDetails?.type == "facility") {
-      await createFacilityData(request)
+      await createFacilityData(request, response)
     }
   }
   else {
@@ -761,6 +883,25 @@ async function processAction(request: any) {
     }
   }
 }
+
+async function processCreate(request: any) {
+  var data = request?.body?.ResourceDetails?.dataToCreate
+  if (data) {
+    const type: string = request.body.ResourceDetails.type;
+    const createAndSearchConfig = createAndSearch[type]
+    if (createAndSearchConfig?.createBulkDetails) {
+      _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, data);
+      const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
+      changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
+      logger.info(type + " create data : " + JSON.stringify(data));
+      logger.info(type + " bulk create url : " + createAndSearchConfig?.createBulkDetails?.url, params);
+      const creationTime = Date.now();
+      await httpRequest(createAndSearchConfig?.createBulkDetails?.url, request.body, params);
+      await confirmCreation(createAndSearchConfig, request, data, creationTime)
+    }
+  }
+}
+
 
 export {
   getSheetData,
@@ -779,5 +920,9 @@ export {
   getAllFacilities,
   createFacilityData,
   processAction,
-  getFacilitiesViaIds
+  getFacilitiesViaIds,
+  confirmCreation,
+  getParamsViaElements,
+  changeBodyViaElements,
+  processCreate
 };
