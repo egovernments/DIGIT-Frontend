@@ -3,7 +3,7 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4, validate } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundaryCodesHandler, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundaryCodesHandler, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS, getHierarchy } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -979,27 +979,47 @@ function matchFacilityData(data: any, searchedFacilities: any) {
   }
 }
 
-async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) {
+async function autoGenerateBoundaryCodes(request: any ,tenantId: string, fileStoreId: string) {
   const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
   if (!fileResponse?.fileStoreIds?.[0]?.url) {
     throw new Error("Invalid file")
   }
   const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1")
-  console.log(boundaryData, "bbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-  const outputData: string[][] = [];
+  let outputData: string[][] = [];
 
-  for (const obj of boundaryData) {
-    const row: string[] = [];
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        row.push(obj[key]);
-      }
+for (const obj of boundaryData) {
+  const row: string[] = [];
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      row.push(obj[key]);
     }
-    outputData.push(row);
   }
-  const res = await getBoundaryCodesHandler(outputData);
-  console.log(res, "pppppppppppppppppppppppp")
-  return res;
+  outputData.push(row);
+}
+
+const res = await getBoundaryCodesHandler(outputData);
+console.log(res, "pppppppppppppppppppppppp");
+
+const updatedOutputData = outputData.map(row => {
+  const boundaryName = row[row.length - 1]; // Get the last element of the row
+  const boundaryCode = res.get(boundaryName); // Fetch corresponding boundary code from res
+  return [...row, boundaryCode]; // Append boundary code to the row and return updated row
+});
+
+console.log(updatedOutputData, "ooooooooooooooooooooo");
+
+  const hierarchy = await getHierarchy(request);
+  const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+  console.log(headers,"hhhhhhhhhhhhh")
+  const data = updatedOutputData.map(boundary => {
+    const boundaryCode = boundary.pop();
+    const rowData = boundary.concat(Array(Math.max(0, hierarchy.length - boundary.length)).fill(''));
+    const boundaryCodeIndex = hierarchy.length;
+    rowData[boundaryCodeIndex] = boundaryCode;
+    return rowData;
+  });
+  return await createExcelSheet(data, headers);
+
 }
 
 
