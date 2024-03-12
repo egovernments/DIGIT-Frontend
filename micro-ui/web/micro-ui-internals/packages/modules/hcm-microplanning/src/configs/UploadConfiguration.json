@@ -12,18 +12,21 @@
           "id": "Excel",
           "title": "Excel",
           "code": "EXCEL",
+          "fileExtension":["xlsx", "xls"],
           "iconName": "Excel"
         },
         {
           "id": "ShapeFiles",
           "title": "Shape Files",
           "code": "SHAPE_FILES",
+          "fileExtension":["zip"],
           "iconName": "SpatialDocument"
         },
         {
           "id": "GeoJson",
           "title": "Geo Json",
           "code": "GEOJSON",
+          "fileExtension":["geojson"],
           "iconName": "SpatialDocument"
         }
       ]
@@ -38,18 +41,21 @@
           "id": "Excel",
           "title": "Excel",
           "code": "EXCEL",
+          "fileExtension":["xlsx", "xls"],
           "iconName": "Excel"
         },
         {
           "id": "ShapeFiles",
           "title": "Shape Files",
           "code": "SHAPE_FILES",
+          "fileExtension":["zip"],
           "iconName": "SpatialDocument"
         },
         {
           "id": "GeoJson",
           "title": "Geo Json",
           "code": "GEOJSON",
+          "fileExtension":["geojson"],
           "iconName": "SpatialDocument"
         }
       ]
@@ -64,18 +70,21 @@
           "id": "Excel",
           "title": "Excel",
           "code": "EXCEL",
+          "fileExtension":["xlsx", "xls"],
           "iconName": "Excel"
         },
         {
           "id": "ShapeFiles",
           "title": "Shape Files",
           "code": "SHAPE_FILES",
+          "fileExtension":["zip"],
           "iconName": "SpatialDocument"
         },
         {
           "id": "GeoJson",
           "title": "Geo Json",
           "code": "GEOJSON",
+          "fileExtension":["geojson"],
           "iconName": "SpatialDocument"
         }
       ]
@@ -90,18 +99,21 @@
           "id": "Excel",
           "title": "Excel",
           "code": "EXCEL",
+          "fileExtension":["xlsx", "xls"],
           "iconName": "Excel"
         },
         {
           "id": "ShapeFiles",
           "title": "Shape Files",
           "code": "SHAPE_FILES",
+          "fileExtension":["zip"],
           "iconName": "SpatialDocument"
         },
         {
           "id": "GeoJson",
           "title": "Geo Json",
           "code": "GEOJSON",
+          "fileExtension":["geojson"],
           "iconName": "SpatialDocument"
         }
       ]

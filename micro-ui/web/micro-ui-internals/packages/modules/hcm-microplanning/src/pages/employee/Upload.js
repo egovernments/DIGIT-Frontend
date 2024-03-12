@@ -28,19 +28,9 @@ const Upload = ({ MicroplanName = "default" }) => {
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
-      let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
+      // let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
+      let uploadSections = Config["UploadConfiguration"];
       setSelectedSection(uploadSections.length > 0 ? uploadSections[0].id : null);
-      uploadSections = uploadSections.map((item) => {
-        let temp = item.UploadFileTypes.map((e) => {
-          if (e.id === "Excel") {
-            e["fileExtension"] = ["xlsx", "xls"];
-          }
-          return e;
-        });
-        item.UploadFileTypes = temp;
-
-        return item;
-      });
       setSections(uploadSections);
     }
   }, [data]);
