@@ -73,18 +73,49 @@
         }
 
         h2 {
-            margin-top: 0.625rem;
+            margin: 0;
+            padding: 0;
+            width: 90% !important;
+            overflow: hidden;
             font-size: 2.5rem;
-            margin: 0.625rem 0;
             font-weight: 700;
         }
 
         p {
             margin: 0.625rem 0;
-            padding-top: 0.625;
+            padding-top: 0.625rem;
             font-size: 1rem;
             margin-top: 0.625rem;
             font-weight: 400;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            .download-template-button {
+                display: flex !important;
+                padding-left: 0.625rem;
+                justify-content: center !important;
+                align-items: center !important;
+                min-width: 13.5rem;
+                height: 2.5rem;
+                border: 1px rgba(244, 119, 56, 1) solid;
+                .icon {
+                    display: flex;
+                    align-items: center;
+                    margin: 0;
+                    padding: 0;
+                }
+        
+                p {
+                    padding: 0;
+                    margin: 0;
+                    color: rgba(244, 119, 56, 1);
+                    font-weight: 500;
+                    font-size: 1rem;
+                }
+            }
         }
     }
 
@@ -186,7 +217,7 @@
         min-width: 90%;
         min-height: 10rem;
         padding-top: 0.625;
-        border: 1px rgba(214, 213, 212, 1) dotted;
+        border: 1px rgba(214, 213, 212, 1);
         margin: 1rem 0;
         display: flex;
         flex-direction: column;
@@ -210,7 +241,7 @@
         .uploaded-file-details {
             display: flex;
             flex-direction: row;
-            align-items: center;
+            align-items: center !important;
             flex-wrap: wrap;
             padding: 1rem 0;
 
@@ -231,6 +262,7 @@
             align-items: center;
             justify-items: end;
             flex-wrap: wrap;
+
             .button {
                 display: flex !important;
                 flex-direction: row;
@@ -305,27 +337,6 @@
         }
     }
 
-    .toast-container {
-        position: fixed;
-        width: 50%;
-        bottom: 1.25rem;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #fff;
-        padding: 1rem;
-        z-index: 9999;
-    }
-
-    .success {
-        background-color: rgba(0, 112, 60, 1);
-    }
-
-    .toast-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
     .message {
         margin-right: 0.6px;
     }
@@ -358,6 +369,44 @@
         p {
             font-weight: 500;
             font-size: 1rem;
+        }
+    }
+
+    .file-upload-error-container {
+        border: 1px solid rgba(214, 213, 212, 1);
+        min-height: 4.75rem;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: start;
+        margin-top: 0.625rem;
+        padding: 0.625rem 0.625rem;
+        flex-wrap: wrap;
+        background-color: rgba(255, 225, 221, 1);
+        color: rgba(212, 53, 28, 1);
+
+        .heading {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+
+            p {
+                font-size: 1.125rem;
+                font-weight: 700;
+                padding: 0;
+                margin: 0;
+                padding-left: 0.625rem;
+            }
+        }
+
+        .body {
+            color: rgba(212, 53, 28, 1);
+
+            p {
+                padding: 0;
+                margin: 0;
+            }
         }
     }
 }
