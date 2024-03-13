@@ -28,6 +28,8 @@ import { SVG } from "./SVG";
 */
 
 
+import PropTypes from 'prop-types';
+
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
   const documents = file
@@ -86,5 +88,18 @@ function XlsPreview({ file, ...props }) {
     </PopUp>
   );
 }
+
+XlsPreview.propTypes = {
+  file: PropTypes.shape({
+    fileName: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+  }),
+  className: PropTypes.string,
+  modalStyle: PropTypes.object,
+  btnStyle: PropTypes.object,
+  onBack: PropTypes.func.isRequired,
+  onDownload: PropTypes.func.isRequired,
+  containerStyle: PropTypes.object,
+};
 
 export default XlsPreview;
