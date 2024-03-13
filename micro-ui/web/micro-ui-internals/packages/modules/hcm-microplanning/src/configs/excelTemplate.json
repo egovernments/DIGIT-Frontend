@@ -1,0 +1,25 @@
+{
+  "tenantId": "mz",
+  "moduleName": "hcm-microplanning",
+  "excelTemplate": [
+    {
+      "excelTemplate":{
+        "Angonia": [
+            [
+                "Admin 0",
+                "Admin1",
+                "Admin2",
+                "Admin 3",
+                "Boundary code",
+                "Total population",
+                "Target population",
+                "Total households",
+                "Target households",
+                "Latitude",
+                "Longitude"
+            ]
+        ]
+    }
+    }
+  ]
+}
