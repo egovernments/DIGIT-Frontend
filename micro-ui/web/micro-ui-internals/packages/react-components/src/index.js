@@ -292,7 +292,9 @@ import Help from "./hoc/Tutorial/Help";
 
 //View Composer
 import ViewComposer from "./hoc/ViewComposer";
+import XlsPreview from "./atoms/XlsPreview";
 export {
+  XlsPreview,
   ViewComposer,
   HelpOutlineIcon,
   InputIcon,
