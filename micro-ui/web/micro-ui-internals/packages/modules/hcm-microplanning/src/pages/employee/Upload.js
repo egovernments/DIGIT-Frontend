@@ -10,7 +10,7 @@ import excelTemplate from "../../configs/excelTemplate.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
-import { excelValidations } from "../../utils/excelValidations";
+import { checkForErrorInUploadedFileExcel} from "../../utils/excelValidations";
 const Upload = ({ MicroplanName = "default" }) => {
   const { t } = useTranslation();
 
@@ -84,7 +84,7 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   const UploadFileClickHandler = (download = false) => {
     if (download) {
-      downloadTemplate();
+      downloadTemplate(setToast);
     }
     setModal("none");
     setDataUpload(true);
@@ -94,7 +94,7 @@ const Upload = ({ MicroplanName = "default" }) => {
     const checkfile = async (file) => {
       try {
         const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
-        checkForErrorInUploadedFile(jsonData, setUploadedFileError, t);
+        checkForErrorInUploadedFileExcel(jsonData, setUploadedFileError, t);
         setSelectedFileType(file.fileType);
       } catch (error) {
         setUploadedFileError("ERROR_PARSING_FILE");
@@ -134,11 +134,11 @@ const Upload = ({ MicroplanName = "default" }) => {
       setLoderActivation(false);
       setDataPresent(true);
       // { header: 1 }
-      const check = await checkForErrorInUploadedFile(result, setUploadedFileError, t);
+      const check = await checkForErrorInUploadedFileExcel(result, setUploadedFileError, t);
       if (check) {
-        setToast({ state: "success", message: "File uploaded Successfully!" });
+        setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY")});
       } else {
-        setToast({ state: "error", message: "Uploaded File error!" });
+        setToast({ state: "error", message: t("UPLOADED_FILE_ERROR") });
       }
     } catch (error) {
       setUploadedFileError("ERROR_UPLOADING_FILE");
@@ -337,7 +337,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
       <div>
         <div className="heading">
           <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.toUpperCase()}_${selectedFileType.toUpperCase()}`)}</h2>
-          <div className="download-template-button" onClick={downloadTemplate}>
+          <div className="download-template-button" onClick={()=>downloadTemplate(setToast)}>
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -370,7 +370,7 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
           <h2>
             <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.toUpperCase()}_${selectedFileType.toUpperCase()}`)}</h2>
           </h2>
-          <div className="download-template-button" onClick={downloadTemplate}>
+          <div className="download-template-button" onClick={()=>downloadTemplate(setToast)}>
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -406,7 +406,7 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
         <div className="file-upload-error-container">
           <div className="heading">
             <CustomIcon Icon={Icons.Error} width={24} height={24} color="rgba(212, 53, 28, 1)" />
-            <p>{t("UPLOADED_FILE_ERROR")}</p>
+            <p>{t("ERROR_UPLOADED_FILE")}</p>
           </div>
           <div className="body">
             <p>{t(error)}</p>
@@ -473,27 +473,9 @@ const ModalWrapper = ({
   );
 };
 
-const checkForErrorInUploadedFile = async (fileInJson, setUploadedFileError, t) => {
-  try {
-    const valid = excelValidations(fileInJson);
-    if (valid.valid) {
-      setUploadedFileError(null);
-      return true;
-    } else {
-      const columnList = valid.columnList;
-      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
-        "PLACEHOLDER",
-        `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-      );
-      setUploadedFileError(message);
-      return false;
-    }
-  } catch (error) {
-    setUploadedFileError("ERROR_PARSING_FILE");
-  }
-};
 
 const downloadTemplate = () => {
+  try {
   const blob = convertJsonToXlsx(excelTemplate.excelTemplate[0].excelTemplate, { skipHeader: true });
 
   const url = URL.createObjectURL(blob);
@@ -502,6 +484,9 @@ const downloadTemplate = () => {
   link.download = "template.xlsx";
   link.click();
   URL.revokeObjectURL(url);
+} catch (error) {
+  setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
+}
 };
 
 // Custom icon component

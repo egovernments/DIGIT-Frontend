@@ -38,3 +38,24 @@ export const excelValidations = (data) => {
   }
   return { valid };
 };
+
+
+export const checkForErrorInUploadedFileExcel = async (fileInJson, setUploadedFileError, t) => {
+  try {
+    const valid = excelValidations(fileInJson);
+    if (valid.valid) {
+      setUploadedFileError(null);
+      return true;
+    } else {
+      const columnList = valid.columnList;
+      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
+        "PLACEHOLDER",
+        `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+      );
+      setUploadedFileError(message);
+      return false;
+    }
+  } catch (error) {
+    setUploadedFileError("ERROR_PARSING_FILE");
+  }
+};
