@@ -1,51 +1,48 @@
 .digit-card-textarea,
 .digit-employee-card-textarea {
-  @apply block outline-none  w-full bg-white text-form-field;
+  @apply block outline-none w-full bg-white text-form-field overflow-x-hidden overflow-y-hidden whitespace-pre-wrap;
 
 
   font-family: theme(digitv2.fontFamily.sans);
-  font-size: 1rem;
   font-style: theme(digitv2.fontStyle.normal);
   font-weight: theme(digitv2.fontWeight.regular);
+  color: theme(digitv2.lightTheme.text-primary);
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+  font-size: 1rem;
   line-height: 1.5rem;
   padding: 0.75rem !important;
   padding-top: 0.5rem !important;
-  color: theme(digitv2.lightTheme.text-primary);
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
   height: 6.25rem;
   min-height: 2.5rem;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  white-space: pre-wrap;  
-  overflow-wrap: break-word; 
+  overflow-wrap: break-word;
 
 
   &.disabled {
     @apply text-grey-dark !important;
-    border: 1px solid theme(digitv2.lightTheme.generic-divider);
+    border: 0.063rem solid theme(digitv2.lightTheme.generic-divider);
     pointer-events: none !important;
-    cursor: not-allowed;            
+    cursor: not-allowed;
 
   }
 
   &.noneditable {
     pointer-events: none !important;
-    border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+    border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
     background: theme(digitv2.lightTheme.generic-background);
     color: theme(digitv2.lightTheme.text-secondary);
   }
 
   &.error {
-    border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+    border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
   }
 
-  &.resize-smart{
+  &.resize-smart {
     min-height: 6rem;
     overflow: hidden;
     resize: none;
   }
 
-  &:hover{
+  &:hover {
     overflow-y: auto;
   }
 }
@@ -73,20 +70,20 @@ textarea::-webkit-scrollbar-thumb:hover {
   @apply w-full;
   height: 6.25rem;
 
-  @media (min-width: 481px) and (max-width: 767px) {
+  @media (min-width: 30.063rem) and (max-width: 47.938rem) {
     /* Media query for tablets */
     max-width: 27.5rem;
     min-width: 12.5rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 30rem) {
     /* Media query for mobile */
     max-width: 20.5rem;
     min-width: 9.75rem;
     width: 100%;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 48rem) {
     /* Media query for desktop */
     max-width: 37.5rem;
     min-width: 12.5rem;
@@ -95,6 +92,6 @@ textarea::-webkit-scrollbar-thumb:hover {
 
 .digit-card-textarea:focus,
 .digit-employee-card-textarea:focus {
-  border: 1.5px solid theme(digitv2.lightTheme.primary-orange);
+  border: 0.094rem solid theme(digitv2.lightTheme.primary-orange);
   overflow-y: auto;
 }

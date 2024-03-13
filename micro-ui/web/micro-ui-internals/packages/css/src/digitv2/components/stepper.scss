@@ -1,6 +1,6 @@
 .digit-stepper-container {
   @apply flex overflow-auto;
-  min-height: 64px;
+  min-height: 4rem;
 
   &.vertical {
     @apply flex-col;
@@ -8,13 +8,13 @@
 
   .digit-stepper-checkpoint {
     @apply relative flex-1;
-    min-height: 64px;
+    min-height: 4rem;
     z-index: 1;
   }
 
   .digit-stepper-content {
     @apply flex flex-col items-center;
-    min-height: 64px;
+    min-height: 4rem;
     gap: 0.5rem;
 
     span {
@@ -28,10 +28,10 @@
       font-family: theme(digitv2.fontFamily.sans);
       font-size: 1rem;
       line-height: 1.5rem;
-      letter-spacing: 0px;
+      letter-spacing: 0rem;
       height: 1.5rem;
 
-      @media (max-width: 480px) {
+      @media (max-width: 30rem) {
         font-size: 0.875rem;
         line-height: 1.25rem;
       }
@@ -45,7 +45,7 @@
         font-weight: theme(digitv2.fontWeight.bold);
         line-height: 1.172rem;
 
-        @media (max-width: 480px) {
+        @media (max-width: 30rem) {
           font-size: 1rem;
         }
       }
@@ -58,14 +58,16 @@
 
   .circle {
     @apply flex text-center justify-center items-center font-regular;
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     background-color: theme(digitv2.lightTheme.text-disabled);
     border-radius: 50%;
+    margin-top:0.25rem;
 
-    @media (max-width: 480px) {
-      width: 24px;
-      height: 24px;
+
+    @media (max-width: 30rem) {
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 
@@ -77,30 +79,30 @@
 
   .line {
     @apply absolute;
-    top: 16px;
-    left: calc(50% + 8px);
-    right: calc(-50% + 8px);
-    border-top: 4px solid theme(colors.border);
+    top: 1.25rem;
+    left: calc(50% + 0.5rem);
+    right: calc(-50% + 0.5rem);
+    border-top: 0.25rem solid theme(colors.border);
     z-index: -1;
-    height: 4px;
+    height: 0.25rem;
 
-    @media (min-width: 481px) and (max-width: 767px) {
+    @media (min-width: 30.063rem) and (max-width: 47.938rem) {
       /* Media query for tablets */
-      min-width: 101px;
-      max-width: 631px;
+      min-width: 6.313rem;
+      max-width: 39.438rem;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 30rem) {
       /* Media query for mobile */
-      min-width: 69px;
-      max-width: 270px;
-      top: 10px;
+      min-width: 4.313rem;
+      max-width: 16.875rem;
+      top: 0.875rem;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 48rem) {
       /* Media query for desktop */
-      min-width: 85px;
-      max-width: 1323px;
+      min-width: 5.313rem;
+      max-width: 82.688rem;
     }
 
     &.active {
@@ -109,10 +111,10 @@
     }
 
     &.vertical {
-      top: calc(50% + 8px);
-      bottom: calc(-50% + 8px);
-      left: -48px;
-      width: 4px;
+      top: calc(50% + 0.5rem);
+      bottom: calc(-50% + 0.5rem);
+      left: -3rem;
+      width: 0.25rem;
       height: auto;
       transform: rotate(90deg);
 
@@ -125,7 +127,7 @@
 
   .digit-stepper-content:hover {
     .circle.active {
-      outline: 4px solid #F477381F;
+      outline: 0.25rem solid #F477381F;
     }
 
     .text-done {
@@ -133,7 +135,7 @@
       font-weight: theme(digitv2.fontWeight.bold);
       line-height: 1.188rem;
 
-      @media (max-width: 480px) {
+      @media (max-width: 30rem) {
         font-size: 1rem;
         line-height: 1.172rem;
       }
@@ -143,17 +145,17 @@
 
 .digit-stepper-container::-webkit-scrollbar-track {
   background-color: #F5F5F5;
-  border-radius: 5px;
+  border-radius: 0.313rem;
 }
 
 .digit-stepper-container::-webkit-scrollbar {
-  width: 10px;
+  width: 0.625rem;
   background-color: #F5F5F5;
 }
 
 .digit-stepper-container::-webkit-scrollbar-thumb {
   background-color: #C1C1C1;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 
 .digit-stepper-container::-webkit-scrollbar-thumb:hover {
