@@ -9,28 +9,28 @@ export default (queryClient) => {
   const userType = Digit.UserService.getType();
 
 
-  registerApplication({
-    name: "Workbench",
-    app: () => import("workbench/WorkbenchModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench`,
-    customProps: {
-      title: "Workbench is running on host",
-      queryClient,
-      userType
-    },
-  });
-
-
   // registerApplication({
-  //   name: "Common",
-  //   app: () => import("common/CommonModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/common`, //change to userType here
+  //   name: "Workbench",
+  //   app: () => import("workbench/WorkbenchModule"),
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench`,
   //   customProps: {
-  //     title: "Common Module is running on host",
+  //     title: "Workbench is running on host",
   //     queryClient,
   //     userType
   //   },
   // });
+
+
+  registerApplication({
+    name: "Common",
+    app: () => import("common/CommonModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/common`, //change to userType here
+    customProps: {
+      title: "Common Module is running on host",
+      queryClient,
+      userType
+    },
+  });
 
   // registerApplication({
   //   name: "PGR",
