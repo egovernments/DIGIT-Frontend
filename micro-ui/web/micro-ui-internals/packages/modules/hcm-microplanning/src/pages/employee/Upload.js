@@ -8,7 +8,7 @@ import { FileUploader } from "react-drag-drop-files";
 import Config from "../../configs/UploadConfiguration.json";
 import excelTemplate from "../../configs/excelTemplate.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
-import { parseXlsToJsonMultipleSheets } from "../../utils/exceltojson";
+import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
 import { excelValidations } from "../../utils/excelValidations";
 const Upload = ({ MicroplanName = "default" }) => {
@@ -92,9 +92,9 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   useEffect(() => {
     const checkfile = async (file) => {
-      const blobWrapper = { target: { files: [convertJsonToXlsx(file.file, { skipHeader: true })] } };
-      const jsonData = await parseXlsToJsonMultipleSheets(blobWrapper);
+      const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
       checkForErrorInUploadedFile(jsonData, setUploadedFileError);
+      setSelectedFileType(file.fileType)
     };
 
     if (selectedSection && selectedFileType) {
@@ -116,15 +116,14 @@ const Upload = ({ MicroplanName = "default" }) => {
   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     setLoderActivation(true);
-    const event = { target: { files: [file] } };
-    const result = await parseXlsToJsonMultipleSheets(event);
+    const result = await parseXlsxToJsonMultipleSheets(file);
     console.log(result);
     let fileObject = {
       id: `Microplanning_${selectedSection}`,
       fileName: file.name,
       section: selectedSection,
       fileType: selectedFileType,
-      file: await parseXlsToJsonMultipleSheets(event, { header: 1 }),
+      file: await parseXlsxToJsonMultipleSheets(file, { header: 1 }),
     };
     Digit.SessionStorage.set(fileObject.id, fileObject);
     setFileData(fileObject);
@@ -155,7 +154,7 @@ const Upload = ({ MicroplanName = "default" }) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "template.json";
+    link.download = fileData.fileName;
     link.click();
     URL.revokeObjectURL(url);
   };

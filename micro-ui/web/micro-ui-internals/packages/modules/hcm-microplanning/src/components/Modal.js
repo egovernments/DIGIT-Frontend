@@ -42,7 +42,7 @@ const Modal = ({
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}}/>
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
-          <div className="popup-module-action-bar" style={isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles}>
+          <div className="popup-module-action-bar" style={moduleActionBarStyle(popupModuleActionBarStyles)}>
             {actionCancelLabel || footerLeftButtonBody ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerLeftButtonBody} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={Object.keys(style).length>0?style:footerLeftButtonstyle}/> : null}
             {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerRightButtonBody} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={Object.keys(style).length>0?style:footerRightButtonstyle}/> : null}
           </div>
@@ -52,6 +52,11 @@ const Modal = ({
     </PopUp>
   );
 };
+
+const moduleActionBarStyle = (popupModuleActionBarStyles)=>{
+ return isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles
+}
+
 
 const ButtonSelector = (props) => {
   let theme = "selector-button-primary";
