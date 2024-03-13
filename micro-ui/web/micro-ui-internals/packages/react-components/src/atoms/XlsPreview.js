@@ -6,6 +6,28 @@ import { DownloadIcon } from "./svgindex";
 import Button from "./Button";
 import { SVG } from "./SVG";
 
+
+/* Steps to use 
+*   1. Import the XlsPreview component 
+*        import XlsPreview from "@egovernments/digit-ui-react-components";
+*    2.  Call the component
+*        <XlsPreview file={file} onDownload={() => handleFileDownload(fileUrl)} onBack={() => {}} />
+*
+*    Note: 
+*      Props need to pass in XlsPreview while calling 
+*      a) file 
+*      The Structure of the file props is
+*      {
+*          "id": fileStoreId, (id is optional)
+*          "url": "https://unified-dev-bucket-s3.s3-ap-south-1.amazonaws.com/....", (url of th file getting from filestore search)
+*          "fileName": "dummyName.xlsx" (FileName to show the on header)
+*      }
+*      b) onDownload
+*      c) onBack
+*
+*/
+
+
 function XlsPreview({ file, ...props }) {
   const { t } = useTranslation();
   const documents = file
