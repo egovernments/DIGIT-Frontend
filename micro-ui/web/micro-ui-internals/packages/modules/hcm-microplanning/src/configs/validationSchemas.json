@@ -2,6 +2,24 @@
   "tenantId": "mz",
   "moduleName": "hcm-microplanning",
   "validateSchemas": [
+    
+    {
+      "type": "GEOJSON",
+      "schema": {
+        "Properties": {
+          "BoundaryCD": {
+            "type": "string"
+          },
+          "Population": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "BoundaryCD",
+          "Population"
+        ]
+      }
+    },
     {
       "type": "EXCEL",
       "schema": {

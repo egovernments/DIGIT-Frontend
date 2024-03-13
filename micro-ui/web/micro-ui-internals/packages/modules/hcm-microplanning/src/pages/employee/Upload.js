@@ -10,7 +10,8 @@ import excelTemplate from "../../configs/excelTemplate.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
-import { checkForErrorInUploadedFileExcel} from "../../utils/excelValidations";
+import { checkForErrorInUploadedFileExcel } from "../../utils/excelValidations";
+import { geojsonValidations } from "../../utils/geojsonValidations";
 const Upload = ({ MicroplanName = "default" }) => {
   const { t } = useTranslation();
 
@@ -28,13 +29,13 @@ const Upload = ({ MicroplanName = "default" }) => {
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
-
+  const [fileDataList,setFileDataList] = useState({});
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
       // let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
       let uploadSections = Config["UploadConfiguration"];
-      setSelectedSection(uploadSections.length > 0 ? uploadSections[0].id : null);
+      setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
       setSections(uploadSections);
     }
   }, [data]);
@@ -52,13 +53,13 @@ const Upload = ({ MicroplanName = "default" }) => {
   const sectionOptions = useMemo(() => {
     if (!sections) return [];
     return sections.map((item) => (
-      <UploadSection key={item.id} item={item} selected={selectedSection === item.id} setSelectedSection={setSelectedSection} />
+      <UploadSection key={item.id} item={item} selected={selectedSection.id === item.id} setSelectedSection={setSelectedSection} />
     ));
   }, [sections, selectedSection]);
 
   // Handler for when a file type is selected for uplaod
   const selectFileTypeHandler = (e) => {
-    setSelectedFileType(e.target.name);
+    setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
     setModal("upload-modal");
   };
 
@@ -69,7 +70,7 @@ const Upload = ({ MicroplanName = "default" }) => {
       <UploadComponents
         key={item.id}
         item={item}
-        selected={selectedSection === item.id}
+        selected={selectedSection.id === item.id}
         uploadOptions={item.UploadFileTypes}
         selectedFileType={selectedFileType}
         selectFileTypeHandler={selectFileTypeHandler}
@@ -93,20 +94,23 @@ const Upload = ({ MicroplanName = "default" }) => {
   useEffect(() => {
     const checkfile = async (file) => {
       try {
-        const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
-        checkForErrorInUploadedFileExcel(jsonData, setUploadedFileError, t);
-        setSelectedFileType(file.fileType);
+            console.log(file.fileType);
+            setUploadedFileError(file.error);
+            setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === file.fileType));
       } catch (error) {
+        console.log(error);
         setUploadedFileError("ERROR_PARSING_FILE");
       }
     };
 
     if (selectedSection && selectedFileType) {
-      const file = Digit.SessionStorage.get(`Microplanning_${selectedSection}`);
-      setFileData(file);
+      // const file = Digit.SessionStorage.get(`Microplanning_${selectedSection.id}`);
+      let file = fileDataList[`Microplanning_${selectedSection.id}`];
+      console.log(file)
       if (file && file.file) {
         setDataPresent(true);
         checkfile(file);
+        setFileData(file);
       } else setDataPresent(false);
     } else {
       setDataPresent(false);
@@ -121,27 +125,58 @@ const Upload = ({ MicroplanName = "default" }) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       setLoderActivation(true);
-      const result = await parseXlsxToJsonMultipleSheets(file);
+      console.log(file);
+      let result;
+      let check;
+      let filetoStore;
+      let error;
+      let response;
+      console.log(selectedFileType);
+      switch (selectedFileType.id) {
+        case "Excel":
+          result = await parseXlsxToJsonMultipleSheets(file);
+          response = await checkForErrorInUploadedFileExcel(result,t);
+          if(!response.valid) setUploadedFileError(response.message)
+          error=response.message;
+        console.log(response)
+          check = response.valid;
+          filetoStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+          break;
+        case "GeoJson":
+          const data = await readGeojson(file,t);
+          if(data.valid == false){
+            setLoderActivation(false);
+            setToast(data.toast);
+            return;
+          }
+          response = geojsonValidations(data,t);
+          if(!response.valid) setUploadedFileError(response.message)
+          check = response.valid;
+          error=response.message;
+          filetoStore = data;
+      }
       let fileObject = {
-        id: `Microplanning_${selectedSection}`,
+        id: `Microplanning_${selectedSection.id}`,
         fileName: file.name,
-        section: selectedSection,
-        fileType: selectedFileType,
-        file: await parseXlsxToJsonMultipleSheets(file, { header: 1 }),
+        section: selectedSection.id,
+        fileType: selectedFileType.id,
+        file: filetoStore,
+        error:error?error:null
       };
-      Digit.SessionStorage.set(fileObject.id, fileObject);
       setFileData(fileObject);
-      setLoderActivation(false);
+      setFileDataList({...fileDataList,[fileObject.id]:fileObject});
+      // Digit.SessionStorage.set(fileObject.id, fileObject);
       setDataPresent(true);
-      // { header: 1 }
-      const check = await checkForErrorInUploadedFileExcel(result, setUploadedFileError, t);
+      setLoderActivation(false);
       if (check) {
-        setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY")});
+        setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       } else {
-        setToast({ state: "error", message: t("UPLOADED_FILE_ERROR") });
+        setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
       }
     } catch (error) {
+      console.log(error.message);
       setUploadedFileError("ERROR_UPLOADING_FILE");
+      setLoderActivation(false);
     }
   };
 
@@ -180,7 +215,7 @@ const Upload = ({ MicroplanName = "default" }) => {
           dataUpload ? (
             <div className="upload-component">
               <FileUploadComponent
-                section={sections.filter((e) => e.id === selectedSection)[0]}
+                section={sections.filter((e) => e.id === selectedSection.id)[0]}
                 selectedSection={selectedSection}
                 selectedFileType={selectedFileType}
                 UploadFileToFileStorage={UploadFileToFileStorage}
@@ -217,8 +252,8 @@ const Upload = ({ MicroplanName = "default" }) => {
           sections={sections}
           footerLeftButtonBody={<AlternateButton text={t("ALREDY_HAVE_IT")} />}
           footerRightButtonBody={<DownloadButton text={t("DOWNLOAD_TEMPLATE")} />}
-          header={<ModalHeading label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.toUpperCase() + "_" + selectedFileType.toUpperCase())} />}
-          bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.toUpperCase() + "_" + selectedFileType.toUpperCase())}
+          header={<ModalHeading label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)} />}
+          bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
         />
       )}
       {modal === "delete-conformation" && (
@@ -261,7 +296,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   const { t } = useTranslation();
   // Handle click on section option
   const handleClick = () => {
-    setSelectedSection(item.id);
+    setSelectedSection(item);
   };
 
   return (
@@ -277,7 +312,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
 // Component for rendering individual upload option
 const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, selectFileTypeHandler }) => {
   const { t } = useTranslation();
-  const title = item.title.toUpperCase();
+  const title = item.code;
 
   // Component for rendering individual upload option container
   const UploadOptionContainer = ({ item, selectedFileType, selectFileTypeHandler }) => {
@@ -285,20 +320,20 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
       <div
         key={item.id}
         className="upload-option"
-        style={selectedFileType === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
+        style={selectedFileType.id === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
       >
         <CustomIcon key={item.id} Icon={Icons[item.iconName]} width={"2.5rem"} height={"3rem"} color={"rgba(244, 119, 56, 1)"} />
         <p>{t(item.code)}</p>
         {/* <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={selectedFileType === item.id?t("Selected"):t("Select ")} onSubmit={selectFileTypeHandler} style={{}}/> */}
         <button
-          className={selectedFileType === item.id ? "selected-button" : "select-button"}
+          className={selectedFileType.id === item.id ? "selected-button" : "select-button"}
           type="button"
           id={item.id}
           name={item.id}
           onClick={selectFileTypeHandler}
         >
-          {selectedFileType === item.id && <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} color={"rgba(255, 255, 255, 0)"} />}
-          {selectedFileType === item.id ? t("Selected") : t("Select ")}
+          {selectedFileType.id === item.id && <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} color={"rgba(255, 255, 255, 0)"} />}
+          {selectedFileType.id === item.id ? t("Selected") : t("Select ")}
         </button>
       </div>
     );
@@ -313,7 +348,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 
         <p>{t(`INSTRUCTIONS_DATA_UPLOAD_OPTIONS_${title}`)}</p>
       </div>
-      <div className={selectedFileType === item.id ? " upload-option-container-selected" : "upload-option-container"}>
+      <div className={selectedFileType.id === item.id ? " upload-option-container-selected" : "upload-option-container"}>
         {/* <div className={selectedFileType === item.id ? " upload-option-container-selected" : ""}> */}
         {uploadOptions &&
           uploadOptions.map((item) => (
@@ -330,27 +365,26 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
   const { t } = useTranslation();
   let types;
   section["UploadFileTypes"].forEach((item) => {
-    if (item.id === selectedFileType) types = item.fileExtension;
+    if (item.id === selectedFileType.id) types = item.fileExtension;
   });
   return (
-    <div key={selectedSection} className="upload-component-active">
+    <div key={selectedSection.id} className="upload-component-active">
       <div>
         <div className="heading">
-          <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.toUpperCase()}_${selectedFileType.toUpperCase()}`)}</h2>
-          <div className="download-template-button" onClick={()=>downloadTemplate(setToast)}>
+          <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
+          <div className="download-template-button" onClick={() => downloadTemplate(setToast)}>
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
             <p>{t("DOWNLOAD_TEMPLATE")}</p>
           </div>
         </div>
-        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.toUpperCase()}`)}</p>
+        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
         <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} multiple={false} name="file" types={types}>
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
-            <p>
-              {t(`INSTRUCTIONS_UNLOAD_${selectedFileType.toUpperCase()}`)}{" "}
-              <text className="browse-text">{t("INSTRUCTIONS_UNLOAD_BROWSE_FILES")}</text>
+            <p className="">
+              {t(`INSTRUCTIONS_UNLOAD_${selectedFileType.code}`)} <text className="browse-text">{t("INSTRUCTIONS_UNLOAD_BROWSE_FILES")}</text>
             </p>
           </div>
         </FileUploader>
@@ -364,25 +398,23 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
 const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, DownloaddFile, DeleteDelete, error }) => {
   const { t } = useTranslation();
   return (
-    <div key={selectedSection} className="upload-component-active">
+    <div key={selectedSection.id} className="upload-component-active">
       <div>
         <div className="heading">
-          <h2>
-            <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.toUpperCase()}_${selectedFileType.toUpperCase()}`)}</h2>
-          </h2>
-          <div className="download-template-button" onClick={()=>downloadTemplate(setToast)}>
+          <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
+          <div className="download-template-button" onClick={() => downloadTemplate(setToast)}>
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
             <p>{t("DOWNLOAD_TEMPLATE")}</p>
           </div>
         </div>
-        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.toUpperCase()}`)}</p>
+        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
 
         <div className="uploaded-file">
           <div className="uploaded-file-details">
             <div>
-              <CustomIcon Icon={Icons.File} width={48} height={48} color="rgba(80, 90, 95, 1)" />
+              <CustomIcon Icon={Icons.File} width={"48"} height={"48"} color="rgba(80, 90, 95, 1)" />
             </div>
             <p>{file.fileName}</p>
           </div>
@@ -405,7 +437,7 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
       {error && (
         <div className="file-upload-error-container">
           <div className="heading">
-            <CustomIcon Icon={Icons.Error} width={24} height={24} color="rgba(212, 53, 28, 1)" />
+            <CustomIcon Icon={Icons.Error} width={"24"} height={"24"} color="rgba(212, 53, 28, 1)" />
             <p>{t("ERROR_UPLOADED_FILE")}</p>
           </div>
           <div className="body">
@@ -473,20 +505,37 @@ const ModalWrapper = ({
   );
 };
 
-
-const downloadTemplate = () => {
+const downloadTemplate = (setToast) => {
   try {
-  const blob = convertJsonToXlsx(excelTemplate.excelTemplate[0].excelTemplate, { skipHeader: true });
+    const blob = convertJsonToXlsx(excelTemplate.excelTemplate[0].excelTemplate, { skipHeader: true });
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "template.xlsx";
-  link.click();
-  URL.revokeObjectURL(url);
-} catch (error) {
-  setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
-}
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "template.xlsx";
+    link.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
+  }
+};
+
+const readGeojson = async (file,t) => {
+
+  return new Promise((resolve, reject) => {
+    if (!file) return reject(new Error("No file provided"));
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const geoJSONData = JSON.parse(e.target.result);
+        resolve(geoJSONData);
+      } catch (error) {
+        resolve({valid:false,toast:{ state: "error", message: t("ERROR_PARSING_FILE") }});
+      }
+    };
+    reader.readAsText(file);
+  });
 };
 
 // Custom icon component
