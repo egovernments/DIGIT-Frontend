@@ -955,6 +955,7 @@ async function enrichResourceDetails(request: any) {
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now()
   }
+  // delete request.body.ResourceDetails.dataToCreate
 }
 
 function getFacilityIds(data: any) {
@@ -973,6 +974,25 @@ function matchFacilityData(data: any, searchedFacilities: any) {
       for (const key of keys) {
         if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
           throw new Error(`Value mismatch for key "${key}" at index ${dataFacility.originalIndex}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
+        }
+      }
+    }
+  }
+}
+
+function matchData(datas: any, searchedDatas: any, createAndSearchConfig: any) {
+  const uid = createAndSearchConfig.uniqueIdentifier;
+  for (const data of datas) {
+    const searchData = searchedDatas.find((searchedData: any) => searchedData[uid] == data[uid]);
+
+    if (!searchData) {
+      throw new Error(`Data with ${uid} ${data[uid]} not found in searched data.`);
+    }
+    if (createAndSearchConfig?.matchEachKey) {
+      const keys = Object.keys(data);
+      for (const key of keys) {
+        if (searchData.hasOwnProperty(key) && searchData[key] !== data[key] && key != "!row#number!") {
+          throw new Error(`Value mismatch for key "${key}" at index ${data["!row#number!"] - 1}. Expected: "${data[key]}", Found: "${searchData[key]}"`);
         }
       }
     }
@@ -1001,6 +1021,113 @@ async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) 
   console.log(res, "pppppppppppppppppppppppp")
   return res;
 }
+
+async function enrichAndSaveResourceDetails(requestBody: any) {
+  if (!requestBody?.ResourceDetails?.status) {
+    requestBody.ResourceDetails.status = "data-accepted"
+  }
+  if (!requestBody?.ResourceDetails?.processedFileStoreId) {
+    requestBody.ResourceDetails.processedFileStoreId = null
+  }
+  requestBody.ResourceDetails.id = uuidv4()
+  requestBody.ResourceDetails.auditDetails = {
+    createdTime: Date.now(),
+    createdBy: requestBody.RequestInfo.userInfo?.uuid,
+    lastModifiedTime: Date.now(),
+    lastModifiedBy: requestBody.RequestInfo.userInfo?.uuid
+  }
+  requestBody.ResourceDetails.additionalDetails = { ...requestBody.ResourceDetails.additionalDetails, atttemptedData: requestBody?.ResourceDetails?.dataToCreate }
+  delete requestBody.ResourceDetails.dataToCreate;
+  produceModifiedMessages(requestBody, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC)
+}
+
+async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearchConfig: any) {
+  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+  if (!fileResponse?.fileStoreIds?.[0]?.url) {
+    throw new Error("Not any download url returned for given fileStoreId")
+  }
+  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName)
+}
+
+function convertToType(dataToSet: any, type: any) {
+  switch (type) {
+    case "string":
+      return String(dataToSet);
+    case "number":
+      return Number(dataToSet);
+    case "boolean":
+      // Convert to boolean assuming any truthy value should be true and falsy should be false
+      return Boolean(dataToSet);
+    // Add more cases if needed for other types
+    default:
+      // If type is not recognized, keep dataToSet as it is
+      return dataToSet;
+  }
+}
+
+function setTenantId(
+  resultantElement: any,
+  requestBody: any,
+  createAndSearchConfig: any
+) {
+  if (createAndSearchConfig?.parseArrayConfig?.tenantId) {
+    const tenantId = _.get(requestBody, createAndSearchConfig?.parseArrayConfig?.tenantId?.getValueViaPath);
+    _.set(resultantElement, createAndSearchConfig?.parseArrayConfig?.tenantId?.resultantPath, tenantId);
+  }
+
+}
+
+
+function processData(dataFromSheet: any[], createAndSearchConfig: any) {
+  const parseLogic = createAndSearchConfig?.parseArrayConfig?.parseLogic;
+  const requiresToSearchFromSheet = createAndSearchConfig?.requiresToSearchFromSheet;
+  var createData = [], searchData = [];
+  for (const data of dataFromSheet) {
+    const resultantElement: any = {};
+    for (const element of parseLogic) {
+      let dataToSet = _.get(data, element.sheetColumnName);
+      if (element.conversionCondition) {
+        dataToSet = element.conversionCondition[dataToSet];
+      }
+      if (element.type) {
+        dataToSet = convertToType(dataToSet, element.type);
+      }
+      _.set(resultantElement, element.resultantPath, dataToSet);
+    }
+    resultantElement["!row#number!"] = data["!row#number!"];
+    var addToCreate = true;
+    for (const key of requiresToSearchFromSheet) {
+      if (data[key.sheetColumnName]) {
+        searchData.push(resultantElement)
+        addToCreate = false;
+        break;
+      }
+    }
+    if (addToCreate) {
+      createData.push(resultantElement)
+    }
+  }
+  return { searchData, createData };
+}
+
+function setTenantIdAndSegregate(processedData: any, createAndSearchConfig: any, requestBody: any) {
+  for (const resultantElement of processedData.createData) {
+    setTenantId(resultantElement, requestBody, createAndSearchConfig);
+  }
+  for (const resultantElement of processedData.searchData) {
+    setTenantId(resultantElement, requestBody, createAndSearchConfig);
+  }
+  return processedData;
+}
+
+// Original function divided into two parts
+function convertToTypeData(dataFromSheet: any[], createAndSearchConfig: any, requestBody: any) {
+  const processedData = processData(dataFromSheet, createAndSearchConfig);
+  return setTenantIdAndSegregate(processedData, createAndSearchConfig, requestBody);
+}
+
+
+
 
 
 export {
@@ -1042,7 +1169,11 @@ export {
   enrichResourceDetails,
   getFacilityIds,
   matchFacilityData,
-  autoGenerateBoundaryCodes
+  autoGenerateBoundaryCodes,
+  enrichAndSaveResourceDetails,
+  getDataFromSheet,
+  convertToTypeData,
+  matchData
 };
 
 

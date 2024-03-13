@@ -1,12 +1,54 @@
 const createAndSearch: any = {
     "facility": {
+        requiresToSearchFromSheet: [
+            {
+                sheetColumnName: "Facility Code",
+                searchPath: "Facility.id"
+            }
+        ],
+        matchEachKey: true,
+        parseArrayConfig: {
+            sheetName: "List of Available Facilities",
+            parseLogic: [
+                {
+                    sheetColumnName: "Facility Code",
+                    resultantPath: "id",
+                    type: "string"
+                },
+                {
+                    sheetColumnName: "Facility Name",
+                    resultantPath: "name",
+                    type: "string"
+                },
+                {
+                    sheetColumnName: "Facility Type",
+                    resultantPath: "usage",
+                    type: "string"
+                },
+                {
+                    sheetColumnName: "Facility Status",
+                    resultantPath: "isPermanent",
+                    type: "boolean",
+                    conversionCondition: {
+                        "Perm": "true",
+                        "Temp": ""
+                    }
+                },
+                {
+                    sheetColumnName: "Facility Capacity",
+                    resultantPath: "storageCapacity",
+                    type: "number"
+                }
+            ],
+            tenantId: {
+                getValueViaPath: "ResourceDetails.tenantId",
+                resultantPath: "tenantId"
+            }
+        },
         createBulkDetails: {
             limit: 50,
             createPath: "Facilities",
-            url: "http://localhost:8086/" + "facility/v1/bulk/_create",
-            createElements: [
-
-            ]
+            url: "http://localhost:8086/" + "facility/v1/bulk/_create"
         },
         searchDetails: {
             searchElements: [

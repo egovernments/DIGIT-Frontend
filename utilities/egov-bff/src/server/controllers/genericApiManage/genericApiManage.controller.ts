@@ -1,8 +1,9 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
-import { errorResponder, sendResponse } from "../../utils/index";
-import { validateGenericCreateRequest } from "../../utils/validator";
-import { processCreate } from "../../api/index";
+import { enrichAndSaveResourceDetails, errorResponder, sendResponse } from "../../utils/index";
+import { validateCreateRequest } from "../../utils/validator";
+import { processGenericRequest } from "../../api/index";
+
 
 
 
@@ -30,8 +31,9 @@ class genericApiManageController {
 
     create = async (request: any, response: any) => {
         try {
-            await validateGenericCreateRequest(request);
-            await processCreate(request);
+            await validateCreateRequest(request);
+            await processGenericRequest(request);
+            await enrichAndSaveResourceDetails(request.body);
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))

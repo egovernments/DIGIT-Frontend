@@ -5,16 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import genericApiManageController from '../controllers/genericApiManage/genericApiManage.controller';
-import { convertToFacilityCreateData, convertToFacilityExsistingData, autoGenerateBoundaryCodes, correctParentValues, sortCampaignDetails } from "../utils/index";
-import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData, validateFacilityViaSearch } from "../utils/validator";
+import { convertToFacilityCreateData, autoGenerateBoundaryCodes, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData } from "../utils/index";
+import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData } from "../utils/validator";
 const _ = require('lodash');
-
-
-
-
-
-
 
 async function getWorkbook(fileUrl: string) {
   const headers = {
@@ -56,16 +49,18 @@ const getSheetData = async (fileUrl: string, sheetName: string) => {
   }
 
   const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-  const jsonData = sheetData.map((row: any) => {
+  const jsonData = sheetData.map((row: any, index: number) => {
     const rowData: any = {};
     Object.keys(row).forEach(key => {
       rowData[key] = row[key] === undefined || row[key] === '' ? null : row[key];
     });
+    rowData['!row#number!'] = index + 1; // Adding row number
     return rowData;
   });
   logger.info("Sheet Data : " + JSON.stringify(jsonData))
   return jsonData;
 };
+
 
 
 
@@ -754,6 +749,21 @@ function changeBodyViaElements(elements: any, request: any) {
     }
   }
 }
+
+function changeBodyViaSearchFromSheet(elements: any, request: any, dataFromSheet: any) {
+  if (!elements) {
+    return;
+  }
+  for (const element of elements) {
+    const arrayToSearch = []
+    for (const data of dataFromSheet) {
+      if (data[element.sheetColumnName]) {
+        arrayToSearch.push(data[element.sheetColumnName]);
+      }
+    }
+    _.set(request.body, element?.searchPath, arrayToSearch);
+  }
+}
 function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any) {
   const userUuid = request?.body?.RequestInfo?.userInfo?.uuid
   var count = 0;
@@ -763,14 +773,13 @@ function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], 
     }
   }
   if (count < createdData.length) {
-    throw new Error("Persisting Error")
+    request.body.ResourceDetails.status = "PERSISTER_ERROR"
   }
   logger.info("New created resources count : " + count);
 }
 
 async function processSearch(createAndSearchConfig: any, request: any, params: any) {
   setSearchLimits(createAndSearchConfig, request, params);
-
   logger.info("Search url : " + createAndSearchConfig?.searchDetails?.url);
 
   const arraysToMatch = await performSearch(createAndSearchConfig, request, params);
@@ -805,7 +814,6 @@ async function performSearch(createAndSearchConfig: any, request: any, params: a
 
     const response = await httpRequest(createAndSearchConfig?.searchDetails?.url, request.body, params);
     const resultArray = _.get(response, createAndSearchConfig?.searchDetails?.searchPath);
-
     if (resultArray && Array.isArray(resultArray)) {
       arraysToMatch.push(...resultArray);
       if (resultArray.length < parseInt(createAndSearchConfig?.searchDetails?.searchLimit?.value)) {
@@ -817,7 +825,6 @@ async function performSearch(createAndSearchConfig: any, request: any, params: a
     updateOffset(createAndSearchConfig, params, request.body);
     await new Promise(resolve => setTimeout(resolve, 5000));
   }
-
   return arraysToMatch;
 }
 
@@ -832,6 +839,14 @@ function updateOffset(createAndSearchConfig: any, params: any, requestBody: any)
       _.set(requestBody, offsetConfig?.keyPath, parseInt(_.get(requestBody, offsetConfig?.keyPath) + parseInt(limit)));
     }
   }
+}
+
+async function processSearchAndValidation(request: any, createAndSearchConfig: any, dataFromSheet: any[]) {
+  const params: any = getParamsViaElements(createAndSearchConfig?.searchDetails?.searchElements, request);
+  changeBodyViaElements(createAndSearchConfig?.searchDetails?.searchElements, request)
+  changeBodyViaSearchFromSheet(createAndSearchConfig?.requiresToSearchFromSheet, request, dataFromSheet)
+  const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
+  matchData(request.body.dataToSearch, arraysToMatch, createAndSearchConfig)
 }
 
 
@@ -862,57 +877,84 @@ async function createFacilityData(request: any, response: any) {
     const facilityCreateData = convertToFacilityCreateData(request?.body?.facilityToCreate, request?.body?.ResourceDetails?.tenantId)
     validateFacilityCreateData(facilityCreateData)
     request.body.ResourceDetails.dataToCreate = facilityCreateData;
-    const genericApiManage = new genericApiManageController();
-    await genericApiManage.create(request, response)
+    await httpRequest("http://localhost:8080/project-factory/v1/generic/_create", request.body)
   }
   else {
     logger.info("No Facility Creation is needed as there is no such row with empty Facility Code.")
   }
 }
 
-async function validateExistingFacilityData(request: any) {
-  const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
-  const tenantId = request?.body?.ResourceDetails?.tenantId
-  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
-  if (!fileResponse?.fileStoreIds?.[0]?.url) {
-    throw new Error("Not any download url returned for given fileStoreId")
-  }
-  const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-  await validateFacilityData(facilityData, request)
-  const facilityExsistingData = convertToFacilityExsistingData(request?.body?.facilityToSearch)
-  await validateFacilityViaSearch(tenantId, facilityExsistingData, request.body)
+// async function validateExistingFacilityData(request: any) {
+//   const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
+//   const tenantId = request?.body?.ResourceDetails?.tenantId
+//   const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+//   if (!fileResponse?.fileStoreIds?.[0]?.url) {
+//     throw new Error("Not any download url returned for given fileStoreId")
+//   }
+//   const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
+//   await validateFacilityData(facilityData, request)
+//   const facilityExsistingData = convertToFacilityExsistingData(request?.body?.facilityToSearch)
+//   await validateFacilityViaSearch(tenantId, facilityExsistingData, request.body)
+// }
+
+async function processValidate(request: any) {
+  const type: string = request.body.ResourceDetails.type;
+  const createAndSearchConfig = createAndSearch[type]
+  const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+  const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
+  request.body.dataToSearch = typeData.searchData;
+  await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
 }
 
 
 
-async function processAction(request: any, response: any) {
-  if (request?.body?.ResourceDetails?.action == "create") {
-    if (request?.body?.ResourceDetails?.type == "facility") {
-      await createFacilityData(request, response)
+async function processAction(request: any) {
+  await httpRequest("http://localhost:8080/project-factory/v1/generic/_create", request.body)
+}
+
+async function performAndSaveResourceActivity(request: any, createAndSearchConfig: any, params: any, type: any) {
+  logger.info(type + " create data : " + JSON.stringify(request?.body?.dataToCreate));
+  logger.info(type + " bulk create url : " + createAndSearchConfig?.createBulkDetails?.url, params);
+  if (createAndSearchConfig?.createBulkDetails?.limit) {
+    const limit = createAndSearchConfig?.createBulkDetails?.limit;
+    const dataToCreate = request?.body?.dataToCreate;
+    const chunks = Math.ceil(dataToCreate.length / limit); // Calculate number of chunks
+    for (let i = 0; i < chunks; i++) {
+      const start = i * limit;
+      const end = (i + 1) * limit;
+      const chunkData = dataToCreate.slice(start, end); // Get a chunk of data
+      const creationTime = Date.now();
+      const newRequestBody = JSON.parse(JSON.stringify(request.body));
+      _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
+      await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params);
+      await confirmCreation(createAndSearchConfig, request, chunkData, creationTime);
     }
+  }
+}
+
+async function processGenericRequest(request: any) {
+  if (request?.body?.ResourceDetails?.action == "create") {
+    await processCreate(request)
   }
   else {
-    if (request?.body?.ResourceDetails?.type == "facility") {
-      await validateExistingFacilityData(request)
-    }
+    await processValidate(request)
   }
 }
 
+
 async function processCreate(request: any) {
-  var data = request?.body?.ResourceDetails?.dataToCreate
-  if (data) {
-    const type: string = request.body.ResourceDetails.type;
-    const createAndSearchConfig = createAndSearch[type]
-    if (createAndSearchConfig?.createBulkDetails) {
-      _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, data);
-      const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
-      changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
-      logger.info(type + " create data : " + JSON.stringify(data));
-      logger.info(type + " bulk create url : " + createAndSearchConfig?.createBulkDetails?.url, params);
-      const creationTime = Date.now();
-      await httpRequest(createAndSearchConfig?.createBulkDetails?.url, request.body, params);
-      await confirmCreation(createAndSearchConfig, request, data, creationTime)
-    }
+  const type: string = request.body.ResourceDetails.type;
+  const createAndSearchConfig = createAndSearch[type]
+  const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+  const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
+  request.body.dataToCreate = typeData.createData;
+  request.body.dataToSearch = typeData.searchData;
+  await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
+  if (createAndSearchConfig?.createBulkDetails) {
+    _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, request?.body?.dataToCreate);
+    const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
+    changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
+    await performAndSaveResourceActivity(request, createAndSearchConfig, params, type);
   }
 }
 
@@ -938,7 +980,7 @@ export {
   confirmCreation,
   getParamsViaElements,
   changeBodyViaElements,
-  processCreate,
+  processGenericRequest,
   getBoundaryCodes,
   getBoundaryCodesHandler
 };

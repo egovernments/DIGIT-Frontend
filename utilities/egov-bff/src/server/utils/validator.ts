@@ -365,7 +365,7 @@ function validateAction(action: string) {
 }
 
 function validateResourceType(type: string) {
-    if (!(type == "facility" || type == "user" || type == "boundary")) {
+    if (!createAndSearch[type]) {
         throw new Error("Invalid resource type")
     }
 }
@@ -392,26 +392,6 @@ async function validateCreateRequest(request: any) {
     }
 }
 
-
-async function validateGenericCreateRequest(request: any) {
-    if (!request?.body?.ResourceDetails) {
-        throw new Error("ResourceDetails is missing")
-    }
-    else {
-        if (!request?.body?.ResourceDetails?.type) {
-            throw new Error("type is missing")
-        }
-        if (!request?.body?.ResourceDetails?.dataToCreate) {
-            throw new Error("dataToCreate is missing")
-        }
-        if (!request?.body?.ResourceDetails?.tenantId) {
-            throw new Error("tenantId is missing")
-        }
-        if (!createAndSearch[request?.body?.ResourceDetails?.type]) {
-            throw new Error("Invalid resource type")
-        }
-    }
-}
 function validateFacilityCreateData(data: any) {
     data.forEach((obj: any) => {
         const originalIndex = obj.originalIndex;
@@ -453,6 +433,5 @@ export {
     validateCreateRequest,
     validateFacilityData,
     validateFacilityCreateData,
-    validateFacilityViaSearch,
-    validateGenericCreateRequest
+    validateFacilityViaSearch
 };

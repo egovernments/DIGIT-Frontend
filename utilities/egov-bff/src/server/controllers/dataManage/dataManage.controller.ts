@@ -2,7 +2,7 @@ import * as express from "express";
 import { logger } from "../../utils/logger";
 import { enrichResourceDetails, errorResponder, processGenerate, sendResponse } from "../../utils/index";
 import { validateCreateRequest, validateGenerateRequest } from "../../utils/validator";
-import { createAndUploadFile, getBoundarySheetData, processAction } from "../../api/index";
+import { createAndUploadFile, getBoundarySheetData, processGenericRequest } from "../../api/index";
 
 
 
@@ -67,7 +67,7 @@ class dataManageController {
     createData = async (request: any, response: any) => {
         try {
             await validateCreateRequest(request);
-            await processAction(request, response);
+            await processGenericRequest(request);
             await enrichResourceDetails(request)
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
