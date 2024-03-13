@@ -42,7 +42,7 @@ const Modal = ({
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}} />
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
-          <div className="popup-module-action-bar" style={moduleActionBarStyle(popupModuleActionBarStyles)}>
+          <div className="popup-module-action-bar" style={moduleActionBarStyle(isOBPSFlow,popupModuleActionBarStyles)}>
             {actionCancelLabel || footerLeftButtonBody ? (
               <ButtonSelector
                 textStyles={{ margin: "0px" }}
@@ -72,7 +72,7 @@ const Modal = ({
   );
 };
 
-const moduleActionBarStyle = (popupModuleActionBarStyles) => {
+const moduleActionBarStyle = (isOBPSFlow ,popupModuleActionBarStyles) => {
   return isOBPSFlow
     ? !mobileView
       ? { marginRight: "18px" }
