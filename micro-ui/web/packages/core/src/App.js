@@ -52,22 +52,6 @@ const App = () => {
   
 
   return (
-    <div>
-      <div
-        style={{
-          height: "60px",
-          backgroundColor: "#282c34",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "end",
-        }}
-      >
-        {/* <Header isSignedIn$={isSignedIn$} logout={logout} /> */}
-        /*<button onClick={() => navigate("/auth/login")}>Login</button>
-      </div>
-
-      <div>
-   
         <Suspense fallback={<Loader />}>
           <Switch>
             {/* <Route path="/auth">
@@ -94,8 +78,6 @@ const App = () => {
             }</Route>
           </Switch>
         </Suspense>
-      </div>
-      </div>
   );
 };
 
