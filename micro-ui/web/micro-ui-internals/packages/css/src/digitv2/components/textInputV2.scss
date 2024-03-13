@@ -9,7 +9,7 @@
   font-size: 1rem;
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
-  border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-text-input {
@@ -70,7 +70,7 @@
       pointer-events: none !important;
       cursor: not-allowed;
       background-color: theme(digitv2.lightTheme.generic-background);
-      border: 1px solid theme(digitv2.lightTheme.generic-divider);
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-divider);
       color: theme(digitv2.lightTheme.generic-divider);
     }
 
@@ -130,13 +130,13 @@
     .digit-numeric-button-prefix,
     .digit-numeric-button-suffix {
       pointer-events: none !important;
-      border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
       background: theme(digitv2.lightTheme.generic-background);
       color: theme(digitv2.lightTheme.text-disabled);
     }
 
     input {
-      border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
       background: theme(digitv2.lightTheme.generic-background);
       color: theme(digitv2.lightTheme.text-disabled);
     }
@@ -165,17 +165,17 @@
     .digit-suffix,
     .digit-numeric-button-prefix,
     .digit-numeric-button-suffix {
-      border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+      border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
     }
 
     .digit-numeric-button-prefix,
     .digit-prefix {
-      border-right: 1px solid theme(digitv2.lightTheme.text-secondary);
+      border-right: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
     }
 
     .digit-numeric-button-suffix,
     .digit-suffix {
-      border-left: 1px solid theme(digitv2.lightTheme.text-secondary);
+      border-left: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
     }
 
     &.numeric {
@@ -227,7 +227,7 @@
 .digit-card-input {
   @apply outline-none mt-sm block w-full h-10 bg-white text-form-field;
   padding-left: 0.75rem;
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
 }
@@ -240,7 +240,7 @@
   font-size: 1rem;
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
-  border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-employee-card-input {
@@ -250,7 +250,7 @@
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
 }
@@ -266,7 +266,7 @@
   width: fit-content !important;
   background: theme(colors.grey.mid);
   border-right: 0;
-  padding-right: 5px;
+  padding-right: 0.313rem;
 }
 
 .digit-employee-card-input-error {
@@ -278,19 +278,19 @@
   font-size: 1rem;
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
-  border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-inputWrapper {
   @apply flex justify-start;
-  max-width: 500px;
+  max-width: 31.25rem;
 
   div {
-    max-width: 80px;
+    max-width: 5rem;
   }
 
   span {
-    margin-top: 16px;
+    margin-top: 1rem;
     margin-left: 10%;
     margin-right: 10%;
   }
@@ -298,15 +298,15 @@
 
 @screen dt {
   .digit-card-input {
-    width: 480px;
+    width: 30rem;
   }
 
   .digit-card-input-emp {
-    width: 240px;
+    width: 15rem;
   }
 
   .digit-card-input-error {
-    width: 480px;
+    width: 30rem;
   }
 
   .digit-employee-card-input {
@@ -319,11 +319,11 @@
 
   .digit-card-textarea {
     @apply w-full;
-    max-width: 540px;
+    max-width: 33.75rem;
   }
 
   .card-input-emp {
-    width: 240px;
+    width: 15rem;
   }
 }
 
@@ -334,7 +334,7 @@
   padding-left: 0.75rem;
   font-family: theme(digitv2.fontFamily.sans);
   font-size: 1rem;
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
 }
@@ -345,7 +345,7 @@
   width: fit-content !important;
   background: theme(colors.grey.mid);
   border-right: 0;
-  padding-right: 5px;
+  padding-right: 0.313rem;
 }
 
 .digit-employee-card-input-error {
@@ -358,7 +358,7 @@
   font-size: 1rem;
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
-  border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-card-input-error {
@@ -370,7 +370,7 @@
   font-size: 1rem;
   color: theme(digitv2.lightTheme.text-primary);
   line-height: 1.5rem;
-  border: 1.5px solid theme(digitv2.lightTheme.alert-error);
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 
@@ -390,18 +390,18 @@
     }
   }
 
-  @media (min-width: 481px) and (max-width: 767px) {
+  @media (min-width: 30.063rem) and (max-width: 47.938rem) {
     /* Media query for tablets */
     max-width: 27.5rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 30rem) {
     /* Media query for mobile */
     max-width: 20.5rem;
     width: 100%;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 48rem) {
     /* Media query for desktop */
     max-width: 37.5rem;
   }
@@ -416,17 +416,17 @@
   .digit-suffix:not([readonly]),
   input:not([readonly]) {
     outline: none;
-    border: 1.5px solid theme(digitv2.lightTheme.primary-orange);
+    border: 0.094rem solid theme(digitv2.lightTheme.primary-orange);
   }
 
   .digit-numeric-button-prefix,
   .digit-prefix {
-    border-right: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
+    border-right: 0.063rem solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 
   .digit-numeric-button-suffix,
   .digit-suffix {
-    border-left: 1px solid theme(digitv2.lightTheme.text-secondary) !important;
+    border-left: 0.063rem solid theme(digitv2.lightTheme.text-secondary) !important;
   }
 }
 
@@ -440,7 +440,7 @@
   color: theme(digitv2.lightTheme.text-secondary);
   font-size: 1.25rem;
   height: 2.5rem !important;
-  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
   line-height: 1.172rem;
   background: theme(colors.grey.mid);
   max-width: none !important;

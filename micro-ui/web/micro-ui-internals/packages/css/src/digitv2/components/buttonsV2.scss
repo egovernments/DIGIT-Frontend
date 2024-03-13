@@ -1,7 +1,7 @@
 @import url("../index.scss");
 
 .icon-label-container {
-  @apply w-full flex items-center max-w-full; 
+  @apply w-full flex items-center max-w-full;
   gap: 0.5rem;
 
   .digit-button-customIcon {
@@ -11,7 +11,8 @@
   }
 
   &.link {
-    gap:0.25rem;
+    gap: 0.25rem;
+
     .digit-button-customIcon {
       width: 1.25rem;
       height: 1.25rem;
@@ -30,7 +31,7 @@
   height: fit-content;
   width: fit-content;
   gap: 0.5rem;
-  border: 1px solid #000000;
+  border: 0.063rem solid #000000;
   padding: 0.5rem 1.5rem;
   min-width: 6.5625rem;
   min-height: 2.5rem;
@@ -50,7 +51,7 @@
   width: fit-content;
   padding: 0.5rem 1.5rem !important;
   gap: 0.5rem;
-  box-shadow: 0px -2px 0px 0px theme(digitv2.lightTheme.text-primary) inset;
+  box-shadow: 0rem -0.125rem 0rem 0rem theme(digitv2.lightTheme.text-primary) inset;
   min-width: 6.5625rem;
   min-height: 2.5rem;
 
@@ -70,7 +71,7 @@
 
   &:active {
     @apply bg-primary-main;
-    box-shadow: 0px 0px 4.5px 0px theme(digitv2.lightTheme.primary-orange);
+    box-shadow: 0rem 0rem 0.281rem 0rem theme(digitv2.lightTheme.primary-orange);
   }
 
   h2 {
@@ -84,7 +85,7 @@
 .digit-button-digit-action-cancel {
   @apply bg-border text-center outline-none px-lg text-center;
   border-color: #464646;
-  border-bottom: 1px;
+  border-bottom: 0.063rem;
   border-style: solid;
   min-width: 5.2rem;
 
@@ -97,7 +98,7 @@
   }
 
   h2 {
-    @apply font-medium text-black flex justify-center items-center ;
+    @apply font-medium text-black flex justify-center items-center;
     margin: 0;
     font-family: theme(digitv2.fontFamily.sans)
   }
@@ -110,7 +111,7 @@
   gap: 0.5rem;
   min-width: 6.5625rem;
   min-height: 2.5rem;
-  border: 1px solid theme(digitv2.lightTheme.primary-orange);
+  border: 0.063rem solid theme(digitv2.lightTheme.primary-orange);
   width: fit-content;
 
   &:focus {
@@ -119,13 +120,13 @@
 
   &:hover {
     @apply bg-white;
-    border: 2px solid theme(digitv2.lightTheme.primary-orange);
+    border: 0.125rem solid theme(digitv2.lightTheme.primary-orange);
   }
 
   &:active {
     @apply bg-white;
-    border: 2px solid theme(digitv2.lightTheme.primary-orange);
-    box-shadow: 0px 0px 4.5px 0px theme(digitv2.lightTheme.primary-orange);
+    border: 0.125rem solid theme(digitv2.lightTheme.primary-orange);
+    box-shadow: 0rem 0rem 0.281rem 0rem theme(digitv2.lightTheme.primary-orange);
   }
 
   h2 {
@@ -137,7 +138,7 @@
 
   &.disabled {
     @apply opacity-50;
-    border: 1px solid theme(digitv2.lightTheme.text-disabled);
+    border: 0.063rem solid theme(digitv2.lightTheme.text-disabled);
 
     h2 {
       color: theme(digitv2.lightTheme.text-disabled);
@@ -221,7 +222,7 @@
 .digit-submit-bar {
   @extend .light-primary-button;
   @apply h-10 text-center w-full outline-none cursor-pointer;
-  box-shadow: inset 0px -2px 0px theme(colors.text.primary);
+  box-shadow: inset 0rem -0.125rem 0rem theme(colors.text.primary);
 
   &:focus {
     @apply outline-none;
@@ -288,7 +289,7 @@
 
   .digit-submit-bar,
   .digit-submit-bar-disabled {
-    width: 240px;
+    width: 15rem;
   }
 }
 

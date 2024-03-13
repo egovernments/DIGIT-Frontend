@@ -12,7 +12,7 @@
 
 
         &.wraplabel {
-            @media (min-width: 481px) {
+            @media (min-width: 30.063rem) {
                 height: fit-content;
                 word-break: break-word;
             }
@@ -23,7 +23,7 @@
             width: 80%;
             gap: 0.25rem;
 
-            @media (max-width: 480px) {
+            @media (max-width: 30rem) {
                 /* Media query for mobile */
                 width: 100%;
             }
@@ -36,16 +36,16 @@
         .info-icon .infotext {
             @apply absolute font-regular text-center;
             visibility: hidden;
-            width: 120px;
+            width: 7.5rem;
             background-color: #555555;
             color: theme(digitv2.lightTheme.paper-primary);
             padding: 0.5rem 0;
             z-index: 1;
             bottom: 100%;
             left: 50%;
-            margin-left: -60px;
+            margin-left: -3.75rem;
             font-family: theme(digitv2.fontFamily.sans);
-            border-radius: 6px;
+            border-radius: 0.375rem;
         }
 
         .info-icon:hover .infotext {
@@ -57,7 +57,7 @@
             text-overflow: ellipsis;
 
             &.wraplabel {
-                @media (min-width: 481px) {
+                @media (min-width: 30.063rem) {
                     @apply whitespace-normal;
                 }
             }
@@ -79,18 +79,18 @@
         gap: 0.5rem;
 
 
-        @media (min-width: 481px) and (max-width: 767px) {
+        @media (min-width: 30.063rem) and (max-width: 47.938rem) {
             /* Media query for tablets */
             max-width: 27.5rem;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 30rem) {
             /* Media query for mobile */
             max-width: 20.5rem;
             width: 100%;
         }
 
-        @media (min-width: 768px) {
+        @media (min-width: 48rem) {
             /* Media query for desktop */
             max-width: 37.5rem;
         }
@@ -108,7 +108,7 @@
             @extend .typography.body-xs;
             @apply font-regular w-full;
             line-height: 1.174rem;
-            margin: 0px;
+            margin: 0rem;
             color: theme(digitv2.lightTheme.alert-error)
         }
     }

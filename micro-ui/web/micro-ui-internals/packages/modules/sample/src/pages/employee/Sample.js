@@ -201,19 +201,6 @@ const Create = () => {
           direction="horizontal"
           onStepClick={onStepClick}
         />
-        <Stepper
-          populators={{
-            name: "stepper",
-          }}
-          type="stepper"
-          currentStep={3}
-          customSteps={{}}
-          totalSteps={5}
-          direction="horizontal"
-          onStepClick={() => {
-            console.log("step clicked");
-          }}
-        />
       </div>
       <div style={commonDivStyle}>
         <InfoCard
@@ -302,7 +289,7 @@ const Create = () => {
           ]}
         />
 
-<InfoCard
+        <InfoCard
           populators={{
             name: "infocardwithelements",
           }}

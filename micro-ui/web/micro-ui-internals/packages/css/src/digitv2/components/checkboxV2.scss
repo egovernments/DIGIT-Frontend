@@ -40,7 +40,7 @@
   }
 
   input:checked~.digit-custom-checkbox {
-    border: 2px solid theme(digitv2.lightTheme.primary-orange);
+    border: 0.125rem solid theme(digitv2.lightTheme.primary-orange);
   }
 
 
@@ -59,7 +59,7 @@
     @apply text-left;
     word-break: break-word;
     line-height: 1.5rem;
-    letter-spacing: 0px;
+    letter-spacing: 0rem;
     color: theme(digitv2.lightTheme.text-primary);
   }
 
@@ -69,11 +69,11 @@
     }
 
     .digit-custom-checkbox {
-      border: 1px solid theme(digitv2.lightTheme.text-disabled);
+      border: 0.063rem solid theme(digitv2.lightTheme.text-disabled);
     }
 
     input:checked~.digit-custom-checkbox {
-      border: 2px solid theme(digitv2.lightTheme.text-disabled);
+      border: 0.125rem solid theme(digitv2.lightTheme.text-disabled);
     }
   }
 }
