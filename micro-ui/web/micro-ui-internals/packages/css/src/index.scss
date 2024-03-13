@@ -110,6 +110,7 @@
 /* @import "./digitv2/typography.scss"; */
 @import "./components/inboxv2/index.scss";
 @import "./components//sidebar.scss";
+@import "./pages/employee/campaignManager.scss";
 
 .wbh-header-container {
   display: flex !important;
@@ -804,4 +805,10 @@ input[type="number"] {
 
 .info-banner-wrap div{
   align-items: center;
+}
+.secondary-action-btn{
+    cursor: pointer;
+    margin-left: 4.5rem;
+    font-weight: 500;
+    margin-right: 10px;
 }

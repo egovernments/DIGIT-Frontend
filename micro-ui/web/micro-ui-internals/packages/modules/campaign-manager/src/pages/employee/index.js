@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import SetupCampaign from "./SetupCampaign";
 // import CampaignHeader from "../../components/CampaignHeader";
 
 const CampaignBreadCrumb = ({ location, defaultPath }) => {
@@ -32,6 +33,7 @@ const App = ({ path }) => {
       <Switch>
         <AppContainer className="campaign">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Home Campaign Loaded</div>} />
+          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

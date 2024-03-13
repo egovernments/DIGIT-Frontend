@@ -6,6 +6,7 @@ const ROLES = {
   LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
   MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
+  HCM:["SYSTEM_ADMINISTRATOR","CAMPAIGN_ADMIN"]
 };
 
 const CampaignCard = () => {
@@ -20,7 +21,7 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_CAMPAIGN_HOME"),
       link: `/${window?.contextPath}/employee/campaign/sample`,
-      roles: [],  // @nabeel roles to be added later
+      roles: ROLES.HCM  // @nabeel roles to be added later
     },
   ];
 

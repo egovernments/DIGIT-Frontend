@@ -1,0 +1,47 @@
+@import url("../../index.scss");
+
+.workbench-bulk-upload {
+    display: flex;
+    padding-top: 0.7rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    margin-left: 1rem;
+    .workbench-download-template-btn {
+      margin-right: 1rem;
+    }
+}
+.info-text{
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+}
+.drag-drop-container {
+    background-color: #fafafa;
+    border: 1.5px dashed #d6d5d4;
+    border-radius: 5px;
+    margin: -1rem 1rem 1rem 1rem;
+    padding: 1rem 1rem 1rem 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  
+    .drag-drop-text {
+      text-decoration: none;
+  
+      .browse-text {
+        text-decoration: none;
+        color: #f47738;
+        transition: color 0.3s;
+      }
+  
+      .browse-text:hover {
+        color: #f47738;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+}
+.delete-and-download-button{
+    display: flex;
+    gap: 1.5rem;
+  }
+
