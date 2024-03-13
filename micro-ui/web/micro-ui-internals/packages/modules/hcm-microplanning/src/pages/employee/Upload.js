@@ -92,9 +92,13 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   useEffect(() => {
     const checkfile = async (file) => {
-      const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
-      checkForErrorInUploadedFile(jsonData, setUploadedFileError,t);
-      setSelectedFileType(file.fileType);
+      try {
+        const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
+        checkForErrorInUploadedFile(jsonData, setUploadedFileError, t);
+        setSelectedFileType(file.fileType);
+      } catch (error) {
+        setUploadedFileError("ERROR_PARSING_FILE");
+      }
     };
 
     if (selectedSection && selectedFileType) {
@@ -115,25 +119,29 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
-    setLoderActivation(true);
-    const result = await parseXlsxToJsonMultipleSheets(file);
-    let fileObject = {
-      id: `Microplanning_${selectedSection}`,
-      fileName: file.name,
-      section: selectedSection,
-      fileType: selectedFileType,
-      file: await parseXlsxToJsonMultipleSheets(file, { header: 1 }),
-    };
-    Digit.SessionStorage.set(fileObject.id, fileObject);
-    setFileData(fileObject);
-    setLoderActivation(false);
-    setDataPresent(true);
-    // { header: 1 }
-    const check = await checkForErrorInUploadedFile(result, setUploadedFileError,t);
-    if (check) {
-      setToast({ state: "success", message: "File uploaded Successfully!" });
-    } else {
-      setToast({ state: "error", message: "Uploaded File error!" });
+    try {
+      setLoderActivation(true);
+      const result = await parseXlsxToJsonMultipleSheets(file);
+      let fileObject = {
+        id: `Microplanning_${selectedSection}`,
+        fileName: file.name,
+        section: selectedSection,
+        fileType: selectedFileType,
+        file: await parseXlsxToJsonMultipleSheets(file, { header: 1 }),
+      };
+      Digit.SessionStorage.set(fileObject.id, fileObject);
+      setFileData(fileObject);
+      setLoderActivation(false);
+      setDataPresent(true);
+      // { header: 1 }
+      const check = await checkForErrorInUploadedFile(result, setUploadedFileError, t);
+      if (check) {
+        setToast({ state: "success", message: "File uploaded Successfully!" });
+      } else {
+        setToast({ state: "error", message: "Uploaded File error!" });
+      }
+    } catch (error) {
+      setUploadedFileError("ERROR_UPLOADING_FILE");
     }
   };
 
@@ -465,19 +473,23 @@ const ModalWrapper = ({
   );
 };
 
-const checkForErrorInUploadedFile = async (fileInJson, setUploadedFileError,t) => {
-  const valid = excelValidations(fileInJson);
-  if (valid.valid) {
-    setUploadedFileError(null);
-    return true;
-  } else {
-    const columnList = valid.columnList;
-    const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
-      "PLACEHOLDER",
-      `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-    );
-    setUploadedFileError(message);
-    return false;
+const checkForErrorInUploadedFile = async (fileInJson, setUploadedFileError, t) => {
+  try {
+    const valid = excelValidations(fileInJson);
+    if (valid.valid) {
+      setUploadedFileError(null);
+      return true;
+    } else {
+      const columnList = valid.columnList;
+      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
+        "PLACEHOLDER",
+        `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+      );
+      setUploadedFileError(message);
+      return false;
+    }
+  } catch (error) {
+    setUploadedFileError("ERROR_PARSING_FILE");
   }
 };
 
