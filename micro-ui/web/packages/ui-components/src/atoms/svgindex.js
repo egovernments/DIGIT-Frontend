@@ -1071,6 +1071,57 @@ const AddIcon = ({ styles, className, fill = "white" }) => (
   </svg>
 );
 
+const UploadIcon = ({styles, className, fill = "white",height="64",width="64" }) => (
+  <svg style={{...styles}} className={className} width={width} height={height} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5084)">
+      <path
+        d="M24.0007 42.6667H40.0007V26.6667H50.6673L32.0007 8L13.334 26.6667H24.0007V42.6667ZM13.334 48H50.6673V53.3333H13.334V48Z"
+        fill="#B1B4B6"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5084">
+        <rect width={width} height={height} fill={fill} />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const DeleteIconv2 = ({styles, className, fill = "#F47738",height="24",width="24" }) => (
+  <svg width={width} style={styles} className={className} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5088)">
+      <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill={fill}/>
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5088">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const InfoIconOutline = ({styles, className, fill = "#505A5F",height="20",width="20" }) => (
+  <svg style={styles} className={className} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill={fill}>
+  <path d="M8.7085 5.54171H10.2918V7.12504H8.7085V5.54171ZM8.7085 8.70837H10.2918V13.4584H8.7085V8.70837ZM9.50016 1.58337C5.13016 1.58337 1.5835 5.13004 1.5835 9.50004C1.5835 13.87 5.13016 17.4167 9.50016 17.4167C13.8702 17.4167 17.4168 13.87 17.4168 9.50004C17.4168 5.13004 13.8702 1.58337 9.50016 1.58337ZM9.50016 15.8334C6.00891 15.8334 3.16683 12.9913 3.16683 9.50004C3.16683 6.00879 6.00891 3.16671 9.50016 3.16671C12.9914 3.16671 15.8335 6.00879 15.8335 9.50004C15.8335 12.9913 12.9914 15.8334 9.50016 15.8334Z" fill="#505A5F"/>
+</svg>
+)
+
+const FileIcon = ({ styles, className, fill = "white", height = "64", width = "64" }) => (
+  <svg styles={styles} className={className} width="24" height="24" viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5092)">
+      <path
+        d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z"
+        fill="#505A5F"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5092">
+        <rect width="24" height="24" fill={fill} />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 const SubtractIcon = ({ styles, className, fill = "white" }) => (
   <svg width="12" height="14" className={className} style={{ ...styles }} viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M9.24609 0.783203V3.45508H0.667969V0.783203H9.24609Z" fill={fill} />
@@ -1735,9 +1786,55 @@ const WarningIcon =({ className = "", fill = "none", style = {} })=>(<svg width=
 </defs>
 </svg>
 )
+
+const AttentionListIcon =({ className = "", fill = "none", style = {} })=>(
+  <svg width="36" height="36" viewBox="0 0 24 27" fill={fill } className={className} style={style} xmlns="http://www.w3.org/2000/svg">
+  <path d="M21.3333 3.00065H15.76C15.2 1.45398 13.7333 0.333984 12 0.333984C10.2667 0.333984 8.8 1.45398 8.24 3.00065H2.66667C1.2 3.00065 0 4.20065 0 5.66732V24.334C0 25.8007 1.2 27.0007 2.66667 27.0007H21.3333C22.8 27.0007 24 25.8007 24 24.334V5.66732C24 4.20065 22.8 3.00065 21.3333 3.00065ZM12 3.00065C12.7333 3.00065 13.3333 3.60065 13.3333 4.33398C13.3333 5.06732 12.7333 5.66732 12 5.66732C11.2667 5.66732 10.6667 5.06732 10.6667 4.33398C10.6667 3.60065 11.2667 3.00065 12 3.00065ZM12.6667 21.6673H5.33333V19.0007H12.6667V21.6673ZM18.6667 16.334H5.33333V13.6673H18.6667V16.334ZM18.6667 11.0007H5.33333V8.33398H18.6667V11.0007Z" fill="#F47738"/>
+  </svg>
+  )
+  
+  const HelpOutlineIcon = ({ className = "", fill = "", style = {} }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className={className} style={style}>
+      <g clip-path="url(#clip0_52342_113207)">
+        <path
+          d="M11 18H13V16H11V18ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6C9.79 6 8 7.79 8 10H10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 12 11 11.75 11 15H13C13 12.75 16 12.5 16 10C16 7.79 14.21 6 12 6Z"
+          fill="#F47738"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_52342_113207">
+          <rect width="24" height="24" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+  
+  const InputIcon = () => (
+    <svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M33.9993 0.0166016H3.99935C2.16602 0.0166016 0.666016 1.5166 0.666016 3.34994V9.99994H3.99935V3.3166H33.9993V26.6999H3.99935V19.9999H0.666016V26.6833C0.666016 28.5166 2.16602 29.9833 3.99935 29.9833H33.9993C35.8327 29.9833 37.3327 28.5166 37.3327 26.6833V3.34994C37.3327 1.49994 35.8327 0.0166016 33.9993 0.0166016ZM17.3327 21.6666L23.9993 14.9999L17.3327 8.33327V13.3333H0.666016V16.6666H17.3327V21.6666Z"
+        fill="#F47738"
+      />
+    </svg>
+  );
+  
+  const TreatmentQualityIcon = ({ className = "", fill = "", style = {} }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="30" viewBox="0 0 34 30" fill="none" className={className} style={style}>
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M30.332 0H3.66536C1.83203 0 0.332031 1.5 0.332031 3.33333V26.6667C0.332031 28.5 1.83203 30 3.66536 30H30.332C32.1654 30 33.6654 28.5 33.6654 26.6667V3.33333C33.6654 1.5 32.1654 0 30.332 0ZM13.6654 23.3333H5.33203V20H13.6654V23.3333ZM13.6654 16.6667H5.33203V13.3333H13.6654V16.6667ZM13.6654 10H5.33203V6.66667H13.6654V10ZM21.6987 20L16.9987 15.2667L19.3487 12.9167L21.6987 15.2833L26.982 10L29.3487 12.3667L21.6987 20Z"
+        fill="#F47738"
+      />
+    </svg>
+  );
+
 const ExpenditureIcon = BillsIcon;
 
 export {
+  InputIcon,
+  TreatmentQualityIcon,
+  HelpOutlineIcon,
   AnnouncementIcon,
   ReceiptIcon,
   CreateEstimateIcon,
@@ -1886,5 +1983,10 @@ export {
   InfoIcon,
   PaymentIcon,
   HistoryIcon,
-  WarningIcon
+  WarningIcon,
+  AttentionListIcon,
+  UploadIcon,
+  FileIcon,
+  DeleteIconv2,
+  InfoIconOutline
 };
