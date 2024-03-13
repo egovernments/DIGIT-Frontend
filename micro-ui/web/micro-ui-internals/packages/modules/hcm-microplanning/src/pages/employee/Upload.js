@@ -117,7 +117,6 @@ const Upload = ({ MicroplanName = "default" }) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     setLoderActivation(true);
     const result = await parseXlsxToJsonMultipleSheets(file);
-    console.log(result);
     let fileObject = {
       id: `Microplanning_${selectedSection}`,
       fileName: file.name,
@@ -129,7 +128,6 @@ const Upload = ({ MicroplanName = "default" }) => {
     setFileData(fileObject);
     setLoderActivation(false);
     setDataPresent(true);
-    // uploadEvent.target.files[0];
     // { header: 1 }
     const check = await checkForErrorInUploadedFile(result, setUploadedFileError);
     if (check) {

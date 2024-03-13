@@ -1,22 +1,5 @@
 import XLSX from "xlsx";
 
-export const parseXlsToJson = (event, setter) => {
-  event.preventDefault();
-
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
-    const sheetName = workbook.SheetNames[0]; // Assuming you want the first sheet
-
-    const result = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    setter(() => result);
-  };
-
-  reader.readAsArrayBuffer(file);
-};
-
 // input is a xlsx blob
 export const parseXlsxToJsonMultipleSheets = (file, options) => {
   return new Promise((resolve, reject) => {

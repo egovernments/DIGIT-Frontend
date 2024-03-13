@@ -15,36 +15,55 @@ const Modal = ({
   formId,
   isDisabled,
   hideSubmit,
-  style={},
-  footerLeftButtonstyle={},
-  footerRightButtonstyle={},
+  style = {},
+  footerLeftButtonstyle = {},
+  footerRightButtonstyle = {},
   footerLeftButtonBody,
   footerRightButtonBody,
   popupModuleMianStyles,
   headerBarMainStyle,
   isOBPSFlow = false,
-  popupModuleActionBarStyles={}
+  popupModuleActionBarStyles = {},
 }) => {
   /**
    * TODO: It needs to be done from the desgin changes
    */
-   const mobileView = Digit.Utils.browser.isMobile() ? true : false;
+  const mobileView = Digit.Utils.browser.isMobile() ? true : false;
   useEffect(() => {
-    document.body.style.overflowY = 'hidden';
-    return () =>{
-      document.body.style.overflowY = 'auto';
-    }
-  }, [])
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "auto";
+    };
+  }, []);
 
   return (
     <PopUp>
       <div className="popup-module" style={popupStyles}>
-        <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}}/>
+        <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}} />
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
           <div className="popup-module-action-bar" style={moduleActionBarStyle(popupModuleActionBarStyles)}>
-            {actionCancelLabel || footerLeftButtonBody ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerLeftButtonBody} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={Object.keys(style).length>0?style:footerLeftButtonstyle}/> : null}
-            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} ButtonBody={footerRightButtonBody} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={Object.keys(style).length>0?style:footerRightButtonstyle}/> : null}
+            {actionCancelLabel || footerLeftButtonBody ? (
+              <ButtonSelector
+                textStyles={{ margin: "0px" }}
+                ButtonBody={footerLeftButtonBody}
+                theme="border"
+                label={actionCancelLabel}
+                onSubmit={actionCancelOnSubmit}
+                style={Object.keys(style).length > 0 ? style : footerLeftButtonstyle}
+              />
+            ) : null}
+            {!hideSubmit ? (
+              <ButtonSelector
+                textStyles={{ margin: "0px" }}
+                ButtonBody={footerRightButtonBody}
+                label={actionSaveLabel}
+                onSubmit={actionSaveOnSubmit}
+                formId={formId}
+                isDisabled={isDisabled}
+                style={Object.keys(style).length > 0 ? style : footerRightButtonstyle}
+              />
+            ) : null}
           </div>
         </div>
       </div>
@@ -53,10 +72,13 @@ const Modal = ({
   );
 };
 
-const moduleActionBarStyle = (popupModuleActionBarStyles)=>{
- return isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles
-}
-
+const moduleActionBarStyle = (popupModuleActionBarStyles) => {
+  return isOBPSFlow
+    ? !mobileView
+      ? { marginRight: "18px" }
+      : { position: "absolute", bottom: "5%", right: "10%", left: window.location.href.includes("employee") ? "0%" : "7%" }
+    : popupModuleActionBarStyles;
+};
 
 const ButtonSelector = (props) => {
   let theme = "selector-button-primary";
@@ -78,10 +100,9 @@ const ButtonSelector = (props) => {
       style={props.style ? props.style : null}
     >
       <h2 style={{ ...props?.textStyles, ...{ width: "100%" } }}>{props.label}</h2>
-      {props.ButtonBody?props.ButtonBody:""}
+      {props.ButtonBody ? props.ButtonBody : ""}
     </button>
   );
 };
-
 
 export default Modal;

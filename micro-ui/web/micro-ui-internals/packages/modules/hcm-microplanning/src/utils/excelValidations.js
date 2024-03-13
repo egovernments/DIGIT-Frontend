@@ -28,13 +28,10 @@ const schema = {
 };
 
 const validate = ajv.compile(schema);
-// const valid = validate(data);
 export const excelValidations = (data) => {
   const valid = validate(data);
   if (!valid) {
     let columns = new Set();
-    // let missing=[]
-    console.log(validate.errors)
     for (let i = 0; i < validate.errors.length; i++) {
       if (validate.errors[i].keyword == "type") {
         const instancePath = validate.errors[i].instancePath.split("/");
