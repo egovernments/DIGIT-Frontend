@@ -1,25 +1,17 @@
 import Ajv from "ajv";
-
 const ajv = new Ajv({ allErrors: true });
+import validateSchema  from "../configs/validationSchemas.json";
 
+const schemaData = validateSchema.validateSchemas.find((item)=>item.type="EXCEL").schema;
 const schema = {
   type: "object",
-  properties: {},
   patternProperties: {
     ".*": {
       type: "array",
       items: {
         type: "object",
-        patternProperties: {
-          "Boundary code": { type: "string" },
-          "Total population": { type: "number" },
-          "Target population": { type: "number" },
-          "Total households": { type: "number" },
-          "Target households": { type: "number" },
-          Latitude: { type: "number" },
-          Longitude: { type: "number" },
-        },
-        required: ["Boundary code", "Total population", "Target population", "Total households", "Target households", "Latitude", "Longitude"],
+        properties: schemaData.Properties,
+        required: schemaData.required,
         additionalProperties: true,
       },
     },
@@ -29,6 +21,7 @@ const schema = {
 
 const validate = ajv.compile(schema);
 export const excelValidations = (data) => {
+
   const valid = validate(data);
   if (!valid) {
     let columns = new Set();

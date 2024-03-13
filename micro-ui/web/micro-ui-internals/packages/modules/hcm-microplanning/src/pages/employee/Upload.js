@@ -93,8 +93,8 @@ const Upload = ({ MicroplanName = "default" }) => {
   useEffect(() => {
     const checkfile = async (file) => {
       const jsonData = await parseXlsxToJsonMultipleSheets(convertJsonToXlsx(file.file, { skipHeader: true }));
-      checkForErrorInUploadedFile(jsonData, setUploadedFileError);
-      setSelectedFileType(file.fileType)
+      checkForErrorInUploadedFile(jsonData, setUploadedFileError,t);
+      setSelectedFileType(file.fileType);
     };
 
     if (selectedSection && selectedFileType) {
@@ -129,7 +129,7 @@ const Upload = ({ MicroplanName = "default" }) => {
     setLoderActivation(false);
     setDataPresent(true);
     // { header: 1 }
-    const check = await checkForErrorInUploadedFile(result, setUploadedFileError);
+    const check = await checkForErrorInUploadedFile(result, setUploadedFileError,t);
     if (check) {
       setToast({ state: "success", message: "File uploaded Successfully!" });
     } else {
@@ -340,7 +340,10 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
         <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} multiple={false} name="file" types={types}>
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
-            <p>{t(`UNLOAD_INSTRUCTIONS_${selectedFileType.toUpperCase()}`)}</p>
+            <p>
+              {t(`INSTRUCTIONS_UNLOAD_${selectedFileType.toUpperCase()}`)}{" "}
+              <text className="browse-text">{t("INSTRUCTIONS_UNLOAD_BROWSE_FILES")}</text>
+            </p>
           </div>
         </FileUploader>
         {/* children={dragDropJSX} onTypeError={fileValidator} /> */}
@@ -462,16 +465,17 @@ const ModalWrapper = ({
   );
 };
 
-const checkForErrorInUploadedFile = async (fileInJson, setUploadedFileError) => {
+const checkForErrorInUploadedFile = async (fileInJson, setUploadedFileError,t) => {
   const valid = excelValidations(fileInJson);
   if (valid.valid) {
     setUploadedFileError(null);
     return true;
   } else {
     const columnList = valid.columnList;
-    const message = `The columns ${columnList.slice(0, columnList.length - 1).join(", ")} and ${
-      columnList[columnList.length - 1]
-    } do not match template requirments!`;
+    const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
+      "PLACEHOLDER",
+      `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+    );
     setUploadedFileError(message);
     return false;
   }
@@ -541,19 +545,5 @@ const Loader = () => {
     </div>
   );
 };
-
-// const Toast = ({ toast, handleClose }) => {
-//   return (
-//     <div className={`toast-container ${toast.state}`}>
-//       <div className="toast-content">
-//         <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} color={"rgba(255, 255, 255, 0)"} />
-//         <span className="message">{toast.message}</span>
-//         <button className="close-button" onClick={handleClose}>
-//           &#10005;
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
 
 export default Upload;

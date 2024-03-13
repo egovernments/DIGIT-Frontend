@@ -93,6 +93,9 @@
             display: flex;
             justify-content: space-between;
             align-items: start;
+            h2 {
+                width: 90% !important;
+            }
             .download-template-button {
                 display: flex !important;
                 padding-left: 0.625rem;
@@ -101,13 +104,14 @@
                 min-width: 13.5rem;
                 height: 2.5rem;
                 border: 1px rgba(244, 119, 56, 1) solid;
+
                 .icon {
                     display: flex;
                     align-items: center;
                     margin: 0;
                     padding: 0;
                 }
-        
+
                 p {
                     padding: 0;
                     margin: 0;
@@ -224,6 +228,17 @@
         align-items: center;
         justify-content: center;
         background-color: rgba(250, 250, 250, 255);
+
+        p {
+            padding: 0;
+            margin: 0
+        }
+
+        .browse-text {
+            color:rgba(244, 119, 56, 1);
+            text-decoration: underline;
+            cursor: pointer;
+        }
     }
 
     .uploaded-file {
@@ -236,7 +251,7 @@
         align-items: center;
         margin-top: 0.625rem;
         padding: 0 0.625rem;
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
 
         .uploaded-file-details {
             display: flex;
@@ -261,7 +276,7 @@
             flex-direction: row;
             align-items: center;
             justify-items: end;
-            flex-wrap: wrap;
+            flex-wrap: wrap !important;
 
             .button {
                 display: flex !important;
