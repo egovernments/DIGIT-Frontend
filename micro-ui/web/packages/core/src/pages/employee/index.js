@@ -39,7 +39,9 @@ const EmployeeApp = ({
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
-
+// return(
+//   <div>Core module</div>
+// )
   return (
     <div className="employee">
       <Switch>

@@ -11,7 +11,7 @@ import LevelCards from "../../components/LevelCards";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
 
 const BoundaryHierarchyTypeAdd = () => {
-  const { t } = useTranslation();
+    const { t } = useTranslation();
   const stateId = Digit.ULBService.getStateId();
   const [showToast, setShowToast] = useState(null);
   const [config, setConfig] = useState([...addBoundaryHierarchyConfig]);
