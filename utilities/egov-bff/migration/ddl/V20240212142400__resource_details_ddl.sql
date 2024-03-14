@@ -21,13 +21,12 @@ CREATE TABLE eg_resource_activity (
     requestPayload jsonb,
     tenantId varchar(128),
     responsePayload jsonb,
-    "status" varchar(128),
+    "status" bigint,
     createdBy varchar(128),
     createdTime bigint,
     lastModifiedBy varchar(128),
     lastModifiedTime bigint,
     additionalDetails jsonb,
-    affectedRows jsonb,
     resourceDetailsId varchar(128),
     FOREIGN KEY (resourceDetailsId) REFERENCES eg_resource_details(id)
 );

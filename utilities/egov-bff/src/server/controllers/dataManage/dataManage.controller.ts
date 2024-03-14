@@ -27,7 +27,6 @@ class dataManageController {
     public intializeRoutes() {
         this.router.post(`${this.path}/_generate`, this.generateData);
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
-        this.router.post(`${this.path}/generateBoundaryCode`, this.generateBoundaryCode);
         this.router.post(`${this.path}/_create`, this.createData);
     }
 
@@ -59,10 +58,6 @@ class dataManageController {
             return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
         }
     };
-
-    generateBoundaryCode = async (request: any, response: any) => {
-
-    }
 
     createData = async (request: any, response: any) => {
         try {

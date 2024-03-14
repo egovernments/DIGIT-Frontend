@@ -14,7 +14,6 @@ import { processValidationWithSchema } from "./validator";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
 const NodeCache = require("node-cache");
-const jp = require("jsonpath");
 const _ = require('lodash');
 
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -167,28 +166,6 @@ const errorResponder = (
     .send(getErrorResponse("INTERNAL_SERVER_ERROR", error?.message));
 };
 
-// Convert the object to the format required for measurement
-const convertObjectForMeasurment = (obj: any, config: any, defaultValue?: any) => {
-  const resultBody: Record<string, any> = defaultValue || {};
-
-  const assignValueAtPath = (obj: any, path: any, value: any) => {
-    _.set(obj, path, value);
-  };
-
-
-  config.forEach((configObj: any) => {
-    const { path, jsonPath } = configObj;
-    let jsonPathValue = jp.query(obj, jsonPath);
-    if (jsonPathValue.length === 1) {
-      jsonPathValue = jsonPathValue[0];
-    }
-    // Assign jsonPathValue to the corresponding property in resultBody
-    assignValueAtPath(resultBody, path, jsonPathValue);
-  });
-
-  return resultBody;
-};
-
 async function getCampaignDetails(requestBody: any): Promise<any> {
   const hcmConfig: any = requestBody?.HCMConfig;
   const userInfo: any = requestBody?.RequestInfo?.userInfo;
@@ -218,76 +195,6 @@ async function getCampaignDetails(requestBody: any): Promise<any> {
   };
 
   return campaignDetails;
-}
-async function processFile(request: any, parsingTemplates: any[], result: any, hostHcmBff: string, Job: any) {
-  var parsingTemplatesLength = parsingTemplates.length
-  for (let i = 0; i < parsingTemplatesLength; i++) {
-    const parsingTemplate = parsingTemplates[i];
-    request.body.HCMConfig['parsingTemplate'] = parsingTemplate.templateName;
-    request.body.HCMConfig['data'] = result?.updatedDatas;
-    var processResult: any = await httpRequest(`${hostHcmBff}${config.app.contextPath}${'/bulk'}/_process`, request.body, undefined, undefined, undefined, undefined);
-    if (processResult.Error) {
-      throw new Error(processResult.Error);
-    }
-    const updatedData = processResult?.updatedDatas;
-    if (Array.isArray(updatedData)) {
-      // Create a new array with simplified objects
-      const simplifiedData = updatedData.map((originalObject: any) => {
-        // Initialize acc with an explicit type annotation
-        const acc: { [key: string]: any } = {};
-
-        // Extract key-value pairs where values are not arrays or objects
-        const simplifiedObject = Object.entries(originalObject).reduce((acc, [key, value]) => {
-          if (!Array.isArray(value) && typeof value !== 'object') {
-            acc[key] = value;
-          }
-          return acc;
-        }, acc);
-
-        return simplifiedObject;
-      });
-      logger.info("SimplifiedData for sheet : " + JSON.stringify(simplifiedData))
-      const ws = XLSX.utils.json_to_sheet(simplifiedData);
-
-      // Create a new workbook
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-      const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-      const formData = new FormData();
-      formData.append('file', buffer, 'filename.xlsx');
-      formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
-      formData.append('module', 'pgr');
-
-      logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
-      var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
-        {
-          'Content-Type': 'multipart/form-data',
-          'auth-token': request?.body?.RequestInfo?.authToken
-        }
-      );
-      const responseData = fileCreationResult?.files;
-      logger.info("Response data after File Creation : " + JSON.stringify(responseData));
-      if (Array.isArray(responseData) && responseData.length > 0) {
-        Job.ingestionDetails.history.push({
-          id: uuidv4(),
-          campaignId: Job.ingestionDetails.campaignDetails.id,
-          fileStoreId: responseData[0].fileStoreId,
-          tenantId: responseData[0].tenantId,
-          state: "Not-Started",
-          fileType: "xlsx",
-          ingestionType: parsingTemplate.ingestionType,
-          additionalDetails: "{}",
-          auditDetails: {
-            createdBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdBy,
-            createdTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.createdTime,
-            lastModifiedBy: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedBy,
-            lastModifiedTime: Job?.ingestionDetails?.campaignDetails?.auditDetails?.lastModifiedTime
-          }
-        });
-      }
-    }
-  }
-
 }
 
 function generateSortingAndPaginationClauses(pagination: Pagination): string {
@@ -374,24 +281,23 @@ async function generateResourceMessage(requestBody: any, status: string) {
   return resourceMessage;
 }
 
-async function generateActivityMessage(createdResult: any, successMessage: any, requestBody: any, status: string) {
+async function generateActivityMessage(requestBody: any, requestPayload: any, responsePayload: any, type: any, url: any, status: any) {
   const activityMessage = {
     id: uuidv4(),
-    status: createdResult?.status,
-    retryCount: createdResult?.retryCount || 0,
-    type: requestBody?.ResourceDetails?.type,
-    url: createdResult?.url,
-    requestPayload: createdResult?.requestPayload,
-    responsePayload: createdResult?.responsePayload,
+    status: status,
+    retryCount: 0,
+    type: type,
+    url: url,
+    requestPayload: requestPayload,
+    responsePayload: responsePayload,
     auditDetails: {
-      createdBy: successMessage?.auditDetails?.createdBy,
-      lastModifiedBy: successMessage?.auditDetails?.lastModifiedBy,
-      createdTime: successMessage?.auditDetails?.createdTime,
-      lastModifiedTime: successMessage?.auditDetails?.lastModifiedTime
+      createdBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      lastModifiedBy: requestBody?.RequestInfo?.userInfo?.uuid,
+      createdTime: Date.now(),
+      lastModifiedTime: Date.now()
     },
     additionalDetails: {},
-    affectedRows: createdResult?.affectedRows || [],
-    resourceDetailsId: successMessage?.id
+    resourceDetailsId: null
   }
   return activityMessage;
 }
@@ -1032,7 +938,6 @@ async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) 
     outputData.push(row);
   }
   const res = await getBoundaryCodesHandler(outputData);
-  console.log(res, "pppppppppppppppppppppppp")
   return res;
 }
 
@@ -1113,7 +1018,6 @@ function processErrorData(request: any, createAndSearchConfig: any, workbook: an
   const columns = findColumns(desiredSheet);
   const statusColumn = columns.statusColumn;
   const errorDetailsColumn = columns.errorDetailsColumn;
-  console.log(statusColumn, errorDetailsColumn, " sssssssssssseeeeeeeeeeeeeeeeeeeee")
 
   const errorData = request.body.sheetErrorDetails;
   errorData.forEach((error: any) => {
@@ -1248,13 +1152,23 @@ function convertToTypeData(dataFromSheet: any[], createAndSearchConfig: any, req
   return setTenantIdAndSegregate(processedData, createAndSearchConfig, requestBody);
 }
 
-async function generateProcessedFileAndPersist(request: any) {
-  await updateStatusFile(request);
-  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+function updateActivityResourceId(request: any) {
+  if (request?.body?.Activities && Array.isArray(request?.body?.Activities)) {
+    for (const activity of request?.body?.Activities) {
+      activity.resourceDetailsId = request?.body?.ResourceDetails?.id
+    }
+  }
 }
 
-
-
+async function generateProcessedFileAndPersist(request: any) {
+  await updateStatusFile(request);
+  updateActivityResourceId(request);
+  logger.info("ResourceDetails to persist : " + JSON.stringify(request?.body?.ResourceDetails));
+  logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
+  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+}
 
 
 export {
@@ -1265,11 +1179,9 @@ export {
   throwError,
   sendResponse,
   appCache,
-  convertObjectForMeasurment,
   cacheResponse,
   getCachedResponse,
   getCampaignDetails,
-  processFile,
   generateSortingAndPaginationClauses,
   generateXlsxFromJson,
   generateAuditDetails,

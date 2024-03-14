@@ -5,33 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { convertToFacilityCreateData, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData } from "../utils/index";
+import { convertToFacilityCreateData, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage } from "../utils/index";
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData } from "../utils/validator";
 const _ = require('lodash');
-
-async function getWorkbook(fileUrl: string) {
-  const headers = {
-    'Content-Type': 'application/json',
-    Accept: 'application/pdf',
-  };
-
-  logger.info("FileUrl : " + fileUrl);
-
-  const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
-
-  // Convert ArrayBuffer directly to Buffer
-  const fileBuffer = Buffer.from(responseFile);
-
-  // Assuming the response is a binary file, adjust the type accordingly
-  const fileXlsx = fileBuffer;
-
-  const arrayBuffer = await fileXlsx.buffer.slice(fileXlsx.byteOffset, fileXlsx.byteOffset + fileXlsx.length);
-  const data = new Uint8Array(arrayBuffer);
-  const workbook = XLSX.read(data, { type: 'array' });
-
-  return workbook;
-
-}
 
 
 const getSheetData = async (fileUrl: string, sheetName: string) => {
@@ -388,9 +364,7 @@ async function getBoundaryCodes(boundaryList: any) {
       let code;
       if (parentCode != 'INDIA') {
         const parentBoundaryCode = elementCodesMap.get(parentCode);
-        console.log(" hhhhhhh111111111111111111111111")
         const lastUnderscoreIndex = parentBoundaryCode.lastIndexOf('_');
-        console.log(" hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         const parentBoundaryCodeTrimmed = lastUnderscoreIndex !== -1 ? parentBoundaryCode.substring(0, lastUnderscoreIndex) : parentBoundaryCode;
         code = generateElementCode(countMap.get(parentCode), parentBoundaryCodeTrimmed, element);
       } else {
@@ -452,69 +426,6 @@ async function getBoundarySheetData(request: any) {
   return { wb: null, ws: null, sheetName: null }; // Return null if no data found
 }
 
-
-
-
-async function updateFile(fileStoreId: any, finalResponse: any, sheetName: any, request: any) {
-  try {
-    const fileUrl = `${config.host.filestore}${config.paths.filestore}/url?tenantId=${request?.body?.RequestInfo?.userInfo?.tenantId}&fileStoreIds=${fileStoreId}`;
-    const response = await httpRequest(fileUrl, undefined, undefined, 'get');
-
-    if (response?.fileStoreIds.length === 0) {
-      throw new Error("No file found with the provided file store ID");
-    }
-
-    for (const file of response.fileStoreIds) {
-      try {
-        const workbook = await getWorkbook(file.url);
-        const desiredSheet: any = workbook.Sheets[sheetName || workbook.SheetNames[0]];
-
-        if (desiredSheet) {
-          const range = XLSX.utils.decode_range(desiredSheet['!ref']);
-          const emptyColumnIndex = range.e.c + 1;
-          const statusColumn = String.fromCharCode(65 + emptyColumnIndex); // Get next column letter
-
-          // Add header for status column
-          desiredSheet[statusColumn + '1'] = { v: '#status#', t: 's', r: '<t xml:space="preserve">#status#</t>', h: '#status#', w: '#status#' };
-
-          // Populate status values for affected rows
-          const activities = finalResponse?.Activities || [];
-          activities.forEach((activity: any) => {
-            activity.affectedRows.forEach((row: any) => {
-              const rowIndex = row - 1; // Adjust for zero-based 
-              desiredSheet[statusColumn + (rowIndex + 1)] = { v: activity.status, t: 's', r: `<t xml:space="preserve">${activity.status}</t>`, h: activity.status, w: activity.status }; // Adjust row index and add status value
-            });
-          });
-
-          // Update range
-          desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + statusColumn);
-          workbook.Sheets[sheetName] = desiredSheet;
-
-          // Call the function to create and upload the file with the updated sheet
-          const responseData = await createAndUploadFile(workbook, request);
-          logger.info('File updated successfully:' + JSON.stringify(responseData));
-          if (responseData?.[0]?.fileStoreId) {
-            const statusFileStoreId = responseData?.[0]?.fileStoreId;
-
-            // Update finalResponse.ResponseDetails with statusFileStoreId
-            finalResponse.ResponseDetails.forEach((detail: any) => {
-              detail.statusFileStoreId = statusFileStoreId;
-            });
-          }
-          else {
-            throw new Error("Error in Creatring Status File");
-          }
-
-        }
-
-      } catch (error) {
-        logger.error('Error processing file:' + error);
-      }
-    }
-  } catch (error) {
-    logger.error('Error fetching file information:' + JSON.stringify(error));
-  }
-}
 
 
 async function createProjectAndUpdateId(projectBody: any, boundaryProjectIdMapping: any, boundaryCode: any, campaignDetails: any) {
@@ -767,7 +678,7 @@ function changeBodyViaSearchFromSheet(elements: any, request: any, dataFromSheet
   }
 }
 
-function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any) {
+function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any, activity: any) {
   newCreatedData.forEach((createdElement: any) => {
     let foundMatch = false;
     for (const searchedElement of newSearchedData) {
@@ -791,11 +702,13 @@ function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any
     }
     if (!foundMatch) {
       errors.push({ status: "NOT_PERSISTED", rowNumber: createdElement["!row#number!"], errorDetails: `Can't confirm persistence of this data` })
+      activity.status = 2001 // means not persisted
+      logger.info("Can't confirm persistence of this data of row number : " + createdElement["!row#number!"]);
     }
   });
 }
 
-function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], request: any, createAndSearchConfig: any) {
+function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], request: any, createAndSearchConfig: any, activity: any) {
   const newCreatedData = JSON.parse(JSON.stringify(createdData));
   const newSearchedData = JSON.parse(JSON.stringify(searchedData));
   const uid = createAndSearchConfig.uniqueIdentifier;
@@ -803,10 +716,11 @@ function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], re
     delete element[uid];
   })
   var errors: any[] = []
-  updateErrors(newCreatedData, newSearchedData, errors, createAndSearchConfig);
+  updateErrors(newCreatedData, newSearchedData, errors, createAndSearchConfig, activity);
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
+  request.body.Activities = [...(request?.body?.Activities ? request?.body?.Activities : []), activity]
 }
-function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any, createAndSearchConfig: any) {
+function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any, createAndSearchConfig: any, activity: any) {
   var matchingSearchData = [];
   const userUuid = request?.body?.RequestInfo?.userInfo?.uuid
   var count = 0;
@@ -819,7 +733,7 @@ function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], 
   if (count < createdData.length) {
     request.body.ResourceDetails.status = "PERSISTER_ERROR"
   }
-  matchCreatedAndSearchedData(createdData, matchingSearchData, request, createAndSearchConfig);
+  matchCreatedAndSearchedData(createdData, matchingSearchData, request, createAndSearchConfig, activity);
   logger.info("New created resources count : " + count);
 }
 
@@ -895,13 +809,13 @@ async function processSearchAndValidation(request: any, createAndSearchConfig: a
 }
 
 
-async function confirmCreation(createAndSearchConfig: any, request: any, facilityCreateData: any[], creationTime: any) {
+async function confirmCreation(createAndSearchConfig: any, request: any, facilityCreateData: any[], creationTime: any, activity: any) {
   // wait for 5 seconds
   await new Promise(resolve => setTimeout(resolve, 5000));
   const params: any = getParamsViaElements(createAndSearchConfig?.searchDetails?.searchElements, request);
   changeBodyViaElements(createAndSearchConfig?.searchDetails?.searchElements, request)
   const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
-  matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime, createAndSearchConfig)
+  matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime, createAndSearchConfig, activity)
 }
 
 
@@ -971,8 +885,10 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
       const creationTime = Date.now();
       const newRequestBody = JSON.parse(JSON.stringify(request.body));
       _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
-      await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params);
-      await confirmCreation(createAndSearchConfig, request, chunkData, creationTime);
+      const responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+      var activity = await generateActivityMessage(request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
+      await confirmCreation(createAndSearchConfig, request, chunkData, creationTime, activity);
+      logger.info("Activity : " + JSON.stringify(activity));
     }
   }
 }
@@ -1011,7 +927,6 @@ export {
   getSchema,
   getResouceNumber,
   getCount,
-  updateFile,
   getBoundarySheetData,
   createAndUploadFile,
   createProjectIfNotExists,

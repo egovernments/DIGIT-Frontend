@@ -51,7 +51,8 @@ const httpRequest = async (
   _params: any = {},
   _method: string = "post",
   responseType: string = "",
-  headers: any = defaultheader
+  headers: any = defaultheader,
+  sendStatusCode: any = false
 ) => {
   try {
     if (headers && headers.cachekey && cacheEnabled) {
@@ -91,7 +92,9 @@ const httpRequest = async (
       if (headers && headers.cachekey) {
         cacheResponse(response.data, headers.cachekey)
       }
-      return response.data;
+      if (!sendStatusCode)
+        return response.data;
+      else return { ...response.data, "statusCode": responseStatus }
     }
   } catch (error: any) {
     var errorResponse = error.response;
