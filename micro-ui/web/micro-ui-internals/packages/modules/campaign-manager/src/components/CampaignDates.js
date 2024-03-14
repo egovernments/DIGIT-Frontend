@@ -1,30 +1,49 @@
-import React, { useState, useMemo, useRef } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast , Card , Header } from "@egovernments/digit-ui-react-components";
-import { FileUploader } from "react-drag-drop-files";
+import React, { useState, useEffect } from "react";
+import { DatePicker,LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ActionBar, Button, DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { DateRangeNew } from "@egovernments/digit-ui-react-components";
-import { DateWrap } from "@egovernments/digit-ui-react-components";
-import { DatePicker } from "@egovernments/digit-ui-react-components";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 
-const CampaignDates = () => {
+const CampaignDates = ({onSelect, formData}) => {
   const { t } = useTranslation();
+  const today =  Digit.Utils.date.getDate(Date.now() + 1 * 24 * 60 * 60 * 1000) // Get today's date
+  const [dates, setDates] = useState({ startDate: today, endDate: today });
+  const [startDate, setStartDate] = useState(); // Set default start date to today
+  const [endDate, setEndDate] = useState(); // Default end date
+
+  function setStart(value) {
+    setStartDate(value);
+  }
+
+
+  function setEnd(value) {
+    setEndDate(value);
+  }
+
+  useEffect(() => {
+    setDates({ startDate, endDate });
+    onSelect("campaignDates", dates);
+  }, [startDate, endDate]);
 
   return (
     <React.Fragment>
-        <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
-        <p>{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
-        <LabelFieldPair>
-            <p>{t(`HCM_CAMPAIGN_DATE`)}</p>
-            <DatePicker 
-            defaultValue={"startDate"}
+      <Header>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</Header>
+      <p>{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
+      <LabelFieldPair style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'start' }}>
+        <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+        <div className="date-field-container">
+        <DatePicker 
+          date={startDate}
+          key = {startDate}
+          min={Digit.Utils.date.getDate(Date.now() + 1 * 24 * 60 * 60 * 1000)}
+          onChange={(e) => setStart(e)}
         />
-            <DatePicker
-            defaultValue={"endDate"} 
-            />
-      
-        </LabelFieldPair>
+        <DatePicker 
+         date={endDate}
+         key = {endDate} 
+         min={Digit.Utils.date.getDate(Date.now() + 2 * 24 * 60 * 60 * 1000)}
+         onChange={(e) => setEnd(e)}
+        />
+        </div>
+      </LabelFieldPair>
     </React.Fragment>
   );
 };

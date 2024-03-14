@@ -28,6 +28,8 @@ const SetupCampaign = () => {
     convertFormData(totalFormData);
   }, [totalFormData]);
 
+  console.log("totalFormData", totalFormData);
+
 
 // function to convert payload to formData
   const convertPayload = (dummyData) => {
@@ -78,8 +80,13 @@ const SetupCampaign = () => {
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
 
     const key = parseInt(filteredSteps[0].key);
-    setCurrentKey(key);
-    setCurrentStep(step);
+    // setCurrentKey(key);
+    // setCurrentStep(step);
+
+    if (Object.keys(totalFormData).includes(key.toString())) {
+      setCurrentKey(key);
+      setCurrentStep(step);
+    }
   };
 
   const onSecondayActionClick = () => {
