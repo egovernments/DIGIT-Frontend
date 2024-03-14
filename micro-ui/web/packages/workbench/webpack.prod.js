@@ -7,17 +7,16 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "workbench_web",
+      publicPath: "/workbench-mfe/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "workbench_web",
+        name: "workbench",
         filename: "remoteEntry.js",
         exposes: {
           "./WorkbenchModule": "./src/SingleSpaEntry",
         },
-        // shared: packageJson.dependencies,
         shared: packageJson.dependencies
       }),
     ],

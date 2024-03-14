@@ -1,17 +1,13 @@
-// import { Loader,TourProvider } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
-import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
-import LevelCards from "./components/LevelCards";
-import * as parsingUtils from "../src/utils/ParsingUtils"
 
 export const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  
   const moduleCode = ["workbench","mdms","schema"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -22,21 +18,16 @@ export const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    // return <Loader />;
+    return <Loader />;
   }
 
-  return (
-  // <TourProvider>
-    <EmployeeApp path={path} stateCode={stateCode} />
-  /* </TourProvider> */
-  )
+  return <EmployeeApp path={path} stateCode={stateCode} />;
 };
 
 const componentsToRegister = {
   WorkbenchModule,
   WorkbenchCard,
   DigitJSONForm,
-  LevelCards,
   DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
   // HRMSCard // Overridden the HRMS card as per workbench
 };
@@ -80,7 +71,6 @@ const setupLibraries = (Library, service, method) => {
 /* To Overide any existing config/middlewares  we need to use similar method */
 const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
 };
 
 
@@ -93,4 +83,3 @@ const updateCustomConfigs = () => {
 };
 
 export   {initWorkbenchComponents, DigitJSONForm};
-

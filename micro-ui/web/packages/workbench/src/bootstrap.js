@@ -14,7 +14,7 @@ initWorkbenchComponents();
 const mount = (el, { history, login }) => {
   const moduleReducers = (initData) => {
   };
-  const enabledModules=["PT","Workbench", "PGR"]
+  const enabledModules=["PT","Workbench"]
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   //console.log(stateCode,'ststcode');

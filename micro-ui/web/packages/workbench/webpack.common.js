@@ -1,4 +1,5 @@
 const path = require("path");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: "./src/index",
@@ -8,6 +9,79 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.css$/i,
+        oneOf: [
+          {
+            test: /\.tw\.css$/i,
+            use: [
+              {
+                loader: MiniCssExtractPlugin.loader,
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  sourceMap: true,
+                  importLoaders: 1,
+                  modules: {
+                    auto: true,
+                    localIdentName: false
+                      ? '[hash:base64]'
+                      : '[path][name]__[local]',
+                  },
+                },
+              },
+              {
+                loader: 'postcss-loader',
+                options: {
+                  sourceMap: true,
+                  postcssOptions: {
+                    plugins: {
+                      tailwindcss: {},
+                      autoprefixer: {},
+                      'postcss-prefixer': {
+                        prefix: 'cr-',
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            use: [
+              {
+                loader: MiniCssExtractPlugin.loader,
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  sourceMap: true,
+                  importLoaders: 1,
+                  modules: {
+                    auto: true,
+                    localIdentName: false
+                      ? '[hash:base64]'
+                      : '[path][name]__[local]',
+                  },
+                },
+              },
+              {
+                loader: 'postcss-loader',
+                options: {
+                  sourceMap: true,
+                  postcssOptions: {
+                    plugins: {
+                      tailwindcss: {},
+                      autoprefixer: {},
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
       {
         test: /\.js?$/,
         loader: "babel-loader",
