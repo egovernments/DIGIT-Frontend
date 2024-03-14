@@ -9,6 +9,7 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -20,7 +21,7 @@ var Digit = window.Digit || {};
 const enabledModules = [ "DSS", "HRMS",
 "Workbench",
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities",
+  "Utilities","PGR"
 //added to check fsm
 // "FSM"
 ];
@@ -68,7 +69,7 @@ const initDigitUI = () => {
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
-
+  initPGRComponents();
 
   const moduleReducers = (initData) => initData;
 
