@@ -6,7 +6,7 @@ import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
 import { correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage } from "../utils/index";
-import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
+import { validateSheetData, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const _ = require('lodash');
 
 
@@ -789,15 +789,10 @@ async function processValidate(request: any) {
   const type: string = request.body.ResourceDetails.type;
   const createAndSearchConfig = createAndSearch[type]
   const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+  await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
   const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
   request.body.dataToSearch = typeData.searchData;
   await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
-}
-
-
-
-async function processAction(request: any) {
-  await httpRequest("http://localhost:8080/project-factory/v1/generic/_create", request.body)
 }
 
 async function performAndSaveResourceActivity(request: any, createAndSearchConfig: any, params: any, type: any) {
@@ -836,6 +831,7 @@ async function processCreate(request: any) {
   const type: string = request.body.ResourceDetails.type;
   const createAndSearchConfig = createAndSearch[type]
   const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+  await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
   const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
   request.body.dataToCreate = typeData.createData;
   request.body.dataToSearch = typeData.searchData;
@@ -864,6 +860,7 @@ async function createProjectCampaignResourcData(request: any) {
       } catch (error: any) {
         // Handle error for individual resource creation
         logger.error(`Error creating resource: ${error}`);
+        throw new Error(String(error))
       }
     }
   }
@@ -884,7 +881,6 @@ export {
   enrichCampaign,
   createExcelSheet,
   getAllFacilities,
-  processAction,
   getFacilitiesViaIds,
   confirmCreation,
   getParamsViaElements,

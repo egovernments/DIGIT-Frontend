@@ -745,19 +745,19 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
     }
     else if (createAndSearchConfig?.matchEachKey) {
       const keys = Object.keys(data);
+      var errorString = "";
+      var errorFound = false;
       for (const key of keys) {
-        var errorString = "";
-        var errorFound = false;
         if (searchData.hasOwnProperty(key) && searchData[key] !== data[key] && key != "!row#number!") {
           errorString += `Value mismatch for key "${key}" at index ${data["!row#number!"] - 1}. Expected: "${data[key]}", Found: "${searchData[key]}"`
           errorFound = true;
         }
-        if (errorFound) {
-          errors.push({ status: "MISMATCHING", rowNumber: data["!row#number!"], errorDetails: errorString })
-        }
-        else {
-          errors.push({ status: "VALID", rowNumber: data["!row#number!"], errorDetails: "" })
-        }
+      }
+      if (errorFound) {
+        errors.push({ status: "MISMATCHING", rowNumber: data["!row#number!"], errorDetails: errorString })
+      }
+      else {
+        errors.push({ status: "VALID", rowNumber: data["!row#number!"], errorDetails: "" })
       }
     }
     else {
@@ -815,6 +815,26 @@ async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearch
   return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName)
 }
 
+function updateRange(range: any, desiredSheet: any) {
+  let maxColumnIndex = 0;
+
+  // Iterate through each row to find the last column with data
+  for (let row = range.s.r; row <= range.e.r; row++) {
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+      if (desiredSheet[cellAddress]) {
+        maxColumnIndex = Math.max(maxColumnIndex, col);
+      }
+    }
+  }
+
+  // Update the end column of the range with the maximum column index found
+  range = {
+    s: { c: range.s.c, r: range.s.r },
+    e: { c: maxColumnIndex, r: range.e.r }
+  };
+}
+
 function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsColumn: string } {
   var range = XLSX.utils.decode_range(desiredSheet['!ref']);
 
@@ -831,7 +851,6 @@ function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsCol
       break;
     }
   }
-
   // Check if the errorDetails column already exists in the first row
   var errorDetailsColumn: any;
   for (let col = range.s.c; col <= range.e.c; col++) {
@@ -845,9 +864,8 @@ function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsCol
       break;
     }
   }
-
+  updateRange(range, desiredSheet);
   // If the status column doesn't exist, calculate the next available column
-  range = XLSX.utils.decode_range(desiredSheet['!ref']);
   const emptyColumnIndex = range.e.c + 1;
   statusColumn = String.fromCharCode(65 + emptyColumnIndex);
   desiredSheet[statusColumn + '1'] = { v: '#status#', t: 's', r: '<t xml:space="preserve">#status#</t>', h: '#status#', w: '#status#' };
@@ -855,7 +873,6 @@ function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsCol
   // Calculate errorDetails column one column to the right of status column
   errorDetailsColumn = String.fromCharCode(statusColumn.charCodeAt(0) + 1);
   desiredSheet[errorDetailsColumn + '1'] = { v: '#errorDetails#', t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: '#errorDetails#', w: '#errorDetails#' };
-
   return { statusColumn, errorDetailsColumn };
 }
 

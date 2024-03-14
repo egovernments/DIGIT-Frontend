@@ -1,11 +1,10 @@
 import * as express from "express";
 import { getFacilitiesViaIds } from "../api";
-import { convertToFacilityExsistingData, getFacilityIds, matchFacilityData } from "../utils/index";
+import { getFacilityIds, matchFacilityData } from "../utils/index";
 import { logger } from "../utils/logger";
 import Ajv from "ajv";
 import config from "../config/index";
 import { httpRequest } from "./request";
-import facilityTemplateSchema from "../config/facilityTemplateSchema";
 import createAndSearch from "../config/createAndSearch";
 
 
@@ -269,11 +268,11 @@ async function validateUniqueBoundaries(uniqueBoundaries: any[], request: any) {
 
 
 
-async function validateBoundaryData(data: any[], request: any) {
+async function validateBoundaryData(data: any[], request: any, boundaryColumn: any) {
     const boundarySet = new Set(); // Create a Set to store unique boundaries
 
     data.forEach((element, index) => {
-        const boundaries = element['Boundary Code'];
+        const boundaries = element[boundaryColumn];
         if (!boundaries) {
             throw new Error(`Boundary Code is required for element at index ${index}`);
         }
@@ -313,17 +312,11 @@ async function validateViaSchema(data: any, schema: any) {
     }
 }
 
-async function validateFacilityData(data: any, request: any) {
-    await validateViaSchema(data, facilityTemplateSchema);
-    const facilityDataWithCode = data.map((facility: any, index: number) => ({ ...facility, originalIndex: index }))
-        .filter((facility: any) => 'Facility Code' in facility)
-    const facilityDataWithoutCode = data.map((facility: any, index: number) => ({ ...facility, originalIndex: index }))
-        .filter((facility: any) => !('Facility Code' in facility))
-    const facilityExsistingData = convertToFacilityExsistingData(facilityDataWithCode)
-    await validateFacilityViaSearch(request?.body?.ResourceDetails?.tenantId, facilityExsistingData, request.body)
-    await validateBoundaryData(data, request);
-    request.body.facilityToCreate = facilityDataWithoutCode;
-    request.body.facilityToSearch = facilityDataWithCode;
+async function validateSheetData(data: any, request: any, schema: any, boundaryValidation: any) {
+    await validateViaSchema(data, schema);
+    if (boundaryValidation) {
+        await validateBoundaryData(data, request, boundaryValidation?.column);
+    }
 }
 function validateBooleanField(obj: any, fieldName: any, index: any) {
     if (!obj.hasOwnProperty(fieldName)) {
@@ -522,8 +515,8 @@ export {
     validateProjectResourceResponse,
     validateGenerateRequest,
     validateCreateRequest,
-    validateFacilityData,
     validateFacilityCreateData,
     validateFacilityViaSearch,
-    validateProjectCampaignRequest
+    validateProjectCampaignRequest,
+    validateSheetData
 };
