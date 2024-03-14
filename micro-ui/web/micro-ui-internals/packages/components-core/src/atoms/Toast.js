@@ -47,13 +47,13 @@ const Toast = (props) => {
       <div>
         <div className={`digit-toast-success ${variant} ${isWarningButtons}`} style={{ ...props.style }}>
           {!props?.isWarningButtons ? (
-            <div className={`digit-toast-success ${variant} ${isWarningButtons}`} style={{ ...props.style }}>
+            <>
               <SVG.Warning fill="#FFFFFF" />
               <div className="toast-label" style={{ ...props.labelstyle }}>
                 {props.label}
               </div>
               <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" onClick={props.onClose ? props.onClose : handleClose} />
-            </div>
+            </>
           ) : (
             <div className="digit-toast-sub-container">
               <SVG.Error fill="#FFFFFF" />
