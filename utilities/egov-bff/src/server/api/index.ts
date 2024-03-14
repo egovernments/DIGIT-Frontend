@@ -67,13 +67,13 @@ const searchMDMS: any = async (uniqueIdentifiers: any[], schemaCode: string, req
 }
 
 
-const getCampaignNumber: any = async (requestBody: any, idFormat: String, idName: string) => {
+const getCampaignNumber: any = async (requestBody: any, idFormat: String, idName: string, tenantId: string) => {
   const data = {
     RequestInfo: requestBody?.RequestInfo,
     "idRequests": [
       {
         "idName": idName,
-        "tenantId": requestBody?.HCMConfig?.tenantId,
+        "tenantId": tenantId,
         "format": idFormat
       }
     ]
@@ -81,44 +81,11 @@ const getCampaignNumber: any = async (requestBody: any, idFormat: String, idName
   const idGenUrl = config.host.idGenHost + config.paths.idGen;
   logger.info("IdGen url : " + idGenUrl)
   logger.info("Idgen Request : " + JSON.stringify(data))
-  try {
-    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
-    if (result?.idResponses?.[0]?.id) {
-      return result?.idResponses?.[0]?.id;
-    }
-    return result;
-  } catch (error: any) {
-    logger.error("Error: " + error)
-    return error;
+  const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
+  if (result?.idResponses?.[0]?.id) {
+    return result?.idResponses?.[0]?.id;
   }
-
-}
-
-const getCampaignNumberForCampaignController: any = async (requestBody: any, idFormat: String, idName: string) => {
-  const data = {
-    RequestInfo: requestBody?.RequestInfo,
-    "idRequests": [
-      {
-        "idName": idName,
-        "tenantId": requestBody?.Campaign?.tenantId,
-        "format": idFormat
-      }
-    ]
-  }
-  const idGenUrl = config.host.idGenHost + config.paths.idGen;
-  logger.info("IdGen url : " + idGenUrl)
-  logger.info("Idgen Request : " + JSON.stringify(data))
-  try {
-    const result = await httpRequest(idGenUrl, data, undefined, undefined, undefined, undefined);
-    if (result?.idResponses?.[0]?.id) {
-      return result?.idResponses?.[0]?.id;
-    }
-    return result;
-  } catch (error: any) {
-    logger.error("Error: " + error)
-    return error;
-  }
-
+  throw new Error("Error during generating campaign number");
 }
 
 const getResouceNumber: any = async (RequestInfo: any, idFormat: String, idName: string) => {
@@ -393,7 +360,7 @@ async function getBoundarySheetData(request: any) {
   if (data) {
     const boundaryList = generateHierarchyList(data)
     const newArray = boundaryList.map(item => item.split(','));
-    console.log(newArray, "array for boundary code generation")
+    logger.info("array for boundary code generation" + JSON.stringify(newArray));
     // await autoGenerateBoundaryCodes("pg", "dc63c934-0c1c-42fa-b8f9-9ddbfbf27c0e");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
@@ -555,7 +522,7 @@ async function createRelatedResouce(requestBody: any) {
 async function enrichCampaign(requestBody: any) {
   if (requestBody?.Campaign) {
     requestBody.Campaign.id = uuidv4();
-    requestBody.Campaign.campaignNo = await getCampaignNumberForCampaignController(requestBody, config.values.idgen.format, config.values.idgen.idName)
+    requestBody.Campaign.campaignNo = await getCampaignNumber(requestBody, config.values.idgen.format, config.values.idgen.idName, requestBody?.Campaign?.tenantId);
     for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
       campaignDetails.id = uuidv4();
     }
@@ -881,6 +848,27 @@ async function processCreate(request: any) {
   }
 }
 
+async function createProjectCampaignResourcData(request: any) {
+  if (request?.body?.CampaignDetails?.action == "create") {
+    for (const resource of request.body.CampaignDetails.resources) {
+      const resourceDetails = {
+        type: resource.type,
+        fileStoreId: resource.filestoreId,
+        tenantId: request?.body?.CampaignDetails?.tenantId,
+        action: "create",
+        hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+        additionalDetails: {}
+      };
+      try {
+        await httpRequest("http://localhost:8080/project-factory/v1/data/_create", { RequestInfo: request.body.RequestInfo, ResourceDetails: resourceDetails });
+      } catch (error: any) {
+        // Handle error for individual resource creation
+        logger.error(`Error creating resource: ${error}`);
+      }
+    }
+  }
+}
+
 
 export {
   getSheetData,
@@ -903,5 +891,6 @@ export {
   changeBodyViaElements,
   processGenericRequest,
   getBoundaryCodes,
-  getBoundaryCodesHandler
+  getBoundaryCodesHandler,
+  createProjectCampaignResourcData
 };

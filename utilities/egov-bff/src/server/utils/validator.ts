@@ -417,6 +417,97 @@ async function validateFacilityViaSearch(tenantId: string, data: any, requestBod
     matchFacilityData(data, searchedFacilities)
 }
 
+async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenantId: any, request: any) {
+    const params = {
+        tenantId: tenantId,
+        codes: boundary.code,
+        boundaryType: boundary.type,
+        hierarchyType: hierarchyType,
+        includeParents: true
+    }
+    const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, { RequestInfo: request.body.RequestInfo }, params);
+    if (boundaryResponse?.TenantBoundary && Array.isArray(boundaryResponse?.TenantBoundary) && boundaryResponse?.TenantBoundary.length > 0) {
+        const boundaryData: any = boundaryResponse?.TenantBoundary[0]?.boundary
+        if (!(boundaryData && Array.isArray(boundaryData) && boundaryData.length > 0)) {
+            throw new Error("Boundary with code " + boundary.code + " not found for boundary type " + boundary.type + " and hierarchy type " + hierarchyType);
+        }
+        if (boundary.isRoot) {
+            if (boundaryData?.[0]?.code !== boundary.code) {
+                throw new Error("Boundary with code " + boundary.code + " is not root");
+            }
+        }
+    }
+}
+async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyType: any, tenantId: any, request: any) {
+    if (!Array.isArray(boundaries)) {
+        throw new Error("boundaries should be an array");
+    }
+    for (const boundary of boundaries) {
+        const { code, type } = boundary;
+        if (!code) {
+            throw new Error("boundary code is required");
+        }
+        if (!type) {
+            throw new Error("boundary type is required");
+        }
+        await validateCampaignBoundary(boundary, hierarchyType, tenantId, request);
+    }
+
+}
+async function validateProjectCampaignResources(resources: any[], tenantId: any, request: any) {
+    if (!Array.isArray(resources)) {
+        throw new Error("resources should be an array");
+    }
+    for (const resource of resources) {
+        const { filestoreId, type } = resource;
+        if (!filestoreId) {
+            throw new Error("filestoreId is required in resources");
+        }
+        if (!type) {
+            throw new Error("resouce type is required");
+        }
+        if (!createAndSearch[type]) {
+            throw new Error("Invalid resource type");
+        }
+    }
+
+}
+
+function validateProjectCampaignMissingFields(CampaignDetails: any) {
+    const { hierarchyType, tenantId, campaignName, action, startDate, endDate, boundaries, resources, projectType, deliveryRules, additionalDetails } = CampaignDetails;
+
+    const missingFields = [];
+    if (!hierarchyType) missingFields.push("hierarchyType");
+    if (!tenantId) missingFields.push("tenantId");
+    if (!campaignName) missingFields.push("campaignName");
+    if (!action) missingFields.push("action");
+    if (!startDate) missingFields.push("startDate");
+    if (!endDate) missingFields.push("endDate");
+    if (!boundaries) missingFields.push("boundaries");
+    if (!resources) missingFields.push("resources");
+    if (!projectType) missingFields.push("projectType");
+    if (!deliveryRules) missingFields.push("deliveryRules");
+    if (!additionalDetails) missingFields.push("additionalDetails");
+    if (missingFields.length > 0) {
+        const errorMessage = "The following fields are missing: " + missingFields.join(", ");
+        throw new Error(errorMessage);
+    }
+}
+async function validateProjectCampaignRequest(request: any) {
+    const { CampaignDetails } = request.body;
+    if (!CampaignDetails) {
+        throw new Error("CampaignDetails is required");
+    }
+    validateProjectCampaignMissingFields(CampaignDetails)
+    const { hierarchyType, tenantId, action, boundaries, resources } = CampaignDetails;
+
+    if (!(action == "create" || action == "draft")) {
+        throw new Error("action can only be create or draft")
+    }
+    await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
+    await validateProjectCampaignResources(resources, tenantId, request)
+}
+
 
 
 
@@ -433,5 +524,6 @@ export {
     validateCreateRequest,
     validateFacilityData,
     validateFacilityCreateData,
-    validateFacilityViaSearch
+    validateFacilityViaSearch,
+    validateProjectCampaignRequest
 };

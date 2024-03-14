@@ -97,23 +97,23 @@ const httpRequest = async (
       else return { ...response.data, "statusCode": responseStatus }
     }
   } catch (error: any) {
-    var errorResponse = error.response;
+    var errorResponse = error?.response;
     logger.error(
       "INTER-SERVICE :: FAILURE :: " +
       getServiceName(_url) +
       ":: CODE :: " +
-      errorResponse.status +
+      errorResponse?.status +
       ":: ERROR :: " +
-      errorResponse.data.Errors[0].code || error
+      errorResponse?.data?.Errors?.[0]?.code || error
     );
-    logger.error(":: ERROR STACK :: " + error.stack || error);
+    logger.error(":: ERROR STACK :: " + error?.stack || error);
     throwError(
       "error occured while making request to " +
       getServiceName(_url) +
       ": error response :" +
-      (errorResponse ? parseInt(errorResponse.status, 10) : error.message),
-      errorResponse.data.Errors[0].code,
-      errorResponse.status
+      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message),
+      errorResponse?.data?.Errors?.[0]?.code,
+      errorResponse?.status
     );
   }
 };

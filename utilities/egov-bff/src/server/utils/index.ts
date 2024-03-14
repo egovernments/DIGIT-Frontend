@@ -165,37 +165,6 @@ const errorResponder = (
     .send(getErrorResponse("INTERNAL_SERVER_ERROR", error?.message));
 };
 
-async function getCampaignDetails(requestBody: any): Promise<any> {
-  const hcmConfig: any = requestBody?.HCMConfig;
-  const userInfo: any = requestBody?.RequestInfo?.userInfo;
-  const additionalDetails = { selectedRows: hcmConfig?.selectedRows };
-  const campaignNumber = await getCampaignNumber(requestBody, config.values.idgen.format, config.values.idgen.idName);
-  if (typeof campaignNumber !== 'string') {
-    return "INVALID_CAMPAIGN_NUMBER"
-  }
-  logger.info("Campaign number : " + campaignNumber)
-  // Extract details from HCMConfig 
-  const campaignDetails = {
-    id: uuidv4(),
-    tenantId: hcmConfig.tenantId,
-    fileStoreId: hcmConfig.fileStoreId,
-    campaignType: hcmConfig.campaignType,
-    status: "Not-Started",
-    projectTypeId: hcmConfig.projectTypeId,
-    campaignName: hcmConfig.campaignName,
-    campaignNumber: campaignNumber,
-    auditDetails: {
-      createdBy: userInfo?.uuid,
-      lastModifiedBy: userInfo?.uuid,
-      createdTime: new Date().getTime(),
-      lastModifiedTime: new Date().getTime(),
-    },
-    additionalDetails: additionalDetails ? JSON.stringify(additionalDetails) : ""
-  };
-
-  return campaignDetails;
-}
-
 function generateSortingAndPaginationClauses(pagination: Pagination): string {
   let clauses = '';
 
@@ -1048,6 +1017,11 @@ async function generateProcessedFileAndPersist(request: any) {
   produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
 }
 
+async function enrichProjectCampaignRequest(request: any) {
+  request.body.CampaignDetails.id = uuidv4();
+  request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
+}
+
 
 export {
   errorResponder,
@@ -1059,7 +1033,6 @@ export {
   appCache,
   cacheResponse,
   getCachedResponse,
-  getCampaignDetails,
   generateSortingAndPaginationClauses,
   generateXlsxFromJson,
   generateAuditDetails,
@@ -1088,7 +1061,8 @@ export {
   getDataFromSheet,
   convertToTypeData,
   matchData,
-  generateProcessedFileAndPersist
+  generateProcessedFileAndPersist,
+  enrichProjectCampaignRequest
 };
 
 
