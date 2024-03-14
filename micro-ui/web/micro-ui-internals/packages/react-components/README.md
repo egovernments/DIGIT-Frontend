@@ -88,6 +88,7 @@ Syntax for the FormComposersV2
 ### Changelog
 
 ```bash
+1.8.1-beta.4 Added Previous button in From Composer
 1.8.1-beta.3 Added XlsPreview component to preview Xls file.
 1.8.1-beta.2 Moved the sidebar footer outside of "drawer-list" to prevent overlapping issues.
 1.8.1-beta.1 Republished after merging with Master due to version issues.
