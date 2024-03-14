@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "../utils/request";
 import config from "../config/index";
-import { v4 as uuidv4, validate } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
 import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundaryCodesHandler, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
@@ -10,7 +10,6 @@ import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
 import { getCount } from '../api/index'
 import { logger } from "./logger";
-import { processValidationWithSchema } from "./validator";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
 const NodeCache = require("node-cache");
@@ -546,85 +545,6 @@ async function modifyData(request: any, response: any, responseDatas: any) {
   }
 }
 
-
-function isEpoch(value: any): boolean {
-  // Check if the value is a number
-  if (typeof value !== 'number') {
-    return false;
-  }
-
-  // Create a new Date object from the provided value
-  const date = new Date(value);
-
-  // Check if the date is valid and the value matches the provided epoch time
-  return !isNaN(date.getTime()) && date.getTime() === value;
-}
-
-function dateToEpoch(dateString: string): number | null {
-  // Parse the date string
-  const parsedDate = Date.parse(dateString);
-
-  // Check if the parsing was successful
-  if (!isNaN(parsedDate)) {
-    // Convert milliseconds since epoch to seconds since epoch
-    return parsedDate / 1000;
-  } else {
-    return null; // Parsing failed, return null
-  }
-}
-
-async function matchWithCreatedDetails(request: any, response: any, ResponseDetails: any, creationTime: any, rowsToMatch: number) {
-  const waitTime = config.waitTime;
-  logger.info("Waiting for " + waitTime + "ms before Checking Persistence");
-  await new Promise(resolve => setTimeout(resolve, parseInt(waitTime)));
-  var requestWithParams = { ...request }
-  requestWithParams.query = { ...requestWithParams.query, type: request?.body?.ResourceDetails?.type, forceUpdate: true }
-  const rows: any = await callSearchApi(requestWithParams, response);
-  var count = 0;
-  var createdDetailsPresent = false;
-  logger.info("Checking Persistence with createdBy for  " + request?.body?.RequestInfo?.userInfo?.uuid + " and createdTime " + creationTime);
-  rows.forEach((item: any) => {
-    var createdBy = item?.auditDetails?.createdBy || item?.createdBy;
-    var createdTime = item?.auditDetails?.createdTime || item?.createdTime || item?.auditDetails?.createdDate || item?.createdDate;
-    if (createdBy && createdTime) {
-      var userMatch = false;
-      var timeMatch = false;
-      if (validate(createdBy)) {
-        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.uuid
-      }
-      else {
-        userMatch = createdBy == request?.body?.RequestInfo?.userInfo?.id
-      }
-      if (isEpoch(createdTime)) {
-        timeMatch = createdTime >= creationTime
-      }
-      else {
-        createdTime = dateToEpoch(createdBy);
-        if (createdTime) {
-          timeMatch = createdTime >= creationTime
-        }
-      }
-      if (userMatch && timeMatch) {
-        count++;
-      }
-    }
-    if (createdBy && createdTime) {
-      createdDetailsPresent = true;
-    }
-  })
-  logger.info("Got " + count + " rows with recent persistence");
-  if (count >= rowsToMatch) {
-    return ResponseDetails;
-  }
-  else if (createdDetailsPresent) {
-    ResponseDetails.status = "PERSISTING_ERROR";
-    return ResponseDetails;
-  }
-  logger.info("No createdBy and createdTime found in Rows.");
-  ResponseDetails.status = "PERSISTENCE_CHECK_REQUIRED";
-  return ResponseDetails;
-}
-
 function getCreationDetails(APIResource: any, sheetName: any) {
   // Assuming APIResource has the necessary structure to extract creation details
   // Replace the following lines with the actual logic to extract creation details
@@ -685,36 +605,6 @@ async function getSchemaAndProcessResult(request: any, parsingTemplate: any, upd
   const schemaDef = await getSchema(healthMaster, request?.body?.RequestInfo);
 
   return { processResult, schemaDef };
-}
-
-async function processValidationResultsAndSendResponse(sheetName: any, processResult: any, schemaDef: any, APIResource: any, response: any, request: any) {
-  const validationErrors: any[] = [];
-  const validatedData: any[] = [];
-  processValidationWithSchema(processResult, validationErrors, validatedData, schemaDef);
-
-  // Include error messages from MDMS service
-  const mdmsErrors = processResult?.mdmsErrors || [];
-
-  // Send response
-  if (validationErrors.length > 0 || mdmsErrors.length > 0) {
-    if (validationErrors?.[0] == "NO_VALIDATION_SCHEMA_FOUND") {
-      const creationDetails = getCreationDetails(APIResource, sheetName);
-      return sendResponse(response, {
-        "validationResult": "NO_VALIDATION_SCHEMA_FOUND",
-        "data": validatedData,
-        creationDetails
-      }, request);
-    }
-    const errors = [...validationErrors, ...mdmsErrors];
-    return sendResponse(response, { "validationResult": "INVALID_DATA", "errors": errors }, request);
-  } else {
-    const creationDetails = getCreationDetails(APIResource, sheetName);
-    return sendResponse(response, {
-      "validationResult": "VALID_DATA",
-      "data": validatedData,
-      creationDetails
-    }, request);
-  }
 }
 
 
@@ -821,18 +711,6 @@ async function processGenerate(request: any, response: any) {
   const newEntryResponse = await getNewEntryResponse(modifiedResponse, request);
   const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
   await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response);
-}
-
-function convertToFacilityCreateData(facilityData: any[], tenantId: string) {
-  const facilityCreateData = facilityData.map(facility => ({
-    "tenantId": tenantId,
-    "isPermanent": facility['Facility Status'] === 'Perm',
-    "name": facility['Facility Name'],
-    "usage": facility['Facility Type'],
-    "storageCapacity": facility['Facility Capacity']
-  }));
-  logger.info("facilityCreateData : " + JSON.stringify(facilityCreateData));
-  return facilityCreateData;
 }
 
 function convertToFacilityExsistingData(facilityData: any[]) {
@@ -1189,7 +1067,6 @@ export {
   generateActivityMessage,
   getResponseFromDb,
   callSearchApi,
-  matchWithCreatedDetails,
   getCreationDetails,
   getSchemaAndProcessResult,
   getModifiedResponse,
@@ -1197,13 +1074,11 @@ export {
   getOldEntryResponse,
   getFinalUpdatedResponse,
   fullProcessFlowForNewEntry,
-  processValidationResultsAndSendResponse,
   modifyData,
   correctParentValues,
   sortCampaignDetails,
   processGenerateRequest,
   processGenerate,
-  convertToFacilityCreateData,
   convertToFacilityExsistingData,
   enrichResourceDetails,
   getFacilityIds,

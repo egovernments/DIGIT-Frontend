@@ -5,8 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { convertToFacilityCreateData, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage } from "../utils/index";
-import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData } from "../utils/validator";
+import { correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage } from "../utils/index";
+import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 const _ = require('lodash');
 
 
@@ -818,44 +818,6 @@ async function confirmCreation(createAndSearchConfig: any, request: any, facilit
   matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime, createAndSearchConfig, activity)
 }
 
-
-
-
-
-
-async function createFacilityData(request: any, response: any) {
-  const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
-  const tenantId = request?.body?.ResourceDetails?.tenantId
-  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
-  if (!fileResponse?.fileStoreIds?.[0]?.url) {
-    throw new Error("Not any download url returned for given fileStoreId")
-  }
-  var facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-  await validateFacilityData(facilityData, request)
-  if (request?.body?.facilityToCreate && Array.isArray(request?.body?.facilityToCreate) && request?.body?.facilityToCreate?.length > 0) {
-    const facilityCreateData = convertToFacilityCreateData(request?.body?.facilityToCreate, request?.body?.ResourceDetails?.tenantId)
-    validateFacilityCreateData(facilityCreateData)
-    request.body.ResourceDetails.dataToCreate = facilityCreateData;
-    await httpRequest("http://localhost:8080/project-factory/v1/generic/_create", request.body)
-  }
-  else {
-    logger.info("No Facility Creation is needed as there is no such row with empty Facility Code.")
-  }
-}
-
-// async function validateExistingFacilityData(request: any) {
-//   const fileStoreId = request?.body?.ResourceDetails?.fileStoreId
-//   const tenantId = request?.body?.ResourceDetails?.tenantId
-//   const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
-//   if (!fileResponse?.fileStoreIds?.[0]?.url) {
-//     throw new Error("Not any download url returned for given fileStoreId")
-//   }
-//   const facilityData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "List of Available Facilities")
-//   await validateFacilityData(facilityData, request)
-//   const facilityExsistingData = convertToFacilityExsistingData(request?.body?.facilityToSearch)
-//   await validateFacilityViaSearch(tenantId, facilityExsistingData, request.body)
-// }
-
 async function processValidate(request: any) {
   const type: string = request.body.ResourceDetails.type;
   const createAndSearchConfig = createAndSearch[type]
@@ -934,7 +896,6 @@ export {
   enrichCampaign,
   createExcelSheet,
   getAllFacilities,
-  createFacilityData,
   processAction,
   getFacilitiesViaIds,
   confirmCreation,
