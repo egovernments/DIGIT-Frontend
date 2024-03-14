@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { convertToFacilityCreateData, autoGenerateBoundaryCodes, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData } from "../utils/index";
+import { convertToFacilityCreateData, correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData } from "../utils/index";
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId, validateFacilityCreateData, validateFacilityData } from "../utils/validator";
 const _ = require('lodash');
 
@@ -388,7 +388,9 @@ async function getBoundaryCodes(boundaryList: any) {
       let code;
       if (parentCode != 'INDIA') {
         const parentBoundaryCode = elementCodesMap.get(parentCode);
+        console.log(" hhhhhhh111111111111111111111111")
         const lastUnderscoreIndex = parentBoundaryCode.lastIndexOf('_');
+        console.log(" hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         const parentBoundaryCodeTrimmed = lastUnderscoreIndex !== -1 ? parentBoundaryCode.substring(0, lastUnderscoreIndex) : parentBoundaryCode;
         code = generateElementCode(countMap.get(parentCode), parentBoundaryCodeTrimmed, element);
       } else {
@@ -418,7 +420,7 @@ async function getBoundarySheetData(request: any) {
     const boundaryList = generateHierarchyList(data)
     const newArray = boundaryList.map(item => item.split(','));
     console.log(newArray, "array for boundary code generation")
-    await autoGenerateBoundaryCodes("pg", "dc63c934-0c1c-42fa-b8f9-9ddbfbf27c0e");
+    // await autoGenerateBoundaryCodes("pg", "dc63c934-0c1c-42fa-b8f9-9ddbfbf27c0e");
     if (Array.isArray(boundaryList) && boundaryList.length > 0) {
       const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
       const string = boundaryCodes.join(', ');
@@ -764,17 +766,60 @@ function changeBodyViaSearchFromSheet(elements: any, request: any, dataFromSheet
     _.set(request.body, element?.searchPath, arrayToSearch);
   }
 }
-function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any) {
+
+function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any) {
+  newCreatedData.forEach((createdElement: any) => {
+    let foundMatch = false;
+    for (const searchedElement of newSearchedData) {
+      let match = true;
+      for (const key in createdElement) {
+        if (createdElement.hasOwnProperty(key) && !searchedElement.hasOwnProperty(key) && key != '!row#number!') {
+          match = false;
+          break;
+        }
+        if (createdElement[key] !== searchedElement[key] && key != '!row#number!') {
+          match = false;
+          break;
+        }
+      }
+      if (match) {
+        foundMatch = true;
+        newSearchedData.splice(newSearchedData.indexOf(searchedElement), 1);
+        errors.push({ status: "PERSISTED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: searchedElement[createAndSearchConfig.uniqueIdentifier], errorDetails: "" })
+        break;
+      }
+    }
+    if (!foundMatch) {
+      errors.push({ status: "NOT_PERSISTED", rowNumber: createdElement["!row#number!"], errorDetails: `Can't confirm persistence of this data` })
+    }
+  });
+}
+
+function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], request: any, createAndSearchConfig: any) {
+  const newCreatedData = JSON.parse(JSON.stringify(createdData));
+  const newSearchedData = JSON.parse(JSON.stringify(searchedData));
+  const uid = createAndSearchConfig.uniqueIdentifier;
+  newCreatedData.forEach((element: any) => {
+    delete element[uid];
+  })
+  var errors: any[] = []
+  updateErrors(newCreatedData, newSearchedData, errors, createAndSearchConfig);
+  request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
+}
+function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], request: any, creationTime: any, createAndSearchConfig: any) {
+  var matchingSearchData = [];
   const userUuid = request?.body?.RequestInfo?.userInfo?.uuid
   var count = 0;
   for (const data of searchedData) {
     if (data?.auditDetails?.createdBy == userUuid && data?.auditDetails?.createdTime >= creationTime) {
+      matchingSearchData.push(data);
       count++;
     }
   }
   if (count < createdData.length) {
     request.body.ResourceDetails.status = "PERSISTER_ERROR"
   }
+  matchCreatedAndSearchedData(createdData, matchingSearchData, request, createAndSearchConfig);
   logger.info("New created resources count : " + count);
 }
 
@@ -846,7 +891,7 @@ async function processSearchAndValidation(request: any, createAndSearchConfig: a
   changeBodyViaElements(createAndSearchConfig?.searchDetails?.searchElements, request)
   changeBodyViaSearchFromSheet(createAndSearchConfig?.requiresToSearchFromSheet, request, dataFromSheet)
   const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
-  matchData(request.body.dataToSearch, arraysToMatch, createAndSearchConfig)
+  matchData(request, request.body.dataToSearch, arraysToMatch, createAndSearchConfig)
 }
 
 
@@ -856,7 +901,7 @@ async function confirmCreation(createAndSearchConfig: any, request: any, facilit
   const params: any = getParamsViaElements(createAndSearchConfig?.searchDetails?.searchElements, request);
   changeBodyViaElements(createAndSearchConfig?.searchDetails?.searchElements, request)
   const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
-  matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime)
+  matchViaUserIdAndCreationTime(facilityCreateData, arraysToMatch, request, creationTime, createAndSearchConfig)
 }
 
 

@@ -1,6 +1,6 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
-import { enrichResourceDetails, errorResponder, processGenerate, sendResponse } from "../../utils/index";
+import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse } from "../../utils/index";
 import { validateCreateRequest, validateGenerateRequest } from "../../utils/validator";
 import { createAndUploadFile, getBoundarySheetData, processGenericRequest } from "../../api/index";
 
@@ -68,7 +68,8 @@ class dataManageController {
         try {
             await validateCreateRequest(request);
             await processGenericRequest(request);
-            await enrichResourceDetails(request)
+            await enrichResourceDetails(request);
+            await generateProcessedFileAndPersist(request);
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))

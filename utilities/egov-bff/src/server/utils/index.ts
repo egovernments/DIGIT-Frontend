@@ -12,6 +12,7 @@ import { getCount } from '../api/index'
 import { logger } from "./logger";
 import { processValidationWithSchema } from "./validator";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
+import createAndSearch from "../config/createAndSearch";
 const NodeCache = require("node-cache");
 const jp = require("jsonpath");
 const _ = require('lodash');
@@ -980,23 +981,37 @@ function matchFacilityData(data: any, searchedFacilities: any) {
   }
 }
 
-function matchData(datas: any, searchedDatas: any, createAndSearchConfig: any) {
+function matchData(request: any, datas: any, searchedDatas: any, createAndSearchConfig: any) {
   const uid = createAndSearchConfig.uniqueIdentifier;
+  const errors = []
   for (const data of datas) {
     const searchData = searchedDatas.find((searchedData: any) => searchedData[uid] == data[uid]);
 
     if (!searchData) {
-      throw new Error(`Data with ${uid} ${data[uid]} not found in searched data.`);
+      errors.push({ status: "INVALID", rowNumber: data["!row#number!"], errorDetails: `Data with ${uid} ${data[uid]} not found in searched data.` })
     }
-    if (createAndSearchConfig?.matchEachKey) {
+    else if (createAndSearchConfig?.matchEachKey) {
       const keys = Object.keys(data);
       for (const key of keys) {
+        var errorString = "";
+        var errorFound = false;
         if (searchData.hasOwnProperty(key) && searchData[key] !== data[key] && key != "!row#number!") {
-          throw new Error(`Value mismatch for key "${key}" at index ${data["!row#number!"] - 1}. Expected: "${data[key]}", Found: "${searchData[key]}"`);
+          errorString += `Value mismatch for key "${key}" at index ${data["!row#number!"] - 1}. Expected: "${data[key]}", Found: "${searchData[key]}"`
+          errorFound = true;
+        }
+        if (errorFound) {
+          errors.push({ status: "MISMATCHING", rowNumber: data["!row#number!"], errorDetails: errorString })
+        }
+        else {
+          errors.push({ status: "VALID", rowNumber: data["!row#number!"], errorDetails: "" })
         }
       }
     }
+    else {
+      errors.push({ status: "VALID", rowNumber: data["!row#number!"], errorDetails: "" })
+    }
   }
+  request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
 async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) {
@@ -1005,7 +1020,6 @@ async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) 
     throw new Error("Invalid file")
   }
   const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1")
-  console.log(boundaryData, "bbbbbbbbbbbbbbbbbbbbbbbbbbbb")
   const outputData: string[][] = [];
 
   for (const obj of boundaryData) {
@@ -1048,6 +1062,114 @@ async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearch
   }
   return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName)
 }
+
+function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsColumn: string } {
+  var range = XLSX.utils.decode_range(desiredSheet['!ref']);
+
+  // Check if the status column already exists in the first row
+  var statusColumn: any;
+  for (let col = range.s.c; col <= range.e.c; col++) {
+    const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: col });
+    if (desiredSheet[cellAddress] && desiredSheet[cellAddress].v === '#status#') {
+      statusColumn = String.fromCharCode(65 + col);
+      for (let row = range.s.r; row <= range.e.r; row++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: statusColumn.charCodeAt(0) - 65 });
+        delete desiredSheet[cellAddress];
+      }
+      break;
+    }
+  }
+
+  // Check if the errorDetails column already exists in the first row
+  var errorDetailsColumn: any;
+  for (let col = range.s.c; col <= range.e.c; col++) {
+    const cellAddress = XLSX.utils.encode_cell({ r: range.s.r, c: col });
+    if (desiredSheet[cellAddress] && desiredSheet[cellAddress].v === '#errorDetails#') {
+      errorDetailsColumn = String.fromCharCode(65 + col);
+      for (let row = range.s.r; row <= range.e.r; row++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: row, c: errorDetailsColumn.charCodeAt(0) - 65 });
+        delete desiredSheet[cellAddress];
+      }
+      break;
+    }
+  }
+
+  // If the status column doesn't exist, calculate the next available column
+  range = XLSX.utils.decode_range(desiredSheet['!ref']);
+  const emptyColumnIndex = range.e.c + 1;
+  statusColumn = String.fromCharCode(65 + emptyColumnIndex);
+  desiredSheet[statusColumn + '1'] = { v: '#status#', t: 's', r: '<t xml:space="preserve">#status#</t>', h: '#status#', w: '#status#' };
+
+  // Calculate errorDetails column one column to the right of status column
+  errorDetailsColumn = String.fromCharCode(statusColumn.charCodeAt(0) + 1);
+  desiredSheet[errorDetailsColumn + '1'] = { v: '#errorDetails#', t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: '#errorDetails#', w: '#errorDetails#' };
+
+  return { statusColumn, errorDetailsColumn };
+}
+
+
+function processErrorData(request: any, createAndSearchConfig: any, workbook: any, sheetName: any) {
+  const desiredSheet: any = workbook.Sheets[sheetName];
+  const columns = findColumns(desiredSheet);
+  const statusColumn = columns.statusColumn;
+  const errorDetailsColumn = columns.errorDetailsColumn;
+  console.log(statusColumn, errorDetailsColumn, " sssssssssssseeeeeeeeeeeeeeeeeeeee")
+
+  const errorData = request.body.sheetErrorDetails;
+  errorData.forEach((error: any) => {
+    const rowIndex = error.rowNumber;
+    if (error.isUniqueIdentifier) {
+      const uniqueIdentifierCell = createAndSearchConfig.uniqueIdentifierColumn + (rowIndex + 1);
+      desiredSheet[uniqueIdentifierCell] = { v: error.uniqueIdentifier, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: error.uniqueIdentifier, w: error.uniqueIdentifier };
+    }
+
+    const statusCell = statusColumn + (rowIndex + 1);
+    const errorDetailsCell = errorDetailsColumn + (rowIndex + 1);
+    desiredSheet[statusCell] = { v: error.status, t: 's', r: '<t xml:space="preserve">#status#</t>', h: error.status, w: error.status };
+    desiredSheet[errorDetailsCell] = { v: error.errorDetails, t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: error.errorDetails, w: error.errorDetails };
+
+  });
+
+  desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + errorDetailsColumn);
+  workbook.Sheets[sheetName] = desiredSheet;
+}
+
+async function updateStatusFile(request: any) {
+  const fileStoreId = request?.body?.ResourceDetails?.fileStoreId;
+  const tenantId = request?.body?.ResourceDetails?.tenantId;
+  const createAndSearchConfig = createAndSearch[request?.body?.ResourceDetails?.type];
+  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
+
+  if (!fileResponse?.fileStoreIds?.[0]?.url) {
+    throw new Error("No download URL returned for the given fileStoreId");
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/pdf',
+  };
+
+  const fileUrl = fileResponse?.fileStoreIds?.[0]?.url;
+  const sheetName = createAndSearchConfig?.parseArrayConfig?.sheetName;
+  const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+  const workbook = XLSX.read(responseFile, { type: 'buffer' });
+
+  // Check if the specified sheet exists in the workbook
+  if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+    throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+  }
+  processErrorData(request, createAndSearchConfig, workbook, sheetName);
+
+  const responseData = await createAndUploadFile(workbook, request);
+  logger.info('File updated successfully:' + JSON.stringify(responseData));
+  if (responseData?.[0]?.fileStoreId) {
+    request.body.ResourceDetails.processedFileStoreId = responseData?.[0]?.fileStoreId;
+  }
+  else {
+    throw new Error("Error in Creatring Status File");
+  }
+}
+
 
 function convertToType(dataToSet: any, type: any) {
   switch (type) {
@@ -1126,6 +1248,11 @@ function convertToTypeData(dataFromSheet: any[], createAndSearchConfig: any, req
   return setTenantIdAndSegregate(processedData, createAndSearchConfig, requestBody);
 }
 
+async function generateProcessedFileAndPersist(request: any) {
+  await updateStatusFile(request);
+  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+}
+
 
 
 
@@ -1173,7 +1300,8 @@ export {
   enrichAndSaveResourceDetails,
   getDataFromSheet,
   convertToTypeData,
-  matchData
+  matchData,
+  generateProcessedFileAndPersist
 };
 
 

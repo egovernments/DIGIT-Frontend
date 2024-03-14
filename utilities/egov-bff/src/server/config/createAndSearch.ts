@@ -6,6 +6,8 @@ const createAndSearch: any = {
                 searchPath: "Facility.id"
             }
         ],
+        uniqueIdentifier: "id",
+        uniqueIdentifierColumn: "A",
         matchEachKey: true,
         parseArrayConfig: {
             sheetName: "List of Available Facilities",
