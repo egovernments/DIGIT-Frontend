@@ -3,7 +3,7 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundaryCodesHandler, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -448,16 +448,17 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     const generatedResource: any = { generatedResource: newEntryResponse }
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
     if (type === 'boundary') {
-      const BoundaryDetails = {
-        hierarchyType: "NITISH",
-        tenantId: "pg"
-      };
-      request.body.BoundaryDetails = BoundaryDetails;
+      // const BoundaryDetails = {
+      //   hierarchyType: "NITISH",
+      //   tenantId: "pg"
+      // };
+      // request.body.BoundaryDetails = BoundaryDetails;
       const dataManagerController = new dataManageController();
       const result = await dataManagerController.getBoundaryData(request, response);
       const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
       produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+      request.body.generatedResource = finalResponse;
     }
     else if (type == "facilityWithBoundary") {
       await processGenerateRequest(request);
@@ -768,14 +769,8 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) {
-  const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
-  if (!fileResponse?.fileStoreIds?.[0]?.url) {
-    throw new Error("Invalid file")
-  }
-  const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1")
-  const outputData: string[][] = [];
-
+function modifyBoundaryData(boundaryData: any) {
+  let outputData: string[][] = [];
   for (const obj of boundaryData) {
     const row: string[] = [];
     for (const key in obj) {
@@ -785,8 +780,7 @@ async function autoGenerateBoundaryCodes(tenantId: string, fileStoreId: string) 
     }
     outputData.push(row);
   }
-  const res = await getBoundaryCodesHandler(outputData);
-  return res;
+  return outputData;
 }
 
 async function enrichAndSaveResourceDetails(requestBody: any) {
@@ -1039,6 +1033,58 @@ async function enrichProjectCampaignRequest(request: any) {
 }
 
 
+function getChildParentMap(modifiedBoundaryData: any) {
+  const childParentMap: Map<string, string | null> = new Map();
+  for (let i = 0; i < modifiedBoundaryData.length; i++) {
+    const child = modifiedBoundaryData[i][modifiedBoundaryData[i].length - 1];
+    const parentIndex = modifiedBoundaryData[i].length - 2;
+    const parent = parentIndex >= 0 ? modifiedBoundaryData[i][parentIndex] : null; // Second last element is the parent, or null if not present
+    childParentMap.set(child, parent);
+  }
+  return childParentMap;
+}
+
+function getBoundaryTypeMap(boundaryData: any, boundaryMap: any) {
+  const boundaryTypeMap: { [key: string]: string } = {};
+  boundaryData.forEach((boundary: any) => {
+    Object.entries(boundary).forEach(([key, value]) => {
+      boundaryTypeMap[boundaryMap.get(value)] = key;
+    });
+  });
+  return boundaryTypeMap;
+}
+function addBoundaryCodeToData(modifiedBoundaryData: any, boundaryMap: any) {
+  const boundaryDataForSheet = modifiedBoundaryData.map((row: any[]) => {
+    const boundaryName = row[row.length - 1]; // Get the last element of the row
+    const boundaryCode = boundaryMap.get(boundaryName); // Fetch corresponding boundary code from res
+    return [...row, boundaryCode]; // Append boundary code to the row and return updated row
+  });
+  return boundaryDataForSheet;
+}
+function prepareDataForExcel(boundaryDataForSheet: any, hierarchy: any[], boundaryMap: any) {
+  const data = boundaryDataForSheet.map((boundary: any[]) => {
+    const boundaryCode = boundary.pop();
+    const rowData = boundary.concat(Array(Math.max(0, hierarchy.length - boundary.length)).fill(''));
+    const boundaryCodeIndex = hierarchy.length;
+    rowData[boundaryCodeIndex] = boundaryCode;
+    return rowData;
+  });
+  return data;
+}
+function extractCodesFromBoundaryRelationshipResponse(boundaries: any[]): any {
+  const codes = new Set();
+  for (const boundary of boundaries) {
+    codes.add(boundary.code); // Add code to the Set
+    if (boundary.children && boundary.children.length > 0) {
+      const childCodes = extractCodesFromBoundaryRelationshipResponse(boundary.children); // Recursively get child codes
+      childCodes.forEach((code: any) => codes.add(code)); // Add child codes to the Set
+    }
+  }
+  return codes;
+}
+
+
+
 export {
   errorResponder,
   errorLogger,
@@ -1072,13 +1118,18 @@ export {
   enrichResourceDetails,
   getFacilityIds,
   matchFacilityData,
-  autoGenerateBoundaryCodes,
   enrichAndSaveResourceDetails,
   getDataFromSheet,
   convertToTypeData,
   matchData,
   generateProcessedFileAndPersist,
-  enrichProjectCampaignRequest
+  enrichProjectCampaignRequest,
+  modifyBoundaryData,
+  getChildParentMap,
+  getBoundaryTypeMap,
+  addBoundaryCodeToData,
+  prepareDataForExcel,
+  extractCodesFromBoundaryRelationshipResponse,
 };
 
 
