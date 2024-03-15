@@ -76,14 +76,7 @@ const initDigitUI = () => {
     pgr: PGRReducers(initData),
   });
 
-  window.Digit.Customizations = {
-    PGR: pgrCustomizations,
-    TL: {
-      customiseCreateFormData: (formData, licenceObject) => licenceObject,
-      customiseRenewalCreateFormData: (formData, licenceObject) => licenceObject,
-      customiseSendbackFormData: (formData, licenceObject) => licenceObject,
-    },
-  };
+  
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);

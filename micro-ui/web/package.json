@@ -20,6 +20,7 @@
     "@egovernments/digit-ui-module-core": "1.8.1-beta.6",
     "@egovernments/digit-ui-module-common": "1.8.0",
     "@egovernments/digit-ui-module-hrms": "1.8.0",
+    "@egovernments/digit-ui-module-pgr": "1.7.5",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.1",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
     "@egovernments/digit-ui-react-components": "1.8.1-beta.2",
@@ -71,11 +72,7 @@
     "build:webpack": "yarn build:libraries &&cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
+  
   "browserslist": {
     "production": [
       ">0.2%",

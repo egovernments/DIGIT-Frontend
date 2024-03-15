@@ -17,8 +17,7 @@ const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
 
   
   const handleCallback = (event) => {
-    // console.log(ACTIONS, EVENTS, LIFECYCLE, STATUS);
-    // debugger
+    
     const {type,action,status,step} = event
     //when we want to end the tutorial and reset the state
     if(type==="tour:end" || action==="close"){
