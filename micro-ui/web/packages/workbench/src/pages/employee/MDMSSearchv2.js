@@ -1,14 +1,9 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
-
-//importing css modularization stuff
-import './../../styles.tw.css';
-import './../../career.css';
-import { prefixClasses as cx } from './../../lib/prefix-classes'
 
 const toDropdownObj = (master = "", mod = "") => {
   return {
@@ -40,13 +35,16 @@ const MDMSSearchv2 = () => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
     tenantId:tenantId ,
+    limit:200
   }
   if(master && modulee ) {
     SchemaDefCriteria.codes = [`${master}.${modulee}`] 
   }
   const { isLoading, data: dropdownData } = Digit.Hooks.useCustomAPIHook({
-    url: "/mdms-v2/schema/v1/_search",
-    params: {},
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
+    params: {
+      
+    },
     body: {
       SchemaDefCriteria
     },
@@ -124,79 +122,68 @@ const MDMSSearchv2 = () => {
       }
       //set the column config
       
-      Config.sections.searchResult.uiConfig.columns = [{
-        label: "Unique Identifier",
-        jsonPath: "uniqueIdentifier",
-        additionalCustomization:true
-      },...dropDownOptions.map(option => {
+      // Config.sections.searchResult.uiConfig.columns = [{
+      //   label: "WBH_UNIQUE_IDENTIFIER",
+      //   jsonPath: "uniqueIdentifier",
+      //   additionalCustomization:true
+      // },...dropDownOptions.map(option => {
+      //   return {
+      //     label:option.i18nKey,
+      //     i18nKey:option.i18nKey,
+      //     jsonPath:`data.${option.code}`,
+      //     dontShowNA:true
+      //   }
+      // })]
+    
+      Config.sections.searchResult.uiConfig.columns = [...dropDownOptions.map(option => {
         return {
           label:option.i18nKey,
           i18nKey:option.i18nKey,
-          jsonPath:`data.${option.code}`
+          jsonPath:`data.${option.code}`,
+          dontShowNA:true
         }
-      })]
-
+      }),{
+        label:"WBH_ISACTIVE",
+        i18nKey:"WBH_ISACTIVE",
+        jsonPath:`isActive`,
+        additionalCustomization:true
+        // dontShowNA:true
+      }]
+      Config.apiDetails.serviceName=`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
+        
       setUpdatedConfig(Config)
     }
   }, [currentSchema]);
 
+  const handleAddMasterData = () => {
+    let actionLink=updatedConfig?.actionLink
+    if(modulee&&master){
+      actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
+    }
+    history.push(`/${window?.contextPath}/employee/${actionLink}`);
+  }
+
+  const onClickRow = ({original:row}) => {
+    const [moduleName,masterName] = row.schemaCode.split(".")
+    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`)
+  }
+
   if (isLoading) return <Loader />;
   return (
     <React.Fragment>
-      <h1 className="careerTitle">CSS Modularization 1</h1>
-      <div className={cx('underline decoration-sky-500')}>CSS Modularization 2</div>
-        <Header className="works-header-search">{t(Config?.label)}</Header>
-      <div className="jk-header-btn-wrapper">
-        <Dropdown
-          option={masterOptions}
-          style={{width:"25%",marginRight:"1rem" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master) : masterName}
-          select={(e) => {
-            setMasterName(e);
-            setModuleName(null)
-            setUpdatedConfig(null)
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MODULE_NAME")}
-          
-          disable={master ? true : false}
-        />
-        <Dropdown
-          option={moduleOptions}
-          style={{width:"25%",marginRight:"auto" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
-          select={(e) => {
-            setModuleName(e);
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MASTER_NAME")}
-          
-          disable = {modulee ? true : false}
-        />
-       {updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && (
-          <Button
-            label={t(updatedConfig?.actionLabel)}
-            variation="secondary"
-            icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
-            onButtonClick={() => {
-              let actionLink=updatedConfig?.actionLink
-              if(modulee&&master){
-                actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
-              }
-              history.push(`/${window?.contextPath}/employee/${actionLink}`);
-            }}
-            type="button"
-          />
-        )}
-      </div>
+      <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
+      {
+        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) &&
+        <ActionBar >
+          <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
+        </ActionBar>
+      }
       {updatedConfig && <div className="inbox-search-wrapper">
-        <InboxSearchComposer configs={updatedConfig}></InboxSearchComposer>
+        <InboxSearchComposer configs={updatedConfig} additionalConfig = {{
+          resultsTable:{
+            onClickRow
+          }
+        }}></InboxSearchComposer>
       </div>}
     </React.Fragment>
   );

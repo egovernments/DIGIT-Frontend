@@ -33,13 +33,13 @@ const MDMSView = ({...props}) => {
   
 
   const reqCriteria = {
-    url: `/mdms-v2/v2/_search`,
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
     body: {
       MdmsCriteria: {
         tenantId: tenantId ,
-        uniqueIdentifier,
-        schemaCodes:[`${moduleName}.${masterName}`]
+        uniqueIdentifiers:[uniqueIdentifier],
+        schemaCode:`${moduleName}.${masterName}`
       },
     },
     config: {
@@ -57,10 +57,10 @@ const MDMSView = ({...props}) => {
     }, 5000);
   }
 
-  const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqCriteriaUpdate = {
-    url: `/mdms-v2/v2/_update/${moduleName}.${masterName}`,
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
     params: {},
     body: {
       
@@ -76,23 +76,25 @@ const MDMSView = ({...props}) => {
     const onSuccess = (resp) => {
       
       setShowToast({
-        label:`${t("WBH_SUCCESS_DIS_MDMS_MSG")} ${resp?.mdms?.[0]?.id}`
+        label:`${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive?"ENA":"DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
       });
       closeToast()
+      refetch()
     };
     const onError = (resp) => {
       setShowToast({
-        label:`${t("WBH_ERROR_MDMS_DATA")}  ${resp?.response?.data?.Errors?.[0]?.description}`,
+        label:`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
         isError:true
       });
       
       closeToast()
+      refetch()
     };
 
 
     mutation.mutate(
       {
-        url:`/mdms-v2/v2/_update/${moduleName}.${masterName}`,
+        url:`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
         params: {},
         body: {
           Mdms:{
@@ -126,7 +128,7 @@ const MDMSView = ({...props}) => {
   return (
     <React.Fragment>
       <MDMSAdd defaultFormData = {data?.data} updatesToUISchema ={{"ui:readonly": true}} screenType={"view"} onViewActionsSelect={onActionSelect} viewActions={fetchActionItems(data)} />
-      {showToast && <Toast label={t(showToast.label)} error={showToast?.isError}></Toast>}
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
     </React.Fragment>
   )
 }
