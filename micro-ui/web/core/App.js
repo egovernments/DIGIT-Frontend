@@ -1,14 +1,27 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
+import {
+  paymentConfigs,
+  PaymentLinks,
+  PaymentModule,
+} from "@egovernments/digit-ui-module-common";
+import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
+import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
-import {PGRReducers} from "@egovernments/digit-ui-module-pgr";
+
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { pgrCustomizations,pgrComponents } from "./pgr";
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+window.Digit.Customizations = {
+  UICustomizations,pgrCustomizations
+};
 
 const enabledModules = [
   "DSS",
@@ -20,18 +33,17 @@ const enabledModules = [
   "PGR"
 ];
 
-
+const moduleReducers = (initData) => ({
+  initData,
+  pgr: PGRReducers(initData),
+});
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {
-    PGR: pgrCustomizations,
-    commonUiConfig: UICustomizations
-  };
-
-window?.Digit.ComponentRegistryService.setupRegistry({
+  window.Digit.ComponentRegistryService.setupRegistry({
     ...pgrComponents,
-   
+    PaymentModule,
+    ...paymentConfigs,
+    PaymentLinks,
   });
   initCoreComponents();
   initDSSComponents();
@@ -40,12 +52,14 @@ window?.Digit.ComponentRegistryService.setupRegistry({
   initUtilitiesComponents();
   initWorkbenchComponents();
   initPGRComponents();
-  initLibraries().then(() => {
+
+ 
+};
+
+initLibraries().then(() => {
   initDigitUI();
 });
-const moduleReducers = (initData) =>  ({
-    pgr: PGRReducers(initData),
-  });
+
 function App() {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
   const stateCode =
@@ -59,7 +73,7 @@ function App() {
       stateCode={stateCode}
       enabledModules={enabledModules}
       moduleReducers={moduleReducers}
-      defaultLanding="employee"
+      // defaultLanding="employee"
     />
   );
 }
