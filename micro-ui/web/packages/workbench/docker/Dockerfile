@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+RUN rm -rf node_modules/
+
+RUN rm -rf yarn.lock
+
 # clear cache
 RUN yarn cache clean
 
