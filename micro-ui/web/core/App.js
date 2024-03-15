@@ -1,14 +1,28 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
+import {
+  paymentConfigs,
+  PaymentLinks,
+  PaymentModule,
+} from "@egovernments/digit-ui-module-common";
+import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
+import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import {  PGRReducers} from "@egovernments/digit-ui-module-pgr";
 
+
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-
+import { pgrCustomizations,pgrComponents } from "./pgr";
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+window.Digit.Customizations = {
+  UICustomizations,pgrCustomizations
+};
 
 const enabledModules = [
   "DSS",
@@ -21,17 +35,22 @@ const enabledModules = [
 ];
 
 
-
 const initDigitUI = () => {
-  window.Digit.ComponentRegistryService.setupRegistry({});
-  window.Digit.Customizations = {
-    PGR: {},
-    commonUiConfig: UICustomizations,
-  };
+  window.Digit.ComponentRegistryService.setupRegistry({
+    ...pgrComponents,
+    PaymentModule,
+    ...paymentConfigs,
+    PaymentLinks,
+  });
+  initCoreComponents();
+  initDSSComponents();
   initHRMSComponents();
-  initPGRComponents();
+  initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initPGRComponents();
+
+ 
 };
 const moduleReducers = (initData) => ({
   pgr: PGRReducers(initData),
