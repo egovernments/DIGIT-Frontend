@@ -12,7 +12,11 @@ import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
 import { checkForErrorInUploadedFileExcel } from "../../utils/excelValidations";
 import { geojsonValidations } from "../../utils/geojsonValidations";
-const Upload = ({ MicroplanName = "default" }) => {
+import schemas from "../../configs/schemas.json";
+import JSZip from "jszip";
+import shp from "shpjs";
+
+const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const { t } = useTranslation();
 
   // Fetching data using custom MDMS hook
@@ -22,14 +26,16 @@ const Upload = ({ MicroplanName = "default" }) => {
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [modal, setModal] = useState("none");
-  const [selectedFileType, setSelectedFileType] = useState("none");
+  const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
   const [loaderActivation, setLoderActivation] = useState(false);
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
-  const [fileDataList,setFileDataList] = useState({});
+  const [fileDataList, setFileDataList] = useState({});
+  const [validationSchemas, setValidationSchemas] = useState([]);
+  const [template, setTemplate] = useState([]);
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
@@ -39,6 +45,13 @@ const Upload = ({ MicroplanName = "default" }) => {
       setSections(uploadSections);
     }
   }, [data]);
+
+  useEffect(() => {
+    setValidationSchemas(schemas.schemas);
+  }, []);
+  useEffect(() => {
+    setTemplate(excelTemplate.excelTemplate);
+  });
 
   // To close the Toast after 10 seconds
   useEffect(() => {
@@ -72,7 +85,7 @@ const Upload = ({ MicroplanName = "default" }) => {
         item={item}
         selected={selectedSection.id === item.id}
         uploadOptions={item.UploadFileTypes}
-        selectedFileType={selectedFileType}
+        selectedFileType={selectedFileType ? selectedFileType : {}}
         selectFileTypeHandler={selectFileTypeHandler}
       />
     ));
@@ -80,43 +93,35 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   const closeModal = () => {
     setModal("none");
-    setSelectedFileType("none");
+    setSelectedFileType(null);
   };
 
   const UploadFileClickHandler = (download = false) => {
     if (download) {
-      downloadTemplate(setToast);
+      downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template);
     }
     setModal("none");
     setDataUpload(true);
   };
 
   useEffect(() => {
-    const checkfile = async (file) => {
-      try {
-            console.log(file.fileType);
-            setUploadedFileError(file.error);
-            setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === file.fileType));
-      } catch (error) {
-        console.log(error);
-        setUploadedFileError("ERROR_PARSING_FILE");
-      }
-    };
-
-    if (selectedSection && selectedFileType) {
+    if (selectedSection) {
       // const file = Digit.SessionStorage.get(`Microplanning_${selectedSection.id}`);
       let file = fileDataList[`Microplanning_${selectedSection.id}`];
-      console.log(file)
       if (file && file.file) {
-        setDataPresent(true);
-        checkfile(file);
+        setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === file.fileType));
+        setUploadedFileError(file.error);
         setFileData(file);
-      } else setDataPresent(false);
+        setDataPresent(true);
+      } else {
+        setSelectedFileType(null);
+        setDataPresent(false);
+      }
     } else {
+      setSelectedFileType(null);
       setDataPresent(false);
     }
 
-    setSelectedFileType("none");
     setDataUpload(false);
   }, [selectedSection]);
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
@@ -125,46 +130,121 @@ const Upload = ({ MicroplanName = "default" }) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       setLoderActivation(true);
-      console.log(file);
       let result;
       let check;
-      let filetoStore;
+      let fileDataToStore;
       let error;
       let response;
-      console.log(selectedFileType);
+      let regx;
+      let schemaData;
       switch (selectedFileType.id) {
         case "Excel":
+          regx = new RegExp(selectedFileType["namingConvention"]);
+          console.log(regx, !regx.test(file.name));
+          if (regx && !regx.test(file.name)) {
+            setToast({
+              state: "error",
+              message: t("ERROR_NAMEING_CONVENSION"),
+            });
+            setLoderActivation(false);
+            return;
+          }
           result = await parseXlsxToJsonMultipleSheets(file);
-          response = await checkForErrorInUploadedFileExcel(result,t);
-          if(!response.valid) setUploadedFileError(response.message)
-          error=response.message;
-        console.log(response)
+          // schemaData = validateSchema.validateSchemas.find(
+          //   (item) => item.type == selectedFileType.id && item.section === selectedSection.id && item.campaignType === campaignType
+          // ).schema;
+          schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+          if (!schemaData) {
+            setToast({
+              state: "error",
+              message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
+            });
+            setLoderActivation(false);
+            return;
+          }
+          response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
+          if (!response.valid) setUploadedFileError(response.message);
+          error = response.message;
           check = response.valid;
-          filetoStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+          fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+          console.log(fileDataToStore);
           break;
-        case "GeoJson":
-          const data = await readGeojson(file,t);
-          if(data.valid == false){
+        case "Geojson":
+          regx = new RegExp(selectedFileType["namingConvention"]);
+          if (regx && !regx.test(file.name)) {
+            setToast({
+              state: "error",
+              message: t("ERROR_NAMEING_CONVENSION"),
+            });
+            setLoderActivation(false);
+            return;
+          }
+          const data = await readGeojson(file, t);
+          if (data.valid == false) {
             setLoderActivation(false);
             setToast(data.toast);
             return;
           }
-          response = geojsonValidations(data,t);
-          if(!response.valid) setUploadedFileError(response.message)
+          // schemaData = validateSchema.validateSchemas.find(
+          //   (item) => item.type == selectedFileType.id && item.section === selectedSection.id && item.campaignType === campaignType
+          // ).schema;
+          console.log(selectedFileType.id, selectedSection.id, validationSchemas);
+          schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+          console.log(validationSchemas, schemaData);
+          if (!schemaData) {
+            setToast({
+              state: "error",
+              message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
+            });
+            setLoderActivation(false);
+            return;
+          }
+          response = geojsonValidations(data, schemaData.schema, t);
+          console.log(response);
+          if (!response.valid) setUploadedFileError(response.message);
           check = response.valid;
-          error=response.message;
-          filetoStore = data;
+          error = response.message;
+          fileDataToStore = data;
+          break;
+        case "Shapefiles":
+          regx = new RegExp(selectedFileType["namingConvention"]);
+          if (regx && !regx.test(file.name)) {
+            setToast({
+              state: "error",
+              message: t("ERROR_NAMEING_CONVENSION"),
+            });
+            setLoderActivation(false);
+            return;
+          }
+          response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
+          console.log(response);
+          if (!response.valid) {
+            setUploadedFileError(response.message);
+            setToast(response.toast);
+          }
+          check = response.valid;
+          error = response.message;
+          fileDataToStore = response.data;
+          break;
+        default:
+          setToast({
+            state: "error",
+            message: t("ERROR_UNKNOWN_FILETYPE"),
+          });
+          setLoderActivation(false);
+          return;
       }
       let fileObject = {
         id: `Microplanning_${selectedSection.id}`,
         fileName: file.name,
         section: selectedSection.id,
         fileType: selectedFileType.id,
-        file: filetoStore,
-        error:error?error:null
+        data: fileDataToStore,
+        file,
+        error: error ? error : null,
       };
       setFileData(fileObject);
-      setFileDataList({...fileDataList,[fileObject.id]:fileObject});
+      setFileDataList({ ...fileDataList, [fileObject.id]: fileObject });
       // Digit.SessionStorage.set(fileObject.id, fileObject);
       setDataPresent(true);
       setLoderActivation(false);
@@ -191,21 +271,64 @@ const Upload = ({ MicroplanName = "default" }) => {
 
   // Download the selected file
   const downloadFile = () => {
-    const blob = convertJsonToXlsx(fileData.file, { skipHeader: true });
+    let blob;
+    switch (fileData.fileType) {
+      case "Excel":
+        blob = fileData.file;
+        break;
+      case "Shapefiles":
+      case "Geojson":
+        console.log(fileData);
+        if (!fileData || !fileData.data) {
+          setToast({
+            state: "error",
+            message: t("ERROR_DATA_NOT_PRESENT"),
+          });
+          return;
+        }
+        // Extract keys from the first feature's properties
+        const keys = Object.keys(fileData.data.features[0].properties);
+        // Extract corresponding values for each feature
+        const values = fileData.data.features.map((feature) => {
+          return keys.map((key) => feature.properties[key]);
+        });
+        // Group keys and values into the desired format
+        const result = { [fileData.fileName]: [keys, ...values] };
+        console.log(result);
+        blob = convertJsonToXlsx(result, { skipHeader: true });
+        break;
+    }
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = fileData.fileName;
+
+    // Forming a name for downloaded file
+    const fileNameParts = fileData.fileName.split(".");
+    fileNameParts.pop();
+    fileNameParts.push("xlsx");
+    fileNameParts.join(".");
+
+    //Downloading the file
+    link.download = fileNameParts.join(".");
     link.click();
     URL.revokeObjectURL(url);
   };
 
   // delete the selected file
   const deleteDelete = () => {
-    Digit.SessionStorage.del(fileData.id);
+    // Digit.SessionStorage.del(fileData.id);
+    setFileDataList({ ...fileDataList, [fileData.id]: undefined });
     setFileData(undefined);
     setDataPresent(false);
+    setUploadedFileError(null);
+    setDataUpload(false);
     closeModal();
+  };
+
+  const onTypeErrorWhileFileUpload = () => {
+    if (selectedFileType.id === "Excel") setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
+    if (selectedFileType.id === "Geojson") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+    if (selectedFileType.id === "Shapefiles") setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
   };
 
   return (
@@ -219,6 +342,9 @@ const Upload = ({ MicroplanName = "default" }) => {
                 selectedSection={selectedSection}
                 selectedFileType={selectedFileType}
                 UploadFileToFileStorage={UploadFileToFileStorage}
+                onTypeError={onTypeErrorWhileFileUpload}
+                setToast={setToast}
+                template={template}
               />
             </div>
           ) : (
@@ -235,6 +361,8 @@ const Upload = ({ MicroplanName = "default" }) => {
                 DownloaddFile={downloadFile}
                 DeleteDelete={() => setModal("delete-conformation")}
                 error={uploadedFileError}
+                setToast={setToast}
+                template={template}
               />
             )}
           </div>
@@ -304,7 +432,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
       <div style={{ padding: "0 10px" }}>
         <CustomIcon Icon={Icons[item.iconName]} color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
-      <p>{t(item.title)}</p>
+      <p>{t(item.id)}</p>
     </div>
   );
 };
@@ -326,14 +454,16 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
         <p>{t(item.code)}</p>
         {/* <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={selectedFileType === item.id?t("Selected"):t("Select ")} onSubmit={selectFileTypeHandler} style={{}}/> */}
         <button
-          className={selectedFileType.id === item.id ? "selected-button" : "select-button"}
+          className={selectedFileType && selectedFileType.id === item.id ? "selected-button" : "select-button"}
           type="button"
           id={item.id}
           name={item.id}
           onClick={selectFileTypeHandler}
         >
-          {selectedFileType.id === item.id && <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} color={"rgba(255, 255, 255, 0)"} />}
-          {selectedFileType.id === item.id ? t("Selected") : t("Select ")}
+          {selectedFileType.id === item.id && (
+            <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} height={"2.5rem"} color={"rgba(255, 255, 255, 1)"} />
+          )}
+          {selectedFileType.id === item.id ? t("SELECTED") : t("SELECT")}
         </button>
       </div>
     );
@@ -360,7 +490,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 };
 
 // Component for uploading file/files
-const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section }) => {
+const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, setToast, template }) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
   let types;
@@ -372,7 +502,10 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
       <div>
         <div className="heading">
           <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <div className="download-template-button" onClick={() => downloadTemplate(setToast)}>
+          <div
+            className="download-template-button"
+            onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
+          >
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -380,7 +513,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
           </div>
         </div>
         <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
-        <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} multiple={false} name="file" types={types}>
+        <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} onTypeError={onTypeError} multiple={false} name="file" types={types}>
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
             <p className="">
@@ -395,14 +528,17 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
 };
 
 // Component to display uploaded file
-const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, DownloaddFile, DeleteDelete, error }) => {
+const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, DownloaddFile, DeleteDelete, error, setToast, template }) => {
   const { t } = useTranslation();
   return (
     <div key={selectedSection.id} className="upload-component-active">
       <div>
         <div className="heading">
           <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <div className="download-template-button" onClick={() => downloadTemplate(setToast)}>
+          <div
+            className="download-template-button"
+            onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
+          >
             <div className="icon">
               <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -505,9 +641,97 @@ const ModalWrapper = ({
   );
 };
 
-const downloadTemplate = (setToast) => {
+const readGeojson = async (file, t) => {
+  return new Promise((resolve, reject) => {
+    if (!file) return resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const geoJSONData = JSON.parse(e.target.result);
+        resolve(geoJSONData);
+      } catch (error) {
+        resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+      }
+    };
+    reader.readAsText(file);
+  });
+};
+
+const readAndValidateShapeFiles = async (file, t, namingConvension) => {
+  return new Promise(async (resolve, reject) => {
+    if (!file) {
+      resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+    }
+    const fileRegex = new RegExp(namingConvension.replace(".zip$", ".*$"));
+    // File Size Check
+    const fileSizeInBytes = file.size;
+    const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
+
+    // Check if file size is within limit
+    if (fileSizeInBytes > maxSizeInBytes)
+      resolve({ valid: false, message: "ERROR_FILE_SIZE", toast: { state: "error", message: t("ERROR_FILE_SIZE") } });
+
+    try {
+      const zip = await JSZip.loadAsync(file);
+      const isEPSG4326 = await checkProjection(zip);
+      if (!isEPSG4326) {
+        resolve({ valid: false, message: "ERROR_WRONG_PRJ", toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
+      }
+      const files = Object.keys(zip.files);
+      console.log(zip);
+      const allFilesMatchRegex = files.every((fl) => {
+        return fileRegex.test(fl);
+      });
+      let regx = new RegExp(namingConvension.replace(".zip$", ".shp$"));
+      const shpFile = zip.file(regx)[0];
+      regx = new RegExp(namingConvension.replace(".zip$", ".shx$"));
+      const shxFile = zip.file(regx)[0];
+      regx = new RegExp(namingConvension.replace(".zip$", ".dbf$"));
+      const dbfFile = zip.file(regx)[0];
+
+      const shpArrayBuffer = await shpFile.async("arraybuffer");
+      const dbfArrayBuffer = await dbfFile.async("arraybuffer");
+
+      const geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
+      if (shpFile && dbfFile && shxFile && allFilesMatchRegex) resolve({ valid: true, data: geojson });
+      else if (!shpFile)
+        resolve({ valid: false, message: "ERROR_SHP_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
+      else if (!dbfFile)
+        resolve({ valid: false, message: "ERROR_DBF_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
+      else if (!shxFile)
+        resolve({ valid: false, message: "ERROR_SHX_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
+      else if (!allFilesMatchRegex)
+        resolve({ valid: false, message: "ERROR_NAMEING_CONVENSION", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
+    } catch (error) {
+      resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+    }
+  });
+};
+
+const checkProjection = async (zip) => {
+  const prjFile = zip.file(/.prj$/i)[0];
+  if (!prjFile) {
+    return "absent";
+  }
+  const prjText = await prjFile.async("text");
+  return prjText.includes("EPSG:4326");
+};
+
+const downloadTemplate = (campaignType, type, section, setToast, Templates) => {
   try {
-    const blob = convertJsonToXlsx(excelTemplate.excelTemplate[0].excelTemplate, { skipHeader: true });
+    // Find the template based on the provided parameters
+    const schema = getSchema(campaignType, type, section, Templates);
+
+    if (!schema) {
+      // Handle if template is not found
+      setToast({ state: "error", message: "Template not found" });
+      return;
+    }
+    const template = {
+      sheet: [schema.schema.required],
+    };
+    const blob = convertJsonToXlsx(template, { skipHeader: true });
 
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -519,29 +743,30 @@ const downloadTemplate = (setToast) => {
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
 };
+// Function to select the template based on provided parameters
+const getTemplate = (campaignType, type, section, excelTemplates) => {
+  return excelTemplates.find((template) => {
+    if (!template.campaignType) {
+      return schemas.type === type && schemas.section === section;
+    }
+    return template.campaignType === campaignType && template.type === type && template.section === section;
+  });
+};
 
-const readGeojson = async (file,t) => {
-
-  return new Promise((resolve, reject) => {
-    if (!file) return reject(new Error("No file provided"));
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const geoJSONData = JSON.parse(e.target.result);
-        resolve(geoJSONData);
-      } catch (error) {
-        resolve({valid:false,toast:{ state: "error", message: t("ERROR_PARSING_FILE") }});
-      }
-    };
-    reader.readAsText(file);
+// get schema for validation
+const getSchema = (campaignType, type, section, schemas) => {
+  return schemas.find((schema) => {
+    if (!schema.campaignType) {
+      return schema.type === type && schema.section === section;
+    }
+    return schema.campaignType === campaignType && schema.type === type && schema.section === section;
   });
 };
 
 // Custom icon component
 const CustomIcon = (props) => {
   if (!props.Icon) return null;
-  return <props.Icon fill={props.color} style={{ outerWidth: "62px", outerHeight: "62px" }} {...props} />;
+  return <props.Icon fill={props.color} style={{}} {...props} />;
 };
 
 const Close = () => (

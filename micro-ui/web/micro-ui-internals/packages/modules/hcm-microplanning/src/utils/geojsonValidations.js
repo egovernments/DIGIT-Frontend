@@ -1,59 +1,37 @@
 import gjv from "geojson-validation";
 import Ajv from "ajv";
 const ajv = new Ajv({ allErrors: true });
-import validateSchema from "../configs/validationSchemas.json";
-
-const schemaData = validateSchema.validateSchemas.find((item) => item.type == "GEOJSON").schema;
-console.log(validateSchema);
-const schema = {
-  type: "object",
-  properties: {
-    type: { const: "FeatureCollection" },
-  },
-  patternProperties: {
-    "^features$": {
-      type: "array",
-      items: {
-        type: "object",
-        patternProperties: {
-          "^properties$": {
-            type: "object",
-            properties: schemaData.Properties,
-            required: schemaData.required,
-            additionalProperties: true,
-          },
-        },
-      },
-    },
-  },
-  additionalProperties: true,
-};
 
 gjv.define("Position", (position) => {
   //the postion must be valid point on the earth, x between -180 and 180
   let errors = [];
   if (position[0] < -180 || position[0] > 180) {
-    errors.push("the x must be between -180 and 180");
+    errors.push("Location Coordinates Error: the x must be between -180 and 180");
   }
   if (position[1] < -90 || position[1] > 90) {
-    errors.push("the y must be between -90 and 90");
+    errors.push("Location Coordinates Error: the y must be between -90 and 90");
   }
   return errors;
 });
 
-export const geojsonValidations = (data, t) => {
-  console.log("hii");
+export const geojsonValidations = (data, schemaData, t) => {
   let valid = true;
   let trace = {};
   for (let i = 0; i < data["features"].length; i++) {
     const check = gjv.valid(data["features"][i]);
-    console.log(check)
+    console.log(check);
     valid = valid && check;
-    if (!check) trace[i] = [...gjv.isFeature(data["features"][i], true)];
+    const errors = gjv.isFeature(data["features"][i], true)
+    console.log(errors,errors.includes("Location Coordinates Error:"))
+    
+    // check if the location coordinates are according to the provided guidlines
+    if(errors.some(str => str.includes("Location Coordinates Error:")))
+    return { valid:false, message: "ERROR_INCORRECT_LOCATION_COORDINATES" };
+    if (!check) trace[i] = [errors];
   }
   console.log(valid, trace, data);
   if (valid) {
-    const response = geojsonPropetiesValidation(data, t);
+    const response = geojsonPropetiesValidation(data, schemaData, t);
     if (!response.valid) {
       return response;
     }
@@ -63,7 +41,30 @@ export const geojsonValidations = (data, t) => {
   }
 };
 
-export const geojsonPropetiesValidation = (data, t) => {
+export const geojsonPropetiesValidation = (data, schemaData, t) => {
+  const schema = {
+    type: "object",
+    properties: {
+      type: { const: "FeatureCollection" },
+    },
+    patternProperties: {
+      "^features$": {
+        type: "array",
+        items: {
+          type: "object",
+          patternProperties: {
+            "^properties$": {
+              type: "object",
+              properties: schemaData.Properties,
+              required: schemaData.required,
+              additionalProperties: true,
+            },
+          },
+        },
+      },
+    },
+    additionalProperties: true,
+  };
   const validateGeojson = ajv.compile(schema);
   const valid = validateGeojson(data);
   if (!valid) {
@@ -74,6 +75,9 @@ export const geojsonPropetiesValidation = (data, t) => {
         columns.add(instancePath[instancePath.length - 1]);
       } else if (validateGeojson.errors[i].keyword == "required") {
         columns.add(validateGeojson.errors[i].params.missingProperty);
+      } else if (validateGeojson.errors[i].keyword == "pattern") {
+        const instancePath = validateGeojson.errors[i].instancePath.split("/");
+        columns.add(instancePath[instancePath.length - 1]);
       }
     }
     const columnList = [...columns];
