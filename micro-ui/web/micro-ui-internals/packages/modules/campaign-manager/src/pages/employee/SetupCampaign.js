@@ -12,8 +12,12 @@ const SetupCampaign = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentKey, setCurrentKey] = useState(1);
   const [totalFormData, setTotalFormData] = useState({});
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig);
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  
+  useEffect(() => {
+    setCampaignConfig(CampaignConfig(totalFormData));
+  }, [totalFormData]);
 
   //to convert formData to payload
   useEffect(() => {
@@ -28,10 +32,7 @@ const SetupCampaign = () => {
     convertFormData(totalFormData);
   }, [totalFormData]);
 
-  console.log("totalFormData", totalFormData);
-
-
-// function to convert payload to formData
+  // function to convert payload to formData
   const convertPayload = (dummyData) => {
     return {
       1: {},
@@ -47,7 +48,7 @@ const SetupCampaign = () => {
     };
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = (formData) => {
     setCurrentKey(currentKey + 1);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
 
@@ -94,26 +95,35 @@ const SetupCampaign = () => {
       setCurrentKey(currentKey - 1);
     }
   };
-// filtering the config on the basis of the screen or key
-  const filteredConfig = campaignConfig
-    .map((config) => {
+  // filtering the config on the basis of the screen or key
+  // const filteredConfig = campaignConfig
+  //   .map((config) => {
+  //     return {
+  //       ...config,
+  //       form: config?.form.filter((step) => parseInt(step.key) == currentKey),
+  //     };
+  //   })
+  //   .filter((config) => config.form.length > 0);
+
+  const filterCampaignConfig = (campaignConfig, currentKey) => {
+    return campaignConfig.map(config => {
       return {
         ...config,
-        form: config?.form.filter((step) => parseInt(step.key) == currentKey),
+        form: config?.form.filter(step => parseInt(step.key) === currentKey),
       };
-    })
-    .filter((config) => config.form.length > 0);
+    }).filter(config => config.form.length > 0);
+  };
+
+  const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
+
+
+  useEffect(() => {
+    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey));
+  }, [campaignConfig, currentKey]);
 
   const config = filteredConfig?.[0];
 
-  const onFormValueChange = (setValue, formData) => {
-    // console.log("formdata", formData)
-    const { deliveryNumber, cycleNumber, campaignName, campaigntype } = formData;
-    // var newArrayData=arrayData;
-    // newArrayData[currentStep]=formData;
-    // setArrayData(newArrayData);
-  };
-// setting the current step when the key is changed on the basis of the config
+  // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
   }, [currentKey, filteredConfig]);
@@ -133,7 +143,6 @@ const SetupCampaign = () => {
         secondaryLabel={"PREVIOUS"}
         onSecondayActionClick={onSecondayActionClick}
         label={currentKey < 10 ? "NEXT" : "SUBMIT"}
-        onFormValueChange={onFormValueChange}
       />
     </React.Fragment>
   );

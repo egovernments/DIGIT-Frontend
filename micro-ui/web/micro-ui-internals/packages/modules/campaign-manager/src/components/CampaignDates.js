@@ -9,19 +9,21 @@ const CampaignDates = ({onSelect, formData}) => {
   const [startDate, setStartDate] = useState(); // Set default start date to today
   const [endDate, setEndDate] = useState(); // Default end date
 
+
   function setStart(value) {
     setStartDate(value);
   }
 
-
-  function setEnd(value) {
-    setEndDate(value);
+  function setEnd(date) {
+    setEndDate(date);
   }
-
   useEffect(() => {
     setDates({ startDate, endDate });
-    onSelect("campaignDates", dates);
   }, [startDate, endDate]);
+
+  useEffect(() =>{
+    onSelect("campaignDates", dates);
+  }, [dates])
 
   return (
     <React.Fragment>
@@ -34,13 +36,13 @@ const CampaignDates = ({onSelect, formData}) => {
           date={startDate}
           key = {startDate}
           min={Digit.Utils.date.getDate(Date.now() + 1 * 24 * 60 * 60 * 1000)}
-          onChange={(e) => setStart(e)}
+          onChange={(date) => setStart(date)}
         />
         <DatePicker 
          date={endDate}
          key = {endDate} 
          min={Digit.Utils.date.getDate(Date.now() + 2 * 24 * 60 * 60 * 1000)}
-         onChange={(e) => setEnd(e)}
+         onChange={(date) => setEnd(date)}
         />
         </div>
       </LabelFieldPair>
