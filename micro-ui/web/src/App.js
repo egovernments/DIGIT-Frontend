@@ -19,6 +19,9 @@ import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { pgrCustomizations,pgrComponents } from "./pgr";
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+window.Digit.Customizations = {
+  UICustomizations,pgrCustomizations
+};
 
 const enabledModules = [
   "DSS",
@@ -32,6 +35,7 @@ const enabledModules = [
 
 const moduleReducers = (initData) => ({
   initData,
+  pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -49,10 +53,7 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initPGRComponents();
 
-  const moduleReducers = (initData) => ({
-    pgr: PGRReducers(initData),
-  });
-  
+ 
 };
 
 initLibraries().then(() => {
