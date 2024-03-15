@@ -541,7 +541,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
     if (!(boundaries.length === 0)) {
       requestBody.Boundary = boundaries;
       console.log(requestBody, "reeeeeeeeeeeeeeeeeeeeee")
-      const response = await httpRequest('http://localhost:8087/boundary-service/boundary/_create', requestBody, {}, 'POST',);
+      const response = await httpRequest(`${config.host.boundaryHost}boundary-service/boundary/_create`, requestBody, {}, 'POST',);
       console.log('Boundary entities created:', response);
     }
     else {
@@ -580,7 +580,7 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
         requestBody.BoundaryRelationship = boundary;
         console.log(requestBody, "reeeeeeeeeeeeeeeeeeeeee")
 
-        const response = await httpRequest('http://localhost:8087/boundary-service/boundary-relationships/_create', requestBody, {}, 'POST');
+        const response = await httpRequest(`${config.host.boundaryHost}boundary-service/boundary-relationships/_create`, requestBody, {}, 'POST');
         // Handle successful response
         console.log('Boundary relationship created:', response);
       }

@@ -3,8 +3,8 @@ import { logger } from "../../utils/logger";
 import { validateCreateRequest, validateGenerateRequest } from "../../utils/validator";
 import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel } from "../../utils/index";
 import { createAndUploadFile, processGenericRequest, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/index";
-import config from "../../../server/config/index";
-import { httpRequest } from "../../../server/utils/request";
+import config from "../../config";
+import { httpRequest } from "../../utils/request";
 
 
 

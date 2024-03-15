@@ -1,3 +1,4 @@
+import config from "../config";
 const createAndSearch: any = {
     "facility": {
         requiresToSearchFromSheet: [
@@ -84,7 +85,7 @@ const createAndSearch: any = {
         createBulkDetails: {
             limit: 50,
             createPath: "Facilities",
-            url: "http://localhost:8086/" + "facility/v1/bulk/_create"
+            url: config.host.facilityHost + "facility/v1/bulk/_create"
         },
         searchDetails: {
             searchElements: [
@@ -112,7 +113,7 @@ const createAndSearch: any = {
                 isInParams: true,
                 isInBody: false,
             },
-            url: "http://localhost:8086/" + "facility/v1/_search",
+            url: config.host.facilityHost + "facility/v1/_search",
             searchPath: "Facilities"
         }
     }

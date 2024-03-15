@@ -52,6 +52,6 @@ config:
   - name: "builds/Digit-Frontend/utilities/egov-bff"
     build:
       - work-dir: "utilities/egov-bff"
-        image-name: "project-factory"
+        image-name: "project-factory-bff"
       - work-dir: "utilities/egov-bff/migration"
-        image-name: "project-factory-db"
+        image-name: "project-factory-bff-db"

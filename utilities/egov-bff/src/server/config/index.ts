@@ -4,8 +4,8 @@
 import { getErrorCodes } from "./constants";
 
 const HOST = process.env.EGOV_HOST ||
-  "http://127.0.0.1:8080/" ||
-  "https://unified-uat.digit.org/";
+  // "http://127.0.0.1:8080/" ||
+  "https://unified-dev.digit.org/";
 
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -14,20 +14,11 @@ if (!HOST) {
 
 const config = {
   auth_token: process.env.AUTH_TOKEN,
-  delayTime: process.env.DELAY_FOR_MULTIPLE_INGESTION || "90000",
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   KAFKA_BROKER_HOST:
     "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
-  KAFKA_DHIS_UPDATE_TOPIC:
-    process.env.KAFKA_DHIS_UPDATE_TOPIC || "update-dhis2-job",
-  KAFKA_DHIS_CREATE_TOPIC:
-    process.env.KAFKA_DHIS_CREATE_TOPIC || "create-dhis2-job",
-  KAFKA_SAVE_INGESTION_TOPIC:
-    process.env.KAFKA_SAVE_INGESTION_TOPIC || "save-ingestion-details",
-  KAFKA_UPDATE_INGESTION_TOPIC:
-    process.env.KAFKA_UPDATE_INGESTION_TOPIC || "update-ingestion-details",
   KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
@@ -56,31 +47,28 @@ const config = {
     serverHost: HOST,
     mdms: process.env.EGOV_MDMS_HOST
       // || "http://localhost:8084/"
-      || "https://unified-uat.digit.org/",
+      || "https://unified-dev.digit.org/",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST
-      || "http://localhost:8083/"
+      // || "http://localhost:8083/"
       || "https://unified-dev.digit.org/",
     hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
-    hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_HOST
-      // || "http://localhost:8082/"
-      || "https://unified-uat.digit.org/",
     idGenHost: process.env.EGOV_IDGEN_HOST
-      || "http://localhost:8085/"
+      // || "http://localhost:8085/"
       || "https://unified-dev.digit.org/",
     facilityHost: process.env.EGOV_FACILITY_HOST
-      || "http://localhost:8086/"
-      || "https://unified-uat.digit.org/",
+      // || "http://localhost:8086/"
+      || "https://unified-dev.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST
-      || "http://localhost:8087/"
+      // || "http://localhost:8087/"
       || "https://unified-dev.digit.org/",
     projectHost: process.env.EGOV_PROJECT_HOST
-      || "http://localhost:8088/"
+      // || "http://localhost:8088/"
       || "https://unified-dev.digit.org/",
     userHost: process.env.EGOV_USER_HOST
-      || "http://localhost:8089/"
+      // || "http://localhost:8089/"
       || "https://unified-dev.digit.org/",
     productHost: process.env.EGOV_PRODUCT_HOST
-      || "http://localhost:8090/"
+      // || "http://localhost:8090/"
       || "https://unified-dev.digit.org/",
 
   },
@@ -90,8 +78,6 @@ const config = {
     mdms_search: process.env.EGOV_MDMS_SEARCH_ENDPOINT
       || "egov-mdms-service/v2/_search",
     // mdms_search: "mdms-v2/v2/_search",
-    hcmMozImpl: process.env.HCM_MOZ_IMPL_SERVICE_ENDPOINT
-      || "hcm-moz-impl/v1/ingest",
     idGen: process.env.EGOV_IDGEN_PATH
       || "egov-idgen/id/_generate",
     mdmsSchema: process.env.EGOV_MDMS_SCHEMA_PATH
@@ -115,8 +101,7 @@ const config = {
     facilitySearch: process.env.EGOV_FACILITY_SEARCH_PATH
       || "facility/v1/_search",
     productVariantSearch: process.env.EGOV_PRODUCT_VARIANT_SEARCH_PATH
-      || "product/variant/v1/_search"
-      || "boundary-service/boundary-hierarchy-definition/_search",
+      || "product/variant/v1/_search",
     boundaryEntity: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH
       || "boundary-service/boundary/_search",
     facilityBulkCreate: process.env.EGOV_FACILITY_BULK_CREATE
