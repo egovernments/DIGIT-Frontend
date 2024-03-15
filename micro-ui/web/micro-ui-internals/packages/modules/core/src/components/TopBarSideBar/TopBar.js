@@ -71,12 +71,14 @@ const TopBar = ({
   function onNotificationIconClick() {
     history.push(`/${window?.contextPath}/citizen/engagement/notifications`);
   }
-
+  
   const urlsToDisableNotificationIcon = (pathname) =>
+  console.log('Current pathname:', pathname);
     !!Digit.UserService?.getUser()?.access_token
       ? false
       : [`/${window?.contextPath}/citizen/select-language`, `/${window?.contextPath}/citizen/select-location`].includes(pathname);
 
+  // debugger;
   if (CITIZEN) {
     return (
       <div>
