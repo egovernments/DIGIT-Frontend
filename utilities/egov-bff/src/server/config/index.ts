@@ -65,7 +65,7 @@ const config = {
       // || "http://localhost:8082/"
       || "https://unified-uat.digit.org/",
     idGenHost: process.env.EGOV_IDGEN_HOST
-      // || "http://localhost:8085/"
+      || "http://localhost:8085/"
       || "https://unified-dev.digit.org/",
     facilityHost: process.env.EGOV_FACILITY_HOST
       || "http://localhost:8086/"
@@ -74,13 +74,13 @@ const config = {
       || "http://localhost:8087/"
       || "https://unified-dev.digit.org/",
     projectHost: process.env.EGOV_PROJECT_HOST
-      // || "http://localhost:8088/"
+      || "http://localhost:8088/"
       || "https://unified-dev.digit.org/",
     userHost: process.env.EGOV_USER_HOST
-      // || "http://localhost:8089/"
+      || "http://localhost:8089/"
       || "https://unified-dev.digit.org/",
     productHost: process.env.EGOV_PRODUCT_HOST
-      // || "http://localhost:8090/"
+      || "http://localhost:8090/"
       || "https://unified-dev.digit.org/",
 
   },

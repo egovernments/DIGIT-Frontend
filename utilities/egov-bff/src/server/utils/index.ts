@@ -249,11 +249,12 @@ async function generateResourceMessage(requestBody: any, status: string) {
   return resourceMessage;
 }
 
-async function generateActivityMessage(requestBody: any, requestPayload: any, responsePayload: any, type: any, url: any, status: any) {
+async function generateActivityMessage(tenantId: any, requestBody: any, requestPayload: any, responsePayload: any, type: any, url: any, status: any) {
   const activityMessage = {
     id: uuidv4(),
     status: status,
     retryCount: 0,
+    tenantId: tenantId,
     type: type,
     url: url,
     requestPayload: requestPayload,
@@ -303,7 +304,7 @@ async function getResponseFromDb(request: any, response: any) {
   try {
     const { type } = request.query;
 
-    let queryString = "SELECT * FROM eg_generated_resource_details WHERE type = $1 AND status = $2";
+    let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
@@ -829,10 +830,7 @@ function updateRange(range: any, desiredSheet: any) {
   }
 
   // Update the end column of the range with the maximum column index found
-  range = {
-    s: { c: range.s.c, r: range.s.r },
-    e: { c: maxColumnIndex, r: range.e.r }
-  };
+  range.e.c = maxColumnIndex
 }
 
 function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsColumn: string } {
@@ -865,6 +863,7 @@ function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsCol
     }
   }
   updateRange(range, desiredSheet);
+  logger.info("Updated Range : " + JSON.stringify(range))
   // If the status column doesn't exist, calculate the next available column
   const emptyColumnIndex = range.e.c + 1;
   statusColumn = String.fromCharCode(65 + emptyColumnIndex);

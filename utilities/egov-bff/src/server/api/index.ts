@@ -810,7 +810,7 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
       const newRequestBody = JSON.parse(JSON.stringify(request.body));
       _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
       const responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
-      var activity = await generateActivityMessage(request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
+      var activity = await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
       await confirmCreation(createAndSearchConfig, request, chunkData, creationTime, activity);
       logger.info("Activity : " + JSON.stringify(activity));
     }
