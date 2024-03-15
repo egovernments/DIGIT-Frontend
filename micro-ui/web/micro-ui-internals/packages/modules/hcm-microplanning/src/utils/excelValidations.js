@@ -1,6 +1,7 @@
 import Ajv from "ajv";
 const ajv = new Ajv({ allErrors: true });
 
+// Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData) => {
   const schema = {
     type: "object",
@@ -22,30 +23,39 @@ export const excelValidations = (data, schemaData) => {
   if (!valid) {
     let columns = new Set();
     for (let i = 0; i < validateExcel.errors.length; i++) {
-      if (validateExcel.errors[i].keyword == "type") {
-        const instancePath = validateExcel.errors[i].instancePath.split("/");
-        if (schemaData["locationDataColumns"].includes(instancePath[instancePath.length - 1])) {
-          return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
-        }
-        columns.add(instancePath[instancePath.length - 1]);
-      } else if (validateExcel.errors[i].keyword == "required") {
-        const missing = validateExcel.errors[i].params.missingProperty;
-        if (schemaData["locationDataColumns"].includes(missing)) {
-          return { valid, message: "ERROR_MISSING_LOCATION_COORDINATES", error: validateExcel.errors };
-        }
-        columns.add(missing);
-      } else if (validateExcel.errors[i].keyword == "maximum" || validateExcel.errors[i].keyword == "minimum") {
-        const instancePath = validateExcel.errors[i].instancePath.split("/");
-        if (schemaData["locationDataColumns"].includes(instancePath[instancePath.length - 1])) {
-          return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
-        }
-        columns.add(instancePath[instancePath.length - 1]);
-      } else if (validateExcel.errors[i].keyword == "pattern") {
-        const instancePath = validateExcel.errors[i].instancePath.split("/");
-        columns.add(instancePath[instancePath.length - 1]);
-      }
-      else {
-        return { valid, message: "ERROR_UNKNOWN" };
+      switch (validateExcel.errors[i].keyword) {
+        case "type":
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
+            return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
+          }
+          columns.add(instancePathType[instancePathType.length - 1]);
+          break;
+
+        case "required":
+          const missing = validateExcel.errors[i].params.missingProperty;
+          if (schemaData["locationDataColumns"].includes(missing)) {
+            return { valid, message: "ERROR_MISSING_LOCATION_COORDINATES", error: validateExcel.errors };
+          }
+          columns.add(missing);
+          break;
+
+        case "maximum":
+        case "minimum":
+          const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
+          if (schemaData["locationDataColumns"].includes(instancePathMinMax[instancePathMinMax.length - 1])) {
+            return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
+          }
+          columns.add(instancePathMinMax[instancePathMinMax.length - 1]);
+          break;
+
+        case "pattern":
+          const instancePathPattern = validateExcel.errors[i].instancePath.split("/");
+          columns.add(instancePathPattern[instancePathPattern.length - 1]);
+          break;
+
+        default:
+          return { valid, message: "ERROR_UNKNOWN" };
       }
     }
     const columnList = [...columns];

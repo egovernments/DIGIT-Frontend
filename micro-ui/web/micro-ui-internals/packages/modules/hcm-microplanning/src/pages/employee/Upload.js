@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-// import { Config } from "../../configs/UploadConfig";
 import { Toast } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
-
 import Config from "../../configs/UploadConfiguration.json";
 import excelTemplate from "../../configs/excelTemplate.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
@@ -22,7 +20,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UploadConfiguration" }]);
 
-  // State to store sections and selected section
+  // States
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [modal, setModal] = useState("none");
@@ -36,6 +34,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const [fileDataList, setFileDataList] = useState({});
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [template, setTemplate] = useState([]);
+
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
@@ -46,12 +45,10 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     }
   }, [data]);
 
+  // Effect to set schema
   useEffect(() => {
     setValidationSchemas(schemas.schemas);
   }, []);
-  useEffect(() => {
-    setTemplate(excelTemplate.excelTemplate);
-  });
 
   // To close the Toast after 10 seconds
   useEffect(() => {
@@ -72,8 +69,17 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
 
   // Handler for when a file type is selected for uplaod
   const selectFileTypeHandler = (e) => {
-    setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
-    setModal("upload-modal");
+    if (selectedSection && selectedSection.UploadFileTypes) {
+      setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
+      setModal("upload-modal");
+      return;
+    }
+    setToast({
+      state: "error",
+      message: t("ERROR_UNKNOWN"),
+    });
+    setLoderActivation(false);
+    return;
   };
 
   // Memoized section components to prevent unnecessary re-renders
@@ -91,11 +97,13 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     ));
   }, [sections, selectedSection, selectedFileType]);
 
+  // Close model click handler
   const closeModal = () => {
     setModal("none");
     setSelectedFileType(null);
   };
 
+  // handler for show file upload screen
   const UploadFileClickHandler = (download = false) => {
     if (download) {
       downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template);
@@ -104,6 +112,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     setDataUpload(true);
   };
 
+  // Effect for updating current session data in case of section change
   useEffect(() => {
     if (selectedSection) {
       // const file = Digit.SessionStorage.get(`Microplanning_${selectedSection.id}`);
@@ -126,79 +135,59 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   }, [selectedSection]);
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
+  // function for handling upload file event
   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
+      // setting loader
       setLoderActivation(true);
       let result;
       let check;
       let fileDataToStore;
       let error;
       let response;
-      let regx;
-      let schemaData;
+
+      // Checking if the file follows name convention rules
+      if (!validateNamingConvention(file, selectedFileType["namingConvention"], setToast, t)) {
+        setLoderActivation(false);
+        return;
+      }
+
+      if ((selectedFileType.id !== "Shapefiles")) {
+        // Check if validation schema is present or not
+        let schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+        if (!schemaData) {
+          setToast({
+            state: "error",
+            message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
+          });
+          setLoderActivation(false);
+          return;
+        }
+      }
+
+      // Handling different filetypes
       switch (selectedFileType.id) {
         case "Excel":
-          regx = new RegExp(selectedFileType["namingConvention"]);
-          console.log(regx, !regx.test(file.name));
-          if (regx && !regx.test(file.name)) {
-            setToast({
-              state: "error",
-              message: t("ERROR_NAMEING_CONVENSION"),
-            });
-            setLoderActivation(false);
-            return;
-          }
+          // Converting the input file to json format
           result = await parseXlsxToJsonMultipleSheets(file);
-          // schemaData = validateSchema.validateSchemas.find(
-          //   (item) => item.type == selectedFileType.id && item.section === selectedSection.id && item.campaignType === campaignType
-          // ).schema;
-          schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
-          if (!schemaData) {
-            setToast({
-              state: "error",
-              message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
-            });
-            setLoderActivation(false);
-            return;
-          }
+          // Running Validations for uploaded file
           response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
           if (!response.valid) setUploadedFileError(response.message);
           error = response.message;
           check = response.valid;
+          // Converting the file to preserve the sequence of columns so that it can be stored
           fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
-          console.log(fileDataToStore);
           break;
         case "Geojson":
-          regx = new RegExp(selectedFileType["namingConvention"]);
-          if (regx && !regx.test(file.name)) {
-            setToast({
-              state: "error",
-              message: t("ERROR_NAMEING_CONVENSION"),
-            });
-            setLoderActivation(false);
-            return;
-          }
+          // Reading and checking geojson data
           const data = await readGeojson(file, t);
           if (data.valid == false) {
             setLoderActivation(false);
             setToast(data.toast);
             return;
           }
-          // schemaData = validateSchema.validateSchemas.find(
-          //   (item) => item.type == selectedFileType.id && item.section === selectedSection.id && item.campaignType === campaignType
-          // ).schema;
-          console.log(selectedFileType.id, selectedSection.id, validationSchemas);
-          schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
-          console.log(validationSchemas, schemaData);
-          if (!schemaData) {
-            setToast({
-              state: "error",
-              message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
-            });
-            setLoderActivation(false);
-            return;
-          }
+          // Running geojson validaiton on uploaded file
           response = geojsonValidations(data, schemaData.schema, t);
           console.log(response);
           if (!response.valid) setUploadedFileError(response.message);
@@ -207,15 +196,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           fileDataToStore = data;
           break;
         case "Shapefiles":
-          regx = new RegExp(selectedFileType["namingConvention"]);
-          if (regx && !regx.test(file.name)) {
-            setToast({
-              state: "error",
-              message: t("ERROR_NAMEING_CONVENSION"),
-            });
-            setLoderActivation(false);
-            return;
-          }
+          // Reading and validating the uploaded geojson file
           response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
           console.log(response);
           if (!response.valid) {
@@ -234,6 +215,8 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           setLoderActivation(false);
           return;
       }
+
+      // creating a fileObject to save all the data collectively
       let fileObject = {
         id: `Microplanning_${selectedSection.id}`,
         fileName: file.name,
@@ -298,6 +281,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
+    // Crating a url object for the blob
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -325,6 +309,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     closeModal();
   };
 
+  // Handler for checing file extension and showing errors in case it is wrong
   const onTypeErrorWhileFileUpload = () => {
     if (selectedFileType.id === "Excel") setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
     if (selectedFileType.id === "Geojson") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
@@ -452,7 +437,6 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
       >
         <CustomIcon key={item.id} Icon={Icons[item.iconName]} width={"2.5rem"} height={"3rem"} color={"rgba(244, 119, 56, 1)"} />
         <p>{t(item.code)}</p>
-        {/* <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={selectedFileType === item.id?t("Selected"):t("Select ")} onSubmit={selectFileTypeHandler} style={{}}/> */}
         <button
           className={selectedFileType && selectedFileType.id === item.id ? "selected-button" : "select-button"}
           type="button"
@@ -479,7 +463,6 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
         <p>{t(`INSTRUCTIONS_DATA_UPLOAD_OPTIONS_${title}`)}</p>
       </div>
       <div className={selectedFileType.id === item.id ? " upload-option-container-selected" : "upload-option-container"}>
-        {/* <div className={selectedFileType === item.id ? " upload-option-container-selected" : ""}> */}
         {uploadOptions &&
           uploadOptions.map((item) => (
             <UploadOptionContainer key={item.id} item={item} selectedFileType={selectedFileType} selectFileTypeHandler={selectFileTypeHandler} />
@@ -489,7 +472,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
   );
 };
 
-// Component for uploading file/files
+// Component for uploading file
 const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, setToast, template }) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
@@ -521,7 +504,6 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
             </p>
           </div>
         </FileUploader>
-        {/* children={dragDropJSX} onTypeError={fileValidator} /> */}
       </div>
     </div>
   );
@@ -585,6 +567,7 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
   );
 };
 
+// Wrapper for modal
 const ModalWrapper = ({
   selectedSection,
   selectedFileType,
@@ -641,6 +624,20 @@ const ModalWrapper = ({
   );
 };
 
+// Function for checking the uploaded file for nameing conventions
+const validateNamingConvention = (file, namingConvention, setToast, t) => {
+  const regx = new RegExp(namingConvention);
+  if (regx && !regx.test(file.name)) {
+    setToast({
+      state: "error",
+      message: t("ERROR_NAMEING_CONVENSION"),
+    });
+    return false;
+  }
+  return true;
+};
+
+// Function for reading ancd checking geojson data
 const readGeojson = async (file, t) => {
   return new Promise((resolve, reject) => {
     if (!file) return resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
@@ -658,6 +655,7 @@ const readGeojson = async (file, t) => {
   });
 };
 
+// Function for reading and validating shape file data
 const readAndValidateShapeFiles = async (file, t, namingConvension) => {
   return new Promise(async (resolve, reject) => {
     if (!file) {
@@ -709,6 +707,7 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
   });
 };
 
+// Function for projections check in case of shapefile data
 const checkProjection = async (zip) => {
   const prjFile = zip.file(/.prj$/i)[0];
   if (!prjFile) {
@@ -718,6 +717,7 @@ const checkProjection = async (zip) => {
   return prjText.includes("EPSG:4326");
 };
 
+// Function to handle the template download
 const downloadTemplate = (campaignType, type, section, setToast, Templates) => {
   try {
     // Find the template based on the provided parameters
@@ -742,15 +742,6 @@ const downloadTemplate = (campaignType, type, section, setToast, Templates) => {
   } catch (error) {
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
-};
-// Function to select the template based on provided parameters
-const getTemplate = (campaignType, type, section, excelTemplates) => {
-  return excelTemplates.find((template) => {
-    if (!template.campaignType) {
-      return schemas.type === type && schemas.section === section;
-    }
-    return template.campaignType === campaignType && template.type === type && template.section === section;
-  });
 };
 
 // get schema for validation
