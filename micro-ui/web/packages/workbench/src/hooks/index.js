@@ -1,6 +1,9 @@
 import { logoutV1 } from "./logout";
-import { UICreateConfigGenerator } from "./workbench";
+import { UICreateConfigGenerator , getMDMSContextPath,getMDMSSchema } from "./workbench";
 import utils from "../utils";
+import useLocalisationSearch from "./useLocalisationSearch";
+import {useWorkbenchFormContext} from "./useWorkbenchFormContext";
+import usePureSchemaDefinition from "./fetchPureSchemaDefinition";
 
 const UserService = {
   logoutV1,
@@ -8,13 +11,18 @@ const UserService = {
 
 const workbench = {
   UICreateConfigGenerator,
+  useLocalisationSearch,
+  getMDMSContextPath,
+  useWorkbenchFormContext,
+  getMDMSSchema,
+  usePureSchemaDefinition
 };
 
 const contracts = {};
 
 const Hooks = {
   attendance: {
-    update: () => {},
+    update: () => { },
   },
   workbench,
   contracts,
@@ -22,7 +30,7 @@ const Hooks = {
 
 const Utils = {
   browser: {
-    sample: () => {},
+    sample: () => { },
   },
   workbench: {
     ...utils,

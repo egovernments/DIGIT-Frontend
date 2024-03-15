@@ -25,7 +25,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-react-components":"1.5.24",
+"@egovernments/digit-ui-react-components":"1.4.108",
 ```
 
 then navigate to App.js
