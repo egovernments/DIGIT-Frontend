@@ -134,7 +134,7 @@ const DesktopInbox = ({
       </div>
       <div style={{ flex: 1 }}>
         <SearchComplaint onSearch={onSearch} type="desktop" />
-        <div style={{ marginTop: "24px", marginTop: "24px", marginLeft: "24px", flex: 1 }}>{result}</div>
+        <div style={{ marginTop: "24px", marginLeft: "24px", flex: 1 }}>{result}</div>
       </div>
     </div>
   );
