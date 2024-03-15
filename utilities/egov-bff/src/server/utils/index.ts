@@ -482,7 +482,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
 async function modifyData(request: any, response: any, responseDatas: any) {
   try {
     let result: any;
-    const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+    const hostHcmBff = config.host.projectFactoryBff.endsWith('/') ? config.host.projectFactoryBff.slice(0, -1) : config.host.projectFactoryBff;
     const { type } = request.query;
     result = await searchMDMS([type], config.SEARCH_TEMPLATE, request.body.RequestInfo, response);
     const modifiedParsingTemplate = result?.mdms?.[0]?.data?.modificationParsingTemplateName;
@@ -556,7 +556,7 @@ function addRowDetails(processResultUpdatedDatas: any[], updatedDatas: any[]): v
 
 
 async function getSchemaAndProcessResult(request: any, parsingTemplate: any, updatedDatas: any, APIResource: any) {
-  const hostHcmBff = config.host.hcmBff.endsWith('/') ? config.host.hcmBff.slice(0, -1) : config.host.hcmBff;
+  const hostHcmBff = config.host.projectFactoryBff.endsWith('/') ? config.host.projectFactoryBff.slice(0, -1) : config.host.projectFactoryBff;
   let processResult;
   request.body.HCMConfig = {};
   request.body.HCMConfig['parsingTemplate'] = parsingTemplate;

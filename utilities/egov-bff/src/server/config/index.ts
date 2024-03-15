@@ -51,7 +51,7 @@ const config = {
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST
       // || "http://localhost:8083/"
       || "https://unified-dev.digit.org/",
-    hcmBff: process.env.EGOV_HCM_BFF_HOST || "http://127.0.0.1:8080/",
+    projectFactoryBff: "http://localhost:8080/",
     idGenHost: process.env.EGOV_IDGEN_HOST
       // || "http://localhost:8085/"
       || "https://unified-dev.digit.org/",
@@ -108,14 +108,10 @@ const config = {
       || "facility/v1/bulk/_create"
   },
   values: {
-    parsingTemplate: process.env.HCM_PARSING_TEMPLATE
-      || "HCM.ParsingTemplate",
-    transfromTemplate: process.env.HCM_TRANSFORM_TEMPLATE
-      || "HCM.TransformTemplate",
-    campaignType: process.env.HCM_CAMPAIGN_TEMPLATE
-      || "HCM.HCMTemplate",
-    APIResource: process.env.HCM_API_RESOURCE
-      || "HCM.APIResourceTemplate3",
+    parsingTemplate: "HCM.ParsingTemplate",
+    transfromTemplate: "HCM.TransformTemplate",
+    campaignType: "HCM.HCMTemplate",
+    APIResource: "HCM.APIResourceTemplate3",
     idgen: {
       format: process.env.CMP_IDGEN_FORMAT || "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]",
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
