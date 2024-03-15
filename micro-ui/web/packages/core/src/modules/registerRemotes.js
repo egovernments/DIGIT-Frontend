@@ -43,16 +43,16 @@ export default (queryClient) => {
   //   },
   //  });
 
-   registerApplication({
-    name: "Dss",
-    app: () => import("dss/DSSModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
-    customProps: {
-      title: "DSS is running on host",
-      queryClient,
-      userType
-    },
-  });
+  //  registerApplication({
+  //   name: "Dss",
+  //   app: () => import("dss/DSSModule"),
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
+  //   customProps: {
+  //     title: "DSS is running on host",
+  //     queryClient,
+  //     userType
+  //   },
+  // });
 
     registerApplication({
     name: "HRMS",
