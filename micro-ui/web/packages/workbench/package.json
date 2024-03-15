@@ -7,7 +7,7 @@
     "predeploy": "yarn build",
     "deploy": "gh-pages -d dist",
     "start": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "build:dev": "webpack --config webpack.dev.js --mode development"
   },
   "homepage": "http://design-egov.github.io/auth",
@@ -46,7 +46,6 @@
     "xlsx": "0.17.5",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.6",
     "@egovernments/digit-ui-react-components":"1.4.108",
-    "@egovernments/digit-ui-svg-components":"1.0.0",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
     "@rjsf/validator-ajv8": "5.10.0",
