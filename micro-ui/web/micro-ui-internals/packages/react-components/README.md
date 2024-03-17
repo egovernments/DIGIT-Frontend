@@ -1,6 +1,6 @@
 
 
-<!-- TODO: update this -->
+
 
 # digit-ui-react-components
 

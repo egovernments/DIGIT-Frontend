@@ -6,7 +6,6 @@ import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initPGRComponents,PGRReducers } from "@egovernments/digit-ui-module-pgr";
-import { pgrCustomizations,pgrComponents } from "./pgr";
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
 const enabledModules = [
