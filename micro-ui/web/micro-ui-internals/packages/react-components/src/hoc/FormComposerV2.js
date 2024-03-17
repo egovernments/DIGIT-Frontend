@@ -31,6 +31,8 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
+import { Button } from "@egovernments/digit-ui-react-components";
+
 
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { validateResolver } from "./validateResolver";
@@ -871,8 +873,12 @@ export const FormComposer = (props) => {
         )
       }
       {!props.submitInForm && props.label && (
-        <ActionBar>
+        <ActionBar className={props.actionClassName}>
+          
           <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
+          {props.secondaryLabel && props.showSecondaryLabel && (
+            <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
+          )}
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}

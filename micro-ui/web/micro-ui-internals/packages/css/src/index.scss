@@ -805,3 +805,16 @@ input[type="number"] {
 .info-banner-wrap div{
   align-items: center;
 }
+
+.xls-popup-module {
+  margin: auto;
+  width: calc(100% - 5rem);
+}
+.actionBarClass{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+.previous-button{
+  margin-left: 4rem;
+}
