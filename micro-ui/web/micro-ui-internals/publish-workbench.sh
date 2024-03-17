@@ -53,3 +53,5 @@ cd "$BASEDIR/packages/modules/core" &&   rm -rf dist && yarn&& npm publish --tag
 # msg "Building and publishing Utilities module"
 cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
+# msg "Building and publishing pgr module"
+cd "$BASEDIR/packages/modules/pgr" &&   rm -rf dist && yarn&&npm publish --tag workbench-1.1
