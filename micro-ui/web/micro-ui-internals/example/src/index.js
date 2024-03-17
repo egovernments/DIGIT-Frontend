@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
@@ -9,10 +9,11 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
-import { pgrCustomizations } from "./pgr";
+import { pgrCustomizations,pgrComponents } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
@@ -20,7 +21,7 @@ var Digit = window.Digit || {};
 const enabledModules = [ "DSS", "HRMS",
 "Workbench",
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities",
+  "Utilities","PGR"
 //added to check fsm
 // "FSM"
 ];
@@ -58,6 +59,7 @@ const initDigitUI = () => {
     commonUiConfig: UICustomizations
   };
   window?.Digit.ComponentRegistryService.setupRegistry({
+    ...pgrComponents,
     // PaymentModule,
     // ...paymentConfigs,
     // PaymentLinks,
@@ -68,10 +70,13 @@ const initDigitUI = () => {
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initPGRComponents();
 
+  const moduleReducers = (initData) =>  ({
+    pgr: PGRReducers(initData),
+  });
 
-  const moduleReducers = (initData) => initData;
-
+  
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);

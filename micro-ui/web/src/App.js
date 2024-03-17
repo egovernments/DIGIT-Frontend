@@ -5,6 +5,10 @@ import {
   PaymentLinks,
   PaymentModule,
 } from "@egovernments/digit-ui-module-common";
+import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
 import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
@@ -22,10 +26,11 @@ const enabledModules = [
   "HRMS",
   "Engagement",
   "Workbench",
+  "PGR"
 ];
 
 const moduleReducers = (initData) => ({
-  initData,
+  initData, pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -34,6 +39,7 @@ const initDigitUI = () => {
     ...paymentConfigs,
     PaymentLinks,
   });
+  initPGRComponents();
   initCoreComponents();
   initDSSComponents();
   initHRMSComponents();
