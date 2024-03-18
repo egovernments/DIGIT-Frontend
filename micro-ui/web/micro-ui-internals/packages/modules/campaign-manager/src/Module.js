@@ -8,6 +8,10 @@ import CampaignCard from "./components/CampaignCard";
 import UploadBoundaryData from "./pages/employee/UploadBoundaryData";
 import CycleConfiguration from "./pages/employee/CycleConfiguration";
 import DeliverySetup from "./pages/employee/deliveryRule";
+import TimelineCampaign from "./components/TimelineCampaign";
+import CampaignDates from "./components/CampaignDates";
+import CampaignType from "./components/CampaignType";
+import CampaignName from "./components/CampaignName";
 
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema"];
@@ -38,6 +42,10 @@ const componentsToRegister = {
   UploadBoundaryData,
   DeliveryRule: DeliverySetup,
   CycleConfiguration: CycleConfiguration,
+  TimelineCampaign,
+  CampaignDates,
+  CampaignType,
+  CampaignName
 };
 
 const overrideHooks = () => {

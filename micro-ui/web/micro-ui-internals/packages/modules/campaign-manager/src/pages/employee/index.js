@@ -3,6 +3,7 @@ import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 // import CampaignHeader from "../../components/CampaignHeader";
+import SetupCampaign from "./SetupCampaign";
 
 const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
           <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
           <PrivateRoute path={`${path}/sample`} component={() => <div>Home Campaign Loaded</div>} />
+          <PrivateRoute path={`${path}/setup-campaign`} component={() => <SetupCampaign />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
