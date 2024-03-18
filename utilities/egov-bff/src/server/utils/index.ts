@@ -304,7 +304,8 @@ async function getResponseFromDb(request: any, response: any) {
   try {
     const { type } = request.query;
 
-    let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    // let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
