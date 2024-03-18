@@ -65,7 +65,7 @@
 }
 
 .campaign-counter-container {
-  padding: 24px;
+  padding: 1.5rem;
   .label-field-pair {
     margin-bottom: 1rem;
   }
@@ -85,8 +85,8 @@
 
 .campaign-tab-head {
   padding: 1rem;
-  width: 200px;
-  height: 48px;
+  width: 12.5rem;
+  height: 3rem;
   border-radius: 10px 10px 0px 0px;
   background-color: #ffffff;
   outline: none;
@@ -99,7 +99,7 @@
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
   &.active {
-    height: 54px;
+    height: 3.375rem;
     background-color: #ffffff;
     outline: none;
     font-weight: bold;
@@ -118,8 +118,8 @@
   background-color: #ffffff;
   color: #f47738;
   border: 1px solid #f47738;
-  height: 31px;
-  width: 147px;
+  height: 2rem;
+  width: 9.188rem;
   font-size: 1rem;
   font-weight: 400;
   &.active {
@@ -127,8 +127,8 @@
     color: #ffffff;
     font-weight: bold;
     outline: none;
-    height: 32px;
-    width: 147px;
+    height: 2rem;
+    width: 9.188rem;
     font-family: "Roboto";
     font-weight: 700;
     font-size: 1rem;
