@@ -32,6 +32,11 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/create-campaign/delivery-details`,
       roles: [], // @nabeel roles to be added later
     },
+    {
+      label: t("ACTION_TEST_SETUP_CAMPAIGN"),
+      link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      roles: [], // @nabeel roles to be added later
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
