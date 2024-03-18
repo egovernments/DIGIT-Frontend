@@ -221,7 +221,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         error: error ? error : null,
       };
       setFileData(fileObject);
-      setFileDataList({ ...fileDataList, [fileObject.id]: fileObject });
+      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       // Digit.SessionStorage.set(fileObject.id, fileObject);
       setDataPresent(true);
       setLoderActivation(false);
