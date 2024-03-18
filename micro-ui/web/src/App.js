@@ -42,7 +42,6 @@ const initDigitUI = () => {
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
-  initMicroplanningComponents();
 
   window.Digit.Customizations = {
     PGR: {},
