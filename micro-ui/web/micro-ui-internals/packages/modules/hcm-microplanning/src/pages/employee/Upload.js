@@ -135,7 +135,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   }, [selectedSection]);
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
-  // function for handling upload file event
+  // Function for handling upload file event
   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
@@ -153,9 +153,10 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         return;
       }
 
+      let schemaData;
       if ((selectedFileType.id !== "Shapefiles")) {
         // Check if validation schema is present or not
-        let schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+        schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
         if (!schemaData) {
           setToast({
             state: "error",
