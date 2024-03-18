@@ -719,6 +719,9 @@ export const FormComposer = (props) => {
             );
           return (
             <Fragment>
+              {field?.withoutLabelFieldPair === true ? (
+                fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)
+              ) : (
               <LabelFieldPair
                 key={index}
                 style={
@@ -746,6 +749,7 @@ export const FormComposer = (props) => {
                   {field?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(field?.description)}</CardText>}
                 </div>
               </LabelFieldPair>
+              )}
               {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
                 <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
                   {t( errors?.[field?.populators?.name]?.message || field?.populators?.error)}
