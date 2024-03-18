@@ -23,6 +23,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 const App = ({ path }) => {
   const location = useLocation();
   const UploadBoundaryData = Digit?.ComponentRegistryService?.getComponent("UploadBoundaryData");
+  const CycleConfiguration = Digit?.ComponentRegistryService?.getComponent("CycleConfiguration");
+  const DeliveryRule = Digit?.ComponentRegistryService?.getComponent("DeliveryRule");
 
   return (
     <React.Fragment>
@@ -33,6 +35,8 @@ const App = ({ path }) => {
       <Switch>
         <AppContainer className="campaign">
           <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
+          <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
+          <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
           <PrivateRoute path={`${path}/sample`} component={() => <div>Home Campaign Loaded</div>} />
         </AppContainer>
       </Switch>

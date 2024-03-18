@@ -6,6 +6,8 @@ import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import UploadBoundaryData from "./pages/employee/UploadBoundaryData";
+import CycleConfiguration from "./pages/employee/CycleConfiguration";
+import DeliverySetup from "./pages/employee/deliveryRule";
 
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema"];
@@ -34,6 +36,8 @@ const componentsToRegister = {
   campaignCard: CampaignCard,
   CampaignCard: CampaignCard,
   UploadBoundaryData,
+  DeliveryRule: DeliverySetup,
+  CycleConfiguration: CycleConfiguration,
 };
 
 const overrideHooks = () => {
