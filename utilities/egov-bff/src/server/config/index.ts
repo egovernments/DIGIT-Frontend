@@ -19,8 +19,8 @@ const config = {
     // "localhost:9092" ||
     // "localhost:9093" ||
     process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
-  KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC:
-    process.env.KAFKA_SAVE_CAMPAIGN_DETAILS_TOPIC || "save-campaign-details",
+  KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC:
+    process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "save-project-campaign-details",
   KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC:
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
   KAFKA_CREATE_RESOURCE_DETAILS_TOPIC:

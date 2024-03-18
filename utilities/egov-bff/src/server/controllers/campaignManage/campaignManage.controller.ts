@@ -1,7 +1,7 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import {
-    enrichProjectCampaignRequest,
+    enrichAndPersistProjectCampaignRequest,
     errorResponder,
     sendResponse,
 } from "../../utils/index";
@@ -38,7 +38,7 @@ class campaignManageController {
         try {
             await validateProjectCampaignRequest(request);
             await createProjectCampaignResourcData(request);
-            await enrichProjectCampaignRequest(request)
+            await enrichAndPersistProjectCampaignRequest(request)
             return sendResponse(response, { CampaignDetails: request?.body?.CampaignDetails }, request);
         } catch (e: any) {
             logger.error(String(e))

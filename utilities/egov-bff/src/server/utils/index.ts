@@ -1028,9 +1028,30 @@ async function generateProcessedFileAndPersist(request: any) {
   produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
 }
 
-async function enrichProjectCampaignRequest(request: any) {
+function getRootBoundaryCode(boundaries: any[]) {
+  for (const boundary of boundaries) {
+    if (boundary.isRoot) {
+      return boundary.code;
+    }
+  }
+  return "";
+}
+
+async function enrichAndPersistProjectCampaignRequest(request: any) {
   request.body.CampaignDetails.id = uuidv4();
   request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
+  request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
+  request.body.CampaignDetails.status = "started"
+  request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+  request.body.CampaignDetails.projectId = null;
+  request.body.CampaignDetails.auditDetails = {
+    createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    createdTime: Date.now(),
+    lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    lastModifiedTime: Date.now(),
+  }
+  produceModifiedMessages(request?.body, config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
+  delete request.body.CampaignDetails.campaignDetails
 }
 
 
@@ -1124,7 +1145,7 @@ export {
   convertToTypeData,
   matchData,
   generateProcessedFileAndPersist,
-  enrichProjectCampaignRequest,
+  enrichAndPersistProjectCampaignRequest,
   modifyBoundaryData,
   getChildParentMap,
   getBoundaryTypeMap,
