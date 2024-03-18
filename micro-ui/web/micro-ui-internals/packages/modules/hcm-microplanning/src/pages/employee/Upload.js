@@ -100,7 +100,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   // Close model click handler
   const closeModal = () => {
     setModal("none");
-    setSelectedFileType(null);
   };
 
   // handler for show file upload screen
@@ -141,7 +140,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     try {
       // setting loader
       setLoderActivation(true);
-      let result;
       let check;
       let fileDataToStore;
       let error;
@@ -154,7 +152,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       }
 
       let schemaData;
-      if ((selectedFileType.id !== "Shapefiles")) {
+      if (selectedFileType.id !== "Shapefiles") {
         // Check if validation schema is present or not
         schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
         if (!schemaData) {
@@ -170,43 +168,38 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       // Handling different filetypes
       switch (selectedFileType.id) {
         case "Excel":
-          // Converting the input file to json format
-          result = await parseXlsxToJsonMultipleSheets(file);
-          // Running Validations for uploaded file
-          response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
-          if (!response.valid) setUploadedFileError(response.message);
-          error = response.message;
-          check = response.valid;
-          // Converting the file to preserve the sequence of columns so that it can be stored
-          fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+          // let response = handleExcelFile(file,schemaData);
+          try {
+            response = await handleExcelFile(file, schemaData);
+            check = response.check;
+            error = response.error;
+            fileDataToStore = response.fileDataToStore;
+            console.log(check,error, fileDataToStore)
+          } catch (error) {
+            setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+          }
           break;
         case "Geojson":
-          // Reading and checking geojson data
-          const data = await readGeojson(file, t);
-          if (data.valid == false) {
-            setLoderActivation(false);
-            setToast(data.toast);
-            return;
+          try {
+            response = await handleGeojsonFile(file, schemaData);
+            check = response.check;
+            error = response.error;
+            fileDataToStore = response.fileDataToStore;
+            console.log(check,error, fileDataToStore)
+          } catch (error) {
+            setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
           }
-          // Running geojson validaiton on uploaded file
-          response = geojsonValidations(data, schemaData.schema, t);
-          console.log(response);
-          if (!response.valid) setUploadedFileError(response.message);
-          check = response.valid;
-          error = response.message;
-          fileDataToStore = data;
           break;
         case "Shapefiles":
-          // Reading and validating the uploaded geojson file
-          response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
-          console.log(response);
-          if (!response.valid) {
-            setUploadedFileError(response.message);
-            setToast(response.toast);
+          try {
+            response = await handleShapefiles(file, schemaData);
+            check = response.check;
+            error = response.error;
+            fileDataToStore = response.fileDataToStore;
+            console.log(check,error, fileDataToStore)
+          } catch (error) {
+            setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
           }
-          check = response.valid;
-          error = response.message;
-          fileDataToStore = response.data;
           break;
         default:
           setToast({
@@ -244,12 +237,55 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     }
   };
 
+  const handleExcelFile = async (file, schemaData) => {
+    // Converting the input file to json format
+    let result = await parseXlsxToJsonMultipleSheets(file);
+    // Running Validations for uploaded file
+    let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
+    if (!response.valid) setUploadedFileError(response.message);
+    let error = response.message;
+    let check = response.valid;
+    // Converting the file to preserve the sequence of columns so that it can be stored
+    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+    return { check, error, fileDataToStore };
+  };
+  const handleGeojsonFile = async (file, schemaData) => {
+    // Reading and checking geojson data
+    const data = await readGeojson(file, t);
+    if (data.valid == false) {
+      setLoderActivation(false);
+      setToast(data.toast);
+      return;
+    }
+    // Running geojson validaiton on uploaded file
+    let response = geojsonValidations(data, schemaData.schema, t);
+    console.log(response);
+    if (!response.valid) setUploadedFileError(response.message);
+    let check = response.valid;
+    let error = response.message;
+    let fileDataToStore = data;
+    return { check, error, fileDataToStore };
+  };
+  const handleShapefiles = async (file, schemaData) => {
+    // Reading and validating the uploaded geojson file
+    let response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
+    if (!response.valid) {
+      setUploadedFileError(response.message);
+      setToast(response.toast);
+    }
+    let check = response.valid;
+    let error = response.message;
+    let fileDataToStore = response.data;
+    return { check, error, fileDataToStore };
+  };
+
   // Reupload the selected file
   const reuplaodFile = () => {
     setFileData(undefined);
     setDataPresent(false);
     setUploadedFileError(null);
     setDataUpload(false);
+    setSelectedFileType(null);
     closeModal();
   };
 
@@ -307,6 +343,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     setDataPresent(false);
     setUploadedFileError(null);
     setDataUpload(false);
+    setSelectedFileType(null);
     closeModal();
   };
 
