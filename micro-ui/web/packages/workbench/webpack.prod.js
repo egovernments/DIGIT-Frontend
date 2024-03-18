@@ -20,7 +20,6 @@ module.exports = () => {
         shared: {
           "single-spa-react": "^4.6.1",
           "xlsx": "0.17.5",
-          "@egovernments/digit-ui-react-components":"1.4.108",
           "@rjsf/core": "5.10.0",
           "@rjsf/utils": "5.10.0",
           "@rjsf/validator-ajv8": "5.10.0",
@@ -36,6 +35,9 @@ module.exports = () => {
           "webpack-cli": "^4.9.2",
           "webpack-dev-server": "^4.8.1",
           "webpack-merge": "5.7.3",
+          "@heroicons/react": "^1.0.1",
+          "@mkeeorg/federation-ui": "^1.3.0",
+          "classnames": "^2.3.2"
         }
       }),
     ],
