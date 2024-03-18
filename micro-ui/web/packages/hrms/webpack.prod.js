@@ -19,9 +19,9 @@ module.exports = () => {
         },
         shared: {
           'single-spa-react': '^4.6.1',
-          'react': '17.0.2',
-          'react-dom': '17.0.2',
-          'react-router-dom': '5.3.0',
+          'react': '17.0.1',
+          'react-dom': '17.0.1',
+          'react-router-dom': '5.2.0',
           'rxjs': '6.6.3',
           'react-hook-form': '6.15.8',
           'react-i18next': '11.16.2',

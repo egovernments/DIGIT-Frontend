@@ -17,6 +17,13 @@ ENV COMMIT_ID=$COMMIT_ID
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+RUN rm -rf node_modules/
+
+RUN rm -rf yarn.lock
+
+# clear cache
+RUN yarn cache clean
+
 # Install dependencies
 RUN yarn install
 
