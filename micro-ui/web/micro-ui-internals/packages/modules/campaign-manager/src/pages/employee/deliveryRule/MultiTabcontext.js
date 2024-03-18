@@ -1,10 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
-import { Card } from "@egovernments/digit-ui-react-components";
-import { Header } from "@egovernments/digit-ui-react-components";
-import { Paragraph } from "@egovernments/digit-ui-react-components";
-import { CardHeader } from "@egovernments/digit-ui-react-components";
-import { CardSubHeader } from "@egovernments/digit-ui-react-components";
-import { CardText } from "@egovernments/digit-ui-react-components";
+import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@egovernments/digit-ui-react-components";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
