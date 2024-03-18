@@ -14,7 +14,7 @@ const SetupCampaign = () => {
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
-  
+
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData));
   }, [totalFormData]);
@@ -106,16 +106,17 @@ const SetupCampaign = () => {
   //   .filter((config) => config.form.length > 0);
 
   const filterCampaignConfig = (campaignConfig, currentKey) => {
-    return campaignConfig.map(config => {
-      return {
-        ...config,
-        form: config?.form.filter(step => parseInt(step.key) === currentKey),
-      };
-    }).filter(config => config.form.length > 0);
+    return campaignConfig
+      .map((config) => {
+        return {
+          ...config,
+          form: config?.form.filter((step) => parseInt(step.key) === currentKey),
+        };
+      })
+      .filter((config) => config.form.length > 0);
   };
 
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
-
 
   useEffect(() => {
     setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey));
@@ -141,6 +142,7 @@ const SetupCampaign = () => {
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={"PREVIOUS"}
+        noCardStyle={currentStep == 1 ? true : false}
         onSecondayActionClick={onSecondayActionClick}
         label={currentKey < 10 ? "NEXT" : "SUBMIT"}
       />

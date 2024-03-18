@@ -83,6 +83,7 @@ export const CampaignConfig = (totalFormData) => {
               key: "cycleConfigure",
               type: "component",
               component: "CycleConfiguration",
+              withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
               customProps: {
@@ -106,6 +107,7 @@ export const CampaignConfig = (totalFormData) => {
               key: "deliveryRule",
               type: "component",
               component: "DeliveryRule",
+              withoutLabelFieldPair: true,
               withoutLabel: true,
               disable: false,
               customProps: {
