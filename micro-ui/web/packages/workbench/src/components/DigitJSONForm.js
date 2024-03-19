@@ -21,7 +21,7 @@ import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomDropdownV2 from "./MultiSelectV2";
 
-import CustomCheckbox from "./Checbox";
+import CustomCheckbox from "./Checkbox";
 import { BulkModal } from "./BulkModal";
 /*
 
