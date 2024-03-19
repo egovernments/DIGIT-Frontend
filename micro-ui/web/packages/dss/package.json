@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@digit-ui/digit-ui-libraries-mfe": "1.0.6",
-    "@egovernments/digit-ui-react-components": "1.4.108",
+    "@egovernments/digit-ui-react-components": "1.4.109",
     "@egovernments/digit-ui-svg-components": "1.0.0",
     "jsonpath": "^1.1.1",
     "lodash": "4.17.21",
