@@ -76,7 +76,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
             }
         })
     }, [config, searchResult])
-
+    const defaultValuesFromSession = config?.customDefaultPagination ? config?.customDefaultPagination : {limit:10,offset:0}
     const {
         register,
         handleSubmit,
@@ -92,10 +92,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         clearErrors,
         unregister,
     } = useForm({
-        defaultValues: {
-            offset: 0,
-            limit: 10, 
-        },
+        defaultValues: defaultValuesFromSession
     });
     
     const isMobile = window.Digit.Utils.browser.isMobile();
@@ -125,8 +122,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     }, []);
 
     useEffect(() => {
-        register("offset", 0);
-        register("limit", 10);
+        register("offset", config?.customDefaultPagination?.offset || 0);
+        register("limit", config?.customDefaultPagination?.limit || 10);
     }, [register]);
 
     useEffect(() => {
@@ -210,6 +207,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 onClickRow={additionalConfig?.resultsTable?.onClickRow}
                 rowClassName={config.rowClassName}
                 noColumnBorder={config?.noColumnBorder}
+                customPageSizesArray={config?.customPageSizesArray || null}
             />}
         </div>
     )

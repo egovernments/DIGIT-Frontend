@@ -16,17 +16,21 @@ import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
 
 
-const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{}}) => {
+const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange}) => {
     const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
-    const [state, dispatch] = useReducer(reducer, initialInboxState);
+    const [state, dispatch] = useReducer(reducer, initialInboxState(configs));
     const [showToast, setShowToast] = useState(false);
     //for mobile view
     const [type, setType] = useState("");
     const [popup, setPopup] = useState(false);
    
-    const apiDetails = configs?.apiDetails
+    const [apiDetails, setApiDetails] = useState(configs?.apiDetails);
+
+    useEffect(()=>{
+        setApiDetails(configs?.apiDetails)
+    },[configs])
 
     const mobileSearchSession = Digit.Hooks.useSessionStorage("MOBILE_SEARCH_MODAL_FORM", 
         {}
@@ -172,13 +176,16 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                 }
                 {
                     configs?.type === 'search' && configs?.sections?.search?.show &&
-                        <div className="section search">
+                        <div className={`section search ${showTab ? "tab": ""}`}>
                             <SearchComponent 
                                 uiConfig={ configs?.sections?.search?.uiConfig} 
                                 header={configs?.sections?.search?.label} 
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTab={showTab}
+                                tabData={tabData}
+                                onTabChange={onTabChange}
                                 />
                         </div>
 

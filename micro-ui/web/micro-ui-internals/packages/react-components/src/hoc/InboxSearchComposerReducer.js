@@ -1,15 +1,22 @@
-export const initialInboxState = {
-    searchForm:{
-
-    },
-    filterForm:{
-
-    },
-    tableForm:{
+export const initialInboxState = (config) => {
+    if (config?.sections?.searchResult?.uiConfig?.customDefaultPagination) {
+      return {
+        searchForm: {},
+        filterForm: {},
+        tableForm: {
+          ...config?.sections?.searchResult?.uiConfig?.customDefaultPagination,
+        },
+      };
+    }
+    return {
+      searchForm: {},
+      filterForm: {},
+      tableForm: {
         limit: 10,
         offset: 0,
-    } 
-};
+      },
+    };
+  };
 
 const reducer = (state, action) => {
     switch (action.type) {
