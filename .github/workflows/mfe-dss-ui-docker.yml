@@ -2,7 +2,7 @@ name: dss ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker","mf-stable-common-module" ]
+    branches: [ "mf-build-docker", "mf","mf-stable-common-module" ]
   pull_request:
     branches: [ "mf-build" ]
 
