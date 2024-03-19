@@ -1,7 +1,7 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import { validateCreateRequest, validateGenerateRequest } from "../../utils/validator";
-import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel } from "../../utils/index";
+import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes } from "../../utils/index";
 import { createAndUploadFile, processGenericRequest, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/index";
 import config from "../../config";
 import { httpRequest } from "../../utils/request";
@@ -28,6 +28,7 @@ class dataManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/_generate`, this.generateData);
+        this.router.post(`${this.path}/_download`, this.downloadData)
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
         this.router.post(`${this.path}/_autoGenerateBoundaryCode`, this.autoGenerateBoundaryCodes);
         this.router.post(`${this.path}/_create`, this.createData);
@@ -45,6 +46,31 @@ class dataManageController {
             return errorResponder({ message: String(e) }, request, response);
         }
     };
+
+
+    downloadData = async (request: express.Request, response: express.Response) => {
+        try {
+            const type = request.query.type;
+            const responseData = await getResponseFromDb(request, response);
+            if (!responseData || responseData.length === 0) {
+                logger.error("No data of type  " + type + " with status Completed present in db")
+                throw new Error('First Generate then Download');
+            }
+            const auditDetails = generateAuditDetails(request);
+            const transformedResponse = responseData.map((item: any) => {
+                return {
+                    fileStoreId: item.filestoreid,
+                    additionalDetails: {},
+                    type: type,
+                    auditDetails: auditDetails
+                };
+            });
+            return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+        } catch (e: any) {
+            logger.error(String(e));
+            return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+        }
+    }
 
 
     getBoundaryData = async (
@@ -70,11 +96,13 @@ class dataManageController {
             }
             const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
             console.log(boundaryData, "plssssssssss")
-            const modifiedBoundaryData = modifyBoundaryData(boundaryData);
-            console.log(modifiedBoundaryData, "outttttttttttttt")
-            const childParentMap = getChildParentMap(modifiedBoundaryData);
+            const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
+            const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
+            console.log(mappingMap, "amppiniiiiiiiiggggggg")
+            console.log(countMap, "countttttttttttttttt")
+            const childParentMap = getChildParentMap(withoutBoundaryCode);
             console.log(childParentMap, "chillllllldddddddddddd")
-            const boundaryMap = await getBoundaryCodesHandler(modifiedBoundaryData, childParentMap);
+            const boundaryMap = await getBoundaryCodesHandler(withoutBoundaryCode, childParentMap, mappingMap, countMap);
             console.log(boundaryMap, "mappppppppppppppppppppp")
             const boundaryTypeMap = getBoundaryTypeMap(boundaryData, boundaryMap);
             console.log(boundaryTypeMap, "mmmmmmmmmmmmmmmmm")
@@ -87,10 +115,11 @@ class dataManageController {
                 const modifiedValue = boundaryMap.get(value);
                 modifiedMap.set(modifiedKey, modifiedValue);
             });
+            console.log(modifiedMap, "maaaoooooooooooooooooo")
 
             await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
             console.log("Boundary relationship createddddddddddddddddddddddddddddddd");
-            const boundaryDataForSheet = addBoundaryCodeToData(modifiedBoundaryData, boundaryMap);
+            const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
             console.log(boundaryDataForSheet, "ooooooooooooooooooooo");
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
             console.log(hierarchy, "hhhhhhhhhhhhhh")

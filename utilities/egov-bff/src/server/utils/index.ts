@@ -212,22 +212,6 @@ async function generateXlsxFromJson(request: any, response: any, simplifiedData:
   }
 }
 
-async function generateAuditDetails(request: any) {
-
-  const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
-  const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
-
-
-  const auditDetails = {
-    createdBy: createdBy,
-    lastModifiedBy: lastModifiedBy,
-    createdTime: Date.now(),
-    lastModifiedTime: Date.now()
-  }
-
-  return auditDetails;
-}
-
 async function generateResourceMessage(requestBody: any, status: string) {
 
   const resourceMessage = {
@@ -304,8 +288,8 @@ async function getResponseFromDb(request: any, response: any) {
   try {
     const { type } = request.query;
 
-    let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
-    // let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    // let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
@@ -545,6 +529,17 @@ function getCreationDetails(APIResource: any, sheetName: any) {
     sheetName
   };
 }
+function generateAuditDetails(request: any) {
+  const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
+  const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
+  const auditDetails = {
+    createdBy: createdBy,
+    lastModifiedBy: lastModifiedBy,
+    createdTime: Date.now(),
+    lastModifiedTime: Date.now()
+  }
+  return auditDetails;
+}
 
 function addRowDetails(processResultUpdatedDatas: any[], updatedDatas: any[]): void {
   if (!processResultUpdatedDatas) return;
@@ -770,19 +765,31 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-function modifyBoundaryData(boundaryData: any) {
-  let outputData: string[][] = [];
+function modifyBoundaryData(boundaryData: unknown[]) {
+  let withBoundaryCode: string[][] = [];
+  let withoutBoundaryCode: string[][] = [];
+
   for (const obj of boundaryData) {
     const row: string[] = [];
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        row.push(obj[key]);
+    if (typeof obj === 'object' && obj !== null) {
+      for (const value of Object.values(obj)) {
+        if (value !== null && value !== undefined) {
+          row.push(value.toString()); // Convert value to string and push to row
+        }
+      }
+
+      if (obj.hasOwnProperty('Boundary Code')) {
+        withBoundaryCode.push(row);
+      } else {
+        withoutBoundaryCode.push(row);
       }
     }
-    outputData.push(row);
   }
-  return outputData;
+
+  return [withBoundaryCode, withoutBoundaryCode];
 }
+
+
 
 async function enrichAndSaveResourceDetails(requestBody: any) {
   if (!requestBody?.ResourceDetails?.status) {
@@ -1057,32 +1064,77 @@ async function enrichAndPersistProjectCampaignRequest(request: any) {
 
 function getChildParentMap(modifiedBoundaryData: any) {
   const childParentMap: Map<string, string | null> = new Map();
+
   for (let i = 0; i < modifiedBoundaryData.length; i++) {
-    const child = modifiedBoundaryData[i][modifiedBoundaryData[i].length - 1];
-    const parentIndex = modifiedBoundaryData[i].length - 2;
-    const parent = parentIndex >= 0 ? modifiedBoundaryData[i][parentIndex] : null; // Second last element is the parent, or null if not present
-    childParentMap.set(child, parent);
+    const row = modifiedBoundaryData[i];
+    for (let j = row.length - 1; j > 0; j--) {
+      const child = row[j];
+      const parent = row[j - 1]; // Parent is the element to the immediate left
+      childParentMap.set(child, parent);
+    }
   }
+
   return childParentMap;
 }
 
-function getBoundaryTypeMap(boundaryData: any, boundaryMap: any) {
+
+function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
+  const countMap = new Map<string, number>();
+  const mappingMap = new Map<string, string>();
+
+  withBoundaryCode.forEach((row: any[]) => {
+    const len = row.length;
+    if (len >= 3) {
+      // Update the count map
+      const grandParent = row[len - 3];
+      if (!countMap.has(grandParent)) {
+        countMap.set(grandParent, 1);
+      } else {
+        const count = countMap.get(grandParent)!;
+        countMap.set(grandParent, count + 1);
+      }
+
+      // Update the mapping map
+      mappingMap.set(row[len - 2], row[len - 1]);
+    } else {
+      // Handle if the row has less than 3 elements
+      mappingMap.set(row[len - 2], row[len - 1]);
+    }
+  });
+
+  return { mappingMap, countMap };
+}
+
+
+
+function getBoundaryTypeMap(boundaryData: any[], boundaryMap: Map<string, string>) {
   const boundaryTypeMap: { [key: string]: string } = {};
-  boundaryData.forEach((boundary: any) => {
+
+  boundaryData.forEach((boundary) => {
     Object.entries(boundary).forEach(([key, value]) => {
-      boundaryTypeMap[boundaryMap.get(value)] = key;
+      if (typeof value === 'string'&&key !== 'Boundary Code') {
+        const boundaryCode = boundaryMap.get(value);
+        if (boundaryCode !== undefined) {
+          boundaryTypeMap[boundaryCode] = key;
+        }
+      }
     });
   });
+
   return boundaryTypeMap;
 }
-function addBoundaryCodeToData(modifiedBoundaryData: any, boundaryMap: any) {
-  const boundaryDataForSheet = modifiedBoundaryData.map((row: any[]) => {
+
+function addBoundaryCodeToData(withBoundaryCode: any[], withoutBoundaryCode: any[], boundaryMap: Map<string, string>) {
+  const boundaryDataWithBoundaryCode = withBoundaryCode;
+  const boundaryDataForWithoutBoundaryCode = withoutBoundaryCode.map((row: any[]) => {
     const boundaryName = row[row.length - 1]; // Get the last element of the row
-    const boundaryCode = boundaryMap.get(boundaryName); // Fetch corresponding boundary code from res
+    const boundaryCode = boundaryMap.get(boundaryName); // Fetch corresponding boundary code from map
     return [...row, boundaryCode]; // Append boundary code to the row and return updated row
   });
+  const boundaryDataForSheet = [...boundaryDataWithBoundaryCode, ...boundaryDataForWithoutBoundaryCode];
   return boundaryDataForSheet;
 }
+
 function prepareDataForExcel(boundaryDataForSheet: any, hierarchy: any[], boundaryMap: any) {
   const data = boundaryDataForSheet.map((boundary: any[]) => {
     const boundaryCode = boundary.pop();
@@ -1152,6 +1204,7 @@ export {
   addBoundaryCodeToData,
   prepareDataForExcel,
   extractCodesFromBoundaryRelationshipResponse,
+  getCodeMappingsOfExistingBoundaryCodes
 };
 
 
