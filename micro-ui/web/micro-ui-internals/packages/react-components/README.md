@@ -88,7 +88,11 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
   1. Set `ShowTab: true` in the Inboxconfig.
   2. In the Config array, include configuration objects for each tab. For example:
         ```javascript
-      [
+      export const inboxconfig = {
+      tenantId: "pb",
+      moduleName: "inboxconfigUiConfig",
+      showTab: true,
+      inboxconfig: [
         {
           ...
         },
