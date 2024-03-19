@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-react-components",
-  "version": "1.4.107",
+  "version": "1.4.109",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -12,6 +12,7 @@
     "example": "cd example && npm run start",
     "build-webpack": "webpack --mode=production --node-env=production",
     "build":"yarn build-webpack",
+    "publish": "yarn build && sudo npm publish --tag mfe",
     "build-old": "microbundle-crl --compress --no-sourcemap --format cjs",
     "starts": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepare": "yarn build",
@@ -48,7 +49,7 @@
     "dist"
   ],
   "dependencies": {
-    "@egovernments/digit-ui-svg-components":"0.0.6",
+    "@egovernments/digit-ui-svg-components":"1.0.0",
     "@googlemaps/js-api-loader": "1.13.10",
     "@hookform/resolvers": "1.3.7",
     "ajv": "^8.12.0",
