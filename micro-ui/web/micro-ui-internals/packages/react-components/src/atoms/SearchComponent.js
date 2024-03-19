@@ -9,12 +9,13 @@ import SubmitBar from "../atoms/SubmitBar";
 import Toast from "../atoms/Toast";
 import { FilterIcon, RefreshIcon } from "./svgindex";
 
-const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data }) => {
+const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data, showTab, tabData, onTabChange }) => {
   const { t } = useTranslation();
   const { state, dispatch } = useContext(InboxContext)
   const [showToast, setShowToast] = useState(null)
   let updatedFields = [];
   const { apiDetails } = fullConfig
+  const customDefaultPagination = fullConfig?.sections?.searchResult?.uiConfig?.customDefaultPagination || null
 
   if (fullConfig?.postProcessResult) {
     //conditions can be added while calling postprocess function to pass different params
@@ -119,6 +120,21 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
 
   return (
     <React.Fragment>
+      {showTab && <div className="search-tabs-container">
+            <div>
+              {tabData?.map((i,num) => (
+                  <button
+                  className={i?.active === true ? "search-tab-head-selected" : "search-tab-head"}
+                  onClick={() => {
+                      clearSearch({});
+                      onTabChange(num);
+                    }}>
+                    {t(i?.label)}
+                  </button>
+                ))}
+            </div>
+          </div>
+        }
       <div className={'search-wrapper'}>
         {header && renderHeader()}
         <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)}>
