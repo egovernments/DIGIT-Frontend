@@ -83,11 +83,57 @@ Syntax for the FormComposersV2
       />
     </React.Fragment>
 ```
- 
+
+To use the InboxSearchComposer component for managing multiple tabs, follow these steps:
+  1. Set `ShowTab: true` in the Inboxconfig.
+  2. In the Config array, include configuration objects for each tab. For example:
+        ```javascript
+      [
+        {
+          ...
+        },
+        {
+          ...
+        }
+      ]
+     ```
+  3. Implement custom limit offset by adding customDefaultPagination under uiConfig in the searchResult:
+        ```javascript         
+            customDefaultPagination: {
+                  limit: 5,
+                  offset: 0,
+            },
+        ```
+  4. For custom table sizes, add an array of page sizes in customPageSizesArray under uiConfig in the searchResult:
+        ```javascript   
+       customPageSizesArray: [5, 10, 15, 20],
+        ```
+  5. In the Inbox Screen, initialize the following states:
+      This state will by default take first object from array config
+        ```javascript
+      const [config, setConfig] = useState(myCampaignConfig?.myCampaignConfig?.[0]);
+        ```
+      TabData state used to fetch which tab is active
+        ```javascript
+      const [tabData, setTabData] = useState(myCampaignConfig?.myCampaignConfig?.map((i, n) => ({ key: n, label: i.label, active: n === 0 ? true : false })));
+        ```
+      Add function to perform when tab changes. Here we are setting the respective tab active and updaing its config
+        ```javascript
+      const onTabChange = (n) => {
+        setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
+        setConfig(myCampaignConfig?.myCampaignConfig?.[n]);
+      };
+        ```
+  6 At last pass all these in InboxSearchComposer props.
+    
+```jsx
+      <InboxSearchComposer configs={config} showTab={true} tabData={tabData} onTabChange={onTabChange}></InboxSearchComposer>
+```
 
 ### Changelog
 
 ```bash
+1.8.1-beta.6 Added feature for Multi Tab in InboxSearchComposer
 1.8.1-beta.5 Added without labelfieldpair config for removing default card
 1.8.1-beta.4 Added Previous button in From Composer
 1.8.1-beta.3 Added XlsPreview component to preview Xls file.
