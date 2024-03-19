@@ -1,0 +1,229 @@
+{
+  "tenantId": "mz",
+  "moduleName": "hcm-microplanning",
+  "schemas": [
+    {
+      "type": "Excel",
+      "section": "Population",
+      "campaignType": "SMC",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Terrain": {
+            "type": "string"
+          },
+          "tp1": {
+            "type": "number"
+          },
+          "tp2": {
+            "type": "number"
+          },
+          "tp3": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tp1",
+          "tp2",
+          "tp3"
+        ],
+        "locationDataColumns": []
+      }
+    },
+    {
+      "type": "Excel",
+      "section": "Population",
+      "campaignType": "ITIN",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          },
+          "Target Households": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population",
+          "Target Households"
+        ]
+      }
+    },
+    {
+      "type": "Excel",
+      "section": "Population",
+      "campaignType": "IRS",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population"
+        ]
+      }
+    },
+    {
+      "type": "Excel",
+      "section": "Facility",
+      "schema": {
+        "Properties": {
+          "Facility Code": {
+            "type": "string"
+          },
+          "Facility Name": {
+            "type": "string"
+          },
+          "Facility Type": {
+            "type": "string",
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+          },
+          "Facility Status": {
+            "type": "string",
+            "pattern": "(Temporary)|(Permanent)"
+          },
+          "Capacity": {
+            "type": "number"
+          },
+          "Lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "Long": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "Facility Code",
+          "Facility Name",
+          "Facility Type",
+          "Facility Status",
+          "Capacity",
+          "Lat",
+          "Long"
+        ],
+        "locationDataColumns": [
+          "Lat",
+          "Long"
+        ]
+      }
+    },
+    {
+      "type": "Geojson",
+      "section": "Population",
+      "campaignType": "SMC",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Terrain": {
+            "type": "string"
+          },
+          "tp1": {
+            "type": "number"
+          },
+          "tp2": {
+            "type": "number"
+          },
+          "tp3": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "tp1",
+          "tp2",
+          "tp3"
+        ]
+      }
+    },
+    {
+      "type": "Geojson",
+      "section": "Population",
+      "campaignType": "ITIN",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          },
+          "Target Households": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population",
+          "Target Households"
+        ]
+      }
+    },
+    {
+      "type": "Geojson",
+      "section": "Population",
+      "campaignType": "IRS",
+      "schema": {
+        "Properties": {
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population"
+        ]
+      }
+    },
+    {
+      "type": "Geojson",
+      "section": "Facility",
+      "schema": {
+        "Properties": {
+          "Facility Code": {
+            "type": "string"
+          },
+          "Facility Name": {
+            "type": "string"
+          },
+          "Facility Type": {
+            "type": "string",
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+          },
+          "Facility Status": {
+            "type": "string",
+            "pattern": "(Temporary)|(Permanent)"
+          },
+          "Capacity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Facility Code",
+          "Facility Name",
+          "Facility Type",
+          "Facility Status",
+          "Capacity"
+        ]
+      }
+    }
+  ]
+}

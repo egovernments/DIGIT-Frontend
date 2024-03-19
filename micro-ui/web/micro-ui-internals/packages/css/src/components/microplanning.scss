@@ -181,6 +181,9 @@
         }
 
         .selected-button {
+            display: flex;
+            flex-direction: row;
+            align-items: center !important;
             justify-self: end;
             border: 1px solid rgba(244, 119, 56, 1);
             background-color: rgba(244, 119, 56, 1);
@@ -233,8 +236,12 @@
             padding: 0;
             margin: 0
         }
+        .flex{
+            display: flex;
+        }
 
         .browse-text {
+            padding-left: 1px;
             color:rgba(244, 119, 56, 1);
             text-decoration: underline;
             cursor: pointer;
