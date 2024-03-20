@@ -2,8 +2,7 @@ import React from "react";
 import { SVG } from "./SVG";
 import PropTypes from "prop-types";
 
-const InfoCard = ({ label, text, variant , style, textStyle,additionalElements,inline}) => {
-
+const InfoCard = ({ label, text, variant, style, textStyle, additionalElements, inline }) => {
   const getIconAndLabelByVariant = (variant) => {
     switch (variant) {
       case "warning":
@@ -20,8 +19,19 @@ const InfoCard = ({ label, text, variant , style, textStyle,additionalElements,i
 
   const hasAdditionalElements = additionalElements && additionalElements.length > 0;
 
-  const displayedLabel = label || defaultLabel;
+  const toTitleCase = (str) => {
+    return str.toLowerCase().replace(/\b\w/g, (c) => {
+      return c.toUpperCase();
+    });
+  };
 
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+      return c.toUpperCase();
+    });
+  };
+
+  const displayedLabel = toTitleCase(label) || defaultLabel;
 
   return (
     <div className={`digit-info-banner-wrap ${variant ? variant : "default"}`} style={style}>
@@ -29,11 +39,13 @@ const InfoCard = ({ label, text, variant , style, textStyle,additionalElements,i
         {icon}
         <h2>{displayedLabel}</h2>
       </div>
-      {text && <p style={{ ...textStyle }}>{text}</p>}
+      {text && <p style={{ ...textStyle }}>{toSentenceCase(text)}</p>}
       {hasAdditionalElements && (
-        <div className={inline ? 'additional-elements-inline' : 'additional-elements-column'}>
+        <div className={inline ? "additional-elements-inline" : "additional-elements-column"}>
           {additionalElements.map((element, index) => (
-            <div className="individualElement" key={index}>{element}</div>
+            <div className="individualElement" key={index}>
+              {element}
+            </div>
           ))}
         </div>
       )}
@@ -44,19 +56,19 @@ const InfoCard = ({ label, text, variant , style, textStyle,additionalElements,i
 InfoCard.propTypes = {
   label: PropTypes.string.isRequired,
   text: PropTypes.string,
-  variant:PropTypes.string,
-  style:PropTypes.object,
-  textStyle:PropTypes.object,
+  variant: PropTypes.string,
+  style: PropTypes.object,
+  textStyle: PropTypes.object,
   additionalElements: PropTypes.arrayOf(PropTypes.node),
   inline: PropTypes.bool,
 };
 
 InfoCard.defaultProps = {
   label: "",
-  text:"",
-  varinat:"",
-  styles:{},
-  textStyle:{},
+  text: "",
+  varinat: "",
+  styles: {},
+  textStyle: {},
   additionalElements: [],
   inline: false,
 };

@@ -4,6 +4,11 @@ import { useTranslation } from "react-i18next";
 
 const Toggle = (props) => {
   const { t } = useTranslation();
+
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   var selected = props.selectedOption ? props.selectedOption : props.options.length > 0 ? props.options[0].code : null;
 
   // Calculate the maximum label length among all options
@@ -34,7 +39,7 @@ const Toggle = (props) => {
               disabled={props?.disabled}
               ref={props.inputRef}
             />
-            <span className="digit-toggle-label">{t(option[props.optionsKey])}</span>
+            <span className="digit-toggle-label">{t(capitalizeFirstLetter(option[props.optionsKey]))}</span>
           </label>
         </div>
       ))}

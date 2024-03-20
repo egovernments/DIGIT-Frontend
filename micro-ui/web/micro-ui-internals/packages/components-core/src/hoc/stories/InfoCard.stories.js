@@ -91,6 +91,9 @@ InfoSuccess.args = {
   label: "Success",
   variant: "success",
 };
+InfoSuccess.argTypes = {
+  variant: { control: { disable: true } },
+};
 
 // InfoSuccess with additional elements
 export const InfoSuccessWithAdditionalElements = Template.bind({});
@@ -134,6 +137,9 @@ InfoSuccessWithAdditionalElements.args = {
   label: "Success",
   variant: "success",
 };
+InfoSuccessWithAdditionalElements.argTypes = {
+  variant: { control: { disable: true } },
+};
 
 // Info Warning
 export const InfoWarning = Template.bind({});
@@ -141,6 +147,9 @@ InfoWarning.args = {
   ...commonArgs,
   label: "Warning",
   variant: "warning",
+};
+InfoWarning.argTypes = {
+  variant: { control: { disable: true } },
 };
 
 // InfoWarning with additional elements
@@ -185,6 +194,10 @@ InfoWarningWithAdditionalElements.args = {
   label: "Warning",
   variant: "warning",
 };
+InfoWarningWithAdditionalElements.argTypes = {
+  variant: { control: { disable: true } },
+};
+
 
 // Info Error
 export const InfoError = Template.bind({});
@@ -192,6 +205,9 @@ InfoError.args = {
   ...commonArgs,
   label: "Error",
   variant: "error",
+};
+InfoError.argTypes = {
+  variant: { control: { disable: true } },
 };
 
 // InfoError with additional elements
@@ -234,4 +250,7 @@ InfoErrorWithAdditionalElements.args = {
   ],
   label: "Error",
   variant: "error",
+};
+InfoErrorWithAdditionalElements.argTypes = {
+  variant: { control: { disable: true } },
 };

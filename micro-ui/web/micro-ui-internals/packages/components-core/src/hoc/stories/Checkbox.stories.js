@@ -8,9 +8,7 @@ export default {
   argTypes: {
     config: { control: "object" },
     inputRef: { control: false },
-    label: { control: "text" },
     onChange: { action: "onChange" },
-    value: { control: "text" },
     errorStyle: { control: "object" },
     disabled: { control: "boolean" },
     type: { control: "text" },
@@ -36,11 +34,9 @@ const commonArgs = {
   },
   inputRef: null,
   onChange: () => {},
-  value: " ",
   errorStyle: null,
   disabled: false,
   type: "checkbox",
-  description: "",
 };
 
 //Default checkbox

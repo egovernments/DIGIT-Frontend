@@ -26,6 +26,15 @@ const Toast = (props) => {
   const variant = props?.error ? "digit-error" : props?.warning ? "digit-warning" : props?.variant ? props?.variant : "";
   const isWarningButtons = props?.isWarningButtons ? "digit-warning-buttons" : "";
 
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+        return c.toUpperCase();
+    });
+};
+
+const sentenceCaseLabel = toSentenceCase(props.label);
+
+
   if (!isVisible) {
     return null;
   }
@@ -35,9 +44,9 @@ const Toast = (props) => {
       <div className={`digit-toast-success ${variant}`} style={{ ...props.style }}>
         <SVG.Error fill="#FFFFFF" />
         <div style={{ ...props.labelstyle }} className="toast-label">
-          {props.label}
+          {sentenceCaseLabel}
         </div>
-        <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" onClick={props.onClose ? props.onClose : handleClose} />
+        <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" style={{ cursor:"pointer" }} onClick={props.onClose ? props.onClose : handleClose} />
       </div>
     );
   }
@@ -50,18 +59,18 @@ const Toast = (props) => {
             <>
               <SVG.Warning fill="#FFFFFF" />
               <div className="toast-label" style={{ ...props.labelstyle }}>
-                {props.label}
+                {sentenceCaseLabel}
               </div>
-              <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" onClick={props.onClose ? props.onClose : handleClose} />
+              <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" style={{ cursor:"pointer" }} onClick={props.onClose ? props.onClose : handleClose} />
             </>
           ) : (
             <div className="digit-toast-sub-container">
               <SVG.Error fill="#FFFFFF" />
               <div className="toast-label" style={{ ...props.labelstyle }}>
-                {props.label}
+                {sentenceCaseLabel}
               </div>
               {props.isDleteBtn ? (
-                <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" onClick={props.onClose ? props.onClose : handleClose} />
+                <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" style={{ cursor:"pointer" }} onClick={props.onClose ? props.onClose : handleClose} />
               ) : null}
             </div>
           )}
@@ -80,9 +89,9 @@ const Toast = (props) => {
     <div className="digit-toast-success" style={{ ...props.style }}>
       <SVG.CheckCircle fill="#FFFFFF" />
       <div className="toast-label" style={{ ...props.labelstyle }}>
-        {props.label}
+        {sentenceCaseLabel}
       </div>
-      <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" onClick={props.onClose ? props.onClose : handleClose} />
+      <SVG.Close fill="#FFFFFF" className="digit-toast-close-btn" style={{ cursor:"pointer" }} onClick={props.onClose ? props.onClose : handleClose} />
     </div>
   );
 };

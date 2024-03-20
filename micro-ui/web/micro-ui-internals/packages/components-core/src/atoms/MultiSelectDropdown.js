@@ -222,8 +222,13 @@ const MultiSelectDropdown = ({
           alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? "checked" : ""
         }`}
         onMouseDown={() => setIsActive(true)}
-      onMouseUp={() => setIsActive(false)}
-      onMouseLeave={() => setIsActive(false)}
+        onMouseUp={() => setIsActive(false)}
+        onMouseLeave={() => setIsActive(false)}
+        style={
+          index === optionIndex && !alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code)
+            ? { opacity: 1, backgroundColor: "#FFFAF7", border: "0.5px solid #F47738" }
+            : {}
+        }
       >
         <input
           type="checkbox"
@@ -245,7 +250,11 @@ const MultiSelectDropdown = ({
           <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%" }}>
             {config?.showIcon &&
               option?.icon &&
-              IconRender(option?.icon, isActive,alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false)}
+              IconRender(
+                option?.icon,
+                isActive,
+                alreadyQueuedSelectedState.find((selectedOption) => selectedOption.code === option.code) ? true : false
+              )}
             <p className="digit-label">{t(option[optionsKey] && typeof option[optionsKey] == "string" && option[optionsKey])}</p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && <div className="option-description">{option.description}</div>}
@@ -350,7 +359,7 @@ const MultiSelectDropdown = ({
                 border: "1px solid #F47738",
                 background: "#FAFAFA",
               }}
-              textStyles={{height:"auto",fontSize: "0.875rem", fontWeight: "400", width: "100%", lineHeight: "16px", color: "#F47738" }}
+              textStyles={{ height: "auto", fontSize: "0.875rem", fontWeight: "400", width: "100%", lineHeight: "16px", color: "#F47738" }}
             />
           )}
         </div>

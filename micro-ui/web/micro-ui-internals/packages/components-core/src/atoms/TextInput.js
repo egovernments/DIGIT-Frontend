@@ -164,6 +164,13 @@ const TextInput = (props) => {
     });
   };
 
+
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+        return c.toUpperCase();
+    });
+};
+
   const inputClassNameForMandatory = `${user_type ? "digit-employee-card-input-error" : "digit-card-input-error"} ${
     props.disabled ? "disabled" : ""
   } ${props.customClass || ""} ${props.nonEditable ? "noneditable" : ""}  ${props.type === "numeric" ? "numeric" : ""}`;
@@ -194,7 +201,7 @@ const TextInput = (props) => {
               name={props.name}
               id={props.id}
               className={inputClassNameForMandatory}
-              placeholder={props.placeholder}
+              placeholder={toSentenceCase(props.placeholder)}
               onChange={(event) => {
                 if (props?.type === "number" && props?.maxlength) {
                   if (event.target.value.length > props?.maxlength) {
@@ -249,7 +256,7 @@ const TextInput = (props) => {
               name={props.name}
               id={props.id}
               className={inputClassName}
-              placeholder={props.placeholder}
+              placeholder={toSentenceCase(props.placeholder)}
               onChange={(event) => {
                 if (props?.type === "number" && props?.maxlength) {
                   if (event.target.value.length > props?.maxlength) {

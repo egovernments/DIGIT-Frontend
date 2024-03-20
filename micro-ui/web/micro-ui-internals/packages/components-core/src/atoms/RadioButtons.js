@@ -11,6 +11,12 @@ const RadioButtons = (props) => {
     props.onSelect(value);
   }
 
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+        return c.toUpperCase();
+    });
+};
+
 
   return (
     <div style={props?.style} className={`digit-radio-wrap ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
@@ -31,7 +37,7 @@ const RadioButtons = (props) => {
                 />
                 <span className="digit-radio-btn-checkmark"></span>
               </span>
-              <label style={props.inputStyle}>{t(option[props.optionsKey])}</label>
+              <label style={props.inputStyle}>{t(toSentenceCase(option[props.optionsKey]))}</label>
             </div>
           );
         } else if (props?.optionsKey && props?.isDependent) {
@@ -50,7 +56,7 @@ const RadioButtons = (props) => {
                 />
                 <span className="digit-radio-btn-checkmark"></span>
               </span>
-              <label style={props.inputStyle}>{t(props.labelKey ? `${props.labelKey}_${option.code}` : option.code)}</label>
+              <label style={props.inputStyle}>{t(props.labelKey ? `${props.labelKey}_${option.code}` : toSentenceCase(option.code))}</label>
             </div>
           );
         } else {
@@ -69,7 +75,7 @@ const RadioButtons = (props) => {
                 />
                 <span className="digit-radio-btn-checkmark"></span>
               </span>
-              <label style={props.inputStyle}>{t(option)}</label>
+              <label style={props.inputStyle}>{t(toSentenceCase(option))}</label>
             </div>
           );
         }

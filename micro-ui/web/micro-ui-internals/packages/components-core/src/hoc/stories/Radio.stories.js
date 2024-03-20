@@ -57,7 +57,6 @@ const commonArgs = {
   },
   inputRef: null,
   label: "Enter Gender",
-  value: "",
   errorStyle: null,
   disabled: false,
   type: "radio",

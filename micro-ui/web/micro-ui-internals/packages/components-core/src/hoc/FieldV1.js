@@ -10,7 +10,6 @@ import {
   MultiSelectDropdown,
   MobileNumber,
   InputTextAmount,
-  Stepper,
 } from "../atoms";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
@@ -62,9 +61,16 @@ const FieldV1 = ({
     setCurrentCharCount(value.length);
   }, [value]);
 
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+        return c.toUpperCase();
+    });
+};
+
+
   const renderCharCount = () => {
     if (charCount) {
-      const maxCharacters = populators?.validation?.maxlength || 50;
+      const maxCharacters = populators?.validation?.maxlength || 0;
       return (
         <CardText style={{ marginTop: "0px", fontSize: "0.875rem", lineHeight: "1.5rem" }}>
           {currentCharCount}/{maxCharacters}
@@ -85,18 +91,18 @@ const FieldV1 = ({
   const renderDescriptionOrError = () => {
     if (error) {
       return (
-        <div className="digit-error" style={{width: !charCount ? "100%" : "90%", whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
+        <div className="digit-error" style={{width: "100%" , whiteSpace: "pre-wrap", wordBreak: "break-word", marginTop: "0px" }}>
           <div className="digit-error-icon">
             <SVG.Info width="1rem" height="1rem" fill="#D4351C" />
           </div>
-          <ErrorMessage message={t(truncateMessage(error, 256))} />
+          <ErrorMessage message={t(toSentenceCase(truncateMessage(error, 256)))} />
         </div>
       );
     } else if (description) {
       return (
         <CardText
           style={{
-            width: !charCount ? "100%" : "90%",
+            width: "100%",
             whiteSpace: "pre-wrap",
             wordBreak: "break-word",
             marginTop: "0px",
@@ -104,7 +110,7 @@ const FieldV1 = ({
             lineHeight: "1.5rem",
           }}
         >
-          {t(truncateMessage(description, 256))}
+          {t(toSentenceCase(truncateMessage(description, 256)))}
         </CardText>
       );
     }
@@ -316,7 +322,7 @@ const FieldV1 = ({
         <Header className={`label ${disabled ? "disabled" : ""} ${nonEditable ? "noneditable" : ""} ${populators?.wrapLabel ? "wraplabel" : ""}`}>
           <div className={"label-container"}>
             <div className={`label-styles ${populators?.wrapLabel ? "wraplabel" : ""}`}>
-              {populators?.wrapLabel ? t(label) : t(truncateMessage(label, 64))}
+              {populators?.wrapLabel ? t(toSentenceCase(label)) : t(toSentenceCase(truncateMessage(label, 64)))}
             </div>
             <div style={{ color: "#D4351C" }}>{required ? " * " : null}</div>
             {infoMessage ? (

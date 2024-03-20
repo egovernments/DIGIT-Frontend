@@ -21,6 +21,15 @@ const CheckBox = ({
   const { t } = useTranslation();
   const userType = pageType || window?.Digit?.SessionStorage.get("userType");
   let styles = props.styles;
+
+  const toSentenceCase = (str) => {
+    return str.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, (c) => {
+        return c.toUpperCase();
+    });
+};
+
+const sentenceCaseLabel = toSentenceCase(label);
+
   return (
     <div className={`digit-checkbox-wrap ${!isLabelFirst ? "checkboxFirst" : "labelFirst"} ${disabled ? "disabled" : " "}`}>
       {isLabelFirst ? (
@@ -35,7 +44,7 @@ const CheckBox = ({
               </span>
             </>
           ) : (
-            label
+            sentenceCaseLabel
           )}
         </p>
       ) : null}
@@ -66,7 +75,7 @@ const CheckBox = ({
               </span>
             </>
           ) : (
-            label
+            sentenceCaseLabel
           )}
         </p>
       ) : null}
