@@ -93,9 +93,11 @@
             display: flex;
             justify-content: space-between;
             align-items: start;
+
             h2 {
                 width: 90% !important;
             }
+
             .download-template-button {
                 display: flex !important;
                 padding-left: 0.625rem;
@@ -236,13 +238,14 @@
             padding: 0;
             margin: 0
         }
-        .flex{
+
+        .flex {
             display: flex;
         }
 
         .browse-text {
             padding-left: 1px;
-            color:rgba(244, 119, 56, 1);
+            color: rgba(244, 119, 56, 1);
             text-decoration: underline;
             cursor: pointer;
         }
@@ -373,13 +376,22 @@
     .altrady-have-template-button {
         display: flex !important;
         justify-content: center;
-        font-weight: 600;
-        font-size: 1rem;
+        padding: 0;
+        margin: 0;
+
+        p {
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0;
+            padding: 0;
+        }
     }
 
     .download-template-button {
         display: flex !important;
         justify-content: center;
+        padding: 0;
+        margin: 0;
 
         .icon {
             display: flex;
@@ -391,6 +403,8 @@
         p {
             font-weight: 500;
             font-size: 1rem;
+            margin: 0;
+            padding: 0;
         }
     }
 
@@ -430,5 +444,123 @@
                 margin: 0;
             }
         }
+    }
+
+    .spatial-data-property-mapping {
+        width: calc(100%-2rem);
+        padding: 1rem;
+        max-height: 31.68rem;
+        padding-top: 0;
+        margin: 1rem;
+        border: 0.063rem rgba(0, 0, 0, 0.16) solid;
+        box-shadow: 0rem 0.063rem 0.125rem 0rem rgba(0, 0, 0, 0.16);
+        border-radius: 0.25rem;
+        background-color: rgba(250, 250, 250, 255);
+        display: block;
+                overflow: auto;
+                padding-bottom: 0;
+        table {
+            width: 100%;
+            th {
+                    width: 50%;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    padding: 1.5rem;
+                    margin: 0;
+                    border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
+                }
+
+                td {
+                    width: 50%;
+                    font-weight: 400;
+                    font-size: 1rem;
+                    padding: 1.5rem;
+                    margin: 0;
+                    border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
+                }
+
+            select {
+                width: 100%;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 0.7em top 50%, 0 0;
+                background-size: 1.5em auto;
+                background-color: rgb(255, 255, 255, 0);
+                border: 0.0623rem solid black !important;
+                padding: 0.5rem;
+                font-weight: 400;
+                font-size: 1rem; 
+            }
+            select:focus {
+                outline: none;
+                border-color: black; 
+              }
+            option {
+                font-weight: 400;
+                padding: 0.5rem;
+                font-size: 1rem;
+                max-height: 50%;
+                border: 0.0623rem solid black !important;
+                border-radius: 0;
+            }
+            option:focus {
+                outline: none;
+                border-color: black; 
+              }
+
+        }
+        
+        .pagination-toolbar{
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(250, 250, 250, 255);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: end;
+            padding: 1rem 0;
+            select{
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 0.7em top 50%, 0 0;
+                background-size: 1.5em auto;
+                background-color: rgb(255, 255, 255, 0);
+                padding: 0.5rem;
+                font-weight: 400;
+                font-size: 1rem;   
+                color:rgba(80, 90, 95, 1);
+                padding-right: 2em;
+            }
+            select:focus {
+                outline: none;
+              }
+            option{
+                font-weight: 400;
+                padding: 0.5rem;
+                font-size: 1rem;
+                max-height: 50%;
+                color:rgba(80, 90, 95, 1);
+                border-radius: 0;
+            }
+            span{
+                font-weight: 400;
+                padding: 0.5rem;
+                font-size: 1rem;
+                color:rgba(80, 90, 95, 1);
+            }
+            .navigation{
+                color:black;
+                font-size: 1rem;
+                font-weight: 700;
+            }
+        }
+
     }
 }

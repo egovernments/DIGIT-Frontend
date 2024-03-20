@@ -10,9 +10,9 @@ export const excelValidations = (data, schemaData) => {
         type: "array",
         items: {
           type: "object",
-          properties: schemaData.Properties,
+          patternProperties: schemaData.Properties,
           required: schemaData.required,
-          additionalProperties: true,
+          additionalProperties: false,
         },
       },
     },
@@ -24,6 +24,8 @@ export const excelValidations = (data, schemaData) => {
     let columns = new Set();
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
+        case "additionalProperties":
+          return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
           const instancePathType = validateExcel.errors[i].instancePath.split("/");
           if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
@@ -68,7 +70,6 @@ export const excelValidations = (data, schemaData) => {
 export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t) => {
   try {
     const valid = excelValidations(fileInJson, schemaData);
-    console.log(valid);
     if (valid.valid) {
       return { valid: true };
     } else {
@@ -76,16 +77,20 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
         return { valid: false, message: valid.message };
       }
       const columnList = valid.columnList;
-      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
-        "PLACEHOLDER",
-        columnList.length > 1
+      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER",{
+        columns: columnList.length > 1
           ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
           : `${columnList[columnList.length - 1]}`
-      );
+      })
+      // .replace(
+      //   "PLACEHOLDER",
+        // columnList.length > 1
+        //   ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+        //   : `${columnList[columnList.length - 1]}`
+      // );
       return { valid: false, message };
     }
   } catch (error) {
-    console.log(error);
     return { valid: false, message: "ERROR_PARSING_FILE" };
   }
 };
