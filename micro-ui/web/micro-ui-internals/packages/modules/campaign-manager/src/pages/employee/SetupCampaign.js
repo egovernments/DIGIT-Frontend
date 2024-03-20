@@ -14,7 +14,7 @@ const SetupCampaign = () => {
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
-  
+
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData));
   }, [totalFormData]);
@@ -22,7 +22,6 @@ const SetupCampaign = () => {
   //to convert formData to payload
   useEffect(() => {
     const convertFormData = (totalFormData) => {
-      console.log("totalFormData" ,totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate);
       const modifiedData = [
         {
           startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
@@ -54,7 +53,6 @@ const SetupCampaign = () => {
   const onSubmit = (formData) => {
     setCurrentKey(currentKey + 1);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
-    console.log("name" ,name);
 
     setTotalFormData((prevData) => ({
       ...prevData,
@@ -116,10 +114,10 @@ const SetupCampaign = () => {
         form: config?.form.filter(step => parseInt(step.key) === currentKey),
       };
     }).filter(config => config.form.length > 0);
+
   };
 
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
-
 
   useEffect(() => {
     setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey));
@@ -145,6 +143,7 @@ const SetupCampaign = () => {
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={"PREVIOUS"}
+        noCardStyle={currentStep == 1 ? true : false}
         onSecondayActionClick={onSecondayActionClick}
         label={currentKey < 10 ? "NEXT" : "SUBMIT"}
       />

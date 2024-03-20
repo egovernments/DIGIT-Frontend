@@ -82,16 +82,17 @@ export const CampaignConfig = (totalFormData) => {
           body: [
             {
               isMandatory: false,
-              key: "campaignName1",
-              type: "text",
-              withoutLabel: false,
-              label: "cycle1",
+              key: "cycleConfigure",
+              type: "component",
+              component: "CycleConfiguration",
+              withoutLabelFieldPair: true,
+              withoutLabel: true,
               disable: false,
               customProps: {
                 module: "HCM",
               },
               populators: {
-                name: "campaignName1",
+                name: "cycleConfiguration",
                 // optionsKey: "code",
                 error: "ES__REQUIRED",
                 required: true,
@@ -105,16 +106,17 @@ export const CampaignConfig = (totalFormData) => {
           body: [
             {
               isMandatory: false,
-              key: "campaignName2",
-              type: "text",
-              withoutLabel: false,
-              label: "cycle2",
+              key: "deliveryRule",
+              type: "component",
+              component: "DeliveryRule",
+              withoutLabelFieldPair: true,
+              withoutLabel: true,
               disable: false,
               customProps: {
                 module: "HCM",
               },
               populators: {
-                name: "campaignName2",
+                name: "deliveryRule",
                 // optionsKey: "code",
                 error: "ES__REQUIRED",
                 required: true,

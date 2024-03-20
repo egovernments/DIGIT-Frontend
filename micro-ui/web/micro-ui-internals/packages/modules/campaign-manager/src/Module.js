@@ -6,6 +6,8 @@ import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
 import UploadBoundaryData from "./pages/employee/UploadBoundaryData";
+import CycleConfiguration from "./pages/employee/CycleConfiguration";
+import DeliverySetup from "./pages/employee/deliveryRule";
 import TimelineCampaign from "./components/TimelineCampaign";
 import CampaignDates from "./components/CampaignDates";
 import CampaignType from "./components/CampaignType";
@@ -34,10 +36,12 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
-  campaignModule: CampaignModule,
-  campaignCard: CampaignCard,
+  // campaignModule: CampaignModule,
+  // campaignCard: CampaignCard,
   CampaignCard: CampaignCard,
   UploadBoundaryData,
+  DeliveryRule: DeliverySetup,
+  CycleConfiguration: CycleConfiguration,
   TimelineCampaign,
   CampaignDates,
   CampaignType,
