@@ -95,37 +95,23 @@ class dataManageController {
                 throw new Error("Invalid file");
             }
             const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
-            console.log(boundaryData, "plssssssssss")
             const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
             const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
-            console.log(mappingMap, "amppiniiiiiiiiggggggg")
-            console.log(countMap, "countttttttttttttttt")
             const childParentMap = getChildParentMap(withoutBoundaryCode);
-            console.log(childParentMap, "chillllllldddddddddddd")
             const boundaryMap = await getBoundaryCodesHandler(withoutBoundaryCode, childParentMap, mappingMap, countMap);
-            console.log(boundaryMap, "mappppppppppppppppppppp")
             const boundaryTypeMap = getBoundaryTypeMap(boundaryData, boundaryMap);
-            console.log(boundaryTypeMap, "mmmmmmmmmmmmmmmmm")
             await createBoundaryEntities(request, boundaryMap);
-
             const modifiedMap: Map<string, string | null> = new Map();
-
             childParentMap.forEach((value, key) => {
                 const modifiedKey = boundaryMap.get(key);
                 const modifiedValue = boundaryMap.get(value);
                 modifiedMap.set(modifiedKey, modifiedValue);
             });
-            console.log(modifiedMap, "maaaoooooooooooooooooo")
-
             await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
-            console.log("Boundary relationship createddddddddddddddddddddddddddddddd");
             const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
-            console.log(boundaryDataForSheet, "ooooooooooooooooooooo");
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-            console.log(hierarchy, "hhhhhhhhhhhhhh")
             const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
             const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
-            console.log(data, "dataaaaaaaaaaaaaaaaaaa")
             const boundarySheetData = await createExcelSheet(data, headers);
             const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
             return sendResponse(response, { BoundaryFileDetails: BoundaryFileDetails }, request);

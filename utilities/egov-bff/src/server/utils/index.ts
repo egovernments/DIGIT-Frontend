@@ -1079,31 +1079,25 @@ function getChildParentMap(modifiedBoundaryData: any) {
 
 
 function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
+  console.log(withBoundaryCode, "withhhhhhhhhhhhhhhhhh")
   const countMap = new Map<string, number>();
   const mappingMap = new Map<string, string>();
-
   withBoundaryCode.forEach((row: any[]) => {
     const len = row.length;
     if (len >= 3) {
-      // Update the count map
       const grandParent = row[len - 3];
-      if (!countMap.has(grandParent)) {
-        countMap.set(grandParent, 1);
+      if (mappingMap.has(grandParent)) {
+        countMap.set(grandParent, (countMap.get(grandParent) || 0) + 1);
       } else {
-        const count = countMap.get(grandParent)!;
-        countMap.set(grandParent, count + 1);
+        throw new Error("Insert boundary hierarchy level wise");
       }
-
-      // Update the mapping map
-      mappingMap.set(row[len - 2], row[len - 1]);
-    } else {
-      // Handle if the row has less than 3 elements
-      mappingMap.set(row[len - 2], row[len - 1]);
     }
+    mappingMap.set(row[len - 2], row[len - 1]); 
+    console.log(mappingMap,"mapppppp");
   });
-
   return { mappingMap, countMap };
 }
+
 
 
 
@@ -1112,7 +1106,7 @@ function getBoundaryTypeMap(boundaryData: any[], boundaryMap: Map<string, string
 
   boundaryData.forEach((boundary) => {
     Object.entries(boundary).forEach(([key, value]) => {
-      if (typeof value === 'string'&&key !== 'Boundary Code') {
+      if (typeof value === 'string' && key !== 'Boundary Code') {
         const boundaryCode = boundaryMap.get(value);
         if (boundaryCode !== undefined) {
           boundaryTypeMap[boundaryCode] = key;
