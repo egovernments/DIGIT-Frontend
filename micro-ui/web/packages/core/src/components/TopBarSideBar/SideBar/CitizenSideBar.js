@@ -152,9 +152,7 @@ import {
     let configEmployeeSideBar = {};
   
     if (!isEmployee) {
-      Object.keys(linkData)
-        ?.sort((x, y) => y.localeCompare(x))
-        ?.map((key) => {
+      Object?.keys(linkData)?.sort((x, y) => y.localeCompare(x))?.map((key) => {
           if (linkData[key][0]?.sidebar === "digit-ui-links")
             menuItems.splice(1, 0, {
               type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",

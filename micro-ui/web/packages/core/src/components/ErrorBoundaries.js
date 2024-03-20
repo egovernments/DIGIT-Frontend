@@ -1,5 +1,6 @@
 import React from "react";
 import ErrorComponent from "./ErrorComponent";
+import Urls from "../../../ui-libraries/src/services/atoms/urls";
 
 const Redircter = () => {
   const path = Digit.UserService.getType() === "employee" ? `/${window?.contextPath}/employee/user/error` : `/${window?.contextPath}/citizen/error`;
@@ -22,14 +23,17 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { error: error?.message, hasError: true, errorStack: error?.stack };
+    if (error.url && error.url === Urls.MDMS) {
+      return { error: error?.message, hasError: false };
+    }
+    return { error: error?.message, hasError: true };
   }
-
   componentDidCatch(error, errorInfo) {
-    // Catch errors in any components below and re-render with error message
-    this.setState({ error: error?.message, hasError: true, errorStack: error?.stack });
-    // You can also log error messages to an error reporting service here
+    if (error.url && error.url === Urls.MDMS) {
+      this.setState({ error: error?.message, hasError: false });
+    } else {
+      this.setState({ error: error?.message, hasError: true });
+    }
   }
 
   render() {

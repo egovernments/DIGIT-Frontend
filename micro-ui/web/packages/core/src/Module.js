@@ -9,8 +9,10 @@ import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
-
+// import EmployeeLogin from "./pages/employee/Login";
 import { ReactQueryDevtools } from 'react-query/devtools';
+// import { Redirect, Route, Switch,useRouteMatch } from "react-router-dom";
+// import LanguageSelection from "./pages/employee/LanguageSelection";
 //here add react-query dev tools
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
@@ -37,6 +39,46 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
     </Provider>
   );
 };
+
+
+// const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
+//   const { isLoading, data: initData,isError, error } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+//   const { path } = useRouteMatch();
+
+//   if (isLoading) {
+//     return <Loader page={true} />;
+//   }
+
+//   if (!initData) {
+//     return (
+//       <Router>
+//         <Switch>
+//         <Route path={`${path}/user/language-selection`}>
+//                 <LanguageSelection />
+//         </Route>
+//         <Route path={`${path}/user/login`}>
+//                 <EmployeeLogin />
+//         </Route>
+//         <Redirect to={`${path}/user/language-selection`} />
+//         </Switch>
+//       </Router>
+//     );
+//   }
+
+//   //when initData is available
+//   return (
+//     <Provider store={getStore(initData, moduleReducers(initData))}>
+//       <DigitApp
+//         initData={initData}
+//         stateCode={stateCode}
+//         modules={initData?.modules}
+//         appTenants={initData.tenants}
+//         logoUrl={initData?.stateInfo?.logoUrl}
+//         defaultLanding={defaultLanding}
+//       />
+//     </Provider>
+//   );
+// };
 
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
