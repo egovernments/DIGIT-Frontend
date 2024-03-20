@@ -36,7 +36,7 @@ jobs:
 
 
     - name: Build the db migration Docker image
-      id: docker_build
+      id: docker_db_build
       working-directory: ./utilities/egov-bff/migration
       run: |
         IMAGE_TAG=egovio/project-factory-db:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
