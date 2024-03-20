@@ -3,9 +3,10 @@ import { logger } from "../../utils/logger";
 import {
     enrichAndPersistProjectCampaignRequest,
     errorResponder,
+    searchProjectCampaignResourcData,
     sendResponse,
 } from "../../utils/index";
-import { validateCampaignRequest, validateProjectCampaignRequest } from "../../utils/validator";
+import { validateCampaignRequest, validateProjectCampaignRequest, validateSearchProjectCampaignRequest } from "../../utils/validator";
 import { createProjectCampaignResourcData, createProjectIfNotExists, createRelatedResouce, enrichCampaign } from "../../api";
 
 
@@ -28,6 +29,7 @@ class campaignManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/create`, this.createProjectTypeCampaign);
+        this.router.post(`${this.path}/search`, this.searchProjectTypeCampaign);
         this.router.post(`${this.path}/createCampaign`, this.createCampaign);
     }
     createProjectTypeCampaign = async (
@@ -39,6 +41,22 @@ class campaignManageController {
             await validateProjectCampaignRequest(request);
             await createProjectCampaignResourcData(request);
             await enrichAndPersistProjectCampaignRequest(request)
+            return sendResponse(response, { CampaignDetails: request?.body?.CampaignDetails }, request);
+        } catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) }, request, response);
+        }
+
+    };
+
+    searchProjectTypeCampaign = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+
+        try {
+            await validateSearchProjectCampaignRequest(request);
+            await searchProjectCampaignResourcData(request);
             return sendResponse(response, { CampaignDetails: request?.body?.CampaignDetails }, request);
         } catch (e: any) {
             logger.error(String(e))

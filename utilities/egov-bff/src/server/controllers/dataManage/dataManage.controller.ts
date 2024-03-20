@@ -1,7 +1,7 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
-import { validateCreateRequest, validateGenerateRequest } from "../../utils/validator";
-import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes } from "../../utils/index";
+import { validateCreateRequest, validateGenerateRequest, validateSearchRequest } from "../../utils/validator";
+import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, processDataSearchRequest, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes } from "../../utils/index";
 import { createAndUploadFile, processGenericRequest, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/index";
 import config from "../../config";
 import { httpRequest } from "../../utils/request";
@@ -32,6 +32,7 @@ class dataManageController {
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
         this.router.post(`${this.path}/_autoGenerateBoundaryCode`, this.autoGenerateBoundaryCodes);
         this.router.post(`${this.path}/_create`, this.createData);
+        this.router.post(`${this.path}/_search`, this.searchData);
     }
 
 
@@ -127,6 +128,17 @@ class dataManageController {
             await processGenericRequest(request);
             await enrichResourceDetails(request);
             await generateProcessedFileAndPersist(request);
+            return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
+        } catch (e: any) {
+            logger.error(String(e))
+            return errorResponder({ message: String(e) }, request, response);
+        }
+    }
+
+    searchData = async (request: any, response: any) => {
+        try {
+            await validateSearchRequest(request);
+            await processDataSearchRequest(request);
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))

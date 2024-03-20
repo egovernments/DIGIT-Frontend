@@ -12,6 +12,7 @@ import { getCount } from '../api/index'
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
+import pool from "../config/dbPoolConfig";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -288,8 +289,8 @@ async function getResponseFromDb(request: any, response: any) {
   try {
     const { type } = request.query;
 
-    // let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
-    let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
+    // let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
     const status = 'Completed';
     const queryResult = await pool.query(queryString, [type, status]);
     const responseData = queryResult.rows;
@@ -1151,6 +1152,146 @@ function extractCodesFromBoundaryRelationshipResponse(boundaries: any[]): any {
   return codes;
 }
 
+async function searchProjectCampaignResourcData(request: any) {
+  const CampaignDetails = request.body.CampaignDetails;
+  const { tenantId, pagination, ids, ...searchFields } = CampaignDetails;
+  const queryData = buildSearchQuery(tenantId, pagination, ids, searchFields);
+  const responseData = await executeSearchQuery(queryData.query, queryData.values);
+  request.body.CampaignDetails = responseData;
+}
+
+function buildSearchQuery(tenantId: string, pagination: any, ids: string[], searchFields: any): { query: string, values: any[] } {
+  let conditions = [];
+  let values = [tenantId];
+  let index = 2;
+
+  for (const field in searchFields) {
+    if (searchFields[field] !== undefined) {
+      conditions.push(`${field} = $${index}`);
+      values.push(searchFields[field]);
+      index++;
+    }
+  }
+
+  let query = `
+      SELECT *
+      FROM health.eg_cm_campaign_details
+      WHERE tenantId = $1
+  `;
+
+  if (ids && ids.length > 0) {
+    const idParams = ids.map((id, i) => `$${index + i}`);
+    query += ` AND id IN (${idParams.join(', ')})`;
+    values.push(...ids);
+  }
+
+  if (conditions.length > 0) {
+    query += ` AND ${conditions.join(' AND ')}`;
+  }
+
+  if (pagination) {
+    query += '\n';
+
+    if (pagination.sortBy) {
+      query += `ORDER BY ${pagination.sortBy}`;
+      if (pagination.sortOrder) {
+        query += ` ${pagination.sortOrder.toUpperCase()}`;
+      }
+      query += '\n';
+    }
+
+    if (pagination.limit !== undefined) {
+      query += `LIMIT ${pagination.limit}`;
+      if (pagination.offset !== undefined) {
+        query += ` OFFSET ${pagination.offset}`;
+      }
+      query += '\n';
+    }
+  }
+
+  return { query, values };
+}
+
+async function executeSearchQuery(query: string, values: any[]) {
+  const queryResult = await pool.query(query, values);
+  return queryResult.rows.map((row: any) => ({
+    id: row.id,
+    tenantId: row.tenantid,
+    status: row.status,
+    action: row.action,
+    campaignNumber: row.campaignnumber,
+    hierarchyType: row.hierarchytype,
+    boundaryCode: row.boundarycode,
+    projectId: row.projectid,
+    createdBy: row.createdby,
+    lastModifiedBy: row.lastmodifiedby,
+    createdTime: Number(row?.createdtime),
+    lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+    additionalDetails: row.additionaldetails,
+    campaignDetails: row.campaigndetails
+  }));
+}
+
+async function processDataSearchRequest(request: any) {
+  const { SearchCriteria } = request.body;
+  const query = buildWhereClauseForDataSearch(SearchCriteria);
+  const queryResult = await pool.query(query.query, query.values);
+  const results = queryResult.rows.map((row: any) => ({
+    id: row.id,
+    tenantId: row.tenantid,
+    status: row.status,
+    action: row.action,
+    fileStoreId: row.filestoreid,
+    processedFilestoreId: row.processedfilestoreid,
+    type: row.type,
+    createdBy: row.createdby,
+    lastModifiedBy: row.lastmodifiedby,
+    createdTime: Number(row?.createdtime),
+    lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+    additionalDetails: row.additionaldetails
+  }));
+  request.body.ResourceDetails = results;
+}
+
+
+
+function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; values: any[] } {
+  const { id, tenantId, type, status } = SearchCriteria;
+  let conditions = [];
+  let values = [];
+
+  if (id && id.length > 0) {
+    conditions.push(`id = ANY($${values.length + 1})`);
+    values.push(id);
+  }
+
+  if (tenantId) {
+    conditions.push(`tenantId = $${values.length + 1}`);
+    values.push(tenantId);
+  }
+
+  if (type) {
+    conditions.push(`type = $${values.length + 1}`);
+    values.push(type);
+  }
+
+  if (status) {
+    conditions.push(`status = $${values.length + 1}`);
+    values.push(status);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  return {
+    query: `
+  SELECT *
+  FROM health.eg_cm_resource_details
+  ${whereClause};`, values
+  };
+}
+
+
+
 
 
 export {
@@ -1198,6 +1339,8 @@ export {
   addBoundaryCodeToData,
   prepareDataForExcel,
   extractCodesFromBoundaryRelationshipResponse,
+  searchProjectCampaignResourcData,
+  processDataSearchRequest,
   getCodeMappingsOfExistingBoundaryCodes
 };
 

@@ -595,6 +595,32 @@ async function validateProjectCampaignRequest(request: any) {
     await validateDeliveryRules(request.body.CampaignDetails.deliveryRules)
 }
 
+async function validateSearchProjectCampaignRequest(request: any) {
+    const CampaignDetails = request.body.CampaignDetails;
+    if (!CampaignDetails) {
+        throw new Error("CampaignDetails is required");
+    }
+    if (!CampaignDetails.tenantId) {
+        throw new Error("tenantId is required")
+    }
+    if (CampaignDetails.ids) {
+        if (!Array.isArray(CampaignDetails.ids)) {
+            throw new Error("ids should be an array")
+        }
+    }
+}
+
+async function validateSearchRequest(request: any) {
+    const { SearchCriteria } = request.body;
+    if (!SearchCriteria) {
+        throw new Error("SearchCriteria is required");
+    }
+    const { tenantId } = SearchCriteria;
+    if (!tenantId) {
+        throw new Error("tenantId is required");
+    }
+}
+
 
 
 
@@ -612,5 +638,7 @@ export {
     validateFacilityCreateData,
     validateFacilityViaSearch,
     validateProjectCampaignRequest,
-    validateSheetData
+    validateSheetData,
+    validateSearchProjectCampaignRequest,
+    validateSearchRequest
 };
