@@ -5,6 +5,7 @@ export const CampaignConfig = (totalFormData) => {
         {
           stepCount: "1",
           key: "1",
+          name: "HCM_CAMPAIGN_DATE",
           body: [
             {
               isMandatory: false,
@@ -28,6 +29,7 @@ export const CampaignConfig = (totalFormData) => {
         {
           stepCount: "1",
           key: "2",
+          name: "HCM_CAMPAIGN_TYPE",
           body: [
             {
               isMandatory: false,
@@ -38,7 +40,7 @@ export const CampaignConfig = (totalFormData) => {
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData ,
+                sessionData: totalFormData,
               },
               populators: {
                 name: "projectType",
@@ -63,7 +65,7 @@ export const CampaignConfig = (totalFormData) => {
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData ,
+                sessionData: totalFormData,
               },
               populators: {
                 name: "campaignName",

@@ -22,10 +22,13 @@ const SetupCampaign = () => {
   //to convert formData to payload
   useEffect(() => {
     const convertFormData = (totalFormData) => {
+      console.log("totalFormData" ,totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate);
       const modifiedData = [
         {
-          projectType: totalFormData?.[2]?.projectType.code,
-          campaignName: totalFormData?.[3]?.campaignName,
+          startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
+          endDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+          projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType.code,
+          campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.campaignName,
         },
       ];
     };
@@ -51,15 +54,16 @@ const SetupCampaign = () => {
   const onSubmit = (formData) => {
     setCurrentKey(currentKey + 1);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
+    console.log("name" ,name);
 
     setTotalFormData((prevData) => ({
       ...prevData,
-      [currentKey]: formData,
+      [name]: formData,
     }));
     //to set the data in the local storage
     setParams({
       ...params,
-      [currentKey]: { ...formData },
+      [name]: { ...formData },
     });
 
     const dummyData = {
