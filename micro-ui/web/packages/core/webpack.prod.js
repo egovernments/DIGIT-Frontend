@@ -22,7 +22,7 @@ module.exports = () => {
           hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
           common: `common@${domain}/common-ui/remoteEntry.js`,
           pgr: `pgr@${domain}/pgr-ui/remoteEntry.js`,
-          // workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
+          workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
           dss : `dss@${domain}/dss-ui/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },

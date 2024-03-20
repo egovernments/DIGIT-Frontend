@@ -1,7 +1,12 @@
+require('dotenv').config();
+
 const { merge } = require("webpack-merge");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const ExternalRemotesPlugin = require('external-remotes-plugin');
 
 module.exports = () => {
   const prodConfig = {
@@ -11,6 +16,7 @@ module.exports = () => {
       filename: "[name].[contenthash].js",
     },
     plugins: [
+      new ExternalRemotesPlugin(),
       new ModuleFederationPlugin({
         name: "workbench",
         filename: "remoteEntry.js",
@@ -40,7 +46,19 @@ module.exports = () => {
           "classnames": "^2.3.2"
         }
       }),
-    ],
+      new MiniCssExtractPlugin(
+        false
+          ? {
+              filename: 'static/css/[name].[contenthash].css',
+              chunkFilename: 'static/css/[name].[contenthash].css',
+            }
+          : {}
+      ),
+    ].filter(Boolean),
+    optimization: {
+      minimize: true, //true if prod
+      minimizer: ['...', new CssMinimizerPlugin()],
+    },
   };
 
   return merge(commonConfig, prodConfig);
