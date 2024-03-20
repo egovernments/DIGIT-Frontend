@@ -33,6 +33,9 @@
     "web-vitals": "1.1.2",
     "react-hook-form": "6.15.8",
     "react-i18next": "11.16.2",
+    "terser-brunch": "^4.1.0",
+    "css-loader": "5.2.6",
+    "style-loader": "2.0.0",
     "react-query": "3.6.1"
   },
   "devDependencies": {
