@@ -1,91 +1,309 @@
 @import url("../index.scss");
 
 .digit-multi-select-dropdown-wrap {
-  margin-bottom: 24px;
+  margin-bottom: 0.625rem;
+
+  @media (min-width: 30.063rem) and (max-width: 47.938rem) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+    min-width: 12.5rem;
+  }
+
+  @media (max-width: 30rem) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    min-width: 9.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 48rem) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+    min-width: 12.5rem;
+  }
+
+
   @apply relative text-form-field text-text-primary w-full;
+
   .digit-master,
   .digit-master-active {
-    @apply relative border border-solid border-input-border h-10 w-full;
+    @apply relative h-10 w-full bg-white;
+    border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
+
     input[type="text"] {
-      @apply absolute top-0 left-0 p-sm pl-sm min-h-full min-w-full opacity-0;
+      @apply absolute top-0 left-0 p-sm min-h-full min-w-full opacity-0;
+      font-family: theme(digitv2.fontFamily.sans);
+      font-size: 1rem;
+      font-weight: theme(digitv2.fontWeight.regular);
+      line-height: 1.5rem;
+      letter-spacing: 0rem;
+
       &:focus {
         @apply outline-none;
       }
     }
+
     .digit-label {
       @apply flex justify-between p-sm w-full h-full;
+
       svg {
         @apply h-6 w-6;
       }
     }
+  }
 
-    &:hover {
-      @apply border-2 border-solid border-primary-main;
+  .digit-master {
+
+    &.disabled {
+      pointer-events: none !important;
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-divider) !important;
+      color: theme(digitv2.lightTheme.generic-divider) !important;
     }
   }
 
   .digit-master-active {
-    @apply border-2 border-primary-main;
-    input[type="text"] {
-      @apply opacity-100;
-    }
-    .digit-label {
-      @apply hidden;
-    }
+    border: 0.063rem solid theme(digitv2.lightTheme.primary-orange);
+
   }
 
   .digit-server {
-    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
-    top: 40px;
+    top: 2.5rem;
+    @apply absolute z-20 bg-white overflow-x-hidden overflow-y-auto;
+    max-height: 25vmax;
+    box-shadow: 0rem 0.063rem 0.275rem 0rem #00000026;
+    width: 100% !important;
+  }
 
-    max-height: 20vmax;
-    overflow: scroll;
-    @apply absolute min-w-full z-20;
-    div {
-      @apply flex w-full bg-white;
-      justify-content: flex-start;
-      align-items: center;
-      &:hover {
-        @apply bg-grey-mid;
+  .digit-server::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+    border-radius: 0.625rem;
+  }
+
+  .digit-server::-webkit-scrollbar {
+    width: 0.625rem;
+    background-color: #F5F5F5;
+  }
+
+  .digit-server::-webkit-scrollbar-thumb {
+    background-color: #C1C1C1;
+    border-radius: 0.625rem;
+  }
+
+  .digit-server::-webkit-scrollbar-thumb:hover {
+    background-color: #A8A8A8;
+  }
+
+  .digit-nested-category {
+    @apply flex items-center flex-shrink-0;
+    background: theme(digitv2.lightTheme.paper-secondary);
+    height: 2.4375rem;
+    padding: 1rem 0.625rem;
+    gap: 0.625rem;
+  }
+
+  .digit-nested-category:not(:first-child) {
+    margin-top: 1rem;
+  }
+
+  .digit-category-name {
+    @apply font-bold;
+    color: theme(digitv2.lightTheme.text-secondary);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 1rem;
+    font-style: theme(digitv2.fontStyle.normal);
+    line-height: theme(digitv2.lineHeight.normal);
+  }
+
+  .multiselect-dropodwn-menuitem {
+
+    @apply flex w-full bg-white justify-start items-center;
+    min-height: 2.438rem;
+
+    .option-des-container {
+      @apply w-full max-w-full overflow-hidden box-border;
+      margin: 0.594rem 0rem 0.594rem 0rem;
+
+      .svg {
+        flex-shrink: 0;
       }
-      input {
-        height: 44px;
-        @apply absolute min-w-full opacity-0 z-20 cursor-pointer;
+    }
+
+    &.nestedmultiselect {
+      @apply relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0.625rem;
+        right: 0.625rem;
+        border-bottom: 0.063rem solid theme(digitv2.lightTheme.generic-divider);
       }
-      p {
-        padding: 12px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        @apply text-form-field text-text-primary;
-      }
-      .digit-custom-checkbox {
-        height: 28px;
-        width: 28px;
-        @apply border border-solid border-input-border m-sm;
-        svg {
-          @apply opacity-0 z-10;
+
+      &:hover,
+      &:active {
+        &::before {
+          border-bottom: none;
         }
       }
-      input:checked ~ .digit-custom-checkbox,
-      input:hover ~ .digit-custom-checkbox {
-        @apply border-2 border-primary-main;
+    }
+
+    &:not(.nestedmultiselect, .checked):not(:active):not(:hover):nth-of-type(even) {
+      background: theme(digitv2.lightTheme.paper-secondary);
+    }
+
+    &:hover {
+      background: #FFFAF7;
+      border: 0.031rem solid theme(digitv2.lightTheme.primary-orange);
+    }
+
+    &:active,
+    &:active:hover {
+      background: theme(digitv2.lightTheme.primary-orange);
+      border: 0.031rem solid theme(digitv2.lightTheme.primary-orange);
+
+      p {
+        color: theme(digitv2.lightTheme.paper-primary);
+        font-weight: theme(digitv2.fontWeight.bold);
+        font-size: 1rem;
+        line-height: 1.188rem;
+      }
+    }
+
+    input {
+      min-height: 2.438rem;
+      @apply absolute min-w-full opacity-0 z-20 cursor-pointer;
+    }
+
+    p {
+      @apply w-full overflow-hidden whitespace-no-wrap;
+      font-family: theme(digitv2.fontFamily.sans);
+      font-size: 0.875rem;
+      font-style: theme(digitv2.fontStyle.normal);
+      font-weight: theme(digitv2.fontWeight.regular);
+      line-height: 1.125rem;
+      color: theme(digitv2.lightTheme.text-primary);
+      margin: 0.063rem 0rem 0.063rem 0rem;
+    }
+
+    &.checked {
+      background: theme(digitv2.lightTheme.primary-orange);
+
+      p {
+        color: theme(digitv2.lightTheme.paper-primary);
+        font-weight: theme(digitv2.fontWeight.bold);
+        font-size: 1rem;
+        line-height: 1.188rem;
+      }
+    }
+
+    .digit-custom-checkbox {
+      height: 1.25rem;
+      width: 1.25rem;
+      border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+      margin: 0.594rem 0.75rem 0.594rem 0.625rem;
+
+      svg {
+        @apply opacity-0 z-10;
+      }
+    }
+
+
+    input:active~.digit-custom-checkbox,
+    input:checked~.digit-custom-checkbox {
+      border: 0.125rem solid theme(digitv2.lightTheme.paper-primary);
+      background-color: theme(digitv2.lightTheme.primary-orange);
+    }
+
+    input:active~.digit-custom-checkbox svg,
+    input:checked~.digit-custom-checkbox svg {
+      @apply opacity-100;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &.nestedtextmultiselect {
+      padding: 0.5rem 1rem;
+      gap: 0.75rem;
+      align-items: flex-start !important;
+      min-height: 4.75rem;
+
+      input {
+        min-height: 3.75rem;
       }
 
-      input:checked ~ .digit-custom-checkbox svg {
-        @apply opacity-100;
+      .option-des-container {
+        @apply flex flex-col justify-center items-start;
+        width: 100% !important;
+        margin: 0rem;
+
+        p {
+          color: theme(digitv2.lightTheme.text-secondary);
+          font-size: 1rem;
+          line-height: 1.5rem;
+          padding: 0rem;
+          margin-bottom: 0rem;
+          margin-top: 0rem;
+        }
+
+        .option-description {
+          color: theme(digitv2.lightTheme.text-secondary);
+          font-family: theme(digitv2.fontFamily.sans);
+          font-size: 0.75rem;
+          font-style: theme(digitv2.fontStyle.normal);
+          font-weight: theme(digitv2.fontWeight.regular);
+          line-height: 1.125rem;
+        }
+
+        .svg {
+          flex-shrink: 0;
+        }
+      }
+
+      .digit-custom-checkbox {
+        margin: 0rem;
+        margin-top: 0.125rem;
+      }
+
+      &:active,
+      &.checked {
+
+        .option-description,
+        p {
+          color: theme(digitv2.lightTheme.paper-primary);
+        }
+
+        p {
+          font-weight: theme(digitv2.fontWeight.bold);
+          font-size: 1rem;
+          line-height: 1.188rem;
+        }
+
+        .digit-custom-checkbox {
+          margin-top: 0rem;
+        }
+      }
+
+      &:active {
+        background: theme(digitv2.lightTheme.primary-orange);
       }
     }
   }
+
   .digit-cursorPointer {
     @apply cursor-pointer;
   }
-  .digit-master {
+
+  .digit-master,
+  .digit-master-active {
     .digit-label {
       p {
         white-space: pre;
         margin: auto;
-        margin-left: 0px;
+        margin-left: 0rem;
         padding-left: 1%;
+        font-size: 1rem;
+        line-height: 1.5rem;
       }
     }
   }

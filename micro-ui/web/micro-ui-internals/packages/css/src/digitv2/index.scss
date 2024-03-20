@@ -9,7 +9,6 @@
 @import url("./components/buttonsV2.scss");
 @import url("./components/cardBasedOptionsV2.scss");
 @import url("./components/cardLabelV2.scss");
-@import url("./components/cardV2.scss");
 @import url("./components/checkboxV2.scss");
 @import url("./components/checkpointV2.scss");
 @import url("./components/CitizenHomeCardV2.scss");
@@ -22,8 +21,8 @@
 @import url("./components/FormComposerV2.scss");
 @import url("./components/headerV2.scss");
 @import url("./components/headerBarV2.scss");
-@import url("./components/infoBannerV2.scss");
-@import url("./components/keynoteV2.scss");
+@import url("./components/infoCardV2.scss");
+@import url("./components/keynoteV2.scss"); 
 @import url("./components/labelFieldPairV2.scss");
 @import url("./components/loaderV2.scss");
 @import url("./components/mobileNumberV2.scss");
@@ -49,6 +48,14 @@
 @import url("./components/topbarV2.scss");
 @import url("./components/uploadFileV2.scss");
 @import url("./components/WhatsNewCardV2.scss");
+@import url("./components/fieldV1.scss");
+@import url("./components/toggle.scss");
+@import url("./components/toggleswitchV2.scss");
+@import url("./components/treeSelectV2.scss");
+@import url("./components/cardV2.scss");
+@import url("./components/searchcomponent.scss");
+@import url("./components/sidebarV2.scss");
+@import url("./components/stepper.scss");
 
 /* pages */
 @import url("./pages/employee/index.scss");
@@ -56,41 +63,41 @@
 /* important to be remove after fixing the components */
 .light {
   &-primary {
-    color: theme(digitv2.lightTheme.primary) !important;
+    color: theme(digitv2.lightTheme.primary-orange) !important;
 
     &-button {
-      background-color: theme(digitv2.lightTheme.primary);
+      background-color: theme(digitv2.lightTheme.primary-orange);
     }
 
     &-bg {
-      background-color: theme(digitv2.lightTheme.primary-bg);
+      background-color: theme(digitv2.lightTheme.primary-orangebg);
     }
   }
 
   &-text-color {
     &-primary {
-      color: theme(digitv2.lightTheme.text-color-primary);
+      color: theme(digitv2.lightTheme.text-primary);
     }
 
     &-secondary {
-      color: theme(digitv2.lightTheme.text-color-secondary);
+      color: theme(digitv2.lightTheme.text-secondary);
     }
 
     &-disabled {
-      color: theme(digitv2.lightTheme.text-color-disabled);
+      color: theme(digitv2.lightTheme.text-disabled);
     }
   }
 
   &-background {
-    background-color: theme(digitv2.lightTheme.background);
+    background-color: theme(digitv2.lightTheme.generic-background);
   }
 
   &-paper {
     &-primary {
-      background-color: theme(digitv2.lightTheme.paper) !important;
+      background-color: theme(digitv2.lightTheme.paper-primary) !important;
 
       &-color {
-        color: theme(digitv2.lightTheme.paper) !important;
+        color: theme(digitv2.lightTheme.paper-primary) !important;
       }
     }
 
@@ -100,48 +107,48 @@
     &-border {
       border: 0.5px solid;
       border-radius: 0.5rem;
-      border-color: theme(digitv2.lightTheme.background);
+      border-color: theme(digitv2.lightTheme.generic-background);
     }
 
     &-border {
       border-radius: 4px;
       border-style: solid;
       border-width: 1px;
-      border-color: theme(digitv2.lightTheme.divider);
+      border-color: theme(digitv2.lightTheme.generic-divider);
     }
   }
 
   &-divider {
-    background-color: theme(digitv2.lightTheme.divider);
+    background-color: theme(digitv2.lightTheme.generic-divider);
   }
 
   &-header-sidenav {
-    color: theme(digitv2.lightTheme.header-sidenav);
+    color: theme(digitv2.lightTheme.primary-bluegray);
   }
 
   &-input-border {
-    border-color: theme(digitv2.lightTheme.input-border);
+    border-color: theme(digitv2.lightTheme.generic-inputborder);
   }
 }
 
 .alert {
   &-error {
-    color: theme(digitv2.alert.error);
+    color: theme(digitv2.lightTheme.alert-error);
 
     &-bg {
-      background-color: theme(digitv2.alert.error-bg);
+      background-color: theme(digitv2.lightTheme.alert-errorbg);
     }
 
     &-border {
-      border-color: theme(digitv2.alert.error) !important;
+      border-color: theme(digitv2.lightTheme.alert-error) !important;
     }
   }
 
   &-success {
-    color: theme(digitv2.alert.success);
+    color: theme(digitv2.lightTheme.alert-success);
 
     &-bg {
-      background-color: theme(digitv2.alert.success-bg);
+      background-color: theme(digitv2.lightTheme.alert-successbg);
     }
   }
 

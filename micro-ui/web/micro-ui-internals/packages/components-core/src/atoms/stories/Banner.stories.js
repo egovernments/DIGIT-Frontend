@@ -9,6 +9,10 @@ export default {
 
 const Template = (args) => <Banner {...args} />;
 
+
+export const Primary = Template.bind({});
+Primary.args = {};
+
 export const Playground = Template.bind({});
 Playground.args = {
   successful: true,
@@ -16,6 +20,3 @@ Playground.args = {
   whichSvg: "tick",
   complaintNumber: "20230725-001",
 };
-
-export const Primary = Template.bind({});
-Primary.args = {};

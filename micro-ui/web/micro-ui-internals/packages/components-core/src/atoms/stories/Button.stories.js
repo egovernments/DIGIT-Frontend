@@ -28,14 +28,6 @@ export default {
 
 const Template = (args) => <Button {...args} />;
 
-export const Playground = Template.bind({});
-Playground.args = {
-  label: "Play-Ground",
-  className: "custom-class",
-  style: {},
-  onClick: () => console.log("clicked"),
-};
-
 export const Primary = Template.bind({});
 Primary.args = {
   variation: "primary",
@@ -50,4 +42,12 @@ secondary.args = {
   label: "Secondary",
   style: {},
   onClick: () => console.log("Secondary clicked"),
+};
+
+export const Playground = Template.bind({});
+Playground.args = {
+  label: "Play-Ground",
+  className: "custom-class",
+  style: {},
+  onClick: () => console.log("clicked"),
 };

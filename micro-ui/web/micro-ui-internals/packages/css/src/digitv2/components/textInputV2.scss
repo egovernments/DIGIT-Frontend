@@ -2,72 +2,295 @@
 @import url("../typography.scss");
 
 .digit-card-input-error {
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
+
 .digit-text-input {
   @apply relative w-full;
-  &.error {
+
+  &.geolocation {
     input {
-      border: 1px solid theme(digitv2.alert.error);
+      @apply pointer-events-none;
     }
   }
-  &.disabled {
+
+  &.numeric {
     input {
-      @apply border-grey-dark text-grey-dark !important;
+      @apply text-center overflow-hidden whitespace-no-wrap;
+      text-overflow: ellipsis;
+    }
+
+    .input-container:focus-within {
+      input {
+        border-left-style: hidden;
+        border-right-style: hidden;
+      }
+    }
+  }
+
+  &.prefix {
+    .input-container:focus-within {
+      input {
+        border-left-style: hidden;
+      }
+    }
+  }
+
+  &.suffix {
+    .input-container:focus-within {
+      input {
+        border-right-style: hidden;
+      }
+    }
+  }
+
+  &.password {
+    input {
+      font-family: theme(digitv2.fontFamily.sans);
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.5rem;
+    }
+  }
+
+  &.disabled {
+
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
       pointer-events: none !important;
       cursor: not-allowed;
+      background-color: theme(digitv2.lightTheme.generic-background);
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-divider);
+      color: theme(digitv2.lightTheme.generic-divider);
+    }
+
+    input {
+      background-color: white;
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right-style: hidden;
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left-style: hidden;
     }
   }
-  input:focus {
-    border: 1px solid theme(digitv2.lightTheme.primary);
+
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="date"]:disabled::-webkit-calendar-picker-indicator,
+  input[type="time"]:disabled::-webkit-calendar-picker-indicator {
+    @apply absolute cursor-pointer w-6 h-6;
+    right: 0.75rem;
+  }
+
+  input[type="date"]:disabled::-webkit-calendar-picker-indicator,
+  input[type="time"]:disabled::-webkit-calendar-picker-indicator {
+    visibility: visible;
+    filter: invert(85%) sepia(0%) saturate(337%) hue-rotate(50deg) brightness(99%) contrast(99%);
+  }
+
+  input[type="date"]:in-range::-webkit-datetime-edit,
+  input[type="time"]:in-range::-webkit-datetime-edit,
+  input[type="date"]:disabled::-webkit-datetime-edit,
+  input[type="time"]:disabled::-webkit-datetime-edit,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-clear-button {
+    display: none;
+  }
+
+  ::placeholder,
+  input[type="date"][value=""]:not(:placeholder-shown)::before,
+  input[type="time"][value=""]:not(:placeholder-shown)::before {
+    content: attr(placeholder);
+    color: theme(digitv2.lightTheme.text-disabled);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-weight: theme(digitv2.fontWeight.regular);
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  &.noneditable {
+
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
+      pointer-events: none !important;
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
+      background: theme(digitv2.lightTheme.generic-background);
+      color: theme(digitv2.lightTheme.text-disabled);
+    }
+
+    input {
+      border: 0.063rem solid theme(digitv2.lightTheme.generic-inputborder);
+      background: theme(digitv2.lightTheme.generic-background);
+      color: theme(digitv2.lightTheme.text-disabled);
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right-style: hidden;
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left-style: hidden;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      visibility: visible;
+      filter: invert(74%) sepia(7%) saturate(64%) hue-rotate(144deg) brightness(98%) contrast(89%);
+    }
+  }
+
+  &.error {
+
+    input,
+    .digit-prefix,
+    .digit-suffix,
+    .digit-numeric-button-prefix,
+    .digit-numeric-button-suffix {
+      border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
+    }
+
+    .digit-numeric-button-prefix,
+    .digit-prefix {
+      border-right: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+    }
+
+    .digit-numeric-button-suffix,
+    .digit-suffix {
+      border-left: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+    }
+
+    &.numeric {
+      input {
+        border-left-style: hidden;
+        border-right-style: hidden;
+      }
+    }
+
+    &.suffix {
+      input {
+        border-right-style: hidden;
+      }
+    }
+
+    &.prefix {
+      input {
+        border-left-style: hidden;
+      }
+    }
+  }
+
+  &.editableTime {
+
+    input[type="time"]:in-range::-webkit-datetime-edit,
+    input[type="time"]:disabled::-webkit-datetime-edit {
+      display: block !important;
+    }
+
+    input[type="time"][value=""]:not(:placeholder-shown)::before {
+      display: none !important;
+    }
+  }
+
+  &.editableDate {
+
+    input[type="date"]:in-range::-webkit-datetime-edit,
+    input[type="date"]:disabled::-webkit-datetime-edit {
+      display: block !important;
+    }
+
+    input[type="date"][value=""]:not(:placeholder-shown)::before {
+      display: none !important;
+    }
   }
 }
 
-.digit-text-input-width {
-  max-width: 540px;
-}
+
 .digit-card-input {
-  @apply mb-lg pl-sm outline-none mt-sm block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none mt-sm block w-full h-10 bg-white text-form-field;
+  padding-left: 0.75rem;
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
 }
 
 .digit-card-input-error {
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-employee-card-input {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none block w-full h-10 bg-white text-form-field;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
 }
+
 .digit-employee-card-input:disabled {
-  @extend .typography.text-body-s;
   @apply border-grey-dark text-grey-dark !important;
   pointer-events: none !important;
 }
+
 .digit-employee-card-input--front {
   @extend .typography.text-body-s;
+  @apply flex items-center;
   width: fit-content !important;
-  display: flex;
-  align-items: center;
   background: theme(colors.grey.mid);
   border-right: 0;
-  padding-right: 5px;
+  padding-right: 0.313rem;
 }
+
 .digit-employee-card-input-error {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
 
 .digit-inputWrapper {
-  display: flex;
-  justify-content: flex-start;
-  max-width: 500px;
+  @apply flex justify-start;
+  max-width: 31.25rem;
 
   div {
-    max-width: 80px;
+    max-width: 5rem;
   }
 
   span {
-    margin-top: 16px;
+    margin-top: 1rem;
     margin-left: 10%;
     margin-right: 10%;
   }
@@ -75,15 +298,15 @@
 
 @screen dt {
   .digit-card-input {
-    width: 480px;
+    width: 30rem;
   }
 
   .digit-card-input-emp {
-    width: 240px;
+    width: 15rem;
   }
 
   .digit-card-input-error {
-    width: 480px;
+    width: 30rem;
   }
 
   .digit-employee-card-input {
@@ -95,43 +318,163 @@
   }
 
   .digit-card-textarea {
-    /* //width: 480px; */
     @apply w-full;
-    max-width: 540px;
+    max-width: 33.75rem;
   }
 
   .card-input-emp {
-    width: 240px;
+    width: 15rem;
   }
 }
 
 .digit-citizen-card-input {
   @extend .typography.text-body-s;
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply outline-none block w-full h-10 bg-white;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
 }
 
 .digit-citizen-card-input--front {
   @extend .typography.text-body-s;
+  @apply flex items-center;
   width: fit-content !important;
-  display: flex;
-  align-items: center;
   background: theme(colors.grey.mid);
   border-right: 0;
-  padding-right: 5px;
+  padding-right: 0.313rem;
 }
 
 .digit-employee-card-input-error {
   @extend .typography.text-body-s;
   @extend .light-input-border;
-  @extend .alert-error;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-form-field text-text-primary;
+  font-style: theme(digitv2.fontStyle.normal);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
+
 .digit-card-input-error {
   @extend .light-input-border;
-  @extend .alert-error;
-  @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply block w-full h-10 outline-none bg-white text-form-field text-text-primary;
+  font-family: theme(digitv2.fontFamily.sans);
+  padding-left: 0.75rem;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: 1rem;
+  color: theme(digitv2.lightTheme.text-primary);
+  line-height: 1.5rem;
+  border: 0.094rem solid theme(digitv2.lightTheme.alert-error);
 }
-.disabled {
-  @apply border-grey-dark text-grey-dark !important;
-  pointer-events: none !important;
+
+
+.input-container {
+  @apply relative flex items-center h-10;
+  max-width: 37.5rem;
+
+  &.date,
+  &.time,
+  &.geolocation,
+  &.password,
+  &.search,
+  &.passwordToText,
+  &.withIcon {
+    input {
+      padding-right: 2.5rem;
+    }
+  }
+
+  @media (min-width: 30.063rem) and (max-width: 47.938rem) {
+    /* Media query for tablets */
+    max-width: 27.5rem;
+  }
+
+  @media (max-width: 30rem) {
+    /* Media query for mobile */
+    max-width: 20.5rem;
+    width: 100%;
+  }
+
+  @media (min-width: 48rem) {
+    /* Media query for desktop */
+    max-width: 37.5rem;
+  }
+
+}
+
+.input-container:focus-within {
+
+  .digit-numeric-button-prefix:not([readonly]),
+  .digit-numeric-button-suffix:not([readonly]),
+  .digit-prefix:not([readonly]),
+  .digit-suffix:not([readonly]),
+  input:not([readonly]) {
+    outline: none;
+    border: 0.094rem solid theme(digitv2.lightTheme.primary-orange);
+  }
+
+  .digit-numeric-button-prefix,
+  .digit-prefix {
+    border-right: 0.063rem solid theme(digitv2.lightTheme.text-secondary) !important;
+  }
+
+  .digit-numeric-button-suffix,
+  .digit-suffix {
+    border-left: 0.063rem solid theme(digitv2.lightTheme.text-secondary) !important;
+  }
+}
+
+.digit-prefix,
+.digit-suffix,
+.digit-numeric-button-prefix,
+.digit-numeric-button-suffix {
+  @apply font-bold text-center;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  color: theme(digitv2.lightTheme.text-secondary);
+  font-size: 1.25rem;
+  height: 2.5rem !important;
+  border: 0.063rem solid theme(digitv2.lightTheme.text-secondary);
+  line-height: 1.172rem;
+  background: theme(colors.grey.mid);
+  max-width: none !important;
+  flex: 0 0 2.5rem;
+}
+
+.digit-numeric-button-prefix,
+.digit-numeric-button-suffix {
+  width: 2.5rem !important;
+  font-size: 1.5rem;
+}
+
+.digit-prefix,
+.digit-numeric-button-prefix {
+  border-right-style: hidden;
+}
+
+.digit-suffix,
+.digit-numeric-button-suffix {
+  border-left-style: hidden;
+}
+
+.digit-prefix,
+.digit-suffix {
+  @apply pointer-events-none;
+}
+
+.digit-text-input-customIcon {
+  @apply absolute w-6 h-6 cursor-pointer;
+  top: 0.5rem;
+  right: 0.75rem;
+
+  &.nonEditable,
+  &.disabled {
+    @apply pointer-events-none;
+  }
 }

@@ -5,11 +5,14 @@ import * as locale from "./locale";
 import * as obps from "./obps";
 import * as pt from "./pt";
 import * as privacy from "./privacy";
-import PDFUtil, { downloadReceipt ,downloadPDFFromLink,downloadBill ,getFileUrl} from "./pdf";
+import { debouncing } from "./debouncing";
+import PDFUtil, { downloadReceipt ,downloadPDFFromLink,downloadBill ,getFileUrl, downloadEgovPDF} from "./pdf";
 import getFileTypeFromFileStoreURL from "./fileType";
 import preProcessMDMSConfig from "./preProcessMDMSConfig";
 import preProcessMDMSConfigInboxSearch from "./preProcessMDMSConfigInboxSearch";
 import * as parsingUtils from "../services/atoms/Utils/ParsingUtils"
+import { getLoggedInUserDetails } from "./user";
+
 const GetParamFromUrl = (key, fallback, search) => {
   if (typeof window !== "undefined") {
     search = search || window.location.search;
@@ -331,6 +334,29 @@ const swAccess = () => {
   return SW_ACCESS?.length > 0;
 };
 
+const trimStringsInObject =  ( obj ) => {
+  if (typeof obj !== 'object' || obj === null) {
+    // If the input is not an object or is null, return as is
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    // If the input is an array, trim the strings in each element
+    return obj.map((item) => trimStringsInObject(item));
+  }
+
+  // If the input is an object, recursively trim strings in each value
+  const trimmedObj = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'string') {
+      trimmedObj[key] = value.trim();
+    } else {
+      trimmedObj[key] = trimStringsInObject(value);
+    }
+  }
+  return trimmedObj;
+}
+
 /* to get the MDMS config module name */
 const getConfigModuleName = () => {
   return window?.globalConfigs?.getConfig("UICONFIG_MODULENAME") || "commonUiConfig";
@@ -378,5 +404,9 @@ export default {
   ...privacy,
   getDefaultLanguage,
   getLocaleDefault,
-  getLocaleRegion
+  getLocaleRegion,
+  debouncing,
+  getLoggedInUserDetails,
+  trimStringsInObject,
+  downloadEgovPDF
 };

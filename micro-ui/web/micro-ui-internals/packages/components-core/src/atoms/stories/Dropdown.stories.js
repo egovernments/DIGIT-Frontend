@@ -13,9 +13,6 @@ const options = [
 ];
 const Template = (args) => <Dropdown {...args} />;
 
-export const PlayGround = Template.bind({});
-PlayGround.args = {};
-
 export const Primary = Template.bind({});
 Primary.args = {
   populators: {},
@@ -27,3 +24,6 @@ Primary.args = {
   option: options,
   optionKey: "name",
 };
+
+export const PlayGround = Template.bind({});
+PlayGround.args = {};

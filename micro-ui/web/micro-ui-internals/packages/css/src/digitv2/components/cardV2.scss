@@ -76,7 +76,7 @@
 
 .digit-employee-card {
   @extend .light-paper-primary;
-  @apply shadow-card p-md mb-xl;
+  @apply bg-white shadow-card p-md mb-xl;
   border-radius: 4px;
 
   .digit-card-header {
@@ -91,7 +91,6 @@
   }
 
   .digit-card-section-header {
-    @extend .light-primary;
     @apply text-heading-m font-bold;
   }
 
@@ -288,7 +287,7 @@
     }
 
     .digit-label-field-pair {
-      @apply flex items-center;
+      @apply flex ;
 
       h2 {
         width: 30%;
@@ -335,7 +334,6 @@
 }
 
 .digit-card-section-header {
-  @extend .light-text-color-primary;
   @apply text-text-primary text-heading-m font-bold;
 }
 

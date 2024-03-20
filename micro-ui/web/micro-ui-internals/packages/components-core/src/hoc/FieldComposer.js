@@ -9,18 +9,18 @@ import {
   MultiSelectDropdown,
   Paragraph,
   TextArea,
-  TextInput,
+  TextInput
 } from "../atoms";
 import { ApiDropdown, CustomDropdown, LocationDropdownWrapper, MultiUploadWrapper } from "../molecules";
 import UploadFileComposer from "./UploadFileComposer";
 import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
 
 // const FieldComposer = (type, populators, isMandatory, disable = false, component, config, sectionFormCategory, formData, selectedFormCategory) => {
 const FieldComposer = ({
   type,
   populators,
   isMandatory,
-  disable = false,
   component,
   config,
   sectionFormCategory,
@@ -34,6 +34,11 @@ const FieldComposer = ({
   onBlur,
   controllerProps,
   variant,
+  placeholder,
+  disable = false,
+  noneditable = false,
+  focused = false,
+  charCount
 }) => {
   const { t } = useTranslation();
   let disableFormValidation = false;
@@ -44,6 +49,11 @@ const FieldComposer = ({
   const customValidation = config?.populators?.validation?.customValidation;
   const customRules = customValidation ? { validate: customValidation } : {};
   const customProps = config?.customProps;
+  const [currentCharCount, setCurrentCharCount] = useState(0);
+
+  useEffect(() => {
+    setCurrentCharCount(value.length);
+  }, [value]);
   const renderField = () => {
     switch (type) {
       case "date":
@@ -51,9 +61,13 @@ const FieldComposer = ({
       case "number":
       case "password":
       case "time":
+      case "search":
+      case "prefix":
+      case "suffix":
+      case "geolocation":
         return (
           <TextInput
-            value={formData?.[populators.name]}
+            value={value}
             type={type}
             name={populators.name}
             onChange={onChange}
@@ -61,13 +75,21 @@ const FieldComposer = ({
             errorStyle={errors?.[populators.name]}
             max={populators?.validation?.max}
             min={populators?.validation?.min}
+            noneditable={noneditable}
             disable={disable}
+            config={config}
+            focused={focused}
+            errors={errors}
             style={type === "date" ? { paddingRight: "3px" } : ""}
+            prefix={populators?.prefix}
+            suffix={populators?.suffix}
             maxlength={populators?.validation?.maxlength}
             minlength={populators?.validation?.minlength}
             customIcon={populators?.customIcon}
             customClass={populators?.customClass}
             variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            charCount={charCount}
+            placeholder={placeholder}
           />
         );
       case "amount":
@@ -89,24 +111,30 @@ const FieldComposer = ({
             customClass={populators?.customClass}
             prefix={populators?.prefix}
             intlConfig={populators?.intlConfig}
-            variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+            state={state ? state : errors?.[populators.name] ? "digit-field-error" : ""}
           />
         );
       case "textarea":
         return (
-          <div className="digit-field-container">
+          <div>
             <TextArea
-              value={formData?.[populators.name]}
+              value={value}
               type={type}
               name={populators.name}
               onChange={onChange}
               inputRef={ref}
+              noneditable={noneditable}
               disable={disable}
+              focused={focused}
+              errors={errors}
               errorStyle={errors?.[populators.name]}
               style={{ marginTop: 0 }}
               maxlength={populators?.validation?.maxlength}
               minlength={populators?.validation?.minlength}
               variant={variant ? variant : errors?.[populators.name] ? "digit-field-error" : ""}
+              charCount={charCount}
+              placeholder={placeholder}
+              config={config}
             />
           </div>
         );
@@ -320,6 +348,17 @@ const FieldComposer = ({
     }
   };
 
+  const renderCharCount = () => {
+    if (charCount) {
+      const maxCharacters = populators?.validation?.maxlength || 50;
+      return (
+        <CardText>
+          {currentCharCount}/{maxCharacters}
+        </CardText>
+      );
+    }
+  }
+
   return (
     <>
       {!config.withoutLabel && (
@@ -334,16 +373,31 @@ const FieldComposer = ({
           {t(config.label)}
           {config?.appendColon ? " : " : null}
           {config.isMandatory ? " * " : null}
+          {config.withoutInfo ? null : <label > ⓘ</label>}
         </Header>
       )}
       <div style={config.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="digit-field">
         {renderField()}
-        {config?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(config?.description)}</CardText>}
-        {populators?.name && errors && errors[populators?.name] && Object.keys(errors[populators?.name]).length ? (
-          <ErrorMessage message={t(populators?.error)} />
+        <div style={{ color: " #505A5F", width: "23.75rem", display: "flex", justifyContent: "space-between", fontSize: "1rem", marginTop: "-40px", lineHeight: "1.5rem" }}>
+          {config?.description && <CardText >{t(config?.description)}</CardText>}
+          {renderCharCount()}
+        </div>
+        {errors.errorMessage ? (
+          <ErrorMessage
+            style={{
+              fontWeight: "400",
+              fontStyle: "normal",
+              color: "#D4351C",
+              fontSize: "0.875rem",
+              lineHeight: "1.5rem"
+            }}
+            message={t(errors?.errorMessage)} />
+        ) : null}
+        {/* {populators?.name && errors && errors[populators?.name] && Object.keys(errors[populators?.name]).length ? (
+          <ErrorMessage style={{fontStyle: "normal",color: "#D4351C" }} message={t(populators?.error)} />
         ) : // {t(field?.populators?.error)}
-        // </ErrorMessage>
-        null}
+          // </ErrorMessage>
+          null} */}
       </div>
     </>
   );

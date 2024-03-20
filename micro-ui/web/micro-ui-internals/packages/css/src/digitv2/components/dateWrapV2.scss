@@ -8,8 +8,10 @@
   .digit-employee-card-input {
     @extend .typography.text-body-s;
     @extend .light-input-border;
-    @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+    @apply mb-lg pl-sm outline-none block w-full h-10 bg-white leading-10 text-form-field;
     width: calc(100%-62px);
     padding-right: 9px;
+    border: 1px solid theme(digitv2.lightTheme.text-secondary);
+    color: theme(digitv2.lightTheme.text-primary);
   }
 }

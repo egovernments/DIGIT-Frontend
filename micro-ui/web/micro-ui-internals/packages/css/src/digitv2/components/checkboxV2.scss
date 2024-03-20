@@ -1,61 +1,79 @@
 @import url("../index.scss");
 
 .digit-checkbox-wrap {
-  @apply flex mb-md relative items-baseline;
+  @apply flex mb-md relative;
+  gap: 1rem;
 
   input {
+    @apply opacity-0 absolute cursor-pointer z-10;
     @extend .light-input-border;
-    width: 38px;
-    height: 38px;
-    @apply opacity-0 absolute top-0 left-0 z-10;
+    width: 2rem;
+    height: 2rem;
+    left: -15%;
   }
 
   .input-emp {
-    @extend input;
-    width: 24px;
-    height: 24px;
+    @extend input ;
   }
 
   .digit-custom-checkbox {
-    @extend .light-input-border;
-    width: 38px;
-    height: 38px;
-    @apply absolute top-0 left-0 border border-solid border-input-border z-0;
+    @apply flex items-center border border-solid border-text-secondary justify-center;
+    width: 1.5rem;
+    height: 1.5rem;
 
-    img {
+    img,
+    svg {
       @apply opacity-0;
     }
 
-    svg {
-      @apply opacity-0;
+    &:hover {
+      @apply border-2 border-primary-main;
     }
   }
 
   .digit-custom-checkbox-emp {
     @extend .digit-custom-checkbox;
-    width: 24px;
-    height: 24px;
   }
 
-  input:checked ~ .digit-custom-checkbox,
-  input:hover ~ .digit-custom-checkbox {
-    @extend .light-input-border;
+  input:hover~.digit-custom-checkbox {
     @apply border-2 border-primary-main;
   }
 
-  input:checked ~ .digit-custom-checkbox img {
+  input:checked~.digit-custom-checkbox {
+    border: 0.125rem solid theme(digitv2.lightTheme.primary-orange);
+  }
+
+
+  input:checked~.digit-custom-checkbox img {
     @apply opacity-100;
   }
 
-  input:checked ~ .digit-custom-checkbox svg {
+  input:checked~.digit-custom-checkbox svg {
     @apply opacity-100;
-    width: 35px;
-    height: 35px;
+    width: 1rem;
+    height: 1rem;
   }
 
   .label {
-    @extend .light-text-color-primary;
-    margin-left: 56px;
-    @apply text-form-field text-text-primary;
+    @extend .typography.body-s;
+    @apply text-left;
+    word-break: break-word;
+    line-height: 1.5rem;
+    letter-spacing: 0rem;
+    color: theme(digitv2.lightTheme.text-primary);
+  }
+
+  &.disabled {
+    .label {
+      color: theme(digitv2.lightTheme.text-disabled);
+    }
+
+    .digit-custom-checkbox {
+      border: 0.063rem solid theme(digitv2.lightTheme.text-disabled);
+    }
+
+    input:checked~.digit-custom-checkbox {
+      border: 0.125rem solid theme(digitv2.lightTheme.text-disabled);
+    }
   }
 }

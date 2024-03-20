@@ -19,10 +19,8 @@ export default {
 
 const Template = (args) => <BreadCrumb {...args} />;
 
-export const Playground = Template.bind({});
-Playground.args = {
-  className: "custom-class",
-  style: { border: "3px solid green" },
+export const Primary = Template.bind({});
+Primary.args = {
   crumbs: [
     {
       content: "HOME",
@@ -35,8 +33,10 @@ Playground.args = {
   ],
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Playground = Template.bind({});
+Playground.args = {
+  className: "custom-class",
+  style: { border: "3px solid green" },
   crumbs: [
     {
       content: "HOME",

@@ -15,8 +15,15 @@ const SideBar = ({ t, CITIZEN, isSidebarOpen, toggleSidebar, handleLogout, mobil
       />
     );
   else {
-    if (!mobileView && userDetails?.access_token) return <EmployeeSideBar {...{ mobileView, userDetails, modules }} />;
-    else return <CitizenSideBar isOpen={isSidebarOpen} isMobile={true} toggleSidebar={toggleSidebar} onLogout={handleLogout} isEmployee={true} />;
+    return (!isSidebarOpen && userDetails?.access_token) ? (
+      <div className="digit-employeeSidebar">
+        <EmployeeSideBar {...{ mobileView, userDetails, modules }} />
+      </div>
+    ) : (
+      <div className="digit-citizenSidebar">
+        <CitizenSideBar isOpen={isSidebarOpen} isMobile={true} toggleSidebar={toggleSidebar} onLogout={handleLogout} isEmployee={true} />
+      </div>
+    );
   }
 };
 

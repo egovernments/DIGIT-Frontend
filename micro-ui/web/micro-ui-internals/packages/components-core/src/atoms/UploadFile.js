@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, Fragment } from "react";
 import PropTypes from "prop-types";
-import Button from "./Button";
+import ButtonSelector from "./ButtonSelector";
 import { useTranslation } from "react-i18next";
 import RemoveableTag from "./RemoveableTag";
 import ErrorMessage from "./ErrorMessage";
@@ -55,12 +55,22 @@ const UploadFile = (props) => {
         style={props?.style}
       >
         <div className="digit-upload-file-button-wrap">
-          <Button theme="border" label={t("CS_COMMON_CHOOSE_FILE")} textStyles={props?.textStyles} type={props.buttonType} />
+          <ButtonSelector
+            theme="border"
+            label={t("CS_COMMON_CHOOSE_FILE")}
+            style={{ ...(props?.extraStyles ? props?.extraStyles?.buttonStyles : {}), ...(!props?.enableButton ? { opacity: 0.5 } : {}) }}
+            textStyles={props?.textStyles}
+            type={props.buttonType}
+          />
           {props?.uploadedFiles?.map((file, index) => {
             const fileDetailsData = file[1];
             return (
               <div className="digit-tag-container">
-                <RemoveableTag key={index} text={file[0]} onClick={(e) => props?.removeTargetedFile(fileDetailsData, e)} />
+                <RemoveableTag
+                  key={index}
+                  text={file[0].length > 64 ? `${file[0].slice(0, 64)} ...` : file[0]}
+                  onClick={(e) => props?.removeTargetedFile(fileDetailsData, e)}
+                />
               </div>
             );
           })}

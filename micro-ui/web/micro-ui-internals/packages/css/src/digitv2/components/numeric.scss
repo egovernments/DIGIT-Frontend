@@ -1,0 +1,47 @@
+.Numeric {
+  width: 23.75rem;
+  text-align: center;
+  display: flex;
+  align-content: center;
+
+  &.disabled {
+    @apply border-grey-dark text-grey-dark !important;
+    pointer-events: none !important;
+    cursor: not-allowed;
+
+  }
+
+  &.focused {
+    border: 2px solid theme(digitv2.lightTheme.primary-orange);
+  }
+
+  &.noneditable {
+    pointer-events: none !important;
+    border: 1px solid theme(digitv2.lightTheme.generic-inputborder);
+    background: theme(digitv2.lightTheme.generic-background);
+    color: theme(digitv2.lightTheme.text-secondary);
+  }
+
+  &.error {
+    border: 2px solid theme(digitv2.lightTheme.alert-error);
+  }
+}
+
+.NumericButton {
+  color: theme(digitv2.lightTheme.text-secondary);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  text-align: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid theme(digitv2.lightTheme.text-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  line-height: theme(digitv2.lineHeight.normal);
+}
+
+input {
+  background-color: theme(digitv2.lightTheme.paper-primary);
+  width: 23.75rem;
+  height: 2.5rem;
+}

@@ -1,0 +1,111 @@
+@import url("../index.scss");
+@import url("../typography.scss");
+
+.digit-info-banner-wrap {
+  @apply m-sm p-md flex flex-col;
+  border-radius: 0.25rem;
+  top: 1.25rem;
+  left: 1.25rem;
+  gap: 0.5rem;
+  background-color: #C7E0F1;
+
+  div {
+    @apply flex items-center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  h2 {
+    @apply w-full max-w-full overflow-hidden text-left;
+    font-family: theme(digitv2.fontFamily.sans);
+    font-weight: theme(digitv2.fontWeight.bold);
+    color: theme(digitv2.lightTheme.text-primary);
+    font-size: 1rem;
+    line-height: 1.172rem;
+    letter-spacing: 0rem;
+    margin: 0rem;
+    text-overflow: ellipsis;
+    margin-top: 0.165rem;
+  }
+
+  p {
+    @apply whitespace-pre-line text-left;
+    font-weight: theme(digitv2.fontWeight.regular);
+    color: theme(digitv2.lightTheme.text-secondary);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    letter-spacing: 0rem;
+    margin: 0rem;
+  }
+
+  &.digit-core-variant {
+    margin: 2rem 0rem;
+    padding: 0.625rem;
+    background-color: #ffe2b5;
+    border-radius: 0.25rem;
+  }
+
+  &.success {
+    background-color: #BAD6C9;
+  }
+
+  &.warning {
+    background-color: #F8E5C8;
+  }
+
+  &.error {
+    background-color: #EFC7C1;
+  }
+
+  @media (min-width: 30.063rem) and (max-width: 47.938rem) {
+    /* Media query for tablets */
+    max-width: 44.5rem;
+    min-width: 22.5rem;
+  }
+
+  @media (max-width: 30rem) {
+    /* Media query for mobile */
+    max-width: 21.5rem;
+    min-width: 15rem;
+  }
+
+  @media (min-width: 48rem) {
+    /* Media query for desktop */
+    max-width: 87rem;
+    min-width: 25rem;
+  }
+
+  &.inline {
+    @apply flex-row items-start;
+  }
+
+  &.column {
+    @apply flex-col;
+  }
+
+  .additional-elements-inline {
+    @apply flex flex-wrap items-start;
+    gap: 0.5rem;
+  }
+
+  .additional-elements-column {
+    @apply flex flex-col items-start;
+    gap: 0.5rem;
+
+    .individualElement {
+      @apply w-full max-w-full;
+
+    }
+  }
+
+  img {
+    @apply max-w-full;
+  }
+
+}

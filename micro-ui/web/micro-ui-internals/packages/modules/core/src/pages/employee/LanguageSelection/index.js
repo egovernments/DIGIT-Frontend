@@ -1,4 +1,4 @@
-import { Button, Card } from "@egovernments/digit-ui-components-core";
+import { Button, Card ,SubmitBar} from "@egovernments/digit-ui-components-core";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -37,11 +37,12 @@ const LanguageSelection = () => {
                 label={language.label}
                 onClick={() => handleChangeLanguage(language)}
                 variation={language.value === selected ? "primary" : ""}
+                style={{boxShadow: "0px 0px 0px 0px",width:"100%"}}
               />
             </div>
           ))}
         </div>
-        <Button style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onClick={handleSubmit} />
+        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit}/>
       </Card>
       <div className="EmployeeLoginFooter">
         <img

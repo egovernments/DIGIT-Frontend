@@ -188,6 +188,11 @@ h1, h2, h3, h4, h5, h6 {
    @apply mb-md mx-md !important;
   */
   @apply mb-md !important;
+  --bg-opacity: 1;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 16%);
+  padding: 16px;
+  border-radius: 4px;
 }
 
 .home-link {
@@ -266,10 +271,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 input[readonly] {
-  @apply border-grey-dark !important;
-  background-color:  theme(digitv2.lightTheme.background);
-  border-color: theme(digitv2.lightTheme.text-color-secondary);
-  color: theme(digitv2.lightTheme.text-color-secondary);
+  background-color:  theme(digitv2.lightTheme.generic-background);
+  border-color: theme(digitv2.lightTheme.text-secondary);
+  color: theme(digitv2.lightTheme.text-secondary);
+  --border-opacity: 1;
+  border-color: #9E9E9E;
+  border-color: rgba(158, 158, 158, var(--border-opacity));
 }
 
 .hide-input-type-file {
@@ -291,8 +298,13 @@ input[readonly] {
 }
 
 .disabled {
-  @apply border-grey-dark text-grey-dark !important;
   pointer-events: none !important;
+  --border-opacity: 1;
+  border-color: #9E9E9E;
+  border-color: rgba(158, 158, 158, var(--border-opacity));
+  --text-opacity: 1;
+  color: #9E9E9E;
+  color: rgba(158, 158, 158, var(--text-opacity));
 }
 
 .card-date-input {

@@ -20,10 +20,10 @@ export default {
 
 const Template = (args) => <AppContainer {...args} />;
 
-export const Playground = Template.bind({});
-Playground.args = {
-  className: "custom-class",
-  style: { border: "3px solid green" },
+
+
+export const Primary = Template.bind({});
+Primary.args = {
   children: (
     <div>
       <h2>App Container</h2>,
@@ -31,8 +31,10 @@ Playground.args = {
   ),
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Playground = Template.bind({});
+Playground.args = {
+  className: "custom-class",
+  style: { border: "3px solid green" },
   children: (
     <div>
       <h2>App Container</h2>,

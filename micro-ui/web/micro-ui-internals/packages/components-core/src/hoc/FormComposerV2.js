@@ -13,7 +13,7 @@ import ActionBar from "../atoms/ActionBar";
 import LabelFieldPair from "../atoms/LabelFieldPair";
 import ErrorMessage from "../atoms/ErrorMessage";
 import HorizontalNav from "../atoms/HorizontalNav";
-import { CardText, Toast } from "../atoms";
+import { CardText, SubmitBar, Toast } from "../atoms";
 
 // import Fields from "./Fields";    //This is a field selector pickup from formcomposer
 import FieldController from "./FieldController";
@@ -212,14 +212,6 @@ export const FormComposer = (props) => {
     setShowErrorToast(false);
   };
 
-  //remove Toast from 3s
-  useEffect(() => {
-    if (showErrorToast) {
-      setTimeout(() => {
-        closeToast();
-      }, 3000);
-    }
-  }, [showErrorToast]);
 
   const formFields = useCallback(
     (section, index, array, sectionFormCategory) => (
@@ -357,7 +349,7 @@ export const FormComposer = (props) => {
       {formFields(section, index, array, sectionFormCategory)}
       {props.childrenAtTheBottom && props.children}
       {props.submitInForm && (
-        <Button label={t(props.label)} style={{ ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full" />
+        <SubmitBar label={t(props.label)} style={{ width:"100%",...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full"/>
       )}
       {props.secondaryActionLabel && (
         <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
@@ -418,7 +410,7 @@ export const FormComposer = (props) => {
       )}
       {!props.submitInForm && props.label && (
         <ActionBar>
-          <Button label={t(props.label)} submit="submit" disabled={isDisabled} />
+          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
           {props.onSkip && props.showSkip && <ActionLinks style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}

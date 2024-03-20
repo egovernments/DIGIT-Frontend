@@ -12,6 +12,8 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+import { initProjectComponents } from "@egovernments/digit-ui-module-project";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -22,6 +24,7 @@ const enabledModules = [
   "HRMS",
   "Engagement",
   "Workbench",
+  "Project",
 ];
 
 const moduleReducers = (initData) => ({
@@ -37,9 +40,11 @@ const initDigitUI = () => {
 
   initDSSComponents();
   initHRMSComponents();
+  initSampleComponents();
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initProjectComponents();
 
   window.Digit.Customizations = {
     PGR: {},

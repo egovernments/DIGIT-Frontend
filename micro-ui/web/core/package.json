@@ -13,6 +13,8 @@
     "micro-ui-internals/packages/modules/core",
     "micro-ui-internals/packages/modules/dss",
     "micro-ui-internals/packages/modules/hrms",
+    "micro-ui-internals/packages/modules/sample",
+    "micro-ui-internals/packages/modules/Project",
     "micro-ui-internals/packages/libraries-core",
     "micro-ui-internals/packages/components-core"
   ],
@@ -21,6 +23,8 @@
     "@egovernments/digit-ui-module-dss": "1.7.10",
     "@egovernments/digit-ui-module-core": "1.7.10",
     "@egovernments/digit-ui-module-hrms": "1.7.10",
+    "@egovernments/digit-ui-module-sample": "0.0.1",
+    "@egovernments/digit-ui-module-project": "0.3.4",
     "@egovernments/digit-ui-react-components": "1.7.10",
     "@egovernments/digit-ui-svg-components": "0.0.8",
     "@egovernments/digit-ui-libraries-core": "0.0.1",

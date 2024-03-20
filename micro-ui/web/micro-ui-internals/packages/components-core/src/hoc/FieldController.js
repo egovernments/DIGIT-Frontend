@@ -1,5 +1,6 @@
 import React from "react";
-import FieldComposer from "./FieldComposer";
+// import FieldComposer from "./FieldComposer";
+import FieldV1 from "./FieldV1";
 import { Controller } from "react-hook-form";
 
 function FieldController(args) {
@@ -32,16 +33,28 @@ function FieldController(args) {
       )
     : null;
   const customRules = customValidation ? { validate: customValidation } : customValidations ? { validate: customValidation } : {};
+  const error = (populators?.name && errors && errors[populators?.name] && Object.keys(errors[populators?.name]).length) ? (populators?.error) : null
   const customProps = config?.customProps;
+
   return (
     <Controller
-      defaultValue={formData?.[populators.name]}
+      defaultValue={formData?.[populators?.name]}
       render={({ onChange, ref, value, onBlur }) => (
-        <FieldComposer
+        <FieldV1
+          error= {error}
+          label={config.label}
+          nonEditable = {config.nonEditable}
+          placeholder={config.placeholder}
+          inline={props.inline}
+          description={config.description}
+          charCount = {config.charCount}
+          infoMessage={config.infoMessage}
+          withoutLabel = {config.withoutLabel}
+          variant={config.variant}
           type={type}
           populators={populators}
-          isMandatory={isMandatory}
-          disable={disable}
+          required={isMandatory}
+          disabled={disable}
           component={component}
           config={config}
           sectionFormCategory={sectionFormCategory}
@@ -56,8 +69,8 @@ function FieldController(args) {
           controllerProps={controllerProps}
         />
       )}
-      name={populators.name}
-      rules={!disableFormValidation ? { required: isMandatory, ...populators.validation, ...customRules } : {}}
+      name={populators?.name}
+      rules={!disableFormValidation ? { required: isMandatory, ...populators?.validation, ...customRules } : {}}
       control={control}
     />
   );

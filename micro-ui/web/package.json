@@ -18,6 +18,8 @@
     "@egovernments/digit-ui-module-dss": "1.7.10",
     "@egovernments/digit-ui-module-core": "1.7.10",
     "@egovernments/digit-ui-module-common": "1.7.10",
+    "@egovernments/digit-ui-module-sample": "0.0.1",
+    "@egovernments/digit-ui-module-project": "0.3.4",
     "@egovernments/digit-ui-module-hrms": "1.7.10.01",
     "@egovernments/digit-ui-module-utilities": "1.0.0-beta",
     "@egovernments/digit-ui-module-engagement": "1.5.20",

@@ -19,6 +19,11 @@ export default {
 
 const Template = (args) => <Header {...args} />;
 
+export const Primary = Template.bind({});
+Primary.args = {
+  children: <p>This is a Primary Header</p>,
+};
+
 export const Playground = Template.bind({});
 Playground.args = {
   className: "custom-class",
@@ -26,9 +31,4 @@ Playground.args = {
     border: "1px solid green",
   },
   children: <p>This is a Custom Header</p>,
-};
-
-export const Primary = Template.bind({});
-Primary.args = {
-  children: <p>This is a Primary Header</p>,
 };

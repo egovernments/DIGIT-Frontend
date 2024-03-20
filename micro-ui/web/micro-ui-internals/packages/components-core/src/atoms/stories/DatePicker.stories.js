@@ -8,6 +8,9 @@ export default {
 
 const Template = (args) => <DatePicker {...args} />;
 
+export const Primary = Template.bind({});
+Primary.args = {};
+
 export const PlayGround = Template.bind({});
 PlayGround.args = {
   className: "",
@@ -23,6 +26,3 @@ PlayGround.args = {
     console.log("Blur");
   },
 };
-
-export const Primary = Template.bind({});
-Primary.args = {};

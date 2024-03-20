@@ -4,6 +4,12 @@
 .digit-header {
   @extend .light-text-color-primary;
   @apply font-bold mb-md;
+
+  @media (max-width: 480px) {
+    /* Media query for mobile */
+    margin-left: 60px;
+  }
+
   &.label {
     margin: 0;
     margin-bottom: 0.25rem;

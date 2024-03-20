@@ -1,0 +1,76 @@
+@import url("../index.scss");
+
+
+.digit-toggle-toolbar {
+  @apply flex justify-start w-full;
+  max-width: 37.5rem;
+  min-width: 7.5rem;
+}
+
+
+.toggle-option-container {
+  @apply inline-flex items-center;
+  gap: 0.5rem;
+}
+
+.digit-toggle-btn-wrap {
+  @apply flex items-center justify-center cursor-pointer bg-white overflow-hidden text-center;
+  padding: 0.125rem 0rem;
+  width: 7rem;
+  height: 2rem;
+  border: 0.063rem solid theme(digitv2.lightTheme.generic-divider);
+  text-overflow: ellipsis;
+
+  .digit-toggle-label {
+    @extend .typography.body-xs;
+    @apply w-full overflow-hidden;
+    line-height: 1.25rem;
+    color: theme(digitv2.lightTheme.text-disabled);
+    text-overflow: ellipsis;
+  }
+
+  &:hover,
+  &:active {
+    border: 0.063rem solid theme(digitv2.lightTheme.primary-orange);
+    background: theme(digitv2.lightTheme.paper-primary);
+    width: 7.125rem;
+    color: theme(digitv2.lightTheme.primary-orange);
+
+    .digit-toggle-label {
+      color: theme(digitv2.lightTheme.primary-orange) !important;
+    }
+  }
+
+  &:active {
+    box-shadow: 0rem 0rem 0.375rem 0rem #F4773840;
+  }
+
+  input:checked+.digit-toggle-label {
+    @extend .typography.heading-s;
+    background-color: theme(digitv2.lightTheme.primary-orange);
+    color: theme(digitv2.lightTheme.paper-primary) !important;
+    line-height: 1.172rem;
+  }
+
+  &.checked {
+    background-color: theme(digitv2.lightTheme.primary-orange);
+    width: 7.125rem;
+    border: 0.063rem solid theme(digitv2.lightTheme.primary-orange);
+
+    .digit-toggle-label {
+      @extend .typography.heading-s;
+      line-height: 1.172rem;
+      color: theme(digitv2.lightTheme.paper-primary);
+    }
+  }
+}
+
+
+.digit-toggle-input {
+  @apply absolute opacity-0;
+}
+
+.digit-toggle-label {
+  color: theme(digitv2.lightTheme.text-disabled);
+  padding: 0.5rem 0.75rem;
+}

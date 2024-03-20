@@ -1,7 +1,13 @@
 @import url("../index.scss");
 
 .digit-radio-wrap {
-  @apply my-sm block leading-10 mb-lg;
+  @apply leading-10 flex justify-start;
+  gap: "3rem";
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 30rem) {
+    @apply flex-col;
+  }
 
   div {
     @apply block mb-md;
@@ -9,11 +15,49 @@
 
   .digit-radio-btn-wrap {
     @apply block float-left relative;
+
     &:hover {
       .digit-radio-btn-checkmark {
         @apply border-primary-main;
       }
     }
+
+    &:active {
+      .digit-radio-btn-checkmark {
+        @apply border-primary-main;
+        outline: 0.188rem solid #FFFAF7;
+      }
+    }
+
+  }
+
+  .radio-option-container {
+    @apply inline-flex items-center;
+    gap: 0.5rem;
+
+    &.disabled {
+      .digit-radio-btn-checkmark {
+        border: 0.063rem solid theme(digitv2.lightTheme.text-disabled);
+        background-color: theme(digitv2.lightTheme.paper-secondary);
+      }
+    }
+
+
+    &.preselected {
+      .digit-radio-btn-checkmark {
+        border: 0.125rem solid theme(digitv2.lightTheme.text-disabled);
+      }
+
+      pointer-events: none !important;
+    }
+
+    &.disabled,
+    &.preselected {
+      label {
+        color: theme(digitv2.lightTheme.text-disabled);
+      }
+    }
+
   }
 
   .digit-radio-btn {
@@ -22,28 +66,41 @@
 
   .digit-radio-btn-checkmark {
     @extend .light-input-border;
-    @apply h-10 w-10 border border-input-border border-solid rounded-full block;
+    @apply h-6 w-6 border border-input-border border-solid rounded-full block;
   }
 
   label {
-    @extend .light-text-color-primary;
-    @apply text-text-primary text-form-field ml-md;
+    @extend .typography.body-s;
+    line-height: 1.172rem;
+    color: theme(digitv2.lightTheme.text-primary);
   }
 
   .digit-radio-btn-checkmark:after {
     content: "";
   }
 
-  .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark {
-    /* @extend .light-input-border; */
-    @apply border-2 border-primary-main;
+  .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
+    border: 0.125rem solid theme(digitv2.lightTheme.primary-orange);
   }
 
-  .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark:after {
-    /* @extend .light-background; */
-    @apply block bg-primary-main h-5 w-5 rounded-full absolute top-10 left-10;
+  .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
+    @apply block bg-primary-main h-3 w-3 rounded-full absolute;
+    top: 25%;
+    left: 25%
+  }
+
+  .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark {
+    border: 0.125rem solid theme(digitv2.lightTheme.generic-divider);
+  }
+
+  .preselected .digit-radio-btn-wrap input:checked~.digit-radio-btn-checkmark:after {
+    @apply block h-3 w-3 rounded-full absolute;
+    top: 25%;
+    left: 25%;
+    background-color: theme(digitv2.lightTheme.text-disabled);
   }
 }
+
 .digit-reverse-radio-selection-wrapper {
   div {
     @apply flex flex-row-reverse place-content-between items-center;

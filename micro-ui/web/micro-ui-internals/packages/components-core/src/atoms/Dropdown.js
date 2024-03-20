@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { SVG } from "./SVG";
+import TreeSelect from "./TreeSelect";
 
 const TextField = (props) => {
   const [value, setValue] = useState(props.selectedVal ? props.selectedVal : "");
@@ -19,7 +20,10 @@ const TextField = (props) => {
     if (props.freeze) return;
 
     setValue(e.target.value);
-    props.setFilter(e.target.value);
+    // the dropdown searchablility is made configurable through isSearchable prop
+    if (props.isSearchable) {
+      props.setFilter(e.target.value);
+    }
   }
 
   function broadcastToOpen() {
@@ -31,6 +35,14 @@ const TextField = (props) => {
   function broadcastToClose() {
     props.dropdownDisplay(false);
   }
+
+  const replaceDotWithColon = (inputString) => {
+    if (props?.variant === "nesteddropdown" || props?.variant === "treedropdown" && inputString) {
+      const updatedInputString = inputString.replace(/\./g, ": ");
+      return updatedInputString;
+    }
+    return inputString;
+  };
 
   /* Custom function to scroll and select in the dropdowns while using key up and down */
   const keyChange = (e) => {
@@ -59,9 +71,9 @@ const TextField = (props) => {
   return (
     <input
       ref={props.inputRef}
-      className={`digit-employee-select-wrap--elipses ${props.disable && "disabled"}`}
+      className={`digit-employee-select-wrap--elipses ${!props.isSearchable ? "notSearchable" : ""} ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
       type="text"
-      value={value}
+      value={replaceDotWithColon(value)}
       onChange={inputChange}
       onClick={props.onClick}
       onFocus={broadcastToOpen}
@@ -93,6 +105,7 @@ const Dropdown = (props) => {
   const [dropdownStatus, setDropdownStatus] = useState(false);
   const [selectedOption, setSelectedOption] = useState(props.selected ? props.selected : null);
   const [filterVal, setFilterVal] = useState("");
+  const [isActive, setIsActive] = useState(-1);
   const [forceSet, setforceSet] = useState(0);
   const [optionIndex, setOptionIndex] = useState(-1);
   const optionRef = useRef(null);
@@ -104,7 +117,7 @@ const Dropdown = (props) => {
   }, [props.selected]);
 
   function dropdownSwitch() {
-    if (!props.disable) {
+    if (!props.disabled) {
       var current = dropdownStatus;
       if (!current) {
         document.addEventListener("mousedown", handleClick, false);
@@ -155,6 +168,127 @@ const Dropdown = (props) => {
     if (!isSelectedSameAsOptions) setSelectedOption(null);
   }
 
+  const IconRender = (iconReq, isActive) => {
+    const iconFill = isActive ? "#FFFFFF" : "#505A5F";
+    try {
+      const components = require("@egovernments/digit-ui-svg-components");
+      const DynamicIcon = components?.[iconReq];
+      if (DynamicIcon) {
+        const svgElement = DynamicIcon({
+          width: "1.25rem",
+          height: "1.25rem",
+          fill: iconFill,
+          className: "",
+        });
+        return svgElement;
+      } else {
+        console.log("Icon not found");
+        return null;
+      }
+    } catch (error) {
+      console.error("Icon not found");
+      return null;
+    }
+  };
+
+  const flattenOptions = (options) => {
+    let flattened = [];
+
+    const flattenNestedOptions = (nestedOptions) => {
+      nestedOptions.forEach((nestedOption) => {
+        flattened.push(nestedOption);
+        if (nestedOption.options) {
+          flattenNestedOptions(nestedOption.options);
+        }
+      });
+    };
+
+    options.forEach((option) => {
+      if (option.options) {
+        flattened.push(option);
+        flattenNestedOptions(option.options);
+      } else {
+        flattened.push(option);
+      }
+    });
+
+    return flattened;
+  };
+
+  const flattenedOptions = flattenOptions(filteredOption);
+
+  const renderOption = (option, index) => {
+    const handleMouseDown = (e) => {
+      if (e.button === 0) setIsActive(index);
+    };
+    const handleMouseUp = () => {
+      setIsActive(-1);
+    };
+
+    return (
+      <div
+        className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`}
+        style={index === optionIndex ? { opacity: 1, backgroundColor: "#FFFAF7", border: "0.5px solid #F47738" } : {}}
+        key={index}
+        onClick={() => onSelect(option)}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+      >
+        {props?.variant === "profiledropdown" || props?.variant === "profilenestedtext" ? (
+          <div
+            className={"profile-icon-container"}
+            style={{
+              width: `${props?.variant === "profiledropdown" ? "2rem" : props?.variant === "profilenestedtext" ? "2.935rem" : ""}`,
+              height: `${props?.variant === "profiledropdown" ? "2rem" : props?.variant === "profilenestedtext" ? "2.935rem" : ""}`,
+              backgroundImage: `url(${
+                option.profileIcon
+                  ? option.profileIcon
+                  : "https://s3-alpha-sig.figma.com/img/a353/e61a/922f0cbf41a57918ee98e5f003d2f9b8?Expires=1705881600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=MmtDrFFMEexXuRiv~LIjrdvTBGtlOb-TqT4e6-pigcyH9ssnhhovhQa564Cp-~t9e6ZPtG33snEpEtOfVcElP-7VqK9HLqGJ7kVD3ZkR4jxGGkzVKLe7ItVqZeI3XD2HAWB2L~JY4s42dnm6658WWst~o6Fh8U9WuTJqB1iaOZyrvTf6VA2F66jcPozoTPjJeYyH0b3kGcxcGZEbkK-AbXwGkUsOJIKGr4dDVS7Gy2hgTabSd0mRkg0HTgntaLW0Zj~gzkgRTTPPUZst98npoIXE8cVimurJ4-KjYYRetx5li4O4PRl4uagRADIsxFxziDmMNv~~5IxEN4C2~0W9ew__"
+              })`,
+            }}
+          />
+        ) : null}
+        <div className="option-des-container">
+          <div style={{ display: "flex", gap: "0.25rem", alignItems: "center", width: "100%", minHeight: "18px" }}>
+            {props?.showIcon && option?.icon && IconRender(option?.icon, index === isActive)}
+            {props.isPropertyAssess ? (
+              <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
+            ) : (
+              <span
+                className={`main-option ${props.variant ? props?.variant : ""}`}
+              >
+                {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}
+              </span>
+            )}
+          </div>
+          {(props.variant === "nestedtextdropdown" || props.variant === "profilenestedtext") && option.description && (
+            <div className="option-description">{option.description}</div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderOptions = () => {
+    const optionsToRender = props.variant === "nesteddropdown" || props.variant === "treedropdown" ? flattenedOptions : filteredOption;
+
+    return optionsToRender.map((option, index) => {
+      if (option.options) {
+        return (
+          <div key={index} className="digit-nested-category">
+            <div className="digit-category-name">
+              {props.variant === "treedropdown" && option.options.length > 0 && (
+                <SVG.ArrowDropDown width="1.5rem" height="1.5rem" className="cp" fill="#505a5f" />
+              )}
+              {option.name}
+            </div>
+          </div>
+        );
+      } else {
+        return renderOption(option, index);
+      }
+    });
+  };
   return (
     <div
       className={`${user_type === "employee" ? "digit-employee-select-wrap" : "digit-select-wrap"} ${props?.className ? props?.className : ""}`}
@@ -163,21 +297,24 @@ const Dropdown = (props) => {
       {hasCustomSelector && (
         <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch}>
           {props.customSelector}
-          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disable && "disabled"} fill="black" />}
+          {props.showArrow && <SVG.ArrowDropDown onClick={dropdownSwitch} className={props.disabled && "disabled"} fill="#505a5f" />}
         </div>
       )}
       {!hasCustomSelector && (
         <div
-          className={`${dropdownStatus ? "digit-select-active" : "digit-select"} ${props?.variant ? props?.variant : ""} ${
-            props.disable && "disabled"
+          className={`${dropdownStatus ? "digit-select-active" : "digit-select"} ${props?.variant ? props?.variant : ""} ${!props?.isSearchable ? "notSearchable" : ""} ${
+            props.disabled && "disabled"
           }`}
           style={
             props.errorStyle
-              ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}) }
-              : { ...(props.noBorder ? { border: "none" } : {}) }
+            ? { border: "1px solid red", ...(props.noBorder ? { border: "none" } : {}) }
+            : { ...(props.noBorder ? { border: "none" } : {}) }
           }
+          onClick={props.variant === "treedropdown" || !props.isSearchable ? dropdownSwitch : null}
         >
           <TextField
+            variant={props?.variant}
+            isSearchable={props?.isSearchable}
             autoComplete={props.autoComplete}
             setFilter={setFilter}
             forceSet={forceSet}
@@ -189,7 +326,13 @@ const Dropdown = (props) => {
                 ? props.t
                   ? props.isMultiSelectEmp
                     ? `${selectedOption} ${t("BPA_SELECTED_TEXT")}`
-                    : props.t(props.optionKey ? selectedOption[props.optionKey] : selectedOption)
+                    : props.t(
+                        props.variant === "nesteddropdown" || props.variant === "treedropdown"
+                          ? selectedOption.code
+                          : props.optionKey
+                          ? selectedOption[props.optionKey]
+                          : selectedOption
+                      )
                   : props.optionKey
                   ? selectedOption[props.optionKey]
                   : selectedOption
@@ -199,15 +342,17 @@ const Dropdown = (props) => {
             addProps={{ length: filteredOption.length, currentIndex: optionIndex, selectOption: selectOption }}
             dropdownDisplay={dropdownOn}
             handleClick={handleClick}
-            disable={props.disable}
+            disable={props.disabled}
             freeze={props.freeze ? true : false}
             autoFocus={props.autoFocus}
             placeholder={props.placeholder}
             onBlur={props?.onBlur}
             inputRef={props.ref}
           />
-          {props.showSearchIcon ? null : <SVG.ArrowDropDown fill="black" onClick={dropdownSwitch} className="cp" disable={props.disable} />}
-          {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disable} /> : null}
+          {props.showSearchIcon ? null : (
+            <SVG.ArrowDropDown fill={props?.disabled ? "#D6D5D4" : "#505A5F"} onClick={dropdownSwitch} className="cp" disable={props.disabled} />
+          )}
+          {props.showSearchIcon ? <SVG.Search onClick={dropdownSwitch} className="cp" disable={props.disabled} /> : null}
         </div>
       )}
       {dropdownStatus ? (
@@ -218,36 +363,17 @@ const Dropdown = (props) => {
             style={{ ...props.optionCardStyles }}
             ref={optionRef}
           >
-            {filteredOption &&
-              filteredOption.map((option, index) => {
-                return (
-                  <div
-                    className={`cp profile-dropdown--item display: flex `}
-                    style={
-                      index === optionIndex
-                        ? {
-                            opacity: 1,
-                            backgroundColor: "rgba(238, 238, 238, var(--bg-opacity))",
-                          }
-                        : {}
-                    }
-                    key={index}
-                    onClick={() => onSelect(option)}
-                  >
-                    {option.icon && <span className="icon"> {option.icon} </span>}
-                    {props.isPropertyAssess ? (
-                      <div>{props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</div>
-                    ) : (
-                      <span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>
-                    )}
-                  </div>
-                );
-              })}
-            {filteredOption && filteredOption.length === 0 && (
-              <div className={`cp profile-dropdown--item display: flex `} key={"-1"} onClick={() => {}}>
-                {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
-              </div>
+            {props.variant === "treedropdown" ? (
+              <TreeSelect options={filteredOption} onSelect={onSelect} selectedOption={selectedOption} variant={props.variant} />
+            ) : (
+              renderOptions()
             )}
+            {(props.variant === "nesteddropdown" ? flattenedOptions : filteredOption) &&
+              (props.variant === "nesteddropdown" ? flattenedOptions : filteredOption).length === 0 && (
+                <div className={`cp profile-dropdown--item ${props.variant ? props?.variant : ""}`} key={"-1"} onClick={() => {}}>
+                  {<span> {"NO RESULTS FOUND"}</span>}
+                </div>
+              )}
           </div>
         ) : (
           <div
@@ -297,6 +423,7 @@ Dropdown.propTypes = {
 Dropdown.defaultProps = {
   customSelector: null,
   showArrow: true,
+  isSearchable:true,
 };
 
 export default Dropdown;
