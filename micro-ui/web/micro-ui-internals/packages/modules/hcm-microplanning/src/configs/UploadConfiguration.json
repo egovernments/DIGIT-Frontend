@@ -10,135 +10,51 @@
         {
           "id": "Excel",
           "code": "EXCEL",
-          "fileExtension": [
-            "xlsx",
-            "xls"
-          ],
+          "fileExtension": ["xlsx", "xls"],
           "iconName": "Excel",
           "namingConvention": "^Population.(xlsx)|(xls)$"
         },
         {
           "id": "Shapefiles",
           "code": "SHAPE_FILES",
-          "fileExtension": [
-            "zip"
-          ],
+          "fileExtension": ["zip"],
           "iconName": "SpatialDocument",
           "namingConvention": "^Population.zip$"
         },
         {
           "id": "Geojson",
           "code": "GEOJSON",
-          "fileExtension": [
-            "geojson"
-          ],
+          "fileExtension": ["geojson"],
           "iconName": "SpatialDocument",
           "namingConvention": "^Population.geojson$"
         }
       ]
     },
     {
-      "id": "Facility",
-      "code": "FACILITY",
-      "iconName": "Facility",
+      "id": "Facilities",
+      "code": "FACILITIES",
+      "iconName": "Facilities",
       "UploadFileTypes": [
         {
           "id": "Excel",
           "code": "EXCEL",
-          "fileExtension": [
-            "xlsx",
-            "xls"
-          ],
+          "fileExtension": ["xlsx", "xls"],
           "iconName": "Excel",
-          "namingConvention": "^Facility.(xlsx)|(xls)$"
+          "namingConvention": "^Facilities.(xlsx)|(xls)$"
         },
         {
           "id": "Shapefiles",
           "code": "SHAPE_FILES",
-          "fileExtension": [
-            "zip"
-          ],
+          "fileExtension": ["zip"],
           "iconName": "SpatialDocument",
-          "namingConvention": "^Facility.zip$"
+          "namingConvention": "^Facilities.zip$"
         },
         {
           "id": "Geojson",
           "code": "GEOJSON",
-          "fileExtension": [
-            "geojson"
-          ],
+          "fileExtension": ["geojson"],
           "iconName": "SpatialDocument",
-          "namingConvention": "^Facility.geojson$"
-        }
-      ]
-    },
-    {
-      "id": "WareHouses",
-      "code": "WARE_HOUSES",
-      "iconName": "WareHouses",
-      "UploadFileTypes": [
-        {
-          "id": "Excel",
-          "code": "EXCEL",
-          "fileExtension": [
-            "xlsx",
-            "xls"
-          ],
-          "iconName": "Excel",
-          "namingConvention": "^Warehouses.(xlsx)|(xls)$"
-        },
-        {
-          "id": "Shapefiles",
-          "code": "SHAPE_FILES",
-          "fileExtension": [
-            "zip"
-          ],
-          "iconName": "SpatialDocument",
-          "namingConvention": "^Warehouses.zip$"
-        },
-        {
-          "id": "Geojson",
-          "code": "GEOJSON",
-          "fileExtension": [
-            "geojson"
-          ],
-          "iconName": "SpatialDocument",
-          "namingConvention": "^Warehouses.geojson$"
-        }
-      ]
-    },
-    {
-      "id": "IncidentRate",
-      "code": "INCIDENT_RATE",
-      "iconName": "BarChart",
-      "UploadFileTypes": [
-        {
-          "id": "Excel",
-          "code": "EXCEL",
-          "fileExtension": [
-            "xlsx",
-            "xls"
-          ],
-          "iconName": "Excel",
-          "namingConvention": "^IncidentRate.(xlsx)|(xls)$"
-        },
-        {
-          "id": "Shapefiles",
-          "code": "SHAPE_FILES",
-          "fileExtension": [
-            "zip"
-          ],
-          "iconName": "SpatialDocument",
-          "namingConvention": "^IncidentRate.zip$"
-        },
-        {
-          "id": "Geojson",
-          "code": "GEOJSON",
-          "fileExtension": [
-            "geojson"
-          ],
-          "iconName": "SpatialDocument",
-          "namingConvention": "^IncidentRate.geojson$"
+          "namingConvention": "^Facilities.geojson$"
         }
       ]
     }

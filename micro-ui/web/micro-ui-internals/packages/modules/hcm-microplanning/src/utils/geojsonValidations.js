@@ -16,13 +16,11 @@ gjv.define("Position", (position) => {
 
 // Main functino for geojson validation that includes structural and property validations
 export const geojsonValidations = (data, schemaData, t) => {
-  let { valid, trace } = geojsonStructureValidation(data);
-  if (valid) {
-    const response = geojsonPropetiesValidation(data, schemaData, t);
-    if (!response.valid) {
-      return response;
-    }
+  let valid = geojsonStructureValidation(data);
+  if (valid.valid) {
     return { valid: true };
+  } else if (valid.message) {
+    return { valid: false, message: valid.message };
   } else {
     return { valid: false, message: "ERROR_INVALID_GEOJSON" };
   }
@@ -39,8 +37,32 @@ export const geojsonStructureValidation = (data) => {
     // check if the location coordinates are according to the provided guidlines
     if (errors.some((str) => str.includes("Location Coordinates Error:"))) return { valid: false, message: "ERROR_INCORRECT_LOCATION_COORDINATES" };
     if (!check) trace[i] = [errors];
+    let error;
+    Object.keys(data["features"][i]["properties"]).forEach((j) => {
+      if (j.length > 10) error = { valid: false, trace, message: "ERROR_FIELD_NAME" };
+      return j;
+    });
+    if (error) return error;
   }
   return { valid, trace };
+};
+
+const geometryValidation = (data) => {
+  let firstType;
+  for (const feature of data.features) {
+    if (!feature.geometry || !feature.geometry.type) {
+      return false; // Missing geometry or geometry type
+    }
+    if (!firstType) {
+      firstType = feature.geometry.type;
+    } else {
+      // Check if the current geometry type matches the first one
+      if (feature.geometry.type !== firstType) {
+        return false; // Different geometry types found
+      }
+    }
+  }
+  return true;
 };
 
 // Function responsible for property verification of geojson data
@@ -58,9 +80,9 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           patternProperties: {
             "^properties$": {
               type: "object",
-              properties: schemaData.Properties,
+              patternProperties: schemaData.Properties,
               required: schemaData.required,
-              additionalProperties: true,
+              additionalProperties: false,
             },
           },
         },
@@ -75,6 +97,8 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
     // Sorting out the Specific errors
     for (let i = 0; i < validateGeojson.errors.length; i++) {
       switch (validateGeojson.errors[i].keyword) {
+        case "additionalProperties":
+          return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
           const instancePathType = validateGeojson.errors[i].instancePath.split("/");
           columns.add(instancePathType[instancePathType.length - 1]);
@@ -94,17 +118,23 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
       }
     }
     const columnList = [...columns];
-    console.log({ valid, columnList, error: validateGeojson.errors });
-    const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER").replace(
-      "PLACEHOLDER",
-      columnList.length > 1
-        ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-        : `${columnList[columnList.length - 1]}`
-    );
+    const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER", {
+      columns:
+        columnList.length > 1
+          ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+          : `${columnList[columnList.length - 1]}`,
+    });
+    // .replace(
+    //   "PLACEHOLDER",
+    //   columnList.length > 1
+    //     ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+    //     : `${columnList[columnList.length - 1]}`
+    // );
     ajv.removeSchema();
 
     return { valid, columnList, message, error: validateGeojson.errors };
   }
   ajv.removeSchema();
+  if (!geometryValidation(data)) return { valid: false, message: t("ERROR_MULTIPLE_GEOMETRY_TYPES") };
   return { valid: true };
 };

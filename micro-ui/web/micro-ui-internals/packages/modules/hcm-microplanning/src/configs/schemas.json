@@ -8,26 +8,32 @@
       "campaignType": "SMC",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
           "Terrain": {
             "type": "string"
           },
-          "tp1": {
+          "Target population Demo 1": {
             "type": "number"
           },
-          "tp2": {
+          "Target population Demo 2": {
             "type": "number"
           },
-          "tp3": {
+          "Target population to reach per cycle against the boundaryn in column H Total": {
             "type": "number"
           }
         },
         "required": [
-          "tp1",
-          "tp2",
-          "tp3"
+          "Boundary code",
+          "Terrain",
+          "Target population Demo 1",
+          "Target population Demo 2",
+          "Target population to reach per cycle against the boundaryn in column H Total"
         ],
         "locationDataColumns": []
       }
@@ -38,6 +44,10 @@
       "campaignType": "ITIN",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
@@ -52,7 +62,8 @@
           "Boundary code",
           "Target Population",
           "Target Households"
-        ]
+        ],
+        "locationDataColumns": []
       }
     },
     {
@@ -61,6 +72,10 @@
       "campaignType": "IRS",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
@@ -71,14 +86,19 @@
         "required": [
           "Boundary code",
           "Target Population"
-        ]
+        ],
+        "locationDataColumns": []
       }
     },
     {
       "type": "Excel",
-      "section": "Facility",
+      "section": "Facilities",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Facility Code": {
             "type": "string"
           },
@@ -128,27 +148,34 @@
       "campaignType": "SMC",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
           "Terrain": {
             "type": "string"
           },
-          "tp1": {
+          "Target population Demo 1  (as configured in MDMS)": {
             "type": "number"
           },
-          "tp2": {
+          "Target population Demo 2  (as configured in MDMS)": {
             "type": "number"
           },
-          "tp3": {
+          "Target population to reach per cycle against the boundaryn in column H Total": {
             "type": "number"
           }
         },
         "required": [
-          "tp1",
-          "tp2",
-          "tp3"
-        ]
+          "Boundary code",
+          "Terrain",
+          "Target population Demo 1  (as configured in MDMS)",
+          "Target population Demo 2  (as configured in MDMS)",
+          "Target population to reach per cycle against the boundaryn in column H Total"
+        ],
+        "locationDataColumns": []
       }
     },
     {
@@ -157,6 +184,10 @@
       "campaignType": "ITIN",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
@@ -171,7 +202,8 @@
           "Boundary code",
           "Target Population",
           "Target Households"
-        ]
+        ],
+        "locationDataColumns": []
       }
     },
     {
@@ -180,6 +212,10 @@
       "campaignType": "IRS",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Boundary code": {
             "type": "string"
           },
@@ -190,14 +226,19 @@
         "required": [
           "Boundary code",
           "Target Population"
-        ]
+        ],
+        "locationDataColumns": []
       }
     },
     {
       "type": "Geojson",
-      "section": "Facility",
+      "section": "Facilities",
       "schema": {
         "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
           "Facility Code": {
             "type": "string"
           },
@@ -222,8 +263,134 @@
           "Facility Type",
           "Facility Status",
           "Capacity"
-        ]
+        ],
+        "locationDataColumns": []
+      }
+    },
+    {
+      "type": "Shapefiles",
+      "section": "Population",
+      "campaignType": "SMC",
+      "schema": {
+        "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
+          "Boundary code": {
+            "type": "string"
+          },
+          "Terrain": {
+            "type": "string"
+          },
+          "Target population Demo 1  (as configured in MDMS)": {
+            "type": "number"
+          },
+          "Target population Demo 2  (as configured in MDMS)": {
+            "type": "number"
+          },
+          "Target population to reach per cycle against the boundaryn in column H Total": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Terrain",
+          "Target population Demo 1  (as configured in MDMS)",
+          "Target population Demo 2  (as configured in MDMS)",
+          "Target population to reach per cycle against the boundaryn in column H Total"
+        ],
+        "locationDataColumns": []
+      }
+    },
+    {
+      "type": "Shapefiles",
+      "section": "Population",
+      "campaignType": "ITIN",
+      "schema": {
+        "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          },
+          "Target Households": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population",
+          "Target Households"
+        ],
+        "locationDataColumns": []
+      }
+    },
+    {
+      "type": "Shapefiles",
+      "section": "Population",
+      "campaignType": "IRS",
+      "schema": {
+        "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
+          "Boundary code": {
+            "type": "string"
+          },
+          "Target Population": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Boundary code",
+          "Target Population"
+        ],
+        "locationDataColumns": []
+      }
+    },
+    {
+      "type": "Shapefiles",
+      "section": "Facilities",
+      "schema": {
+        "Properties": {
+          "Admin.*":{
+            "type":"string",
+            "nullable": true
+          },
+          "Facility Code": {
+            "type": "string"
+          },
+          "Facility Name": {
+            "type": "string"
+          },
+          "Facility Type": {
+            "type": "string",
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+          },
+          "Facility Status": {
+            "type": "string",
+            "pattern": "(Temporary)|(Permanent)"
+          },
+          "Capacity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "Facility Code",
+          "Facility Name",
+          "Facility Type",
+          "Facility Status",
+          "Capacity"
+        ],
+        "locationDataColumns": []
       }
     }
-  ]
+  ] 
 }

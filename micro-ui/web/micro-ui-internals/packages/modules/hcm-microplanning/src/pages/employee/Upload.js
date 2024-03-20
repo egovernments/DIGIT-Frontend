@@ -9,9 +9,10 @@ import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
 import { checkForErrorInUploadedFileExcel } from "../../utils/excelValidations";
-import { geojsonValidations } from "../../utils/geojsonValidations";
+import { geojsonPropetiesValidation, geojsonValidations } from "../../utils/geojsonValidations";
 import schemas from "../../configs/schemas.json";
 import JSZip from "jszip";
+import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 
 const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
@@ -34,6 +35,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const [fileDataList, setFileDataList] = useState({});
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [template, setTemplate] = useState([]);
+  const [resourceMapping, setResourceMapping] = useState([]);
 
   // Effect to update sections and selected section when data changes
   useEffect(() => {
@@ -130,6 +132,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       setDataPresent(false);
     }
 
+    setResourceMapping([]);
     setDataUpload(false);
   }, [selectedSection]);
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
@@ -144,7 +147,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       let fileDataToStore;
       let error;
       let response;
-
+      let callMapping = false;
       // Checking if the file follows name convention rules
       if (!validateNamingConvention(file, selectedFileType["namingConvention"], setToast, t)) {
         setLoderActivation(false);
@@ -174,7 +177,17 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
-            console.log(check,error, fileDataToStore)
+            if (check === true) {
+              setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
+            } else if (response.toast) {
+              setToast(response.toast);
+            } else {
+              setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+            }
+            if (response.interruptUpload) {
+              setLoderActivation(false);
+              return;
+            }
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
           }
@@ -185,7 +198,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
-            console.log(check,error, fileDataToStore)
+            callMapping = true;
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
           }
@@ -196,7 +209,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
-            console.log(check,error, fileDataToStore)
+            callMapping = true;
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
           }
@@ -209,7 +222,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           setLoderActivation(false);
           return;
       }
-
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: `Microplanning_${selectedSection.id}`,
@@ -223,15 +235,10 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       // Digit.SessionStorage.set(fileObject.id, fileObject);
+      if (error === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
       setLoderActivation(false);
-      if (check) {
-        setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
-      } else {
-        setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-      }
     } catch (error) {
-      console.log(error.message);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -240,6 +247,16 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const handleExcelFile = async (file, schemaData) => {
     // Converting the input file to json format
     let result = await parseXlsxToJsonMultipleSheets(file);
+    if (result && result.error) {
+      return {
+        check: false,
+        interruptUpload: true,
+        error: result.error,
+        fileDataToStore: {},
+        toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") },
+      };
+    }
+
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
     if (!response.valid) setUploadedFileError(response.message);
@@ -259,7 +276,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     }
     // Running geojson validaiton on uploaded file
     let response = geojsonValidations(data, schemaData.schema, t);
-    console.log(response);
     if (!response.valid) setUploadedFileError(response.message);
     let check = response.valid;
     let error = response.message;
@@ -281,6 +297,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
 
   // Reupload the selected file
   const reuplaodFile = () => {
+    setResourceMapping([]);
     setFileData(undefined);
     setDataPresent(false);
     setUploadedFileError(null);
@@ -298,7 +315,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         break;
       case "Shapefiles":
       case "Geojson":
-        console.log(fileData);
         if (!fileData || !fileData.data) {
           setToast({
             state: "error",
@@ -314,7 +330,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         });
         // Group keys and values into the desired format
         const result = { [fileData.fileName]: [keys, ...values] };
-        console.log(result);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
@@ -338,6 +353,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   // delete the selected file
   const deleteDelete = () => {
     // Digit.SessionStorage.del(fileData.id);
+    setResourceMapping([]);
     setFileDataList({ ...fileDataList, [fileData.id]: undefined });
     setFileData(undefined);
     setDataPresent(false);
@@ -347,12 +363,66 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     closeModal();
   };
 
+  // Function for handling the validations for geojson and shapefiles after mapping of properties
+  const validationForMappingAndDataSaving = () => {
+    setLoderActivation(true);
+    const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+    if (!schemaData && !schemaData.schema) {
+      setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
+      setLoderActivation(false);
+      return;
+    }
+    if (resourceMapping.length !== schemaData.schema["required"].length) {
+      setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
+      setLoderActivation(false);
+      return;
+    }
+    setModal("none");
+    const data = computeGeojsonWithMappedProperties();
+    const response = geojsonPropetiesValidation(data, schemaData.schema, t);
+    if (!response.valid) {
+      setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+      setUploadedFileError(response.message);
+      setLoderActivation(false);
+
+      return;
+    }
+    setFileData((prev) => ({ ...prev, data, resourceMapping }));
+    setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
+    setLoderActivation(false);
+  };
+
+  const computeGeojsonWithMappedProperties = () => {
+    const newFeatures = fileData.data["features"].map((item) => {
+      let newProperties = {};
+      resourceMapping.forEach((e) => {
+        newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+      });
+      item["properties"] = newProperties;
+      return item;
+    });
+    let data = fileData.data;
+    data["features"] = newFeatures;
+    return data;
+  };
+
   // Handler for checing file extension and showing errors in case it is wrong
   const onTypeErrorWhileFileUpload = () => {
     if (selectedFileType.id === "Excel") setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
     if (selectedFileType.id === "Geojson") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
     if (selectedFileType.id === "Shapefiles") setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
   };
+
+  // Cancle mapping and uplaod in case of geojson and shapefiles
+  const cancleUpload = ()=>{
+    setFileDataList({ ...fileDataList, [fileData.id]: undefined });
+    setFileData(undefined);
+    setDataPresent(false);
+    setUploadedFileError(null);
+    setDataUpload(false);
+    setSelectedFileType(null);
+    closeModal();
+  }
 
   return (
     <div className="jk-header-btn-wrapper microplanning">
@@ -397,7 +467,10 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         <ModalWrapper
           selectedSection={selectedSection}
           selectedFileType={selectedFileType}
-          closeModal={closeModal}
+          closeModal={() => {
+            closeModal();
+            setSelectedFileType(null);
+          }}
           LeftButtonHandler={() => UploadFileClickHandler(false)}
           RightButtonHandler={() => UploadFileClickHandler(true)}
           sections={sections}
@@ -435,9 +508,41 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           bodyText={t("INSTRUCTIONS_REUPLOAD_FILE_CONFORMATION")}
         />
       )}
+      {modal === "spatial-data-property-mapping" && (
+        <ModalWrapper
+          popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
+          popupStyles={{ width: "48.5rem" }}
+          selectedSection={selectedSection}
+          selectedFileType={selectedFileType}
+          closeModal={cancleUpload}
+          // LeftButtonHandler={reuplaodFile}
+          RightButtonHandler={validationForMappingAndDataSaving}
+          headerBarMainStyle={{ width: "48.5rem" }}
+          sections={sections}
+          // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
+          footerRightButtonBody={<AlternateButton text={t("COMPLETE_MAPPING")} />}
+          header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "44rem" }} />}
+          bodyText={t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}
+          body={
+            <SpatialDataPropertyMapping
+              uploadedData={fileData.data}
+              resourceMapping={resourceMapping}
+              setResourceMapping={setResourceMapping}
+              schema={getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas)}
+              setToast={setToast}
+              t={t}
+            />
+          }
+        />
+      )}
       {loaderActivation && <Loader />}
       {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
-      {toast && toast.state === "error" && <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} error />}
+      {toast && toast.state === "error" && (
+        <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} error />
+      )}
+      {toast && toast.state === "warning" && (
+        <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} warning />
+      )}
     </div>
   );
 };
@@ -473,7 +578,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
         className="upload-option"
         style={selectedFileType.id === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
       >
-        <CustomIcon key={item.id} Icon={Icons[item.iconName]} width={"2.5rem"} height={"3rem"} color={"rgba(244, 119, 56, 1)"} />
+        <CustomIcon key={item.id} Icon={Icons[item.iconName]} width={"2.5rem"} height={"3rem"} color={selectedFileType.id === item.id ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"  }/>
         <p>{t(item.code)}</p>
         <button
           className={selectedFileType && selectedFileType.id === item.id ? "selected-button" : "select-button"}
@@ -617,6 +722,10 @@ const ModalWrapper = ({
   footerRightButtonBody,
   header,
   bodyText,
+  body,
+  popupStyles,
+  headerBarMainStyle,
+  popupModuleActionBarStyles,
 }) => {
   const { t } = useTranslation();
   return (
@@ -626,10 +735,10 @@ const ModalWrapper = ({
       actionCancelOnSubmit={LeftButtonHandler}
       actionSaveOnSubmit={RightButtonHandler}
       formId="microplanning"
-      popupStyles={{ width: "34rem" }}
-      headerBarMainStyle={{ margin: 0, width: "34rem", overflow: "hidden" }}
+      popupStyles={{ width: "34rem", borderRadius: "0.25rem", ...(popupStyles ? popupStyles : {}) }}
+      headerBarMainStyle={{ margin: 0, width: "34rem", overflow: "hidden", ...(headerBarMainStyle ? headerBarMainStyle : {}) }}
       popupModuleMianStyles={{ margin: 0, padding: 0 }}
-      popupModuleActionBarStyles={{ justifyContent: "space-between", padding: "1rem" }}
+      popupModuleActionBarStyles={popupModuleActionBarStyles ? popupModuleActionBarStyles : { justifyContent: "space-between", padding: "1rem" }}
       style={{}}
       hideSubmit={false}
       footerLeftButtonstyle={{
@@ -639,7 +748,7 @@ const ModalWrapper = ({
         textStyles: { fontWeight: "600" },
         backgroundColor: "rgba(255, 255, 255, 1)",
         color: "rgba(244, 119, 56, 1)",
-        width: "14rem",
+        minWidth: "13rem",
         border: "1px solid rgba(244, 119, 56, 1)",
       }}
       footerRightButtonstyle={{
@@ -649,7 +758,7 @@ const ModalWrapper = ({
         textStyles: { fontWeight: "500" },
         backgroundColor: "rgba(244, 119, 56, 1)",
         color: "rgba(255, 255, 255, 1)",
-        width: "14rem",
+        minWidth: "13rem",
         boxShadow: "0px -2px 0px 0px rgba(11, 12, 12, 1) inset",
       }}
       footerLeftButtonBody={footerLeftButtonBody}
@@ -658,6 +767,7 @@ const ModalWrapper = ({
       <div className="modal-body">
         <p className="modal-main-body-p">{bodyText}</p>
       </div>
+      {body ? body : ""}
     </Modal>
   );
 };
@@ -686,9 +796,13 @@ const readGeojson = async (file, t) => {
         const geoJSONData = JSON.parse(e.target.result);
         resolve(geoJSONData);
       } catch (error) {
-        resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+        resolve({ valid: false, toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") } });
       }
     };
+    reader.onerror = function (error) {
+      resolve({ valid: false, toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") } });
+    };
+
     reader.readAsText(file);
   });
 };
@@ -715,7 +829,6 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
         resolve({ valid: false, message: "ERROR_WRONG_PRJ", toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
       }
       const files = Object.keys(zip.files);
-      console.log(zip);
       const allFilesMatchRegex = files.every((fl) => {
         return fileRegex.test(fl);
       });
@@ -726,19 +839,26 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
       regx = new RegExp(namingConvension.replace(".zip$", ".dbf$"));
       const dbfFile = zip.file(regx)[0];
 
-      const shpArrayBuffer = await shpFile.async("arraybuffer");
-      const dbfArrayBuffer = await dbfFile.async("arraybuffer");
+      let geojson;
+      if (shpFile && dbfFile) {
+        const shpArrayBuffer = await shpFile.async("arraybuffer");
+        const dbfArrayBuffer = await dbfFile.async("arraybuffer");
 
-      const geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
+        geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
+      }
       if (shpFile && dbfFile && shxFile && allFilesMatchRegex) resolve({ valid: true, data: geojson });
-      else if (!shpFile)
-        resolve({ valid: false, message: "ERROR_SHP_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
-      else if (!dbfFile)
-        resolve({ valid: false, message: "ERROR_DBF_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
-      else if (!shxFile)
-        resolve({ valid: false, message: "ERROR_SHX_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
       else if (!allFilesMatchRegex)
-        resolve({ valid: false, message: "ERROR_NAMEING_CONVENSION", toast: { state: "error", data: geojson, message: t("ERROR_PARSING_FILE") } });
+        resolve({
+          valid: false,
+          message: "ERROR_CONTENT_NAMEING_CONVENSION",
+          toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMEING_CONVENSION") },
+        });
+      else if (!shpFile)
+        resolve({ valid: false, message: "ERROR_SHP_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
+      else if (!dbfFile)
+        resolve({ valid: false, message: "ERROR_DBF_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
+      else if (!shxFile)
+        resolve({ valid: false, message: "ERROR_SHX_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
     } catch (error) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
@@ -806,7 +926,7 @@ const Close = () => (
 
 const CloseBtn = (props) => {
   return (
-    <div className="icon-bg-secondary" onClick={props.onClick} style={{ backgroundColor: "#FFFFFF" }}>
+    <div className="icon-bg-secondary" onClick={props.onClick} style={{ backgroundColor: "#FFFFFF", borderRadius: "0.25rem" }}>
       <Close />
     </div>
   );
@@ -832,7 +952,11 @@ const DownloadButton = (props) => {
 };
 
 const ModalHeading = (props) => {
-  return <p className="modal-header">{props.label}</p>;
+  return (
+    <p className="modal-header" style={props.style}>
+      {props.label}
+    </p>
+  );
 };
 
 const Loader = () => {
