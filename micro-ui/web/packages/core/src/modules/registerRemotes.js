@@ -21,38 +21,38 @@ export default (queryClient) => {
   // });
 
 
-  // registerApplication({
-  //   name: "Common",
-  //   app: () => import("common/CommonModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/payment`, //change to userType here
-  //   customProps: {
-  //     title: "Common Module is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+  registerApplication({
+    name: "Common",
+    app: () => import("common/CommonModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/payment`, //change to userType here
+    customProps: {
+      title: "Common Module is running on host",
+      queryClient,
+      userType
+    },
+  });
 
-  // registerApplication({
-  //   name: "PGR",
-  //   app: () => import("pgr/PGRModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr/`,
-  //   customProps: {
-  //     title: "PGR is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  //  });
+  registerApplication({
+    name: "PGR",
+    app: () => import("pgr/PGRModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr/`,
+    customProps: {
+      title: "PGR is running on host",
+      queryClient,
+      userType
+    },
+   });
 
-  //  registerApplication({
-  //   name: "Dss",
-  //   app: () => import("dss/DSSModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
-  //   customProps: {
-  //     title: "DSS is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+   registerApplication({
+    name: "Dss",
+    app: () => import("dss/DSSModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
+    customProps: {
+      title: "DSS is running on host",
+      queryClient,
+      userType
+    },
+  });
 
     registerApplication({
     name: "HRMS",
