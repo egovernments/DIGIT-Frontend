@@ -24,7 +24,7 @@ jobs:
         echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
         echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
 
-    - name: Build the Docker image
+    - name: Build the service Docker image
       id: docker_build
       working-directory: ./utilities/egov-bff
       run: |
@@ -33,6 +33,18 @@ jobs:
           --file Dockerfile \
           --tag $IMAGE_TAG
         echo "::set-output name=image_name::$IMAGE_TAG"
+
+
+    - name: Build the db migration Docker image
+      id: docker_build
+      working-directory: ./utilities/egov-bff/migration
+      run: |
+        IMAGE_TAG=egovio/project-factory-db:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        docker build . \
+          --file Dockerfile \
+          --tag $IMAGE_TAG
+        echo "::set-output name=db_image_name::$IMAGE_TAG"
+
 
     - name: Login to Docker Hub and Push Docker Image
       working-directory: ./utilities/egov-bff
@@ -47,3 +59,17 @@ jobs:
           # Push the image to Docker Hub
           docker push $IMAGE_NAME
           echo "Docker image pushed: $IMAGE_NAME"
+    
+    - name: Login to Docker Hub and Push DB Migration Docker Image
+      working-directory: ./utilities/egov-bff
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DB_IMAGE_NAME: ${{ steps.docker_build.outputs.db_image_name }}
+      run: |      
+          # Authenticate with Docker Hub
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          
+          # Push the image to Docker Hub
+          docker push $DB_IMAGE_NAME
+          echo "Docker image pushed: $DB_IMAGE_NAME"
