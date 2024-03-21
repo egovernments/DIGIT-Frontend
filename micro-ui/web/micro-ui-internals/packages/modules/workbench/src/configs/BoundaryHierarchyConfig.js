@@ -23,8 +23,6 @@ export const addBoundaryHierarchyConfig = [
             },
             populators: {
               name: "levelcards",
-              // optionsKey: "code",
-              error: "ES__REQUIRED",
               required: true,
             },
           },

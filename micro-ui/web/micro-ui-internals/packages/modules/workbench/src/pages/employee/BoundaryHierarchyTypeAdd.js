@@ -54,18 +54,25 @@ const BoundaryHierarchyTypeAdd = () => {
   const handleFormSubmit = async (formData) => {
 
     try {
+      if (formData.levelcards[0].level.trim() === "") {
+        setShowToast({ label: `${t("HCM_LEVEL_MANDATORY")}`, isError: true });
+        closeToast();
+        return;
+      }
       const parentTypeMapping = generateDynamicParentType(formData);
 
       const boundaryHierarchy = formData.levelcards.map((level, index) => {
         const currentLevel = level.level;
         const parentBoundaryType = index === 0 ? null : parentTypeMapping[currentLevel] || null;
   
-        return {
-          boundaryType: currentLevel,
-          parentBoundaryType: parentBoundaryType,
-          active: true,
-        };
-      });
+        if (currentLevel.trim() !== "") {
+          return {
+            boundaryType: currentLevel,
+            parentBoundaryType: parentBoundaryType,
+            active: true,
+          };
+        }
+      }).filter(Boolean); 
 
       await mutation.mutate(
         {
@@ -114,9 +121,9 @@ const BoundaryHierarchyTypeAdd = () => {
           fieldStyle={{ marginRight: 0 }}
           config={config}
           noBreakLine={true}
-          label="HCM_CREATE_BOUNDARY_HIERARCHY"
-          heading="HCM_CREATE_BOUNDARY_HIERARCHY"
-          description = "HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION"
+          label={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
+          heading={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
+          description = {t("HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION")}
           enableDelete={true}
         >
         </FormComposerV2>
