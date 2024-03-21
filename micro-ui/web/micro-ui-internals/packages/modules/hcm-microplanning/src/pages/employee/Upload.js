@@ -559,7 +559,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           popupStyles={{ width: "48.5rem" }}
           selectedSection={selectedSection}
           selectedFileType={selectedFileType}
-          closeModal={cancleUpload}
+          closeModal={cancelUpload}
           // LeftButtonHandler={reuplaodFile}
           RightButtonHandler={validationForMappingAndDataSaving}
           headerBarMainStyle={{ width: "48.5rem" }}
@@ -699,7 +699,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
             <p className="">
-              {t(`INSTRUCTIONS_UNLOAD_${selectedFileType.code}`)} <text className="browse-text">{t("INSTRUCTIONS_UNLOAD_BROWSE_FILES")}</text>
+              {t(`INSTRUCTIONS_UPLOAD_${selectedFileType.code}`)} <text className="browse-text">{t("INSTRUCTIONS_UPLOAD_BROWSE_FILES")}</text>
             </p>
           </div>
         </FileUploader>
