@@ -9,7 +9,8 @@
     "packages/common",
     "packages/pgr",
     "packages/dss",
-    "packages/hrms"
+    "packages/hrms",
+    "packages/ui-libraries"
   ],
   "command": {
     "run": {

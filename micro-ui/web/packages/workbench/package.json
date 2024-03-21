@@ -44,7 +44,7 @@
   "dependencies": {
     "single-spa-react": "^4.6.1",
     "xlsx": "0.17.5",
-    "@digit-ui/digit-ui-libraries-mfe": "1.0.6",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
     "@egovernments/digit-ui-react-components":"1.4.106",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
