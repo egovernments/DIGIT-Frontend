@@ -11,7 +11,7 @@ import { validateSheetData, validateProjectFacilityResponse, validateProjectReso
 const _ = require('lodash');
 
 
-const getSheetData = async (fileUrl: string, sheetName: string) => {
+const getSheetData = async (fileUrl: string, sheetName: string, getRow = false) => {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/pdf',
@@ -31,7 +31,7 @@ const getSheetData = async (fileUrl: string, sheetName: string) => {
     Object.keys(row).forEach(key => {
       rowData[key] = row[key] === undefined || row[key] === '' ? null : row[key];
     });
-    // rowData['!row#number!'] = index + 1; // Adding row number
+    if (getRow) rowData['!row#number!'] = index + 1; // Adding row number
     return rowData;
   });
   logger.info("Sheet Data : " + JSON.stringify(jsonData))
@@ -157,11 +157,11 @@ const getCount: any = async (responseData: any, request: any, response: any) => 
 
 }
 
-async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any) {
+async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any, tenantId?: any) {
   const buffer = XLSX.write(updatedWorkbook, { bookType: 'xlsx', type: 'buffer' });
   const formData = new FormData();
   formData.append('file', buffer, 'filename.xlsx');
-  formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+  formData.append('tenantId', tenantId ? tenantId : request?.body?.RequestInfo?.userInfo?.tenantId);
   formData.append('module', 'pgr');
 
   logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
@@ -172,7 +172,6 @@ async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any)
     }
   );
   const responseData = fileCreationResult?.files;
-  console.log(responseData, "tttttttttttttttt")
   return responseData;
 }
 

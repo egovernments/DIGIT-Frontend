@@ -816,7 +816,7 @@ async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearch
   if (!fileResponse?.fileStoreIds?.[0]?.url) {
     throw new Error("Not any download url returned for given fileStoreId")
   }
-  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName)
+  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName, true)
 }
 
 function updateRange(range: any, desiredSheet: any) {
@@ -1046,7 +1046,6 @@ function getRootBoundaryCode(boundaries: any[]) {
 }
 
 async function enrichAndPersistProjectCampaignRequest(request: any) {
-  request.body.CampaignDetails.id = uuidv4();
   request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
   request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
   request.body.CampaignDetails.status = "started"
