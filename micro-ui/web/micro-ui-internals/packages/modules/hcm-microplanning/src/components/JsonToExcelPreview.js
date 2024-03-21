@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 export const ExcelComponent = (props) => {
   const { t } = useTranslation();
   const sheetsData = props?.sheetsData;
-  console.log(sheetsData);
   return (
     <div className="preview-data " >
       <div

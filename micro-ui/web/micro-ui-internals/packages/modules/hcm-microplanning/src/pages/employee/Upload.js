@@ -197,10 +197,8 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         case "Geojson":
           try {
             response = await handleGeojsonFile(file, schemaData);
-            console.log(response.check == false && response.stopUpload)
             if(response.check == false && response.stopUpload) {
               setLoderActivation(false);
-              console.log(response)
               setToast(response.toast);
               return;
             }
@@ -248,7 +246,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
-      console.log(error)
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -279,14 +276,11 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const handleGeojsonFile = async (file, schemaData) => {
     // Reading and checking geojson data
     const data = await readGeojson(file, t);
-    console.log('data',data)
     if (!data.valid) {
       return {check:false, stopUpload:true, toast:data.toast};
     }
-    console.log("hi")
     // Running geojson validaiton on uploaded file
     let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
-    console.log(response)
     if (!response.valid) setUploadedFileError(response.message);
     let check = response.valid;
     let error = response.message;
@@ -341,7 +335,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         });
         // Group keys and values into the desired format
         const result = { [fileData.fileName]: [keys, ...values] };
-        console.log(result);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
@@ -399,7 +392,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     setModal("none");
     const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
-    console.log(resourceMapping)
     if (!response.valid) {
       error= response.message;
       const fileObject = fileData;
@@ -411,7 +403,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       setLoderActivation(false);
       return;
     }
-    console.log(resourceMapping)
     setFileData((prev) => ({ ...prev, data, resourceMapping, error }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
     setLoderActivation(false);
@@ -450,21 +441,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   const openDataPreview = () => {
-    // let blob = dataToBlob();
-    // console.log(blob)
-    // const data = {url:blob,
-    //   fileName:"idk so bla bla"
-    // }
-    // const reader = new FileReader();
-
-    // reader.onload = (e) => {
-    //   const data = new Uint8Array(e.target.result);
-    //   const excelBlob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //   const blobURI = URL.createObjectURL(excelBlob);
-    //   // setExcelBlobURI(blobURI);
-    //   setPreviewUploadedData(blobURI);
-    // };
-    // reader.readAsArrayBuffer(fileData.file);
     let data;
     switch (fileData.fileType) {
       case "Excel":
@@ -479,7 +455,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           });
           return;
         }
-        console.log(fileData.data);
         // Extract keys from the first feature's properties
         const keys = Object.keys(fileData.data.features[0].properties);
         // Extract corresponding values for each feature
@@ -613,7 +588,6 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       {toast && toast.state === "warning" && (
         <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} warning />
       )}
-      {console.log(previewUploadedData)}
       {previewUploadedData && (
         <div className="popup-wrap">
           <ExcelComponent sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
@@ -888,7 +862,6 @@ const readGeojson = async (file, t) => {
       try {
         const geoJSONData = JSON.parse(e.target.result);
         const trimmedGeoJSONData = trimJSON(geoJSONData);
-        console.log(trimmedGeoJSONData)
         resolve({ valid: true, geojsonData:trimmedGeoJSONData });
       } catch (error) {
         resolve({ valid: false, toast: { state: "error", message: t("ERROR_INCORRECT_FORMAT") } });

@@ -17,7 +17,6 @@ gjv.define("Position", (position) => {
 // Main functino for geojson validation that includes structural and property validations
 export const geojsonValidations = (data, schemaData, t) => {
   let valid = geojsonStructureValidation(data);
-  console.log(valid);
   if (valid.valid) {
     return { valid: true };
   } else if (valid.message) {
@@ -120,7 +119,6 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
     }
     const columnList = [...columns];
     // if(column)
-    console.log(validateGeojson.errors);
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER", {
       columns:
         columnList.length > 1
