@@ -389,7 +389,7 @@ async function createProjectAndUpdateId(projectBody: any, boundaryProjectIdMappi
   logger.info("Project Creation response" + JSON.stringify(projectResponse))
   validatedProjectResponseAndUpdateId(projectResponse, projectBody, campaignDetails);
   boundaryProjectIdMapping[boundaryCode] = projectResponse?.Project[0]?.id
-  await new Promise(resolve => setTimeout(resolve, 10000));
+  await new Promise(resolve => setTimeout(resolve, 3000));
 }
 
 async function createProjectIfNotExists(requestBody: any) {

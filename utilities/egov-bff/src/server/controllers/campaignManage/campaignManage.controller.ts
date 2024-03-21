@@ -54,9 +54,9 @@ class campaignManageController {
         }
 
         async function projectCreate(projectCreateBody: any, request: any) {
-            logger.info("Project creation url " + config.host.projectHost + config.paths.healthProjectCreate)
+            logger.info("Project creation url " + config.host.projectHost + config.paths.projectCreate)
             logger.info("Project creation body " + JSON.stringify(projectCreateBody))
-            const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.healthProjectCreate, projectCreateBody);
+            const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
             logger.info("Project creation response" + JSON.stringify(projectCreateResponse))
             if (projectCreateResponse?.Project[0]?.id) {
                 logger.info("Project created successfully with id " + projectCreateResponse?.Project[0]?.id)

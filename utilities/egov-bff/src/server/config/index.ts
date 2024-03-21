@@ -88,16 +88,14 @@ const config = {
       || "boundary-service/boundary/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH
       || "boundary-service/boundary-hierarchy-definition/_search",
-    projectCreate: process.env.EGOV_PROJECT_CREATE_PATH
-      || "project/v1/_create",
-    healthProjectCreate: process.env.EGOV_PROJECT_CREATE_PATH
+    projectCreate: process.env.HEALTH_PROJECT_CREATE_PATH
       || "health-project/v1/_create",
     staffCreate: process.env.EGOV_PROJECT_STAFF_CREATE_PATH
-      || "project/staff/v1/_create",
+      || "health-project/staff/v1/_create",
     projectResourceCreate: process.env.EGOV_PROJECT_RESOURCE_CREATE_PATH
-      || "project/resource/v1/_create",
+      || "health-project/resource/v1/_create",
     projectFacilityCreate: process.env.EGOV_PROJECT_RESOURCE_FACILITY_PATH
-      || "project/facility/v1/_create",
+      || "health-project/facility/v1/_create",
     userSearch: process.env.EGOV_USER_SEARCH_PATH
       || "user/_search",
     facilitySearch: process.env.EGOV_FACILITY_SEARCH_PATH
