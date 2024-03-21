@@ -5,9 +5,10 @@ import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
-import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
+import { initLibraries,initTranslation } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
 import registerRemotes from "./modules/registerRemotes"
+import { useTranslation } from "react-i18next";
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
@@ -19,9 +20,7 @@ import registerRemotes from "./modules/registerRemotes"
 // const MeasurementLazy = lazy(() => import("./modules/Measurement"));
 
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
 
 //registering remote apps
 const queryClient = new QueryClient({
@@ -38,14 +37,22 @@ const queryClient = new QueryClient({
     },
   },
 });
-registerRemotes(queryClient)
+
+
+initTranslation().then((i18next) => {
+  initDigitUI();
+  registerRemotes(queryClient,i18next)
+});
+
+
 
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
   const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
-
+  const { t } = useTranslation()
+  console.log("logging t function ", t)
   const moduleReducers = (initData) => initData;
   
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";

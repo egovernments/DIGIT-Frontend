@@ -2,10 +2,13 @@
 //routing and all we have to handle in remote app itself
 //need to share history obj i think(we need to rethink the routing part)
 
+
 import { registerApplication,start } from "single-spa";
 
-export default (queryClient) => {
-
+export default (queryClient,translator) => {
+  
+  console.log("translator",translator.store.data.en_IN.translations)
+  
   const userType = Digit.UserService.getType();
 
 

@@ -56,6 +56,6 @@ export const initI18n = (callback) => {
     .use(initReactI18next)
     .init(i18nextConfig(), () => {
       window.i18next = i18next;
-      callback();
+      callback(i18next);//here basically we are calling resolve
     });
 };

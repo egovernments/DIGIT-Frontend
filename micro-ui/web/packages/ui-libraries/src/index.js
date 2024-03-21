@@ -82,9 +82,12 @@ const initLibraries = () => {
 
   setupLibraries("AccessControlService", AccessControlService);
 
+  
+};
+
+const initTranslation = () => {
   return new Promise((resolve) => {
     initI18n(resolve);
   });
-};
-
-export { initLibraries, Enums, Hooks, subFormRegistry };
+}
+export { initLibraries, Enums, Hooks, subFormRegistry,initTranslation };
