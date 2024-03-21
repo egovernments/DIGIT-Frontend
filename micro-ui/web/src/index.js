@@ -4,10 +4,11 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import "./index.css";
 import App from './App';
 import { TLCustomisations } from './Customisations/tl/TLCustomisation';
+import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
 
 
 initLibraries();
-
+initMicroplanningComponents();
 
 window.Digit.Customizations = { PGR: {} ,TL:TLCustomisations};
 
