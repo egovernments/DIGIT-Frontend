@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export const Excel = ({ className, width = "24", height = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
-    <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 63 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
