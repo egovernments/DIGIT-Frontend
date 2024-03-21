@@ -4,7 +4,6 @@ import { Toast } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
 import Config from "../../configs/UploadConfiguration.json";
-import excelTemplate from "../../configs/excelTemplate.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 import Modal from "../../components/Modal";
@@ -14,6 +13,7 @@ import schemas from "../../configs/schemas.json";
 import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
+import { ExcelComponent } from "../../components/JsonToExcelPreview";
 
 const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const { t } = useTranslation();
@@ -36,6 +36,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [template, setTemplate] = useState([]);
   const [resourceMapping, setResourceMapping] = useState([]);
+  const [previewUploadedData, setPreviewUploadedData] = useState();
 
   // Effect to update sections and selected section when data changes
   useEffect(() => {
@@ -101,6 +102,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
 
   // Close model click handler
   const closeModal = () => {
+    setResourceMapping([]);
     setModal("none");
   };
 
@@ -195,6 +197,13 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         case "Geojson":
           try {
             response = await handleGeojsonFile(file, schemaData);
+            console.log(response.check == false && response.stopUpload)
+            if(response.check == false && response.stopUpload) {
+              setLoderActivation(false);
+              console.log(response)
+              setToast(response.toast);
+              return;
+            }
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
@@ -239,6 +248,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
+      console.log(error)
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -269,17 +279,18 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const handleGeojsonFile = async (file, schemaData) => {
     // Reading and checking geojson data
     const data = await readGeojson(file, t);
-    if (data.valid == false) {
-      setLoderActivation(false);
-      setToast(data.toast);
-      return;
+    console.log('data',data)
+    if (!data.valid) {
+      return {check:false, stopUpload:true, toast:data.toast};
     }
+    console.log("hi")
     // Running geojson validaiton on uploaded file
-    let response = geojsonValidations(data, schemaData.schema, t);
+    let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
+    console.log(response)
     if (!response.valid) setUploadedFileError(response.message);
     let check = response.valid;
     let error = response.message;
-    let fileDataToStore = data;
+    let fileDataToStore = data.geojsonData;
     return { check, error, fileDataToStore };
   };
   const handleShapefiles = async (file, schemaData) => {
@@ -306,8 +317,8 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     closeModal();
   };
 
-  // Download the selected file
-  const downloadFile = () => {
+  // Function for creating blob out of data
+  const dataToBlob = () => {
     let blob;
     switch (fileData.fileType) {
       case "Excel":
@@ -330,9 +341,16 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         });
         // Group keys and values into the desired format
         const result = { [fileData.fileName]: [keys, ...values] };
+        console.log(result);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
+    return blob;
+  };
+
+  // Download the selected file
+  const downloadFile = () => {
+    let blob = dataToBlob();
     // Crating a url object for the blob
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -367,6 +385,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const validationForMappingAndDataSaving = () => {
     setLoderActivation(true);
     const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+    let error;
     if (!schemaData && !schemaData.schema) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
       setLoderActivation(false);
@@ -380,14 +399,20 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     setModal("none");
     const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
+    console.log(resourceMapping)
     if (!response.valid) {
+      error= response.message;
+      const fileObject = fileData;
+      fileObject.error = error;
+      setFileData((prev) => ({ ...prev, error }));
+      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
       setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
       setUploadedFileError(response.message);
       setLoderActivation(false);
-
       return;
     }
-    setFileData((prev) => ({ ...prev, data, resourceMapping }));
+    console.log(resourceMapping)
+    setFileData((prev) => ({ ...prev, data, resourceMapping, error }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
     setLoderActivation(false);
   };
@@ -414,7 +439,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
-  const cancleUpload = ()=>{
+  const cancleUpload = () => {
     setFileDataList({ ...fileDataList, [fileData.id]: undefined });
     setFileData(undefined);
     setDataPresent(false);
@@ -422,7 +447,51 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     setDataUpload(false);
     setSelectedFileType(null);
     closeModal();
-  }
+  };
+
+  const openDataPreview = () => {
+    // let blob = dataToBlob();
+    // console.log(blob)
+    // const data = {url:blob,
+    //   fileName:"idk so bla bla"
+    // }
+    // const reader = new FileReader();
+
+    // reader.onload = (e) => {
+    //   const data = new Uint8Array(e.target.result);
+    //   const excelBlob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //   const blobURI = URL.createObjectURL(excelBlob);
+    //   // setExcelBlobURI(blobURI);
+    //   setPreviewUploadedData(blobURI);
+    // };
+    // reader.readAsArrayBuffer(fileData.file);
+    let data;
+    switch (fileData.fileType) {
+      case "Excel":
+        data = fileData.data;
+        break;
+      case "Shapefiles":
+      case "Geojson":
+        if (!fileData || !fileData.data) {
+          setToast({
+            state: "error",
+            message: t("ERROR_DATA_NOT_PRESENT"),
+          });
+          return;
+        }
+        console.log(fileData.data);
+        // Extract keys from the first feature's properties
+        const keys = Object.keys(fileData.data.features[0].properties);
+        // Extract corresponding values for each feature
+        const values = fileData.data.features.map((feature) => {
+          return keys.map((key) => feature.properties[key]);
+        });
+        // Group keys and values into the desired format
+        data = { [fileData.fileName]: [keys, ...values] };
+        break;
+    }
+    setPreviewUploadedData(data);
+  };
 
   return (
     <div className="jk-header-btn-wrapper microplanning">
@@ -456,6 +525,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
                 error={uploadedFileError}
                 setToast={setToast}
                 template={template}
+                openDataPreview={openDataPreview}
               />
             )}
           </div>
@@ -543,6 +613,12 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       {toast && toast.state === "warning" && (
         <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} warning />
       )}
+      {console.log(previewUploadedData)}
+      {previewUploadedData && (
+        <div className="popup-wrap">
+          <ExcelComponent sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
+        </div>
+      )}
     </div>
   );
 };
@@ -578,7 +654,13 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
         className="upload-option"
         style={selectedFileType.id === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
       >
-        <CustomIcon key={item.id} Icon={Icons[item.iconName]} width={"2.5rem"} height={"3rem"} color={selectedFileType.id === item.id ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"  }/>
+        <CustomIcon
+          key={item.id}
+          Icon={Icons[item.iconName]}
+          width={"2.5rem"}
+          height={"3rem"}
+          color={selectedFileType.id === item.id ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"}
+        />
         <p>{t(item.code)}</p>
         <button
           className={selectedFileType && selectedFileType.id === item.id ? "selected-button" : "select-button"}
@@ -653,7 +735,18 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
 };
 
 // Component to display uploaded file
-const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, DownloaddFile, DeleteDelete, error, setToast, template }) => {
+const UploadedFile = ({
+  selectedSection,
+  selectedFileType,
+  file,
+  ReuplaodFile,
+  DownloaddFile,
+  DeleteDelete,
+  error,
+  setToast,
+  template,
+  openDataPreview,
+}) => {
   const { t } = useTranslation();
   return (
     <div key={selectedSection.id} className="upload-component-active">
@@ -672,7 +765,7 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
         </div>
         <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
 
-        <div className="uploaded-file">
+        <div className="uploaded-file" onDoubleClick={openDataPreview}>
           <div className="uploaded-file-details">
             <div>
               <CustomIcon Icon={Icons.File} width={"48"} height={"48"} color="rgba(80, 90, 95, 1)" />
@@ -681,15 +774,15 @@ const UploadedFile = ({ selectedSection, selectedFileType, file, ReuplaodFile, D
           </div>
           <div className="uploaded-file-operations">
             <div className="button" onClick={ReuplaodFile}>
-              <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"2.5rem"} color={"rgba(177, 180, 182, 1)"} />
+              <CustomIcon Icon={Icons.FileUpload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("Reupload")}</p>
             </div>
             <div className="button" onClick={DownloaddFile}>
-              <CustomIcon Icon={Icons.FileDownload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
+              <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("Download")}</p>
             </div>
             <div className="button deletebutton" onClick={DeleteDelete}>
-              <CustomIcon Icon={Icons.Trash} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
+              <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("Delete")}</p>
             </div>
           </div>
@@ -794,9 +887,11 @@ const readGeojson = async (file, t) => {
     reader.onload = (e) => {
       try {
         const geoJSONData = JSON.parse(e.target.result);
-        resolve(geoJSONData);
+        const trimmedGeoJSONData = trimJSON(geoJSONData);
+        console.log(trimmedGeoJSONData)
+        resolve({ valid: true, geojsonData:trimmedGeoJSONData });
       } catch (error) {
-        resolve({ valid: false, toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") } });
+        resolve({ valid: false, toast: { state: "error", message: t("ERROR_INCORRECT_FORMAT") } });
       }
     };
     reader.onerror = function (error) {
@@ -807,6 +902,27 @@ const readGeojson = async (file, t) => {
   });
 };
 
+// Function to recursively trim leading and trailing spaces from string values in a JSON object
+const trimJSON = (jsonObject) => {
+  if (typeof jsonObject !== 'object') {
+    return jsonObject; // If not an object, return as is
+  }
+
+  if (Array.isArray(jsonObject)) {
+    return jsonObject.map(item => trimJSON(item)); // If it's an array, recursively trim each item
+  }
+
+  const trimmedObject = {};
+  for (const key in jsonObject) {
+    if (jsonObject.hasOwnProperty(key)) {
+      const value = jsonObject[key];
+      // Trim string values, recursively trim objects
+      trimmedObject[key.trim()] = (typeof value === 'string') ? value.trim() :
+                           (typeof value === 'object') ? trimJSON(value) : value;
+    }
+  }
+  return trimmedObject;
+};
 // Function for reading and validating shape file data
 const readAndValidateShapeFiles = async (file, t, namingConvension) => {
   return new Promise(async (resolve, reject) => {
@@ -871,8 +987,14 @@ const checkProjection = async (zip) => {
   if (!prjFile) {
     return "absent";
   }
+
   const prjText = await prjFile.async("text");
-  return prjText.includes("EPSG:4326");
+
+  if (prjText.includes("GEOGCS") && prjText.includes("WGS_1984") && prjText.includes("DATUM") && prjText.includes("D_WGS_1984")) {
+    return "EPSG:4326";
+  } else {
+    return false;
+  }
 };
 
 // Function to handle the template download

@@ -39,6 +39,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping,setRe
    // Update user columns when uploaded data changes
    useEffect(() => {
      let userUploadedColumns = new Set();
+     console.log(uploadedData)
      uploadedData["features"].forEach((item) => {
        Object.keys(item["properties"]).forEach((key) => userUploadedColumns.add(key));
      });
