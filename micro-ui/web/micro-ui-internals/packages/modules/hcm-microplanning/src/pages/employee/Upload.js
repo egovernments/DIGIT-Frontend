@@ -430,7 +430,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
-  const cancleUpload = () => {
+  const cancelUpload  = () => {
     setFileDataList({ ...fileDataList, [fileData.id]: undefined });
     setFileData(undefined);
     setDataPresent(false);
