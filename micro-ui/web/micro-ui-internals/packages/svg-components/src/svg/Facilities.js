@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const Facility = ({ className, width = "24", height = "24", style = {}, fill = "#F47738", onClick = null }) => {
+export const Facilities = ({ className, width = "24", height = "24", style = {}, fill = "#F47738", onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -15,7 +15,7 @@ export const Facility = ({ className, width = "24", height = "24", style = {}, f
 };
 
 
-Facility.propTypes = {
+Facilities.propTypes = {
   /** custom width of the svg icon */
   width: PropTypes.string,
   /** custom height of the svg icon */
