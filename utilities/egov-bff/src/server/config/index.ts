@@ -61,7 +61,7 @@ const config = {
     boundaryHost: process.env.EGOV_BOUNDARY_HOST
       // || "http://localhost:8087/"
       || "https://unified-dev.digit.org/",
-    projectHost: process.env.HEALTH_PROJECT_HOST
+    projectHost: process.env.EGOV_PROJECT_HOST
       // || "http://localhost:8088/"
       || "https://unified-dev.digit.org/",
     userHost: process.env.EGOV_USER_HOST
