@@ -158,10 +158,10 @@
           "Terrain": {
             "type": "string"
           },
-          "Target population Demo 1  (as configured in MDMS)": {
+          "Target population Demo 1": {
             "type": "number"
           },
-          "Target population Demo 2  (as configured in MDMS)": {
+          "Target population Demo 2": {
             "type": "number"
           },
           "Target population to reach per cycle against the boundaryn in column H Total": {
@@ -171,8 +171,8 @@
         "required": [
           "Boundary code",
           "Terrain",
-          "Target population Demo 1  (as configured in MDMS)",
-          "Target population Demo 2  (as configured in MDMS)",
+          "Target population Demo 1",
+          "Target population Demo 2",
           "Target population to reach per cycle against the boundaryn in column H Total"
         ],
         "locationDataColumns": []
@@ -283,10 +283,10 @@
           "Terrain": {
             "type": "string"
           },
-          "Target population Demo 1  (as configured in MDMS)": {
+          "Target population Demo 1": {
             "type": "number"
           },
-          "Target population Demo 2  (as configured in MDMS)": {
+          "Target population Demo 2": {
             "type": "number"
           },
           "Target population to reach per cycle against the boundaryn in column H Total": {
@@ -296,8 +296,8 @@
         "required": [
           "Boundary code",
           "Terrain",
-          "Target population Demo 1  (as configured in MDMS)",
-          "Target population Demo 2  (as configured in MDMS)",
+          "Target population Demo 1",
+          "Target population Demo 2",
           "Target population to reach per cycle against the boundaryn in column H Total"
         ],
         "locationDataColumns": []

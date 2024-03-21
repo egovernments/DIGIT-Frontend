@@ -101,13 +101,13 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
           const instancePathType = validateGeojson.errors[i].instancePath.split("/");
-          columns.add(instancePathType[instancePathType.length - 1]);
           break;
-
+        case "const":
+          if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") return { valid, message: "ERROR_FEATURECOLLECTION" };
+          break;
         case "required":
           columns.add(validateGeojson.errors[i].params.missingProperty);
           break;
-
         case "pattern":
           const instancePathPattern = validateGeojson.errors[i].instancePath.split("/");
           columns.add(instancePathPattern[instancePathPattern.length - 1]);
@@ -118,6 +118,7 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
       }
     }
     const columnList = [...columns];
+    // if(column)
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE_PLACEHOLDER", {
       columns:
         columnList.length > 1

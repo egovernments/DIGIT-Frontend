@@ -300,10 +300,10 @@
                 background-color: white;
                 cursor: pointer;
             }
-
             p {
                 padding: 0;
                 margin: 0;
+                margin-left: 0.5rem;
                 color: rgba(244, 119, 56, 1);
                 font-weight: 600;
                 font-size: 1rem;
@@ -457,27 +457,29 @@
         border-radius: 0.25rem;
         background-color: rgba(250, 250, 250, 255);
         display: block;
-                overflow: auto;
-                padding-bottom: 0;
+        overflow: auto;
+        padding-bottom: 0;
+
         table {
             width: 100%;
-            th {
-                    width: 50%;
-                    font-weight: 700;
-                    font-size: 1rem;
-                    padding: 1.5rem;
-                    margin: 0;
-                    border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
-                }
 
-                td {
-                    width: 50%;
-                    font-weight: 400;
-                    font-size: 1rem;
-                    padding: 1.5rem;
-                    margin: 0;
-                    border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
-                }
+            th {
+                width: 50%;
+                font-weight: 700;
+                font-size: 1rem;
+                padding: 1.5rem;
+                margin: 0;
+                border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
+            }
+
+            td {
+                width: 50%;
+                font-weight: 400;
+                font-size: 1rem;
+                padding: 1.5rem;
+                margin: 0;
+                border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
+            }
 
             select {
                 width: 100%;
@@ -492,12 +494,14 @@
                 border: 0.0623rem solid black !important;
                 padding: 0.5rem;
                 font-weight: 400;
-                font-size: 1rem; 
+                font-size: 1rem;
             }
+
             select:focus {
                 outline: none;
-                border-color: black; 
-              }
+                border-color: black;
+            }
+
             option {
                 font-weight: 400;
                 padding: 0.5rem;
@@ -506,14 +510,15 @@
                 border: 0.0623rem solid black !important;
                 border-radius: 0;
             }
+
             option:focus {
                 outline: none;
-                border-color: black; 
-              }
+                border-color: black;
+            }
 
         }
-        
-        .pagination-toolbar{
+
+        .pagination-toolbar {
             position: sticky;
             bottom: 0;
             left: 0;
@@ -523,7 +528,8 @@
             align-items: center;
             justify-content: end;
             padding: 1rem 0;
-            select{
+
+            select {
                 appearance: none;
                 -webkit-appearance: none;
                 -moz-appearance: none;
@@ -534,33 +540,114 @@
                 background-color: rgb(255, 255, 255, 0);
                 padding: 0.5rem;
                 font-weight: 400;
-                font-size: 1rem;   
-                color:rgba(80, 90, 95, 1);
+                font-size: 1rem;
+                color: rgba(80, 90, 95, 1);
                 padding-right: 2em;
             }
+
             select:focus {
                 outline: none;
-              }
-            option{
+            }
+
+            option {
                 font-weight: 400;
                 padding: 0.5rem;
                 font-size: 1rem;
                 max-height: 50%;
-                color:rgba(80, 90, 95, 1);
+                color: rgba(80, 90, 95, 1);
                 border-radius: 0;
             }
-            span{
+
+            span {
                 font-weight: 400;
                 padding: 0.5rem;
                 font-size: 1rem;
-                color:rgba(80, 90, 95, 1);
+                color: rgba(80, 90, 95, 1);
             }
-            .navigation{
-                color:black;
+
+            .navigation {
+                color: black;
                 font-size: 1rem;
                 font-weight: 700;
             }
         }
+    }
 
+    .preview-data {
+        margin: 0 2.5rem;
+        width: calc(100% - 5rem);
+        border-radius: 0.25rem;
+
+        .operational-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .excel-wrapper {
+            width: 100%;
+            padding: 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: white !important;
+            border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
+            border-radius: 0.25rem;
+
+            .sheet-wrapper {
+                height: 80vh;
+                overflow: auto;
+                background-color: white;
+                padding: 0.3rem;
+
+                &::-webkit-scrollbar {
+                    width: 0.625rem;
+                    height: 0.625rem;
+                    border: none;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: #ffffff;
+                    border: none;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: rgba(177, 180, 182, 1);
+                    border-radius: 10px;
+                    border: 2px solid #f0f0f0;
+                }
+
+                &::-webkit-scrollbar-thumb:hover {
+                    background: rgba(177, 180, 182, 0.8);
+                }
+
+                h3 {
+                    background-color: #f4f4f4;
+                    padding: 10px;
+                    margin: 0;
+                }
+
+                .excel-table {
+                    width: 100%;
+                    border: 1px solid #ccc;
+                    border-collapse: collapse;
+
+                    th,
+                    td {
+                        border: 1px solid #ccc;
+                        padding: 8px;
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                    }
+
+                    th {
+                        background-color: #f4f4f4;
+                        font-weight: bold;
+                        text-align: left;
+                    }
+                }
+            }
+        }
     }
 }
