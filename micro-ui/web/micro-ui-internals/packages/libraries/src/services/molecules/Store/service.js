@@ -71,7 +71,7 @@ export const StoreService = {
         bannerUrl: stateInfo.bannerUrl,
       },
       localizationModules: stateInfo.localizationModules,
-      modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x,y)=>x?.order-y?.order),
+      modules: MdmsRes?.tenant?.citymodule?.filter((module) => module?.active)?.filter((module) => enabledModules?.includes(module?.code))?.sort((x,y)=>x?.order-y?.order)||[],
       uiHomePage: uiHomePage
     };
 

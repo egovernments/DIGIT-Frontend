@@ -4,10 +4,10 @@ import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
+// import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+// import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+// import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
 
@@ -65,10 +65,10 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
   initCoreComponents();
-  initDSSComponents();
-  initHRMSComponents();
-  initEngagementComponents();
-  initUtilitiesComponents();
+  // initDSSComponents();
+  // initHRMSComponents();
+  // initEngagementComponents();
+  // initUtilitiesComponents();
   initWorkbenchComponents();
   initPGRComponents();
 
