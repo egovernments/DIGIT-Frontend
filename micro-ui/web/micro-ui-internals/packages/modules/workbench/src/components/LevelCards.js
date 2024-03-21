@@ -46,7 +46,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
           
           <LabelFieldPair card key={index}>
             <CardLabel style={{ marginTop: "0px" }} className="card-details">
-              {t(`${"HCM_LEVEL "}${index + 1}`)}
+              {t("HCM_LEVEL") + " " + (index + 1)}
             </CardLabel>
             <TextInput
               className="field"
@@ -63,7 +63,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
               type="button"
               className="CloseLevelButton"
               icon={<DeleteIconv2 styles={{ height: "1.5rem", width: "1.5rem" }} fill="#F47738" />}
-              onButtonClick={handleDeleteRowDetails}
+              onButtonClick={() => handleDeleteRowDetails(index)} 
               style={{ fontSize: "1rem" }}
             />
            
