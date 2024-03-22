@@ -65,6 +65,17 @@ export default (queryClient) => {
     },
   }); 
 
+  registerApplication({
+    name: "Engagement",
+    app: () => import("engagement/EngagementModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
+    customProps: {
+      title: "Engagement is running on host",
+      queryClient,
+      userType
+    },
+  }); 
+
   start();
 }
 
