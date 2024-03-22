@@ -37,6 +37,7 @@
     "uuid": "^9.0.1",
     "winston": "^3.8.2",
     "xlsx": "^0.18.5",
+    "xlsx-populate": "^1.21.0",
     "yup": "^1.0.2"
   },
   "devDependencies": {

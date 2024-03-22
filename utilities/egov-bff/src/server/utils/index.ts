@@ -3,18 +3,19 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { getCount, createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
-import { getCount } from '../api/index'
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
+// import * as xlsx from 'xlsx-populate';
 const NodeCache = require("node-cache");
 const _ = require('lodash');
+
 
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -1093,8 +1094,8 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
         throw new Error("Insert boundary hierarchy level wise");
       }
     }
-    mappingMap.set(row[len - 2], row[len - 1]); 
-    console.log(mappingMap,"mapppppp");
+    mappingMap.set(row[len - 2], row[len - 1]);
+    console.log(mappingMap, "mapppppp");
   });
   return { mappingMap, countMap };
 }
@@ -1253,8 +1254,6 @@ async function processDataSearchRequest(request: any) {
   request.body.ResourceDetails = results;
 }
 
-
-
 function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; values: any[] } {
   const { id, tenantId, type, status } = SearchCriteria;
   let conditions = [];
@@ -1289,6 +1288,47 @@ function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; va
   ${whereClause};`, values
   };
 }
+
+
+
+async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
+  try {
+    const uniqueDistricts: string[] = [];
+    for (const item of boundaryData) {
+      if (item.District && !uniqueDistricts.includes(item.District)) {
+        uniqueDistricts.push(item.District);
+      }
+    }
+    const workbook = await getWorkbook(fileUrl, 'Sheet1');
+    for (const district of uniqueDistricts) {
+      const districtDataFiltered = boundaryData.filter(item => item.District === district);
+      const newSheetData = [Object.keys(districtDataFiltered[0])].concat(districtDataFiltered.map(obj => Object.values(obj)));
+      const ws = XLSX.utils.aoa_to_sheet(newSheetData);
+      XLSX.utils.book_append_sheet(workbook, ws, district);
+    }
+    return workbook;
+  } catch (error) {
+    throw Error("An error occurred while appending sheets:");
+  }
+}
+
+async function getWorkbook(fileUrl: string, sheetName: string) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/pdf',
+    };
+    const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+    const workbook = XLSX.read(workbookData, { type: 'buffer' });
+    if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+      throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+    }
+    return workbook;
+  } catch (error) {
+    throw new Error("Error while fetching sheet");
+  }
+}
+
 
 
 
@@ -1341,7 +1381,8 @@ export {
   extractCodesFromBoundaryRelationshipResponse,
   searchProjectCampaignResourcData,
   processDataSearchRequest,
-  getCodeMappingsOfExistingBoundaryCodes
+  getCodeMappingsOfExistingBoundaryCodes,
+  appendSheetsToWorkbook
 };
 
 
