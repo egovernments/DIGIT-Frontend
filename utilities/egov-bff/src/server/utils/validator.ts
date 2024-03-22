@@ -219,6 +219,9 @@ function validateGenerateRequest(request: express.Request) {
     if (!tenantId) {
         throw new Error("tenantId is required");
     }
+    if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+        throw new Error("tenantId in userInfo and query should be same");
+    }
     if (!["facility", "user", "boundary", "facilityWithBoundary"].includes(String(type))) {
         throw new Error("type should be facility, user, boundary or facilityWithBoundary");
     }
@@ -381,6 +384,9 @@ async function validateCreateRequest(request: any) {
         if (!request?.body?.ResourceDetails?.action) {
             throw new Error("action is missing")
         }
+        if (request?.body?.ResourceDetails?.tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+            throw new Error("tenantId is not matching with userInfo")
+        }
         validateAction(request?.body?.ResourceDetails?.action);
         validateResourceType(request?.body?.ResourceDetails?.type);
     }
@@ -499,6 +505,9 @@ function validateProjectCampaignMissingFields(CampaignDetails: any) {
     if (!projectType) missingFields.push("projectType");
     if (!deliveryRules) missingFields.push("deliveryRules");
     if (!additionalDetails) missingFields.push("additionalDetails");
+    if (startDate && endDate && (new Date(endDate).getTime() - new Date(startDate).getTime()) < (24 * 60 * 60 * 1000)) {
+        missingFields.push("endDate must be at least one day after startDate");
+    }
     if (missingFields.length > 0) {
         const errorMessage = "The following fields are missing: " + missingFields.join(", ");
         throw new Error(errorMessage);
@@ -589,6 +598,9 @@ async function validateProjectCampaignRequest(request: any) {
 
     if (!(action == "create" || action == "draft")) {
         throw new Error("action can only be create or draft")
+    }
+    if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+        throw new Error("tenantId is not matching with userInfo")
     }
     await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
     await validateProjectCampaignResources(resources, tenantId, request)
