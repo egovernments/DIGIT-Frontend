@@ -51,40 +51,6 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       switch (key) {
-        case "TQM_INBOX_SLA":
-          let sla = 0;
-          const currentDate = new Date();
-          const targetTimestamp = row?.businessObject?.scheduledDate;
-          const targetDate = new Date(targetTimestamp);
-          const remainingSLA = targetDate - currentDate;
-          sla = Math.ceil(remainingSLA / (24 * 60 * 60 * 1000));
-          if (!row?.businessObject?.scheduledDate) return t("ES_COMMON_NA");
-          return Math.sign(sla) === -1 ? (
-            <span className="sla-cell-error">
-              {Math.ceil(sla)} {t("COMMON_DAYS_OVERDUE")}
-            </span>
-          ) : (
-            <span className="sla-cell-success">
-              {sla} {t("COMMON_DAYS")}
-            </span>
-          );
-
-        case "TQM_PENDING_DATE":
-          return Digit.DateUtils.ConvertEpochToDate(value);
-
-        case "TQM_TEST_ID":
-          return (
-            <span className="link">
-              <Link
-                to={`/${
-                  window.contextPath
-                }/employee/tqm/view-test-results?tenantId=${Digit.ULBService.getCurrentTenantId()}&id=${value}&from=TQM_BREAD_INBOX`}
-              >
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
-              </Link>
-            </span>
-          );
-
         default:
           return "case_not_found";
       }
