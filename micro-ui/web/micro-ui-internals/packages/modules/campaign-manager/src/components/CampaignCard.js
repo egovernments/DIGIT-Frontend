@@ -3,14 +3,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
+  LOCALISATION: ["EMPLOYEE", "SUPERUSER", "EMPLOYEE_COMMON", "LOC_ADMIN"],
   MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
 };
 
 const CampaignCard = () => {
   // if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
-    // return null;
+  // return null;
   // }
 
   const { t } = useTranslation();
@@ -35,6 +35,11 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      roles: [], // @nabeel roles to be added later
+    },
+    {
+      label: t("ACTION_TEST_MY_CAMPAIGN"),
+      link: `/${window?.contextPath}/employee/campaign/my-campaign`,
       roles: [], // @nabeel roles to be added later
     },
   ];
