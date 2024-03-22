@@ -193,7 +193,6 @@ export const UICustomizations = {
       return "";
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("MADARCHOD", row, key, column, value, searchResult);
       switch (key) {
         case "TQM_INBOX_SLA":
           let sla = 0;

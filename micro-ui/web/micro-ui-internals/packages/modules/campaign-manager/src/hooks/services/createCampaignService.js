@@ -1,5 +1,4 @@
 const createCampaignService = async (req, tenantId) => {
-  console.log("SERVICE", req, tenantId);
   try {
     const response = await Digit.CustomService.getResponse({
       url: "/project-factory/v1/project-type/create",

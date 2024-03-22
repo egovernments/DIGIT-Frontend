@@ -85,6 +85,10 @@ const SetupCampaign = () => {
   }
 
   useEffect(() => {
+    if (currentKey === 8) {
+      // history.push()
+      return;
+    }
     const reqCreate = async () => {
       let payloadData = {};
       payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -116,7 +120,7 @@ const SetupCampaign = () => {
     };
 
     reqCreate();
-  }, [totalFormData]);
+  }, [totalFormData, currentKey]);
 
   const onSubmit = (formData) => {
     setCurrentKey(currentKey + 1);
