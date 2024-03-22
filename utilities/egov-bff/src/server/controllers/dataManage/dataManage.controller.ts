@@ -109,7 +109,7 @@ class dataManageController {
             if (!fileResponse?.fileStoreIds?.[0]?.url) {
                 throw new Error("Invalid file");
             }
-            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
+            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1",false);
             const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
             const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
             const childParentMap = getChildParentMap(withoutBoundaryCode);
