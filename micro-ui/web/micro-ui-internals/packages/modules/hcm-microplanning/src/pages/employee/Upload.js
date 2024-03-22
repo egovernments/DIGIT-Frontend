@@ -13,7 +13,7 @@ import schemas from "../../configs/schemas.json";
 import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
-import { ExcelComponent } from "../../components/JsonToExcelPreview";
+import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 
 const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const { t } = useTranslation();
@@ -126,10 +126,12 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         setFileData(file);
         setDataPresent(true);
       } else {
+        setUploadedFileError(null);
         setSelectedFileType(null);
         setDataPresent(false);
       }
     } else {
+      setUploadedFileError(null);
       setSelectedFileType(null);
       setDataPresent(false);
     }
@@ -197,7 +199,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         case "Geojson":
           try {
             response = await handleGeojsonFile(file, schemaData);
-            if(response.check == false && response.stopUpload) {
+            if (response.check == false && response.stopUpload) {
               setLoderActivation(false);
               setToast(response.toast);
               return;
@@ -277,7 +279,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     // Reading and checking geojson data
     const data = await readGeojson(file, t);
     if (!data.valid) {
-      return {check:false, stopUpload:true, toast:data.toast};
+      return { check: false, stopUpload: true, toast: data.toast };
     }
     // Running geojson validaiton on uploaded file
     let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
@@ -393,7 +395,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {
-      error= response.message;
+      error = response.message;
       const fileObject = fileData;
       fileObject.error = error;
       setFileData((prev) => ({ ...prev, error }));
@@ -430,7 +432,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
-  const cancelUpload  = () => {
+  const cancelUpload = () => {
     setFileDataList({ ...fileDataList, [fileData.id]: undefined });
     setFileData(undefined);
     setDataPresent(false);
@@ -471,40 +473,44 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   return (
     <div className="jk-header-btn-wrapper microplanning">
       <div className="upload">
-        {!dataPresent ? (
-          dataUpload ? (
-            <div className="upload-component">
-              <FileUploadComponent
-                section={sections.filter((e) => e.id === selectedSection.id)[0]}
-                selectedSection={selectedSection}
-                selectedFileType={selectedFileType}
-                UploadFileToFileStorage={UploadFileToFileStorage}
-                onTypeError={onTypeErrorWhileFileUpload}
-                setToast={setToast}
-                template={template}
-              />
-            </div>
+        <div className="upload-component-wrapper">
+          {!dataPresent ? (
+            dataUpload ? (
+              <div className="upload-component">
+                <FileUploadComponent
+                  section={sections.filter((e) => e.id === selectedSection.id)[0]}
+                  selectedSection={selectedSection}
+                  selectedFileType={selectedFileType}
+                  UploadFileToFileStorage={UploadFileToFileStorage}
+                  onTypeError={onTypeErrorWhileFileUpload}
+                  setToast={setToast}
+                  template={template}
+                />
+              </div>
+            ) : (
+              <div className="upload-component">{sectionComponents}</div>
+            )
           ) : (
-            <div className="upload-component">{sectionComponents}</div>
-          )
-        ) : (
-          <div className="upload-component">
-            {selectedSection != null && fileData !== null && (
-              <UploadedFile
-                selectedSection={selectedSection}
-                selectedFileType={selectedFileType}
-                file={fileData}
-                ReuplaodFile={() => setModal("reupload-conformation")}
-                DownloaddFile={downloadFile}
-                DeleteDelete={() => setModal("delete-conformation")}
-                error={uploadedFileError}
-                setToast={setToast}
-                template={template}
-                openDataPreview={openDataPreview}
-              />
-            )}
-          </div>
-        )}
+            <div className="upload-component">
+              {selectedSection != null && fileData !== null && (
+                <UploadedFile
+                  selectedSection={selectedSection}
+                  selectedFileType={selectedFileType}
+                  file={fileData}
+                  ReuplaodFile={() => setModal("reupload-conformation")}
+                  DownloaddFile={downloadFile}
+                  DeleteDelete={() => setModal("delete-conformation")}
+                  error={uploadedFileError}
+                  setToast={setToast}
+                  template={template}
+                  openDataPreview={openDataPreview}
+                />
+              )}
+            </div>
+          )}
+          {!dataPresent && dataUpload && <UploadInstructions setModal={() => setModal("upload-guidelines")} t={t} />}
+        </div>
+
         <div className="upload-section-option">{sectionOptions}</div>
       </div>
 
@@ -566,7 +572,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           sections={sections}
           // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
           footerRightButtonBody={<AlternateButton text={t("COMPLETE_MAPPING")} />}
-          header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "44rem" }} />}
+          header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% - 2rem)" }} />}
           bodyText={t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}
           body={
             <SpatialDataPropertyMapping
@@ -580,6 +586,17 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           }
         />
       )}
+      {modal === "upload-guidelines" && (
+        <ModalWrapper
+          popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
+          popupStyles={{ width: "calc(100% - 6rem)" }}
+          closeModal={closeModal}
+          hideSubmit={true}
+          headerBarMainStyle={{ width: "100%" }}
+          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} style={{ width: "100%" }} />}
+          body={<UploadGuideLines t={t} />}
+        />
+      )}
       {loaderActivation && <Loader />}
       {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
       {toast && toast.state === "error" && (
@@ -590,7 +607,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       )}
       {previewUploadedData && (
         <div className="popup-wrap">
-          <ExcelComponent sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
+          <JsonPreviewInExcelForm sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
         </div>
       )}
     </div>
@@ -611,6 +628,26 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
         <CustomIcon Icon={Icons[item.iconName]} color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.id)}</p>
+    </div>
+  );
+};
+
+const UploadInstructions = ({ setModal, t }) => {
+  return (
+    <div className="information">
+      <div className="information-heading">
+        <CustomIcon Icon={Icons["Info"]} color={"rgba(52, 152, 219, 1)"} />
+        <p>{t("INFO")}</p>
+      </div>
+      <div className="information-description">
+        <p>{t("INFORMATION_DESCIPTION_1")}</p>
+        <div className="link-wrapper">
+          {t("REFER")} &nbsp;
+          <div className="link" onClick={setModal}>
+            {t("INFORMATION_DESCIPTION_2_LINK")}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -698,9 +735,9 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
         <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} onTypeError={onTypeError} multiple={false} name="file" types={types}>
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
-            <p className="">
-              {t(`INSTRUCTIONS_UPLOAD_${selectedFileType.code}`)} <text className="browse-text">{t("INSTRUCTIONS_UPLOAD_BROWSE_FILES")}</text>
-            </p>
+            <div className="browse-text-wrapper">
+              {t(`INSTRUCTIONS_UPLOAD_${selectedFileType.code}`)}&nbsp;<div className="browse-text">{t("INSTRUCTIONS_UPLOAD_BROWSE_FILES")}</div>
+            </div>
           </div>
         </FileUploader>
       </div>
@@ -793,6 +830,7 @@ const ModalWrapper = ({
   popupStyles,
   headerBarMainStyle,
   popupModuleActionBarStyles,
+  hideSubmit,
 }) => {
   const { t } = useTranslation();
   return (
@@ -807,7 +845,7 @@ const ModalWrapper = ({
       popupModuleMianStyles={{ margin: 0, padding: 0 }}
       popupModuleActionBarStyles={popupModuleActionBarStyles ? popupModuleActionBarStyles : { justifyContent: "space-between", padding: "1rem" }}
       style={{}}
-      hideSubmit={false}
+      hideSubmit={hideSubmit ? hideSubmit : false}
       footerLeftButtonstyle={{
         padding: 0,
         alignSelf: "flex-start",
@@ -862,7 +900,7 @@ const readGeojson = async (file, t) => {
       try {
         const geoJSONData = JSON.parse(e.target.result);
         const trimmedGeoJSONData = trimJSON(geoJSONData);
-        resolve({ valid: true, geojsonData:trimmedGeoJSONData });
+        resolve({ valid: true, geojsonData: trimmedGeoJSONData });
       } catch (error) {
         resolve({ valid: false, toast: { state: "error", message: t("ERROR_INCORRECT_FORMAT") } });
       }
@@ -877,12 +915,12 @@ const readGeojson = async (file, t) => {
 
 // Function to recursively trim leading and trailing spaces from string values in a JSON object
 const trimJSON = (jsonObject) => {
-  if (typeof jsonObject !== 'object') {
+  if (typeof jsonObject !== "object") {
     return jsonObject; // If not an object, return as is
   }
 
   if (Array.isArray(jsonObject)) {
-    return jsonObject.map(item => trimJSON(item)); // If it's an array, recursively trim each item
+    return jsonObject.map((item) => trimJSON(item)); // If it's an array, recursively trim each item
   }
 
   const trimmedObject = {};
@@ -890,8 +928,7 @@ const trimJSON = (jsonObject) => {
     if (jsonObject.hasOwnProperty(key)) {
       const value = jsonObject[key];
       // Trim string values, recursively trim objects
-      trimmedObject[key.trim()] = (typeof value === 'string') ? value.trim() :
-                           (typeof value === 'object') ? trimJSON(value) : value;
+      trimmedObject[key.trim()] = typeof value === "string" ? value.trim() : typeof value === "object" ? trimJSON(value) : value;
     }
   }
   return trimmedObject;
@@ -1005,6 +1042,41 @@ const getSchema = (campaignType, type, section, schemas) => {
     }
     return schema.campaignType === campaignType && schema.type === type && schema.section === section;
   });
+};
+
+// Uplaod GuideLines
+const UploadGuideLines = ({ t }) => {
+  const [points, setPoints] = useState([]);
+  // const t=(a)=>{
+  //   console.log(a)
+  //   if (a == `INSTRUCTION_POINTS_5`) return `INSTRUCTION_POINTS_5`
+  //   return "You are on the BI Clients tab in the characteristic editing screen in the BW modeling toolsYou are on the BI Clients tab in the characteristic editing screen in the BW modeling toolsYou are on the BI Clients tab in the characteristic editing screen in the BW modeling tools"
+  // }
+  useEffect(() => {
+    let pts = [];
+    let i = 1;
+    while (true) {
+      let msg = t(`INSTRUCTION_POINTS_${i}`);
+      if (msg !== `INSTRUCTION_POINTS_${i}`) pts.push(msg);
+      else break;
+      i += 1;
+    }
+    setPoints(pts);
+  }, []);
+
+  return (
+    <div className="guidelines">
+      <p className="sub-heading">{t("PREREQUISITES")}</p>
+      <div className="instruction-list flex">
+        {t("INSTRUCTION_PREREQUISITES_1")}&nbsp;<div className="link">{t("INSTRUCTION_PREREQUISITES_LINK")}</div>
+      </div>
+      <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
+      <p className="sub-heading">{t("PROCEDURE")}</p>
+      {points.map((item) => (
+        <p className="instruction-list">{item}</p>
+      ))}
+    </div>
+  );
 };
 
 // Custom icon component
