@@ -8,6 +8,7 @@ import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
 import registerRemotes from "./modules/registerRemotes"
+import { useTranslation } from "react-i18next";
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
@@ -42,6 +43,8 @@ registerRemotes(queryClient)
 
 
 const App = () => {
+  const {t} = useTranslation()
+  console.log(t("CORE_COMMON_LOGIN"),"In Core Module")
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
   const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
