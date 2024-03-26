@@ -282,7 +282,7 @@ import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
 
 // Importing From SVG Library
-import {SVG} from "./atoms/SVG";
+// import {SVG} from "./atoms/SVG";
 
 //Tutorial
 import Tutorial from "./hoc/Tutorial/Tutorial";
@@ -584,5 +584,5 @@ export {
 
 
   // Exported all svgs from svg-component library
-  SVG
+  // SVG
 };
