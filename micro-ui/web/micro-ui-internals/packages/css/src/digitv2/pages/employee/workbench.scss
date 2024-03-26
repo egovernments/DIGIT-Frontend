@@ -442,6 +442,14 @@
         @apply font-rc font-medium text-legend text-white leading-10;
       }
     }
+    .workbench-bulk-upload {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      .workbench-download-template-btn {
+        margin-right: 1rem;
+      }
+    }
   }
 
   .workbench-no-schema-found {

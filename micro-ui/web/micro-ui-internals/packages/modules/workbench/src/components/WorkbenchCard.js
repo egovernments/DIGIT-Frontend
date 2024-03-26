@@ -30,7 +30,7 @@ const WorkbenchCard = () => {
     },
     {
       label: t("ACTION_TEST_CREATE_NEW_HIERARCHY"),
-      link: `/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`,
+      link: `/${window?.contextPath}/employee/workbench/upload-boundary`,
       roles: ROLES.LOCALISATION,
     },
     // {

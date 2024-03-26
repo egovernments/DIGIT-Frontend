@@ -1,10 +1,10 @@
 import React from 'react';
 import XLSX from 'xlsx';
 
-const GenerateXlsx = ({inputRef}) =>  {
+const GenerateXlsx = ({inputRef, jsonData , skipHeader }) =>  {
   const handleExport = () => {
     // Sample JSON data
-    const jsonData = [
+    const Data = jsonData || [
       {
         "code": "WBH_MDMS_MASTER_ACCESSCONTROL_ACTIONS_TEST",
         "message": "Access Control",
@@ -14,7 +14,7 @@ const GenerateXlsx = ({inputRef}) =>  {
     ];
 
     // Create a new worksheet
-    const ws = XLSX.utils.json_to_sheet(jsonData);
+    const ws = XLSX.utils.json_to_sheet(Data ,  { skipHeader });
 
     // Create a new workbook
     const wb = XLSX.utils.book_new();
