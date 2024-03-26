@@ -2,7 +2,7 @@ import { Button, DownloadIcon, SVG } from "@egovernments/digit-ui-react-componen
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-export const ExcelComponent = (props) => {
+export const JsonPreviewInExcelForm = (props) => {
   const { t } = useTranslation();
   const sheetsData = props?.sheetsData;
   return (
