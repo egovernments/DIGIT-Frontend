@@ -126,19 +126,20 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
         setFileData(file);
         setDataPresent(true);
       } else {
-        setUploadedFileError(null);
-        setSelectedFileType(null);
-        setDataPresent(false);
+        resetSectionState();
       }
     } else {
-      setUploadedFileError(null);
-      setSelectedFileType(null);
-      setDataPresent(false);
+      resetSectionState();
     }
+  }, [selectedSection]);
 
+  const resetSectionState = () => {
+    setUploadedFileError(null);
+    setSelectedFileType(null);
+    setDataPresent(false);
     setResourceMapping([]);
     setDataUpload(false);
-  }, [selectedSection]);
+  };
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
   // Function for handling upload file event
@@ -395,18 +396,20 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {
-      error = response.message;
-      const fileObject = fileData;
-      fileObject.error = error;
-      setFileData((prev) => ({ ...prev, error }));
-      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
-      setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-      setUploadedFileError(response.message);
-      setLoderActivation(false);
-      return;
+      return handleValidationErrorResponse(response.message);
     }
     setFileData((prev) => ({ ...prev, data, resourceMapping, error }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
+    setLoderActivation(false);
+  };
+
+  const handleValidationErrorResponse = (error) => {
+    const fileObject = fileData;
+    fileObject.error = error;
+    setFileData((prev) => ({ ...prev, error }));
+    setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
+    setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+    setUploadedFileError(response.message);
     setLoderActivation(false);
   };
 
@@ -1068,7 +1071,10 @@ const UploadGuideLines = ({ t }) => {
     <div className="guidelines">
       <p className="sub-heading">{t("PREREQUISITES")}</p>
       <div className="instruction-list flex">
-        {t("INSTRUCTION_PREREQUISITES_1")}&nbsp;<div className="link">{t("INSTRUCTION_PREREQUISITES_LINK")}</div>
+        {t("INSTRUCTION_PREREQUISITES_1")}&nbsp;
+        <a className="link" href="https://help.sap.com/docs/SAP_BW4HANA/107a6e8a38b74ede94c833ca3b7b6f51/ff09575df3614f3da5738ea14e72b703.html">
+          {t("INSTRUCTION_PREREQUISITES_LINK")}
+        </a>
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
       <p className="sub-heading">{t("PROCEDURE")}</p>
