@@ -10,8 +10,9 @@
     "packages/pgr",
     "packages/dss",
     "packages/hrms",
-    "packages/ui-libraries",
-    "packages/engagement"
+    "packages/engagement",
+    "packages/ui-components",
+    "packages/ui-libraries"
   ],
   "command": {
     "run": {

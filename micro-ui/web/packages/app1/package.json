@@ -20,7 +20,7 @@
     "serve": "^13.0.2",
     "single-spa": "^5.9.3",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
-    "@egovernments/digit-ui-react-components":"1.4.107",
+    "@egovernments/digit-ui-react-components":"1.4.109",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "3.6.1",

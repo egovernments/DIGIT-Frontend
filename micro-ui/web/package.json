@@ -24,8 +24,9 @@
     "packages/pgr",
     "packages/dss",
     "packages/hrms",
-    "packages/ui-libraries",
-    "packages/engagement"
+    "packages/engagement",
+    "packages/ui-components",
+    "packages/ui-libraries"
   ],
   "scripts": {
     "build": "yarn lerna run build",
