@@ -3,17 +3,19 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { getCount, createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
-import { getCount } from '../api/index'
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
+import pool from "../config/dbPoolConfig";
+// import * as xlsx from 'xlsx-populate';
 const NodeCache = require("node-cache");
 const _ = require('lodash');
+
 
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -210,22 +212,6 @@ async function generateXlsxFromJson(request: any, response: any, simplifiedData:
     logger.error(errorMessage)
     return errorResponder({ message: errorMessage + "    Check Logs" }, request, response);
   }
-}
-
-async function generateAuditDetails(request: any) {
-
-  const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
-  const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
-
-
-  const auditDetails = {
-    createdBy: createdBy,
-    lastModifiedBy: lastModifiedBy,
-    createdTime: Date.now(),
-    lastModifiedTime: Date.now()
-  }
-
-  return auditDetails;
 }
 
 async function generateResourceMessage(requestBody: any, status: string) {
@@ -545,6 +531,17 @@ function getCreationDetails(APIResource: any, sheetName: any) {
     sheetName
   };
 }
+function generateAuditDetails(request: any) {
+  const createdBy = request?.body?.RequestInfo?.userInfo?.uuid;
+  const lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
+  const auditDetails = {
+    createdBy: createdBy,
+    lastModifiedBy: lastModifiedBy,
+    createdTime: Date.now(),
+    lastModifiedTime: Date.now()
+  }
+  return auditDetails;
+}
 
 function addRowDetails(processResultUpdatedDatas: any[], updatedDatas: any[]): void {
   if (!processResultUpdatedDatas) return;
@@ -770,19 +767,31 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-function modifyBoundaryData(boundaryData: any) {
-  let outputData: string[][] = [];
+function modifyBoundaryData(boundaryData: unknown[]) {
+  let withBoundaryCode: string[][] = [];
+  let withoutBoundaryCode: string[][] = [];
+
   for (const obj of boundaryData) {
     const row: string[] = [];
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        row.push(obj[key]);
+    if (typeof obj === 'object' && obj !== null) {
+      for (const value of Object.values(obj)) {
+        if (value !== null && value !== undefined) {
+          row.push(value.toString()); // Convert value to string and push to row
+        }
+      }
+
+      if (obj.hasOwnProperty('Boundary Code')) {
+        withBoundaryCode.push(row);
+      } else {
+        withoutBoundaryCode.push(row);
       }
     }
-    outputData.push(row);
   }
-  return outputData;
+
+  return [withBoundaryCode, withoutBoundaryCode];
 }
+
+
 
 async function enrichAndSaveResourceDetails(requestBody: any) {
   if (!requestBody?.ResourceDetails?.status) {
@@ -808,7 +817,7 @@ async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearch
   if (!fileResponse?.fileStoreIds?.[0]?.url) {
     throw new Error("Not any download url returned for given fileStoreId")
   }
-  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName)
+  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName, true)
 }
 
 function updateRange(range: any, desiredSheet: any) {
@@ -1028,40 +1037,99 @@ async function generateProcessedFileAndPersist(request: any) {
   produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
 }
 
-async function enrichProjectCampaignRequest(request: any) {
-  request.body.CampaignDetails.id = uuidv4();
+function getRootBoundaryCode(boundaries: any[]) {
+  for (const boundary of boundaries) {
+    if (boundary.isRoot) {
+      return boundary.code;
+    }
+  }
+  return "";
+}
+
+async function enrichAndPersistProjectCampaignRequest(request: any) {
   request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
+  request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
+  request.body.CampaignDetails.status = "started"
+  request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+  request.body.CampaignDetails.projectId = null;
+  request.body.CampaignDetails.auditDetails = {
+    createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    createdTime: Date.now(),
+    lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
+    lastModifiedTime: Date.now(),
+  }
+  produceModifiedMessages(request?.body, config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
+  delete request.body.CampaignDetails.campaignDetails
 }
 
 
 function getChildParentMap(modifiedBoundaryData: any) {
   const childParentMap: Map<string, string | null> = new Map();
+
   for (let i = 0; i < modifiedBoundaryData.length; i++) {
-    const child = modifiedBoundaryData[i][modifiedBoundaryData[i].length - 1];
-    const parentIndex = modifiedBoundaryData[i].length - 2;
-    const parent = parentIndex >= 0 ? modifiedBoundaryData[i][parentIndex] : null; // Second last element is the parent, or null if not present
-    childParentMap.set(child, parent);
+    const row = modifiedBoundaryData[i];
+    for (let j = row.length - 1; j > 0; j--) {
+      const child = row[j];
+      const parent = row[j - 1]; // Parent is the element to the immediate left
+      childParentMap.set(child, parent);
+    }
   }
+
   return childParentMap;
 }
 
-function getBoundaryTypeMap(boundaryData: any, boundaryMap: any) {
+
+function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
+  console.log(withBoundaryCode, "withhhhhhhhhhhhhhhhhh")
+  const countMap = new Map<string, number>();
+  const mappingMap = new Map<string, string>();
+  withBoundaryCode.forEach((row: any[]) => {
+    const len = row.length;
+    if (len >= 3) {
+      const grandParent = row[len - 3];
+      if (mappingMap.has(grandParent)) {
+        countMap.set(grandParent, (countMap.get(grandParent) || 0) + 1);
+      } else {
+        throw new Error("Insert boundary hierarchy level wise");
+      }
+    }
+    mappingMap.set(row[len - 2], row[len - 1]);
+    console.log(mappingMap, "mapppppp");
+  });
+  return { mappingMap, countMap };
+}
+
+
+
+
+function getBoundaryTypeMap(boundaryData: any[], boundaryMap: Map<string, string>) {
   const boundaryTypeMap: { [key: string]: string } = {};
-  boundaryData.forEach((boundary: any) => {
+
+  boundaryData.forEach((boundary) => {
     Object.entries(boundary).forEach(([key, value]) => {
-      boundaryTypeMap[boundaryMap.get(value)] = key;
+      if (typeof value === 'string' && key !== 'Boundary Code') {
+        const boundaryCode = boundaryMap.get(value);
+        if (boundaryCode !== undefined) {
+          boundaryTypeMap[boundaryCode] = key;
+        }
+      }
     });
   });
+
   return boundaryTypeMap;
 }
-function addBoundaryCodeToData(modifiedBoundaryData: any, boundaryMap: any) {
-  const boundaryDataForSheet = modifiedBoundaryData.map((row: any[]) => {
+
+function addBoundaryCodeToData(withBoundaryCode: any[], withoutBoundaryCode: any[], boundaryMap: Map<string, string>) {
+  const boundaryDataWithBoundaryCode = withBoundaryCode;
+  const boundaryDataForWithoutBoundaryCode = withoutBoundaryCode.map((row: any[]) => {
     const boundaryName = row[row.length - 1]; // Get the last element of the row
-    const boundaryCode = boundaryMap.get(boundaryName); // Fetch corresponding boundary code from res
+    const boundaryCode = boundaryMap.get(boundaryName); // Fetch corresponding boundary code from map
     return [...row, boundaryCode]; // Append boundary code to the row and return updated row
   });
+  const boundaryDataForSheet = [...boundaryDataWithBoundaryCode, ...boundaryDataForWithoutBoundaryCode];
   return boundaryDataForSheet;
 }
+
 function prepareDataForExcel(boundaryDataForSheet: any, hierarchy: any[], boundaryMap: any) {
   const data = boundaryDataForSheet.map((boundary: any[]) => {
     const boundaryCode = boundary.pop();
@@ -1083,6 +1151,185 @@ function extractCodesFromBoundaryRelationshipResponse(boundaries: any[]): any {
   }
   return codes;
 }
+
+async function searchProjectCampaignResourcData(request: any) {
+  const CampaignDetails = request.body.CampaignDetails;
+  const { tenantId, pagination, ids, ...searchFields } = CampaignDetails;
+  const queryData = buildSearchQuery(tenantId, pagination, ids, searchFields);
+  const responseData = await executeSearchQuery(queryData.query, queryData.values);
+  request.body.CampaignDetails = responseData;
+}
+
+function buildSearchQuery(tenantId: string, pagination: any, ids: string[], searchFields: any): { query: string, values: any[] } {
+  let conditions = [];
+  let values = [tenantId];
+  let index = 2;
+
+  for (const field in searchFields) {
+    if (searchFields[field] !== undefined) {
+      conditions.push(`${field} = $${index}`);
+      values.push(searchFields[field]);
+      index++;
+    }
+  }
+
+  let query = `
+      SELECT *
+      FROM health.eg_cm_campaign_details
+      WHERE tenantId = $1
+  `;
+
+  if (ids && ids.length > 0) {
+    const idParams = ids.map((id, i) => `$${index + i}`);
+    query += ` AND id IN (${idParams.join(', ')})`;
+    values.push(...ids);
+  }
+
+  if (conditions.length > 0) {
+    query += ` AND ${conditions.join(' AND ')}`;
+  }
+
+  if (pagination) {
+    query += '\n';
+
+    if (pagination.sortBy) {
+      query += `ORDER BY ${pagination.sortBy}`;
+      if (pagination.sortOrder) {
+        query += ` ${pagination.sortOrder.toUpperCase()}`;
+      }
+      query += '\n';
+    }
+
+    if (pagination.limit !== undefined) {
+      query += `LIMIT ${pagination.limit}`;
+      if (pagination.offset !== undefined) {
+        query += ` OFFSET ${pagination.offset}`;
+      }
+      query += '\n';
+    }
+  }
+
+  return { query, values };
+}
+
+async function executeSearchQuery(query: string, values: any[]) {
+  const queryResult = await pool.query(query, values);
+  return queryResult.rows.map((row: any) => ({
+    id: row.id,
+    tenantId: row.tenantid,
+    status: row.status,
+    action: row.action,
+    campaignNumber: row.campaignnumber,
+    hierarchyType: row.hierarchytype,
+    boundaryCode: row.boundarycode,
+    projectId: row.projectid,
+    createdBy: row.createdby,
+    lastModifiedBy: row.lastmodifiedby,
+    createdTime: Number(row?.createdtime),
+    lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+    additionalDetails: row.additionaldetails,
+    campaignDetails: row.campaigndetails
+  }));
+}
+
+async function processDataSearchRequest(request: any) {
+  const { SearchCriteria } = request.body;
+  const query = buildWhereClauseForDataSearch(SearchCriteria);
+  const queryResult = await pool.query(query.query, query.values);
+  const results = queryResult.rows.map((row: any) => ({
+    id: row.id,
+    tenantId: row.tenantid,
+    status: row.status,
+    action: row.action,
+    fileStoreId: row.filestoreid,
+    processedFilestoreId: row.processedfilestoreid,
+    type: row.type,
+    createdBy: row.createdby,
+    lastModifiedBy: row.lastmodifiedby,
+    createdTime: Number(row?.createdtime),
+    lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+    additionalDetails: row.additionaldetails
+  }));
+  request.body.ResourceDetails = results;
+}
+
+function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; values: any[] } {
+  const { id, tenantId, type, status } = SearchCriteria;
+  let conditions = [];
+  let values = [];
+
+  if (id && id.length > 0) {
+    conditions.push(`id = ANY($${values.length + 1})`);
+    values.push(id);
+  }
+
+  if (tenantId) {
+    conditions.push(`tenantId = $${values.length + 1}`);
+    values.push(tenantId);
+  }
+
+  if (type) {
+    conditions.push(`type = $${values.length + 1}`);
+    values.push(type);
+  }
+
+  if (status) {
+    conditions.push(`status = $${values.length + 1}`);
+    values.push(status);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  return {
+    query: `
+  SELECT *
+  FROM health.eg_cm_resource_details
+  ${whereClause};`, values
+  };
+}
+
+
+
+async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
+  try {
+    const uniqueDistricts: string[] = [];
+    for (const item of boundaryData) {
+      if (item.District && !uniqueDistricts.includes(item.District)) {
+        uniqueDistricts.push(item.District);
+      }
+    }
+    const workbook = await getWorkbook(fileUrl, 'Sheet1');
+    for (const district of uniqueDistricts) {
+      const districtDataFiltered = boundaryData.filter(item => item.District === district);
+      const newSheetData = [Object.keys(districtDataFiltered[0])].concat(districtDataFiltered.map(obj => Object.values(obj)));
+      const ws = XLSX.utils.aoa_to_sheet(newSheetData);
+      XLSX.utils.book_append_sheet(workbook, ws, district);
+    }
+    return workbook;
+  } catch (error) {
+    throw Error("An error occurred while appending sheets:");
+  }
+}
+
+async function getWorkbook(fileUrl: string, sheetName: string) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/pdf',
+    };
+    const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+    const workbook = XLSX.read(workbookData, { type: 'buffer' });
+    if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+      throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+    }
+    return workbook;
+  } catch (error) {
+    throw new Error("Error while fetching sheet");
+  }
+}
+
+
+
 
 
 
@@ -1124,13 +1371,17 @@ export {
   convertToTypeData,
   matchData,
   generateProcessedFileAndPersist,
-  enrichProjectCampaignRequest,
+  enrichAndPersistProjectCampaignRequest,
   modifyBoundaryData,
   getChildParentMap,
   getBoundaryTypeMap,
   addBoundaryCodeToData,
   prepareDataForExcel,
   extractCodesFromBoundaryRelationshipResponse,
+  searchProjectCampaignResourcData,
+  processDataSearchRequest,
+  getCodeMappingsOfExistingBoundaryCodes,
+  appendSheetsToWorkbook
 };
 
 

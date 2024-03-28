@@ -6,6 +6,7 @@ import Ajv from "ajv";
 import config from "../config/index";
 import { httpRequest } from "./request";
 import createAndSearch from "../config/createAndSearch";
+// import RequestCampaignDetails from "../config/interfaces/requestCampaignDetails.interface";
 
 
 function validateDataWithSchema(data: any, schema: any): { isValid: boolean; error: Ajv.ErrorObject[] | null | undefined } {
@@ -218,6 +219,9 @@ function validateGenerateRequest(request: express.Request) {
     if (!tenantId) {
         throw new Error("tenantId is required");
     }
+    if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+        throw new Error("tenantId in userInfo and query should be same");
+    }
     if (!["facility", "user", "boundary", "facilityWithBoundary"].includes(String(type))) {
         throw new Error("type should be facility, user, boundary or facilityWithBoundary");
     }
@@ -380,6 +384,9 @@ async function validateCreateRequest(request: any) {
         if (!request?.body?.ResourceDetails?.action) {
             throw new Error("action is missing")
         }
+        if (request?.body?.ResourceDetails?.tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+            throw new Error("tenantId is not matching with userInfo")
+        }
         validateAction(request?.body?.ResourceDetails?.action);
         validateResourceType(request?.body?.ResourceDetails?.type);
     }
@@ -410,43 +417,60 @@ async function validateFacilityViaSearch(tenantId: string, data: any, requestBod
     matchFacilityData(data, searchedFacilities)
 }
 
-async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenantId: any, request: any) {
+async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenantId: any, request: any): Promise<void> {
     const params = {
         tenantId: tenantId,
         codes: boundary.code,
         boundaryType: boundary.type,
         hierarchyType: hierarchyType,
         includeParents: true
-    }
+    };
+
     const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, { RequestInfo: request.body.RequestInfo }, params);
-    if (boundaryResponse?.TenantBoundary && Array.isArray(boundaryResponse?.TenantBoundary) && boundaryResponse?.TenantBoundary.length > 0) {
-        const boundaryData: any = boundaryResponse?.TenantBoundary[0]?.boundary
-        if (!(boundaryData && Array.isArray(boundaryData) && boundaryData.length > 0)) {
-            throw new Error("Boundary with code " + boundary.code + " not found for boundary type " + boundary.type + " and hierarchy type " + hierarchyType);
-        }
-        if (boundary.isRoot) {
-            if (boundaryData?.[0]?.code !== boundary.code) {
-                throw new Error("Boundary with code " + boundary.code + " is not root");
-            }
-        }
+
+    if (!boundaryResponse?.TenantBoundary || !Array.isArray(boundaryResponse.TenantBoundary) || boundaryResponse.TenantBoundary.length === 0) {
+        throw new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
+    }
+
+    const boundaryData = boundaryResponse.TenantBoundary[0]?.boundary;
+
+    if (!boundaryData || !Array.isArray(boundaryData) || boundaryData.length === 0) {
+        throw new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
+    }
+
+    if (boundary.isRoot && boundaryData[0]?.code !== boundary.code) {
+        throw new Error(`Boundary with code ${boundary.code} is not root`);
     }
 }
-async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyType: any, tenantId: any, request: any) {
+
+async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyType: any, tenantId: any, request: any): Promise<void> {
     if (!Array.isArray(boundaries)) {
-        throw new Error("boundaries should be an array");
+        throw new Error("Boundaries should be an array");
     }
+
+    let rootBoundaryCount = 0;
+
     for (const boundary of boundaries) {
-        const { code, type } = boundary;
-        if (!code) {
-            throw new Error("boundary code is required");
+        if (!boundary.code) {
+            throw new Error("Boundary code is required");
         }
-        if (!type) {
-            throw new Error("boundary type is required");
+
+        if (!boundary.type) {
+            throw new Error("Boundary type is required");
         }
+
+        if (boundary.isRoot) {
+            rootBoundaryCount++;
+        }
+
         await validateCampaignBoundary(boundary, hierarchyType, tenantId, request);
     }
 
+    if (rootBoundaryCount !== 1) {
+        throw new Error("Exactly one boundary should have isRoot=true");
+    }
 }
+
 async function validateProjectCampaignResources(resources: any[], tenantId: any, request: any) {
     if (!Array.isArray(resources)) {
         throw new Error("resources should be an array");
@@ -481,13 +505,91 @@ function validateProjectCampaignMissingFields(CampaignDetails: any) {
     if (!projectType) missingFields.push("projectType");
     if (!deliveryRules) missingFields.push("deliveryRules");
     if (!additionalDetails) missingFields.push("additionalDetails");
+    if (startDate && endDate && (new Date(endDate).getTime() - new Date(startDate).getTime()) < (24 * 60 * 60 * 1000)) {
+        missingFields.push("endDate must be at least one day after startDate");
+    }
     if (missingFields.length > 0) {
         const errorMessage = "The following fields are missing: " + missingFields.join(", ");
         throw new Error(errorMessage);
     }
 }
+
+function validateDeliveryRules(deliveryRules: any): void {
+    // Check if it's an array
+    if (!Array.isArray(deliveryRules)) {
+        throw new Error('Delivery rules must be an array.');
+    }
+
+    // Check each rule in the array
+    for (let i = 0; i < deliveryRules.length; i++) {
+        const rule = deliveryRules[i];
+        const ruleIndex = i + 1;
+
+        // Validate each property of the rule
+        if (typeof rule !== 'object') {
+            throw new Error(`Delivery rule at index ${ruleIndex} is not an object.`);
+        }
+
+        if (typeof rule.startDate !== 'number') {
+            throw new Error(`Invalid startDate for delivery rule at index ${ruleIndex}.`);
+        }
+
+        if (typeof rule.endDate !== 'number') {
+            throw new Error(`Invalid endDate for delivery rule at index ${ruleIndex}.`);
+        }
+
+        if (typeof rule.cycleNumber !== 'number') {
+            throw new Error(`Invalid cycleNumber for delivery rule at index ${ruleIndex}.`);
+        }
+
+        if (typeof rule.deliveryNumber !== 'number') {
+            throw new Error(`Invalid deliveryNumber for delivery rule at index ${ruleIndex}.`);
+        }
+
+        if (typeof rule.deliveryRuleNumber !== 'number') {
+            throw new Error(`Invalid deliveryRuleNumber for delivery rule at index ${ruleIndex}.`);
+        }
+
+        if (!Array.isArray(rule.products)) {
+            throw new Error(`Products for delivery rule at index ${ruleIndex} must be an array.`);
+        }
+
+        if (!rule.products.every((product: any) => typeof product === 'string')) {
+            throw new Error(`Each product in delivery rule at index ${ruleIndex} must be a string.`);
+        }
+
+        if (!Array.isArray(rule.conditions)) {
+            throw new Error(`Conditions for delivery rule at index ${ruleIndex} must be an array.`);
+        }
+
+        if (!rule.conditions.every((condition: any, conditionIndex: number) => validateCondition(condition, conditionIndex))) {
+            throw new Error(`Invalid condition(s) for delivery rule at index ${ruleIndex}.`);
+        }
+    }
+}
+
+function validateCondition(condition: any, conditionIndex: number): boolean {
+    if (typeof condition !== 'object') {
+        throw new Error(`Condition at index ${conditionIndex} is not an object.`);
+    }
+
+    if (typeof condition.attribute !== 'string') {
+        throw new Error(`Invalid attribute for condition at index ${conditionIndex}.`);
+    }
+
+    if (typeof condition.operator !== 'string') {
+        throw new Error(`Invalid operator for condition at index ${conditionIndex}.`);
+    }
+
+    if (typeof condition.value !== 'number') {
+        throw new Error(`Invalid value for condition at index ${conditionIndex}.`);
+    }
+
+    return true;
+}
+
 async function validateProjectCampaignRequest(request: any) {
-    const { CampaignDetails } = request.body;
+    const CampaignDetails = request.body.CampaignDetails;
     if (!CampaignDetails) {
         throw new Error("CampaignDetails is required");
     }
@@ -497,8 +599,38 @@ async function validateProjectCampaignRequest(request: any) {
     if (!(action == "create" || action == "draft")) {
         throw new Error("action can only be create or draft")
     }
+    if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+        throw new Error("tenantId is not matching with userInfo")
+    }
     await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
     await validateProjectCampaignResources(resources, tenantId, request)
+    await validateDeliveryRules(request.body.CampaignDetails.deliveryRules)
+}
+
+async function validateSearchProjectCampaignRequest(request: any) {
+    const CampaignDetails = request.body.CampaignDetails;
+    if (!CampaignDetails) {
+        throw new Error("CampaignDetails is required");
+    }
+    if (!CampaignDetails.tenantId) {
+        throw new Error("tenantId is required")
+    }
+    if (CampaignDetails.ids) {
+        if (!Array.isArray(CampaignDetails.ids)) {
+            throw new Error("ids should be an array")
+        }
+    }
+}
+
+async function validateSearchRequest(request: any) {
+    const { SearchCriteria } = request.body;
+    if (!SearchCriteria) {
+        throw new Error("SearchCriteria is required");
+    }
+    const { tenantId } = SearchCriteria;
+    if (!tenantId) {
+        throw new Error("tenantId is required");
+    }
 }
 
 
@@ -518,5 +650,7 @@ export {
     validateFacilityCreateData,
     validateFacilityViaSearch,
     validateProjectCampaignRequest,
-    validateSheetData
+    validateSheetData,
+    validateSearchProjectCampaignRequest,
+    validateSearchRequest
 };
