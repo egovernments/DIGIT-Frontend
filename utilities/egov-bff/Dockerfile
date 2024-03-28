@@ -29,6 +29,6 @@ COPY . .
 # Expose the port your app runs on
 EXPOSE 3000
 
-CMD ["node", "app.js"] 
+CMD ["yarn", "prod"]
  # Replace "app.js" with your entry point file
 
