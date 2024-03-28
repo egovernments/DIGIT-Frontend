@@ -44,7 +44,7 @@ registerRemotes(queryClient)
 
 const App = () => {
   const {t} = useTranslation()
-  console.log(t("CORE_COMMON_LOGIN"),"In Core Module")
+  console.log(window.i18next.t("CORE_COMMON_LOGIN"),"In Core Module")
   const { login, history, isSignedIn$, logout } = useAuth();
   const { navigate } = useRouter();
   const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
