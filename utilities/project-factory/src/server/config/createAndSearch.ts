@@ -1,4 +1,4 @@
-import config from "../config";
+import config from ".";
 const createAndSearch: any = {
     "facility": {
         requiresToSearchFromSheet: [

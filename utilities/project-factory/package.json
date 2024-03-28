@@ -1,5 +1,5 @@
 {
-  "name": "egov-bff",
+  "name": "project-factory",
   "version": "0.0.1",
   "main": "src/server/index.ts",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",

@@ -1,7 +1,7 @@
 import * as express from "express";
 import { getFacilitiesViaIds } from "../api";
-import { getFacilityIds, matchFacilityData } from "../utils/index";
-import { logger } from "../utils/logger";
+import { getFacilityIds, matchFacilityData } from "./index";
+import { logger } from "./logger";
 import Ajv from "ajv";
 import config from "../config/index";
 import { httpRequest } from "./request";
