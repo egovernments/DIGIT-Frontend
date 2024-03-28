@@ -2,9 +2,14 @@ name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'develop' ]
+    branches: [ 'develop','campaign' ]
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
+    
+  pull_request:
+    branches: 
+      - 'dev-hcm'
+      # Push events to branches matching refs/heads/mona/octocat
 
 jobs:
   build:
@@ -15,6 +20,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: cd micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
+      - run: cd micro-ui/web/micro-ui-internals/ && bash ./publish-develop.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
