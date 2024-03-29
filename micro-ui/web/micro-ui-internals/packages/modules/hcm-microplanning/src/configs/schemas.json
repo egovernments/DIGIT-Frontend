@@ -8,32 +8,32 @@
       "campaignType": "SMC",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Terrain": {
+          "terrain": {
             "type": "string"
           },
-          "Target population Demo 1": {
+          "targetPopulationDemo1": {
             "type": "number"
           },
-          "Target population Demo 2": {
+          "targetpopulationDemo2": {
             "type": "number"
           },
-          "Target population to reach per cycle against the boundaryn in column H Total": {
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
             "type": "number"
           }
         },
         "required": [
-          "Boundary code",
-          "Terrain",
-          "Target population Demo 1",
-          "Target population Demo 2",
-          "Target population to reach per cycle against the boundaryn in column H Total"
+          "boundaryCode",
+          "terrain",
+          "targetPopulationDemo1",
+          "targetpopulationDemo2",
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal"
         ],
         "locationDataColumns": []
       }
@@ -44,25 +44,21 @@
       "campaignType": "ITIN",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           },
-          "Target Households": {
+          "targetHouseholds": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population",
-          "Target Households"
-        ],
+        "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
         "locationDataColumns": []
       }
     },
@@ -72,21 +68,18 @@
       "campaignType": "IRS",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population"
-        ],
+        "required": ["boundaryCode", "targetPopulation"],
         "locationDataColumns": []
       }
     },
@@ -95,51 +88,48 @@
       "section": "Facilities",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Facility Code": {
+          "facilityCode": {
             "type": "string"
           },
-          "Facility Name": {
+          "facilityName": {
             "type": "string"
           },
-          "Facility Type": {
+          "facilityType": {
             "type": "string",
             "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
           },
-          "Facility Status": {
+          "facilityStatus": {
             "type": "string",
             "pattern": "(Temporary)|(Permanent)"
           },
-          "Capacity": {
+          "capacity": {
             "type": "number"
           },
-          "Lat": {
+          "lat": {
             "type": "number",
             "minimum": -90,
             "maximum": 90
           },
-          "Long": {
+          "long": {
             "type": "number",
             "minimum": -180,
             "maximum": 180
           }
         },
         "required": [
-          "Facility Code",
-          "Facility Name",
-          "Facility Type",
-          "Facility Status",
-          "Capacity",
-          "Lat",
-          "Long"
+          "facilityCode",
+          "facilityName",
+          "facilityType",
+          "facilityStatus",
+          "capacity",
+          "lat",
+          "long"
         ],
-        "locationDataColumns": [
-          "Lat",
-          "Long"
-        ]
+        "locationDataColumns": ["lat", "long"]
       }
     },
     {
@@ -148,32 +138,32 @@
       "campaignType": "SMC",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Terrain": {
+          "terrain": {
             "type": "string"
           },
-          "Target population Demo 1": {
+          "targetPopulationDemo1": {
             "type": "number"
           },
-          "Target population Demo 2": {
+          "targetpopulationDemo2": {
             "type": "number"
           },
-          "Target population to reach per cycle against the boundaryn in column H Total": {
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
             "type": "number"
           }
         },
         "required": [
-          "Boundary code",
-          "Terrain",
-          "Target population Demo 1",
-          "Target population Demo 2",
-          "Target population to reach per cycle against the boundaryn in column H Total"
+          "boundaryCode",
+          "terrain",
+          "targetPopulationDemo1",
+          "targetpopulationDemo2",
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal"
         ],
         "locationDataColumns": []
       }
@@ -184,25 +174,21 @@
       "campaignType": "ITIN",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           },
-          "Target Households": {
+          "targetHouseholds": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population",
-          "Target Households"
-        ],
+        "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
         "locationDataColumns": []
       }
     },
@@ -212,21 +198,18 @@
       "campaignType": "IRS",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population"
-        ],
+        "required": ["boundaryCode", "targetPopulation"],
         "locationDataColumns": []
       }
     },
@@ -235,36 +218,46 @@
       "section": "Facilities",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Facility Code": {
+          "facilityCode": {
             "type": "string"
           },
-          "Facility Name": {
+          "facilityName": {
             "type": "string"
           },
-          "Facility Type": {
+          "facilityType": {
             "type": "string",
             "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
           },
-          "Facility Status": {
+          "facilityStatus": {
             "type": "string",
             "pattern": "(Temporary)|(Permanent)"
           },
-          "Capacity": {
+          "capacity": {
             "type": "number"
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "long": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
           }
         },
         "required": [
-          "Facility Code",
-          "Facility Name",
-          "Facility Type",
-          "Facility Status",
-          "Capacity"
+          "facilityCode",
+          "facilityName",
+          "facilityType",
+          "facilityStatus",
+          "capacity"
         ],
-        "locationDataColumns": []
+        "locationDataColumns": ["lat", "long"]
       }
     },
     {
@@ -273,32 +266,32 @@
       "campaignType": "SMC",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Terrain": {
+          "terrain": {
             "type": "string"
           },
-          "Target population Demo 1": {
+          "targetPopulationDemo1": {
             "type": "number"
           },
-          "Target population Demo 2": {
+          "targetpopulationDemo2": {
             "type": "number"
           },
-          "Target population to reach per cycle against the boundaryn in column H Total": {
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
             "type": "number"
           }
         },
         "required": [
-          "Boundary code",
-          "Terrain",
-          "Target population Demo 1",
-          "Target population Demo 2",
-          "Target population to reach per cycle against the boundaryn in column H Total"
+          "boundaryCode",
+          "terrain",
+          "targetPopulationDemo1",
+          "targetpopulationDemo2",
+          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal"
         ],
         "locationDataColumns": []
       }
@@ -309,25 +302,21 @@
       "campaignType": "ITIN",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           },
-          "Target Households": {
+          "targetHouseholds": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population",
-          "Target Households"
-        ],
+        "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
         "locationDataColumns": []
       }
     },
@@ -337,21 +326,18 @@
       "campaignType": "IRS",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Boundary code": {
+          "boundaryCode": {
             "type": "string"
           },
-          "Target Population": {
+          "targetPopulation": {
             "type": "number"
           }
         },
-        "required": [
-          "Boundary code",
-          "Target Population"
-        ],
+        "required": ["boundaryCode", "targetPopulation"],
         "locationDataColumns": []
       }
     },
@@ -360,37 +346,47 @@
       "section": "Facilities",
       "schema": {
         "Properties": {
-          "Admin.*":{
-            "type":"string",
+          "admin.*": {
+            "type": "string",
             "nullable": true
           },
-          "Facility Code": {
+          "facilityCode": {
             "type": "string"
           },
-          "Facility Name": {
+          "facilityName": {
             "type": "string"
           },
-          "Facility Type": {
+          "facilityType": {
             "type": "string",
             "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
           },
-          "Facility Status": {
+          "facilityStatus": {
             "type": "string",
             "pattern": "(Temporary)|(Permanent)"
           },
-          "Capacity": {
+          "capacity": {
             "type": "number"
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "long": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
           }
         },
         "required": [
-          "Facility Code",
-          "Facility Name",
-          "Facility Type",
-          "Facility Status",
-          "Capacity"
+          "facilityCode",
+          "facilityName",
+          "facilityType",
+          "facilityStatus",
+          "capacity"
         ],
-        "locationDataColumns": []
+        "locationDataColumns": ["lat", "long"]
       }
     }
-  ] 
+  ]
 }
