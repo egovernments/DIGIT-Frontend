@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.7 Viewcomposer enhancement for cardheader action
 1.8.1-beta.6 Added feature for Multi Tab in InboxSearchComposer
 1.8.1-beta.5 Added without labelfieldpair config for removing default card
 1.8.1-beta.4 Added Previous button in From Composer
