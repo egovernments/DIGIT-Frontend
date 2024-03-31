@@ -11,7 +11,7 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
 //here add react-query dev tools
-
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
 
@@ -20,7 +20,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
   if (isLoading) {
     return <Loader page={true} />;
   }
-
+  const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
       <Router>
