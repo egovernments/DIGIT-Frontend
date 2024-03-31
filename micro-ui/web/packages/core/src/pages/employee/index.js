@@ -23,13 +23,14 @@ const EmployeeApp = ({
   handleUserDropdownSelection,
   logoUrl,
   DSO,
-  stateCode,
+  stateCode="pg",
   modules,
   appTenants,
   sourceUrl,
   pathname,
   initData,
 }) => {
+  
   const history = useHistory();
   const { t } = useTranslation();
   const { path } = useRouteMatch();

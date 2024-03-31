@@ -45,6 +45,8 @@ module.exports = () => {
           pgr:"pgr@https://localhost:8087/remoteEntry.js",
           dss: "dss@https://localhost:8088/remoteEntry.js",
           engagement: "engagement@https://localhost:8091/remoteEntry.js",
+          tqm: "tqm@https://localhost:8089/remoteEntry.js",
+
         },
         shared: packageJson.dependencies,
       }),

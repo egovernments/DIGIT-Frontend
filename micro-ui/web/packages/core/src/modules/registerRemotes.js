@@ -66,6 +66,17 @@ export default (queryClient) => {
   }); 
 
   registerApplication({
+    name: "TQM",
+    app: () => import("tqm/TQMModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/tqm`,
+    customProps: {
+      title: "TQM is running on host",
+      queryClient,
+      userType
+    },
+  });
+
+  registerApplication({
     name: "Engagement",
     app: () => import("engagement/EngagementModule"),
     activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,

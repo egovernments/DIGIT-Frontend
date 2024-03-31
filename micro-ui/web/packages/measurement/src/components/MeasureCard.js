@@ -49,7 +49,6 @@ const MeasureCard = React.memo(({ columns, fields = [], register, setValue, tabl
   const { t } = useTranslation();
 
   const reducer = (state, action) => {
-    // console.log(state, action, "reducer");
     switch (action.type) {
       case "ADD_ROW":
         const { state: newRow } = action;

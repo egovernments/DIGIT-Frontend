@@ -15,17 +15,14 @@ const MeasurementServiceResponse = () => {
     // Get the current URL
     const currentURL = window.location.href;
 
-    // console.log(currentURL);
 
     // Create a URL object from the current URL
     const url = new URL(currentURL);
-    // console.log(url);
 
     // Get the value of the "mbreference" query parameter
     const mbReference = url.searchParams.get('mbreference');
 
 
-    // console.log(mbReference); // This will log "Mb848484"
 
 
 
@@ -35,7 +32,6 @@ const MeasurementServiceResponse = () => {
 
     //     const responseObj = location?.state?.responseData;
 
-    //    console.log(responseObj?.get?.responseInfo?.status);
 
     // Now you can work with the response object as needed
 

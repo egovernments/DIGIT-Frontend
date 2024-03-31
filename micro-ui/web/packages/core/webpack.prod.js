@@ -25,6 +25,7 @@ module.exports = () => {
           workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
           dss : `dss@${domain}/dss-ui/remoteEntry.js`,
           engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
+          tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
         shared: packageJson.dependencies,

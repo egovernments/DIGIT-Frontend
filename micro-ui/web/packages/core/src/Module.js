@@ -10,15 +10,16 @@ import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
-import { ReactQueryDevtools } from 'react-query/devtools';
 //here add react-query dev tools
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
+const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
+
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+
   if (isLoading) {
     return <Loader page={true} />;
   }
-
   const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
@@ -38,28 +39,12 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+  
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
-  const userType = Digit.UserService.getType();
-  // const queryClient = new QueryClient({
-  //   defaultOptions: {
-  //     queries: {
-  //       staleTime: 15 * 60 * 1000,
-  //       cacheTime: 50 * 60 * 1000,
-  //       retry: false,
-  //       retryDelay: (attemptIndex) => Infinity,
-  //       /*
-  //         enable this to have auto retry incase of failure
-  //         retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-  //        */
-  //     },
-  //   },
-  // });
-
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
 
-  const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 
   return (
     <div>
@@ -100,14 +85,18 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
-              <ReactQueryDevtools initialIsOpen={false} />
+
+              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
+              {/* <div>Core Module Dummy</div> */}
+
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
       </ErrorBoundary>
     </div>
   );
+
 };
 
 const componentsToRegister = {
