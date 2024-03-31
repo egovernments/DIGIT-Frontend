@@ -39,7 +39,6 @@ const MeasureTable = (props) => {
   // register(tableKey)
 
   useEffect(() => {
-    // console.log("tableKey, fields",tableKey, fields)
     register(tableKey, fields);
     register(`${tableKey}table`, fields);
   }, []);

@@ -17,7 +17,7 @@ const CitizenApp = ({
   sourceUrl,
   pathname,
 }) => {
-  // debugger
+  
   const { t } = useTranslation();
 
   return <AppModules stateCode={stateCode} userType="citizen" modules={modules} appTenants={appTenants} />;

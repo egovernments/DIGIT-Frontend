@@ -147,14 +147,12 @@ const CreateMeasurement = ({ props }) => {
   //   if (!_.isEqual(sessionFormData, createState)) {
   //     // setSessionFormData({ ...createState });
   //   }
-  //   console.log(createState,"formdata",sessionFormData)
   // }, [createState]);
 
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
     if (!_.isEqual(formData, createState)) {
       // setState({ ...createState, ...formData })
     }
-    // console.log(formData, "---formData-", createState);
   };
 
   // if data is still loading return loader

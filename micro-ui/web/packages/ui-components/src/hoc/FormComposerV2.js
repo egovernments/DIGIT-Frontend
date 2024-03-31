@@ -98,7 +98,6 @@ export const FormComposer = (props) => {
     clearErrors,
     unregister,
   } = useForm(inputProps);
-  // console.log(formState,'formState');
   const formData = watch();
   const selectedFormCategory = props?.currentFormCategory;
   const [showErrorToast, setShowErrorToast] = useState(false); 

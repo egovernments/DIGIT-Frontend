@@ -11,7 +11,7 @@ const getTenants = (codes, tenants) => {
 };
 
 export const AppModules = ({ stateCode="pg", userType, modules, appTenants }) => {
-  // debugger
+  
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const { path } = useRouteMatch();
   const location = useLocation();

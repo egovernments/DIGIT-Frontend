@@ -1,10 +1,10 @@
-// debugger
+
 // import React from "react";
 // import ReactDOM from "react-dom";
 // import { createBrowserHistory } from "history";
 // import { QueryClient, QueryClientProvider } from "react-query";
 // import App from "./TQMWrapper";
-// debugger
+
 // //registering remote apps
 // const queryClient = new QueryClient({
 //   defaultOptions: {

@@ -31,7 +31,7 @@ const getFromLocation = (state, searchParams) => {
 };
 
 const Login = ({ stateCode="pg", isUserRegistered = true }) => {
-  // debugger
+  
   const { t } = useTranslation();
   const location = useLocation();
   const { path, url } = useRouteMatch();

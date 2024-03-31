@@ -64,7 +64,7 @@ const TqmBreadCrumb = ({ location, defaultPath }) => {
 
 const App = ({ path }) => {
   const match = useRouteMatch()
-  // debugger
+  
   const { t } = useTranslation();
   const location = useLocation();
   const isPlantOperatorLoggedIn = Digit.Utils.tqm.isPlantOperatorLoggedIn();

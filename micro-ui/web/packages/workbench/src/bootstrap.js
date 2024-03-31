@@ -16,7 +16,6 @@ const mount = (el, { history, login }) => {
   const enabledModules = ["PT", "Workbench", "PGR", "TQM"];
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  //console.log(stateCode,'ststcode');
   ReactDOM.render(<div>Workbench in isolation</div>, el);
 };
 

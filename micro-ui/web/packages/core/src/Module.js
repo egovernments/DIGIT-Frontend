@@ -40,7 +40,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
 };
 
 export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
-  // debugger
+  
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
