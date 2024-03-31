@@ -373,19 +373,19 @@ const HamburgerIcon = ({ className, styles, color = "#fdfdfd" }) => (
   </svg>
 );
 
-export const HomeIcon = ({ className, styles }) => (
+const HomeIcon = ({ className, styles }) => (
   <svg className={className} viewBox="0 0 24 24" style={{ ...styles }}>
     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
   </svg>
 );
 
-export const LanguageIcon = ({ className, styles }) => (
+const LanguageIcon = ({ className, styles }) => (
   <svg className={className} viewBox="0 0 24 24" style={{ ...styles }}>
     <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path>
   </svg>
 );
 
-export const LogoutIcon = ({ className, styles }) => (
+const LogoutIcon = ({ className, styles }) => (
   <svg className={className} viewBox="0 0 24 24" style={{ ...styles }}>
     <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"></path>
   </svg>
@@ -441,14 +441,6 @@ const ShippingTruck = ({ className, styles }) => (
   </svg>
 );
 
-function CloseSvg({ onClick }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" onClick={onClick}>
-      <path d="M0 0h24v24H0z" fill="none" />
-      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-    </svg>
-  );
-}
 
 const UpwardArrow = ({ color = "#00703C", rotate = 0, marginRight = 0 }) => (
   <svg
@@ -570,14 +562,7 @@ const PrintIcon = () => (
     />
   </svg>
 );
-function PropertyHouse({ className, styles }) {
-  return (
-    <svg className={className} fill="#FFFFFF" style={{ ...styles }} width="24" height="24" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-      <path d="M13.6167 9.5L1.66667 17.4667V35H10V21.6667H16.6667V35H25V17.0833L13.6167 9.5Z" />
-      <path d="M16.6667 5V7.51667L20 9.73333L22.8833 11.6667H25V13.0833L28.3333 15.3167V18.3333H31.6667V21.6667H28.3333V25H31.6667V28.3333H28.3333V35H38.3333V5H16.6667ZM31.6667 15H28.3333V11.6667H31.6667V15Z" />
-    </svg>
-  );
-}
+
 
 const InfoBannerIcon = ({ fill = "#3498DB" }) => {
   return (
@@ -1068,6 +1053,57 @@ const AddIcon = ({ styles, className, fill = "white" }) => (
       d="M11.7896 2.58402C9.24786 0.0490554 5.13886 0.0490554 2.59717 2.58402C0.0554699 5.11898 0.0554701 9.21709 2.59717 11.752C5.13886 14.287 9.24786 14.287 11.7896 11.752C14.3312 9.21709 14.3312 5.11898 11.7896 2.58402ZM7.84142 11.1057H6.5453V7.81438H3.24523L3.24523 6.52169H6.5453V3.23036H7.84142V6.52169H11.1415L11.1415 7.81438H7.84142V11.1057Z"
       fill={fill}
     />
+  </svg>
+);
+
+const UploadIcon = ({styles, className, fill = "white",height="64",width="64" }) => (
+  <svg style={{...styles}} className={className} width={width} height={height} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5084)">
+      <path
+        d="M24.0007 42.6667H40.0007V26.6667H50.6673L32.0007 8L13.334 26.6667H24.0007V42.6667ZM13.334 48H50.6673V53.3333H13.334V48Z"
+        fill="#B1B4B6"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5084">
+        <rect width={width} height={height} fill={fill} />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const DeleteIconv2 = ({styles, className, fill = "#F47738",height="24",width="24" }) => (
+  <svg width={width} style={styles} className={className} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5088)">
+      <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill={fill}/>
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5088">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const InfoIconOutline = ({styles, className, fill = "#505A5F",height="20",width="20" }) => (
+  <svg style={styles} className={className} xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 20" fill={fill}>
+  <path d="M8.7085 5.54171H10.2918V7.12504H8.7085V5.54171ZM8.7085 8.70837H10.2918V13.4584H8.7085V8.70837ZM9.50016 1.58337C5.13016 1.58337 1.5835 5.13004 1.5835 9.50004C1.5835 13.87 5.13016 17.4167 9.50016 17.4167C13.8702 17.4167 17.4168 13.87 17.4168 9.50004C17.4168 5.13004 13.8702 1.58337 9.50016 1.58337ZM9.50016 15.8334C6.00891 15.8334 3.16683 12.9913 3.16683 9.50004C3.16683 6.00879 6.00891 3.16671 9.50016 3.16671C12.9914 3.16671 15.8335 6.00879 15.8335 9.50004C15.8335 12.9913 12.9914 15.8334 9.50016 15.8334Z" fill="#505A5F"/>
+</svg>
+)
+
+const FileIcon = ({ styles, className, fill = "white", height = "64", width = "64" }) => (
+  <svg styles={styles} className={className} width="24" height="24" viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_431_5092)">
+      <path
+        d="M14 2H6C4.9 2 4.01 2.9 4.01 4L4 20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM16 18H8V16H16V18ZM16 14H8V12H16V14ZM13 9V3.5L18.5 9H13Z"
+        fill="#505A5F"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_431_5092">
+        <rect width="24" height="24" fill={fill} />
+      </clipPath>
+    </defs>
   </svg>
 );
 
@@ -1735,9 +1771,29 @@ const WarningIcon =({ className = "", fill = "none", style = {} })=>(<svg width=
 </defs>
 </svg>
 )
+
+const AttentionListIcon =({ className = "", fill = "none", style = {} })=>(
+  <svg width="36" height="36" viewBox="0 0 24 27" fill={fill } className={className} style={style} xmlns="http://www.w3.org/2000/svg">
+  <path d="M21.3333 3.00065H15.76C15.2 1.45398 13.7333 0.333984 12 0.333984C10.2667 0.333984 8.8 1.45398 8.24 3.00065H2.66667C1.2 3.00065 0 4.20065 0 5.66732V24.334C0 25.8007 1.2 27.0007 2.66667 27.0007H21.3333C22.8 27.0007 24 25.8007 24 24.334V5.66732C24 4.20065 22.8 3.00065 21.3333 3.00065ZM12 3.00065C12.7333 3.00065 13.3333 3.60065 13.3333 4.33398C13.3333 5.06732 12.7333 5.66732 12 5.66732C11.2667 5.66732 10.6667 5.06732 10.6667 4.33398C10.6667 3.60065 11.2667 3.00065 12 3.00065ZM12.6667 21.6673H5.33333V19.0007H12.6667V21.6673ZM18.6667 16.334H5.33333V13.6673H18.6667V16.334ZM18.6667 11.0007H5.33333V8.33398H18.6667V11.0007Z" fill="#F47738"/>
+  </svg>
+  )
+  
+ 
+  
+  const InputIcon = () => (
+    <svg width="38" height="30" viewBox="0 0 38 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M33.9993 0.0166016H3.99935C2.16602 0.0166016 0.666016 1.5166 0.666016 3.34994V9.99994H3.99935V3.3166H33.9993V26.6999H3.99935V19.9999H0.666016V26.6833C0.666016 28.5166 2.16602 29.9833 3.99935 29.9833H33.9993C35.8327 29.9833 37.3327 28.5166 37.3327 26.6833V3.34994C37.3327 1.49994 35.8327 0.0166016 33.9993 0.0166016ZM17.3327 21.6666L23.9993 14.9999L17.3327 8.33327V13.3333H0.666016V16.6666H17.3327V21.6666Z"
+        fill="#F47738"
+      />
+    </svg>
+  );
+  
+  
+
 const ExpenditureIcon = BillsIcon;
 
-export const LoginIcon = ({ className, styles }) => (
+const LoginIcon = ({ className, styles }) => (
   <svg className={className} viewBox="0 0 24 24" style={{ ...styles }}>
     <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"></path>
   </svg>
@@ -1938,6 +1994,9 @@ const DocumentRect = ({ styles = {}, className, fill = "#D4351C" }) => (
 );
 
 export {
+  InputIcon,
+  TreatmentQualityIcon,
+  HelpOutlineIcon,
   AnnouncementIcon,
   ReceiptIcon,
   CreateEstimateIcon,
@@ -1979,7 +2038,6 @@ export {
   RefreshSVG,
   Details,
   PrintIcon,
-  PropertyHouse,
   PrimaryDownlaodIcon,
   InfoBannerIcon,
   ShareIcon,
@@ -2088,17 +2146,22 @@ export {
   HistoryIcon,
   WarningIcon,
   LoginIcon,
-  CloseSvg,
   PropertyHouse,
   TqmHomePageCardIcon,
   TqmInboxIcon,
-  TreatmentQualityIcon,
   MaintainanceIcon,
   IssueIcon,
   ViewReportsIcon,
-  HelpOutlineIcon,
   VehicleLogIcon,
   ArrowUpward,
   ArrowDownward,
   DocumentRect,
+  AttentionListIcon,
+  UploadIcon,
+  FileIcon,
+  DeleteIconv2,
+  InfoIconOutline,
+  HomeIcon,
+  LanguageIcon,
+  LogoutIcon
 };

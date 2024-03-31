@@ -3,8 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  LOCALISATION: ["EMPLOYEE", "SUPERUSER"],
-  MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER","HRMS_ADMIN"],
+  LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
+  MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
   DSS: ["STADMIN"],
 };
 
@@ -19,14 +19,19 @@ const WorkbenchCard = () => {
 
   let links = [
     {
+      label: t("ACTION_TEST_MDMS"),
+      link: `/${window?.contextPath}/employee/workbench/manage-master-data`,
+      roles: ROLES.MDMS,
+    },
+    {
       label: t("ACTION_TEST_LOCALISATION"),
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
     },
     {
-      label: t("ACTION_TEST_MDMS"),
-      link: `/${window?.contextPath}/employee/workbench/mdms-search-v2`,
-      roles: ROLES.MDMS,
+      label: t("ACTION_TEST_CREATE_NEW_HIERARCHY"),
+      link: `/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`,
+      roles: ROLES.LOCALISATION,
     },
     // {
     //   label: t("Sample Create master"),

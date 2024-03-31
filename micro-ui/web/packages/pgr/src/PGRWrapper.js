@@ -4,14 +4,14 @@ import { QueryClientProvider } from 'react-query';
 import EmployeeApp from './EmployeeApp';
 import { Switch, useLocation, BrowserRouter as Router } from 'react-router-dom';
 
-const App = ({ queryClient, title }) => {
+const App = ({ queryClient, title,userType }) => {
   initPGRComponents();
   //make way to do this job in container while registering remotes
 
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <EmployeeApp path={'/workbench-ui/employee/pgr/'} />
+        <EmployeeApp path={`/${window.contextPath}/${userType}/pgr/`} />
       </Router>
     </QueryClientProvider>
   );

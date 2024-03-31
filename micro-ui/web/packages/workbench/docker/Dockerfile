@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+RUN rm -rf node_modules/
+
+RUN rm -rf yarn.lock
+
 # clear cache
 RUN yarn cache clean
 
@@ -21,7 +25,7 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/workbench-web
+ENV WORK_DIR=/var/web/workbench-mfe
 
 RUN mkdir -p ${WORK_DIR}
 

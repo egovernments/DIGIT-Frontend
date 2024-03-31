@@ -2,7 +2,7 @@ name: workbench ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker" ]
+    branches: [ "mf-build-docker", "mf","mf-stable-common-module" ]
   pull_request:
     branches: [ "mf-build" ]
 
@@ -28,7 +28,7 @@ jobs:
       id: docker_build
       working-directory: ./micro-ui/web/packages/workbench
       run: |
-        IMAGE_TAG=egovio/workbench-web:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        IMAGE_TAG=egovio/workbench-mfe:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
           --file docker/Dockerfile \
           --tag $IMAGE_TAG

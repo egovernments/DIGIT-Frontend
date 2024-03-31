@@ -2,7 +2,7 @@ name: pgr ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker" ]
+    branches: [ "mf-build-docker", "mf","mf-stable-common-module" ]
   pull_request:
     branches: [ "mf-build" ]
 

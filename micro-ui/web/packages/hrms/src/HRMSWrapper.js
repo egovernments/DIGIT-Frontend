@@ -5,13 +5,12 @@ import { initHRMSComponents } from './Module';
 import EmployeeApp from './pages';
 
 const App = ({ queryClient, title }) => {
-    console.log("qc in remote hrms",queryClient);
-initHRMSComponents();
+  initHRMSComponents();
 
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <EmployeeApp path={'/workbench-ui/employee/hrms/'} />
+        <EmployeeApp path={`/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/hrms/`} />
       </Router>
     </QueryClientProvider>
   );

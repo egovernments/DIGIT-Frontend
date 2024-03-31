@@ -2,7 +2,7 @@ name: engagement ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker" ]
+    branches: [ "mf-build-docker", "mf" ]
   pull_request:
     branches: [ "mf-build" ]
 

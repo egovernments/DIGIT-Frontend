@@ -7,18 +7,19 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/dss/",
+      publicPath: "/dss-ui/",
       filename: "[name].[contenthash].js",
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "dss_ui",
+        name: "dss",
         filename: "remoteEntry.js",
         exposes: {
           "./DSSModule": "./src/SingleSpaEntry",
         },
-        // shared: packageJson.dependencies,
-        shared: packageJson.dependencies
+        shared: {
+          ...packageJson.dependencies
+        }
       }),
     ],
   };
