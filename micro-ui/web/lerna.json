@@ -12,7 +12,8 @@
     "packages/hrms",
     "packages/engagement",
     "packages/ui-components",
-    "packages/ui-libraries"
+    "packages/ui-libraries",
+    "packages/tqm"
   ],
   "command": {
     "run": {

@@ -17,8 +17,23 @@ module.exports = () => {
         exposes: {
           "./TQMModule": "./src/SingleSpaEntry",
         },
-        // shared: packageJson.dependencies,
-        shared: packageJson.dependencies
+        shared: {
+          'single-spa-react': '^4.6.1',
+          '@digit-ui/digit-ui-libraries-mfe': '1.0.7',
+          '@rjsf/core': '5.10.0',
+          '@rjsf/utils': '5.10.0',
+          '@rjsf/validator-ajv8': '5.10.0',
+          'react': '17.0.2',
+          'react-date-range': '1.4.0',
+          'react-dom': '17.0.2',
+          'react-hook-form': '6.15.8',
+          'react-i18next': '11.16.2',
+          'react-query': '3.6.1',
+          'react-router-dom': '5.3.0',
+          'react-select': '5.7.4',
+          'react-table': '7.7.0',
+          'react-time-picker': '4.2.1',
+        }
       }),
     ],
   };

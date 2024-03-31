@@ -243,7 +243,6 @@ import {
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
-import { Phone } from "./atoms/svgindex";
 import TextArea from "./atoms/TextArea";
 import InputTextAmount from "./atoms/InputTextAmount";
 import TextInput from "./atoms/TextInput";
@@ -293,7 +292,6 @@ import { FilterForm, FilterFormField } from "./molecules/FilterForm";
 import WrapUnMaskComponent from "./molecules/WrapUnMaskComponent";
 import OpenLinkContainer from "./atoms/OpenLinkContainer";
 import UploadPitPhoto from "./molecules/UploadPitPhoto";
-import { DownloadBtnCommon } from "./atoms/svgindex";
 import ToggleSwitch from "./atoms/ToggleSwitch";
 import WeekPicker from "./atoms/WeekPicker";
 import CollapseAndExpandGroups from "./atoms/CollapseAndExpandGroups";
@@ -323,10 +321,8 @@ import Help from "./hoc/Tutorial/Help";
 
 export {
   Notification,
-  ViewComposer,
   HelpOutlineIcon,
   InputIcon,
-  TreatmentQualityIcon,
   Help,
   Tutorial,
   useTourState, 
@@ -622,7 +618,6 @@ export {
   MaintainanceIcon,
   IssueIcon,
   ViewReportsIcon,
-  HelpOutlineIcon,
   VehicleLogIcon,
   ArrowDownward,
   ArrowUpward,

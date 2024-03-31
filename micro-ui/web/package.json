@@ -1,5 +1,5 @@
 {
-  "name": "UI",
+  "name": "ui",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
@@ -26,7 +26,8 @@
     "packages/hrms",
     "packages/engagement",
     "packages/ui-components",
-    "packages/ui-libraries"
+    "packages/ui-libraries",
+    "packages/tqm"
   ],
   "scripts": {
     "build": "yarn lerna run build",

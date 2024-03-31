@@ -48,7 +48,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
-import { DigitUI } from "@digit-ui/digit-ui-module-core-base";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initTQMComponents } from "./Module";
 import { QueryClient, QueryClientProvider } from "react-query";
