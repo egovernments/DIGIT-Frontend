@@ -182,8 +182,6 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     generateTabsData(cycleData?.cycleConfgureDate?.cycle, cycleData?.cycleConfgureDate?.deliveries)
   );
 
-  console.log("NABEEL", saved, "generateTabsData", generateTabsData(cycleData?.cycleConfgureDate?.cycle, cycleData?.cycleConfgureDate?.deliveries));
-
   useEffect(() => {
     dispatchCampaignData({
       type: "GENERATE_CAMPAIGN_DATA",
