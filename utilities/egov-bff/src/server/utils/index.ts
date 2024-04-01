@@ -3,7 +3,7 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, createProjectCampaignResourcData, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, projectCreate, searchMDMS } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -1045,6 +1045,19 @@ function getRootBoundaryCode(boundaries: any[]) {
   return "";
 }
 
+function enrichRootProjectId(requestBody: any) {
+  var rootBoundary;
+  for (const boundary of requestBody?.CampaignDetails?.boundaries) {
+    if (boundary?.isRoot) {
+      rootBoundary = boundary?.code
+      break;
+    }
+  }
+  if (rootBoundary) {
+    requestBody.CampaignDetails.projectId = requestBody?.boundaryProjectMapping?.[rootBoundary]?.projectId
+  }
+}
+
 async function enrichAndPersistProjectCampaignRequest(request: any) {
   request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
   request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
@@ -1057,6 +1070,7 @@ async function enrichAndPersistProjectCampaignRequest(request: any) {
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now(),
   }
+  enrichRootProjectId(request.body);
   produceModifiedMessages(request?.body, config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
   delete request.body.CampaignDetails.campaignDetails
 }
@@ -1092,8 +1106,8 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
         throw new Error("Insert boundary hierarchy level wise");
       }
     }
-    mappingMap.set(row[len - 2], row[len - 1]); 
-    console.log(mappingMap,"mapppppp");
+    mappingMap.set(row[len - 2], row[len - 1]);
+    console.log(mappingMap, "mapppppp");
   });
   return { mappingMap, countMap };
 }
@@ -1219,6 +1233,8 @@ async function executeSearchQuery(query: string, values: any[]) {
     status: row.status,
     action: row.action,
     campaignNumber: row.campaignnumber,
+    campaignName: row.campaignname,
+    projectType: row.projecttype,
     hierarchyType: row.hierarchytype,
     boundaryCode: row.boundarycode,
     projectId: row.projectid,
@@ -1289,8 +1305,119 @@ function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; va
   };
 }
 
+async function processBoundary(boundary: any, boundaryCodes: any, boundaries: any[], request: any, parent?: any) {
+  if (!boundaryCodes.has(boundary.code)) {
+    boundaries.push({ code: boundary?.code, type: boundary?.boundaryType });
+    boundaryCodes.add(boundary?.code);
+  }
+  if (!request?.body?.boundaryProjectMapping?.[boundary?.code]) {
+    request.body.boundaryProjectMapping[boundary?.code] = {
+      parent: parent ? parent : null,
+      projectId: null
+    }
+  }
+  else {
+    request.body.boundaryProjectMapping[boundary?.code].parent = parent
+  }
+  if (boundary?.includeAllChildren) {
+    const params = {
+      tenantId: request?.body?.CampaignDetails?.tenantId,
+      codes: boundary?.code,
+      hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+      includeChildren: true
+    }
+    logger.info("Boundary relationship search url : " + config.host.boundaryHost + config.paths.boundaryRelationship);
+    logger.info("Boundary relationship search params : " + JSON.stringify(params));
+    const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+    if (boundaryResponse?.TenantBoundary?.[0]) {
+      logger.info("Boundary found " + JSON.stringify(boundaryResponse?.TenantBoundary?.[0]?.boundary));
+      for (const childBoundary of boundaryResponse.TenantBoundary[0]?.boundary?.[0].children) {
+        await processBoundary(childBoundary, boundaryCodes, boundaries, request, boundary?.code);
+      }
+    }
+  }
+}
+
+async function addBoundaries(request: any) {
+  const { boundaries } = request?.body?.CampaignDetails;
+  var boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code));
+  for (const boundary of boundaries) {
+    await processBoundary(boundary, boundaryCodes, boundaries, request);
+  }
+}
+
+function reorderBoundariesWithParentFirst(reorderedBoundaries: any[], boundaryProjectMapping: any) {
+  // Function to get the index of a boundary in the reordered boundaries array
+  function getIndex(code: any) {
+    return reorderedBoundaries.findIndex((boundary: any) => boundary.code === code);
+  }
+
+  // Reorder boundaries so that parents come first
+  for (const boundary of reorderedBoundaries) {
+    const parentCode = boundaryProjectMapping[boundary.code]?.parent;
+    if (parentCode) {
+      const parentIndex = getIndex(parentCode);
+      const boundaryIndex = getIndex(boundary.code);
+      if (parentIndex !== -1 && boundaryIndex !== -1 && parentIndex > boundaryIndex) {
+        // Move the boundary to be right after its parent
+        reorderedBoundaries.splice(parentIndex + 1, 0, reorderedBoundaries.splice(boundaryIndex, 1)[0]);
+      }
+    }
+  }
+
+  return reorderedBoundaries;
+}
 
 
+// TODO: FIX THIS FUNCTION...NOT REORDERING CORRECTLY
+async function reorderBoundaries(request: any) {
+  request.body.boundaryProjectMapping = {}
+  await addBoundaries(request)
+  logger.info("Boundaries after addition " + JSON.stringify(request?.body?.CampaignDetails?.boundaries));
+  console.log("Boundary Project Mapping " + JSON.stringify(request?.body?.boundaryProjectMapping));
+  reorderBoundariesWithParentFirst(request?.body?.CampaignDetails?.boundaries, request?.body?.boundaryProjectMapping)
+  logger.info("Reordered Boundaries " + JSON.stringify(request?.body?.CampaignDetails?.boundaries));
+}
+
+async function createProject(request: any) {
+  const { tenantId, boundaries, projectType, startDate, endDate } = request?.body?.CampaignDetails;
+  request.body.CampaignDetails.id = uuidv4()
+  var Projects: any = [{
+    tenantId,
+    projectType,
+    startDate,
+    endDate,
+    "projectSubType": "Campaign",
+    "department": "Campaign",
+    "description": "Campaign ",
+  }]
+  const projectCreateBody = {
+    RequestInfo: request?.body?.RequestInfo,
+    Projects
+  }
+  await reorderBoundaries(request)
+  for (const boundary of boundaries) {
+    Projects[0].address = { tenantId: tenantId, boundary: boundary?.code, boundaryType: boundary?.type }
+    if (request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent) {
+      const parent = request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent
+      Projects[0].parent = request?.body?.boundaryProjectMapping?.[parent]?.projectId
+    }
+    else {
+      Projects[0].parent = null
+    }
+    Projects[0].referenceID = request?.body?.CampaignDetails?.id
+    await projectCreate(projectCreateBody, request)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  }
+}
+
+async function processBasedOnAction(request: any) {
+  if (request?.body?.CampaignDetails?.action == "create") {
+    await createProjectCampaignResourcData(request);
+    await createProject(request)
+    await enrichAndPersistProjectCampaignRequest(request)
+  }
+}
 
 
 export {
@@ -1331,7 +1458,6 @@ export {
   convertToTypeData,
   matchData,
   generateProcessedFileAndPersist,
-  enrichAndPersistProjectCampaignRequest,
   modifyBoundaryData,
   getChildParentMap,
   getBoundaryTypeMap,
@@ -1340,7 +1466,8 @@ export {
   extractCodesFromBoundaryRelationshipResponse,
   searchProjectCampaignResourcData,
   processDataSearchRequest,
-  getCodeMappingsOfExistingBoundaryCodes
+  getCodeMappingsOfExistingBoundaryCodes,
+  processBasedOnAction
 };
 
 
