@@ -45,7 +45,7 @@
   "dependencies": {
     "single-spa-react": "^4.6.1",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.7",
-    "@egovernments/digit-ui-react-components": "2.0.0-fsm.2.1",
+    "@egovernments/digit-ui-react-components": "2.0.0-fsm.2.2",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
     "@rjsf/validator-ajv8": "5.10.0",
