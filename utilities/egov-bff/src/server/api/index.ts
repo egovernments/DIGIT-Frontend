@@ -607,9 +607,6 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
 
 
 
-
-
-
 async function enrichCampaign(requestBody: any) {
   if (requestBody?.Campaign) {
     requestBody.Campaign.id = uuidv4();
@@ -957,10 +954,19 @@ async function createProjectCampaignResourcData(request: any) {
   }
 }
 
-
-
-
-
+async function projectCreate(projectCreateBody: any, request: any) {
+  logger.info("Project creation url " + config.host.projectHost + config.paths.projectCreate)
+  logger.info("Project creation body " + JSON.stringify(projectCreateBody))
+  const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
+  logger.info("Project creation response" + JSON.stringify(projectCreateResponse))
+  if (projectCreateResponse?.Project[0]?.id) {
+    logger.info("Project created successfully with id " + JSON.stringify(projectCreateResponse?.Project[0]?.id))
+    request.body.boundaryProjectMapping[projectCreateBody?.Projects?.[0]?.address?.boundary].projectId = projectCreateResponse?.Project[0]?.id
+  }
+  else {
+    throw new Error("Project creation failed, for the request: " + JSON.stringify(projectCreateBody))
+  }
+}
 
 export {
   getSheetData,
@@ -988,5 +994,6 @@ export {
   getHierarchy,
   createBoundaryEntities,
   createBoundaryRelationship,
+  projectCreate,
   getWorkbook
 };

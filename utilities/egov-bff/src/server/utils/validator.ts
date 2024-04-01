@@ -590,21 +590,22 @@ function validateCondition(condition: any, conditionIndex: number): boolean {
 
 async function validateProjectCampaignRequest(request: any) {
     const CampaignDetails = request.body.CampaignDetails;
+    const { hierarchyType, action, tenantId, boundaries, resources } = CampaignDetails;
     if (!CampaignDetails) {
         throw new Error("CampaignDetails is required");
     }
-    validateProjectCampaignMissingFields(CampaignDetails)
-    const { hierarchyType, tenantId, action, boundaries, resources } = CampaignDetails;
-
     if (!(action == "create" || action == "draft")) {
         throw new Error("action can only be create or draft")
     }
-    if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
-        throw new Error("tenantId is not matching with userInfo")
+    if (action == "create") {
+        validateProjectCampaignMissingFields(CampaignDetails)
+        if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
+            throw new Error("tenantId is not matching with userInfo")
+        }
+        await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
+        await validateProjectCampaignResources(resources, tenantId, request)
+        await validateDeliveryRules(request.body.CampaignDetails.deliveryRules)
     }
-    await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
-    await validateProjectCampaignResources(resources, tenantId, request)
-    await validateDeliveryRules(request.body.CampaignDetails.deliveryRules)
 }
 
 async function validateSearchProjectCampaignRequest(request: any) {
