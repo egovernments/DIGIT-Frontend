@@ -74,7 +74,7 @@ class dataManageController {
                 }
                 console.log(fileResponse?.fileStoreIds?.[0]?.url, "ggggggggggg")
                 const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
-                const updatedWorkbook = await appendSheetsToWorkbook(fileResponse?.fileStoreIds?.[0]?.url, boundaryData);
+                const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
                 const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
                 transformedResponse[0].fileStoreId = boundaryDetails[0].fileStoreId;
                 return sendResponse(response, { fileStoreIds: transformedResponse }, request);

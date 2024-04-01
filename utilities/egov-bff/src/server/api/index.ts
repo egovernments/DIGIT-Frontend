@@ -533,7 +533,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
     });
     const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: request?.body?.ResourceDetails?.tenantId, codes: boundaryCodes.join(', ') });
     const codesFromResponse = boundaryEntityResponse.Boundary.map((boundary: any) => boundary.code);
-    const codeSet = new Set(codesFromResponse);  // Creating a set and filling it with the codes from the response
+        const codeSet = new Set(codesFromResponse);  // Creating a set and filling it with the codes from the response
     Array.from(boundaryMap.entries()).forEach(async ([boundaryName, boundaryCode]) => {   // Convert the Map to an array of entries and iterate over it
       const boundary = {
         tenantId: request?.body?.ResourceDetails?.tenantId,
@@ -568,7 +568,7 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
     const params = {
       "type": request?.body?.ResourceDetails?.type,
       "tenantId": request?.body?.ResourceDetails?.tenantId,
-      "boundaryType": "Country",
+      "boundaryType": null,
       "codes": null,
       "includeChildren": true,
       "hierarchyType": request?.body?.ResourceDetails?.hierarchyType
@@ -579,7 +579,7 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
     let flag = 1;
     for (const [boundaryCode, boundaryType] of Object.entries(boundaryTypeMap)) {
       const boundary = {
-        tenantId: "pg",
+        tenantId: request?.body?.ResourceDetails?.tenantId,
         boundaryType: boundaryType,
         code: boundaryCode,
         hierarchyType: request?.body?.ResourceDetails?.hierarchyType,

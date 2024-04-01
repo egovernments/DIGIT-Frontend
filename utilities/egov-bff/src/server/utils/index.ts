@@ -1290,18 +1290,41 @@ function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; va
 
 
 
-async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
+async function appendSheetsToWorkbook( boundaryData: any[]) {
   try {
     const uniqueDistricts: string[] = [];
+    const uniqueDistrictsForMainSheet: string[] = [];
+    const workbook = XLSX.utils.book_new();
+    const mainSheetData: any[] = [];
+    const headersForMainSheet = Object.keys(boundaryData[0]);
+    mainSheetData.push(headersForMainSheet);
+
+    for (const data of boundaryData) {
+      const rowData = Object.values(data);
+      const districtIndex = rowData.indexOf(data.District);
+      const districtLevelRow = rowData.slice(0, districtIndex + 1);
+      if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
+        uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
+        mainSheetData.push(rowData);
+      }
+    }
+    const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
+    XLSX.utils.book_append_sheet(workbook, mainSheet, 'Sheet1');
+    
     for (const item of boundaryData) {
       if (item.District && !uniqueDistricts.includes(item.District)) {
         uniqueDistricts.push(item.District);
       }
     }
-    const workbook = await getWorkbook(fileUrl, 'Sheet1');
     for (const district of uniqueDistricts) {
       const districtDataFiltered = boundaryData.filter(item => item.District === district);
-      const newSheetData = [Object.keys(districtDataFiltered[0])].concat(districtDataFiltered.map(obj => Object.values(obj)));
+      const districtIndex = Object.keys(districtDataFiltered[0]).indexOf('District');
+      const headers = Object.keys(districtDataFiltered[0]).slice(districtIndex);
+      const newSheetData = [headers];
+      for (const data of districtDataFiltered) {
+        const rowData = Object.values(data).slice(districtIndex).map(value => value === null ? '' : String(value)); // Replace null with empty string
+        newSheetData.push(rowData);
+      }
       const ws = XLSX.utils.aoa_to_sheet(newSheetData);
       XLSX.utils.book_append_sheet(workbook, ws, district);
     }
@@ -1311,22 +1334,22 @@ async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
   }
 }
 
-async function getWorkbook(fileUrl: string, sheetName: string) {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/pdf',
-    };
-    const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
-    const workbook = XLSX.read(workbookData, { type: 'buffer' });
-    if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-      throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
-    }
-    return workbook;
-  } catch (error) {
-    throw new Error("Error while fetching sheet");
-  }
-}
+// async function getWorkbook(fileUrl: string, sheetName: string) {
+//   try {
+//     const headers = {
+//       'Content-Type': 'application/json',
+//       Accept: 'application/pdf',
+//     };
+//     const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+//     const workbook = XLSX.read(workbookData, { type: 'buffer' });
+//     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+//       throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+//     }
+//     return workbook;
+//   } catch (error) {
+//     throw new Error("Error while fetching sheet");
+//   }
+// }
 
 
 
