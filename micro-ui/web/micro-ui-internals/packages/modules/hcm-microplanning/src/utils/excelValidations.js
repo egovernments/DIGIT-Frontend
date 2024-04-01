@@ -95,12 +95,6 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
             ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
             : `${columnList[columnList.length - 1]}`,
       });
-      // .replace(
-      //   "PLACEHOLDER",
-      // columnList.length > 1
-      //   ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-      //   : `${columnList[columnList.length - 1]}`
-      // );
       return { valid: false, message };
     }
   } catch (error) {
