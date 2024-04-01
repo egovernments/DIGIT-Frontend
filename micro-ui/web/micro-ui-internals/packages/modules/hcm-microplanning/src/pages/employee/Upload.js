@@ -3,23 +3,22 @@ import { useTranslation } from "react-i18next";
 import { Toast } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
-import Config from "../../configs/UploadConfiguration.json";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
-import Modal from "../../components/Modal";
+import { ModalWrapper } from "../../components/Modal";
 import { checkForErrorInUploadedFileExcel } from "../../utils/excelValidations";
 import { geojsonPropetiesValidation, geojsonValidations } from "../../utils/geojsonValidations";
-import schemas from "../../configs/schemas.json";
 import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
+import { ButtonType1, CustomIcon, ButtonType2, ModalHeading, Loader } from "../../components/ComonComponents";
 
 const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const { t } = useTranslation();
 
   // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UploadConfiguration" }]);
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UploadConfiguration" },{ name: "UIConfiguration" },{ name: "schemas" }]);
 
   // States
   const [sections, setSections] = useState([]);
@@ -37,21 +36,33 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const [template, setTemplate] = useState([]);
   const [resourceMapping, setResourceMapping] = useState([]);
   const [previewUploadedData, setPreviewUploadedData] = useState();
+  const [uploadGuideLines, setUploadGuideLines] = useState();
 
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
-      // let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let uploadSections = Config["UploadConfiguration"];
+      console.log(data)
+      let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
+      let schemas = data["hcm-microplanning"]["schemas"]
+      let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"]
+      // let uploadSections = Config["UploadConfiguration"];
+      const uploadGuideLinesList = UIConfiguration.find(item => item.name === "uploadGuideLines").UploadGuideLineInstructions;
+      setUploadGuideLines(uploadGuideLinesList);
+      setValidationSchemas(schemas);
       setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
       setSections(uploadSections);
     }
   }, [data]);
 
+  // // Effect to set upload quidelines
+  // useEffect(()=>{
+  //   const uploadGuideLinesList = UIConfiguration.find(item => item.name === "uploadGuideLines").UploadGuideLineInstructions;
+  //   setUploadGuideLines(uploadGuideLinesList);
+  // },[])
   // Effect to set schema
-  useEffect(() => {
-    setValidationSchemas(schemas.schemas);
-  }, []);
+  // useEffect(() => {
+  //   setValidationSchemas(schemas.schemas);
+  // }, []);
 
   // To close the Toast after 10 seconds
   useEffect(() => {
@@ -365,7 +376,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   // delete the selected file
-  const deleteDelete = () => {
+  const deleteFile = () => {
     // Digit.SessionStorage.del(fileData.id);
     setResourceMapping([]);
     setFileDataList({ ...fileDataList, [fileData.id]: undefined });
@@ -398,18 +409,20 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
     if (!response.valid) {
       return handleValidationErrorResponse(response.message);
     }
-    setFileData((prev) => ({ ...prev, data, resourceMapping, error }));
+    setFileData((previous) => ({ ...previous, data, resourceMapping, error }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
     setLoderActivation(false);
   };
 
   const handleValidationErrorResponse = (error) => {
+    console.log(error)
     const fileObject = fileData;
     fileObject.error = error;
-    setFileData((prev) => ({ ...prev, error }));
+    setFileData((previous) => ({ ...previous, error }));
     setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-    setUploadedFileError(response.message);
+    if(error)
+    setUploadedFileError(error);
     setLoderActivation(false);
   };
 
@@ -474,7 +487,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   return (
-    <div className="jk-header-btn-wrapper microplanning">
+    <div className="jk-header-btn-wrapper upload-section">
       <div className="upload">
         <div className="upload-component-wrapper">
           {!dataPresent ? (
@@ -502,7 +515,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
                   file={fileData}
                   ReuplaodFile={() => setModal("reupload-conformation")}
                   DownloaddFile={downloadFile}
-                  DeleteDelete={() => setModal("delete-conformation")}
+                  DeleteFile={() => setModal("delete-conformation")}
                   error={uploadedFileError}
                   setToast={setToast}
                   template={template}
@@ -528,8 +541,8 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           LeftButtonHandler={() => UploadFileClickHandler(false)}
           RightButtonHandler={() => UploadFileClickHandler(true)}
           sections={sections}
-          footerLeftButtonBody={<AlternateButton text={t("ALREDY_HAVE_IT")} />}
-          footerRightButtonBody={<DownloadButton text={t("DOWNLOAD_TEMPLATE")} />}
+          footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
+          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} />}
           header={<ModalHeading label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)} />}
           bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
         />
@@ -539,13 +552,13 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           selectedSection={selectedSection}
           selectedFileType={selectedFileType}
           closeModal={closeModal}
-          LeftButtonHandler={deleteDelete}
+          LeftButtonHandler={deleteFile}
           RightButtonHandler={closeModal}
           sections={sections}
-          footerLeftButtonBody={<AlternateButton text={t("YES")} />}
-          footerRightButtonBody={<AlternateButton text={t("NO")} />}
-          header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFORMATION")} />}
-          bodyText={t("INSTRUCTIONS_DELETE_FILE_CONFORMATION")}
+          footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
+          footerRightButtonBody={<ButtonType1 text={t("NO")} />}
+          header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+          bodyText={t("INSTRUCTIONS_DELETE_FILE_CONFIRMATION")}
         />
       )}
       {modal === "reupload-conformation" && (
@@ -556,10 +569,10 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           LeftButtonHandler={reuplaodFile}
           RightButtonHandler={closeModal}
           sections={sections}
-          footerLeftButtonBody={<AlternateButton text={t("YES")} />}
-          footerRightButtonBody={<AlternateButton text={t("NO")} />}
-          header={<ModalHeading label={t("HEADING_REUPLOAD_FILE_CONFORMATION")} />}
-          bodyText={t("INSTRUCTIONS_REUPLOAD_FILE_CONFORMATION")}
+          footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
+          footerRightButtonBody={<ButtonType1 text={t("NO")} />}
+          header={<ModalHeading label={t("HEADING_REUPLOAD_FILE_CONFIRMATION")} />}
+          bodyText={t("INSTRUCTIONS_REUPLOAD_FILE_CONFIRMATION")}
         />
       )}
       {modal === "spatial-data-property-mapping" && (
@@ -574,7 +587,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           headerBarMainStyle={{ width: "48.5rem" }}
           sections={sections}
           // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
-          footerRightButtonBody={<AlternateButton text={t("COMPLETE_MAPPING")} />}
+          footerRightButtonBody={<ButtonType1 text={t("COMPLETE_MAPPING")} />}
           header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% - 2rem)" }} />}
           bodyText={t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}
           body={
@@ -595,12 +608,12 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           popupStyles={{ width: "calc(100% - 6rem)" }}
           closeModal={closeModal}
           hideSubmit={true}
-          headerBarMainStyle={{ width: "100%" }}
+          headerBarMainStyle={{ width: "100%", margin:0 }}
           header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} style={{ width: "100%" }} />}
-          body={<UploadGuideLines t={t} />}
+          body={<UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />}
         />
       )}
-      {loaderActivation && <Loader />}
+      {loaderActivation && <Loader text={"FILE_UPLOADING"} />}
       {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
       {toast && toast.state === "error" && (
         <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} error />
@@ -626,11 +639,11 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   };
 
   return (
-    <div className={`upload-section-options ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
-      <div style={{ padding: "0 10px" }}>
-        <CustomIcon Icon={Icons[item.iconName]} color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
+    <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
+      <div className="icon">
+        <CustomIcon Icon={Icons[item.iconName]} minWidth={"1.875rem"} minHeight={"2.188rem"} color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
-      <p>{t(item.id)}</p>
+      <p>{t(item.code)}</p>
     </div>
   );
 };
@@ -643,11 +656,11 @@ const UploadInstructions = ({ setModal, t }) => {
         <p>{t("INFO")}</p>
       </div>
       <div className="information-description">
-        <p>{t("INFORMATION_DESCIPTION_1")}</p>
+        <p>{t("INFORMATION_DESCRIPTION")}</p>
         <div className="link-wrapper">
           {t("REFER")} &nbsp;
           <div className="link" onClick={setModal}>
-            {t("INFORMATION_DESCIPTION_2_LINK")}
+            {t("INFORMATION_DESCRIPTION_LINK")}
           </div>
         </div>
       </div>
@@ -755,7 +768,7 @@ const UploadedFile = ({
   file,
   ReuplaodFile,
   DownloaddFile,
-  DeleteDelete,
+  DeleteFile,
   error,
   setToast,
   template,
@@ -795,9 +808,9 @@ const UploadedFile = ({
               <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("Download")}</p>
             </div>
-            <div className="button deletebutton" onClick={DeleteDelete}>
+            <div className="button deletebutton" onClick={DeleteFile}>
               <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={"rgba(244, 119, 56, 1)"} />
-              <p>{t("Delete")}</p>
+              <p>{t("DELETE")}</p>
             </div>
           </div>
         </div>
@@ -817,76 +830,13 @@ const UploadedFile = ({
   );
 };
 
-// Wrapper for modal
-const ModalWrapper = ({
-  selectedSection,
-  selectedFileType,
-  closeModal,
-  LeftButtonHandler,
-  RightButtonHandler,
-  sections,
-  footerLeftButtonBody,
-  footerRightButtonBody,
-  header,
-  bodyText,
-  body,
-  popupStyles,
-  headerBarMainStyle,
-  popupModuleActionBarStyles,
-  hideSubmit,
-}) => {
-  const { t } = useTranslation();
-  return (
-    <Modal
-      headerBarMain={header}
-      headerBarEnd={<CloseBtn onClick={closeModal} />}
-      actionCancelOnSubmit={LeftButtonHandler}
-      actionSaveOnSubmit={RightButtonHandler}
-      formId="microplanning"
-      popupStyles={{ width: "34rem", borderRadius: "0.25rem", ...(popupStyles ? popupStyles : {}) }}
-      headerBarMainStyle={{ margin: 0, width: "34rem", overflow: "hidden", ...(headerBarMainStyle ? headerBarMainStyle : {}) }}
-      popupModuleMianStyles={{ margin: 0, padding: 0 }}
-      popupModuleActionBarStyles={popupModuleActionBarStyles ? popupModuleActionBarStyles : { justifyContent: "space-between", padding: "1rem" }}
-      style={{}}
-      hideSubmit={hideSubmit ? hideSubmit : false}
-      footerLeftButtonstyle={{
-        padding: 0,
-        alignSelf: "flex-start",
-        height: "fit-content",
-        textStyles: { fontWeight: "600" },
-        backgroundColor: "rgba(255, 255, 255, 1)",
-        color: "rgba(244, 119, 56, 1)",
-        minWidth: "13rem",
-        border: "1px solid rgba(244, 119, 56, 1)",
-      }}
-      footerRightButtonstyle={{
-        padding: 0,
-        alignSelf: "flex-end",
-        height: "fit-content",
-        textStyles: { fontWeight: "500" },
-        backgroundColor: "rgba(244, 119, 56, 1)",
-        color: "rgba(255, 255, 255, 1)",
-        minWidth: "13rem",
-        boxShadow: "0px -2px 0px 0px rgba(11, 12, 12, 1) inset",
-      }}
-      footerLeftButtonBody={footerLeftButtonBody}
-      footerRightButtonBody={footerRightButtonBody}
-    >
-      <div className="modal-body">
-        <p className="modal-main-body-p">{bodyText}</p>
-      </div>
-      {body ? body : ""}
-    </Modal>
-  );
-};
-
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
   const regx = new RegExp(namingConvention);
   if (regx && !regx.test(file.name)) {
     setToast({
       state: "error",
-      message: t("ERROR_NAMEING_CONVENSION"),
+      message: t("ERROR_NAMING_CONVENSION"),
     });
     return false;
   }
@@ -979,8 +929,8 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
       else if (!allFilesMatchRegex)
         resolve({
           valid: false,
-          message: "ERROR_CONTENT_NAMEING_CONVENSION",
-          toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMEING_CONVENSION") },
+          message: "ERROR_CONTENT_NAMING_CONVENSION",
+          toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMING_CONVENSION") },
         });
       else if (!shpFile)
         resolve({ valid: false, message: "ERROR_SHP_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
@@ -1048,29 +998,11 @@ const getSchema = (campaignType, type, section, schemas) => {
 };
 
 // Uplaod GuideLines
-const UploadGuideLines = ({ t }) => {
-  const [points, setPoints] = useState([]);
-  // const t=(a)=>{
-  //   console.log(a)
-  //   if (a == `INSTRUCTION_POINTS_5`) return `INSTRUCTION_POINTS_5`
-  //   return "You are on the BI Clients tab in the characteristic editing screen in the BW modeling toolsYou are on the BI Clients tab in the characteristic editing screen in the BW modeling toolsYou are on the BI Clients tab in the characteristic editing screen in the BW modeling tools"
-  // }
-  useEffect(() => {
-    let pts = [];
-    let i = 1;
-    while (true) {
-      let msg = t(`INSTRUCTION_POINTS_${i}`);
-      if (msg !== `INSTRUCTION_POINTS_${i}`) pts.push(msg);
-      else break;
-      i += 1;
-    }
-    setPoints(pts);
-  }, []);
-
+const UploadGuideLines = ({uploadGuideLines, t }) => {
   return (
     <div className="guidelines">
       <p className="sub-heading">{t("PREREQUISITES")}</p>
-      <div className="instruction-list flex">
+      <div className="instruction-list">
         {t("INSTRUCTION_PREREQUISITES_1")}&nbsp;
         <a className="link" href="https://help.sap.com/docs/SAP_BW4HANA/107a6e8a38b74ede94c833ca3b7b6f51/ff09575df3614f3da5738ea14e72b703.html">
           {t("INSTRUCTION_PREREQUISITES_LINK")}
@@ -1078,69 +1010,14 @@ const UploadGuideLines = ({ t }) => {
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
       <p className="sub-heading">{t("PROCEDURE")}</p>
-      {points.map((item) => (
+      {uploadGuideLines.map(item=><p className="instruction-list">{t(item)}</p>)}
+      {/* {points.map((item) => (
         <p className="instruction-list">{item}</p>
-      ))}
+      ))} */}
     </div>
   );
 };
 
-// Custom icon component
-const CustomIcon = (props) => {
-  if (!props.Icon) return null;
-  return <props.Icon fill={props.color} style={{}} {...props} />;
-};
 
-const Close = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#0B0C0C" />
-  </svg>
-);
-
-const CloseBtn = (props) => {
-  return (
-    <div className="icon-bg-secondary" onClick={props.onClick} style={{ backgroundColor: "#FFFFFF", borderRadius: "0.25rem" }}>
-      <Close />
-    </div>
-  );
-};
-
-const AlternateButton = (props) => {
-  return (
-    <div className="altrady-have-template-button">
-      <p>{props.text}</p>
-    </div>
-  );
-};
-
-const DownloadButton = (props) => {
-  return (
-    <div className="download-template-button">
-      <div className="icon">
-        <CustomIcon color={"white"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
-      </div>
-      <p>{props.text}</p>
-    </div>
-  );
-};
-
-const ModalHeading = (props) => {
-  return (
-    <p className="modal-header" style={props.style}>
-      {props.label}
-    </p>
-  );
-};
-
-const Loader = () => {
-  return (
-    <div className="loader-container">
-      <div className="loader">
-        <div className="loader-inner" />
-      </div>
-      <div className="loader-text">File Uploading....</div>
-    </div>
-  );
-};
 
 export default Upload;

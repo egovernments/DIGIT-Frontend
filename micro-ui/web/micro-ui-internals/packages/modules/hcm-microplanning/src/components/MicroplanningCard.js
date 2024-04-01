@@ -23,6 +23,11 @@ const MicroplanningCard = () => {
       link: `/${window?.contextPath}/employee/microplanning/upload`,
       roles: [],
     },
+    {
+      label: t("Hypothesis Page"),
+      link: `/${window?.contextPath}/employee/microplanning/hypothesis`,
+      roles: [],
+    },
     // {
     //   label: t("ACTION_TEST_LOCALISATION"),
     //   link: `/${window?.contextPath}/employee/workbench/localisation-search`,

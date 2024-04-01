@@ -1,0 +1,40 @@
+{
+    "tenantId": "mz",
+    "moduleName": "hcm-microplanning",
+    "hypothesisAssumptions": [
+        {
+            "campaignType": "ITIN",
+            "assumptions": [
+                    "NO_OF_PEOPLE_PER_HOUSEHOLD",
+                    "NO_OF_PEOPLE_PER_BEDNET",
+                    "NO_OF_DAYS_OF_THE_CAMPAIGN_AT_THAT_BOUNDRY_LEVEL",
+                    "NO_OF_DISTRIBUTORS_PER_MONITOR",
+                    "BUFFER",
+                    "NO_OF_POPULATION_TARGETTED_FOR_COVERAGE"
+            ]
+        },
+        {
+            "campaignType": "IRS",
+            "assumptions": [
+                    "NO_OF_PEOPLE_PER_HOUSEHOLD",
+                    "NO_OF_DAYS_OF_THE_CAMPAIGN_AT_THAT_BOUNDRY_LEVEL",
+                    "NO_OF_STRUCTURES_THAT_ARE_SPRAYABLE",
+                    "NO_OF_SOAK_PITS",
+                    "NO_OF_STRUCTURES_PER_UNIT_OF_INSECTICIDE",
+                    "BUFFER",
+                    "NO_OF_STRUCTURES_SPRAYED_PER_DAY_PER_OPERATOR",
+                    "NO_OF_SPRAY_OPERATOR_PER_MONITOR"
+            ]
+        },
+        {
+            "campaignType": "SMC",
+            "assumptions": [
+                    "NO_OF_CYCLES",
+                    "NO_OF_SPAQ_PER_CYCLE",
+                    "NO_OF_DAYS_OF_THE_CAMPAIGN_AT_THAT_BOUNDRY_LEVEL",
+                    "NO_OF_DISTRIBUTORS_PER_MONITOR",
+                    "BUFFER"
+            ]
+        }
+    ]
+}

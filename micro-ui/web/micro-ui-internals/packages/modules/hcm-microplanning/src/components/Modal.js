@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { PopUp, HeaderBar, Toast } from "@egovernments/digit-ui-react-components";
+import { CloseBtn } from "./ComonComponents";
 
 const Modal = ({
   headerBarMain,
@@ -104,5 +105,66 @@ const ButtonSelector = (props) => {
     </button>
   );
 };
+
+
+// Wrapper for modal
+export const ModalWrapper = ({
+  closeModal,
+  LeftButtonHandler,
+  RightButtonHandler,
+  footerLeftButtonBody,
+  footerRightButtonBody,
+  header,
+  bodyText,
+  body,
+  popupStyles,
+  headerBarMainStyle,
+  popupModuleActionBarStyles,
+  hideSubmit,
+}) => {
+  return (
+    <Modal
+      headerBarMain={header}
+      headerBarEnd={<CloseBtn onClick={closeModal} side={"2.5rem"} />}
+      actionCancelOnSubmit={LeftButtonHandler}
+      actionSaveOnSubmit={RightButtonHandler}
+      formId="microplanning"
+      popupStyles={{ width: "34rem", borderRadius: "0.25rem", ...(popupStyles ? popupStyles : {}) }}
+      headerBarMainStyle={{ margin: 0, width: "34rem", overflow: "hidden", ...(headerBarMainStyle ? headerBarMainStyle : {}) }}
+      popupModuleMianStyles={{ margin: 0, padding: 0 }}
+      popupModuleActionBarStyles={popupModuleActionBarStyles ? popupModuleActionBarStyles : { justifyContent: "space-between", padding: "1rem" }}
+      style={{}}
+      hideSubmit={hideSubmit ? hideSubmit : false}
+      footerLeftButtonstyle={{
+        padding: 0,
+        alignSelf: "flex-start",
+        height: "fit-content",
+        textStyles: { fontWeight: "600" },
+        backgroundColor: "rgba(255, 255, 255, 1)",
+        color: "rgba(244, 119, 56, 1)",
+        minWidth: "13rem",
+        border: "1px solid rgba(244, 119, 56, 1)",
+      }}
+      footerRightButtonstyle={{
+        padding: 0,
+        alignSelf: "flex-end",
+        height: "fit-content",
+        textStyles: { fontWeight: "500" },
+        backgroundColor: "rgba(244, 119, 56, 1)",
+        color: "rgba(255, 255, 255, 1)",
+        minWidth: "13rem",
+        boxShadow: "0px -2px 0px 0px rgba(11, 12, 12, 1) inset",
+      }}
+      footerLeftButtonBody={footerLeftButtonBody}
+      footerRightButtonBody={footerRightButtonBody}
+    >
+      <div className="modal-body">
+        <p className="modal-main-body-p">{bodyText}</p>
+      </div>
+      {body ? body : ""}
+    </Modal>
+  );
+};
+
 
 export default Modal;
