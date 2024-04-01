@@ -4,13 +4,11 @@ const ajv = new Ajv({ allErrors: true });
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
   const tranlate = () => {
-  const required = schemaData.required.map(item => t(item));
-  const properties = prepareProperties(schemaData.Properties,t);
-    return {required,properties}
+    const required = schemaData.required.map((item) => t(item));
+    const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties };
   };
-  const {required,properties}= tranlate()
-  console.log(required)
-  console.log(properties)
+  const { required, properties } = tranlate();
   const schema = {
     type: "object",
     patternProperties: {
@@ -26,7 +24,6 @@ export const excelValidations = (data, schemaData, t) => {
     },
     additionalProperties: true,
   };
-  console.log(schema)
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
   if (!valid) {
@@ -76,15 +73,15 @@ export const excelValidations = (data, schemaData, t) => {
   return { valid };
 };
 
-const prepareProperties=(properties,t)=>{
-  let newProperties={};
-  Object.keys(properties).forEach(item=>newProperties[t(item)] = properties[item]);
-  return newProperties
-}
+const prepareProperties = (properties, t) => {
+  let newProperties = {};
+  Object.keys(properties).forEach((item) => (newProperties[t(item)] = properties[item]));
+  return newProperties;
+};
 
 export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t) => {
   try {
-    const valid = excelValidations(fileInJson, schemaData,t);
+    const valid = excelValidations(fileInJson, schemaData, t);
     if (valid.valid) {
       return { valid: true };
     } else {
@@ -92,21 +89,22 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
         return { valid: false, message: valid.message };
       }
       const columnList = valid.columnList;
-      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE",{
-        columns: columnList.length > 1
-          ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-          : `${columnList[columnList.length - 1]}`
-      })
+      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
+        columns:
+          columnList.length > 1
+            ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+            : `${columnList[columnList.length - 1]}`,
+      });
       // .replace(
       //   "PLACEHOLDER",
-        // columnList.length > 1
-        //   ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-        //   : `${columnList[columnList.length - 1]}`
+      // columnList.length > 1
+      //   ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
+      //   : `${columnList[columnList.length - 1]}`
       // );
       return { valid: false, message };
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return { valid: false, message: "ERROR_PARSING_FILE" };
   }
 };

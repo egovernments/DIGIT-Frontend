@@ -26,7 +26,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
   const [assumptions, setAssumptions] = useState(initialAssumptions);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
-
+  const [exampleOption, setExampleOption] = useState("")
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!hypothesisAssumptions || !hypothesisAssumptions.hypothesisAssumptions) return;
@@ -35,6 +35,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
     if (!(temp && temp.assumptions)) return;
 
     setHypothesisAssumptionsList(temp.assumptions);
+    setExampleOption(temp.assumptions.length?temp.assumptions[0]:"")
   }, [campaignType, hypothesisAssumptions]);
 
   const closeModal = useCallback(() => {
@@ -59,6 +60,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
         setHypothesisAssumptionsList={setHypothesisAssumptionsList}
         setModal={setModal}
         setItemForDeletion={setItemForDeletion}
+        exampleOption={exampleOption}
         t={t}
       />
       <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
@@ -105,7 +107,7 @@ const NonInterractableSection = React.memo(({ t }) => {
 
 // Defination for NonInterractable Section
 const InterractableSection = React.memo(
-  ({ assumptions, setAssumptions, hypothesisAssumptionsList, setHypothesisAssumptionsList, setModal, setItemForDeletion, t }) => {
+  ({ assumptions, setAssumptions, hypothesisAssumptionsList, setHypothesisAssumptionsList, setModal, setItemForDeletion, exampleOption,t }) => {
     // Handler for deleting an assumption on conformation
     const deleteHandler = useCallback(
       (item) => {
@@ -117,7 +119,7 @@ const InterractableSection = React.memo(
 
     return (
       <div className="user-input-section">
-        <Example hypothesisAssumptionsList={hypothesisAssumptionsList} t={t} />
+        <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
           <div className="key">
             <p className="heading">{t("KEY")}</p>
@@ -155,20 +157,22 @@ const InterractableSection = React.memo(
   }
 );
 
-const Example = ({ hypothesisAssumptionsList, t }) => {
+const Example = ({ exampleOption, t }) => {
   return (
     <div className="example">
       <p className="heading">{t("EXAMPLE")}</p>
       <div className="example-body">
         <div className="key">
           <p className="heading">{t("KEY")}</p>
-          <select value={hypothesisAssumptionsList.length ? hypothesisAssumptionsList[0] : t("SELECT_OPTION")} disabled>
-            <option value="">{t("SELECT_OPTION")}</option>
-            {hypothesisAssumptionsList.map((item, index) => (
+          <select value={exampleOption} disabled>
+            <option value={exampleOption} disabled>
+              {t(exampleOption)}
+            </option>
+            {/* {hypothesisAssumptionsList.map((item, index) => (
               <option key={item} id={index} value={item}>
                 {t(item)}
               </option>
-            ))}
+            ))} */}
           </select>
           <p className="heading">{t("HYPOTHESIS_KEY_HELP_TEXT")}</p>
         </div>
@@ -240,9 +244,9 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   return (
     <select value={selected} onChange={selectChangeHandler} disabled={disabled}>
-      {/* <option value="" disabled>
-          {t("SELECT_OPTION")}
-        </option> */}
+      <option value="" disabled>
+        {t("SELECT_OPTION")}
+      </option>
       {filteredOptions.map((item, index) => (
         <option key={item} id={index} value={item}>
           {t(item)}
