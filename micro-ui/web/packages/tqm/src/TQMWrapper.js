@@ -7,11 +7,10 @@ import EmployeeApp from "./pages/employee";
 const App = ({ queryClient, title }) => {
   initTQMComponents();
   //make way to do this job in container while registering remotes
-
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
-        <EmployeeApp path={"/workbench-ui/employee/tqm"} />
+        <EmployeeApp path={`/${window.contextPath}/employee/tqm`} />
       </QueryClientProvider>
     </Router>
   );

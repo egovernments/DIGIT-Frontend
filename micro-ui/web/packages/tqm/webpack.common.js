@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/SingleSpaEntry.js",
+  entry: "./src/index.js",
   resolve: {
     extensions: [ ".js", ".jsx"],
     modules: [path.resolve(__dirname, "src"), "node_modules"],

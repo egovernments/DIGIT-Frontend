@@ -160,7 +160,7 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
         {data?.display ? (
           <div style={{ marginTop: "20x", width: "1025px", marginLeft: "25px", backgroundColor: "white", height: "60px" }}>
             {t(data.display)
-              .split("\\n")
+              ?.split("\\n")
               .map((text, index) => (
                 <p key={index} style={{ textAlign: "center" }}>
                   {text}
