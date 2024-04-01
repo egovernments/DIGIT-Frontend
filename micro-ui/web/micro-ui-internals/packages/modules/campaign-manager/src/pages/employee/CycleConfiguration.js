@@ -1,15 +1,5 @@
 import React, { useReducer, Fragment, useEffect } from "react";
-import {
-  CardText,
-  DatePicker,
-  LabelFieldPair,
-  Card,
-  CardHeader,
-  CardLabel,
-  CardSubHeader,
-  Paragraph,
-  Header,
-} from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { TextInput } from "@egovernments/digit-ui-components";
 
