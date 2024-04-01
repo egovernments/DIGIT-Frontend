@@ -1417,7 +1417,7 @@ async function processBasedOnAction(request: any) {
     await enrichAndPersistProjectCampaignRequest(request)
   }
 }
-async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
+async function appendSheetsToWorkbook(boundaryData: any[]) {
   try {
     const uniqueDistricts: string[] = [];
     const uniqueDistrictsForMainSheet: string[] = [];
