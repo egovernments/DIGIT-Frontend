@@ -3,18 +3,19 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, createProjectCampaignResourcData, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, projectCreate, searchMDMS } from "../api/index";
+import { createAndUploadFile, createExcelSheet, createProjectCampaignResourcData, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, projectCreate, searchMDMS, getCount, } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
 import { Pool } from 'pg';
-import { getCount } from '../api/index'
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
+// import * as xlsx from 'xlsx-populate';
 const NodeCache = require("node-cache");
 const _ = require('lodash');
+
 
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -1268,8 +1269,6 @@ async function processDataSearchRequest(request: any) {
   request.body.ResourceDetails = results;
 }
 
-
-
 function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; values: any[] } {
   const { id, tenantId, type, status } = SearchCriteria;
   let conditions = [];
@@ -1418,6 +1417,47 @@ async function processBasedOnAction(request: any) {
     await enrichAndPersistProjectCampaignRequest(request)
   }
 }
+async function appendSheetsToWorkbook(fileUrl: string, boundaryData: any[]) {
+  try {
+    const uniqueDistricts: string[] = [];
+    for (const item of boundaryData) {
+      if (item.District && !uniqueDistricts.includes(item.District)) {
+        uniqueDistricts.push(item.District);
+      }
+    }
+    const workbook = await getWorkbook(fileUrl, 'Sheet1');
+    for (const district of uniqueDistricts) {
+      const districtDataFiltered = boundaryData.filter(item => item.District === district);
+      const newSheetData = [Object.keys(districtDataFiltered[0])].concat(districtDataFiltered.map(obj => Object.values(obj)));
+      const ws = XLSX.utils.aoa_to_sheet(newSheetData);
+      XLSX.utils.book_append_sheet(workbook, ws, district);
+    }
+    return workbook;
+  } catch (error) {
+    throw Error("An error occurred while appending sheets:");
+  }
+}
+
+async function getWorkbook(fileUrl: string, sheetName: string) {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/pdf',
+    };
+    const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
+    const workbook = XLSX.read(workbookData, { type: 'buffer' });
+    if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+      throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+    }
+    return workbook;
+  } catch (error) {
+    throw new Error("Error while fetching sheet");
+  }
+}
+
+
+
+
 
 
 export {
@@ -1467,7 +1507,8 @@ export {
   searchProjectCampaignResourcData,
   processDataSearchRequest,
   getCodeMappingsOfExistingBoundaryCodes,
-  processBasedOnAction
+  processBasedOnAction,
+  appendSheetsToWorkbook
 };
 
 

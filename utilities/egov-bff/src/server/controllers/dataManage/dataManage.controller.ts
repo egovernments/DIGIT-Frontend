@@ -1,7 +1,7 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import { validateCreateRequest, validateGenerateRequest, validateSearchRequest } from "../../utils/validator";
-import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, processDataSearchRequest, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes } from "../../utils/index";
+import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, processDataSearchRequest, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes, appendSheetsToWorkbook } from "../../utils/index";
 import { createAndUploadFile, processGenericRequest, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/index";
 import config from "../../config";
 import { httpRequest } from "../../utils/request";
@@ -60,13 +60,27 @@ class dataManageController {
             const auditDetails = generateAuditDetails(request);
             const transformedResponse = responseData.map((item: any) => {
                 return {
-                    fileStoreId: item.filestoreid,
+                    fileStoreId: item.fileStoreid,
                     additionalDetails: {},
                     type: type,
                     auditDetails: auditDetails
                 };
             });
-            return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+            if (type == "boundaryWithTarget") {
+                const fileStoreId = transformedResponse?.[0].fileStoreId;
+                const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
+                if (!fileResponse?.fileStoreIds?.[0]?.url) {
+                    throw new Error("Invalid file");
+                }
+                console.log(fileResponse?.fileStoreIds?.[0]?.url, "ggggggggggg")
+                const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
+                const updatedWorkbook = await appendSheetsToWorkbook(fileResponse?.fileStoreIds?.[0]?.url, boundaryData);
+                const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
+                transformedResponse[0].fileStoreId = boundaryDetails[0].fileStoreId;
+                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+            } else {
+                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
+            }
         } catch (e: any) {
             logger.error(String(e));
             return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
@@ -95,7 +109,7 @@ class dataManageController {
             if (!fileResponse?.fileStoreIds?.[0]?.url) {
                 throw new Error("Invalid file");
             }
-            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
+            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1",false);
             const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
             const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
             const childParentMap = getChildParentMap(withoutBoundaryCode);
