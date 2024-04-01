@@ -3,12 +3,12 @@ const ajv = new Ajv({ allErrors: true });
 
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
-  const tranlate = () => {
+  const translate = () => {
     const required = schemaData.required.map((item) => t(item));
     const properties = prepareProperties(schemaData.Properties, t);
     return { required, properties };
   };
-  const { required, properties } = tranlate();
+  const { required, properties } = translate();
   const schema = {
     type: "object",
     patternProperties: {
