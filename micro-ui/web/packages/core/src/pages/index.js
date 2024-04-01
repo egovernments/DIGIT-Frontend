@@ -66,9 +66,6 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
   };
   
   return (
-    <div>Core Module</div>
-  )
-  return (
     <Switch>
       <Route path={`/${window?.contextPath}/employee`}>
         <EmployeeApp {...commonProps} />
