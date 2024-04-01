@@ -1,5 +1,6 @@
 import { FileDownload } from "@egovernments/digit-ui-svg-components";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export const CloseBtn = (props) => {
   return (
@@ -42,13 +43,14 @@ export const ModalHeading = (props) => {
   );
 };
 
-export const Loader = () => {
+export const Loader = (props) => {
+  const { t } = useTranslation();
   return (
     <div className="loader-container">
       <div className="loader">
         <div className="loader-inner" />
       </div>
-      <div className="loader-text">File Uploading....</div>
+      <div className="loader-text">{t(props.text || "FILE_UPLOADING")}</div>
     </div>
   );
 };

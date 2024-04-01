@@ -1,5 +1,4 @@
 import Ajv from "ajv";
-import { useTranslation } from "react-i18next";
 const ajv = new Ajv({ allErrors: true });
 
 // Function responsible for excel data validation with respect to the template/schema provided

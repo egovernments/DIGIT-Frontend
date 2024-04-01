@@ -8,13 +8,13 @@ import { ButtonType1, CustomIcon, ModalHeading } from "../../components/ComonCom
 const initialAssumptions = [
   {
     id: 0,
-    key: undefined,
-    value: undefined,
+    key: "",
+    value: "",
   },
   {
     id: 1,
-    key: undefined,
-    value: undefined,
+    key: "",
+    value: "",
   },
 ];
 
@@ -87,8 +87,8 @@ const addAssumptionsHandler = (setAssumptions) => {
     ...previous,
     {
       id: previous.length ? previous[previous.length - 1].id + 1 : 0,
-      key: undefined,
-      value: undefined,
+      key: "",
+      value: "",
     },
   ]);
 };
@@ -117,29 +117,7 @@ const InterractableSection = React.memo(
 
     return (
       <div className="user-input-section">
-        <div className="example">
-          <p className="heading">{t("EXAMPLE")}</p>
-          <div className="example-body">
-            <div className="key">
-              <p className="heading">{t("KEY")}</p>
-              <select value={hypothesisAssumptionsList.length ? hypothesisAssumptionsList[0] : t("SELECT_OPTION")} disabled>
-                <option value="">{t("SELECT_OPTION")}</option>
-                {hypothesisAssumptionsList.map((item, index) => (
-                  <option key={item} id={index} value={item}>
-                    {t(item)}
-                  </option>
-                ))}
-              </select>
-              <p className="heading">{t("HYPOTHESIS_KEY_HELP_TEXT")}</p>
-            </div>
-            <div className="value">
-              <p className="heading">{t("VALUE")}</p>
-              <input disabled />
-              <p className="heading">{t("HYPOTHESIS_VALUE_HELP_TEXT")}</p>
-            </div>
-          </div>
-        </div>
-
+        <Example hypothesisAssumptionsList={hypothesisAssumptionsList} t={t} />
         <div className="interactable-section">
           <div className="key">
             <p className="heading">{t("KEY")}</p>
@@ -176,6 +154,33 @@ const InterractableSection = React.memo(
     );
   }
 );
+
+const Example = ({ hypothesisAssumptionsList, t }) => {
+  return (
+    <div className="example">
+      <p className="heading">{t("EXAMPLE")}</p>
+      <div className="example-body">
+        <div className="key">
+          <p className="heading">{t("KEY")}</p>
+          <select value={hypothesisAssumptionsList.length ? hypothesisAssumptionsList[0] : t("SELECT_OPTION")} disabled>
+            <option value="">{t("SELECT_OPTION")}</option>
+            {hypothesisAssumptionsList.map((item, index) => (
+              <option key={item} id={index} value={item}>
+                {t(item)}
+              </option>
+            ))}
+          </select>
+          <p className="heading">{t("HYPOTHESIS_KEY_HELP_TEXT")}</p>
+        </div>
+        <div className="value">
+          <p className="heading">{t("VALUE")}</p>
+          <input disabled />
+          <p className="heading">{t("HYPOTHESIS_VALUE_HELP_TEXT")}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList) => {
   setAssumptions((previous) => {
@@ -264,7 +269,7 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
         }
       } else value = parseFloat(e.target.value);
 
-      setInputValue(value);
+      setInputValue(!isNaN(value) ? value : "");
       const newDataSegment = {
         id: item.id,
         key: item.key,

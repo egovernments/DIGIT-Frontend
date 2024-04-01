@@ -613,7 +613,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           body={<UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />}
         />
       )}
-      {loaderActivation && <Loader />}
+      {loaderActivation && <Loader text={"FILE_UPLOADING"} />}
       {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
       {toast && toast.state === "error" && (
         <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} error />
