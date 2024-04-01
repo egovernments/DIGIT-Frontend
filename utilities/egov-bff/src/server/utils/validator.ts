@@ -6,6 +6,7 @@ import Ajv from "ajv";
 import config from "../config/index";
 import { httpRequest } from "./request";
 import createAndSearch from "../config/createAndSearch";
+import { campaignDetailsSchema } from "../config/campaignDetails";
 // import RequestCampaignDetails from "../config/interfaces/requestCampaignDetails.interface";
 
 
@@ -471,18 +472,12 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
     }
 }
 
-async function validateProjectCampaignResources(resources: any[], tenantId: any, request: any) {
+async function validateProjectCampaignResources(resources: any[]) {
     if (!Array.isArray(resources)) {
         throw new Error("resources should be an array");
     }
     for (const resource of resources) {
-        const { filestoreId, type } = resource;
-        if (!filestoreId) {
-            throw new Error("filestoreId is required in resources");
-        }
-        if (!type) {
-            throw new Error("resouce type is required");
-        }
+        const { type } = resource;
         if (!createAndSearch[type]) {
             throw new Error("Invalid resource type");
         }
@@ -491,101 +486,16 @@ async function validateProjectCampaignResources(resources: any[], tenantId: any,
 }
 
 function validateProjectCampaignMissingFields(CampaignDetails: any) {
-    const { hierarchyType, tenantId, campaignName, action, startDate, endDate, boundaries, resources, projectType, deliveryRules, additionalDetails } = CampaignDetails;
-
-    const missingFields = [];
-    if (!hierarchyType) missingFields.push("hierarchyType");
-    if (!tenantId) missingFields.push("tenantId");
-    if (!campaignName) missingFields.push("campaignName");
-    if (!action) missingFields.push("action");
-    if (!startDate) missingFields.push("startDate");
-    if (!endDate) missingFields.push("endDate");
-    if (!boundaries) missingFields.push("boundaries");
-    if (!resources) missingFields.push("resources");
-    if (!projectType) missingFields.push("projectType");
-    if (!deliveryRules) missingFields.push("deliveryRules");
-    if (!additionalDetails) missingFields.push("additionalDetails");
+    const ajv = new Ajv();
+    const validate = ajv.compile(campaignDetailsSchema);
+    const valid = validate(CampaignDetails);
+    if (!valid) {
+        throw new Error('Invalid data: ' + ajv.errorsText(validate.errors));
+    }
+    const { startDate, endDate } = CampaignDetails;
     if (startDate && endDate && (new Date(endDate).getTime() - new Date(startDate).getTime()) < (24 * 60 * 60 * 1000)) {
-        missingFields.push("endDate must be at least one day after startDate");
+        throw new Error("endDate must be at least one day after startDate");
     }
-    if (missingFields.length > 0) {
-        const errorMessage = "The following fields are missing: " + missingFields.join(", ");
-        throw new Error(errorMessage);
-    }
-}
-
-function validateDeliveryRules(deliveryRules: any): void {
-    // Check if it's an array
-    if (!Array.isArray(deliveryRules)) {
-        throw new Error('Delivery rules must be an array.');
-    }
-
-    // Check each rule in the array
-    for (let i = 0; i < deliveryRules.length; i++) {
-        const rule = deliveryRules[i];
-        const ruleIndex = i + 1;
-
-        // Validate each property of the rule
-        if (typeof rule !== 'object') {
-            throw new Error(`Delivery rule at index ${ruleIndex} is not an object.`);
-        }
-
-        if (typeof rule.startDate !== 'number') {
-            throw new Error(`Invalid startDate for delivery rule at index ${ruleIndex}.`);
-        }
-
-        if (typeof rule.endDate !== 'number') {
-            throw new Error(`Invalid endDate for delivery rule at index ${ruleIndex}.`);
-        }
-
-        if (typeof rule.cycleNumber !== 'number') {
-            throw new Error(`Invalid cycleNumber for delivery rule at index ${ruleIndex}.`);
-        }
-
-        if (typeof rule.deliveryNumber !== 'number') {
-            throw new Error(`Invalid deliveryNumber for delivery rule at index ${ruleIndex}.`);
-        }
-
-        if (typeof rule.deliveryRuleNumber !== 'number') {
-            throw new Error(`Invalid deliveryRuleNumber for delivery rule at index ${ruleIndex}.`);
-        }
-
-        if (!Array.isArray(rule.products)) {
-            throw new Error(`Products for delivery rule at index ${ruleIndex} must be an array.`);
-        }
-
-        if (!rule.products.every((product: any) => typeof product === 'string')) {
-            throw new Error(`Each product in delivery rule at index ${ruleIndex} must be a string.`);
-        }
-
-        if (!Array.isArray(rule.conditions)) {
-            throw new Error(`Conditions for delivery rule at index ${ruleIndex} must be an array.`);
-        }
-
-        if (!rule.conditions.every((condition: any, conditionIndex: number) => validateCondition(condition, conditionIndex))) {
-            throw new Error(`Invalid condition(s) for delivery rule at index ${ruleIndex}.`);
-        }
-    }
-}
-
-function validateCondition(condition: any, conditionIndex: number): boolean {
-    if (typeof condition !== 'object') {
-        throw new Error(`Condition at index ${conditionIndex} is not an object.`);
-    }
-
-    if (typeof condition.attribute !== 'string') {
-        throw new Error(`Invalid attribute for condition at index ${conditionIndex}.`);
-    }
-
-    if (typeof condition.operator !== 'string') {
-        throw new Error(`Invalid operator for condition at index ${conditionIndex}.`);
-    }
-
-    if (typeof condition.value !== 'number') {
-        throw new Error(`Invalid value for condition at index ${conditionIndex}.`);
-    }
-
-    return true;
 }
 
 async function validateProjectCampaignRequest(request: any) {
@@ -603,8 +513,7 @@ async function validateProjectCampaignRequest(request: any) {
             throw new Error("tenantId is not matching with userInfo")
         }
         await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
-        await validateProjectCampaignResources(resources, tenantId, request)
-        await validateDeliveryRules(request.body.CampaignDetails.deliveryRules)
+        await validateProjectCampaignResources(resources)
     }
 }
 
