@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import hypothesisAssumptions from "../../configs/hypothesisAssumptions.json";
-import { AddAlert, Trash } from "@egovernments/digit-ui-svg-components";
+import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, CustomIcon, ModalHeading } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
 
 const initialAssumptions = [
   {
@@ -26,17 +25,25 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
   const [assumptions, setAssumptions] = useState(initialAssumptions);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
-  const [exampleOption, setExampleOption] = useState("")
+  const [exampleOption, setExampleOption] = useState("");
+
+    // Fetching data using custom MDMS hook
+    const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
+      { name: "hypothesisAssumptions" },
+    ]);
+
   // useEffect to initialise the data from MDMS
   useEffect(() => {
-    if (!hypothesisAssumptions || !hypothesisAssumptions.hypothesisAssumptions) return;
+    if(!data || !data["hcm-microplanning"]) return;
+    let hypothesisAssumptions = data["hcm-microplanning"]["hypothesisAssumptions"];
+    if (!hypothesisAssumptions) return;
 
-    const temp = hypothesisAssumptions.hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+    const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
 
     setHypothesisAssumptionsList(temp.assumptions);
-    setExampleOption(temp.assumptions.length?temp.assumptions[0]:"")
-  }, [campaignType, hypothesisAssumptions]);
+    setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
+  }, [data]);
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -64,7 +71,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
         t={t}
       />
       <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
-        <CustomIcon Icon={AddAlert} color={""} />
+        <div className="add-icon"><p>+</p></div>
         <p>{t("ADD_ROW")}</p>
       </button>
       {/* delete conformation */}
@@ -74,7 +81,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
           LeftButtonHandler={deleteAssumptionHandlerCallback}
           RightButtonHandler={closeModal}
           footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
-          footerRightButtonBody={<ButtonType1 text={t("NO")} />}
+          footerRightButtonBody={<ButtonType2 text={t("NO")} />}
           header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
           bodyText={t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
         />
@@ -107,7 +114,7 @@ const NonInterractableSection = React.memo(({ t }) => {
 
 // Defination for NonInterractable Section
 const InterractableSection = React.memo(
-  ({ assumptions, setAssumptions, hypothesisAssumptionsList, setHypothesisAssumptionsList, setModal, setItemForDeletion, exampleOption,t }) => {
+  ({ assumptions, setAssumptions, hypothesisAssumptionsList, setHypothesisAssumptionsList, setModal, setItemForDeletion, exampleOption, t }) => {
     // Handler for deleting an assumption on conformation
     const deleteHandler = useCallback(
       (item) => {
@@ -121,14 +128,22 @@ const InterractableSection = React.memo(
       <div className="user-input-section">
         <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
-          <div className="key">
-            <p className="heading">{t("KEY")}</p>
-          </div>
-          <div className="value">
-            <p className="heading">{t("VALUE")}</p>
+          <div className="headerbar">
+            <div className="key">
+              <p className="heading" >{t("KEY")}</p>
+            </div>
+            <div className="value">
+              <p className="heading">{t("VALUE")}</p>
+            </div>
+            <div className="invicible">
+              <button className="delete-button invicible" onClick={() => deleteHandler(item)}>
+                <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                <p>{t("DELETE")}</p>
+              </button>
+            </div>
           </div>
           {assumptions.map((item) => (
-            <div key={item.id} className="select-and-input-wrapper">
+            <div key={item.id} className="select-and-input-wrapper" >
               <div className="key">
                 <Select
                   key={item.id}
@@ -145,7 +160,7 @@ const InterractableSection = React.memo(
               </div>
               <div>
                 <button className="delete-button" onClick={() => deleteHandler(item)}>
-                  <CustomIcon Icon={Trash} width={"0.8rem"} height={"1rem"} color={"rgba(244, 119, 56, 1)"} />
+                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                   <p>{t("DELETE")}</p>
                 </button>
               </div>
@@ -212,7 +227,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
     if (!options) return;
     const filteredOptions = options.length ? options : [t("SELECT_OPTION")];
     if (item && item.key && !filteredOptions.includes(item.key)) {
-      setFilteredOptions([...filteredOptions, item.key]);
+      setFilteredOptions([item.key, ...filteredOptions]);
     } else setFilteredOptions(filteredOptions);
   }, [options]);
 
@@ -235,7 +250,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
       setOptions((previous) => {
         let newOptions = previous.filter((item) => item !== e.target.value);
-        if (selected && !newOptions.includes(selected)) newOptions.push(selected);
+        if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
         return newOptions;
       });
     },
@@ -292,7 +307,8 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
     [item, setAssumptions]
   );
 
-  return <input type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled || !item.key} />;
+  return <input type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
 });
 
 export default Hypothesis;
+

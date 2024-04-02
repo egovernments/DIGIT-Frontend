@@ -98,7 +98,6 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
       return { valid: false, message };
     }
   } catch (error) {
-    console.log(error);
     return { valid: false, message: "ERROR_PARSING_FILE" };
   }
 };

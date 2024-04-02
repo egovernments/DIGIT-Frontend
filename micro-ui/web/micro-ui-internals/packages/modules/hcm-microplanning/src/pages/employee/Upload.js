@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toast } from "@egovernments/digit-ui-react-components";
+import { Toast, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
@@ -12,13 +12,17 @@ import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, CustomIcon, ButtonType2, ModalHeading, Loader } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
 
 const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const { t } = useTranslation();
 
   // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UploadConfiguration" },{ name: "UIConfiguration" },{ name: "schemas" }]);
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
+    { name: "UploadConfiguration" },
+    { name: "UIConfiguration" },
+    { name: "schemas" },
+  ]);
 
   // States
   const [sections, setSections] = useState([]);
@@ -41,12 +45,11 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (data) {
-      console.log(data)
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let schemas = data["hcm-microplanning"]["schemas"]
-      let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"]
+      let schemas = data["hcm-microplanning"]["schemas"];
+      let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       // let uploadSections = Config["UploadConfiguration"];
-      const uploadGuideLinesList = UIConfiguration.find(item => item.name === "uploadGuideLines").UploadGuideLineInstructions;
+      const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
       setUploadGuideLines(uploadGuideLinesList);
       setValidationSchemas(schemas);
       setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
@@ -415,14 +418,12 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   };
 
   const handleValidationErrorResponse = (error) => {
-    console.log(error)
     const fileObject = fileData;
     fileObject.error = error;
     setFileData((previous) => ({ ...previous, error }));
     setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-    if(error)
-    setUploadedFileError(error);
+    if (error) setUploadedFileError(error);
     setLoderActivation(false);
   };
 
@@ -532,6 +533,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
 
       {modal === "upload-modal" && (
         <ModalWrapper
+          closeButton={true}
           selectedSection={selectedSection}
           selectedFileType={selectedFileType}
           closeModal={() => {
@@ -577,6 +579,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       )}
       {modal === "spatial-data-property-mapping" && (
         <ModalWrapper
+          closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "48.5rem" }}
           selectedSection={selectedSection}
@@ -604,16 +607,17 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       )}
       {modal === "upload-guidelines" && (
         <ModalWrapper
+          closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "calc(100% - 6rem)" }}
           closeModal={closeModal}
           hideSubmit={true}
-          headerBarMainStyle={{ width: "100%", margin:0 }}
-          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} style={{ width: "100%" }} />}
+          headerBarMainStyle={{ width: "100%", margin: 0, padding:0}}
+          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} className="upload-guidelines-header"/>}
           body={<UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />}
         />
       )}
-      {loaderActivation && <Loader text={"FILE_UPLOADING"} />}
+      {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
       {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
       {toast && toast.state === "error" && (
         <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} error />
@@ -639,9 +643,12 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   };
 
   return (
-    <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
+    <div
+      className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`}
+      onClick={handleClick}
+    >
       <div className="icon">
-        <CustomIcon Icon={Icons[item.iconName]} minWidth={"1.875rem"} minHeight={"2.188rem"} color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
+        <CustomIcon Icon={Icons[item.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.code)}</p>
     </div>
@@ -998,7 +1005,7 @@ const getSchema = (campaignType, type, section, schemas) => {
 };
 
 // Uplaod GuideLines
-const UploadGuideLines = ({uploadGuideLines, t }) => {
+const UploadGuideLines = ({ uploadGuideLines, t }) => {
   return (
     <div className="guidelines">
       <p className="sub-heading">{t("PREREQUISITES")}</p>
@@ -1010,7 +1017,9 @@ const UploadGuideLines = ({uploadGuideLines, t }) => {
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
       <p className="sub-heading">{t("PROCEDURE")}</p>
-      {uploadGuideLines.map(item=><p className="instruction-list">{t(item)}</p>)}
+      {uploadGuideLines.map((item) => (
+        <p className="instruction-list">{t(item)}</p>
+      ))}
       {/* {points.map((item) => (
         <p className="instruction-list">{item}</p>
       ))} */}
@@ -1018,6 +1027,9 @@ const UploadGuideLines = ({uploadGuideLines, t }) => {
   );
 };
 
-
+const CustomIcon = (props) => {
+  if (!props.Icon) return null;
+  return <props.Icon fill={props.color} {...props} />;
+};
 
 export default Upload;

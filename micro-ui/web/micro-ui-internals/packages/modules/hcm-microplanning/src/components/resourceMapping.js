@@ -1,3 +1,4 @@
+import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
 import React, { useState, useEffect } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, t }) => {
@@ -112,16 +113,16 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
         </span>
         <div className="navigation">
           <button onClick={() => handlePageClick(0)} disabled={currentPage === 0}>
-            {"|<"}
+            <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"}/>
           </button>
           <button onClick={() => handlePageClick(currentPage - 1)} disabled={currentPage === 0}>
-            {"<"}
+            <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"}/>
           </button>
           <button onClick={() => handlePageClick(currentPage + 1)} disabled={currentPage === totalPages - 1}>
-            {">"}
+            <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"}/>
           </button>
           <button onClick={() => handlePageClick(totalPages - 1)} disabled={currentPage === totalPages - 1}>
-            {">|"}
+            <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"}/>
           </button>
         </div>
       </div>

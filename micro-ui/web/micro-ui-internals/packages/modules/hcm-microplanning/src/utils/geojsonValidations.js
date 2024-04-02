@@ -120,7 +120,6 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
     }
     const columnList = [...columns];
     // if(column)
-    console.log(validateGeojson.errors,columnList)
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
       columns:
         columnList.length > 1

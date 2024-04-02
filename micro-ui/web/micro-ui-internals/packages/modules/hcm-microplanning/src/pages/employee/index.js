@@ -5,6 +5,7 @@ import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-r
 import MicroplanningHeader from "../../components/MicroplanningHeader";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
+import RuleEngine from "./RuleEngine";
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -28,6 +29,11 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
       path: `/${window.contextPath}/employee/hypothesis`,
       content:  t(`HYPOTHESIS`) ,
       show: pathVar.includes("hypothesis")?true: false,
+    },
+    {
+      path: `/${window.contextPath}/employee/rule-engine`,
+      content:  t(`RULE_ENGINE`) ,
+      show: pathVar.includes("rule-engine")?true: false,
     }
     
   ];
@@ -61,6 +67,7 @@ const App = ({ path }) => {
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
           <PrivateRoute path={`${path}/hypothesis`} component={() => <Hypothesis parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} />
 
         </AppContainer>
       </Switch>
