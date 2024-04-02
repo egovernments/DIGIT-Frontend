@@ -42,6 +42,7 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+1.8.1-beta.7 Added CSS for Loader With Gap
 1.8.1-beta.7 Added CSS for viewcomposer header
 1.8.1-beta.5 Added CSS for Tab InboxSearchComposer
 1.8.1-beta.2 Added CSS for create hierarchy

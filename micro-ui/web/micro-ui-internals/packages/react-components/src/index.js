@@ -281,7 +281,8 @@ import WorkflowActions from "./atoms/WorkflowActions";
 import Amount from "./atoms/Amount";
 import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
-import CloseButton from "./atoms/CloseButton"
+import CloseButton from "./atoms/CloseButton";
+import LoaderWithGap from "./atoms/LoaderWithGap";
 // Importing From SVG Library
 import {SVG} from "./atoms/SVG";
 
@@ -400,6 +401,7 @@ export {
   HorizontalNav,
   NoResultsFound,
   Amount,
+  LoaderWithGap,
   // Icons
   GetApp,
   ArrowLeft,
