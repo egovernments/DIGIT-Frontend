@@ -13,7 +13,7 @@ npm install --save @egovernments/digit-ui-react-components
 ## Limitation
 
 ```bash
-This Package is more specific to DIGIT-UI's, can be used across mission's
+This package is specifically designed for DIGIT-UI's but can be used across various missions.
 ```
 
 ## Usage
