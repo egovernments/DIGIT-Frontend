@@ -18,6 +18,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   console.log("initDataLoading",isLoading);
   console.log("initData",initData);
+  console.log("new ver");
   if (isLoading) {
     return <Loader page={true} />;
   }
