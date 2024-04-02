@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const Facilities = ({ className, width = "24", height = "24", style = {}, fill = "#F47738", onClick = null }) => {
+export const Facilities = ({ className, width = "20", height = "27", style = {}, fill = "#F47738", onClick = null }) => {
   return (
-    <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 20 27" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -13,7 +13,6 @@ export const Facilities = ({ className, width = "24", height = "24", style = {},
     </svg>
   );
 };
-
 
 Facilities.propTypes = {
   /** custom width of the svg icon */

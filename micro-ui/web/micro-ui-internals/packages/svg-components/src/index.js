@@ -787,7 +787,10 @@ import { TickMarkBackgroundFilled } from "./svg/TickMarkBackgroundFilled";
 import { Excel } from "./svg/Excel";
 import { SpatialDocument } from "./svg/SpatialDocument";
 import { Trash } from "./svg/Trash";
-
+import {PaginationFirst } from "./svg/PaginationFirst"
+import {PaginationLast } from "./svg/PaginationLast"
+import {PaginationNext } from "./svg/PaginationNext"
+import {PaginationPrevious } from "./svg/PaginationPrevious"
 export {
   Success,
   TickMark,
@@ -1577,5 +1580,9 @@ export {
   TickMarkBackgroundFilled,
   Excel,
   SpatialDocument,
-  Trash
+  Trash,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationLast,
+  PaginationFirst,
 };

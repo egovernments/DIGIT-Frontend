@@ -281,7 +281,8 @@ import WorkflowActions from "./atoms/WorkflowActions";
 import Amount from "./atoms/Amount";
 import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
-
+import CustomModal from "./hoc/CustomModal";
+import CloseButton from "./atoms/CloseButton"
 // Importing From SVG Library
 import {SVG} from "./atoms/SVG";
 
@@ -460,7 +461,9 @@ export {
   FilterFormField,
   SortAction,
   CustomDropdown,
+  CloseButton,
   // hoc
+  CustomModal,
   FormComposer,
   FormComposerV2,
   RenderFormFields,
