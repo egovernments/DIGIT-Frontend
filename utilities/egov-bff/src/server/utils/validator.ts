@@ -497,6 +497,34 @@ function validateProjectCampaignMissingFields(CampaignDetails: any) {
         throw new Error("endDate must be at least one day after startDate");
     }
 }
+async function validateCampaignName(request: any) {
+    const CampaignDetails = request.body.CampaignDetails;
+    const { campaignName, tenantId } = CampaignDetails;
+    if (!campaignName) {
+        throw new Error("campaignName is required");
+    }
+    if (!tenantId) {
+        throw new Error("tenantId is required");
+    }
+    const searchBody = {
+        RequestInfo: request.body.RequestInfo,
+        CampaignDetails: {
+            tenantId: tenantId,
+            campaignName: campaignName
+        }
+    }
+    logger.info("searchBody : " + JSON.stringify(searchBody));
+    logger.info("Url : " + config.host.projectFactoryBff + "project-factory/v1/project-type/search");
+    const searchResponse = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+    if (Array.isArray(searchResponse?.CampaignDetails)) {
+        if (searchResponse?.CampaignDetails?.length > 0) {
+            throw new Error("Campaign name already exists");
+        }
+    }
+    else {
+        throw new Error("Some error occured during campaignName search");
+    }
+}
 
 async function validateProjectCampaignRequest(request: any) {
     const CampaignDetails = request.body.CampaignDetails;
@@ -507,6 +535,7 @@ async function validateProjectCampaignRequest(request: any) {
     if (!(action == "create" || action == "draft")) {
         throw new Error("action can only be create or draft")
     }
+    await validateCampaignName(request);
     if (action == "create") {
         validateProjectCampaignMissingFields(CampaignDetails)
         if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {

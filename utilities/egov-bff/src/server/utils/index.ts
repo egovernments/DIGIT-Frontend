@@ -1060,18 +1060,23 @@ function enrichRootProjectId(requestBody: any) {
 }
 
 async function enrichAndPersistProjectCampaignRequest(request: any) {
+  const action = request?.body?.CampaignDetails?.action;
   request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
   request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
-  request.body.CampaignDetails.status = "started"
+  request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
   request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
-  request.body.CampaignDetails.projectId = null;
   request.body.CampaignDetails.auditDetails = {
     createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
     createdTime: Date.now(),
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now(),
   }
-  enrichRootProjectId(request.body);
+  if (action == "create") {
+    enrichRootProjectId(request.body);
+  }
+  else {
+    request.body.CampaignDetails.projectId = null
+  }
   produceModifiedMessages(request?.body, config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
   delete request.body.CampaignDetails.campaignDetails
 }
@@ -1380,7 +1385,6 @@ async function reorderBoundaries(request: any) {
 
 async function createProject(request: any) {
   const { tenantId, boundaries, projectType, startDate, endDate } = request?.body?.CampaignDetails;
-  request.body.CampaignDetails.id = uuidv4()
   var Projects: any = [{
     tenantId,
     projectType,
@@ -1411,9 +1415,13 @@ async function createProject(request: any) {
 }
 
 async function processBasedOnAction(request: any) {
+  request.body.CampaignDetails.id = uuidv4()
   if (request?.body?.CampaignDetails?.action == "create") {
     await createProjectCampaignResourcData(request);
     await createProject(request)
+    await enrichAndPersistProjectCampaignRequest(request)
+  }
+  else {
     await enrichAndPersistProjectCampaignRequest(request)
   }
 }
@@ -1437,7 +1445,7 @@ async function appendSheetsToWorkbook(boundaryData: any[]) {
     }
     const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
     XLSX.utils.book_append_sheet(workbook, mainSheet, 'Sheet1');
-    
+
     for (const item of boundaryData) {
       if (item.District && !uniqueDistricts.includes(item.District)) {
         uniqueDistricts.push(item.District);
