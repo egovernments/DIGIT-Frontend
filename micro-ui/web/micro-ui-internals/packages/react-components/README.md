@@ -13,7 +13,7 @@ npm install --save @egovernments/digit-ui-react-components
 ## Limitation
 
 ```bash
-This Package is more specific to DIGIT-UI's can be used across mission's
+This package is specifically designed for DIGIT-UI but can be used across various missions.
 ```
 
 ## Usage
@@ -85,7 +85,7 @@ Syntax for the FormComposersV2
 ```
 
 To use the InboxSearchComposer component for managing multiple tabs, follow these steps:
-  1. Set `ShowTab: true` in the Inboxconfig.
+  1. Set `showTab: true` in the inboxconfig.
   2. In the Config array, include configuration objects for each tab. For example:
         ```javascript
       export const inboxconfig = {
@@ -121,7 +121,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
         ```javascript
       const [tabData, setTabData] = useState(myCampaignConfig?.myCampaignConfig?.map((i, n) => ({ key: n, label: i.label, active: n === 0 ? true : false })));
         ```
-      Add function to perform when tab changes. Here we are setting the respective tab active and updaing its config
+      Add function to perform when tab changes. Here we are setting the respective tab active and updating its config
         ```javascript
       const onTabChange = (n) => {
         setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.8 Added Close button and Loader
 1.8.1-beta.7 Viewcomposer enhancement for cardheader action
 1.8.1-beta.6 Added feature for Multi Tab in InboxSearchComposer
 1.8.1-beta.5 Added without labelfieldpair config for removing default card
