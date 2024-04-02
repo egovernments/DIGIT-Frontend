@@ -13,10 +13,11 @@ import getStore from "./redux/store";
 //here add react-query dev tools
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding }) => {
+const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
 
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
-
+  console.log("initDataLoading",isLoading);
+  console.log("initData",initData);
   if (isLoading) {
     return <Loader page={true} />;
   }
@@ -32,6 +33,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
             appTenants={initData.tenants}
             logoUrl={initData?.stateInfo?.logoUrl}
             defaultLanding={defaultLanding}
+            queryClient={queryClient}
           />
         </Body>
       </Router>
@@ -86,7 +88,7 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
               }}
             >
 
-              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
+              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient} />
               {/* <div>Core Module Dummy</div> */}
 
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
