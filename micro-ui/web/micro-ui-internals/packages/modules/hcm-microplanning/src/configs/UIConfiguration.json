@@ -1,0 +1,23 @@
+{
+  "tenantId": "mz",
+  "moduleName": "hcm-microplanning",
+  "UIConfiguration": [
+    {
+      "name": "uploadGuideLines",
+      "UploadGuideLineInstructions": [
+        "INSTRUCTION_POINTS_1",
+        "INSTRUCTION_POINTS_2",
+        "INSTRUCTION_POINTS_3",
+        "INSTRUCTION_POINTS_4",
+        "INSTRUCTION_POINTS_5"
+      ]
+    },
+    {
+      "name": "ruleConfigure",
+      "ruleConfigureOperators":[
+        "DEVIDED_BY",
+        "MULTIPLIED_BY"
+      ]
+    }
+  ]
+}
