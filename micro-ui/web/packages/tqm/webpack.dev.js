@@ -44,7 +44,7 @@ module.exports = () => {
         },
         shared: {
           'single-spa-react': '^4.6.1',
-          '@digit-ui/digit-ui-libraries-mfe': '1.0.7',
+          '@digit-ui/digit-ui-libraries-mfe': '1.0.8',
           '@rjsf/core': '5.10.0',
           '@rjsf/utils': '5.10.0',
           '@rjsf/validator-ajv8': '5.10.0',
