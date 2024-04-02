@@ -28,7 +28,22 @@ module.exports = () => {
           tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
           // measurement : `measurement@${domain}/measurement/remoteEntry.js`
         },
-        shared: packageJson.dependencies,
+        shared: {
+          
+    "@egovernments/digit-ui-react-components": "1.4.109",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-i18next": "11.16.2",
+    "react-query": "3.6.1",
+    "react-redux": "7.2.8",
+    "react-router-dom": "5.3.0",
+    "single-spa-react": "^4.6.1",
+    "react-tooltip": "^5.21.1",
+    "redux": "4.1.2",
+    "redux-thunk": "^2.4.2",
+    "rxjs": "6.6.3",
+    "single-spa": "^5.9.3"
+        },
       }),
     ],
   };
