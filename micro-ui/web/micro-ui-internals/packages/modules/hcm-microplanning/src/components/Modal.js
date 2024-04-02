@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { PopUp, HeaderBar, Toast, CloseButton, ButtonSelector } from "@egovernments/digit-ui-react-components";
+import { Close } from "@egovernments/digit-ui-svg-components";
 
 const Modal = ({
   headerBarMain,
@@ -95,11 +96,12 @@ export const ModalWrapper = ({
   headerBarMainStyle,
   popupModuleActionBarStyles,
   hideSubmit,
+  closeButton=false,
 }) => {
   return (
     <Modal
       headerBarMain={header}
-      headerBarEnd={<CloseButton onClick={closeModal} side={"2.5rem"} />}
+      headerBarEnd={closeButton?<div className="microplan-close-button" onClick={closeModal}> <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"}/></div>:""}
       actionCancelOnSubmit={LeftButtonHandler}
       actionSaveOnSubmit={RightButtonHandler}
       formId="microplanning"

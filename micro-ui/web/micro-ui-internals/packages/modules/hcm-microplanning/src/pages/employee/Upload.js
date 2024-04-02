@@ -533,6 +533,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
 
       {modal === "upload-modal" && (
         <ModalWrapper
+          closeButton={true}
           selectedSection={selectedSection}
           selectedFileType={selectedFileType}
           closeModal={() => {
@@ -578,6 +579,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       )}
       {modal === "spatial-data-property-mapping" && (
         <ModalWrapper
+          closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "48.5rem" }}
           selectedSection={selectedSection}
@@ -605,12 +607,13 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
       )}
       {modal === "upload-guidelines" && (
         <ModalWrapper
+          closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "calc(100% - 6rem)" }}
           closeModal={closeModal}
           hideSubmit={true}
           headerBarMainStyle={{ width: "100%", margin: 0, padding:0}}
-          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} style={{ width: "100%", fontSize:"2.5rem", border:"1px red solid"}} />}
+          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} className="upload-guidelines-header"/>}
           body={<UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />}
         />
       )}

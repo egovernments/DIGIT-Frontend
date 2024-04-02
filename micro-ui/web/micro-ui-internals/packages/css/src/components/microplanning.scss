@@ -64,6 +64,14 @@
     }
 }
 
+.microplan-close-button {
+    margin: 0.5rem 0.5rem 0 0;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    overflow: visible;
+}
+
 .upload-section {
     font-family: Roboto;
 
@@ -391,13 +399,6 @@
 
     .message {
         margin-right: 0.6px;
-    }
-
-    .close-button {
-        background: transparent;
-        border: none;
-        color: inherit;
-        cursor: pointer;
     }
 
     .download-template-button {
@@ -747,6 +748,10 @@
         .flex {
             display: flex;
         }
+    }
+    .upload-guidelines-header {
+        width: 100%;
+        font-size: 2.5rem;
     }
 }
 

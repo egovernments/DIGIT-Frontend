@@ -24,7 +24,7 @@ export const ButtonType2 = (props) => {
 
 export const ModalHeading = (props) => {
   return (
-    <p className="modal-header" style={props.style}>
+    <p className={`modal-header ${props.className?props.className:""}`} style={props.style}>
       {props.label}
     </p>
   );
