@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export const LoaderWithGap = (props) => {
   const { t } = useTranslation();
   return (
-    <div className="loader-container">
+    <div className="loader-with-gap-container">
       <div className="loader">
         <div className="loader-inner" />
       </div>
@@ -24,3 +24,5 @@ LoaderWithGap.propTypes = {
 LoaderWithGap.defaultProps = {
   text: "LOADING",
 };
+
+export default LoaderWithGap;
