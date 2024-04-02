@@ -71,7 +71,7 @@ export const LocalizationService = {
       messages.push(...data.messages);
       setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
     }
-    LocalizationStore.updateResources(locale, messages);
+    LocalizationStore.updateResources(locale, messages,tenantId);
     return messages;
   },
   changeLanguage: (locale, tenantId) => {
@@ -84,10 +84,12 @@ export const LocalizationService = {
     Digit.SessionStorage.set("locale", locale);
     i18next.changeLanguage(locale);
   },
-  updateResources: (locale = "en_IN", messages) => {
+  updateResources: (locale = "en_IN", messages,tenantId) => {
     if (locale.indexOf("_IN") === -1) {
       locale += "_IN";
     }
     LocalizationStore.updateResources(locale, messages);
+    //change lang here to trigger re-render
+    LocalizationService.changeLanguage(locale,tenantId)
   },
 };
