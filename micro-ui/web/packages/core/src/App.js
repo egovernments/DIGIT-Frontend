@@ -39,7 +39,7 @@ const queryClient = new QueryClient({
     },
   },
 });
-registerRemotes(queryClient)
+// registerRemotes(queryClient)
 
 
 const App = () => {

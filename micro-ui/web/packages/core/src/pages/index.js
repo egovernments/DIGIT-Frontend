@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import CitizenApp from "./citizen";
 import EmployeeApp from "./employee";
-
-export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="employee"}) => {
+import registerRemotes from "../modules/registerRemotes";
+export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="employee",queryClient}) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
@@ -16,6 +16,11 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
   let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
 
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
+
+  useEffect(() => {
+    registerRemotes(queryClient)
+  }, [])
+  
 
   useEffect(() => {
     if (!pathname?.includes("application-details")) {
