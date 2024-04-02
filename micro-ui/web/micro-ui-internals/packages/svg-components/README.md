@@ -1,5 +1,5 @@
 
-# digit-ui-svg-components
+# Digit-UI SVG Components
 
 ## Install
 
@@ -15,7 +15,7 @@ npm install --save @egovernments/digit-ui-svg-components
 
 ## Usage
 
-After adding the dependency make sure you have this dependency in
+After adding the dependency, make sure you have this dependency in
 
 ```bash
 frontend/micro-ui/web/package.json
@@ -33,7 +33,7 @@ then navigate to App.js
 
 # SVGs can be imported from svg component libraries and also from digit-ui-react-components^1.5.27 package
 
-Syntax for import any svgs
+Syntax for importing any SVGs
 
 # from svg library
 

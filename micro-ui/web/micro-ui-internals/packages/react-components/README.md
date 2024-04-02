@@ -13,7 +13,7 @@ npm install --save @egovernments/digit-ui-react-components
 ## Limitation
 
 ```bash
-This Package is more specific to DIGIT-UI's can be used across mission's
+This Package is more specific to DIGIT-UI's, can be used across mission's
 ```
 
 ## Usage
@@ -137,7 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
-1.8.1-beta.8 Added Close button, Custom Modal and Loader
+1.8.1-beta.8 Added Close button and Loader
 1.8.1-beta.7 Viewcomposer enhancement for cardheader action
 1.8.1-beta.6 Added feature for Multi Tab in InboxSearchComposer
 1.8.1-beta.5 Added without labelfieldpair config for removing default card
