@@ -1584,5 +1584,5 @@ export {
   PaginationPrevious,
   PaginationNext,
   PaginationLast,
-  PaginationFirst,
+  PaginationFirst
 };

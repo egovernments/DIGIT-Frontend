@@ -1,10 +1,10 @@
 import React from "react";
 import {SVG} from "./SVG"
 
-export const CloseButton = (props) => {
+export const CloseButton = ({ onClick, size  = "24" }) => {
   return (
-    <div className="icon-bg-secondary" onClick={props.onClick} style={{ backgroundColor: "#FFFFFF", borderRadius: "0.25rem" }}>
-      <SVG.Close width={props.side ? props.side : "24"} height={props.side ? props.side : "24"} />
+    <div className="icon-bg-secondary" onClick={onClick} style={{ backgroundColor: "#FFFFFF", borderRadius: "0.25rem" }}>
+      <SVG.Close width={size} height={size} />
     </div>
   );
 };

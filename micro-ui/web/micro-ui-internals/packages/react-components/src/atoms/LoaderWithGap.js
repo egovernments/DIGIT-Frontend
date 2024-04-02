@@ -16,11 +16,11 @@ export const LoaderWithGap = (props) => {
 
 LoaderWithGap.propTypes = {
   /**
-   * Is this is page or a module?
+   * Text to be shown below the loader
    */
   text: PropTypes.string,
 };
 
 LoaderWithGap.defaultProps = {
-  page: "LOADING",
+  text: "LOADING",
 };

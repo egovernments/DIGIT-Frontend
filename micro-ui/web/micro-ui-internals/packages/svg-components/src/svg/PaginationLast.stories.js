@@ -6,7 +6,7 @@ export default {
   argTypes: {
     className: {
         options: ['custom-class'],
-        control: { type: 'check' },
+        control: { type: 'text' },
     }
   },
   title: "PaginationLast",
