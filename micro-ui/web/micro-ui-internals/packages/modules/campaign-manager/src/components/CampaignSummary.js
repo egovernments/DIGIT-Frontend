@@ -141,7 +141,7 @@ const CampaignSummary = () => {
     history.push(`/${window?.contextPath}/employee/campaign/setup-campaign?step=${step}`);
   };
 
-  const dummyData = [
+  const DUMMY_DATA = [
     {
       id: "899e6cdf-93b5-4fac-b8bb-4d6404622227",
       tenantId: "mz",
@@ -320,19 +320,19 @@ const CampaignSummary = () => {
             values: [
               {
                 key: "CAMPAIGN_TYPE",
-                value: dummyData?.[0]?.projectType || t("CAMPAIGN_SUMMARY_NA"),
+                value: DUMMY_DATA?.[0]?.projectType || t("CAMPAIGN_SUMMARY_NA"),
               },
               {
                 key: "CAMPAIGN_NAME",
-                value: dummyData?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
+                value: DUMMY_DATA?.[0]?.campaignName || t("CAMPAIGN_SUMMARY_NA"),
               },
               {
                 key: "CAMPAIGN_START_DATE",
-                value: Digit.Utils.date.convertEpochToDate(dummyData?.[0]?.campaignDetails?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
+                value: Digit.Utils.date.convertEpochToDate(DUMMY_DATA?.[0]?.campaignDetails?.startDate) || t("CAMPAIGN_SUMMARY_NA"),
               },
               {
                 key: "CAMPAIGN_END_DATE",
-                value: Digit.Utils.date.convertEpochToDate(dummyData?.[0]?.campaignDetails?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
+                value: Digit.Utils.date.convertEpochToDate(DUMMY_DATA?.[0]?.campaignDetails?.endDate) || t("CAMPAIGN_SUMMARY_NA"),
               },
             ],
           },
@@ -351,13 +351,13 @@ const CampaignSummary = () => {
             values: [
               {
                 key: "CAMPAIGN_TYPE",
-                value: dummyData?.[0]?.hierarchyType || t("CAMPAIGN_SUMMARY_NA"),
+                value: DUMMY_DATA?.[0]?.hierarchyType || t("CAMPAIGN_SUMMARY_NA"),
               },
             ],
           },
         ],
       },
-      ...dummyData?.[0]?.campaignDetails?.deliveryRules?.map((item, index) => ({
+      ...DUMMY_DATA?.[0]?.campaignDetails?.deliveryRules?.map((item, index) => ({
         sections: [
           {
             type: "COMPONENT",
@@ -365,7 +365,7 @@ const CampaignSummary = () => {
             cardSecondaryAction: <EditIcon />,
             component: "CycleDetaisPreview",
             props: {
-              dummyData: dummyData?.[0],
+              DUMMY_DATA: DUMMY_DATA?.[0],
               item: item,
               index: index,
             },
