@@ -33,6 +33,11 @@ const MicroplanningCard = () => {
       link: `/${window?.contextPath}/employee/microplanning/rule-engine`,
       roles: [],
     },
+    {
+      label: t("Create Microplan"),
+      link: `/${window?.contextPath}/employee/microplanning/create-microplan`,
+      roles: [],
+    },
     // {
     //   label: t("ACTION_TEST_LOCALISATION"),
     //   link: `/${window?.contextPath}/employee/workbench/localisation-search`,

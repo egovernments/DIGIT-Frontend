@@ -1,0 +1,34 @@
+{
+    "timeLineOptions": [
+        {
+            "id": 0,
+            "name": "MICROPLAN_DETAILS",
+            "component": ""
+        },
+        {
+            "id": 1,
+            "name": "UPLOAD_DATA",
+            "component": "Upload"
+        },
+        {
+            "id": 2,
+            "name": "HYPOTHESIS",
+            "component": "Hypothesis"
+        },
+        {
+            "id": 3,
+            "name": "FORMULA_CONFIGURATION",
+            "component": "RuleEngine"
+        },
+        {
+            "id": 4,
+            "name": "MAPPING",
+            "component": ""
+        },
+        {
+            "id": 5,
+            "name": "MICROPLAN_GENERATION",
+            "component": ""
+        }
+    ]
+}

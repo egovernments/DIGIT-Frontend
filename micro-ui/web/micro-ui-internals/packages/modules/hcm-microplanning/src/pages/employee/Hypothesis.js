@@ -135,15 +135,15 @@ const InterractableSection = React.memo(
             <div className="value">
               <p className="heading">{t("VALUE")}</p>
             </div>
-            <div className="invicible">
-              <button className="delete-button invicible" onClick={() => deleteHandler(item)}>
+            <div className="invisible">
+              <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
                 <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                 <p>{t("DELETE")}</p>
               </button>
             </div>
           </div>
-          {assumptions.map((item) => (
-            <div key={item.id} className="select-and-input-wrapper" >
+          {assumptions.map((item,index) => (
+            <div className={`${index === 0?"select-and-input-wrapper-first":"select-and-input-wrapper" }`}>
               <div className="key">
                 <Select
                   key={item.id}

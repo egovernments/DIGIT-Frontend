@@ -6,6 +6,7 @@ import MicroplanningHeader from "../../components/MicroplanningHeader";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
+import CreateMicroplan from "./CreateMicroplan";
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -34,6 +35,11 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
       path: `/${window.contextPath}/employee/rule-engine`,
       content:  t(`RULE_ENGINE`) ,
       show: pathVar.includes("rule-engine")?true: false,
+    },
+    {
+      path: `/${window.contextPath}/employee/create-microplan`,
+      content:  t(`CREATE_MICROPLAN`) ,
+      show: pathVar.includes("create-microplan")?true: false,
     }
     
   ];
@@ -68,7 +74,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
           <PrivateRoute path={`${path}/hypothesis`} component={() => <Hypothesis parentRoute={path}/>} />
           <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} />
-
+          <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path}/>} />
+          
         </AppContainer>
       </Switch>
     </React.Fragment>

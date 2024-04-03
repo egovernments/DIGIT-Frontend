@@ -749,6 +749,7 @@
             display: flex;
         }
     }
+
     .upload-guidelines-header {
         width: 100%;
         font-size: 2.5rem;
@@ -906,10 +907,19 @@
         }
 
         .select-and-input-wrapper {
+            margin-top: 1rem;
             width: 100%;
             display: flex;
             align-items: center;
         }
+
+        .select-and-input-wrapper-first{
+            margin-top: 0.8rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        
 
         .headerbar {
             padding: 0;
@@ -919,7 +929,7 @@
             margin: 0;
         }
 
-        .invicible {
+        .invisible {
             visibility: hidden;
             pointer-events: none;
             padding: 0;
@@ -1124,15 +1134,6 @@
                     padding: 0;
                     font-weight: 700;
                 }
-
-                .select-and-input-wrapper {
-                    margin-top: 1.5rem !important;
-                }
-
-                .select-and-input-wrapper:first-child {
-                    margin-top: 0.8rem !important;
-                }
-
             }
 
             .value-input-key {
@@ -1157,13 +1158,28 @@
 
             .equal-to-icon {
                 margin: 0 3%;
+                font-family: Roboto Condensed;
+                font-size: 2.5rem;
+                font-weight: 700;
             }
 
 
             .select-and-input-wrapper {
+                margin-top: 1rem;
                 width: 100%;
                 display: flex;
                 align-items: center;
+            }
+
+            .select-and-input-wrapper-first{
+                margin-top: 0rem;
+                width: 100%;
+                display: flex;
+                align-items: center;
+            }
+            
+            .user-input-wrapper{
+                width: 100%;
             }
 
             select {
@@ -1226,7 +1242,7 @@
             margin: 0;
         }
 
-        .invicible {
+        .invisible {
             visibility: hidden;
             pointer-events: none;
             padding: 0;
@@ -1326,5 +1342,23 @@
         }
     }
 
+
+
+    .next-previous-bar {
+        display: flex;
+        bottom: 0;
+        left: 0;
+        /* Adjust as needed */
+        width: 100%;
+        /* Adjust as needed */
+        background-color: #ffffff;
+        /* Adjust as needed */
+        padding: 10px;
+        /* Adjust as needed */
+        box-shadow: rgba(0, 0, 0, 0.16) 0 -2px 8px;
+        max-width: 480px;
+        z-index: 100;
+        text-align: right;
+    }
 
 }
