@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Toast, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
 import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
@@ -13,8 +13,16 @@ import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
+import { Toast } from "@egovernments/digit-ui-components";
 
-const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
+const Upload = ({
+  MicroplanName = "default",
+  campaignType = "SMC",
+  microplanData,
+  setMicroplanData,
+  checkDataCompletion,
+  setCheckDataCompletion,
+}) => {
   const { t } = useTranslation();
 
   // Fetching data using custom MDMS hook
@@ -41,6 +49,44 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
   const [resourceMapping, setResourceMapping] = useState([]);
   const [previewUploadedData, setPreviewUploadedData] = useState();
   const [uploadGuideLines, setUploadGuideLines] = useState();
+
+  // UseEffect for checking completeness of data before moveing to next section
+  useEffect(() => {
+    if (!setCheckDataCompletion) return;
+    setCheckDataCompletion("valid");
+  }, [checkDataCompletion]);
+
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!fileDataList || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+  }, [fileDataList]);
+
+  // UseEffect to extract data on first render
+  useEffect(() => {
+    if (!microplanData || !microplanData.upload) return;
+    setFileDataList(microplanData.upload);
+  }, []);
+
+  // UseEffect to add a event listener for keyboard
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [modal]);
+
+  const handleKeyPress = (event) => {
+    if (modal !== "upload-guidelines") return;
+    if (event.key === "x" || event.key === "Escape") {
+      // Perform the desired action when "x" or "esc" is pressed
+      setModal((previous) => {
+        if (previous === "upload-guidelines") return "none";
+        return previous;
+      });
+    }
+  };
 
   // Effect to update sections and selected section when data changes
   useEffect(() => {
@@ -544,7 +590,7 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           RightButtonHandler={() => UploadFileClickHandler(true)}
           sections={sections}
           footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
-          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} />}
+          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} download={true} />}
           header={<ModalHeading label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)} />}
           bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
         />
@@ -612,18 +658,18 @@ const Upload = ({ MicroplanName = "default", campaignType = "SMC" }) => {
           popupStyles={{ width: "calc(100% - 6rem)" }}
           closeModal={closeModal}
           hideSubmit={true}
-          headerBarMainStyle={{ width: "100%", margin: 0, padding:0}}
-          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} className="upload-guidelines-header"/>}
+          headerBarMainStyle={{ width: "100%", margin: 0, padding: 0 }}
+          header={<ModalHeading label={t("HEADING_DATA_UPLOAD_GUIDELINES")} className="upload-guidelines-header" />}
           body={<UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />}
         />
       )}
       {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
-      {toast && toast.state === "success" && <Toast label={toast.message} onClose={() => setToast(null)} />}
+      {toast && toast.state === "success" && <Toast style={{ bottom: "5.5rem" }} label={toast.message} onClose={() => setToast(null)} />}
       {toast && toast.state === "error" && (
-        <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} error />
+        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
       )}
       {toast && toast.state === "warning" && (
-        <Toast label={toast.message} isDleteBtn onClose={() => setToast(null)} style={{ zIndex: "9999999" }} warning />
+        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
       )}
       {previewUploadedData && (
         <div className="popup-wrap">
@@ -643,10 +689,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   };
 
   return (
-    <div
-      className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`}
-      onClick={handleClick}
-    >
+    <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
       <div className="icon">
         <CustomIcon Icon={Icons[item.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
@@ -1017,12 +1060,11 @@ const UploadGuideLines = ({ uploadGuideLines, t }) => {
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
       <p className="sub-heading">{t("PROCEDURE")}</p>
-      {uploadGuideLines.map((item) => (
-        <p className="instruction-list">{t(item)}</p>
+      {uploadGuideLines.map((item, index) => (
+        <p key={index} className="instruction-list">
+          {t(item)}
+        </p>
       ))}
-      {/* {points.map((item) => (
-        <p className="instruction-list">{item}</p>
-      ))} */}
     </div>
   );
 };

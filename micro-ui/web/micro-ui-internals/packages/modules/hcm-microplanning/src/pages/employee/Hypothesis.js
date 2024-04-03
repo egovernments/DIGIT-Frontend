@@ -17,7 +17,7 @@ const initialAssumptions = [
   },
 ];
 
-const Hypothesis = ({ campaignType = "SMC" }) => {
+const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion }) => {
   const { t } = useTranslation();
 
   // States
@@ -27,14 +27,33 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
 
-    // Fetching data using custom MDMS hook
-    const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-      { name: "hypothesisAssumptions" },
-    ]);
+  // UseEffect to extract data on first render
+  useEffect(() => {
+    if (!microplanData || !microplanData.hypothesis) return;
+    setAssumptions(microplanData.hypothesis);
+  }, []);
+
+  // UseEffect for checking completeness of data before moveing to next section
+  useEffect(() => {
+    if (!assumptions || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    let check = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
+    check = check && assumptions.length !== 0;
+    if (check) setCheckDataCompletion("valid");
+    else setCheckDataCompletion("invalid");
+  }, [checkDataCompletion]);
+
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!assumptions || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+  }, [assumptions]);
+
+  // Fetching data using custom MDMS hook
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "hypothesisAssumptions" }]);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
-    if(!data || !data["hcm-microplanning"]) return;
+    if (!data || !data["hcm-microplanning"]) return;
     let hypothesisAssumptions = data["hcm-microplanning"]["hypothesisAssumptions"];
     if (!hypothesisAssumptions) return;
 
@@ -71,7 +90,9 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
         t={t}
       />
       <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
-        <div className="add-icon"><p>+</p></div>
+        <div className="add-icon">
+          <p>+</p>
+        </div>
         <p>{t("ADD_ROW")}</p>
       </button>
       {/* delete conformation */}
@@ -81,7 +102,7 @@ const Hypothesis = ({ campaignType = "SMC" }) => {
           LeftButtonHandler={deleteAssumptionHandlerCallback}
           RightButtonHandler={closeModal}
           footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
-          footerRightButtonBody={<ButtonType2 text={t("NO")} />}
+          footerRightButtonBody={<ButtonType2 text={t("NO")} download={false} />}
           header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
           bodyText={t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
         />
@@ -130,7 +151,7 @@ const InterractableSection = React.memo(
         <div className="interactable-section">
           <div className="headerbar">
             <div className="key">
-              <p className="heading" >{t("KEY")}</p>
+              <p className="heading">{t("KEY")}</p>
             </div>
             <div className="value">
               <p className="heading">{t("VALUE")}</p>
@@ -142,8 +163,8 @@ const InterractableSection = React.memo(
               </button>
             </div>
           </div>
-          {assumptions.map((item,index) => (
-            <div className={`${index === 0?"select-and-input-wrapper-first":"select-and-input-wrapper" }`}>
+          {assumptions.map((item, index) => (
+            <div key={index} className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
               <div className="key">
                 <Select
                   key={item.id}
@@ -274,6 +295,10 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
   const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    if (item) setInputValue(item.value);
+  }, [item]);
+
   const inputChangeHandler = useCallback(
     (e) => {
       if ((e.target.value <= 0 || e.target.value / 1000 >= 1) && e.target.value !== "") return;
@@ -311,4 +336,3 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
 });
 
 export default Hypothesis;
-

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { AddAlert, Info, Trash } from "@egovernments/digit-ui-svg-components";
+import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
 
@@ -21,7 +21,7 @@ const initialRules = [
   },
 ];
 
-const RuleEngine = ({ campaignType = "SMC" }) => {
+const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion }) => {
   const { t } = useTranslation();
 
   // States
@@ -41,6 +41,27 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
     { name: "ruleConfigureOutput" },
     { name: "hypothesisAssumptions" },
   ]);
+
+  // UseEffect to extract data on first render
+  useEffect(() => {
+    if (!microplanData || !microplanData.ruleEngine) return;
+    setRules(microplanData.ruleEngine);
+  }, []);
+
+  // UseEffect for checking completeness of data before moveing to next section
+  useEffect(() => {
+    if (!rules || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    let check = rules.every((item) => Object.values(item).every((data) => data !== ""));
+    check = check && rules.length !== 0;
+    if (check) setCheckDataCompletion("valid");
+    else setCheckDataCompletion("invalid");
+  }, [checkDataCompletion]);
+
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!rules || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+  }, [rules]);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -66,7 +87,7 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
     setInputs(temp.data);
 
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (!(temp && temp.data)) return;
+    if (!(temp && temp.ruleConfigureOperators)) return;
     setOperators(temp.ruleConfigureOperators);
   }, [data]);
 
@@ -119,7 +140,7 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
           footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
           footerRightButtonBody={<ButtonType1 text={t("NO")} />}
           header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-          bodyText={t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
+          bodyText={t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
         />
       )}
     </div>
