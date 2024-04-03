@@ -44,7 +44,7 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
-    if(!data || !data["hcm-microplanning"]) return;
+    if (!data || !data["hcm-microplanning"]) return;
     let hypothesisAssumptions = data["hcm-microplanning"]["hypothesisAssumptions"];
     let ruleConfigureOutput = data["hcm-microplanning"]["ruleConfigureOutput"];
     let ruleConfigureInputs = data["hcm-microplanning"]["ruleConfigureInputs"];
@@ -57,18 +57,15 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
     setHypothesisAssumptionsList(temp.assumptions);
     setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
 
-    if (ruleConfigureOutput)
-      temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.data)) return;
     setOutputs(temp.data);
 
-    if (ruleConfigureInputs)
-      temp = ruleConfigureInputs.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureInputs) temp = ruleConfigureInputs.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.data)) return;
     setInputs(temp.data);
 
-    if (UIConfiguration) 
-      temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
+    if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!(temp && temp.data)) return;
     setOperators(temp.ruleConfigureOperators);
   }, [data]);
@@ -106,7 +103,9 @@ const RuleEngine = ({ campaignType = "SMC" }) => {
           t={t}
         />
         <button className="add-button" onClick={() => addAssumptionsHandler(setRules)}>
-          <div className="add-icon"><p>+</p></div>
+          <div className="add-icon">
+            <p>+</p>
+          </div>
           <p>{t("ADD_ROW")}</p>
         </button>
       </div>
@@ -198,7 +197,7 @@ const InterractableSection = React.memo(
             <div className="value-input-key">
               <p className="heading">{t("VALUE")}</p>
             </div>
-            <div className="equal-to-icon invicible">=</div>
+            <div className="equal-to-icon invisible">=</div>
             <div className="value-input-key">
               <p className="heading">{t("RULE_ENGINE_INPUT")}</p>
             </div>
@@ -208,16 +207,16 @@ const InterractableSection = React.memo(
             <div className="value-input-key">
               <p className="heading">{t("KEY")}</p>
             </div>
-            <div className="invicible">
-              <button className="delete-button invicible" onClick={() => deleteHandler(item)}>
+            <div className="invisible">
+              <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
                 <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                 <p>{t("DELETE")}</p>
               </button>
             </div>
           </div>
-          {rules.map((item) => (
-            <div key={item.id} className="select-and-input-wrapper">
-              <div className="value-input-key">
+          {rules.map((item, index) => (
+            <div className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
+              <div key={item.id} className="value-input-key">
                 <Select
                   key={item.id}
                   item={item}
@@ -274,7 +273,7 @@ const InterractableSection = React.memo(
               </div>
               <div>
                 <button className="delete-button" onClick={() => deleteHandler(item)}>
-                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"}/>
+                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                   <p>{t("DELETE")}</p>
                 </button>
               </div>
@@ -303,10 +302,15 @@ const Example = ({ exampleOption, t }) => {
               </option>
             ))} */}
           </select>
-          <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
+          <p className="heading">{t(" ")}</p>
         </div>
 
-        <div className="equal-to-icon">=</div>
+        <div className="equal-to-icon">
+          <p className="heading invisible">{"="}</p>
+
+          <div className="equal-to-icon">=</div>
+          <p className="heading invisible">{"="}</p>
+        </div>
 
         <div className="value-input-key">
           <p className="heading">{t("RULE_ENGINE_INPUT")}</p>
