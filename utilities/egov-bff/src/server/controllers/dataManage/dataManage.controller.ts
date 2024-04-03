@@ -1,10 +1,13 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
-import { validateCreateRequest, validateGenerateRequest, validateSearchRequest } from "../../utils/validator";
-import { enrichResourceDetails, errorResponder, generateProcessedFileAndPersist, processGenerate, sendResponse, modifyBoundaryData, getChildParentMap, getBoundaryTypeMap, addBoundaryCodeToData, prepareDataForExcel, processDataSearchRequest, getResponseFromDb, generateAuditDetails, getCodeMappingsOfExistingBoundaryCodes, appendSheetsToWorkbook } from "../../utils/index";
-import { createAndUploadFile, processGenericRequest, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/index";
+import { validateGenerateRequest } from "../../utils/validators/genericValidator";
+import { enrichResourceDetails, errorResponder, processGenerate, sendResponse, modifyBoundaryData, getResponseFromDb, generateAuditDetails } from "../../utils/genericUtils";
+import { processGenericRequest } from "../../api/campaignApis";
+import { createAndUploadFile, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/genericApis";
 import config from "../../config";
 import { httpRequest } from "../../utils/request";
+import { validateCreateRequest, validateSearchRequest } from "../../utils/validators/campaignValidators";
+import { addBoundaryCodeToData, appendSheetsToWorkbook, generateProcessedFileAndPersist, getBoundaryTypeMap, getChildParentMap, getCodeMappingsOfExistingBoundaryCodes, prepareDataForExcel, processDataSearchRequest } from "../../utils/campaignUtils";
 
 
 
@@ -109,7 +112,7 @@ class dataManageController {
             if (!fileResponse?.fileStoreIds?.[0]?.url) {
                 throw new Error("Invalid file");
             }
-            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1",false);
+            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1", false);
             const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
             const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
             const childParentMap = getChildParentMap(withoutBoundaryCode);

@@ -2,7 +2,7 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import config from './config';
 import { requestMiddleware } from './utils/middlewares';
-import { errorLogger, errorResponder, invalidPathHandler } from './utils';
+import { errorLogger, errorResponder, invalidPathHandler } from './utils/genericUtils';
 
 class App {
   public app: express.Application;

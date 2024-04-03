@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { logger } from "./logger";
-import { cacheResponse, getCachedResponse, throwError } from ".";
+import { cacheResponse, getCachedResponse, throwError } from "./genericUtils";
 
 var Axios = require("axios").default;
 var get = require("lodash/get");
@@ -111,9 +111,7 @@ const httpRequest = async (
       "error occured while making request to " +
       getServiceName(_url) +
       ": error response :" +
-      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message),
-      errorResponse?.data?.Errors?.[0]?.code,
-      errorResponse?.status
+      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message)
     );
   }
 };

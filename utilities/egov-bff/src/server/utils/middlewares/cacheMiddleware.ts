@@ -1,4 +1,4 @@
-import { errorResponder, appCache } from "../index";
+import { errorResponder, appCache } from "../genericUtils";
 import { NextFunction, Request, Response } from "express";
 
 const cacheEnabled = false;
@@ -7,7 +7,7 @@ const cacheMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
     const cacheData = appCache.get(req.headers.cachekey);
     if (cacheData && cacheEnabled) {
-      return cacheData;
+      res.send(cacheData);
     } else {
       next();
     }

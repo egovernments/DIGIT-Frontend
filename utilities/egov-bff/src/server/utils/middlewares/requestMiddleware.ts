@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 const { object, string } = require("yup");
-const { errorResponder } = require("../index");
+import { errorResponder } from "../genericUtils";
 
 const requestSchema = object({
   apiId: string().nullable(),

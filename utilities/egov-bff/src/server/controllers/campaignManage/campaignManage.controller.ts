@@ -2,12 +2,16 @@ import * as express from "express";
 import { logger } from "../../utils/logger";
 import {
     errorResponder,
-    processBasedOnAction,
-    searchProjectCampaignResourcData,
     sendResponse,
-} from "../../utils/index";
-import { validateCampaignRequest, validateProjectCampaignRequest, validateSearchProjectCampaignRequest } from "../../utils/validator";
-import { createProjectIfNotExists, createRelatedResouce, enrichCampaign } from "../../api";
+} from "../../utils/genericUtils";
+import {
+    processBasedOnAction,
+    searchProjectCampaignResourcData
+} from "../../utils/campaignUtils"
+import { validateCampaignRequest } from "../../utils/validators/genericValidator";
+import { enrichCampaign } from "../../api/campaignApis";
+import { validateProjectCampaignRequest, validateSearchProjectCampaignRequest } from "../../utils/validators/campaignValidators";
+import { createProjectIfNotExists, createRelatedResouce } from "../../api/genericApis";
 
 
 
