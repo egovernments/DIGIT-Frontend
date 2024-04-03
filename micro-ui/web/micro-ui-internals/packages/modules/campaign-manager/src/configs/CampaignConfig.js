@@ -193,6 +193,24 @@ export const CampaignConfig = (totalFormData) => {
             },
           ],
         },
+        {
+          stepCount: "7",
+          key: "9",
+          isLast: true,
+          body: [
+            {
+              isMandatory: false,
+              key: "preview",
+              type: "component",
+              component: "PreviewCampaign",
+              withoutLabel: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+              },
+            },
+          ],
+        },
       ],
     },
   ];
