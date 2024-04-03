@@ -6,6 +6,7 @@ import MicroplanningHeader from "../../components/MicroplanningHeader";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
+import Guidelines from "./Guidelines";
 import CreateMicroplan from "./CreateMicroplan";
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
@@ -74,6 +75,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
           <PrivateRoute path={`${path}/hypothesis`} component={() => <Hypothesis parentRoute={path}/>} />
           <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/help-guidelines`} component={() => <Guidelines parentRoute={path}/>} />
+
           <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path}/>} />
           
         </AppContainer>
