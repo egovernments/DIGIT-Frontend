@@ -136,7 +136,7 @@ const SetupCampaign = () => {
         if (formData?.campaignDates?.startDate && formData?.campaignDates?.endDate && endDateObj > startDateObj) {
           return true;
         } else {
-          setShowToast({ key: "error", label: "Showing Error" });
+          setShowToast({ key: "error", label: "CAMPAIGN_DATES_MISSING_ERROR" });
           return false;
         }
       default:
