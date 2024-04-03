@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
-// import { previewConfig } from "../configs/previewConfig";
 
 const CampaignSummary = () => {
   const { t } = useTranslation();
@@ -11,7 +10,7 @@ const CampaignSummary = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
 
-  const { isLoading, data } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
