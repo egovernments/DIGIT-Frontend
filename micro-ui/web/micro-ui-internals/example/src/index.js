@@ -3,26 +3,29 @@ import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
-import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
-
+import { DigitUI } from "@egovernments/digit-ui-module-core";
 import "@egovernments/digit-ui-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 
 var Digit = window.Digit || {};
 
-const enabledModules = [ "DSS", "HRMS",
-"Workbench",
-//  "Engagement", "NDSS","QuickPayLinks", "Payment",
+const enabledModules = [
+  "DSS",
+  "HRMS",
+  "Workbench",
+  "HCMWORKBENCH",
+  "Campaign",
+  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
-//added to check fsm
-// "FSM"
+  "Microplanning"
+  //added to check fsm
+  // "FSM"
 ];
 
 const initTokens = (stateCode) => {
@@ -62,13 +65,10 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-  initCoreComponents();
-  initDSSComponents();
-  initHRMSComponents();
-  initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
-
+  initWorkbenchHCMComponents();
+  initCampaignComponents();
 
   const moduleReducers = (initData) => initData;
 

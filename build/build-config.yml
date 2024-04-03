@@ -24,6 +24,12 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
+
+  - name: builds/Digit-Frontend/microplan-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/microplan/Dockerfile
+        image-name: microplan-ui
         
   - name: builds/Digit-Frontend/storybook-svg
     build:
@@ -51,7 +57,7 @@ config:
 
   - name: "builds/Digit-Frontend/utilities/egov-bff"
     build:
-      - work-dir: "utilities/egov-bff"
+      - work-dir: "utilities/project-factory"
         image-name: "project-factory"
-      - work-dir: "utilities/egov-bff/migration"
+      - work-dir: "utilities/project-factory/migration"
         image-name: "project-factory-db"
