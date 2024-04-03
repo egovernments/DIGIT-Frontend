@@ -3,17 +3,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
-  // LOCALISATION: ["EMPLOYEE", "SUPERUSER","EMPLOYEE_COMMON","LOC_ADMIN"],
-  MDMS: ["MDMS_ADMIN", "EMPLOYEE", "SUPERUSER"],
-  DSS: ["STADMIN"],
+  MICROPLAN:['MICROPLAN_ADMIN']
 };
 
-// Mukta Overrriding the Works Home screen card
 const MicroplanningCard = () => {
-  // if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
-  //   return null;
-  // }
-
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -21,33 +14,29 @@ const MicroplanningCard = () => {
     {
       label: t("Upload Page"),
       link: `/${window?.contextPath}/employee/microplanning/upload`,
-      roles: [],
+      roles: ROLES.MICROPLAN,
     },
     {
       label: t("Hypothesis Page"),
       link: `/${window?.contextPath}/employee/microplanning/hypothesis`,
-      roles: [],
+      roles: ROLES.MICROPLAN,
     },
     {
       label: t("Rule Engine Page"),
       link: `/${window?.contextPath}/employee/microplanning/rule-engine`,
-      roles: [],
+      roles: ROLES.MICROPLAN,
     },
-    // {
-    //   label: t("ACTION_TEST_LOCALISATION"),
-    //   link: `/${window?.contextPath}/employee/workbench/localisation-search`,
-    //   roles: ROLES.LOCALISATION,
-    // },
-    // {
-    //   label: t("Sample Create master"),
-    //   link: `/${window?.contextPath}/employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Sample`,
-    //   roles: ROLES.MDMS,
-    // },
-    // {
-    //   label: t("Sample Search master"),
-    //   link: `/${window?.contextPath}/employee/workbench/mdms-search-v2?masterName=common-masters&moduleName=Sample`,
-    //   roles: ROLES.MDMS,
-    // },
+    {
+      label: t("CREATE_NEW_MICROPLAN"),
+      link: `/${window?.contextPath}/employee/microplanning/help-guidelines`,
+      roles: ROLES.MICROPLAN,
+    },
+    {
+      label: t("SAVED_MICROPLANS"),
+      link: `/${window?.contextPath}/employee/microplanning/saved-microplans`,
+      roles: ROLES.MICROPLAN,
+    },
+    
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
