@@ -362,13 +362,13 @@ function validateFilters(request: any) {
     const boundaries = request?.body?.Filters?.boundaries;
 
     if (!Array.isArray(boundaries)) {
-        throw new Error("Boundaries should be an array");
+        throw new Error("Invalid Filter Criteria: 'boundaries' should be an array.");
     }
 
     const rootBoundaries = boundaries.filter((boundary: any) => boundary.isRoot);
 
     if (rootBoundaries.length !== 1) {
-        throw new Error("Invalid Filter Criteria: Either more than one root or no root present");
+        throw new Error("Invalid Filter Criteria: Exactly one root boundary is required, but found " + rootBoundaries.length);
     }
 
     const boundaryTypeOfRoot = rootBoundaries[0]?.boundaryType;
@@ -376,7 +376,7 @@ function validateFilters(request: any) {
     const boundariesOfTypeOfSameAsRoot = boundaries.filter((boundary: any) => boundary.boundaryType === boundaryTypeOfRoot);
 
     if (boundariesOfTypeOfSameAsRoot.length > 1) {
-        throw new Error("Invalid Filter Criteria: Only one root can be there for a given Boundary level");
+        throw new Error("Invalid Filter Criteria: Multiple boundaries of the same type as the root found. Only one is allowed.");
     }
 }
 
