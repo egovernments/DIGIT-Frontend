@@ -420,7 +420,6 @@ export const UICustomizations = {
     },
   },
   SearchDefaultConfig: {
-
     customValidationCheck: (data) => {
       //checking both to and from date are present
       const { createdFrom, createdTo } = data;
@@ -548,7 +547,20 @@ export const UICustomizations = {
           selectConfig: {
           },
           textConfig :["faciltyUsage","localityCode", "storageCapacity","id"]
-        }
+        },
+        "SearchProjectFacilityConfig": {
+          basePath: "ProjectFacility", 
+          pathConfig: {
+            id: "id[0]",
+            projectId: "projectId[0]",
+            facilityId: "facilityId[0]"
+          },
+          dateConfig: {
+          },
+          selectConfig: {
+          },
+          textConfig :[]
+        },
       }
      
       const id = searchParams.get("config")|| masterName;
@@ -600,11 +612,13 @@ export const UICustomizations = {
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
-        case "MASTERS_WAGESEEKER_ID":
+        case "ID":
+          
           return (
             <span className="link">
-              <Link to={`/${window.contextPath}/employee/masters/view-wageseeker?tenantId=${row?.tenantId}&individualId=${value}`}>
-                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+              <Link
+                to={`/${window.contextPath}/employee/workbench/mdms-view?tenantId=${tenantId}&projectNumber=${masterName}`}
+              >
               </Link>
             </span>
           );

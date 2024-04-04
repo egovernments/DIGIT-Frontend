@@ -1,10 +1,12 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -12,9 +14,11 @@ const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  "HRMS",
+  // "HRMS",
   "Engagement",
   "Workbench",
+  "HCMWORKBENCH",
+  "Campaign"
 ];
 
 const moduleReducers = (initData) => ({
@@ -27,9 +31,12 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
-  initHRMSComponents();
+  // initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initWorkbenchHCMComponents();
+  initCampaignComponents();
+
 };
 
 initLibraries().then(() => {
