@@ -415,7 +415,7 @@ const getHierarchy = async (request: any, tenantId: string, hierarchyType: strin
     const boundaryList = response?.BoundaryHierarchy?.[0].boundaryHierarchy;
     return generateHierarchy(boundaryList);
   } catch (error) {
-    console.error('Error:', error);
+    logger.error(`Error fetching hierarchy data: ${error.message}`, error);
     throw error;
   }
 };
