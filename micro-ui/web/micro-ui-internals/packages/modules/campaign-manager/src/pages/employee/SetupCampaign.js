@@ -13,9 +13,20 @@ const SetupCampaign = () => {
   const [currentKey, setCurrentKey] = useState(1);
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
+  const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [showToast, setShowToast] = useState(null);
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
 
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+  // Example usage:
+  // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData));
   }, [totalFormData]);
@@ -85,44 +96,73 @@ const SetupCampaign = () => {
   }
 
   useEffect(() => {
-    if (currentKey === 8) {
-      // history.push()
+    if (shouldUpdate === true) {
+      if (currentKey === 9) {
+        // history.push()
+        return;
+      }
+      const reqCreate = async () => {
+        let payloadData = {};
+        payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+          ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
+          : null;
+        payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+          ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+          : null;
+        payloadData.tenantId = tenantId;
+        payloadData.action = "draft";
+        payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
+        payloadData.boundaries = [];
+        payloadData.resources = [];
+        payloadData.projectType = null;
+        payloadData.additionalDetails = {};
+        if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+          const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+          payloadData.deliveryRules = temp;
+        }
+
+        await mutate(payloadData, {
+          onError: (error, variables) => {
+            console.log(error);
+          },
+          onSuccess: async (data) => {
+            console.log(data);
+          },
+        });
+      };
+
+      reqCreate();
+      setShouldUpdate(false);
+    }
+  }, [shouldUpdate, totalFormData, currentKey]);
+
+  const handleValidate = (formData) => {
+    const key = Object.keys(formData)?.[0];
+    switch (key) {
+      case "campaignDates":
+        const startDateObj = new Date(formData?.campaignDates?.startDate);
+        const endDateObj = new Date(formData?.campaignDates?.endDate);
+        if (formData?.campaignDates?.startDate && formData?.campaignDates?.endDate && endDateObj > startDateObj) {
+          return true;
+        } else {
+          setShowToast({ key: "error", label: "CAMPAIGN_DATES_MISSING_ERROR" });
+          return false;
+        }
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(closeToast, 5000);
+    }
+  }, [showToast]);
+  const onSubmit = (formData) => {
+    const checkValid = handleValidate(formData);
+    if (checkValid === false) {
       return;
     }
-    const reqCreate = async () => {
-      let payloadData = {};
-      payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-        ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
-        : null;
-      payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-        ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-        : null;
-      payloadData.tenantId = tenantId;
-      payloadData.action = "draft";
-      payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-      payloadData.boundaries = [];
-      payloadData.resources = [];
-      payloadData.projectType = null;
-      payloadData.additionalDetails = {};
-      if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-        const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-        payloadData.deliveryRules = temp;
-      }
-
-      await mutate(payloadData, {
-        onError: (error, variables) => {
-          console.log(error);
-        },
-        onSuccess: async (data) => {
-          console.log(data);
-        },
-      });
-    };
-
-    reqCreate();
-  }, [totalFormData, currentKey]);
-
-  const onSubmit = (formData) => {
     setCurrentKey(currentKey + 1);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
 
@@ -147,6 +187,7 @@ const SetupCampaign = () => {
       ],
     };
 
+    setShouldUpdate(true);
     // convertFormData(totalFormData);
     const payload = convertPayload(dummyData);
   };
@@ -154,11 +195,11 @@ const SetupCampaign = () => {
   const onStepClick = (step) => {
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
 
+    
     const key = parseInt(filteredSteps[0].key);
-    // setCurrentKey(key);
-    // setCurrentStep(step);
+    const name = filteredSteps[0].name;
 
-    if (Object.keys(totalFormData).includes(key.toString())) {
+    if (Object.keys(totalFormData).includes(name)) {
       setCurrentKey(key);
       setCurrentStep(step);
     }
@@ -166,6 +207,7 @@ const SetupCampaign = () => {
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
+      setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
     }
   };
@@ -203,6 +245,10 @@ const SetupCampaign = () => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
   }, [currentKey, filteredConfig]);
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
   return (
     <React.Fragment>
       <TimelineCampaign currentStep={currentStep + 1} onStepClick={onStepClick} />
@@ -215,11 +261,13 @@ const SetupCampaign = () => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={"PREVIOUS"}
+        secondaryLabel={t("HCM_BACK")}
+        actionClassName={"actionBarClass"}
         noCardStyle={currentStep == 1 ? true : false}
         onSecondayActionClick={onSecondayActionClick}
-        label={currentKey < 8 ? "NEXT" : "SUBMIT"}
+        label={currentKey === 9 ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
+      {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
     </React.Fragment>
   );
 };

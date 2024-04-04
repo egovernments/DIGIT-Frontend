@@ -1,14 +1,16 @@
-import React, { useReducer, Fragment, useEffect } from "react";
-import { CardText, DatePicker, LabelFieldPair, Card, CardHeader, CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
-import PlusMinusInput from "../../components/PlusMinusInput";
+import React, { useReducer, Fragment, useEffect, useState } from "react";
+import { CardText, LabelFieldPair, Card, CardLabel, CardSubHeader, Paragraph, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import { TextInput } from "@egovernments/digit-ui-components";
 
-const initialState = {
-  cycleConfgureDate: {
-    cycle: 1,
-    deliveries: 1,
-  },
-  cycleData: [],
+const initialState = (saved) => {
+  return {
+    cycleConfgureDate: {
+      cycle: saved?.cycleConfgureDate?.cycle ? saved?.cycleConfgureDate?.cycle : 1,
+      deliveries: saved?.cycleConfgureDate?.deliveries ? saved?.cycleConfgureDate?.deliveries : 1,
+    },
+    cycleData: saved?.cycleData ? [...saved?.cycleData] : [],
+  };
 };
 
 const reducer = (state, action) => {
@@ -47,16 +49,31 @@ const updateCycleData = (cycleData, index, update) => {
 };
 
 function CycleConfiguration({ onSelect, formData, control, ...props }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const saved = JSON.parse(sessionStorage.getItem("Digit.HCM_CAMPAIGN_MANAGER_FORM_DATA"))?.value?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+  const [state, dispatch] = useReducer(reducer, initialState(saved));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
+  const [dateRange, setDateRange] = useState(null);
+  const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const [sessionData, setSessionData] = useState(tempSession);
+
+  useEffect(() => {
+    setSessionData(tempSession);
+  }, [tempSession]);
+
+  useEffect(() => {
+    setDateRange({
+      startDate: sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
+      endDate: sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+    });
+  }, [sessionData]);
 
   useEffect(() => {
     onSelect("cycleConfigure", state);
   }, [state]);
 
   const updateCycle = (d) => {
-    dispatch({ type: "UPDATE_CYCLE", payload: d });
+    dispatch({ type: "UPDATE_CYCLE", payload: d?.target?.value ? Number(d?.target?.value) : d });
   };
 
   const updateDelivery = (d) => {
@@ -73,15 +90,31 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   return (
     <>
+      <Header>{sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.name}</Header>
+      <Paragraph
+        customClassName="cycle-paragraph"
+        value={`(${sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+          .split("-")
+          .reverse()
+          .join("/")} - ${sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate.split("-").reverse().join("/")})`}
+      />
       <Card className="campaign-counter-container">
         <CardText>{t(`CAMPAIGN_CYCLE_CONFIGURE_HEADING`)}</CardText>
         <LabelFieldPair>
-          <CardLabel>{t(`CAMPAIGN_NO_OF_CYCLE`)}</CardLabel>
-          <PlusMinusInput defaultValues={cycleConfgureDate?.cycle} onSelect={(d) => updateCycle(d)} />
+          <CardLabel>
+            {t(`CAMPAIGN_NO_OF_CYCLE`)}
+            <span className="mandatory-span">*</span>
+          </CardLabel>
+          <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} />
+          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.cycle} onSelect={(d) => updateCycle(d)} /> */}
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel>{t(`CAMPAIGN_NO_OF_DELIVERY`)}</CardLabel>
-          <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} />
+          <CardLabel>
+            {t(`CAMPAIGN_NO_OF_DELIVERY`)}
+            <span className="mandatory-span">*</span>
+          </CardLabel>
+          <TextInput type="numeric" value={cycleConfgureDate?.deliveries} onChange={(d) => updateDelivery(d)} />
+          {/* <PlusMinusInput defaultValues={cycleConfgureDate?.deliveries} onSelect={(d) => updateDelivery(d)} /> */}
         </LabelFieldPair>
       </Card>
       <Card className="campaign-counter-container">
@@ -92,16 +125,19 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               {t(`CAMPAIGN_CYCLE`)} {index + 1}
             </CardLabel>
             <div className="date-field-container">
-              <DatePicker
-                // min={Digit.Utils.date.getDate(Date.now() + 1 * 24 * 60 * 60 * 1000)}
-                // max={Digit.Utils.date.getDate(Date.now() + 2 * 24 * 60 * 60 * 1000)}
-                date={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+              <TextInput
+                type="date"
+                value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                min={dateRange?.startDate}
+                max={dateRange?.endDate}
                 onChange={(d) => selectFromDate(index + 1, d)}
               />
-              <DatePicker
-                // min={Digit.Utils.date.getDate()}
-                // max={Digit.Utils.date.getDate(Date.now() + 10 * 24 * 60 * 60 * 1000)}
-                date={cycleData?.find((j) => j.key === index + 1)?.toDate}
+              {console.log("cycleData?.find((j) => j.key === index + 1)?.toDate", cycleData?.find((j) => j.key === index + 1)?.fromDate)}
+              <TextInput
+                type="date"
+                value={cycleData?.find((j) => j.key === index + 1)?.toDate}
+                min={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                max={dateRange?.endDate}
                 onChange={(d) => selectToDate(index + 1, d)}
               />
             </div>
