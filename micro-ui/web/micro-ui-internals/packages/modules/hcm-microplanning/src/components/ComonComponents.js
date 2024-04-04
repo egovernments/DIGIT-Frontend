@@ -13,7 +13,7 @@ export const ButtonType1 = (props) => {
 export const ButtonType2 = (props) => {
   return (
     <div className="button-type-2">
-      {props.download && (
+      {props.showDownloadIcon && (
         <div className="icon">
           <FileDownload fill={"white"} height={"24"} width={"24"} />
         </div>

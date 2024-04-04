@@ -75,9 +75,7 @@ const Upload = ({
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
+    return () => window.removeEventListener("keydown", handleKeyPress);
   }, [modal]);
 
   const handleKeyPress = (event) => {
@@ -597,7 +595,7 @@ const Upload = ({
           RightButtonHandler={() => UploadFileClickHandler(true)}
           sections={sections}
           footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
-          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} download={true} />}
+          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} showDownloadIcon={true} />}
           header={<ModalHeading label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)} />}
           bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
         />
