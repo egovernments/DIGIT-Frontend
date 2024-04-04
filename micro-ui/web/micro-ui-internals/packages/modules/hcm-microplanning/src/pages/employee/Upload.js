@@ -54,7 +54,8 @@ const Upload = ({
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     const valueList = fileDataList ? Object.values(fileDataList) : [];
-    if (valueList.length !== 0 && fileDataList.Microplanning_Population && fileDataList.Microplanning_Population.error === null) setCheckDataCompletion("valid");
+    if (valueList.length !== 0 && fileDataList.Microplanning_Population && fileDataList.Microplanning_Population.error === null)
+      setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
   }, [checkDataCompletion]);
 
@@ -83,10 +84,7 @@ const Upload = ({
     if (modal !== "upload-guidelines") return;
     if (event.key === "x" || event.key === "Escape") {
       // Perform the desired action when "x" or "esc" is pressed
-      setModal((previous) => {
-        if (previous === "upload-guidelines") return "none";
-        return previous;
-      });
+      if (modal === "upload-guidelines") setModal("none");
     }
   };
 
@@ -97,11 +95,15 @@ const Upload = ({
       let schemas = data["hcm-microplanning"]["schemas"];
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       // let uploadSections = Config["UploadConfiguration"];
-      const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
-      setUploadGuideLines(uploadGuideLinesList);
-      setValidationSchemas(schemas);
-      setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
-      setSections(uploadSections);
+      if (UIConfiguration) {
+        const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
+        setUploadGuideLines(uploadGuideLinesList);
+      }
+      if (schemas) setValidationSchemas(schemas);
+      if (uploadSections) {
+        setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
+        setSections(uploadSections);
+      }
     }
   }, [data]);
 
@@ -430,7 +432,7 @@ const Upload = ({
   const deleteFile = () => {
     // Digit.SessionStorage.del(fileData.id);
     setResourceMapping([]);
-    setFileDataList( previous => {
+    setFileDataList((previous) => {
       delete previous[fileData.id];
       return previous;
     });
@@ -735,11 +737,11 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
     const handleMouseEnter = () => {
       setIsHovered(true);
     };
-  
+
     const handleMouseLeave = () => {
       setIsHovered(false);
     };
-    
+
     return (
       <div
         key={item.id}

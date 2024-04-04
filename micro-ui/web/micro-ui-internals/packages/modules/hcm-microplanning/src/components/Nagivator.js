@@ -1,7 +1,5 @@
-// import { ActionBar, FormComposerV2 } from "@egovernments/digit-ui-react-components";
-// import { ActionBar, Button, Stepper} from "@egovernments/digit-ui-components";
 import { ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
-
+import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-react-components";
@@ -11,6 +9,7 @@ import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
  *
  * @param { config: Object, checkDataCompleteness: boolean, components: Object, childProps: Object, stepNavigationActive: boolean } props
  * @returns
+ * 
  */
 // Main component for creating a microplan
 const Navigator = (props) => {
@@ -151,5 +150,8 @@ const LoadCustomComponent = (props) => {
   const secondaryProps = props.secondaryProps;
   return <props.component {...secondaryProps} />;
 };
-
+LoadCustomComponent.propTypes = {
+     component: PropTypes.elementType.isRequired,
+     secondaryProps: PropTypes.object,
+   };
 export default Navigator;
