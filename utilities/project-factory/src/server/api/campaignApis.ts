@@ -387,7 +387,7 @@ function generateHierarchyList(data: any[], parentChain: any = []) {
     result.push(currentChain.join(','));
 
     // If there are children, recursively call the function
-    if (boundary.children.length > 0) {
+    if (boundary.children && boundary.children.length > 0) {
       let childResults = generateHierarchyList(boundary.children, currentChain);
       result = result.concat(childResults);
     }
