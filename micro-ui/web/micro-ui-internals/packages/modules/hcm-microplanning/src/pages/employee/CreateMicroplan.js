@@ -72,6 +72,7 @@ const CreateMicroplan = () => {
 
   // Function to navigate to the next step
   const nextStep = useCallback(() => {
+    if (!currentPage) return;
     if (currentPage?.id + 1 > timeLineOptions.length - 1) return;
     setCurrentPage((previous) => timeLineOptions[previous?.id + 1]);
     setMicroplanData((previous) => ({ ...previous, currentPage: timeLineOptions[previous?.id + 1] }));
@@ -135,7 +136,6 @@ const CreateMicroplan = () => {
           isSuffix={true}
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}
-          // icon={"ArrowForward"}
         >
           <ArrowForward className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgb(255,255,255)"} />
         </Button>
