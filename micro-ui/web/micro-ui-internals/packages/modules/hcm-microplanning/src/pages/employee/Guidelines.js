@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 const Guidelines = ({ path }) => {
   const { t } = useTranslation();
-  const newPath = String(window.contextPath).split("/").slice(0, -1).join("/");
+  // const newPath = String(window.contextPath).split("/")
+  // console.log(newPath)
   // Keeping inline style for now because design for this screen is not given yet
   return (
-    <Link to={`/${newPath}/employee/create-microplan`}>
+    <Link to={`/${window.contextPath}/employee/microplanning/create-microplan`}>
       <div
         style={{
           position: "absolute",

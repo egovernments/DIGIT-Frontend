@@ -74,7 +74,7 @@ const CreateMicroplan = () => {
   const nextStep = useCallback(() => {
     if (currentPage?.id + 1 > timeLineOptions.length - 1) return;
     setCurrentPage((previous) => timeLineOptions[previous?.id + 1]);
-    setMicroplanData((previous) => ({ ...previous, currentPage }));
+    setMicroplanData((previous) => ({ ...previous, currentPage: timeLineOptions[previous?.id + 1] }));
   }, [currentPage]);
 
   // Function to navigate to the previous step
@@ -116,7 +116,7 @@ const CreateMicroplan = () => {
         {currentPage?.id > 0 && (
           <Button
             type="button"
-            label={t("PREVIOUS")}
+            label={t("BACK")}
             onButtonClick={previousStep}
             isSuffix={false}
             variation={"secondary"}

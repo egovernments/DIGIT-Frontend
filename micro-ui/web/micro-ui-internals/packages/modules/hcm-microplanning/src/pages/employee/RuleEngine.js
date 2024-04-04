@@ -236,7 +236,7 @@ const InterractableSection = React.memo(
             </div>
           </div>
           {rules.map((item, index) => (
-            <div className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
+            <div key={index} className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
               <div key={item.id} className="value-input-key">
                 <Select
                   key={item.id}

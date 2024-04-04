@@ -1,3 +1,12 @@
+$box-shadow-color: #00000029;
+$border-color: rgba(214, 213, 212, 1);
+$highlight-color: rgba(244, 119, 56, 1);
+$highlight-color: rgba(244, 119, 56, 1);
+$border-color: rgba(214, 213, 212, 1);
+
+
+
+
 .modal-header {
     width: 30rem;
     font-weight: 700;
@@ -96,7 +105,7 @@
         background-color: #ffffff;
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;
-        box-shadow: 0 0.063rem 0.125rem 0 #00000029;
+        box-shadow: 0 0.063rem 0.125rem 0 $box-shadow-color;
     }
 
     .upload-section-options-active,
@@ -104,7 +113,7 @@
         min-height: 3.7rem;
         display: flex;
         align-items: center;
-        border-bottom: 0.063rem rgba(214, 213, 212, 1) solid;
+        border-bottom: 0.063rem $border-color solid;
         cursor: pointer;
 
         p {
@@ -202,7 +211,7 @@
                 align-items: center !important;
                 min-width: 13.5rem;
                 height: 2.5rem;
-                border: 0.063rem rgba(244, 119, 56, 1) solid;
+                border: 0.063rem $highlight-color solid;
 
                 .icon {
                     display: flex;
@@ -234,7 +243,7 @@
         flex-wrap: wrap;
 
         .upload-option-container-selected {
-            border: 0.125rem rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
             color: rgba(244, 119, 56, 1);
         }
     }
@@ -255,7 +264,7 @@
         cursor: pointer;
 
         &:hover {
-            border: 0.125rem rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
         }
 
         p {
@@ -263,13 +272,13 @@
         }
 
         .upload-option-selected {
-            border: 0.125rem rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
             color: rgba(244, 119, 56, 1);
         }
 
         .select-button {
             justify-self: end;
-            border: 0.063rem solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
             background-color: rgba(255, 255, 255, 1);
             width: 11rem;
             height: 2.5rem;
@@ -285,7 +294,7 @@
             align-items: center !important;
             justify-self: end;
             justify-content: center;
-            border: 0.063rem solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
             background-color: rgba(244, 119, 56, 1);
             width: 11rem;
             height: 2.5rem;
@@ -300,7 +309,7 @@
         min-width: 90%;
         min-height: 10rem;
         padding-top: 0.625;
-        border: 0.063rem rgba(214, 213, 212, 1);
+        border: 0.063rem $border-color;
         margin: 1rem 0;
         display: flex !important;
         flex-direction: column;
@@ -332,7 +341,7 @@
     }
 
     .uploaded-file {
-        border: 0.063rem solid rgba(214, 213, 212, 1);
+        border: 0.063rem solid $border-color;
         min-height: 4.75rem;
         background-color: rgb(256, 252, 252);
         display: flex !important;
@@ -376,7 +385,7 @@
                 margin-left: 1rem;
                 min-width: 9rem;
                 height: 2.5rem;
-                border: 0.063rem rgba(244, 119, 56, 1) solid;
+                border: 0.063rem $highlight-color solid;
                 background-color: white;
                 cursor: pointer;
             }
@@ -423,7 +432,7 @@
     }
 
     .file-upload-error-container {
-        border: 0.063rem solid rgba(214, 213, 212, 1);
+        border: 0.063rem solid $border-color;
         min-height: 4.75rem;
         display: flex !important;
         flex-direction: column;
@@ -609,7 +618,7 @@
             padding: 1rem 0.5rem;
             display: flex;
             flex-direction: column;
-            gap: 20;
+            gap: 1.25rem;
             background-color: white !important;
             border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
             border-radius: 0.25rem;
@@ -633,7 +642,7 @@
 
                 &::-webkit-scrollbar-thumb {
                     background: rgba(177, 180, 182, 1);
-                    border-radius: 10;
+                    border-radius: 0.625rem;
                     border: 0.125rem solid #f0f0f0;
                 }
 
@@ -643,7 +652,7 @@
 
                 h3 {
                     background-color: #f4f4f4;
-                    padding: 10;
+                    padding: 0.625rem;
                     margin: 0;
                 }
 
@@ -1016,7 +1025,7 @@
         align-items: center;
         justify-content: center;
         background: rgba(255, 255, 255, 1);
-        border: 0.063rem solid rgba(244, 119, 56, 1);
+        border: 0.063rem solid $highlight-color;
 
         p {
             color: rgba(244, 119, 56, 1);
@@ -1279,7 +1288,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 1);
-            border: 0.063rem solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
 
             p {
                 color: rgba(244, 119, 56, 1);
@@ -1346,26 +1355,6 @@
             }
         }
     }
-
-
-
-    .next-previous-bar {
-        display: flex;
-        bottom: 0;
-        left: 0;
-        /* Adjust as needed */
-        width: 100%;
-        /* Adjust as needed */
-        background-color: #ffffff;
-        /* Adjust as needed */
-        padding: 10;
-        /* Adjust as needed */
-        box-shadow: rgba(0, 0, 0, 0.16) 0 -0.125rem 8px;
-        max-width: 480;
-        z-index: 100;
-        text-align: right;
-    }
-
 }
 
 
