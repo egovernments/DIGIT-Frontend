@@ -2,9 +2,9 @@ name: project factory service docker Image CI
 
 on:
   push:
-    branches: [ "bff-cleanup" ]
+    branches: [ "campaign" ]
   pull_request:
-    branches: [ "mf-build" ]
+    branches: [ "campaign" ]
 
 jobs:
 
