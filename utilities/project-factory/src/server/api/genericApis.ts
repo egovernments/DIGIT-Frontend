@@ -350,7 +350,7 @@ async function getBoundarySheetData(request: any) {
     };
     const boundaryData = await getBoundaryRelationshipData(request, params);
     logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
-    if (request?.body?.Filters) {
+    if (request?.body?.Filters !=null) {
         const filteredBoundaryData = await generateFilteredBoundaryData(request);
         return await getDataSheetReady(filteredBoundaryData, request);
     }
