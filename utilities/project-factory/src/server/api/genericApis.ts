@@ -21,7 +21,7 @@ const getWorkbook = async (fileUrl: string, sheetName: string) => {
         }
         return workbook;
     } catch (error) {
-        throw Error("Error while fetching sheet")
+        throw Error("Error while fetching sheet data: " + error)
     }
 
 }

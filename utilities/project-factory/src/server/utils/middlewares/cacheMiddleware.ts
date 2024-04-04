@@ -12,8 +12,6 @@ const cacheMiddleware = (req: Request, res: Response, next: NextFunction) => {
       next();
     }
   } catch (error) {
-    // error.status = 400;
-    // error.code = "MISSING_PARAMETERS_IN_REQUESTINFO";
     errorResponder(error, req, res, next);
   }
 };
