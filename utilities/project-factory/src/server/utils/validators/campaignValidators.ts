@@ -6,6 +6,7 @@ import { getFacilityIds, matchFacilityData } from "../genericUtils";
 import { getFacilitiesViaIds } from "../../api/campaignApis";
 import { campaignDetailsSchema } from "../../config/campaignDetails";
 import Ajv from "ajv";
+import axios from "axios";
 
 
 async function fetchBoundariesInChunks(uniqueBoundaries: any[], request: any) {
@@ -206,9 +207,7 @@ async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenan
         hierarchyType: hierarchyType,
         includeParents: true
     };
-
     const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, { RequestInfo: request.body.RequestInfo }, params);
-
     if (!boundaryResponse?.TenantBoundary || !Array.isArray(boundaryResponse.TenantBoundary) || boundaryResponse.TenantBoundary.length === 0) {
         throw new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
     }
@@ -295,15 +294,22 @@ async function validateCampaignName(request: any) {
     }
     logger.info("searchBody : " + JSON.stringify(searchBody));
     logger.info("Url : " + config.host.projectFactoryBff + "project-factory/v1/project-type/search");
-    const searchResponse = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
-    if (Array.isArray(searchResponse?.CampaignDetails)) {
-        if (searchResponse?.CampaignDetails?.length > 0) {
-            throw new Error("Campaign name already exists");
+    try {
+        const searchResponse: any = await axios.post(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+        if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
+            if (searchResponse?.data?.CampaignDetails?.length > 0) {
+                throw new Error("Campaign name already exists");
+            }
         }
+        else {
+            throw new Error("Some error occured during campaignName search");
+        }
+    } catch (error: any) {
+        // Handle error for individual resource creation
+        logger.error(`Error searching campaign name ${error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error}`);
+        throw new Error(String(error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error))
     }
-    else {
-        throw new Error("Some error occured during campaignName search");
-    }
+
 }
 
 async function validateProjectCampaignRequest(request: any) {

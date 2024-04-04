@@ -7,6 +7,7 @@ import { getDataFromSheet, matchData, generateActivityMessage } from "../utils/g
 import { validateSheetData } from '../utils/validators/campaignValidators';
 import { getCampaignNumber } from "./genericApis";
 import { convertToTypeData } from "../utils/campaignUtils";
+import axios from "axios";
 const _ = require('lodash');
 
 
@@ -348,11 +349,14 @@ async function createProjectCampaignResourcData(request: any) {
         additionalDetails: {}
       };
       try {
-        await httpRequest("http://localhost:8080/project-factory/v1/data/_create", { RequestInfo: request.body.RequestInfo, ResourceDetails: resourceDetails });
+        await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+          RequestInfo: request.body.RequestInfo,
+          ResourceDetails: resourceDetails
+        });
       } catch (error: any) {
         // Handle error for individual resource creation
-        logger.error(`Error creating resource: ${error}`);
-        throw new Error(String(error))
+        logger.error(`Error creating resource: ${error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error}`);
+        throw new Error(String(error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error))
       }
     }
   }
