@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage, extractCodesFromBoundaryRelationshipResponse } from "../utils/index";
+import { correctParentValues, sortCampaignDetails, getDataFromSheet, convertToTypeData, matchData, generateActivityMessage, extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getBoundaryRelationshipData, getDataSheetReady } from "../utils/index";
 import { validateSheetData, validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse, validatedProjectResponseAndUpdateId } from "../utils/validator";
 // import { json } from 'body-parser';
 const _ = require('lodash');
@@ -358,43 +358,19 @@ function generateElementCode(sequence: any, parentCode: any, element: any) {
 }
 
 async function getBoundarySheetData(request: any) {
-  const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
-  const params = request?.body?.Filters;
-  const boundaryType = params?.boundaryType;
-  const boundaryRelationshipResponse = await httpRequest(url, request.body, params);
-  const boundaryData = boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
+  const params = {
+    ...request?.query,
+    includeChildren: true
+  };
+  const boundaryData = await getBoundaryRelationshipData(request, params);
   logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
-  if (boundaryData) {
-    const boundaryList = generateHierarchyList(boundaryData)
-    if (Array.isArray(boundaryList) && boundaryList.length > 0) {
-      const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
-      const string = boundaryCodes.join(', ');
-      const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: "pg", codes: string });
-
-      const boundaryCodeNameMapping: { [key: string]: string } = {};
-      boundaryEntityResponse?.Boundary?.forEach((data: any) => {
-        boundaryCodeNameMapping[data?.code] = data?.additionalDetails?.name;
-      });
-
-      const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
-      const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
-      const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
-      const headers = [...reducedHierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
-      const data = boundaryList.map(boundary => {
-        const boundaryParts = boundary.split(',');
-        const boundaryCode = boundaryParts[boundaryParts.length - 1];
-        const rowData = boundaryParts.concat(Array(Math.max(0, reducedHierarchy.length - boundaryParts.length)).fill(''));
-        const mappedRowData = rowData.map((cell: any, index: number) =>
-          index === reducedHierarchy.length ? '' : cell !== '' ? boundaryCodeNameMapping[cell] || cell : ''
-        );
-        const boundaryCodeIndex = reducedHierarchy.length;
-        mappedRowData[boundaryCodeIndex] = boundaryCode;
-        return mappedRowData;
-      });
-      return await createExcelSheet(data, headers);
-    }
+  if (request?.body?.Filters) {
+    const filteredBoundaryData = await generateFilteredBoundaryData(request);
+    return await getDataSheetReady(filteredBoundaryData, request);
   }
-  return { wb: null, ws: null, sheetName: null }; // Return null if no data found
+  else {
+    return await getDataSheetReady(boundaryData, request);
+  }
 }
 
 
@@ -533,7 +509,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
     });
     const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: request?.body?.ResourceDetails?.tenantId, codes: boundaryCodes.join(', ') });
     const codesFromResponse = boundaryEntityResponse.Boundary.map((boundary: any) => boundary.code);
-        const codeSet = new Set(codesFromResponse);  // Creating a set and filling it with the codes from the response
+    const codeSet = new Set(codesFromResponse);  // Creating a set and filling it with the codes from the response
     Array.from(boundaryMap.entries()).forEach(async ([boundaryName, boundaryCode]) => {   // Convert the Map to an array of entries and iterate over it
       const boundary = {
         tenantId: request?.body?.ResourceDetails?.tenantId,
@@ -549,6 +525,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
     });
     if (!(boundaries.length === 0)) {
       requestBody.Boundary = boundaries;
+      console.log(requestBody, "reqqqq")
       const response = await httpRequest(`${config.host.boundaryHost}boundary-service/boundary/_create`, requestBody, {}, 'POST',);
       console.log('Boundary entities created:', response);
     }
@@ -566,7 +543,6 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
     const requestBody = { "RequestInfo": request.body.RequestInfo } as { RequestInfo: any; BoundaryRelationship?: any };
     const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
     const params = {
-      "type": request?.body?.ResourceDetails?.type,
       "tenantId": request?.body?.ResourceDetails?.tenantId,
       "boundaryType": null,
       "codes": null,
@@ -992,6 +968,7 @@ export {
   getAutoGeneratedBoundaryCodes,
   getBoundaryCodesHandler,
   getHierarchy,
+  generateHierarchyList,
   createBoundaryEntities,
   createBoundaryRelationship,
   projectCreate,

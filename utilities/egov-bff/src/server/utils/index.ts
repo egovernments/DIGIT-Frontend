@@ -3,7 +3,7 @@ import { httpRequest } from "../utils/request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createAndUploadFile, createExcelSheet, createProjectCampaignResourcData, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, projectCreate, searchMDMS, getCount, } from "../api/index";
+import { createAndUploadFile, createExcelSheet, createProjectCampaignResourcData, getAllFacilities, getBoundarySheetData, getCampaignNumber, getResouceNumber, getSchema, getSheetData, projectCreate, searchMDMS, getCount, getHierarchy, generateHierarchyList } from "../api/index";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { Pagination } from "../utils/Pagination";
@@ -12,6 +12,7 @@ import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
+import { validateFilters } from "./validator";
 // import * as xlsx from 'xlsx-populate';
 const NodeCache = require("node-cache");
 const _ = require('lodash');
@@ -435,11 +436,6 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     const generatedResource: any = { generatedResource: newEntryResponse }
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
     if (type === 'boundary') {
-      // const BoundaryDetails = {
-      //   hierarchyType: "NITISH",
-      //   tenantId: "pg"
-      // };
-      // request.body.BoundaryDetails = BoundaryDetails;
       const dataManagerController = new dataManageController();
       const result = await dataManagerController.getBoundaryData(request, response);
       const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
@@ -1094,7 +1090,7 @@ function getChildParentMap(modifiedBoundaryData: any) {
 
 
 function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
-  console.log(withBoundaryCode, "withhhhhhhhhhhhhhhhhh")
+  logger.info(withBoundaryCode)
   const countMap = new Map<string, number>();
   const mappingMap = new Map<string, string>();
   withBoundaryCode.forEach((row: any[]) => {
@@ -1108,7 +1104,6 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
       }
     }
     mappingMap.set(row[len - 2], row[len - 1]);
-    console.log(mappingMap, "mapppppp");
   });
   return { mappingMap, countMap };
 }
@@ -1310,13 +1305,13 @@ async function processBoundary(boundary: any, boundaryCodes: any, boundaries: an
     boundaryCodes.add(boundary?.code);
   }
   if (!request?.body?.boundaryProjectMapping?.[boundary?.code]) {
-    request.body.boundaryProjectMapping[boundary?.code] = {
-      parent: parent ? parent : null,
-      projectId: null
-    }
+  request.body.boundaryProjectMapping[boundary?.code] = {
+  parent: parent ? parent : null,
+  projectId: null
+  }
   }
   else {
-    request.body.boundaryProjectMapping[boundary?.code].parent = parent
+  request.body.boundaryProjectMapping[boundary?.code].parent = parent
   }
   if (boundary?.includeAllChildren) {
     const params = {
@@ -1328,6 +1323,7 @@ async function processBoundary(boundary: any, boundaryCodes: any, boundaries: an
     logger.info("Boundary relationship search url : " + config.host.boundaryHost + config.paths.boundaryRelationship);
     logger.info("Boundary relationship search params : " + JSON.stringify(params));
     const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+    console.log(boundaryResponse?.TenantBoundary?.[0], "response")
     if (boundaryResponse?.TenantBoundary?.[0]) {
       logger.info("Boundary found " + JSON.stringify(boundaryResponse?.TenantBoundary?.[0]?.boundary));
       for (const childBoundary of boundaryResponse.TenantBoundary[0]?.boundary?.[0].children) {
@@ -1437,7 +1433,7 @@ async function appendSheetsToWorkbook(boundaryData: any[]) {
     }
     const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
     XLSX.utils.book_append_sheet(workbook, mainSheet, 'Sheet1');
-    
+
     for (const item of boundaryData) {
       if (item.District && !uniqueDistricts.includes(item.District)) {
         uniqueDistricts.push(item.District);
@@ -1461,22 +1457,117 @@ async function appendSheetsToWorkbook(boundaryData: any[]) {
   }
 }
 
-// async function getWorkbook(fileUrl: string, sheetName: string) {
-//   try {
-//     const headers = {
-//       'Content-Type': 'application/json',
-//       Accept: 'application/pdf',
-//     };
-//     const workbookData = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
-//     const workbook = XLSX.read(workbookData, { type: 'buffer' });
-//     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-//       throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
-//     }
-//     return workbook;
-//   } catch (error) {
-//     throw new Error("Error while fetching sheet");
-//   }
-// }
+async function generateFilteredBoundaryData(request: any) {
+  validateFilters(request);
+  const rootBoundary: any = (request?.body?.Filters?.boundaries).filter((boundary: any) => boundary.isRoot);
+  const params = {
+    ...request?.query,
+    includeChildren: true,
+    codes: rootBoundary?.[0]?.code
+  };
+  const boundaryData = await getBoundaryRelationshipData(request, params);
+  const filteredBoundaryList = filterBoundaries(boundaryData, request?.body?.Filters)
+  return filteredBoundaryList;
+}
+
+function filterBoundaries(boundaryData: any[], filters: any): any {
+  function filterRecursive(boundary: any): any {
+    const boundaryFilters = filters && filters.boundaries; // Accessing boundaries array from filters object
+    const filter = boundaryFilters?.find((f: any) => f.code === boundary.code && f.boundaryType === boundary.boundaryType);
+
+    if (!filter) {
+      return {
+        ...boundary,
+        children: boundary.children.map(filterRecursive)
+      };
+    }
+
+    if (!boundary.children.length) {
+      if (!filter.includeAllChildren) {
+        throw new Error("Boundary cannot have includeAllChildren filter false if it does not have any children");
+      }
+      // If boundary has no children and includeAllChildren is true, return as is
+      return {
+        ...boundary,
+        children: []
+      };
+    }
+
+    if (filter.includeAllChildren) {
+      // If includeAllChildren is true, return boundary with all children
+      return {
+        ...boundary,
+        children: boundary.children.map(filterRecursive)
+      };
+    }
+
+    const filteredChildren: any[] = [];
+    boundary.children.forEach((child: any) => {
+      const matchingFilter = boundaryFilters.find((f: any) => f.code === child.code && f.boundaryType === child.boundaryType);
+      if (matchingFilter) {
+        filteredChildren.push(filterRecursive(child));
+      }
+    });
+    return {
+      ...boundary,
+      children: filteredChildren
+    };
+  }
+  try {
+    const filteredData = boundaryData.map(filterRecursive);
+    return filteredData;
+  }
+  catch (e: any) {
+    const errorMessage = "Error occurred while fetching boundaries: " + e.message;
+    logger.error(errorMessage)
+    throw new Error(errorMessage);
+  }
+}
+
+
+async function getBoundaryRelationshipData(request: any, params: any) {
+  const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
+  const boundaryRelationshipResponse = await httpRequest(url, request.body, params);
+  return boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
+}
+
+async function getDataSheetReady(boundaryData: any, request: any) {
+  if (!boundaryData) {
+    throw new Error("No boundary data provided.");
+  }
+  const boundaryType = boundaryData?.[0].boundaryType;
+  const boundaryList = generateHierarchyList(boundaryData)
+  if (!Array.isArray(boundaryList) || boundaryList.length === 0) {
+    throw new Error("Boundary list is empty or not an array.");
+  }
+  const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
+  const string = boundaryCodes.join(', ');
+  const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: "pg", codes: string });
+
+  const boundaryCodeNameMapping: { [key: string]: string } = {};
+  boundaryEntityResponse?.Boundary?.forEach((data: any) => {
+    boundaryCodeNameMapping[data?.code] = data?.additionalDetails?.name;
+  });
+
+  const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
+  const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
+  const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
+  const headers = [...reducedHierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+  const data = boundaryList.map(boundary => {
+    const boundaryParts = boundary.split(',');
+    const boundaryCode = boundaryParts[boundaryParts.length - 1];
+    const rowData = boundaryParts.concat(Array(Math.max(0, reducedHierarchy.length - boundaryParts.length)).fill(''));
+    const mappedRowData = rowData.map((cell: any, index: number) =>
+      index === reducedHierarchy.length ? '' : cell !== '' ? boundaryCodeNameMapping[cell] || cell : ''
+    );
+    const boundaryCodeIndex = reducedHierarchy.length;
+    mappedRowData[boundaryCodeIndex] = boundaryCode;
+    return mappedRowData;
+  });
+  return await createExcelSheet(data, headers);
+}
+
+
 
 
 
@@ -1531,7 +1622,12 @@ export {
   processDataSearchRequest,
   getCodeMappingsOfExistingBoundaryCodes,
   processBasedOnAction,
-  appendSheetsToWorkbook
+  appendSheetsToWorkbook,
+  generateFilteredBoundaryData,
+  getBoundaryRelationshipData,
+  getDataSheetReady
 };
+
+
 
 
