@@ -31,8 +31,7 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
-import { Button } from "@egovernments/digit-ui-react-components";
-
+import Button from "../atoms/Button"
 
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { validateResolver } from "./validateResolver";
