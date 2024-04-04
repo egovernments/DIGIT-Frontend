@@ -1,3 +1,22 @@
+$box-shadow-color: #00000029;
+$border-color: rgba(214, 213, 212, 1);
+$highlight-color: rgba(244, 119, 56, 1);
+$highlight-color: rgba(244, 119, 56, 1);
+$border-color: rgba(214, 213, 212, 1);
+
+
+.navigator-componet-not-found {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    font-weight: 700;
+    font-size: 2rem;
+    color: rgb(0, 0, 0);
+}
+
+
 .modal-header {
     width: 30rem;
     font-weight: 700;
@@ -96,7 +115,7 @@
         background-color: #ffffff;
         border-top-left-radius: 0.5rem;
         border-bottom-left-radius: 0.5rem;
-        box-shadow: 0px 1px 2px 0px #00000029;
+        box-shadow: 0 0.063rem 0.125rem 0 $box-shadow-color;
     }
 
     .upload-section-options-active,
@@ -104,7 +123,7 @@
         min-height: 3.7rem;
         display: flex;
         align-items: center;
-        border-bottom: 1px rgba(214, 213, 212, 1) solid;
+        border-bottom: 0.063rem $border-color solid;
         cursor: pointer;
 
         p {
@@ -165,7 +184,7 @@
             color: rgba(177, 180, 182, 1);
             margin: 0 0.625rem;
             font-size: 1.25rem;
-            padding-top: 0px;
+            padding-top: 0;
             font-weight: 500;
         }
 
@@ -202,7 +221,7 @@
                 align-items: center !important;
                 min-width: 13.5rem;
                 height: 2.5rem;
-                border: 1px rgba(244, 119, 56, 1) solid;
+                border: 0.063rem $highlight-color solid;
 
                 .icon {
                     display: flex;
@@ -234,7 +253,7 @@
         flex-wrap: wrap;
 
         .upload-option-container-selected {
-            border: 2px rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
             color: rgba(244, 119, 56, 1);
         }
     }
@@ -255,7 +274,10 @@
         cursor: pointer;
 
         &:hover {
-            border: 2px rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
+            p{
+                color: rgba(244, 119, 56, 1);
+            }
         }
 
         p {
@@ -263,13 +285,13 @@
         }
 
         .upload-option-selected {
-            border: 0.125rem rgba(244, 119, 56, 1) solid;
+            border: 0.125rem $highlight-color solid;
             color: rgba(244, 119, 56, 1);
         }
 
         .select-button {
             justify-self: end;
-            border: 1px solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
             background-color: rgba(255, 255, 255, 1);
             width: 11rem;
             height: 2.5rem;
@@ -285,7 +307,7 @@
             align-items: center !important;
             justify-self: end;
             justify-content: center;
-            border: 1px solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
             background-color: rgba(244, 119, 56, 1);
             width: 11rem;
             height: 2.5rem;
@@ -300,7 +322,7 @@
         min-width: 90%;
         min-height: 10rem;
         padding-top: 0.625;
-        border: 1px rgba(214, 213, 212, 1);
+        border: 0.063rem $border-color;
         margin: 1rem 0;
         display: flex !important;
         flex-direction: column;
@@ -332,7 +354,7 @@
     }
 
     .uploaded-file {
-        border: 1px solid rgba(214, 213, 212, 1);
+        border: 0.063rem solid $border-color;
         min-height: 4.75rem;
         background-color: rgb(256, 252, 252);
         display: flex !important;
@@ -376,7 +398,7 @@
                 margin-left: 1rem;
                 min-width: 9rem;
                 height: 2.5rem;
-                border: 1px rgba(244, 119, 56, 1) solid;
+                border: 0.063rem $highlight-color solid;
                 background-color: white;
                 cursor: pointer;
             }
@@ -423,7 +445,7 @@
     }
 
     .file-upload-error-container {
-        border: 1px solid rgba(214, 213, 212, 1);
+        border: 0.063rem solid $border-color;
         min-height: 4.75rem;
         display: flex !important;
         flex-direction: column;
@@ -609,7 +631,7 @@
             padding: 1rem 0.5rem;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 1.25rem;
             background-color: white !important;
             border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
             border-radius: 0.25rem;
@@ -633,8 +655,8 @@
 
                 &::-webkit-scrollbar-thumb {
                     background: rgba(177, 180, 182, 1);
-                    border-radius: 10px;
-                    border: 2px solid #f0f0f0;
+                    border-radius: 0.625rem;
+                    border: 0.125rem solid #f0f0f0;
                 }
 
                 &::-webkit-scrollbar-thumb:hover {
@@ -643,18 +665,18 @@
 
                 h3 {
                     background-color: #f4f4f4;
-                    padding: 10px;
+                    padding: 0.625rem;
                     margin: 0;
                 }
 
                 .excel-table {
                     width: 100%;
-                    border: 1px solid #ccc;
+                    border: 0.063rem solid #ccc;
                     border-collapse: collapse;
 
                     th,
                     td {
-                        border: 1px solid #ccc;
+                        border: 0.063rem solid #ccc;
                         padding: 8px;
                         font-family: Arial, sans-serif;
                         font-size: 14px;
@@ -764,7 +786,10 @@
     width: 100%;
     background-color: rgb(255, 255, 255);
     padding: 1.3rem;
+    margin-top: 1.3rem;
     height: 33.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16);
 
     .add-icon {
         background-color: rgba(244, 119, 56, 1);
@@ -821,8 +846,8 @@
 
         &::-webkit-scrollbar-thumb {
             background: rgba(177, 180, 182, 1);
-            border-radius: 10px;
-            border: 2px solid #f0f0f0;
+            border-radius: 10;
+            border: 0.125rem solid #f0f0f0;
         }
 
         &::-webkit-scrollbar-thumb:hover {
@@ -913,13 +938,13 @@
             align-items: center;
         }
 
-        .select-and-input-wrapper-first{
+        .select-and-input-wrapper-first {
             margin-top: 0.8rem;
             width: 100%;
             display: flex;
             align-items: center;
         }
-        
+
 
         .headerbar {
             padding: 0;
@@ -979,7 +1004,7 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             width: 100%;
-            border: 1px solid rgba(80, 90, 95, 1);
+            border: 0.063rem solid rgba(80, 90, 95, 1);
             background-color: rgb(255, 255, 255, 0);
             padding: 0.5rem;
             font-weight: 400;
@@ -1013,7 +1038,7 @@
         align-items: center;
         justify-content: center;
         background: rgba(255, 255, 255, 1);
-        border: 0.063rem solid rgba(244, 119, 56, 1);
+        border: 0.063rem solid $highlight-color;
 
         p {
             color: rgba(244, 119, 56, 1);
@@ -1031,6 +1056,7 @@
 .rule-engine-section {
     display: flex;
     flex-direction: column;
+    margin-top: 1.3rem;
 
     .rule-engine-body {
         font-family: Roboto;
@@ -1041,7 +1067,8 @@
         background-color: rgb(255, 255, 255);
         padding: 1.3rem;
         height: 33.5rem;
-
+        box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16);
+        border-radius: 0.25rem;
 
         .heading {
             padding: 0.5rem 0;
@@ -1079,8 +1106,8 @@
 
             &::-webkit-scrollbar-thumb {
                 background: rgba(177, 180, 182, 1);
-                border-radius: 10px;
-                border: 2px solid #f0f0f0;
+                border-radius: 10;
+                border: 0.125rem solid #f0f0f0;
             }
 
             &::-webkit-scrollbar-thumb:hover {
@@ -1171,14 +1198,14 @@
                 align-items: center;
             }
 
-            .select-and-input-wrapper-first{
+            .select-and-input-wrapper-first {
                 margin-top: 0rem;
                 width: 100%;
                 display: flex;
                 align-items: center;
             }
-            
-            .user-input-wrapper{
+
+            .user-input-wrapper {
                 width: 100%;
             }
 
@@ -1225,7 +1252,7 @@
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 width: 100%;
-                border: 1px solid rgba(80, 90, 95, 1);
+                border: 0.063rem solid rgba(80, 90, 95, 1);
                 background-color: rgb(255, 255, 255, 0);
                 padding: 0.5rem;
                 font-weight: 400;
@@ -1274,7 +1301,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 1);
-            border: 0.063rem solid rgba(244, 119, 56, 1);
+            border: 0.063rem solid $highlight-color;
 
             p {
                 color: rgba(244, 119, 56, 1);
@@ -1341,24 +1368,39 @@
             }
         }
     }
+}
 
 
+.create-microplan {
 
-    .next-previous-bar {
-        display: flex;
-        bottom: 0;
-        left: 0;
-        /* Adjust as needed */
-        width: 100%;
-        /* Adjust as needed */
-        background-color: #ffffff;
-        /* Adjust as needed */
-        padding: 10px;
-        /* Adjust as needed */
-        box-shadow: rgba(0, 0, 0, 0.16) 0 -2px 8px;
-        max-width: 480px;
-        z-index: 100;
-        text-align: right;
+    .custom-action-bar,
+    .custom-action-bar-no-first-button {
+        padding: 1.5rem 1.5rem 1.5rem 5.3rem;
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        height: 5.5rem;
+
+        .custom-button {
+            width: 12.5rem;
+            border: 0.063rem red solid;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            h2 {
+                width: fit-content !important;
+            }
+
+            .icon {
+                margin: 0 0 0 1rem !important;
+            }
+        }
+
+    }
+
+    .custom-action-bar-no-first-button {
+        justify-content: end;
     }
 
 }

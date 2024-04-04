@@ -1,11 +1,16 @@
-import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+// import { ActionBar, FormComposerV2 } from "@egovernments/digit-ui-react-components";
+// import { ActionBar, Button, Stepper} from "@egovernments/digit-ui-components";
+import { ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import TimelineMicroplan from "../../components/TimelineMicroplan";
 import { timeLineOptions } from "../../configs/timeLineOptions.json";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
+import { Button } from "@egovernments/digit-ui-react-components";
+import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
+import Navigator from "../../components/Nagivator";
 
 export const components = {
   Upload,
@@ -13,40 +18,30 @@ export const components = {
   RuleEngine,
 };
 
+// Main component for creating a microplan
 const CreateMicroplan = () => {
-  const [currentPage, setCurrentPage] = useState();
+  // States
+  const [microplanData, setMicroplanData] = useState();
+
+  const { t } = useTranslation();
+
+  // useEffect to store data in session storage
   useEffect(() => {
-    if (!timeLineOptions || timeLineOptions.length === 0) return;
-    setCurrentPage(timeLineOptions[0]);
-  }, [timeLineOptions]);
+    if (!microplanData) return;
+    Digit.SessionStorage.set("microplanData", microplanData);
+  }, [microplanData]);
 
-  const nextStep = useCallback(() => {
-    setCurrentPage((previous) => timeLineOptions[previous?.id + 1]);
-  }, []);
-
-  const previousStep = useCallback(() => {
-    setCurrentPage((previous) => timeLineOptions[previous?.id - 1]);
+  // useEffect to store data in session storage
+  useEffect(() => {
+    const data = Digit.SessionStorage.get("microplanData");
+    setMicroplanData(data);
   }, []);
 
   return (
-    <div>
-      <TimelineMicroplan currentStep={currentPage?.id} onStepClick={() => ""} />
-      <LoadCustomComponent component={components[currentPage?.component]} />
-      <FormComposerV2
-        onSubmit={nextStep}
-        actionClassName={"next-previous-bar"}
-        showMultipleCardsWithoutNavs={true}
-        showSecondaryLabel={currentPage?.id > 0 ? true : false}
-        secondaryLabel={"PREVIOUS"}
-        onSecondayActionClick={previousStep}
-        label={currentPage?.id < timeLineOptions.length - 1 ? "NEXT" : "SUBMIT"}
-      />
+    <div className="create-microplan">
+      <Navigator config={timeLineOptions} checkDataCompleteness={true} stepNavigationActive={true} components={components} childProps={{microplanData, setMicroplanData}}/>
     </div>
   );
-};
-const LoadCustomComponent = (props) => {
-  if (!props.component) return null;
-  return <props.component />;
 };
 
 export default CreateMicroplan;

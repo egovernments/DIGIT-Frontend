@@ -2,7 +2,6 @@ import { Close, FileDownload } from "@egovernments/digit-ui-svg-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-
 export const ButtonType1 = (props) => {
   return (
     <div className="button-type-1">
@@ -14,9 +13,11 @@ export const ButtonType1 = (props) => {
 export const ButtonType2 = (props) => {
   return (
     <div className="button-type-2">
-      <div className="icon">
-        <FileDownload fill={"white"} height={"24"} width={"24"}  />
-      </div>
+      {props.showDownloadIcon && (
+        <div className="icon">
+          <FileDownload fill={"white"} height={"24"} width={"24"} />
+        </div>
+      )}
       <p>{props.text}</p>
     </div>
   );
@@ -24,10 +25,8 @@ export const ButtonType2 = (props) => {
 
 export const ModalHeading = (props) => {
   return (
-    <p className={`modal-header ${props.className?props.className:""}`} style={props.style}>
+    <p className={`modal-header ${props.className ? props.className : ""}`} style={props.style}>
       {props.label}
     </p>
   );
 };
-
-  

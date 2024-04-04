@@ -63,7 +63,6 @@ const App = ({ path }) => {
       clearSessionFormDataView();
     }
   }, [location]);
-
   return (
     <React.Fragment>
       <div className="wbh-header-container">
