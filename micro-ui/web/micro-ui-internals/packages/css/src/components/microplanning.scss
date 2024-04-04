@@ -5,6 +5,16 @@ $highlight-color: rgba(244, 119, 56, 1);
 $border-color: rgba(214, 213, 212, 1);
 
 
+.navigator-componet-not-found {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    font-weight: 700;
+    font-size: 2rem;
+    color: rgb(0, 0, 0);
+}
 
 
 .modal-header {
@@ -265,6 +275,9 @@ $border-color: rgba(214, 213, 212, 1);
 
         &:hover {
             border: 0.125rem $highlight-color solid;
+            p{
+                color: rgba(244, 119, 56, 1);
+            }
         }
 
         p {

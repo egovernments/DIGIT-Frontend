@@ -52,8 +52,10 @@ const Upload = ({
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
-    if (!setCheckDataCompletion) return;
-    setCheckDataCompletion("valid");
+    if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    const valueList = fileDataList ? Object.values(fileDataList) : [];
+    if (valueList.length !== 0 && fileDataList.Microplanning_Population && fileDataList.Microplanning_Population.error === null) setCheckDataCompletion("valid");
+    else setCheckDataCompletion("invalid");
   }, [checkDataCompletion]);
 
   // UseEffect to store current data
@@ -428,7 +430,10 @@ const Upload = ({
   const deleteFile = () => {
     // Digit.SessionStorage.del(fileData.id);
     setResourceMapping([]);
-    setFileDataList({ ...fileDataList, [fileData.id]: undefined });
+    setFileDataList( previous => {
+      delete previous[fileData.id];
+      return previous;
+    });
     setFileData(undefined);
     setDataPresent(false);
     setUploadedFileError(null);
@@ -725,18 +730,30 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 
   // Component for rendering individual upload option container
   const UploadOptionContainer = ({ item, selectedFileType, selectFileTypeHandler }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+    };
+  
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+    };
+    
     return (
       <div
         key={item.id}
         className="upload-option"
         style={selectedFileType.id === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <CustomIcon
           key={item.id}
           Icon={Icons[item.iconName]}
           width={"2.5rem"}
           height={"3rem"}
-          color={selectedFileType.id === item.id ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"}
+          color={selectedFileType.id === item.id || isHovered ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"}
         />
         <p>{t(item.code)}</p>
         <button
