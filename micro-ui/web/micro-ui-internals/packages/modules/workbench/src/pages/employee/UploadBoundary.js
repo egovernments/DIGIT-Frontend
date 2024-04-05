@@ -125,9 +125,9 @@ const UploadBoundary = () => {
 
   return (
     <React.Fragment>
-      <Header className="works-header-search">{t("WBH_UPLOAD_BOUNDARY")}</Header>
+      <Header className="works-header-search">{t("HCM_UPLOAD_BOUNDARY")}</Header>
       <Card className="workbench-create-form">
-        <Header className="digit-form-composer-sub-header">{t("WBH_UPLOAD_BOUNDARY")}</Header>
+        <Header className="digit-form-composer-sub-header">{t("WBH_HIERARCHY_DETAILS")}</Header>
 
         <LabelFieldPair style={{ alignItems: "flex-start", paddingLeft: "1rem" }}>
           <CardLabel style={{ marginBottom: "0.4rem", fontWeight: "700" }}>{t("WBH_HIERARCHY_TYPE")}</CardLabel>

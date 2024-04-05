@@ -47,6 +47,7 @@ const LevelCards = ({ onSelect, formData, props }) => {
           <LabelFieldPair card key={index}>
             <CardLabel style={{ marginTop: "0px" }} className="card-details">
               {t("HCM_LEVEL") + " " + (index + 1)}
+              <span className="mandatory-span">*</span>
             </CardLabel>
             <TextInput
               className="field"
