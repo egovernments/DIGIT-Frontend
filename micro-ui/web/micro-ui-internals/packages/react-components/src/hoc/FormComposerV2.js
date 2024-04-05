@@ -31,7 +31,7 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
-import { Button } from "@egovernments/digit-ui-react-components";
+import Button from "../atoms/Button"
 
 
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -741,7 +741,7 @@ export const FormComposer = (props) => {
                   >
                     {t(field.label)}
                     {field?.appendColon ? ' : ' : null}
-                    {field.isMandatory ? " * " : null}
+                    {field.isMandatory ? <span className="mandatory-span">*</span> : null}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
@@ -881,7 +881,7 @@ export const FormComposer = (props) => {
           
           <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
           {props.secondaryLabel && props.showSecondaryLabel && (
-            <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
+            <Button className="previous-button" icon={props.previousIcon} variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
           )}
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
