@@ -387,9 +387,9 @@ function validateFilters(request: any, boundaryData: any[]) {
 function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string, string>): void {
     for (const boundary of boundaries) {
         if (!boundaryMap.has(boundary.code)) {
-            throw new Error(`Boundary data '${boundary.code}' in Filters of requestBody not found for given hierarchy.`);
+            throw new Error(`Boundary data with code '${boundary.code}' specified in 'Filters' of the request body was not found for the given hierarchy.`);
         } else if (boundaryMap.get(boundary.code) !== boundary.boundaryType) {
-            throw new Error(`Boundary type mismatch for code '${boundary.code}' in Filters of requestBody. Expected: ${boundary.boundaryType}`);
+            throw new Error(`Boundary type mismatch for code '${boundary.code}' specified in 'Filters' of the request body. Expected type: ${boundary.boundaryType}, but found a different type.`);
         }
     }
 }
