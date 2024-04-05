@@ -1,8 +1,8 @@
-import React from "react";
+import React,{Fragment} from "react";
 import { CheckSvg } from "./svgindex";
 import PropTypes from "prop-types";
 
-const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pageType, style, index, isLabelFirst,  ...props }) => {
+const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pageType, style, index, isLabelFirst,customLabelMarkup,  ...props }) => {
   const userType = pageType || Digit.SessionStorage.get("userType");
   let wrkflwStyle = props.styles;
   if (isLabelFirst) {
@@ -52,7 +52,14 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pag
           </p>
         </div>
         <p className="label" style={style ? style : null}>
-          {label}
+        {customLabelMarkup ? 
+          <>
+            <p>{t("COMMON_CERTIFY_ONE")}</p>
+            <br />
+            <p>
+            <b> {t("ES_COMMON_NOTE")}</b>{t("COMMON_CERTIFY_TWO")}
+            </p>
+            </> : label}
         </p>
       </div>
     );
