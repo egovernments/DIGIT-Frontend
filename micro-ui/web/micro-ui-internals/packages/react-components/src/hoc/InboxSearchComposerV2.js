@@ -44,7 +44,7 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
     // if(Object.keys(presets).length > 0) configs = Digit.Utils.configUpdater(configs)
 
     const [enable, setEnable] = useState(false);
-    const [state, dispatch] = useReducer(reducer, initialInboxState);
+    const [state, dispatch] = useReducer(reducer, initialInboxState(config));
     
     //for mobile view
     const [type, setType] = useState("");
@@ -93,10 +93,10 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
     
     //adding this effect in case of screen refresh
     useEffect(() => {
-        if(_.isEqual(state, initialInboxState)){
+        if(_.isEqual(state, initialInboxState(config))){
             dispatch({
                 type:"obj",
-                updatedState:Object?.keys(session)?.length > 0 ? session : initialInboxState
+                updatedState:Object?.keys(session)?.length > 0 ? session : initialInboxState(config)
             })
         } 
     },[])

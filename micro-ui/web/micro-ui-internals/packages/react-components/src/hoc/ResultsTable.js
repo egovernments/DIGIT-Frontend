@@ -81,7 +81,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         })
     }, [config, searchResult])
 
-    const defaultValuesFromSession = session?.tableForm ? {...session?.tableForm} : {limit:10,offset:0}
+    const defaultValuesFromSession = config?.customDefaultPagination ? config?.customDefaultPagination : (session?.tableForm ? {...session?.tableForm} : {limit:10,offset:0})
+    
     const {
         register,
         handleSubmit,
@@ -137,8 +138,8 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     }, []);
 
     useEffect(() => {
-        register("offset",session?.tableForm?.offset || 0);
-        register("limit",session?.tableForm?.limit || 10);
+        register("offset",session?.tableForm?.offset || config?.customDefaultPagination?.offset|| 0);
+        register("limit",session?.tableForm?.limit || config?.customDefaultPagination?.limit || 10);
     }, [register]);
 
     function onPageSizeChange(e) {
