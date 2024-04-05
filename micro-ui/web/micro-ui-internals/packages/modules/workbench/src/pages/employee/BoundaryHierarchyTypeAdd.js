@@ -3,11 +3,7 @@ import { FormComposerV2, TextInput, Button, Card, CardLabel } from "@egovernment
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
-import { SubmitBar } from "@egovernments/digit-ui-react-components";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-react-components";
-import LevelCards from "../../components/LevelCards";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
 
 const BoundaryHierarchyTypeAdd = () => {
