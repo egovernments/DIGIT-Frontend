@@ -20,7 +20,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
     const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
-    const [state, dispatch] = useReducer(reducer, initialInboxState(config));
+    const [state, dispatch] = useReducer(reducer, initialInboxState(configs));
     const [showToast, setShowToast] = useState(false);
     //for mobile view
     const [type, setType] = useState("");
