@@ -55,8 +55,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const { t } = useTranslation();
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [dateRange, setDateRange] = useState({
-    startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
-    endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+    startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate ?? '',
+    endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate ?? '',
   });
 
   useEffect(() => {
