@@ -89,7 +89,7 @@ const CreateMicroplan = () => {
   };
 
   const updatePlanConfiguration = async (body) => {
-    body = body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+    body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
