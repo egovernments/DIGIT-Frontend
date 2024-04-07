@@ -1,9 +1,9 @@
 import React  from "react";
-const Mapping = ({}) => {
+const Mapping = () => {
 
     return (
         <div>
-            Hi
+            Demo
         </div>
     )
 };

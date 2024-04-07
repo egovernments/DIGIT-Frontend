@@ -1,8 +1,8 @@
 import { logoutV1 } from "./logout";
 import utils from "../utils";
 import useCreatePlanConfig from "./useCreatePlanConfig";
-import useSearchPlanConfig from "./useCreatePlanConfig";
-import useUpdatePlanConfig from "./useCreatePlanConfig";
+import useSearchPlanConfig from "./useSearchPlanConfig";
+import useUpdatePlanConfig from "./useUpdatePlanConfig";
 
 const UserService = {
   logoutV1,
