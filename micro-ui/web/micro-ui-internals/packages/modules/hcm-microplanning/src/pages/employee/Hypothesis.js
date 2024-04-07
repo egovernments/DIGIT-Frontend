@@ -49,17 +49,15 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   }, [assumptions]);
 
   // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "hypothesisAssumptions" }]);
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "HypothesisAssumptions" }]);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let hypothesisAssumptions = data["hcm-microplanning"]["hypothesisAssumptions"];
+    let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
     if (!hypothesisAssumptions) return;
-
     const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
-
     setHypothesisAssumptionsList(temp.assumptions);
     setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
   }, [data]);

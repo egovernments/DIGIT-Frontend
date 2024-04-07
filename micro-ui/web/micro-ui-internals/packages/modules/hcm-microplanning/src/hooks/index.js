@@ -1,19 +1,24 @@
 import { logoutV1 } from "./logout";
 import utils from "../utils";
+import useCreatePlanConfig from "./useCreatePlanConfig";
+import useSearchPlanConfig from "./useCreatePlanConfig";
+import useUpdatePlanConfig from "./useCreatePlanConfig";
 
 const UserService = {
   logoutV1,
 };
 
 const microplan = {
-  
+  useCreatePlanConfig,
+  useSearchPlanConfig,
+  useUpdatePlanConfig,
 };
 
 const contracts = {};
 
 const Hooks = {
   attendance: {
-    update: () => { },
+    update: () => {},
   },
   microplan,
   contracts,
@@ -21,7 +26,7 @@ const Hooks = {
 
 const Utils = {
   browser: {
-    sample: () => { },
+    sample: () => {},
   },
   microplan: {
     ...utils,
