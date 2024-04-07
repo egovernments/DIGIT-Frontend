@@ -61,18 +61,18 @@ const CreateMicroplan = () => {
 
       if (microplanData && !microplanData.planConfigurationId) {
         await CreateMutate(body, {
+          onSuccess: async (data) => {
+            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
+            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+            setTimeout(() => {
+              setToastCreateMicroplan(undefined);
+            }, 2000);
+          },
           onError: (error, variables) => {
             setToastCreateMicroplan({
               message: t("ERROR_DATA_NOT_SAVED"),
               state: "error",
             });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-          onSuccess: async (data) => {
-            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
-            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
             setTimeout(() => {
               setToastCreateMicroplan(undefined);
             }, 2000);
@@ -81,18 +81,18 @@ const CreateMicroplan = () => {
       } else if (microplanData && microplanData.planConfigurationId) {
         body = body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
         await UpdateMutate(body, {
+          onSuccess: async (data) => {
+            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
+            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+            setTimeout(() => {
+              setToastCreateMicroplan(undefined);
+            }, 2000);
+          },
           onError: (error, variables) => {
             setToastCreateMicroplan({
               message: t("ERROR_DATA_NOT_SAVED"),
               state: "error",
             });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-          onSuccess: async (data) => {
-            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
-            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
             setTimeout(() => {
               setToastCreateMicroplan(undefined);
             }, 2000);
@@ -112,7 +112,7 @@ const CreateMicroplan = () => {
           if (data && data?.currentPage) currentPage = data.currentPage;
           if (currentPage && props && props?.setCurrentPage && timeLineOptions.find((item) => item.id === currentPage?.id)) {
             props.setCurrentPage(currentPage);
-            return true
+            return true;
           }
           break;
         case "save":

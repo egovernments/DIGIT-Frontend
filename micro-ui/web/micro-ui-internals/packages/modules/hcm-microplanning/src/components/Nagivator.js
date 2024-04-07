@@ -67,6 +67,7 @@ const Navigator = (props) => {
 
   // Function to navigate to the previous step
   const previousStep = useCallback(() => {
+    ChangeCurrentPage(props.config[previous?.id - 1]);
     setCurrentPage((previous) => props.config[previous?.id - 1]);
   }, []);
 
