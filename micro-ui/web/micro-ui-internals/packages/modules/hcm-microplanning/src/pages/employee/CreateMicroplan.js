@@ -58,50 +58,57 @@ const CreateMicroplan = () => {
     async (currentPage) => {
       if (!microplanData || currentPage?.name !== "FORMULA_CONFIGURATION") return;
       let body = mapDataForApi(microplanData, operatorsObject);
-
       if (microplanData && !microplanData.planConfigurationId) {
-        await CreateMutate(body, {
-          onSuccess: async (data) => {
-            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
-            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-          onError: (error, variables) => {
-            setToastCreateMicroplan({
-              message: t("ERROR_DATA_NOT_SAVED"),
-              state: "error",
-            });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-        });
+        createPlanConfiguration(body);
       } else if (microplanData && microplanData.planConfigurationId) {
-        body = body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
-        await UpdateMutate(body, {
-          onSuccess: async (data) => {
-            setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
-            setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-          onError: (error, variables) => {
-            setToastCreateMicroplan({
-              message: t("ERROR_DATA_NOT_SAVED"),
-              state: "error",
-            });
-            setTimeout(() => {
-              setToastCreateMicroplan(undefined);
-            }, 2000);
-          },
-        });
+        updatePlanConfiguration(body);
       }
     },
     [microplanData, UpdateMutate, CreateMutate]
   );
+
+  const createPlanConfiguration = async (body) => {
+    await CreateMutate(body, {
+      onSuccess: async (data) => {
+        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
+        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+      onError: (error, variables) => {
+        setToastCreateMicroplan({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+    });
+  };
+
+  const updatePlanConfiguration = async (body) => {
+    body = body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+    await UpdateMutate(body, {
+      onSuccess: async (data) => {
+        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
+        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+      onError: (error, variables) => {
+        setToastCreateMicroplan({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+    });
+  };
 
   const setCurrentPageExternally = useCallback(
     (props) => {
@@ -166,7 +173,7 @@ const mapDataForApi = (data, Operators) => {
         return item;
       }),
       operations: data?.ruleEngine?.map((item) => {
-        const data = { ...item };
+        const data = JSON.parse(JSON.stringify(item));
         delete data.id;
         const operator = Operators.find((e) => e.name === data.operator);
         if (operator && operator.code) data.operator = operator?.code;

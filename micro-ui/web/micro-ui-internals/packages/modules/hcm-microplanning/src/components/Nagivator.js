@@ -48,7 +48,7 @@ const Navigator = (props) => {
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
     if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (props.nextEventAddon !== undefined) {
+    if (typeof props.nextEventAddon === 'function') {
       props.nextEventAddon(currentPage);
     }
     if (navigationEvent && navigationEvent.name === "next") nextStep();
@@ -60,21 +60,21 @@ const Navigator = (props) => {
   // Function to navigate to the next step
   const nextStep = useCallback(() => {
     if (!currentPage) return;
-    ChangeCurrentPage(props.config[currentPage?.id + 1]);
+    changeCurrentPage(props.config[currentPage?.id + 1]);
     if (currentPage?.id + 1 > props.config.length - 1) return;
     setCurrentPage((previous) => props.config[previous?.id + 1]);
   }, [currentPage]);
 
   // Function to navigate to the previous step
   const previousStep = useCallback(() => {
-    ChangeCurrentPage(props.config[previous?.id - 1]);
+    changeCurrentPage(props.config[previous?.id - 1]);
     setCurrentPage((previous) => props.config[previous?.id - 1]);
   }, []);
 
   // Function to handle step click and navigate to the selected step
   const onStepClick = useCallback((index) => {
     const newCurrentPage = props.config.find((item) => item.id === index);
-    ChangeCurrentPage(newCurrentPage);
+    changeCurrentPage(newCurrentPage);
     setCurrentPage(newCurrentPage);
   });
 
@@ -89,7 +89,7 @@ const Navigator = (props) => {
   // Function to handle step click
   const stepClickHandler = useCallback(
     (index) => {
-      if (!props.stepNavigationActive) return;
+      if (typeof props.stepNavigationActive !== 'function') return;
       if (props.checkDataCompleteness && LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) {
         setCheckDataCompletion("true");
         setNavigationEvent({ name: "step", step: index });
@@ -101,7 +101,7 @@ const Navigator = (props) => {
   );
 
   // Function to set current page
-  const ChangeCurrentPage = (newPage) => {
+  const changeCurrentPage = (newPage) => {
     if (props.setCurrentPageExternally) {
       props.setCurrentPageExternally({ currentPage:newPage, method: "save" });
     }
