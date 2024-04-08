@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { CardText, LabelFieldPair, Card, CardHeader, CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, Card, CardHeader, CardLabel, CardSubHeader, TypeSelectCard } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Dropdown, InfoCard, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { render } from "react-dom";
 function SelectingBoundaries() {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -13,6 +14,7 @@ function SelectingBoundaries() {
   const [boundaryData, setBoundaryData] = useState({});
   const [parentArray, setParentArray] = useState(null);
   const [boundaryTypeDataresult, setBoundaryTypeDataresult] = useState(null);
+  const [optionsData, setOptionsData] = useState([]);
 
   const reqCriteriaBoundaryHierarchySearch = {
     url: "/boundary-service/boundary-hierarchy-definition/_search",
@@ -30,22 +32,23 @@ function SelectingBoundaries() {
   const handleChange = (data) => {
     setHierarchy(data);
     setShowComponent(true);
-    setParent(null);
 
     // to make the boundary data object
     const boundaryDataObj = {};
     data.boundaryHierarchy.forEach((boundary) => {
-      boundaryDataObj[boundary.boundaryType] = null;
+      boundaryDataObj[boundary.boundaryType] = [];
     });
     setBoundaryData(boundaryDataObj);
     const boundaryWithTypeNullParent = data.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === null);
     // Set the boundary type with null parentBoundaryType
     if (boundaryWithTypeNullParent) {
       setBoundaryType(boundaryWithTypeNullParent.boundaryType);
-    } else {
-      setBoundaryType(null);
     }
+    //  else {
+    //   setBoundaryType(null);
+    // }
   };
+  console.log("boundaryType", boundaryType);
 
   // const reqCriteriaBoundaryTypeSearch = {
   //   url: "/boundary-service/boundary-relationships/_search",
@@ -62,8 +65,7 @@ function SelectingBoundaries() {
   //   },
   // };
   // const { data: boundaryTypeDataresult } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryTypeSearch);
-
-
+  const newData = [];
   const fetchBoundaryTypeData = async () => {
     if (parentArray === null) {
       const reqCriteriaBoundaryTypeSearch = Digit.CustomService.getResponse({
@@ -77,8 +79,12 @@ function SelectingBoundaries() {
         body: {},
       });
       const boundaryTypeData = await reqCriteriaBoundaryTypeSearch;
-      setBoundaryTypeDataresult(boundaryTypeData);
+      console.log("boundaryTypeData", boundaryTypeData);
+      setBoundaryTypeDataresult([boundaryTypeData]);
     } else {
+      const existingCodes = optionsData.flatMap((item) => item.TenantBoundary.flatMap((boundary) => boundary.boundary.map((b) => b.code)));
+      console.log("existingCodes", existingCodes);
+      
       for (const parentCode of parentArray) {
         // console.log("parentCde", parentCode);
         const reqCriteriaBoundaryTypeSearch = Digit.CustomService.getResponse({
@@ -86,21 +92,39 @@ function SelectingBoundaries() {
           params: {
             tenantId: tenantId,
             hierarchyType: hierarchy.hierarchyType,
-            boundaryType: boundaryType,
+            boundaryType: boundaryType, 
             parent: parentCode,
           },
           body: {},
         });
         const boundaryTypeData = await reqCriteriaBoundaryTypeSearch;
-        setBoundaryTypeDataresult(boundaryTypeData);
+        console.log("boundaryTypeData",boundaryTypeData);
+        newData.push(boundaryTypeData);
+        // const newCodes = boundaryTypeData.TenantBoundary.flatMap((boundary) => boundary.boundary.map((b) => b.code));
+        // if(newCodes.length==0) optionsData.push(boundaryTypeData);
+        // const uniqueNewCodes = newCodes.filter((code) => !existingCodes.includes(code));
+        // if (uniqueNewCodes.length > 0) {
+        //   optionsData.push(boundaryTypeData);
+        //   existingCodes.push(...uniqueNewCodes);
+        // }
+        
+        // setBoundaryTypeDataresult(boundaryTypeData);
+        // optionsData.push(boundaryTypeData);
+        // setOptionsData(optionsData);
       }
+      // const updatedOptionsData = [...optionsData, ...newData];
+        console.log("optionsData", optionsData);
+      //   setOptionsData(updatedOptionsData);
+      setBoundaryTypeDataresult(newData);
+      
     }
   };
-
+  console.log("boundaryTypeDataresult", boundaryTypeDataresult);
 
   useEffect(() => {
-      fetchBoundaryTypeData();
-  }, [boundaryType, parentArray , boundaryTypeDataresult]);
+    console.log("parentArray", parentArray);
+    fetchBoundaryTypeData();
+  }, [boundaryType, parentArray]);
 
   // const fetchBoundaryData = async (parentCode) => {
   //   const reqCriteriaBoundaryTypeSearch = {
@@ -142,19 +166,22 @@ function SelectingBoundaries() {
   // }, [hierarchy, boundaryData, parentArray]);
 
   useEffect(() => {
-    if (boundaryTypeDataresult && boundaryTypeDataresult.TenantBoundary) {
+    if (boundaryTypeDataresult && boundaryTypeDataresult[0]?.TenantBoundary) {
       if (parentArray.length === 0) {
         // Check if boundaryData is an empty object
         const updatedBoundaryData = {
           ...boundaryData,
-          [boundaryTypeDataresult.TenantBoundary[0]?.boundary[0]?.boundaryType]: boundaryTypeDataresult.TenantBoundary[0]?.boundary,
+          [boundaryTypeDataresult?.[0].TenantBoundary[0]?.boundary[0]?.boundaryType]: boundaryTypeDataresult?.[0]?.TenantBoundary[0]?.boundary,
         };
         setBoundaryData(updatedBoundaryData);
       }
     }
   }, [boundaryTypeDataresult]);
 
+  console.log("boundaryData", boundaryData);
+
   const handleBoundary = (data, boundary) => {
+    debugger;
     let res = [];
     data &&
       data?.map((ob) => {
@@ -165,31 +192,50 @@ function SelectingBoundaries() {
     const parentBoundaryEntry = hierarchy ? hierarchy?.boundaryHierarchy.find((e) => e.parentBoundaryType === boundary?.boundaryType) : null;
     setParentBoundaryType(parentBoundaryEntry?.parentBoundaryType);
     setBoundaryType(parentBoundaryEntry?.boundaryType);
-    setParent(data?.[0]?.[1]?.code);
+    // setParent(data?.[0]?.[1]?.code);
     const codes = res.map((item) => item.code);
     console.log("codes", codes);
-    setParentArray(codes);
+    if (JSON.stringify(codes) !== JSON.stringify(parentArray)) {
+      setParentArray(codes);
+    }
     const updatedBoundaryData = { ...boundaryData };
-    const newBoundaryData = boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary;
+    const newBoundaryData = boundaryTypeDataresult?.[0]?.TenantBoundary?.[0]?.boundary;
     console.log("new", newBoundaryData);
+    console.log("updatedBoundaryData",boundaryTypeDataresult?.[0].TenantBoundary?.[0]?.boundary?.[0]?.boundaryType);
 
-    
-    if (updatedBoundaryData[boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType]) {
-      const existingData = updatedBoundaryData[boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType];
+    if (updatedBoundaryData[boundaryTypeDataresult?.[0].TenantBoundary?.[0]?.boundary?.[0]?.boundaryType]) {
+      const existingData = updatedBoundaryData[boundaryTypeDataresult?.[0].TenantBoundary?.[0]?.boundary?.[0]?.boundaryType];
       const newData = newBoundaryData.filter((newItem) => !existingData.some((existingItem) => existingItem.code === newItem.code));
-      updatedBoundaryData[boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType] = [...existingData, ...newData];
-      console.log("updatedBoundaryData",updatedBoundaryData);
+      updatedBoundaryData[boundaryTypeDataresult?.[0].TenantBoundary?.[0]?.boundary?.[0]?.boundaryType] = [...existingData, ...newData];
+      // console.log("updatedBoundaryData",updatedBoundaryData);
     } else {
       // If there's no existing data, simply add the new data
-      updatedBoundaryData[boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType] = newBoundaryData;
+      updatedBoundaryData[boundaryTypeDataresult?.[0].TenantBoundary?.[0]?.boundary?.[0]?.boundaryType] = newBoundaryData;
     }
 
     setBoundaryData(updatedBoundaryData);
 
-    fetchBoundaryTypeData();
+    // fetchBoundaryTypeData();
   };
 
-  console.log("parentArray", parentArray);
+  //make 2 components parent and child
+  // for parent make all the api calls
+  // and in child keep all the logics how to render
+  // in parent keep a state to store the boundary data
+  // initialy when I load the screen it will be empty = {}
+  // after I select hierarchy type my initial state will get updated to different boundary Type {country=[], state=[], district=[]}
+  // one state for the what user can select = initialy (country)
+  // what user can select and is the data available now make the api call to get the country data
+  // got data , currently user can select country so this data will update initial state into {country=[data], state=[], district=[]}
+  // user will select some data make a new state userSelectedValue {country=[userSelectedData], state=[], district=[]}
+  // one state for the what user can select = initialy (state)
+  // what user can select and is the data available now make the api call to get the state data
+  // got data , currently user can select state so this data will update initial state into {country=[data], state=[data], district=[]}
+  // user will select some data make a new state userSelectedValue {country=[userSelectedData], state=[1,2,3], district=[]}
+  // one state for the what user can select = initialy (state)
+  // what user can select and is the data available now make the api call to get the state data
+  // got data , currently user can select state so this data will update initial state into {country=[data], state=[data], district=[]}
+  // user will select some data make a new state userSelectedValue {country=[userSelectedData], state=[1,2,3], district=[]}
 
   return (
     <React.Fragment>
@@ -219,7 +265,7 @@ function SelectingBoundaries() {
               <LabelFieldPair key={index}>
                 <CardLabel>{boundary.boundaryType}</CardLabel>
                 <MultiSelectDropdown
-                  // style={{ width: "50%" }}
+                  style={{ width: "100%" }}
                   t={t}
                   // option={boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary}
                   options={boundaryData[boundary.boundaryType] ? boundaryData[boundary.boundaryType] : []}
