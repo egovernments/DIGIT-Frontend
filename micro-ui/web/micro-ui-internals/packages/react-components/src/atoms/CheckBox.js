@@ -1,8 +1,9 @@
 import React,{Fragment} from "react";
 import { CheckSvg } from "./svgindex";
 import PropTypes from "prop-types";
-
+import { useTranslation } from "react-i18next";
 const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, pageType, style, index, isLabelFirst,customLabelMarkup,  ...props }) => {
+  const { t } = useTranslation()
   const userType = pageType || Digit.SessionStorage.get("userType");
   let wrkflwStyle = props.styles;
   if (isLabelFirst) {
