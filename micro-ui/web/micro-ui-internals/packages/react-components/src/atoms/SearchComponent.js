@@ -16,7 +16,7 @@ const setUIConf = (uiConfig) => {
   return [{uiConfig}]
 }
 
-const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data,activeLink,setActiveLink,browserSession}) => {
+const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullConfig, data,activeLink,setActiveLink,browserSession,showTab}) => {
   
   //whenever activeLink changes we'll change uiConfig
   // const [activeLink,setActiveLink] = useState(uiConfig?.configNavItems?.filter(row=>row.activeByDefault)?.[0]?.name)
@@ -27,6 +27,7 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
   const [showToast,setShowToast] = useState(null)
   let updatedFields = [];
   const {apiDetails} = fullConfig
+  const customDefaultPagination = fullConfig?.sections?.searchResult?.uiConfig?.customDefaultPagination || null
   const [session,setSession,clearSession] = browserSession || []
   
   if (fullConfig?.postProcessResult){
@@ -159,7 +160,64 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
       }
     }
   }
-
+  if(showTab){
+    return <React.Fragment>
+    {showTab && <div className="search-tabs-container">
+          <div>
+            {tabData?.map((i,num) => (
+                <button
+                className={i?.active === true ? "search-tab-head-selected" : "search-tab-head"}
+                onClick={() => {
+                    clearSearch({});
+                    onTabChange(num);
+                  }}>
+                  {t(i?.label)}
+                </button>
+              ))}
+          </div>
+        </div>
+      }
+    <div className={'search-wrapper'}>
+      {header && renderHeader()}
+      <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)}>
+        <div>
+          {uiConfig?.showFormInstruction && <p className="search-instruction-header">{t(uiConfig?.showFormInstruction)}</p>}
+          <div className={`search-field-wrapper ${screenType} ${uiConfig?.type} ${uiConfig?.formClassName ? uiConfig?.formClassName : ""}`}>
+            <RenderFormFields
+              fields={uiConfig?.fields}
+              control={control}
+              formData={formData}
+              errors={errors}
+              register={register}
+              setValue={setValue}
+              getValues={getValues}
+              setError={setError}
+              clearErrors={clearErrors}
+              labelStyle={{ fontSize: "16px" }}
+              apiDetails={apiDetails}
+              data={data}
+            />
+            <div className={`search-button-wrapper ${screenType} ${uiConfig?.type} ${uiConfig?.searchWrapperClassName}`} style={uiConfig?.searchWrapperStyles}>
+              {uiConfig?.secondaryLabel && <LinkLabel style={{ marginBottom: 0, whiteSpace: 'nowrap' }} onClick={clearSearch}>{t(uiConfig?.secondaryLabel)}</LinkLabel>}
+              {uiConfig?.isPopUp && uiConfig?.primaryLabel && <SubmitBar label={t(uiConfig?.primaryLabel)} onSubmit={(e) => {
+                handleSubmit(onSubmit)(e);
+                // onSubmit(formData, e)
+              }} disabled={false} />}
+              {!uiConfig?.isPopUp && uiConfig?.primaryLabel && <SubmitBar label={t(uiConfig?.primaryLabel)} submit="submit" disabled={false} />}
+            </div>
+          </div>
+        </div>
+      </form>
+      {showToast && <Toast
+        error={showToast.error}
+        warning={showToast.warning}
+        label={t(showToast.label)}
+        isDleteBtn={true}
+        onClose={closeToast} />
+      }
+    </div>
+  </React.Fragment>
+  }
   return (
     <HorizontalNavV2 configNavItems={navConfig?.length > 0 ? navConfig : []} showNav={navConfig?.length > 0 ? true : false} activeLink={activeLink} setActiveLink={setActiveLink} fromSearchComp={true} horizontalLine={uiConfig?.horizontalLine}>
       <div className={'search-wrapper'}>
