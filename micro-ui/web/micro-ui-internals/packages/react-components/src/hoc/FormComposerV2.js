@@ -740,7 +740,7 @@ export const FormComposer = (props) => {
                   >
                     {t(field.label)}
                     {field?.appendColon ? ' : ' : null}
-                    {field.isMandatory ? " * " : null}
+                    {field.isMandatory ? <span className="mandatory-span">*</span> : null}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">

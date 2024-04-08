@@ -7,9 +7,9 @@ import _ from "lodash";
 import { InboxContext } from './InboxSearchComposerContext';
 import { Loader } from '../atoms/Loader';
 import NoResultsFound from '../atoms/NoResultsFound';
-import { InfoIcon } from "../atoms/svgindex";
+import { InfoIcon,EditIcon } from "../atoms/svgindex";
 
-const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession }) => {
+const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession,additionalConfig }) => {
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
     const resultsKey = config.resultsJsonPath
@@ -214,6 +214,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                         },
                     };
                 }}
+                onClickRow={additionalConfig?.resultsTable?.onClickRow}
             />}
         </div>
     )
