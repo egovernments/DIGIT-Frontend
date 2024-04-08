@@ -70,7 +70,7 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
-        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
+        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration[0]?.id, auditDetails: data?.PlanConfiguration[0]?.auditDetails }));
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -90,6 +90,7 @@ const CreateMicroplan = () => {
 
   const updatePlanConfiguration = async (body) => {
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+    body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
