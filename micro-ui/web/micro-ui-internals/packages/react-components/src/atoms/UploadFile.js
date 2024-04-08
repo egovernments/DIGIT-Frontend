@@ -134,6 +134,9 @@ const getCitizenStyles = (value) => {
 };
 
 const UploadFile = (props) => {
+  if(props.enableButton){
+    props.disabled = !props.enableButton
+  }
   const { t } = useTranslation();
   const inpRef = useRef();
   const [hasFile, setHasFile] = useState(false);
@@ -237,6 +240,10 @@ const UploadFile = (props) => {
           disabled={props.disabled}
           onChange={(e) => props.onUpload(e)}
           onClick ={ event => {
+            if (props?.disabled) {
+              event.preventDefault()
+              return
+            }
             const { target = {} } = event || {};
             target.value = "";
           }}

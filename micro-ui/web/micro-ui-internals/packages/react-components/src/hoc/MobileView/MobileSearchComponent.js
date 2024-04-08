@@ -117,7 +117,7 @@ const renderHeader = () => {
         <div className="popup-label" style={{ display: "flex", paddingBottom: "20px" }}>
           <span className="header" style={{ display : "flex" }}>
             <span className="icon" style ={{ marginRight: "12px", marginTop: "5px",  paddingBottom: "3px" }}><FilterIcon/></span>
-            <span style ={{ fontSize: "1.5rem", fontWeight:"700" ,marginRight: "12px" }}>{t(`${uiConfig?.headerLabel || "TQM_INBOX_SORTBY"}`)}</span>
+            <span style ={{ fontSize: "1.5rem", fontWeight:"700" ,marginRight: "12px" }}>{t(`${uiConfig?.headerLabel || "ES_COMMON_SEARCH_BY"}`)}</span>
             <span className="clear-search refresh-icon-container" onClick={clearSearch}><RefreshIcon/></span>
           </span>
           {/* <span className="clear-search" onClick={clearSearch}><RefreshIcon/></span> */}
@@ -132,7 +132,7 @@ const renderHeader = () => {
           <div className="popup-label" style={{ display: "flex", paddingBottom: "20px" }}>
             <span className="header" style={{ display : "flex" }}>
               <span className="icon" style ={{ marginRight: "12px", marginTop: "5px",  paddingBottom: "3px" }}><SortSvg/></span>
-              <span style ={{ fontSize: "1.5rem", fontWeight:"700" ,marginRight: "12px" }}>{t(`${uiConfig?.headerLabel || "TQM_INBOX_SORTBY"}`)}</span>
+              <span style ={{ fontSize: "1.5rem", fontWeight:"700" ,marginRight: "12px" }}>{t(`${uiConfig?.headerLabel || "ES_COMMON_SEARCH_BY"}`)}</span>
               <span className="clear-search refresh-icon-container" onClick={clearSearch}><RefreshIcon/></span>
             </span>
             <span onClick={onClose}>
@@ -146,7 +146,7 @@ const renderHeader = () => {
         <div className="popup-label" style={{ display: "flex", paddingBottom: "20px" }}>
         <span className="header" style={{ display : "flex" }}>
            <span className="icon" style ={{ marginRight: "12px", marginTop: "5px"}}><SearchIcon/></span>
-           <span style ={{ fontSize: "large" }}>{t(`${uiConfig?.headerLabel || "TQM_INBOX_SORTBY"}`)}</span>
+           <span style ={{ fontSize: "large" }}>{t(`${uiConfig?.headerLabel || "ES_COMMON_SEARCH_BY"}`)}</span>
        </span>
         <span onClick={onClose}>
            <CloseSvg />
@@ -159,7 +159,7 @@ const renderHeader = () => {
         <div className="popup-label" style={{ display: "flex", paddingBottom: "20px" }}>
            <span className="header" style={{ display : "flex" }}>
               <span className="icon" style ={{ marginRight: "12px", marginTop: "5px"}}><SearchIcon/></span>
-              <span style ={{ fontSize: "large" }}>{t(`${uiConfig?.headerLabel || "TQM_INBOX_SORTBY"}`)}</span>
+              <span style ={{ fontSize: "large" }}>{t(`${uiConfig?.headerLabel || "ES_COMMON_SEARCH_BY"}`)}</span>
           </span>
            <span onClick={onClose}>
               <CloseSvg />

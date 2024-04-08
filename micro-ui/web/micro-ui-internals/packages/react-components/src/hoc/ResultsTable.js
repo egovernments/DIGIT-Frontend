@@ -58,6 +58,16 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
     const tableColumns = useMemo(() => {
         //test if accessor can take jsonPath value only and then check sort and global search work properly
         return config?.columns?.map(column => {
+            if(column?.svg) {
+                // const icon = Digit.ComponentRegistryService.getComponent(column.svg);
+                return {
+                    Header: t(column?.label) || t("ES_COMMON_NA"),
+                    accessor:column.jsonPath,
+                    Cell: ({ value, col, row }) => {
+                        return <div className='cursorPointer' style={{marginLeft:"1rem"}} onClick={()=>additionalConfig?.resultsTable?.onClickSvg(row)}> <EditIcon /></div>
+                    }
+                }
+            }
             if (column.additionalCustomization){
                 return {
                     Header: t(column?.label) || t("ES_COMMON_NA"),
@@ -215,6 +225,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                     };
                 }}
                 onClickRow={additionalConfig?.resultsTable?.onClickRow}
+                manualPagination={config.manualPagination}
             />}
         </div>
     )
