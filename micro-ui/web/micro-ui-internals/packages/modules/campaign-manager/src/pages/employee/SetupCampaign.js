@@ -194,38 +194,38 @@ const SetupCampaign = () => {
 
         reqCreate();
       } else {
-        // const reqCreate = async () => {
-        //   let payloadData = draftData;
-        //   payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-        //     ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
-        //     : null;
-        //   payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-        //     ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-        //     : null;
-        //   payloadData.tenantId = tenantId;
-        //   payloadData.action = "draft";
-        //   payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-        //   payloadData.boundaries = [];
-        //   payloadData.resources = [];
-        //   payloadData.projectType = null;
-        //   payloadData.additionalDetails = {};
-        //   if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-        //     const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-        //     payloadData.deliveryRules = temp;
-        //   }
+        const reqCreate = async () => {
+          let payloadData = draftData;
+          payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+            ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
+            : null;
+          payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+            ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+            : null;
+          payloadData.tenantId = tenantId;
+          payloadData.action = "draft";
+          payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
+          payloadData.boundaries = [];
+          payloadData.resources = [];
+          payloadData.projectType = null;
+          payloadData.additionalDetails = {};
+          if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+            const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
+            payloadData.deliveryRules = temp;
+          }
 
-        //   await updateCampaign(payloadData, {
-        //     onError: (error, variables) => {
-        //       console.log(error);
-        //     },
-        //     onSuccess: async (data) => {
-        //       updateUrlParams({ id: data?.CampaignDetails?.id });
-        //       draftRefetch();
-        //     },
-        //   });
-        // };
+          await updateCampaign(payloadData, {
+            onError: (error, variables) => {
+              console.log(error);
+            },
+            onSuccess: async (data) => {
+              updateUrlParams({ id: data?.CampaignDetails?.id });
+              draftRefetch();
+            },
+          });
+        };
 
-        // reqCreate();
+        reqCreate();
       }
       setShouldUpdate(false);
     }
