@@ -40,9 +40,11 @@ const AddAttributeField = ({ deliveryRuleIndex, delivery, deliveryRules, setDeli
   }, [delivery]);
 
   const selectValue = (e) => {
+    console.log("edkshsdkhs", e.target.value);
     let val = e.target.value;
     if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
       val = val.slice(0, -1);
+      return;
     }
     // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
@@ -66,6 +68,10 @@ const AddAttributeField = ({ deliveryRuleIndex, delivery, deliveryRules, setDeli
   };
 
   const selectToFromValue = (e, range) => {
+    let val = e.target.value;
+    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
+      val = val.slice(0, -1);
+    }
     if (range === "to") {
       const updatedData = deliveryRules.map((item, index) => {
         if (item.ruleKey === deliveryRuleIndex) {
