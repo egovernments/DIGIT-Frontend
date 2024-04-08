@@ -32,7 +32,9 @@ const CampaignType = ({ onSelect, formData, ...props }) => {
         <Dropdown
           style={{ width: "50%" }}
           t={t}
-          option={projectType?.["HCM-PROJECT-TYPES"]?.projectTypes}
+          option={[{
+            code : "Nabeel"
+          }]}
           optionKey={"code"}
           selected={type}
           select={(value) => {

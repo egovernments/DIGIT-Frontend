@@ -436,6 +436,10 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   const prodRef = useRef();
 
   const confirmResources = () => {
+    const isValid = prodRef.current?.every((item) => item?.count !== null && item?.value !== null);
+    if (!isValid) {
+      return;
+    }
     dispatchCampaignData({
       type: "ADD_PRODUCT",
       payload: {
@@ -487,7 +491,9 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         />
 
         {delivery?.products?.length > 0 &&
-          delivery?.products?.map((i) => <RemoveableTagNew text={{ value: i.name }} onClick={() => removeProduct(i)} />)}
+          delivery?.products?.map((i) => {
+            i?.value && i.count ? <RemoveableTagNew text={{ value: i.value }} onClick={() => removeProduct(i)} /> : null;
+          })}
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT`)}
