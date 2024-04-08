@@ -29,7 +29,7 @@ const Upload = ({
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UploadConfiguration" },
     { name: "UIConfiguration" },
-    { name: "schemas" },
+    { name: "Schemas" },
   ]);
 
   // States
@@ -90,7 +90,7 @@ const Upload = ({
   useEffect(() => {
     if (data) {
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let schemas = data["hcm-microplanning"]["schemas"];
+      let schemas = data["hcm-microplanning"]["Schemas"];
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       // let uploadSections = Config["UploadConfiguration"];
       if (UIConfiguration) {
@@ -294,6 +294,33 @@ const Upload = ({
           setLoderActivation(false);
           return;
       }
+      let filestoreId;
+      if (!error && !callMapping) {
+        try {
+          const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
+          if (filestoreResponse?.data?.files?.length > 0) {
+            filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+          } else {
+            error = t("ERROR_UPLOADING_FILE");
+            setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+            setFileData((previous) => ({ ...previous, error }));
+            setUploadedFileError(error);
+          }
+        } catch (errorData) {
+          error = t("ERROR_UPLOADING_FILE");
+          setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+          setUploadedFileError(error);
+        }
+      }
+      let resourceMappingData;
+      if (!error) {
+        resourceMappingData = schemaData?.schema?.required?.map((item) => ({
+          filestoreId,
+          mappedFrom: item,
+          mappedTo: item,
+        }));
+        if (resourceMappingData) setResourceMapping(resourceMappingData);
+      }
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: `Microplanning_${selectedSection.id}`,
@@ -303,7 +330,10 @@ const Upload = ({
         data: fileDataToStore,
         file,
         error: error ? error : null,
+        filestoreId,
+        resourceMapping: resourceMappingData,
       };
+
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       // Digit.SessionStorage.set(fileObject.id, fileObject);
@@ -428,7 +458,6 @@ const Upload = ({
 
   // delete the selected file
   const deleteFile = () => {
-    // Digit.SessionStorage.del(fileData.id);
     setResourceMapping([]);
     setFileDataList((previous) => {
       delete previous[fileData.id];
@@ -443,7 +472,7 @@ const Upload = ({
   };
 
   // Function for handling the validations for geojson and shapefiles after mapping of properties
-  const validationForMappingAndDataSaving = () => {
+  const validationForMappingAndDataSaving = async () => {
     setLoderActivation(true);
     const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
     let error;
@@ -463,7 +492,30 @@ const Upload = ({
     if (!response.valid) {
       return handleValidationErrorResponse(response.message);
     }
-    setFileData((previous) => ({ ...previous, data, resourceMapping, error }));
+    let filestoreId;
+    if (!error) {
+      try {
+        const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", fileData.file, Digit.ULBService.getStateId());
+        if (filestoreResponse?.data?.files?.length > 0) {
+          filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+        } else {
+          error = t("ERROR_UPLOADING_FILE");
+          setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+          setUploadedFileError(error);
+        }
+      } catch (error) {
+        error = t("ERROR_UPLOADING_FILE");
+        setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+        setFileData((previous) => ({ ...previous, error }));
+        setUploadedFileError(error);
+        setLoderActivation(false);
+        return;
+      }
+    }
+    if (filestoreId) {
+      resourceMapping = resourceMapping.map((item) => ({ ...item, filestoreId }));
+    }
+    setFileData((previous) => ({ ...previous, data, resourceMapping, error, filestoreId }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
     setLoderActivation(false);
   };

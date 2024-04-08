@@ -91,6 +91,9 @@ module.exports = function (app) {
     "/hcm-bff/bulk/_transform",
     "/hcm-bff/hcm/_processmicroplan",
     "/health-hrms",
+    "/plan-service/config/_create",
+    "/plan-service/config/_search",
+    "/plan-service/config/_update"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

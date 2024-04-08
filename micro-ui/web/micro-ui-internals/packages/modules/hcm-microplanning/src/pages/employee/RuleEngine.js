@@ -10,14 +10,14 @@ const initialRules = [
     output: "",
     input: "",
     operator: "",
-    hypothesisValue: "",
+    assumptionValue: "",
   },
   {
     id: 1,
     output: "",
     input: "",
     operator: "",
-    hypothesisValue: "",
+    assumptionValue: "",
   },
 ];
 
@@ -37,9 +37,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UIConfiguration" },
-    { name: "ruleConfigureInputs" },
-    { name: "ruleConfigureOutput" },
-    { name: "hypothesisAssumptions" },
+    { name: "RuleConfigureInputs" },
+    { name: "RuleConfigureOutput" },
+    { name: "HypothesisAssumptions" },
   ]);
 
   // UseEffect to extract data on first render
@@ -66,15 +66,17 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let hypothesisAssumptions = data["hcm-microplanning"]["hypothesisAssumptions"];
-    let ruleConfigureOutput = data["hcm-microplanning"]["ruleConfigureOutput"];
-    let ruleConfigureInputs = data["hcm-microplanning"]["ruleConfigureInputs"];
+    let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
+    let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
+    let ruleConfigureInputs = data["hcm-microplanning"]["RuleConfigureInputs"];
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
     if (!hypothesisAssumptions) return;
+    if (!ruleConfigureOutput) return;
+    if (!ruleConfigureInputs) return;
+    if (!UIConfiguration) return;
 
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
-
     setHypothesisAssumptionsList(temp.assumptions);
     setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
 
@@ -88,7 +90,8 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!(temp && temp.ruleConfigureOperators)) return;
-    setOperators(temp.ruleConfigureOperators);
+    temp = temp.ruleConfigureOperators.map((item) => item.name);
+    setOperators(temp);
   }, [data]);
 
   const closeModal = useCallback(() => {
@@ -287,7 +290,7 @@ const InterractableSection = React.memo(
                   setRules={setRules}
                   options={hypothesisAssumptionsList}
                   setOptions={setHypothesisAssumptionsList}
-                  toChange={"hypothesisValue"}
+                  toChange={"assumptionValue"}
                   unique={true}
                   t={t}
                 />
