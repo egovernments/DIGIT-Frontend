@@ -167,14 +167,14 @@ function SelectingBoundaries() {
 
   useEffect(() => {
     if (boundaryTypeDataresult && boundaryTypeDataresult[0]?.TenantBoundary) {
-      if (parentArray.length === 0) {
-        // Check if boundaryData is an empty object
-        const updatedBoundaryData = {
-          ...boundaryData,
-          [boundaryTypeDataresult?.[0].TenantBoundary[0]?.boundary[0]?.boundaryType]: boundaryTypeDataresult?.[0]?.TenantBoundary[0]?.boundary,
-        };
-        setBoundaryData(updatedBoundaryData);
-      }
+      // if (parentArray.length === 0) {
+      // Check if boundaryData is an empty object
+      const updatedBoundaryData = {
+        ...boundaryData,
+        [boundaryTypeDataresult?.[0].TenantBoundary[0]?.boundary[0]?.boundaryType]: boundaryTypeDataresult?.[0]?.TenantBoundary[0]?.boundary,
+      };
+      setBoundaryData(updatedBoundaryData);
+      // }
     }
   }, [boundaryTypeDataresult]);
 
