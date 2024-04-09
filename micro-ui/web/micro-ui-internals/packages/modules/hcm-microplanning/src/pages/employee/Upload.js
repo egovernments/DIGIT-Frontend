@@ -602,7 +602,7 @@ const Upload = ({
   };
 
   return (
-    <div className={`jk-header-btn-wrapper upload-section ${editable ? "" : "non-editable-component"}`}>
+    <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
       <div className="upload">
         <div className="upload-component-wrapper">
           {!dataPresent ? (

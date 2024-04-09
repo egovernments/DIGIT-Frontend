@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BaseMapLayers } from "../../configs/BaseMapLayers.json";
 
-const Mapping = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
+const Mapping = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages, ...props }) => {
   const [editable, setEditable] = useState(true);
   const { t } = useTranslation();
   var [map, setMap] = useState(null);
@@ -63,8 +63,7 @@ const Mapping = ({ campaignType = "SMC", microplanData, setMicroplanData, checkD
 
   //     if (!pages) return;
   //     const previouspage = pages[currentPage?.id - 1];
-  //     if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
-  //     else setEditable(true);
+  //     setEditable(!(previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]));
   //   }, []);
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>

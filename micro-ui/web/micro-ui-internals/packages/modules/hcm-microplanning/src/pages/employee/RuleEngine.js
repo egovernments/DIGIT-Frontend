@@ -21,7 +21,7 @@ const initialRules = [
   },
 ];
 
-const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion,  currentPage, pages, }) => {
+const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
 
   // States
@@ -46,8 +46,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // UseEffect to extract data on first render
   useEffect(() => {
     if (!microplanData || !microplanData.ruleEngine) return;
-    let hypothesisAssumptions = [];
-    microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
+    const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
     if (!hypothesisAssumptions) return;
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setRules(microplanData.ruleEngine);
@@ -117,8 +116,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setHypothesisAssumptionsList, closeModal]);
 
+  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className={`jk-header-btn-wrapper rule-engine-section ${editable?"":"non-editable-component"}`}>
+    <div className={sectionClass}>
       <div className="rule-engine-body">
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />

@@ -78,8 +78,9 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, closeModal]);
 
+  const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className={`jk-header-btn-wrapper hypothesis-section ${editable?"":"non-editable-component"}`}>
+    <div className={sectionClass}>
       {/* NonInterractable Section */}
       <NonInterractableSection t={t} />
       {/* Interractable Section that includes the example as well as the assumptions */}
