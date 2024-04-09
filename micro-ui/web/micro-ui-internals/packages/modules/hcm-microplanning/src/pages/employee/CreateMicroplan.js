@@ -4,6 +4,7 @@ import { timeLineOptions } from "../../configs/timeLineOptions.json";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
+import Mapping from "./Mapping";
 import Navigator from "../../components/Nagivator";
 import { v4 as uuidv4 } from "uuid";
 import { Toast } from "@egovernments/digit-ui-components";
@@ -12,6 +13,7 @@ export const components = {
   Upload,
   Hypothesis,
   RuleEngine,
+  Mapping
 };
 
 // will be changed laters
@@ -30,7 +32,7 @@ const CreateMicroplan = () => {
   const [microplanData, setMicroplanData] = useState();
   const [operatorsObject, setOperatorsObject] = useState([]);
   const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
-
+  const [checkForCompleteness, setCheckForCompletion] = useState([]);
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     let temp;
@@ -50,13 +52,32 @@ const CreateMicroplan = () => {
   // useEffect to store data in session storage
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
-    setMicroplanData(data);
+    let statusData = {};
+    let toCheckCompleteness = [];
+    timeLineOptions.forEach((item) => {
+      statusData[item.name] = false;
+      if (item?.checkForCompleteness) toCheckCompleteness.push(item.name);
+    });
+    if (data && data?.status && Object.keys(data?.status) === 0) setCheckForCompletion(toCheckCompleteness);
+    setMicroplanData({ ...data, status: statusData });
   }, []);
 
   // An addon function to pass to Navigator
   const nextEventAddon = useCallback(
-    async (currentPage) => {
-      if (!microplanData || currentPage?.name !== "FORMULA_CONFIGURATION") return;
+    async (currentPage, checkDataCompletion) => {
+      if (!microplanData) return;
+      setMicroplanData((previous) => ({
+        ...previous,
+        status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
+      }));
+      if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
+      let checkStatusValues = microplanData?.status || {};
+      checkStatusValues["FORMULA_CONFIGURATION"] = true;
+      let check = true;
+      for (let data of checkForCompleteness) {
+        check = check && checkStatusValues[data];
+      }
+      if (!check) return;
       let body = mapDataForApi(microplanData, operatorsObject);
       if (microplanData && !microplanData.planConfigurationId) {
         createPlanConfiguration(body);
@@ -70,7 +91,11 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
-        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration[0]?.id, auditDetails: data?.PlanConfiguration[0]?.auditDetails }));
+        setMicroplanData((previous) => ({
+          ...previous,
+          planConfigurationId: data?.PlanConfiguration[0]?.id,
+          auditDetails: data?.PlanConfiguration[0]?.auditDetails,
+        }));
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -93,7 +118,6 @@ const CreateMicroplan = () => {
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
-        setMicroplanData((previous) => ({ ...previous, planConfigurationId: data?.PlanConfiguration?.id }));
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -170,8 +194,9 @@ const mapDataForApi = (data, Operators) => {
         templateIdentifier: item.section,
       })),
       assumptions: data?.hypothesis?.map((item) => {
-        delete item.id;
-        return item;
+        let templist = JSON.parse(JSON.stringify(item));;
+        delete templist.id;
+        return templist;
       }),
       operations: data?.ruleEngine?.map((item) => {
         const data = JSON.parse(JSON.stringify(item));

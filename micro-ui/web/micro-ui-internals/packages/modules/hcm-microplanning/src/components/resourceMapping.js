@@ -2,6 +2,7 @@ import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } f
 import React, { useState, useEffect } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, t }) => {
+  console.log(uploadedData)
   // If no data is uploaded, display a message
   if (!uploadedData) return <div className="spatial-data-property-mapping"> No Data To Map</div>;
 

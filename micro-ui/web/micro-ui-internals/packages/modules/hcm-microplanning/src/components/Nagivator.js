@@ -38,18 +38,22 @@ const Navigator = (props) => {
     if (!response) setCurrentPage(props.config[0]);
   }, [props.config]);
 
+  // Might need it later
   // Effect to handle data completion validation and show toast
-  useEffect(() => {
-    if (checkDataCompletion === "false" || checkDataCompletion === "true" || checkDataCompletion === "valid") return;
-    if (checkDataCompletion === "invalid") setToast(t("COMMON_PLEASE_FILL_ALL_THE_FIELDS"));
-    setCheckDataCompletion("false");
-  }, [checkDataCompletion]);
+  // useEffect(() => {
+  //   if (checkDataCompletion === "false" || checkDataCompletion === "true" || checkDataCompletion === "valid") return;
+  //   if (checkDataCompletion === "invalid") setToast(t("COMMON_PLEASE_FILL_ALL_THE_FIELDS"));
+  //   setCheckDataCompletion("false");
+  // }, [checkDataCompletion]);
 
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
-    if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (typeof props.nextEventAddon === 'function') {
-      props.nextEventAddon(currentPage);
+    // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
+    if (checkDataCompletion === "false" || checkDataCompletion === "true" || navigationEvent === undefined) return;
+    if (typeof props.nextEventAddon === "function") {
+      if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
+        props.nextEventAddon(currentPage, checkDataCompletion);
+      else props.nextEventAddon(currentPage, true);
     }
     if (navigationEvent && navigationEvent.name === "next") nextStep();
     else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step) onStepClick(navigationEvent.step);
@@ -80,7 +84,11 @@ const Navigator = (props) => {
 
   // Function to handle next button click
   const nextbuttonClickHandler = useCallback(() => {
-    if (props.checkDataCompleteness && LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) {
+    if (
+      props.checkDataCompleteness &&
+      props?.config[currentPage?.id ]?.checkForCompleteness &&
+      LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+    ) {
       setCheckDataCompletion("true");
       setNavigationEvent({ name: "next" });
     } else nextStep();
@@ -89,8 +97,12 @@ const Navigator = (props) => {
   // Function to handle step click
   const stepClickHandler = useCallback(
     (index) => {
-      if (typeof props.stepNavigationActive !== 'function') return;
-      if (props.checkDataCompleteness && LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) {
+      if (!props.stepNavigationActive) return;
+      if (
+        props.checkDataCompleteness &&
+        props?.config[currentPage?.id]?.checkForCompleteness &&
+        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+      ) {
         setCheckDataCompletion("true");
         setNavigationEvent({ name: "step", step: index });
       } else {
@@ -103,7 +115,7 @@ const Navigator = (props) => {
   // Function to set current page
   const changeCurrentPage = (newPage) => {
     if (props.setCurrentPageExternally) {
-      props.setCurrentPageExternally({ currentPage:newPage, method: "save" });
+      props.setCurrentPageExternally({ currentPage: newPage, method: "save" });
     }
   };
 
@@ -122,7 +134,9 @@ const Navigator = (props) => {
       {LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null ? (
         <LoadCustomComponent
           component={props.components[currentPage?.component]}
-          secondaryProps={checkDataCompletion ? { checkDataCompletion, setCheckDataCompletion, ...props.childProps } : {}}
+          secondaryProps={
+            checkDataCompletion ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, ...props.childProps } : {}
+          }
         />
       ) : (
         <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
