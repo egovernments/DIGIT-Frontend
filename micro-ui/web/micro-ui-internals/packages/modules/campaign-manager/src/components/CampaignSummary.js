@@ -26,7 +26,7 @@ const CampaignSummary = () => {
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                      <span>Edit</span>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -58,7 +58,7 @@ const CampaignSummary = () => {
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-                      <span>Edit</span>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -78,7 +78,7 @@ const CampaignSummary = () => {
                   cardHeader: { value: t("DELIVERY_CYCLE_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
-                      <span>Edit</span>
+                      <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
                   ),
@@ -277,7 +277,7 @@ const CampaignSummary = () => {
             cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0 } },
             cardSecondaryAction: (
               <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                <span>Edit</span>
+                <span>{t(`CAMPAIGN_EDIT`)}</span>
                 <EditIcon />
               </div>
             ),
@@ -309,7 +309,7 @@ const CampaignSummary = () => {
             cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0 } },
             cardSecondaryAction: (
               <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-                <span>Edit</span>
+                <span>{t(`CAMPAIGN_EDIT`)}</span>
                 <EditIcon />
               </div>
             ),
@@ -329,7 +329,7 @@ const CampaignSummary = () => {
             cardHeader: { value: t("DELIVERY_CYCLE_DETAILS"), inlineStyles: { marginTop: 0 } },
             cardSecondaryAction: (
               <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
-                <span>Edit</span>
+                <span>{t(`CAMPAIGN_EDIT`)}</span>
                 <EditIcon />
               </div>
             ),
