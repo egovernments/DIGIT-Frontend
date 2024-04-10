@@ -381,16 +381,8 @@ const CampaignSummary = () => {
 
   return (
     <>
-      {/* <div className="cardHeaderWithOptions"> */}
-      <div className="madarchod">
-        <Header>{t("ES_TQM_SUMMARY_HEADING")}</Header>
-      </div>
-      {/* </div> */}
-
-      <div className="laudalelo">
-        {/* {!isLoading && <ViewComposer data={testData} isLoading={isLoading} />} */}
-        <ViewComposer data={data} />
-      </div>
+      <Header>{t("ES_TQM_SUMMARY_HEADING")}</Header>
+      <ViewComposer data={data} />
     </>
   );
 };
