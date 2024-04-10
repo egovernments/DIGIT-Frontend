@@ -154,14 +154,27 @@ const errorResponder = (
   error: any,
   request: any,
   response: Response,
+  status: any = 500,
   next: any = null
 ) => {
   response.header("Content-Type", "application/json");
-  const status = 500;
-  response
-    .status(status)
-    .send(getErrorResponse("INTERNAL_SERVER_ERROR", error?.message));
+  const errorResponse = getErrorResponse(error.code || "INTERNAL_SERVER_ERROR", trimError(error.message || "Some Error Occurred!!"));
+  if (error?.status) {
+    response.status(error.status).send(errorResponse);
+  }
+  else response.status(status).send(errorResponse);
 };
+
+const trimError = (e: any) => {
+  if (typeof e === "string") {
+    e = e.trim();
+    while (e.startsWith("Error:")) {
+      e = e.substring(6);
+      e = e.trim();
+    }
+  }
+  return e;
+}
 
 async function generateXlsxFromJson(request: any, response: any, simplifiedData: any) {
   try {
@@ -542,7 +555,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any) 
   const allFacilities = await getAllFacilities(tenantId, request.body);
   request.body.generatedResourceCount = allFacilities.length;
   const facilitySheetData: any = await createFacilitySheet(allFacilities);
-  request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
+  // request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
   const boundarySheetData: any = await getBoundarySheetData(request);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request);
 }
@@ -597,24 +610,6 @@ async function enrichResourceDetails(request: any) {
 
 function getFacilityIds(data: any) {
   return data.map((obj: any) => obj["id"])
-}
-
-function matchFacilityData(data: any, searchedFacilities: any) {
-  for (const dataFacility of data) {
-    const searchedFacility = searchedFacilities.find((facility: any) => facility.id === dataFacility.id);
-
-    if (!searchedFacility) {
-      throw new Error(`Facility with ID "${dataFacility.id}" not found in searched facilities.`);
-    }
-    if (config?.values?.matchFacilityData) {
-      const keys = Object.keys(dataFacility);
-      for (const key of keys) {
-        if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
-          throw new Error(`Value mismatch for key "${key}" at index ${dataFacility.originalIndex}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
-        }
-      }
-    }
-  }
 }
 
 function matchData(request: any, datas: any, searchedDatas: any, createAndSearchConfig: any) {
@@ -706,7 +701,9 @@ async function getDataSheetReady(boundaryData: any, request: any) {
   const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
   const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
   const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
-  const headers = [...reducedHierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+  const headers = [...reducedHierarchy, "Boundary Code",
+    // "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"
+  ];
   const data = boundaryList.map(boundary => {
     const boundaryParts = boundary.split(',');
     const boundaryCode = boundaryParts[boundaryParts.length - 1];
@@ -749,7 +746,6 @@ export {
   processGenerateRequest,
   processGenerate,
   getFacilityIds,
-  matchFacilityData,
   getDataFromSheet,
   matchData,
   enrichResourceDetails,

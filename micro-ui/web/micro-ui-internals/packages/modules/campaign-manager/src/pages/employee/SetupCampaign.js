@@ -1,10 +1,11 @@
-import { Loader, FormComposerV2, Header, Toast, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import TimelineCampaign from "../../components/TimelineCampaign";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
+import { Stepper, Toast } from "@egovernments/digit-ui-components";
 
 const SetupCampaign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -293,6 +294,14 @@ const SetupCampaign = () => {
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
     switch (key) {
+      case "campaignName":
+      if (typeof formData?.campaignName !== 'string' || !formData?.campaignName.trim() ) {
+        setShowToast({ key: "error", label: "CAMPAIGN_NAME_MISSING_TYPE_ERROR" });
+        return false;
+      }
+      else {
+        return true;
+      }
       case "campaignDates":
         const startDateObj = new Date(formData?.campaignDates?.startDate);
         const endDateObj = new Date(formData?.campaignDates?.endDate);
@@ -423,7 +432,19 @@ const SetupCampaign = () => {
 
   return (
     <React.Fragment>
-      <TimelineCampaign currentStep={currentStep + 1} onStepClick={onStepClick} />
+      <Stepper
+        customSteps={[
+          "HCM_CAMPAIGN_SETUP_DETAILS",
+          "HCM_DELIVERY_DETAILS",
+          "HCM_BOUNDARY_DETAILS",
+          "HCM_TARGETS",
+          "HCM_FACILITY_DETAILS",
+          "HCM_USER_DETAILS",
+          "HCM_REVIEW_DETAILS",
+        ]}
+        currentStep={currentStep + 1}
+        onStepClick={onStepClick}
+      />
       <FormComposerV2
         config={config?.form.map((config) => {
           return {
