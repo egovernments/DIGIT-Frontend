@@ -1,13 +1,13 @@
 import * as express from "express";
 import { logger } from "../../utils/logger";
 import { validateGenerateRequest } from "../../utils/validators/genericValidator";
-import { enrichResourceDetails, errorResponder, processGenerate, sendResponse, modifyBoundaryData, getResponseFromDb, generateAuditDetails } from "../../utils/genericUtils";
+import { enrichResourceDetails, errorResponder, processGenerate, sendResponse, getResponseFromDb, generateAuditDetails } from "../../utils/genericUtils";
 import { processGenericRequest } from "../../api/campaignApis";
-import { createAndUploadFile, createBoundaryEntities, createBoundaryRelationship, createExcelSheet, getBoundaryCodesHandler, getBoundarySheetData, getHierarchy, getSheetData } from "../../api/genericApis";
+import { createAndUploadFile, getBoundarySheetData, getSheetData } from "../../api/genericApis";
 import config from "../../config";
 import { httpRequest } from "../../utils/request";
 import { validateCreateRequest, validateSearchRequest } from "../../utils/validators/campaignValidators";
-import { addBoundaryCodeToData, appendSheetsToWorkbook, generateProcessedFileAndPersist, getBoundaryTypeMap, getChildParentMap, getCodeMappingsOfExistingBoundaryCodes, prepareDataForExcel, processDataSearchRequest } from "../../utils/campaignUtils";
+import {  appendSheetsToWorkbook, generateProcessedFileAndPersist, processDataSearchRequest } from "../../utils/campaignUtils";
 
 
 
@@ -33,7 +33,6 @@ class dataManageController {
         this.router.post(`${this.path}/_generate`, this.generateData);
         this.router.post(`${this.path}/_download`, this.downloadData)
         this.router.post(`${this.path}/_getboundarysheet`, this.getBoundaryData);
-        this.router.post(`${this.path}/_autoGenerateBoundaryCode`, this.autoGenerateBoundaryCodes);
         this.router.post(`${this.path}/_create`, this.createData);
         this.router.post(`${this.path}/_search`, this.searchData);
     }
@@ -76,6 +75,7 @@ class dataManageController {
                     throw new Error("Invalid file");
                 }
                 const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
+                console.log(boundaryData,"boundddddddddd")
                 const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
                 const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
                 transformedResponse[0].fileStoreId = boundaryDetails[0].fileStoreId;
@@ -105,41 +105,7 @@ class dataManageController {
         }
     };
 
-    autoGenerateBoundaryCodes = async (request: any, response: any) => {
-        try {
-            const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
-            if (!fileResponse?.fileStoreIds?.[0]?.url) {
-                throw new Error("Invalid file");
-            }
-            const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1", false);
-            const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
-            const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
-            const childParentMap = getChildParentMap(withoutBoundaryCode);
-            const boundaryMap = await getBoundaryCodesHandler(withoutBoundaryCode, childParentMap, mappingMap, countMap, request);
-            const boundaryTypeMap = getBoundaryTypeMap(boundaryData, boundaryMap);
-            await createBoundaryEntities(request, boundaryMap);
-            const modifiedMap: Map<string, string | null> = new Map();
-            childParentMap.forEach((value, key) => {
-                const modifiedKey = boundaryMap.get(key);
-                let modifiedValue = null;
-                if (value !== null && boundaryMap.has(value)) {
-                    modifiedValue = boundaryMap.get(value);
-                }
-                modifiedMap.set(modifiedKey, modifiedValue);
-            });
-            await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
-            const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
-            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-            const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
-            const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
-            const boundarySheetData = await createExcelSheet(data, headers);
-            const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
-            return sendResponse(response, { BoundaryFileDetails: BoundaryFileDetails }, request);
-        }
-        catch (error) {
-            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
-        }
-    }
+  
 
     createData = async (request: any, response: any) => {
         try {
