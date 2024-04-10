@@ -223,7 +223,7 @@ function updateActivityResourceId(request: any) {
 }
 
 async function generateProcessedFileAndPersist(request: any) {
-    if (request.body.ResourceDetails.type != "boundary") {
+    if (request.body.ResourceDetails.type !== "boundary") {
         await updateStatusFile(request);
     }
     updateActivityResourceId(request);
