@@ -271,6 +271,7 @@ import HorizontalNav from "./atoms/HorizontalNav";
 import NoResultsFound from "./atoms/NoResultsFound";
 import { ViewImages } from "./atoms/ViewImages";
 import InboxSearchComposer from "./hoc/InboxSearchComposer";
+import InboxSearchComposerV2 from "./hoc/InboxSearchComposerV2";
 import MobileSearchResults from "./hoc/MobileView/MobileSearchResults";
 import MobileSearchComponent from "./hoc/MobileView/MobileSearchComponent";
 import ResultsTable from "./hoc/ResultsTable";
@@ -486,6 +487,7 @@ export {
   Details,
   InboxComposer,
   InboxSearchComposer,
+  InboxSearchComposerV2,
   MobileSearchResults,
   MobileSearchComponent,
   ResultsTable,

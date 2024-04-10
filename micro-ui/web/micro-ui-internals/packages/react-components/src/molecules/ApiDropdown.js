@@ -13,9 +13,8 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
 
   const { t } = useTranslation();
 
-
-  const reqCriteria = Digit?.Customizations?.[populators?.masterName]?.[populators?.moduleName]?.[populators?.customfn]()
-
+  const reqCriteria = Digit?.Customizations?.[populators?.masterName]?.[populators?.moduleName]?.[populators?.customfn](populators)
+  
   const { isLoading: isApiLoading, data: apiData, revalidate, isFetching: isApiFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
@@ -43,9 +42,10 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
               );
             }}
             selected={props?.value}
-            defaultLabel={t(populators?.defaultText)}
-            defaultUnit={t(populators?.selectedText)}
+            defaultLabel={t(populators?.defaultText) }
+            defaultUnit={t(populators?.selectedText) || t("COMMON_SELECTED")}
             config={populators}
+            
           />
         </div>
       )}

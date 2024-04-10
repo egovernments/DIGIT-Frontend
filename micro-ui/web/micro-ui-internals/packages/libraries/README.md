@@ -55,6 +55,7 @@ export default App;
 ### Changelog
 
 ```bash
+1.8.1-beta.2: Enhanced `useCustomMdms` hook to support version 2 of MDMS API calls.
 1.8.1-beta.1 Republished after merging with Master due to version issues.
 1.8.0 Released as part of workbench v1.0
 ```
