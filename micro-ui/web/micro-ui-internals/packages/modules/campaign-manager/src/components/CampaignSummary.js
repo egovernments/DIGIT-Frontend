@@ -25,7 +25,8 @@ const CampaignSummary = () => {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
-                    <div onClick={() => handleRedirect(1)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                      <span>Edit</span>
                       <EditIcon />
                     </div>
                   ),
@@ -56,7 +57,8 @@ const CampaignSummary = () => {
                   type: "DATA",
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
-                    <div onClick={() => handleRedirect(2)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                      <span>Edit</span>
                       <EditIcon />
                     </div>
                   ),
@@ -74,7 +76,12 @@ const CampaignSummary = () => {
                 {
                   type: "COMPONENT",
                   cardHeader: { value: t("DELIVERY_CYCLE_DETAILS"), inlineStyles: { marginTop: 0 } },
-                  cardSecondaryAction: <EditIcon />,
+                  cardSecondaryAction: (
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
+                      <span>Edit</span>
+                      <EditIcon />
+                    </div>
+                  ),
                   component: "CycleDetaisPreview",
                   props: {
                     data: data?.[0],
@@ -269,7 +276,8 @@ const CampaignSummary = () => {
             type: "DATA",
             cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0 } },
             cardSecondaryAction: (
-              <div onClick={() => handleRedirect(1)}>
+              <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                <span>Edit</span>
                 <EditIcon />
               </div>
             ),
@@ -300,7 +308,8 @@ const CampaignSummary = () => {
             type: "DATA",
             cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0 } },
             cardSecondaryAction: (
-              <div onClick={() => handleRedirect(2)}>
+              <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                <span>Edit</span>
                 <EditIcon />
               </div>
             ),
@@ -318,7 +327,12 @@ const CampaignSummary = () => {
           {
             type: "COMPONENT",
             cardHeader: { value: t("DELIVERY_CYCLE_DETAILS"), inlineStyles: { marginTop: 0 } },
-            cardSecondaryAction: <EditIcon />,
+            cardSecondaryAction: (
+              <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
+                <span>Edit</span>
+                <EditIcon />
+              </div>
+            ),
             component: "CycleDetaisPreview",
             props: {
               DUMMY_DATA: DUMMY_DATA?.[0],
