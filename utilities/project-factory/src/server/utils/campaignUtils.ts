@@ -875,7 +875,7 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
     }
     catch (error: any) {
-        throw Error(error);
+        throw new Error(error.message);
     }
 }
 async function convertSheetToDifferentTabs(request: any, fileStoreId: any) {
