@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.10 Added InboxSearchComposerV2 component and updated dependent files. It includes features such as broswerSession integration, Removable tags to show on search/inbox screens on mobile. One config for both mobile and desktop screen.
 1.8.1-beta.9 Fixed Loader with gap
 1.8.1-beta.8 Added Close button and Loader
 1.8.1-beta.7 Viewcomposer enhancement for cardheader action
