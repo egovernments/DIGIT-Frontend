@@ -3,11 +3,9 @@ import { logger } from "../../utils/logger";
 import { validateGenerateRequest } from "../../utils/validators/genericValidator";
 import { enrichResourceDetails, errorResponder, processGenerate, sendResponse, getResponseFromDb, generateAuditDetails } from "../../utils/genericUtils";
 import { processGenericRequest } from "../../api/campaignApis";
-import { createAndUploadFile, getBoundarySheetData, getSheetData } from "../../api/genericApis";
-import config from "../../config";
-import { httpRequest } from "../../utils/request";
+import { createAndUploadFile, getBoundarySheetData } from "../../api/genericApis";
 import { validateCreateRequest, validateSearchRequest } from "../../utils/validators/campaignValidators";
-import {  appendSheetsToWorkbook, generateProcessedFileAndPersist, processDataSearchRequest } from "../../utils/campaignUtils";
+import {  generateProcessedFileAndPersist, processDataSearchRequest } from "../../utils/campaignUtils";
 
 
 
@@ -68,21 +66,7 @@ class dataManageController {
                     auditDetails: auditDetails
                 };
             });
-            if (type == "boundaryWithTarget") {
-                const fileStoreId = transformedResponse?.[0].fileStoreId;
-                const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
-                if (!fileResponse?.fileStoreIds?.[0]?.url) {
-                    throw new Error("Invalid file");
-                }
-                const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
-                console.log(boundaryData,"boundddddddddd")
-                const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
-                const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
-                transformedResponse[0].fileStoreId = boundaryDetails[0].fileStoreId;
-                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
-            } else {
-                return sendResponse(response, { fileStoreIds: transformedResponse }, request);
-            }
+            return sendResponse(response, { fileStoreIds: transformedResponse }, request);
         } catch (e: any) {
             logger.error(String(e));
             return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
@@ -105,7 +89,7 @@ class dataManageController {
         }
     };
 
-  
+
 
     createData = async (request: any, response: any) => {
         try {
