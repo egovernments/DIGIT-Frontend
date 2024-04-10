@@ -107,7 +107,7 @@ async function updateStatusFile(request: any) {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
 
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throw new Error("No download URL returned for the given fileStoreId");
+        throw Object.assign(new Error("No download URL returned for the given fileStoreId"), { code: 'INVALID_FILE' });
     }
 
     const headers = {
@@ -122,7 +122,7 @@ async function updateStatusFile(request: any) {
 
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-        throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+        throw Object.assign(new Error(`Sheet with name "${sheetName}" is not present in the file.`), { code: 'SHEET_NOT_FOUND' });
     }
     processErrorData(request, createAndSearchConfig, workbook, sheetName);
 
@@ -234,7 +234,7 @@ async function generateProcessedFileAndPersist(request: any) {
     produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
 }
 
-function getRootBoundaryCode(boundaries: any[]) {
+function getRootBoundaryCode(boundaries: any[] = []) {
     for (const boundary of boundaries) {
         if (boundary.isRoot) {
             return boundary.code;
@@ -256,12 +256,17 @@ function enrichRootProjectId(requestBody: any) {
     }
 }
 
-async function enrichAndPersistProjectCampaignRequest(request: any) {
+async function enrichAndPersistCampaignForCreate(request: any) {
     const action = request?.body?.CampaignDetails?.action;
     request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
-    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
+    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules };
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
     request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+    request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : null;
+    request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : null;
+    request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : {};
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate
     request.body.CampaignDetails.auditDetails = {
         createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
         createdTime: Date.now(),
@@ -274,15 +279,56 @@ async function enrichAndPersistProjectCampaignRequest(request: any) {
     else {
         request.body.CampaignDetails.projectId = null
     }
+    logger.info("Persisting CampaignDetails : " + JSON.stringify(request?.body?.CampaignDetails));
     produceModifiedMessages(request?.body, config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
     delete request.body.CampaignDetails.campaignDetails
+}
+
+async function enrichAndPersistCampaignForUpdate(request: any) {
+    const action = request?.body?.CampaignDetails?.action;
+    const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
+    request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber
+    request.body.CampaignDetails.campaignDetails = request?.body?.CampaignDetails?.deliveryRules ? { deliveryRules: request?.body?.CampaignDetails?.deliveryRules } : ExistingCampaignDetails?.campaignDetails;
+    request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
+    request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate ? request?.body?.CampaignDetails?.startDate : ExistingCampaignDetails?.startDate
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate ? request?.body?.CampaignDetails?.endDate : ExistingCampaignDetails?.endDate
+    request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : ExistingCampaignDetails?.projectType
+    request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : ExistingCampaignDetails?.hierarchyType
+    request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : ExistingCampaignDetails?.additionalDetails
+    request.body.CampaignDetails.auditDetails = {
+        createdBy: ExistingCampaignDetails?.createdBy,
+        createdTime: ExistingCampaignDetails?.createdTime,
+        lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
+        lastModifiedTime: Date.now(),
+    }
+    if (action == "create") {
+        enrichRootProjectId(request.body);
+    }
+    else {
+        request.body.CampaignDetails.projectId = null
+    }
+    logger.info("Persisting CampaignDetails : " + JSON.stringify(request?.body?.CampaignDetails));
+    produceModifiedMessages(request?.body, config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
+    delete request.body.CampaignDetails.campaignDetails
+    delete request.body.ExistingCampaignDetails
+}
+
+
+async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl: any) {
+    if (actionInUrl == "create") {
+        await enrichAndPersistCampaignForCreate(request)
+    }
+    else if (actionInUrl == "update") {
+        await enrichAndPersistCampaignForUpdate(request)
+    }
 }
 
 
 function getChildParentMap(modifiedBoundaryData: any) {
     const childParentMap: Map<string, string | null> = new Map();
 
-    modifiedBoundaryData.forEach((row:any)=> {
+    modifiedBoundaryData.forEach((row: any) => {
         for (let j = row.length - 1; j >= 0; j--) {
             const child = row[j];
             const parent = j - 1 >= 0 ? row[j - 1] : null;
@@ -297,7 +343,6 @@ function getChildParentMap(modifiedBoundaryData: any) {
 
 
 function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
-    console.log(withBoundaryCode, "withhhhhhhhhhhhhhhhhh")
     const countMap = new Map<string, number>();
     const mappingMap = new Map<string, string>();
     withBoundaryCode.forEach((row: any[]) => {
@@ -311,7 +356,6 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
             }
         }
         mappingMap.set(row[len - 2], row[len - 1]);
-        console.log(mappingMap, "mapppppp");
     });
     return { mappingMap, countMap };
 }
@@ -373,6 +417,7 @@ async function searchProjectCampaignResourcData(request: any) {
     const CampaignDetails = request.body.CampaignDetails;
     const { tenantId, pagination, ids, ...searchFields } = CampaignDetails;
     const queryData = buildSearchQuery(tenantId, pagination, ids, searchFields);
+    logger.info("queryData : " + JSON.stringify(queryData));
     const responseData = await executeSearchQuery(queryData.query, queryData.values);
     request.body.CampaignDetails = responseData;
 }
@@ -384,7 +429,13 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
 
     for (const field in searchFields) {
         if (searchFields[field] !== undefined) {
-            conditions.push(`${field} = $${index}`);
+            if (field === 'startDate') {
+                conditions.push(`startDate >= $${index}`);
+            } else if (field === 'endDate') {
+                conditions.push(`endDate <= $${index}`);
+            } else {
+                conditions.push(`${field} = $${index}`);
+            }
             values.push(searchFields[field]);
             index++;
         }
@@ -429,8 +480,10 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
     return { query, values };
 }
 
+
 async function executeSearchQuery(query: string, values: any[]) {
     const queryResult = await pool.query(query, values);
+    logger.info("queryResult : " + JSON.stringify(queryResult));
     return queryResult.rows.map((row: any) => ({
         id: row.id,
         tenantId: row.tenantid,
@@ -442,6 +495,8 @@ async function executeSearchQuery(query: string, values: any[]) {
         hierarchyType: row.hierarchytype,
         boundaryCode: row.boundarycode,
         projectId: row.projectid,
+        startDate: Number(row.startdate),
+        endDate: Number(row.enddate),
         createdBy: row.createdby,
         lastModifiedBy: row.lastmodifiedby,
         createdTime: Number(row?.createdtime),
@@ -454,7 +509,9 @@ async function executeSearchQuery(query: string, values: any[]) {
 async function processDataSearchRequest(request: any) {
     const { SearchCriteria } = request.body;
     const query = buildWhereClauseForDataSearch(SearchCriteria);
+    logger.info("queryData : " + JSON.stringify(query));
     const queryResult = await pool.query(query.query, query.values);
+    logger.info("queryResult : " + JSON.stringify(queryResult));
     const results = queryResult.rows.map((row: any) => ({
         id: row.id,
         tenantId: row.tenantid,
@@ -612,15 +669,17 @@ async function createProject(request: any) {
     }
 }
 
-async function processBasedOnAction(request: any) {
-    request.body.CampaignDetails.id = uuidv4()
+async function processBasedOnAction(request: any, actionInUrl: any) {
+    if (actionInUrl == "create") {
+        request.body.CampaignDetails.id = uuidv4()
+    }
     if (request?.body?.CampaignDetails?.action == "create") {
         await createProjectCampaignResourcData(request);
         await createProject(request)
-        await enrichAndPersistProjectCampaignRequest(request)
+        await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
     }
     else {
-        await enrichAndPersistProjectCampaignRequest(request)
+        await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
     }
 }
 async function appendSheetsToWorkbook(boundaryData: any[]) {

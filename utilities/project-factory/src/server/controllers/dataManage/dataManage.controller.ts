@@ -40,13 +40,12 @@ class dataManageController {
 
     generateData = async (request: express.Request, response: express.Response) => {
         try {
-            validateGenerateRequest(request);
+            await validateGenerateRequest(request);
             await processGenerate(request, response);
             return sendResponse(response, { GeneratedResource: request?.body?.generatedResource }, request);
-
         } catch (e: any) {
             logger.error(String(e))
-            return errorResponder({ message: String(e) }, request, response);
+            return errorResponder({ message: String(e), code: e?.code }, request, response, e?.status ? e?.status : 400);
         }
     };
 
@@ -57,7 +56,7 @@ class dataManageController {
             const responseData = await getResponseFromDb(request, response);
             if (!responseData || responseData.length === 0) {
                 logger.error("No data of type  " + type + " with status Completed present in db")
-                throw new Error('First Generate then Download');
+                throw Object.assign(new Error('First Generate then Download'), { code: 'GENERATION_REQUIRE' });
             }
             const auditDetails = generateAuditDetails(request);
             const transformedResponse = responseData.map((item: any) => {
@@ -85,7 +84,7 @@ class dataManageController {
             }
         } catch (e: any) {
             logger.error(String(e));
-            return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
+            return errorResponder({ message: String(e) + "    Check Logs" }, request, response, e?.status ? e?.status : 400);
         }
     }
 
@@ -99,13 +98,13 @@ class dataManageController {
             const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
             return BoundaryFileDetails;
         }
-        catch (error: any) {
-            logger.error(String(error));
-            return errorResponder({ message: String(error) + "    Check Logs" }, request, response);
+        catch (e: any) {
+            logger.error(String(e));
+            return errorResponder({ message: String(e) + "    Check Logs" }, request, response, e?.status ? e?.status : 400);
         }
     };
 
-  
+
 
     createData = async (request: any, response: any) => {
         try {
@@ -116,7 +115,7 @@ class dataManageController {
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))
-            return errorResponder({ message: String(e) }, request, response);
+            return errorResponder({ message: String(e), code: e?.code }, request, response, e?.status ? e?.status : 400);
         }
     }
 
@@ -127,7 +126,7 @@ class dataManageController {
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))
-            return errorResponder({ message: String(e) }, request, response);
+            return errorResponder({ message: String(e), code: e?.code }, request, response, e?.status ? e?.status : 400);
         }
     }
 
