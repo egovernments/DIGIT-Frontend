@@ -88,6 +88,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
         url:configs?.apiDetails?.serviceName,
         params:configs?.apiDetails?.requestParam,
         body:configs?.apiDetails?.requestBody,
+        headers:configs?.apiDetails?.requestHeaders,
         config: {
             enabled: enable,
         },
