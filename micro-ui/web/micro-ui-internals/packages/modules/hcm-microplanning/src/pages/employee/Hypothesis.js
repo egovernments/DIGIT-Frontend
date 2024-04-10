@@ -17,10 +17,11 @@ const initialAssumptions = [
   },
 ];
 
-const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion }) => {
+const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
 
   // States
+  const [editable, setEditable] = useState(true);
   const [modal, setModal] = useState("none");
   const [assumptions, setAssumptions] = useState(initialAssumptions);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
@@ -31,6 +32,11 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   useEffect(() => {
     if (!microplanData || !microplanData.hypothesis) return;
     setAssumptions(microplanData.hypothesis);
+
+    if (!pages) return;
+    const previouspage = pages[currentPage?.id - 1];
+    if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+    else setEditable(true);
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
@@ -72,8 +78,9 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, closeModal]);
 
+  const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className="jk-header-btn-wrapper hypothesis-section">
+    <div className={sectionClass}>
       {/* NonInterractable Section */}
       <NonInterractableSection t={t} />
       {/* Interractable Section that includes the example as well as the assumptions */}

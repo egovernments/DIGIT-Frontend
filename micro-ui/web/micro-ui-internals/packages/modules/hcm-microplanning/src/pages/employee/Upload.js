@@ -22,6 +22,8 @@ const Upload = ({
   setMicroplanData,
   checkDataCompletion,
   setCheckDataCompletion,
+  currentPage,
+  pages,
 }) => {
   const { t } = useTranslation();
 
@@ -33,6 +35,7 @@ const Upload = ({
   ]);
 
   // States
+  const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
   const [modal, setModal] = useState("none");
@@ -69,6 +72,11 @@ const Upload = ({
   useEffect(() => {
     if (!microplanData || !microplanData.upload) return;
     setFileDataList(microplanData.upload);
+
+    if (!pages) return;
+    const previouspage = pages[currentPage?.id - 1];
+    if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+    else setEditable(true);
   }, []);
 
   // UseEffect to add a event listener for keyboard
@@ -501,6 +509,7 @@ const Upload = ({
         } else {
           error = t("ERROR_UPLOADING_FILE");
           setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+          setResourceMapping([]);
           setUploadedFileError(error);
         }
       } catch (error) {
@@ -509,13 +518,15 @@ const Upload = ({
         setFileData((previous) => ({ ...previous, error }));
         setUploadedFileError(error);
         setLoderActivation(false);
+        setResourceMapping([]);
         return;
       }
     }
+    let resourceMappingData;
     if (filestoreId) {
-      resourceMapping = resourceMapping.map((item) => ({ ...item, filestoreId }));
+      resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
     }
-    setFileData((previous) => ({ ...previous, data, resourceMapping, error, filestoreId }));
+    setFileData((previous) => ({ ...previous, data, resourceMapping: resourceMappingData, error, filestoreId }));
     setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
     setLoderActivation(false);
   };
@@ -591,7 +602,7 @@ const Upload = ({
   };
 
   return (
-    <div className="jk-header-btn-wrapper upload-section">
+    <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
       <div className="upload">
         <div className="upload-component-wrapper">
           {!dataPresent ? (

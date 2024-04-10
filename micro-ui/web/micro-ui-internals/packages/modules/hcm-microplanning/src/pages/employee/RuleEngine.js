@@ -21,10 +21,11 @@ const initialRules = [
   },
 ];
 
-const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion }) => {
+const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
 
   // States
+  const [editable, setEditable] = useState(true);
   const [modal, setModal] = useState("none");
   const [rules, setRules] = useState(initialRules);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
@@ -39,13 +40,21 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     { name: "UIConfiguration" },
     { name: "RuleConfigureInputs" },
     { name: "RuleConfigureOutput" },
-    { name: "HypothesisAssumptions" },
+    // { name: "HypothesisAssumptions" },
   ]);
 
   // UseEffect to extract data on first render
   useEffect(() => {
     if (!microplanData || !microplanData.ruleEngine) return;
+    const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
+    if (!hypothesisAssumptions) return;
+    setHypothesisAssumptionsList(hypothesisAssumptions);
     setRules(microplanData.ruleEngine);
+
+    if (!pages) return;
+    const previouspage = pages[currentPage?.id - 1];
+    if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+    else setEditable(true);
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
@@ -66,7 +75,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
+    // let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
+    let hypothesisAssumptions = [];
+    microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
     let ruleConfigureInputs = data["hcm-microplanning"]["RuleConfigureInputs"];
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
@@ -75,10 +86,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (!ruleConfigureInputs) return;
     if (!UIConfiguration) return;
 
-    let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    if (!(temp && temp.assumptions)) return;
-    setHypothesisAssumptionsList(temp.assumptions);
-    setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
+    let temp;
+    // let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+    // if (!(temp && temp.assumptions)) return;
+    setHypothesisAssumptionsList(hypothesisAssumptions);
+    setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
 
     if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.data)) return;
@@ -104,8 +116,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setHypothesisAssumptionsList, closeModal]);
 
+  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className="jk-header-btn-wrapper rule-engine-section">
+    <div className={sectionClass}>
       <div className="rule-engine-body">
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />
