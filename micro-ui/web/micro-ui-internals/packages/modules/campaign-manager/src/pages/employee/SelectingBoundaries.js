@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { CardText, LabelFieldPair, Card, Header, CardLabel, CardSubHeader, TypeSelectCard, Button } from "@egovernments/digit-ui-react-components";
+import { CardText, LabelFieldPair, Card, Header, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Dropdown, InfoCard, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 function SelectingBoundaries({ onSelect, formData, ...props }) {
@@ -8,14 +8,13 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [hierarchy, setHierarchy] = useState({});
   const [showcomponent, setShowComponent] = useState(false);
   const [boundaryType, setBoundaryType] = useState(null);
-  const [parentBoundaryType, setParentBoundaryType] = useState(null);
   const [boundaryData, setBoundaryData] = useState({});
   const [parentArray, setParentArray] = useState(null);
   const [boundaryTypeDataresult, setBoundaryTypeDataresult] = useState(null);
+  const [selectedData,setSelectedData] = useState({});
   useEffect(() => {
-    onSelect("boundaryType", boundaryData);
-  }, [boundaryData]);
-
+    onSelect("boundaryType", {boundaryData:boundaryData , selectedData:selectedData});
+  }, [boundaryData , selectedData]);
   const reqCriteriaBoundaryHierarchySearch = {
     url: "/boundary-service/boundary-hierarchy-definition/_search",
     params: {},
@@ -99,7 +98,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         setBoundaryData(updatedBoundaryData);
       }
     }
-  }, [boundaryTypeDataresult]);
+  }, [boundaryTypeDataresult , hierarchy]);
 
   const handleBoundaryChange = (data, boundary) => {
     let res = [];
@@ -107,6 +106,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       data?.map((ob) => {
         res.push(ob?.[1]);
       });
+    setSelectedData(res);
     const parentBoundaryEntry = hierarchy ? hierarchy?.boundaryHierarchy.find((e) => e.parentBoundaryType === res?.[0]?.boundaryType) : null;
     setBoundaryType(parentBoundaryEntry?.boundaryType);
     const codes = res.map((item) => item.code);
@@ -124,8 +124,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             {`${t("HCM_HIERARCHY_TYPE")}`}
             <span className="mandatory-span">*</span>
           </CardLabel>
-          <Dropdown
-            // style={{ width: "50%" }}
+          <div className="digit-field">          <Dropdown
             t={t}
             option={hierarchyTypeDataresult?.BoundaryHierarchy}
             optionKey={"hierarchyType"}
@@ -133,7 +132,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             select={(value) => {
               handleChange(value);
             }}
-          />
+          /></div>
         </LabelFieldPair>
       </Card>
       {showcomponent && (
@@ -147,17 +146,18 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
                   {boundary.boundaryType}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
+                <div className="digit-field">
                 <MultiSelectDropdown
-                  style={{ width: "300%" }}
                   t={t}
                   // option={boundaryTypeDataresult?.TenantBoundary?.[0]?.boundary}
                   options={boundaryData[boundary.boundaryType]?.map((item) => item?.TenantBoundary?.[0]?.boundary).flat() || []}
                   optionsKey={"code"}
-                  // selected={boundaryType}
+                  // selected={boundaryData}
                   onSelect={(value) => {
                     handleBoundaryChange(value, boundary);
                   }}
                 />
+                </div>
               </LabelFieldPair>
             ))}
           </div>
@@ -169,10 +169,11 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             name: "infocard",
           }}
           variant="default"
+          style= {{marginLeft: "0rem", maxWidth: "100%"}}
           additionalElements={[
             <span>
               {t("HCM_BOUNDARY_INFO ")}
-              <a href={`mailto:L1team@email.com`}>{t("L1team@email.com")}</a>
+              <a href="mailto:L1team@email.com" style={{ color:"black"}}>{t("L1team@email.com")}</a>
             </span>,
           ]}
           label={"Info"}

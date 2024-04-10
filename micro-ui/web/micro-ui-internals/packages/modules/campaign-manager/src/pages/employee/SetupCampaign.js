@@ -143,7 +143,6 @@ const SetupCampaign = () => {
 
           await mutate(payloadData, {
             onError: (error, variables) => {
-              console.log(error);
             },
             onSuccess: async (data) => {
               draftRefetch();
@@ -456,7 +455,7 @@ const SetupCampaign = () => {
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
-        noCardStyle={currentStep === 1 || currentStep === 6 ? true : false}
+        noCardStyle={currentStep === 1 || currentStep === 6 || currentStep === 2 ? true : false}
         onSecondayActionClick={onSecondayActionClick}
         label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
