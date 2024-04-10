@@ -12,7 +12,7 @@ import HorizontalNavV2 from "./HorizontalNavV2";
 
 const setUIConf = (uiConfig) => {
   if(uiConfig.additionalTabs)
-    return [{uiConfig},...uiConfig?.additionalTabs]
+    return [{...uiConfig},...uiConfig?.additionalTabs]
   return [{uiConfig}]
 }
 

@@ -152,6 +152,11 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
         register("limit",session?.tableForm?.limit || config?.customDefaultPagination?.limit || 10);
     }, [register]);
 
+    useEffect(() => {
+        setValue("offset",state.tableForm.offset)
+        setValue("limit",state.tableForm.limit)
+      })
+
     function onPageSizeChange(e) {
         setValue("limit", Number(e.target.value));
         handleSubmit(onSubmit)();
