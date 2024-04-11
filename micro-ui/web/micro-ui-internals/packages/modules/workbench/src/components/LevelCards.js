@@ -18,6 +18,12 @@ const LevelCards = ({ onSelect, formData, props }) => {
   };
 
   useEffect(() => {
+    if(formData?.levelcards === null){
+      setCardDetails([{ level: "" }]);
+    }
+  }, [formData]);
+
+  useEffect(() => {
     onSelect("levelcards", cardDetails);
   }, [cardDetails]);
 
