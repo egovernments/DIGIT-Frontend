@@ -45,16 +45,18 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (!microplanData || !microplanData.ruleEngine) return;
-    const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
-    if (!hypothesisAssumptions) return;
-    setHypothesisAssumptionsList(hypothesisAssumptions);
-    setRules(microplanData.ruleEngine);
+    if (microplanData && microplanData.ruleEngine) {
+      const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
+      if (!hypothesisAssumptions) return;
+      setHypothesisAssumptionsList(hypothesisAssumptions);
+      setRules(microplanData.ruleEngine);
+    }
 
-    if (!pages) return;
-    const previouspage = pages[currentPage?.id - 1];
-    if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
-    else setEditable(true);
+    if (pages) {
+      const previouspage = pages[currentPage?.id - 1];
+      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      else setEditable(true);
+    }
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section

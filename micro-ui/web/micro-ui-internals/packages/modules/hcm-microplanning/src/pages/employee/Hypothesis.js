@@ -30,13 +30,14 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (!microplanData || !microplanData.hypothesis) return;
-    setAssumptions(microplanData.hypothesis);
-
-    if (!pages) return;
-    const previouspage = pages[currentPage?.id - 1];
-    if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
-    else setEditable(true);
+    if (pages) {
+      const previouspage = pages[currentPage?.id - 1];
+      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      else setEditable(true);
+    }
+    if (microplanData && microplanData.hypothesis) {
+      setAssumptions(microplanData.hypothesis);
+    }
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section

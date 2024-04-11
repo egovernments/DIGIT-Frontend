@@ -13,7 +13,7 @@ export const components = {
   Upload,
   Hypothesis,
   RuleEngine,
-  Mapping
+  Mapping,
 };
 
 // will be changed laters
@@ -182,19 +182,28 @@ const CreateMicroplan = () => {
 const mapDataForApi = (data, Operators) => {
   // Generate UUID
   const uuid = uuidv4();
+  let files = [],
+    resourceMapping = [];
+  Object.values(data?.upload).forEach((item) => {
+    if (item?.error) return;
+    const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
+    files.push(data);
+  });
+  Object.values(data?.upload).forEach((item) => {
+    if (item?.error) return;
+    resourceMapping.push(item?.resourceMapping);
+  });
+  resourceMapping = resourceMapping.flatMap((inner) => inner);
+
   // return a Create API body
   return {
     PlanConfiguration: {
       tenantId: Digit.ULBService.getStateId(),
       name: MicroplanName,
       executionPlanId: uuid,
-      files: Object.values(data?.upload).map((item) => ({
-        filestoreId: item.filestoreId,
-        inputFileType: item.fileType,
-        templateIdentifier: item.section,
-      })),
+      files,
       assumptions: data?.hypothesis?.map((item) => {
-        let templist = JSON.parse(JSON.stringify(item));;
+        let templist = JSON.parse(JSON.stringify(item));
         delete templist.id;
         return templist;
       }),
@@ -205,9 +214,7 @@ const mapDataForApi = (data, Operators) => {
         if (operator && operator.code) data.operator = operator?.code;
         return data;
       }),
-      resourceMapping: Object.values(data?.upload)
-        .map((item) => item.resourceMapping)
-        .flatMap((inner) => inner),
+      resourceMapping,
     },
   };
 };
