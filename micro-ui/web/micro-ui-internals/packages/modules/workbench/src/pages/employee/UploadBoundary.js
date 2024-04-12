@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useReducer, useMemo, useRef, useCallback } from "react";
-import { CardLabel, Header, Card, LabelFieldPair, DownloadIcon , Toast , Button , CustomDropdown} from "@egovernments/digit-ui-react-components";
+import { CardLabel, Header, Card, LabelFieldPair, DownloadIcon, Toast, Button, CustomDropdown } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../../components/BulkUpload";
 import GenerateXlsx from "../../components/GenerateXlsx";
 import { useHistory } from "react-router-dom";
+import XLSX from "xlsx";
 
 const UploadBoundary = () => {
   const { t } = useTranslation();
@@ -69,7 +70,7 @@ const UploadBoundary = () => {
   };
 
   const requestCriteriaBulkUpload = {
-    url: "/project-factory/v1/data/_autoGenerateBoundaryCode",
+    url: "/project-factory/v1/data/_create",
     params: {},
     body: {
       ResourceDetails: {},
@@ -78,7 +79,73 @@ const UploadBoundary = () => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(requestCriteriaBulkUpload);
 
+  const validateHeaderRow = (headerRow) => {
+    const expectedHeaders = simplifiedData;
+    // Check if the length of the headerRow matches the length of expectedHeaders
+    if (headerRow.length !== expectedHeaders.length) {
+      return false;
+    }
+
+    // Check each header in the headerRow against the corresponding header in expectedHeaders
+    for (let i = 0; i < headerRow.length; i++) {
+      if (headerRow[i] !== expectedHeaders[i]) {
+        return false;
+      }
+    }
+    // All headers match
+    return true;
+  };
+
+  const validateExcel = (selectedFile) => {
+    return new Promise((resolve, reject) => {
+      // Check if a file is selected
+      if (!selectedFile) {
+        reject(t("HCM_FILE_UPLOAD_ERROR"));
+        return;
+      }
+
+      // Read the Excel file
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+
+          // Assuming your columns are in the first sheet
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+          const columnsToValidate = XLSX.utils.sheet_to_json(sheet, {
+            header: 1,
+          })[0];
+
+          // Find the index of "Boundary Code" column
+          const boundaryCodeIndex = columnsToValidate.indexOf("Boundary Code");
+
+          // Slice the array to include only columns before the "Boundary Code" column
+          const columnsBeforeBoundaryCode = boundaryCodeIndex !== -1 ? columnsToValidate.slice(0, boundaryCodeIndex) : columnsToValidate;
+
+          if (validateHeaderRow(columnsBeforeBoundaryCode)) {
+            resolve(true);
+          } else {
+            const label = "HCM_FILE_VALIDATION_ERROR";
+            setShowToast({ isError: true, label });
+            closeToast();
+          }
+        } catch (error) {
+          reject("HCM_FILE_UNAVAILABLE");
+        }
+      };
+
+      reader.readAsArrayBuffer(selectedFile);
+    });
+  };
+
   const onBulkUploadSubmit = async (file) => {
+    // Validate the header row
+    const validate = await validateExcel(file[0]);
+    if (!validateExcel(file[0])) {
+      return;
+    }
     try {
       const module = "HCM";
       const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
@@ -115,12 +182,11 @@ const UploadBoundary = () => {
           },
         }
       );
-      
     } catch (error) {
       let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
       setShowToast({ label, isError: true });
+      closeToast();
     }
-    
   };
 
   return (
