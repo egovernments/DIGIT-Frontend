@@ -4,7 +4,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { UIConfiguration } from "../../configs/UIConfiguration.json";
 // Mapping component definition
 const Mapping = ({
   campaignType = "SMC",
@@ -17,7 +16,11 @@ const Mapping = ({
   ...props
 }) => {
   // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "BaseMapLayers" }, { name: "Schemas" }]);
+  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
+    { name: "BaseMapLayers" },
+    { name: "Schemas" },
+    { name: "UIConfiguration" },
+  ]);
 
   // Setting up state variables
   const [editable, setEditable] = useState(true);
@@ -33,10 +36,9 @@ const Mapping = ({
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!data) return;
-    // let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
+    let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
     if (UIConfiguration) {
       const filterDataOriginList = UIConfiguration.find((item) => item.name === "mapping");
-      //.boundriesDataOrigin;
       setFilterDataOrigin(filterDataOriginList);
     }
     const BaseMapLayers = data["hcm-microplanning"]["BaseMapLayers"];
@@ -126,7 +128,7 @@ const Mapping = ({
         </div>
         <div className="map-container">
           {/* Container for map */}
-          <div ref={(node) => (_mapNode = node)}  className="map" id="map" />
+          <div ref={(node) => (_mapNode = node)} className="map" id="map" />
         </div>
       </div>
       {toast && toast.state === "warning" && (
@@ -151,7 +153,7 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
   if (microplanData && microplanData?.upload) {
     let files = microplanData?.upload;
     let dataAvailabilityCheck = "initialStage"; // Initialize data availability check
-    
+
     // Loop through each file in the microplan upload
     for (let fileData in files) {
       // Check if the file is not part of boundary or layer data origins
@@ -161,19 +163,24 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
       ) {
         dataAvailabilityCheck = "false"; // Set data availability to false if file not found in data origins
       }
-      
+
       // If data availability is not false, proceed with further checks
       if (dataAvailabilityCheck !== false) {
-        if (files[fileData]?.error || !files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
-        
+        if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true"; 
+        if (files[fileData]?.error) {
+          dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "false" : "partial";
+          continue;
+        }
+        console.log(dataAvailabilityCheck)
+        if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
+
         // Get validation schema for the file
         let schema = getSchema(campaignType, files[fileData]?.fileType, files[fileData]?.section, validationSchemas);
         let latLngColumns = schema?.schema?.locationDataColumns || [];
-        
+
         // Check if file contains latitude and longitude columns
         if (latLngColumns?.length && files[fileData]?.data) {
-          if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true"; // Update data availability if it's in initial stage
-          
+
           // Check file type and update data availability accordingly
           switch (files[fileData]?.fileType) {
             case "Excel": {
@@ -196,20 +203,20 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
         }
       }
     }
-    
+
     // Set overall data availability
     setDataAvailability(dataAvailabilityCheck);
 
     // Combine boundary and layer data origins
     const combineList = [...filterDataOrigin?.boundriesDataOrigin, ...filterDataOrigin?.layerDataOrigin];
-    
+
     // Section wise check
     if (dataAvailabilityCheck == "true") {
       let sectionWiseCheck = true;
       combineList.forEach((item) => (sectionWiseCheck = Object.keys(files).includes(item) && sectionWiseCheck));
       if (!sectionWiseCheck) dataAvailabilityCheck = "partial"; // Update data availability if section-wise check fails
     }
-    
+
     // Update data availability based on conditions
     if (dataAvailabilityCheck == "initialStage" && (combineList.length === 0 || Object.keys(files).length === 0)) dataAvailabilityCheck = "false";
     switch (dataAvailabilityCheck) {

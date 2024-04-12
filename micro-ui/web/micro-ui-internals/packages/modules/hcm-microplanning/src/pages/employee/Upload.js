@@ -606,10 +606,6 @@ const Upload = ({
     setPreviewUploadedData(data);
   };
 
-  const idk = async (event) => {
-    const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", event.target.files[0], Digit.ULBService.getStateId());
-  };
-
   return (
     <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
       <div className="upload">
@@ -626,9 +622,6 @@ const Upload = ({
                   setToast={setToast}
                   template={template}
                 />
-                {/* /////////////////////////////// */}
-                <input type="file" onChange={idk} />
-                {/* /////////////////////////////// */}
               </div>
             ) : (
               <div className="upload-component">{sectionComponents}</div>
