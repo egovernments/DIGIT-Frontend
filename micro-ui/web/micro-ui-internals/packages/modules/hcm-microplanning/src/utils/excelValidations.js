@@ -33,11 +33,13 @@ export const excelValidations = (data, schemaData, t) => {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
-          const instancePathType = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
+          let instancePathType = validateExcel.errors[i].dataPath;
+          var matches = instancePathType.match(/\'([a-zA-Z]+)\'/g);
+          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
+          if (schemaData["locationDataColumns"].includes(parts)) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(instancePathType[instancePathType.length - 1]);
+          columns.add(parts);
           break;
 
         case "required":
@@ -50,16 +52,20 @@ export const excelValidations = (data, schemaData, t) => {
 
         case "maximum":
         case "minimum":
-          const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathMinMax[instancePathMinMax.length - 1])) {
+          let instancePathMinMax = validateExcel.errors[i].dataPath;
+          var matches = instancePathMinMax.match(/\'([a-zA-Z]+)\'/g);
+          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
+          if (schemaData["locationDataColumns"].includes(parts[parts.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(instancePathMinMax[instancePathMinMax.length - 1]);
+          columns.add(parts);
           break;
 
         case "pattern":
-          const instancePathPattern = validateExcel.errors[i].instancePath.split("/");
-          columns.add(instancePathPattern[instancePathPattern.length - 1]);
+          const instancePathPattern = validateExcel.errors[i].dataPath;
+          var matches = instancePathPattern.match(/\'([a-zA-Z]+)\'/g);
+          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
+          columns.add(parts);
           break;
 
         default:
@@ -73,9 +79,22 @@ export const excelValidations = (data, schemaData, t) => {
   return { valid };
 };
 
+function filterOutWordAndLocalise(inputString, operation) {
+  // Define a regular expression to match the string parts
+  var regex = /(\w+)/g; // Matches one or more word characters
+
+  // Replace each match using the provided function
+  var replacedString = inputString.replace(regex, function (match) {
+    // Apply the function to each matched string part
+    return operation(match);
+  });
+
+  return replacedString;
+}
+
 const prepareProperties = (properties, t) => {
   let newProperties = {};
-  Object.keys(properties).forEach((item) => (newProperties[t(item)] = properties[item]));
+  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
   return newProperties;
 };
 

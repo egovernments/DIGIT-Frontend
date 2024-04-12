@@ -279,9 +279,10 @@ $border-color: rgba(214, 213, 212, 1);
         cursor: pointer;
 
         &:hover {
-            border: 0.125rem $highlight-color solid;
+            outline: 0.125rem $highlight-color solid;
 
             p {
+                font-weight: 500;
                 color: rgba(244, 119, 56, 1);
             }
         }
@@ -1468,7 +1469,26 @@ $border-color: rgba(214, 213, 212, 1);
             }
 
             .dropdown {
-                padding: 0.5rem 1rem 0 0;
+                padding: 0.5rem 0 0 0;
+                width: 100%;
+            }
+
+            .filter-controllers {
+                display: flex !important;
+                justify-content: space-between;
+                padding: 1rem 0 0 0;
+
+                .button-primary , .button-secondary {
+                    font-family: Roboto;
+                    font-size: 1.188rem;
+                    font-weight: 600;
+                    max-width: 6.75rem;
+                    min-height: 2.5rem;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
             }
         }
 
@@ -1481,10 +1501,11 @@ $border-color: rgba(214, 213, 212, 1);
 
             #map {
                 height: 100%;
+                z-index: 20;
                 .leaflet-control-layers-toggle::before {
-                    font-family: 'Font Awesome 5 Free' ;
-                    background-image: none ;
-                    content: "\f0c9" ; 
+                    font-family: 'Font Awesome 5 Free';
+                    background-image: none;
+                    content: "\f0c9";
                 }
             }
 

@@ -100,8 +100,10 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
-          const instancePathType = validateGeojson.errors[i].instancePath.split("/");
-          columns.add(t(instancePathType[instancePathType.length - 1]));
+          const instancePathType = validateGeojson.errors[i].dataPath;
+          var matches =  instancePathType.match(/\'([a-zA-Z]+)\'/g);
+          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
+          columns.add(t(parts));
           break;
         case "const":
           if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") return { valid, message: "ERROR_FEATURECOLLECTION" };
@@ -110,8 +112,10 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           columns.add(t(validateGeojson.errors[i].params.missingProperty));
           break;
         case "pattern":
-          const instancePathPattern = validateGeojson.errors[i].instancePath.split("/");
-          columns.add(t(instancePathPattern[instancePathPattern.length - 1]));
+          const instancePathPattern = validateGeojson.errors[i].dataPath;
+          var matches =  instancePathPattern.match(/\'([a-zA-Z]+)\'/g);
+          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
+          columns.add(t(parts));
           break;
 
         default:
