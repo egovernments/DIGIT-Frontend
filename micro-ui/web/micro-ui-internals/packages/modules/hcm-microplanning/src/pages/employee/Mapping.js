@@ -131,7 +131,7 @@ const Mapping = ({
           <div ref={(node) => (_mapNode = node)} className="map" id="map" />
         </div>
       </div>
-      {toast && toast.state === "warning" && (
+      {toast && toast.state === "error" && (
         <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
       )}
     </div>
@@ -166,12 +166,15 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
 
       // If data availability is not false, proceed with further checks
       if (dataAvailabilityCheck !== false) {
-        if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true"; 
         if (files[fileData]?.error) {
-          dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "false" : "partial";
+          dataAvailabilityCheck =
+            dataAvailabilityCheck === "partial"
+              ? "partial"
+              : dataAvailabilityCheck === "false" || dataAvailabilityCheck === "initialStage"
+              ? "false"
+              : "partial";
           continue;
         }
-        console.log(dataAvailabilityCheck)
         if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
 
         // Get validation schema for the file
@@ -180,7 +183,7 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
 
         // Check if file contains latitude and longitude columns
         if (latLngColumns?.length && files[fileData]?.data) {
-
+          if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
           switch (files[fileData]?.fileType) {
             case "Excel": {
@@ -189,10 +192,17 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
               for (let colName of latLngColumns) {
                 check = check && columnList.includes(t(colName)); // Check if columns exist in the file
               }
-              if (check === true)
-                dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability based on column check
-              if (check === false)
-                dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "false" : "partial"; // Update data availability based on column check
+              dataAvailabilityCheck = check
+                ? dataAvailabilityCheck === "partial"
+                  ? "partial"
+                  : dataAvailabilityCheck === "false"
+                  ? "partial"
+                  : "true"
+                : dataAvailabilityCheck === "partial"
+                ? "partial"
+                : dataAvailabilityCheck === "false"
+                ? "false"
+                : "partial"; // Update data availability based on column check
               break;
             }
             case "Geojson":
@@ -224,21 +234,20 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
       case undefined:
         // Set warning toast message for no data to show
         setToast({
-          state: "warning",
+          state: "error",
           message: t("MAPPING_NO_DATA_TO_SHOW"),
         });
         break;
       case "partial":
         // Set warning toast message for partial data to show
         setToast({
-          state: "warning",
+          state: "error",
           message: t("MAPPING_PARTIAL_DATA_TO_SHOW"),
         });
         break;
     }
   }
 };
-
 
 // Exporting Mapping component
 export default Mapping;
