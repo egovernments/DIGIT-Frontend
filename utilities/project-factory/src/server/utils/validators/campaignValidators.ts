@@ -2,8 +2,7 @@ import createAndSearch from "../../config/createAndSearch";
 import config from "../../config";
 import { logger } from "../logger";
 import { httpRequest } from "../request";
-import { getFacilityIds, matchFacilityData } from "../genericUtils";
-import { getFacilitiesViaIds } from "../../api/campaignApis";
+import {  getHierarchy } from "../../api/campaignApis";
 import { campaignDetailsSchema } from "../../config/campaignDetails";
 import Ajv from "ajv";
 import axios from "axios";
@@ -89,27 +88,26 @@ async function validateBoundaryData(data: any[], request: any, boundaryColumn: a
 }
 
 async function validateViaSchema(data: any, schema: any) {
-    const ajv = new Ajv();
-    const validate = ajv.compile(schema);
-    const validationErrors: any[] = [];
-
-    data.forEach((facility: any, index: any) => {
-        if (!validate(facility)) {
-            validationErrors.push({ index, errors: validate.errors });
-        }
-    });
-
-    // Throw errors if any
-    if (validationErrors.length > 0) {
-        const errorMessage = validationErrors.map(({ index, errors }) => {
-            const errorMessages = errors.map((error: any) => {
-                return `Validation error at '${error.dataPath}': ${error.message}`;
-            });
-            return `Data at index ${index}:${errorMessages}`;
+    if (schema) {
+        const ajv = new Ajv();
+        const validate = ajv.compile(schema);
+        const validationErrors: any[] = [];
+        data.forEach((item: any, index: any) => {
+            if (!validate(item)) {
+                validationErrors.push({ index, errors: validate.errors });
+            }
         });
-        throw new Error(`Validation errors:${errorMessage}`);
-    } else {
-        logger.info("All Facilities rows are valid.");
+
+        // Throw errors if any
+        if (validationErrors.length > 0) {
+            const errorMessage = validationErrors.map(({ index, errors }) => `Facility at index ${index}: ${JSON.stringify(errors)}`).join('\n');
+            throw new Error(`Validation errors:\n${errorMessage}`);
+        } else {
+            logger.info("All Facilities rows are valid.");
+        }
+    }
+    else {
+        logger.info("skipping schema validation")
     }
 }
 
@@ -213,12 +211,6 @@ function validateFacilityCreateData(data: any) {
 
 }
 
-async function validateFacilityViaSearch(tenantId: string, data: any, requestBody: any) {
-    const ids = getFacilityIds(data);
-    const searchedFacilities = await getFacilitiesViaIds(tenantId, ids, requestBody)
-    matchFacilityData(data, searchedFacilities)
-}
-
 async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenantId: any, request: any): Promise<void> {
     const params = {
         tenantId: tenantId,
@@ -229,18 +221,18 @@ async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenan
     };
     const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, { RequestInfo: request.body.RequestInfo }, params);
     if (!boundaryResponse?.TenantBoundary || !Array.isArray(boundaryResponse.TenantBoundary) || boundaryResponse.TenantBoundary.length === 0) {
-        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND" });
+        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND", status: 400 });
     }
 
     const boundaryData = boundaryResponse.TenantBoundary[0]?.boundary;
 
     if (!boundaryData || !Array.isArray(boundaryData) || boundaryData.length === 0) {
-        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND" });
+        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND", status: 400 });
 
     }
 
     if (boundary.isRoot && boundaryData[0]?.code !== boundary.code) {
-        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND" });
+        throw Object.assign(new Error(`Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`), { code: "BOUNDARY_NOT_FOUND", status: 400 });
     }
 }
 
@@ -353,6 +345,9 @@ async function validateById(request: any) {
             if (searchResponse?.data?.CampaignDetails?.length > 0) {
                 logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
                 request.body.ExistingCampaignDetails = searchResponse?.data?.CampaignDetails[0];
+                if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName) {
+                    throw Object.assign(new Error(`CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`), { code: "CAMPAIGNNAME_MISMATCH", status: 400 });
+                }
             }
             else {
                 throw new Error("Campaign not found");
@@ -406,6 +401,16 @@ async function validateSearchProjectCampaignRequest(request: any) {
             throw new Error("ids should be an array")
         }
     }
+    const { pagination } = CampaignDetails;
+    if (pagination?.limit || pagination?.limit == 0) {
+        if (typeof pagination.limit === 'number') {
+            if (pagination.limit > 100 || pagination.limit < 1) {
+                throw Object.assign(new Error("Pagination Limit should be from 1 to 100"), { code: "INVALID_PAGINATION", status: 400 });
+            }
+        } else {
+            throw Object.assign(new Error("Pagination Limit should be a number"), { code: "INVALID_PAGINATION", status: 400 });
+        }
+    }
 }
 
 async function validateSearchRequest(request: any) {
@@ -454,6 +459,52 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
     }
 }
 
+async function validateHierarchyType(request: any) {
+    try {
+        const requestBody = {
+            "RequestInfo": { ...request?.body?.RequestInfo },
+            "BoundaryTypeHierarchySearchCriteria": {
+                "tenantId": request?.body?.ResourceDetails?.tenantId,
+                "hierarchyType": request?.body?.ResourceDetails?.hierarchyType
+            }
+        }
+        const url = config?.host?.boundaryHost + config?.paths?.boundaryHierarchy;
+        const response = await httpRequest(url, requestBody, undefined, "post", undefined, undefined);
+        if (!response?.BoundaryHierarchy) {
+            throw Error("Boundary Hierarchy not present for given tenant and hierarchy Type")
+        }
+    }
+    catch (error: any) {
+        throw new Error(`Error while validating HierarchyType: ${error.message}`);
+    }
+}
+
+async function validateBoundarySheetData(boundaryData: any, request: any) {
+    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    validateBoundarySheetHeaders(boundaryData, hierarchy, request);
+}
+function validateBoundarySheetHeaders(boundaryData: any, hierarchy: any, request: any) {
+    let maxLength = 0;
+    let longestObject: any;
+    for (const obj of boundaryData) {
+        const length = Object.keys(obj).length;
+        if (length > maxLength) {
+            longestObject = obj;
+            maxLength = length;
+        }
+    }
+    const headersOfBoundarySheet = Object.keys(longestObject);
+    const boundaryCodeIndex = headersOfBoundarySheet.indexOf('Boundary Code');
+    const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
+    if (keysBeforeBoundaryCode.some((key: string, index: number) => key !== hierarchy[index])) {
+        const errorMessage = `"Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type: ${request?.body?.ResourceDetails?.hierarchyType}"`;
+        throw Object.assign(new Error(errorMessage), { code: "BOUNDARY_SHEET_HEADER_ERROR" });
+    }
+
+}
+
+
+
 
 
 
@@ -462,9 +513,10 @@ export {
     validateSheetData,
     validateCreateRequest,
     validateFacilityCreateData,
-    validateFacilityViaSearch,
     validateProjectCampaignRequest,
     validateSearchProjectCampaignRequest,
     validateSearchRequest,
-    validateFilters
+    validateFilters,
+    validateHierarchyType,
+    validateBoundarySheetData
 }

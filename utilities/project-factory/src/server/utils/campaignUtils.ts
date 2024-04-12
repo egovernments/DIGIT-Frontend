@@ -3,13 +3,14 @@ import { httpRequest } from "./request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createProjectCampaignResourcData, projectCreate } from "../api/campaignApis";
-import { getCampaignNumber, createAndUploadFile } from "../api/genericApis";
+import { createProjectCampaignResourcData, getHierarchy, projectCreate } from "../api/campaignApis";
+import { getCampaignNumber, createAndUploadFile, getSheetData, getBoundaryCodesHandler, createBoundaryEntities, createBoundaryRelationship, createExcelSheet } from "../api/genericApis";
 import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
-import { getBoundaryRelationshipData } from "./genericUtils";
+import { getBoundaryRelationshipData, modifyBoundaryData } from "./genericUtils";
+import { validateBoundarySheetData, validateHierarchyType } from "./validators/campaignValidators";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -106,7 +107,7 @@ async function updateStatusFile(request: any) {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
 
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throw new Error("No download URL returned for the given fileStoreId");
+        throw Object.assign(new Error("No download URL returned for the given fileStoreId"), { code: 'INVALID_FILE' });
     }
 
     const headers = {
@@ -121,7 +122,7 @@ async function updateStatusFile(request: any) {
 
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-        throw new Error(`Sheet with name "${sheetName}" is not present in the file.`);
+        throw Object.assign(new Error(`Sheet with name "${sheetName}" is not present in the file.`), { code: 'SHEET_NOT_FOUND' });
     }
     processErrorData(request, createAndSearchConfig, workbook, sheetName);
 
@@ -222,7 +223,9 @@ function updateActivityResourceId(request: any) {
 }
 
 async function generateProcessedFileAndPersist(request: any) {
-    await updateStatusFile(request);
+    if (request.body.ResourceDetails.type !== "boundary") {
+        await updateStatusFile(request);
+    }
     updateActivityResourceId(request);
     logger.info("ResourceDetails to persist : " + JSON.stringify(request?.body?.ResourceDetails));
     logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
@@ -256,12 +259,14 @@ function enrichRootProjectId(requestBody: any) {
 async function enrichAndPersistCampaignForCreate(request: any) {
     const action = request?.body?.CampaignDetails?.action;
     request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
-    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
+    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules };
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
     request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
     request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : null;
     request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : null;
     request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : {};
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate
     request.body.CampaignDetails.auditDetails = {
         createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
         createdTime: Date.now(),
@@ -283,9 +288,14 @@ async function enrichAndPersistCampaignForUpdate(request: any) {
     const action = request?.body?.CampaignDetails?.action;
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
     request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber
-    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules, startDate: request?.body?.CampaignDetails?.startDate, endDate: request?.body?.CampaignDetails?.endDate };
+    request.body.CampaignDetails.campaignDetails = request?.body?.CampaignDetails?.deliveryRules ? { deliveryRules: request?.body?.CampaignDetails?.deliveryRules } : ExistingCampaignDetails?.campaignDetails;
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
     request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate ? request?.body?.CampaignDetails?.startDate : ExistingCampaignDetails?.startDate
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate ? request?.body?.CampaignDetails?.endDate : ExistingCampaignDetails?.endDate
+    request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : ExistingCampaignDetails?.projectType
+    request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : ExistingCampaignDetails?.hierarchyType
+    request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : ExistingCampaignDetails?.additionalDetails
     request.body.CampaignDetails.auditDetails = {
         createdBy: ExistingCampaignDetails?.createdBy,
         createdTime: ExistingCampaignDetails?.createdTime,
@@ -403,11 +413,24 @@ function extractCodesFromBoundaryRelationshipResponse(boundaries: any[]): any {
     return codes;
 }
 
+
+async function getTotalCount(request: any) {
+    try {
+        const query = "SELECT COUNT(*) FROM health.eg_cm_campaign_details";
+        const queryResult = await pool.query(query);
+        request.body.totalCount = parseInt(queryResult.rows[0].count, 10);
+    } catch (error: any) {
+        logger.error("Error getting total count: " + error.message + ", Stack: " + error.stack);
+        throw error;
+    }
+}
+
 async function searchProjectCampaignResourcData(request: any) {
     const CampaignDetails = request.body.CampaignDetails;
     const { tenantId, pagination, ids, ...searchFields } = CampaignDetails;
     const queryData = buildSearchQuery(tenantId, pagination, ids, searchFields);
     logger.info("queryData : " + JSON.stringify(queryData));
+    await getTotalCount(request)
     const responseData = await executeSearchQuery(queryData.query, queryData.values);
     request.body.CampaignDetails = responseData;
 }
@@ -419,7 +442,13 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
 
     for (const field in searchFields) {
         if (searchFields[field] !== undefined) {
-            conditions.push(`${field} = $${index}`);
+            if (field === 'startDate') {
+                conditions.push(`startDate >= $${index}`);
+            } else if (field === 'endDate') {
+                conditions.push(`endDate <= $${index}`);
+            } else {
+                conditions.push(`${field} = $${index}`);
+            }
             values.push(searchFields[field]);
             index++;
         }
@@ -464,6 +493,7 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
     return { query, values };
 }
 
+
 async function executeSearchQuery(query: string, values: any[]) {
     const queryResult = await pool.query(query, values);
     logger.info("queryResult : " + JSON.stringify(queryResult));
@@ -478,6 +508,8 @@ async function executeSearchQuery(query: string, values: any[]) {
         hierarchyType: row.hierarchytype,
         boundaryCode: row.boundarycode,
         projectId: row.projectid,
+        startDate: Number(row.startdate),
+        endDate: Number(row.enddate),
         createdBy: row.createdby,
         lastModifiedBy: row.lastmodifiedby,
         createdTime: Number(row?.createdtime),
@@ -674,15 +706,15 @@ async function appendSheetsToWorkbook(boundaryData: any[]) {
 
         for (const data of boundaryData) {
             const rowData = Object.values(data);
-            const districtIndex = rowData.indexOf(data.District);
-            const districtLevelRow = rowData.slice(0, districtIndex + 1);
+            const districtIndex = data.District !== null ? rowData.indexOf(data.District) : -1;
+            const districtLevelRow = districtIndex !== -1 ? rowData.slice(0, districtIndex + 1) : rowData;
             if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
                 uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
                 mainSheetData.push(rowData);
             }
         }
         const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
-        XLSX.utils.book_append_sheet(workbook, mainSheet, 'Sheet1');
+        XLSX.utils.book_append_sheet(workbook, mainSheet, 'ReadMe');
 
         for (const item of boundaryData) {
             if (item.District && !uniqueDistricts.includes(item.District)) {
@@ -703,7 +735,7 @@ async function appendSheetsToWorkbook(boundaryData: any[]) {
         }
         return workbook;
     } catch (error) {
-        throw Error("An error occurred while appending sheets:");
+        throw Error("An error occurred while creating tabs based on district:");
     }
 }
 
@@ -822,6 +854,54 @@ function createBoundaryMap(boundaries: any[], boundaryMap: Map<string, string>):
     }
 }
 
+const autoGenerateBoundaryCodes = async (request: any) => {
+    try {
+        await validateHierarchyType(request);
+        const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
+        if (!fileResponse?.fileStoreIds?.[0]?.url) {
+            throw new Error("Invalid file");
+        }
+        const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1", false);
+        await validateBoundarySheetData(boundaryData, request);
+        const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
+        const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
+        const childParentMap = getChildParentMap(withoutBoundaryCode);
+        const boundaryMap = await getBoundaryCodesHandler(withoutBoundaryCode, childParentMap, mappingMap, countMap, request);
+        const boundaryTypeMap = getBoundaryTypeMap(boundaryData, boundaryMap);
+        await createBoundaryEntities(request, boundaryMap);
+        const modifiedMap: Map<string, string | null> = new Map();
+        childParentMap.forEach((value, key) => {
+            const modifiedKey = boundaryMap.get(key);
+            let modifiedValue = null;
+            if (value !== null && boundaryMap.has(value)) {
+                modifiedValue = boundaryMap.get(value);
+            }
+            modifiedMap.set(modifiedKey, modifiedValue);
+        });
+        await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
+        const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
+        const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+        const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
+        const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
+        const boundarySheetData = await createExcelSheet(data, headers);
+        const boundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
+        request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
+    }
+    catch (error: any) {
+        throw new Error(error.message);
+    }
+}
+async function convertSheetToDifferentTabs(request: any, fileStoreId: any) {
+    const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
+    if (!fileResponse?.fileStoreIds?.[0]?.url) {
+        throw new Error("Invalid file");
+    }
+    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
+    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
+    const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
+    return boundaryDetails;
+}
+
 export {
     generateProcessedFileAndPersist,
     convertToTypeData,
@@ -837,5 +917,7 @@ export {
     appendSheetsToWorkbook,
     generateFilteredBoundaryData,
     generateHierarchy,
-    createBoundaryMap
+    createBoundaryMap,
+    autoGenerateBoundaryCodes,
+    convertSheetToDifferentTabs
 }

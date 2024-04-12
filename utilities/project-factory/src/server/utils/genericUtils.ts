@@ -10,6 +10,7 @@ import FormData from 'form-data';
 import { Pool } from 'pg';
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
+import { convertSheetToDifferentTabs } from "./campaignUtils";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -158,7 +159,10 @@ const errorResponder = (
 ) => {
   response.header("Content-Type", "application/json");
   const errorResponse = getErrorResponse(error.code || "INTERNAL_SERVER_ERROR", trimError(error.message || "Some Error Occurred!!"));
-  response.status(status).send(errorResponse);
+  if (error?.status) {
+    response.status(error.status).send(errorResponse);
+  }
+  else response.status(status).send(errorResponse);
 };
 
 const trimError = (e: any) => {
@@ -404,7 +408,11 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
     if (type === 'boundary') {
       const dataManagerController = new dataManageController();
       const result = await dataManagerController.getBoundaryData(request, response);
-      const finalResponse = await getFinalUpdatedResponse(result, newEntryResponse, request);
+      let updatedResult = result;
+      if (request?.body?.Filters && request?.body?.Filters?.boundaries.length > 0) {
+        updatedResult = await convertSheetToDifferentTabs(request, result[0].fileStoreId);
+      }
+      const finalResponse = await getFinalUpdatedResponse(updatedResult, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
       produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
       request.body.generatedResource = finalResponse;
@@ -604,24 +612,6 @@ function getFacilityIds(data: any) {
   return data.map((obj: any) => obj["id"])
 }
 
-function matchFacilityData(data: any, searchedFacilities: any) {
-  for (const dataFacility of data) {
-    const searchedFacility = searchedFacilities.find((facility: any) => facility.id === dataFacility.id);
-
-    if (!searchedFacility) {
-      throw new Error(`Facility with ID "${dataFacility.id}" not found in searched facilities.`);
-    }
-    if (config?.values?.matchFacilityData) {
-      const keys = Object.keys(dataFacility);
-      for (const key of keys) {
-        if (searchedFacility.hasOwnProperty(key) && searchedFacility[key] !== dataFacility[key]) {
-          throw new Error(`Value mismatch for key "${key}" at index ${dataFacility.originalIndex}. Expected: "${dataFacility[key]}", Found: "${searchedFacility[key]}"`);
-        }
-      }
-    }
-  }
-}
-
 function matchData(request: any, datas: any, searchedDatas: any, createAndSearchConfig: any) {
   const uid = createAndSearchConfig.uniqueIdentifier;
   const errors = []
@@ -756,7 +746,6 @@ export {
   processGenerateRequest,
   processGenerate,
   getFacilityIds,
-  matchFacilityData,
   getDataFromSheet,
   matchData,
   enrichResourceDetails,

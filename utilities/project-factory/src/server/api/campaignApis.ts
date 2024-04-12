@@ -5,8 +5,8 @@ import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, matchData, generateActivityMessage } from "../utils/genericUtils";
 import { validateSheetData } from '../utils/validators/campaignValidators';
-import { getCampaignNumber } from "./genericApis";
-import { convertToTypeData, generateHierarchy } from "../utils/campaignUtils";
+import {  getCampaignNumber } from "./genericApis";
+import { autoGenerateBoundaryCodes, convertToTypeData, generateHierarchy } from "../utils/campaignUtils";
 import axios from "axios";
 const _ = require('lodash');
 
@@ -31,7 +31,7 @@ async function getAllFacilitiesInLoop(searchedFacilities: any[], facilitySearchP
     searchedFacilities.push(...response?.Facilities);
     return response.Facilities.length >= 50; // Return true if there are more facilities to fetch, false otherwise
   } else {
-    throw Object.assign(new Error("Search failed for Facility. Check Logs"), { code: "FACILITY_SEARCH_FAILED" });
+    throw Object.assign(new Error("Search failed for Facility. Check Logs"), { code: "FACILITY_SEARCH_FAILED", status: 400 });
   }
 }
 
@@ -322,18 +322,23 @@ async function processGenericRequest(request: any) {
 
 async function processCreate(request: any) {
   const type: string = request.body.ResourceDetails.type;
-  const createAndSearchConfig = createAndSearch[type]
-  const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
-  await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
-  const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
-  request.body.dataToCreate = typeData.createData;
-  request.body.dataToSearch = typeData.searchData;
-  await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
-  if (createAndSearchConfig?.createBulkDetails) {
-    _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, request?.body?.dataToCreate);
-    const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
-    changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
-    await performAndSaveResourceActivity(request, createAndSearchConfig, params, type);
+  if (type == "boundary") {
+         await autoGenerateBoundaryCodes(request);
+  }
+  else {
+    const createAndSearchConfig = createAndSearch[type]
+    const dataFromSheet = await getDataFromSheet(request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+    await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
+    const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
+    request.body.dataToCreate = typeData.createData;
+    request.body.dataToSearch = typeData.searchData;
+    await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
+    if (createAndSearchConfig?.createBulkDetails) {
+      _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, request?.body?.dataToCreate);
+      const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
+      changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
+      await performAndSaveResourceActivity(request, createAndSearchConfig, params, type);
+    }
   }
 }
 
@@ -356,7 +361,7 @@ async function createProjectCampaignResourcData(request: any) {
       } catch (error: any) {
         // Handle error for individual resource creation
         logger.error(`Error creating resource: ${error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error}`);
-        throw Object.assign(new Error(String(error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error)), { code: "RESOURCE_CREATION_ERROR" });
+        throw Object.assign(new Error(String(error?.response?.data?.Errors?.[0]?.message ? error?.response?.data?.Errors?.[0]?.message : error)), { code: "RESOURCE_CREATION_ERROR", status: 400 });
       }
     }
   }
@@ -372,7 +377,7 @@ async function projectCreate(projectCreateBody: any, request: any) {
     request.body.boundaryProjectMapping[projectCreateBody?.Projects?.[0]?.address?.boundary].projectId = projectCreateResponse?.Project[0]?.id
   }
   else {
-    throw Object.assign(new Error("Project creation failed, for the request: " + JSON.stringify(projectCreateBody)), { code: "PROJECT_CREATION_FAILED" });
+    throw Object.assign(new Error("Project creation failed, for the request: " + JSON.stringify(projectCreateBody)), { code: "PROJECT_CREATION_FAILED", status: 400 });
   }
 }
 
