@@ -47,7 +47,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   useEffect(() => {
     if (microplanData && microplanData.ruleEngine) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
-      if (!hypothesisAssumptions) return;
+      if (hypothesisAssumptions.length === 0) return;
       setHypothesisAssumptionsList(hypothesisAssumptions);
       setRules(microplanData.ruleEngine);
     }

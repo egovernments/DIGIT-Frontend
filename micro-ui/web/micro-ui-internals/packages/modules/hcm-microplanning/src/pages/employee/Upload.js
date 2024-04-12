@@ -57,7 +57,7 @@ const Upload = ({
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     const valueList = fileDataList ? Object.values(fileDataList) : [];
-    if (valueList.length !== 0 && fileDataList.Population && fileDataList.Population.error === null) setCheckDataCompletion("valid");
+    if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
   }, [checkDataCompletion]);
 
@@ -75,7 +75,7 @@ const Upload = ({
 
     if (pages) {
       const previouspage = pages[currentPage?.id - 1];
-      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
       else setEditable(true);
     }
   }, []);
@@ -190,7 +190,7 @@ const Upload = ({
   useEffect(() => {
     if (selectedSection) {
       // const file = Digit.SessionStorage.get(`Microplanning_${selectedSection.id}`);
-      let file = fileDataList[`${selectedSection.id}`];
+      let file = fileDataList?.[`${selectedSection.id}`];
       if (file && file.file) {
         setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === file.fileType));
         setUploadedFileError(file.error);
@@ -468,7 +468,7 @@ const Upload = ({
   const deleteFile = () => {
     setResourceMapping([]);
     setFileDataList((previous) => {
-      let temp = JSON.parse(JSON.stringify(previous));
+      let temp = _.cloneDeep(previous);
       delete temp[fileData.id];
       return temp;
     });
@@ -486,46 +486,18 @@ const Upload = ({
       setLoderActivation(true);
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
-      if (!schemaData && !schemaData.schema) {
-        setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-        setLoderActivation(false);
-        return;
-      }
-      if (resourceMapping.length !== schemaData.schema["required"].length) {
-        setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-        setLoderActivation(false);
-        return;
-      }
-      setModal("none");
-      const data = computeGeojsonWithMappedProperties();
-      const response = geojsonPropetiesValidation(data, schemaData.schema, t);
-      if (!response.valid) {
-        return handleValidationErrorResponse(response.message);
-      }
+      checkForSchemaData(schemaData);
+      const { data, valid } = conputeMappedDataAndItsValidations();
+      if (!valid) return;
       let filestoreId;
       if (!error) {
-        try {
-          const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", fileData.file, Digit.ULBService.getStateId());
-          if (filestoreResponse?.data?.files?.length > 0) {
-            filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
-          } else {
-            error = t("ERROR_UPLOADING_FILE");
-            setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-            setResourceMapping([]);
-            setUploadedFileError(error);
-          }
-        } catch (error) {
-          error = t("ERROR_UPLOADING_FILE");
-          handleValidationErrorResponse(error)
-          setResourceMapping([]);
-          return;
-        }
+        saveFileToFileStore();
       }
       let resourceMappingData;
       if (filestoreId) {
         resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
       }
-      setResourceMapping([])
+      setResourceMapping([]);
       setFileData((previous) => ({ ...previous, data, resourceMapping: resourceMappingData, error, filestoreId }));
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoderActivation(false);
@@ -534,6 +506,32 @@ const Upload = ({
       setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
       setLoderActivation(false);
     }
+  };
+  const saveFileToFileStore = async () => {
+    try {
+      const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", fileData.file, Digit.ULBService.getStateId());
+      if (filestoreResponse?.data?.files?.length > 0) {
+        filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+      } else {
+        error = t("ERROR_UPLOADING_FILE");
+        setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+        setResourceMapping([]);
+        setUploadedFileError(error);
+      }
+    } catch (error) {
+      error = t("ERROR_UPLOADING_FILE");
+      handleValidationErrorResponse(error);
+      setResourceMapping([]);
+      return;
+    }
+  };
+  const conputeMappedDataAndItsValidations = () => {
+    data = computeGeojsonWithMappedProperties();
+    const response = geojsonPropetiesValidation(data, schemaData.schema, t);
+    if (!response.valid) {
+      return handleValidationErrorResponse(response.message);
+    }
+    return { data: data, valid: response.valid };
   };
 
   const handleValidationErrorResponse = (error) => {
@@ -544,6 +542,20 @@ const Upload = ({
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
     if (error) setUploadedFileError(error);
     setLoderActivation(false);
+  };
+
+  const checkForSchemaData = (schemaData) => {
+    if (!schemaData || !schemaData.schema) {
+      setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
+      setLoderActivation(false);
+      return;
+    }
+    if (resourceMapping.length !== schemaData.schema["required"].length) {
+      setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
+      setLoderActivation(false);
+      return;
+    }
+    setModal("none");
   };
 
   const computeGeojsonWithMappedProperties = () => {
