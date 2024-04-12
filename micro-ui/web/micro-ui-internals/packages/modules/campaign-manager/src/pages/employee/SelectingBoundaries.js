@@ -2,6 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Dropdown, InfoCard, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { mailConfig } from "../../configs/mailConfig";
 function SelectingBoundaries({ onSelect, formData, ...props }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -11,7 +12,8 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [boundaryData, setBoundaryData] = useState({});
   const [parentArray, setParentArray] = useState(null);
   const [boundaryTypeDataresult, setBoundaryTypeDataresult] = useState(null);
-  const [selectedData,setSelectedData] = useState({});
+  const [selectedData,setSelectedData] = useState([]);
+  const [parentBoundaryType , setParentBoundaryType] = useState(null);
   useEffect(() => {
     onSelect("boundaryType", {boundaryData:boundaryData , selectedData:selectedData});
   }, [boundaryData , selectedData]);
@@ -41,6 +43,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
     // Set the boundary type with null parentBoundaryType
     if (boundaryWithTypeNullParent) {
       setBoundaryType(boundaryWithTypeNullParent.boundaryType);
+      setParentBoundaryType(boundaryWithTypeNullParent.boundaryType)
     }
   };
 
@@ -106,7 +109,56 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       data?.map((ob) => {
         res.push(ob?.[1]);
       });
-    setSelectedData(res);
+
+    const transformedRes = res?.map((item) => ({
+      code: item.code,
+      type: item.boundaryType,
+      isRoot: item.boundaryType === parentBoundaryType,
+      includeAllChildren: true
+    }));
+
+    res.forEach((boundary) => {
+      const index = transformedRes.findIndex((item) => item.code === boundary?.code);
+      if (index !== -1) {
+        transformedRes[index].includeAllChildren = true; // Set includeAllChildren to true for the selected boundary
+      }
+      // Find the parent boundary type using the hierarchy data
+      const parentBoundaryType = hierarchy?.boundaryHierarchy.find((e) => e.boundaryType === boundary.boundaryType)?.parentBoundaryType;
+
+      // If the selected boundary has a parent, set includeAllChildren to false for the parent
+      if (parentBoundaryType) {
+        const parentIndexes = selectedData.reduce((acc, item, index) => {
+          if (item.type === parentBoundaryType) {
+            acc.push(index);
+          }
+          return acc;
+        }, []);
+      
+        parentIndexes.forEach((parentIndex) => {
+          selectedData[parentIndex].includeAllChildren = false;
+        });
+      }
+      
+    });
+  
+    const newBoundaryType = transformedRes?.[0]?.type;
+    const existingBoundaryType = selectedData.length > 0 ? selectedData?.[0]?.type : null;
+  
+    if (existingBoundaryType === newBoundaryType) {
+      // Update only the data for the specific boundaryType
+      const updatedSelectedData = selectedData?.map(item => {
+        if (item.type === newBoundaryType) {
+          return transformedRes;
+        } else {
+          return item;
+        }
+      });
+      setSelectedData(updatedSelectedData);
+    } else {
+      // Update only the data for the new boundaryType
+      setSelectedData([...selectedData.filter(item => item.type !== newBoundaryType), ...transformedRes]);
+    }
+    // setSelectedData(res);
     const parentBoundaryEntry = hierarchy ? hierarchy?.boundaryHierarchy.find((e) => e.parentBoundaryType === res?.[0]?.boundaryType) : null;
     setBoundaryType(parentBoundaryEntry?.boundaryType);
     const codes = res.map((item) => item.code);
@@ -173,8 +225,8 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
           additionalElements={[
             <span>
               {t("HCM_BOUNDARY_INFO ")}
-              <a href="mailto:L1team@email.com" style={{ color:"black"}}>{t("L1team@email.com")}</a>
-            </span>,
+              <a href={`mailto:${mailConfig.mailId}`} style={{ color:"black"}}>{t("L1team@email.com")}</a>
+            </span>
           ]}
           label={"Info"}
         />
@@ -182,5 +234,4 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
     </>
   );
 }
-
 export default SelectingBoundaries;

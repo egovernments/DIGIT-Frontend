@@ -132,7 +132,7 @@ const SetupCampaign = () => {
           payloadData.tenantId = tenantId;
           payloadData.action = "create";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-          payloadData.boundaries = [];
+          payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           payloadData.resources = [];
           payloadData.projectType = null;
           payloadData.additionalDetails = {};
@@ -171,7 +171,7 @@ const SetupCampaign = () => {
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-          payloadData.boundaries = [];
+          payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           payloadData.resources = [];
           payloadData.projectType = null;
           payloadData.additionalDetails = {};
@@ -205,7 +205,7 @@ const SetupCampaign = () => {
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-          payloadData.boundaries = [];
+          payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           payloadData.resources = [];
           payloadData.projectType = null;
           payloadData.additionalDetails = {};
