@@ -13,10 +13,6 @@ const CustomScaleControl = ({ map }) => {
     const scaleTextData = scale < 1 ? `${Math.round(scale * 1000)} m` : `${Math.round(Math.round(scale.toFixed(0) / 10) * 10)} km`;
 
     // Update the scale text in the container element
-    // const scaleContainer = document.querySelector(".custom-scale");
-    // if (scaleContainer) {
-    //   scaleContainer.innerHTML = scaleText;
-    // }
     setScaleText(scaleTextData)
   };
 

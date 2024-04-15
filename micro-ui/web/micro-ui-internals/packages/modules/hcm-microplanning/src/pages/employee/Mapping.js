@@ -89,9 +89,9 @@ const Mapping = ({
     if (map !== null) return;
 
     let mapConfig = {
-      center: [-24.749434, 32.961285],
+      center: [-23.799434, 33.561285],
       zoomControl: false,
-      zoom: 8,
+      zoom: 5,
       scrollwheel: true,
     };
 
@@ -170,7 +170,7 @@ const Mapping = ({
             </div>
             <div className="bottom-left-map-subcomponents">
               <ZoomControl map={map} t={t} />
-              <div>
+              <div className="north-arrow">
                 <NorthArrow width={"2.5rem"} height={"2.5rem"} fill={"rgba(255, 255, 255, 1)"} />
               </div>
               <CustomScaleControl map={map} />

@@ -888,16 +888,16 @@ $border-color: rgba(214, 213, 212, 1);
 
             .key {
                 width: 22rem;
-    
+
                 @media (max-width: 48rem) {
                     width: 60%;
                 }
             }
-    
+
             .value {
                 margin-left: 10%;
                 width: 7.5rem;
-    
+
                 @media (max-width: 48rem) {
                     margin-left: 1rem;
                 }
@@ -1536,6 +1536,7 @@ $border-color: rgba(214, 213, 212, 1);
 
                 .custom-scale {
                     width: 7.5rem;
+                    margin-left: 0.5rem;
                     text-align: center;
                     border-bottom: 0.063rem solid #ccc;
                     padding: 0 0;
@@ -1557,32 +1558,35 @@ $border-color: rgba(214, 213, 212, 1);
                 }
             }
 
-
-
-            .zoom-control {
-                display: flex !important;
-                flex-direction: column;
+            .zoom-container {
                 width: fit-content;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                margin: 0;
-                width: 2.5rem;
+
+                .zoom-control {
+                    display: flex !important;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 1.3rem;
+                }
+
+                .zoom-button {
+                    border: 0.125rem solid rgba(214, 213, 212, 1);
+                    border-radius: 0.063rem;
+                    width: 2rem;
+                    height: 2rem;
+                    text-align: center;
+                    color: rgba(244, 119, 56, 1);
+                    background-color: rgb(255, 255, 255);
+                    cursor: pointer;
+                    font-family: Roboto;
+                    font-size: 1.125rem;
+                    font-weight: 700;
+                    box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16);
+                }
             }
 
-            .zoom-button {
-                max-width: 2.5rem;
-                max-height: 3rem;
-                background-color: transparent;
-                border: none;
-                color: #ffffff;
-                font-family: Roboto;
-                font-weight: 400;
-                font-size: 3rem;
-                cursor: pointer;
-                padding: 0;
-                margin: 0 0 1rem 0;
-                line-height: 2rem;
+            .north-arrow {
+                margin-left: 0.5rem;
+
             }
 
             .top-right-map-subcomponents {
@@ -1610,7 +1614,7 @@ $border-color: rgba(214, 213, 212, 1);
                     width: 2rem;
                     margin-top: 0;
                     cursor: pointer;
-                    box-shadow: none;  
+                    box-shadow: none;
                 }
 
                 .base-map-area-wrapper {
@@ -1699,6 +1703,7 @@ $border-color: rgba(214, 213, 212, 1);
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         p {
             font-family: Roboto Condensed;
             font-size: 2.5rem;
@@ -1706,19 +1711,20 @@ $border-color: rgba(214, 213, 212, 1);
             text-align: left;
             line-height: 2.5rem;
             padding: 0;
-            margin: 0 ;
+            margin: 0;
         }
 
-        .dropdown{
+        .dropdown {
             width: fit-content;
             padding: 0;
             margin: 0 !important;
         }
     }
-    .aggregates{
+
+    .aggregates {
         width: 100%;
         min-height: 8.063rem;
-        background-color: rgb(255, 255, 255,1);
+        background-color: rgb(255, 255, 255, 1);
     }
 
     .microplan-preview-body {
@@ -1782,7 +1788,8 @@ $border-color: rgba(214, 213, 212, 1);
                 }
             }
         }
-        .preview-container{
+
+        .preview-container {
             flex-grow: 1;
             min-height: 34rem;
             background: rgba(255, 255, 255, 1);
@@ -1801,45 +1808,45 @@ $border-color: rgba(214, 213, 212, 1);
                 background-color: white !important;
                 border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
                 border-radius: 0.25rem;
-    
+
                 .sheet-wrapper {
                     height: 80vh;
                     overflow: auto;
                     background-color: white;
                     padding: 0.3rem;
-    
+
                     &::-webkit-scrollbar {
                         width: 0.625rem;
                         height: 0.625rem;
                         border: none;
                     }
-    
+
                     &::-webkit-scrollbar-track {
                         background: #ffffff;
                         border: none;
                     }
-    
+
                     &::-webkit-scrollbar-thumb {
                         background: rgba(177, 180, 182, 1);
                         border-radius: 0.625rem;
                         border: 0.125rem solid #f0f0f0;
                     }
-    
+
                     &::-webkit-scrollbar-thumb:hover {
                         background: rgba(177, 180, 182, 0.8);
                     }
-    
+
                     h3 {
                         background-color: #f4f4f4;
                         padding: 0.625rem;
                         margin: 0;
                     }
-    
+
                     .excel-table {
                         width: 100%;
                         border: 0.063rem solid #ccc;
                         border-collapse: collapse;
-    
+
                         th,
                         td {
                             border: 0.063rem solid #ccc;
@@ -1847,7 +1854,7 @@ $border-color: rgba(214, 213, 212, 1);
                             font-family: Arial, sans-serif;
                             font-size: 14px;
                         }
-    
+
                         th {
                             background-color: #f4f4f4;
                             font-weight: bold;
@@ -1858,5 +1865,5 @@ $border-color: rgba(214, 213, 212, 1);
             }
         }
     }
-    
+
 }
