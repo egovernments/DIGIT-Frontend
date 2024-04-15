@@ -21,17 +21,8 @@
   },
   "workspaces": [
     "packages/core",
-    "packages/workbench",
-    "packages/ui-core",
-    "packages/app1",
-    "packages/common",
-    "packages/pgr",
-    "packages/dss",
-    "packages/hrms",
-    "packages/engagement",
     "packages/ui-components",
-    "packages/ui-libraries",
-    "packages/tqm"
+    "packages/ui-libraries"
   ],
   "scripts": {
     "build": "yarn lerna run build",
