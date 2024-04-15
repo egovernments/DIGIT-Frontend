@@ -493,7 +493,7 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       checkForSchemaData(schemaData);
-      const { data, valid } = conputeMappedDataAndItsValidations(schemaData);
+      const { data, valid } = computeMappedDataAndItsValidations(schemaData);
       if (!valid) return;
       let filestoreId;
       if (!error) {
@@ -532,7 +532,7 @@ const Upload = ({
       return;
     }
   };
-  const conputeMappedDataAndItsValidations = (schemaData) => {
+  const computeMappedDataAndItsValidations = (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {

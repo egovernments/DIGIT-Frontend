@@ -35,9 +35,9 @@ const CustomScaleControl = ({ map }) => {
   }, [map]);
 
   return (
-    <div className="custom-scale">
+    <div className="custom-scale" aria-live="polite">
         {scaleText}
-      <div className="border-spikes"/>
+      <div className="border-spikes" aria-hidden="true"/>
     </div>
   );
 };
