@@ -1,8 +1,8 @@
-import React, { memo, useCallback,  } from "react";
+import React, { memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-const ZoomControl = memo(({ map }) => {
-  if (!map) return <div></div>;
+const ZoomControl = memo(({ map, t }) => {
+  if (!map) return <div>{t("ERROR_MAP_OBJECT_MISSING")}</div>;
 
   const zoomIn = useCallback(() => {
     map.zoomIn();
@@ -14,10 +14,10 @@ const ZoomControl = memo(({ map }) => {
 
   return (
     <div className="zoom-control">
-      <button className="zoom-button" onClick={zoomIn}>
+      <button className="zoom-button" onClick={zoomIn} aria-label="Zoom in">
         +
       </button>
-      <button className="zoom-button" onClick={zoomOut}>
+      <button className="zoom-button" onClick={zoomOut} aria-label="Zoom out">
         -
       </button>
     </div>

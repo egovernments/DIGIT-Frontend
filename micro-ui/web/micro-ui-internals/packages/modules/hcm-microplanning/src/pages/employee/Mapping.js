@@ -169,7 +169,7 @@ const Mapping = ({
               </div>
             </div>
             <div className="bottom-left-map-subcomponents">
-              <ZoomControl map={map} />
+              <ZoomControl map={map} t={t} />
               <div>
                 <NorthArrow width={"2.5rem"} height={"2.5rem"} fill={"rgba(255, 255, 255, 1)"} />
               </div>
@@ -190,7 +190,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
 
   return (
     <div className="base-map-selector">
-      <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)} >
+      <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
         <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
       </div>
       <div className="base-map-area-wrapper">
