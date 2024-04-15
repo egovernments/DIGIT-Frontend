@@ -39,8 +39,9 @@ const Mapping = ({
   const [toast, setToast] = useState();
   const [baseMaps, setBaseMaps] = useState({});
   const [selectedBaseMap, setSelectedBaseMap] = useState({});
+  const [selectedBaseMapName, setSelectedBaseMapName] = useState("");
   const [showBaseMapSelector, setShowBaseMapSelector] = useState(false);
-
+  
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!data) return;
@@ -62,13 +63,18 @@ const Mapping = ({
           maxZoom: item?.maxZoom,
           attribution: item?.attribution,
         });
-        if (!defaultBaseMap) defaultBaseMap = layer;
-        baseMaps[item.name] = {
+        baseMaps[item?.name] = {
           metadata: item,
           layer,
         };
+        if (!defaultBaseMap) defaultBaseMap = {
+          name: item?.name,
+          layer,
+        };
+
       }
     });
+    setSelectedBaseMapName(defaultBaseMap?.name)
     setBaseMaps(baseMaps);
     if (!map) {
       init(_mapNode, defaultBaseMap);
@@ -91,12 +97,12 @@ const Mapping = ({
     let mapConfig = {
       center: [-23.799434, 33.561285],
       zoomControl: false,
-      zoom: 5,
+      zoom: 6,
       scrollwheel: true,
     };
 
     let map_i = L.map(id, mapConfig);
-    const defaultBaseLayer = defaultBaseMap.addTo(map_i);
+    const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
@@ -113,6 +119,7 @@ const Mapping = ({
 
       // Update the baseLayer state
       setSelectedBaseMap(newBaseLayer);
+      setSelectedBaseMapName(newBaseMap);
     }
   };
 
@@ -161,6 +168,7 @@ const Mapping = ({
                   showBaseMapSelector={showBaseMapSelector}
                   setShowBaseMapSelector={setShowBaseMapSelector}
                   handleBaseMapToggle={handleBaseMapToggle}
+                  selectedBaseMapName={selectedBaseMapName}
                   t={t}
                 />
               </div>
@@ -185,7 +193,7 @@ const Mapping = ({
   );
 };
 
-const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, t }) => {
+const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, t }) => {
   if (!baseMaps) return null;
 
   return (
@@ -196,8 +204,10 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
       <div className="base-map-area-wrapper">
         {showBaseMapSelector && (
           <div className="base-map-area">
-            {Object.entries(baseMaps).map(([name, baseMap], index) => (
-              <div className="base-map-entity">
+            {Object.entries(baseMaps).map(([name, baseMap], index) => {
+              console.log(name, selectedBaseMapName,name == selectedBaseMapName)
+              return (
+              <div key={index} className={`base-map-entity ${name == selectedBaseMapName ? "selected" : ""}`}>
                 <img
                   className="base-map-img"
                   key={index}
@@ -207,7 +217,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
                 />
                 <p>{t(name)}</p>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>
