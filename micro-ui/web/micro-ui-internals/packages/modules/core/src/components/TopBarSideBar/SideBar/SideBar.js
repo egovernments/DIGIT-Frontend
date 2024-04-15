@@ -116,8 +116,8 @@ const Sidebar = ({ data }) => {
 
       if (key === "item" && item?.leftIcon !== "") {
         return {
-          isDynamic: item.leftIcon.split(":")[0],
-          leftIconArray: item.leftIcon.split(":")[1],
+          iconKey: item.leftIcon.split(":")[0],
+          iconName: item.leftIcon.split(":")[1],
         };
       }
 
@@ -162,11 +162,15 @@ const Sidebar = ({ data }) => {
 
           if (!subItemKeys && subItems && Object.keys(subItems).length > 0) {
             // If the item has sub-items, render a dropdown with toggle button
-            const { leftIconArray, isDynamic } = extractLeftIcon(subItems) || {};
-            let leftIcon = IconsObject[leftIconArray] || IconsObject.collections;
-            if (isDynamic === "dynamic") {
-              var IconComp = require("@egovernments/digit-ui-react-components")?.[leftIconArray];
+            const { iconKey,iconName } = extractLeftIcon(subItems) || {};
+            let leftIcon = IconsObject[iconName] || IconsObject.collections;
+            if (iconKey === "dynamic") {
+              var IconComp = require("@egovernments/digit-ui-react-components")?.[iconName];
               leftIcon = IconComp ? <IconComp /> : leftIcon;
+            }
+            if (iconKey === "svg") {
+              var IconComp = require("@egovernments/digit-ui-react-components")?.SVG?.[iconName];
+              leftIcon = IconComp ? <IconComp fill="white" /> : leftIcon;
             }
             const isParentActive = selectedParent === itemKey;
             const isChildActive = selectedChildLevelOne === trimModuleName;
@@ -226,11 +230,15 @@ const Sidebar = ({ data }) => {
             );
           } else if (subItemKeys) {
             // If the item is a link, render it
-            const { leftIconArray, isDynamic } = extractLeftIcon(subItems) || {};
-            let leftIcon = IconsObject[leftIconArray] || IconsObject.collections;
-            if (isDynamic === "dynamic") {
-              var IconComp = require("@egovernments/digit-ui-react-components")?.[leftIconArray];
+            const { iconKey,iconName } = extractLeftIcon(subItems) || {};
+            let leftIcon = IconsObject[iconName] || IconsObject.collections;
+            if (iconKey === "dynamic") {
+              var IconComp = require("@egovernments/digit-ui-react-components")?.[iconName];
               leftIcon = IconComp ? <IconComp /> : leftIcon;
+            }
+            if (iconKey === "svg") {
+              var IconComp = require("@egovernments/digit-ui-react-components")?.SVG?.[iconName];
+              leftIcon = IconComp ? <IconComp fill="white" /> : leftIcon;
             }
             const isChildActive = selectedChild === subItems.item.path;
             return (

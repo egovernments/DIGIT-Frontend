@@ -78,6 +78,7 @@ and add its related functions
 ### Changelog
 
 ```bash
+1.8.1-beta.7 Added custom support for all svg icons to be used in sidebar by specifiying icon as svg:localairport (svg:iconname)
 1.8.1-beta.6 Resolved duplicacy issue in the Sidebar
 1.8.1-beta.5 Fixed Sidebar Path issue
 1.8.1-beta.4 Added a null check for homescreen landing issue
