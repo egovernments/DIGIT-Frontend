@@ -60,7 +60,10 @@ const CreateMicroplan = () => {
       statusData[item.name] = false;
       if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
     });
-    if (data && data?.status && Object.keys(data?.status) === 0) setMicroplanData({ ...data, status: statusData });
+    if (data && data?.status) {
+      if (Object.keys(data?.status) === 0) setMicroplanData({ ...data, status: statusData });
+      else setMicroplanData({ ...data });
+    }
     setCheckForCompletion(toCheckCompletenesData);
   }, []);
 
@@ -74,12 +77,12 @@ const CreateMicroplan = () => {
       }));
       if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
       let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
+      if (Object.keys(checkStatusValues).length == 0) return;
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
         check = check && checkStatusValues?.[data];
       }
-      console.log(check);
       if (!check) return;
       let body = mapDataForApi(microplanData, operatorsObject);
       if (microplanData && !microplanData.planConfigurationId) {

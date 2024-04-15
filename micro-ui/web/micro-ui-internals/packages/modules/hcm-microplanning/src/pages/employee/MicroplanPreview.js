@@ -1,4 +1,4 @@
-import { Button, Dropdown } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, FieldV1 } from "@egovernments/digit-ui-components";
 import React, { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -20,7 +20,6 @@ const MicroplanPreview = ({
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
-        setRules(microplanData.ruleEngine);
       }
     }
   }, []);
@@ -42,7 +41,7 @@ const MicroplanPreview = ({
                 <p>{t(item)}</p>
                 <div className="dropdown">
                   {/* Dropdown for boundaries */}
-                  <Dropdown type={"treemultiselect"} t={t} config={{}} select={() => {}} />
+                  <FieldV1 type={"number"} t={t} config={{}} select={() => {}} />
                 </div>
               </div>
             ))}

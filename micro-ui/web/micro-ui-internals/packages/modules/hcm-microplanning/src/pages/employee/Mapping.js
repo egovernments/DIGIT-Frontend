@@ -205,7 +205,6 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
         {showBaseMapSelector && (
           <div className="base-map-area">
             {Object.entries(baseMaps).map(([name, baseMap], index) => {
-              console.log(name, selectedBaseMapName,name == selectedBaseMapName)
               return (
               <div key={index} className={`base-map-entity ${name == selectedBaseMapName ? "selected" : ""}`}>
                 <img

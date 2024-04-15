@@ -54,7 +54,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
     if (pages) {
       const previouspage = pages[currentPage?.id - 1];
-      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
       else setEditable(true);
     }
   }, []);
