@@ -14,21 +14,13 @@ import getStore from "./redux/store";
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
-  const[showUI,setShowUI] = useState(false)
-  const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShowUI(true)
-    }, 10000);
-  }, [third])
-  
-  
+  const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  console.log("initDataLoading",isLoading);
+  console.log("initData",initData);
+  console.log("new ver");
   if (isLoading) {
     return <Loader page={true} />;
-  }
-  if(!showUI){
-    return <Loader />
   }
   const i18n = getI18n();
   return (

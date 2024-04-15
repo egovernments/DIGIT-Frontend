@@ -3,8 +3,17 @@
   "version": "0.0.0",
   "packages":[
     "packages/core",
+    "packages/workbench",
+    "packages/ui-core",
+    "packages/app1",
+    "packages/common",
+    "packages/pgr",
+    "packages/dss",
+    "packages/hrms",
+    "packages/engagement",
     "packages/ui-components",
-    "packages/ui-libraries"
+    "packages/ui-libraries",
+    "packages/tqm"
   ],
   "command": {
     "run": {

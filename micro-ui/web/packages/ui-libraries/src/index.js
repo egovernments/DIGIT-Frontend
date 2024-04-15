@@ -87,6 +87,4 @@ const initLibraries = () => {
   });
 };
 
-//try exporting a hook from here that sets localisation data and returns isLoading and isError states
-
 export { initLibraries, Enums, Hooks, subFormRegistry };
