@@ -77,8 +77,7 @@ const CreateMicroplan = () => {
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
-        console.log(data, checkStatusValues[data]);
-        check = check && checkStatusValues[data];
+        check = check && checkStatusValues?.[data];
       }
       console.log(check);
       if (!check) return;
