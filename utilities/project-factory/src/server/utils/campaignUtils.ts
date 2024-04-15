@@ -9,7 +9,7 @@ import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
-import { getBoundaryRelationshipData, modifyBoundaryData } from "./genericUtils";
+import { getBoundaryRelationshipData, modifyBoundaryData, throwError } from "./genericUtils";
 import { validateBoundarySheetData, validateHierarchyType } from "./validators/campaignValidators";
 
 // import * as xlsx from 'xlsx-populate';
@@ -107,7 +107,7 @@ async function updateStatusFile(request: any) {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
 
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throw Object.assign(new Error("No download URL returned for the given fileStoreId"), { code: 'INVALID_FILE' });
+        throwError("No download URL returned for the given fileStoreId", 500, "INVALID_FILE");
     }
 
     const headers = {
@@ -122,7 +122,7 @@ async function updateStatusFile(request: any) {
 
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-        throw Object.assign(new Error(`Sheet with name "${sheetName}" is not present in the file.`), { code: 'SHEET_NOT_FOUND' });
+        throwError(`Sheet with name "${sheetName}" is not present in the file.`, 500, "SHEET_NOT_FOUND");
     }
     processErrorData(request, createAndSearchConfig, workbook, sheetName);
 
@@ -132,7 +132,7 @@ async function updateStatusFile(request: any) {
         request.body.ResourceDetails.processedFileStoreId = responseData?.[0]?.fileStoreId;
     }
     else {
-        throw new Error("Error in Creatring Status File");
+        throwError("Error in Creating Status File", 500, "STATUS_FILE_CREATION_ERROR");
     }
 }
 
@@ -265,15 +265,15 @@ async function enrichAndPersistCampaignForCreate(request: any) {
     request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : null;
     request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : null;
     request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : {};
-    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate
-    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate || null
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate || null
     request.body.CampaignDetails.auditDetails = {
         createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
         createdTime: Date.now(),
         lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
         lastModifiedTime: Date.now(),
     }
-    if (action == "create") {
+    if (action == "create" && !request?.body?.CampaignDetails?.projectId) {
         enrichRootProjectId(request.body);
     }
     else {
@@ -291,8 +291,8 @@ async function enrichAndPersistCampaignForUpdate(request: any) {
     request.body.CampaignDetails.campaignDetails = request?.body?.CampaignDetails?.deliveryRules ? { deliveryRules: request?.body?.CampaignDetails?.deliveryRules } : ExistingCampaignDetails?.campaignDetails;
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
     request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
-    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate ? request?.body?.CampaignDetails?.startDate : ExistingCampaignDetails?.startDate
-    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate ? request?.body?.CampaignDetails?.endDate : ExistingCampaignDetails?.endDate
+    request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate || ExistingCampaignDetails?.startDate || null
+    request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate || ExistingCampaignDetails?.endDate || null
     request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : ExistingCampaignDetails?.projectType
     request.body.CampaignDetails.hierarchyType = request?.body?.CampaignDetails?.hierarchyType ? request?.body?.CampaignDetails?.hierarchyType : ExistingCampaignDetails?.hierarchyType
     request.body.CampaignDetails.additionalDetails = request?.body?.CampaignDetails?.additionalDetails ? request?.body?.CampaignDetails?.additionalDetails : ExistingCampaignDetails?.additionalDetails
@@ -302,7 +302,7 @@ async function enrichAndPersistCampaignForUpdate(request: any) {
         lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
         lastModifiedTime: Date.now(),
     }
-    if (action == "create") {
+    if (action == "create" && !request?.body?.CampaignDetails?.projectId) {
         enrichRootProjectId(request.body);
     }
     else {
@@ -352,7 +352,7 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
             if (mappingMap.has(grandParent)) {
                 countMap.set(grandParent, (countMap.get(grandParent) || 0) + 1);
             } else {
-                throw new Error("Insert boundary hierarchy level wise");
+                throwError("Insert boundary hierarchy level wise", 400, "BOUNDARY_HIERARCHY_INSERT_ERROR");
             }
         }
         mappingMap.set(row[len - 2], row[len - 1]);
@@ -652,33 +652,35 @@ async function reorderBoundaries(request: any) {
 }
 
 async function createProject(request: any) {
-    const { tenantId, boundaries, projectType, startDate, endDate } = request?.body?.CampaignDetails;
-    var Projects: any = [{
-        tenantId,
-        projectType,
-        startDate,
-        endDate,
-        "projectSubType": "Campaign",
-        "department": "Campaign",
-        "description": "Campaign ",
-    }]
-    const projectCreateBody = {
-        RequestInfo: request?.body?.RequestInfo,
-        Projects
-    }
-    await reorderBoundaries(request)
-    for (const boundary of boundaries) {
-        Projects[0].address = { tenantId: tenantId, boundary: boundary?.code, boundaryType: boundary?.type }
-        if (request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent) {
-            const parent = request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent
-            Projects[0].parent = request?.body?.boundaryProjectMapping?.[parent]?.projectId
+    const { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
+    if (boundaries && projectType && !projectId) {
+        var Projects: any = [{
+            tenantId,
+            projectType,
+            startDate,
+            endDate,
+            "projectSubType": "Campaign",
+            "department": "Campaign",
+            "description": "Campaign ",
+        }]
+        const projectCreateBody = {
+            RequestInfo: request?.body?.RequestInfo,
+            Projects
         }
-        else {
-            Projects[0].parent = null
+        await reorderBoundaries(request)
+        for (const boundary of boundaries) {
+            Projects[0].address = { tenantId: tenantId, boundary: boundary?.code, boundaryType: boundary?.type }
+            if (request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent) {
+                const parent = request?.body?.boundaryProjectMapping?.[boundary?.code]?.parent
+                Projects[0].parent = request?.body?.boundaryProjectMapping?.[parent]?.projectId
+            }
+            else {
+                Projects[0].parent = null
+            }
+            Projects[0].referenceID = request?.body?.CampaignDetails?.id
+            await projectCreate(projectCreateBody, request)
+            await new Promise(resolve => setTimeout(resolve, 3000));
         }
-        Projects[0].referenceID = request?.body?.CampaignDetails?.id
-        await projectCreate(projectCreateBody, request)
-        await new Promise(resolve => setTimeout(resolve, 3000));
     }
 }
 
@@ -765,7 +767,7 @@ function filterBoundaries(boundaryData: any[], filters: any): any {
 
         if (!boundary.children.length) {
             if (!filter.includeAllChildren) {
-                throw new Error("Boundary cannot have includeAllChildren filter false if it does not have any children");
+                throwError("Boundary cannot have includeAllChildren filter false if it does not have any children", 400, "VALIDATION_ERROR");
             }
             // If boundary has no children and includeAllChildren is true, return as is
             return {
@@ -801,7 +803,7 @@ function filterBoundaries(boundaryData: any[], filters: any): any {
     catch (e: any) {
         const errorMessage = "Error occurred while fetching boundaries: " + e.message;
         logger.error(errorMessage)
-        throw new Error(errorMessage);
+        throwError("Error occurred while fetching boundaries: " + e.message, 500, "INTERNAL_SERVER_ERROR");
     }
 }
 
@@ -859,7 +861,7 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         await validateHierarchyType(request);
         const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
         if (!fileResponse?.fileStoreIds?.[0]?.url) {
-            throw new Error("Invalid file");
+            throwError("Invalid file", 400, "INVALID_FILE_ERROR");
         }
         const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
         const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
@@ -888,13 +890,13 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
     }
     catch (error: any) {
-        throw new Error(error.message);
+        throwError(error.message, 500, "INTERNAL_SERVER_ERROR");
     }
 }
 async function convertSheetToDifferentTabs(request: any, fileStoreId: any) {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throw new Error("Invalid file");
+        throwError("Invalid file", 400, "INVALID_FILE_ERROR");
     }
     const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
     const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
