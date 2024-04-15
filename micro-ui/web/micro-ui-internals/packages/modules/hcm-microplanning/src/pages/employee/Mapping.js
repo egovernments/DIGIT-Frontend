@@ -4,6 +4,11 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import ZoomControl from "../../components/ZoomControl";
+import CustomScaleControl from "../../components/CustomScaleControl";
+import { MapLayerIcon } from "../../icons/MapLayerIcon";
+import { NorthArrow } from "../../icons/NorthArrow";
+import { Info } from "@egovernments/digit-ui-svg-components";
 // Mapping component definition
 const Mapping = ({
   campaignType = "SMC",
@@ -32,6 +37,9 @@ const Mapping = ({
   const [filterDataOrigin, setFilterDataOrigin] = useState({});
   const [dataAvailability, setDataAvailability] = useState("true");
   const [toast, setToast] = useState();
+  const [baseMaps, setBaseMaps] = useState({});
+  const [selectedBaseMap, setSelectedBaseMap] = useState({});
+  const [showBaseMapSelector, setShowBaseMapSelector] = useState(false);
 
   // Effect to initialize map when data is fetched
   useEffect(() => {
@@ -55,23 +63,29 @@ const Mapping = ({
           attribution: item?.attribution,
         });
         if (!defaultBaseMap) defaultBaseMap = layer;
-        baseMaps[item.name] = layer;
+        baseMaps[item.name] = {
+          metadata: item,
+          layer,
+        };
       }
     });
-    var overlayMaps = {};
+    setBaseMaps(baseMaps);
     if (!map) {
-      init(_mapNode, baseMaps, overlayMaps, defaultBaseMap);
+      init(_mapNode, defaultBaseMap);
     }
   }, [data]);
 
   useEffect(() => {
     if (filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
-      extractExcelGeoData(campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t);
+      extractGeoData(campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t);
     }
   }, [filterDataOrigin]);
 
+  // change the baseMap
+  useEffect(() => {});
+
   // Function to initialize map
-  const init = (id, baseMaps, overlayMaps, defaultBaseMap) => {
+  const init = (id, defaultBaseMap) => {
     if (map !== null) return;
 
     let mapConfig = {
@@ -79,16 +93,27 @@ const Mapping = ({
       zoomControl: false,
       zoom: 8,
       scrollwheel: true,
-      layers: defaultBaseMap,
     };
 
     let map_i = L.map(id, mapConfig);
-
-    var customControl = L.control.layers(baseMaps, overlayMaps).addTo(map_i);
-    // L.control.zoom({ position: "bottomleft" }).addTo(map_i);
-    // L.control.scale({ position: "bottomleft" }).addTo(map_i);
-
+    const defaultBaseLayer = defaultBaseMap.addTo(map_i);
+    setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
+  };
+
+  const handleBaseMapToggle = (newBaseMap) => {
+    if (map) {
+      const currentBaseLayer = selectedBaseMap;
+      if (currentBaseLayer) {
+        currentBaseLayer.remove();
+      }
+      const newBaseLayer = baseMaps[newBaseMap].layer.addTo(map);
+      // Add the new base layer to the bottom of the layer stack
+      newBaseLayer.addTo(map);
+
+      // Update the baseLayer state
+      setSelectedBaseMap(newBaseLayer);
+    }
   };
 
   // Rendering component
@@ -97,7 +122,7 @@ const Mapping = ({
       <div className="heading">
         <p>{t("MAPPING")}</p>
       </div>
-      <div className="mapping-body-comtainer">
+      <div className="mapping-body-container">
         <div className="filter-container">
           <p className="filter-heading">{t("MAPPING_FILTER_HEADING")}</p>
           <p className="instructions">{t("MAPPING_FILTER_INSTRUCTIONS")}</p>
@@ -128,7 +153,29 @@ const Mapping = ({
         </div>
         <div className="map-container">
           {/* Container for map */}
-          <div ref={(node) => (_mapNode = node)} className="map" id="map" />
+          <div ref={(node) => (_mapNode = node)} className="map" id="map">
+            <div className="top-right-map-subcomponents">
+              <div className="icon-first">
+                <BaseMapSwitcher
+                  baseMaps={baseMaps}
+                  showBaseMapSelector={showBaseMapSelector}
+                  setShowBaseMapSelector={setShowBaseMapSelector}
+                  handleBaseMapToggle={handleBaseMapToggle}
+                  t={t}
+                />
+              </div>
+              <div className="icon-rest">
+                <Info width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+              </div>
+            </div>
+            <div className="bottom-left-map-subcomponents">
+              <ZoomControl map={map} />
+              <div>
+                <NorthArrow width={"2.5rem"} height={"2.5rem"} fill={"rgba(255, 255, 255, 1)"} />
+              </div>
+              <CustomScaleControl map={map} />
+            </div>
+          </div>
         </div>
       </div>
       {toast && toast.state === "error" && (
@@ -136,6 +183,48 @@ const Mapping = ({
       )}
     </div>
   );
+};
+
+const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, t }) => {
+  if (!baseMaps) return null;
+
+  return (
+    <div className="base-map-selector">
+      <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)} >
+        <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+      </div>
+      <div className="base-map-area-wrapper">
+        {showBaseMapSelector && (
+          <div className="base-map-area">
+            {Object.entries(baseMaps).map(([name, baseMap], index) => (
+              <div className="base-map-entity">
+                <img
+                  className="base-map-img"
+                  key={index}
+                  src={generatePreviewUrl(baseMap?.metadata?.url, [-24.749434, 32.961285], 5)}
+                  alt={name}
+                  onClick={() => handleBaseMapToggle(name)}
+                />
+                <p>{t(name)}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
+  const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(2, zoom));
+  const lat = Math.floor(
+    ((1 - Math.log(Math.tan((center[0] * Math.PI) / 180) + 1 / Math.cos((center[0] * Math.PI) / 180)) / Math.PI) / 2) * Math.pow(2, zoom)
+  );
+  if (baseMapUrl) {
+    return baseMapUrl.replace("{z}", zoom).replace("{x}", lat).replace("{y}", lon);
+  }
+  // Return a default preview URL or handle this case as needed
+  return "default-preview-url.jpg"; // todo
 };
 
 // get schema for validation
@@ -148,12 +237,11 @@ const getSchema = (campaignType, type, section, schemas) => {
   });
 };
 
-const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t) => {
+const extractGeoData = (campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t) => {
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = microplanData?.upload;
     let dataAvailabilityCheck = "initialStage"; // Initialize data availability check
-
     // Loop through each file in the microplan upload
     for (let fileData in files) {
       // Check if the file is not part of boundary or layer data origins
@@ -246,6 +334,11 @@ const extractExcelGeoData = (campaignType, microplanData, filterDataOrigin, vali
         });
         break;
     }
+  } else {
+    setToast({
+      state: "error",
+      message: t("MAPPING_NO_DATA_TO_SHOW"),
+    });
   }
 };
 

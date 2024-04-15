@@ -33,7 +33,7 @@
     {
       "id": 5,
       "name": "MICROPLAN_GENERATION",
-      "component": "",
+      "component": "MicroplanPreview",
       "checkForCompleteness": false
     }
   ]

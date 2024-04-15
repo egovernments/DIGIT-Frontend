@@ -266,11 +266,13 @@ const Upload = ({
             }
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
         case "Geojson":
           try {
             response = await handleGeojsonFile(file, schemaData);
+            file = new File([file], file.name, { type: "application/json" });
             if (response.check == false && response.stopUpload) {
               setLoderActivation(false);
               setToast(response.toast);
@@ -282,17 +284,20 @@ const Upload = ({
             callMapping = true;
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
         case "Shapefiles":
           try {
             response = await handleShapefiles(file, schemaData);
+            file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
             callMapping = true;
           } catch (error) {
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
         default:
@@ -319,6 +324,7 @@ const Upload = ({
           error = t("ERROR_UPLOADING_FILE");
           setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
           setUploadedFileError(error);
+          handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
         }
       }
       let resourceMappingData;
@@ -487,11 +493,11 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       checkForSchemaData(schemaData);
-      const { data, valid } = conputeMappedDataAndItsValidations();
+      const { data, valid } = conputeMappedDataAndItsValidations(schemaData);
       if (!valid) return;
       let filestoreId;
       if (!error) {
-        saveFileToFileStore();
+        filestoreId = saveFileToFileStore();
       }
       let resourceMappingData;
       if (filestoreId) {
@@ -502,16 +508,17 @@ const Upload = ({
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoderActivation(false);
     } catch (error) {
-      setUploadedFileError("ERROR_UPLOADING_FILE");
-      setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+      setUploadedFileError(t("ERROR_UPLOADING_FILE"));
+      setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoderActivation(false);
+      handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
     }
   };
   const saveFileToFileStore = async () => {
     try {
       const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", fileData.file, Digit.ULBService.getStateId());
       if (filestoreResponse?.data?.files?.length > 0) {
-        filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+        return filestoreResponse?.data?.files[0]?.fileStoreId;
       } else {
         error = t("ERROR_UPLOADING_FILE");
         setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
@@ -525,11 +532,12 @@ const Upload = ({
       return;
     }
   };
-  const conputeMappedDataAndItsValidations = () => {
-    data = computeGeojsonWithMappedProperties();
+  const conputeMappedDataAndItsValidations = (schemaData) => {
+    const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {
-      return handleValidationErrorResponse(response.message);
+      handleValidationErrorResponse(response.message);
+      return { data: data, valid: response.valid };
     }
     return { data: data, valid: response.valid };
   };

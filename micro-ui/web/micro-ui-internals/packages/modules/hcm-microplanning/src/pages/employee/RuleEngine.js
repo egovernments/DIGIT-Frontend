@@ -45,11 +45,12 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (microplanData && microplanData.ruleEngine) {
+    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
-      if (hypothesisAssumptions.length === 0) return;
-      setHypothesisAssumptionsList(hypothesisAssumptions);
-      setRules(microplanData.ruleEngine);
+      if (hypothesisAssumptions.length !== 0) {
+        setHypothesisAssumptionsList(hypothesisAssumptions);
+        setRules(microplanData.ruleEngine);
+      }
     }
 
     if (pages) {

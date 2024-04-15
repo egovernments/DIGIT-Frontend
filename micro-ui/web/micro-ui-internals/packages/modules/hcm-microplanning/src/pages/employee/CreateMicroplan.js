@@ -8,12 +8,14 @@ import Mapping from "./Mapping";
 import Navigator from "../../components/Nagivator";
 import { v4 as uuidv4 } from "uuid";
 import { Toast } from "@egovernments/digit-ui-components";
+import MicroplanPreview from "./MicroplanPreview";
 
 export const components = {
   Upload,
   Hypothesis,
   RuleEngine,
   Mapping,
+  MicroplanPreview
 };
 
 // will be changed laters
@@ -71,7 +73,7 @@ const CreateMicroplan = () => {
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
       }));
       if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
-      let checkStatusValues = microplanData?.status || {};
+      let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
       checkStatusValues["FORMULA_CONFIGURATION"] = true;
       let check = true;
       for (let data of checkForCompleteness) {
