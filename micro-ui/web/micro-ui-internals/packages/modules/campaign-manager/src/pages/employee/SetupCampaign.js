@@ -24,6 +24,9 @@ const SetupCampaign = () => {
   const id = searchParams.get("id");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const client = useQueryClient();
+  // const step = searchParams.get("step");
+  // const [config, setConfig] = useState(null);
+
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -52,19 +55,19 @@ const SetupCampaign = () => {
   }, [totalFormData]);
 
   //to convert formData to payload
-  useEffect(() => {
-    const convertFormData = (totalFormData) => {
-      const modifiedData = [
-        {
-          startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
-          endDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
-          projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType.code,
-          campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.campaignName,
-        },
-      ];
-    };
-    convertFormData(totalFormData);
-  }, [totalFormData]);
+  // useEffect(() => {
+  //   const convertFormData = (totalFormData) => {
+  //     const modifiedData = [
+  //       {
+  //         startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
+  //         endDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+  //         projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType.code,
+  //         campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.campaignName,
+  //       },
+  //     ];
+  //   };
+  //   convertFormData(totalFormData);
+  // }, [totalFormData]);
 
   // function to convert payload to formData
   const convertPayload = (dummyData) => {
@@ -389,6 +392,8 @@ const SetupCampaign = () => {
     if (Object.keys(totalFormData).includes(name)) {
       setCurrentKey(key);
       setCurrentStep(step);
+      // updateUrlParams({ step: step+1 });
+      
     }
   };
 
@@ -408,7 +413,20 @@ const SetupCampaign = () => {
   //   })
   //   .filter((config) => config.form.length > 0);
 
-  const filterCampaignConfig = (campaignConfig, currentKey) => {
+  const filterCampaignConfig = (campaignConfig, currentKey ) => {
+    // console.log("step", step);
+    // if(step!==undefined){
+    // const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step));
+    // const key = parseInt(filteredSteps?.[0]?.key);
+    // return campaignConfig
+    //   .map((config) => {
+    //     return {
+    //       ...config,
+    //       form: config?.form.filter((step) => parseInt(step.key) === key),
+    //     };
+    //   })
+    //   .filter((config) => config.form.length > 0);
+    // }
     return campaignConfig
       .map((config) => {
         return {
@@ -425,11 +443,44 @@ const SetupCampaign = () => {
     setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey));
   }, [campaignConfig, currentKey]);
 
-  const config = filteredConfig?.[0];
+  // const filterConfigStep = (step ) => {
+  //   // console.log("step", step);
+  //   // if(step!==undefined){
+  //   const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step));
+  //   const key = parseInt(filteredSteps?.[0]?.key);
+  //   // return campaignConfig
+  //   //   .map((config) => {
+  //   //     return {
+  //   //       ...config,
+  //   //       form: config?.form.filter((step) => parseInt(step.key) === key),
+  //   //     };
+  //   //   })
+  //   //   .filter((config) => config.form.length > 0);
+  //   // }
+  //   return campaignConfig
+  //     .map((config) => {
+  //       return {
+  //         ...config,
+  //         form: config?.form.filter((step) => parseInt(step.key) === key),
+  //       };
+  //     })
+  //     .filter((config) => config.form.length > 0);
+  // };
+
+  // useEffect(() => {
+  //   const config = filterConfigStep(step);
+  //   setFilteredConfig(config);
+  // }, []);
+
+  // // const config = filteredConfig?.[0];
+  // useEffect(() => {
+  //  setConfig(filteredConfig?.[0]);
+  // }, [filteredConfig]);
 
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
+    // updateUrlParams({ step: (Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1)+1) });
   }, [currentKey, filteredConfig]);
 
   const closeToast = () => {
