@@ -1,12 +1,11 @@
 import { Body, Loader } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { getI18n } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp } from "./pages/index";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
-import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
@@ -21,7 +20,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
     setTimeout(() => {
       setShowUI(true)
     }, 10000);
-  }, [third])
+  }, [])
   
   
   if (isLoading) {
