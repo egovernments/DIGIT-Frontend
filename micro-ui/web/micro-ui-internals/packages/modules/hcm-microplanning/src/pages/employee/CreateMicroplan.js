@@ -15,7 +15,7 @@ export const components = {
   Hypothesis,
   RuleEngine,
   Mapping,
-  MicroplanPreview
+  MicroplanPreview,
 };
 
 // will be changed laters
@@ -55,13 +55,13 @@ const CreateMicroplan = () => {
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
     let statusData = {};
-    let toCheckCompleteness = [];
+    let toCheckCompletenesData = [];
     timeLineOptions.forEach((item) => {
       statusData[item.name] = false;
-      if (item?.checkForCompleteness) toCheckCompleteness.push(item.name);
+      if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
     });
-    if (data && data?.status && Object.keys(data?.status) === 0) setCheckForCompletion(toCheckCompleteness);
-    setMicroplanData({ ...data, status: statusData });
+    if (data && data?.status && Object.keys(data?.status) === 0) setMicroplanData({ ...data, status: statusData });
+    setCheckForCompletion(toCheckCompletenesData);
   }, []);
 
   // An addon function to pass to Navigator
@@ -74,11 +74,13 @@ const CreateMicroplan = () => {
       }));
       if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
       let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
-      checkStatusValues["FORMULA_CONFIGURATION"] = true;
+      checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
+        console.log(data, checkStatusValues[data]);
         check = check && checkStatusValues[data];
       }
+      console.log(check);
       if (!check) return;
       let body = mapDataForApi(microplanData, operatorsObject);
       if (microplanData && !microplanData.planConfigurationId) {

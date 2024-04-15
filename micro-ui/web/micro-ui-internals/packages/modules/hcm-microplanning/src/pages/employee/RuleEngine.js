@@ -40,7 +40,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     { name: "UIConfiguration" },
     { name: "RuleConfigureInputs" },
     { name: "RuleConfigureOutput" },
-    // { name: "HypothesisAssumptions" },
   ]);
 
   // UseEffect to extract data on first render
