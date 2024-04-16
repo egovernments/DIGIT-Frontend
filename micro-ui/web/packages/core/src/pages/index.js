@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import CitizenApp from "./citizen";
 import EmployeeApp from "./employee";
-import registerRemotes from "../modules/registerRemotes";
+
 export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="employee",queryClient}) => {
   const history = useHistory();
   const { pathname } = useLocation();
@@ -17,9 +17,6 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
 
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
 
-  useEffect(() => {
-    registerRemotes(queryClient)
-  }, [])
   
 
   useEffect(() => {

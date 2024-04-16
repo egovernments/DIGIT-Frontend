@@ -39,6 +39,8 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+//removing this call to test localisation in core app
 // registerRemotes(queryClient)
 
 
