@@ -1,10 +1,9 @@
 import React, { useState, useRef } from "react";
-import { FormComposerV2, TextInput, Button, Card, CardLabel } from "@egovernments/digit-ui-react-components";
-import { Header } from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
+import { FormComposerV2, TextInput, Button, Card, CardLabel, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Toast } from "@egovernments/digit-ui-react-components";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
+import LevelCards from "../../components/LevelCards";
 
 const BoundaryHierarchyTypeAdd = () => {
   const { t } = useTranslation();
@@ -31,14 +30,9 @@ const BoundaryHierarchyTypeAdd = () => {
       const currentLevel = levelKeys[i].level;
       const previousLevel = levelKeys[i - 1].level;
       dynamicParentType[currentLevel] = previousLevel;
-  }
+    }
 
     return dynamicParentType;
-  };
-
-  const resetFormState = () => {
-    setConfig([...addBoundaryHierarchyConfig]);
-    levelCounter.current = 2;
   };
 
   const closeToast = () => {
@@ -47,28 +41,33 @@ const BoundaryHierarchyTypeAdd = () => {
     }, 5000);
   };
 
-  const handleFormSubmit = async (formData) => {
-
+  const handleFormSubmit = async (formData, setValue) => {
     try {
-      if (formData.levelcards[0].level.trim() === "") {
-        setShowToast({ label: `${t("HCM_LEVEL_MANDATORY")}`, isError: true });
+      const allLevelsValid = formData.levelcards.every((levelCard) => {
+        return levelCard.level.trim() !== "";
+      });
+
+      if (!allLevelsValid) {
+        setShowToast({ label: `${t("HCM_LEVEL_IS_MANDATORY")}`, isError: true });
         closeToast();
         return;
       }
       const parentTypeMapping = generateDynamicParentType(formData);
 
-      const boundaryHierarchy = formData.levelcards.map((level, index) => {
-        const currentLevel = level.level;
-        const parentBoundaryType = index === 0 ? null : parentTypeMapping[currentLevel] || null;
-  
-        if (currentLevel.trim() !== "") {
-          return {
-            boundaryType: currentLevel,
-            parentBoundaryType: parentBoundaryType,
-            active: true,
-          };
-        }
-      }).filter(Boolean); 
+      const boundaryHierarchy = formData.levelcards
+        .map((level, index) => {
+          const currentLevel = level.level;
+          const parentBoundaryType = index === 0 ? null : parentTypeMapping[currentLevel] || null;
+
+          if (currentLevel.trim() !== "") {
+            return {
+              boundaryType: currentLevel,
+              parentBoundaryType: parentBoundaryType,
+              active: true,
+            };
+          }
+        })
+        .filter(Boolean);
 
       await mutation.mutate(
         {
@@ -77,7 +76,7 @@ const BoundaryHierarchyTypeAdd = () => {
             BoundaryHierarchy: {
               tenantId: stateId,
               hierarchyType: formData.hierarchyType,
-              boundaryHierarchy: boundaryHierarchy
+              boundaryHierarchy: boundaryHierarchy,
             },
           },
         },
@@ -97,34 +96,31 @@ const BoundaryHierarchyTypeAdd = () => {
           onSuccess: () => {
             setShowToast({ label: `${t("WBH_BOUNDARY_UPSERT_SUCCESS")}` });
             closeToast();
+            setConfig([...addBoundaryHierarchyConfig]); // Resetting form fields
+            setValue("hierarchyType", "");
+            setValue("levelcards", null);
           },
         }
       );
-      resetFormState();
-
-      setConfig([...addBoundaryHierarchyConfig]);
-      levelCounter.current = 2;
     } catch {}
   };
 
-
   return (
     <React.Fragment>
-
-        <FormComposerV2
-          defaultValues={{}}
-          onSubmit={handleFormSubmit}
-          fieldStyle={{ marginRight: 0 }}
-          config={config}
-          noBreakLine={true}
-          label={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
-          heading={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
-          description = {t("HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION")}
-          enableDelete={true}
-        >
-        </FormComposerV2>
-        {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
-      
+      <FormComposerV2
+        defaultValues={{}}
+        onSubmit={handleFormSubmit}
+        fieldStyle={{ marginRight: 0 }}
+        config={config}
+        noBreakLine={true}
+        label={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
+        heading={t("HCM_CREATE_BOUNDARY_HIERARCHY")}
+        description={t("HCM_CREATE_BOUNDARY_HIERARCHY_DESCRIPTION")}
+        enableDelete={true}
+        headingStyle={{ marginBottom: "1rem" }}
+        descriptionStyle={{ color: "#0B0C0C" }}
+      ></FormComposerV2>
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
 };

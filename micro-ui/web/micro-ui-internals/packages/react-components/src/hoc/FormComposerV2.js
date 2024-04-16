@@ -135,9 +135,8 @@ export const FormComposer = (props) => {
   useEffect(()=>{
     setCustomToast(props?.customToast);
   },[props?.customToast])
-
   function onSubmit(data) {
-    props.onSubmit(data);
+    props.onSubmit(data,setValue);
   }
 
   function onSecondayActionClick(data) {
@@ -805,7 +804,7 @@ export const FormComposer = (props) => {
       <React.Fragment key={index}>
           {!props.childrenAtTheBottom && props.children}
           {props.heading && <CardSubHeader className={props?.cardSubHeaderClassName ? props?.cardSubHeaderClassName : ""} style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
-          {props.description && <CardLabelDesc className={"repos"}> {props.description} </CardLabelDesc>}
+          {props.description && <CardLabelDesc className={"repos"} style={{ ...props.descriptionStyle }}> {props.description} </CardLabelDesc>}
           {props.text && <CardText>{props.text}</CardText>}
           {formFields(section, index, array, sectionFormCategory)}
           {props.childrenAtTheBottom && props.children}
