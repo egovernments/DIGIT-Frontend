@@ -28,11 +28,11 @@ const MicroplanningCard = () => {
     },
     {
       label: t("CREATE_NEW_MICROPLAN"),
-      link: `/${window?.contextPath}/employee/microplanning/help-guidelines`,
+      link: `/${window?.contextPath}/employee/microplanning/select-campaign`,
       roles: ROLES.MICROPLAN,
     },
     {
-      label: t("SAVED_MICROPLANS"),
+      label: t("OPEN_SAVED_MICROPLANS"),
       link: `/${window?.contextPath}/employee/microplanning/saved-microplans`,
       roles: ROLES.MICROPLAN,
     },
