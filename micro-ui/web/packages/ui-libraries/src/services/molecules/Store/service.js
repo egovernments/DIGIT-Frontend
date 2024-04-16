@@ -2,7 +2,7 @@ import { LocalizationService } from "../../elements/Localization/service";
 import { MdmsService } from "../../elements/MDMS";
 import { Storage } from "../../atoms/Utils/Storage";
 import { ApiCacheService } from "../../atoms/ApiCacheService";
-
+import i18next from "i18next";
 const getImgUrl = (url, fallbackUrl) => {
   if (!url && fallbackUrl) {
     return fallbackUrl;
@@ -103,6 +103,7 @@ export const StoreService = {
     setTimeout(() => {
       renderTenantLogos(stateInfo, initData.tenants);
     }, 0);
+    i18next.reloadResources();
     return initData;
   },
   defaultData: async (stateCode, moduleCode, language) => {
