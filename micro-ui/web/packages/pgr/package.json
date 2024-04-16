@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "single-spa-react": "^4.6.1",
-    "@digit-ui/digit-ui-libraries-mfe": "1.0.10",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.11",
     "@digit-ui/digit-ui-module-core-base": "1.0.8",
     "@egovernments/digit-ui-react-components": "1.4.109",
     "@egovernments/digit-ui-svg-components": "1.0.0",
