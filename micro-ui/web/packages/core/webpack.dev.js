@@ -39,18 +39,25 @@ module.exports = () => {
       new ModuleFederationPlugin({
         name: "core",
         remotes: {
-          hrms: "hrms@https://localhost:8085/remoteEntry.js",
-          workbench: "workbench@https://localhost:8086/remoteEntry.js",
-          common:"common@https://localhost:8090/remoteEntry.js",
-          pgr:"pgr@https://localhost:8087/remoteEntry.js",
-          dss: "dss@https://localhost:8088/remoteEntry.js",
-          engagement: "engagement@https://localhost:8091/remoteEntry.js",
-          tqm: "tqm@https://localhost:8089/remoteEntry.js",
-
+          // hrms: "hrms@https://localhost:8085/remoteEntry.js",
+          // workbench: "workbench@https://localhost:8086/remoteEntry.js",
+          // common:"common@https://localhost:8090/remoteEntry.js",
+          // pgr:"pgr@https://localhost:8087/remoteEntry.js",
+          // dss: "dss@https://localhost:8088/remoteEntry.js",
+          // engagement: "engagement@https://localhost:8091/remoteEntry.js",
+          // tqm: "tqm@https://localhost:8089/remoteEntry.js",
         },
         shared: packageJson.dependencies,
       }),
     ],
+    externals:{
+      'react-i18next': {
+        root: 'reactI18next',
+        commonjs2: 'react-i18next',
+        commonjs: 'react-i18next',
+        amd: 'react-i18next',
+      },
+    }
   };
 
   return merge(commonConfig, devConfig);

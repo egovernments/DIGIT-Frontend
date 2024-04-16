@@ -31,6 +31,14 @@ module.exports = () => {
         shared: packageJson.dependencies,
       }),
     ],
+    externals:{
+      'react-i18next': {
+        root: 'reactI18next',
+        commonjs2: 'react-i18next',
+        commonjs: 'react-i18next',
+        amd: 'react-i18next',
+      },
+    }
   };
 
   return merge(commonConfig, prodConfig);
