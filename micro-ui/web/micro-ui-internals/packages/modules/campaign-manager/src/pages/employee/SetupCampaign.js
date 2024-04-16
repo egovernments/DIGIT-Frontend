@@ -149,8 +149,7 @@ const SetupCampaign = () => {
           }
 
           await mutate(payloadData, {
-            onError: (error, variables) => {
-            },
+            onError: (error, variables) => {},
             onSuccess: async (data) => {
               draftRefetch();
               Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -299,6 +298,7 @@ const SetupCampaign = () => {
 
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
+    console.log("KEYYYEYEYE", key, formData);
     switch (key) {
       case "campaignName":
         if (typeof formData?.campaignName !== "string" || !formData?.campaignName.trim()) {
@@ -315,6 +315,15 @@ const SetupCampaign = () => {
         } else {
           setShowToast({ key: "error", label: "CAMPAIGN_DATES_MISSING_ERROR" });
           return false;
+        }
+      case "cycleConfigure":
+        const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
+        const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
+        if (cycleNumber === "" || cycleNumber === 0 || deliveryNumber === "" || deliveryNumber === 0) {
+          setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
+          return false;
+        } else {
+          return true;
         }
       case "summary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
@@ -372,7 +381,7 @@ const SetupCampaign = () => {
 
     setShouldUpdate(true);
 
-    console.log("filteredConfig",filteredConfig)
+    console.log("filteredConfig", filteredConfig);
     if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
       setCurrentKey(currentKey + 1);
     }
