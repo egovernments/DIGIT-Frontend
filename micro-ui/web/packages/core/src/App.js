@@ -7,7 +7,7 @@ import useRouter from "./hooks/useRouter";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
-import registerRemotes from "./modules/registerRemotes"
+// import registerRemotes from "./modules/registerRemotes"
 import { useTranslation } from "react-i18next";
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
