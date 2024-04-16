@@ -8,12 +8,14 @@ import Mapping from "./Mapping";
 import Navigator from "../../components/Nagivator";
 import { v4 as uuidv4 } from "uuid";
 import { Toast } from "@egovernments/digit-ui-components";
+import MicroplanPreview from "./MicroplanPreview";
 
 export const components = {
   Upload,
   Hypothesis,
   RuleEngine,
   Mapping,
+  MicroplanPreview,
 };
 
 // will be changed laters
@@ -53,13 +55,16 @@ const CreateMicroplan = () => {
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
     let statusData = {};
-    let toCheckCompleteness = [];
+    let toCheckCompletenesData = [];
     timeLineOptions.forEach((item) => {
       statusData[item.name] = false;
-      if (item?.checkForCompleteness) toCheckCompleteness.push(item.name);
+      if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
     });
-    if (data && data?.status && Object.keys(data?.status) === 0) setCheckForCompletion(toCheckCompleteness);
-    setMicroplanData({ ...data, status: statusData });
+    if (data && data?.status) {
+      if (Object.keys(data?.status) === 0) setMicroplanData({ ...data, status: statusData });
+      else setMicroplanData({ ...data });
+    }
+    setCheckForCompletion(toCheckCompletenesData);
   }, []);
 
   // An addon function to pass to Navigator
@@ -71,11 +76,12 @@ const CreateMicroplan = () => {
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
       }));
       if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
-      let checkStatusValues = microplanData?.status || {};
-      checkStatusValues["FORMULA_CONFIGURATION"] = true;
+      let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
+      if (Object.keys(checkStatusValues).length == 0) return;
+      checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
-        check = check && checkStatusValues[data];
+        check = check && checkStatusValues?.[data];
       }
       if (!check) return;
       let body = mapDataForApi(microplanData, operatorsObject);

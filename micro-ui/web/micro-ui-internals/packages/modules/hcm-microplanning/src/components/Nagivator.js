@@ -56,7 +56,7 @@ const Navigator = (props) => {
       else props.nextEventAddon(currentPage, true);
     }
     if (navigationEvent && navigationEvent.name === "next") nextStep();
-    else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step) onStepClick(navigationEvent.step);
+    else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
     setCheckDataCompletion("false");
     setNavigationEvent(undefined);
   }, [navigationEvent, checkDataCompletion, props.nextEventAddon]);

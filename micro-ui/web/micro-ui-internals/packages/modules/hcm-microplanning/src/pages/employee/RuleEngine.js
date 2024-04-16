@@ -40,21 +40,21 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     { name: "UIConfiguration" },
     { name: "RuleConfigureInputs" },
     { name: "RuleConfigureOutput" },
-    // { name: "HypothesisAssumptions" },
   ]);
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (microplanData && microplanData.ruleEngine) {
+    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
-      if (hypothesisAssumptions.length === 0) return;
-      setHypothesisAssumptionsList(hypothesisAssumptions);
-      setRules(microplanData.ruleEngine);
+      if (hypothesisAssumptions.length !== 0) {
+        setHypothesisAssumptionsList(hypothesisAssumptions);
+        setRules(microplanData.ruleEngine);
+      }
     }
 
     if (pages) {
       const previouspage = pages[currentPage?.id - 1];
-      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
       else setEditable(true);
     }
   }, []);
