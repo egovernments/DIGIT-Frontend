@@ -34,7 +34,7 @@ function isFalsyOrEmpty(input) {
     return false;
   }
 
-const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
+const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession,additionalConfig}) => {
     
     
     const [session,setSession,clearSession] = browserSession || []
@@ -101,6 +101,14 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
         } 
     },[])
 
+    useEffect(() => {
+        if(additionalConfig?.search?.callRefetch) {
+            refetch()
+            additionalConfig?.search?.setCallRefetch(false)
+        }
+    }, [additionalConfig?.search?.callRefetch])
+    
+
     //adding another effect to sync session with state, the component invoking InboxSearchComposer will be passing session as prop
     useEffect(() => {
         // if(_.isEqual(state, initialInboxState)){
@@ -136,7 +144,15 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
     const updatedReqCriteria = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess(requestCriteria,configs?.sections?.search?.uiConfig?.defaultValues,activeLink?.name) : requestCriteria 
 
     
-    const { isLoading, data, revalidate,isFetching } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+    if(configs.customHookName){
+        var { isLoading, data, revalidate,isFetching,refetch,error } = eval(`Digit.Hooks.${configs.customHookName}(updatedReqCriteria)`);
+    }
+    else {
+       var { isLoading, data, revalidate,isFetching,error } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+        
+    }
+
+    // const { isLoading, data, revalidate,isFetching } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
     
     
     useEffect(() => {
@@ -303,6 +319,7 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession}) => {
                                 type={configs?.type}
                                 activeLink={activeLink}
                                 browserSession={browserSession}
+                                additionalConfig={additionalConfig}
                                 />
                             </MediaQuery>
                             <MediaQuery maxWidth={426}>

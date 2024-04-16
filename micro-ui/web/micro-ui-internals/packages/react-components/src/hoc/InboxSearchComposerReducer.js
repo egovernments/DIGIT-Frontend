@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 function removeObjectFromArray(array, key, value) {
   // Find the index of the object with the specified key and value
@@ -14,8 +14,7 @@ function removeObjectFromArray(array, key, value) {
 }
 
 export const initialInboxState = (config) => {
-  
-  if(config?.sections?.searchResult?.uiConfig?.customDefaultPagination) {
+  if (config?.sections?.searchResult?.uiConfig?.customDefaultPagination) {
     return {
       searchForm: {},
       filterForm: {},
@@ -24,48 +23,48 @@ export const initialInboxState = (config) => {
       },
     };
   }
-  
+
   return {
     searchForm: {},
     filterForm: {},
     tableForm: {
-    limit: 10,
-    offset: 0,
-  },
-  }
+      limit: 10,
+      offset: 0,
+    },
+  };
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'searchForm':
+    case "searchForm":
       const { state: updatedSearchStateSearchForm } = action;
       return {
         ...state,
         searchForm: { ...state.searchForm, ...updatedSearchStateSearchForm },
       };
-    case 'filterForm':
+    case "filterForm":
       const { state: updatedSearchStateFilterForm } = action;
       return {
         ...state,
         filterForm: { ...state.filterForm, ...updatedSearchStateFilterForm },
       };
-    case 'tableForm':
+    case "tableForm":
       const updatedTableState = action.state;
       return {
         ...state,
         tableForm: { ...state.tableForm, ...updatedTableState },
       };
-    case 'clearSearchForm':
+    case "clearSearchForm":
       return { ...state, searchForm: action.state };
-    case 'clearFilterForm':
+    case "clearFilterForm":
       return { ...state, filterForm: action.state };
-    case 'jsonPath':
+    case "jsonPath":
       const {
         tag: { removableTagConf },
       } = action;
       const stateObj = _.cloneDeep(state);
       switch (removableTagConf?.type) {
-        case 'multi':
+        case "multi":
           _.set(
             stateObj,
             removableTagConf?.sessionJsonPath,
@@ -77,23 +76,23 @@ const reducer = (state, action) => {
           );
           return stateObj;
 
-        case 'single':
-          _.set(stateObj, removableTagConf?.sessionJsonPath, '');
+        case "single":
+          _.set(stateObj, removableTagConf?.sessionJsonPath, "");
           return stateObj;
 
-        case 'dateRange':
-          _.set(stateObj, removableTagConf?.sessionJsonPath, '');
+        case "dateRange":
+          _.set(stateObj, removableTagConf?.sessionJsonPath, "");
           return stateObj;
-        case 'workflowStatusFilter':
+        case "workflowStatusFilter":
           //if we are here then we have dynamic ids to delete from state
-          _.set(stateObj,`${removableTagConf?.sessionJsonPath}.${removableTagConf?.dynamicId}`, false)
-          return stateObj
+          _.set(stateObj, `${removableTagConf?.sessionJsonPath}.${removableTagConf?.dynamicId}`, false);
+          return stateObj;
         default:
           break;
       }
-    case 'obj':
-        const {updatedState} = action
-        return updatedState
+    case "obj":
+      const { updatedState } = action;
+      return updatedState;
 
     default:
       return state;

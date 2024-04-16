@@ -201,6 +201,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 </div> )
             }
             {searchResult?.length > 0 && <Table
+                rowClassName={config.rowClassName}
                 className={config?.tableClassName ? config?.tableClassName: "table"}
                 t={t}
                 customTableWrapperClassName={"search-component-table"}
@@ -231,6 +232,7 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                 }}
                 onClickRow={additionalConfig?.resultsTable?.onClickRow}
                 manualPagination={config.manualPagination}
+                noColumnBorder={config?.noColumnBorder}
             />}
         </div>
     )
