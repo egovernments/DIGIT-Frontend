@@ -298,7 +298,6 @@ const SetupCampaign = () => {
 
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
-    console.log("KEYYYEYEYE", key, formData);
     switch (key) {
       case "campaignName":
         if (typeof formData?.campaignName !== "string" || !formData?.campaignName.trim()) {
@@ -381,7 +380,6 @@ const SetupCampaign = () => {
 
     setShouldUpdate(true);
 
-    console.log("filteredConfig", filteredConfig);
     if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
       setCurrentKey(currentKey + 1);
     }
