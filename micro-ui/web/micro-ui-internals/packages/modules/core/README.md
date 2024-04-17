@@ -61,7 +61,7 @@ with
  .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
 
 ```
- *   Digit.Hooks.Utils.getDefaultLanguage()
+ *   Digit.Utils.getDefaultLanguage()
 
 ```
 from 1.8.0 beta version add the following utility method in micro-ui/web/micro-ui-internals/packages/libraries/src/utils/index.js
@@ -78,6 +78,7 @@ and add its related functions
 ### Changelog
 
 ```bash
+1.8.1-beta.9: Fixed stablity issue 
 1.8.1-beta.8: Enhanced to load screen even if mdms is failing
 1.8.1-beta.7 Added custom support for all svg icons to be used in sidebar by specifiying icon as svg:localairport (svg:iconname)
 1.8.1-beta.6 Resolved duplicacy issue in the Sidebar

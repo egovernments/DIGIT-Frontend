@@ -143,7 +143,7 @@ const getLocaleDefault = () => {
  * @author jagankumar-egov
  *
  * @example
- *   Digit.Hooks.Utils.getDefaultLanguage()
+ *   Digit.Utils.getDefaultLanguage()
  *
  * @returns {string} 
  */
