@@ -1,4 +1,4 @@
-import { Card, CustomButton, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Button, Card ,SubmitBar} from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -33,15 +33,16 @@ const LanguageSelection = () => {
         <div className="language-selector" style={{ justifyContent: "space-around", marginBottom: "24px", padding: "0 5%" }}>
           {languages.map((language, index) => (
             <div className="language-button-container" key={index}>
-              <CustomButton
-                selected={language.value === selected}
-                text={language.label}
+              <Button
+                label={language.label}
                 onClick={() => handleChangeLanguage(language)}
-              ></CustomButton>
+                variation={language.value === selected ? "primary" : ""}
+                style={{boxShadow: "0px 0px 0px 0px",width:"100%"}}
+              />
             </div>
           ))}
         </div>
-        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit} />
+        <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit}/>
       </Card>
       <div className="EmployeeLoginFooter">
         <img

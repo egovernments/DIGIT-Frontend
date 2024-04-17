@@ -1,17 +1,13 @@
 import {
   BackButton,
-  BillsIcon,
   CitizenHomeCard,
   CitizenInfoLabel,
-  FSMIcon,
   Loader,
+  FSMIcon,
   MCollectIcon,
-  OBPSIcon,
-  PGRIcon,
-  PTIcon,
-  TLIcon,
-  WSICon,
-} from "@egovernments/digit-ui-react-components";
+  BillsIcon
+} from "@egovernments/digit-ui-components";
+
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -79,7 +75,12 @@ const iconSelector = (code) => {
       return <PTIcon className="fill-path-primary-main" />;
   }
 };
-const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => {
+const CitizenHome = ({
+  modules,
+  getCitizenMenu,
+  fetchedCitizen,
+  isLoading,
+}) => {
   const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
   const moduleArr = modules.filter(({ code }) => code !== "Payment");
   const moduleArray = [paymentModule, ...moduleArr];
@@ -91,18 +92,27 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
   return (
     <React.Fragment>
       <div className="citizen-all-services-wrapper">
-        {location.pathname.includes("sanitation-ui/citizen/all-services") ? null : <BackButton />}
+        {location.pathname.includes(
+          "sanitation-ui/citizen/all-services"
+        ) ? null : (
+          <BackButton />
+        )}
         <div className="citizenAllServiceGrid">
           {moduleArray
             .filter((mod) => mod)
             .map(({ code }, index) => {
               let mdmsDataObj;
-              if (fetchedCitizen) mdmsDataObj = fetchedCitizen ? processLinkData(getCitizenMenu, code, t) : undefined;
+              if (fetchedCitizen)
+                mdmsDataObj = fetchedCitizen
+                  ? processLinkData(getCitizenMenu, code, t)
+                  : undefined;
               if (mdmsDataObj?.links?.length > 0) {
                 return (
                   <CitizenHomeCard
                     header={t(mdmsDataObj?.header)}
-                    links={mdmsDataObj?.links?.filter((ele) => ele?.link)?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
+                    links={mdmsDataObj?.links
+                      ?.filter((ele) => ele?.link)
+                      ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
                     Icon={() => iconSelector(code)}
                     Info={
                       code === "OBPS"
@@ -110,7 +120,9 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
                             <CitizenInfoLabel
                               style={{ margin: "0px", padding: "10px" }}
                               info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                              text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
+                              text={t(
+                                `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
+                              )}
                             />
                           )
                         : null
@@ -132,7 +144,9 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
       <div className="employee-app-container">
         <div className="ground-container moduleCardWrapper gridModuleWrapper">
           {modules.map(({ code }, index) => {
-            const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
+            const Card =
+              Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
+              (() => <React.Fragment />);
             return <Card key={index} />;
           })}
         </div>
@@ -141,7 +155,10 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
       {additionalComponent &&
         additionalComponent?.length > 0 &&
         additionalComponent.map((i) => {
-          const Component = typeof i === "string" ? Digit.ComponentRegistryService.getComponent(i) : null;
+          const Component =
+            typeof i === "string"
+              ? Digit.ComponentRegistryService.getComponent(i)
+              : null;
           return Component ? (
             <div className="additional-component-wrapper">
               <Component />
@@ -152,9 +169,25 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
   );
 };
 
-export const AppHome = ({ userType, modules, getCitizenMenu, fetchedCitizen, isLoading, additionalComponent }) => {
+export const AppHome = ({
+  userType,
+  modules,
+  getCitizenMenu,
+  fetchedCitizen,
+  isLoading,
+  additionalComponent,
+}) => {
   if (userType === "citizen") {
-    return <CitizenHome modules={modules} getCitizenMenu={getCitizenMenu} fetchedCitizen={fetchedCitizen} isLoading={isLoading} />;
+    return (
+      <CitizenHome
+        modules={modules}
+        getCitizenMenu={getCitizenMenu}
+        fetchedCitizen={fetchedCitizen}
+        isLoading={isLoading}
+      />
+    );
   }
-  return <EmployeeHome modules={modules} additionalComponent={additionalComponent} />;
+  return (
+    <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
+  );
 };

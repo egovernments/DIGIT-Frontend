@@ -3,7 +3,6 @@ import {
   HomeIcon,
   EditPencilIcon,
   LogoutIcon,
-  Loader,
   AddressBookIcon,
   PropertyHouse,
   CaseIcon,
@@ -18,7 +17,8 @@ import {
   BirthIcon,
   DeathIcon,
   FirenocIcon,
-} from "@egovernments/digit-ui-react-components";
+  Loader
+} from "@egovernments/digit-ui-components";
 import { Link, useLocation } from "react-router-dom";
 import SideBarMenu from "../../../config/sidebar-menu";
 import { useTranslation } from "react-i18next";
@@ -27,14 +27,16 @@ import LogoutDialog from "../../Dialog/LogoutDialog";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 
-
 /* 
 Feature :: Citizen Webview sidebar
 */
 const Profile = ({ info, stateName, t }) => (
   <div className="profile-section">
     <div className="imageloader imageloader-loaded">
-      <img className="img-responsive img-circle img-Profile" src={defaultImage} />
+      <img
+        className="img-responsive img-circle img-Profile"
+        src={defaultImage}
+      />
     </div>
     <div id="profile-name" className="label-container name-Profile">
       <div className="label-text"> {info?.name} </div>
@@ -50,7 +52,9 @@ const Profile = ({ info, stateName, t }) => (
     <div className="profile-divider"></div>
     {window.location.href.includes("/employee") &&
       !window.location.href.includes("/employee/user/login") &&
-      !window.location.href.includes("employee/user/language-selection") && <ChangeCity t={t} mobileView={true} />}
+      !window.location.href.includes("employee/user/language-selection") && (
+        <ChangeCity t={t} mobileView={true} />
+      )}
   </div>
 );
 const IconsObject = {
@@ -110,14 +114,18 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     history.push(`/${window?.contextPath}/citizen/user/profile`);
   };
 
-  let menuItems = [...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee)];
+  let menuItems = [
+    ...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee),
+  ];
 
   menuItems = menuItems.filter((item) => item.element !== "LANGUAGE");
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const MenuItem = ({ item }) => {
     const leftIconArray = item?.icon || item.icon?.type?.name;
-    const leftIcon = leftIconArray ? IconsObject[leftIconArray] : IconsObject.BillsIcon;
+    const leftIcon = leftIconArray
+      ? IconsObject[leftIconArray]
+      : IconsObject.BillsIcon;
     let itemComponent;
     if (item.type === "component") {
       itemComponent = item.action;
@@ -150,7 +158,9 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   let profileItem;
 
   if (isFetched && user && user.access_token) {
-    profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
+    profileItem = (
+      <Profile info={user?.info} stateName={stateInfo?.name} t={t} />
+    );
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
     menuItems = [
       ...menuItems,
@@ -176,16 +186,22 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
               {storeData?.tenants.map((i) => {
                 i.code === tenantId ? (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
+                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>
+                      {storeData?.tenants[i].contactNumber}
+                    </a>
                   </div>
                 ) : (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>
+                      {storeData?.tenants[0].contactNumber}
+                    </a>
                   </div>
                 );
               })}
               <div className="link">
-                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>
+                  {storeData?.tenants[0].contactNumber}
+                </a>
               </div>
             </div>
           </React.Fragment>
@@ -200,8 +216,12 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     ?.map((key) => {
       if (linkData[key][0]?.sidebar === `${window.contextPath}-links`) {
         menuItems.splice(1, 0, {
-          type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",
-          text: t(`ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`),
+          type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath)
+            ? "link"
+            : "external-link",
+          text: t(
+            `ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`
+          ),
           links: linkData[key],
           icon: linkData[key][0]?.leftIcon,
           link: linkData[key][0]?.sidebarURL,
@@ -232,13 +252,28 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
           {profileItem}
           <div className="drawer-desktop">
             {menuItems?.map((item, index) => (
-              <div className={`sidebar-list ${pathname === item?.link || pathname === item?.sidebarURL ? "active" : ""}`} key={index}>
+              <div
+                className={`sidebar-list ${
+                  pathname === item?.link || pathname === item?.sidebarURL
+                    ? "active"
+                    : ""
+                }`}
+                key={index}
+              >
                 <MenuItem item={item} />
               </div>
             ))}
           </div>
         </div>
-        <div>{showDialog && <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>}</div>
+        <div>
+          {showDialog && (
+            <LogoutDialog
+              onSelect={handleOnSubmit}
+              onCancel={handleOnCancel}
+              onDismiss={handleOnCancel}
+            ></LogoutDialog>
+          )}
+        </div>
       </div>
     </React.Fragment>
   );

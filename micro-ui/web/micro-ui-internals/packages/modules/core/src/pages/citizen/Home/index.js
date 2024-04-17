@@ -1,6 +1,15 @@
 import {
-  Calender, CardBasedOptions, CaseIcon, ComplaintIcon, DocumentIcon, HomeIcon, Loader, OBPSIcon, PTIcon, WhatsNewCard
-} from "@egovernments/digit-ui-react-components";
+  Calender,
+  CardBasedOptions,
+  CaseIcon,
+  ComplaintIcon,
+  DocumentIcon,
+  HomeIcon,
+  OBPSIcon,
+  PTIcon,
+  Loader,
+  WhatsNewCard,
+} from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -9,7 +18,10 @@ const Home = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCitizenCurrentTenant(true);
-  const { data: { stateInfo, uiHomePage } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
+  const {
+    data: { stateInfo, uiHomePage } = {},
+    isLoading,
+  } = Digit.Hooks.useStore.getInitData();
   let isMobile = window.Digit.Utils.browser.isMobile();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -18,7 +30,10 @@ const Home = () => {
     return true;
   };
 
-  const { data: EventsData, isLoading: EventsDataLoading } = Digit.Hooks.useEvents({
+  const {
+    data: EventsData,
+    isLoading: EventsDataLoading,
+  } = Digit.Hooks.useEvents({
     tenantId,
     variant: "whats-new",
     config: {
@@ -55,23 +70,27 @@ const Home = () => {
     header: t(citizenServicesObj?.headerLabel),
     sideOption: {
       name: t(citizenServicesObj?.sideOption?.name),
-      onClick: () => history.push(citizenServicesObj?.sideOption?.navigationUrl),
+      onClick: () =>
+        history.push(citizenServicesObj?.sideOption?.navigationUrl),
     },
     options: [
       {
         name: t(citizenServicesObj?.props?.[0]?.label),
         Icon: <ComplaintIcon />,
-        onClick: () => history.push(citizenServicesObj?.props?.[0]?.navigationUrl),
+        onClick: () =>
+          history.push(citizenServicesObj?.props?.[0]?.navigationUrl),
       },
       {
         name: t(citizenServicesObj?.props?.[1]?.label),
         Icon: <PTIcon className="fill-path-primary-main" />,
-        onClick: () => history.push(citizenServicesObj?.props?.[1]?.navigationUrl),
+        onClick: () =>
+          history.push(citizenServicesObj?.props?.[1]?.navigationUrl),
       },
       {
         name: t(citizenServicesObj?.props?.[2]?.label),
         Icon: <CaseIcon className="fill-path-primary-main" />,
-        onClick: () => history.push(citizenServicesObj?.props?.[2]?.navigationUrl),
+        onClick: () =>
+          history.push(citizenServicesObj?.props?.[2]?.navigationUrl),
       },
       // {
       //     name: t("ACTION_TEST_WATER_AND_SEWERAGE"),
@@ -81,10 +100,16 @@ const Home = () => {
       {
         name: t(citizenServicesObj?.props?.[3]?.label),
         Icon: <OBPSIcon />,
-        onClick: () => history.push(citizenServicesObj?.props?.[3]?.navigationUrl),
+        onClick: () =>
+          history.push(citizenServicesObj?.props?.[3]?.navigationUrl),
       },
     ],
-    styles: { display: "flex", flexWrap: "wrap", justifyContent: "flex-start", width: "100%" },
+    styles: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "flex-start",
+      width: "100%",
+    },
   };
   const allInfoAndUpdatesProps = {
     header: t(infoAndUpdatesObj?.headerLabel),
@@ -96,29 +121,38 @@ const Home = () => {
       {
         name: t(infoAndUpdatesObj?.props?.[0]?.label),
         Icon: <HomeIcon />,
-        onClick: () => history.push(infoAndUpdatesObj?.props?.[0]?.navigationUrl),
+        onClick: () =>
+          history.push(infoAndUpdatesObj?.props?.[0]?.navigationUrl),
       },
       {
         name: t(infoAndUpdatesObj?.props?.[1]?.label),
         Icon: <Calender />,
-        onClick: () => history.push(infoAndUpdatesObj?.props?.[1]?.navigationUrl),
+        onClick: () =>
+          history.push(infoAndUpdatesObj?.props?.[1]?.navigationUrl),
       },
       {
         name: t(infoAndUpdatesObj?.props?.[2]?.label),
         Icon: <DocumentIcon />,
-        onClick: () => history.push(infoAndUpdatesObj?.props?.[2]?.navigationUrl),
+        onClick: () =>
+          history.push(infoAndUpdatesObj?.props?.[2]?.navigationUrl),
       },
       {
         name: t(infoAndUpdatesObj?.props?.[3]?.label),
         Icon: <DocumentIcon />,
-        onClick: () => history.push(infoAndUpdatesObj?.props?.[3]?.navigationUrl),
+        onClick: () =>
+          history.push(infoAndUpdatesObj?.props?.[3]?.navigationUrl),
       },
       // {
       //     name: t("CS_COMMON_HELP"),
       //     Icon: <HelpIcon/>
       // }
     ],
-    styles: { display: "flex", flexWrap: "wrap", justifyContent: "flex-start", width: "100%" },
+    styles: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "flex-start",
+      width: "100%",
+    },
   };
 
   return isLoading ? (
@@ -131,13 +165,23 @@ const Home = () => {
       <div className="HomePageWrapper">
         {
           <div className="BannerWithSearch">
-            {isMobile ? <img src={appBannerMobObj?.bannerUrl} /> : <img src={appBannerWebObj?.bannerUrl} />}
+            {isMobile ? (
+              <img src={appBannerMobObj?.bannerUrl} />
+            ) : (
+              <img src={appBannerWebObj?.bannerUrl} />
+            )}
             {/* <div className="Search">
             <StandaloneSearchBar placeholder={t("CS_COMMON_SEARCH_PLACEHOLDER")} />
           </div> */}
             <div className="ServicesSection">
-              <CardBasedOptions style={{ marginTop: "-30px" }} {...allCitizenServicesProps} />
-              <CardBasedOptions style={isMobile ? {} : { marginTop: "-30px" }} {...allInfoAndUpdatesProps} />
+              <CardBasedOptions
+                style={{ marginTop: "-30px" }}
+                {...allCitizenServicesProps}
+              />
+              <CardBasedOptions
+                style={isMobile ? {} : { marginTop: "-30px" }}
+                {...allInfoAndUpdatesProps}
+              />
             </div>
           </div>
         }
@@ -145,9 +189,19 @@ const Home = () => {
         {(whatsAppBannerMobObj || whatsAppBannerWebObj) && (
           <div className="WhatsAppBanner">
             {isMobile ? (
-              <img src={whatsAppBannerMobObj?.bannerUrl} onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerMobObj)} />
+              <img
+                src={whatsAppBannerMobObj?.bannerUrl}
+                onClick={() =>
+                  handleClickOnWhatsAppBanner(whatsAppBannerMobObj)
+                }
+              />
             ) : (
-              <img src={whatsAppBannerWebObj?.bannerUrl} onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerWebObj)} />
+              <img
+                src={whatsAppBannerWebObj?.bannerUrl}
+                onClick={() =>
+                  handleClickOnWhatsAppBanner(whatsAppBannerWebObj)
+                }
+              />
             )}
           </div>
         )}
@@ -159,7 +213,13 @@ const Home = () => {
             <div className="WhatsNewSection">
               <div className="headSection">
                 <h2>{t(whatsNewSectionObj?.headerLabel)}</h2>
-                <p onClick={() => history.push(whatsNewSectionObj?.sideOption?.navigationUrl)}>{t(whatsNewSectionObj?.sideOption?.name)}</p>
+                <p
+                  onClick={() =>
+                    history.push(whatsNewSectionObj?.sideOption?.navigationUrl)
+                  }
+                >
+                  {t(whatsNewSectionObj?.sideOption?.name)}
+                </p>
               </div>
               <WhatsNewCard {...EventsData?.[0]} />
             </div>
