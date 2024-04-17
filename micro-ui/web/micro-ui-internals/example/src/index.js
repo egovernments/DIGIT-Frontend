@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -57,9 +56,7 @@ const initDigitUI = () => {
     commonUiConfig: UICustomizations
   };
   window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
+    
   });
 
   initMicroplanningComponents();
