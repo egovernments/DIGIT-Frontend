@@ -14,7 +14,7 @@ const UploadData = ({formData , onSelect , ...props}) => {
   const [params] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType , setErrorsType] = useState({});
-  const type = props?.props?.type
+  const type = props?.props?.type;
   useEffect(() => {
     if(type==="facilityWithBoundary"){
     onSelect("uploadFacility", uploadedFile);
@@ -160,12 +160,12 @@ const UploadData = ({formData , onSelect , ...props}) => {
     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
     const fileData = fileUrl.map((i) => {
-      const t = i?.url?.split("/");
-      const dd = t[t?.length - 1]?.split("?")?.[0];
+      const urlParts = i?.url?.split("/");
+      const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
       const fileType = (type === "facility") ? "facilityWithBoundary" : type;
       return {
         ...i,
-        fileName: dd,
+        fileName: fileName,
         type: fileType
       };
     });
@@ -187,7 +187,7 @@ const UploadData = ({formData , onSelect , ...props}) => {
       tenantId: tenantId,
       type: type,
       forceUpdate: false,
-      hierarchyType: "ADMIN",
+      hierarchyType: params.hierarchyType,
       id: params?.facilityId,
     },
     body: {},
@@ -210,11 +210,11 @@ const UploadData = ({formData , onSelect , ...props}) => {
           const filesArray = [result?.fileStoreIds?.[0]?.fileStoreId];
           const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
           const fileData = fileUrl.map((i) => {
-            const t = i?.url?.split("/");
-            const dd = t[t?.length - 1]?.split("?")?.[0];
+            const urlParts = i?.url?.split("/");
+            const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
             return {
               ...i,
-              fileName: dd,
+              fileName: fileName,
             };
           });
           window.location.href = fileData?.[0]?.url;

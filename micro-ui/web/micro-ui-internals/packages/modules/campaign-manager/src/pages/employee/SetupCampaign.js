@@ -23,6 +23,7 @@ const SetupCampaign = () => {
   const id = searchParams.get("id");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const client = useQueryClient();
+  const hierarchyType = "ADMIN";
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -37,8 +38,8 @@ const SetupCampaign = () => {
     },
   });
 
-  const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary","ADMIN");
-  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary","ADMIN");
+  const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary",hierarchyType);
+  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary",hierarchyType);
   // const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary"); // to be integrated later
 
   function updateUrlParams(params) {
@@ -379,7 +380,8 @@ const SetupCampaign = () => {
       ...params,
       [name]: { ...formData },
       facilityId : facilityId,
-      boundaryId : boundaryId
+      boundaryId : boundaryId,
+      hierarchyType: hierarchyType
     });
 
     const dummyData = {
