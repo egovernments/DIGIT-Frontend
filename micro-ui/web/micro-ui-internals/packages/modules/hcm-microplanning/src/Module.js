@@ -84,5 +84,5 @@ const updateCustomConfigs = () => {
   });
 };
 
-export   {initMicroplanningComponents};
+export {initMicroplanningComponents};
 

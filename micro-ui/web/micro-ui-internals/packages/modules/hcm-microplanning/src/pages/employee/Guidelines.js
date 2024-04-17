@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 const Guidelines = ({ path }) => {
   const { t } = useTranslation();
   // Keeping inline style for now because design for this screen is not given yet
+  const { id="" } = Digit.Hooks.useQueryParams();
   return (
-    <Link to={`/${window.contextPath}/employee/microplanning/create-microplan`}>
+    <Link to={`/${window.contextPath}/employee/microplanning/create-microplan?id=${id}`}>
       <div
         style={{
           position: "absolute",

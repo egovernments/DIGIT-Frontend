@@ -8,6 +8,8 @@ import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
 import Guidelines from "./Guidelines";
 import CreateMicroplan from "./CreateMicroplan";
+import SavedMicroplans from "./SavedMicroplans";
+import SelectCampaign from "./SelectCampaign";
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -41,7 +43,18 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
       path: `/${window.contextPath}/employee/create-microplan`,
       content:  t(`CREATE_MICROPLAN`) ,
       show: pathVar.includes("create-microplan")?true: false,
-    }
+    },
+    {
+      path: `/${window.contextPath}/employee/saved-microplan`,
+      content:  t(`SAVED_MICROPLANS_TEXT`) ,
+      show: pathVar.includes("saved-microplan")?true: false,
+    },
+    {
+      path: `/${window.contextPath}/employee/select-campaign`,
+      content:  t(`CREATE_MICROPLAN`) ,
+      show: pathVar.includes("select-campaign")?true: false,
+    },
+    
     
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
@@ -77,7 +90,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/help-guidelines`} component={() => <Guidelines parentRoute={path}/>} />
 
           <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path}/>} />
-          
+          <PrivateRoute path={`${path}/saved-microplans`} component={() => <SavedMicroplans parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/select-campaign`} component={() => <SelectCampaign parentRoute={path}/>} />
         </AppContainer>
       </Switch>
     </React.Fragment>
