@@ -1,4 +1,4 @@
-export const useGenerateIdCampaign = (type ,hierarchyType="ADMIN", filters) => {
+export const useGenerateIdCampaign = (type ,hierarchyType, filters) => {
   const reqCriteriaFacility = {
     url: `/project-factory/v1/data/_generate`,
     changeQueryName :   `${type}-${hierarchyType}`,

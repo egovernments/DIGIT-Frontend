@@ -201,7 +201,7 @@ const UploadData = ({formData , onSelect , ...props}) => {
           tenantId: tenantId,
           type: type,
           forceUpdate: false,
-          hierarchyType: "ADMIN",
+          hierarchyType: params.hierarchyType,
           id: params?.facilityId,
         },
       },
