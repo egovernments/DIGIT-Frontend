@@ -39,7 +39,6 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
    
 
     const {state,dispatch} = useContext(InboxContext)
-    
     //here I am just checking state.searchForm has all empty keys or not(when clicked on clear search)
     useEffect(() => {
         if(apiDetails?.minParametersForSearchForm !== 0 && Object.keys(state.searchForm).length > 0 && !Object.keys(state.searchForm).some(key => state.searchForm[key]!=="") && type==="search" && activeLink?.minParametersForSearchForm !== 0){
@@ -146,16 +145,16 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
             return res;
         });
     }, []);
-
+   
     useEffect(() => {
-        register("offset",session?.tableForm?.offset || config?.customDefaultPagination?.offset|| 0);
-        register("limit",session?.tableForm?.limit || config?.customDefaultPagination?.limit || 10);
-    }, [register]);
+        register("offset",session?.tableForm?.offset ||state.tableForm.offset|| config?.customDefaultPagination?.offset|| 0);
+        register("limit",session?.tableForm?.limit ||state.tableForm.limit|| config?.customDefaultPagination?.limit || 10);
+    });
 
-    useEffect(() => {
-        setValue("offset",state.tableForm.offset)
-        setValue("limit",state.tableForm.limit)
-      })
+    // useEffect(() => {
+    //     setValue("offset",state.tableForm.offset)
+    //     setValue("limit",state.tableForm.limit)
+    //   })
 
     function onPageSizeChange(e) {
         setValue("limit", Number(e.target.value));
