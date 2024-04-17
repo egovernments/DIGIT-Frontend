@@ -18,6 +18,8 @@ import CampaignSummary from "./components/CampaignSummary";
 import CycleDetaisPreview from "./components/CycleDetaisPreview";
 import Response from "./pages/employee/Response";
 import SelectingBoundaries from "./pages/employee/SelectingBoundaries";
+import CampaignSelection from "./components/CampaignType";
+
 
 const CampaignModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["campaignmanager", "workbench", "mdms", "schema"];
@@ -57,7 +59,8 @@ const componentsToRegister = {
   CampaignSummary,
   CycleDetaisPreview,
   Response,
-  SelectingBoundaries: SelectingBoundaries
+  SelectingBoundaries: SelectingBoundaries,
+  CampaignSelection
 };
 
 const overrideHooks = () => {
