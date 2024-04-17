@@ -50,14 +50,14 @@ const configs = {
             disable: false,
             populators: {
               name: "status",
-              optionsKey: "name",
+              optionsKey: "status",
               optionsCustomStyle: {
                 top: "2.3rem",
               },
               mdmsConfig: {
-                masterName: "projectTypes",
-                moduleName: "HCM-PROJECT-TYPES",
-                localePrefix: "CAMPAIGN_TYPE",
+                masterName: "MicroplanStatus",
+                moduleName: "hcm-microplanning",
+                localePrefix: "MICROPLAN_STATUS",
               },
             },
           },
@@ -83,11 +83,12 @@ const configs = {
           },
           {
             label: "CAMPAIGNS_ASSIGNED",
-            jsonPath: "executionPlanId",
+            jsonPath: "CampaignDetails.campaignName",
           },
           {
             label: "CAMPAIGN_DATE",
-            jsonPath: "tenantId",
+            jsonPath: "CampaignDetails.campaignDetails.startDate",
+            additionalCustomization:true
           },
         ],
         showActionBarMobileCard: true,
@@ -106,7 +107,7 @@ const configs = {
   additionalSections: {},
   persistFormData: true,
   showAsRemovableTagsInMobile: false,
-  // customHookName:"microplan.useSavedMicroplans"
+  customHookName:"microplan.useSavedMicroplans"
 };
 const SavedMicroplans = () => {
   const { t } = useTranslation();

@@ -238,13 +238,19 @@ export const UICustomizations = {
       const { name,status } = data?.state?.searchForm || {};
       
       data.body.PlanConfigurationSearchCriteria = {}
+      data.body.PlanConfigurationSearchCriteria.pagination = data?.state?.tableForm
       data.body.PlanConfigurationSearchCriteria.name = name
       data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.PlanConfigurationSearchCriteria.id = Digit.UserService.getUser().info.uuid;
-      delete data.body.PlanConfigurationSearchCriteria.pagination
-
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status
       cleanObject(data.body.PlanConfigurationSearchCriteria);
       return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      if (key === "CAMPAIGN_DATE") {
+        return Digit.DateUtils.ConvertEpochToDate(value);
+      }
     },
   },
 };

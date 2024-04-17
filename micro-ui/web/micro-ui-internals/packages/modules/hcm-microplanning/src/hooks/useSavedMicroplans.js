@@ -3,7 +3,18 @@ import { useQuery } from "react-query";
 import SearchSavedPlans from "../services/searchSavedPlans";
 
 const useSavedMicroplans = (reqCriteria) => {
-  return useQuery([reqCriteria?.tenantId, reqCriteria?.id, reqCriteria?.name, reqCriteria?.executionPlanId, reqCriteria?.userUuid, reqCriteria?.offset, reqCriteria?.limit], () =>[], { ...reqCriteria.config });
+  const {body,config,params,state,url} = reqCriteria
+  const { isLoading, data, isFetching,refetch } =  useQuery(["SAVED_MICROPLANS",url], () => SearchSavedPlans(body), { ...config,cacheTime:0,staleTime:0 });
+
+  return {
+    isLoading,
+    isFetching,
+    data,
+    refetch,
+    revalidate: () => {
+      
+    },
+  };
 };
 
 // () => SearchSavedPlans(data)
