@@ -3,7 +3,7 @@ export const useGenerateIdCampaign = (type ,hierarchyType="ADMIN", filters) => {
     url: `/project-factory/v1/data/_generate`,
     changeQueryName :   `${type}-${hierarchyType}`,
     params: {
-      tenantId: "mz",
+      tenantId:  Digit.ULBService.getCurrentTenantId(),
       type: type,
       forceUpdate: true,
       hierarchyType: hierarchyType,

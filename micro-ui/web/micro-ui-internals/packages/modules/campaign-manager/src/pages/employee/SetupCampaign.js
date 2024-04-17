@@ -130,7 +130,7 @@ const SetupCampaign = () => {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
     }
     if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA) {
-      const temp = Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA); // to be enchanced later
+      const temp = Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA , "ADMIN"); // to be enchanced later
     }
     if (shouldUpdate === true) {
       if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall) {
