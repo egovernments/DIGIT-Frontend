@@ -9,6 +9,7 @@ import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { QueryClient, QueryClientProvider } from "react-query";
 // import registerRemotes from "./modules/registerRemotes"
 import { useTranslation } from "react-i18next";
+import { initI18n } from "./hooks/trans";
 
 //import { initHRMSComponents } from "@digit-ui/digit-ui-module-hrms-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
@@ -20,7 +21,11 @@ import { useTranslation } from "react-i18next";
 // const MeasurementLazy = lazy(() => import("./modules/Measurement"));
 
 
-initLibraries().then(() => {
+initLibraries().then(()=>{
+  return new Promise((resolve) => {
+    initI18n(resolve);
+  });
+}).then(() => {
   initDigitUI();
 });
 
