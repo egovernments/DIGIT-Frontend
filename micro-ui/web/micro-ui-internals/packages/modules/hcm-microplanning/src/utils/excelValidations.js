@@ -33,13 +33,11 @@ export const excelValidations = (data, schemaData, t) => {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
-          let instancePathType = validateExcel.errors[i].dataPath;
-          var matches = instancePathType.match(/\'([a-zA-Z]+)\'/g);
-          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
-          if (schemaData["locationDataColumns"].includes(parts)) {
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(parts);
+          columns.add(instancePathType[instancePathType.length - 1]);
           break;
 
         case "required":
@@ -52,20 +50,16 @@ export const excelValidations = (data, schemaData, t) => {
 
         case "maximum":
         case "minimum":
-          let instancePathMinMax = validateExcel.errors[i].dataPath;
-          var matches = instancePathMinMax.match(/\'([a-zA-Z]+)\'/g);
-          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
-          if (schemaData["locationDataColumns"].includes(parts[parts.length - 1])) {
+          const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
+          if (schemaData["locationDataColumns"].includes(instancePathMinMax[instancePathMinMax.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(parts);
+          columns.add(instancePathMinMax[instancePathMinMax.length - 1]);
           break;
 
         case "pattern":
-          const instancePathPattern = validateExcel.errors[i].dataPath;
-          var matches = instancePathPattern.match(/\'([a-zA-Z]+)\'/g);
-          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
-          columns.add(parts);
+          const instancePathPattern = validateExcel.errors[i].instancePath.split("/");
+          columns.add(instancePathPattern[instancePathPattern.length - 1]);
           break;
 
         default:
