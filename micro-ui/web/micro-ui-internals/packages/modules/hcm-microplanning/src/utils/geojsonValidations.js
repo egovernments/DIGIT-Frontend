@@ -100,7 +100,6 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
   const valid = validateGeojson(data);
   if (!valid) {
     let columns = new Set();
-    console.log(validateGeojson.errors)
     // Sorting out the Specific errors
     for (let i = 0; i < validateGeojson.errors.length; i++) {
       switch (validateGeojson.errors[i].keyword) {
