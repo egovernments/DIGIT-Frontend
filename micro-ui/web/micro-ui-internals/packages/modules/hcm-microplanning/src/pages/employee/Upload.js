@@ -272,7 +272,7 @@ const Upload = ({
         case "Geojson":
           try {
             response = await handleGeojsonFile(file, schemaData);
-            file = new File([file], file.name, { type: "application/json" });
+            file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoderActivation(false);
               setToast(response.toast);
@@ -493,6 +493,7 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       checkForSchemaData(schemaData);
+
       const { data, valid } = computeMappedDataAndItsValidations(schemaData);
       if (!valid) return;
       let filestoreId;
@@ -504,7 +505,10 @@ const Upload = ({
         resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
       }
       setResourceMapping([]);
-      setFileData((previous) => ({ ...previous, data, resourceMapping: resourceMappingData, error, filestoreId }));
+      let fileObject = _.cloneDeep(fileData);
+      fileObject = { ...fileData, mappedData: data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
+      setFileData(fileObject);
+      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoderActivation(false);
     } catch (error) {
@@ -533,7 +537,7 @@ const Upload = ({
     }
   };
   const computeMappedDataAndItsValidations = (schemaData) => {
-    const data = computeGeojsonWithMappedProperties();
+    const data = computeGeojsonWithMappedProperties(t);
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {
       handleValidationErrorResponse(response.message);
@@ -566,11 +570,16 @@ const Upload = ({
     setModal("none");
   };
 
-  const computeGeojsonWithMappedProperties = () => {
+  const computeGeojsonWithMappedProperties = (t) => {
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
+      for (const prop in item["properties"]) {
+        if (/^Admin.*/.test(prop)) {
+          newProperties[prop] = item["properties"][prop];
+        }
+      }
       resourceMapping.forEach((e) => {
-        newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+        newProperties[t(e["mappedTo"])] = item["properties"][e["mappedFrom"]];
       });
       item["properties"] = newProperties;
       return item;

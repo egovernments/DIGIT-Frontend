@@ -67,6 +67,12 @@ const geometryValidation = (data) => {
 
 // Function responsible for property verification of geojson data
 export const geojsonPropetiesValidation = (data, schemaData, t) => {
+  const translate = () => {
+    const required = schemaData.required.map((item) => t(item));
+    const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties };
+  };
+  const { required, properties } = translate();
   const schema = {
     type: "object",
     properties: {
@@ -80,8 +86,8 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           patternProperties: {
             "^properties$": {
               type: "object",
-              patternProperties: schemaData.Properties,
-              required: schemaData.required,
+              patternProperties: properties,
+              required: required,
               additionalProperties: false,
             },
           },
@@ -100,10 +106,8 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
-          const instancePathType = validateGeojson.errors[i].dataPath;
-          var matches =  instancePathType.match(/\'([a-zA-Z]+)\'/g);
-          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
-          columns.add(t(parts));
+          const instancePathType = validateGeojson.errors[i].instancePath.split("/");
+          columns.add(t(instancePathType[instancePathType.length - 1]));
           break;
         case "const":
           if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") return { valid, message: "ERROR_FEATURECOLLECTION" };
@@ -112,10 +116,8 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           columns.add(t(validateGeojson.errors[i].params.missingProperty));
           break;
         case "pattern":
-          const instancePathPattern = validateGeojson.errors[i].dataPath;
-          var matches =  instancePathPattern.match(/\'([a-zA-Z]+)\'/g);
-          var parts = matches ? matches[matches.length - 1].replace(/'/g, "") : null;
-          columns.add(t(parts));
+          const instancePathPattern = validateGeojson.errors[i].instancePath.split("/");
+          columns.add(t(instancePathPattern[instancePathPattern.length - 1]));
           break;
 
         default:
@@ -143,4 +145,23 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
   ajv.removeSchema();
   if (!geometryValidation(data)) return { valid: false, message: t("ERROR_MULTIPLE_GEOMETRY_TYPES") };
   return { valid: true };
+};
+
+function filterOutWordAndLocalise(inputString, operation) {
+  // Define a regular expression to match the string parts
+  var regex = /(\w+)/g; // Matches one or more word characters
+
+  // Replace each match using the provided function
+  var replacedString = inputString.replace(regex, function (match) {
+    // Apply the function to each matched string part
+    return operation(match);
+  });
+
+  return replacedString;
+}
+
+const prepareProperties = (properties, t) => {
+  let newProperties = {};
+  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
+  return newProperties;
 };
