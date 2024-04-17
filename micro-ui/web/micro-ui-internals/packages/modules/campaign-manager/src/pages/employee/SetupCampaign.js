@@ -133,7 +133,9 @@ const SetupCampaign = () => {
       const temp = Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA); // to be enchanced later
     }
     if (shouldUpdate === true) {
-      if (filteredConfig?.[0]?.form?.[0]?.isLast) {
+      if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall) {
+        return;
+      } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -155,8 +157,7 @@ const SetupCampaign = () => {
           }
 
           await mutate(payloadData, {
-            onError: (error, variables) => {
-            },
+            onError: (error, variables) => {},
             onSuccess: async (data) => {
               draftRefetch();
               Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -195,12 +196,17 @@ const SetupCampaign = () => {
 
           await mutate(payloadData, {
             onError: (error, variables) => {
-              console.log(error);
+              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                setShowToast({ key: "error", label: error });
+              }
             },
             onSuccess: async (data) => {
               updateUrlParams({ id: data?.CampaignDetails?.id });
               setIsDraftCreated(true);
               draftRefetch();
+              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
             },
           });
         };
@@ -322,6 +328,15 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "CAMPAIGN_DATES_MISSING_ERROR" });
           return false;
         }
+      case "cycleConfigure":
+        const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
+        const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
+        if (cycleNumber === "" || cycleNumber === 0 || deliveryNumber === "" || deliveryNumber === 0) {
+          setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
+          return false;
+        } else {
+          return true;
+        }
       case "summary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
         const isCycleError = validateCycleData(cycleConfigureData);
@@ -380,7 +395,7 @@ const SetupCampaign = () => {
 
     setShouldUpdate(true);
 
-    if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
+    if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
       setCurrentKey(currentKey + 1);
     }
     // convertFormData(totalFormData);

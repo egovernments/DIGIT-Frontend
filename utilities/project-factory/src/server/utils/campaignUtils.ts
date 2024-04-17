@@ -3,8 +3,8 @@ import { httpRequest } from "./request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
-import { createProjectCampaignResourcData, getHierarchy, projectCreate } from "../api/campaignApis";
-import { getCampaignNumber, createAndUploadFile, getSheetData, getBoundaryCodesHandler, createBoundaryEntities, createBoundaryRelationship, createExcelSheet } from "../api/genericApis";
+import { createProjectCampaignResourcData, getHeadersOfBoundarySheet, getHierarchy, projectCreate } from "../api/campaignApis";
+import { getCampaignNumber, createAndUploadFile, getSheetData, getBoundaryCodesHandler, createBoundaryRelationship, createExcelSheet, createBoundaryEntities } from "../api/genericApis";
 import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
@@ -290,7 +290,8 @@ async function enrichAndPersistCampaignForUpdate(request: any) {
     request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber
     request.body.CampaignDetails.campaignDetails = request?.body?.CampaignDetails?.deliveryRules ? { deliveryRules: request?.body?.CampaignDetails?.deliveryRules } : ExistingCampaignDetails?.campaignDetails;
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
-    request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
+    const boundaryCode = !(request?.body?.CampaignDetails?.projectId) ? getRootBoundaryCode(request.body.CampaignDetails.boundaries) : (request?.body?.CampaignDetails?.boundaryCode || ExistingCampaignDetails?.boundaryCode)
+    request.body.CampaignDetails.boundaryCode = boundaryCode
     request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate || ExistingCampaignDetails?.startDate || null
     request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate || ExistingCampaignDetails?.endDate || null
     request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType ? request?.body?.CampaignDetails?.projectType : ExistingCampaignDetails?.projectType
@@ -306,7 +307,7 @@ async function enrichAndPersistCampaignForUpdate(request: any) {
         enrichRootProjectId(request.body);
     }
     else {
-        request.body.CampaignDetails.projectId = null
+        request.body.CampaignDetails.projectId = request?.body?.CampaignDetails?.projectId || ExistingCampaignDetails?.projectId
     }
     logger.info("Persisting CampaignDetails : " + JSON.stringify(request?.body?.CampaignDetails));
     produceModifiedMessages(request?.body, config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
@@ -640,7 +641,6 @@ function reorderBoundariesWithParentFirst(reorderedBoundaries: any[], boundaryPr
     return reorderedBoundaries;
 }
 
-
 // TODO: FIX THIS FUNCTION...NOT REORDERING CORRECTLY
 async function reorderBoundaries(request: any) {
     request.body.boundaryProjectMapping = {}
@@ -651,7 +651,71 @@ async function reorderBoundaries(request: any) {
     logger.info("Reordered Boundaries " + JSON.stringify(request?.body?.CampaignDetails?.boundaries));
 }
 
-async function createProject(request: any) {
+function convertToProjectsArray(Projects: any, currentArray: any = []) {
+    for (const project of Projects) {
+        const descendants = project?.descendants
+        delete project?.descendants
+        currentArray.push(project);
+        if (descendants && Array.isArray(descendants) && descendants?.length > 0) {
+            convertToProjectsArray(descendants, currentArray)
+        }
+    }
+    return currentArray;
+}
+
+async function getRelatedProjects(request: any) {
+    const { projectId, tenantId } = request?.body?.CampaignDetails;
+    const projectSearchBody = {
+        RequestInfo: request?.body?.RequestInfo,
+        Projects: [
+            {
+                id: projectId,
+                tenantId: tenantId
+            }
+        ]
+    }
+    const projectSearchParams = {
+        tenantId: tenantId,
+        offset: 0,
+        limit: 1,
+        includeDescendants: true
+    }
+    logger.info("Project search params " + JSON.stringify(projectSearchParams))
+    logger.info("Project search body " + JSON.stringify(projectSearchBody))
+    logger.info("Project search url " + config?.host?.projectHost + config?.paths?.projectSearch)
+    const projectSearchResponse = await httpRequest(config?.host?.projectHost + config?.paths?.projectSearch, projectSearchBody, projectSearchParams);
+    if (projectSearchResponse?.Project && Array.isArray(projectSearchResponse?.Project) && projectSearchResponse?.Project?.length > 0) {
+        return convertToProjectsArray(projectSearchResponse?.Project)
+    }
+    else {
+        throwError("Error occured during project search , Check projectId", 500, "PROJECT_SEARCH_ERROR")
+        return []
+    }
+}
+
+async function updateProjectDates(request: any) {
+    const projects = await getRelatedProjects(request);
+    const { startDate, endDate } = request?.body?.CampaignDetails;
+    for (const project of projects) {
+        project.startDate = startDate || project.startDate;
+        project.endDate = endDate || project.endDate;
+        delete project?.address;
+    }
+    logger.info("Projects related to current Campaign : " + JSON.stringify(projects));
+    const projectUpdateBody = {
+        RequestInfo: request?.body?.RequestInfo,
+        Projects: projects
+    }
+    const projectUpdateResponse = await httpRequest(config?.host?.projectHost + config?.paths?.projectUpdate, projectUpdateBody);
+    if (projectUpdateResponse?.Project && Array.isArray(projectUpdateResponse?.Project) && projectUpdateResponse?.Project?.length == projects?.length) {
+        logger.info("Project dates updated successfully")
+    }
+    else {
+        throwError("Error occured during project update , Check projectId", 500, "PROJECT_UPDATE_ERROR")
+    }
+}
+
+async function createProject(request: any, actionUrl: any) {
     const { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
         var Projects: any = [{
@@ -682,6 +746,9 @@ async function createProject(request: any) {
             await new Promise(resolve => setTimeout(resolve, 3000));
         }
     }
+    else if ((startDate || endDate) && projectId && actionUrl == "update") {
+        await updateProjectDates(request);
+    }
 }
 
 async function processBasedOnAction(request: any, actionInUrl: any) {
@@ -690,7 +757,7 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     }
     if (request?.body?.CampaignDetails?.action == "create") {
         await createProjectCampaignResourcData(request);
-        await createProject(request)
+        await createProject(request, actionInUrl)
         await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
     }
     else {
@@ -863,8 +930,9 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         if (!fileResponse?.fileStoreIds?.[0]?.url) {
             throwError("Invalid file", 400, "INVALID_FILE_ERROR");
         }
-        const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1", false);
-        await validateBoundarySheetData(boundaryData, request);
+        const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
+        const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
+        await validateBoundarySheetData(headersOfBoundarySheet, request);
         const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
         const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
         const childParentMap = getChildParentMap(withoutBoundaryCode);
@@ -883,9 +951,8 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
         const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
         const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-        const headers = [...hierarchy, "Boundary Code", "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"];
         const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
-        const boundarySheetData = await createExcelSheet(data, headers);
+        const boundarySheetData = await createExcelSheet(data, hierarchy);
         const boundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
         request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
     }

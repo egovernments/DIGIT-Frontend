@@ -149,6 +149,7 @@ function AddProducts({ stref, selectedDelivery }) {
   const incrementC = (data, value) => {
     if (value?.target?.value.trim() === "") return;
     if (value === 0) return;
+    if (value > 10) return;
     setProducts((prevState) => {
       return prevState.map((item) => {
         if (item.key === data.key) {
@@ -210,7 +211,7 @@ function AddProducts({ stref, selectedDelivery }) {
       ))}
       <Button
         variation="secondary"
-        label={`CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION`}
+        label={t(`CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION`)}
         className={"add-rule-btn"}
         icon={<AddIcon fill="#f47738" styles={{ height: "1.5rem", width: "1.5rem" }} />}
         onButtonClick={add}

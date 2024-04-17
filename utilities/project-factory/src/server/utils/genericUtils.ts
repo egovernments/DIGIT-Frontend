@@ -311,7 +311,8 @@ async function getNewEntryResponse(modifiedResponse: any, request: any) {
       createdBy: request?.body?.RequestInfo?.userInfo.uuid,
       lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
     },
-    additionalDetails: {}
+    additionalDetails: {},
+    count: null
   };
   return [newEntry];
 }
@@ -580,7 +581,8 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    await fullProcessFlowForNewEntry(newEntryResponse, request, response);
+    request.body.generatedResource = newEntryResponse;
+    fullProcessFlowForNewEntry(newEntryResponse, request, response);
   }
   else {
     request.body.generatedResource = responseData
@@ -688,6 +690,7 @@ async function getBoundaryRelationshipData(request: any, params: any) {
 }
 
 async function getDataSheetReady(boundaryData: any, request: any) {
+  const type = request?.query?.type;
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)
   if (!Array.isArray(boundaryList) || boundaryList.length === 0) {
@@ -695,19 +698,17 @@ async function getDataSheetReady(boundaryData: any, request: any) {
   }
   const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
   const string = boundaryCodes.join(', ');
-  const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: "pg", codes: string });
-
+  const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryServiceSearch, request.body, { tenantId: request?.query?.tenantId, codes: string });
   const boundaryCodeNameMapping: { [key: string]: string } = {};
   boundaryEntityResponse?.Boundary?.forEach((data: any) => {
     boundaryCodeNameMapping[data?.code] = data?.additionalDetails?.name;
   });
-
   const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
   const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
   const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
-  const headers = [...reducedHierarchy, "Boundary Code",
-    // "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"
-  ];
+  const headers = type != "facilityWithBoundary" ? [...reducedHierarchy, "Boundary Code",
+    "Target at the Selected Boundary level", "Start Date of Campaign (Optional Field)", "End Date of Campaign (Optional Field)"
+  ] : [...reducedHierarchy, "Boundary Code"];
   const data = boundaryList.map(boundary => {
     const boundaryParts = boundary.split(',');
     const boundaryCode = boundaryParts[boundaryParts.length - 1];

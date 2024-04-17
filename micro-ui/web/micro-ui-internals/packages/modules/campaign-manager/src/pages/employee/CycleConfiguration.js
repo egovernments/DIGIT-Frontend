@@ -64,14 +64,15 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   }, [state]);
 
   const updateCycle = (d) => {
-    if (d === 0) return;
-    if (d?.target?.value.trim() === "") return;
-    dispatch({ type: "UPDATE_CYCLE", payload: d?.target?.value ? Number(d?.target?.value) : d });
+    if (d === 0 || d > 5) return;
+    // if (d?.target?.value.trim() === "") return;
+    dispatch({ type: "UPDATE_CYCLE", payload: d?.target?.value ? Number(d?.target?.value) : d?.target?.value === "" ? d.target.value : d });
   };
 
   const updateDelivery = (d) => {
-    if (d === 0) return;
-    dispatch({ type: "UPDATE_DELIVERY", payload: d });
+    if (d === 0 || d > 5) return;
+    // if (d?.target?.value.trim() === "") return;
+    dispatch({ type: "UPDATE_DELIVERY", payload: d?.target?.value ? Number(d?.target?.value) : d });
   };
 
   const selectToDate = (index, d) => {
@@ -121,6 +122,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             <div className="date-field-container">
               <TextInput
                 type="date"
+                placeholder={t("FROM_DATE")}
                 value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
                 min={dateRange?.startDate}
                 max={dateRange?.endDate}
@@ -128,6 +130,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               />
               <TextInput
                 type="date"
+                placeholder={t("TO_DATE")}
                 value={cycleData?.find((j) => j.key === index + 1)?.toDate}
                 min={cycleData?.find((j) => j.key === index + 1)?.fromDate}
                 max={dateRange?.endDate}
