@@ -16,7 +16,7 @@ import {
   CollectionsBookmarIcons,
   FinanceChartIcon,
   CollectionIcon,
-} from "@egovernments/digit-ui-react-components";
+} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import ReactTooltip from "react-tooltip";
 

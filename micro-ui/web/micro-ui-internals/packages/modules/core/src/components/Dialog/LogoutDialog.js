@@ -1,4 +1,4 @@
-import { CardText, CloseSvg, Modal } from "@egovernments/digit-ui-react-components";
+import {CardText, SVG, Modal} from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,11 +15,10 @@ const CloseBtn = (props) => {
   return (
     <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
       {props?.isMobileView ? (
-        <CloseSvg />
+        <SVG.Close />
       ) : (
         <div className={"icon-bg-secondary"} style={{ backgroundColor: "#505A5F" }}>
-          {" "}
-          <Close />{" "}
+          <Close />
         </div>
       )}
     </div>
@@ -69,7 +68,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
         position: "absolute",
         left: 0,
         bottom: 0,
-        padding: "18px",
+        padding: "5px",
       }}
       style={{
         flex: 1,

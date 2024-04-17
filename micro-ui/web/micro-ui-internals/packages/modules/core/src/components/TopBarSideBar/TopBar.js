@@ -1,4 +1,5 @@
-import { Dropdown, Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
+import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
+import { Dropdown } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
@@ -71,13 +72,12 @@ const TopBar = ({
   function onNotificationIconClick() {
     history.push(`/${window?.contextPath}/citizen/engagement/notifications`);
   }
-  
+
   const urlsToDisableNotificationIcon = (pathname) =>
     !!Digit.UserService?.getUser()?.access_token
       ? false
       : [`/${window?.contextPath}/citizen/select-language`, `/${window?.contextPath}/citizen/select-location`].includes(pathname);
 
- 
   if (CITIZEN) {
     return (
       <div>
@@ -121,12 +121,12 @@ const TopBar = ({
   }
   return (
     <div className="topbar">
-      {mobileView ? <Hamburger handleClick={toggleSidebar} color="#9E9E9E" /> : null}
+      <div className="digit-hamburger-class">{<Hamburger  handleClick={toggleSidebar} color="#9E9E9E" />}</div>
       <img className="city" src={loggedin ? cityDetails?.logoId : stateInfo?.statelogo} />
-      <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+      <span className="digit-topbar-container">
         {loggedin &&
           (cityDetails?.city?.ulbGrade ? (
-            <p className="ulb" style={mobileView ? { fontSize: "14px", display: "inline-block" } : {}}>
+            <p className="ulb">
               {t(cityDetails?.i18nKey).toUpperCase()}{" "}
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
             </p>
@@ -134,42 +134,41 @@ const TopBar = ({
             <img className="state" src={logoUrl} />
           ))}
         {!loggedin && (
-          <p className="ulb" style={mobileView ? { fontSize: "14px", display: "inline-block" } : {}}>
+          <p className="ulb">
             {t(`MYCITY_${stateInfo?.code?.toUpperCase()}_LABEL`)} {t(`MYCITY_STATECODE_LABEL`)}
           </p>
         )}
-        {!mobileView && (
-          <div className={mobileView ? "right" : "flex-right right w-80 column-gap-15"} style={!loggedin ? { width: "80%" } : {}}>
-            <div className="left">
-              {!window.location.href.includes("employee/user/login") && !window.location.href.includes("employee/user/language-selection") && (
-                <ChangeCity dropdown={true} t={t} />
-              )}
-            </div>
-            <div className="left">{showLanguageChange && <ChangeLanguage dropdown={true} />}</div>
-            {userDetails?.access_token && (
-              <div className="left">
-                <Dropdown
-                  option={userOptions}
-                  optionKey={"name"}
-                  select={handleUserDropdownSelection}
-                  showArrow={true}
-                  freeze={true}
-                  style={mobileView ? { right: 0 } : {}}
-                  optionCardStyles={{ overflow: "revert",display:"table" }}
-                  topbarOptionsClassName={"topbarOptionsClassName"}
-                  customSelector={
-                    profilePic == null ? (
-                      <TextToImg name={userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Employee"} />
-                    ) : (
-                      <img src={profilePic} style={{ height: "48px", width: "48px", borderRadius: "50%" }} />
-                    )
-                  }
-                />
-              </div>
+        <div className={mobileView ? "right" : "flex-right right w-80 column-gap-15"} style={!loggedin ? { width: "80%" } : {}}>
+          <div className="left">
+            {!window.location.href.includes("employee/user/login") && !window.location.href.includes("employee/user/language-selection") && (
+              <ChangeCity dropdown={true} t={t} />
             )}
-            <img className="state" src={logoUrl} />
           </div>
-        )}
+          <div className="left">{showLanguageChange && <ChangeLanguage dropdown={true} />}</div>
+          {userDetails?.access_token && (
+            <div className="left">
+              <Dropdown
+                option={userOptions}
+                optionKey={"name"}
+                select={handleUserDropdownSelection}
+                showArrow={true}
+                freeze={true}
+                style={{}}
+                optionCardStyles={{ overflow: "revert", display: "table" }}
+                topbarOptionsClassName={"topbarOptionsClassName"}
+                customSelector={
+                  profilePic == null ? (
+                    <TextToImg name={userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Employee"} />
+                  ) : (
+                    <img src={profilePic} style={{ height: "48px", width: "48px", borderRadius: "50%" }} />
+                  )
+                }
+                showIcon={true}
+              />
+            </div>
+          )}
+          <img className="state" src={logoUrl} />
+        </div>
       </span>
     </div>
   );

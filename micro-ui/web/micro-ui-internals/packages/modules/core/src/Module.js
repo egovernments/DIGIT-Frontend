@@ -1,4 +1,5 @@
-import { Body, Loader } from "@egovernments/digit-ui-react-components";
+import { BodyContainer } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { getI18n } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -12,17 +13,18 @@ import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
-const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLanding }) => {
-  const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
+  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
   }
+  const data=getStore(initData, moduleReducers(initData)) || {};
 
   const i18n = getI18n();
   return (
-    <Provider store={getStore(initData, moduleReducers(initData))}>
+    <Provider store={data}>
       <Router>
-        <Body>
+        <BodyContainer>
           <DigitApp
             initData={initData}
             stateCode={stateCode}
@@ -31,13 +33,13 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers,defaultLandi
             logoUrl={initData?.stateInfo?.logoUrl}
             defaultLanding={defaultLanding}
           />
-        </Body>
+        </BodyContainer>
       </Router>
     </Provider>
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,defaultLanding}) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
@@ -99,7 +101,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers ,d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding}/>
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
