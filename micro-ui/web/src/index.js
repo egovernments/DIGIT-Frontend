@@ -5,12 +5,12 @@ import "./index.css";
 import App from './App';
 import { TLCustomisations } from './Customisations/tl/TLCustomisation';
 import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
-
+import { UICustomizations } from './Customisations/UICustomizations';
 
 initLibraries();
 initMicroplanningComponents();
 
-window.Digit.Customizations = { PGR: {} ,TL:TLCustomisations};
+window.Digit.Customizations = { PGR: {} ,TL:TLCustomisations,commonUiConfig: UICustomizations,};
 
 const user = window.Digit.SessionStorage.get("User");
 
