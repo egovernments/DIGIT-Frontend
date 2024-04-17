@@ -88,7 +88,7 @@ const configs = {
           {
             label: "CAMPAIGN_DATE",
             jsonPath: "CampaignDetails.campaignDetails.startDate",
-            additionalCustomization:true
+            additionalCustomization: true,
           },
         ],
         showActionBarMobileCard: true,
@@ -107,14 +107,14 @@ const configs = {
   additionalSections: {},
   persistFormData: true,
   showAsRemovableTagsInMobile: false,
-  customHookName:"microplan.useSavedMicroplans"
+  customHookName: "microplan.useSavedMicroplans",
 };
 const SavedMicroplans = () => {
   const { t } = useTranslation();
-  
+
   const onClickRow = (row) => {
     console.log(row);
-  }
+  };
 
   const savedMircoplanSession = Digit.Hooks.useSessionStorage("SAVED_MICROPLAN_SESSION", {});
 

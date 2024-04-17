@@ -38,14 +38,6 @@ const overrideHooks = () => {
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
       Object.keys(CustomisedHooks[ele]).map((hook) => {
-        // if(Object.keys(CustomisedHooks[ele][hook]).length > 0)
-        // {
-        //   Object.keys(CustomisedHooks[ele][hook]).map((method) => {
-        //     setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
-        //   });
-        // }else{
-        //   setupHooks(hook,hook,CustomisedHooks[ele][hook])
-        // }
         Object.keys(CustomisedHooks[ele][hook]).map((method) => {
           setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
         });

@@ -45,7 +45,7 @@ const configs = {
               style: {
                 marginBottom: "0px",
               },
-            }
+            },
           },
           {
             label: "CAMPAIGN_TYPE",
@@ -69,10 +69,10 @@ const configs = {
             label: "CAMPAIGN_START_DATE",
             type: "date",
             isMandatory: false,
-            key:"startDate",
+            key: "startDate",
             disable: false,
             preProcess: {
-                  updateDependent: ["populators.max"],
+              updateDependent: ["populators.max"],
             },
             populators: {
               name: "startDate",
@@ -88,10 +88,10 @@ const configs = {
             type: "date",
             isMandatory: false,
             disable: false,
-            key:"endDate",
+            key: "endDate",
             preProcess: {
-                  updateDependent: ["populators.max"],
-                },
+              updateDependent: ["populators.max"],
+            },
             populators: {
               name: "endDate",
               error: "DATE_VALIDATION_MSG",
@@ -161,7 +161,7 @@ const configs = {
         resultsJsonPath: "CampaignDetails",
         tableClassName: "table pqm-table",
         rowClassName: "table-row-mdms table-row-mdms-hover",
-        noColumnBorder:true,
+        noColumnBorder: true,
       },
       children: {},
       show: true,
@@ -173,11 +173,11 @@ const configs = {
 };
 const SelectCampaign = () => {
   const { t } = useTranslation();
-  const history = useHistory()
-  
-  const onClickRow = (row) =>{
-    history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`)
-  }
+  const history = useHistory();
+
+  const onClickRow = (row) => {
+    history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`);
+  };
 
   const SelectCampaignSession = Digit.Hooks.useSessionStorage("SELECT_CAMPAIGN_SESSION", {});
 
