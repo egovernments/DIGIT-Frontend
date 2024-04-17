@@ -14,15 +14,15 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
-  const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
     return <Loader page={true} />;
   }
+  const data=getStore(initData, moduleReducers(initData)) || {};
 
   const i18n = getI18n();
-  const data=getStore(initData, moduleReducers(initData)) || {};
   return (
-    <Provider store={getStore(initData, moduleReducers(initData))}>
+    <Provider store={data}>
       <Router>
         <BodyContainer>
           <DigitApp
