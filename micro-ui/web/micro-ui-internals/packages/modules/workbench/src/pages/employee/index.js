@@ -72,7 +72,9 @@ const App = ({ path }) => {
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
   const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
-  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession
+  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
+  const endPoint = location.pathname.replace(path + "/", "").split("?")?.[0];
+  const isBoundaryPath = endPoint.includes("upload-boundary") || endPoint.includes("create-boundary-hierarchy-type");
 
   useEffect(() => {
     // Function to clear session storage for keys with specific prefixes
@@ -106,10 +108,13 @@ const App = ({ path }) => {
 
   return (
     <React.Fragment>
-      <div className="wbh-header-container">
-        <WorkbenchBreadCrumb location={location} defaultPath={path} />
-        <WorkbenchHeader />
-      </div>
+        <div className="wbh-header-container">
+          <WorkbenchBreadCrumb location={location} defaultPath={path} />
+          {!isBoundaryPath && (
+            <WorkbenchHeader />
+          )}
+        </div>
+
       <Switch>
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
