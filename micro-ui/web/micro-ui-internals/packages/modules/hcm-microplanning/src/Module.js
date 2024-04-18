@@ -6,7 +6,7 @@ import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 // import WorkbenchCard from "./components/WorkbenchCard";
 import MicroplanningCard from "./components/MicroplanningCard";
-
+import MicroplanDetails from "./components/MicroplanDetails";
 const MicroplanningModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["Microplanning"];
   const { path, url } = useRouteMatch();
@@ -29,6 +29,7 @@ const MicroplanningModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   MicroplanningModule,
   MicroplanningCard,
+  MicroplanDetails
   // DigitJSONForm,
   // DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
   // HRMSCard // Overridden the HRMS card as per workbench

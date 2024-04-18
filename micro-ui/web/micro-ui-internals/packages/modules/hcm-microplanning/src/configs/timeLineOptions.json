@@ -3,8 +3,8 @@
     {
       "id": 0,
       "name": "MICROPLAN_DETAILS",
-      "component": "",
-      "checkForCompleteness": false
+      "component": "MicroplanDetails",
+      "checkForCompleteness": true
     },
     {
       "id": 1,

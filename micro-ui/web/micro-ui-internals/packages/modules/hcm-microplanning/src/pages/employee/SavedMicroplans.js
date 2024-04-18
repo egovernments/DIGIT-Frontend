@@ -113,7 +113,7 @@ const SavedMicroplans = () => {
   const { t } = useTranslation();
 
   const onClickRow = (row) => {
-    console.log(row);
+    // console.log(row);
   };
 
   const savedMircoplanSession = Digit.Hooks.useSessionStorage("SAVED_MICROPLAN_SESSION", {});
