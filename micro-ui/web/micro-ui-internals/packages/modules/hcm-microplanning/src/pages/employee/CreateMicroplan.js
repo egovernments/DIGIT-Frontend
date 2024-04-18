@@ -9,8 +9,9 @@ import Navigator from "../../components/Nagivator";
 import { v4 as uuidv4 } from "uuid";
 import { Toast } from "@egovernments/digit-ui-components";
 import MicroplanPreview from "./MicroplanPreview";
-
+import MicroplanDetails from "../../components/MicroplanDetails";
 export const components = {
+  MicroplanDetails,
   Upload,
   Hypothesis,
   RuleEngine,
@@ -24,6 +25,8 @@ const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
+
+  
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();

@@ -4,6 +4,7 @@ import useCreatePlanConfig from "./useCreatePlanConfig";
 import useSearchPlanConfig from "./useSearchPlanConfig";
 import useUpdatePlanConfig from "./useUpdatePlanConfig";
 import useSavedMicroplans from "./useSavedMicroplans";
+import useSearchCampaign from "./useSearchCampaign";
 const UserService = {
   logoutV1,
 };
@@ -12,7 +13,8 @@ const microplan = {
   useCreatePlanConfig,
   useSearchPlanConfig,
   useUpdatePlanConfig,
-  useSavedMicroplans
+  useSavedMicroplans,
+  useSearchCampaign
 };
 
 const contracts = {};
