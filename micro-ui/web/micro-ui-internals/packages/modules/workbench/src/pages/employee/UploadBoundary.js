@@ -14,6 +14,7 @@ const UploadBoundary = () => {
   const [selectedValue, setSelectedValue] = useState(null);
   const history = useHistory();
   const [showToast, setShowToast] = useState(null);
+  const [success , setSuccess] = useState(false);
 
   const callInputClick = async (event) => {
     inputRef.current.click();
@@ -167,6 +168,8 @@ const UploadBoundary = () => {
           onSuccess: () => {
             setShowToast({ label: `${t("WBH_CAMPAIGN_CREATED")}` });
             closeToast();
+            setSuccess(true);
+            setSelectedValue(null);
           },
           onError: (resp) => {
             let label = `${t("WBH_BOUNDARY_CREATION_FAIL")}: `;
@@ -203,6 +206,7 @@ const UploadBoundary = () => {
             onChange={handleHierarchyTypeChange}
             type={hierarchyTypeDropdownConfig.type}
             disable={hierarchyTypeDropdownConfig?.disable}
+            value={selectedValue}
           />
         </LabelFieldPair>
         <LabelFieldPair style={{ alignItems: "flex-start", paddingLeft: "1rem" }}>
@@ -232,7 +236,7 @@ const UploadBoundary = () => {
           />
           <GenerateXlsx inputRef={inputRef} jsonData={[simplifiedData]} skipHeader={true} />
         </div>
-        <BulkUpload onSubmit={onBulkUploadSubmit} />
+        <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
         {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
       </Card>
     </React.Fragment>

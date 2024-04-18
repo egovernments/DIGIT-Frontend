@@ -1,12 +1,18 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo , useEffect } from "react";
 import { UploadIcon, FileIcon, DeleteIconv2 , ActionBar , SubmitBar } from "@egovernments/digit-ui-react-components";
 import { FileUploader } from "react-drag-drop-files";
 import { useTranslation } from "react-i18next";
 
-const BulkUpload = ({ multiple = true, onSubmit }) => {
+const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
   const fileTypes = ["XLS", "XLSX"];
+
+  useEffect(() => {
+    if (onSuccess) {
+      setFiles([]);
+    }
+  }, [onSuccess]);
 
   const dragDropJSX = (
     <div className="drag-drop-container">
@@ -16,6 +22,7 @@ const BulkUpload = ({ multiple = true, onSubmit }) => {
       </p>
     </div>
   );
+
 
   const handleFileDelete = (index) => {
     const updatedFiles = [...files];
