@@ -14,6 +14,7 @@ import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
 import { Toast } from "@egovernments/digit-ui-components";
+import Schema from "../../configs/Schemas.json"
 
 const Upload = ({
   MicroplanName = "default",
@@ -31,7 +32,7 @@ const Upload = ({
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UploadConfiguration" },
     { name: "UIConfiguration" },
-    { name: "Schemas" },
+    // { name: "Schemas" },
   ]);
 
   // States
@@ -99,7 +100,8 @@ const Upload = ({
   useEffect(() => {
     if (data) {
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let schemas = data["hcm-microplanning"]["Schemas"];
+      // let schemas = data["hcm-microplanning"]["Schemas"];
+      let schemas = Schema.Schemas;
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       // let uploadSections = Config["UploadConfiguration"];
       if (UIConfiguration) {
@@ -331,7 +333,7 @@ const Upload = ({
       if (!error) {
         resourceMappingData = schemaData?.schema?.required?.map((item) => ({
           filestoreId,
-          mappedFrom: item,
+          mappedFrom: t(item),
           mappedTo: item,
         }));
       }
@@ -498,8 +500,9 @@ const Upload = ({
       if (!valid) return;
       let filestoreId;
       if (!error) {
-        filestoreId = saveFileToFileStore();
+        filestoreId = await saveFileToFileStore();
       }
+      console.log("filestoreId",filestoreId)
       let resourceMappingData;
       if (filestoreId) {
         resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
@@ -573,11 +576,7 @@ const Upload = ({
   const computeGeojsonWithMappedProperties = (t) => {
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
-      for (const prop in item["properties"]) {
-        if (/^Admin.*/.test(prop)) {
-          newProperties[prop] = item["properties"][prop];
-        }
-      }
+      
       resourceMapping.forEach((e) => {
         newProperties[t(e["mappedTo"])] = item["properties"][e["mappedFrom"]];
       });
@@ -739,7 +738,7 @@ const Upload = ({
           sections={sections}
           // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
           footerRightButtonBody={<ButtonType1 text={t("COMPLETE_MAPPING")} />}
-          header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% - 2rem)" }} />}
+          header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% )" }} />}
           bodyText={t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}
           body={
             <SpatialDataPropertyMapping
@@ -1173,11 +1172,16 @@ const UploadGuideLines = ({ uploadGuideLines, t }) => {
         </a>
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
-      <p className="sub-heading">{t("PROCEDURE")}</p>
+      <p className="sub-heading padtop">{t("PROCEDURE")}</p>
       {uploadGuideLines.map((item, index) => (
-        <p key={index} className="instruction-list">
+        <div className="instruction-list-container">
+        <p key={index} className="instruction-list number">
+          {t(index+1)}.
+        </p>
+        <p key={index} className="instruction-list text">
           {t(item)}
         </p>
+        </div>
       ))}
     </div>
   );
