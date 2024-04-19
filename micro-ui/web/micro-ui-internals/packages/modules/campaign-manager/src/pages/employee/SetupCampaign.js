@@ -11,7 +11,7 @@ const SetupCampaign = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
-  const [currentKey, setCurrentKey] = useState(1);
+  // const [currentKey, setCurrentKey] = useState(1);
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -24,6 +24,11 @@ const SetupCampaign = () => {
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const client = useQueryClient();
   const hierarchyType = "ADMIN";
+  const [currentKey, setCurrentKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -85,6 +90,10 @@ const SetupCampaign = () => {
       },
     };
   };
+
+  useEffect(() => {
+    updateUrlParams({ key : currentKey});
+  }, [currentKey]);
 
   function restructureData(data) {
     const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
@@ -336,7 +345,7 @@ const SetupCampaign = () => {
         if (!formData?.campaignDates?.startDate || !formData?.campaignDates?.endDate) {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
           return false;
-        } else if ((endDateObj == startDateObj)) {
+        } else if ((endDateObj === startDateObj)) {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
           return false;
         } else if (endDateObj < startDateObj) {
