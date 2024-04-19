@@ -3,7 +3,7 @@ import { FormComposerV2, TextInput, Button, Card, CardLabel, CardSubHeader } fro
 import { useTranslation } from "react-i18next";
 import { Toast } from "@egovernments/digit-ui-react-components";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
-import LevelCards from "../../components/LevelCards";
+import { useHistory } from "react-router-dom";
 
 const BoundaryHierarchyTypeAdd = () => {
   const { t } = useTranslation();
@@ -11,6 +11,7 @@ const BoundaryHierarchyTypeAdd = () => {
   const [showToast, setShowToast] = useState(null);
   const [config, setConfig] = useState([...addBoundaryHierarchyConfig]);
   const levelCounter = useRef(2);
+  const history = useHistory();
 
   const reqCriteriaBoundaryHierarchyTypeAdd = {
     url: `/boundary-service/boundary-hierarchy-definition/_create`,
@@ -99,6 +100,9 @@ const BoundaryHierarchyTypeAdd = () => {
             setConfig([...addBoundaryHierarchyConfig]); // Resetting form fields
             setValue("hierarchyType", "");
             setValue("levelcards", null);
+            setTimeout(() => {
+              history.push(`/${window?.contextPath}/employee/workbench/upload-boundary`);
+            }, 2000);
           },
         }
       );
