@@ -23,10 +23,20 @@ const IFrameInterface = (props) => {
   useEffect(() => {
     const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
     const isOrign = pageObject?.["isOrigin"] || false;
-    const domain = isOrign ? (process.env.NODE_ENV === "development" ? "https://qa.digit.org" : document.location.origin) : pageObject?.["domain"];
+    const domain = isOrign ? (process.env.NODE_ENV === "development" ? "https://unified-dev.digit.org" : document.location.origin) : pageObject?.["domain"];
     const contextPath = pageObject?.["routePath"] || "";
     const title = pageObject?.["title"] || "";
     let url = `${domain}${contextPath}`;
+    if(pageObject?.authToken&&pageObject?.authToken?.enable){
+      const authKey = pageObject?.authToken?.key ||  "auth-token";
+      if(pageObject?.authToken?.customFun&&Digit.Utils.createFunction(pageObject?.authToken?.customFun)){
+        // Digit.Utils.createFunction(config?.mdmsConfig?.select)
+       const customFun= Digit.Utils.createFunction(pageObject?.authToken?.customFun);
+        url=customFun(url,Digit.UserService.getUser()?.access_token,pageObject?.authToken);
+      }else{
+        url=`${url}&${authKey}=${Digit.UserService.getUser()?.access_token||""}`;
+      }
+    }
     setUrl(url);
     setTitle(title);
   }, [data, moduleName, pageName]);
