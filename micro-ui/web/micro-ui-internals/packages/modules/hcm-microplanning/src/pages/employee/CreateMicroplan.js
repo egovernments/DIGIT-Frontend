@@ -38,6 +38,7 @@ const CreateMicroplan = () => {
   const [operatorsObject, setOperatorsObject] = useState([]);
   const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
+
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     let temp;
@@ -74,6 +75,7 @@ const CreateMicroplan = () => {
   const nextEventAddon = useCallback(
     async (currentPage, checkDataCompletion) => {
       if (!microplanData) return;
+      if(!microplanData?.microplanDetails?.name) return
       setMicroplanData((previous) => ({
         ...previous,
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
@@ -87,7 +89,7 @@ const CreateMicroplan = () => {
         check = check && checkStatusValues?.[data];
       }
       if (!check) return;
-      let body = mapDataForApi(microplanData, operatorsObject);
+      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name);
       if (microplanData && !microplanData.planConfigurationId) {
         createPlanConfiguration(body);
       } else if (microplanData && microplanData.planConfigurationId) {
@@ -173,7 +175,7 @@ const CreateMicroplan = () => {
         checkDataCompleteness={true}
         stepNavigationActive={true}
         components={components}
-        childProps={{ microplanData, setMicroplanData, campaignType }}
+        childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
         nextEventAddon={nextEventAddon}
         setCurrentPageExternally={setCurrentPageExternally}
       />
@@ -188,7 +190,7 @@ const CreateMicroplan = () => {
   );
 };
 
-const mapDataForApi = (data, Operators) => {
+const mapDataForApi = (data, Operators, microplanName) => {
   // Generate UUID
   const uuid = uuidv4();
   let files = [],
@@ -207,8 +209,9 @@ const mapDataForApi = (data, Operators) => {
   // return a Create API body
   return {
     PlanConfiguration: {
+      status:"DRAFT",
       tenantId: Digit.ULBService.getStateId(),
-      name: MicroplanName,
+      name: microplanName,
       executionPlanId: uuid,
       files,
       assumptions: data?.hypothesis?.map((item) => {

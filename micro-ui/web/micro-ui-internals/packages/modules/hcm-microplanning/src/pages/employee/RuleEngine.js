@@ -3,17 +3,18 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
+import Schema from "../../configs/Schemas.json";
 
 const initialRules = [
   {
-    id: 0,
+    id: 1,
     output: "",
     input: "",
     operator: "",
     assumptionValue: "",
   },
   {
-    id: 1,
+    id: 2,
     output: "",
     input: "",
     operator: "",
@@ -34,6 +35,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [inputs, setInputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
   const [operators, setOperators] = useState([]);
+  const [validationSchemas, setValidationSchemas] = useState([]);
 
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
@@ -81,12 +83,14 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     let hypothesisAssumptions = [];
     microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
-    let ruleConfigureInputs = data["hcm-microplanning"]["RuleConfigureInputs"];
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
-    if (!hypothesisAssumptions) return;
-    if (!ruleConfigureOutput) return;
-    if (!ruleConfigureInputs) return;
-    if (!UIConfiguration) return;
+    let schemas = Schema.Schemas;
+    // let ruleConfigureInputs = data["hcm-microplanning"]["RuleConfigureInputs"];
+    let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
+    microplanData?.ruleEngine?.forEach((item) => {
+      if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
+    });
+    if (schemas) setValidationSchemas(schemas);
 
     let temp;
     // let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
@@ -95,17 +99,22 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
 
     if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
-    if (!(temp && temp.data)) return;
-    setOutputs(temp.data);
+    if (temp && temp.data) {
+      let data = temp.data;
+      microplanData?.ruleEngine?.forEach((item) => {
+        data = data.filter((e) => e !== item?.output);
+      });
+      setOutputs(data);
+    }
 
-    if (ruleConfigureInputs) temp = ruleConfigureInputs.find((item) => item.campaignType === campaignType);
-    if (!(temp && temp.data)) return;
-    setInputs(temp.data);
+    // if (ruleConfigureInputs) temp = ruleConfigureInputs.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureInputs) setInputs(ruleConfigureInputs);
 
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (!(temp && temp.ruleConfigureOperators)) return;
-    temp = temp.ruleConfigureOperators.map((item) => item.name);
-    setOperators(temp);
+    if (temp && temp.ruleConfigureOperators) {
+      temp = temp.ruleConfigureOperators.map((item) => item.name);
+      setOperators(temp);
+    }
   }, [data]);
 
   const closeModal = useCallback(() => {
@@ -114,9 +123,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // Function to Delete an assumption
   const deleteAssumptionHandlerCallback = useCallback(() => {
-    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setRules, setHypothesisAssumptionsList);
+    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setRules, setOutputs, setInputs);
     closeModal();
-  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setHypothesisAssumptionsList, closeModal]);
+  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal]);
 
   const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
   return (
@@ -265,6 +274,7 @@ const InterractableSection = React.memo(
                   setOptions={setOutputs}
                   toChange={"output"}
                   unique={true}
+                  setInputs={setInputs}
                   t={t}
                 />
               </div>
@@ -280,7 +290,8 @@ const InterractableSection = React.memo(
                   options={inputs}
                   setOptions={setInputs}
                   toChange={"input"}
-                  unique={true}
+                  unique={false}
+                  setInputs={setInputs}
                   t={t}
                 />
               </div>
@@ -294,6 +305,7 @@ const InterractableSection = React.memo(
                   setOptions={setOperators}
                   toChange={"operator"}
                   unique={false}
+                  setInputs={setInputs}
                   t={t}
                 />
               </div>
@@ -306,7 +318,8 @@ const InterractableSection = React.memo(
                   options={hypothesisAssumptionsList}
                   setOptions={setHypothesisAssumptionsList}
                   toChange={"assumptionValue"}
-                  unique={true}
+                  unique={false}
+                  setInputs={setInputs}
                   t={t}
                 />
               </div>
@@ -398,21 +411,24 @@ const Example = ({ exampleOption, t }) => {
   );
 };
 
-const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setHypothesisAssumptionsList, unique) => {
+const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs) => {
   setRules((previous) => {
     if (!previous.length) return [];
     const filteredData = previous.filter((data) => data.id !== item.id);
     return filteredData || [];
   });
-  if (item && item.key)
-    setHypothesisAssumptionsList((previous) => {
-      if (!previous.includes(item.key)) return [...previous, item.key];
-      return previous;
+  if (item && item.output) {
+    setOutputs((previous) => {
+      if (!previous.includes(item.output)) return [...previous, item.output];
     });
+    setInputs((previous) => {
+      return previous.filter((e) => e !== item.output);
+    });
+  }
   setItemForDeletion();
 };
 
-const Select = React.memo(({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, t }) => {
+const Select = React.memo(({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, setInputs, t }) => {
   const [selected, setSelected] = useState("");
   const [filteredOptions, setFilteredOptions] = useState([]);
 
@@ -422,14 +438,21 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
   useEffect(() => {
     if (!options) return;
-    const filteredOptions = options.length ? options : [t("SELECT_OPTION")];
+    let filteredOptions = options.length ? options : [];
+    let filteredOptionPlaceHolder = [];
     if (item && item[toChange] && !filteredOptions.includes(item[toChange])) {
-      setFilteredOptions([item[toChange], ...filteredOptions]);
-    } else setFilteredOptions(filteredOptions);
+      filteredOptionPlaceHolder = [item[toChange], ...filteredOptions];
+    } else filteredOptionPlaceHolder = filteredOptions;
+
+    if (toChange === "input") {
+      filteredOptionPlaceHolder = filteredOptionPlaceHolder.filter((data) => data !== item.output);
+    }
+    setFilteredOptions(filteredOptionPlaceHolder);
   }, [options]);
 
   const selectChangeHandler = useCallback(
     (e) => {
+      if (e.target.value === "SELECT_OPTION") return;
       const existingEntry = rules.find((item) => item[toChange] === e.target.value);
       if (existingEntry && unique) return;
       const newDataSegment = { ...item };
@@ -441,6 +464,16 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
         });
         return filteredAssumptionsList;
       });
+      if (typeof setInputs == "function") {
+        setInputs((previous) => {
+          let temp = _.cloneDeep(previous);
+          if (toChange == "output") {
+            temp = temp.filter((item) => item != selected);
+          }
+          if (Object.values(newDataSegment).every((item) => item != "")) temp = [...temp, newDataSegment.output];
+          return temp;
+        });
+      }
       if (unique)
         setOptions((previous) => {
           let newOptions = previous.filter((item) => item !== e.target.value);
@@ -448,7 +481,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
           return newOptions;
         });
     },
-    [rules, item, selected, setRules, setOptions]
+    [rules, item, selected, setRules, setOptions, setInputs]
   );
 
   return (
@@ -464,5 +497,28 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
     </select>
   );
 });
+
+// get schema for validation
+const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
+  let sortData = []
+  // let filTypes = []
+  Object.entries(microplanData?.upload)?.filter(([key,value])=>value?.error === null).forEach(([key,value])=>{
+    sortData.push({section:key,fileType:value?.fileType})
+  })
+  const filteredSchemas = schemas.filter((schema) => {
+    if (schema.campaignType) {
+        return schema.campaignType === campaignType &&
+    sortData.some(entry => entry.section === schema.section && entry.fileType === schema.type) 
+    } else {
+        return sortData.some(entry => entry.section === schema.section && entry.fileType === schema.type)
+    }
+}) || [];
+    console.log(filteredSchemas)
+  const finalData = filteredSchemas
+    ?.map((item) => item?.schema?.RuleConfigureInputs)
+    .flatMap((item) => item)
+    .filter((item) => item);
+  return finalData;
+};
 
 export default RuleEngine;

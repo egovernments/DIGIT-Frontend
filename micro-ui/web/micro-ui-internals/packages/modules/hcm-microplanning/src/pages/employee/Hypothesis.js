@@ -32,7 +32,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   useEffect(() => {
     if (pages) {
       const previouspage = pages[currentPage?.id - 1];
-      if (previouspage?.checkForCompleteness && !microplanData?.status[previouspage?.name]) setEditable(false);
+      if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {

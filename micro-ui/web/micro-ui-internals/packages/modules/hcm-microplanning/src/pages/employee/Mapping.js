@@ -41,7 +41,7 @@ const Mapping = ({
   const [selectedBaseMap, setSelectedBaseMap] = useState({});
   const [selectedBaseMapName, setSelectedBaseMapName] = useState("");
   const [showBaseMapSelector, setShowBaseMapSelector] = useState(false);
-  
+
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!data) return;
@@ -67,14 +67,14 @@ const Mapping = ({
           metadata: item,
           layer,
         };
-        if (!defaultBaseMap) defaultBaseMap = {
-          name: item?.name,
-          layer,
-        };
-
+        if (!defaultBaseMap)
+          defaultBaseMap = {
+            name: item?.name,
+            layer,
+          };
       }
     });
-    setSelectedBaseMapName(defaultBaseMap?.name)
+    setSelectedBaseMapName(defaultBaseMap?.name);
     setBaseMaps(baseMaps);
     if (!map) {
       init(_mapNode, defaultBaseMap);
@@ -102,6 +102,13 @@ const Mapping = ({
     };
 
     let map_i = L.map(id, mapConfig);
+    var verticalBounds = L.latLngBounds(
+      L.latLng(-90, -180), 
+      L.latLng(85, 180) 
+    );
+    map_i.on("drag", function () {
+      map_i.panInsideBounds(verticalBounds, { animate: false });
+    });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
@@ -206,17 +213,18 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
           <div className="base-map-area">
             {Object.entries(baseMaps).map(([name, baseMap], index) => {
               return (
-              <div key={index} className={`base-map-entity ${name == selectedBaseMapName ? "selected" : ""}`}>
-                <img
-                  className="base-map-img"
-                  key={index}
-                  src={generatePreviewUrl(baseMap?.metadata?.url, [-24.749434, 32.961285], 5)}
-                  alt={name}
-                  onClick={() => handleBaseMapToggle(name)}
-                />
-                <p>{t(name)}</p>
-              </div>
-            )})}
+                <div key={index} className={`base-map-entity ${name == selectedBaseMapName ? "selected" : ""}`}>
+                  <img
+                    className="base-map-img"
+                    key={index}
+                    src={generatePreviewUrl(baseMap?.metadata?.url, [-24.749434, 32.961285], 5)}
+                    alt={name}
+                    onClick={() => handleBaseMapToggle(name)}
+                  />
+                  <p>{t(name)}</p>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
