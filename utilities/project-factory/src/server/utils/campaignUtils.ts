@@ -107,7 +107,7 @@ async function updateStatusFile(request: any) {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
 
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throwError("No download URL returned for the given fileStoreId", 500, "INVALID_FILE");
+        throwError("FILE", 500, "INVALID_FILE");
     }
 
     const headers = {
@@ -122,7 +122,7 @@ async function updateStatusFile(request: any) {
 
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-        throwError(`Sheet with name "${sheetName}" is not present in the file.`, 500, "SHEET_NOT_FOUND");
+        throwError("FILE", 500, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
     }
     processErrorData(request, createAndSearchConfig, workbook, sheetName);
 
@@ -132,7 +132,7 @@ async function updateStatusFile(request: any) {
         request.body.ResourceDetails.processedFileStoreId = responseData?.[0]?.fileStoreId;
     }
     else {
-        throwError("Error in Creating Status File", 500, "STATUS_FILE_CREATION_ERROR");
+        throwError("FILE", 500, "STATUS_FILE_CREATION_ERROR");
     }
 }
 
@@ -173,14 +173,16 @@ function processData(dataFromSheet: any[], createAndSearchConfig: any) {
     for (const data of dataFromSheet) {
         const resultantElement: any = {};
         for (const element of parseLogic) {
-            let dataToSet = _.get(data, element.sheetColumnName);
-            if (element.conversionCondition) {
-                dataToSet = element.conversionCondition[dataToSet];
+            if (element?.resultantPath) {
+                let dataToSet = _.get(data, element.sheetColumnName);
+                if (element.conversionCondition) {
+                    dataToSet = element.conversionCondition[dataToSet];
+                }
+                if (element.type) {
+                    dataToSet = convertToType(dataToSet, element.type);
+                }
+                _.set(resultantElement, element.resultantPath, dataToSet);
             }
-            if (element.type) {
-                dataToSet = convertToType(dataToSet, element.type);
-            }
-            _.set(resultantElement, element.resultantPath, dataToSet);
         }
         resultantElement["!row#number!"] = data["!row#number!"];
         var addToCreate = true;
@@ -227,9 +229,18 @@ async function generateProcessedFileAndPersist(request: any) {
         await updateStatusFile(request);
     }
     updateActivityResourceId(request);
+    request.body.ResourceDetails = {
+        ...request?.body?.ResourceDetails,
+        status: "completed",
+        auditDetails: {
+            ...request?.body?.ResourceDetails?.auditDetails,
+            lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
+            lastModifiedTime: Date.now()
+        }
+    };
+    produceModifiedMessages(request?.body, config.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
     logger.info("ResourceDetails to persist : " + JSON.stringify(request?.body?.ResourceDetails));
     logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
-    produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
     await new Promise(resolve => setTimeout(resolve, 2000));
     produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
 }
@@ -353,7 +364,7 @@ function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
             if (mappingMap.has(grandParent)) {
                 countMap.set(grandParent, (countMap.get(grandParent) || 0) + 1);
             } else {
-                throwError("Insert boundary hierarchy level wise", 400, "BOUNDARY_HIERARCHY_INSERT_ERROR");
+                throwError("BOUNDARY", 400, "BOUNDARY_HIERARCHY_INSERT_ERROR");
             }
         }
         mappingMap.set(row[len - 2], row[len - 1]);
@@ -416,14 +427,9 @@ function extractCodesFromBoundaryRelationshipResponse(boundaries: any[]): any {
 
 
 async function getTotalCount(request: any) {
-    try {
-        const query = "SELECT COUNT(*) FROM health.eg_cm_campaign_details";
-        const queryResult = await pool.query(query);
-        request.body.totalCount = parseInt(queryResult.rows[0].count, 10);
-    } catch (error: any) {
-        logger.error("Error getting total count: " + error.message + ", Stack: " + error.stack);
-        throw error;
-    }
+    const query = "SELECT COUNT(*) FROM health.eg_cm_campaign_details";
+    const queryResult = await pool.query(query);
+    request.body.totalCount = parseInt(queryResult.rows[0].count, 10);
 }
 
 async function searchProjectCampaignResourcData(request: any) {
@@ -688,7 +694,7 @@ async function getRelatedProjects(request: any) {
         return convertToProjectsArray(projectSearchResponse?.Project)
     }
     else {
-        throwError("Error occured during project search , Check projectId", 500, "PROJECT_SEARCH_ERROR")
+        throwError("PROJECT", 500, "PROJECT_SEARCH_ERROR")
         return []
     }
 }
@@ -711,7 +717,7 @@ async function updateProjectDates(request: any) {
         logger.info("Project dates updated successfully")
     }
     else {
-        throwError("Error occured during project update , Check projectId", 500, "PROJECT_UPDATE_ERROR")
+        throwError("PROJECT", 500, "PROJECT_UPDATE_ERROR")
     }
 }
 
@@ -764,48 +770,67 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
         await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
     }
 }
-async function appendSheetsToWorkbook(boundaryData: any[]) {
+async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnLevel: any) {
     try {
-        const uniqueDistricts: string[] = [];
         const uniqueDistrictsForMainSheet: string[] = [];
         const workbook = XLSX.utils.book_new();
         const mainSheetData: any[] = [];
         const headersForMainSheet = Object.keys(boundaryData[0]);
         mainSheetData.push(headersForMainSheet);
+        const districtLevelRowBoundaryCodeMap = new Map();
+
 
         for (const data of boundaryData) {
             const rowData = Object.values(data);
-            const districtIndex = data.District !== null ? rowData.indexOf(data.District) : -1;
-            const districtLevelRow = districtIndex !== -1 ? rowData.slice(0, districtIndex + 1) : rowData;
-            if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
-                uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
+            const districtIndex = data[differentTabsBasedOnLevel] !== null ? rowData.indexOf(data[differentTabsBasedOnLevel]) : -1;
+            if (districtIndex == -1) {
                 mainSheetData.push(rowData);
+            }
+            else {
+                const districtLevelRow = rowData.slice(0, districtIndex + 1);
+                if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
+                    uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
+                    districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('_'), data['Boundary Code']);
+                    mainSheetData.push(rowData);
+                }
             }
         }
         const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
         XLSX.utils.book_append_sheet(workbook, mainSheet, 'ReadMe');
 
-        for (const item of boundaryData) {
-            if (item.District && !uniqueDistricts.includes(item.District)) {
-                uniqueDistricts.push(item.District);
-            }
-        }
-        for (const district of uniqueDistricts) {
-            const districtDataFiltered = boundaryData.filter(item => item.District === district);
-            const districtIndex = Object.keys(districtDataFiltered[0]).indexOf('District');
-            const headers = Object.keys(districtDataFiltered[0]).slice(districtIndex);
+        for (const uniqueData of uniqueDistrictsForMainSheet) {
+            const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
+            const districtDataFiltered = boundaryData.filter(boundary => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs);
+            const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData));
+            const districtIndex = Object.keys(modifiedFilteredData[0]).indexOf(differentTabsBasedOnLevel);
+            const headers = Object.keys(modifiedFilteredData[0]).slice(districtIndex);
             const newSheetData = [headers];
-            for (const data of districtDataFiltered) {
+            for (const data of modifiedFilteredData) {
                 const rowData = Object.values(data).slice(districtIndex).map(value => value === null ? '' : String(value)); // Replace null with empty string
                 newSheetData.push(rowData);
             }
             const ws = XLSX.utils.aoa_to_sheet(newSheetData);
-            XLSX.utils.book_append_sheet(workbook, ws, district);
+            XLSX.utils.book_append_sheet(workbook, ws, districtLevelRowBoundaryCodeMap.get(uniqueData));
         }
         return workbook;
     } catch (error) {
         throw Error("An error occurred while creating tabs based on district:");
     }
+}
+function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any): any {
+
+    // Step 2: Slice the boundary code up to the last underscore
+    const slicedBoundaryCode = targetBoundaryCode.slice(0, targetBoundaryCode.lastIndexOf('_') + 1);
+
+    // Step 3: Filter the rows that contain the sliced boundary code
+    const modifiedFilteredData = districtDataFiltered.filter((row: any, index: any) => {
+        // Extract the boundary code from the current row
+        const boundaryCode = row['Boundary Code'];
+        // Check if the boundary code starts with the sliced boundary code
+        return boundaryCode.startsWith(slicedBoundaryCode);
+    });
+    // Step 4: Return the modified filtered data
+    return modifiedFilteredData;
 }
 
 async function generateFilteredBoundaryData(request: any) {
@@ -834,7 +859,7 @@ function filterBoundaries(boundaryData: any[], filters: any): any {
 
         if (!boundary.children.length) {
             if (!filter.includeAllChildren) {
-                throwError("Boundary cannot have includeAllChildren filter false if it does not have any children", 400, "VALIDATION_ERROR");
+                throwError("COMMON", 400, "VALIDATION_ERROR", "Boundary cannot have includeAllChildren filter false if it does not have any children");
             }
             // If boundary has no children and includeAllChildren is true, return as is
             return {
@@ -863,15 +888,8 @@ function filterBoundaries(boundaryData: any[], filters: any): any {
             children: filteredChildren
         };
     }
-    try {
-        const filteredData = boundaryData.map(filterRecursive);
-        return filteredData;
-    }
-    catch (e: any) {
-        const errorMessage = "Error occurred while fetching boundaries: " + e.message;
-        logger.error(errorMessage)
-        throwError("Error occurred while fetching boundaries: " + e.message, 500, "INTERNAL_SERVER_ERROR");
-    }
+    const filteredData = boundaryData.map(filterRecursive);
+    return filteredData;
 }
 
 
@@ -925,13 +943,13 @@ function createBoundaryMap(boundaries: any[], boundaryMap: Map<string, string>):
 
 const autoGenerateBoundaryCodes = async (request: any) => {
     try {
-        await validateHierarchyType(request);
+        await validateHierarchyType(request, request?.body?.ResourceDetails?.hierarchyType, request?.body?.ResourceDetails?.tenantId);
         const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
         if (!fileResponse?.fileStoreIds?.[0]?.url) {
-            throwError("Invalid file", 400, "INVALID_FILE_ERROR");
+            throwError("FILE", 400, "INVALID_FILE");
         }
-        const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
-        const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileResponse?.fileStoreIds?.[0]?.url, "Boundary Data", false);
+        const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName, false);
+        const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName, false);
         await validateBoundarySheetData(headersOfBoundarySheet, request);
         const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
         const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
@@ -952,23 +970,28 @@ const autoGenerateBoundaryCodes = async (request: any) => {
         const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
         const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
         const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
-        const boundarySheetData = await createExcelSheet(data, hierarchy);
+        const boundarySheetData = await createExcelSheet(data, hierarchy, config.sheetName);
         const boundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
         request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
     }
     catch (error: any) {
-        throwError(error.message, 500, "INTERNAL_SERVER_ERROR");
+        throwError("BOUNDARY", 500, "BOUNDARY_CREATION_ERROR", error.message);
     }
 }
-async function convertSheetToDifferentTabs(request: any, fileStoreId: any) {
-    const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
-    if (!fileResponse?.fileStoreIds?.[0]?.url) {
-        throwError("Invalid file", 400, "INVALID_FILE_ERROR");
-    }
-    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, "Sheet1");
-    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData);
+async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any) {
+    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData, differentTabsBasedOnLevel);
     const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
     return boundaryDetails;
+}
+
+async function getBoundaryDataAfterGeneration(result: any, request: any) {
+    const fileStoreId = result[0].fileStoreId;
+    const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
+    if (!fileResponse?.fileStoreIds?.[0]?.url) {
+        throwError("FILE", 400, "INVALID_FILE");
+    }
+    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName);
+    return boundaryData;
 }
 
 export {
@@ -988,5 +1011,6 @@ export {
     generateHierarchy,
     createBoundaryMap,
     autoGenerateBoundaryCodes,
-    convertSheetToDifferentTabs
+    convertSheetToDifferentTabs,
+    getBoundaryDataAfterGeneration
 }

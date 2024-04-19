@@ -78,11 +78,13 @@
     margin-bottom: 1.5rem;
   }
 }
-.bulk-drag-drop-container {
+.uploaded-file-container {
+  margin-left: 0rem;
+}
+.upload-drag-drop-container {
   background-color: #fafafa;
   border: 1.5px dashed #d6d5d4;
   border-radius: 5px;
-  margin-top: 1.5rem;
   padding: 1rem 1rem 1rem 1rem;
   display: flex;
   align-items: center;
@@ -102,6 +104,18 @@
       text-decoration: underline;
       cursor: pointer;
     }
+  }
+}
+
+.upload-drag-drop-container{
+  margin-left: 0rem;
+  .drag-drop{
+    color: #B1B4B6;
+  }
+  .browse-text {
+    text-decoration: underline;
+    color: #f47738;
+    transition: color 0.3s;
   }
 }
 

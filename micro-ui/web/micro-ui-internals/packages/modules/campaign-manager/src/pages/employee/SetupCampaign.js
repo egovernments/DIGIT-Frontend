@@ -2,7 +2,6 @@ import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, Logo
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import TimelineCampaign from "../../components/TimelineCampaign";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
@@ -12,7 +11,7 @@ const SetupCampaign = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
-  const [currentKey, setCurrentKey] = useState(1);
+  // const [currentKey, setCurrentKey] = useState(1);
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -24,6 +23,12 @@ const SetupCampaign = () => {
   const id = searchParams.get("id");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const client = useQueryClient();
+  const hierarchyType = "ADMIN";
+  const [currentKey, setCurrentKey] = useState(() => {
+    const keyParam = searchParams.get("key");
+    return keyParam ? parseInt(keyParam) : 1;
+  });
+
 
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -37,6 +42,10 @@ const SetupCampaign = () => {
       },
     },
   });
+
+  const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary",hierarchyType);
+  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary",hierarchyType);
+  // const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary"); // to be integrated later
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -81,6 +90,10 @@ const SetupCampaign = () => {
       },
     };
   };
+
+  useEffect(() => {
+    updateUrlParams({ key : currentKey});
+  }, [currentKey]);
 
   function restructureData(data) {
     const dateData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleData;
@@ -140,6 +153,9 @@ const SetupCampaign = () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
     }
+    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA) {
+      const temp = Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA, hierarchyType); // to be enchanced later
+    }
     if (shouldUpdate === true) {
       if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall) {
         return;
@@ -156,8 +172,8 @@ const SetupCampaign = () => {
           payloadData.action = "create";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
-          payloadData.resources = [];
-          payloadData.projectType = null;
+          payloadData.resources = [totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.[0]];
+          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {};
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -194,8 +210,8 @@ const SetupCampaign = () => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
-          payloadData.resources = [];
-          payloadData.projectType = null;
+          payloadData.resources = [totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.[0]];
+          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {};
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -233,8 +249,8 @@ const SetupCampaign = () => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
-          payloadData.resources = [];
-          payloadData.projectType = null;
+          payloadData.resources = [totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.[0]];
+          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {};
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -324,17 +340,33 @@ const SetupCampaign = () => {
         if (typeof formData?.campaignName !== "string" || !formData?.campaignName.trim()) {
           setShowToast({ key: "error", label: "CAMPAIGN_NAME_MISSING_TYPE_ERROR" });
           return false;
+        } else if (formData.campaignName.length > 250) {
+          setShowToast({ key: "error", label: "CAMPAIGN_NAME_TOO_LONG_ERROR" });
+          return false;
+        } else {
+          return true;
+        }
+      case "projectType":
+        if (!formData?.projectType) {
+          setShowToast({ key: "error", label: "PROJECT_TYPE_UNDEFINED_ERROR" });
+          return false;
         } else {
           return true;
         }
       case "campaignDates":
         const startDateObj = new Date(formData?.campaignDates?.startDate);
         const endDateObj = new Date(formData?.campaignDates?.endDate);
-        if (formData?.campaignDates?.startDate && formData?.campaignDates?.endDate && endDateObj > startDateObj) {
-          return true;
-        } else {
-          setShowToast({ key: "error", label: "CAMPAIGN_DATES_MISSING_ERROR" });
+        if (!formData?.campaignDates?.startDate || !formData?.campaignDates?.endDate) {
+          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
           return false;
+        } else if ((endDateObj == startDateObj)) {
+          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
+          return false;
+        } else if (endDateObj < startDateObj) {
+          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
+          return false;
+        } else {
+          return true;
         }
       case "cycleConfigure":
         const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
@@ -386,6 +418,9 @@ const SetupCampaign = () => {
     setParams({
       ...params,
       [name]: { ...formData },
+      facilityId : facilityId,
+      boundaryId : boundaryId,
+      hierarchyType: hierarchyType
     });
 
     const dummyData = {

@@ -13,6 +13,8 @@ if (!HOST) {
 }
 
 const config = {
+  sheetName: process.env.SHEET_NAME || "Boundary Data",
+  generateDifferentTabsOnBasisOf: process.env.GENERATE_DIFFERENT_TABS_ON_BASIS_OF || "District",
   auth_token: process.env.AUTH_TOKEN,
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   KAFKA_BROKER_HOST:
@@ -27,6 +29,8 @@ const config = {
     process.env.KAFKA_UPDATE_CAMPAIGN_DETAILS_TOPIC || "update-campaign-details",
   KAFKA_CREATE_RESOURCE_DETAILS_TOPIC:
     process.env.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC || "create-resource-details",
+  KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC:
+    process.env.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC || "update-resource-details",
   KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC:
     process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
   KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC:

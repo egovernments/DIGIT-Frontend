@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { httpRequest } from "./request";
-import config from "../config/index";
+import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../Kafka/Listener'
 import { generateHierarchyList, getAllFacilities, getHierarchy } from "../api/campaignApis";
@@ -10,7 +10,7 @@ import FormData from 'form-data';
 import { Pool } from 'pg';
 import { logger } from "./logger";
 import dataManageController from "../controllers/dataManage/dataManage.controller";
-import { convertSheetToDifferentTabs } from "./campaignUtils";
+import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration } from "./campaignUtils";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -40,10 +40,12 @@ const throwErrorViaRequest = (message = "Internal Server Error") => {
   throw error;
 };
 
-const throwError = (message = "Unknown Error", status = 500, code = "UNKNOWN_ERROR") => {
-  let error: any = new Error(message);
-  error = Object.assign(error, { status, code });
-  logger.error("Error : " + error);
+const throwError = (module = "COMMON", status = 500, code = "UNKNOWN_ERROR", description: any = null) => {
+  const errorResult: any = getErrorCodes(module, code);
+  status = errorResult?.code == "UNKNOWN_ERROR" ? 500 : status;
+  let error: any = new Error(errorResult?.message);
+  error = Object.assign(error, { status, code: errorResult?.code, description });
+  logger.error(error);
   throw error;
 };
 
@@ -52,14 +54,15 @@ Error Object
 */
 const getErrorResponse = (
   code = "INTERNAL_SERVER_ERROR",
-  message = "Some Error Occured!!"
+  message = "Some Error Occured!!",
+  description: any = null
 ) => ({
   ResponseInfo: null,
   Errors: [
     {
       code: code,
       message: message,
-      description: null,
+      description: description,
       params: null,
     },
   ],
@@ -165,9 +168,12 @@ const errorResponder = (
   }
   const code = error?.code || (status === 500 ? "INTERNAL_SERVER_ERROR" : (status === 400 ? "BAD_REQUEST" : "UNKNOWN_ERROR"));
   response.header("Content-Type", "application/json");
-  const errorResponse = getErrorResponse(code, trimError(error.message || "Some Error Occurred!!"));
+  const errorMessage = trimError(error.message || "Some Error Occurred!!");
+  const errorDescription = error.description || null;
+  const errorResponse = getErrorResponse(code, errorMessage, errorDescription);
   response.status(status).send(errorResponse);
 };
+
 
 const trimError = (e: any) => {
   if (typeof e === "string") {
@@ -181,33 +187,27 @@ const trimError = (e: any) => {
 }
 
 async function generateXlsxFromJson(request: any, response: any, simplifiedData: any) {
-  try {
-    const ws = XLSX.utils.json_to_sheet(simplifiedData);
+  const ws = XLSX.utils.json_to_sheet(simplifiedData);
 
-    // Create a new workbook
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-    const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-    const formData = new FormData();
-    formData.append('file', buffer, 'filename.xlsx');
-    formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
-    formData.append('module', 'pgr');
+  // Create a new workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+  const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+  const formData = new FormData();
+  formData.append('file', buffer, 'filename.xlsx');
+  formData.append('tenantId', request?.body?.RequestInfo?.userInfo?.tenantId);
+  formData.append('module', 'pgr');
 
-    logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
-    var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
-      {
-        'Content-Type': 'multipart/form-data',
-        'auth-token': request?.body?.RequestInfo?.authToken
-      }
-    );
-    const responseData = fileCreationResult?.files;
-    logger.info("Response data after File Creation : " + JSON.stringify(responseData));
-    return responseData;
-  } catch (e: any) {
-    const errorMessage = "Error occurred while fetching the file store ID: " + e.message;
-    logger.error(errorMessage)
-    throwError(errorMessage + "    Check Logs", 500, "INTERNAL_SERVER_ERROR");
-  }
+  logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
+  var fileCreationResult = await httpRequest(config.host.filestore + config.paths.filestore, formData, undefined, undefined, undefined,
+    {
+      'Content-Type': 'multipart/form-data',
+      'auth-token': request?.body?.RequestInfo?.authToken
+    }
+  );
+  const responseData = fileCreationResult?.files;
+  logger.info("Response data after File Creation : " + JSON.stringify(responseData));
+  return responseData;
 }
 
 async function generateActivityMessage(tenantId: any, requestBody: any, requestPayload: any, responsePayload: any, type: any, url: any, status: any) {
@@ -252,7 +252,7 @@ function modifyAuditdetailsAndCases(responseData: any) {
     delete item.tenantid;
   })
 }
-
+/*   add documentation on every fun*/
 async function getResponseFromDb(request: any, response: any) {
   const pool = new Pool({
     user: config.DB_USER,
@@ -264,14 +264,26 @@ async function getResponseFromDb(request: any, response: any) {
 
   try {
     const { type } = request.query;
+    const hierarchyType = request?.query?.hierarchyType;
+    const tenantId = request?.query?.tenantId;
 
-    let queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
-    // let queryString = "SELECT * FROM eg_cm_generated_resource_details WHERE type = $1 AND status = $2";
-    const status = 'Completed';
-    const queryResult = await pool.query(queryString, [type, status]);
-    const responseData = queryResult.rows;
-    modifyAuditdetailsAndCases(responseData);
-    return responseData;
+    let queryString: string;
+    if (request?.query?.id) {
+      const id = request?.query?.id;
+      queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE id=$1 AND type = $2 AND hierarchyType = $3 AND tenantId = $4";
+      const queryResult = await pool.query(queryString, [id, type, hierarchyType, tenantId]);
+      const responseData = queryResult.rows;
+      modifyAuditdetailsAndCases(responseData);
+      return responseData;
+    }
+    else {
+      queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE type = $1 AND status = $2 AND hierarchyType = $3 AND tenantId = $4";
+      const status = 'Completed';
+      const queryResult = await pool.query(queryString, [type, status, hierarchyType, tenantId]);
+      const responseData = queryResult.rows;
+      modifyAuditdetailsAndCases(responseData);
+      return responseData;
+    }
   } catch (error) {
     logger.error('Error fetching data from the database:', error);
     throw error;
@@ -297,13 +309,17 @@ async function getModifiedResponse(responseData: any) {
   });
 }
 
-async function getNewEntryResponse(modifiedResponse: any, request: any) {
+async function getNewEntryResponse(request: any) {
   const { type } = request.query;
+  const additionalDetails = type === 'boundary'
+    ? { Filters: request?.body?.Filters ?? null }
+    : {};
   const newEntry = {
     id: uuidv4(),
     fileStoreid: null,
     type: type,
     status: "In Progress",
+    hierarchyType: request?.query?.hierarchyType,
     tenantId: request?.query?.tenantId,
     auditDetails: {
       lastModifiedTime: Date.now(),
@@ -311,7 +327,7 @@ async function getNewEntryResponse(modifiedResponse: any, request: any) {
       createdBy: request?.body?.RequestInfo?.userInfo.uuid,
       lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
     },
-    additionalDetails: {},
+    additionalDetails: additionalDetails,
     count: null
   };
   return [newEntry];
@@ -330,7 +346,7 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
     return {
       ...item,
       tenantId: request?.query?.tenantId,
-      count: parseInt(request?.body?.generatedResourceCount ? request?.body?.generatedResourceCount : null),
+      count: parseInt(request?.body?.generatedResourceCount || null),
       auditDetails: {
         ...item.auditDetails,
         lastModifiedTime: Date.now(),
@@ -338,7 +354,7 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
         lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid
       },
       fileStoreid: result?.[0]?.fileStoreId,
-      status: "Completed",
+      status: "Completed"
     };
   });
 }
@@ -414,8 +430,12 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       const dataManagerController = new dataManageController();
       const result = await dataManagerController.getBoundaryData(request, response);
       let updatedResult = result;
-      if (request?.body?.Filters && request?.body?.Filters?.boundaries.length > 0) {
-        updatedResult = await convertSheetToDifferentTabs(request, result[0].fileStoreId);
+      const boundaryData = await getBoundaryDataAfterGeneration(result, request);
+      const differentTabsBasedOnLevel = config.generateDifferentTabsOnBasisOf;
+      const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
+      const districtEntries = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
+      if (isKeyOfThatTypePresent && districtEntries.length >= 2) {
+        updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel);
       }
       const finalResponse = await getFinalUpdatedResponse(updatedResult, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
@@ -464,7 +484,7 @@ async function modifyData(request: any, response: any, responseDatas: any) {
       try {
         const processResult = await httpRequest(`${hostHcmBff}${config.app.contextPath}/bulk/_process`, batchRequestBody, undefined, undefined, undefined, undefined);
         if (processResult.Error) {
-          throwError(processResult.Error, 500, "INTERNAL_SERVER_ERROR");
+          throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", processResult.Error);
         }
         allUpdatedData.push(...processResult.updatedDatas);
       } catch (error: any) {
@@ -588,22 +608,28 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = responseData
   }
 }
+/* 
 
+*/
 async function processGenerate(request: any, response: any) {
   const responseData = await getResponseFromDb(request, response);
   const modifiedResponse = await getModifiedResponse(responseData);
-  const newEntryResponse = await getNewEntryResponse(modifiedResponse, request);
+  const newEntryResponse = await getNewEntryResponse(request);
   const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
   await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response);
 }
+/*
+TODO add comments @nitish-egov
 
+*/
 async function enrichResourceDetails(request: any) {
   request.body.ResourceDetails.id = uuidv4();
+  request.body.ResourceDetails.processedFileStoreId = null;
   if (request?.body?.ResourceDetails?.action == "create") {
     request.body.ResourceDetails.status = "data-accepted"
   }
   else {
-    request.body.ResourceDetails.status = "data-validated"
+    request.body.ResourceDetails.status = "validation-started"
   }
   request.body.ResourceDetails.auditDetails = {
     createdBy: request?.body?.RequestInfo?.userInfo?.uuid,
@@ -611,7 +637,7 @@ async function enrichResourceDetails(request: any) {
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now()
   }
-  // delete request.body.ResourceDetails.dataToCreate
+  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
 }
 
 function getFacilityIds(data: any) {
@@ -633,7 +659,7 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
       var errorFound = false;
       for (const key of keys) {
         if (searchData.hasOwnProperty(key) && searchData[key] !== data[key] && key != "!row#number!") {
-          errorString += `Value mismatch for key "${key}" at index ${data["!row#number!"] - 1}. Expected: "${data[key]}", Found: "${searchData[key]}"`
+          errorString += `Value mismatch for key "${key}. Expected: "${data[key]}", Found: "${searchData[key]}"`
           errorFound = true;
         }
       }
@@ -678,9 +704,9 @@ function modifyBoundaryData(boundaryData: unknown[]) {
 async function getDataFromSheet(fileStoreId: any, tenantId: any, createAndSearchConfig: any) {
   const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: tenantId, fileStoreIds: fileStoreId }, "get");
   if (!fileResponse?.fileStoreIds?.[0]?.url) {
-    throwError("Not any download URL returned for the given fileStoreId", 500, "DOWNLOAD_URL_NOT_FOUND");
+    throwError("FILE", 500, "DOWNLOAD_URL_NOT_FOUND");
   }
-  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName, true)
+  return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName, true, createAndSearchConfig)
 }
 
 async function getBoundaryRelationshipData(request: any, params: any) {
@@ -694,7 +720,7 @@ async function getDataSheetReady(boundaryData: any, request: any) {
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)
   if (!Array.isArray(boundaryList) || boundaryList.length === 0) {
-    throwError("Boundary list is empty or not an array.", 400, "VALIDATION_ERROR");
+    throwError("COMMON", 400, "VALIDATION_ERROR", "Boundary list is empty or not an array.");
   }
   const boundaryCodes = boundaryList.map(boundary => boundary.split(',').pop());
   const string = boundaryCodes.join(', ');
@@ -720,7 +746,11 @@ async function getDataSheetReady(boundaryData: any, request: any) {
     mappedRowData[boundaryCodeIndex] = boundaryCode;
     return mappedRowData;
   });
-  return await createExcelSheet(data, headers);
+  const sheetRowCount = data.length;
+  if (type != "facilityWithBoundary") {
+    request.body.generatedResourceCount = sheetRowCount;
+  }
+  return await createExcelSheet(data, headers, config.sheetName);
 }
 
 
