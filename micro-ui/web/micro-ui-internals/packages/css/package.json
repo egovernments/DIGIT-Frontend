@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-css",
-  "version": "1.0.12-microplan",
+  "version": "1.0.13-microplan",
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
