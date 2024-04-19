@@ -164,7 +164,10 @@ const InterractableSection = React.memo(
             </div>
             <div className="invisible">
               <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
-                <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                <div>
+                  {" "}
+                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                </div>
                 <p>{t("DELETE")}</p>
               </button>
             </div>
@@ -187,7 +190,10 @@ const InterractableSection = React.memo(
               </div>
               <div>
                 <button className="delete-button" onClick={() => deleteHandler(item)}>
-                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  <div>
+                    {" "}
+                    <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  </div>
                   <p>{t("DELETE")}</p>
                 </button>
               </div>

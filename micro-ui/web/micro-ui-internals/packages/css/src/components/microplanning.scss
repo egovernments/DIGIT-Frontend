@@ -1353,6 +1353,7 @@ $border-color: rgba(214, 213, 212, 1);
             background: rgba(255, 255, 255, 1);
 
             p {
+                text-align: center;
                 margin: 0;
                 padding: 0 0 0 0.5rem;
                 font-size: 1rem;
@@ -1367,7 +1368,7 @@ $border-color: rgba(214, 213, 212, 1);
             margin-top: 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center !important;
             background: rgba(255, 255, 255, 1);
             border: 0.063rem solid $highlight-color;
 
@@ -1377,7 +1378,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin: 0;
                 font-size: 1.188rem;
                 font-weight: 600;
-                text-align: left;
+                text-align: center;
             }
 
             .add-icon {
@@ -1391,12 +1392,12 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: 0.5rem;
 
                 p {
-                    margin: auto;
                     font-size: 1.25rem;
                     font-weight: 400;
                     padding: 0;
                     margin: 0;
                     color: white !important;
+                    text-align: center;
                 }
             }
         }

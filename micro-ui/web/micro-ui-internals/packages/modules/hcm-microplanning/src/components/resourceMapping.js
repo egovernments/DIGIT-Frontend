@@ -1,7 +1,7 @@
 import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
 import React, { useState, useEffect } from "react";
 
-export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, t }) => {
+export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, t }) => {
   // If no data is uploaded, display a message
   if (!uploadedData) return <div className="spatial-data-property-mapping"> No Data To Map</div>;
 
@@ -30,10 +30,10 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   // Fetch template columns when schema changes
   useEffect(() => {
-    if (!schema || !schema["schema"] || !schema.schema["required"]) return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-
-    const columns = schema.schema["required"];
-    if (columns) setTemplateColumns(columns);
+    if (!schema || !schema["schema"] || !schema.schema["Properties"]) return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
+    
+    const columns = Object.keys(schema.schema["Properties"]);
+    if (columns) setTemplateColumns([...columns,...hierarchy]);
   }, [schema]);
 
   // Update user columns when uploaded data changes
@@ -113,16 +113,16 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
         </span>
         <div className="navigation">
           <button onClick={() => handlePageClick(0)} disabled={currentPage === 0}>
-            <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"}/>
+            <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"} />
           </button>
           <button onClick={() => handlePageClick(currentPage - 1)} disabled={currentPage === 0}>
-            <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"}/>
+            <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"} />
           </button>
           <button onClick={() => handlePageClick(currentPage + 1)} disabled={currentPage === totalPages - 1}>
-            <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"}/>
+            <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"} />
           </button>
           <button onClick={() => handlePageClick(totalPages - 1)} disabled={currentPage === totalPages - 1}>
-            <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"}/>
+            <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"} />
           </button>
         </div>
       </div>

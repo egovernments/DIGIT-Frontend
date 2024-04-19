@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
-import Schema from "../../configs/Schemas.json";
 
 const initialRules = [
   {
@@ -42,6 +41,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     { name: "UIConfiguration" },
     { name: "RuleConfigureInputs" },
     { name: "RuleConfigureOutput" },
+    { name: "Schemas" },
   ]);
 
   // UseEffect to extract data on first render
@@ -79,13 +79,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    // let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
+    let schemas = data["hcm-microplanning"]["Schemas"];
     let hypothesisAssumptions = [];
     microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
-    let schemas = Schema.Schemas;
-    // let ruleConfigureInputs = data["hcm-microplanning"]["RuleConfigureInputs"];
     let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
     microplanData?.ruleEngine?.forEach((item) => {
       if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
@@ -93,8 +91,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (schemas) setValidationSchemas(schemas);
 
     let temp;
-    // let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    // if (!(temp && temp.assumptions)) return;
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
 
@@ -107,7 +103,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       setOutputs(data);
     }
 
-    // if (ruleConfigureInputs) temp = ruleConfigureInputs.find((item) => item.campaignType === campaignType);
     if (ruleConfigureInputs) setInputs(ruleConfigureInputs);
 
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
@@ -257,7 +252,10 @@ const InterractableSection = React.memo(
             </div>
             <div className="invisible">
               <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
-                <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                <div>
+                  {" "}
+                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                </div>
                 <p>{t("DELETE")}</p>
               </button>
             </div>
@@ -292,6 +290,7 @@ const InterractableSection = React.memo(
                   toChange={"input"}
                   unique={false}
                   setInputs={setInputs}
+                  outputs={outputs}
                   t={t}
                 />
               </div>
@@ -325,7 +324,10 @@ const InterractableSection = React.memo(
               </div>
               <div>
                 <button className="delete-button" onClick={() => deleteHandler(item)}>
-                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  <div>
+                    {" "}
+                    <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  </div>
                   <p>{t("DELETE")}</p>
                 </button>
               </div>
@@ -428,12 +430,16 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs,
   setItemForDeletion();
 };
 
-const Select = React.memo(({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, setInputs, t }) => {
+const Select = React.memo(({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, setInputs, outputs, t }) => {
   const [selected, setSelected] = useState("");
   const [filteredOptions, setFilteredOptions] = useState([]);
 
   useEffect(() => {
-    if (item) setSelected(item[toChange]);
+    if (item) {
+      if (outputs && outputs.some((e) => e == item?.input)) {
+        if (rules.some((e) => e?.output == item?.input)) setSelected(item[toChange]);
+      } else setSelected(item[toChange]);
+    }
   }, [item]);
 
   useEffect(() => {
@@ -500,25 +506,26 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
 // get schema for validation
 const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
-  let sortData = []
-  // let filTypes = []
-  Object.entries(microplanData?.upload)?.filter(([key,value])=>value?.error === null).forEach(([key,value])=>{
-    sortData.push({section:key,fileType:value?.fileType})
-  })
-  const filteredSchemas = schemas.filter((schema) => {
-    if (schema.campaignType) {
-        return schema.campaignType === campaignType &&
-    sortData.some(entry => entry.section === schema.section && entry.fileType === schema.type) 
-    } else {
-        return sortData.some(entry => entry.section === schema.section && entry.fileType === schema.type)
-    }
-}) || [];
-    console.log(filteredSchemas)
+  let sortData = [];
+  if (!schemas) return;
+  Object.entries(microplanData?.upload)
+    ?.filter(([key, value]) => value?.error === null)
+    .forEach(([key, value]) => {
+      sortData.push({ section: key, fileType: value?.fileType });
+    });
+  const filteredSchemas =
+    schemas?.filter((schema) => {
+      if (schema.campaignType) {
+        return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
+      } else {
+        return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
+      }
+    }) || [];
   const finalData = filteredSchemas
     ?.map((item) => item?.schema?.RuleConfigureInputs)
     .flatMap((item) => item)
-    .filter((item) => item);
-  return finalData;
+    .filter((item) => !!item);
+  return [...new Set(finalData)];
 };
 
 export default RuleEngine;

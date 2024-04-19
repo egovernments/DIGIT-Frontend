@@ -13,8 +13,7 @@ import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
-import { Toast } from "@egovernments/digit-ui-components";
-import Schema from "../../configs/Schemas.json"
+import { Loader, Toast } from "@egovernments/digit-ui-components";
 
 const Upload = ({
   MicroplanName = "default",
@@ -32,7 +31,7 @@ const Upload = ({
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UploadConfiguration" },
     { name: "UIConfiguration" },
-    // { name: "Schemas" },
+    { name: "Schemas" },
   ]);
 
   // States
@@ -53,6 +52,39 @@ const Upload = ({
   const [resourceMapping, setResourceMapping] = useState([]);
   const [previewUploadedData, setPreviewUploadedData] = useState();
   const [uploadGuideLines, setUploadGuideLines] = useState();
+
+  //fetch campaign data
+  const { id = "" } = Digit.Hooks.useQueryParams();
+  const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        id,
+      },
+    },
+    {
+      enabled: !!id,
+    }
+  );
+
+  // request body for boundary hierarchy api
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    params: {},
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: Digit.ULBService.getStateId(),
+        hierarchyType: campaignData?.hierarchyType,
+      },
+    },
+    config: {
+      enabled: !!campaignData?.hierarchyType,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType) || {};
+      },
+    },
+  };
+  const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
@@ -100,10 +132,8 @@ const Upload = ({
   useEffect(() => {
     if (data) {
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      // let schemas = data["hcm-microplanning"]["Schemas"];
-      let schemas = Schema.Schemas;
+      let schemas = data["hcm-microplanning"]["Schemas"];
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
-      // let uploadSections = Config["UploadConfiguration"];
       if (UIConfiguration) {
         const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
         setUploadGuideLines(uploadGuideLinesList);
@@ -115,25 +145,6 @@ const Upload = ({
       }
     }
   }, [data]);
-
-  // // Effect to set upload quidelines
-  // useEffect(()=>{
-  //   const uploadGuideLinesList = UIConfiguration.find(item => item.name === "uploadGuideLines").UploadGuideLineInstructions;
-  //   setUploadGuideLines(uploadGuideLinesList);
-  // },[])
-  // Effect to set schema
-  // useEffect(() => {
-  //   setValidationSchemas(schemas.schemas);
-  // }, []);
-
-  // To close the Toast after 10 seconds
-  useEffect(() => {
-    if (toast == undefined) return;
-    const timer = setTimeout(() => {
-      setToast(undefined);
-    }, 10000);
-    return () => clearTimeout(timer);
-  }, [toast]);
 
   // Memoized section options to prevent unnecessary re-renders
   const sectionOptions = useMemo(() => {
@@ -191,11 +202,10 @@ const Upload = ({
   // Effect for updating current session data in case of section change
   useEffect(() => {
     if (selectedSection) {
-      // const file = Digit.SessionStorage.get(`Microplanning_${selectedSection.id}`);
       let file = fileDataList?.[`${selectedSection.id}`];
-      if (file && file.file) {
-        setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === file.fileType));
-        setUploadedFileError(file.error);
+      if (file && file?.file && file?.resourceMapping) {
+        setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item?.id === file?.fileType));
+        setUploadedFileError(file?.error);
         setFileData(file);
         setDataPresent(true);
       } else {
@@ -330,8 +340,9 @@ const Upload = ({
         }
       }
       let resourceMappingData;
-      if (!error) {
-        resourceMappingData = schemaData?.schema?.required?.map((item) => ({
+      if (!error && selectedFileType.id == "Excel" ) {
+        if(schemaData?.schema?.required)
+        resourceMappingData = [...schemaData?.schema?.required,...hierarchy].map((item) => ({
           filestoreId,
           mappedFrom: t(item),
           mappedTo: item,
@@ -494,7 +505,7 @@ const Upload = ({
       setLoderActivation(true);
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
-      checkForSchemaData(schemaData);
+      if (!checkForSchemaData(schemaData)) return;
 
       const { data, valid } = computeMappedDataAndItsValidations(schemaData);
       if (!valid) return;
@@ -502,7 +513,6 @@ const Upload = ({
       if (!error) {
         filestoreId = await saveFileToFileStore();
       }
-      console.log("filestoreId",filestoreId)
       let resourceMappingData;
       if (filestoreId) {
         resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
@@ -560,23 +570,33 @@ const Upload = ({
   };
 
   const checkForSchemaData = (schemaData) => {
-    if (!schemaData || !schemaData.schema) {
+    if(resourceMapping?.length===0){
+      setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
+      setLoderActivation(false);
+      return false;
+    }
+    
+    if (!schemaData || !schemaData.schema || !schemaData.schema["required"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
       setLoderActivation(false);
       return;
     }
-    if (resourceMapping.length !== schemaData.schema["required"].length) {
+
+    let columns = [...schemaData?.schema?.["required"], ...hierarchy];
+    const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom ).length;
+    if (columns.length !== resourceMappingLength) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
       setLoderActivation(false);
-      return;
+      return false;
     }
     setModal("none");
+    return true;
   };
 
   const computeGeojsonWithMappedProperties = (t) => {
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
-      
+
       resourceMapping.forEach((e) => {
         newProperties[t(e["mappedTo"])] = item["properties"][e["mappedFrom"]];
       });
@@ -633,6 +653,10 @@ const Upload = ({
     }
     setPreviewUploadedData(data);
   };
+
+  if (isCampaignLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
@@ -747,6 +771,7 @@ const Upload = ({
               setResourceMapping={setResourceMapping}
               schema={getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas)}
               setToast={setToast}
+              hierarchy={hierarchy}
               t={t}
             />
           }
@@ -1175,12 +1200,12 @@ const UploadGuideLines = ({ uploadGuideLines, t }) => {
       <p className="sub-heading padtop">{t("PROCEDURE")}</p>
       {uploadGuideLines.map((item, index) => (
         <div className="instruction-list-container">
-        <p key={index} className="instruction-list number">
-          {t(index+1)}.
-        </p>
-        <p key={index} className="instruction-list text">
-          {t(item)}
-        </p>
+          <p key={index} className="instruction-list number">
+            {t(index + 1)}.
+          </p>
+          <p key={index} className="instruction-list text">
+            {t(item)}
+          </p>
         </div>
       ))}
     </div>
