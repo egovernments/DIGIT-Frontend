@@ -85,7 +85,15 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   return (
     <>
-      <Header>{t(`CAMPAIGN_PROJECT_${tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()}`)}</Header>
+      <Header>
+        {t(
+          `CAMPAIGN_PROJECT_${
+            tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
+              ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
+              : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+          }`
+        )}
+      </Header>
       <Paragraph
         customClassName="cycle-paragraph"
         value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -124,7 +132,11 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                 type="date"
                 placeholder={t("FROM_DATE")}
                 value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
-                min={dateRange?.startDate}
+                min={
+                  index > 0 && cycleData?.find((j) => j.key === index)?.toDate
+                    ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
+                    : dateRange?.startDate
+                }
                 max={dateRange?.endDate}
                 onChange={(d) => selectFromDate(index + 1, d)}
               />
@@ -132,7 +144,11 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                 type="date"
                 placeholder={t("TO_DATE")}
                 value={cycleData?.find((j) => j.key === index + 1)?.toDate}
-                min={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                min={
+                  cycleData?.find((j) => j.key === index + 1)?.fromDate
+                    ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
+                    : null
+                }
                 max={dateRange?.endDate}
                 onChange={(d) => selectToDate(index + 1, d)}
               />
