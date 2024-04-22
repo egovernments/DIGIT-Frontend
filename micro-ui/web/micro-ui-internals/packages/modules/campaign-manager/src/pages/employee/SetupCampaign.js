@@ -491,7 +491,6 @@ const SetupCampaign = () => {
   }
 
   const handleValidate = (formData) => {
-    console.log("KAKAKA", formData);
     const key = Object.keys(formData)?.[0];
     switch (key) {
       case "campaignName":
@@ -561,7 +560,6 @@ const SetupCampaign = () => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
-    console.log("HAHAHAAH", formData, cc);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
       return;
