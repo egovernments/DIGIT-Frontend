@@ -12,9 +12,9 @@ import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/ComonComponents";
 import { Loader, Toast } from "@egovernments/digit-ui-components";
-
+import Schema from "../../configs/Schemas.json"
 const Upload = ({
   MicroplanName = "default",
   campaignType = "SMC",
@@ -31,7 +31,7 @@ const Upload = ({
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UploadConfiguration" },
     { name: "UIConfiguration" },
-    { name: "Schemas" },
+    // { name: "Schemas" },
   ]);
 
   // States
@@ -132,7 +132,8 @@ const Upload = ({
   useEffect(() => {
     if (data) {
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let schemas = data["hcm-microplanning"]["Schemas"];
+      // let schemas = data["hcm-microplanning"]["Schemas"];
+      let schemas = Schema?.Schemas;
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       if (UIConfiguration) {
         const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
@@ -321,33 +322,36 @@ const Upload = ({
           return;
       }
       let filestoreId;
-      if (!error && !callMapping) {
-        try {
-          const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
-          if (filestoreResponse?.data?.files?.length > 0) {
-            filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
-          } else {
-            error = t("ERROR_UPLOADING_FILE");
-            setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-            setFileData((previous) => ({ ...previous, error }));
-            setUploadedFileError(error);
-          }
-        } catch (errorData) {
-          error = t("ERROR_UPLOADING_FILE");
-          setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-          setUploadedFileError(error);
-          handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
-        }
-      }
-      let resourceMappingData;
-      if (!error && selectedFileType.id == "Excel" ) {
-        if(schemaData?.schema?.required)
-        resourceMappingData = [...schemaData?.schema?.required,...hierarchy].map((item) => ({
-          filestoreId,
-          mappedFrom: t(item),
-          mappedTo: item,
-        }));
-      }
+      // if (!error && !callMapping) {
+      //   try {
+      //     const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
+      //     if (filestoreResponse?.data?.files?.length > 0) {
+      //       filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+      //     } else {
+      //       error = t("ERROR_UPLOADING_FILE");
+      //       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+      //       setFileData((previous) => ({ ...previous, error }));
+      //       setUploadedFileError(error);
+      //     }
+      //   } catch (errorData) {
+      //     error = t("ERROR_UPLOADING_FILE");
+      //     setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+      //     setUploadedFileError(error);
+      //     handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
+      //   }
+      // }
+
+      // Mapping resources
+      let { resourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
+        schemaData,
+        hierarchy,
+        selectedFileType,
+        fileDataToStore,
+        error,
+        filestoreId,
+        t
+      );
+      fileDataToStore = tempFileDataToStore;
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: `${selectedSection.id}`,
@@ -449,14 +453,7 @@ const Upload = ({
           });
           return;
         }
-        // Extract keys from the first feature's properties
-        const keys = Object.keys(fileData.data.features[0].properties);
-        // Extract corresponding values for each feature
-        const values = fileData.data.features.map((feature) => {
-          return keys.map((key) => feature.properties[key]);
-        });
-        // Group keys and values into the desired format
-        const result = { [fileData.fileName]: [keys, ...values] };
+        const result = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
@@ -550,7 +547,7 @@ const Upload = ({
     }
   };
   const computeMappedDataAndItsValidations = (schemaData) => {
-    const data = computeGeojsonWithMappedProperties(t);
+    const data = computeGeojsonWithMappedProperties();
     const response = geojsonPropetiesValidation(data, schemaData.schema, t);
     if (!response.valid) {
       handleValidationErrorResponse(response.message);
@@ -570,20 +567,20 @@ const Upload = ({
   };
 
   const checkForSchemaData = (schemaData) => {
-    if(resourceMapping?.length===0){
+    if (resourceMapping?.length === 0) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
       setLoderActivation(false);
       return false;
     }
-    
+
     if (!schemaData || !schemaData.schema || !schemaData.schema["required"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
       setLoderActivation(false);
       return;
     }
 
-    let columns = [...schemaData?.schema?.["required"], ...hierarchy];
-    const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom ).length;
+    let columns = [...hierarchy, ...schemaData?.schema?.["required"]];
+    const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom).length;
     if (columns.length !== resourceMappingLength) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
       setLoderActivation(false);
@@ -593,12 +590,18 @@ const Upload = ({
     return true;
   };
 
-  const computeGeojsonWithMappedProperties = (t) => {
+  const computeGeojsonWithMappedProperties = () => {
+    const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
+    let schemaKeys;
+    if (schemaData?.schema?.["Properties"]) schemaKeys = hierarchy.concat(Object.keys(schemaData.schema["Properties"]));
+    // Sorting the resourceMapping list inorder to maintain the column sequence
+    const sortedSecondList = sortSecondListBasedOnFirstListOrder(schemaKeys, resourceMapping);
+    // Creating a object with input data with MDMS keys
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
 
-      resourceMapping.forEach((e) => {
-        newProperties[t(e["mappedTo"])] = item["properties"][e["mappedFrom"]];
+      sortedSecondList.forEach((e) => {
+        newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
       });
       item["properties"] = newProperties;
       return item;
@@ -641,14 +644,7 @@ const Upload = ({
           });
           return;
         }
-        // Extract keys from the first feature's properties
-        const keys = Object.keys(fileData.data.features[0].properties);
-        // Extract corresponding values for each feature
-        const values = fileData.data.features.map((feature) => {
-          return keys.map((key) => feature.properties[key]);
-        });
-        // Group keys and values into the desired format
-        data = { [fileData.fileName]: [keys, ...values] };
+        data = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         break;
     }
     setPreviewUploadedData(data);
@@ -1216,5 +1212,81 @@ const CustomIcon = (props) => {
   if (!props.Icon) return null;
   return <props.Icon fill={props.color} {...props} />;
 };
+
+// Performs resource mapping and data filtering for Excel files based on provided schema data, hierarchy, and file data.
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, error, filestoreId, t) => {
+  let resourceMappingData = [];
+  let newFileData = {};
+  if (!error && selectedFileType.id === "Excel" && fileDataToStore) {
+    // Extract all unique column names from fileDataToStore and then doing thir resource mapping
+    const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
+    if (schemaData?.schema?.["Properties"]) {
+      const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
+      schemaKeys.forEach((item) => {
+        if (columnForMapping.has(t(item))) {
+          resourceMappingData.push({
+            filestoreId,
+            mappedFrom: t(item),
+            mappedTo: item,
+          });
+        }
+      });
+    }
+
+    // Filtering the columns with respect to the resource mapping and removing the columns that are not needed
+    Object.entries(fileDataToStore).forEach(([key, value]) => {
+      let data = [];
+      let headers = [];
+      let toRemove = [];
+      if (value && value.length > 0) {
+        value[0].forEach((item, index) => {
+          const mappedTo = resourceMappingData.find((e) => e.mappedFrom === item)?.mappedTo;
+          if (!mappedTo) {
+            toRemove.push(index);
+            return;
+          }
+          headers.push(mappedTo);
+          return;
+        });
+        for (let i = 1; i < value?.length; i++) {
+          let temp = [];
+          for (let j = 0; j < value[i].length; j++) {
+            if (!toRemove.includes(j)) {
+              temp.push(value[i][j]);
+            }
+          }
+          data.push(temp);
+        }
+      }
+      newFileData[key] = [headers, ...data];
+    });
+  }
+  return { resourceMappingData, tempFileDataToStore: newFileData };
+};
+
+// Sorting 2 lists, The first list is a list of string and second one is list of Objects
+function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
+  // Create a map to store the indices of elements in the first list
+  const indexMap = {};
+  firstList.forEach((value, index) => {
+    indexMap[value] = index;
+  });
+
+  // Sort the second list based on the order of elements in the first list
+  secondList.sort((a, b) => {
+    // Get the mappedTo values of each object
+    const mappedToA = a.mappedTo;
+    const mappedToB = b.mappedTo;
+
+    // Get the indices of mappedTo values in the first list
+    const indexA = indexMap[mappedToA];
+    const indexB = indexMap[mappedToB];
+
+    // Compare the indices
+    return indexA - indexB;
+  });
+
+  return secondList;
+}
 
 export default Upload;
