@@ -684,6 +684,7 @@ $border-color: rgba(214, 213, 212, 1);
 
                     th,
                     td {
+                        min-width: 7.578rem;
                         border: 0.063rem solid #ccc;
                         padding: 8px;
                         font-family: Arial, sans-serif;
@@ -749,7 +750,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .guidelines {
-        padding: 0.8rem 2rem 0 2rem ;
+        padding: 0.8rem 2rem 0 2rem;
 
         .sub-heading {
             font-family: Roboto;
@@ -760,7 +761,8 @@ $border-color: rgba(214, 213, 212, 1);
             padding: 0;
             margin: 0;
         }
-        .padtop{
+
+        .padtop {
             margin-top: 1rem;
         }
 
@@ -777,18 +779,19 @@ $border-color: rgba(214, 213, 212, 1);
                 text-decoration: underline;
                 color: rgba(11, 12, 12, 1);
             }
-            
+
         }
-        .instruction-list-container{
+
+        .instruction-list-container {
             margin-left: 0.3rem;
             display: flex;
             align-items: flex-start;
+
             .number {
                 min-width: 1.2rem !important;
-              }
-              
-              .text {
-              }
+            }
+
+            .text {}
         }
 
         .flex {
@@ -915,9 +918,11 @@ $border-color: rgba(214, 213, 212, 1);
             .value {
                 margin-left: 9%;
                 width: fit-content;
-                input{
+
+                input {
                     width: 7.5rem;
                 }
+
                 @media (max-width: 48rem) {
                     margin-left: 1rem;
                 }
@@ -1854,67 +1859,70 @@ $border-color: rgba(214, 213, 212, 1);
             min-height: 34rem;
             background: rgba(255, 255, 255, 1);
             box-shadow: 0px 0.063rem 0.125rem 0px rgba(0, 0, 0, 0.16);
-            padding: 1rem;
-            display: flex;
-            flex-direction: row;
             position: relative;
+            width: 100%;
+            overflow: auto;
+            border-radius: 0.25rem;
+            
+            
 
             .excel-wrapper {
                 width: 100%;
-                padding: 1rem 0.5rem;
                 display: flex;
                 flex-direction: column;
                 gap: 1.25rem;
                 background-color: white !important;
                 border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
                 border-radius: 0.25rem;
-
+                padding: 0.8rem 0.5rem 0.5rem 0.8rem;
+    
                 .sheet-wrapper {
                     height: 80vh;
                     overflow: auto;
                     background-color: white;
                     padding: 0.3rem;
-
+    
                     &::-webkit-scrollbar {
                         width: 0.625rem;
                         height: 0.625rem;
                         border: none;
                     }
-
+    
                     &::-webkit-scrollbar-track {
                         background: #ffffff;
                         border: none;
                     }
-
+    
                     &::-webkit-scrollbar-thumb {
                         background: rgba(177, 180, 182, 1);
                         border-radius: 0.625rem;
                         border: 0.125rem solid #f0f0f0;
                     }
-
+    
                     &::-webkit-scrollbar-thumb:hover {
                         background: rgba(177, 180, 182, 0.8);
                     }
-
+    
                     h3 {
                         background-color: #f4f4f4;
                         padding: 0.625rem;
                         margin: 0;
                     }
-
+    
                     .excel-table {
                         width: 100%;
                         border: 0.063rem solid #ccc;
                         border-collapse: collapse;
-
+    
                         th,
                         td {
+                            min-width: 7.578rem;
                             border: 0.063rem solid #ccc;
                             padding: 8px;
                             font-family: Arial, sans-serif;
                             font-size: 14px;
                         }
-
+    
                         th {
                             background-color: #f4f4f4;
                             font-weight: bold;

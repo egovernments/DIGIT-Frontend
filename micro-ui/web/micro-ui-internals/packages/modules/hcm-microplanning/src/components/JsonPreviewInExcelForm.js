@@ -35,7 +35,7 @@ export const JsonPreviewInExcelForm = (props) => {
               <thead>
                 <tr>
                   {sheetData[0].map((header, columnIndex) => (
-                    <th key={columnIndex}>{header}</th>
+                    <th key={columnIndex}>{t(header)}</th>
                   ))}
                 </tr>
               </thead>
