@@ -18,7 +18,7 @@ export const excelValidations = (data, schemaData, t) => {
           type: "object",
           patternProperties: properties,
           required: required,
-          additionalProperties: false,
+          additionalProperties: true,
         },
       },
     },
