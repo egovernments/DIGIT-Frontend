@@ -281,7 +281,7 @@ const Upload = ({
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
-        case "Geojson":
+        case "GeoJSON":
           try {
             response = await handleGeojsonFile(file, schemaData);
             file = new File([file], file.name, { type: "application/geo+json" });
@@ -299,7 +299,7 @@ const Upload = ({
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
-        case "Shapefiles":
+        case "Shapefile":
           try {
             response = await handleShapefiles(file, schemaData);
             file = new File([file], file.name, { type: "application/octet-stream" });
