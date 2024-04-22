@@ -197,7 +197,6 @@ const UploadData = ({formData , onSelect , ...props}) => {
       },
       {
         onSuccess: async (result) => {
-          console.log("result", result);
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid]
           const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
           const fileData = fileUrl?.map((i) => {
