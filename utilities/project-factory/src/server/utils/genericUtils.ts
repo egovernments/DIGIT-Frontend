@@ -270,7 +270,7 @@ async function getResponseFromDb(request: any, response: any) {
     let queryValues: any[] = [];
 
     queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE ";
-     // query for download with id
+    // query for download with id
     if (request?.query?.id) {
       queryString += "id = $1 AND type = $2 AND hierarchytype = $3 AND tenantid = $4 ";
       queryValues = [request.query.id, type, hierarchyType, tenantId];
@@ -450,7 +450,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       const differentTabsBasedOnLevel = config.generateDifferentTabsOnBasisOf;
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
       const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
-      if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= config.numberOfBoundaryDataOnWhichWeSplit) {
+      if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config.numberOfBoundaryDataOnWhichWeSplit)) {
         updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel);
       }
       // final upodated response to be sent to update topic 
@@ -609,6 +609,22 @@ async function processGenerateRequest(request: any) {
   }
 }
 
+async function processGenerateForNew(request: any, response: any, generatedResource: any, newEntryResponse: any) {
+  request.body.generatedResource = newEntryResponse;
+  try {
+    await fullProcessFlowForNewEntry(newEntryResponse, request, response);
+  } catch (error: any) {
+    handleGenerateError(newEntryResponse, generatedResource, error);
+  }
+}
+
+function handleGenerateError(newEntryResponse: any, generatedResource: any, error: any) {
+  newEntryResponse.map((item: any) => { item.status = "failed", item.additionalDetails = { ...item.additionalDetails, error: error.message } })
+  generatedResource = { generatedResource: newEntryResponse };
+  logger.error(String(error));
+  produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+}
+
 async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, response: any) {
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
@@ -620,9 +636,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    request.body.generatedResource = newEntryResponse;
-    // generate data if response from db is empty or force update true  
-    fullProcessFlowForNewEntry(newEntryResponse, request, response);
+    processGenerateForNew(request, response, generatedResource, newEntryResponse)
   }
   else {
     request.body.generatedResource = responseData
