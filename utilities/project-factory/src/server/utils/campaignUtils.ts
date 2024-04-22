@@ -82,20 +82,21 @@ function processErrorData(request: any, createAndSearchConfig: any, workbook: an
     const errorDetailsColumn = columns.errorDetailsColumn;
 
     const errorData = request.body.sheetErrorDetails;
-    errorData.forEach((error: any) => {
-        const rowIndex = error.rowNumber;
-        if (error.isUniqueIdentifier) {
-            const uniqueIdentifierCell = createAndSearchConfig.uniqueIdentifierColumn + (rowIndex + 1);
-            desiredSheet[uniqueIdentifierCell] = { v: error.uniqueIdentifier, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: error.uniqueIdentifier, w: error.uniqueIdentifier };
-        }
+    if (errorData) {
+        errorData.forEach((error: any) => {
+            const rowIndex = error.rowNumber;
+            if (error.isUniqueIdentifier) {
+                const uniqueIdentifierCell = createAndSearchConfig.uniqueIdentifierColumn + (rowIndex + 1);
+                desiredSheet[uniqueIdentifierCell] = { v: error.uniqueIdentifier, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: error.uniqueIdentifier, w: error.uniqueIdentifier };
+            }
 
-        const statusCell = statusColumn + (rowIndex + 1);
-        const errorDetailsCell = errorDetailsColumn + (rowIndex + 1);
-        desiredSheet[statusCell] = { v: error.status, t: 's', r: '<t xml:space="preserve">#status#</t>', h: error.status, w: error.status };
-        desiredSheet[errorDetailsCell] = { v: error.errorDetails, t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: error.errorDetails, w: error.errorDetails };
+            const statusCell = statusColumn + (rowIndex + 1);
+            const errorDetailsCell = errorDetailsColumn + (rowIndex + 1);
+            desiredSheet[statusCell] = { v: error.status, t: 's', r: '<t xml:space="preserve">#status#</t>', h: error.status, w: error.status };
+            desiredSheet[errorDetailsCell] = { v: error.errorDetails, t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: error.errorDetails, w: error.errorDetails };
 
-    });
-
+        });
+    }
     desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + errorDetailsColumn);
     workbook.Sheets[sheetName] = desiredSheet;
 }
@@ -186,11 +187,13 @@ function processData(dataFromSheet: any[], createAndSearchConfig: any) {
         }
         resultantElement["!row#number!"] = data["!row#number!"];
         var addToCreate = true;
-        for (const key of requiresToSearchFromSheet) {
-            if (data[key.sheetColumnName]) {
-                searchData.push(resultantElement)
-                addToCreate = false;
-                break;
+        if (requiresToSearchFromSheet) {
+            for (const key of requiresToSearchFromSheet) {
+                if (data[key.sheetColumnName]) {
+                    searchData.push(resultantElement)
+                    addToCreate = false;
+                    break;
+                }
             }
         }
         if (addToCreate) {
@@ -240,9 +243,11 @@ async function generateProcessedFileAndPersist(request: any) {
     };
     produceModifiedMessages(request?.body, config.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
     logger.info("ResourceDetails to persist : " + JSON.stringify(request?.body?.ResourceDetails));
-    logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+    if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
+        logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+    }
 }
 
 function getRootBoundaryCode(boundaries: any[] = []) {
@@ -787,10 +792,9 @@ async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnL
         mainSheetData.push(headersForMainSheet);
         const districtLevelRowBoundaryCodeMap = new Map();
 
-
         for (const data of boundaryData) {
             const rowData = Object.values(data);
-            const districtIndex = data[differentTabsBasedOnLevel] !== null ? rowData.indexOf(data[differentTabsBasedOnLevel]) : -1;
+            const districtIndex = data[differentTabsBasedOnLevel] !== '' ? rowData.indexOf(data[differentTabsBasedOnLevel]) : -1;
             if (districtIndex == -1) {
                 mainSheetData.push(rowData);
             }
@@ -951,14 +955,14 @@ function createBoundaryMap(boundaries: any[], boundaryMap: Map<string, string>):
 
 const autoGenerateBoundaryCodes = async (request: any) => {
     try {
-        await validateHierarchyType(request, request?.body?.ResourceDetails?.hierarchyType, request?.body?.ResourceDetails?.tenantId);
+        await validateHierarchyType(request, request?.body?.ResourceDetails?.hierarchyType, request?.body?.ResourceDetails?.tenantId); // todo revisit
         const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
         if (!fileResponse?.fileStoreIds?.[0]?.url) {
             throwError("FILE", 400, "INVALID_FILE");
-        }
+        } // revisit 
         const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName, false);
         const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName, false);
-        await validateBoundarySheetData(headersOfBoundarySheet, request);
+        await validateBoundarySheetData(headersOfBoundarySheet, request); /// revisit
         const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
         const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
         const childParentMap = getChildParentMap(withoutBoundaryCode);
@@ -987,7 +991,9 @@ const autoGenerateBoundaryCodes = async (request: any) => {
     }
 }
 async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any) {
+    // create different tabs on the level of hierarchy we want to 
     const updatedWorkbook = await appendSheetsToWorkbook(boundaryData, differentTabsBasedOnLevel);
+    // upload the excel and generate file store id
     const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
     return boundaryDetails;
 }

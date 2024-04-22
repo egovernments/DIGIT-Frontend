@@ -6,6 +6,16 @@ import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
 
+/**
+ * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
+ * including form data handling, validation, and submission.
+ * @returns The `SetupCampaign` component is being returned. It consists of a form setup for creating
+ * or updating a campaign with multiple steps like campaign details, delivery details, boundary
+ * details, targets, facility details, user details, and review details. The form data is validated at
+ * each step, and the user can navigate between steps using a stepper component. The form submission
+ * triggers API calls to create or update the campaign
+ */
+
 function loopAndReturn(data) {
   let newArray = [];
   data.forEach((item) => {
@@ -91,6 +101,7 @@ const SetupCampaign = () => {
   const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
+  const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [showToast, setShowToast] = useState(null);
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
@@ -99,6 +110,7 @@ const SetupCampaign = () => {
   const isPreview = searchParams.get("preview");
   const isDraft = searchParams.get("draft");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
+  const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
   const hierarchyType = "ADMIN";
   const [currentKey, setCurrentKey] = useState(() => {
@@ -169,9 +181,20 @@ const SetupCampaign = () => {
     };
     setParams({ ...restructureFormData });
   }, [params, draftData]);
+
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
-  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType);
-  // const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary"); // to be integrated later
+  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
+  const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary" ,hierarchyType ); // to be integrated later
+
+  useEffect(() => {
+    if (Object.keys(dataParams).length === 0) {
+      setDataParams({
+        facilityId: facilityId,
+        boundaryId: boundaryId,
+        hierarchyType: hierarchyType,
+      });
+    }
+  }, [dataParams]); // Only run if dataParams changes
 
   // Example usage:
   // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
@@ -186,6 +209,36 @@ const SetupCampaign = () => {
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData));
   }, [totalFormData]);
+
+  useEffect(() => {
+    const convertFormData = (totalFormData) => {
+      const modifiedData = [
+        {
+          startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
+          endDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+          projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType.code,
+          campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.campaignName,
+        },
+      ];
+    };
+    convertFormData(totalFormData);
+  }, [totalFormData]);
+
+  // function to convert payload to formData
+  const convertPayload = (dummyData) => {
+    return {
+      1: {},
+      2: {
+        projectType: dummyData?.projectType,
+      },
+      3: {
+        campaignName: dummyData?.campaignName,
+      },
+      4: {
+        boundaries: dummyData?.boundaries,
+      },
+    };
+  };
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -462,10 +515,10 @@ const SetupCampaign = () => {
         if (!formData?.campaignDates?.startDate || !formData?.campaignDates?.endDate) {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
           return false;
-        } else if (endDateObj == startDateObj) {
+        } else if (endDateObj.getTime() === startDateObj.getTime()) {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
           return false;
-        } else if (endDateObj < startDateObj) {
+        } else if (endDateObj.getTime() < startDateObj) {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
           return false;
         } else {
@@ -522,9 +575,6 @@ const SetupCampaign = () => {
     setParams({
       ...params,
       [name]: { ...formData },
-      // facilityId: facilityId,
-      // boundaryId: boundaryId,
-      // hierarchyType: hierarchyType,
     });
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].skipAPICall) {
