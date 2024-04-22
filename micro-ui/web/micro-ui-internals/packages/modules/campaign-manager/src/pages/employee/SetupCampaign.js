@@ -39,9 +39,10 @@ function loopAndReturn(data) {
 }
 
 function cycleDataRemap(data) {
+  if (!data) return null;
   const uniqueCycleObjects = Object.values(
-    data.reduce((acc, obj) => {
-      acc[obj.cycleNumber] = acc[obj.cycleNumber] || obj;
+    data?.reduce((acc, obj) => {
+      acc[obj?.cycleNumber] = acc[obj?.cycleNumber] || obj;
       return acc;
     }, {})
   );
@@ -54,6 +55,7 @@ function cycleDataRemap(data) {
 }
 
 function reverseDeliveryRemap(data) {
+  if (!data) return null;
   const reversedData = [];
   let currentCycleIndex = null;
   let currentDeliveryIndex = null;
@@ -169,8 +171,8 @@ const SetupCampaign = () => {
       HCM_CAMPAIGN_CYCLE_CONFIGURE: {
         cycleConfigure: {
           cycleConfgureDate: {
-            cycle: Math.max(...delivery?.map((obj) => obj?.cycleNumber)),
-            deliveries: Math.max(...delivery?.map((obj) => obj?.deliveryNumber)),
+            cycle: delivery?.map((obj) => obj?.cycleNumber) ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
+            deliveries: delivery?.map((obj) => obj?.deliveryNumber) ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
           },
           cycleData: cycleDataRemap(delivery),
         },
@@ -184,7 +186,7 @@ const SetupCampaign = () => {
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
   const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
-  const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary" ,hierarchyType ); // to be integrated later
+  const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
     if (Object.keys(dataParams).length === 0) {

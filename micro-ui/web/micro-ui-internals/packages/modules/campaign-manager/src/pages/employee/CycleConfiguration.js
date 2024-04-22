@@ -50,10 +50,10 @@ const updateCycleData = (cycleData, index, update) => {
 
 function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const saved = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+  const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [state, dispatch] = useReducer(reducer, initialState(saved));
   const { cycleConfgureDate, cycleData } = state;
   const { t } = useTranslation();
-  const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [dateRange, setDateRange] = useState({
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
     endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
