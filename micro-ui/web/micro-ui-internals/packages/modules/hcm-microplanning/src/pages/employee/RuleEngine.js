@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
+import Schema from "../../configs/Schemas.json";
 
 const initialRules = [
   {
@@ -79,7 +80,8 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let schemas = data["hcm-microplanning"]["Schemas"];
+    // let schemas = data["hcm-microplanning"]["Schemas"];
+    let schemas = Schema?.Schemas;
     let hypothesisAssumptions = [];
     microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
@@ -145,7 +147,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           setOperators={setOperators}
           t={t}
         />
-        <button className="add-button" onClick={() => addAssumptionsHandler(setRules)}>
+        <button className="add-button" onClick={() => addRulesHandler(setRules)}>
           <div className="add-icon">
             <p>+</p>
           </div>
@@ -184,13 +186,15 @@ const RuleEngineInformation = ({ t }) => {
 };
 
 // Function to add a new assumption
-const addAssumptionsHandler = (setRules) => {
+const addRulesHandler = (setRules) => {
   setRules((previous) => [
     ...previous,
     {
       id: previous.length ? previous[previous.length - 1].id + 1 : 0,
-      key: "",
-      value: "",
+      output: "",
+      input: "",
+      operator: "",
+      assumptionValue: "",
     },
   ]);
 };
@@ -521,8 +525,14 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
         return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       }
     }) || [];
+    console.log(filteredSchemas)
   const finalData = filteredSchemas
-    ?.map((item) => item?.schema?.RuleConfigureInputs)
+    ?.map((item) => Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+      if (value?.isRuleConfigureInputs) {
+        acc.push(key);
+      }
+      return acc;
+    }, []))
     .flatMap((item) => item)
     .filter((item) => !!item);
   return [...new Set(finalData)];

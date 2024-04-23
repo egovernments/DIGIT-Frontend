@@ -1,5 +1,5 @@
 // Importing necessary modules
-import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect } from "@egovernments/digit-ui-components";
+import { Button, CustomDropdown, Dropdown, MultiSelectDropdown, Toast, TreeSelect } from "@egovernments/digit-ui-components";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -9,9 +9,6 @@ import CustomScaleControl from "../../components/CustomScaleControl";
 import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { Info } from "@egovernments/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
-import Schema from "../../configs/Schemas.json";
-
 // Mapping component definition
 const Mapping = ({
   campaignType = "SMC",
@@ -29,39 +26,6 @@ const Mapping = ({
     { name: "Schemas" },
     { name: "UIConfiguration" },
   ]);
-
-  //fetch campaign data
-  const { id = "" } = Digit.Hooks.useQueryParams();
-  const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
-    {
-      CampaignDetails: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-        ids: [id],
-      },
-    },
-    {
-      enabled: !!id,
-    }
-  );
-
-  // request body for boundary hierarchy api
-  const reqCriteria = {
-    url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    params: {},
-    body: {
-      BoundaryTypeHierarchySearchCriteria: {
-        tenantId: Digit.ULBService.getStateId(),
-        hierarchyType: campaignData?.hierarchyType,
-      },
-    },
-    config: {
-      enabled: !!campaignData?.hierarchyType,
-      select: (data) => {
-        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType) || {};
-      },
-    },
-  };
-  const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // Setting up state variables
   const [editable, setEditable] = useState(true);
@@ -87,8 +51,7 @@ const Mapping = ({
       setFilterDataOrigin(filterDataOriginList);
     }
     const BaseMapLayers = data["hcm-microplanning"]["BaseMapLayers"];
-    // let schemas = data["hcm-microplanning"]["Schemas"];
-    let schemas = Schema?.Schemas;
+    let schemas = data["hcm-microplanning"]["Schemas"];
     if (schemas) setValidationSchemas(schemas);
     if (!BaseMapLayers || (BaseMapLayers && BaseMapLayers.length === 0)) return;
     let baseMaps = {};
@@ -167,12 +130,41 @@ const Mapping = ({
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
-      <Header className="heading">{t("MAPPING")}</Header>
-      <Card className="mapping-body-container" style={{ margin: "0", padding: "0" }}>
-        <Card className="map-container">
+      <div className="heading">
+        <p>{t("MAPPING")}</p>
+      </div>
+      <div className="mapping-body-container">
+        <div className="filter-container">
+          <p className="filter-heading">{t("MAPPING_FILTER_HEADING")}</p>
+          <p className="instructions">{t("MAPPING_FILTER_INSTRUCTIONS")}</p>
+          <div>
+            <p>{t("MAPPING_FILTER_BOUNDARIES")}</p>
+            <div className="dropdown">
+              {/* Dropdown for boundaries */}
+              <Dropdown type={"treemultiselect"} t={t} config={{}} select={() => {}} />
+            </div>
+
+            <p>{t("MAPPING_FILTER_LAYERS")}</p>
+            <div className="dropdown">
+              {/* Dropdown for layers */}
+              <Dropdown type={"treemultiselect"} t={t} config={{}} select={() => {}} />
+            </div>
+
+            <p>{t("MAPPING_FILTER_VIRTUALISATIONS")}</p>
+            <div className="dropdown">
+              {/* Dropdown for virtualizations */}
+              <Dropdown type={"treemultiselect"} t={t} config={{}} select={() => {}} />
+            </div>
+
+            <div className="filter-controllers">
+              <Button variation={"secondary"} className={"button-secondary"} label={t("CLEAR_ALL")} />
+              <Button className={"button-primary"} label={t("FILTER")} />
+            </div>
+          </div>
+        </div>
+        <div className="map-container">
           {/* Container for map */}
           <div ref={(node) => (_mapNode = node)} className="map" id="map">
-            <BoundarySelection hierarchy={hierarchy} t={t} />
             <div className="top-right-map-subcomponents">
               <div className="icon-first">
                 <BaseMapSwitcher
@@ -188,7 +180,6 @@ const Mapping = ({
                 <Info width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
               </div>
             </div>
-
             <div className="bottom-left-map-subcomponents">
               <ZoomControl map={map} t={t} />
               <div className="north-arrow">
@@ -197,42 +188,10 @@ const Mapping = ({
               <CustomScaleControl map={map} />
             </div>
           </div>
-        </Card>
-      </Card>
+        </div>
+      </div>
       {toast && toast.state === "error" && (
         <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
-      )}
-    </div>
-  );
-};
-
-const BoundarySelection = ({ hierarchy, t }) => {
-  const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
-  return (
-    <div className="filter-by-boundary">
-      <Button
-        icon="FilterAlt"
-        variation="secondary"
-        className="button-primary"
-        textStyles={{ width: "fit-content" }}
-        label={t("BUTTON_FILTER_BY_BOUNDARY")}
-        onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
-      />
-      {isboundarySelectionSelected && (
-        <Card className="boundary-selection">
-          <div className="header-section">
-            <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
-            <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
-          </div>
-          <div className="hierarchy-selection-container">
-            {hierarchy?.map((item) => (
-              <div className="hierarchy-selection-element">
-                <CardLabel style={{padding:0,margin:0}}>{t(item)}</CardLabel>
-                <CustomDropdown label={"blabla"} style={{ maxWidth: "23.75rem", margin: 0 }} type={"dropdown"} t={t} config={{}} select={() => {}} />
-              </div>
-            ))}
-          </div>
-        </Card>
       )}
     </div>
   );
@@ -331,7 +290,6 @@ const extractGeoData = (campaignType, microplanData, filterDataOrigin, validatio
               return acc;
             }, [])
             .map((item) => t(item)) || [];
-            console.log(latLngColumns)
 
         // Check if file contains latitude and longitude columns
         if (latLngColumns?.length && files[fileData]?.data) {

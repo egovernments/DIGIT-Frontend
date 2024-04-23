@@ -1,10 +1,21 @@
 import Ajv from "ajv";
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv({ allErrors: true});
+ajv.addKeyword("isRequired");
+ajv.addKeyword("isLocationDataColumns");
+ajv.addKeyword("isRuleConfigureInputs");
 
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
   const translate = () => {
-    const required = schemaData.required.map((item) => t(item));
+    const required = Object.entries(schemaData?.schema?.Properties || {})
+      .reduce((acc, [key, value]) => {
+        if (value?.isRequired) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+      .map((item) => t(item));
+
     const properties = prepareProperties(schemaData.Properties, t);
     return { required, properties };
   };
@@ -26,15 +37,24 @@ export const excelValidations = (data, schemaData, t) => {
   };
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
+  let locationDataColumns = Object.entries(schemaData?.schema?.Properties || {})
+  .reduce((acc, [key, value]) => {
+    if (value?.isLocationDataColumns) {
+      acc.push(key);
+    }
+    return acc;
+  }, [])
+  .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
+    console.log("validateExcel",validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
           const instancePathType = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
+          if (locationDataColumns.includes(instancePathType[instancePathType.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
           columns.add(instancePathType[instancePathType.length - 1]);
@@ -42,7 +62,7 @@ export const excelValidations = (data, schemaData, t) => {
 
         case "required":
           const missing = validateExcel.errors[i].params.missingProperty;
-          if (schemaData["locationDataColumns"].includes(missing)) {
+          if (locationDataColumns.includes(missing)) {
             return { valid, message: "ERROR_MISSING_LOCATION_COORDINATES", error: validateExcel.errors };
           }
           columns.add(missing);
@@ -51,7 +71,7 @@ export const excelValidations = (data, schemaData, t) => {
         case "maximum":
         case "minimum":
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathMinMax[instancePathMinMax.length - 1])) {
+          if (locationDataColumns.includes(instancePathMinMax[instancePathMinMax.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
           columns.add(instancePathMinMax[instancePathMinMax.length - 1]);

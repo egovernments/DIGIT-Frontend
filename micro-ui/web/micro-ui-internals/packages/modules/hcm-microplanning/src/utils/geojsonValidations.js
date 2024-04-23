@@ -1,6 +1,9 @@
 import gjv from "geojson-validation";
 import Ajv from "ajv";
 const ajv = new Ajv({ allErrors: true });
+ajv.addKeyword("isRequired");
+ajv.addKeyword("isLocationDataColumns");
+ajv.addKeyword("isRuleConfigureInputs");
 
 //the postion must be valid point on the earth, x between -180 and 180
 gjv.define("Position", (position) => {
@@ -68,7 +71,15 @@ const geometryValidation = (data) => {
 // Function responsible for property verification of geojson data
 export const geojsonPropetiesValidation = (data, schemaData, t) => {
   const translate = () => {
-    const required = schemaData.required.map((item) => item);
+    const required = Object.entries(schemaData?.schema?.Properties || {})
+      .reduce((acc, [key, value]) => {
+        if (value?.isRequired) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+      .map((item) => t(item));
+
     const properties = prepareProperties(schemaData.Properties, t);
     return { required, properties };
   };

@@ -14,7 +14,7 @@ import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/ComonComponents";
 import { Loader, Toast } from "@egovernments/digit-ui-components";
-import Schema from "../../configs/Schemas.json"
+import Schema from "../../configs/Schemas.json";
 const Upload = ({
   MicroplanName = "default",
   campaignType = "SMC",
@@ -59,7 +59,7 @@ const Upload = ({
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        id,
+        ids: [id],
       },
     },
     {
@@ -285,6 +285,7 @@ const Upload = ({
         case "GeoJSON":
           try {
             response = await handleGeojsonFile(file, schemaData);
+            console.log(response);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoderActivation(false);
@@ -340,18 +341,21 @@ const Upload = ({
       //     handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
       //   }
       // }
-
-      // Mapping resources
-      let { resourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
-        schemaData,
-        hierarchy,
-        selectedFileType,
-        fileDataToStore,
-        error,
-        filestoreId,
-        t
-      );
-      fileDataToStore = tempFileDataToStore;
+      let resourceMappingData;
+      if (selectedFileType.id === "Excel") {
+        // Mapping resources
+        let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
+          schemaData,
+          hierarchy,
+          selectedFileType,
+          fileDataToStore,
+          error,
+          filestoreId,
+          t
+        );
+        fileDataToStore = tempFileDataToStore;
+        resourceMappingData = tempResourceMappingData;
+      }
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: `${selectedSection.id}`,
@@ -372,6 +376,7 @@ const Upload = ({
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
+      console.log(error);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -444,8 +449,8 @@ const Upload = ({
       case "Excel":
         blob = fileData.file;
         break;
-      case "Shapefiles":
-      case "Geojson":
+      case "Shapefile":
+      case "GeoJSON":
         if (!fileData || !fileData.data) {
           setToast({
             state: "error",
@@ -522,6 +527,7 @@ const Upload = ({
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoderActivation(false);
     } catch (error) {
+      console.log(error);
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoderActivation(false);
@@ -573,15 +579,28 @@ const Upload = ({
       return false;
     }
 
-    if (!schemaData || !schemaData.schema || !schemaData.schema["required"]) {
+    if (!schemaData || !schemaData.schema || !schemaData.schema["Properties"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
       setLoderActivation(false);
       return;
     }
 
-    let columns = [...hierarchy, ...schemaData?.schema?.["required"]];
-    const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom).length;
-    if (columns.length !== resourceMappingLength) {
+    console.log(Object.entries(schemaData?.schema?.Properties || {}));
+    let columns = [
+      ...hierarchy,
+      ...Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        if (value?.isRequired) {
+          acc.push(key);
+        }
+        return acc;
+      }, []),
+    ];
+    console.log(
+      columns,
+      resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo))
+    );
+    const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
+    if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
       setLoderActivation(false);
       return false;
@@ -614,8 +633,8 @@ const Upload = ({
   // Handler for checing file extension and showing errors in case it is wrong
   const onTypeErrorWhileFileUpload = () => {
     if (selectedFileType.id === "Excel") setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
-    if (selectedFileType.id === "Geojson") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
-    if (selectedFileType.id === "Shapefiles") setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+    if (selectedFileType.id === "GeoJSON") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+    if (selectedFileType.id === "Shapefile") setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
@@ -636,7 +655,7 @@ const Upload = ({
         data = fileData.data;
         break;
       case "Shapefiles":
-      case "Geojson":
+      case "GeoJSON":
         if (!fileData || !fileData.data) {
           setToast({
             state: "error",
@@ -650,8 +669,12 @@ const Upload = ({
     setPreviewUploadedData(data);
   };
 
-  if (isCampaignLoading) {
-    return <Loader />;
+  if (isCampaignLoading || ishierarchyLoading) {
+    return (
+      <div className="api-data-loader">
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -1261,7 +1284,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       newFileData[key] = [headers, ...data];
     });
   }
-  return { resourceMappingData, tempFileDataToStore: newFileData };
+  return { tempResourceMappingData:resourceMappingData, tempFileDataToStore: newFileData };
 };
 
 // Sorting 2 lists, The first list is a list of string and second one is list of Objects

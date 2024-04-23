@@ -9,29 +9,50 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "terrain": {
-            "type": "string"
+            "type": "string",
+            "isRequired":false,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulationDemo1": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetpopulationDemo2": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "lat": {
             "type": "number",
             "minimum": -90,
-            "maximum": 90
+            "maximum": 90,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           },
           "long": {
             "type": "number",
             "minimum": -180,
-            "maximum": 180
+            "maximum": 180,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           }
         },
         "required": [
@@ -51,23 +72,39 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "nullable": false,
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetHouseholds": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "lat": {
             "type": "number",
             "minimum": -90,
-            "maximum": 90
+            "maximum": 90,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           },
           "long": {
             "type": "number",
             "minimum": -180,
-            "maximum": 180
+            "maximum": 180,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           }
         },
         "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
@@ -82,20 +119,32 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "lat": {
             "type": "number",
             "minimum": -90,
-            "maximum": 90
+            "maximum": 90,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           },
           "long": {
             "type": "number",
             "minimum": -180,
-            "maximum": 180
+            "maximum": 180,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           }
         },
         "required": ["boundaryCode", "targetPopulation"],
@@ -109,34 +158,58 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityName": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)"
+            "pattern": "(Temporary)|(Permanent)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "capacity": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "lat": {
             "type": "number",
             "minimum": -90,
-            "maximum": 90
+            "maximum": 90,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           },
           "long": {
             "type": "number",
             "minimum": -180,
-            "maximum": 180
+            "maximum": 180,
+            "isRequired":false,
+            "isLocationDataColumns":true,
+            "isRuleConfigureInputs":false
           }
         },
         "required": [
@@ -157,19 +230,34 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "terrain": {
-            "type": "string"
+            "type": "string",
+            "isRequired":false,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulationDemo1": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetpopulationDemo2": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": [
@@ -189,13 +277,22 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetHouseholds": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
@@ -210,10 +307,16 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": ["boundaryCode", "targetPopulation"],
@@ -227,34 +330,42 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityName": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)"
+            "pattern": "(Temporary)|(Permanent)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "capacity": {
-            "type": "number"
-          },
-          "lat": {
             "type": "number",
-            "minimum": -90,
-            "maximum": 90
-          },
-          "long": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": [
@@ -264,7 +375,7 @@
           "facilityStatus",
           "capacity"
         ],
-        "locationDataColumns": ["lat", "long"],
+        "locationDataColumns": [],
         "RuleConfigureInputs":["capacity"]
       }
     },
@@ -275,19 +386,34 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "terrain": {
-            "type": "string"
+            "type": "string",
+            "isRequired":false,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulationDemo1": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetpopulationDemo2": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": [
@@ -307,13 +433,22 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           },
           "targetHouseholds": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": ["boundaryCode", "targetPopulation", "targetHouseholds"],
@@ -328,10 +463,16 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "targetPopulation": {
-            "type": "number"
+            "type": "number",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": ["boundaryCode", "targetPopulation"],
@@ -345,34 +486,42 @@
       "schema": {
         "Properties": {
           "boundaryCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityCode": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityName": {
-            "type": "string"
+            "type": "string",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)"
+            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)"
+            "pattern": "(Temporary)|(Permanent)",
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":false
           },
           "capacity": {
-            "type": "number"
-          },
-          "lat": {
             "type": "number",
-            "minimum": -90,
-            "maximum": 90
-          },
-          "long": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180
+            "isRequired":true,
+            "isLocationDataColumns":false,
+            "isRuleConfigureInputs":true
           }
         },
         "required": [
