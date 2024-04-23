@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-react-components",
-  "version": "1.4.112",
+  "version": "1.4.114",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
