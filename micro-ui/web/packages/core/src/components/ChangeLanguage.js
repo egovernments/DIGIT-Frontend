@@ -1,5 +1,6 @@
 import { CustomButton, Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const ChangeLanguage = (prop) => {
   const isDropdown = prop.dropdown || false;
@@ -7,8 +8,10 @@ const ChangeLanguage = (prop) => {
   const { languages, stateInfo } = storeData || {};
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [selected, setselected] = useState(selectedLanguage);
+  const { i18n } = useTranslation();
   const handleChangeLanguage = (language) => {
     setselected(language.value);
+    i18n.changeLanguage(language.value);
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 

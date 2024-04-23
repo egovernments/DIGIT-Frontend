@@ -65,7 +65,7 @@ const EmployeeSideBar = () => {
   let res = [];
   const splitKeyValue = () => {
     const keys = Object.keys(configEmployeeSideBar);
-    keys.sort((a, b) => a.orderNumber - b.orderNumber);
+    keys?.sort((a, b) => a.orderNumber - b.orderNumber);
     for (let i = 0; i < keys.length; i++) {
       if (configEmployeeSideBar[keys[i]][0].path.indexOf(".") === -1) {
         if (configEmployeeSideBar[keys[i]][0].displayName === "Home") {
@@ -96,10 +96,10 @@ const EmployeeSideBar = () => {
     if (res.find((a) => a.moduleName === "HOME")) {
       const home = res?.filter((ob) => ob?.moduleName === "HOME");
       let res1 = res?.filter((ob) => ob?.moduleName !== "HOME");
-      res = res1.sort((a, b) => a.moduleName.localeCompare(b.moduleName));
+      res = res1?.sort((a, b) => a.moduleName.localeCompare(b.moduleName));
       home?.[0] && res.unshift(home[0]);
     } else {
-      res.sort((a, b) => a.moduleName.localeCompare(b.moduleName));
+      res?.sort((a, b) => a.moduleName.localeCompare(b.moduleName));
     }
     return res?.map((item, index) => {
       // return <SubMenu item={item} key={index + 1} />;

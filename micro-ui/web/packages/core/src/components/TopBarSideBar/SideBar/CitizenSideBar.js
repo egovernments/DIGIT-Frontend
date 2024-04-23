@@ -217,7 +217,7 @@ import {
        const home = menuItems.splice(indx,1);
        const comp = menuItems.findIndex(a => a.element === "LANGUAGE");
        const part = menuItems.splice(comp,menuItems?.length-comp);
-       menuItems.sort((a,b) => {
+       menuItems?.sort((a,b) => {
         let c1 = a?.type === "dynamic" ? a?.moduleName : a?.text;
         let c2 = b?.type === "dynamic" ? b?.moduleName : b?.text;
         return c1.localeCompare(c2)

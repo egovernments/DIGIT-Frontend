@@ -1,6 +1,7 @@
 import { useClearNotifications, useEvents, useNotificationCount } from "./events";
 import useCreateEvent from "./events/useCreateEvent";
 import useUpdateEvent from "./events/useUpdateEvent";
+import { useLocalisationSearch } from "./useLocalisationSearch";
 import {
   useBulkPdfDetails, useDemandSearch, useFetchBillsForBuissnessService, useFetchCitizenBillsForBuissnessService, useFetchPayment, useGetPaymentRulesForBusinessServices, usePaymentSearch, usePaymentUpdate, useRecieptSearch
 } from "./payment";
@@ -12,6 +13,8 @@ import useCustomMDMS from "./useCustomMDMS";
 import useDocumentSearch from "./useDocumentSearch";
 import useDynamicData from "./useDynamicData";
 import useLocation from "./useLocation";
+
+import useLocalization from "./useLocalization";
 
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useNewInboxGeneral from "./useInboxGeneral/useNewInbox";
@@ -210,7 +213,9 @@ const Hooks = {
   useStaticData,
   useDynamicData,
   useBulkPdfDetails,
-  useLocation
+  useLocation,
+  useLocalisationSearch,
+  useLocalization
 };
 
 export default Hooks;

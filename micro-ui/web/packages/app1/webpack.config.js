@@ -1,5 +1,5 @@
 const path = require("path");
-
+const packageJson = require("./package.json");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { ModuleFederationPlugin } = require("webpack").container;
 
@@ -60,14 +60,9 @@ module.exports = {
       name: "app1",
       filename: "remoteEntry.js",
       exposes: {
-        "./App": "./src/singleSpaEntry",
+        "./App": "./src/SingleSpaEntry",
       },
-      shared: [
-        "react-dom",
-        "react-query",
-        "react",
-        "single-spa-react",
-      ],
+      shared: packageJson.dependencies
     }),
   ],
 };

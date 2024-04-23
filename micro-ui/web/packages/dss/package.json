@@ -26,8 +26,8 @@
     "webpack-merge": "5.7.3"
   },
   "dependencies": {
-    "@digit-ui/digit-ui-libraries-mfe": "1.0.11",
-    "@egovernments/digit-ui-react-components": "1.4.109",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.14",
+    "@egovernments/digit-ui-react-components": "1.4.111",
     "@egovernments/digit-ui-svg-components": "1.0.0",
     "jsonpath": "^1.1.1",
     "lodash": "4.17.21",

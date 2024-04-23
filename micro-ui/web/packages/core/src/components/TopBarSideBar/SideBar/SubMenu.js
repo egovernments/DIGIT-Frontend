@@ -132,7 +132,7 @@ const SubMenu = ({ item }) => {
 
         {subnav &&
           item.links
-            .sort((a, b) => a.orderNumber - b.orderNumber)
+            ?.sort((a, b) => a.orderNumber - b.orderNumber)
             .filter((item) => item.url === "url" || item.url !== "")
             .map((item, index) => {
               const getChildName = item?.displayName?.toUpperCase()?.replace(/[ -]/g, "_");

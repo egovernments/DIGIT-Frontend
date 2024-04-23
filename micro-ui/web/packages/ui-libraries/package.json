@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-libraries-mfe",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "main": "dist/main.js",
   "module": "dist/main.js",
   "source": "src/index.js",

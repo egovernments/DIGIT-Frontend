@@ -9,16 +9,14 @@ import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
-
 //here add react-query dev tools
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
 
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
-  console.log("initDataLoading",isLoading);
-  console.log("initData",initData);
-  console.log("new ver");
+  const reduxRsp = getStore(initData, moduleReducers(initData))
+  
   if (isLoading) {
     return <Loader page={true} />;
   }
@@ -52,7 +50,7 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
   return (
     <div>
       <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
+        {/* <QueryClientProvider client={queryClient}> */}
           <ComponentProvider.Provider value={registry}>
             <PrivacyProvider.Provider
               value={{
@@ -95,7 +93,7 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
-        </QueryClientProvider>
+        {/* </QueryClientProvider> */}
       </ErrorBoundary>
     </div>
   );
@@ -106,7 +104,9 @@ const componentsToRegister = {
   SelectOtp,
 };
 
+
 export const initCoreComponents = () => {
+  
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

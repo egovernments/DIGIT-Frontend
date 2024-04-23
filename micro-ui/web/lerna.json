@@ -2,7 +2,9 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "0.0.0",
   "packages":[
-    "packages/core"
+    "packages/core",
+    "packages/ui-libraries",
+    "packages/ui-components"
   ],
   "command": {
     "run": {
