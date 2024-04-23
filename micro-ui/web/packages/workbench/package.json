@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-module-workbench-mfe",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -46,7 +46,7 @@
     "single-spa-react": "^4.6.1",
     "xlsx": "0.17.5",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.15",
-    "@egovernments/digit-ui-react-components":"1.4.112",
+    "@egovernments/digit-ui-react-components":"1.4.114",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
     "@rjsf/validator-ajv8": "5.10.0",

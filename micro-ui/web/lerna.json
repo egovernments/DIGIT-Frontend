@@ -4,7 +4,8 @@
   "packages":[
     "packages/core",
     "packages/ui-libraries",
-    "packages/ui-components"
+    "packages/ui-components",
+    "packages/workbench"
   ],
   "command": {
     "run": {

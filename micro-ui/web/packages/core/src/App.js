@@ -1,10 +1,10 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense,useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import registerRemotes from "./modules/registerRemotes"
 import { useTranslation } from "react-i18next";
-import { queryClient } from "./bootstrap";
+// import { queryClient } from "./bootstrap";
 import { Loader } from "@egovernments/digit-ui-react-components";
 
 const initDigitUI = () => {
@@ -33,10 +33,10 @@ const initDigitUI = () => {
 
 initLibraries()
 initDigitUI()
-registerRemotes(queryClient)
 
 
-const App = () => {
+
+const App = ({queryClient}) => {
   const {t,i18n} = useTranslation()
   const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
   const moduleReducers = (initData) => initData;
@@ -56,7 +56,12 @@ const App = () => {
     },
     i18n,
   })
+
+  useEffect(() => {
+    registerRemotes(queryClient)
+  }, [])
   
+
   
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   

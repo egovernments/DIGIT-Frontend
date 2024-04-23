@@ -6,7 +6,7 @@ import '../src/locale/i18n';
 import { CustomisedHooks } from './hooks';
 import { QueryClient,QueryClientProvider } from 'react-query';
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 15 * 60 * 1000,
@@ -64,10 +64,11 @@ const overrideHooks = () => {
 overrideHooks();
 
 const AppWithRouter = () => {
+
   return (
     <QueryClientProvider client={queryClient}>
       <HashRouter>
-        <App />
+        <App queryClient={queryClient}/>
       </HashRouter>
     </QueryClientProvider>
   );

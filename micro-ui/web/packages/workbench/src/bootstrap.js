@@ -6,9 +6,8 @@ import { createBrowserHistory } from "history";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initWorkbenchComponents } from "./Module";
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+// initDigitUI()
 initWorkbenchComponents();
 
 const mount = (el, { history, login }) => {
@@ -30,24 +29,24 @@ if (process.env.NODE_ENV === "development") {
   }
 }
 
-const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {};
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
+// const initDigitUI = () => {
+//   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+//   window.Digit.Customizations = {};
+//   window?.Digit.ComponentRegistryService.setupRegistry({
+//     // PaymentModule,
+//     // ...paymentConfigs,
+//     // PaymentLinks,
+//   });
 
-  // initHRMSComponents();
-  const enabledModules = ["PT", "TQM"];
+//   // initHRMSComponents();
+//   const enabledModules = ["PT", "TQM"];
 
-  const moduleReducers = (initData) => initData;
+//   const moduleReducers = (initData) => initData;
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  // initTokens(stateCode);
+//   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+//   // initTokens(stateCode);
 
-  // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
-};
+//   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
+// };
 
 export { mount };

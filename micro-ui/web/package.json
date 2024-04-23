@@ -22,7 +22,8 @@
   "workspaces": [
     "packages/core",
     "packages/ui-libraries",
-    "packages/ui-components"
+    "packages/ui-components",
+    "packages/workbench"
   ],
   "scripts": {
     "build": "yarn lerna run build",

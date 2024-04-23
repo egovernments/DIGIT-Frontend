@@ -49,9 +49,7 @@ module.exports = () => {
         exposes: {
           "./WorkbenchModule": "./src/SingleSpaEntry",
         },
-        shared: {
-          ...packageJson.dependencies
-        }
+        shared: packageJson.dependencies
       }),
       new HtmlWebpackPlugin({
         template: "./public/index.html",

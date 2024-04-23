@@ -5,7 +5,6 @@
 import { registerApplication,start } from "single-spa";
 
 export default (queryClient) => {
-
   const userType = Digit.UserService.getType();
 
   // registerApplication({
@@ -19,16 +18,16 @@ export default (queryClient) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "Workbench",
-  //   app: () => import("workbench/WorkbenchModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench`,
-  //   customProps: {
-  //     title: "Workbench is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+  registerApplication({
+    name: "Workbench",
+    app: () => import("workbench/WorkbenchModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench`,
+    customProps: {
+      title: "Workbench is running on host",
+      queryClient,
+      userType,
+    },
+  });
 
 
   // registerApplication({
