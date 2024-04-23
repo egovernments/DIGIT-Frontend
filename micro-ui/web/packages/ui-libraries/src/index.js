@@ -82,9 +82,9 @@ const initLibraries = () => {
 
   setupLibraries("AccessControlService", AccessControlService);
 
-  return new Promise((resolve) => {
-    initI18n(resolve);
-  });
+  // return new Promise((resolve) => {
+  //   initI18n(resolve);
+  // });
 };
 
 export { initLibraries, Enums, Hooks, subFormRegistry };

@@ -61,10 +61,11 @@ const LocalizationStore = {
 };
 
 export const LocalizationService = {
-  getLocale: async ({ modules = [], locale = "en_IN", tenantId }) => {
+  getLocale: async ({ modules = ["rainmaker-common"], locale = "en_IN", tenantId }) => {
     if (locale.indexOf("_IN") === -1) {
       locale += "_IN";
     }
+    
     const [newModules, messages] = LocalizationStore.get(locale, modules);
     if (newModules.length > 0) {
       const data = await Request({ url: Urls.localization, params: { module: newModules.join(","), locale, tenantId }, useCache: false });
@@ -72,6 +73,7 @@ export const LocalizationService = {
       setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
     }
     LocalizationStore.updateResources(locale, messages,tenantId);
+    
     return messages;
   },
   changeLanguage: (locale, tenantId) => {

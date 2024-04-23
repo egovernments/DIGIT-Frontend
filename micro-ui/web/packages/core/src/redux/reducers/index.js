@@ -3,6 +3,6 @@ export const commonReducer = (defaultData) => (state = defaultData, action) => {
       case "LANGUAGE_SELECT":
         return { ...state, selectedLanguage: action.payload };
       default:
-        return state;
+        return state ? state : {};
     }
   };
