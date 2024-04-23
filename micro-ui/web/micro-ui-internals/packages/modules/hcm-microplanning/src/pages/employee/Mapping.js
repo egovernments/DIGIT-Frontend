@@ -1,8 +1,8 @@
 // Importing necessary modules
 import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect } from "@egovernments/digit-ui-components";
-import L from "leaflet";
+import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ZoomControl from "../../components/ZoomControl";
 import CustomScaleControl from "../../components/CustomScaleControl";
@@ -11,6 +11,7 @@ import { NorthArrow } from "../../icons/NorthArrow";
 import { Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
 import Schema from "../../configs/Schemas.json";
+import processHierarchyAndData from "../../utils/processHierarchyAndData";
 
 // Mapping component definition
 const Mapping = ({
@@ -57,7 +58,7 @@ const Mapping = ({
     config: {
       enabled: !!campaignData?.hierarchyType,
       select: (data) => {
-        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType) || {};
+        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
       },
     },
   };
@@ -77,7 +78,9 @@ const Mapping = ({
   const [selectedBaseMap, setSelectedBaseMap] = useState({});
   const [selectedBaseMapName, setSelectedBaseMapName] = useState("");
   const [showBaseMapSelector, setShowBaseMapSelector] = useState(false);
-
+  const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
+  const [filterData, setFilterData] = useState({}); // State for facility data
+  const [boundarySelections, setBoundarySelections] = useState([]);
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!data) return;
@@ -120,12 +123,20 @@ const Mapping = ({
 
   useEffect(() => {
     if (filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
-      extractGeoData(campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t);
+      extractGeoData(
+        campaignType,
+        microplanData,
+        filterDataOrigin,
+        validationSchemas,
+        setToast,
+        setDataAvailability,
+        hierarchy,
+        setBoundaryData,
+        setFilterData,
+        t
+      );
     }
-  }, [filterDataOrigin]);
-
-  // change the baseMap
-  useEffect(() => {});
+  }, [filterDataOrigin, hierarchy]);
 
   // Function to initialize map
   const init = (id, defaultBaseMap) => {
@@ -164,6 +175,14 @@ const Mapping = ({
     }
   };
 
+  useEffect(() => {
+    // const geojson = prepareGeojson(boundaryData,selection);
+    const geojson = prepareGeojson(boundaryData, "ALL");
+
+    // if(geojson)
+    console.log(addGeojsonToMap(map, geojson));
+  }, [boundaryData]);
+
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -171,8 +190,14 @@ const Mapping = ({
       <Card className="mapping-body-container" style={{ margin: "0", padding: "0" }}>
         <Card className="map-container">
           {/* Container for map */}
+          <BoundarySelection
+            boundarySelections={boundarySelections}
+            setBoundarySelections={setBoundarySelections}
+            boundaryData={boundaryData}
+            hierarchy={hierarchy}
+            t={t}
+          />
           <div ref={(node) => (_mapNode = node)} className="map" id="map">
-            <BoundarySelection hierarchy={hierarchy} t={t} />
             <div className="top-right-map-subcomponents">
               <div className="icon-first">
                 <BaseMapSwitcher
@@ -206,8 +231,41 @@ const Mapping = ({
   );
 };
 
-const BoundarySelection = ({ hierarchy, t }) => {
+const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
+  const [processedHierarchy, setProcessedHierarchy] = useState([]);
+  useEffect(() => {
+    if (!boundaryData || !hierarchy) return;
+    let dataMap = {};
+    Object.values(boundaryData)?.forEach((item) => {
+      Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
+        if (value) {
+          if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
+          else dataMap[key] = new Set([...value]);
+        }
+      });
+    });
+    let processedHierarchyTemp = hierarchy.map((item) => {
+      if (dataMap?.[item?.boundaryType])
+        return {
+          ...item,
+          dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({ name: data, code: data, boundaryType: item.boundaryType })),
+        };
+      else return item;
+    });
+    setProcessedHierarchy(processedHierarchyTemp);
+  }, [boundaryData, hierarchy]);
+
+  const handleSelection = (e) => {
+    let tempData = {};
+    e.forEach((item) => {
+      if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]?.name];
+      else tempData[item?.[1]?.boundaryType] = [item?.[1]?.name];
+    });
+    console.log("selections", tempData);
+    setBoundarySelections((previous) => ({ ...previous, ...tempData }));
+  };
+
   return (
     <div className="filter-by-boundary">
       <Button
@@ -225,10 +283,21 @@ const BoundarySelection = ({ hierarchy, t }) => {
             <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
           </div>
           <div className="hierarchy-selection-container">
-            {hierarchy?.map((item) => (
-              <div className="hierarchy-selection-element">
-                <CardLabel style={{padding:0,margin:0}}>{t(item)}</CardLabel>
-                <CustomDropdown label={"blabla"} style={{ maxWidth: "23.75rem", margin: 0 }} type={"dropdown"} t={t} config={{}} select={() => {}} />
+            {processedHierarchy?.map((item, index) => (
+              <div key={index} className="hierarchy-selection-element">
+                <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
+                {console.log(item?.dropDownOptions)}
+                <MultiSelectDropdown
+                  selected={boundarySelections?.[item?.boundaryType]}
+                  label={"blabla"}
+                  style={{ maxWidth: "23.75rem", margin: 0 }}
+                  type={"multiselectdropdown"}
+                  t={t}
+                  options={item?.dropDownOptions}
+                  optionsKey="name"
+                  onSelect={handleSelection}
+                  ServerStyle={{ position: "sticky", maxHeight: "15rem" }}
+                />
               </div>
             ))}
           </div>
@@ -236,7 +305,7 @@ const BoundarySelection = ({ hierarchy, t }) => {
       )}
     </div>
   );
-};
+});
 
 const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, t }) => {
   if (!baseMaps) return null;
@@ -292,7 +361,23 @@ const getSchema = (campaignType, type, section, schemas) => {
   });
 };
 
-const extractGeoData = (campaignType, microplanData, filterDataOrigin, validationSchemas, setToast, setDataAvailability, t) => {
+const extractGeoData = (
+  campaignType,
+  microplanData,
+  filterDataOrigin,
+  validationSchemas,
+  setToast,
+  setDataAvailability,
+  hierarchy,
+  setBoundaryData,
+  setFilterData,
+  t
+) => {
+  if (!hierarchy) return;
+
+  let setBoundary = {};
+  let setFilter = {};
+
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = microplanData?.upload;
@@ -331,18 +416,20 @@ const extractGeoData = (campaignType, microplanData, filterDataOrigin, validatio
               return acc;
             }, [])
             .map((item) => t(item)) || [];
-            console.log(latLngColumns)
 
         // Check if file contains latitude and longitude columns
-        if (latLngColumns?.length && files[fileData]?.data) {
+        if (files[fileData]?.data) {
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
+          console.log(files[fileData]);
           switch (files[fileData]?.fileType) {
             case "Excel": {
               let columnList = Object.values(files[fileData]?.data)[0][0];
               let check = true;
-              for (let colName of latLngColumns) {
-                check = check && columnList.includes(t(colName)); // Check if columns exist in the file
+              if (latLngColumns) {
+                for (let colName of latLngColumns) {
+                  check = check && columnList.includes(t(colName)); // Check if columns exist in the file
+                }
               }
               dataAvailabilityCheck = check
                 ? dataAvailabilityCheck === "partial"
@@ -355,12 +442,43 @@ const extractGeoData = (campaignType, microplanData, filterDataOrigin, validatio
                 : dataAvailabilityCheck === "false"
                 ? "false"
                 : "partial"; // Update data availability based on column check
+
+              // extract dada
+              console.log(Object.values(files[fileData]?.data));
+              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(files[fileData]?.data));
+              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
+                setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
+              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
+                setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
               break;
             }
             case "GeoJSON":
             case "Shapefile":
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
-              break;
+              // Extract keys from the first feature's properties
+              var keys = Object.keys(files[fileData]?.mappedData.features[0].properties);
+              keys.push("feature");
+
+              // Extract corresponding values for each feature
+              const values = files[fileData]?.mappedData?.features.map((feature) => {
+                // list with features added to it
+                const temp = keys.map((key) => {
+                  if (feature.properties[key] === "") {
+                    return null;
+                  }
+                  if (key === "feature") return feature;
+                  return feature.properties[key];
+                });
+                return temp;
+              });
+              // Group keys and values into the desired format
+              let data = { [files[fileData]?.fileName]: [keys, ...values] };
+              // extract dada
+              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
+              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
+                setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
+              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
+                setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
           }
         }
       }
@@ -404,6 +522,85 @@ const extractGeoData = (campaignType, microplanData, filterDataOrigin, validatio
       message: t("MAPPING_NO_DATA_TO_SHOW"),
     });
   }
+
+  console.log(setBoundary, setFilter);
+  setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
+  setFilterData((previous) => ({ ...previous, ...setFilter }));
+};
+
+const prepareGeojson = (boundaryData, selection) => {
+  let geojsonRawFeatures = [];
+  if (selection == "ALL") {
+    for (let data of Object.values(boundaryData)) {
+      const tempList = fetchFeatures(data?.hierarchicalData);
+      console.log("tempList", tempList);
+    }
+  }
+  return [
+    {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        coordinates: [
+          [
+            [40.188448985600814, -10.660068568603492],
+            [35.19616098538114, -11.910583088074588],
+            [35.14163839729292, -14.368277351798866],
+            [35.18739126202129, -16.532332178003855],
+            [34.04151920874003, -15.299883549627438],
+            [33.122381578920454, -14.428431962891153],
+            [31.25626119395085, -15.782388281195963],
+            [33.207822620574944, -17.627841401248986],
+            [32.84449605031611, -21.05056806074147],
+            [31.00321346916303, -22.853508698154457],
+            [31.939524780326792, -26.720591196238836],
+            [33.49388775933767, -26.98786182588011],
+            [35.68685874638962, -24.448499065948766],
+            [35.068551734441826, -20.091153292255783],
+            [37.89752637767572, -17.841808757821923],
+            [41.92559279741067, -15.343081245085685],
+            [40.188448985600814, -10.660068568603492],
+          ],
+        ],
+        type: "Polygon",
+      },
+    },
+  ];
+  return;
+};
+
+const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
+  if (parameter === "ALL") {
+    // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
+    let tempStorage = [];
+    for (let [entityKey, entityValue] of Object.entries(data)) {
+      console.log("112", entityKey, entityValue);
+      if (entityValue?.children)
+        tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+      else tempStorage = [...tempStorage, entityValue?.data?.feature];
+    }
+    return tempStorage;
+  } else if (Array.isArray(parameter)) {
+    let tempStorage = [];
+    for (let [entityKey, entityValue] of Object.entries(data)) {
+      console.log("112", entityKey, entityValue);
+      if (parameter.includes(entityKey)) {
+        if (entityValue?.children)
+          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter , outputList)];
+        else tempStorage = [...tempStorage, entityValue?.data?.feature];
+      } else {
+        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter ,  outputList)];
+      }
+    }
+    return tempStorage;
+  }
+};
+
+const addGeojsonToMap = (map, geojson) => {
+  if (!map || !geojson) return false;
+  const geojsonLayer = L.geoJSON(geojson);
+  geojsonLayer.addTo(map);
+  return true;
 };
 
 // Exporting Mapping component
