@@ -32,6 +32,13 @@ function loopAndReturn(dataa) {
         toValue: Math.min(existingItem.value, item.value),
         fromValue: Math.max(existingItem.value, item.value),
       };
+    } else if (item?.operator?.code === "EQUAL_TO") {
+      newArray.push({
+        ...item,
+        value: {
+          code: item?.value,
+        },
+      });
     } else {
       // If no existing item with the same attribute is found, push the current item
       // if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
