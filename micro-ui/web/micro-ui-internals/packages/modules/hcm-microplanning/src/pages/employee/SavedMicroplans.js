@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposerV2 } from "@egovernments/digit-ui-react-components";
-
+import { useHistory } from "react-router-dom";
 const configs = {
   label: "SAVED_MICROPLANS",
   type: "search",
@@ -110,10 +110,11 @@ const configs = {
   customHookName: "microplan.useSavedMicroplans",
 };
 const SavedMicroplans = () => {
+  const history = useHistory()
   const { t } = useTranslation();
 
   const onClickRow = (row) => {
-    // console.log(row);
+    history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
   };
 
   const savedMircoplanSession = Digit.Hooks.useSessionStorage("SAVED_MICROPLAN_SESSION", {});
