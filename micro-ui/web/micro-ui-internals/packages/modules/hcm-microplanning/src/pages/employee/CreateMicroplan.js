@@ -6,10 +6,10 @@ import Hypothesis from "./Hypothesis";
 import RuleEngine from "./RuleEngine";
 import Mapping from "./Mapping";
 import Navigator from "../../components/Nagivator";
-import { v4 as uuidv4 } from "uuid";
 import { Toast } from "@egovernments/digit-ui-components";
 import MicroplanPreview from "./MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
+
 export const components = {
   MicroplanDetails,
   Upload,
@@ -28,6 +28,7 @@ const CreateMicroplan = () => {
 
   
   // Fetching data using custom MDMS hook
+  const { campaignId = "" } = Digit.Hooks.useQueryParams();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
@@ -89,7 +90,7 @@ const CreateMicroplan = () => {
         check = check && checkStatusValues?.[data];
       }
       if (!check) return;
-      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name);
+      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name,campaignId);
       if (microplanData && !microplanData.planConfigurationId) {
         createPlanConfiguration(body);
       } else if (microplanData && microplanData.planConfigurationId) {
@@ -190,9 +191,7 @@ const CreateMicroplan = () => {
   );
 };
 
-const mapDataForApi = (data, Operators, microplanName) => {
-  // Generate UUID
-  const uuid = uuidv4();
+const mapDataForApi = (data, Operators, microplanName, campaignId) => {
   let files = [],
     resourceMapping = [];
   Object.values(data?.upload).forEach((item) => {
@@ -212,7 +211,7 @@ const mapDataForApi = (data, Operators, microplanName) => {
       status:"DRAFT",
       tenantId: Digit.ULBService.getStateId(),
       name: microplanName,
-      executionPlanId: uuid,
+      executionPlanId: campaignId,
       files,
       assumptions: data?.hypothesis?.map((item) => {
         let templist = JSON.parse(JSON.stringify(item));

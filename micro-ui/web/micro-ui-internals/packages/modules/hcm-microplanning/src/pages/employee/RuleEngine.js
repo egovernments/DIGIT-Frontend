@@ -525,7 +525,6 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
         return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       }
     }) || [];
-    console.log(filteredSchemas)
   const finalData = filteredSchemas
     ?.map((item) => Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
       if (value?.isRuleConfigureInputs) {

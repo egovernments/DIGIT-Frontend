@@ -47,7 +47,6 @@ export const excelValidations = (data, schemaData, t) => {
   .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
-    console.log("validateExcel",validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":

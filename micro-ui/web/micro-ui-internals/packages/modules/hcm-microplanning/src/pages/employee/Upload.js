@@ -285,7 +285,6 @@ const Upload = ({
         case "GeoJSON":
           try {
             response = await handleGeojsonFile(file, schemaData);
-            console.log(response);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoderActivation(false);
@@ -376,7 +375,6 @@ const Upload = ({
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
-      console.log(error);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -521,13 +519,12 @@ const Upload = ({
       }
       setResourceMapping([]);
       let fileObject = _.cloneDeep(fileData);
-      fileObject = { ...fileData, mappedData: data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
+      fileObject = { ...fileData, data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoderActivation(false);
     } catch (error) {
-      console.log(error);
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoderActivation(false);
@@ -585,7 +582,6 @@ const Upload = ({
       return;
     }
 
-    console.log(Object.entries(schemaData?.schema?.Properties || {}));
     let columns = [
       ...hierarchy,
       ...Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
@@ -595,10 +591,6 @@ const Upload = ({
         return acc;
       }, []),
     ];
-    console.log(
-      columns,
-      resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo))
-    );
     const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
     if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });

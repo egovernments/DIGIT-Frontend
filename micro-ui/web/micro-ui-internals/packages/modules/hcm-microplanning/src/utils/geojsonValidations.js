@@ -78,10 +78,10 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
         }
         return acc;
       }, [])
-      .map((item) => t(item));
+      .map((item) => item);
 
-    const properties = prepareProperties(schemaData.Properties, t);
-    return { required, properties };
+    // const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
   const schema = {
@@ -158,21 +158,25 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
   return { valid: true };
 };
 
-function filterOutWordAndLocalise(inputString, operation) {
-  // Define a regular expression to match the string parts
-  var regex = /(\w+)/g; // Matches one or more word characters
+////////////////////////////
+// // Might be needed
+// function filterOutWordAndLocalise(inputString, operation) {
+//   // Define a regular expression to match the string parts
+//   var regex = /(\w+)/g; // Matches one or more word characters
 
-  // Replace each match using the provided function
-  var replacedString = inputString.replace(regex, function (match) {
-    // Apply the function to each matched string part
-    return operation(match);
-  });
+//   // Replace each match using the provided function
+//   var replacedString = inputString.replace(regex, function (match) {
+//     // Apply the function to each matched string part
+//     return operation(match);
+//   });
 
-  return replacedString;
-}
+//   return replacedString;
+// }
+// const prepareProperties = (properties, t) => {
+//   let newProperties = {};
+//   Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
+//   return newProperties;
+// };
 
-const prepareProperties = (properties, t) => {
-  let newProperties = {};
-  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
-  return newProperties;
-};
+////////////////////////////
+

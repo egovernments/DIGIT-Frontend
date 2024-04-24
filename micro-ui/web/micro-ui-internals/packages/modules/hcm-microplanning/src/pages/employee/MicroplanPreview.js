@@ -120,9 +120,7 @@ const MicroplanPreview = ({
   },[MDMSData])
 
   useEffect(() => {
-    console.log(campaignType, microplanData, validationSchemas)
     const filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    console.log("filteredSchemaColumns",filteredSchemaColumns)
     let tempData1 = [];
     let tempData2 = [];
     if (microplanData?.upload?.Population?.data) {
@@ -150,7 +148,7 @@ const MicroplanPreview = ({
             hierarchy.map((item) => (
               <div className="hierarchy-selection-element">
                 <p>{t(item)}</p>
-                <CustomDropdown label={"blabla"} style={{ maxWidth: "23.75rem", margin: 0 }} type={"dropdown"} t={t} config={{}} select={() => {}} />
+                <CustomDropdown style={{ maxWidth: "23.75rem", margin: 0 }} type={"dropdown"} t={t} config={{}} select={() => {}} />
               </div>
             ))}
         </div>

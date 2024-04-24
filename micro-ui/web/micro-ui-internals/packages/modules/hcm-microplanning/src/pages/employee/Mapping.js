@@ -177,10 +177,12 @@ const Mapping = ({
 
   useEffect(() => {
     // const geojson = prepareGeojson(boundaryData,selection);
-    const geojson = prepareGeojson(boundaryData, "ALL");
+    // const geojsons = prepareGeojson(boundaryData, "ALL");
 
-    // if(geojson)
-    console.log(addGeojsonToMap(map, geojson));
+    // if (geojsons) addGeojsonToMap(map, geojsons);
+    // const bounds = findBounds(geojsons);
+    // console.log(geojsons, bounds);
+    // if (bounds) map?.fitBounds(bounds);
   }, [boundaryData]);
 
   // Rendering component
@@ -234,6 +236,8 @@ const Mapping = ({
 const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const [processedHierarchy, setProcessedHierarchy] = useState([]);
+
+  // Filtering out dropdown values
   useEffect(() => {
     if (!boundaryData || !hierarchy) return;
     let dataMap = {};
@@ -249,7 +253,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
       if (dataMap?.[item?.boundaryType])
         return {
           ...item,
-          dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({ name: data, code: data, boundaryType: item.boundaryType })),
+          dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({ name: data, code: data, boundaryType: item?.boundaryType, parentBoundaryType:item?.parentBoundaryType })),
         };
       else return item;
     });
@@ -258,12 +262,30 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
 
   const handleSelection = (e) => {
     let tempData = {};
+    let TempHierarchy = _.cloneDeep(processedHierarchy)
     e.forEach((item) => {
-      if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]?.name];
-      else tempData[item?.[1]?.boundaryType] = [item?.[1]?.name];
+      // Enpty previous options
+      let index = TempHierarchy.findIndex(e=>  e?.parentBoundaryType === item?.[1]?.boundaryType)
+      if(index !== -1){
+        TempHierarchy[index].dropDownOptions = []
+      }
     });
-    console.log("selections", tempData);
+    e.forEach((item) => {
+      // insert new data into tempData
+      if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
+      else tempData[item?.[1]?.boundaryType] = [item?.[1]];
+
+      // Filter the options
+      let index = TempHierarchy.findIndex(e=>  e?.parentBoundaryType === item?.[1]?.boundaryType)
+      if(index !== -1){
+        const tempData = findFilteredData(item?.[1]?.name,item?.[1]?.boundaryType,boundaryData)
+        if(tempData)
+         TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions,...tempData]
+      }
+    });
+    setProcessedHierarchy(TempHierarchy);
     setBoundarySelections((previous) => ({ ...previous, ...tempData }));
+
   };
 
   return (
@@ -286,17 +308,15 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
             {processedHierarchy?.map((item, index) => (
               <div key={index} className="hierarchy-selection-element">
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
-                {console.log(item?.dropDownOptions)}
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
-                  label={"blabla"}
                   style={{ maxWidth: "23.75rem", margin: 0 }}
                   type={"multiselectdropdown"}
                   t={t}
                   options={item?.dropDownOptions}
                   optionsKey="name"
                   onSelect={handleSelection}
-                  ServerStyle={{ position: "sticky", maxHeight: "15rem" }}
+                  ServerStyle={{ position: "sticky", maxHeight: "15rem", zIndex:600 }}
                 />
               </div>
             ))}
@@ -306,6 +326,8 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
     </div>
   );
 });
+
+
 
 const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, t }) => {
   if (!baseMaps) return null;
@@ -421,7 +443,6 @@ const extractGeoData = (
         if (files[fileData]?.data) {
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
-          console.log(files[fileData]);
           switch (files[fileData]?.fileType) {
             case "Excel": {
               let columnList = Object.values(files[fileData]?.data)[0][0];
@@ -444,7 +465,6 @@ const extractGeoData = (
                 : "partial"; // Update data availability based on column check
 
               // extract dada
-              console.log(Object.values(files[fileData]?.data));
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(files[fileData]?.data));
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
@@ -456,11 +476,11 @@ const extractGeoData = (
             case "Shapefile":
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
               // Extract keys from the first feature's properties
-              var keys = Object.keys(files[fileData]?.mappedData.features[0].properties);
+              var keys = Object.keys(files[fileData]?.data.features[0].properties);
               keys.push("feature");
 
               // Extract corresponding values for each feature
-              const values = files[fileData]?.mappedData?.features.map((feature) => {
+              const values = files[fileData]?.data?.features.map((feature) => {
                 // list with features added to it
                 const temp = keys.map((key) => {
                   if (feature.properties[key] === "") {
@@ -523,7 +543,6 @@ const extractGeoData = (
     });
   }
 
-  console.log(setBoundary, setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
 };
@@ -532,41 +551,11 @@ const prepareGeojson = (boundaryData, selection) => {
   let geojsonRawFeatures = [];
   if (selection == "ALL") {
     for (let data of Object.values(boundaryData)) {
-      const tempList = fetchFeatures(data?.hierarchicalData);
-      console.log("tempList", tempList);
+      const templist = fetchFeatures(data?.hierarchicalData);
+      if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
     }
   }
-  return [
-    {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        coordinates: [
-          [
-            [40.188448985600814, -10.660068568603492],
-            [35.19616098538114, -11.910583088074588],
-            [35.14163839729292, -14.368277351798866],
-            [35.18739126202129, -16.532332178003855],
-            [34.04151920874003, -15.299883549627438],
-            [33.122381578920454, -14.428431962891153],
-            [31.25626119395085, -15.782388281195963],
-            [33.207822620574944, -17.627841401248986],
-            [32.84449605031611, -21.05056806074147],
-            [31.00321346916303, -22.853508698154457],
-            [31.939524780326792, -26.720591196238836],
-            [33.49388775933767, -26.98786182588011],
-            [35.68685874638962, -24.448499065948766],
-            [35.068551734441826, -20.091153292255783],
-            [37.89752637767572, -17.841808757821923],
-            [41.92559279741067, -15.343081245085685],
-            [40.188448985600814, -10.660068568603492],
-          ],
-        ],
-        type: "Polygon",
-      },
-    },
-  ];
-  return;
+  return geojsonRawFeatures;
 };
 
 const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
@@ -574,7 +563,6 @@ const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
     let tempStorage = [];
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      console.log("112", entityKey, entityValue);
       if (entityValue?.children)
         tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
       else tempStorage = [...tempStorage, entityValue?.data?.feature];
@@ -583,24 +571,112 @@ const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
   } else if (Array.isArray(parameter)) {
     let tempStorage = [];
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      console.log("112", entityKey, entityValue);
       if (parameter.includes(entityKey)) {
         if (entityValue?.children)
-          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter , outputList)];
+          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
         else tempStorage = [...tempStorage, entityValue?.data?.feature];
       } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter ,  outputList)];
+        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
       }
     }
     return tempStorage;
   }
 };
 
+// Filters data for dropdown with when a parent is selected
+const findFilteredData = (name,boundaryType,boundaryData)=>{
+  let geojsonRawFeatures = [];
+    for (let data of Object.values(boundaryData)) {
+    const templist = findFilteredDataHierarchyTraveler(data?.hierarchicalData,name,boundaryType);
+    if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
+  }
+    return geojsonRawFeatures
+}
+const findFilteredDataHierarchyTraveler = (data,name,boundaryType)=>{
+  if(!data) return
+  let tempStorage = [];
+  for (let [entityKey, entityValue] of Object.entries(data)) {
+    if (entityKey === name &&  entityValue?.boundaryType === boundaryType)
+    tempStorage = [...tempStorage,...Object.values(entityValue?.children)?.map(item=>({ name: item?.name, code: item?.name, boundaryType: item?.boundaryType, parentBoundaryType:boundaryType }))]
+    else if (entityValue?.children) tempStorage = [...tempStorage,...findFilteredDataHierarchyTraveler(entityValue?.children,name,boundaryType)];
+  }
+  return tempStorage;
+}
+
 const addGeojsonToMap = (map, geojson) => {
   if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson);
   geojsonLayer.addTo(map);
   return true;
+};
+
+const findBounds = (data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return;
+  }
+
+  // Initialize variables to store bounds
+  var minLat = Number.MAX_VALUE;
+  var maxLat = -Number.MAX_VALUE;
+  var minLng = Number.MAX_VALUE;
+  var maxLng = -Number.MAX_VALUE;
+
+  // Iterate through the data to find bounds
+  data.forEach(function (feature) {
+    if (!feature || !feature.geometry || !feature.geometry.type || !feature.geometry.coordinates) {
+      return;
+    }
+
+    var coords = feature.geometry.coordinates;
+    var geometryType = feature.geometry.type;
+
+    // Handling different geometry types
+    switch (geometryType) {
+      case "Point":
+        coords = [coords];
+        break;
+      case "LineString":
+        coords = [coords];
+        break;
+      case "Polygon":
+        coords = [coords[0]];
+        break;
+      case "MultiPoint":
+      case "MultiLineString":
+      case "MultiPolygon":
+        break;
+      default:
+        return;
+    }
+
+    coords.forEach(function (coordinates) {
+      coordinates.forEach(function (coord) {
+        if (!Array.isArray(coord) || coord.length !== 2 || typeof coord[0] !== "number" || typeof coord[1] !== "number") {
+          return;
+        }
+
+        var lat = coord[1];
+        var lng = coord[0];
+        minLat = Math.min(minLat, lat);
+        maxLat = Math.max(maxLat, lat);
+        minLng = Math.min(minLng, lng);
+        maxLng = Math.max(maxLng, lng);
+      });
+    });
+  });
+
+  // Check if valid bounds found
+  if (minLat === Number.MAX_VALUE || maxLat === -Number.MAX_VALUE || minLng === Number.MAX_VALUE || maxLng === -Number.MAX_VALUE) {
+    return;
+  }
+
+  // Set bounds for the Leaflet map
+  var bounds = [
+    [minLat, minLng],
+    [maxLat, maxLng],
+  ];
+
+  return bounds;
 };
 
 // Exporting Mapping component
