@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, AppContainer, BreadCrumb, Loader } from "@egovernments/digit-ui-react-components";
 import LocalisationSearch from "./LocalisationSearch";
 import MDMSSearch from "./MDMSSearch";
 import MDMSAdd from "./MDMSAdd";
@@ -66,6 +66,16 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 };
 
 const App = ({ path }) => {
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      module: 'rainmaker-workbench',
+      locale:i18n.language,
+    },
+    i18n,
+  })
+  
   const location = useLocation();
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
@@ -102,6 +112,10 @@ const App = ({ path }) => {
       clearSessionFormDataView();
     }
   }, [location]);
+
+  if(isLoading){
+    return <Loader />
+  }
 
   return (
     <React.Fragment>

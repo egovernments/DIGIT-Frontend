@@ -10,7 +10,7 @@ i18n
   .init({
     ns: ["translations"],
     defaultNS: "translations",
-    debug: true,
+    debug: false,
     lng: localStorage.getItem("i18nextLng") || "en_IN",
     fallbackLng:"en_IN",
     returnObjects:true,
