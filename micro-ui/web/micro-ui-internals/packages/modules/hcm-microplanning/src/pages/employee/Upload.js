@@ -59,7 +59,7 @@ const Upload = ({
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        id,
+        ids:[id],
       },
     },
     {

@@ -31,7 +31,7 @@ const MicroplanDetails = (
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        id,
+        ids:[id],
       },
     },
     {
