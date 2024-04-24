@@ -924,10 +924,19 @@ $border-color: rgba(214, 213, 212, 1);
 
             .value {
                 margin-left: 9%;
-                width: fit-content;
+                
+
+                .heading{
+                    display: flex;
+                    text-wrap: wrap;
+                }
 
                 input {
                     width: 7.5rem;
+                }
+
+                @media (min-width: 60rem) {
+                    width: fit-content;
                 }
 
                 @media (max-width: 48rem) {

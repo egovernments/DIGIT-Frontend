@@ -14,10 +14,10 @@ export const excelValidations = (data, schemaData, t) => {
         }
         return acc;
       }, [])
-      .map((item) => t(item));
+      .map((item) => item);
 
-    const properties = prepareProperties(schemaData.Properties, t);
-    return { required, properties };
+    // const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties: schemaData.Properties};
   };
   const { required, properties } = translate();
   const schema = {
@@ -27,7 +27,7 @@ export const excelValidations = (data, schemaData, t) => {
         type: "array",
         items: {
           type: "object",
-          patternProperties: properties,
+          properties: properties,
           required: required,
           additionalProperties: true,
         },
@@ -47,6 +47,7 @@ export const excelValidations = (data, schemaData, t) => {
   .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
+    console.log(validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":
@@ -73,7 +74,6 @@ export const excelValidations = (data, schemaData, t) => {
           if (locationDataColumns.includes(instancePathMinMax[instancePathMinMax.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(instancePathMinMax[instancePathMinMax.length - 1]);
           break;
 
         case "pattern":
@@ -92,24 +92,26 @@ export const excelValidations = (data, schemaData, t) => {
   return { valid };
 };
 
-function filterOutWordAndLocalise(inputString, operation) {
-  // Define a regular expression to match the string parts
-  var regex = /(\w+)/g; // Matches one or more word characters
 
-  // Replace each match using the provided function
-  var replacedString = inputString.replace(regex, function (match) {
-    // Apply the function to each matched string part
-    return operation(match);
-  });
 
-  return replacedString;
-}
+// Might need it later
+// function filterOutWordAndLocalise(inputString, operation) {
+//   // Define a regular expression to match the string parts
+//   var regex = /(\w+)/g; // Matches one or more word characters
 
-const prepareProperties = (properties, t) => {
-  let newProperties = {};
-  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
-  return newProperties;
-};
+//   // Replace each match using the provided function
+//   var replacedString = inputString.replace(regex, function (match) {
+//     // Apply the function to each matched string part
+//     return operation(match);
+//   });
+
+//   return replacedString;
+// }
+// const prepareProperties = (properties, t) => {
+//   let newProperties = {};
+//   Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
+//   return newProperties;
+// };
 
 export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t) => {
   try {
@@ -120,7 +122,7 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
       if (valid["message"] !== undefined) {
         return { valid: false, message: valid.message };
       }
-      const columnList = valid.columnList;
+      const columnList = valid.columnList?.map(item=>t(item));
       const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
         columns:
           columnList.length > 1

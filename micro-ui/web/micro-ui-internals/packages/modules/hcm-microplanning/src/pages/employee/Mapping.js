@@ -81,6 +81,7 @@ const Mapping = ({
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
   const [filterData, setFilterData] = useState({}); // State for facility data
   const [boundarySelections, setBoundarySelections] = useState([]);
+
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!data) return;
@@ -123,6 +124,7 @@ const Mapping = ({
 
   useEffect(() => {
     if (filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
+      // Check if all the data is present or not, if it is then extract it in a format that can be used for mapping and other mapping related operations
       extractGeoData(
         campaignType,
         microplanData,

@@ -256,16 +256,17 @@ const Upload = ({
           return;
         }
       }
-
+      let resourceMappingData={};
       // Handling different filetypes
       switch (selectedFileType.id) {
         case "Excel":
           // let response = handleExcelFile(file,schemaData);
           try {
-            response = await handleExcelFile(file, schemaData);
+            response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, t);
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
+            resourceMappingData=response?.tempResourceMappingData
             if (check === true) {
               setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
             } else if (response.toast) {
@@ -278,6 +279,7 @@ const Upload = ({
               return;
             }
           } catch (error) {
+            console.log(error)
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
@@ -322,38 +324,27 @@ const Upload = ({
           return;
       }
       let filestoreId;
-      // if (!error && !callMapping) {
-      //   try {
-      //     const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
-      //     if (filestoreResponse?.data?.files?.length > 0) {
-      //       filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
-      //     } else {
-      //       error = t("ERROR_UPLOADING_FILE");
-      //       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-      //       setFileData((previous) => ({ ...previous, error }));
-      //       setUploadedFileError(error);
-      //     }
-      //   } catch (errorData) {
-      //     error = t("ERROR_UPLOADING_FILE");
-      //     setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-      //     setUploadedFileError(error);
-      //     handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
-      //   }
-      // }
-      let resourceMappingData;
+      if (!error && !callMapping) {
+        try {
+          const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
+          if (filestoreResponse?.data?.files?.length > 0) {
+            filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
+          } else {
+            error = t("ERROR_UPLOADING_FILE");
+            setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+            setFileData((previous) => ({ ...previous, error }));
+            setUploadedFileError(error);
+          }
+        } catch (errorData) {
+          error = t("ERROR_UPLOADING_FILE");
+          setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+          setUploadedFileError(error);
+          handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
+        }
+      }
+      
       if (selectedFileType.id === "Excel") {
-        // Mapping resources
-        let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
-          schemaData,
-          hierarchy,
-          selectedFileType,
-          fileDataToStore,
-          error,
-          filestoreId,
-          t
-        );
-        fileDataToStore = tempFileDataToStore;
-        resourceMappingData = tempResourceMappingData;
+        resourceMappingData=resourceMappingData.map(item=>({...item,filestoreId}))
       }
       // creating a fileObject to save all the data collectively
       let fileObject = {
@@ -375,14 +366,26 @@ const Upload = ({
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
+      console.log(error)
+
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
   };
 
-  const handleExcelFile = async (file, schemaData) => {
+  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType,t=(e)=>e) => {
+    // Converting the file to preserve the sequence of columns so that it can be stored
+    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+            let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
+      schemaData,
+      hierarchy,
+      selectedFileType,
+      fileDataToStore,
+      t
+    );
+    fileDataToStore = convertJsonToXlsx(tempFileDataToStore, { skipHeader: true });
     // Converting the input file to json format
-    let result = await parseXlsxToJsonMultipleSheets(file);
+    let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
     if (result && result.error) {
       return {
         check: false,
@@ -398,9 +401,8 @@ const Upload = ({
     if (!response.valid) setUploadedFileError(response.message);
     let error = response.message;
     let check = response.valid;
-    // Converting the file to preserve the sequence of columns so that it can be stored
-    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
-    return { check, error, fileDataToStore };
+
+    return { check, error, fileDataToStore:tempFileDataToStore, tempResourceMappingData };
   };
   const handleGeojsonFile = async (file, schemaData) => {
     // Reading and checking geojson data
@@ -1229,10 +1231,11 @@ const CustomIcon = (props) => {
 };
 
 // Performs resource mapping and data filtering for Excel files based on provided schema data, hierarchy, and file data.
-const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, error, filestoreId, t) => {
-  let resourceMappingData = [];
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
+            console.log(typeof t,t("UPLOAD_DATA"))
+            let resourceMappingData = [];
   let newFileData = {};
-  if (!error && selectedFileType.id === "Excel" && fileDataToStore) {
+  if (selectedFileType.id === "Excel" && fileDataToStore) {
     // Extract all unique column names from fileDataToStore and then doing thir resource mapping
     const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
     if (schemaData?.schema?.["Properties"]) {
@@ -1240,7 +1243,6 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       schemaKeys.forEach((item) => {
         if (columnForMapping.has(t(item))) {
           resourceMappingData.push({
-            filestoreId,
             mappedFrom: t(item),
             mappedTo: item,
           });
