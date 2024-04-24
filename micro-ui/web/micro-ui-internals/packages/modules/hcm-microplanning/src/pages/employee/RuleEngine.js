@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
-import Schema from "../../configs/Schemas.json";
 
 const initialRules = [
   {
@@ -80,8 +79,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    // let schemas = data["hcm-microplanning"]["Schemas"];
-    let schemas = Schema?.Schemas;
+    let schemas = data["hcm-microplanning"]["Schemas"];
     let hypothesisAssumptions = [];
     microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];

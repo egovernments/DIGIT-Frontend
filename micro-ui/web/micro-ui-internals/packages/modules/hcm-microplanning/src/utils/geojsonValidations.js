@@ -135,7 +135,7 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           break;
       }
     }
-    const columnList = [...columns];
+    const columnList = [...columns].map(item=>t(item));
     // if(column)
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
       columns:

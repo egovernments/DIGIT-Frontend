@@ -2,7 +2,6 @@ import { Button, CustomDropdown, Dropdown, FieldV1, Header, Loader } from "@egov
 import React, { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UIConfiguration } from "../../configs/UIConfiguration.json";
-import Schema from "../../configs/Schemas.json";
 import Resources from "../../configs/Resources.json";
 
 const MicroplanPreview = ({
@@ -77,8 +76,7 @@ const MicroplanPreview = ({
   useEffect(() => {
     if (!MDMSData) return;
     // let UIConfiguration = data["hcm-microplanning"]?.["UIConfiguration"];
-    // let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
-    let schemas = Schema?.Schemas;
+    let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
     if (schemas) setValidationSchemas(schemas);
     let resourcelist = Resources?.Resources;
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
@@ -110,8 +108,7 @@ const MicroplanPreview = ({
   useEffect(()=>{
     if(!MDMSData) return
     // let UIConfiguration = data["hcm-microplanning"]?.["UIConfiguration"];
-    // let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
-    let schemas = Schema?.Schemas;
+    let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
     if (schemas) setValidationSchemas(schemas);
     if (UIConfiguration) {
       const joinWithColumns = UIConfiguration.find((item) => item.name === "microplanPreview")?.joinWithColumns;

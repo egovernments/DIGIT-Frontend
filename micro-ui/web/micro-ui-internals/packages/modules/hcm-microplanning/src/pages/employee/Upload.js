@@ -14,7 +14,7 @@ import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/ComonComponents";
 import { Loader, Toast } from "@egovernments/digit-ui-components";
-import Schema from "../../configs/Schemas.json";
+
 const Upload = ({
   MicroplanName = "default",
   campaignType = "SMC",
@@ -31,7 +31,7 @@ const Upload = ({
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
     { name: "UploadConfiguration" },
     { name: "UIConfiguration" },
-    // { name: "Schemas" },
+    { name: "Schemas" },
   ]);
 
   // States
@@ -132,8 +132,7 @@ const Upload = ({
   useEffect(() => {
     if (data) {
       let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      // let schemas = data["hcm-microplanning"]["Schemas"];
-      let schemas = Schema?.Schemas;
+      let schemas = data["hcm-microplanning"]["Schemas"];
       let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
       if (UIConfiguration) {
         const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
@@ -244,7 +243,7 @@ const Upload = ({
       }
 
       let schemaData;
-      if (selectedFileType.id !== "Shapefiles") {
+      if (selectedFileType.id !== "Shapefile") {
         // Check if validation schema is present or not
         schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
         if (!schemaData) {
@@ -648,7 +647,7 @@ const Upload = ({
       case "Excel":
         data = fileData.data;
         break;
-      case "Shapefiles":
+      case "Shapefile":
       case "GeoJSON":
         if (!fileData || !fileData.data) {
           setToast({
