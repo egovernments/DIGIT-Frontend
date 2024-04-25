@@ -2,13 +2,13 @@
 import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ZoomControl from "../../components/ZoomControl";
 import CustomScaleControl from "../../components/CustomScaleControl";
 import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
-import { Info } from "@egovernments/digit-ui-svg-components";
+import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
 import processHierarchyAndData from "../../utils/processHierarchyAndData";
 
@@ -80,6 +80,10 @@ const Mapping = ({
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
   const [filterData, setFilterData] = useState({}); // State for facility data
   const [boundarySelections, setBoundarySelections] = useState([]);
+  const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
+
+  const basemapRef = useRef();
+  const filterBoundaryRef = useRef();
 
   // Effect to initialize map when data is fetched
   useEffect(() => {
@@ -184,6 +188,13 @@ const Mapping = ({
     if (bounds) map?.fitBounds(bounds);
   }, [boundaryData]);
 
+  const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
+    if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
+    if (showBaseMapSelector) setShowBaseMapSelector(false);
+  }, [isboundarySelectionSelected, showBaseMapSelector, setIsboundarySelectionSelected, setShowBaseMapSelector]);
+  Digit?.Hooks.useClickOutside(filterBoundaryRef, handleOutsideClickAndSubmitSimultaneously, isboundarySelectionSelected, { capture: true });
+  Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
+
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -196,6 +207,9 @@ const Mapping = ({
             setBoundarySelections={setBoundarySelections}
             boundaryData={boundaryData}
             hierarchy={hierarchy}
+            filterBoundaryRef={filterBoundaryRef}
+            isboundarySelectionSelected={isboundarySelectionSelected}
+            setIsboundarySelectionSelected={setIsboundarySelectionSelected}
             t={t}
           />
           <div ref={(node) => (_mapNode = node)} className="map" id="map">
@@ -207,11 +221,15 @@ const Mapping = ({
                   setShowBaseMapSelector={setShowBaseMapSelector}
                   handleBaseMapToggle={handleBaseMapToggle}
                   selectedBaseMapName={selectedBaseMapName}
+                  basemapRef={basemapRef}
                   t={t}
                 />
               </div>
               <div className="icon-rest">
-                <Info width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+                <p>{t("FILTER")}</p>
+                <div className="icon">
+                  <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+                </div>
               </div>
             </div>
 
@@ -232,112 +250,125 @@ const Mapping = ({
   );
 };
 
-const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
-  const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
-  const [processedHierarchy, setProcessedHierarchy] = useState([]);
+const BoundarySelection = memo(
+  ({
+    boundarySelections,
+    setBoundarySelections,
+    boundaryData,
+    hierarchy,
+    filterBoundaryRef,
+    isboundarySelectionSelected,
+    setIsboundarySelectionSelected,
+    t,
+  }) => {
+    const [processedHierarchy, setProcessedHierarchy] = useState([]);
 
-  // Filtering out dropdown values
-  useEffect(() => {
-    if (!boundaryData || !hierarchy) return;
-    let dataMap = {};
-    Object.values(boundaryData)?.forEach((item) => {
-      Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
-        if (value) {
-          if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
-          else dataMap[key] = new Set([...value]);
+    // Filtering out dropdown values
+    useEffect(() => {
+      if (!boundaryData || !hierarchy) return;
+      let dataMap = {};
+      Object.values(boundaryData)?.forEach((item) => {
+        Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
+          if (value) {
+            if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
+            else dataMap[key] = new Set([...value]);
+          }
+        });
+      });
+      let processedHierarchyTemp = hierarchy.map((item) => {
+        if (dataMap?.[item?.boundaryType])
+          return {
+            ...item,
+            dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({
+              name: data,
+              code: data,
+              boundaryType: item?.boundaryType,
+              parentBoundaryType: item?.parentBoundaryType,
+            })),
+          };
+        else return item;
+      });
+      setProcessedHierarchy(processedHierarchyTemp);
+    }, [boundaryData, hierarchy]);
+
+    const handleSelection = (e) => {
+      let tempData = {};
+      let TempHierarchy = _.cloneDeep(processedHierarchy);
+      e.forEach((item) => {
+        // Enpty previous options
+        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+        if (index !== -1) {
+          TempHierarchy[index].dropDownOptions = [];
         }
       });
-    });
-    let processedHierarchyTemp = hierarchy.map((item) => {
-      if (dataMap?.[item?.boundaryType])
-        return {
-          ...item,
-          dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({
-            name: data,
-            code: data,
-            boundaryType: item?.boundaryType,
-            parentBoundaryType: item?.parentBoundaryType,
-          })),
-        };
-      else return item;
-    });
-    setProcessedHierarchy(processedHierarchyTemp);
-  }, [boundaryData, hierarchy]);
+      e.forEach((item) => {
+        // insert new data into tempData
+        if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
+        else tempData[item?.[1]?.boundaryType] = [item?.[1]];
 
-  const handleSelection = (e) => {
-    let tempData = {};
-    let TempHierarchy = _.cloneDeep(processedHierarchy);
-    e.forEach((item) => {
-      // Enpty previous options
-      let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-      if (index !== -1) {
-        TempHierarchy[index].dropDownOptions = [];
-      }
-    });
-    e.forEach((item) => {
-      // insert new data into tempData
-      if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
-      else tempData[item?.[1]?.boundaryType] = [item?.[1]];
+        // Filter the options
+        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+        if (index !== -1) {
+          const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
+          if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
+        }
+      });
+      setProcessedHierarchy(TempHierarchy);
+      setBoundarySelections((previous) => ({ ...previous, ...tempData }));
+    };
 
-      // Filter the options
-      let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-      if (index !== -1) {
-        const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
-        if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
-      }
-    });
-    setProcessedHierarchy(TempHierarchy);
-    setBoundarySelections((previous) => ({ ...previous, ...tempData }));
-  };
+    return (
+      <div className="filter-by-boundary" ref={filterBoundaryRef}>
+        <Button
+          icon="FilterAlt"
+          variation="secondary"
+          className="button-primary"
+          textStyles={{ width: "fit-content" }}
+          label={t("BUTTON_FILTER_BY_BOUNDARY")}
+          onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
+        />
+        {isboundarySelectionSelected && (
+          <Card className="boundary-selection">
+            <div className="header-section">
+              <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
+              <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
+            </div>
+            <div className="hierarchy-selection-container">
+              {processedHierarchy?.map((item, index) => (
+                <div key={index} className="hierarchy-selection-element">
+                  <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
+                  <MultiSelectDropdown
+                    selected={boundarySelections?.[item?.boundaryType]}
+                    style={{ maxWidth: "23.75rem", margin: 0 }}
+                    type={"multiselectdropdown"}
+                    t={t}
+                    options={item?.dropDownOptions}
+                    optionsKey="name"
+                    onSelect={handleSelection}
+                    ServerStyle={{ position: "sticky", maxHeight: "15rem", zIndex: 600 }}
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+      </div>
+    );
+  }
+);
 
-  return (
-    <div className="filter-by-boundary">
-      <Button
-        icon="FilterAlt"
-        variation="secondary"
-        className="button-primary"
-        textStyles={{ width: "fit-content" }}
-        label={t("BUTTON_FILTER_BY_BOUNDARY")}
-        onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
-      />
-      {isboundarySelectionSelected && (
-        <Card className="boundary-selection">
-          <div className="header-section">
-            <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
-            <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
-          </div>
-          <div className="hierarchy-selection-container">
-            {processedHierarchy?.map((item, index) => (
-              <div key={index} className="hierarchy-selection-element">
-                <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
-                <MultiSelectDropdown
-                  selected={boundarySelections?.[item?.boundaryType]}
-                  style={{ maxWidth: "23.75rem", margin: 0 }}
-                  type={"multiselectdropdown"}
-                  t={t}
-                  options={item?.dropDownOptions}
-                  optionsKey="name"
-                  onSelect={handleSelection}
-                  ServerStyle={{ position: "sticky", maxHeight: "15rem", zIndex: 600 }}
-                />
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-    </div>
-  );
-});
-
-const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, t }) => {
+const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, basemapRef, t }) => {
   if (!baseMaps) return null;
 
   return (
     <div className="base-map-selector">
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
-        <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+        <p>{t("LAYERS")}</p>
+        <div className="icon">
+          <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+        </div>
       </div>
-      <div className="base-map-area-wrapper">
+      <div className="base-map-area-wrapper" ref={basemapRef}>
         {showBaseMapSelector && (
           <div className="base-map-area">
             {Object.entries(baseMaps).map(([name, baseMap], index) => {
@@ -652,17 +683,17 @@ const findFilteredDataHierarchyTraveler = (data, name, boundaryType) => {
 
 const addGeojsonToMap = (map, geojson) => {
   if (!map || !geojson) return false;
-  const geojsonLayer = L.geoJSON(geojson,{
-    style: function(feature) {
+  const geojsonLayer = L.geoJSON(geojson, {
+    style: function (feature) {
       return {
-        fillColor: 'rgb(0,0,0,0)', 
+        fillColor: "rgb(0,0,0,0)",
         weight: 2,
         opacity: 1,
-        color: 'rgba(176, 176, 176, 1)',
-        dashArray: '3',
-        fillOpacity: 0
+        color: "rgba(176, 176, 176, 1)",
+        dashArray: "3",
+        fillOpacity: 0,
       };
-    }
+    },
   });
   geojsonLayer.addTo(map);
   return true;
