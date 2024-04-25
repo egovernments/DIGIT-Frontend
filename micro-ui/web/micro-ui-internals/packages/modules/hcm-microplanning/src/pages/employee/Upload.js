@@ -59,7 +59,7 @@ const Upload = ({
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        id,
+        ids:[id],
       },
     },
     {
@@ -393,6 +393,7 @@ const Upload = ({
     let check = response.valid;
     // Converting the file to preserve the sequence of columns so that it can be stored
     let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+    debugger
     return { check, error, fileDataToStore };
   };
   const handleGeojsonFile = async (file, schemaData) => {
