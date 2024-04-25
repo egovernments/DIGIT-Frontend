@@ -1,5 +1,5 @@
 import { Button, Header } from "@egovernments/digit-ui-react-components";
-import React, { useRef, useState , useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
@@ -16,20 +16,20 @@ import { schemaConfig } from "../configs/schemaConfig";
  * BulkUpload component for handling file uploads, and an InfoCard component for displaying error
  * messages if any validation errors occur during file upload.
  */
-const UploadData = ({formData , onSelect , ...props}) => {
+const UploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")
   const [showInfoCard, setShowInfoCard] = useState(false);
-  const [errorsType , setErrorsType] = useState({});
-  const [schema , setSchema] = useState(null);
+  const [errorsType, setErrorsType] = useState({});
+  const [schema, setSchema] = useState(null);
   const type = props?.props?.type;
   useEffect(() => {
-    if(type==="facilityWithBoundary"){
-    onSelect("uploadFacility", uploadedFile);
+    if (type === "facilityWithBoundary") {
+      onSelect("uploadFacility", uploadedFile);
     }
-    else if(type === "boundary"){
+    else if (type === "boundary") {
       onSelect("uploadBoundary", uploadedFile);
     }
   }, [uploadedFile]);
@@ -45,17 +45,17 @@ const UploadData = ({formData , onSelect , ...props}) => {
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser || []);
         break;
-    }  
-   
+    }
+
   }, [type]);
 
-  useEffect(() =>{
+  useEffect(() => {
     if (errorsType[type]) {
       setShowInfoCard(true);
     } else {
       setShowInfoCard(false);
     }
-  },[type,errorsType]);
+  }, [type, errorsType]);
 
 
   const validateData = (data) => {
@@ -67,8 +67,8 @@ const UploadData = ({formData , onSelect , ...props}) => {
     } else if (type === 'boundary') {
       validate = ajv.compile(schemaConfig?.Boundary);
     }
-    else{
-      validate =  ajv.compile(schemaConfig?.User);
+    else {
+      validate = ajv.compile(schemaConfig?.User);
     }
     const errors = []; // Array to hold validation errors
 
@@ -226,8 +226,6 @@ const UploadData = ({formData , onSelect , ...props}) => {
     );
   };
 
-  console.log("error", errorsType);
-
   return (
     <React.Fragment>
       <div className="campaign-bulk-upload">
@@ -259,7 +257,7 @@ const UploadData = ({formData , onSelect , ...props}) => {
             <React.Fragment key={type}>
               {errorMessage.split(',').map((error, index) => (
                 <React.Fragment key={index}>
-                  {index > 0 && <br />} 
+                  {index > 0 && <br />}
                   {error.trim()}
                 </React.Fragment>
               ))}
