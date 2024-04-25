@@ -70,7 +70,7 @@ const App = ({ path }) => {
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
       tenantId: Digit.ULBService.getCurrentTenantId(),
-      module: 'rainmaker-workbench',
+      module: 'rainmaker-workbench,rainmaker-mdms',
       locale:i18n.language,
     },
     i18n,

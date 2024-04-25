@@ -15,15 +15,15 @@ export const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench","mdms","schema"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({
-    stateCode,
-    moduleCode,
-    language,
-  });
+  // const { isLoading, data: store } = Digit.Services.useStore({
+  //   stateCode,
+  //   moduleCode,
+  //   language,
+  // });
 
-  if (isLoading) {
-    // return <Loader />;
-  }
+  // if (isLoading) {
+  //   // return <Loader />;
+  // }
 
   return (
   // <TourProvider>

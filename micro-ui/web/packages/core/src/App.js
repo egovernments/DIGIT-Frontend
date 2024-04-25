@@ -43,15 +43,7 @@ const App = ({queryClient}) => {
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
       tenantId: Digit.ULBService.getCurrentTenantId(),
-      module: 'rainmaker-common',
-      locale:i18n.language,
-    },
-    i18n,
-  })
-  const { isLoading:isLoadingState } = Digit.Hooks.core.useLocalization({
-    params:{
-      tenantId: Digit.ULBService.getCurrentTenantId(),
-      module: `rainmaker-${Digit.ULBService.getCurrentTenantId()}`,
+      module: `rainmaker-common,rainmaker-${Digit.ULBService.getCurrentTenantId()}`,
       locale:i18n.language,
     },
     i18n,
@@ -65,7 +57,7 @@ const App = ({queryClient}) => {
   
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   
-  if(isLoading || isLoadingState){
+  if(isLoading){
     return <Loader />
   }
 
