@@ -61,3 +61,4 @@ export const schemaConfig = {
     required: ["Name of the Person (Mandatory)", "Phone Number", "Role (Mandatory)", "Employment Type (Mandatory)"],
   },
 };
+

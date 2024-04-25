@@ -508,7 +508,7 @@ const SetupCampaign = () => {
         };
 
         reqCreate();
-      } else if (!isDraftCreated) {
+      } else if (!isDraftCreated && !id) {
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -676,6 +676,8 @@ const SetupCampaign = () => {
               //   attribute.toValue
               // } to ${attribute.fromValue})`;
               return "CAMPAIGN_IN_BETWEEN_ERROR";
+            } else if (attribute?.value === 0 || attribute?.value === "0") {
+              return "CAMPAIGN_VALUE_ZERO_ERROR";
             }
           }
         }
