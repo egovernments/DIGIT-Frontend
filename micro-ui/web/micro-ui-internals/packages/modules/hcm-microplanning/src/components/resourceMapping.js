@@ -33,13 +33,13 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     if (!schema || !schema["schema"] || !schema.schema["Properties"]) return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
     
     const columns = Object.keys(schema.schema["Properties"]);
-    if (columns) setTemplateColumns([...columns,...hierarchy]);
+    if (columns) setTemplateColumns([...hierarchy,...columns]);
   }, [schema]);
 
   // Update user columns when uploaded data changes
   useEffect(() => {
     let userUploadedColumns = new Set();
-    uploadedData["features"].forEach((item) => {
+    uploadedData?.["features"]?.forEach((item) => {
       Object.keys(item["properties"]).forEach((key) => userUploadedColumns.add(key));
     });
     setUserColumns((preUserColumns) => [...preUserColumns, ...userUploadedColumns]);

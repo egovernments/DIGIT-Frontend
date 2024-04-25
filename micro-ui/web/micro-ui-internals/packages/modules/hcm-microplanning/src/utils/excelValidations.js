@@ -1,12 +1,23 @@
 import Ajv from "ajv";
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv({ allErrors: true});
+ajv.addKeyword("isRequired");
+ajv.addKeyword("isLocationDataColumns");
+ajv.addKeyword("isRuleConfigureInputs");
 
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
   const translate = () => {
-    const required = schemaData.required.map((item) => t(item));
-    const properties = prepareProperties(schemaData.Properties, t);
-    return { required, properties };
+    const required = Object.entries(schemaData?.schema?.Properties || {})
+      .reduce((acc, [key, value]) => {
+        if (value?.isRequired) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+      .map((item) => item);
+
+    // const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties: schemaData.Properties};
   };
   const { required, properties } = translate();
   const schema = {
@@ -16,7 +27,7 @@ export const excelValidations = (data, schemaData, t) => {
         type: "array",
         items: {
           type: "object",
-          patternProperties: properties,
+          properties: properties,
           required: required,
           additionalProperties: true,
         },
@@ -26,15 +37,24 @@ export const excelValidations = (data, schemaData, t) => {
   };
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
+  let locationDataColumns = Object.entries(schemaData?.schema?.Properties || {})
+  .reduce((acc, [key, value]) => {
+    if (value?.isLocationDataColumns) {
+      acc.push(key);
+    }
+    return acc;
+  }, [])
+  .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
+    console.log(validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":
           return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
         case "type":
           const instancePathType = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathType[instancePathType.length - 1])) {
+          if (locationDataColumns.includes(instancePathType[instancePathType.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
           columns.add(instancePathType[instancePathType.length - 1]);
@@ -42,7 +62,7 @@ export const excelValidations = (data, schemaData, t) => {
 
         case "required":
           const missing = validateExcel.errors[i].params.missingProperty;
-          if (schemaData["locationDataColumns"].includes(missing)) {
+          if (locationDataColumns.includes(missing)) {
             return { valid, message: "ERROR_MISSING_LOCATION_COORDINATES", error: validateExcel.errors };
           }
           columns.add(missing);
@@ -51,10 +71,9 @@ export const excelValidations = (data, schemaData, t) => {
         case "maximum":
         case "minimum":
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          if (schemaData["locationDataColumns"].includes(instancePathMinMax[instancePathMinMax.length - 1])) {
+          if (locationDataColumns.includes(instancePathMinMax[instancePathMinMax.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
-          columns.add(instancePathMinMax[instancePathMinMax.length - 1]);
           break;
 
         case "pattern":
@@ -73,24 +92,26 @@ export const excelValidations = (data, schemaData, t) => {
   return { valid };
 };
 
-function filterOutWordAndLocalise(inputString, operation) {
-  // Define a regular expression to match the string parts
-  var regex = /(\w+)/g; // Matches one or more word characters
 
-  // Replace each match using the provided function
-  var replacedString = inputString.replace(regex, function (match) {
-    // Apply the function to each matched string part
-    return operation(match);
-  });
 
-  return replacedString;
-}
+// Might need it later
+// function filterOutWordAndLocalise(inputString, operation) {
+//   // Define a regular expression to match the string parts
+//   var regex = /(\w+)/g; // Matches one or more word characters
 
-const prepareProperties = (properties, t) => {
-  let newProperties = {};
-  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
-  return newProperties;
-};
+//   // Replace each match using the provided function
+//   var replacedString = inputString.replace(regex, function (match) {
+//     // Apply the function to each matched string part
+//     return operation(match);
+//   });
+
+//   return replacedString;
+// }
+// const prepareProperties = (properties, t) => {
+//   let newProperties = {};
+//   Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
+//   return newProperties;
+// };
 
 export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t) => {
   try {
@@ -101,7 +122,7 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
       if (valid["message"] !== undefined) {
         return { valid: false, message: valid.message };
       }
-      const columnList = valid.columnList;
+      const columnList = valid.columnList?.map(item=>t(item));
       const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
         columns:
           columnList.length > 1

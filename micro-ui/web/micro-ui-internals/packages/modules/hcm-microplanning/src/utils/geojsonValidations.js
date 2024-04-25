@@ -1,6 +1,9 @@
 import gjv from "geojson-validation";
 import Ajv from "ajv";
 const ajv = new Ajv({ allErrors: true });
+ajv.addKeyword("isRequired");
+ajv.addKeyword("isLocationDataColumns");
+ajv.addKeyword("isRuleConfigureInputs");
 
 //the postion must be valid point on the earth, x between -180 and 180
 gjv.define("Position", (position) => {
@@ -68,9 +71,17 @@ const geometryValidation = (data) => {
 // Function responsible for property verification of geojson data
 export const geojsonPropetiesValidation = (data, schemaData, t) => {
   const translate = () => {
-    const required = schemaData.required.map((item) => t(item));
-    const properties = prepareProperties(schemaData.Properties, t);
-    return { required, properties };
+    const required = Object.entries(schemaData?.schema?.Properties || {})
+      .reduce((acc, [key, value]) => {
+        if (value?.isRequired) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+      .map((item) => item);
+
+    // const properties = prepareProperties(schemaData.Properties, t);
+    return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
   const schema = {
@@ -124,7 +135,7 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           break;
       }
     }
-    const columnList = [...columns];
+    const columnList = [...columns].map(item=>t(item));
     // if(column)
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
       columns:
@@ -147,21 +158,25 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
   return { valid: true };
 };
 
-function filterOutWordAndLocalise(inputString, operation) {
-  // Define a regular expression to match the string parts
-  var regex = /(\w+)/g; // Matches one or more word characters
+////////////////////////////
+// // Might be needed
+// function filterOutWordAndLocalise(inputString, operation) {
+//   // Define a regular expression to match the string parts
+//   var regex = /(\w+)/g; // Matches one or more word characters
 
-  // Replace each match using the provided function
-  var replacedString = inputString.replace(regex, function (match) {
-    // Apply the function to each matched string part
-    return operation(match);
-  });
+//   // Replace each match using the provided function
+//   var replacedString = inputString.replace(regex, function (match) {
+//     // Apply the function to each matched string part
+//     return operation(match);
+//   });
 
-  return replacedString;
-}
+//   return replacedString;
+// }
+// const prepareProperties = (properties, t) => {
+//   let newProperties = {};
+//   Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
+//   return newProperties;
+// };
 
-const prepareProperties = (properties, t) => {
-  let newProperties = {};
-  Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
-  return newProperties;
-};
+////////////////////////////
+
