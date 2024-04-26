@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-pgr":"1.7.5",
+"@egovernments/digit-ui-module-pgr":"1.7.6",
 ```
 
 then navigate to App.js
@@ -51,6 +51,7 @@ const initDigitUI = () => {
 ### Changelog
 
 ```bash
+1.7.6 fixed routing issue
 1.7.5 base urban version
 ```
 
