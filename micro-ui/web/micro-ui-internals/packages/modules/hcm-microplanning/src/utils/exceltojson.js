@@ -28,11 +28,13 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
 
         resolve(jsonData);
       } catch (error) {
-        resolve({ error: true });
+      console.log(error)
+      resolve({ error: true });
       }
     };
 
     reader.onerror = function (error) {
+      console.log(error)
       resolve({ error: true });
     };
 

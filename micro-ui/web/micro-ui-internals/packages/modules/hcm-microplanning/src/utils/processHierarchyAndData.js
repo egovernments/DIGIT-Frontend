@@ -8,6 +8,7 @@ const processHierarchyAndData = (hierarchy, allData) => {
       hierarchyLists[item.boundaryType] = [];
     });
 
+    console.log("hierarchyLists",hierarchyLists)
     // Process all sets of data
     allData.forEach((data) => {
       const dataHierarchicalData = {};
@@ -84,5 +85,20 @@ const createDataObject = (headers, row) => {
   });
   return dataObject;
 };
+
+
+
+// Find parent in hierarchy
+export const findParent = (name, hierarchy, parent) => {
+  if (!name || !hierarchy) return;
+  for (let key in hierarchy) {
+    if (!parent) {
+      let response = findParent(name, hierarchy[key]?.children, hierarchy[key]);
+      if (response) return response;
+    }
+    if (hierarchy[key]?.name == name) return parent;
+  }
+};
+
 
 export default processHierarchyAndData;

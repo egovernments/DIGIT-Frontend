@@ -261,6 +261,7 @@ const Upload = ({
         case "Excel":
           // let response = handleExcelFile(file,schemaData);
           try {
+            console.log(file)
             response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, t);
             check = response.check;
             error = response.error;
@@ -765,13 +766,10 @@ const Upload = ({
           closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "48.5rem" }}
-          selectedSection={selectedSection}
-          selectedFileType={selectedFileType}
           closeModal={cancelUpload}
           // LeftButtonHandler={reuplaodFile}
           RightButtonHandler={validationForMappingAndDataSaving}
           headerBarMainStyle={{ width: "48.5rem" }}
-          sections={sections}
           // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
           footerRightButtonBody={<ButtonType1 text={t("COMPLETE_MAPPING")} />}
           header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% )" }} />}
