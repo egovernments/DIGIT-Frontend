@@ -5,7 +5,8 @@
     "packages/core",
     "packages/ui-libraries",
     "packages/ui-components",
-    "packages/workbench"
+    "packages/workbench",
+    "packages/hrms"
   ],
   "command": {
     "run": {

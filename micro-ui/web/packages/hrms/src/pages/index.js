@@ -1,11 +1,20 @@
-import { PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute,Loader } from "@egovernments/digit-ui-react-components";
 import React,{ useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation,  BrowserRouter as Router } from "react-router-dom";
 
 const EmployeeApp = ({ path, url, userType }) => {
   
-  const { t } = useTranslation();
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      module: 'rainmaker-hrms',
+      locale:i18n.language,
+    },
+    i18n,
+  })
+
   const location = useLocation();
   const mobileView = innerWidth <= 640;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -30,6 +39,10 @@ const EmployeeApp = ({ path, url, userType }) => {
     clearSessionFormData();
     }
 },[location]);
+
+  if(isLoading){
+    return <Loader />
+  }
 
   return (
       <React.Fragment>

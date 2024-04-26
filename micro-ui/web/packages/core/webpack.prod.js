@@ -15,7 +15,7 @@ module.exports = () => {
       new ModuleFederationPlugin({
         name: "core-digit-ui",
         remotes: {
-          // hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
+          hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
           // common: `common@${domain}/common-ui/remoteEntry.js`,
           // pgr: `pgr@${domain}/pgr-ui/remoteEntry.js`,
           workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
