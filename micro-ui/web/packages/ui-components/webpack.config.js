@@ -12,6 +12,9 @@ module.exports = {
     },
   },
   resolve: {
+    alias: {
+      'react-i18next': require.resolve('react-i18next'),
+    },
     extensions: [".js"],
   },
   externals: {

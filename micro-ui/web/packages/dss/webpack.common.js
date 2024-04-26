@@ -5,6 +5,9 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
     modules: [path.resolve(__dirname, "src"), "node_modules"],
+    alias: {
+      'react-i18next': require.resolve('react-i18next'),
+    },
   },
   module: {
     rules: [
