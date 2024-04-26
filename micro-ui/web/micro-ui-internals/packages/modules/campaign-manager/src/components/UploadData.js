@@ -5,7 +5,7 @@ import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard } from "@egovernments/digit-ui-components";
+import { InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { schemaConfig } from "../configs/schemaConfig";
 
 /**
@@ -24,6 +24,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
   const [schema, setSchema] = useState(null);
+  const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -46,7 +47,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser || []);
         break;
     }
-
   }, [type]);
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setShowInfoCard(false);
     }
   }, [type, errorsType]);
-
 
   const validateData = (data) => {
     const ajv = new Ajv(); // Initialize Ajv
@@ -105,7 +104,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setShowInfoCard(false);
       return true;
     }
-
   };
 
   const validateExcel = (selectedFile) => {
@@ -122,7 +120,36 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
-
+          const SheetNames = workbook.SheetNames[0];
+          if (type === "boundary") {
+            if (SheetNames !== "Boundary Data") {
+              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage
+              }));
+              return ;
+            }
+          } else if (type === "facilityWithBoundary") {
+            if (SheetNames !== "List of Available Facilities") {
+              const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage
+              }));
+              return ;
+            }
+          }else{
+            if (SheetNames !== "Create List of Users") {
+              const errorMessage = t("HCM_INVALID_USER_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage
+              }));
+              return ;
+            }
+          }
+          
           const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
             const rowData = {};
@@ -134,17 +161,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return rowData;
             }
           });
-          
+
           jsonData = jsonData.filter((element) => element !== undefined);
 
-          console.log("jsonData", jsonData);
-
-          if (validateData(jsonData)) {
+          if (validateData(jsonData, SheetNames)) {
             resolve(true);
           } else {
             setShowInfoCard(true);
           }
         } catch (error) {
+          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -153,19 +179,32 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     });
   };
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(closeToast, 5000);
+    }
+  }, [showToast]);
+
   const onBulkUploadSubmit = async (file) => {
+    if (file.length > 1) {
+      setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
+      return;
+    }
     const module = "HCM";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
     const fileData = fileUrl.map((i) => {
       const urlParts = i?.url?.split("/");
-      const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-      const fileType = (type === "facilityWithBoundary") ? "facility" : type;
+      const fileName = file?.[0]?.name;
+      const fileType = type === "facilityWithBoundary" ? "facility" : type;
       return {
         ...i,
         fileName: fileName,
-        type: fileType
+        type: fileType,
       };
     });
     setUploadedFile(fileData);
@@ -190,7 +229,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       type: type,
       forceUpdate: false,
       hierarchyType: params.hierarchyType,
-      id: (type === 'boundary' ? params?.boundaryId : (type === 'facilityWithBoundary' ? params?.facilityId : params?.userId))
+      id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
@@ -203,23 +242,49 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           type: type,
           forceUpdate: false,
           hierarchyType: params.hierarchyType,
-          id: (type === 'boundary' ? params?.boundaryId : (type === 'facilityWithBoundary' ? params?.facilityId : params?.userId))
+          id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
         },
       },
       {
         onSuccess: async (result) => {
-          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid]
+          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
           const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
           const fileData = fileUrl?.map((i) => {
             const urlParts = i?.url?.split("/");
-            const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
+            // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
+            const fileName = type === "boundary" ? "Boundary Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
               fileName: fileName,
             };
           });
+
           if (fileData && fileData?.[0]?.url) {
             window.location.href = fileData?.[0]?.url;
+
+            // const link = document.createElement("a");
+            // link.href = fileData?.[0]?.url;
+            // link.download = "download"; // Set custom file name here
+            // link.target = "_blank"; // Open in a new tab/window
+            // link.click();
+
+            // fetch(fileData?.[0]?.url)
+            // .then((response) => response.blob())
+            // .then((blob) => {
+            //   const url = window.URL.createObjectURL(new Blob([blob]));
+            //   const link = document.createElement("a");
+            //   link.href =  "https://unified-dev-bucket-s3.s3-ap-south-1.amazonaws.com/mz/pgr/April/26/1714119186437HfyAmLyvuX.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCURO6LL2T7ZQYP7%2F20240426%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20240426T081306Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=44fafeddf259073a42d9e03ad21522afbae3d47edc663ad051c7d46209b548ab"
+            //   link.download = "downloaded-file";
+            //   document.body.appendChild(link);
+
+            //   link.click();
+
+            //   document.body.removeChild(link);
+            //   // window.URL.revokeObjectURL(url);
+            // })
+            // .catch((error) => {
+            //   console.error("Error fetching the file:", error);
+            // });
           }
         },
       }
@@ -253,18 +318,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           variant="error"
           style={{ marginLeft: "0rem", maxWidth: "100%" }}
           label={t("HCM_ERROR")}
-          additionalElements={[Object.entries(errorsType).map(([type, errorMessage]) => (
-            <React.Fragment key={type}>
-              {errorMessage.split(',').map((error, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && <br />}
-                  {error.trim()}
-                </React.Fragment>
-              ))}
-            </React.Fragment>
-          ))]}
+          additionalElements={[
+            Object.entries(errorsType).map(([type, errorMessage]) => (
+              <React.Fragment key={type}>
+                {errorMessage.split(",").map((error, index) => (
+                  <React.Fragment key={index}>
+                    {index > 0 && <br />}
+                    {error.trim()}
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
+            )),
+          ]}
         />
       )}
+      {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
     </React.Fragment>
   );
 };
