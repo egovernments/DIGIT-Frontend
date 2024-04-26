@@ -36,9 +36,9 @@ const useLocalization = ({url="/localization/messages/v1/_search", params, body,
       select:(data) => {
         const res=TransformArrayToObj(data?.messages)
         i18n.addResourceBundle(i18n.language, 'translations', res);
-        i18n.addResourceBundle('hi_IN', 'translations', {
-          CORE_COMMON_PROFILE_NAME:"here"
-        });
+        // i18n.addResourceBundle('hi_IN', 'translations', {
+        //   CORE_COMMON_PROFILE_NAME:"here"
+        // });
 
         return []
       },
