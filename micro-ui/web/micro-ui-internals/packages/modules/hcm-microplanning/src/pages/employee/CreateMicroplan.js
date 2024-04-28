@@ -253,7 +253,7 @@ const CreateMicroplan = () => {
   );
 };
 
-const mapDataForApi = (data, Operators, microplanName, campaignId) => {
+export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
   let files = [],
     resourceMapping = [];
   Object.values(data?.upload).forEach((item) => {

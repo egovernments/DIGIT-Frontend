@@ -26,10 +26,6 @@
       "name": "mapping",
       "boundriesDataOrigin": ["Population"],
       "layerDataOrigin": ["Facilities"]
-    },
-    {
-      "name": "microplanPreview",
-      "joinWithColumns": ["boundaryCode"]
     }
   ]
 }

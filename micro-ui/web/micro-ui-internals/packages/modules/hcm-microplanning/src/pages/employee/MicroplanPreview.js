@@ -15,12 +15,12 @@ import {
 } from "@egovernments/digit-ui-components";
 import React, { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { UIConfiguration } from "../../configs/UIConfiguration.json";
 import Resources from "../../configs/Resources.json";
 import processHierarchyAndData, { findParent } from "../../utils/processHierarchyAndData";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
 import { Close } from "@egovernments/digit-ui-svg-components";
+import { mapDataForApi } from "./CreateMicroplan";
 
 const MicroplanPreview = ({
   campaignType = "SMC",
@@ -33,6 +33,7 @@ const MicroplanPreview = ({
 }) => {
   // Fetching data using custom MDMS hook
   const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }, { name: "Schemas" }]);
+  const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const userInfo = Digit.SessionStorage.get("User")?.info;
 
   const { t } = useTranslation();
@@ -43,11 +44,11 @@ const MicroplanPreview = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [resources, setResources] = useState([]);
   const [formulaConfiguration, setFormulaConfiguration] = useState([]);
-  const [hierarchylist, sethierarchyList] = useState([]); // state for hierarchy from the data available from uploaded data
-  const [boundarySelections, setBoundarySelections] = useState([]);
+  const [boundarySelections, setBoundarySelections] = useState([]); // state for hierarchy from the data available from uploaded data
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
   const [toast, setToast] = useState();
   const [modal, setModal] = useState("none");
+  const [operatorsObject, setOperatorsObject] = useState([]);
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -99,7 +100,7 @@ const MicroplanPreview = ({
   // Fetch and assign MDMS data
   useEffect(() => {
     if (!MDMSData) return;
-    // let UIConfiguration = data["hcm-microplanning"]?.["UIConfiguration"];
+    let UIConfiguration = MDMSData["hcm-microplanning"]?.["UIConfiguration"];
     let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
     if (schemas) setValidationSchemas(schemas);
     let resourcelist = Resources?.Resources;
@@ -109,11 +110,16 @@ const MicroplanPreview = ({
       const joinWithColumns = UIConfiguration.find((item) => item.name === "microplanPreview")?.joinWithColumns;
       setJoinByColumns(joinWithColumns);
     }
+    let temp;
+    console.log("UIConfiguration", UIConfiguration);
+    if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
+    if (!(temp && temp.ruleConfigureOperators)) return;
+    setOperatorsObject(temp.ruleConfigureOperators);
   }, [MDMSData]);
 
   // Set microplan preview data
   useEffect(() => {
-    if (data?.length !== 0 || !joinByColumns || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
+    if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
     let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
     console.log("filteredSchemaColumns", filteredSchemaColumns);
     //Decide columns to take and their sequence
@@ -145,23 +151,14 @@ const MicroplanPreview = ({
     }
   }, [joinByColumns, hierarchy, hierarchyRawData]);
 
-  // Fetch and assign MDMS data
-  useEffect(() => {
-    if (!MDMSData) return;
-    // let UIConfiguration = data["hcm-microplanning"]?.["UIConfiguration"];
-    let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
-    if (schemas) setValidationSchemas(schemas);
-    if (UIConfiguration) {
-      const joinWithColumns = UIConfiguration.find((item) => item.name === "microplanPreview")?.joinWithColumns;
-      setJoinByColumns(joinWithColumns);
-    }
-  }, [MDMSData]);
-
   useEffect(() => {
     const tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
     console.log(tempData);
     setDataToShow(tempData);
   }, [boundarySelections]);
+
+  // UseEffect to store current data
+  useEffect(() => {}, [hypothesisAssumptionsList]);
 
   if (isCampaignLoading || ishierarchyLoading) {
     return (
@@ -201,6 +198,9 @@ const MicroplanPreview = ({
             setToast={setToast}
             modal={modal}
             setModal={setModal}
+            setMicroplanData={setMicroplanData}
+            operatorsObject={operatorsObject}
+            UpdateMutate={UpdateMutate}
             t={t}
           />
         </div>
@@ -214,6 +214,8 @@ const MicroplanPreview = ({
               ishierarchyLoading={ishierarchyLoading}
               resources={resources}
               hypothesisAssumptionsList={hypothesisAssumptionsList}
+              modal={modal}
+              setModal={setModal}
             />
           ) : (
             <div className="no-data-available-container">{t("NO_DATA_AVAILABLE")}</div>
@@ -227,8 +229,20 @@ const MicroplanPreview = ({
   );
 };
 
-const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, modal, setModal, t }) => {
+const HypothesisValues = ({
+  boundarySelections,
+  hypothesisAssumptionsList,
+  setHypothesisAssumptionsList,
+  setToast,
+  modal,
+  setModal,
+  setMicroplanData,
+  operatorsObject,
+  UpdateMutate,
+  t,
+}) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
+  const { campaignId = "" } = Digit.Hooks.useQueryParams();
   const valueChangeHandler = (e) => {
     console.log(boundarySelections);
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
@@ -259,6 +273,16 @@ const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHy
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     console.log("tempHypothesisList", tempHypothesisList);
     setHypothesisAssumptionsList(tempHypothesisList);
+
+    if (!hypothesisAssumptionsList || !setMicroplanData) return;
+    let microData = {};
+    setMicroplanData((previous) => {
+      microData = { ...previous, hypothesis: hypothesisAssumptionsList };
+      return microData;
+    });
+    console.log(microData);
+    console.log(operatorsObject);
+    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
     setModal("none");
   };
 
@@ -298,40 +322,24 @@ const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHy
         />
       </div>
       {modal === "confirm-apply-changed-hypothesis" && (
-        //    <ModalWrapper
-        //    closeButton={true}
-        //    popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
-        //    popupStyles={{  }}
-        //    closeModal={()=>setModal("none")}
-        //    LeftButtonHandler={applyNewHypothesis}
-        //    RightButtonHandler={()=>setModal("none")}
-        //    headerBarMainStyle={{ width: "48.5rem" }}
-        //    actionCancelLabel={t("YES")}
-        //   //  footerLeftButtonBody={<Button variation="secondary" label={t("YES")} />}
-        //    footerRightButtonBody={<Button label={t("NO")} />}
-        //    header={<ModalHeading label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} style={{ width: "calc(100% )" }} />}
-        //    bodyText={t("INSTRUCTION_PROCEED_WITH_NEW_HYPOTHESIS")}
-        //    body={
-        //      ""
-        //    }
-        //  />
         <Modal
-          popupStyles={{width: "fit-content",borderRadius:"0.25rem"}}
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
             justifyContent: "flex-start",
-            padding:0,
+            padding: 0,
             width: "100%",
-            padding:"1rem"
+            padding: "1rem",
           }}
+          popupModuleMianStyles={{padding:0,margin:0}}
           style={{
             flex: 1,
-            backgroundColor:"white",
-            border:"0.063rem solid rgba(244, 119, 56, 1)",
-            color:"rgba(244, 119, 56, 1)"
+            backgroundColor: "white",
+            border: "0.063rem solid rgba(244, 119, 56, 1)",
           }}
-          headerBarMain={<ModalHeading label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+          headerBarMainStyle={{padding:"1rem 0 0 0",margin:0}}
+          headerBarMain={<ModalHeading style={{width:"fit-content"}} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={applyNewHypothesis}
           actionSaveLabel={t("NO")}
@@ -463,50 +471,92 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
   );
 });
 
-const DataPreview = memo(({ previewData, isCampaignLoading, ishierarchyLoading, resources, formulaConfiguration, hypothesisAssumptionsList, t }) => {
-  if (!previewData) return;
-  if (isCampaignLoading || ishierarchyLoading) {
+const DataPreview = memo(
+  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, formulaConfiguration, hypothesisAssumptionsList, modal, setModal, t }) => {
+    if (!previewData) return;
+    if (isCampaignLoading || ishierarchyLoading) {
+      return (
+        <div className="api-data-loader">
+          <Loader />
+        </div>
+      );
+    }
+
+    const [selectedRow, setSelectedRow] = useState();
+
     return (
-      <div className="api-data-loader">
-        <Loader />
+      <div className="excel-wrapper">
+        <div className="sheet-wrapper">
+          <table className="excel-table">
+            <thead>
+              <tr>
+                {previewData[0].map((header, columnIndex) => (
+                  <th key={columnIndex}>{t(header)}</th>
+                ))}
+                {Object.values(resources).map((header, cellIndex) => (
+                  <th key={previewData[0]?.length + cellIndex}>{t(header)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {previewData.slice(1).map((rowData, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  onClick={() => {
+                    setModal("change-preview-data");
+                    setSelectedRow({ rowData, index: rowIndex });
+                  }}
+                >
+                  {Object.values(previewData[0]).map((_, cellIndex) => (
+                    <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
+                  ))}
+                  {Object.values(resources).map((resourceName, cellIndex) => (
+                    <td key={previewData[0]?.length + cellIndex}>
+                      {Math.round(
+                        calculateResource(resourceName, rowData, formulaConfiguration, Object.values(previewData[0]), hypothesisAssumptionsList, t)
+                      ) || t("NO_DATA")}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {modal === "change-preview-data" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-end",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            style={{
+              flex:1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{padding:0}}
+            headerBarMain={<ModalHeading style={{padding:0,margin:0}} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={() => {
+              setModal("none");
+            }}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={() => {
+              setModal("none");
+            }}
+            formId="modal-action"
+          >
+            {/* <ChangePreviewData /> */}
+          </Modal>
+        )}
       </div>
     );
   }
-  return (
-    <div className="excel-wrapper">
-      <div className="sheet-wrapper">
-        <table className="excel-table">
-          <thead>
-            <tr>
-              {previewData[0].map((header, columnIndex) => (
-                <th key={columnIndex}>{t(header)}</th>
-              ))}
-              {Object.values(resources).map((header, cellIndex) => (
-                <th key={previewData[0]?.length + cellIndex}>{t(header)}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {previewData.slice(1).map((rowData, rowIndex) => (
-              <tr key={rowIndex}>
-                {Object.values(previewData[0]).map((_, cellIndex) => (
-                  <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
-                ))}
-                {Object.values(resources).map((resourceName, cellIndex) => (
-                  <td key={previewData[0]?.length + cellIndex}>
-                    {Math.round(
-                      calculateResource(resourceName, rowData, formulaConfiguration, Object.values(previewData[0]), hypothesisAssumptionsList, t)
-                    ) || t("NO_DATA")}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-});
+);
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
   let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
@@ -568,7 +618,21 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
       }
     }) || [];
 
-  const finalData = filteredSchemas
+  let finalData = [];
+  let tempdata = filteredSchemas
+    ?.map((item) =>
+      Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        if (value?.isLocationDataColumns) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+    )
+    .flatMap((item) => item)
+    .filter((item) => !!item);
+  finalData = [...finalData, ...tempdata];
+
+  tempdata = filteredSchemas
     ?.map((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
         if (value?.isRuleConfigureInputs) {
@@ -579,6 +643,18 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
     )
     .flatMap((item) => item)
     .filter((item) => !!item);
+  finalData = [...finalData, ...tempdata];
+
+  tempdata = filteredSchemas
+    ?.map((item) =>
+      Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        acc.push(key);
+        return acc;
+      }, [])
+    )
+    .flatMap((item) => item)
+    .filter((item) => !!item);
+  finalData = [...finalData, ...tempdata];
   return [...new Set(finalData)];
 };
 
@@ -693,67 +769,6 @@ const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeeded
   return joinedList;
 };
 
-const extractGeoData = (microplanData, hierarchy, setBoundaryData, t) => {
-  if (!hierarchy) return;
-
-  let combinesDataList = [];
-
-  // Check if microplanData and its upload property exist
-  if (microplanData && microplanData?.upload) {
-    let files = microplanData?.upload;
-    // Loop through each file in the microplan upload
-    for (let fileData in files) {
-      // Check if the file is not part of boundary or layer data origins
-      if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
-
-      // Check if file contains latitude and longitude columns
-      if (files[fileData]?.data) {
-        // Check file type and update data availability accordingly
-        switch (files[fileData]?.fileType) {
-          case "Excel": {
-            // extract dada
-            for (let data of Object.values(files[fileData]?.data)) {
-              combinesDataList.push(data);
-            }
-            // var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
-            // setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
-            console.log(hierarchicalData);
-            break;
-          }
-          case "GeoJSON":
-          case "Shapefile":
-            // Extract keys from the first feature's properties
-            var keys = Object.keys(files[fileData]?.data.features[0].properties);
-
-            // Extract corresponding values for each feature
-            const values = files[fileData]?.data?.features.map((feature) => {
-              // list with features added to it
-              const temp = keys.map((key) => {
-                if (feature.properties[key] === "") {
-                  return null;
-                }
-                return feature.properties[key];
-              });
-              return temp;
-            });
-
-            // Group keys and values into the desired format
-            let data = { [files[fileData]?.fileName]: [keys, ...values] };
-            // extract dada
-            combinesDataList.push(data);
-          // var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
-          // setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
-        }
-      }
-    }
-  }
-
-  console.log(combinesDataList);
-  // var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
-
-  setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
-};
-
 // Filters data for dropdown with when a parent is selected
 const findFilteredDataForHierarchyDropdown = (name, boundaryType, boundaryData) => {
   let geojsonRawFeatures = [];
@@ -811,14 +826,14 @@ const CloseButton = ({ clickHandler }) => {
 
 const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList, t }) => {
   return (
-    <div className="apply-changes-hypothesis">
-      <div>
-        <div className="modal-body">
-          <p className="modal-main-body-p">{t("INSTRUCTION_PROCEED_WITH_NEW_HYPOTHESIS")}</p>
-        </div>
+    <div className="apply-changes-hypothesis" >
+      <div className="instructions">
+        <p>{t("INSTRUCTION_PROCEED_WITH_NEW_HYPOTHESIS")}</p>
       </div>
       <div className="table-container">
-        <CardLabel className="table-header" style={{padding:0}} >{t("MICROPLAN_PREVIEW_HYPOTHESIS")}</CardLabel>
+        <CardLabel className="table-header" style={{ padding: 0 }}>
+          {t("MICROPLAN_PREVIEW_HYPOTHESIS")}
+        </CardLabel>
         <table className="custom-table">
           <thead>
             <tr>
@@ -842,4 +857,26 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
   );
 };
 
+const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate) => {
+  let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
+  body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+  body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+  await UpdateMutate(body, {
+    onSuccess: async (data) => {
+      setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+      setTimeout(() => {
+        setToastCreateMicroplan(undefined);
+      }, 2000);
+    },
+    onError: (error, variables) => {
+      setToastCreateMicroplan({
+        message: t("ERROR_DATA_NOT_SAVED"),
+        state: "error",
+      });
+      setTimeout(() => {
+        setToastCreateMicroplan(undefined);
+      }, 2000);
+    },
+  });
+};
 export default MicroplanPreview;

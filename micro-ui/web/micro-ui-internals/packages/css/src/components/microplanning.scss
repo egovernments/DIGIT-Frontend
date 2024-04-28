@@ -25,18 +25,18 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .modal-header {
-    width: 30rem;
-    font-weight: 700;
-    font-size: 1.5rem;
-    padding-left: 1rem;
-    margin-bottom: 0;
-    display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
+    width: 30rem ;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    padding-left: 1rem !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: hidden !important;
 
     p {
-        padding: 0;
-        margin: 0;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 }
 
@@ -1903,6 +1903,7 @@ $border-color: rgba(214, 213, 212, 1);
     width: 100%;
     display: flex;
     flex-direction: column;
+    
 
     .top-section {
         margin: 1.5rem 0 0 0;
@@ -2109,6 +2110,20 @@ $border-color: rgba(214, 213, 212, 1);
                         border: 0.063rem solid #ccc;
                         border-collapse: collapse;
 
+                        /*     z-index: 20;
+                                border: 0.063rem solid rgba(244, 119, 56, 1);
+                                cursor: pointer;/*
+                                border-top: 0.063rem solid rgba(244, 119, 56, 1);
+                                border-bottom: 0.063rem solid rgba(244, 119, 56, 1);*/
+                        tr {
+                          z-index: 20;
+
+                            &:hover {
+                                border: 0.063rem solid rgba(244, 119, 56, 1);
+                                cursor: pointer;
+                            }
+                        }
+
                         th,
                         td {
                             min-width: 7.578rem;
@@ -2137,8 +2152,22 @@ $border-color: rgba(214, 213, 212, 1);
         }
     }
 
+    .digit-action-cancel {
+        color: rgba(244, 119, 56, 1);
+    }
+
     .apply-changes-hypothesis {
         padding: 1rem;
+        padding-top: 0;
+
+        .instructions {
+            p {
+                font-weight: 400;
+                font-size: 1rem;
+                padding: 0;
+                margin: 0;
+            }
+        }
 
         .table-container {
             .table-header {
@@ -2151,23 +2180,34 @@ $border-color: rgba(214, 213, 212, 1);
             .custom-table {
                 width: 100%;
                 border-collapse: collapse;
-            }
 
-            .custom-table th,
-            .custom-table td {
-                padding: 1rem 1.2rem;
-                border: 0.063 solid rgba(238, 238, 238, 1);
-                text-align: left;
-            }
+                th {
+                    font-family: Roboto;
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
 
-            .even-row {
-                background-color: rgba(238, 238, 238, 1);
-            }
+                th,
+                td {
+                    padding: 1rem 1.2rem;
+                    text-align: left;
+                    border: 0.063rem solid rgba(214, 213, 212, 1) !important;
+                }
 
-            .odd-row {
-                background-color: white;
+                .even-row {
+                    background-color: rgba(238, 238, 238, 1);
+                }
+
+                .odd-row {
+                    background-color: white;
+                }
             }
         }
+
+
+
+
+
     }
 
 }
