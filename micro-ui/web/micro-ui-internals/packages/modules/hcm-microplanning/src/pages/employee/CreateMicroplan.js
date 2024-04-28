@@ -29,66 +29,7 @@ const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
-  // const fid = "ac88fcd7-9449-44c4-b6ff-93bbb15eb472";
-  // const file = await Digit.UploadServices.Filefetch([fid], "mz");
-  // const url = file?.data?.[fid];
-  // const filev2 = await Request(
-  //   {
-  //    url:"/filestore/v1/files/id" ,
-  //    data: {},
-  //    useCache:false,
-  //    userService:true,
-  //    method: "GET",
-  //    auth: false,
-  //    params: {
-  //        tenantId:Digit.ULBService.getCurrentTenantId(),
-  //        fileStoreId:fid
-  //      },
-  //    plainAccessRequest: {},
-  //    userDownload:false,
-  //    setTimeParam:false,
-  //    headers:{
-  //      "auth-token":Digit.UserService.getUser()?.['access_token']
-  //    }
-  //   }
-  //  )
-  //  console.log(filev2)
-     //  console.log(typeof filev2.buffer)
-  //    const idk = new Blob([filev2]);
-  //    let file = new File([idk],"abrakadabra",{ type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-  //  console.log(await parseXlsxToJsonMultipleSheets(file))
-  //    console.log(idk)
-  //    console.log(file)
-  //    debugger
-  //  console.log(typeof filev2.buffer)
-  //  const idk = new Blob([filev2.buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
-  //  console.log(await parseXlsxToJsonMultipleSheets(url))
-  // const encoder = new TextEncoder();
-  // const bytes = encoder.encode(filev2);
-  // const workbook = XLSX.readFile(url);
-  //       const jsonData = {};
-
-  //       workbook.SheetNames.forEach((sheetName) => {
-  //         const worksheet = workbook.Sheets[sheetName];
-  //         // const options = { header: 1 };
-  //         const jsonSheetData = XLSX.utils.sheet_to_json(worksheet, options);
-  //         for (let i = 0; i < jsonSheetData.length; i++) {
-  //           for (let j = 0; j < jsonSheetData[i].length; j++) {
-  //             const cell = jsonSheetData[i][j];
-  //             if (typeof cell === "string") {
-  //               jsonSheetData[i][j] = cell.trim();
-  //             }
-  //           }
-  //         }
-  //         jsonData[sheetName] = jsonSheetData;
-  //       });
-  //  console.log(jsonData)
-  //  debugger
-
-  // useEffect(async()=>{
-  //   fetchResource();
-  // },[])
-  
+    
   // Fetching data using custom MDMS hook
   const { campaignId = "" } = Digit.Hooks.useQueryParams();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
@@ -294,30 +235,3 @@ export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
 
 export default CreateMicroplan;
 
-
-const fetchResource = async (fid) => {
-  try {
-    const fid = "a643aa8e-f565-4966-b707-d8a5c822a1c5";
-    const file = await Digit.UploadServices.Filefetch([fid], "mz");
-    const url = file?.data?.[fid];
-    console.log(url)
-    if (url) {
-      const response = await fetch(url);
-      console.log(response)
-      debugger
-      if (response.ok) {
-        console.log(response)
-        return true; // Resource fetched successfully
-      } else {
-        console.error('Error:', response.status);
-        return false; // Error fetching resource
-      }
-    } else {
-      console.error('No URL found for the file');
-      return false; // No URL found for the file
-    }
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return false; // Fetch error
-  }
-};
