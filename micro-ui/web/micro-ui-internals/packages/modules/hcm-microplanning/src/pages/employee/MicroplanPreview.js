@@ -119,23 +119,33 @@ const MicroplanPreview = ({
   // Set microplan preview data
   useEffect(() => {
     if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
-    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+
     //Decide columns to take and their sequence
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
+    const getfilteredSchemaColumnsList = () => {
+      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+      if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
+      return filteredSchemaColumns;
+    };
 
-    let tempData1 = [];
-    let tempData2 = [];
+    const fetchAndCombineData = (filteredSchemaColumns) => {
+      let tempData1 = [];
+      let tempData2 = [];
 
-    //fetch microplan data
-    if (microplanData?.upload?.Population?.data) {
-      tempData1 = microplanData?.upload?.Population?.data.Angonia;
-    }
-    if (microplanData?.upload?.Facilities?.data) {
-      tempData2 = microplanData?.upload?.Facilities?.data.Angonia;
-    }
+      //fetch microplan data
+      if (microplanData?.upload?.Population?.data) {
+        tempData1 = microplanData?.upload?.Population?.data.Angonia;
+      }
+      if (microplanData?.upload?.Facilities?.data) {
+        tempData2 = microplanData?.upload?.Facilities?.data.Angonia;
+      }
 
-    // combine all the data from different files
-    const combinedData = innerJoinLists(tempData1, tempData2, "boundaryCode", filteredSchemaColumns);
+      // combine all the data from different uploaded files
+      return innerJoinLists(tempData1, tempData2, "boundaryCode", filteredSchemaColumns);
+    };
+
+    let filteredSchemaColumns = getfilteredSchemaColumnsList();
+
+    let combinedData = fetchAndCombineData(filteredSchemaColumns);
 
     // process and form hierarchy
     if (combinedData && hierarchy) {
@@ -242,7 +252,6 @@ const HypothesisValues = ({
 
   // Handles the change in hypothesis value
   const valueChangeHandler = (e) => {
-
     // Checks it the boundary filters at at root level ( given constraints )
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
@@ -260,7 +269,7 @@ const HypothesisValues = ({
       }
     } else value = parseFloat(e.newValue);
     value = !isNaN(value) ? value : "";
-    
+
     // update the state with user input
     let newhypothesisEntity = hypothesisAssumptionsList?.find((item) => item?.id === e?.item?.id);
     newhypothesisEntity.value = value;
@@ -330,14 +339,14 @@ const HypothesisValues = ({
             width: "100%",
             padding: "1rem",
           }}
-          popupModuleMianStyles={{padding:0,margin:0}}
+          popupModuleMianStyles={{ padding: 0, margin: 0 }}
           style={{
             flex: 1,
             backgroundColor: "white",
             border: "0.063rem solid rgba(244, 119, 56, 1)",
           }}
-          headerBarMainStyle={{padding:"1rem 0 0 0",margin:0}}
-          headerBarMain={<ModalHeading style={{width:"fit-content"}} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+          headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
+          headerBarMain={<ModalHeading style={{ width: "fit-content" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={applyNewHypothesis}
           actionSaveLabel={t("NO")}
@@ -525,12 +534,12 @@ const DataPreview = memo(
               padding: "1rem",
             }}
             style={{
-              flex:1,
+              flex: 1,
               backgroundColor: "white",
               border: "0.063rem solid rgba(244, 119, 56, 1)",
             }}
-            headerBarMainStyle={{padding:0}}
-            headerBarMain={<ModalHeading style={{padding:0,margin:0}} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+            headerBarMainStyle={{ padding: 0 }}
+            headerBarMain={<ModalHeading style={{ padding: 0, margin: 0 }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={() => {
               setModal("none");
@@ -814,7 +823,7 @@ const CloseButton = ({ clickHandler }) => {
 
 const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList, t }) => {
   return (
-    <div className="apply-changes-hypothesis" >
+    <div className="apply-changes-hypothesis">
       <div className="instructions">
         <p>{t("INSTRUCTION_PROCEED_WITH_NEW_HYPOTHESIS")}</p>
       </div>
