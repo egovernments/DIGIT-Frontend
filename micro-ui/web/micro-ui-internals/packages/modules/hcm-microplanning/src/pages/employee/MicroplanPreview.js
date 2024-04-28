@@ -127,7 +127,7 @@ const MicroplanPreview = ({
       return filteredSchemaColumns;
     };
 
-    const fetchAndCombineData = (filteredSchemaColumns) => {
+    const fetchData = (filteredSchemaColumns) => {
       let tempData1 = [];
       let tempData2 = [];
 
@@ -140,12 +140,13 @@ const MicroplanPreview = ({
       }
 
       // combine all the data from different uploaded files
-      return innerJoinLists(tempData1, tempData2, "boundaryCode", filteredSchemaColumns);
+      return [tempData1, tempData2];
     };
 
     let filteredSchemaColumns = getfilteredSchemaColumnsList();
+    const fetchedData = fetchAndCombineData(filteredSchemaColumns);
 
-    let combinedData = fetchAndCombineData(filteredSchemaColumns);
+    let combinedData = innerJoinLists(fetchedData[0], fetchedData[1], "boundaryCode", filteredSchemaColumns);
 
     // process and form hierarchy
     if (combinedData && hierarchy) {
@@ -284,13 +285,18 @@ const HypothesisValues = ({
     setHypothesisAssumptionsList(tempHypothesisList);
 
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
+    const microData = updateMicroplanData(hypothesisAssumptionsList);
+    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
+    setModal("none");
+  };
+
+  const updateMicroplanData = (hypothesisAssumptionsList) => {
     let microData = {};
     setMicroplanData((previous) => {
       microData = { ...previous, hypothesis: hypothesisAssumptionsList };
       return microData;
     });
-    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
-    setModal("none");
+    return microData;
   };
 
   const closeModal = () => {
