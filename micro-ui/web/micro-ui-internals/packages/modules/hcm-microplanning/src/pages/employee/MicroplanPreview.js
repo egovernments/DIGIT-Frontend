@@ -16,7 +16,7 @@ import {
 import React, { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Resources from "../../configs/Resources.json";
-import processHierarchyAndData, { findParent } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
 import { Close } from "@egovernments/digit-ui-svg-components";

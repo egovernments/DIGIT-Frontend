@@ -1,4 +1,4 @@
-const processHierarchyAndData = (hierarchy, allData) => {
+export const processHierarchyAndData = (hierarchy, allData) => {
   const hierarchyLists = {};
   let hierarchicalData = {};
 
@@ -97,4 +97,3 @@ export const findParent = (name, hierarchy, parent) => {
   }
 };
 
-export default processHierarchyAndData;

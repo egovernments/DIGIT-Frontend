@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
-import processHierarchyAndData, { findParent } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
 
 // Mapping component definition
 const Mapping = ({
