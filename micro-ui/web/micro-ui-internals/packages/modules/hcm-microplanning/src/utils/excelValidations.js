@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-const ajv = new Ajv({ allErrors: true});
+const ajv = new Ajv({ allErrors: true });
 ajv.addKeyword("isRequired");
 ajv.addKeyword("isLocationDataColumns");
 ajv.addKeyword("isRuleConfigureInputs");
@@ -17,7 +17,7 @@ export const excelValidations = (data, schemaData, t) => {
       .map((item) => item);
 
     // const properties = prepareProperties(schemaData.Properties, t);
-    return { required, properties: schemaData.Properties};
+    return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
   const schema = {
@@ -38,16 +38,15 @@ export const excelValidations = (data, schemaData, t) => {
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
   let locationDataColumns = Object.entries(schemaData?.schema?.Properties || {})
-  .reduce((acc, [key, value]) => {
-    if (value?.isLocationDataColumns) {
-      acc.push(key);
-    }
-    return acc;
-  }, [])
-  .map((item) => t(item));
+    .reduce((acc, [key, value]) => {
+      if (value?.isLocationDataColumns) {
+        acc.push(key);
+      }
+      return acc;
+    }, [])
+    .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
-    console.log(validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":
@@ -92,8 +91,6 @@ export const excelValidations = (data, schemaData, t) => {
   return { valid };
 };
 
-
-
 // Might need it later
 // function filterOutWordAndLocalise(inputString, operation) {
 //   // Define a regular expression to match the string parts
@@ -122,7 +119,7 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
       if (valid["message"] !== undefined) {
         return { valid: false, message: valid.message };
       }
-      const columnList = valid.columnList?.map(item=>t(item));
+      const columnList = valid.columnList?.map((item) => t(item));
       const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
         columns:
           columnList.length > 1

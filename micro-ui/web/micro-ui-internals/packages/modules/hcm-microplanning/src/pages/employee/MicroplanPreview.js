@@ -111,7 +111,6 @@ const MicroplanPreview = ({
       setJoinByColumns(joinWithColumns);
     }
     let temp;
-    console.log("UIConfiguration", UIConfiguration);
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!(temp && temp.ruleConfigureOperators)) return;
     setOperatorsObject(temp.ruleConfigureOperators);
@@ -121,7 +120,6 @@ const MicroplanPreview = ({
   useEffect(() => {
     if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
     let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    console.log("filteredSchemaColumns", filteredSchemaColumns);
     //Decide columns to take and their sequence
     if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
 
@@ -142,7 +140,6 @@ const MicroplanPreview = ({
     // process and form hierarchy
     if (combinedData && hierarchy) {
       var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchyRawData, [combinedData]);
-      console.log(hierarchyLists, hierarchicalData);
       setBoundaryData({ Microplan: { hierarchyLists, hierarchicalData } });
     }
     if (combinedData) {
@@ -153,7 +150,6 @@ const MicroplanPreview = ({
 
   useEffect(() => {
     const tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
-    console.log(tempData);
     setDataToShow(tempData);
   }, [boundarySelections]);
 
@@ -243,11 +239,15 @@ const HypothesisValues = ({
 }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
   const { campaignId = "" } = Digit.Hooks.useQueryParams();
+
+  // Handles the change in hypothesis value
   const valueChangeHandler = (e) => {
-    console.log(boundarySelections);
+
+    // Checks it the boundary filters at at root level ( given constraints )
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
-    console.log(e);
+
+    // validating user input
     if ((e?.newValue <= 0 || e?.newValue / 1000 >= 1) && e?.newValue !== "") return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
@@ -260,18 +260,18 @@ const HypothesisValues = ({
       }
     } else value = parseFloat(e.newValue);
     value = !isNaN(value) ? value : "";
+    
+    // update the state with user input
     let newhypothesisEntity = hypothesisAssumptionsList?.find((item) => item?.id === e?.item?.id);
     newhypothesisEntity.value = value;
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
     unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
-    console.log(newhypothesisEntity);
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
-    console.log("tempHypothesisList", tempHypothesisList);
     setHypothesisAssumptionsList(tempHypothesisList);
 
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
@@ -280,8 +280,6 @@ const HypothesisValues = ({
       microData = { ...previous, hypothesis: hypothesisAssumptionsList };
       return microData;
     });
-    console.log(microData);
-    console.log(operatorsObject);
     updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
     setModal("none");
   };
@@ -389,7 +387,6 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
     let TempHierarchy = _.cloneDeep(processedHierarchy);
     let oldSelections = boundarySelections;
     let selections = [];
-    console.log("e", e);
     e.forEach((item) => {
       selections.push(item?.[1]?.name);
       // Enpty previous options
@@ -423,11 +420,6 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
 
       // set the parent as selected
       let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-      console.log("see the data", item?.[1]?.name, boundaryData, parent?.boundaryType, tempData, parent, oldSelections);
-      console.log(
-        tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name),
-        oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-      );
       if (
         !(
           tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
@@ -445,7 +437,6 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
         });
       }
     });
-    console.log(tempData);
     setProcessedHierarchy(TempHierarchy);
     setBoundarySelections({ ...oldSelections, ...tempData });
   };
@@ -801,10 +792,8 @@ const findFilteredDataHierarchyTraveler = (data, name, boundaryType) => {
 const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hierarchy, hierarchyIndex = 0) => {
   if (hierarchyIndex >= hierarchy?.length) return data;
   const filteredHirarchyLevelList = selections?.[hierarchy?.[hierarchyIndex]]?.map((item) => item?.name);
-  console.log("filteredHirarchyLevelList", selections, filteredHirarchyLevelList);
   if (!filteredHirarchyLevelList || filteredHirarchyLevelList?.length === 0) return data;
   const columnDataIndexForHierarchyLevel = data?.[0]?.indexOf(hierarchy?.[hierarchyIndex]);
-  console.log("columnDataIndexForHierarchyLevel", columnDataIndexForHierarchyLevel);
   if (columnDataIndexForHierarchyLevel === -1) return data;
   const levelFilteredData = data.filter((item, index) => {
     if (index === 0) return true;
@@ -815,7 +804,6 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
 };
 
 const CloseButton = ({ clickHandler }) => {
-  console.log(typeof clickHandler, clickHandler);
   return (
     <div className="microplan-close-button" onClick={clickHandler}>
       {" "}

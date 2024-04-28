@@ -184,7 +184,6 @@ const Mapping = ({
     const geojsons = prepareGeojson(boundaryData, "ALL");
     if (geojsons) addGeojsonToMap(map, geojsons);
     const bounds = findBounds(geojsons);
-    console.log(geojsons, bounds);
     if (bounds) map?.fitBounds(bounds);
   }, [boundaryData]);
 
@@ -296,7 +295,6 @@ const BoundarySelection = memo(
       let TempHierarchy = _.cloneDeep(processedHierarchy);
       let oldSelections = boundarySelections;
       let selections = [];
-      console.log("e", e);
       e.forEach((item) => {
         selections.push(item?.[1]?.name);
         // Enpty previous options
@@ -315,7 +313,6 @@ const BoundarySelection = memo(
           });
         }
       }
-      console.log("oldSelections", oldSelections);
       e.forEach((item) => {
         // insert new data into tempData
         if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
@@ -329,13 +326,7 @@ const BoundarySelection = memo(
         }
 
         // set the parent as selected
-        console.log(boundaryData);
         let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-        console.log("see the data", item?.[1]?.name, boundaryData, parent?.boundaryType, tempData, parent, oldSelections);
-        console.log(
-          tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name),
-          oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-        );
         if (
           !(
             tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
@@ -568,7 +559,6 @@ const extractGeoData = (
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
                 setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
-              console.log(hierarchicalData);
               break;
             }
             case "GeoJSON":
