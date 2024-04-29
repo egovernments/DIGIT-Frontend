@@ -126,7 +126,6 @@ const MicroplanPreview = ({
     if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
 
     let combinedData = fetchMicroplanPreviewData(campaignType, microplanData, validationSchemas, hierarchy);
-
     // process and form hierarchy
     if (combinedData && hierarchy) {
       var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchyRawData, [combinedData]);
@@ -228,7 +227,7 @@ const HypothesisValues = ({
   t,
 }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
-  const { id:campaignId = "" } = Digit.Hooks.useQueryParams();
+  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { valueChangeHandler, updateHyothesisAPICall } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
   const applyNewHypothesis = () => {
@@ -870,8 +869,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
   const fetchedData = fetchMicroplanData(microplanData);
-  console.log(fetchedData)
-  // let dataAfterJoins = innerJoinLists(fetchedData, "boundaryCode", filteredSchemaColumns);
+
   // Perform inner joins using reduce
   const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
     if (index === 0) {
@@ -880,7 +878,6 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
       return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
     }
   }, null);
-  console.log(dataAfterJoins)
   return dataAfterJoins;
 };
 

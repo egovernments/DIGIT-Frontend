@@ -97,8 +97,6 @@ export const findParent = (name, hierarchy, parent) => {
   }
 };
 
-
-
 export const fetchDropdownValues = (boundaryData, hierarchy) => {
   let dataMap = {};
   Object.values(boundaryData)?.forEach((item) => {
@@ -124,4 +122,3 @@ export const fetchDropdownValues = (boundaryData, hierarchy) => {
   });
   return processedHierarchyTemp;
 };
-
