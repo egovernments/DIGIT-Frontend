@@ -228,7 +228,7 @@ const HypothesisValues = ({
   t,
 }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
-  const { campaignId = "" } = Digit.Hooks.useQueryParams();
+  const { id:campaignId = "" } = Digit.Hooks.useQueryParams();
   const { valueChangeHandler, updateHyothesisAPICall } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
   const applyNewHypothesis = () => {
@@ -862,29 +862,27 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
 };
 
 const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
-  // Memoize getfilteredSchemaColumnsList
-  const getfilteredSchemaColumnsList = (() => {
-    let memo = null;
-    return () => {
-      if (memo !== null) return memo;
-      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-      if (hierarchy) filteredSchemaColumns.unshift(...hierarchy);
-      memo = filteredSchemaColumns;
-      return memo;
-    };
-  })();
-
-  const filteredSchemaColumns = getfilteredSchemaColumnsList();
+  //Decide columns to take and their sequence
+  const getfilteredSchemaColumnsList = () => {
+    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+    if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
+    return filteredSchemaColumns;
+  };
+  let filteredSchemaColumns = getfilteredSchemaColumnsList();
   const fetchedData = fetchMicroplanData(microplanData);
-
+  console.log(fetchedData)
+  // let dataAfterJoins = innerJoinLists(fetchedData, "boundaryCode", filteredSchemaColumns);
   // Perform inner joins using reduce
-  const dataAfterJoins = fetchedData.reduce((accumulator, currentData) => {
-    return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
-  });
-
+  const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
+    if (index === 0) {
+      return currentData;
+    } else {
+      return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
+    }
+  }, null);
+  console.log(dataAfterJoins)
   return dataAfterJoins;
 };
-
 
 const fetchMicroplanData = (microplanData) => {
   if (!microplanData) return [];

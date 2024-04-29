@@ -31,7 +31,7 @@ const campaignType = "ITIN";
 const CreateMicroplan = () => {
     
   // Fetching data using custom MDMS hook
-  const { campaignId = "" } = Digit.Hooks.useQueryParams();
+  const { id:campaignId = "" } = Digit.Hooks.useQueryParams();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
