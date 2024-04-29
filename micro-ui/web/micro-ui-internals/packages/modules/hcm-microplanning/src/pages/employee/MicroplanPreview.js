@@ -862,24 +862,29 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
 };
 
 const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
-  //Decide columns to take and their sequence
-  const getfilteredSchemaColumnsList = () => {
-    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
-    return filteredSchemaColumns;
-  };
-  let filteredSchemaColumns = getfilteredSchemaColumnsList();
-  const fetchedData = fetchMicroplanData(microplanData);
-  let firstJoin = innerJoinLists(fetchedData[0], fetchedData[1], "boundaryCode", filteredSchemaColumns);
-  let dataAfterJoins = firstJoin;
+  // Memoize getfilteredSchemaColumnsList
+  const getfilteredSchemaColumnsList = (() => {
+    let memo = null;
+    return () => {
+      if (memo !== null) return memo;
+      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+      if (hierarchy) filteredSchemaColumns.unshift(...hierarchy);
+      memo = filteredSchemaColumns;
+      return memo;
+    };
+  })();
 
-  // Apply inner join with each subsequent list
-  for (let i = 2; i < fetchedData.length; i++) {
-    dataAfterJoins = innerJoinLists(dataAfterJoins, fetchedData[i], "boundaryCode", filteredSchemaColumns);
-  }
+  const filteredSchemaColumns = getfilteredSchemaColumnsList();
+  const fetchedData = fetchMicroplanData(microplanData);
+
+  // Perform inner joins using reduce
+  const dataAfterJoins = fetchedData.reduce((accumulator, currentData) => {
+    return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
+  });
 
   return dataAfterJoins;
 };
+
 
 const fetchMicroplanData = (microplanData) => {
   if (!microplanData) return [];
