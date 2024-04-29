@@ -75,9 +75,10 @@ and add its related functions
 ```
 
 
-### Changelog
+## Changelog
 
 ```bash
+1.8.1-beta.11: Enhancements of components and css
 1.8.1-beta.10: Fixed login screen issue
 1.8.1-beta.9: Fixed stablity issue 
 1.8.1-beta.8: Enhanced to load screen even if mdms is failing
