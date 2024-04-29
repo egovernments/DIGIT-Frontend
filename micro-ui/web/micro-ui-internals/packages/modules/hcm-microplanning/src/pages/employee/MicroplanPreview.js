@@ -127,7 +127,7 @@ const MicroplanPreview = ({
       return filteredSchemaColumns;
     };
 
-    const fetchData = (filteredSchemaColumns) => {
+    const fetchData = () => {
       let tempData1 = [];
       let tempData2 = [];
 
@@ -144,7 +144,7 @@ const MicroplanPreview = ({
     };
 
     let filteredSchemaColumns = getfilteredSchemaColumnsList();
-    const fetchedData = fetchAndCombineData(filteredSchemaColumns);
+    const fetchedData = fetchData();
 
     let combinedData = innerJoinLists(fetchedData[0], fetchedData[1], "boundaryCode", filteredSchemaColumns);
 
@@ -272,7 +272,7 @@ const HypothesisValues = ({
     value = !isNaN(value) ? value : "";
 
     // update the state with user input
-    let newhypothesisEntity = hypothesisAssumptionsList?.find((item) => item?.id === e?.item?.id);
+    let newhypothesisEntity = _.cloneDeep(hypothesisAssumptionsList)?.find((item) => item?.id === e?.item?.id);
     newhypothesisEntity.value = value;
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
     unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
@@ -849,8 +849,8 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
             {hypothesisList?.map((row, index) => (
               <tr key={row.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                 <td>{row?.key}</td>
-                <td>{newhypothesisList?.[index]?.value}</td>
                 <td>{row?.value}</td>
+                <td>{newhypothesisList?.[index]?.value}</td>
               </tr>
             ))}
           </tbody>
