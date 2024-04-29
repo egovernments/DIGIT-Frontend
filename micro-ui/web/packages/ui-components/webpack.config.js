@@ -16,9 +16,10 @@ module.exports = {
   },
   externals: {
     // Define any external dependencies here
-    react: 'react',
+    'react': 'react',
     'react-dom': 'react-dom',
     'react-i18next': 'react-i18next',
+    'react-router-dom': 'react-router-dom'
   },
   module: {
     rules: [
