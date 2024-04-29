@@ -13,7 +13,7 @@ import {
   TextInput,
   Toast,
 } from "@egovernments/digit-ui-components";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Resources from "../../configs/Resources.json";
 import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
@@ -31,7 +31,7 @@ const MicroplanPreview = ({
   pages,
 }) => {
   // Fetching data using custom MDMS hook
-  const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }, { name: "Schemas" }]);
+  const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }, { name: "Schemas" }, { name: "Resources" }]);
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const userInfo = Digit.SessionStorage.get("User")?.info;
 
@@ -103,8 +103,8 @@ const MicroplanPreview = ({
     if (!MDMSData) return;
     let UIConfiguration = MDMSData["hcm-microplanning"]?.["UIConfiguration"];
     let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
+    let resourcelist = MDMSData["hcm-microplanning"]?.["Resources"];
     if (schemas) setValidationSchemas(schemas);
-    let resourcelist = Resources?.Resources;
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
     if (resourcelist) setResources(resourcelist);
     if (UIConfiguration) {
@@ -372,7 +372,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
     setProcessedHierarchy(processedHierarchyTemp);
   }, [boundaryData, hierarchy]);
 
-  const handleSelection = (e) => {
+  const handleSelection = useCallback((e) => {
     let tempData = {};
     let TempHierarchy = _.cloneDeep(processedHierarchy);
     let oldSelections = boundarySelections;
@@ -429,7 +429,8 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
     });
     setProcessedHierarchy(TempHierarchy);
     setBoundarySelections({ ...oldSelections, ...tempData });
-  };
+  }, [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]);
+
 
   return (
     <div className="boundary-selection">
