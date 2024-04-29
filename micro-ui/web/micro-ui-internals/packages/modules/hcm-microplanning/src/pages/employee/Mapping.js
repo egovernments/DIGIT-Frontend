@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
-import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 
 // Mapping component definition
 const Mapping = ({
@@ -265,32 +265,11 @@ const BoundarySelection = memo(
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
-      let dataMap = {};
-      Object.values(boundaryData)?.forEach((item) => {
-        Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
-          if (value) {
-            if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
-            else dataMap[key] = new Set([...value]);
-          }
-        });
-      });
-      let processedHierarchyTemp = hierarchy.map((item) => {
-        if (dataMap?.[item?.boundaryType])
-          return {
-            ...item,
-            dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({
-              name: data,
-              code: data,
-              boundaryType: item?.boundaryType,
-              parentBoundaryType: item?.parentBoundaryType,
-            })),
-          };
-        else return item;
-      });
+      let processedHierarchyTemp = fetchDropdownValues(boundaryData, hierarchy);
       setProcessedHierarchy(processedHierarchyTemp);
     }, [boundaryData, hierarchy]);
 
-    const handleSelection = (e) => {
+    const handleSelection = useCallback((e) => {
       let tempData = {};
       let TempHierarchy = _.cloneDeep(processedHierarchy);
       let oldSelections = boundarySelections;
@@ -305,14 +284,14 @@ const BoundarySelection = memo(
       });
 
       // filtering current option. if its itself and its parent is not selected it will be discarded
-      if(hierarchy)
-      for (let key of hierarchy) {
-        if (Array.isArray(oldSelections?.[key?.boundaryType])) {
-          oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-            return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
-          });
+      if (hierarchy)
+        for (let key of hierarchy) {
+          if (Array.isArray(oldSelections?.[key?.boundaryType])) {
+            oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
+              return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+            });
+          }
         }
-      }
       e.forEach((item) => {
         // insert new data into tempData
         if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
@@ -346,7 +325,9 @@ const BoundarySelection = memo(
       });
       setProcessedHierarchy(TempHierarchy);
       setBoundarySelections({ ...oldSelections, ...tempData });
-    };
+    },
+    [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]
+  );
 
     return (
       <div className="filter-by-boundary" ref={filterBoundaryRef}>
