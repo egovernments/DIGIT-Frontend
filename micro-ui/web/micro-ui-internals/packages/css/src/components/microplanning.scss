@@ -25,18 +25,18 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .modal-header {
-    width: 30rem;
-    font-weight: 700;
-    font-size: 1.5rem;
-    padding-left: 1rem;
-    margin-bottom: 0;
-    display: flex;
-    flex-wrap: wrap;
-    overflow: hidden;
+    width: 30rem ;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    padding-left: 1rem !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    overflow: hidden !important;
 
     p {
-        padding: 0;
-        margin: 0;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 }
 
@@ -1630,6 +1630,10 @@ $border-color: rgba(214, 213, 212, 1);
                     }
                 }
 
+                .display-none {
+                    display: none !important;
+                }
+
                 .boundary-selection {
                     display: block;
                     min-width: 16.5rem;
@@ -1754,22 +1758,24 @@ $border-color: rgba(214, 213, 212, 1);
             }
 
             .icon-rest {
-                display: flex  !important;
+                display: flex !important;
                 margin-top: 1.5rem !important;
                 align-items: center;
                 justify-content: flex-end;
                 cursor: pointer;
-                p{
+
+                p {
                     margin: 0;
                     padding: 0;
                     font-family: Roboto;
                     font-size: 1rem;
                     font-weight: 400;
-                    color:rgba(255, 255, 255, 1)
+                    color: rgba(255, 255, 255, 1)
                 }
+
                 .icon {
                     margin-left: 0.3rem;
-                    height:1.667rem;
+                    height: 1.667rem;
                 }
             }
 
@@ -1786,19 +1792,21 @@ $border-color: rgba(214, 213, 212, 1);
                     margin-top: 0;
                     cursor: pointer;
                     box-shadow: none;
-                    p{
+
+                    p {
                         margin: 0;
                         padding: 0;
                         font-family: Roboto;
                         font-size: 1rem;
                         font-weight: 400;
-                        color:rgba(255, 255, 255, 1)
+                        color: rgba(255, 255, 255, 1)
                     }
+
                     .icon {
                         margin-left: 0.3rem;
-                        height:1.667rem;
+                        height: 1.667rem;
                     }
-                    
+
                 }
 
                 .base-map-area-wrapper {
@@ -1896,6 +1904,7 @@ $border-color: rgba(214, 213, 212, 1);
     width: 100%;
     display: flex;
     flex-direction: column;
+    
 
     .top-section {
         margin: 1.5rem 0 0 0;
@@ -1947,24 +1956,32 @@ $border-color: rgba(214, 213, 212, 1);
         background-color: rgb(255, 255, 255, 1);
     }
 
-    .hierarchy-selection-container {
-        margin: 1.5rem 0 1rem 0;
 
-        .hierarchy-selection {
-            display: flex;
-            flex-wrap: wrap;
+    .boundary-selection {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 2rem;
 
-            .hierarchy-selection-element {
-                margin-right: 1rem;
-                width: 19.75rem;
+        .hierarchy-selection-element {
+            position: relative;
 
-                p {
-                    margin: 0;
-                    padding: 0 0 0.2rem 0;
-                }
+            .header {
+                font-family: Roboto;
+                font-size: 1rem;
+                font-weight: 400;
+                padding: 0 0 0.3rem 0;
+                margin: 0;
             }
+
+            width: 19.75rem;
+            padding-right: 1rem;
         }
     }
+
 
     .microplan-preview-body {
         width: 100%;
@@ -1986,6 +2003,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0;
                 margin: 0;
                 overflow: hidden;
+                height: fit-content;
                 text-wrap: wrap;
             }
 
@@ -2003,8 +2021,8 @@ $border-color: rgba(214, 213, 212, 1);
                 margin: 1.5rem 0;
             }
 
-            .dropdown {
-                padding: 0.5rem 0 0 0;
+            .input {
+                padding: 1rem 0 0 0;
                 width: 100%;
             }
 
@@ -2012,13 +2030,13 @@ $border-color: rgba(214, 213, 212, 1);
                 display: flex !important;
                 justify-content: space-between;
                 padding: 1rem 0 0 0;
+                width: 100%;
 
-                .button-primary,
-                .button-secondary {
+                .button-primary {
                     font-family: Roboto;
                     font-size: 1.188rem;
                     font-weight: 600;
-                    max-width: 6.75rem;
+                    width: 100%;
                     min-height: 2.5rem;
                     padding: 0;
                     display: flex;
@@ -2093,6 +2111,20 @@ $border-color: rgba(214, 213, 212, 1);
                         border: 0.063rem solid #ccc;
                         border-collapse: collapse;
 
+                        /*     z-index: 20;
+                                border: 0.063rem solid rgba(244, 119, 56, 1);
+                                cursor: pointer;/*
+                                border-top: 0.063rem solid rgba(244, 119, 56, 1);
+                                border-bottom: 0.063rem solid rgba(244, 119, 56, 1);*/
+                        tr {
+                          z-index: 20;
+
+                            &:hover {
+                                border: 0.063rem solid rgba(244, 119, 56, 1);
+                                cursor: pointer;
+                            }
+                        }
+
                         th,
                         td {
                             min-width: 7.578rem;
@@ -2119,6 +2151,64 @@ $border-color: rgba(214, 213, 212, 1);
                 justify-content: center;
             }
         }
+    }
+
+    .digit-action-cancel {
+        color: rgba(244, 119, 56, 1);
+    }
+
+    .apply-changes-hypothesis {
+        padding: 1rem;
+        padding-top: 0;
+
+        .instructions {
+            p {
+                font-weight: 400;
+                font-size: 1rem;
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+        .table-container {
+            .table-header {
+                font-family: Roboto;
+                font-size: 1rem;
+                font-weight: 700;
+                color: rgba(11, 12, 12, 1);
+            }
+
+            .custom-table {
+                width: 100%;
+                border-collapse: collapse;
+
+                th {
+                    font-family: Roboto;
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
+
+                th,
+                td {
+                    padding: 1rem 1.2rem;
+                    text-align: left;
+                    border: 0.063rem solid rgba(214, 213, 212, 1) !important;
+                }
+
+                .even-row {
+                    background-color: rgba(238, 238, 238, 1);
+                }
+
+                .odd-row {
+                    background-color: white;
+                }
+            }
+        }
+
+
+
+
+
     }
 
 }

@@ -9,6 +9,8 @@ import Navigator from "../../components/Nagivator";
 import { Toast } from "@egovernments/digit-ui-components";
 import MicroplanPreview from "./MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
+import { Request } from "@egovernments/digit-ui-libraries";
+import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
 
 export const components = {
   MicroplanDetails,
@@ -19,14 +21,15 @@ export const components = {
   MicroplanPreview,
 };
 
+import XLSX from "xlsx";
+
 // will be changed laters
 const MicroplanName = "microplan 1912";
 const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
-
-  
+    
   // Fetching data using custom MDMS hook
   const { campaignId = "" } = Digit.Hooks.useQueryParams();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
@@ -191,7 +194,7 @@ const CreateMicroplan = () => {
   );
 };
 
-const mapDataForApi = (data, Operators, microplanName, campaignId) => {
+export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
   let files = [],
     resourceMapping = [];
   Object.values(data?.upload).forEach((item) => {
@@ -231,3 +234,4 @@ const mapDataForApi = (data, Operators, microplanName, campaignId) => {
 };
 
 export default CreateMicroplan;
+

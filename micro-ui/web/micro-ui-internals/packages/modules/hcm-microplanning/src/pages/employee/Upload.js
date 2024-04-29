@@ -59,7 +59,7 @@ const Upload = ({
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        ids:[id],
+        ids: [id],
       },
     },
     {
@@ -255,7 +255,7 @@ const Upload = ({
           return;
         }
       }
-      let resourceMappingData={};
+      let resourceMappingData = {};
       // Handling different filetypes
       switch (selectedFileType.id) {
         case "Excel":
@@ -265,7 +265,7 @@ const Upload = ({
             check = response.check;
             error = response.error;
             fileDataToStore = response.fileDataToStore;
-            resourceMappingData=response?.tempResourceMappingData
+            resourceMappingData = response?.tempResourceMappingData;
             if (check === true) {
               setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
             } else if (response.toast) {
@@ -278,7 +278,6 @@ const Upload = ({
               return;
             }
           } catch (error) {
-            console.log(error)
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
@@ -341,9 +340,9 @@ const Upload = ({
           handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
         }
       }
-      
+
       if (selectedFileType.id === "Excel") {
-        resourceMappingData=resourceMappingData.map(item=>({...item,filestoreId}))
+        resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
       // creating a fileObject to save all the data collectively
       let fileObject = {
@@ -365,17 +364,15 @@ const Upload = ({
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
-      console.log(error)
-
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
   };
 
-  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType,t=(e)=>e) => {
+  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, t = (e) => e) => {
     // Converting the file to preserve the sequence of columns so that it can be stored
     let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
-            let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
+    let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
       schemaData,
       hierarchy,
       selectedFileType,
@@ -401,7 +398,7 @@ const Upload = ({
     let error = response.message;
     let check = response.valid;
 
-    return { check, error, fileDataToStore:tempFileDataToStore, tempResourceMappingData };
+    return { check, error, fileDataToStore: tempFileDataToStore, tempResourceMappingData };
   };
   const handleGeojsonFile = async (file, schemaData) => {
     // Reading and checking geojson data
@@ -765,13 +762,10 @@ const Upload = ({
           closeButton={true}
           popupModuleActionBarStyles={{ justifyContent: "end", padding: "1rem" }}
           popupStyles={{ width: "48.5rem" }}
-          selectedSection={selectedSection}
-          selectedFileType={selectedFileType}
           closeModal={cancelUpload}
           // LeftButtonHandler={reuplaodFile}
           RightButtonHandler={validationForMappingAndDataSaving}
           headerBarMainStyle={{ width: "48.5rem" }}
-          sections={sections}
           // footerLeftButtonBody={<AlternateButton text={t("YES")} />}
           footerRightButtonBody={<ButtonType1 text={t("COMPLETE_MAPPING")} />}
           header={<ModalHeading label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} style={{ width: "calc(100% )" }} />}
@@ -1231,8 +1225,7 @@ const CustomIcon = (props) => {
 
 // Performs resource mapping and data filtering for Excel files based on provided schema data, hierarchy, and file data.
 const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
-            console.log(typeof t,t("UPLOAD_DATA"))
-            let resourceMappingData = [];
+  let resourceMappingData = [];
   let newFileData = {};
   if (selectedFileType.id === "Excel" && fileDataToStore) {
     // Extract all unique column names from fileDataToStore and then doing thir resource mapping
@@ -1277,7 +1270,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       newFileData[key] = [headers, ...data];
     });
   }
-  return { tempResourceMappingData:resourceMappingData, tempFileDataToStore: newFileData };
+  return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
 // Sorting 2 lists, The first list is a list of string and second one is list of Objects

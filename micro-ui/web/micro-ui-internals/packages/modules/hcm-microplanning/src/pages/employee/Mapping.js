@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
-import processHierarchyAndData from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
 
 // Mapping component definition
 const Mapping = ({
@@ -147,9 +147,9 @@ const Mapping = ({
     if (map !== null) return;
 
     let mapConfig = {
-      center: [-23.799434, 33.561285],
+      center: [0, 0],
       zoomControl: false,
-      zoom: 6,
+      zoom: 0,
       scrollwheel: true,
     };
 
@@ -184,7 +184,6 @@ const Mapping = ({
     const geojsons = prepareGeojson(boundaryData, "ALL");
     if (geojsons) addGeojsonToMap(map, geojsons);
     const bounds = findBounds(geojsons);
-    console.log(geojsons, bounds);
     if (bounds) map?.fitBounds(bounds);
   }, [boundaryData]);
 
@@ -294,13 +293,26 @@ const BoundarySelection = memo(
     const handleSelection = (e) => {
       let tempData = {};
       let TempHierarchy = _.cloneDeep(processedHierarchy);
+      let oldSelections = boundarySelections;
+      let selections = [];
       e.forEach((item) => {
+        selections.push(item?.[1]?.name);
         // Enpty previous options
         let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
         if (index !== -1) {
           TempHierarchy[index].dropDownOptions = [];
         }
       });
+
+      // filtering current option. if its itself and its parent is not selected it will be discarded
+      if(hierarchy)
+      for (let key of hierarchy) {
+        if (Array.isArray(oldSelections?.[key?.boundaryType])) {
+          oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
+            return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+          });
+        }
+      }
       e.forEach((item) => {
         // insert new data into tempData
         if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
@@ -312,9 +324,28 @@ const BoundarySelection = memo(
           const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
           if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
         }
+
+        // set the parent as selected
+        let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
+        if (
+          !(
+            tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
+            oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
+          ) &&
+          !!parent
+        ) {
+          var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
+          if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
+          tempData?.[parent?.boundaryType]?.push({
+            name: parent?.name,
+            code: parent?.name,
+            boundaryType: parent?.boundaryType,
+            parentBoundaryType: parentBoundaryType,
+          });
+        }
       });
       setProcessedHierarchy(TempHierarchy);
-      setBoundarySelections((previous) => ({ ...previous, ...tempData }));
+      setBoundarySelections({ ...oldSelections, ...tempData });
     };
 
     return (
@@ -327,31 +358,28 @@ const BoundarySelection = memo(
           label={t("BUTTON_FILTER_BY_BOUNDARY")}
           onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
         />
-        {isboundarySelectionSelected && (
-          <Card className="boundary-selection">
-            <div className="header-section">
-              <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
-              <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
-            </div>
-            <div className="hierarchy-selection-container">
-              {processedHierarchy?.map((item, index) => (
-                <div key={index} className="hierarchy-selection-element">
-                  <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
-                  <MultiSelectDropdown
-                    selected={boundarySelections?.[item?.boundaryType]}
-                    style={{ maxWidth: "23.75rem", margin: 0 }}
-                    type={"multiselectdropdown"}
-                    t={t}
-                    options={item?.dropDownOptions}
-                    optionsKey="name"
-                    onSelect={handleSelection}
-                    ServerStyle={{ position: "sticky", maxHeight: "15rem", zIndex: 600 }}
-                  />
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
+        <Card className={`boundary-selection ${!isboundarySelectionSelected ? "display-none" : ""}`}>
+          <div className="header-section">
+            <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
+            <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
+          </div>
+          <div className="hierarchy-selection-container">
+            {processedHierarchy?.map((item, index) => (
+              <div key={index} className="hierarchy-selection-element">
+                <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
+                <MultiSelectDropdown
+                  selected={boundarySelections?.[item?.boundaryType]}
+                  style={{ maxWidth: "23.75rem", margin: 0 }}
+                  type={"multiselectdropdown"}
+                  t={t}
+                  options={item?.dropDownOptions}
+                  optionsKey="name"
+                  onSelect={handleSelection}
+                />
+              </div>
+            ))}
+          </div>
+        </Card>
       </div>
     );
   }
@@ -525,14 +553,12 @@ const extractGeoData = (
                 })
               );
 
-              console.log(convertedData);
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
                 setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
-              console.log(hierarchicalData);
               break;
             }
             case "GeoJSON":
@@ -562,7 +588,6 @@ const extractGeoData = (
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
                 setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
-              console.log(hierarchicalData);
           }
         }
       }
