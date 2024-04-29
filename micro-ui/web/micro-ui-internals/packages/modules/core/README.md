@@ -75,7 +75,7 @@ and add its related functions
 ```
 
 
-### Changelog
+## Changelog
 
 ```bash
 1.8.1-beta.11: Enhancements of components and css
