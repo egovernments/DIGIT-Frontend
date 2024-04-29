@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@digit-ui/digit-ui-libraries-mfe": "1.0.16",
-    "@egovernments/digit-ui-react-components": "1.4.115",
+    "@egovernments/digit-ui-react-components": "1.4.117",
     "i18next": "19.9.2",
     "i18next-browser-languagedetector": "^7.2.1",
     "i18next-http-backend": "^2.5.1",

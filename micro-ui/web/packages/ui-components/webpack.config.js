@@ -12,16 +12,13 @@ module.exports = {
     },
   },
   resolve: {
-    alias: {
-      'react-i18next': require.resolve('react-i18next'),
-    },
     extensions: [".js"],
   },
   externals: {
     // Define any external dependencies here
-    react: "react",
-    "react-router-dom": "react-router-dom",
-    // Add other peer dependencies as needed
+    react: 'react',
+    'react-dom': 'react-dom',
+    'react-i18next': 'react-i18next',
   },
   module: {
     rules: [
