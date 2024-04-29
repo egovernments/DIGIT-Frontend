@@ -870,7 +870,6 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
   const fetchedData = fetchMicroplanData(microplanData);
-  console.log("fetchedData", fetchedData);
   let firstJoin = innerJoinLists(fetchedData[0], fetchedData[1], "boundaryCode", filteredSchemaColumns);
   let dataAfterJoins = firstJoin;
 
@@ -929,7 +928,6 @@ const fetchMicroplanData = (microplanData) => {
       }
     }
   }
-  console.log(microplanData, combinesDataList);
   return combinesDataList;
 };
 export default MicroplanPreview;
