@@ -13,11 +13,10 @@ import {
   TextInput,
   Toast,
 } from "@egovernments/digit-ui-components";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Resources from "../../configs/Resources.json";
 import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
-import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
 import { Close } from "@egovernments/digit-ui-svg-components";
 import { mapDataForApi } from "./CreateMicroplan";
@@ -82,7 +81,9 @@ const MicroplanPreview = ({
     },
   };
   const { isLoading: ishierarchyLoading, data: hierarchyRawData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  const hierarchy = hierarchyRawData?.map((item) => item?.boundaryType);
+  const hierarchy = useMemo(() => {
+    return hierarchyRawData?.map(item => item?.boundaryType);
+  }, [hierarchyRawData]);
   // UseEffect to extract data on first render
   useEffect(() => {
     if (microplanData && microplanData?.ruleEngine && microplanData?.hypothesis) {
@@ -251,7 +252,7 @@ const HypothesisValues = ({
   const [tempHypothesisList , setTempHypothesisList] = useState(hypothesisAssumptionsList);
   const { campaignId = "" } = Digit.Hooks.useQueryParams();
   const {valueChangeHandler,updateHyothesisAPICall} = useHypothesis(tempHypothesisList ,hypothesisAssumptionsList);
-  
+
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
@@ -259,7 +260,7 @@ const HypothesisValues = ({
     setHypothesisAssumptionsList(tempHypothesisList);
 
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
-    const microData = updateMicroplanData(hypothesisAssumptionsList);
+    const microData = updateMicroplanData(tempHypothesisList);
     updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
     setModal("none");
   };
