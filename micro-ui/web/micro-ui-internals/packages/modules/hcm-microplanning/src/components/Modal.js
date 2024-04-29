@@ -97,6 +97,7 @@ export const ModalWrapper = ({
   popupModuleActionBarStyles,
   hideSubmit,
   closeButton=false,
+  actionCancelLabel
 }) => {
   return (
     <Modal
@@ -133,6 +134,7 @@ export const ModalWrapper = ({
       }}
       footerLeftButtonBody={footerLeftButtonBody}
       footerRightButtonBody={footerRightButtonBody}
+      actionCancelLabel={actionCancelLabel}
     >
       {bodyText && (
         <div className="modal-body">

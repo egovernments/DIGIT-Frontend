@@ -1,4 +1,4 @@
-const processHierarchyAndData = (hierarchy, allData) => {
+export const processHierarchyAndData = (hierarchy, allData) => {
   const hierarchyLists = {};
   let hierarchicalData = {};
 
@@ -85,4 +85,15 @@ const createDataObject = (headers, row) => {
   return dataObject;
 };
 
-export default processHierarchyAndData;
+// Find parent in hierarchy
+export const findParent = (name, hierarchy, parent) => {
+  if (!name || !hierarchy) return null;
+  for (let key in hierarchy) {
+    if (!parent) {
+      let response = findParent(name, hierarchy[key]?.children, hierarchy[key]);
+      if (response) return response;
+    }
+    if (hierarchy[key]?.name == name) return parent;
+  }
+};
+

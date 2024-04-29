@@ -5,18 +5,20 @@
         {
             "campaignType": "ITIN",
             "data": [
-                    "NO_OF_BEDNET_REQUIRED"
+                    "NO_OF_BEDNET_REQUIRED",
+                    "BALES",
+                    "NO_OF_HOUSEHOLD",
+                    "NO_OF_DISTRIBUTORS"
             ]
         },
         {
             "campaignType": "IRS",
             "data": [
                     "NO_OF_HOUSEHOLD",
-                    "NO_OF_STRUCTURES",
                     "NO_OF_HOUSEHOLD_TO_BE_COVERED",
                     "NO_OF_POPULATION_TO_BE_COVERED",
                     "QUANTITY_OF_INSECTICIDE_REQUIRED",
-                    "TOTAL_QUANTITY"
+                    "NO_OF_DISTRIBUTORS"
             ]
         },
         {
@@ -24,8 +26,6 @@
             "data": [
                     "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
                     "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2",
-                    "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1_WITH_BUFFER",
-                    "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2_WITH_BUFFER",
                     "NO_OF_DISTRIBUTORS"
             ]
         }
