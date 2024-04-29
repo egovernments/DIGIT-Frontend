@@ -29,9 +29,8 @@ const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
-    
   // Fetching data using custom MDMS hook
-  const { campaignId = "" } = Digit.Hooks.useQueryParams();
+  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
@@ -79,7 +78,7 @@ const CreateMicroplan = () => {
   const nextEventAddon = useCallback(
     async (currentPage, checkDataCompletion) => {
       if (!microplanData) return;
-      if(!microplanData?.microplanDetails?.name) return
+      if (!microplanData?.microplanDetails?.name) return;
       setMicroplanData((previous) => ({
         ...previous,
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
@@ -93,7 +92,7 @@ const CreateMicroplan = () => {
         check = check && checkStatusValues?.[data];
       }
       if (!check) return;
-      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name,campaignId);
+      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId);
       if (microplanData && !microplanData.planConfigurationId) {
         createPlanConfiguration(body);
       } else if (microplanData && microplanData.planConfigurationId) {
@@ -211,7 +210,7 @@ export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
   // return a Create API body
   return {
     PlanConfiguration: {
-      status:"DRAFT",
+      status: "DRAFT",
       tenantId: Digit.ULBService.getStateId(),
       name: microplanName,
       executionPlanId: campaignId,
@@ -234,4 +233,3 @@ export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
 };
 
 export default CreateMicroplan;
-
