@@ -248,36 +248,10 @@ const HypothesisValues = ({
   UpdateMutate,
   t,
 }) => {
-  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
+  const [tempHypothesisList , setTempHypothesisList] = useState(hypothesisAssumptionsList);
   const { campaignId = "" } = Digit.Hooks.useQueryParams();
-
-  // Handles the change in hypothesis value
-  const valueChangeHandler = (e) => {
-    // Checks it the boundary filters at at root level ( given constraints )
-    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
-      return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
-
-    // validating user input
-    if ((e?.newValue <= 0 || e?.newValue / 1000 >= 1) && e?.newValue !== "") return;
-    let value;
-    const decimalIndex = e.newValue.indexOf(".");
-    if (decimalIndex !== -1) {
-      const numDecimals = e.newValue.length - decimalIndex - 1;
-      if (numDecimals > 2) {
-        value = parseFloat(e.newValue.substring(0, decimalIndex + 3));
-      } else {
-        value = parseFloat(e.newValue);
-      }
-    } else value = parseFloat(e.newValue);
-    value = !isNaN(value) ? value : "";
-
-    // update the state with user input
-    let newhypothesisEntity = _.cloneDeep(hypothesisAssumptionsList)?.find((item) => item?.id === e?.item?.id);
-    newhypothesisEntity.value = value;
-    let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
-    unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
-    setTempHypothesisList(unprocessedHypothesisList);
-  };
+  const {valueChangeHandler,updateHyothesisAPICall} = useHypothesis(tempHypothesisList ,hypothesisAssumptionsList);
+  
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
@@ -318,7 +292,7 @@ const HypothesisValues = ({
                 type={"number"}
                 t={t}
                 config={{}}
-                onChange={(value) => valueChangeHandler({ item, newValue: value?.target?.value })}
+                onChange={(value) => valueChangeHandler({ item, newValue: value?.target?.value },setTempHypothesisList, boundarySelections)}
               />
             </div>
           </div>
@@ -860,26 +834,65 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
   );
 };
 
-const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate) => {
-  let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
-  body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
-  body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
-  await UpdateMutate(body, {
-    onSuccess: async (data) => {
-      setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-      setTimeout(() => {
-        setToastCreateMicroplan(undefined);
-      }, 2000);
-    },
-    onError: (error, variables) => {
-      setToastCreateMicroplan({
-        message: t("ERROR_DATA_NOT_SAVED"),
-        state: "error",
-      });
-      setTimeout(() => {
-        setToastCreateMicroplan(undefined);
-      }, 2000);
-    },
-  });
-};
+
+
+const useHypothesis = (tempHypothesisList,hypothesisAssumptionsList)=>{
+  // Handles the change in hypothesis value
+  const valueChangeHandler = (e,setTempHypothesisList,boundarySelections) => {
+    // Checks it the boundary filters at at root level ( given constraints )
+    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
+      return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
+
+    // validating user input
+    if ((e?.newValue <= 0 || e?.newValue / 1000 >= 1) && e?.newValue !== "") return;
+    let value;
+    const decimalIndex = e.newValue.indexOf(".");
+    if (decimalIndex !== -1) {
+      const numDecimals = e.newValue.length - decimalIndex - 1;
+      if (numDecimals > 2) {
+        value = parseFloat(e.newValue.substring(0, decimalIndex + 3));
+      } else {
+        value = parseFloat(e.newValue);
+      }
+    } else value = parseFloat(e.newValue);
+    value = !isNaN(value) ? value : "";
+
+    // update the state with user input
+    let newhypothesisEntity = _.cloneDeep(hypothesisAssumptionsList)?.find((item) => item?.id === e?.item?.id);
+    newhypothesisEntity.value = value;
+    let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
+    unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
+    setTempHypothesisList(unprocessedHypothesisList);
+  };
+
+  const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate) => {
+    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
+    body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+    body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+    await UpdateMutate(body, {
+      onSuccess: async (data) => {
+        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+      onError: (error, variables) => {
+        setToastCreateMicroplan({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setTimeout(() => {
+          setToastCreateMicroplan(undefined);
+        }, 2000);
+      },
+    });
+  };
+  
+
+  return {
+    valueChangeHandler,
+    updateHyothesisAPICall
+  }
+}
+
 export default MicroplanPreview;
