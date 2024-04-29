@@ -864,7 +864,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   //Decide columns to take and their sequence
   const getfilteredSchemaColumnsList = () => {
     let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
+    if (hierarchy) filteredSchemaColumns = [...hierarchy, "boundaryCode", ...filteredSchemaColumns];
     return filteredSchemaColumns;
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
