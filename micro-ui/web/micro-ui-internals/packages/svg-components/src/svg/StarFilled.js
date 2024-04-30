@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const StarFilled = ({ className, id, onClick, style, percentage = 100, fill = "#F47738", width, height }) => {
+export const StarFilled = ({ className, id, onClick, style, percentage = 100, fill = COLOR_FILL, width, height }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
