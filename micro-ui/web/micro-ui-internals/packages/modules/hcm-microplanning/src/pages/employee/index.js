@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, AppContainer, BreadCrumb, Loader } from "@egovernments/digit-ui-react-components";
 import MicroplanningHeader from "../../components/MicroplanningHeader";
 import Upload from "./Upload";
 import Hypothesis from "./Hypothesis";
@@ -10,6 +10,7 @@ import Guidelines from "./Guidelines";
 import CreateMicroplan from "./CreateMicroplan";
 import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
+import { useMyContext } from "../../utils/context";
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -61,12 +62,31 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
 };
 
 const App = ({ path }) => {
+  const {dispatch} = useMyContext()
+
   const location = useLocation();
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
   
   const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
   const [sessionFormDataView,setSessionFormDataView,clearSessionFormDataView] = MDMSViewSession
+
+  const { isLoading:isLoadingMdmsBaseData, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
+    { name: "UploadConfiguration" },
+    { name: "UIConfiguration" },
+    { name: "Schemas" },
+    { name: "RuleConfigureOutput" },
+    { name: "Resources" },
+  ],
+  {
+    select:(data) => {
+      dispatch({
+        type:"SETINITDATA",
+        state:data?.['hcm-microplanning']
+      })
+    }
+  }
+);
 
   useEffect(() => {
     if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
@@ -76,6 +96,11 @@ const App = ({ path }) => {
       clearSessionFormDataView();
     }
   }, [location]);
+
+  if(isLoadingMdmsBaseData){
+    return <Loader />
+  }
+
   return (
     <React.Fragment>
       <div className="wbh-header-container">

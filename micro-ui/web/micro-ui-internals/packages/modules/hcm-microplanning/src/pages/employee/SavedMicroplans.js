@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
+import { useMyContext } from "../../utils/context";
+
 const configs = {
   label: "SAVED_MICROPLANS",
   type: "search",
@@ -773,13 +775,14 @@ const sampleObj = {
   ]
 }
 const SavedMicroplans = () => {
+  const {state} = useMyContext()
   const history = useHistory()
   const { t } = useTranslation();
 
   const onClickRow = async (row) => {
     try {
       //here compute the sessionObject based on the row?.original data and then re-route
-      const computedSession = await updateSessionUtils.computeSessionObject(row.original)
+      const computedSession = await updateSessionUtils.computeSessionObject(row.original,state)
       debugger
       Digit.SessionStorage.set("microplanData", computedSession);
       history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
