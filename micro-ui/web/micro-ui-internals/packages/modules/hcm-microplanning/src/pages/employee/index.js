@@ -88,14 +88,11 @@ const App = ({ path }) => {
   }
 );
 
+//destroying session 
   useEffect(() => {
-    if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
-      clearSessionFormData();
-    }
-    if (!window.location.href.includes("mdms-view") && sessionFormDataView ) {
-      clearSessionFormDataView();
-    }
-  }, [location]);
+    const pathVar = location.pathname.replace(path + "/", "").split("?")?.[0];
+    Digit.Utils.microplan.destroySessionHelper(pathVar,["create-microplan"],"microplanData");
+  }, [location])
 
   if(isLoadingMdmsBaseData){
     return <Loader />

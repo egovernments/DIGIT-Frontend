@@ -70,4 +70,11 @@ const computeGeojsonWithMappedProperties = ({campaignType,fileType,templateIdent
   return data;
 };
 
-export default { formatDates , computeGeojsonWithMappedProperties};
+
+const destroySessionHelper = (currentPath,pathList,sessionName) => {
+  if(!pathList.includes(currentPath)){
+    sessionStorage.removeItem(`Digit.${sessionName}`)
+  }
+}
+
+export default { formatDates , computeGeojsonWithMappedProperties,destroySessionHelper};
