@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
 export const RoundedCheck = ({ className, height = "24", width = "24", style = {}, fill = "#FFFFFF", onClick = null }) => {
   return (
