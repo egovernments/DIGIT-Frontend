@@ -436,7 +436,7 @@ const AddCustomAttributeField = ({
                 t={t}
               />
             ) : (
-              <TextInput textInputStyle={{ width: "100%" }} value={attribute?.value} onChange={selectValue} disable={false} />
+              <TextInput textInputStyle={{ width: "100%" }} value={attribute?.value ? attribute?.value : ""} onChange={selectValue} disable={false} />
             )}
           </div>
         </LabelFieldPair>
