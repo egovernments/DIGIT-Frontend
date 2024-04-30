@@ -48,7 +48,7 @@ export const UserService = {
   },
   logout: async () => {
     const userType = UserService.getType();
-    const logoutRedirectURL = window?.globalConfigs?.getConfig("LOGOUT_REDIRECT_URL")
+    const logoutRedirectURL = window?.globalConfigs?.getConfig("LOGOUT_REDIRECT_URL") || window?.contextPath;
     try {
       await UserService.logoutUser();
     } catch (e) {
