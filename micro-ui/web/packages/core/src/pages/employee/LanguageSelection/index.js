@@ -6,7 +6,7 @@ import Background from "../../../components/Background";
 
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const history = useHistory();
   const { languages, stateInfo } = storeData || {};
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
@@ -14,6 +14,7 @@ const LanguageSelection = () => {
   const handleChangeLanguage = (language) => {
     setselected(language.value);
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
+    i18n.changeLanguage(language.value);
   };
 
   const handleSubmit = (event) => {
