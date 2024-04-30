@@ -226,7 +226,7 @@ const Upload = ({
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
   // Function for handling upload file event
-  const UploadFileToFileStorage = async (file) => {
+   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       // setting loader

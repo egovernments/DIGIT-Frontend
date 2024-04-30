@@ -10,7 +10,7 @@ const configs = {
     serviceName: "/project-factory/v1/project-type/search",
     requestParam: {},
     requestBody: {},
-    minParametersForSearchForm: 0,
+    minParametersForSearchForm: 1,
     masterName: "commonUiConfig",
     moduleName: "SearchCampaign",
     tableFormJsonPath: "requestBody.CampaignDetails.pagination",
@@ -25,7 +25,7 @@ const configs = {
         headerStyle: null,
         primaryLabel: "ES_COMMON_SEARCH",
         secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-        minReqFields: 0,
+        minReqFields: 1,
         // "showFormInstruction": "TQM_SEARCH_HINT",
         defaultValues: {
           campaignName: "",

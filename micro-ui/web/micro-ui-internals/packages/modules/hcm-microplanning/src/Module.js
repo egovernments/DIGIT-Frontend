@@ -7,7 +7,11 @@ import { UICustomizations } from "./configs/UICustomizations";
 // import WorkbenchCard from "./components/WorkbenchCard";
 import MicroplanningCard from "./components/MicroplanningCard";
 import MicroplanDetails from "./components/MicroplanDetails";
+import { ProviderContext } from "./utils/context";
+
+
 const MicroplanningModule = ({ stateCode, userType, tenants }) => {
+  
   const moduleCode = ["Microplanning"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -17,13 +21,18 @@ const MicroplanningModule = ({ stateCode, userType, tenants }) => {
     language,
   });
 
+
   if (isLoading) {
     return <Loader />;
   }
 
-  return <TourProvider>
-    <EmployeeApp path={path} stateCode={stateCode} />
-  </TourProvider>
+  return (
+    <ProviderContext>
+      <TourProvider>
+        <EmployeeApp path={path} stateCode={stateCode} />
+      </TourProvider>
+    </ProviderContext>
+  )
 };
 
 const componentsToRegister = {
