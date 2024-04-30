@@ -16,7 +16,7 @@ import {
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Resources from "../../configs/Resources.json";
-import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
 import { Close } from "@egovernments/digit-ui-svg-components";
 import { mapDataForApi } from "./CreateMicroplan";
@@ -31,7 +31,11 @@ const MicroplanPreview = ({
   pages,
 }) => {
   // Fetching data using custom MDMS hook
-  const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }, { name: "Schemas" }, { name: "Resources" }]);
+  const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
+    { name: "UIConfiguration" },
+    { name: "Schemas" },
+    { name: "Resources" },
+  ]);
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const userInfo = Digit.SessionStorage.get("User")?.info;
 
@@ -82,7 +86,7 @@ const MicroplanPreview = ({
   };
   const { isLoading: ishierarchyLoading, data: hierarchyRawData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   const hierarchy = useMemo(() => {
-    return hierarchyRawData?.map(item => item?.boundaryType);
+    return hierarchyRawData?.map((item) => item?.boundaryType);
   }, [hierarchyRawData]);
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -121,34 +125,7 @@ const MicroplanPreview = ({
   useEffect(() => {
     if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
 
-    //Decide columns to take and their sequence
-    const getfilteredSchemaColumnsList = () => {
-      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-      if (hierarchy) filteredSchemaColumns = [...hierarchy, ...filteredSchemaColumns];
-      return filteredSchemaColumns;
-    };
-
-    const fetchData = () => {
-      let tempData1 = [];
-      let tempData2 = [];
-
-      //fetch microplan data
-      if (microplanData?.upload?.Population?.data) {
-        tempData1 = microplanData?.upload?.Population?.data.Angonia;
-      }
-      if (microplanData?.upload?.Facilities?.data) {
-        tempData2 = microplanData?.upload?.Facilities?.data.Angonia;
-      }
-
-      // combine all the data from different uploaded files
-      return [tempData1, tempData2];
-    };
-
-    let filteredSchemaColumns = getfilteredSchemaColumnsList();
-    const fetchedData = fetchData();
-
-    let combinedData = innerJoinLists(fetchedData[0], fetchedData[1], "boundaryCode", filteredSchemaColumns);
-
+    let combinedData = fetchMicroplanPreviewData(campaignType, microplanData, validationSchemas, hierarchy);
     // process and form hierarchy
     if (combinedData && hierarchy) {
       var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchyRawData, [combinedData]);
@@ -249,10 +226,9 @@ const HypothesisValues = ({
   UpdateMutate,
   t,
 }) => {
-  const [tempHypothesisList , setTempHypothesisList] = useState(hypothesisAssumptionsList);
-  const { campaignId = "" } = Digit.Hooks.useQueryParams();
-  const {valueChangeHandler,updateHyothesisAPICall} = useHypothesis(tempHypothesisList ,hypothesisAssumptionsList);
-
+  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
+  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
+  const { valueChangeHandler, updateHyothesisAPICall } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
@@ -293,7 +269,9 @@ const HypothesisValues = ({
                 type={"number"}
                 t={t}
                 config={{}}
-                onChange={(value) => valueChangeHandler({ item, newValue: value?.target?.value },setTempHypothesisList, boundarySelections)}
+                onChange={(value) =>
+                  valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
+                }
               />
             </div>
           </div>
@@ -347,90 +325,71 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
   // Filtering out dropdown values
   useEffect(() => {
     if (!boundaryData || !hierarchy) return;
-    let dataMap = {};
-    Object.values(boundaryData)?.forEach((item) => {
-      Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
-        if (value) {
-          if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
-          else dataMap[key] = new Set([...value]);
-        }
-      });
-    });
-    let processedHierarchyTemp = hierarchy.map((item) => {
-      if (dataMap?.[item?.boundaryType])
-        return {
-          ...item,
-          dropDownOptions: [...dataMap[item.boundaryType]].map((data, index) => ({
-            name: data,
-            code: data,
-            boundaryType: item?.boundaryType,
-            parentBoundaryType: item?.parentBoundaryType,
-          })),
-        };
-      else return item;
-    });
+    let processedHierarchyTemp = fetchDropdownValues(boundaryData, hierarchy);
     setProcessedHierarchy(processedHierarchyTemp);
   }, [boundaryData, hierarchy]);
 
-  const handleSelection = useCallback((e) => {
-    let tempData = {};
-    let TempHierarchy = _.cloneDeep(processedHierarchy);
-    let oldSelections = boundarySelections;
-    let selections = [];
-    e.forEach((item) => {
-      selections.push(item?.[1]?.name);
-      // Enpty previous options
-      let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-      if (index !== -1) {
-        TempHierarchy[index].dropDownOptions = [];
-      }
-    });
+  const handleSelection = useCallback(
+    (e) => {
+      let tempData = {};
+      let TempHierarchy = _.cloneDeep(processedHierarchy);
+      let oldSelections = boundarySelections;
+      let selections = [];
+      e.forEach((item) => {
+        selections.push(item?.[1]?.name);
+        // Enpty previous options
+        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+        if (index !== -1) {
+          TempHierarchy[index].dropDownOptions = [];
+        }
+      });
 
-    // filtering current option. if its itself and its parent is not selected it will be discarded
-    if (hierarchy)
-      for (let key of hierarchy) {
-        if (Array.isArray(oldSelections?.[key?.boundaryType])) {
-          oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-            return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+      // filtering current option. if its itself and its parent is not selected it will be discarded
+      if (hierarchy)
+        for (let key of hierarchy) {
+          if (Array.isArray(oldSelections?.[key?.boundaryType])) {
+            oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
+              return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+            });
+          }
+        }
+
+      e.forEach((item) => {
+        // insert new data into tempData
+        if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
+        else tempData[item?.[1]?.boundaryType] = [item?.[1]];
+
+        // Filter the options
+        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+        if (index !== -1) {
+          const tempData = findFilteredDataForHierarchyDropdown(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
+          if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
+        }
+
+        // set the parent as selected
+        let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
+        if (
+          !(
+            tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
+            oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
+          ) &&
+          !!parent
+        ) {
+          var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
+          if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
+          tempData?.[parent?.boundaryType]?.push({
+            name: parent?.name,
+            code: parent?.name,
+            boundaryType: parent?.boundaryType,
+            parentBoundaryType: parentBoundaryType,
           });
         }
-      }
-
-    e.forEach((item) => {
-      // insert new data into tempData
-      if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
-      else tempData[item?.[1]?.boundaryType] = [item?.[1]];
-
-      // Filter the options
-      let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-      if (index !== -1) {
-        const tempData = findFilteredDataForHierarchyDropdown(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
-        if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
-      }
-
-      // set the parent as selected
-      let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-      if (
-        !(
-          tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
-          oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-        ) &&
-        !!parent
-      ) {
-        var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
-        if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
-        tempData?.[parent?.boundaryType]?.push({
-          name: parent?.name,
-          code: parent?.name,
-          boundaryType: parent?.boundaryType,
-          parentBoundaryType: parentBoundaryType,
-        });
-      }
-    });
-    setProcessedHierarchy(TempHierarchy);
-    setBoundarySelections({ ...oldSelections, ...tempData });
-  }, [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]);
-
+      });
+      setProcessedHierarchy(TempHierarchy);
+      setBoundarySelections({ ...oldSelections, ...tempData });
+    },
+    [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]
+  );
 
   return (
     <div className="boundary-selection">
@@ -700,10 +659,10 @@ const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeeded
         let value;
         if (firstListIndex !== undefined) {
           // If the column is present in firstList
-          value = firstList[i][firstListIndex];
+          value = firstList?.[i]?.[firstListIndex];
         } else if (secondListIndex !== undefined) {
           // If the column is present in secondList but not in firstList
-          value = secondList[i][secondListIndex];
+          value = secondList?.[i]?.[secondListIndex];
         }
         // Push the value to the joined row
         joinedRow.push(value);
@@ -836,11 +795,9 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
   );
 };
 
-
-
-const useHypothesis = (tempHypothesisList,hypothesisAssumptionsList)=>{
+const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
   // Handles the change in hypothesis value
-  const valueChangeHandler = (e,setTempHypothesisList,boundarySelections) => {
+  const valueChangeHandler = (e, setTempHypothesisList, boundarySelections, setToast, t) => {
     // Checks it the boundary filters at at root level ( given constraints )
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
@@ -868,33 +825,109 @@ const useHypothesis = (tempHypothesisList,hypothesisAssumptionsList)=>{
   };
 
   const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate) => {
-    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
-    body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
-    body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
-    await UpdateMutate(body, {
-      onSuccess: async (data) => {
-        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-        setTimeout(() => {
-          setToastCreateMicroplan(undefined);
-        }, 2000);
-      },
-      onError: (error, variables) => {
-        setToastCreateMicroplan({
-          message: t("ERROR_DATA_NOT_SAVED"),
-          state: "error",
-        });
-        setTimeout(() => {
-          setToastCreateMicroplan(undefined);
-        }, 2000);
-      },
-    });
+    try {
+      let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
+      body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+      body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+      await UpdateMutate(body, {
+        onSuccess: async (data) => {
+          setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+          setTimeout(() => {
+            setToastCreateMicroplan(undefined);
+          }, 2000);
+        },
+        onError: (error, variables) => {
+          setToastCreateMicroplan({
+            message: t("ERROR_DATA_NOT_SAVED"),
+            state: "error",
+          });
+          setTimeout(() => {
+            setToastCreateMicroplan(undefined);
+          }, 2000);
+        },
+      });
+    } catch (error) {
+      setToastCreateMicroplan({
+        message: t("ERROR_DATA_NOT_SAVED"),
+        state: "error",
+      });
+    }
   };
-  
 
   return {
     valueChangeHandler,
-    updateHyothesisAPICall
-  }
-}
+    updateHyothesisAPICall,
+  };
+};
 
+const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
+  //Decide columns to take and their sequence
+  const getfilteredSchemaColumnsList = () => {
+    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+    if (hierarchy) filteredSchemaColumns = [...hierarchy, "boundaryCode", ...filteredSchemaColumns];
+    return filteredSchemaColumns;
+  };
+  let filteredSchemaColumns = getfilteredSchemaColumnsList();
+  const fetchedData = fetchMicroplanData(microplanData);
+
+  // Perform inner joins using reduce
+  const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
+    if (index === 0) {
+      return currentData;
+    } else {
+      return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
+    }
+  }, null);
+  return dataAfterJoins;
+};
+
+const fetchMicroplanData = (microplanData) => {
+  if (!microplanData) return [];
+
+  let combinesDataList = [];
+
+  // Check if microplanData and its upload property exist
+  if (microplanData && microplanData?.upload) {
+    let files = microplanData?.upload;
+    // Loop through each file in the microplan upload
+    for (let fileData in files) {
+      // Check if the file is not part of boundary or layer data origins
+      if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
+
+      // Check if file contains latitude and longitude columns
+      if (files[fileData]?.data) {
+        // Check file type and update data availability accordingly
+        switch (files[fileData]?.fileType) {
+          case "Excel": {
+            // extract dada
+            for (let data of Object.values(files[fileData]?.data)) {
+              combinesDataList.push(data);
+            }
+            break;
+          }
+          case "GeoJSON":
+          case "Shapefile":
+            // Extract keys from the first feature's properties
+            var keys = Object.keys(files[fileData]?.data.features[0].properties);
+
+            // Extract corresponding values for each feature
+            const values = files[fileData]?.data?.features.map((feature) => {
+              // list with features added to it
+              const temp = keys.map((key) => {
+                if (feature.properties[key] === "") {
+                  return null;
+                }
+                return feature.properties[key];
+              });
+              return temp;
+            });
+
+            let data = [keys, ...values];
+            combinesDataList.push(data);
+        }
+      }
+    }
+  }
+  return combinesDataList;
+};
 export default MicroplanPreview;

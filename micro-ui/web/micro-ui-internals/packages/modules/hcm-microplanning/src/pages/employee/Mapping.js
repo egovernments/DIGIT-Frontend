@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
-import { processHierarchyAndData, findParent } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 
 // Mapping component definition
 const Mapping = ({
@@ -265,88 +265,70 @@ const BoundarySelection = memo(
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
-      let dataMap = {};
-      Object.values(boundaryData)?.forEach((item) => {
-        Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
-          if (value) {
-            if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
-            else dataMap[key] = new Set([...value]);
-          }
-        });
-      });
-      let processedHierarchyTemp = hierarchy.map((item) => {
-        if (dataMap?.[item?.boundaryType])
-          return {
-            ...item,
-            dropDownOptions: [...dataMap[item.boundaryType]].map((data) => ({
-              name: data,
-              code: data,
-              boundaryType: item?.boundaryType,
-              parentBoundaryType: item?.parentBoundaryType,
-            })),
-          };
-        else return item;
-      });
+      let processedHierarchyTemp = fetchDropdownValues(boundaryData, hierarchy);
       setProcessedHierarchy(processedHierarchyTemp);
     }, [boundaryData, hierarchy]);
 
-    const handleSelection = (e) => {
-      let tempData = {};
-      let TempHierarchy = _.cloneDeep(processedHierarchy);
-      let oldSelections = boundarySelections;
-      let selections = [];
-      e.forEach((item) => {
-        selections.push(item?.[1]?.name);
-        // Enpty previous options
-        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-        if (index !== -1) {
-          TempHierarchy[index].dropDownOptions = [];
-        }
-      });
+    const handleSelection = useCallback(
+      (e) => {
+        let tempData = {};
+        let TempHierarchy = _.cloneDeep(processedHierarchy);
+        let oldSelections = boundarySelections;
+        let selections = [];
+        e.forEach((item) => {
+          selections.push(item?.[1]?.name);
+          // Enpty previous options
+          let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+          if (index !== -1) {
+            TempHierarchy[index].dropDownOptions = [];
+          }
+        });
 
-      // filtering current option. if its itself and its parent is not selected it will be discarded
-      if(hierarchy)
-      for (let key of hierarchy) {
-        if (Array.isArray(oldSelections?.[key?.boundaryType])) {
-          oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-            return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
-          });
-        }
-      }
-      e.forEach((item) => {
-        // insert new data into tempData
-        if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
-        else tempData[item?.[1]?.boundaryType] = [item?.[1]];
+        // filtering current option. if its itself and its parent is not selected it will be discarded
+        if (hierarchy)
+          for (let key of hierarchy) {
+            if (Array.isArray(oldSelections?.[key?.boundaryType])) {
+              oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
+                return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+              });
+            }
+          }
+        e.forEach((item) => {
+          // insert new data into tempData
+          if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
+          else tempData[item?.[1]?.boundaryType] = [item?.[1]];
 
-        // Filter the options
-        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-        if (index !== -1) {
-          const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
-          if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
-        }
+          // Filter the options
+          let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
+          if (index !== -1) {
+            const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
+            if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
+          }
 
-        // set the parent as selected
-        let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-        if (
-          !(
-            tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
-            oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-          ) &&
-          !!parent
-        ) {
-          var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
-          if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
-          tempData?.[parent?.boundaryType]?.push({
-            name: parent?.name,
-            code: parent?.name,
-            boundaryType: parent?.boundaryType,
-            parentBoundaryType: parentBoundaryType,
-          });
-        }
-      });
-      setProcessedHierarchy(TempHierarchy);
-      setBoundarySelections({ ...oldSelections, ...tempData });
-    };
+          // set the parent as selected
+          let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
+          if (
+            !(
+              tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
+              oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
+            ) &&
+            !!parent
+          ) {
+            var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
+            if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
+            tempData?.[parent?.boundaryType]?.push({
+              name: parent?.name,
+              code: parent?.name,
+              boundaryType: parent?.boundaryType,
+              parentBoundaryType: parentBoundaryType,
+            });
+          }
+        });
+        setProcessedHierarchy(TempHierarchy);
+        setBoundarySelections({ ...oldSelections, ...tempData });
+      },
+      [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]
+    );
 
     return (
       <div className="filter-by-boundary" ref={filterBoundaryRef}>
@@ -461,7 +443,7 @@ const extractGeoData = (
 
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
-    let files = microplanData?.upload;
+    let files = _.cloneDeep(microplanData?.upload);
     let dataAvailabilityCheck = "initialStage"; // Initialize data availability check
     // Loop through each file in the microplan upload
     for (let fileData in files) {

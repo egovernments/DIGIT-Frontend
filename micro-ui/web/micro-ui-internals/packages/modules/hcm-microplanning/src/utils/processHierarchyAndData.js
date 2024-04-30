@@ -97,3 +97,28 @@ export const findParent = (name, hierarchy, parent) => {
   }
 };
 
+export const fetchDropdownValues = (boundaryData, hierarchy) => {
+  let dataMap = {};
+  Object.values(boundaryData)?.forEach((item) => {
+    Object.entries(item?.hierarchyLists)?.forEach(([key, value]) => {
+      if (value) {
+        if (dataMap?.[key]) dataMap[key] = new Set([...dataMap[key], ...value]);
+        else dataMap[key] = new Set([...value]);
+      }
+    });
+  });
+  let processedHierarchyTemp = hierarchy.map((item) => {
+    if (dataMap?.[item?.boundaryType])
+      return {
+        ...item,
+        dropDownOptions: [...dataMap[item.boundaryType]].map((data, index) => ({
+          name: data,
+          code: data,
+          boundaryType: item?.boundaryType,
+          parentBoundaryType: item?.parentBoundaryType,
+        })),
+      };
+    else return item;
+  });
+  return processedHierarchyTemp;
+};
