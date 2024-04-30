@@ -1,12 +1,34 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
-import Backend from "i18next-http-backend";
+import ReactPostprocessor from "i18next-react-postprocessor";
+
+function replaceLiterals(text = "", dynamicValues = {}) {
+  let returnText = text;
+  const regex = /[^\{\{][\{]\w+/;
+  if (regex.exec(text) !== null) {
+    Object.keys(dynamicValues).forEach((key) => {
+      returnText = returnText.replace(`{${key.toUpperCase()}}`, dynamicValues[key]);
+    });
+  }
+
+  return returnText;
+}
+
+const templatePostprocessor = {
+  type: "postProcessor",
+  name: "templatePostprocessor",
+  process: function (value, key, options, translator) {
+    return replaceLiterals(value, options);
+  },
+};
+
 
 i18n
+  .use(new ReactPostprocessor())
+  .use(templatePostprocessor)
   .use(LanguageDetector)
   .use(initReactI18next)
-  // .use(Backend)
   .init({
     ns: ["translations"],
     defaultNS: "translations",
@@ -14,35 +36,7 @@ i18n
     lng: localStorage.getItem("i18nextLng") || "en_IN",
     fallbackLng:"en_IN",
     returnObjects:true,
-    // backend:{
-    //   loadPath:'/locales/{{lng}}/{{ns}}.json'
-    // },
+    postProcess: [`reactPostprocessor`, "templatePostprocessor"],
     resources: {
-      // en:{
-      //   translation:{
-      //     greeting: 'Hello, Welcome!',
-      //   }
-      // },
-      // hi:{
-      //   translation:{
-      //     greeting: 'नमस्ते, स्वागत है!',
-      //   }
-      // },
-      // fr:{
-      //   translation:{
-      //     greeting: 'Bonjour bienvenue',
-      //   }
-      // },
     },
   });
-
-
-  // i18n.addResourceBundle('en', 'sample', {
-  //   "meet": 'hello from namespace 1'
-  // });
-  // i18n.addResourceBundle('hi', 'sample', {
-  //   "meet": 'Hindi'
-  // });
-  // i18n.addResourceBundle('fr', 'sample', {
-  //   "meet": 'French'
-  // });
