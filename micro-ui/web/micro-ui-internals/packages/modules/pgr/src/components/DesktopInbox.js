@@ -75,7 +75,7 @@ const DesktopInbox = ({
   let result;
   if (isLoading) {
     result = <Loader />;
-  } else if (data && data.length === 0) {
+  } else if (data && data?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
         {t(LOCALE.NO_COMPLAINTS_EMPLOYEE)
@@ -87,7 +87,7 @@ const DesktopInbox = ({
           ))}
       </Card>
     );
-  } else if (data.length > 0) {
+  } else if (data?.length > 0) {
     result = (
       <ComplaintTable
         t={t}

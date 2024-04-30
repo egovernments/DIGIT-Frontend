@@ -58,12 +58,12 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   useEffect(() => {
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
-    if (city?.code === getCities()[0]?.code) {
+    if (city?.code&&city?.code === getCities()[0]?.code) {
       setPincodeNotValid(false);
       setSelectedCity(city);
       setSelectedLocality(null);
       const __localityList = fetchedLocalities;
-      const __filteredLocalities = __localityList.filter((city) => city["pincode"] == pincode);
+      const __filteredLocalities = __localityList?.filter((city) => city["pincode"] == pincode);
       setLocalities(__filteredLocalities);
     } else if (pincode === "" || pincode === null) {
       setPincodeNotValid(false);
