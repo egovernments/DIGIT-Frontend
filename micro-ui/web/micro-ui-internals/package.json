@@ -7,6 +7,7 @@
     "example",
     "packages/css",
     "packages/react-components",
+    "packages/svg-components",
     "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
