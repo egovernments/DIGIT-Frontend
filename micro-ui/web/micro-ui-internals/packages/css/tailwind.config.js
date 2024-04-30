@@ -12,7 +12,7 @@ module.exports = {
     colors: {
       primary: {
         light: "#F18F5E",
-        main: "#F47738",
+        main: "#c84c0e",
         dark: "#C8602B",
       },
       secondary: "#22394D",
@@ -27,7 +27,7 @@ module.exports = {
       border: "#D6D5D4",
       inputBorder: "#464646",
       "input-border": "#464646",
-      focus: "#F47738",
+      focus: "#c84c0e",
       error: "#D4351C",
       success: "#00703C",
       black: "#000000",
@@ -103,7 +103,7 @@ module.exports = {
     extend: {},
     digitv2: {
       lightTheme: {
-        primary: "#F47738",
+        primary: "#c84c0e",
         "text-color-primary": "#0B0C0C",
         "text-color-secondary": "#505A5F",
         "text-color-disabled": "#B1B4B6",

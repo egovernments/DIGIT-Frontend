@@ -61,6 +61,7 @@ const { Accessibility } = SVG;
 ### Changelog
 
 ```bash
+1.0.6 Used a new Primary constant color "#c84c0e"
 1.0.5 Adding Pagination icons and Fixing Population and Facility icons
 1.0.4 fixed Excel icon
 1.0.3 fixed and added Microplanning module icons
