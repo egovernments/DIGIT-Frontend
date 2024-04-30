@@ -131,7 +131,6 @@ export const updateSessionUtils = {
       // const fileBlob = new Blob([binary], { type: 'application/octet-stream' });
       // const file = new File([fileBlob], "filename");
 
-      debugger
       // shp
       // ------------
       // const zip = await JSZip.loadAsync(file);
