@@ -20,7 +20,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);
-  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")
+  const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
   const [errorsType, setErrorsType] = useState({});
   const [schema, setSchema] = useState(null);
@@ -68,10 +68,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         uploadType = "uploadFacility";
       }
       onSelect(uploadType, uploadedFile);
-      setExecutionCount(prevCount => prevCount + 1);
+      setExecutionCount((prevCount) => prevCount + 1);
     }
   }, [type, executionCount, onSelect, uploadedFile]);
-  
 
   useEffect(() => {
     switch (type) {
@@ -99,12 +98,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     const ajv = new Ajv(); // Initialize Ajv
     // const validate = ajv.compile(schema); // Compile schema
     let validate;
-    if (type === 'facilityWithBoundary') {
+    if (type === "facilityWithBoundary") {
       validate = ajv.compile(schemaConfig?.facilityWithBoundary);
-    } else if (type === 'boundary') {
-      validate = ajv.compile(schemaConfig?.Boundary);
-    }
-    else {
+    } else if (type === "boundary") {
+      // validate = ajv.compile(schemaConfig?.Boundary);
+    } else {
       validate = ajv.compile(schemaConfig?.User);
     }
     const errors = []; // Array to hold validation errors
@@ -118,14 +116,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     if (errors.length > 0) {
       const errorMessage = errors
         .map(({ index, errors }) => {
-          const formattedErrors = errors.map((error) => {
-            let formattedError = `${error.instancePath}: ${error.message}`;
-            if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
-                formattedError += `. Allowed values are: ${error.params.allowedValues.join('/ ')}`;
-            }
-            return formattedError;
-        }).join(', ');
-        return `Data at row ${index}: ${formattedErrors}`;
+          const formattedErrors = errors
+            .map((error) => {
+              let formattedError = `${error.instancePath}: ${error.message}`;
+              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+                formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
+              }
+              return formattedError;
+            })
+            .join(", ");
+          return `Data at row ${index}: ${formattedErrors}`;
         })
         .join(" , ");
 
@@ -137,11 +137,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     } else {
       setErrorsType((prevErrors) => ({
         ...prevErrors,
-        [type]: '' // Clear the error message
+        [type]: "", // Clear the error message
       }));
       setShowInfoCard(false);
       return true;
     }
+  };
+
+  const validateTarget = (data) => {
+    console.log("data", data);
+    
   };
 
   const validateExcel = (selectedFile) => {
@@ -164,30 +169,30 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
-                [type]: errorMessage
+                [type]: errorMessage,
               }));
-              return ;
+              return;
             }
           } else if (type === "facilityWithBoundary") {
             if (SheetNames !== "List of Available Facilities") {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
-                [type]: errorMessage
+                [type]: errorMessage,
               }));
-              return ;
+              return;
             }
-          }else{
+          } else {
             if (SheetNames !== "Create List of Users") {
               const errorMessage = t("HCM_INVALID_USER_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
-                [type]: errorMessage
+                [type]: errorMessage,
               }));
-              return ;
+              return;
             }
           }
-          
+
           const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
             const rowData = {};
@@ -202,10 +207,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           jsonData = jsonData.filter((element) => element !== undefined);
 
-          if (validateData(jsonData, SheetNames)) {
-            resolve(true);
+          console.log("json", jsonData);
+
+          if (type == "boundary") {
+            const validate = validateTarget(file[0]);
           } else {
-            setShowInfoCard(true);
+            if (validateData(jsonData, SheetNames)) {
+              resolve(true);
+            } else {
+              setShowInfoCard(true);
+            }
           }
         } catch (error) {
           console.log("error", error);
@@ -227,6 +238,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [showToast]);
 
   const onBulkUploadSubmit = async (file) => {
+    console.log("file", file);
     if (file.length > 1) {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
       return;
@@ -238,7 +250,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     const fileData = fileUrl.map((i) => {
       const urlParts = i?.url?.split("/");
       const fileName = file?.[0]?.name;
-      const fileType = type === "facilityWithBoundary" ? "facility" : type;
+      const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
       return {
         ...i,
         fileName: fileName,
@@ -255,11 +267,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const onFileDownload = (file) => {
     if (file && file?.url) {
-        // Splitting filename before .xlsx or .xls
-        const fileNameWithoutExtension = file?.fileName.split(/\.(xlsx|xls)/)[0];
-        downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
+      window.location.href = fileData?.[0]?.url;
+      // Splitting filename before .xlsx or .xls
+      // const fileNameWithoutExtension = file?.fileName.split(/\.(xlsx|xls)/)[0];
+      // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
-};
+  };
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -299,21 +312,55 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           if (fileData && fileData?.[0]?.url) {
-            downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
+            console.log("fileData", fileData);
+            // downloadExcel(fileData[0].blob, fileData[0].fileName);
+            window.location.href = fileData?.[0]?.url;
+            // downloadExcel(new Blob(fileData, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
           }
+          // if (fileData && fileData?.[0]?.url) {
+          //   console.log("fileData", fileData);
+          //   const response = await fetch(fileData[0].url);
+          //   const blob = await response.blob();
+          //   downloadExcel(blob, fileData[0].fileName); // Pass the blob directly to downloadExcel
+          // }
         },
       }
     );
   };
 
+  // const downloadExcel = (blob, fileName) => {
+  //   console.log("fileName", fileName);
+  //     const link = document.createElement("a");
+  //     link.href = URL.createObjectURL(blob);
+  //     link.download = fileName + ".xlsx";
+  //     document.body.append(link);
+  //     link.click();
+  //     link.remove();
+  //     // document.body.removeChild(link);
+  //     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+  // };
+
   const downloadExcel = (blob, fileName) => {
+    console.log("fileName", fileName);
+    console.log("blob", blob);
+    if (window.mSewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
+      var reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = function () {
+        var base64data = reader.result;
+        // Adjust MIME type and file extension if necessary
+        window.mSewaApp.downloadBase64File(base64data, fileName + ".xlsx");
+      };
+    } else {
       const link = document.createElement("a");
+      // Adjust MIME type to Excel format
       link.href = URL.createObjectURL(blob);
-      link.download = fileName + ".xlsx";
+      link.download = fileName + ".xlsx"; // Adjust file extension
       document.body.append(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    }
   };
 
   return (
