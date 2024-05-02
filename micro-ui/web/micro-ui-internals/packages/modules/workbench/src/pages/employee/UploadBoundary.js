@@ -234,7 +234,7 @@ const UploadBoundary = () => {
             isDisabled={!selectedValue}
             onButtonClick={callInputClick}
           />
-          <GenerateXlsx inputRef={inputRef} jsonData={[simplifiedData]} skipHeader={true} />
+          <GenerateXlsx inputRef={inputRef} jsonData={[simplifiedData]} skipHeader={true} sheetName="Boundary Data"/>
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
         {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
