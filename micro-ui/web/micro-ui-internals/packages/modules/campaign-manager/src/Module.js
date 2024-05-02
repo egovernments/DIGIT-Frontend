@@ -21,7 +21,7 @@ import CampaignSelection from "./components/CampaignType";
 import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
 import AddProduct from "./pages/employee/AddProduct";
 import AddProductField from "./components/AddProductField";
-// import CycleDataPreview from "./components/CycleDataPreview";
+import CycleDataPreview from "./components/CycleDataPreview";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -52,8 +52,6 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
-  // campaignModule: CampaignModule,
-  // campaignCard: CampaignCard,
   CampaignCard: CampaignCard,
   UploadData,
   DeliveryRule: DeliverySetup,
@@ -71,7 +69,7 @@ const componentsToRegister = {
   CampaignDocumentsPreview: CampaignDocumentsPreview,
   AddProduct,
   AddProductField,
-  // CycleDataPreview,
+  CycleDataPreview,
 };
 
 const overrideHooks = () => {

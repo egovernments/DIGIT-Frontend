@@ -61,7 +61,6 @@ function AddProduct() {
             setShowToast({ key: "error", label: error });
           },
           onSuccess: async (data) => {
-            // console.log("HO GYA RE BAAP", data);
             history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
               message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
               text: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_TEXT",
