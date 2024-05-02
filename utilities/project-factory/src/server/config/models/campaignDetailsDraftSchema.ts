@@ -81,7 +81,7 @@ export const campaignDetailsDraftSchema = {
             "maxLength": 128,
             "minLength": 1
         },
-         "deliveryRules": {
+        "deliveryRules": {
             "type": "array"
         },
         "additionalDetails": {
