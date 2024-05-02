@@ -315,16 +315,17 @@ const SetupCampaign = () => {
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
   const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
-  const userId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType); // to be integrated later
+  const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
     setDataParams({
       ...dataParams,
       facilityId: facilityId,
       boundaryId: boundaryId,
+      userId: userId,
       hierarchyType: hierarchyType,
     });
-  }, [facilityId, boundaryId]); // Only run if dataParams changes
+  }, [facilityId, boundaryId , userId]); // Only run if dataParams changes
 
   // Example usage:
   // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
@@ -413,11 +414,6 @@ const SetupCampaign = () => {
                 value: attribute.toValue ? Number(attribute.toValue) : null,
               });
             } else {
-              console.log(
-                "JKHJKH",
-                attribute,
-                attribute?.attribute?.code ? attribute?.attribute?.code : typeof attribute?.attribute === "string" ? attribute?.attribute : null
-              );
               restructuredRule.conditions.push({
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
@@ -772,6 +768,33 @@ const SetupCampaign = () => {
         } else {
           return true;
         }
+        case "uploadBoundary":
+          if (formData?.uploadBoundary?.errorsType && formData?.uploadBoundary?.errorsType?.boundary && !(formData?.uploadBoundary?.uploadedFile.length === 0)) {
+            setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}`});
+            return false;
+          }
+          else {
+            return true;
+          }
+
+        case "uploadFacility":
+          if (formData?.uploadFacility?.errorsType && formData?.uploadFacility?.errorsType?.facilityWithBoundary && !(formData?.uploadFacility?.uploadedFile.length === 0)) {
+            setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}`});
+            return false;
+          }
+          else {
+            return true;
+          }
+          case "uploaduser":
+          if (formData?.uploadUser?.errorsType && formData?.uploadUser?.errorsType?.userWithBoundary && !(formData?.uploadUser?.uploadedFile.length === 0)) {
+            setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}`});
+            return false;
+          }
+          else {
+            return true;
+          }
+        
+
       case "cycleConfigure":
         const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
         const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;

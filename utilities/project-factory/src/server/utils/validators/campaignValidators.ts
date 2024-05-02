@@ -12,6 +12,8 @@ import { validateBodyViaSchema, validateHierarchyType } from "./genericValidator
 import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
 import { campaignDetailsDraftSchema } from "../../config/models/campaignDetailsDraftSchema";
+import { downloadRequestSchema } from "../../config/models/downloadRequestSchema";
+import { createRequestSchema } from "../../config/models/createRequestSchema"
 
 
 
@@ -207,29 +209,34 @@ async function validateViaSchema(data: any, schema: any, request: any) {
         const ajv = new Ajv();
         const validate = ajv.compile(schema);
         const validationErrors: any[] = [];
-        data.forEach((item: any) => {
-            if (!item?.[createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName])
-                if (!validate(item)) {
-                    validationErrors.push({ index: item?.["!row#number!"] + 1, errors: validate.errors });
-                }
-        });
-        await validateUnique(schema, data, request)
-
-        // Throw errors if any
-        if (validationErrors.length > 0) {
-            const errorMessage = validationErrors.map(({ index, errors }) => {
-                const formattedErrors = errors.map((error: any) => {
-                    let formattedError = `${error.dataPath}: ${error.message}`;
-                    if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
-                        formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
+        if (data?.length > 0) {
+            data.forEach((item: any) => {
+                if (!item?.[createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName])
+                    if (!validate(item)) {
+                        validationErrors.push({ index: item?.["!row#number!"] + 1, errors: validate.errors });
                     }
-                    return formattedError;
-                }).join(', ');
-                return `Data at row ${index}: ${formattedErrors}`;
-            }).join(' , ');
-            throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
-        } else {
-            logger.info("All Data rows are valid.");
+            });
+            await validateUnique(schema, data, request)
+
+            // Throw errors if any
+            if (validationErrors.length > 0) {
+                const errorMessage = validationErrors.map(({ index, errors }) => {
+                    const formattedErrors = errors.map((error: any) => {
+                        let formattedError = `${error.dataPath}: ${error.message}`;
+                        if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
+                            formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
+                        }
+                        return formattedError;
+                    }).join(', ');
+                    return `Data at row ${index}: ${formattedErrors}`;
+                }).join(' , ');
+                throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
+            } else {
+                logger.info("All Data rows are valid.");
+            }
+        }
+        else {
+            throwError("FILE", 400, "INVALID_FILE_ERROR", "Data rows cannot be empty");
         }
     }
     else {
@@ -295,44 +302,17 @@ function validateStorageCapacity(obj: any, index: any) {
     }
 }
 
-function validateAction(action: string) {
-    if (!(action == "create" || action == "validate")) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid action");
-    }
-}
-
-function validateResourceType(type: string) {
-    if (!createAndSearch[type]) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid resource type");
-    }
-}
 
 async function validateCreateRequest(request: any) {
-    if (!request?.body?.ResourceDetails) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "ResourceDetails is missing");
-    } else {
-        if (!request?.body?.ResourceDetails?.fileStoreId) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "fileStoreId is missing");
-        }
-        if (!request?.body?.ResourceDetails?.type) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "type is missing");
-        }
-        if (!request?.body?.ResourceDetails?.tenantId) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is missing");
-        }
-        if (!request?.body?.ResourceDetails?.action) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "action is missing");
-        }
-        if (!request?.body?.ResourceDetails?.hierarchyType) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "hierarchyType is missing");
-        }
+    if (!request?.body?.ResourceDetails || Object.keys(request.body.ResourceDetails).length === 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "ResourceDetails is missing or empty or null");
+    }
+    else {
+        validateBodyViaSchema(createRequestSchema, request.body.ResourceDetails);
         await validateHierarchyType(request, request?.body?.ResourceDetails?.hierarchyType, request?.body?.ResourceDetails?.tenantId);
-
         if (request?.body?.ResourceDetails?.tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is not matching with userInfo");
         }
-        validateAction(request?.body?.ResourceDetails?.action);
-        validateResourceType(request?.body?.ResourceDetails?.type);
         const fileUrl = await validateFile(request);
         if (request.body.ResourceDetails.type == 'boundary') {
             await validateBoundarySheetData(request, fileUrl);
@@ -451,21 +431,39 @@ async function validateResources(resources: any, request: any) {
 }
 
 async function validateProjectCampaignResources(resources: any, request: any) {
+    const requiredTypes = ["user", "facility"];
+    const typeCounts: any = {
+        "user": 0,
+        "facility": 0
+    };
+
     if (resources) {
-        if (!Array.isArray(resources)) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be an array");
+        if (!Array.isArray(resources) || resources.length === 0) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be a non-empty array");
         }
+
         for (const resource of resources) {
             const { type } = resource;
-            if (!createAndSearch[type]) {
+            if (!type || !requiredTypes.includes(type)) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid resource type");
             }
+            typeCounts[type]++;
         }
-        if (request?.body?.CampaignDetails?.action == "create" && request?.body?.CampaignDetails?.resources) {
+
+        for (const type of requiredTypes) {
+            if (typeCounts[type] === 0) {
+                throwError("COMMON", 400, "VALIDATION_ERROR", `Missing resource of type ${type}`);
+            }
+        }
+
+        if (request?.body?.CampaignDetails?.action === "create" && request?.body?.CampaignDetails?.resources) {
             await validateResources(request.body.CampaignDetails.resources, request);
         }
+    } else {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "Missing resources array");
     }
 }
+
 
 
 
@@ -567,12 +565,49 @@ async function validateById(request: any) {
     }
 }
 
+async function validateProjectType(request: any, projectType: any, tenantId: any) {
+    if (!projectType) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "projectType is required");
+    }
+    else {
+        const searchBody = {
+            RequestInfo: request.body.RequestInfo,
+            "MdmsCriteria": {
+                "tenantId": tenantId,
+                "moduleDetails": [
+                    {
+                        "moduleName": "HCM-PROJECT-TYPES",
+                        "masterDetails": [
+                            {
+                                "name": "projectTypes",
+                                "filter": "*.code"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+        const params = { tenantId: tenantId }
+        logger.info("Url : " + config.host.mdms + "egov-mdms-service/v1/_search");
+        const searchResponse: any = await httpRequest(config.host.mdms + "egov-mdms-service/v1/_search", searchBody, params);
+        if (searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes && Array.isArray(searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes)) {
+            const projectTypes = searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+            if (!projectTypes.includes(projectType)) {
+                throwError("COMMON", 400, "VALIDATION_ERROR", "projectType is not valid");
+            }
+        }
+        else {
+            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Error occured during projectType search");
+        }
+    }
+}
+
 
 
 
 async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     const CampaignDetails = request.body.CampaignDetails;
-    const { hierarchyType, action, tenantId, boundaries, resources } = CampaignDetails;
+    const { hierarchyType, action, tenantId, boundaries, resources, projectType } = CampaignDetails;
     if (!CampaignDetails) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "CampaignDetails is required");
     }
@@ -588,10 +623,13 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
         if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is not matching with userInfo");
         }
+        await validateHierarchyType(request, hierarchyType, tenantId);
+        await validateProjectType(request, projectType, tenantId);
         await validateProjectCampaignBoundaries(boundaries, hierarchyType, tenantId, request);
         await validateProjectCampaignResources(resources, request);
     }
     else {
+        await validateHierarchyType(request, hierarchyType, tenantId);
         validateDraftProjectCampaignMissingFields(CampaignDetails);
     }
     if (actionInUrl == "update") {
@@ -699,27 +737,16 @@ function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: 
     const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
     if (keysBeforeBoundaryCode.some((key: any, index: any) => (key === undefined || key === null) || key !== hierarchy[index]) || keysBeforeBoundaryCode.length !== hierarchy.length) {
         const errorMessage = `"Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type: ${request?.body?.ResourceDetails?.hierarchyType}"`;
-        throwError("BOUNDARY", 500, "BOUNDARY_SHEET_HEADER_ERROR", errorMessage);
+        throwError("BOUNDARY", 400, "BOUNDARY_SHEET_HEADER_ERROR", errorMessage);
     }
 }
 
 
 async function validateDownloadRequest(request: any) {
-    const { tenantId, type, hierarchyType } = request.query;
-    if (!tenantId) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is required");
-    }
+    const { tenantId, hierarchyType } = request.query;
+    validateBodyViaSchema(downloadRequestSchema, request.query);
     if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId in userInfo and query should be the same");
-    }
-    if (!type) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "type is required");
-    }
-    if (!["facility", "user", "boundary", "facilityWithBoundary", "userWithBoundary"].includes(String(type))) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "Type should be facility, user, boundary, or facilityWithBoundary or userWithBoundary");
-    }
-    if (!hierarchyType) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "hierarchyType is required");
     }
     await validateHierarchyType(request, hierarchyType, tenantId);
 }
