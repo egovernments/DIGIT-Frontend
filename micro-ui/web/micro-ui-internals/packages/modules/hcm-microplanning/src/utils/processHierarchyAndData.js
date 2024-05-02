@@ -18,8 +18,9 @@ export const processHierarchyAndData = (hierarchy, allData) => {
         let currentNode = dataHierarchicalData;
         hierarchy.forEach((item, index) => {
           const boundaryType = item.boundaryType;
-          const cellValue = row[index];
-
+          const dataIndex = data?.[0].indexOf(boundaryType)
+          if(dataIndex === -1) return
+          const cellValue = row[dataIndex];
           // Populate hierarchy lists
           if (!hierarchyLists[boundaryType].includes(cellValue) && cellValue !== null && cellValue !== "" && cellValue !== undefined) {
             hierarchyLists[boundaryType].push(cellValue);

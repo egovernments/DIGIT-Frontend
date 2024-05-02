@@ -34,7 +34,6 @@ export const ModalHeading = (props) => {
 
 export const convertGeojsonToExcelSingleSheet = (InputData, fileName) => {
   if (!InputData || !Array.isArray(InputData) || InputData.length === 0) {
-    console.error("InputData is missing or invalid.");
     return null;
   }
 
@@ -42,7 +41,6 @@ export const convertGeojsonToExcelSingleSheet = (InputData, fileName) => {
   const keys = Object.keys(InputData?.[0]?.properties);
 
   if (!keys || keys.length === 0) {
-    console.error("Properties keys are missing or invalid in the InputData.");
     return null;
   }
 
@@ -53,4 +51,13 @@ export const convertGeojsonToExcelSingleSheet = (InputData, fileName) => {
 
   // Group keys and values into the desired format
   return { [fileName]: [keys, ...values] };
+};
+
+export const CloseButton = ({ clickHandler, style = {} }) => {
+  return (
+    <div className="microplan-close-button" onClick={clickHandler} style={style}>
+      {" "}
+      <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
+    </div>
+  );
 };

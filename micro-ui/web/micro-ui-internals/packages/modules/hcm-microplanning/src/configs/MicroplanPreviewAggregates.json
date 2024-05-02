@@ -1,0 +1,36 @@
+{
+    "tenantId": "mz",
+    "moduleName": "hcm-microplanning",
+    "MicroplanPreviewAggregates": [
+        {
+            "campaignType": "ITIN",
+            "data": [
+                "targetPopulation",
+                "targetHouseholds",
+                "NO_OF_BEDNET_REQUIRED",
+                "NO_OF_DISTRIBUTORS"
+            ]
+        },
+        {
+            "campaignType": "IRS",
+            "data": [
+                "targetPopulation",
+                "NO_OF_HOUSEHOLD",
+                "QUANTITY_OF_INSECTICIDE_REQUIRED",
+                "NO_OF_DISTRIBUTORS"
+            ]
+        },
+        {
+            "campaignType": "SMC",
+            "data": [
+                "targetPopulationDemo1",
+                "targetpopulationDemo2",
+                [
+                    "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
+                    "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2"
+                ],
+                "NO_OF_DISTRIBUTORS"
+            ]
+        }
+    ]
+}

@@ -22,6 +22,7 @@ export const components = {
 };
 
 import XLSX from "xlsx";
+import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 
 // will be changed laters
 const MicroplanName = "microplan 1912";
@@ -34,6 +35,7 @@ const CreateMicroplan = () => {
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
+  const [ toRender, setToRender] = useState("navigator")
   const { t } = useTranslation();
 
   // States
@@ -171,8 +173,12 @@ const CreateMicroplan = () => {
     [microplanData, setMicroplanData, Navigator]
   );
 
+  const completeNavigation=()=>{
+    setToRender("success-screen")
+  }
   return (
     <div className="create-microplan">
+      {toRender === "navigator" &&
       <Navigator
         config={timeLineOptions}
         checkDataCompleteness={true}
@@ -181,7 +187,13 @@ const CreateMicroplan = () => {
         childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
         nextEventAddon={nextEventAddon}
         setCurrentPageExternally={setCurrentPageExternally}
+        completeNavigation={completeNavigation}
       />
+  }
+  {
+    toRender === "success-screen" &&
+    <MicroplanCreatedScreen microplanData={microplanData}/>
+  }
 
       {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
         <Toast style={{ bottom: "5.5rem" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />

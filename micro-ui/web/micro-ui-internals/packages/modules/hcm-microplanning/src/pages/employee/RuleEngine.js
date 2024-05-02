@@ -3,23 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
-
-const initialRules = [
-  {
-    id: 1,
-    output: "",
-    input: "",
-    operator: "",
-    assumptionValue: "",
-  },
-  {
-    id: 2,
-    output: "",
-    input: "",
-    operator: "",
-    assumptionValue: "",
-  },
-];
+import AutoFilledRuleConfigurations from "../../configs/AutoFilledRuleConfigurations.json";
+import { Modal } from "@egovernments/digit-ui-components";
 
 const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
@@ -27,7 +12,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // States
   const [editable, setEditable] = useState(true);
   const [modal, setModal] = useState("none");
-  const [rules, setRules] = useState(initialRules);
+  const [rules, setRules] = useState([]);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
@@ -35,6 +20,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [outputs, setOutputs] = useState([]);
   const [operators, setOperators] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
+  const [autofillData, setAutoFillData] = useState([]);
 
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
@@ -85,6 +71,8 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
     let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
+    let AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurations.AutoFilledRuleConfigurations;
+    AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurationsList.find((item) => item.campaignType === campaignType)?.data;
     microplanData?.ruleEngine?.forEach((item) => {
       if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
     });
@@ -110,7 +98,22 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       temp = temp.ruleConfigureOperators.map((item) => item.name);
       setOperators(temp);
     }
+    if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
   }, [data]);
+
+  // useEffect to set autofill data
+  useEffect(() => {
+    if (!autofillData || !outputs || !hypothesisAssumptionsList || !validationSchemas) return;
+    setAutoFillRules(
+      autofillData,
+      rules,
+      setRules,
+      hypothesisAssumptionsList,
+      outputs,
+      operators,
+      getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas)
+    );
+  }, [autofillData]);
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -155,15 +158,33 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       <RuleEngineInformation t={t} />
       {/* delete conformation */}
       {modal === "delete-conformation" && (
-        <ModalWrapper
-          closeModal={closeModal}
-          LeftButtonHandler={deleteAssumptionHandlerCallback}
-          RightButtonHandler={closeModal}
-          footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
-          footerRightButtonBody={<ButtonType1 text={t("NO")} />}
-          header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-          bodyText={t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
-        />
+        <Modal
+        popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+        popupModuleActionBarStyles={{
+          display: "flex",
+          flex: 1,
+          justifyContent: "flex-start",
+          padding: 0,
+          width: "100%",
+          padding: "1rem",
+        }}
+        popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          border: "0.063rem solid rgba(244, 119, 56, 1)",
+        }}
+        headerBarMainStyle={{ padding: 0, margin: 0 }}
+        headerBarMain={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+        actionCancelLabel={t("YES")}
+        actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+        actionSaveLabel={t("NO")}
+        actionSaveOnSubmit={closeModal}
+      >
+        <div className="modal-body">
+          <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+        </div>
+      </Modal>
       )}
     </div>
   );
@@ -358,7 +379,7 @@ const Example = ({ exampleOption, t }) => {
               </option>
             ))} */}
           </select>
-          <p className="heading">{t(" ")}</p>
+          <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
         </div>
 
         <div className="equal-to-icon">
@@ -508,6 +529,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
 // get schema for validation
 const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
+  if (!schemas || !microplanData || !microplanData?.upload|| !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
   Object.entries(microplanData?.upload)
@@ -524,15 +546,43 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
       }
     }) || [];
   const finalData = filteredSchemas
-    ?.map((item) => Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-      if (value?.isRuleConfigureInputs) {
-        acc.push(key);
-      }
-      return acc;
-    }, []))
+    ?.map((item) =>
+      Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        if (value?.isRuleConfigureInputs) {
+          acc.push(key);
+        }
+        return acc;
+      }, [])
+    )
     .flatMap((item) => item)
     .filter((item) => !!item);
   return [...new Set(finalData)];
 };
 
+
+// This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
+const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsList, outputs, operators, inputs) => {
+  if(rules?.length !== 0) return 
+  let newRules = [];
+  const ruleOuputList = rules.map((item) => item?.output) || [];
+  let rulePlusInputs;
+  if (ruleOuputList) rulePlusInputs = [...inputs, ...rules.map((item) => item?.output)];
+  else rulePlusInputs = inputs;
+  autofillData.forEach((item) => {
+    ruleOuputList?.includes(item?.output);
+    if (
+      ruleOuputList?.includes(item?.output) ||
+      !outputs?.includes(item?.output) ||
+      !rulePlusInputs.includes(item?.input) ||
+      !operators?.includes(item?.operator) ||
+      !hypothesisAssumptionsList?.includes(item?.assumptionValue)
+    )
+      return;
+    item["id"] = newRules.length
+    newRules.push(item);
+    rulePlusInputs?.push(item?.output);
+    ruleOuputList?.push(item?.output);
+  });
+  if (newRules.length !== 0) setRules((previous) => [...previous, ...newRules]);
+};
 export default RuleEngine;
