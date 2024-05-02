@@ -7,6 +7,7 @@ import Ajv from "ajv";
 import XLSX from "xlsx";
 import { InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { schemaConfig } from "../configs/schemaConfig";
+import { headerConfig } from "../configs/headerConfig";
 
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
@@ -96,12 +97,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const validateData = (data) => {
     const ajv = new Ajv(); // Initialize Ajv
-    // const validate = ajv.compile(schema); // Compile schema
     let validate;
     if (type === "facilityWithBoundary") {
       validate = ajv.compile(schemaConfig?.facilityWithBoundary);
     } else if (type === "boundary") {
-      // validate = ajv.compile(schemaConfig?.Boundary);
+      validate = ajv.compile(schemaConfig?.Boundary);
     } else {
       validate = ajv.compile(schemaConfig?.User);
     }
@@ -144,11 +144,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   };
 
-  const validateTarget = (data) => {
-    console.log("data", data);
-    
-  };
-
   const validateExcel = (selectedFile) => {
     return new Promise((resolve, reject) => {
       // Check if a file is selected
@@ -163,6 +158,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
+
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+            header: 1,
+          })[0];
+
+          const expectedHeaders = headerConfig[type];
+          for(const header of expectedHeaders){
+            if(!headersToValidate.includes(header)){
+              const errorMessage = t("HCM_MISSING_HEADERS");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              return;
+            }
+          }
+
           const SheetNames = workbook.SheetNames[0];
           if (type === "boundary") {
             if (SheetNames !== "Boundary Data") {
@@ -183,7 +196,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else {
-            if (SheetNames !== "Create List of Users") {
+            if (SheetNames !== "List of Users") {
               const errorMessage = t("HCM_INVALID_USER_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -209,15 +222,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           console.log("json", jsonData);
 
-          if (type == "boundary") {
-            const validate = validateTarget(file[0]);
-          } else {
+          if(jsonData.length == 0){
+            const errorMessage = t("HCM_EMPTY_SHEET");
+              setErrorsType((prevErrors) => ({
+                ...prevErrors,
+                [type]: errorMessage,
+              }));
+              return;
+          }
+
             if (validateData(jsonData, SheetNames)) {
               resolve(true);
             } else {
               setShowInfoCard(true);
             }
-          }
         } catch (error) {
           console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
@@ -272,6 +290,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       // const fileNameWithoutExtension = file?.fileName.split(/\.(xlsx|xls)/)[0];
       // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
+    
   };
 
   const Template = {
@@ -315,7 +334,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             console.log("fileData", fileData);
             // downloadExcel(fileData[0].blob, fileData[0].fileName);
             window.location.href = fileData?.[0]?.url;
-            // downloadExcel(new Blob(fileData, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
+            // handleFileDownload(fileData?.[0]);
+            // downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
+          }
+          else{
+            setShowToast({ key: "error", label: t("HCM_PLEASE_WAIT") });
           }
           // if (fileData && fileData?.[0]?.url) {
           //   console.log("fileData", fileData);
