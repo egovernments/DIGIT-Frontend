@@ -1,25 +1,12 @@
-import {
-  Button,
-  Card,
-  CardLabel,
-  CustomDropdown,
-  Dropdown,
-  FieldV1,
-  Header,
-  HeaderBar,
-  Loader,
-  Modal,
-  MultiSelectDropdown,
-  TextInput,
-  Toast,
-} from "@egovernments/digit-ui-components";
+import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Resources from "../../configs/Resources.json";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
-import { Close } from "@egovernments/digit-ui-svg-components";
+import { CloseButton, ModalHeading } from "../../components/ComonComponents";
 import { mapDataForApi } from "./CreateMicroplan";
+import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
+
+const commonColumn = "boundaryCode";
 
 const MicroplanPreview = ({
   campaignType = "SMC",
@@ -29,6 +16,7 @@ const MicroplanPreview = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  ...props
 }) => {
   // Fetching data using custom MDMS hook
   const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
@@ -53,6 +41,8 @@ const MicroplanPreview = ({
   const [modal, setModal] = useState("none");
   const [operatorsObject, setOperatorsObject] = useState([]);
 
+  const [userEditedResources, setUserEditedResources] = useState({}); // state to maintain a record of the resources that the user has edited ( boundaryCode : {resource : value})
+  const [microplanPreviewAggregates, setMicroplaPreviewAggregates] = useState();
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
@@ -88,9 +78,10 @@ const MicroplanPreview = ({
   const hierarchy = useMemo(() => {
     return hierarchyRawData?.map((item) => item?.boundaryType);
   }, [hierarchyRawData]);
+
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (microplanData && microplanData?.ruleEngine && microplanData?.hypothesis) {
+    if (microplanData && (microplanData?.ruleEngine || microplanData?.hypothesis)) {
       const hypothesisAssumptions = microplanData?.hypothesis || [];
       const formulaConfiguration = microplanData?.ruleEngine?.filter((item) => Object.values(item).every((key) => key !== "")) || [];
       if (hypothesisAssumptions.length !== 0) {
@@ -108,6 +99,8 @@ const MicroplanPreview = ({
     let UIConfiguration = MDMSData["hcm-microplanning"]?.["UIConfiguration"];
     let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
     let resourcelist = MDMSData["hcm-microplanning"]?.["Resources"];
+    let microplanPreviewAggregatesList = MicroplanPreviewAggregates.MicroplanPreviewAggregates;
+    microplanPreviewAggregatesList = microplanPreviewAggregatesList.find((item) => item.campaignType === campaignType)?.data;
     if (schemas) setValidationSchemas(schemas);
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
     if (resourcelist) setResources(resourcelist);
@@ -117,9 +110,17 @@ const MicroplanPreview = ({
     }
     let temp;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (!(temp && temp.ruleConfigureOperators)) return;
-    setOperatorsObject(temp.ruleConfigureOperators);
+    if (temp && temp.ruleConfigureOperators) {
+      setOperatorsObject(temp.ruleConfigureOperators);
+    }
+    if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
   }, [MDMSData]);
+
+  // UseEffect for checking completeness of data before moveing to next section
+  useEffect(() => {
+    if (!dataToShow || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    setCheckDataCompletion("valid");
+  }, [checkDataCompletion]);
 
   // Set microplan preview data
   useEffect(() => {
@@ -135,15 +136,16 @@ const MicroplanPreview = ({
       setData(combinedData);
       setDataToShow(combinedData);
     }
-  }, [joinByColumns, hierarchy, hierarchyRawData]);
+  }, [hierarchy, hierarchyRawData]);
 
   useEffect(() => {
-    const tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
+    if (!boundarySelections && !resources) return;
+    let tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
+    // Adding resources to the data we need to show
+    tempData = addResourcesToFilteredDataToShow(tempData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t);
     setDataToShow(tempData);
-  }, [boundarySelections]);
-
-  // UseEffect to store current data
-  useEffect(() => {}, [hypothesisAssumptionsList]);
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: tempData }));
+  }, [boundarySelections, resources, hypothesisAssumptionsList, userEditedResources]);
 
   if (isCampaignLoading || ishierarchyLoading) {
     return (
@@ -156,8 +158,8 @@ const MicroplanPreview = ({
   return (
     <div className={`jk-header-btn-wrapper microplan-preview-section`}>
       <div className="top-section">
-        <p className="campaign-name">{t("Campaign name")}</p>
-        <Header className="heading">{t("MICROPLAN_PREVIEW")}</Header>
+        <p className="campaign-name">{t(campaignData?.campaignName)}</p>
+        <Header className="heading">{t(microplanData?.microplanDetails?.name)}</Header>
         <p className="user-name">{t("MICROPLAN_PREVIEW_CREATE_BY", { username: userInfo?.name })}</p>
       </div>
       <div className="hierarchy-selection-container">
@@ -171,7 +173,7 @@ const MicroplanPreview = ({
           />
         </div>
       </div>
-      <div className="aggregates"></div>
+      <Aggregates microplanPreviewAggregates={microplanPreviewAggregates} dataToShow={dataToShow} t={t} />
       <div className="microplan-preview-body">
         <div className="hypothesis-container">
           <p className="hypothesis-heading">{t("MICROPLAN_PREVIEW_HYPOTHESIS_HEADING")}</p>
@@ -193,14 +195,13 @@ const MicroplanPreview = ({
           {dataToShow?.length != 0 ? (
             <DataPreview
               previewData={dataToShow}
-              t={t}
               isCampaignLoading={isCampaignLoading}
-              formulaConfiguration={formulaConfiguration}
-              ishierarchyLoading={ishierarchyLoading}
+              userEditedResources={userEditedResources}
+              setUserEditedResources={setUserEditedResources}
               resources={resources}
-              hypothesisAssumptionsList={hypothesisAssumptionsList}
               modal={modal}
               setModal={setModal}
+              t={t}
             />
           ) : (
             <div className="no-data-available-container">{t("NO_DATA_AVAILABLE")}</div>
@@ -256,33 +257,33 @@ const HypothesisValues = ({
 
   return (
     <div>
-      {tempHypothesisList
-        ?.filter((item) => item.key !== "")
-        .map((item, index) => (
-          <div id={"hyopthesis_" + index} className="">
-            <p>{t(item?.key)}</p>
-            <div className="input">
-              {/* Dropdown for boundaries */}
-              <TextInput
-                name={"hyopthesis_" + index}
-                value={item?.value}
-                type={"number"}
-                t={t}
-                config={{}}
-                onChange={(value) =>
-                  valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
-                }
-              />
+      <div className="hypothesis-list">
+        {tempHypothesisList
+          ?.filter((item) => item.key !== "")
+          .map((item, index) => (
+            <div key={"hyopthesis_" + index} className="">
+              <p>{t(item?.key)}</p>
+              <div className="input">
+                {/* Dropdown for boundaries */}
+                <TextInput
+                  name={"hyopthesis_" + index}
+                  value={item?.value}
+                  t={t}
+                  config={{}}
+                  onChange={(value) =>
+                    valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
+                  }
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
       <div className="hypothesis-controllers">
         <Button
           className={"button-primary"}
           style={{ width: "100%" }}
           onClick={() => {
             setModal("confirm-apply-changed-hypothesis");
-            // applyNewHypothesis
           }}
           label={t("APPLY")}
         />
@@ -298,14 +299,14 @@ const HypothesisValues = ({
             width: "100%",
             padding: "1rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0 }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
           style={{
             flex: 1,
             backgroundColor: "white",
             border: "0.063rem solid rgba(244, 119, 56, 1)",
           }}
           headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
-          headerBarMain={<ModalHeading style={{ width: "fit-content" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={applyNewHypothesis}
           actionSaveLabel={t("NO")}
@@ -349,7 +350,10 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
         for (let key of hierarchy) {
           if (Array.isArray(oldSelections?.[key?.boundaryType])) {
             oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-              return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || e?.parentBoundaryType === null;
+              return (
+                (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) ||
+                (e?.parentBoundaryType === null && selections?.length !== 0)
+              );
             });
           }
         }
@@ -413,8 +417,11 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
 });
 
 const DataPreview = memo(
-  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, formulaConfiguration, hypothesisAssumptionsList, modal, setModal, t }) => {
+  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, userEditedResources, setUserEditedResources, modal, setModal, t }) => {
     if (!previewData) return;
+    const [tempResourceChanges, setTempResourceChanges] = useState(userEditedResources);
+    const [selectedRow, setSelectedRow] = useState();
+    const [mouseOver, setMouseOver] = useState();
     if (isCampaignLoading || ishierarchyLoading) {
       return (
         <div className="api-data-loader">
@@ -423,7 +430,22 @@ const DataPreview = memo(
       );
     }
 
-    const [selectedRow, setSelectedRow] = useState();
+    const rowClick = useCallback((rowIndex) => {
+      setSelectedRow(rowIndex);
+      setModal("change-preview-data");
+    }, []);
+
+    const finaliseRowDataChange = () => {
+      console.log(tempResourceChanges);
+      setUserEditedResources(tempResourceChanges);
+      setModal("none");
+      setSelectedRow(undefined);
+    };
+
+    const modalCloseHandler = () => {
+      setModal("none");
+      setSelectedRow(undefined);
+    };
 
     return (
       <div className="excel-wrapper">
@@ -434,38 +456,43 @@ const DataPreview = memo(
                 {previewData[0].map((header, columnIndex) => (
                   <th key={columnIndex}>{t(header)}</th>
                 ))}
-                {Object.values(resources).map((header, cellIndex) => (
-                  <th key={previewData[0]?.length + cellIndex}>{t(header)}</th>
-                ))}
               </tr>
             </thead>
             <tbody>
-              {previewData.slice(1).map((rowData, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  onClick={() => {
-                    setModal("change-preview-data");
-                    setSelectedRow({ rowData, index: rowIndex });
-                  }}
-                >
-                  {Object.values(previewData[0]).map((_, cellIndex) => (
-                    <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
-                  ))}
-                  {Object.values(resources).map((resourceName, cellIndex) => (
-                    <td key={previewData[0]?.length + cellIndex}>
-                      {Math.round(
-                        calculateResource(resourceName, rowData, formulaConfiguration, Object.values(previewData[0]), hypothesisAssumptionsList, t)
-                      ) || t("NO_DATA")}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              {previewData.slice(1).map((rowData, rowIndex) => {
+                const rowDataList = Object.values(previewData[0]).map((_, cellIndex) => (
+                  <td className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`} key={cellIndex}>
+                    {rowData[cellIndex] || t("NO_DATA")}
+                  </td>
+                ));
+                let returnData = [];
+                if (mouseOver && mouseOver === rowIndex)
+                  returnData.push(
+                    <tr
+                      className="hover"
+                      onClick={() => {
+                        rowClick(rowIndex + 1);
+                      }}
+                      onMouseEnter={() => setMouseOver(rowIndex)}
+                      onMouseLeave={() => setMouseOver(undefined)}
+                    >
+                      {rowDataList}
+                    </tr>
+                  );
+                returnData.push(
+                  <tr key={rowIndex} onMouseEnter={() => setMouseOver(rowIndex)} onMouseLeave={() => setMouseOver(undefined)}>
+                    {rowDataList}
+                  </tr>
+                );
+
+                return returnData;
+              })}
             </tbody>
           </table>
         </div>
         {modal === "change-preview-data" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ width: "80%", maxHeight: "37.938rem", borderRadius: "0.25rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -475,23 +502,30 @@ const DataPreview = memo(
               padding: "1rem",
             }}
             style={{
-              flex: 1,
               backgroundColor: "white",
               border: "0.063rem solid rgba(244, 119, 56, 1)",
+              marginTop: "0.5rem",
+              marginBottom: "0.5rem",
+              marginRight: "1.4rem",
+              width: "12.5rem",
             }}
-            headerBarMainStyle={{ padding: 0 }}
-            headerBarMain={<ModalHeading style={{ padding: 0, margin: 0 }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
-            actionCancelLabel={t("YES")}
-            actionCancelOnSubmit={() => {
-              setModal("none");
-            }}
-            actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={() => {
-              setModal("none");
-            }}
+            headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("EDIT_ROW", { rowNumber: selectedRow })} />}
+            headerBarEnd={<CloseButton clickHandler={modalCloseHandler} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+            actionCancelLabel={t("CANCLE")}
+            actionCancelOnSubmit={modalCloseHandler}
+            actionSaveLabel={t("SAVE_CHANGES")}
+            actionSaveOnSubmit={finaliseRowDataChange}
             formId="modal-action"
           >
-            {/* <ChangePreviewData /> */}
+            <EditResourceData
+              selectedRow={selectedRow}
+              previewData={previewData}
+              resources={resources}
+              tempResourceChanges={tempResourceChanges}
+              setTempResourceChanges={setTempResourceChanges}
+              t={t}
+            />
           </Modal>
         )}
       </div>
@@ -501,15 +535,14 @@ const DataPreview = memo(
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
   let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
-  if (!formula) return t("NO_DATA");
+  if (!formula) return null;
 
   // Finding Input
   // check for Uploaded Data
   let inputValue = findInputValue(formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
-  if (inputValue == undefined || inputValue === t("NO_DATA")) return t("NO_DATA");
-
+  if (inputValue == undefined || inputValue === null) return null;
   let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.key === formula?.assumptionValue)?.value;
-  if (assumptionValue == undefined) return t("NO_DATA");
+  if (assumptionValue == undefined) return null;
 
   return findResult(inputValue, assumptionValue, formula?.operator);
 };
@@ -517,8 +550,8 @@ const calculateResource = (resourceName, rowData, formulaConfiguration, headers,
 // function to find input value, it calls calculateResource fucntion recurcively until it get a proper value
 const findInputValue = (formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
   const inputIndex = headers?.indexOf(formula?.input);
-  if (inputIndex === -1) {
-    let tempFormula = formulaConfiguration.find((item) => item?.output === formula?.input);
+  if (inputIndex === -1 || !rowData[inputIndex]) {
+    // let tempFormula = formulaConfiguration.find((item) => item?.output === formula?.input);
     return calculateResource(formula?.input, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
   } else return rowData[inputIndex];
 };
@@ -543,8 +576,8 @@ const findResult = (inputValue, assumptionValue, operator) => {
 
 // get schema for validation
 const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
+  if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
-  if (!schemas) return;
   Object.entries(microplanData?.upload)
     ?.filter(([key, value]) => value?.error === null)
     .forEach(([key, value]) => {
@@ -602,13 +635,11 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
 const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeededInFinalData) => {
   // Check if commonColumn and listOfColumnsNeededInFinalData are provided
   if (!commonColumn || !listOfColumnsNeededInFinalData) {
-    console.error("Error: Common column or list of columns needed in final data is missing.");
     return;
   }
 
   // Check if both lists are absent
   if ((!firstList || firstList.length === 0) && (!secondList || secondList.length === 0)) {
-    console.error("Error: Both lists are absent.");
     return;
   }
 
@@ -617,20 +648,18 @@ const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeeded
   // const joinedHeaders = [commonColumn];
 
   // Add other columns needed in the final data if they exist in either list
-  if (firstList && firstList[0]) {
-    listOfColumnsNeededInFinalData.forEach((column) => {
+  listOfColumnsNeededInFinalData.forEach((column) => {
+    if (firstList && firstList[0]) {
       if (firstList[0].includes(column)) {
         joinedHeaders.push(column);
       }
-    });
-  }
-  if (secondList && secondList[0]) {
-    listOfColumnsNeededInFinalData.forEach((column) => {
+    }
+    if (secondList && secondList[0]) {
       if (secondList[0].includes(column) && !joinedHeaders.includes(column)) {
         joinedHeaders.push(column);
       }
-    });
-  }
+    }
+  });
 
   // Initialize the joined list with the headers
   const joinedList = [joinedHeaders];
@@ -740,6 +769,7 @@ const findFilteredDataHierarchyTraveler = (data, name, boundaryType) => {
 
 // function to filter the microplan data with respect to the hierarchy selected by the user
 const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hierarchy, hierarchyIndex = 0) => {
+  if (!selections || selections?.length === 0) return data;
   if (hierarchyIndex >= hierarchy?.length) return data;
   const filteredHirarchyLevelList = selections?.[hierarchy?.[hierarchyIndex]]?.map((item) => item?.name);
   if (!filteredHirarchyLevelList || filteredHirarchyLevelList?.length === 0) return data;
@@ -753,25 +783,16 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
   return filterMicroplanDataToShowWithHierarchySelection(levelFilteredData, selections, hierarchy, hierarchyIndex + 1);
 };
 
-const CloseButton = ({ clickHandler }) => {
-  return (
-    <div className="microplan-close-button" onClick={clickHandler}>
-      {" "}
-      <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
-    </div>
-  );
-};
-
 const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList, t }) => {
   return (
     <div className="apply-changes-hypothesis">
       <div className="instructions">
         <p>{t("INSTRUCTION_PROCEED_WITH_NEW_HYPOTHESIS")}</p>
       </div>
+      <CardLabel className="table-header" style={{ padding: 0 }}>
+        {t("MICROPLAN_PREVIEW_HYPOTHESIS")}
+      </CardLabel>
       <div className="table-container">
-        <CardLabel className="table-header" style={{ padding: 0 }}>
-          {t("MICROPLAN_PREVIEW_HYPOTHESIS")}
-        </CardLabel>
         <table className="custom-table">
           <thead>
             <tr>
@@ -783,9 +804,9 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
           <tbody>
             {hypothesisList?.map((row, index) => (
               <tr key={row.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
-                <td>{row?.key}</td>
-                <td>{row?.value}</td>
-                <td>{newhypothesisList?.[index]?.value}</td>
+                <td>{t(row?.key)}</td>
+                <td>{t(row?.value)}</td>
+                <td>{t(newhypothesisList?.[index]?.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -864,7 +885,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   //Decide columns to take and their sequence
   const getfilteredSchemaColumnsList = () => {
     let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, "boundaryCode", ...filteredSchemaColumns];
+    if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
     return filteredSchemaColumns;
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
@@ -873,9 +894,9 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   // Perform inner joins using reduce
   const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
     if (index === 0) {
-      return currentData;
+      return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
     } else {
-      return innerJoinLists(accumulator, currentData, "boundaryCode", filteredSchemaColumns);
+      return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
     }
   }, null);
   return dataAfterJoins;
@@ -930,4 +951,122 @@ const fetchMicroplanData = (microplanData) => {
   }
   return combinesDataList;
 };
+
+const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
+  const data = _.cloneDeep(previewData);
+  const checkUserEditedData = (commonColumnData, resourceName) => {
+    if (userEditedResources?.[commonColumnData]) {
+      return userEditedResources?.[commonColumnData]?.[resourceName];
+    }
+  };
+  const conmmonColumnIndex = data?.[0]?.indexOf(commonColumn);
+
+  const combinedData = data.map((item, index) => {
+    if (index === 0) {
+      resources.forEach((e) => item?.push(e));
+      return item;
+    }
+
+    resources.forEach((resourceName, resourceIndex) => {
+      console.log(item?.[conmmonColumnIndex], resourceName);
+      let savedData = checkUserEditedData(item?.[conmmonColumnIndex], resourceName);
+      if (savedData) {
+        item.push(savedData);
+        return item;
+      }
+      // if (checkUserEditedData(item?.[conmmonColumnIndex], resourceName)!!item[item?.length + resourceIndex]) return;
+      let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
+      if (calculations !== null) calculations = Math.round(calculations);
+      // item[item?.length + resourceIndex] = !!calculations || calculations === 0? calculations:t("NO_DATA");
+      item.push(!!calculations || calculations === 0 ? calculations : undefined);
+      return item;
+    });
+
+    return item;
+  });
+  return combinedData;
+};
+
+const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges, t }) => {
+  const conmmonColumnData = useMemo(() => {
+    const index = previewData?.[0]?.indexOf(commonColumn);
+    if (index == -1) return;
+    return previewData?.[selectedRow]?.[index];
+  }, [previewData]);
+
+  const valueChangeHandler = (item, value) => {
+    if (!conmmonColumnData) return;
+    let changedDataAgainstBoundaryCode = tempResourceChanges?.[conmmonColumnData] || {};
+    changedDataAgainstBoundaryCode[item] = value;
+    setTempResourceChanges((previous) => ({ ...previous, [conmmonColumnData]: changedDataAgainstBoundaryCode }));
+  };
+
+  return (
+    <div className="edit-resource-data">
+      <table className="edit-resource-data-table">
+        <thead>
+          <tr>
+            <th>{t("COLUMNS")}</th>
+            <th>{t("OLD_VALUE")}</th>
+            <th>{t("NEW_VALUE")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {resources.map((item) => {
+            let index = previewData?.[0]?.indexOf(item);
+            const currentData = previewData?.[selectedRow]?.[index];
+            return (
+              <tr key={item}>
+                <td className="column-names">
+                  <p>{t(item)}</p>
+                </td>
+                <td className="old-value">
+                  <p>{currentData || t("NO_DATA")}</p>
+                </td>
+                <td className="new-value no-left-padding">
+                  <TextInput
+                    name={"hyopthesis_" + index}
+                    value={item?.value}
+                    style={{ margin: 0 }}
+                    t={t}
+                    onChange={(value) => valueChangeHandler(item, value.target.value)}
+                  />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+const Aggregates = ({ microplanPreviewAggregates, dataToShow, t }) => {
+  if (!microplanPreviewAggregates) return <Loader />;
+  return (
+    <div className="aggregates">
+      {microplanPreviewAggregates.map((item, index) => (
+        <div key={index}>
+          <p className="aggregate-value">{calulateAggregate(item, dataToShow)}</p>
+          <p className="aggregate-label">{t(item)}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const calulateAggregate = (aggregateName, dataToShow) => {
+  if (!aggregateName || !dataToShow || dataToShow.length === 0) return;
+  let aggregateNameList = aggregateName;
+  if (!Array.isArray(aggregateName)) aggregateNameList = [aggregateName];
+  let aggregateData = 0;
+  aggregateNameList.forEach((item) => {
+    const columnIndex = dataToShow?.[0].indexOf(item);
+    dataToShow.slice(1).forEach((e) => {
+      if (e?.[columnIndex]) aggregateData = aggregateData + Number(e[columnIndex]);
+    });
+  });
+  return aggregateData.toLocaleString();
+};
+
 export default MicroplanPreview;

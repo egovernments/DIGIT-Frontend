@@ -7,7 +7,7 @@ import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
 
 /**
  *
- * @param { config: Object, checkDataCompleteness: boolean, components: Object, childProps: Object, stepNavigationActive: boolean, nextEventAddon: function, setCurrentPageExternally: function } props
+ * @param { config: Object, checkDataCompleteness: boolean, components: Object, childProps: Object, stepNavigationActive: boolean, nextEventAddon: function, setCurrentPageExternally: function, completeNavigation } props
  * @returns
  *
  */
@@ -83,16 +83,19 @@ const Navigator = (props) => {
   });
 
   // Function to handle next button click
-  const nextbuttonClickHandler = useCallback(() => {
-    if (
-      props.checkDataCompleteness &&
-      props?.config[currentPage?.id ]?.checkForCompleteness &&
-      LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
-    ) {
-      setCheckDataCompletion("true");
-      setNavigationEvent({ name: "next" });
-    } else nextStep();
-  }, [props.checkDataCompleteness, nextStep]);
+  const nextbuttonClickHandler = useCallback(
+    () => {
+      if (
+        props.checkDataCompleteness &&
+        props?.config[currentPage?.id]?.checkForCompleteness &&
+        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+      ) {
+        setCheckDataCompletion("true");
+        setNavigationEvent({ name: "next" });
+      } else nextStep();
+    },
+    [props.checkDataCompleteness, nextStep]
+  );
 
   // Function to handle step click
   const stepClickHandler = useCallback(
@@ -148,6 +151,7 @@ const Navigator = (props) => {
         {currentPage?.id > 0 && (
           <Button
             type="button"
+            className="custom-button custom-button-left-icon"
             label={t("BACK")}
             onButtonClick={previousStep}
             isSuffix={false}
@@ -159,8 +163,14 @@ const Navigator = (props) => {
         <Button
           type="button"
           className="custom-button"
-          label={currentPage?.id < props.config.length - 1 ? t("NEXT") : t("SUBMIT")}
-          onButtonClick={nextbuttonClickHandler}
+          label={currentPage?.id < props.config.length - 1 ? t("NEXT") : t("GENERATE_MICROPLAN")}
+          onButtonClick={
+            currentPage?.id < props.config.length - 1
+              ? nextbuttonClickHandler
+              : typeof props?.completeNavigation == "function"
+              ? props?.completeNavigation
+              : () => {}
+          }
           isSuffix={true}
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
+import { Modal, Toast } from "@egovernments/digit-ui-components";
 
 const initialAssumptions = [
   {
@@ -27,6 +28,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
+  const [toast, setToast] = useState();
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -75,9 +77,9 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // Function to Delete an assumption
   const deleteAssumptionHandlerCallback = useCallback(() => {
-    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList);
+    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, setToast, t);
     closeModal();
-  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, closeModal]);
+  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, closeModal, setToast, t]);
 
   const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"}`;
   return (
@@ -103,15 +105,36 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       </button>
       {/* delete conformation */}
       {modal === "delete-conformation" && (
-        <ModalWrapper
-          closeModal={closeModal}
-          LeftButtonHandler={deleteAssumptionHandlerCallback}
-          RightButtonHandler={closeModal}
-          footerLeftButtonBody={<ButtonType1 text={t("YES")} />}
-          footerRightButtonBody={<ButtonType2 text={t("NO")} download={false} />}
-          header={<ModalHeading label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-          bodyText={t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}
-        />
+        <Modal
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupModuleActionBarStyles={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "flex-start",
+            padding: 0,
+            width: "100%",
+            padding: "1rem",
+          }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          style={{
+            flex: 1,
+            backgroundColor: "white",
+            border: "0.063rem solid rgba(244, 119, 56, 1)",
+          }}
+          headerBarMainStyle={{ padding: 0, margin: 0 }}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+          actionCancelLabel={t("YES")}
+          actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+          actionSaveLabel={t("NO")}
+          actionSaveOnSubmit={closeModal}
+        >
+          <div className="modal-body">
+            <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+          </div>
+        </Modal>
+      )}
+      {toast && toast.state === "error" && (
+        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
       )}
     </div>
   );
@@ -234,13 +257,19 @@ const Example = ({ exampleOption, t }) => {
   );
 };
 
-const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList) => {
+const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, setToast, t) => {
+  let add = true;
   setAssumptions((previous) => {
     if (!previous.length) return [];
+    if (previous?.length <= 1) {
+      setToast({ state: "error", message: t("ERROR_CANNOT_DELETE_LAST_HYPOTHESIS") });
+      add = false;
+      return previous;
+    }
     const filteredData = previous.filter((data) => data.id !== item.id);
     return filteredData || [];
   });
-  if (item && item.key)
+  if (add && item && item.key)
     setHypothesisAssumptionsList((previous) => {
       if (!previous.includes(item.key)) return [...previous, item.key];
       return previous; // Return previous array if key already exists
