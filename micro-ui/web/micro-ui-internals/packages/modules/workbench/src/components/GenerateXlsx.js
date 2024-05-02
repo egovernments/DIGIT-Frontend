@@ -1,7 +1,7 @@
 import React from 'react';
 import XLSX from 'xlsx';
 
-const GenerateXlsx = ({inputRef, jsonData , skipHeader }) =>  {
+const GenerateXlsx = ({inputRef, jsonData , skipHeader , sheetName }) =>  {
   const handleExport = () => {
     // Sample JSON data
     const Data = jsonData || [
@@ -18,7 +18,7 @@ const GenerateXlsx = ({inputRef, jsonData , skipHeader }) =>  {
 
     // Create a new workbook
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.utils.book_append_sheet(wb, ws, sheetName || 'Sheet1');
 
     // Save the workbook as an XLSX file
     XLSX.writeFile(wb, 'template.xlsx');
