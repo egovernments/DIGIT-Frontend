@@ -436,7 +436,6 @@ const DataPreview = memo(
     }, []);
 
     const finaliseRowDataChange = () => {
-      console.log(tempResourceChanges);
       setUserEditedResources(tempResourceChanges);
       setModal("none");
       setSelectedRow(undefined);
@@ -968,7 +967,6 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
     }
 
     resources.forEach((resourceName, resourceIndex) => {
-      console.log(item?.[conmmonColumnIndex], resourceName);
       let savedData = checkUserEditedData(item?.[conmmonColumnIndex], resourceName);
       if (savedData) {
         item.push(savedData);

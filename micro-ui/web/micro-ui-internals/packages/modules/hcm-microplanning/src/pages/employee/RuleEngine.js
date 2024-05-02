@@ -584,6 +584,5 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
     ruleOuputList?.push(item?.output);
   });
   if (newRules.length !== 0) setRules((previous) => [...previous, ...newRules]);
-  console.log(newRules);
 };
 export default RuleEngine;

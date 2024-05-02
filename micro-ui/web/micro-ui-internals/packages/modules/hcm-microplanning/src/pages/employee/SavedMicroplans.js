@@ -125,7 +125,6 @@ const SavedMicroplans = () => {
       Digit.SessionStorage.set("microplanData", computedSession);
       history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
     } catch (error) {
-        console.log("An error occured in SavedMicroplan onClickRow",error.message)
     }
   };
 

@@ -269,7 +269,6 @@ const Upload = ({
             error = response.error;
             fileDataToStore = response.fileDataToStore;
             resourceMappingData = response?.tempResourceMappingData;
-            console.log(8);
             if (check === true) {
               if (response?.toast) setToast(response.toast);
               else setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
@@ -282,9 +281,7 @@ const Upload = ({
               setLoderActivation(false);
               return;
             }
-            console.log(9);
           } catch (error) {
-            console.log(error);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
@@ -371,7 +368,6 @@ const Upload = ({
       setDataPresent(true);
       setLoderActivation(false);
     } catch (error) {
-      console.log(error);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoderActivation(false);
     }
@@ -430,7 +426,6 @@ const Upload = ({
       }
     });
     if (error && !error?.check) return error;
-    console.log(10);
 
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
