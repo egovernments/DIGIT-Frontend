@@ -4,7 +4,7 @@ $highlight-color: rgba(244, 119, 56, 1);
 $highlight-color: rgba(244, 119, 56, 1);
 $border-color: rgba(214, 213, 212, 1);
 
-@mixin custom-scrollbar{
+@mixin custom-scrollbar {
     &::-webkit-scrollbar {
         width: 0.625rem;
         height: 0.625rem;
@@ -1457,7 +1457,8 @@ $border-color: rgba(214, 213, 212, 1);
                 margin: 0 0 0 1rem !important;
             }
         }
-        .custom-button-left-icon{
+
+        .custom-button-left-icon {
             .icon {
                 margin: 0 1rem 0 0 !important;
             }
@@ -1982,7 +1983,8 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 1rem 0 0 0;
                 width: 100%;
             }
-            .hypothesis-list{
+
+            .hypothesis-list {
                 overflow-y: auto;
                 max-height: 17rem;
                 @include custom-scrollbar;
@@ -2064,16 +2066,17 @@ $border-color: rgba(214, 213, 212, 1);
                         .hover {
                             position: absolute;
                             z-index: 50;
-                            outline: 0.09rem solid rgba(244, 119, 56, 1) ;
-                            td{
-                                color:rgb(0, 0, 0, 0);
+                            outline: 0.09rem solid rgba(244, 119, 56, 1);
+
+                            td {
+                                color: rgb(0, 0, 0, 0);
                             }
                         }
 
                         .selected-row {
-                                width: 100%;
-                                height: 100%;
-                                background-color: rgb(244, 119, 56, 0.12) !important;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgb(244, 119, 56, 0.12) !important;
                         }
 
                         th,
@@ -2196,12 +2199,14 @@ $border-color: rgba(214, 213, 212, 1);
                 margin: 0;
             }
         }
+
         .table-header {
             font-family: Roboto;
             font-size: 1rem;
             font-weight: 700;
             color: rgba(11, 12, 12, 1);
         }
+
         .table-container {
             max-height: 15rem;
             overflow-y: auto;
@@ -2238,11 +2243,13 @@ $border-color: rgba(214, 213, 212, 1);
         }
     }
 }
-.microplan-success-screen{
+
+.microplan-success-screen {
     padding: 1.5rem;
     background-color: rgba(255, 255, 255, 1);
 }
-.button-container{
+
+.button-container {
     width: 100%;
     display: flex;
     align-items: center;
@@ -2270,16 +2277,33 @@ $border-color: rgba(214, 213, 212, 1);
             margin: 0 0 0 1rem !important;
         }
     }
-    .custom-button-left-icon{
+
+    .custom-button-left-icon {
         margin-right: 1.2rem;
+
         .icon {
             margin: 0 1rem 0 0 !important;
         }
     }
 
 }
-.digit-action-cancel{
-    .digit-button-label{
-    color: rgba(244, 119, 56, 1) !important;
+
+.digit-action-cancel {
+    .digit-button-label {
+        color: rgba(244, 119, 56, 1) !important;
+    }
+}
+
+.digit-stepper-checkpoint {
+    .digit-stepper-content {
+        .active {
+            background-color: rgba(244, 119, 56, 1) !important;
+            border-color: rgba(244, 119, 56, 1) !important;
+        }
+    }
+
+    .active {
+        background-color: rgba(244, 119, 56, 1) !important;
+        border-color: rgba(244, 119, 56, 1) !important;
     }
 }
