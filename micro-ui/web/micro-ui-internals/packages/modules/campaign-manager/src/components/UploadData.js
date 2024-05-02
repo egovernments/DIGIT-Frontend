@@ -220,8 +220,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           jsonData = jsonData.filter((element) => element !== undefined);
 
-          console.log("json", jsonData);
-
           if(jsonData.length == 0){
             const errorMessage = t("HCM_EMPTY_SHEET");
               setErrorsType((prevErrors) => ({
@@ -256,7 +254,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [showToast]);
 
   const onBulkUploadSubmit = async (file) => {
-    console.log("file", file);
     if (file.length > 1) {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
       return;
@@ -331,7 +328,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           if (fileData && fileData?.[0]?.url) {
-            console.log("fileData", fileData);
             // downloadExcel(fileData[0].blob, fileData[0].fileName);
             window.location.href = fileData?.[0]?.url;
             // handleFileDownload(fileData?.[0]);
@@ -364,8 +360,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   // };
 
   const downloadExcel = (blob, fileName) => {
-    console.log("fileName", fileName);
-    console.log("blob", blob);
     if (window.mSewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
       var reader = new FileReader();
       reader.readAsDataURL(blob);
