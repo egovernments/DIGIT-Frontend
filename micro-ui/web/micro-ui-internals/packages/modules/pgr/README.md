@@ -51,6 +51,7 @@ const initDigitUI = () => {
 ### Changelog
 
 ```bash
+1.8.0 base urban version released
 1.7.8 added some null checks to improve stability 
 1.7.7 used new color constants
 1.7.6 fixed routing issue
