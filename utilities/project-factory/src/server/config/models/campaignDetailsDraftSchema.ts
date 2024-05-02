@@ -88,5 +88,5 @@ export const campaignDetailsDraftSchema = {
             "type": "object"
         }
     },
-    "required": ["tenantId", "campaignName"]
+    "required": ["tenantId", "campaignName", "hierarchyType"]
 };
