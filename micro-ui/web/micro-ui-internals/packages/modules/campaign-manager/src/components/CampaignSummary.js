@@ -234,7 +234,7 @@ const CampaignSummary = () => {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0 } },
                   cardSecondaryAction: (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -263,7 +263,7 @@ const CampaignSummary = () => {
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     cardSecondaryAction: (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
                         <span>{t(`CAMPAIGN_EDIT`)}</span>
                         <EditIcon />
                       </div>
