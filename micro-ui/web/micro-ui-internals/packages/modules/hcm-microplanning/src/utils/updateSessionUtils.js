@@ -199,6 +199,7 @@ export const updateSessionUtils = {
       sessionObj.upload = upload;
       return sessionObj;
     } catch (error) {
+      console.log("error occured in updateSeshUtils", error.message);
     }
   },
 };
