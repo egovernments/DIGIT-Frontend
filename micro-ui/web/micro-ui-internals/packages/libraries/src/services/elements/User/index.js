@@ -58,9 +58,9 @@ export const UserService = {
       window.sessionStorage.clear();
 
       if (userType === "citizen") {
-        window.location.replace(`/${logoutRedirectURL}/citizen`);
+        window.location.replace(`/${logoutRedirectURL}`);
       } else {
-        window.location.replace(`/${logoutRedirectURL}/employee/user/language-selection`);
+        window.location.replace(`/${logoutRedirectURL}`);
       }
     }
   },
