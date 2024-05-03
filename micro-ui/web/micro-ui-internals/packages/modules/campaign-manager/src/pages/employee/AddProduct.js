@@ -25,6 +25,16 @@ function AddProduct() {
     });
     return isValid;
   };
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(closeToast, 5000);
+    }
+  }, [showToast]);
+
   const onSubmit = async (formData) => {
     const isValid = checkValid(formData);
     if (!isValid) {
@@ -61,12 +71,11 @@ function AddProduct() {
             setShowToast({ key: "error", label: error });
           },
           onSuccess: async (data) => {
-            // console.log("HO GYA RE BAAP", data);
             history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
               message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
               text: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_TEXT",
               actionLabel: "ES_PRODUCT_RESPONSE_ACTION",
-              actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${state?.campaignId}&draft=true`,
+              actionLink: `/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`,
             });
           },
         });
