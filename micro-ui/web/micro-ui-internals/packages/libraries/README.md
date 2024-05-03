@@ -55,6 +55,7 @@ export default App;
 ### Changelog
 
 ```bash
+1.8.1 Added logoutRedirectURL for mgramseva workbench
 1.8.0 Released as part of workbench v1.0
 ```
 
