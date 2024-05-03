@@ -4,6 +4,8 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initPGRComponents,PGRReducers } from "@egovernments/digit-ui-module-pgr";
+
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
 const enabledModules = [
@@ -15,7 +17,7 @@ const enabledModules = [
 ];
 
 const moduleReducers = (initData) => ({
-  initData,
+  initData, pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -26,6 +28,7 @@ const initDigitUI = () => {
   };
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initPGRComponents();
 };
 
 initLibraries().then(() => {
