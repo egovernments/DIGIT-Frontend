@@ -32,16 +32,18 @@ function loopAndReturn(dataa) {
         toValue: existingItem.value && item.value ? Math.min(existingItem.value, item.value) : null,
         fromValue: existingItem.value && item.value ? Math.max(existingItem.value, item.value) : null,
       };
-    } else if (item?.operator?.code === "EQUAL_TO") {
-      newArray.push({
-        ...item,
-        value: item?.value
-          ? {
-              code: item?.value,
-            }
-          : null,
-      });
-    } else {
+    }
+    // else if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
+    // newArray.push({
+    // ...item,
+    // value: item?.value
+    // ? {
+    // code: item?.value,
+    // }
+    // : null,
+    // });
+    // }
+    else {
       // If no existing item with the same attribute is found, push the current item
       // if (item?.operator?.code === "EQUAL_TO" && item?.attribute?.code === "Gender") {
       //   newArray.push({
