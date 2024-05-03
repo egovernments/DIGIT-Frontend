@@ -30,6 +30,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
+  const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "facilitySchema" },{ name: "userSchema" },{ name: "boundarySchema" }]);
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -41,26 +42,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile, isError]);
 
-  // useEffect(() => {
-  //   if(type === "boundary"){
-  //     if (executionCount < 5) {
-  //       onSelect("uploadBoundary", uploadedFile);
-  //       setExecutionCount(prevCount => prevCount + 1);
-  //     }
-  //   }
-  //   else if(type === "facilityWithBoundary"){
-  //     if (executionCount < 5) {
-  //       onSelect("uploadFacility", uploadedFile);
-  //       setExecutionCount(prevCount => prevCount + 1);
-  //     }
-  //   }
-  //   else{
-  //     if (executionCount < 5) {
-  //       onSelect("uploadUser", uploadedFile);
-  //       setExecutionCount(prevCount => prevCount + 1);
-  //     }
-  //   }
-  // });
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -97,15 +78,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [type, errorsType]);
 
+
   const validateData = (data) => {
     const ajv = new Ajv(); // Initialize Ajv
     let validate;
     if (type === "facilityWithBoundary") {
-      validate = ajv.compile(schemaConfig?.facilityWithBoundary);
+      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]);
     } else if (type === "boundary") {
-      validate = ajv.compile(schemaConfig?.Boundary);
+      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.boundarySchema?.[0]);
     } else {
-      validate = ajv.compile(schemaConfig?.User);
+      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.userSchema?.[0]);
     }
     const errors = []; // Array to hold validation errors
 
@@ -148,7 +130,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   const validateTarget = (jsonData, headersToValidate) => {
-    const boundaryCodeIndex = headersToValidate.indexOf("Boundary Code");
+    const boundaryCodeIndex = headersToValidate.indexOf("HCM_ADMIN_CONSOLE_BOUNDARY_CODE");
     const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
 
     const filteredData = jsonData
@@ -157,7 +139,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           return true;
         }
       })
-      .filter((e) => e["Target at the Selected Boundary level"]);
+      .filter((e) => e["HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL"]);
 
     if (filteredData.length == 0) {
       const errorMessage = t("HCM_MISSING_TARGET");
@@ -169,7 +151,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       return false;
     }
 
-    const targetValue = filteredData?.[0]["Target at the Selected Boundary level"];
+    const targetValue = filteredData?.[0]["HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL"];
 
     if (targetValue <= 0 || targetValue >= 100000000) {
       const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
@@ -205,7 +187,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           const SheetNames = workbook.SheetNames[0];
           if (type === "boundary") {
-            if (SheetNames !== "Boundary Data") {
+            if (SheetNames !== "HCM_ADMIN_CONSOLE_BOUNDARY_DATA") {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -215,7 +197,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else if (type === "facilityWithBoundary") {
-            if (SheetNames !== "List of Available Facilities") {
+            if (SheetNames !== "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -225,7 +207,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else {
-            if (SheetNames !== "List of Users") {
+            if (SheetNames !== "HCM_ADMIN_CONSOLE_USER_LIST") {
               const errorMessage = t("HCM_INVALID_USER_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
