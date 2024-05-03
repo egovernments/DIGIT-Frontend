@@ -28,16 +28,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
+  const [isError, setIsError] = useState(true);
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
-      onSelect("uploadFacility", { uploadedFile, errorsType });
+      onSelect("uploadFacility", { uploadedFile, isError });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, errorsType });
+      onSelect("uploadBoundary", { uploadedFile, isError });
     } else {
-      onSelect("uploadUser", { uploadedFile, errorsType });
+      onSelect("uploadUser", { uploadedFile, isError });
     }
-  }, [uploadedFile, errorsType]);
+  }, [uploadedFile, isError]);
 
   // useEffect(() => {
   //   if(type === "boundary"){
@@ -133,6 +134,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         ...prevErrors,
         [type]: errorMessage,
       }));
+      setIsError(true);
       return false;
     } else {
       setErrorsType((prevErrors) => ({
@@ -162,6 +164,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         ...prevErrors,
         [type]: errorMessage,
       }));
+      setIsError(true);
       return false;
     }
 
@@ -173,6 +176,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         ...prevErrors,
         [type]: errorMessage,
       }));
+      setIsError(true);
       return false;
     }
     return true;
@@ -206,6 +210,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 ...prevErrors,
                 [type]: errorMessage,
               }));
+              setIsError(true);
               return;
             }
           } else if (type === "facilityWithBoundary") {
@@ -215,6 +220,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 ...prevErrors,
                 [type]: errorMessage,
               }));
+              setIsError(true);
               return;
             }
           } else {
@@ -224,6 +230,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 ...prevErrors,
                 [type]: errorMessage,
               }));
+              setIsError(true);
               return;
             }
           }
@@ -236,6 +243,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 ...prevErrors,
                 [type]: errorMessage,
               }));
+              setIsError(true);
               return;
             }
           }
@@ -254,9 +262,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           jsonData = jsonData.filter((element) => element !== undefined);
 
-          if(type === "boundary"){
-            if(!validateTarget(jsonData,headersToValidate)){
-              return ;
+          if (type === "boundary") {
+            if (!validateTarget(jsonData, headersToValidate)) {
+              return;
             }
           }
 
@@ -266,6 +274,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               ...prevErrors,
               [type]: errorMessage,
             }));
+            setIsError(true);
             return;
           }
 
@@ -283,7 +292,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
-
 
   const closeToast = () => {
     setShowToast(null);
@@ -323,12 +331,78 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const onFileDownload = (file) => {
     if (file && file?.url) {
-      window.location.href = fileData?.[0]?.url;
+      window.location.href = file?.url;
       // Splitting filename before .xlsx or .xls
       // const fileNameWithoutExtension = file?.fileName.split(/\.(xlsx|xls)/)[0];
       // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!errorsType[type] && uploadedFile.length > 0) {
+        // Set loading state to true
+        // setLoading(true);
+        setShowToast({ key: "warning", label: t("HCM_VALIDATION_IN_PROGRESS") });
+        setIsError(true);
+
+        try {
+          const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type);
+          if (temp?.status === "completed") {
+            if (Object.keys(temp?.additionalDetails).length === 0) {
+              setShowToast({ key: "warning", label: t("HCM_VALIDATION_COMPLETED") });
+              if (!errorsType[type]) {
+                setIsError(false);
+              }
+            } else {
+              setShowToast({ key: "warning", label: t("HCM_VALIDATION_FAILED") });
+              const processedFileStore = temp?.processedFileStore;
+              if (!processedFileStore) {
+                setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+                return;
+              } else {
+                const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
+                const fileData = fileUrl.map((i) => {
+                  const urlParts = i?.url?.split("/");
+                  const fileName = file?.[0]?.name;
+                  const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+                  return {
+                    ...i,
+                    fileName: fileName,
+                    type: fileType,
+                  };
+                });
+                setUploadedFile(fileData);
+              }
+            }
+          } else {
+            setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+            const processedFileStore = temp?.processedFileStore;
+            if (!processedFileStore) {
+              setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+              return;
+            } else {
+              const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
+              const fileData = fileUrl.map((i) => {
+                const urlParts = i?.url?.split("/");
+                const fileName = file?.[0]?.name;
+                const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+                return {
+                  ...i,
+                  fileName: fileName,
+                  type: fileType,
+                };
+              });
+              setUploadedFile(fileData);
+            }
+          }
+        } catch (error) {
+        }
+      }
+    };
+
+    fetchData();
+  }, [errorsType, uploadedFile]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",
