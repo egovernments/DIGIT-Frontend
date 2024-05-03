@@ -244,7 +244,7 @@ const SetupCampaign = () => {
       boundaryId: boundaryId,
       hierarchyType: hierarchyType,
     });
-  }, [facilityId, boundaryId]); // Only run if dataParams changes
+  }, [facilityId, boundaryId , userId]); // Only run if dataParams changes
 
   // Example usage:
   // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
