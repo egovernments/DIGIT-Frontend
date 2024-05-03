@@ -935,6 +935,11 @@ const SetupCampaign = () => {
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
 
+    if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
+      setCurrentKey(10);
+      setCurrentStep(7);
+    }
+
     if (Object.keys(totalFormData).includes(name)) {
       setCurrentKey(key);
       setCurrentStep(step);
