@@ -48,7 +48,7 @@ export const UserService = {
   },
   logout: async () => {
     const userType = UserService.getType();
-    const logoutRedirectURL = window?.globalConfigs?.getConfig("LOGOUT_REDIRECT_URL") || window?.contextPath;
+    const logoutRedirectURL = window?.globalConfigs?.getConfig("LOGOUT_REDIRECT_URL") || `/${window?.contextPath}/${userType === "citizen"?"citizen":"employee/user/language-selection"}`;
     try {
       await UserService.logoutUser();
     } catch (e) {
@@ -56,12 +56,8 @@ export const UserService = {
     finally {
       window.localStorage.clear();
       window.sessionStorage.clear();
-
-      if (userType === "citizen") {
-        window.location.replace(`/${logoutRedirectURL}`);
-      } else {
-        window.location.replace(`/${logoutRedirectURL}`);
-      }
+      window.location.replace(`/${logoutRedirectURL}`);
+      
     }
   },
   sendOtp: (details, stateCode) =>
