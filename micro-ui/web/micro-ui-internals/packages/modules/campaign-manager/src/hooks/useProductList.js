@@ -1,7 +1,7 @@
 export const useProductList = () => {
   const reqCriteriaVariant = {
     url: `/product/variant/v1/_search`,
-    params: { tenantId: "mz", limit: 100, offset: 0 },
+    params: { tenantId: "mz", limit: 1000, offset: 0 },
     body: {
       ProductVariant: {},
     },
@@ -17,7 +17,7 @@ export const useProductList = () => {
 
   const reqCriteriaProduct = {
     url: `/product/v1/_search`,
-    params: { tenantId: "mz", limit: 100, offset: 0 },
+    params: { tenantId: "mz", limit: 1000, offset: 0 },
     body: {
       Product: {
         id: productVariant?.map((i) => i?.productId),
