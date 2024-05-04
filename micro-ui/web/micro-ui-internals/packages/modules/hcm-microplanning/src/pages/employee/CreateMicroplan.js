@@ -23,6 +23,7 @@ export const components = {
 
 import XLSX from "xlsx";
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
+import { Tutorial } from "@egovernments/digit-ui-react-components";
 
 // will be changed laters
 const MicroplanName = "microplan 1912";
@@ -35,7 +36,7 @@ const CreateMicroplan = () => {
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
-  const [ toRender, setToRender] = useState("navigator")
+  const [toRender, setToRender] = useState("navigator");
   const { t } = useTranslation();
 
   // States
@@ -173,27 +174,24 @@ const CreateMicroplan = () => {
     [microplanData, setMicroplanData, Navigator]
   );
 
-  const completeNavigation=()=>{
-    setToRender("success-screen")
-  }
+  const completeNavigation = () => {
+    setToRender("success-screen");
+  };
   return (
     <div className="create-microplan">
-      {toRender === "navigator" &&
-      <Navigator
-        config={timeLineOptions}
-        checkDataCompleteness={true}
-        stepNavigationActive={true}
-        components={components}
-        childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
-        nextEventAddon={nextEventAddon}
-        setCurrentPageExternally={setCurrentPageExternally}
-        completeNavigation={completeNavigation}
-      />
-  }
-  {
-    toRender === "success-screen" &&
-    <MicroplanCreatedScreen microplanData={microplanData}/>
-  }
+      {toRender === "navigator" && (
+        <Navigator
+          config={timeLineOptions}
+          checkDataCompleteness={true}
+          stepNavigationActive={true}
+          components={components}
+          childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
+          nextEventAddon={nextEventAddon}
+          setCurrentPageExternally={setCurrentPageExternally}
+          completeNavigation={completeNavigation}
+        />
+      )}
+      {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
 
       {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
         <Toast style={{ bottom: "5.5rem" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />

@@ -11,6 +11,10 @@ import {
   TextInput,
 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import { tourSteps } from "../configs/tourSteps";
+import { useMyContext } from "../utils/context";
+
+const page = "microplanDetails"
 
 const MicroplanDetails = (
   {MicroplanName = "default",
@@ -24,6 +28,7 @@ const MicroplanDetails = (
 ) => {
   const { t } = useTranslation();
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
+  const {state, dispatch} = useMyContext();
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -62,6 +67,15 @@ const MicroplanDetails = (
     }
   );
 
+  // Set TourSteps
+  useEffect(() => {
+    if (state?.tourStateData?.name === page || !tourSteps?.[page]) return;
+    dispatch({
+      type: "SETINITDATA",
+      state: { tourStateData: tourSteps?.[page] },
+    });
+  }, []);
+
   useEffect(() => {
     if ( checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     if(microplan!==""){
@@ -89,6 +103,7 @@ const MicroplanDetails = (
           margin: "1rem",
           padding: "2rem 0 1rem 1.5rem",
         }}
+        className="microplan-campaign-detials"
       >
         <CardSectionHeader
           style={{
@@ -119,6 +134,7 @@ const MicroplanDetails = (
           margin: "1rem",
           padding: "2rem 0 0 1.5rem",
         }}
+        className="microplan-name"
       >
         <CardSubHeader>{t("NAME_YOUR_MP")}</CardSubHeader>
         <p>{t("MP_FOOTER")}</p>
