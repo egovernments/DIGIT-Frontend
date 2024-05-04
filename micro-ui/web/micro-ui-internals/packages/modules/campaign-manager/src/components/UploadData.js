@@ -30,7 +30,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
-  const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "facilitySchema" },{ name: "userSchema" },{ name: "boundarySchema" }]);
+  const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
+    { name: "facilitySchema" },
+    { name: "userSchema" },
+    { name: "boundarySchema" },
+  ]);
+  const [sheetHeaders , setSheetHeaders] = useState({});
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -42,6 +47,17 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile, isError]);
 
+  useEffect(() => {
+    if (Schemas?.["HCM-ADMIN-CONSOLE"]) {
+      const headers = {
+        boundary: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.boundarySchema?.[0]?.properties),
+        facilityWithBoundary: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]?.properties),
+        User: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.userSchema?.[0]?.properties)
+      };
+
+      setSheetHeaders(headers);
+    }
+  }, [Schemas?.["HCM-ADMIN-CONSOLE"]]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -77,7 +93,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setShowInfoCard(false);
     }
   }, [type, errorsType]);
-
 
   const validateData = (data) => {
     const ajv = new Ajv(); // Initialize Ajv
@@ -218,7 +233,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          const expectedHeaders = headerConfig[type];
+          const expectedHeaders = sheetHeaders[type];
           for (const header of expectedHeaders) {
             if (!headersToValidate.includes(header)) {
               const errorMessage = t("HCM_MISSING_HEADERS");
