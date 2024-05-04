@@ -5,7 +5,6 @@ import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../
 import { CloseButton, ModalHeading } from "../../components/ComonComponents";
 import { mapDataForApi } from "./CreateMicroplan";
 import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
-import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 
 const commonColumn = "boundaryCode";
 
@@ -137,7 +136,7 @@ const MicroplanPreview = ({
       setData(combinedData);
       setDataToShow(combinedData);
     }
-  }, [hierarchy, hierarchyRawData, microplanData]);
+  }, [hierarchy, hierarchyRawData]);
 
   useEffect(() => {
     if (!boundarySelections && !resources) return;
@@ -465,19 +464,27 @@ const DataPreview = memo(
                     {rowData[cellIndex] || t("NO_DATA")}
                   </td>
                 ));
-                return (
-                  <tr
-                    className={`${mouseOver && mouseOver === rowIndex ? "hover" : ""}`}
-                    key={rowIndex}
-                    onClick={() => {
-                      rowClick(rowIndex + 1);
-                    }}
-                    onMouseEnter={() => setMouseOver(rowIndex)}
-                    onMouseLeave={() => setMouseOver(undefined)}
-                  >
+                let returnData = [];
+                if (mouseOver && mouseOver === rowIndex)
+                  returnData.push(
+                    <tr
+                      className="hover"
+                      onClick={() => {
+                        rowClick(rowIndex + 1);
+                      }}
+                      onMouseEnter={() => setMouseOver(rowIndex)}
+                      onMouseLeave={() => setMouseOver(undefined)}
+                    >
+                      {rowDataList}
+                    </tr>
+                  );
+                returnData.push(
+                  <tr key={rowIndex} onMouseEnter={() => setMouseOver(rowIndex)} onMouseLeave={() => setMouseOver(undefined)}>
                     {rowDataList}
                   </tr>
                 );
+
+                return returnData;
               })}
             </tbody>
           </table>
@@ -911,15 +918,15 @@ const fetchMicroplanData = (microplanData) => {
       if (files[fileData]?.data) {
         // Check file type and update data availability accordingly
         switch (files[fileData]?.fileType) {
-          case EXCEL: {
+          case "Excel": {
             // extract dada
             for (let data of Object.values(files[fileData]?.data)) {
               combinesDataList.push(data);
             }
             break;
           }
-          case GEOJSON:
-          case SHAPEFILE:
+          case "GeoJSON":
+          case "Shapefile":
             // Extract keys from the first feature's properties
             var keys = Object.keys(files[fileData]?.data.features[0].properties);
 

@@ -4,8 +4,6 @@ import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
 import { Modal, Toast } from "@egovernments/digit-ui-components";
-import { useMyContext } from "../../utils/context";
-import { tourSteps } from "../../configs/tourSteps";
 
 const initialAssumptions = [
   {
@@ -20,8 +18,6 @@ const initialAssumptions = [
   },
 ];
 
-const page = "hypothesis";
-
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
 
@@ -33,16 +29,6 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
   const [toast, setToast] = useState();
-  const {state, dispatch} = useMyContext()
-
-  // Set TourSteps
-  useEffect(() => {
-    if (state?.tourStateData?.name === page || !tourSteps?.[page]) return;
-    dispatch({
-      type: "SETINITDATA",
-      state: { tourStateData: tourSteps?.[page] },
-    });
-  }, []);
 
   // UseEffect to extract data on first render
   useEffect(() => {

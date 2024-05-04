@@ -11,13 +11,14 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   const downloadMicroplan = () => {
     try {
       if (!microplanData?.microplanPreview) return;
+
       let data = _.cloneDeep(microplanData?.microplanPreview);
       data[0] = data[0].map((item) => t(item));
       for (let i in data) {
         data[i] = data[i].map((item) => (item ? item : t("NO_DATA")));
       }
 
-      let blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name ]: data }, { skipHeader: true });
+      let blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data }, { skipHeader: true });
 
       if (!blob) {
         return;
@@ -55,7 +56,8 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
         </div>
         <p>{t("MICROPLAN_GENERATED_SUCCESSFULLY_DESCRIPTIION")}</p>
         <div className="button-container">
-          <Button label={t("DOWNLOAD_MICROPLAN")} variation="secondary" onButtonClick={downloadMicroplan} icon={<FileDownload width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"}/>} isSuffix={false} />
+          {" "}
+          <Button label={t("DOWNLOAD_MICROPLAN")} variation="secondary" onClick={downloadMicroplan} icon={<FileDownload width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"}/>} isSuffix={false} />
         </div>
       </div>
 

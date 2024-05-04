@@ -11,7 +11,6 @@ import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 
 // Mapping component definition
 const Mapping = ({
@@ -46,7 +45,7 @@ const Mapping = ({
   );
 
   // request body for boundary hierarchy api
-  var reqCriteria = {
+  const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     params: {},
     body: {
@@ -63,18 +62,6 @@ const Mapping = ({
     },
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
-  // request body for boundary hierarchy api
-  var reqCriteria = {
-    url: `/boundary-service/boundary/_search`,
-    params: {codes:Digit.ULBService.getCurrentTenantId(),tenantId:Digit.ULBService.getCurrentTenantId()},
-    body: {},
-    config: {
-      select: (data) => {
-        return data?.Boundary || {};
-      },
-    },
-  };
-  const { isLoading: isBoundaryLoading, data: Boundary } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // Setting up state variables
   const [editable, setEditable] = useState(true);
@@ -100,7 +87,7 @@ const Mapping = ({
 
   // Effect to initialize map when data is fetched
   useEffect(() => {
-    if (!data || !Boundary) return;
+    if (!data) return;
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
     if (UIConfiguration) {
       const filterDataOriginList = UIConfiguration.find((item) => item.name === "mapping");
@@ -133,9 +120,9 @@ const Mapping = ({
     setSelectedBaseMapName(defaultBaseMap?.name);
     setBaseMaps(baseMaps);
     if (!map) {
-      init(_mapNode, defaultBaseMap, Boundary);
+      init(_mapNode, defaultBaseMap);
     }
-  }, [data, Boundary]);
+  }, [data]);
 
   useEffect(() => {
     if (filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
@@ -156,15 +143,8 @@ const Mapping = ({
   }, [filterDataOrigin, hierarchy]);
 
   // Function to initialize map
-  const init = (id, defaultBaseMap, Boundary) => {
+  const init = (id, defaultBaseMap) => {
     if (map !== null) return;
-
-    let bounds;
-    // setting bounds if they exist
-    if(Boundary){
-      console.log(Boundary)
-      bounds = findBounds(Boundary);
-    }
 
     let mapConfig = {
       center: [0, 0],
@@ -172,11 +152,9 @@ const Mapping = ({
       zoom: 2,
       scrollwheel: true,
       minZoom:2,
-      bounds
     };
 
     let map_i = L.map(id, mapConfig);
-    if(bounds) map_i.fitBounds(L.latLngBounds(bounds))
     var verticalBounds = L.latLngBounds(L.latLng(-90, -180), L.latLng(85, 180));
     map_i.on("drag", function () {
       map_i.panInsideBounds(verticalBounds, { animate: true });
@@ -185,7 +163,6 @@ const Mapping = ({
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
-
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
@@ -512,7 +489,7 @@ const extractGeoData = (
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
           switch (files[fileData]?.fileType) {
-            case EXCEL: {
+            case "Excel": {
               let columnList = Object.values(files[fileData]?.data)[0][0];
               let check = true;
               if (latLngColumns) {
@@ -570,8 +547,8 @@ const extractGeoData = (
                 setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
               break;
             }
-            case GEOJSON:
-            case SHAPEFILE:
+            case "GeoJSON":
+            case "Shapefile":
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
               // Extract keys from the first feature's properties
               var keys = Object.keys(files[fileData]?.data.features[0].properties);

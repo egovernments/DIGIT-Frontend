@@ -2064,8 +2064,13 @@ $border-color: rgba(214, 213, 212, 1);
                         position: relative;
 
                         .hover {
-                            width: 100%;
+                            position: absolute;
+                            z-index: 50;
                             outline: 0.09rem solid rgba(244, 119, 56, 1);
+
+                            td {
+                                color: rgb(0, 0, 0, 0);
+                            }
                         }
 
                         .selected-row {
@@ -2077,7 +2082,7 @@ $border-color: rgba(214, 213, 212, 1);
                         th,
                         td {
                             min-width: 7.578rem;
-                            border: 0 0px 0.063rem 0.063rem solid rgba(214, 213, 212, 1);
+                            border: 0.063rem solid #ccc;
                             padding: 0.5rem;
                             font-family: Arial, sans-serif;
                             font-size: 0.875rem;
