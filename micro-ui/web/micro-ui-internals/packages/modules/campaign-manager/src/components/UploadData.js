@@ -49,21 +49,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [uploadedFile, isError]);
 
   var translateSchema = (schema) => {
-    console.log("schema" , schema);
     var newSchema = { ...schema };
     var newProp = {};
 
-    // Object.keys(schema?.properties)
-    //   .map((e) => ({ key: e, value: t(e) }))
-    //   .map((e) => {
-    //     newProp[e.value] = schema?.properties[e.key];
-    //   });
-    // const newRequired = schema?.required.map((e) => t(e));
+    Object.keys(schema?.properties)
+      .map((e) => ({ key: e, value: t(e) }))
+      .map((e) => {
+        newProp[e.value] = schema?.properties[e.key];
+      });
+    const newRequired = schema?.required.map((e) => t(e));
 
-    // newSchema.properties = newProp;
-    // newSchema.required = newRequired;
-    // delete newSchema.unique;
-    // return { ...newSchema };
+    newSchema.properties = newProp;
+    newSchema.required = newRequired;
+    delete newSchema.unique;
+    return { ...newSchema };
   };
 
   useEffect(async () => {
