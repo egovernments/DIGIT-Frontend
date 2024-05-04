@@ -1000,19 +1000,21 @@ const SetupCampaign = () => {
 
   return (
     <React.Fragment>
-      <Stepper
-        customSteps={[
-          "HCM_CAMPAIGN_SETUP_DETAILS",
-          "HCM_DELIVERY_DETAILS",
-          "HCM_BOUNDARY_DETAILS",
-          "HCM_TARGETS",
-          "HCM_FACILITY_DETAILS",
-          "HCM_USER_DETAILS",
-          "HCM_REVIEW_DETAILS",
-        ]}
-        currentStep={currentStep + 1}
-        onStepClick={onStepClick}
-      />
+      {noAction !== "false" && (
+        <Stepper
+          customSteps={[
+            "HCM_CAMPAIGN_SETUP_DETAILS",
+            "HCM_DELIVERY_DETAILS",
+            "HCM_BOUNDARY_DETAILS",
+            "HCM_TARGETS",
+            "HCM_FACILITY_DETAILS",
+            "HCM_USER_DETAILS",
+            "HCM_REVIEW_DETAILS",
+          ]}
+          currentStep={currentStep + 1}
+          onStepClick={onStepClick}
+        />
+      )}
       <FormComposerV2
         config={config?.form.map((config) => {
           return {
