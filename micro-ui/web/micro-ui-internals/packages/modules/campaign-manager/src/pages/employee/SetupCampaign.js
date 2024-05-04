@@ -220,6 +220,7 @@ const SetupCampaign = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
@@ -473,7 +474,6 @@ const SetupCampaign = () => {
       });
     }
   }, [shouldUpdate]);
-
 
   //API CALL
   useEffect(async () => {
@@ -806,14 +806,14 @@ const SetupCampaign = () => {
         } else {
           return true;
         }
-        case "boundaryType":
+      case "boundaryType":
         if (!formData?.boundaryType?.selectedData || (formData?.boundaryType?.selectedData && formData.boundaryType.selectedData.length === 0)) {
           setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
           return false;
         } else {
           return true;
         }
-        
+
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isError) {
           setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
@@ -1022,12 +1022,12 @@ const SetupCampaign = () => {
         })}
         onSubmit={onSubmit}
         showSecondaryLabel={currentKey > 1 ? true : false}
-        secondaryLabel={t("HCM_BACK")}
+        secondaryLabel={noAction === "false" ? null : t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         noCardStyle={currentStep === 1 || currentStep === 6 || currentStep === 2 ? true : false}
         onSecondayActionClick={onSecondayActionClick}
-        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={noAction === "false" ? null : filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
       {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
     </React.Fragment>
