@@ -35,7 +35,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { name: "userSchema" },
     { name: "boundarySchema" },
   ]);
-  const [sheetHeaders , setSheetHeaders] = useState({});
+  const [sheetHeaders, setSheetHeaders] = useState({});
+  const [translatedSchema, setTranslatedSchema] = useState({});
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -47,15 +48,43 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile, isError]);
 
-  useEffect(() => {
+  var translateSchema = (schema) => {
+    console.log("schema" , schema);
+    var newSchema = { ...schema };
+    var newProp = {};
+
+    // Object.keys(schema?.properties)
+    //   .map((e) => ({ key: e, value: t(e) }))
+    //   .map((e) => {
+    //     newProp[e.value] = schema?.properties[e.key];
+    //   });
+    // const newRequired = schema?.required.map((e) => t(e));
+
+    // newSchema.properties = newProp;
+    // newSchema.required = newRequired;
+    // delete newSchema.unique;
+    // return { ...newSchema };
+  };
+
+  useEffect(async () => {
     if (Schemas?.["HCM-ADMIN-CONSOLE"]) {
+      const newFacilitySchema = await translateSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]);
+      const newBoundarySchema = await translateSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.boundarySchema?.[0]);
+      const newUserSchema = await translateSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.userSchema?.[0]);
       const headers = {
-        boundary: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.boundarySchema?.[0]?.properties),
-        facilityWithBoundary: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]?.properties),
-        User: Object?.keys(Schemas?.["HCM-ADMIN-CONSOLE"]?.userSchema?.[0]?.properties)
+        boundary: Object?.keys(newBoundarySchema?.properties),
+        facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
+        User: Object?.keys(newUserSchema?.properties),
+      };
+
+      const schema = {
+        boundary: newBoundarySchema,
+        facilityWithBoundary: newFacilitySchema,
+        userWithBoundary: newUserSchema,
       };
 
       setSheetHeaders(headers);
+      setTranslatedSchema(schema);
     }
   }, [Schemas?.["HCM-ADMIN-CONSOLE"]]);
 
@@ -96,14 +125,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const validateData = (data) => {
     const ajv = new Ajv(); // Initialize Ajv
-    let validate;
-    if (type === "facilityWithBoundary") {
-      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]);
-    } else if (type === "boundary") {
-      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.boundarySchema?.[0]);
-    } else {
-      validate = ajv.compile(Schemas?.["HCM-ADMIN-CONSOLE"]?.userSchema?.[0]);
-    }
+    let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
     data.forEach((item, index) => {
@@ -145,7 +167,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   const validateTarget = (jsonData, headersToValidate) => {
-    const boundaryCodeIndex = headersToValidate.indexOf("HCM_ADMIN_CONSOLE_BOUNDARY_CODE");
+    const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
     const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
 
     const filteredData = jsonData
@@ -154,7 +176,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           return true;
         }
       })
-      .filter((e) => e["HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL"]);
+      .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
 
     if (filteredData.length == 0) {
       const errorMessage = t("HCM_MISSING_TARGET");
@@ -166,7 +188,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       return false;
     }
 
-    const targetValue = filteredData?.[0]["HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL"];
+    const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
 
     if (targetValue <= 0 || targetValue >= 100000000) {
       const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
@@ -202,7 +224,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           const SheetNames = workbook.SheetNames[0];
           if (type === "boundary") {
-            if (SheetNames !== "HCM_ADMIN_CONSOLE_BOUNDARY_DATA") {
+            if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -212,7 +234,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else if (type === "facilityWithBoundary") {
-            if (SheetNames !== "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
+            if (SheetNames !== t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -222,7 +244,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else {
-            if (SheetNames !== "HCM_ADMIN_CONSOLE_USER_LIST") {
+            if (SheetNames !== t("HCM_ADMIN_CONSOLE_USER_LIST")) {
               const errorMessage = t("HCM_INVALID_USER_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
