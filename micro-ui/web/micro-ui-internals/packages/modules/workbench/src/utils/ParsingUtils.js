@@ -81,3 +81,52 @@ export const parseXlsToJsonMultipleSheetsFile  = async (uploadedFile) => {
     reader.readAsArrayBuffer(uploadedFile);
   });
 }
+
+// Function to handle multiple file upload
+export const parseMultipleXlsToJson = async (uploadedFiles) => {
+  const allowedFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"];
+  const allJsonData = [];
+
+  const processFile = (file) => {
+    return new Promise((resolve, reject) => {
+      if (!allowedFileTypes.includes(file.type)) {
+        reject(new Error("WBH_LOC_INAVLID_FILY_TYPE"));
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const arrayBuffer = event.target.result;
+        const workbook = XLSX.read(arrayBuffer, { type: "arraybuffer" });
+        const jsonData = [];
+
+        workbook.SheetNames.forEach((sheetName) => {
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonSheetData = XLSX.utils.sheet_to_json(worksheet);
+          jsonData.push(...jsonSheetData);
+        });
+
+        resolve(jsonData);
+      };
+
+      reader.onerror = function (error) {
+        reject(error);
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  // Process each file sequentially
+  for (const file of uploadedFiles) {
+    try {
+      const jsonData = await processFile(file);
+      allJsonData.push(...jsonData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  return allJsonData;
+};

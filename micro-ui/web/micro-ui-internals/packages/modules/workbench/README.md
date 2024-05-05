@@ -110,6 +110,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.1-beta.14 added direct boundary bulk upload screen
 1.0.1-beta.4 Added boundary bulk upload screen
 1.0.1-beta.3 minor fixes in create hierarchy screen
 1.0.1-beta.2 Added create heirarchty screen
