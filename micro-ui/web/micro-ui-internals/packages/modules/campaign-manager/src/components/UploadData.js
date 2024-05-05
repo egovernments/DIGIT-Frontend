@@ -361,14 +361,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile.length > 0) {
-        setShowToast({ key: "warning", label: t("HCM_VALIDATION_IN_PROGRESS") });
+        setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsError(true);
 
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
           if (temp?.status === "completed") {
             if (Object.keys(temp?.additionalDetails).length === 0) {
-              setShowToast({ key: "warning", label: t("HCM_VALIDATION_COMPLETED") });
+              setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (!errorsType[type]) {
                 setIsError(false);
               }
@@ -378,7 +378,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
                 return;
               } else {
-                setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
                 const fileData = fileUrl.map((i) => {
                   const urlParts = i?.url?.split("/");
@@ -401,7 +401,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
               return;
             } else {
-              setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
               const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
               const fileData = fileUrl.map((i) => {
                 const urlParts = i?.url?.split("/");
@@ -465,8 +465,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             // handleFileDownload(fileData?.[0]);
             // downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
           } else {
-            setShowToast({ key: "error", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
           }
+        },
+        onError: (result) => {
+          setShowToast({key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          closeToast();
         },
       }
     );
@@ -550,7 +554,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           ]}
         />
       )}
-      {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
+      {showToast && (
+        <Toast
+          error={showToast.key === "error" ? true : false}
+          warning={showToast.key === "warning" ? true : false}
+          info={showToast.key === "info" ? true : false}
+          label={t(showToast.label)}
+          onClose={closeToast}
+        />
+      )}
     </React.Fragment>
   );
 };
