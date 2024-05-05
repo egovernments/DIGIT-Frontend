@@ -31,6 +31,12 @@ const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
     setFiles(updatedFiles);
   };
 
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(null);
+    }, 5000);
+  };
+
   const renderFileCards = useMemo(() => {
     return files.map((file, index) => (
       <div className="uploaded-file-container" key={index}>
@@ -48,9 +54,9 @@ const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
   const handleChange = (newFiles) => {
     if (newFiles.length > 1) {
       setShowToast({ key: "error", label: t("WBH_ERROR_MORE_THAN_ONE_FILE") , isError: true });
+      closeToast();
       return;
     }
-    console.log("newFiles",newFiles)
     // setFiles([...files, ...newFiles]);
     setFiles([...newFiles]);
   };
