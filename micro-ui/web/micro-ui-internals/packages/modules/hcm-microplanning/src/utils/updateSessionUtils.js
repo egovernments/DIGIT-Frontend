@@ -2,6 +2,9 @@ import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheets } from "../utils/exceltojson";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
+import XLSX from "xlsx";
+
+
 
 function parseBlobToExcel(blob) {
   return new Promise((resolve, reject) => {
@@ -27,6 +30,8 @@ function parseBlobToExcel(blob) {
     reader.readAsText(blob);
   });
 }
+
+
 
 export const updateSessionUtils = {
   computeSessionObject: async (row,state) => {
@@ -80,47 +85,133 @@ export const updateSessionUtils = {
       let promises = [];
 
       // Loop through each URL
-      for (let file of files) {
-        //here every file will have {inputFileTyp,templateIdentifier(use this key to set data on upload object)}
-        const { inputFileType, templateIdentifier, filestoreId } = file || {};
+      // for (let file of files) {
+      //   //here every file will have {inputFileTyp,templateIdentifier(use this key to set data on upload object)}
+      //   const { inputFileType, templateIdentifier, filestoreId } = file || {};
 
-        upload[templateIdentifier] = {
-          id: templateIdentifier,
-          section: templateIdentifier,
-          fileName: templateIdentifier,
-          fileType: inputFileType,
-          file: {},
-          error: null,
-          resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
-          data: {},
-        };
+      //   upload[templateIdentifier] = {
+      //     id: templateIdentifier,
+      //     section: templateIdentifier,
+      //     fileName: templateIdentifier,
+      //     fileType: inputFileType,
+      //     file: {},
+      //     error: null,
+      //     resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
+      //     data: {},
+      //   };
 
-        //we need to set id,fileName,section,fileType,data,file,error,resourceMapping(filter with filestoreId) (for every file)
-        let promise = Request({
-          url: "/filestore/v1/files/id",
-          data: {},
-          useCache: false,
-          userService: true,
-          method: "GET",
-          auth: false,
-          params: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-            // fileStoreId: filestoreId,
-            fileStoreId: "733b2d5f-9876-4622-931f-9b265f7879b0",//geoj
-          },
-          plainAccessRequest: {},
-          userDownload: false,
-          setTimeParam: false,
+      //   //we need to set id,fileName,section,fileType,data,file,error,resourceMapping(filter with filestoreId) (for every file)
+      //   let promise = Request({
+      //     url: "/filestore/v1/files/url",
+      //     data: {},
+      //     useCache: false,
+      //     userService: true,
+      //     method: "GET",
+      //     auth: false,
+      //     params: {
+      //       tenantId: Digit.ULBService.getCurrentTenantId(),
+      //       // fileStoreId: filestoreId,
+      //       fileStoreIds: "e82dd3ef-4b64-4443-aa62-dfbc1dba73cf",//geoj
+      //     },
+      //     plainAccessRequest: {},
+      //     userDownload: false,
+      //     setTimeParam: false,
+      //     headers: {
+      //       "auth-token": Digit.UserService.getUser()?.["access_token"],
+      //     },
+      //   });
+
+      //   promises.push(promise); // Push the promise into the array
+      // }
+
+      // let results = await Promise.all(promises);
+
+
+      // _________________________
+      try {
+        
+        const fileStoreIdsList = files?.map(file => file.filestoreId)
+        
+        const responseFileStoreUrl = await Request({
+        url: "/filestore/v1/files/url",
+        data: {},
+        useCache: false,
+        userService: true,
+        method: "GET",
+        auth: false,
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          // fileStoreIds: fileStoreIdsList.join(',')
+          fileStoreIds:"e82dd3ef-4b64-4443-aa62-dfbc1dba73cf"
+        },
+        plainAccessRequest: {},
+        userDownload: false,
+        setTimeParam: false,
+        // headers: {
+        //   "auth-token": Digit.UserService.getUser()?.["access_token"],
+        // },
+      });
+      
+      const response = await fetch(responseFileStoreUrl.fileStoreIds[0].url,
+        {
+          mode: 'no-cors',
+          // responseType: "arraybuffer",
           headers: {
-            "auth-token": Digit.UserService.getUser()?.["access_token"],
+            // "Content-Type": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            // "Accept": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            // "Access-Control-Allow-Origin": "*"
           },
+          method: "GET"
         });
+        debugger
+    // if (!response.ok) {
+    //   throw new Error('Network response was not ok');
+    // }
+    
+    const blob = await response.blob();
 
-        promises.push(promise); // Push the promise into the array
+    const reader = new FileReader();
+    const dataPromise = new Promise((resolve, reject) => {
+      reader.onload = function(event) {
+        resolve(event.target.result);
+      };
+      reader.onerror = function(event) {
+        reject(event.target.error);
+      };
+    });
+    
+    reader.readAsBinaryString(blob);
+    
+    const data = await dataPromise;
+    
+    const workbook = XLSX.read(data, { type: "binary" });
+    
+    console.log("Workbook:", workbook);
+
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
       }
-      //this will have data corresponding to all the files
-      let results = await Promise.all(promises);
-      //do other async operations here only for files such as shp and xlsx
+      
+      
+
+//       var resultAsync = await fetch(responseFileStoreUrl["e82dd3ef-4b64-4443-aa62-dfbc1dba73cf"], {
+//         mode: 'no-cors',
+//         responseType: "arraybuffer",
+//         headers: {
+//           "Content-Type": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//           "Accept": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//           "Access-Control-Allow-Origin": "*"
+//         },
+//         method: "GET"
+//       }).then((res) => {
+// debugger
+//         return res.blob()
+//       });
+// debugger
+
+
+      // ____________________________
+
       
 
 
@@ -150,7 +241,21 @@ export const updateSessionUtils = {
 
 
       const handleGeoJson = (file,idx) => {
-        upload[files[idx].templateIdentifier].data = results[idx];
+
+        const { inputFileType, templateIdentifier, filestoreId } = file || {};
+
+        upload[templateIdentifier] = {
+          id: templateIdentifier,
+          section: templateIdentifier,
+          fileName: templateIdentifier,
+          fileType: inputFileType,
+          file: {},
+          error: null,
+          resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
+          data: {},
+        };
+
+        upload[templateIdentifier].data = results[idx];
           const newFeatures = results[idx]["features"].map((item) => {
             let newProperties = {};
             row?.resourceMapping
@@ -169,20 +274,20 @@ export const updateSessionUtils = {
 
       // let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
       //run a loop and set the data object of every file
-      files.forEach((file, idx) => {
-        switch (file.inputFileType) {
-          case "Shapefile":
-            break;
-          case "Excel":
-            break;
-          case "GeoJSON":
-            handleGeoJson();
-          default:
-            break;
-        }
-        //this logic is for geoJson file type only
-        handleGeoJson(file,idx)
-      });
+      // files.forEach((file, idx) => {
+      //   switch (file.inputFileType) {
+      //     case "Shapefile":
+      //       break;
+      //     case "Excel":
+      //       break;
+      //     case "GeoJSON":
+      //       handleGeoJson();
+      //     default:
+      //       break;
+      //   }
+      //   //this logic is for geoJson file type only
+      //   handleGeoJson(file,idx)
+      // });
       //now map over this results and for each file (currently only geojson) set upload object in sessionObj
       //also preprocess with computeGeojsonWithMappedProperties before setting on sessionObj
 
