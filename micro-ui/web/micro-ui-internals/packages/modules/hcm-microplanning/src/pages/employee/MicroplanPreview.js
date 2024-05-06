@@ -2,12 +2,14 @@ import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInpu
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { CloseButton, ModalHeading } from "../../components/ComonComponents";
-import { mapDataForApi } from "./CreateMicroplan";
+import { CloseButton, ModalHeading, handleSelection, mapDataForApi } from "../../components/ComonComponents";
 import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
-import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants";
+import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { tourSteps } from "../../configs/tourSteps";
+import { useMyContext } from "../../utils/context";
 
-const commonColumn = "boundaryCode";
+const page = "microplanPreview";
 
 const MicroplanPreview = ({
   campaignType = "SMC",
@@ -27,7 +29,7 @@ const MicroplanPreview = ({
   ]);
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const userInfo = Digit.SessionStorage.get("User")?.info;
-
+  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { t } = useTranslation();
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [data, setData] = useState([]);
@@ -36,7 +38,7 @@ const MicroplanPreview = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [resources, setResources] = useState([]);
   const [formulaConfiguration, setFormulaConfiguration] = useState([]);
-  const [boundarySelections, setBoundarySelections] = useState([]); // state for hierarchy from the data available from uploaded data
+  const [boundarySelections, setBoundarySelections] = useState({}); // state for hierarchy from the data available from uploaded data
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
   const [toast, setToast] = useState();
   const [modal, setModal] = useState("none");
@@ -44,6 +46,8 @@ const MicroplanPreview = ({
 
   const [userEditedResources, setUserEditedResources] = useState({}); // state to maintain a record of the resources that the user has edited ( boundaryCode : {resource : value})
   const [microplanPreviewAggregates, setMicroplaPreviewAggregates] = useState();
+  const { state, dispatch } = useMyContext();
+
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
@@ -79,6 +83,16 @@ const MicroplanPreview = ({
   const hierarchy = useMemo(() => {
     return hierarchyRawData?.map((item) => item?.boundaryType);
   }, [hierarchyRawData]);
+
+  // Set TourSteps
+  useEffect(() => {
+    const tourData = tourSteps(t)?.[page] || {};
+    if (!state?.tourStateData?.name || state.tourStateData.name === page) return;
+    dispatch({
+      type: "SETINITDATA",
+      state: { tourStateData: tourData },
+    });
+  }, []);
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -120,8 +134,60 @@ const MicroplanPreview = ({
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!dataToShow || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    setCheckDataCompletion("valid");
+    let check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis)
+    if(check.length === 0){
+      return createMicroplan()
+    }
+     setModal("confirm-apply-changed-hypothesis");
   }, [checkDataCompletion]);
+
+  // check if data has changed or not
+  const updateData = () => {
+    if (!dataToShow || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: dataToShow }));
+    // const valueList = fileDataList ? Object.values(fileDataList) : [];
+    // if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
+    // else setCheckDataCompletion("invalid");
+    setCheckDataCompletion("valid");
+  };
+
+  const cancleUpdateData = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
+  // UseEffect to add a event listener for keyboard
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [modal]);
+
+  const handleKeyPress = (event) => {
+    // if (modal !== "upload-guidelines") return;
+    if (event.key === "x" || event.key === "Escape") {
+      // Perform the desired action when "x" or "esc" is pressed
+      // if (modal === "upload-guidelines")
+      setCheckDataCompletion("false");
+      setModal("none");
+    }
+  };
+
+
+  const createMicroplan = () => {
+    if (!hypothesisAssumptionsList || !setMicroplanData) return;
+    const microData = updateMicroplanData(hypothesisAssumptionsList);
+    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate, setToast);
+    updateData();
+    setModal("none");
+  };
+  const updateMicroplanData = (hypothesisAssumptionsList) => {
+    let microData = {};
+    setMicroplanData((previous) => {
+      microData = { ...previous, hypothesis: hypothesisAssumptionsList };
+      return microData;
+    });
+    return microData;
+  };
 
   // Set microplan preview data
   useEffect(() => {
@@ -188,7 +254,6 @@ const MicroplanPreview = ({
             setModal={setModal}
             setMicroplanData={setMicroplanData}
             operatorsObject={operatorsObject}
-            UpdateMutate={UpdateMutate}
             t={t}
           />
         </div>
@@ -208,86 +273,6 @@ const MicroplanPreview = ({
             <div className="no-data-available-container">{t("NO_DATA_AVAILABLE")}</div>
           )}
         </div>
-      </div>
-      {toast && toast.state === "error" && (
-        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
-      )}
-    </div>
-  );
-};
-
-const HypothesisValues = ({
-  boundarySelections,
-  hypothesisAssumptionsList,
-  setHypothesisAssumptionsList,
-  setToast,
-  modal,
-  setModal,
-  setMicroplanData,
-  operatorsObject,
-  UpdateMutate,
-  t,
-}) => {
-  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
-  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
-  const { valueChangeHandler, updateHyothesisAPICall } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
-
-  const applyNewHypothesis = () => {
-    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
-      return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
-    setHypothesisAssumptionsList(tempHypothesisList);
-
-    if (!hypothesisAssumptionsList || !setMicroplanData) return;
-    const microData = updateMicroplanData(tempHypothesisList);
-    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate);
-    setModal("none");
-  };
-
-  const updateMicroplanData = (hypothesisAssumptionsList) => {
-    let microData = {};
-    setMicroplanData((previous) => {
-      microData = { ...previous, hypothesis: hypothesisAssumptionsList };
-      return microData;
-    });
-    return microData;
-  };
-
-  const closeModal = () => {
-    setModal("none");
-  };
-
-  return (
-    <div>
-      <div className="hypothesis-list">
-        {tempHypothesisList
-          ?.filter((item) => item.key !== "")
-          .map((item, index) => (
-            <div key={"hyopthesis_" + index} className="">
-              <p>{t(item?.key)}</p>
-              <div className="input">
-                {/* Dropdown for boundaries */}
-                <TextInput
-                  name={"hyopthesis_" + index}
-                  value={item?.value}
-                  t={t}
-                  config={{}}
-                  onChange={(value) =>
-                    valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
-                  }
-                />
-              </div>
-            </div>
-          ))}
-      </div>
-      <div className="hypothesis-controllers">
-        <Button
-          className={"button-primary"}
-          style={{ width: "100%" }}
-          onClick={() => {
-            setModal("confirm-apply-changed-hypothesis");
-          }}
-          label={t("APPLY")}
-        />
       </div>
       {modal === "confirm-apply-changed-hypothesis" && (
         <Modal
@@ -309,95 +294,93 @@ const HypothesisValues = ({
           headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={applyNewHypothesis}
+          actionCancelOnSubmit={createMicroplan}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={closeModal}
+          actionSaveOnSubmit={cancleUpdateData}
           formId="modal-action"
         >
-          <AppplyChangedHypothesisConfirmation newhypothesisList={tempHypothesisList} hypothesisList={hypothesisAssumptionsList} t={t} />
+          <AppplyChangedHypothesisConfirmation newhypothesisList={hypothesisAssumptionsList} hypothesisList={microplanData?.hypothesis} t={t} />
         </Modal>
       )}
+      {toast && toast.state === "error" && (
+        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+      )}
+    </div>
+  );
+};
+
+const HypothesisValues = ({
+  boundarySelections,
+  hypothesisAssumptionsList,
+  setHypothesisAssumptionsList,
+  setToast,
+  setModal,
+  t,
+}) => {
+  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
+  const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
+
+  const applyNewHypothesis = () => {
+    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
+      return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
+    setHypothesisAssumptionsList(tempHypothesisList);
+  };
+
+  const closeModal = () => {
+    setModal("none");
+  };
+
+  return (
+    <div>
+      <div className="hypothesis-list">
+        {tempHypothesisList
+          ?.filter((item) => item.key !== "")
+          .map((item, index) => (
+            <div key={"hyopthesis_" + index} className="hypothesis-list-entity">
+              <p>{t(item?.key)}</p>
+              <div className="input">
+                {/* Dropdown for boundaries */}
+                <TextInput
+                  name={"hyopthesis_" + index}
+                  type={"text"}
+                  value={item?.value}
+                  t={t}
+                  config={{}}
+                  onChange={(value) =>
+                    valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
+                  }
+                  disable={false}
+                />
+              </div>
+            </div>
+          ))}
+      </div>
+      <div className="hypothesis-controllers">
+        <Button className={"button-primary"} style={{ width: "100%" }} onClick={applyNewHypothesis} label={t("APPLY")} />
+      </div>
     </div>
   );
 };
 
 const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
   const [processedHierarchy, setProcessedHierarchy] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filtering out dropdown values
   useEffect(() => {
     if (!boundaryData || !hierarchy) return;
-    let processedHierarchyTemp = fetchDropdownValues(boundaryData, hierarchy);
+    let processedHierarchyTemp = fetchDropdownValues(
+      boundaryData,
+      processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
+      boundarySelections
+    );
     setProcessedHierarchy(processedHierarchyTemp);
-  }, [boundaryData, hierarchy]);
-
-  const handleSelection = useCallback(
-    (e) => {
-      let tempData = {};
-      let TempHierarchy = _.cloneDeep(processedHierarchy);
-      let oldSelections = boundarySelections;
-      let selections = [];
-      e.forEach((item) => {
-        selections.push(item?.[1]?.name);
-        // Enpty previous options
-        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-        if (index !== -1) {
-          TempHierarchy[index].dropDownOptions = [];
-        }
-      });
-
-      // filtering current option. if its itself and its parent is not selected it will be discarded
-      if (hierarchy)
-        for (let key of hierarchy) {
-          if (Array.isArray(oldSelections?.[key?.boundaryType])) {
-            oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-              return (
-                (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) ||
-                (e?.parentBoundaryType === null && selections?.length !== 0)
-              );
-            });
-          }
-        }
-
-      e.forEach((item) => {
-        // insert new data into tempData
-        if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
-        else tempData[item?.[1]?.boundaryType] = [item?.[1]];
-
-        // Filter the options
-        let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-        if (index !== -1) {
-          const tempData = findFilteredDataForHierarchyDropdown(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
-          if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
-        }
-
-        // set the parent as selected
-        let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-        if (
-          !(
-            tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
-            oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-          ) &&
-          !!parent
-        ) {
-          var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
-          if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
-          tempData?.[parent?.boundaryType]?.push({
-            name: parent?.name,
-            code: parent?.name,
-            boundaryType: parent?.boundaryType,
-            parentBoundaryType: parentBoundaryType,
-          });
-        }
-      });
-      setProcessedHierarchy(TempHierarchy);
-      setBoundarySelections({ ...oldSelections, ...tempData });
-    },
-    [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]
-  );
+    setIsLoading(false);
+  }, [boundaryData, hierarchy, boundarySelections]);
 
   return (
     <div className="boundary-selection">
+      {isLoading && <LoaderWithGap text={"LOADING"} />}
       {processedHierarchy?.map((item, index) => (
         <div key={index} className="hierarchy-selection-element">
           <CardLabel className="header">{t(item?.boundaryType)}</CardLabel>
@@ -405,11 +388,12 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
             defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
             selected={boundarySelections?.[item?.boundaryType]}
             style={{ maxWidth: "23.75rem", margin: 0 }}
+            ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
             type={"multiselectdropdown"}
             t={t}
             options={item?.dropDownOptions || []}
             optionsKey="name"
-            onSelect={handleSelection}
+            onSelect={(e) => handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)}
           />
         </div>
       ))}
@@ -422,7 +406,6 @@ const DataPreview = memo(
     if (!previewData) return;
     const [tempResourceChanges, setTempResourceChanges] = useState(userEditedResources);
     const [selectedRow, setSelectedRow] = useState();
-    const [mouseOver, setMouseOver] = useState();
     if (isCampaignLoading || ishierarchyLoading) {
       return (
         <div className="api-data-loader">
@@ -454,7 +437,9 @@ const DataPreview = memo(
             <thead>
               <tr>
                 {previewData[0].map((header, columnIndex) => (
-                  <th key={columnIndex}>{t(header)}</th>
+                  <th key={columnIndex} className="no-hover-row">
+                    {t(header)}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -467,13 +452,10 @@ const DataPreview = memo(
                 ));
                 return (
                   <tr
-                    className={`${mouseOver && mouseOver === rowIndex ? "hover" : ""}`}
                     key={rowIndex}
                     onClick={() => {
                       rowClick(rowIndex + 1);
                     }}
-                    onMouseEnter={() => setMouseOver(rowIndex)}
-                    onMouseLeave={() => setMouseOver(undefined)}
                   >
                     {rowDataList}
                   </tr>
@@ -731,34 +713,6 @@ const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeeded
   return joinedList;
 };
 
-// Filters data for dropdown with when a parent is selected
-const findFilteredDataForHierarchyDropdown = (name, boundaryType, boundaryData) => {
-  let geojsonRawFeatures = [];
-  for (let data of Object.values(boundaryData)) {
-    const templist = findFilteredDataHierarchyTraveler(data?.hierarchicalData, name, boundaryType);
-    if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
-  }
-  return geojsonRawFeatures;
-};
-const findFilteredDataHierarchyTraveler = (data, name, boundaryType) => {
-  if (!data) return;
-  let tempStorage = [];
-  for (let [entityKey, entityValue] of Object.entries(data)) {
-    if (entityKey === name && entityValue?.boundaryType === boundaryType)
-      tempStorage = [
-        ...tempStorage,
-        ...Object.values(entityValue?.children)?.map((item) => ({
-          name: item?.name,
-          code: item?.name,
-          boundaryType: item?.boundaryType,
-          parentBoundaryType: boundaryType,
-        })),
-      ];
-    else if (entityValue?.children) tempStorage = [...tempStorage, ...findFilteredDataHierarchyTraveler(entityValue?.children, name, boundaryType)];
-  }
-  return tempStorage;
-};
-
 // function to filter the microplan data with respect to the hierarchy selected by the user
 const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hierarchy, hierarchyIndex = 0) => {
   if (!selections || selections?.length === 0) return data;
@@ -776,6 +730,7 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
 };
 
 const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList, t }) => {
+  const data = filterObjects(newhypothesisList, hypothesisList)
   return (
     <div className="apply-changes-hypothesis">
       <div className="instructions">
@@ -794,7 +749,7 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
             </tr>
           </thead>
           <tbody>
-            {hypothesisList?.map((row, index) => (
+            {data?.map((row, index) => (
               <tr key={row.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                 <td>{t(row?.key)}</td>
                 <td>{t(row?.value)}</td>
@@ -807,6 +762,27 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
     </div>
   );
 };
+
+function filterObjects(arr1, arr2) {
+  if(!arr1 ||!arr2) return []
+  // Create a new array to store the filtered objects
+  let filteredArray = [];
+
+  // Iterate through the first array
+  arr1.forEach(obj1 => {
+    // Find the corresponding object in the second array
+    let obj2 = arr2.find(item => item.key === obj1.key);
+
+    // If the object with the same key is found in the second array and their values are the same
+    if (obj2 && obj1.value !== obj2.value) {
+      // Push the object to the filtered array
+      filteredArray.push(obj1);
+    }
+  });
+
+  return filteredArray;
+}
+
 
 const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
   // Handles the change in hypothesis value
@@ -837,40 +813,40 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
-  const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate) => {
-    try {
-      let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId);
-      body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
-      body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
-      await UpdateMutate(body, {
-        onSuccess: async (data) => {
-          setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-          setTimeout(() => {
-            setToastCreateMicroplan(undefined);
-          }, 2000);
-        },
-        onError: (error, variables) => {
-          setToastCreateMicroplan({
-            message: t("ERROR_DATA_NOT_SAVED"),
-            state: "error",
-          });
-          setTimeout(() => {
-            setToastCreateMicroplan(undefined);
-          }, 2000);
-        },
-      });
-    } catch (error) {
-      setToastCreateMicroplan({
-        message: t("ERROR_DATA_NOT_SAVED"),
-        state: "error",
-      });
-    }
-  };
 
   return {
     valueChangeHandler,
-    updateHyothesisAPICall,
   };
+};
+
+const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate, setToast) => {
+  try {
+    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, "GENERATED");
+    body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+    body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+    await UpdateMutate(body, {
+      onSuccess: async (data) => {
+        setToast({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+        setTimeout(() => {
+          setToast(undefined);
+        }, 2000);
+      },
+      onError: (error, variables) => {
+        setToast({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setTimeout(() => {
+          setToast(undefined);
+        }, 2000);
+      },
+    });
+  } catch (error) {
+    setToast({
+      message: t("ERROR_DATA_NOT_SAVED"),
+      state: "error",
+    });
+  }
 };
 
 const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {

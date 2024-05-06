@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 import { ArrowBack, FileDownload } from "@egovernments/digit-ui-svg-components";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import { Button } from "@egovernments/digit-ui-react-components";
+import { useHistory } from "react-router-dom";
 
 const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   const { t } = useTranslation();
+  const history = useHistory()
 
   const downloadMicroplan = () => {
     try {
@@ -40,6 +42,14 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
     }
   };
 
+  const clickGoToHCM = ()=>{
+    history.replace(`/workbench-ui/employee/campaign/setup-campaign`);
+  }
+
+  const clickGoHome = ()=>{
+    history.replace(`/microplan-ui/employee/microplanning/select-campaign`);
+  }
+
   return (
     <div className="">
       <div className="microplan-success-screen">
@@ -65,7 +75,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           type="button"
           className="custom-button custom-button-left-icon"
           label={t("GO_BACK_HOME")}
-          onButtonClick={() => {}}
+          onButtonClick={clickGoHome}
           isSuffix={false}
           variation={"secondary"}
           icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"} />}
@@ -75,7 +85,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           type="button"
           className="custom-button"
           label={t("GO_TO_HCM")}
-          onButtonClick={() => {}}
+          onButtonClick={clickGoToHCM}
           isSuffix={true}
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}

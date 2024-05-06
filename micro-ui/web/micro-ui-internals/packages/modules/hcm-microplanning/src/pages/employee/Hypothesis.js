@@ -1,24 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ButtonType2, ModalHeading } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, ModalHeading, inputScrollPrevention } from "../../components/ComonComponents";
 import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import { tourSteps } from "../../configs/tourSteps";
-
-const initialAssumptions = [
-  {
-    id: 0,
-    key: "",
-    value: "",
-  },
-  {
-    id: 1,
-    key: "",
-    value: "",
-  },
-];
 
 const page = "hypothesis";
 
@@ -28,19 +15,21 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // States
   const [editable, setEditable] = useState(true);
   const [modal, setModal] = useState("none");
-  const [assumptions, setAssumptions] = useState(initialAssumptions);
+  const [assumptions, setAssumptions] = useState([]);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
   const [toast, setToast] = useState();
-  const {state, dispatch} = useMyContext()
+  const [autofillHypothesis, setAutofillHypothesis] = useState([]);
+  const { state, dispatch } = useMyContext();
 
   // Set TourSteps
   useEffect(() => {
-    if (state?.tourStateData?.name === page || !tourSteps?.[page]) return;
+    const tourData = tourSteps(t)?.[page] || {};
+    if (state?.tourStateData?.name === page) return;
     dispatch({
       type: "SETINITDATA",
-      state: { tourStateData: tourSteps?.[page] },
+      state: { tourStateData: tourData },
     });
   }, []);
 
@@ -54,22 +43,53 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (microplanData && microplanData.hypothesis) {
       setAssumptions(microplanData.hypothesis);
     }
+    let hypothesisAssumptionsList = state?.HypothesisAssumptions?.find((item) => item.campaignType === campaignType)?.assumptions;
+    setAutofillHypothesisData(hypothesisAssumptionsList, microplanData?.hypothesis ? microplanData?.hypothesis : assumptions, setAssumptions);
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!assumptions || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    if (!microplanData?.hypothesis || !_.isEqual(assumptions, microplanData.hypothesis)) setModal("data-change-check");
+    else updateData();
+  }, [checkDataCompletion]);
+
+  // // UseEffect to store current data
+  // useEffect(() => {
+  //   if (!assumptions || !setMicroplanData) return;
+  //   setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+  // }, [assumptions]);
+
+  // UseEffect to add a event listener for keyboard
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [modal]);
+
+  const handleKeyPress = (event) => {
+    // if (modal !== "upload-guidelines") return;
+    if (event.key === "x" || event.key === "Escape") {
+      // Perform the desired action when "x" or "esc" is pressed
+      // if (modal === "upload-guidelines")
+      setCheckDataCompletion("false");
+      setModal("none");
+    }
+  };
+
+  // check if data has changed or not
+  const updateData = () => {
+    if (!assumptions || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
     let check = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
     check = check && assumptions.length !== 0;
     if (check) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
-  }, [checkDataCompletion]);
-
-  // UseEffect to store current data
-  useEffect(() => {
-    if (!assumptions || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
-  }, [assumptions]);
+  };
+  const cancleUpdateData = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
 
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "HypothesisAssumptions" }]);
@@ -77,13 +97,19 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let hypothesisAssumptions = data["hcm-microplanning"]["HypothesisAssumptions"];
+    let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
     const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
     setHypothesisAssumptionsList(temp.assumptions);
+    setAutofillHypothesis(temp.assumptions);
     setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
   }, [data]);
+
+  // useEffect(()=>{
+  // if(!autofillHypothesis) return;
+  // setAutofillHypothesisData(autofillHypothesis, assumptions, setAssumptions)
+  // },[autofillHypothesis])
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -97,28 +123,63 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className={sectionClass}>
-      {/* NonInterractable Section */}
-      <NonInterractableSection t={t} />
-      {/* Interractable Section that includes the example as well as the assumptions */}
-      <InterractableSection
-        assumptions={assumptions}
-        setAssumptions={setAssumptions}
-        hypothesisAssumptionsList={hypothesisAssumptionsList}
-        setHypothesisAssumptionsList={setHypothesisAssumptionsList}
-        setModal={setModal}
-        setItemForDeletion={setItemForDeletion}
-        exampleOption={exampleOption}
-        t={t}
-      />
-      <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
-        <div className="add-icon">
-          <p>+</p>
-        </div>
-        <p>{t("ADD_ROW")}</p>
-      </button>
-      {/* delete conformation */}
-      {modal === "delete-conformation" && (
+    <>
+      <div className={sectionClass}>
+        {/* NonInterractable Section */}
+        <NonInterractableSection t={t} />
+        {/* Interractable Section that includes the example as well as the assumptions */}
+        <InterractableSection
+          assumptions={assumptions}
+          setAssumptions={setAssumptions}
+          hypothesisAssumptionsList={hypothesisAssumptionsList}
+          setHypothesisAssumptionsList={setHypothesisAssumptionsList}
+          setModal={setModal}
+          setItemForDeletion={setItemForDeletion}
+          exampleOption={exampleOption}
+          t={t}
+        />
+        <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
+          <div className="add-icon">
+            <p>+</p>
+          </div>
+          <p>{t("ADD_ROW")}</p>
+        </button>
+        {/* delete conformation */}
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
+
+        {toast && toast.state === "error" && (
+          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+        )}
+      </div>
+      {modal === "data-change-check" && (
         <Modal
           popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
           popupModuleActionBarStyles={{
@@ -136,21 +197,18 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             border: "0.063rem solid rgba(244, 119, 56, 1)",
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
-          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+          actionCancelOnSubmit={updateData}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={closeModal}
+          actionSaveOnSubmit={cancleUpdateData}
         >
           <div className="modal-body">
-            <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
       )}
-      {toast && toast.state === "error" && (
-        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
-      )}
-    </div>
+    </>
   );
 };
 
@@ -387,7 +445,20 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
     [item, setAssumptions]
   );
 
-  return <input type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
+  return <input onFocus={inputScrollPrevention} type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
 });
+
+const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptions) => {
+  if (assumptions?.length !== 0) return;
+  let newAssumptions = [];
+  for (let i in autofillHypothesis) {
+    newAssumptions.push({
+      id: i,
+      key: autofillHypothesis[i],
+      value: "",
+    });
+  }
+  setAssumptions(newAssumptions);
+};
 
 export default Hypothesis;

@@ -25,33 +25,27 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
       content: t("Home"),
       show: true,
     },
+    // {
+    //   content:  t(`UPLOAD`) ,
+    //   show: pathVar.includes("upload")?true: false,
+    // },
+    // {
+    //   content:  t(`HYPOTHESIS`) ,
+    //   show: pathVar.includes("hypothesis")?true: false,
+    // },
+    // {
+    //   content:  t(`RULE_ENGINE`) ,
+    //   show: pathVar.includes("rule-engine")?true: false,
+    // },
     {
-      path: `/${window.contextPath}/employee/upload`,
-      content:  t(`UPLOAD`) ,
-      show: pathVar.includes("upload")?true: false,
-    },
-    {
-      path: `/${window.contextPath}/employee/hypothesis`,
-      content:  t(`HYPOTHESIS`) ,
-      show: pathVar.includes("hypothesis")?true: false,
-    },
-    {
-      path: `/${window.contextPath}/employee/rule-engine`,
-      content:  t(`RULE_ENGINE`) ,
-      show: pathVar.includes("rule-engine")?true: false,
-    },
-    {
-      path: `/${window.contextPath}/employee/create-microplan`,
       content:  t(`CREATE_MICROPLAN`) ,
       show: pathVar.includes("create-microplan")?true: false,
     },
     {
-      path: `/${window.contextPath}/employee/saved-microplan`,
       content:  t(`SAVED_MICROPLANS_TEXT`) ,
       show: pathVar.includes("saved-microplan")?true: false,
     },
     {
-      path: `/${window.contextPath}/employee/select-campaign`,
       content:  t(`CREATE_MICROPLAN`) ,
       show: pathVar.includes("select-campaign")?true: false,
     },
@@ -77,6 +71,7 @@ const App = ({ path }) => {
     { name: "Schemas" },
     { name: "RuleConfigureOutput" },
     { name: "Resources" },
+    { name: "HypothesisAssumptions" },
   ],
   {
     select:(data) => {
@@ -106,9 +101,9 @@ const App = ({ path }) => {
       </div>
       <Switch>
         <AppContainer className="workbench">
-          <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
+          {/* <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
           <PrivateRoute path={`${path}/hypothesis`} component={() => <Hypothesis parentRoute={path}/>} />
-          <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} /> */}
           <PrivateRoute path={`${path}/help-guidelines`} component={() => <Guidelines parentRoute={path}/>} />
 
           <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path}/>} />

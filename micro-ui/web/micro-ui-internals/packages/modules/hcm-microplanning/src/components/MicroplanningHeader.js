@@ -26,7 +26,7 @@ const MicroplanningHeader = () => {
 
   return (
     <>
-      <Tutorial tutorial={tourState} updateTutorial={setTourState} />
+    <Tutorial tutorial={tourState} updateTutorial={setTourState} />
       <div className="wbh-header">
         <Help startTour={startTour} />
       </div>

@@ -37,14 +37,13 @@ export const excelValidations = (data, schemaData, t) => {
   };
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
-  let locationDataColumns = Object.entries(schemaData?.schema?.Properties || {})
+  let locationDataColumns = Object.entries(schemaData?.Properties || {})
     .reduce((acc, [key, value]) => {
-      if (value?.isLocationDataColumns) {
+  if (value?.isLocationDataColumns) {
         acc.push(key);
       }
       return acc;
     }, [])
-    .map((item) => t(item));
   if (!valid) {
     let columns = new Set();
     for (let i = 0; i < validateExcel.errors.length; i++) {
@@ -73,8 +72,8 @@ export const excelValidations = (data, schemaData, t) => {
           if (locationDataColumns.includes(instancePathMinMax[instancePathMinMax.length - 1])) {
             return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
           }
+          columns.add(instancePathPattern[instancePathPattern.length - 1]);
           break;
-
         case "pattern":
           const instancePathPattern = validateExcel.errors[i].instancePath.split("/");
           columns.add(instancePathPattern[instancePathPattern.length - 1]);

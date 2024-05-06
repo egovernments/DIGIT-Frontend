@@ -1,4 +1,4 @@
-import React, { Fragment, useState,useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   Card,
   CardSubHeader,
@@ -13,22 +13,26 @@ import {
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
+import { Modal } from "@egovernments/digit-ui-components";
+import { ModalHeading } from "./ComonComponents";
 
-const page = "microplanDetails"
+const page = "microplanDetails";
 
-const MicroplanDetails = (
-  {MicroplanName = "default",
+const MicroplanDetails = ({
+  MicroplanName = "default",
   campaignType = "SMC",
   microplanData,
   setMicroplanData,
   checkDataCompletion,
   setCheckDataCompletion,
   currentPage,
-  pages,...props}
-) => {
+  pages,
+  ...props
+}) => {
   const { t } = useTranslation();
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
-  const {state, dispatch} = useMyContext();
+  const { state, dispatch } = useMyContext();
+  const [modal, setModal] = useState("none");
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -36,7 +40,7 @@ const MicroplanDetails = (
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
-        ids:[id],
+        ids: [id],
       },
     },
     {
@@ -69,28 +73,67 @@ const MicroplanDetails = (
 
   // Set TourSteps
   useEffect(() => {
-    if (state?.tourStateData?.name === page || !tourSteps?.[page]) return;
+    const tourData = tourSteps(t)?.[page] || {};
+    if (state?.tourStateData?.name === page) return;
     dispatch({
       type: "SETINITDATA",
-      state: { tourStateData: tourSteps?.[page] },
+      state: { tourStateData: tourData },
     });
   }, []);
 
   useEffect(() => {
-    if ( checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if(microplan!==""){
-      setCheckDataCompletion("valid")
-    }
-    else setCheckDataCompletion("invalid");
+    if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    if (
+      !microplanData?.microplanDetails ||
+      !_.isEqual(
+        {
+          name: microplan,
+        },
+        microplanData.microplanDetails
+      )
+    )
+      setModal("data-change-check");
+    else updateData();
   }, [checkDataCompletion]);
 
-  const onChangeMicroplanName = (e) => {
-    setMicroplan(e.target.value)
-    setMicroplanData((previous) => ({ ...previous, microplanDetails: {
-      name:e.target.value
-    } }));
-  }
+  // UseEffect to add a event listener for keyboard
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
 
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [modal]);
+
+  const handleKeyPress = (event) => {
+    // if (modal !== "upload-guidelines") return;
+    if (event.key === "x" || event.key === "Escape") {
+      // Perform the desired action when "x" or "esc" is pressed
+      // if (modal === "upload-guidelines")
+      setCheckDataCompletion("false");
+      setModal("none");
+    }
+  };
+
+  // check if data has changed or not
+  const updateData = () => {
+    if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    setMicroplanData((previous) => ({
+      ...previous,
+      microplanDetails: {
+        name: microplan,
+      },
+    }));
+    if (microplan !== "") {
+      setCheckDataCompletion("valid");
+    } else setCheckDataCompletion("invalid");
+  };
+  const cancleUpdateData = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
+
+  const onChangeMicroplanName = (e) => {
+    setMicroplan(e.target.value);
+  };
 
   if (isCampaignLoading) {
     return <Loader />;
@@ -162,6 +205,35 @@ const MicroplanDetails = (
           </div>
         </LabelFieldPair>
       </Card>
+      {modal === "data-change-check" && (
+        <Modal
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupModuleActionBarStyles={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "flex-start",
+            padding: 0,
+            width: "100%",
+            padding: "1rem",
+          }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          style={{
+            flex: 1,
+            backgroundColor: "white",
+            border: "0.063rem solid rgba(244, 119, 56, 1)",
+          }}
+          headerBarMainStyle={{ padding: 0, margin: 0 }}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
+          actionCancelLabel={t("YES")}
+          actionCancelOnSubmit={updateData}
+          actionSaveLabel={t("NO")}
+          actionSaveOnSubmit={cancleUpdateData}
+        >
+          <div className="modal-body">
+            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
