@@ -78,8 +78,8 @@ function processErrorData(request: any, createAndSearchConfig: any, workbook: an
     const desiredSheet: any = workbook.Sheets[sheetName];
     const errorData = request.body.sheetErrorDetails;
     if (errorData) {
-        const uniqueIdentifierFirstRowCell = createAndSearchConfig.uniqueIdentifierColumn + 1
-        desiredSheet[uniqueIdentifierFirstRowCell] = { v: createAndSearchConfig?.uniqueIdentifierColumnName, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: createAndSearchConfig?.uniqueIdentifierColumnName, w: createAndSearchConfig?.uniqueIdentifierColumnName };
+        const uniqueIdentifierFirstRowCell = createAndSearchConfig?.uniqueIdentifierColumn + 1
+        desiredSheet[uniqueIdentifierFirstRowCell] = { v: createAndSearchConfig.uniqueIdentifierColumnName, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: createAndSearchConfig.uniqueIdentifierColumnName, w: createAndSearchConfig.uniqueIdentifierColumnName };
         errorData.forEach((error: any) => {
             const rowIndex = error.rowNumber;
             if (error.isUniqueIdentifier) {
