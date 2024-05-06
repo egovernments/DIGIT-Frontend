@@ -1,5 +1,5 @@
 import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading, handleSelection, mapDataForApi } from "../../components/ComonComponents";
@@ -19,6 +19,7 @@ const MicroplanPreview = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  navigationEvent,
   ...props
 }) => {
   // Fetching data using custom MDMS hook
@@ -43,6 +44,8 @@ const MicroplanPreview = ({
   const [toast, setToast] = useState();
   const [modal, setModal] = useState("none");
   const [operatorsObject, setOperatorsObject] = useState([]);
+
+  const [loaderActivation, setLoderActivation] = useState(false);
 
   const [userEditedResources, setUserEditedResources] = useState({}); // state to maintain a record of the resources that the user has edited ( boundaryCode : {resource : value})
   const [microplanPreviewAggregates, setMicroplaPreviewAggregates] = useState();
@@ -134,11 +137,11 @@ const MicroplanPreview = ({
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!dataToShow || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    let check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis)
-    if(check.length === 0){
-      return createMicroplan()
+    let check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis);
+    if (check.length === 0) {
+      return createMicroplan();
     }
-     setModal("confirm-apply-changed-hypothesis");
+    setModal("confirm-apply-changed-hypothesis");
   }, [checkDataCompletion]);
 
   // check if data has changed or not
@@ -148,7 +151,7 @@ const MicroplanPreview = ({
     // const valueList = fileDataList ? Object.values(fileDataList) : [];
     // if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
     // else setCheckDataCompletion("invalid");
-    setCheckDataCompletion("valid");
+    setCheckDataCompletion("perform-action");
   };
 
   const cancleUpdateData = () => {
@@ -172,12 +175,22 @@ const MicroplanPreview = ({
     }
   };
 
-
   const createMicroplan = () => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
     const microData = updateMicroplanData(hypothesisAssumptionsList);
-    updateHyothesisAPICall(microData, operatorsObject, microData?.microplanDetails?.name, campaignId, UpdateMutate, setToast);
-    updateData();
+    setLoderActivation(true);
+    updateHyothesisAPICall(
+      microData,
+      operatorsObject,
+      microData?.microplanDetails?.name,
+      campaignId,
+      UpdateMutate,
+      setToast,
+      updateData,
+      setLoderActivation,
+      navigationEvent?.name === "next"?"GENERATED":"DRAFT",
+      t
+    );
     setModal("none");
   };
   const updateMicroplanData = (hypothesisAssumptionsList) => {
@@ -223,100 +236,96 @@ const MicroplanPreview = ({
   }
 
   return (
-    <div className={`jk-header-btn-wrapper microplan-preview-section`}>
-      <div className="top-section">
-        <p className="campaign-name">{t(campaignData?.campaignName)}</p>
-        <Header className="heading">{t(microplanData?.microplanDetails?.name)}</Header>
-        <p className="user-name">{t("MICROPLAN_PREVIEW_CREATE_BY", { username: userInfo?.name })}</p>
-      </div>
-      <div className="hierarchy-selection-container">
-        <div className="hierarchy-selection">
-          <BoundarySelection
-            boundarySelections={boundarySelections}
-            setBoundarySelections={setBoundarySelections}
-            boundaryData={boundaryData}
-            hierarchy={hierarchyRawData}
-            t={t}
-          />
+    <>
+      <div className={`jk-header-btn-wrapper microplan-preview-section`}>
+        <div className="top-section">
+          <p className="campaign-name">{t(campaignData?.campaignName)}</p>
+          <Header className="heading">{t(microplanData?.microplanDetails?.name)}</Header>
+          <p className="user-name">{t("MICROPLAN_PREVIEW_CREATE_BY", { username: userInfo?.name })}</p>
         </div>
-      </div>
-      <Aggregates microplanPreviewAggregates={microplanPreviewAggregates} dataToShow={dataToShow} t={t} />
-      <div className="microplan-preview-body">
-        <div className="hypothesis-container">
-          <p className="hypothesis-heading">{t("MICROPLAN_PREVIEW_HYPOTHESIS_HEADING")}</p>
-          <p className="instructions">{t("MICROPLAN_PREVIEW_HYPOTHESIS_INSTRUCTIONS")}</p>
-          <HypothesisValues
-            boundarySelections={boundarySelections}
-            hypothesisAssumptionsList={hypothesisAssumptionsList}
-            setHypothesisAssumptionsList={setHypothesisAssumptionsList}
-            setToast={setToast}
-            modal={modal}
-            setModal={setModal}
-            setMicroplanData={setMicroplanData}
-            operatorsObject={operatorsObject}
-            t={t}
-          />
-        </div>
-        <div className="preview-container">
-          {dataToShow?.length != 0 ? (
-            <DataPreview
-              previewData={dataToShow}
-              isCampaignLoading={isCampaignLoading}
-              userEditedResources={userEditedResources}
-              setUserEditedResources={setUserEditedResources}
-              resources={resources}
-              modal={modal}
-              setModal={setModal}
+        <div className="hierarchy-selection-container">
+          <div className="hierarchy-selection">
+            <BoundarySelection
+              boundarySelections={boundarySelections}
+              setBoundarySelections={setBoundarySelections}
+              boundaryData={boundaryData}
+              hierarchy={hierarchyRawData}
               t={t}
             />
-          ) : (
-            <div className="no-data-available-container">{t("NO_DATA_AVAILABLE")}</div>
-          )}
+          </div>
         </div>
+        <Aggregates microplanPreviewAggregates={microplanPreviewAggregates} dataToShow={dataToShow} t={t} />
+        <div className="microplan-preview-body">
+          <div className="hypothesis-container">
+            <p className="hypothesis-heading">{t("MICROPLAN_PREVIEW_HYPOTHESIS_HEADING")}</p>
+            <p className="instructions">{t("MICROPLAN_PREVIEW_HYPOTHESIS_INSTRUCTIONS")}</p>
+            <HypothesisValues
+              boundarySelections={boundarySelections}
+              hypothesisAssumptionsList={hypothesisAssumptionsList}
+              setHypothesisAssumptionsList={setHypothesisAssumptionsList}
+              setToast={setToast}
+              modal={modal}
+              setModal={setModal}
+              setMicroplanData={setMicroplanData}
+              operatorsObject={operatorsObject}
+              t={t}
+            />
+          </div>
+          <div className="preview-container">
+            {dataToShow?.length != 0 ? (
+              <DataPreview
+                previewData={dataToShow}
+                isCampaignLoading={isCampaignLoading}
+                userEditedResources={userEditedResources}
+                setUserEditedResources={setUserEditedResources}
+                resources={resources}
+                modal={modal}
+                setModal={setModal}
+                t={t}
+              />
+            ) : (
+              <div className="no-data-available-container">{t("NO_DATA_AVAILABLE")}</div>
+            )}
+          </div>
+        </div>
+        {modal === "confirm-apply-changed-hypothesis" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={createMicroplan}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={cancleUpdateData}
+            formId="modal-action"
+          >
+            <AppplyChangedHypothesisConfirmation newhypothesisList={hypothesisAssumptionsList} hypothesisList={microplanData?.hypothesis} t={t} />
+          </Modal>
+        )}
+        {toast && toast.state === "error" && (
+          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+        )}
       </div>
-      {modal === "confirm-apply-changed-hypothesis" && (
-        <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-          popupModuleActionBarStyles={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "flex-start",
-            padding: 0,
-            width: "100%",
-            padding: "1rem",
-          }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
-          }}
-          headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
-          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
-          actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={createMicroplan}
-          actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancleUpdateData}
-          formId="modal-action"
-        >
-          <AppplyChangedHypothesisConfirmation newhypothesisList={hypothesisAssumptionsList} hypothesisList={microplanData?.hypothesis} t={t} />
-        </Modal>
-      )}
-      {toast && toast.state === "error" && (
-        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
-      )}
-    </div>
+      {loaderActivation && <LoaderWithGap text={"LOADING"} />}
+    </>
   );
 };
 
-const HypothesisValues = ({
-  boundarySelections,
-  hypothesisAssumptionsList,
-  setHypothesisAssumptionsList,
-  setToast,
-  setModal,
-  t,
-}) => {
+const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
@@ -730,7 +739,7 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
 };
 
 const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList, t }) => {
-  const data = filterObjects(newhypothesisList, hypothesisList)
+  const data = filterObjects(newhypothesisList, hypothesisList);
   return (
     <div className="apply-changes-hypothesis">
       <div className="instructions">
@@ -764,14 +773,14 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
 };
 
 function filterObjects(arr1, arr2) {
-  if(!arr1 ||!arr2) return []
+  if (!arr1 || !arr2) return [];
   // Create a new array to store the filtered objects
   let filteredArray = [];
 
   // Iterate through the first array
-  arr1.forEach(obj1 => {
+  arr1.forEach((obj1) => {
     // Find the corresponding object in the second array
-    let obj2 = arr2.find(item => item.key === obj1.key);
+    let obj2 = arr2.find((item) => item.key === obj1.key);
 
     // If the object with the same key is found in the second array and their values are the same
     if (obj2 && obj1.value !== obj2.value) {
@@ -782,7 +791,6 @@ function filterObjects(arr1, arr2) {
 
   return filteredArray;
 }
-
 
 const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
   // Handles the change in hypothesis value
@@ -813,20 +821,32 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
-
   return {
     valueChangeHandler,
   };
 };
 
-const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanName, campaignId, UpdateMutate, setToast) => {
+const updateHyothesisAPICall = async (
+  microplanData,
+  operatorsObject,
+  MicroplanName,
+  campaignId,
+  UpdateMutate,
+  setToast,
+  updateData,
+  setLoderActivation,
+  status,
+  t
+) => {
   try {
-    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, "GENERATED");
+    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         setToast({ state: "success", message: t("SUCCESS_DATA_SAVED") });
+        updateData();
+        setLoderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -836,6 +856,8 @@ const updateHyothesisAPICall = async (microplanData, operatorsObject, MicroplanN
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
+        updateData();
+        setLoderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);

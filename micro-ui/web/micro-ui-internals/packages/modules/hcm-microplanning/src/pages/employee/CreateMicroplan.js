@@ -37,7 +37,7 @@ const CreateMicroplan = () => {
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
-  const [toRender, setToRender] = useState("navigator");
+  const [ toRender, setToRender] = useState("navigator")
   const { t } = useTranslation();
 
   // States
@@ -127,6 +127,11 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
+        setMicroplanData((previous) => ({
+          ...previous,
+          planConfigurationId: data?.PlanConfiguration[0]?.id,
+          auditDetails: data?.PlanConfiguration[0]?.auditDetails,
+        }));
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -220,7 +225,7 @@ const CreateMicroplan = () => {
           <Toast style={{ bottom: "5.5rem", zIndex:"999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} error />
         )}
       </div>
-      {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
+      {loaderActivation && <LoaderWithGap text={"LOADING"} />}
     </>
   );
 };

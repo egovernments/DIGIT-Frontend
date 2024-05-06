@@ -157,3 +157,4 @@ export const mapDataForApi = (data, Operators, microplanName, campaignId, status
     },
   };
 };
+

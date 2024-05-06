@@ -50,24 +50,25 @@ const Navigator = (props) => {
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
     // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (checkDataCompletion === "valid" || checkDataCompletion === "invalid" ){ 
-    if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
-      props?.completeNavigation();
+    if (checkDataCompletion === "valid" || checkDataCompletion === "invalid") {
+      if (typeof props.nextEventAddon === "function") {
+        if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
+          props.nextEventAddon(currentPage, checkDataCompletion, setCheckDataCompletion);
+        else props.nextEventAddon(currentPage, true, setCheckDataCompletion);
+      } else {
+        setCheckDataCompletion("perform-action");
+      }
     }
-    if (typeof props.nextEventAddon === "function") {
-      if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
-        props.nextEventAddon(currentPage, checkDataCompletion, setCheckDataCompletion);
-      else props.nextEventAddon(currentPage, true, setCheckDataCompletion);
-    } else {
-      setCheckDataCompletion("perform-action");
-    }
-  }
   }, [navigationEvent, checkDataCompletion, props.nextEventAddon]);
 
   useEffect(() => {
     if (checkDataCompletion === "perform-action") {
-      if (navigationEvent && navigationEvent.name === "next") nextStep();
-      else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
+      if (navigationEvent && navigationEvent.name === "next") {
+        if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
+          return props?.completeNavigation();
+        }
+        nextStep();
+      } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
       else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
       setCheckDataCompletion("false");
       setNavigationEvent(undefined);
@@ -145,8 +146,10 @@ const Navigator = (props) => {
   };
 
   const completeNavigation = () => {
-    setCheckDataCompletion("true");
+      setNavigationEvent({ name: "next" });
+      setCheckDataCompletion("true");
   };
+
   return (
     <div className="create-microplan">
       {/* Stepper component */}
