@@ -143,6 +143,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       setOperators(temp);
     }
     if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
+    if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
   }, [data]);
 
   // useEffect to set autofill data
