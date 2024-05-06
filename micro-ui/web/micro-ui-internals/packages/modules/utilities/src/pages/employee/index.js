@@ -6,6 +6,7 @@ import DynamicSearchComponent from "./DynamicSearchComponent";
 import IFrameInterface from "./IFrameInterface";
 import WorkflowCompTest from "./WorkflowComponentTest";
 import DocViewer from "./DocViewer.js";
+import NonIFrameInterface from "./IFrameInterface/NonIframe.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -37,6 +38,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <Route path={`${path}/create/:moduleName/:masterName`} component={() => <DynamicCreateComponent parentRoute={path} />} />
         <Route path={`${path}/iframe/:moduleName/:pageName`}>
           <IFrameInterface {...commonProps} />
+        </Route>
+        <Route path={`${path}/non-iframe/:moduleName/:pageName`}>
+          <NonIFrameInterface {...commonProps} />
         </Route>
         <Route path={`${path}/doc-viewer`}>
           <DocViewer {...commonProps} />

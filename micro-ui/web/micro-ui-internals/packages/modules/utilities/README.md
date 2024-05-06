@@ -136,6 +136,7 @@ _Bill Module
 ### Changelog
 
 ```bash
+1.0.1-beta.3 Utilities updated for non iframe content
 1.0.1-beta.2 Utilities updated for iframe to support the Custom function logic
 1.0.1-beta.1 Republished after merging with Master due to version issues.
 1.0.0-beta.3 added new support to view any document

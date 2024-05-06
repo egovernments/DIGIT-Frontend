@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-utilities",
-  "version": "1.0.1-beta.2",
+  "version": "1.0.1-beta.3",
   "description": "Utilities Module UI",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-react-components": "1.8.1-beta.14",
+    "@egovernments/digit-ui-components": "0.0.1-beta.15",
     "react": "17.0.2",
     "react-date-range": "^1.4.0",
     "react-dom": "17.0.2",
