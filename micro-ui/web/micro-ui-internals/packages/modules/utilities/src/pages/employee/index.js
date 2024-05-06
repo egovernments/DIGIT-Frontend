@@ -6,7 +6,7 @@ import DynamicSearchComponent from "./DynamicSearchComponent";
 import IFrameInterface from "./IFrameInterface";
 import WorkflowCompTest from "./WorkflowComponentTest";
 import DocViewer from "./DocViewer.js";
-import NonIFrameInterface from "./IFrameInterface/NonIframe";
+import NonIFrameInterface from "./IFrameInterface/RenderCustom";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
