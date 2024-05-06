@@ -128,7 +128,7 @@ class dataManageController {
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
             logger.error(String(e))
-            console.log(e,"eeeeeeeeeeeeeeeeeeeeee")
+            logger.debug(e, "Error details")
             // Handle errors and send error response
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
         }
