@@ -174,14 +174,19 @@ function changeBodyViaSearchFromSheet(elements: any, request: any, dataFromSheet
   }
 }
 
-function updateErrorsForUser(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any) {
+function updateErrorsForUser(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any, userNameAndPassword: any[]) {
   newCreatedData.forEach((createdElement: any) => {
     let foundMatch = false;
     for (const searchedElement of newSearchedData) {
       if (searchedElement?.code === createdElement?.code) {
         foundMatch = true;
         newSearchedData.splice(newSearchedData.indexOf(searchedElement), 1);
-        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: searchedElement[createAndSearchConfig.uniqueIdentifier], errorDetails: "" })
+        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: _.get(searchedElement, createAndSearchConfig.uniqueIdentifier, ""), errorDetails: "" })
+        userNameAndPassword.push({
+          userName: searchedElement?.user?.userName,
+          password: "eGov@123",
+          rowNumber: createdElement["!row#number!"]
+        })
         break;
       }
     }
@@ -210,7 +215,7 @@ function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any
       if (match) {
         foundMatch = true;
         newSearchedData.splice(newSearchedData.indexOf(searchedElement), 1);
-        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: searchedElement[createAndSearchConfig.uniqueIdentifier], errorDetails: "" })
+        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: _.get(searchedElement, createAndSearchConfig.uniqueIdentifier, ""), errorDetails: "" })
         break;
       }
     }
@@ -239,7 +244,9 @@ function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], re
     updateErrors(newCreatedData, newSearchedData, errors, createAndSearchConfig);
   }
   else {
-    updateErrorsForUser(newCreatedData, newSearchedData, errors, createAndSearchConfig);
+    var userNameAndPassword: any = []
+    updateErrorsForUser(newCreatedData, newSearchedData, errors, createAndSearchConfig, userNameAndPassword);
+    request.body.userNameAndPassword = userNameAndPassword
   }
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
   request.body.Activities = activities

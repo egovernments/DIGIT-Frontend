@@ -77,17 +77,7 @@ function findColumns(desiredSheet: any): { statusColumn: string, errorDetailsCol
 function processErrorData(request: any, createAndSearchConfig: any, workbook: any, sheetName: any) {
     const desiredSheet: any = workbook.Sheets[sheetName];
     const errorData = request.body.sheetErrorDetails;
-    if (errorData) {
-        const uniqueIdentifierFirstRowCell = createAndSearchConfig?.uniqueIdentifierColumn + 1
-        desiredSheet[uniqueIdentifierFirstRowCell] = { v: createAndSearchConfig.uniqueIdentifierColumnName, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: createAndSearchConfig.uniqueIdentifierColumnName, w: createAndSearchConfig.uniqueIdentifierColumnName };
-        errorData.forEach((error: any) => {
-            const rowIndex = error.rowNumber;
-            if (error.isUniqueIdentifier) {
-                const uniqueIdentifierCell = createAndSearchConfig.uniqueIdentifierColumn + (rowIndex + 1);
-                desiredSheet[uniqueIdentifierCell] = { v: error.uniqueIdentifier, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: error.uniqueIdentifier, w: error.uniqueIdentifier };
-            }
-        });
-    }
+    const userNameAndPassword = request.body.userNameAndPassword;
     const columns = findColumns(desiredSheet);
     const statusColumn = columns.statusColumn;
     const errorDetailsColumn = columns.errorDetailsColumn;
@@ -99,13 +89,48 @@ function processErrorData(request: any, createAndSearchConfig: any, workbook: an
             const errorDetailsCell = errorDetailsColumn + (rowIndex + 1);
             desiredSheet[statusCell] = { v: error.status, t: 's', r: '<t xml:space="preserve">#status#</t>', h: error.status, w: error.status };
             desiredSheet[errorDetailsCell] = { v: error.errorDetails, t: 's', r: '<t xml:space="preserve">#errorDetails#</t>', h: error.errorDetails, w: error.errorDetails };
-            if (!(error?.status == "CREATED" || error?.status == "VALID")) {
+            if ((error?.status) && !(error?.status == "CREATED" || error?.status == "VALID")) {
                 additionalDetailsErrors.push(error)
             }
         });
     }
+    if (errorData) {
+        const uniqueIdentifierFirstRowCell = createAndSearchConfig?.uniqueIdentifierColumn + 1
+        desiredSheet[uniqueIdentifierFirstRowCell] = { v: createAndSearchConfig.uniqueIdentifierColumnName, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: createAndSearchConfig.uniqueIdentifierColumnName, w: createAndSearchConfig.uniqueIdentifierColumnName };
+        errorData.forEach((error: any) => {
+            const rowIndex = error.rowNumber;
+            if (error.isUniqueIdentifier) {
+                const uniqueIdentifierCell = createAndSearchConfig.uniqueIdentifierColumn + (rowIndex + 1);
+                desiredSheet[uniqueIdentifierCell] = { v: error.uniqueIdentifier, t: 's', r: '<t xml:space="preserve">#uniqueIdentifier#</t>', h: error.uniqueIdentifier, w: error.uniqueIdentifier };
+            }
+        });
+    }
     request.body.additionalDetailsErrors = additionalDetailsErrors
-    desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + errorDetailsColumn);
+    // lastcolumn = max of createAndSearchConfig?.uniqueIdentifierColumn and errorDetailsColumn
+    let lastColumn: string = errorDetailsColumn;
+
+    if (createAndSearchConfig?.uniqueIdentifierColumn !== undefined) {
+        // Compare strings lexicographically
+        lastColumn = createAndSearchConfig?.uniqueIdentifierColumn > errorDetailsColumn ?
+            createAndSearchConfig?.uniqueIdentifierColumn :
+            errorDetailsColumn;
+    }
+    if (userNameAndPassword) {
+        const userNameFirstCell = "I" + 1;
+        const passwordFirstCell = "J" + 1;
+        desiredSheet[userNameFirstCell] = { v: "UserName", t: 's', r: '<t xml:space="preserve">UserName</t>', h: "UserName", w: "UserName" };
+        desiredSheet[passwordFirstCell] = { v: "Password", t: 's', r: '<t xml:space="preserve">Password</t>', h: "Password", w: "Password" };
+        userNameAndPassword.forEach((data: any) => {
+            const rowIndex = data.rowNumber;
+            const userNameCell = "I" + (rowIndex + 1);
+            const passWordCell = "J" + (rowIndex + 1);
+            desiredSheet[userNameCell] = { v: data?.userName, t: 's', r: '<t xml:space="preserve">UserName</t>', h: data?.userName, w: data?.userName };
+            desiredSheet[passWordCell] = { v: data?.password, t: 's', r: '<t xml:space="preserve">Password</t>', h: data?.password, w: data?.password };
+        });
+        lastColumn = "J";
+        delete request.body.userNameAndPassword;
+    }
+    desiredSheet['!ref'] = desiredSheet['!ref'].replace(/:[A-Z]+/, ':' + lastColumn);
     workbook.Sheets[sheetName] = desiredSheet;
 }
 
@@ -358,6 +383,7 @@ function enrichRootProjectId(requestBody: any) {
 }
 
 async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
+    requestBody.CampaignDetails = requestBody?.CampaignDetails || {}
     const action = requestBody?.CampaignDetails?.action;
     requestBody.CampaignDetails.campaignNumber = requestBody?.CampaignDetails?.campaignNumber || null
     requestBody.CampaignDetails.campaignDetails = requestBody?.CampaignDetails?.campaignDetails || { deliveryRules: requestBody?.CampaignDetails?.deliveryRules, resources: requestBody?.CampaignDetails?.resources || [], boundaries: requestBody?.CampaignDetails?.boundaries || [] };

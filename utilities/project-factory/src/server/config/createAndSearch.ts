@@ -156,7 +156,8 @@ const createAndSearch: any = {
                     "maximum": 9999999999
                 },
                 "Role (Mandatory)": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": ["Registrar", "Distributor", "Supervisor", "Help Desk", "Monitor Local", "Logistical officer"]
                 },
                 "Employment Type (Mandatory)": {
                     // "type": "string",
@@ -215,9 +216,9 @@ const createAndSearch: any = {
                 resultantPath: "tenantId"
             }
         },
-        uniqueIdentifier: "uuid",
-        uniqueIdentifierColumn: "F",
-        uniqueIdentifierColumnName: "User Uuids",
+        uniqueIdentifier: "user.userServiceUuid",
+        uniqueIdentifierColumn: "H",
+        uniqueIdentifierColumnName: "UserService Uuids",
         createBulkDetails: {
             limit: 50,
             createPath: "Employees",
