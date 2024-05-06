@@ -80,6 +80,37 @@ const NonIFrameInterface = (props) => {
 
     fetchData();
   }, [url]);
+
+  const renderExternalResources = () => {
+    if (!htmlContent) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    const externalResources = [];
+
+    // Render <link> elements (stylesheets)
+    doc.querySelectorAll('link').forEach(link => {
+      if (link.rel === 'stylesheet') {
+        externalResources.push(<link rel="stylesheet" href={link.href} key={link.href} />);
+      }
+    });
+
+    // Render <img> elements (images)
+    doc.querySelectorAll('img').forEach(img => {
+      externalResources.push(<img src={img.src} alt={img.alt} key={img.src} />);
+    });
+
+    // Render <script> elements
+    doc.querySelectorAll('script').forEach(script => {
+      // Note: For security reasons, loading external scripts dynamically is not recommended in most cases
+      // You should carefully review and sanitize the script source before using this approach
+      externalResources.push(<script src={script.src} key={script.src} />);
+    });
+
+    return externalResources;
+  };
+  
   if (isLoading) {
     return <Loader />;
   }
@@ -91,6 +122,9 @@ const NonIFrameInterface = (props) => {
     <React.Fragment>
       <Header>{t(title)}</Header>
       <div className="app-iframe-wrapper">
+        {/* Render external resources */}
+        {renderExternalResources()}
+
        {/* Render HTML content */}
        <div style={{height:"100vh",width:"100vw"}} dangerouslySetInnerHTML={{ __html: htmlContent }} />
 

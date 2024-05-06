@@ -136,6 +136,7 @@ _Bill Module
 ### Changelog
 
 ```bash
+1.0.1-beta.5 added support to load external resources
 1.0.1-beta.4 fixed some styling and added toasts
 1.0.1-beta.3 Utilities updated for non iframe content
 1.0.1-beta.2 Utilities updated for iframe to support the Custom function logic
