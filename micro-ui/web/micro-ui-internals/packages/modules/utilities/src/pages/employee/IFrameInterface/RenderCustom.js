@@ -1,59 +1,16 @@
 import { Header, Loader } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 
 const NonIFrameInterface = (props) => {
   const { stateCode } = props;
-  const iframeRef = useRef(null);
   const localStorageKey = 'Employee.token';
   const { moduleName, pageName } = useParams();
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
-  const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-  
-  useEffect(() => {
-    const injectCustomHttpInterceptor = () => {
-      try {
-        if (!iframeWindow) {
-          console.error('Failed to access iframe content window.');
-          return;
-        }
-        
-        const xhrObj = iframeWindow.XMLHttpRequest.prototype.open;
 
-        iframeWindow.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
-          // Intercepting here
-          this.addEventListener('load', function() {
-            console.log('load: ' + this.responseText);
-          });
-
-          xhrObj.apply(this, arguments);
-
-          const oidcToken = window.localStorage.getItem(localStorageKey);
-          if (!oidcToken) {
-            console.error('OIDC token not found in local storage.');
-            return;
-          }
-          
-          const accessToken = oidcToken;
-          this.setRequestHeader('Authorization', "Bearer " + accessToken); 
-        };
-      } catch (error) {
-        console.error('Error injecting custom HTTP interceptor:', error);
-      }
-    };
-
-    if (iframeRef.current) {
-      injectCustomHttpInterceptor();
-    }
-  }, [localStorageKey,iframeWindow]);
-  const handleIframeLoad = (e) => {
-    setIframeLoaded(true);
-    console.log(e, "iframeloaded");
-    // Additional logic you want to execute when iframe loads
-  };
 
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
@@ -102,9 +59,12 @@ const NonIFrameInterface = (props) => {
           if (xhr.status === 200) {
             console.log(xhr.responseText);
             setHtmlContent(xhr.responseText);
+            setIframeLoaded({info:true,label:"External Website getting loaded"})
             // Handle successful response here
           } else {
             console.error('Request failed with status:', xhr.status);
+            setIframeLoaded({erroe:true,label:'Request failed with status:'+ xhr.status})
+
             // Handle error here
           }
         }
@@ -131,15 +91,10 @@ const NonIFrameInterface = (props) => {
     <React.Fragment>
       <Header>{t(title)}</Header>
       <div className="app-iframe-wrapper">
-        {/* <iframe src={url} title={title}         ref={iframeRef}
- className="app-iframe"
-  // onLoad={handleIframeLoad} 
-          // style={{ display: 'none' }} // Assuming you want to hide the iframe initially
- /> */}
        {/* Render HTML content */}
-       <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+       <div style={{height:"100vh",width:"100vw"}} dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
-        {iframeLoaded && <Toast info={iframeLoaded} label={"Iframe Loaded"}></Toast>}
+        {iframeLoaded && <Toast info={iframeLoaded?.info} error={iframeLoaded?.error} label={iframeLoaded?.label}></Toast>}
       </div>
     </React.Fragment>
   );
