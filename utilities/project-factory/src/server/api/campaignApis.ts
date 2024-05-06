@@ -7,7 +7,6 @@ import { getDataFromSheet, matchData, generateActivityMessage, throwError, trans
 import { fetchBoundariesInChunks, validateSheetData, validateTargetSheetData } from '../utils/validators/campaignValidators';
 import { callMdmsData, getCampaignNumber, getWorkbook } from "./genericApis";
 import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist } from "../utils/campaignUtils";
-import axios from "axios";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
 import { produceModifiedMessages } from "../Kafka/Listener";
@@ -521,6 +520,7 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
         for (const facility of newRequestBody.Facilities) {
           facility.address = {}
         }
+        logger.info("Facility create data : " + JSON.stringify(newRequestBody));
         var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
       }
       else if (type == "user") {
@@ -531,7 +531,7 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
       var activity = await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
       logger.info("Activity : " + JSON.stringify(activity));
       activities.push(activity);
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 10000));
     }
     await confirmCreation(createAndSearchConfig, request, dataToCreate, creationTime, activities);
   }
@@ -630,20 +630,23 @@ async function createProjectCampaignResourcData(request: any) {
   var resourceDetailsIds: any[] = []
   if (request?.body?.CampaignDetails?.action == "create" && request?.body?.CampaignDetails?.resources) {
     for (const resource of request?.body?.CampaignDetails?.resources) {
-      const resourceDetails = {
-        type: resource.type,
-        fileStoreId: resource.filestoreId,
-        tenantId: request?.body?.CampaignDetails?.tenantId,
-        action: "create",
-        hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-        additionalDetails: {}
-      };
-      const response = await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
-        RequestInfo: request.body.RequestInfo,
-        ResourceDetails: resourceDetails
-      });
-      if (response?.data?.ResourceDetails?.id) {
-        resourceDetailsIds.push(response?.data?.ResourceDetails?.id)
+      if (resource.type != "boundaryWithTarget") {
+        const resourceDetails = {
+          type: resource.type,
+          fileStoreId: resource.filestoreId,
+          tenantId: request?.body?.CampaignDetails?.tenantId,
+          action: "create",
+          hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+          additionalDetails: {}
+        };
+        logger.info("resourceDetails " + JSON.stringify(resourceDetails))
+        const response = await httpRequest(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+          RequestInfo: request.body.RequestInfo,
+          ResourceDetails: resourceDetails
+        });
+        if (response?.ResourceDetails?.id) {
+          resourceDetailsIds.push(response?.ResourceDetails?.id)
+        }
       }
     }
   }

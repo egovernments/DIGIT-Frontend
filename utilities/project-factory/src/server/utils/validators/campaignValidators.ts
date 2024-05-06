@@ -399,10 +399,12 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
                 if (boundary.isRoot) {
                     rootBoundaryCount++;
                 }
-                await validateCampaignBoundary(boundary, hierarchyType, tenantId, request);
             }
             if (rootBoundaryCount !== 1) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", "Exactly one boundary should have isRoot=true");
+            }
+            for (const boundary of boundaries) {
+                await validateCampaignBoundary(boundary, hierarchyType, tenantId, request);
             }
         }
         else {
@@ -434,10 +436,11 @@ async function validateResources(resources: any, request: any) {
 }
 
 async function validateProjectCampaignResources(resources: any, request: any) {
-    const requiredTypes = ["user", "facility"];
+    const requiredTypes = ["user", "facility", "boundaryWithTarget"];
     const typeCounts: any = {
         "user": 0,
-        "facility": 0
+        "facility": 0,
+        "boundaryWithTarget": 0
     };
 
     if (resources) {
