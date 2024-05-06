@@ -217,7 +217,7 @@ const Mapping = ({
 
   useEffect(() => {
     const geojsons = prepareGeojson(boundaryData, "ALL");
-    if (geojsons) addGeojsonToMap(map, geojsons);
+    if (geojsons) addGeojsonToMap(map, geojsons, t);
     // setting bounds if they exist
     let bounds = findBounds(geojsons);
     if (bounds) {
@@ -508,12 +508,16 @@ const extractGeoData = (
                   }
                   const latIndex = item?.[0].findIndex((cell) => cell === "lat");
                   const lonIndex = item?.[0].findIndex((cell) => cell === "long");
+                  let properties = {};
+                  row.map((e, index) => {
+                    properties[item?.[0]?.[index]] = e;
+                  });
                   if (latIndex !== -1 && lonIndex !== -1) {
                     const lat = row[latIndex];
                     const lon = row[lonIndex];
                     const feature = {
                       type: "Feature",
-                      properties: {},
+                      properties: properties,
                       geometry: {
                         type: "Point",
                         coordinates: [lon, lat],
@@ -632,30 +636,32 @@ const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
     for (let [entityKey, entityValue] of Object.entries(data)) {
       if (entityValue?.data?.feature) {
-        if (entityValue?.children)
-          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-        else tempStorage = [...tempStorage, entityValue?.data?.feature];
-      }
-      else{
+        let feature = entityValue.data.feature;
+        feature.properties["name"] = entityKey;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        else tempStorage = [...tempStorage, feature];
+      } else {
         tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
       }
     }
     return tempStorage;
   } else if (Array.isArray(parameter)) {
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      if (parameter.includes(entityKey)) {
-        if (entityValue?.children)
-          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-        else tempStorage = [...tempStorage, entityValue?.data?.feature];
-      } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+      if (entityValue?.data?.feature) {
+        if (parameter.includes(entityKey)) {
+          if (entityValue?.children)
+            tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+          else tempStorage = [...tempStorage, entityValue?.data?.feature];
+        } else {
+          if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        }
       }
     }
     return tempStorage;
   }
 };
 
-const addGeojsonToMap = (map, geojson) => {
+const addGeojsonToMap = (map, geojson, t) => {
   if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
@@ -672,6 +678,27 @@ const addGeojsonToMap = (map, geojson) => {
       return L.marker(latlng, {
         icon: MapMarker,
       });
+    },
+    onEachFeature: function (feature, layer) {
+      if (feature.properties) {
+        let popupContent = "<div style='background-color: white; padding: 0rem;'>";
+        popupContent += "<table style='border-collapse: collapse;'>";
+        popupContent +=
+          "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
+          feature.properties["name"] +
+          "</div>";
+        for (let prop in feature.properties) {
+          if (prop !== "name")
+            popupContent +=
+              "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
+              t(prop) +
+              "</td><td>" +
+              feature.properties[prop] +
+              "</td></tr>";
+        }
+        popupContent += "</table></div>";
+        layer.bindPopup(popupContent);
+      }
     },
   });
   geojsonLayer.addTo(map);

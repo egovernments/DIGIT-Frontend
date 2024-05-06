@@ -112,7 +112,7 @@ export const tourSteps = (t) => {
       steps: [
         {
           content:
-            t("HELP_RULE_ENGINE_INTERACTABLE_SECTION"),
+            t("HELP_MAPPING_BOUNDARY_SELECTION"),
           target: ".filter-by-boundary .button-primary",
           disableBeacon: true,
           placement: "right-start",
@@ -120,8 +120,8 @@ export const tourSteps = (t) => {
         },
         {
           content:
-            t("HELP_RULE_ENGINE_INTERACTABLE_SECTION"),
-          target: ".filter-by-boundary .button-primary",
+            t("HELP_MAPPING_BASE_MAP"),
+          target: ".base-map-selector",
           disableBeacon: true,
           placement: "right-start",
           title: "",

@@ -831,7 +831,7 @@ const Upload = ({
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={deleteFile}
             actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={() => UploadFileClickHandler(true)}
+            actionSaveOnSubmit={closeModal}
           >
             <div className="modal-body">
               <p className="modal-main-body-p">{t("INSTRUCTIONS_DELETE_FILE_CONFIRMATION")}</p>
@@ -860,7 +860,7 @@ const Upload = ({
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={reuplaodFile}
             actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={() => UploadFileClickHandler(true)}
+            actionSaveOnSubmit={closeModal}
           >
             <div className="modal-body">
               <p className="modal-main-body-p">{t("INSTRUCTIONS_REUPLOAD_FILE_CONFIRMATION")}</p>
