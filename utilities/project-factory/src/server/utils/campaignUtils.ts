@@ -1327,7 +1327,7 @@ async function getBoundaryDataAfterGeneration(result: any, request: any) {
 }
 
  function getLocalizedName(expectedName: string, localizationMap?: { [key: string]: string } ) {
-    if (!localizationMap || !localizationMap[expectedName]) {
+    if (!localizationMap || !(expectedName in localizationMap)) {
         return expectedName;
     }
     const localizedName = localizationMap[expectedName];
