@@ -70,7 +70,6 @@
 }
 /* toast new componnet css added */
 
-
 .toast-success {
   gap: 0.5rem;
   height: 3rem;
@@ -79,7 +78,7 @@
   transition: bottom 0.5s ease;
   grid-gap: 0.5rem;
   &.error {
-    background-color: theme(digitv2.alert.error)!important;
+    background-color: theme(digitv2.alert.error) !important;
   }
 
   &.warning {
@@ -121,7 +120,10 @@
 
 @media screen and (max-width: 768px) {
   .topbar {
-      background: #0b4b66 !important;
-      color: #fff;
+    background: #0b4b66 !important;
+    color: #fff;
   }
+}
+header {
+  font-family: "Roboto Condensed";
 }
