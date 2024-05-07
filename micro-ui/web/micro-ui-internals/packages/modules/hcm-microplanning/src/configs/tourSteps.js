@@ -59,7 +59,7 @@ export const tourSteps = (t) => {
         {
           content:
             t("HELP_HYPOTHESIS_DELETE_BUTTON"),
-          target: ".select-and-input-wrapper-first .delete-button",
+          target: ".delete-button-help-locator",
           disableBeacon: true,
           placement: "left-start",
           title: "",
@@ -123,7 +123,38 @@ export const tourSteps = (t) => {
             t("HELP_MAPPING_BASE_MAP"),
           target: ".base-map-selector",
           disableBeacon: true,
-          placement: "right-start",
+          placement: "left-start",
+          title: "",
+        },
+        {
+          content:
+            t("HELP_MAPPING_FILTER"),
+          target: ".filter-icon",
+          disableBeacon: true,
+          placement: "left-start",
+          title: "",
+        },
+        {
+          content:
+            t("HELP_MAPPING_MAP_GEOMETRIES"),
+          target: ".map-container",
+          disableBeacon: true,
+          placement: "top-end",
+          title: "",
+        }
+      ],
+      tourActive: true,
+    },
+    microplanPreview: {
+      name: "microplanPreview",
+      run: true,
+      steps: [
+        {
+          content:
+            t("HELP_MICROPLAN_DETAILS_EDIT_ROWS"),
+          target: ".preview-container",
+          disableBeacon: true,
+          placement: "top-end",
           title: "",
         }
       ],

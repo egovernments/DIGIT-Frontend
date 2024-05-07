@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ModalHeading } from "../../components/CommonComponents";
+import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import AutoFilledRuleConfigurations from "../../configs/AutoFilledRuleConfigurations.json";
 import { Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
@@ -51,7 +51,8 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
-        setRules(microplanData.ruleEngine);
+        setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
+        // setRules(microplanData.ruleEngine);
       }
     }
 
@@ -66,7 +67,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   useEffect(() => {
     if (!rules || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
-    else updateData();
+    else updateData(true);
   }, [checkDataCompletion]);
 
   // // UseEffect to store current data
@@ -93,13 +94,20 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = (check) => {
     if (!rules || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-    let check = rules.every((item) => Object.values(item).every((data) => data !== ""));
-    check = check && rules.length !== 0;
-    if (check) setCheckDataCompletion("valid");
-    else setCheckDataCompletion("invalid");
+    if (check) {
+      setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+      let check = rules.every((item) => Object.values(item).every((data) => data !== ""));
+      check = check && rules.length !== 0;
+      if (check) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    } else {
+      let check = microplanData?.ruleEngine?.every((item) => Object.values(item).every((data) => data !== ""));
+      check = check && rules.length !== 0;
+      if (check) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    }
     // const isDataValid = rules.length !== 0 && rules.every((item) => Object.values(item).every((data) => data !== ""));
     // setCheckDataCompletion(isDataValid ? "valid" : "invalid");
   };
@@ -242,10 +250,10 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             padding: 0,
             width: "100%",
-            padding: "1rem",
+            padding: "0 0 1rem 1rem",
           }}
           popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
           style={{
@@ -255,10 +263,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
+          headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={updateData}
+          actionCancelOnSubmit={() => updateData(true)}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancelUpdateData}
+          actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
@@ -645,7 +654,6 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
   if (ruleOuputList) rulePlusInputs = [...inputs, ...rules.map((item) => item?.output)];
   else rulePlusInputs = inputs;
   autofillData.forEach((item) => {
-    ruleOuputList?.includes(item?.output);
     if (
       ruleOuputList?.includes(item?.output) ||
       !outputs?.includes(item?.output) ||
@@ -669,6 +677,21 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
     setOutputs(newOutputs);
     setInputs(rulePlusInputs);
     setRules((previous) => [...previous, ...newRules]);
+  }
+};
+
+const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions, setRules) => {
+  if (rules?.length === 0) return;
+  let newRules = [];
+  debugger;
+  console.log(rules, hypothesisAssumptions);
+  rules.forEach((item) => {
+    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
+    item["id"] = newRules.length;
+    newRules.push(item);
+  });
+  if (newRules.length !== 0) {
+    setRules(newRules);
   }
 };
 export default RuleEngine;

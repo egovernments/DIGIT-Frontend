@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ButtonType2, ModalHeading } from "../../components/CommonComponents";
+import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import { tourSteps } from "../../configs/tourSteps";
@@ -43,15 +43,27 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (microplanData && microplanData.hypothesis) {
       setAssumptions(microplanData.hypothesis);
     }
-    let hypothesisAssumptionsList = state?.HypothesisAssumptions?.find((item) => item.campaignType === campaignType)?.assumptions;
-    setAutofillHypothesisData(hypothesisAssumptionsList, microplanData?.hypothesis ? microplanData?.hypothesis : assumptions, setAssumptions);
+    
+    
+    let hypothesisAssumptions = state?.HypothesisAssumptions;
+    if (!hypothesisAssumptions) return;
+    let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+    if (!(temp && temp.assumptions)) return;
+    let hypothesisAssumptionsList = temp.assumptions
+    setExampleOption(temp.length ? temp[0] : "");
+
+    let newAssumptions = setAutofillHypothesisData(hypothesisAssumptionsList, microplanData?.hypothesis ? microplanData?.hypothesis : assumptions, setAssumptions);
+    let newHypothesislist = filterHypothesisList(newAssumptions.length !==0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
+    setHypothesisAssumptionsList(newHypothesislist);
+    
+
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!assumptions || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     if (!microplanData?.hypothesis || !_.isEqual(assumptions, microplanData.hypothesis)) setModal("data-change-check");
-    else updateData();
+    else updateData(true);
   }, [checkDataCompletion]);
 
   // // UseEffect to store current data
@@ -69,7 +81,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (["x", "Escape"].includes(event.key)) {  
+    if (["x", "Escape"].includes(event.key)) {
       // Perform the desired action when "x" or "esc" is pressed
       // if (modal === "upload-guidelines")
       setCheckDataCompletion("false");
@@ -78,13 +90,21 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = (check) => {
     if (!assumptions || !setMicroplanData) return;
+    if(check){
     setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
     let check = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
     check = check && assumptions.length !== 0;
     if (check) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
+    }
+    else{
+      let check = microplanData?.hypothesis?.every((item) => Object.values(item).every((data) => data !== ""));
+      check = check && assumptions.length !== 0;
+      if (check) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    }
   };
   const cancelUpdateData = () => {
     setCheckDataCompletion("false");
@@ -97,13 +117,13 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!data || !data["hcm-microplanning"]) return;
-    let hypothesisAssumptions = state?.HypothesisAssumptions;
-    if (!hypothesisAssumptions) return;
-    const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    if (!(temp && temp.assumptions)) return;
-    setHypothesisAssumptionsList(temp.assumptions);
-    setAutofillHypothesis(temp.assumptions);
-    setExampleOption(temp.assumptions.length ? temp.assumptions[0] : "");
+    // let hypothesisAssumptions = state?.HypothesisAssumptions;
+    // if (!hypothesisAssumptions) return;
+    // let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+    // if (!(temp && temp.assumptions)) return;
+    // setHypothesisAssumptionsList(temp);
+    // setAutofillHypothesis(temp);
+    // setExampleOption(temp.length ? temp[0] : "");
   }, [data]);
 
   // useEffect(()=>{
@@ -185,10 +205,11 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
+            margin:0,
             padding: 0,
             width: "100%",
-            padding: "1rem",
+            padding: "0 0 1rem 1.3rem",
           }}
           popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
           style={{
@@ -198,10 +219,11 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
-          actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={updateData}
+            headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+            actionCancelLabel={t("YES")}
+          actionCancelOnSubmit={() => updateData(true)}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancelUpdateData}
+          actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
@@ -284,7 +306,7 @@ const InterractableSection = React.memo(
                 <Input key={item.id} item={item} assumptions={assumptions} setAssumptions={setAssumptions} />
               </div>
               <div>
-                <button className="delete-button" onClick={() => deleteHandler(item)}>
+                <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
                   <div>
                     {" "}
                     <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
@@ -445,11 +467,20 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
     [item, setAssumptions]
   );
 
-  return <input onFocus={Digit.Utils.microplan.inputScrollPrevention} type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
+  return (
+    <input
+      onFocus={Digit.Utils.microplan.inputScrollPrevention}
+      type="number"
+      step="0.01"
+      value={inputValue}
+      onChange={inputChangeHandler}
+      disabled={disabled}
+    />
+  );
 });
 
 const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptions) => {
-  if (assumptions?.length !== 0) return;
+  if (assumptions?.length !== 0) return [];
   let newAssumptions = [];
   for (let i in autofillHypothesis) {
     newAssumptions.push({
@@ -459,6 +490,13 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
     });
   }
   setAssumptions(newAssumptions);
+  return newAssumptions
+};
+
+const filterHypothesisList = (assumptions, hypothesisList) => {
+  debugger;
+  let alreadySelectedHypothesis = assumptions.map((item) => item?.key) || [];
+  return hypothesisList.filter((item) => !alreadySelectedHypothesis.includes(item));
 };
 
 export default Hypothesis;

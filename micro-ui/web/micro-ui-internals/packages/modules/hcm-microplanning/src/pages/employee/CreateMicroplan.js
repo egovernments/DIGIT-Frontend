@@ -85,10 +85,10 @@ const CreateMicroplan = () => {
         setCheckDataCompletion("perform-action");
         return;
       }
-      if (!microplanData?.microplanDetails?.name) {
-        setCheckDataCompletion("perform-action");
-        return;
-      }
+      // if (!microplanData?.microplanDetails?.name) {
+      //   setCheckDataCompletion("perform-action");
+      //   return;
+      // }
       setMicroplanData((previous) => ({
         ...previous,
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },

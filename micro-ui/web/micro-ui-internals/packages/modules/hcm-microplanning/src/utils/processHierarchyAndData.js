@@ -1,7 +1,6 @@
 export const processHierarchyAndData = (hierarchy, allData) => {
   const hierarchyLists = {};
   let hierarchicalData = {};
-
   try {
     // Process hierarchy
     hierarchy.forEach((item) => {
@@ -21,7 +20,7 @@ export const processHierarchyAndData = (hierarchy, allData) => {
           const dataIndex = data?.[0].indexOf(boundaryType);
           if (dataIndex === -1) return;
           const cellValue = row[dataIndex];
-          // if (!cellValue) return;
+          if (!cellValue) return;
           // Populate hierarchy lists
           if (!hierarchyLists[boundaryType].includes(cellValue) && cellValue !== null && cellValue !== "" && cellValue !== undefined) {
             hierarchyLists[boundaryType].push(cellValue);
@@ -38,8 +37,22 @@ export const processHierarchyAndData = (hierarchy, allData) => {
           }
 
           // Assign row data to the correct hierarchical level
-          if (index === hierarchy.length - 1) {
-            currentNode[cellValue].data = createDataObject(data[0], row);
+          if (cellValue) {
+            if (index === hierarchy.length - 1) {
+              currentNode[cellValue].data = createDataObject(data[0], row);
+            } else if (index + 1 < hierarchy.length)
+               {
+                let nextHierarchyList = hierarchy.slice(index + 1);
+                let check = true;
+                nextHierarchyList.forEach((e) => {
+                  const boundaryType = e.boundaryType;
+                  const dataIndex = data?.[0].indexOf(boundaryType);
+                  if (dataIndex === -1) return;
+                  check = check && !row[dataIndex];
+                });
+                if(check)
+                  currentNode[cellValue].data = createDataObject(data[0], row);
+            }
           }
 
           currentNode = currentNode[cellValue].children;
@@ -139,6 +152,7 @@ export const findChildren = (parents, hierarchy) => {
   return hierarchyTraveller(parents, Object.values(hierarchy), {});
 };
 
+// Fetched data from tree
 export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections) => {
   if (
     !hierarchy ||
@@ -166,8 +180,15 @@ export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections)
     }
   } else {
     const currentHierarchy = findCurrentFilteredHierarchy(Object.values(boundaryData)?.[0]?.hierarchicalData, boundarySelections, TempHierarchy);
+    let currentDropdownIndex = 0;
+    hierarchy.forEach((e, index) => {
+      if (e && e.boundaryType && boundarySelections && boundarySelections[e.boundaryType] && boundarySelections[e.boundaryType].length !== 0) {
+        currentDropdownIndex = index;
+      }
+    });
     Object.entries(boundarySelections)?.forEach(([key, value]) => {
       let currentindex = hierarchy.findIndex((e) => e?.boundaryType === key);
+      if (currentDropdownIndex !== currentindex) return;
       let childIndex = hierarchy.findIndex((e) => e?.parentBoundaryType === key);
       if (childIndex == -1) return;
       if (TempHierarchy?.[childIndex]) {

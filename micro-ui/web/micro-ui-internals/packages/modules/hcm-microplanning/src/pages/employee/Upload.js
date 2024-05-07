@@ -82,6 +82,7 @@ const Upload = ({
       BoundaryTypeHierarchySearchCriteria: {
         tenantId: Digit.ULBService.getStateId(),
         hierarchyType: campaignData?.hierarchyType,
+        // hierarchyType:  "Microplan",
       },
     },
     config: {
@@ -107,7 +108,7 @@ const Upload = ({
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     if (!microplanData?.upload || !_.isEqual(fileDataList, microplanData.upload)) setModal("data-change-check");
-    else updateData();
+    else updateData(true);
   }, [checkDataCompletion]);
 
   // // UseEffect to store current data
@@ -117,12 +118,18 @@ const Upload = ({
   // }, [fileDataList]);
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = (check) => {
     if (!fileDataList || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-    const valueList = fileDataList ? Object.values(fileDataList) : [];
-    if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
-    else setCheckDataCompletion("invalid");
+    if (check) {
+      setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+      const valueList = fileDataList ? Object.values(fileDataList) : [];
+      if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    } else {
+      const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
+      if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    }
   };
   const cancelUpdateData = () => {
     setCheckDataCompletion("false");
@@ -965,10 +972,10 @@ const Upload = ({
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             padding: 0,
             width: "100%",
-            padding: "1rem",
+            padding: "0 0 1rem 1.3rem",
           }}
           popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
           style={{
@@ -979,9 +986,10 @@ const Upload = ({
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={updateData}
+          actionCancelOnSubmit={() => updateData(true)}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancelUpdateData}
+          headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+          actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
