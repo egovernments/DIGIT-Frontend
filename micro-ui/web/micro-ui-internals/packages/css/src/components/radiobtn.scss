@@ -1,5 +1,6 @@
 .radio-wrap {
   @apply my-sm block leading-10 mb-lg;
+  max-width: 540px;
 
   div {
     @apply block mb-md;
