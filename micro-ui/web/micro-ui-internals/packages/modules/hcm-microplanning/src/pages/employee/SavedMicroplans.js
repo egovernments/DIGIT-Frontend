@@ -122,7 +122,6 @@ const SavedMicroplans = () => {
     try {
       //here compute the sessionObject based on the row?.original data and then re-route
       const computedSession = await updateSessionUtils.computeSessionObject(row.original,state)
-      // debugger
       Digit.SessionStorage.set("microplanData", computedSession);
       history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
     } catch (error) {
