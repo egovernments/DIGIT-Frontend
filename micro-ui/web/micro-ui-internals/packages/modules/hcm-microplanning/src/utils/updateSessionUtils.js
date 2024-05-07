@@ -5,6 +5,7 @@ import JSZip from "jszip";
 import * as XLSX from 'xlsx';
 
 
+import { EXCEL, GEOJSON, SHAPEFILE } from "../configs/constants";
 
 function parseBlobToExcel(blob) {
   return new Promise((resolve, reject) => {
@@ -292,6 +293,20 @@ export const updateSessionUtils = {
       //   //this logic is for geoJson file type only
       //   handleGeoJson(file,idx)
       // });
+      files.forEach((file, idx) => {
+        switch (file.inputFileType) {
+          case SHAPEFILE:
+            break;
+          case EXCEL:
+            break;
+          case GEOJSON:
+            handleGeoJson();
+          default:
+            break;
+        }
+        //this logic is for geoJson file type only
+        handleGeoJson(file,idx)
+      });
       //now map over this results and for each file (currently only geojson) set upload object in sessionObj
       //also preprocess with computeGeojsonWithMappedProperties before setting on sessionObj
 
@@ -308,7 +323,6 @@ export const updateSessionUtils = {
       sessionObj.upload = upload;
       return sessionObj;
     } catch (error) {
-      console.log("error occured in updateSeshUtils", error.message);
     }
   },
 };

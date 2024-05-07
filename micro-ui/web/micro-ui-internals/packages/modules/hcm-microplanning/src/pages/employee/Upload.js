@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
@@ -12,9 +12,13 @@ import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, ButtonType2, CloseButton, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { Loader, Modal, Toast } from "@egovernments/digit-ui-components";
+import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../../configs/constants";
+import { tourSteps } from "../../configs/tourSteps";
+import { useMyContext } from "../../utils/context";
 
+const page = "upload";
 const commonColumn = "boundaryCode";
 
 const Upload = ({
@@ -44,7 +48,7 @@ const Upload = ({
   const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
-  const [loaderActivation, setLoderActivation] = useState(false);
+  const [loaderActivation, setLoaderActivation] = useState(false);
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
@@ -54,6 +58,7 @@ const Upload = ({
   const [resourceMapping, setResourceMapping] = useState([]);
   const [previewUploadedData, setPreviewUploadedData] = useState();
   const [uploadGuideLines, setUploadGuideLines] = useState();
+  const { state, dispatch } = useMyContext();
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -88,19 +93,41 @@ const Upload = ({
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  // Set TourSteps
+  useEffect(() => {
+    const tourData = tourSteps(t)?.[page] || {};
+    if (state?.tourStateData?.name === page) return;
+    dispatch({
+      type: "SETINITDATA",
+      state: { tourStateData: tourData },
+    });
+  }, [t]);
+
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    if (!microplanData?.upload || !_.isEqual(fileDataList, microplanData.upload)) setModal("data-change-check");
+    else updateData();
+  }, [checkDataCompletion]);
+
+  // // UseEffect to store current data
+  // useEffect(() => {
+  //   if (!fileDataList || !setMicroplanData) return;
+  //   setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+  // }, [fileDataList]);
+
+  // check if data has changed or not
+  const updateData = () => {
+    if (!fileDataList || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
     const valueList = fileDataList ? Object.values(fileDataList) : [];
     if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
-  }, [checkDataCompletion]);
-
-  // UseEffect to store current data
-  useEffect(() => {
-    if (!fileDataList || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-  }, [fileDataList]);
+  };
+  const cancelUpdateData = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -120,14 +147,16 @@ const Upload = ({
     window.addEventListener("keydown", handleKeyPress);
 
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [modal]);
+  }, [modal, previewUploadedData]);
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (event.key === "x" || event.key === "Escape") {
+    if (["x", "Escape"].includes(event.key)) {
       // Perform the desired action when "x" or "esc" is pressed
-      // if (modal === "upload-guidelines")
-      setModal("none");
+      if (modal === "upload-guidelines") {
+        setModal("none");
+      }
+      if (previewUploadedData) setPreviewUploadedData(undefined);
     }
   };
 
@@ -168,7 +197,7 @@ const Upload = ({
       state: "error",
       message: t("ERROR_UNKNOWN"),
     });
-    setLoderActivation(false);
+    setLoaderActivation(false);
     return;
   };
 
@@ -233,7 +262,7 @@ const Upload = ({
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       // setting loader
-      setLoderActivation(true);
+      setLoaderActivation(true);
       let check;
       let fileDataToStore;
       let error;
@@ -241,12 +270,12 @@ const Upload = ({
       let callMapping = false;
       // Checking if the file follows name convention rules
       if (!validateNamingConvention(file, selectedFileType["namingConvention"], setToast, t)) {
-        setLoderActivation(false);
+        setLoaderActivation(false);
         return;
       }
 
       let schemaData;
-      if (selectedFileType.id !== "Shapefile") {
+      if (selectedFileType.id !== SHAPEFILE) {
         // Check if validation schema is present or not
         schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
         if (!schemaData) {
@@ -254,14 +283,14 @@ const Upload = ({
             state: "error",
             message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
           });
-          setLoderActivation(false);
+          setLoaderActivation(false);
           return;
         }
       }
       let resourceMappingData = {};
       // Handling different filetypes
       switch (selectedFileType.id) {
-        case "Excel":
+        case EXCEL:
           // let response = handleExcelFile(file,schemaData);
           try {
             response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, t);
@@ -278,7 +307,7 @@ const Upload = ({
               setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             }
             if (response.interruptUpload) {
-              setLoderActivation(false);
+              setLoaderActivation(false);
               return;
             }
           } catch (error) {
@@ -286,12 +315,12 @@ const Upload = ({
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
-        case "GeoJSON":
+        case GEOJSON:
           try {
             response = await handleGeojsonFile(file, schemaData);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
-              setLoderActivation(false);
+              setLoaderActivation(false);
               setToast(response.toast);
               return;
             }
@@ -304,7 +333,7 @@ const Upload = ({
             handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
           }
           break;
-        case "Shapefile":
+        case SHAPEFILE:
           try {
             response = await handleShapefiles(file, schemaData);
             file = new File([file], file.name, { type: "application/octet-stream" });
@@ -322,7 +351,7 @@ const Upload = ({
             state: "error",
             message: t("ERROR_UNKNOWN_FILETYPE"),
           });
-          setLoderActivation(false);
+          setLoaderActivation(false);
           return;
       }
       let filestoreId;
@@ -345,7 +374,7 @@ const Upload = ({
         }
       }
 
-      if (selectedFileType.id === "Excel") {
+      if (selectedFileType.id === EXCEL) {
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
       // creating a fileObject to save all the data collectively
@@ -363,13 +392,12 @@ const Upload = ({
 
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
-      // Digit.SessionStorage.set(fileObject.id, fileObject);
       if (error === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
-      setLoderActivation(false);
+      setLoaderActivation(false);
     } catch (error) {
       setUploadedFileError("ERROR_UPLOADING_FILE");
-      setLoderActivation(false);
+      setLoaderActivation(false);
     }
   };
 
@@ -401,13 +429,12 @@ const Upload = ({
     let error;
     let toast;
     let latLngColumns =
-      Object.entries(schemaData?.schema?.Properties || {})
-        .reduce((acc, [key, value]) => {
-          if (value?.isLocationDataColumns) {
-            acc.push(key);
-          }
-          return acc;
-        }, []) || [];
+      Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        if (value?.isLocationDataColumns) {
+          acc.push(key);
+        }
+        return acc;
+      }, []) || [];
     data.forEach((item) => {
       const keys = item[0];
       if (keys?.length !== 0) {
@@ -420,7 +447,7 @@ const Upload = ({
             toast: { state: "error", message: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT") },
           };
         }
-        if (!latLngColumns?.every((e) => keys.includes(t(e)))) {
+        if (!latLngColumns?.every((e) => keys.includes(e))) {
           toast = { state: "warning", message: t("ERROR_UPLOAD_EXCEL_LOCATION_DATA_MISSING") };
         }
       }
@@ -477,11 +504,11 @@ const Upload = ({
   const dataToBlob = () => {
     let blob;
     switch (fileData.fileType) {
-      case "Excel":
+      case EXCEL:
         blob = fileData.file;
         break;
-      case "Shapefile":
-      case "GeoJSON":
+      case SHAPEFILE:
+      case GEOJSON:
         if (!fileData || !fileData.data) {
           setToast({
             state: "error",
@@ -489,7 +516,7 @@ const Upload = ({
           });
           return;
         }
-        const result = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+        const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
@@ -542,7 +569,7 @@ const Upload = ({
   // Function for handling the validations for geojson and shapefiles after mapping of properties
   const validationForMappingAndDataSaving = async () => {
     try {
-      setLoderActivation(true);
+      setLoaderActivation(true);
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
@@ -555,7 +582,12 @@ const Upload = ({
       }
       let resourceMappingData;
       if (filestoreId) {
-        resourceMappingData = resourceMapping.map((item) => ({ ...item, filestoreId }));
+        let toChange;
+        if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
+        resourceMappingData = resourceMapping.map((item) => {
+          if (item?.mappedTo && item?.mappedTo === toChange) item.mappedTo = LOCALITY;
+          return { ...item, filestoreId };
+        });
       }
       setResourceMapping([]);
       let fileObject = _.cloneDeep(fileData);
@@ -563,11 +595,11 @@ const Upload = ({
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
     } catch (error) {
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
     }
   };
@@ -606,19 +638,19 @@ const Upload = ({
     setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
     if (error) setUploadedFileError(error);
-    setLoderActivation(false);
+    setLoaderActivation(false);
   };
 
   const checkForSchemaData = (schemaData) => {
     if (resourceMapping?.length === 0) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return false;
     }
 
     if (!schemaData || !schemaData.schema || !schemaData.schema["Properties"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return;
     }
 
@@ -634,7 +666,7 @@ const Upload = ({
     const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
     if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return false;
     }
     setModal("none");
@@ -664,9 +696,21 @@ const Upload = ({
 
   // Handler for checing file extension and showing errors in case it is wrong
   const onTypeErrorWhileFileUpload = () => {
-    if (selectedFileType.id === "Excel") setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
-    if (selectedFileType.id === "GeoJSON") setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
-    if (selectedFileType.id === "Shapefile") setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+    // if (selectedFileType.id === EXCEL) setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
+    // if (selectedFileType.id === GEOJSON) setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+    // if (selectedFileType.id === SHAPEFILE) setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+
+    switch (selectedFileType.id) {
+      case EXCEL:
+        setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
+        break;
+      case GEOJSON:
+        setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+        break;
+      case SHAPEFILE:
+        setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+        break;
+    }
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
@@ -683,11 +727,11 @@ const Upload = ({
   const openDataPreview = () => {
     let data;
     switch (fileData.fileType) {
-      case "Excel":
+      case EXCEL:
         data = fileData.data;
         break;
-      case "Shapefile":
-      case "GeoJSON":
+      case SHAPEFILE:
+      case GEOJSON:
         if (!fileData || !fileData.data) {
           setToast({
             state: "error",
@@ -695,7 +739,7 @@ const Upload = ({
           });
           return;
         }
-        data = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+        data = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         break;
     }
     setPreviewUploadedData(data);
@@ -710,202 +754,241 @@ const Upload = ({
   }
 
   return (
-    <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
-      <div className="upload">
-        <div className="upload-component-wrapper">
-          {!dataPresent ? (
-            dataUpload ? (
-              <div className="upload-component">
-                <FileUploadComponent
-                  section={sections.filter((e) => e.id === selectedSection.id)[0]}
-                  selectedSection={selectedSection}
-                  selectedFileType={selectedFileType}
-                  UploadFileToFileStorage={UploadFileToFileStorage}
-                  onTypeError={onTypeErrorWhileFileUpload}
-                  setToast={setToast}
-                  template={template}
-                />
-              </div>
+    <>
+      <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
+        <div className="upload">
+          <div className="upload-component-wrapper">
+            {!dataPresent ? (
+              dataUpload ? (
+                <div className="upload-component">
+                  <FileUploadComponent
+                    section={sections.filter((e) => e.id === selectedSection.id)[0]}
+                    selectedSection={selectedSection}
+                    selectedFileType={selectedFileType}
+                    UploadFileToFileStorage={UploadFileToFileStorage}
+                    onTypeError={onTypeErrorWhileFileUpload}
+                    setToast={setToast}
+                    template={template}
+                  />
+                </div>
+              ) : (
+                <div className="upload-component">{sectionComponents}</div>
+              )
             ) : (
-              <div className="upload-component">{sectionComponents}</div>
-            )
-          ) : (
-            <div className="upload-component">
-              {selectedSection != null && fileData !== null && (
-                <UploadedFile
-                  selectedSection={selectedSection}
-                  selectedFileType={selectedFileType}
-                  file={fileData}
-                  ReuplaodFile={() => setModal("reupload-conformation")}
-                  DownloadFile={downloadFile}
-                  DeleteFile={() => setModal("delete-conformation")}
-                  error={uploadedFileError}
-                  setToast={setToast}
-                  template={template}
-                  openDataPreview={openDataPreview}
-                />
-              )}
-            </div>
-          )}
-          {!dataPresent && dataUpload && <UploadInstructions setModal={() => setModal("upload-guidelines")} t={t} />}
+              <div className="upload-component">
+                {selectedSection != null && fileData !== null && (
+                  <UploadedFile
+                    selectedSection={selectedSection}
+                    selectedFileType={selectedFileType}
+                    file={fileData}
+                    ReuplaodFile={() => setModal("reupload-conformation")}
+                    DownloadFile={downloadFile}
+                    DeleteFile={() => setModal("delete-conformation")}
+                    error={uploadedFileError}
+                    setToast={setToast}
+                    template={template}
+                    openDataPreview={openDataPreview}
+                  />
+                )}
+              </div>
+            )}
+            {!dataPresent && dataUpload && <UploadInstructions setModal={() => setModal("upload-guidelines")} t={t} />}
+          </div>
+
+          <div className="upload-section-option">{sectionOptions}</div>
         </div>
 
-        <div className="upload-section-option">{sectionOptions}</div>
-      </div>
-
-      {modal === "upload-modal" && (
-        <ModalWrapper
-          closeButton={true}
-          selectedSection={selectedSection}
-          selectedFileType={selectedFileType}
-          closeModal={() => {
-            closeModal();
-            setSelectedFileType(null);
-          }}
-          LeftButtonHandler={() => UploadFileClickHandler(false)}
-          RightButtonHandler={() => UploadFileClickHandler(true)}
-          sections={sections}
-          footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
-          footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} showDownloadIcon={true} />}
-          header={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)} />}
-          bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
-        />
-      )}
-      {modal === "delete-conformation" && (
-        <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-          popupModuleActionBarStyles={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "flex-start",
-            padding: 0,
-            width: "100%",
-            padding: "1rem",
-          }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
-          }}
-          headerBarMainStyle={{ padding: 0, margin: 0 }}
-          headerBarMain={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-          actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={deleteFile}
-          actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={() => UploadFileClickHandler(true)}
-        >
-          <div className="modal-body">
-            <p className="modal-main-body-p">{t("INSTRUCTIONS_DELETE_FILE_CONFIRMATION")}</p>
-          </div>
-        </Modal>
-      )}
-      {modal === "reupload-conformation" && (
-        <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-          popupModuleActionBarStyles={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "flex-start",
-            padding: 0,
-            width: "100%",
-            padding: "1rem",
-          }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
-          }}
-          headerBarMainStyle={{ padding: 0, margin: 0 }}
-          headerBarMain={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_REUPLOAD_FILE_CONFIRMATION")} />}
-          actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={reuplaodFile}
-          actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={() => UploadFileClickHandler(true)}
-        >
-          <div className="modal-body">
-            <p className="modal-main-body-p">{t("INSTRUCTIONS_REUPLOAD_FILE_CONFIRMATION")}</p>
-          </div>
-        </Modal>
-      )}
-      {modal === "spatial-data-property-mapping" && (
-        <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-          popupModuleActionBarStyles={{
-            display: "flex",
-            flex: 1,
-            justifyContent: "flex-end",
-            padding: 0,
-            width: "100%",
-            padding: "1rem",
-          }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "48.5rem" }}
-          style={{
-            backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
-          }}
-          headerBarMainStyle={{ padding: 0, margin: 0 }}
-          headerBarMain={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} />}
-          actionSaveOnSubmit={validationForMappingAndDataSaving}
-          actionSaveLabel={t("COMPLETE_MAPPING")}
-          headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-        >
-          <div className="modal-body">
-            <p className="modal-main-body-p">{t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}</p>
-          </div>
-          <SpatialDataPropertyMapping
-            uploadedData={fileData.data}
-            resourceMapping={resourceMapping}
-            setResourceMapping={setResourceMapping}
-            schema={getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas)}
-            setToast={setToast}
-            hierarchy={hierarchy}
-            t={t}
+        {modal === "upload-modal" && (
+          <ModalWrapper
+            closeButton={true}
+            selectedSection={selectedSection}
+            selectedFileType={selectedFileType}
+            closeModal={() => {
+              closeModal();
+              setSelectedFileType(null);
+            }}
+            LeftButtonHandler={() => UploadFileClickHandler(false)}
+            RightButtonHandler={() => UploadFileClickHandler(true)}
+            sections={sections}
+            footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
+            footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} showDownloadIcon={true} />}
+            header={
+              <ModalHeading
+                style={{ fontSize: "1.5rem" }}
+                label={t("HEADING_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
+              />
+            }
+            bodyText={t("INSTRUCTIONS_DOWNLOAD_TEMPLATE_FOR_" + selectedSection.code + "_" + selectedFileType.code)}
           />
+        )}
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteFile}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("INSTRUCTIONS_DELETE_FILE_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
+        {modal === "reupload-conformation" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_REUPLOAD_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={reuplaodFile}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("INSTRUCTIONS_REUPLOAD_FILE_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
+        {modal === "spatial-data-property-mapping" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-end",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "48.5rem" }}
+            style={{
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} />}
+            actionSaveOnSubmit={validationForMappingAndDataSaving}
+            actionSaveLabel={t("COMPLETE_MAPPING")}
+            headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}</p>
+            </div>
+            <SpatialDataPropertyMapping
+              uploadedData={fileData.data}
+              resourceMapping={resourceMapping}
+              setResourceMapping={setResourceMapping}
+              schema={getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas)}
+              setToast={setToast}
+              hierarchy={hierarchy}
+              t={t}
+            />
+          </Modal>
+        )}
+        {modal === "upload-guidelines" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "90%" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-end",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            hideSubmit={true}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={
+              <ModalHeading style={{ fontSize: "2.5rem", lineHeight: "2.5rem", marginLeft: "1rem" }} label={t("HEADING_DATA_UPLOAD_GUIDELINES")} />
+            }
+            headerBarEnd={<CloseButton clickHandler={closeModal} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+          >
+            <UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />
+          </Modal>
+        )}
+        {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
+        {toast && toast.state === "success" && (
+          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />
+        )}
+        {toast && toast.state === "error" && (
+          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+        )}
+        {toast && toast.state === "warning" && (
+          <Toast
+            style={{ bottom: "5.5rem", zIndex: "9999999", backgroundColor: "#F19100" }}
+            label={toast.message}
+            isDleteBtn
+            error
+            onClose={() => setToast(null)}
+          />
+        )}
+        {previewUploadedData && (
+          <div className="popup-wrap">
+            <JsonPreviewInExcelForm sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
+          </div>
+        )}
+      </div>
+      {modal === "data-change-check" && (
+        <Modal
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupModuleActionBarStyles={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "flex-start",
+            padding: 0,
+            width: "100%",
+            padding: "1rem",
+          }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          style={{
+            flex: 1,
+            backgroundColor: "white",
+            border: "0.063rem solid rgba(244, 119, 56, 1)",
+          }}
+          headerBarMainStyle={{ padding: 0, margin: 0 }}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
+          actionCancelLabel={t("YES")}
+          actionCancelOnSubmit={updateData}
+          actionSaveLabel={t("NO")}
+          actionSaveOnSubmit={cancelUpdateData}
+        >
+          <div className="modal-body">
+            <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+          </div>
         </Modal>
       )}
-      {modal === "upload-guidelines" && (
-        <Modal
-        popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "90%" }}
-        popupModuleActionBarStyles={{
-          display: "flex",
-          flex: 1,
-          justifyContent: "flex-end",
-          padding: 0,
-          width: "100%",
-          padding: "1rem",
-        }}
-        hideSubmit={true}
-        popupModuleMianStyles={{ padding: 0, margin: 0,  }}
-        headerBarMainStyle={{ padding: 0, margin: 0 }}
-        headerBarMain={<ModalHeading style={{fontSize:"2.5rem",lineHeight:"2.5rem", marginLeft:"1rem"}} label={t("HEADING_DATA_UPLOAD_GUIDELINES")} />}
-        headerBarEnd={<CloseButton clickHandler={closeModal} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-      >
-        <UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />
-      </Modal>
-
-      )}
-      {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
-      {toast && toast.state === "success" && <Toast style={{ bottom: "5.5rem" }} label={toast.message} onClose={() => setToast(null)} />}
-      {toast && toast.state === "error" && (
-        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
-      )}
-      {toast && toast.state === "warning" && (
-        <Toast
-          style={{ bottom: "5.5rem", zIndex: "9999999", backgroundColor: "#F19100" }}
-          label={toast.message}
-          isDleteBtn
-          error
-          onClose={() => setToast(null)}
-        />
-      )}
-      {previewUploadedData && (
-        <div className="popup-wrap">
-          <JsonPreviewInExcelForm sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
@@ -1324,13 +1407,22 @@ const CustomIcon = (props) => {
 const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
   let resourceMappingData = [];
   let newFileData = {};
-  if (selectedFileType.id === "Excel" && fileDataToStore) {
+  let toAddInResourceMapping;
+  if (selectedFileType.id === EXCEL && fileDataToStore) {
     // Extract all unique column names from fileDataToStore and then doing thir resource mapping
     const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
     if (schemaData?.schema?.["Properties"]) {
+      let toChange;
+      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
       const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
       schemaKeys.forEach((item) => {
         if (columnForMapping.has(t(item))) {
+          if (LOCALITY && toChange === item) {
+            toAddInResourceMapping = {
+              mappedFrom: t(item),
+              mappedTo: LOCALITY,
+            };
+          }
           resourceMappingData.push({
             mappedFrom: t(item),
             mappedTo: item,
@@ -1367,6 +1459,8 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       newFileData[key] = [headers, ...data];
     });
   }
+  resourceMappingData.pop();
+  resourceMappingData.push(toAddInResourceMapping);
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
