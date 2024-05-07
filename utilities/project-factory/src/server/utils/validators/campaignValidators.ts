@@ -49,7 +49,7 @@ async function fetchBoundariesInChunks(request: any) {
 // Compares unique boundaries with response boundaries and throws error for missing codes.
 function compareBoundariesWithUnique(uniqueBoundaries: any[], responseBoundaries: any[], request: any) {
     // Extracts boundary codes from response boundaries
-    const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
+    const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code.trim());
 
     // Finds missing codes from unique boundaries
     const missingCodes = uniqueBoundaries.filter(code => !responseBoundaryCodes.includes(code));
@@ -206,21 +206,20 @@ async function validateUnique(schema: any, data: any[], request: any) {
 
 
 
-async function validateViaSchema(data: any, schema: any, request: any) {
+async function validateViaSchema(data: any, schema: any, request: any, localizationMap?: any) {
     if (schema) {
         const ajv = new Ajv();
         const validate = ajv.compile(schema);
         const validationErrors: any[] = [];
+        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap)
         if (data?.length > 0) {
             data.forEach((item: any) => {
-                if (!item?.[createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName])
+                if (!item?.[uniqueIdentifierColumnName])
                     if (!validate(item)) {
                         validationErrors.push({ index: item?.["!row#number!"] + 1, errors: validate.errors });
                     }
             });
             await validateUnique(schema, data, request)
-
-            // Throw errors if any
             if (validationErrors.length > 0) {
                 const errorMessage = validationErrors.map(({ index, errors }) => {
                     const formattedErrors = errors.map((error: any) => {
@@ -248,10 +247,10 @@ async function validateViaSchema(data: any, schema: any, request: any) {
 
 
 
-async function validateSheetData(data: any, request: any, schema: any, boundaryValidation: any,localizationMap?:{ [key: string]: string }) {
-    await validateViaSchema(data, schema, request);
+async function validateSheetData(data: any, request: any, schema: any, boundaryValidation: any, localizationMap?: { [key: string]: string }) {
+    await validateViaSchema(data, schema, request, localizationMap);
     if (boundaryValidation) {
-        const localisedBoundaryCode =  getLocalizedName(boundaryValidation?.column,localizationMap)
+        const localisedBoundaryCode = getLocalizedName(boundaryValidation?.column, localizationMap)
         await validateBoundaryData(data, request, localisedBoundaryCode);
     }
 }
@@ -415,22 +414,45 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
 
 async function validateResources(resources: any, request: any) {
     for (const resource of resources) {
-        const resourceDetails = {
-            type: resource.type,
-            fileStoreId: resource.filestoreId,
-            tenantId: request?.body?.CampaignDetails?.tenantId,
-            action: "validate",
-            hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-            additionalDetails: {}
-        };
-        try {
-            await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
-                RequestInfo: request.body.RequestInfo,
-                ResourceDetails: resourceDetails
-            });
-        } catch (error: any) {
-            logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
-            throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+        if (resource?.resourceId) {
+            var searchBody = {
+                RequestInfo: request?.body?.RequestInfo,
+                SearchCriteria: {
+                    id: [resource?.resourceId],
+                    tenantId: request?.body?.CampaignDetails?.tenantId
+                }
+            }
+            logger.info("searchBody : " + JSON.stringify(searchBody));
+            const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
+            if (response?.ResourceDetails?.[0]) {
+                if (!(response?.ResourceDetails?.[0]?.status == "completed")) {
+                    logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
+                }
+            }
+            else {
+                logger.error(`No resource data found for resource with Id ${resource?.resourceId} :`);
+                throwError("COMMON", 400, "VALIDATION_ERROR", `No resource data found for resource with Id ${resource?.resourceId} . If resourceId is invalid, don't send resourceId in resources`);
+            }
+        }
+        else {
+            const resourceDetails = {
+                type: resource.type,
+                fileStoreId: resource.filestoreId,
+                tenantId: request?.body?.CampaignDetails?.tenantId,
+                action: "validate",
+                hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+                additionalDetails: {}
+            };
+            try {
+                await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+                    RequestInfo: request.body.RequestInfo,
+                    ResourceDetails: resourceDetails
+                });
+            } catch (error: any) {
+                logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+                throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+            }
         }
     }
 }
@@ -443,30 +465,38 @@ async function validateProjectCampaignResources(resources: any, request: any) {
         "boundaryWithTarget": 0
     };
 
-    if (resources) {
-        if (!Array.isArray(resources) || resources.length === 0) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be a non-empty array");
-        }
+    const missingTypes: string[] = [];
 
-        for (const resource of resources) {
-            const { type } = resource;
-            if (!type || !requiredTypes.includes(type)) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid resource type");
-            }
-            typeCounts[type]++;
-        }
+    if (!resources || !Array.isArray(resources) || resources.length === 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be a non-empty array");
+    }
 
-        for (const type of requiredTypes) {
-            if (typeCounts[type] === 0) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `Missing resource of type ${type}`);
-            }
+    for (const resource of resources) {
+        const { type } = resource;
+        if (!type || !requiredTypes.includes(type)) {
+            throwError(
+                "COMMON",
+                400,
+                "VALIDATION_ERROR",
+                `Invalid resource type. Allowed types are: ${requiredTypes.join(', ')}`
+            );
         }
+        typeCounts[type]++;
+    }
 
-        if (request?.body?.CampaignDetails?.action === "create" && request?.body?.CampaignDetails?.resources) {
-            await validateResources(request.body.CampaignDetails.resources, request);
+    for (const type of requiredTypes) {
+        if (typeCounts[type] === 0) {
+            missingTypes.push(type);
         }
-    } else {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "Missing resources array");
+    }
+
+    if (missingTypes.length > 0) {
+        const missingTypesMessage = `Missing resources of types: ${missingTypes.join(', ')}`;
+        throwError("COMMON", 400, "VALIDATION_ERROR", missingTypesMessage);
+    }
+
+    if (request?.body?.CampaignDetails?.action === "create" && request?.body?.CampaignDetails?.resources) {
+        await validateResources(request.body.CampaignDetails.resources, request);
     }
 }
 
