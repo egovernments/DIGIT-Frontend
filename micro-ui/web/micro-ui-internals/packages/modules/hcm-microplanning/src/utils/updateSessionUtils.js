@@ -2,7 +2,7 @@ import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheets } from "../utils/exceltojson";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
-import XLSX from "xlsx";
+import * as XLSX from 'xlsx';
 
 
 
@@ -142,7 +142,8 @@ export const updateSessionUtils = {
         params: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
           // fileStoreIds: fileStoreIdsList.join(',')
-          fileStoreIds:"e82dd3ef-4b64-4443-aa62-dfbc1dba73cf"
+          fileStoreIds:"e82dd3ef-4b64-4443-aa62-dfbc1dba73cf",
+          // fileStoreIds:"733b2d5f-9876-4622-931f-9b265f7879b0" //geojson
         },
         plainAccessRequest: {},
         userDownload: false,
@@ -152,41 +153,44 @@ export const updateSessionUtils = {
         // },
       });
       
-      const response = await fetch(responseFileStoreUrl.fileStoreIds[0].url,
-        {
-          mode: 'no-cors',
-          // responseType: "arraybuffer",
-          headers: {
-            // "Content-Type": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            // "Accept": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            // "Access-Control-Allow-Origin": "*"
-          },
-          method: "GET"
-        });
-        debugger
-    // if (!response.ok) {
-    //   throw new Error('Network response was not ok');
-    // }
-    
-    const blob = await response.blob();
+      const url = responseFileStoreUrl.fileStoreIds[0].url
+      const response = await fetch(url, {
+        mode: 'no-cors',
+        // responseType: "arraybuffer",
+        // headers: {
+        //   "Content-Type": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        //   "Accept": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        //   "Access-Control-Allow-Origin": "*"
+        // },
+        // method: "GET"
+      });
+      // debugger
+    if (!response.ok) {
+      console.log("response was not ok");
+      throw new Error('Network response was not ok');
+      
+    }
 
-    const reader = new FileReader();
-    const dataPromise = new Promise((resolve, reject) => {
-      reader.onload = function(event) {
-        resolve(event.target.result);
-      };
-      reader.onerror = function(event) {
-        reject(event.target.error);
-      };
-    });
+    // Read the response as an array buffer
+    const arrayBuffer = await response.arrayBuffer();
+
+    // Convert the array buffer to binary string
+    const data = new Uint8Array(arrayBuffer);
+    const binaryString = String.fromCharCode.apply(null, data);
+
+    // Parse the binary string into a workbook
+    const workbook = XLSX.read(binaryString, { type: 'binary' });
+
+    // Assuming there's only one sheet in the workbook
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    // Convert the sheet to JSON object
+    const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+    console.log('Parsed Excel data:', jsonData);
     
-    reader.readAsBinaryString(blob);
-    
-    const data = await dataPromise;
-    
-    const workbook = XLSX.read(data, { type: "binary" });
-    
-    console.log("Workbook:", workbook);
+    return jsonData;
 
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
