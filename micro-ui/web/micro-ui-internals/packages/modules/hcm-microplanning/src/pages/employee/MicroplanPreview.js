@@ -2,7 +2,7 @@ import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInpu
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { CloseButton, ModalHeading, handleSelection, mapDataForApi } from "../../components/ComonComponents";
+import { CloseButton, ModalHeading, handleSelection, mapDataForApi } from "../../components/CommonComponents";
 import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
 import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -154,10 +154,11 @@ const MicroplanPreview = ({
     setCheckDataCompletion("perform-action");
   };
 
-  const cancleUpdateData = () => {
+  const cancelUpdateData = () => {
     setCheckDataCompletion("false");
     setModal("none");
   };
+  
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
@@ -167,18 +168,19 @@ const MicroplanPreview = ({
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (event.key === "x" || event.key === "Escape") {
+    if (["x", "Escape"].includes(event.key)) {
       // Perform the desired action when "x" or "esc" is pressed
-      // if (modal === "upload-guidelines")
       setCheckDataCompletion("false");
       setModal("none");
     }
   };
 
-  const createMicroplan = () => {
+  const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
+    
     const microData = updateMicroplanData(hypothesisAssumptionsList);
     setLoderActivation(true);
+    
     updateHyothesisAPICall(
       microData,
       operatorsObject,
@@ -188,19 +190,21 @@ const MicroplanPreview = ({
       setToast,
       updateData,
       setLoderActivation,
-      navigationEvent?.name === "next"?"GENERATED":"DRAFT",
+      navigationEvent?.name === "next" ? "GENERATED" : "DRAFT",
       t
     );
+    
     setModal("none");
-  };
-  const updateMicroplanData = (hypothesisAssumptionsList) => {
+  }, [hypothesisAssumptionsList, setMicroplanData, operatorsObject, campaignId, UpdateMutate, setToast, updateData, setLoderActivation, navigationEvent, t]);
+
+  const updateMicroplanData = useCallback((hypothesisAssumptionsList) => {
     let microData = {};
     setMicroplanData((previous) => {
       microData = { ...previous, hypothesis: hypothesisAssumptionsList };
       return microData;
     });
     return microData;
-  };
+  }, [setMicroplanData]);
 
   // Set microplan preview data
   useEffect(() => {
@@ -310,7 +314,7 @@ const MicroplanPreview = ({
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={createMicroplan}
             actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={cancleUpdateData}
+            actionSaveOnSubmit={cancelUpdateData}
             formId="modal-action"
           >
             <AppplyChangedHypothesisConfirmation newhypothesisList={hypothesisAssumptionsList} hypothesisList={microplanData?.hypothesis} t={t} />

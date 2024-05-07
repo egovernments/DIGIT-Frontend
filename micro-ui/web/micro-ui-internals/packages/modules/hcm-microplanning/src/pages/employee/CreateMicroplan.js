@@ -24,7 +24,7 @@ export const components = {
 import XLSX from "xlsx";
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
-import { mapDataForApi } from "../../components/ComonComponents";
+import { mapDataForApi } from "../../components/CommonComponents";
 
 // will be changed laters
 const MicroplanName = "microplan 1912";
@@ -106,6 +106,7 @@ const CreateMicroplan = () => {
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
+        if(data === "mapping") break;
         check = check && checkStatusValues?.[data];
       }
       if (!check) {

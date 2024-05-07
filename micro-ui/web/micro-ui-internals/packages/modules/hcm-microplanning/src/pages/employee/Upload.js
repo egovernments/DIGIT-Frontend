@@ -12,7 +12,7 @@ import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, ButtonType2, CloseButton, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, CloseButton, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/CommonComponents";
 import { Loader, Modal, Toast } from "@egovernments/digit-ui-components";
 import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
@@ -124,7 +124,7 @@ const Upload = ({
     if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
   };
-  const cancleUpdateData = () => {
+  const cancelUpdateData = () => {
     setCheckDataCompletion("false");
     setModal("none");
   };
@@ -151,7 +151,7 @@ const Upload = ({
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (event.key === "x" || event.key === "Escape") {
+    if (["x", "Escape"].includes(event.key)) {
       // Perform the desired action when "x" or "esc" is pressed
       if (modal === "upload-guidelines") {
         setModal("none");
@@ -696,9 +696,21 @@ const Upload = ({
 
   // Handler for checing file extension and showing errors in case it is wrong
   const onTypeErrorWhileFileUpload = () => {
-    if (selectedFileType.id === EXCEL) setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
-    if (selectedFileType.id === GEOJSON) setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
-    if (selectedFileType.id === SHAPEFILE) setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+    // if (selectedFileType.id === EXCEL) setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
+    // if (selectedFileType.id === GEOJSON) setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+    // if (selectedFileType.id === SHAPEFILE) setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+
+    switch (selectedFileType.id) {
+      case EXCEL:
+        setToast({ state: "error", message: t("ERROR_EXCEL_EXTENSION") });
+        break;
+      case GEOJSON:
+        setToast({ state: "error", message: t("ERROR_GEOJSON_EXTENSION") });
+        break;
+      case SHAPEFILE:
+        setToast({ state: "error", message: t("ERROR_SHAPE_FILE_EXTENSION") });
+        break;
+    }
   };
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
@@ -969,7 +981,7 @@ const Upload = ({
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={updateData}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancleUpdateData}
+          actionSaveOnSubmit={cancelUpdateData}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>

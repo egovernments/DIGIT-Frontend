@@ -2094,184 +2094,182 @@ $border-color: rgba(214, 213, 212, 1);
                             }
                         }
 
-                        .selected-row {
-                            width: 100%;
-                            height: 100%;
-                            background-color: rgb(244, 119, 56, 0.12) !important;
-                        .selected-row {
-                            width: 100%;
-                            height: 100%;
-                            background-color: rgb(244, 119, 56, 0.12) !important;
-                        }
 
-                        th,
-                        td {
-                            min-width: 7.578rem;
-                            border-left: 0.063rem solid rgba(214, 213, 212, 1);
-                            border-top: 0.063rem solid rgba(214, 213, 212, 1);
-                            border-bottom: 0;
-                            border-right: 0;
-                            padding: 0.5rem;
-                            font-family: Arial, sans-serif;
-                            font-size: 0.875rem;
-                            cursor: pointer;
-
-                        }
-
-                        th {
-                            background-color: #f4f4f4;
-                            font-weight: bold;
-                            text-align: left;
-                        }
-                    }
-                }
-
-                .edit-resource-data {
-                    padding: 0 0.7rem 0 1rem;
-                    width: 100%;
-                    max-height: 25.5rem;
-                    overflow: auto;
-
-                    @include custom-scrollbar;
-
-                    .edit-resource-data-table {
-                        width: 100% !important;
-                        background: rgb(255, 255, 255);
-
-                        th,
-                        td {
-                            p {
-                                display: flex !important;
-                                align-items: center;
-                                min-width: 7.578rem;
-                                height: 2.5rem;
-                                padding-left: 0.5rem;
-                                padding-right: 0.5rem;
-                                font-family: Roboto;
-                                margin: 0;
-                                font-size: 1rem;
-                                font-weight: 400;
-                                text-align: left;
-                                border: 0.063rem solid rgba(80, 90, 95, 1);
-                                color: rgba(80, 90, 95, 1);
-                                text-wrap: wrap;
+                            .selected-row {
+                                width: 100%;
+                                height: 100%;
+                                background-color: rgb(244, 119, 56, 0.12) !important;
                             }
 
+                            th,
+                            td {
+                                min-width: 7.578rem;
+                                border-left: 0.063rem solid rgba(214, 213, 212, 1);
+                                border-top: 0.063rem solid rgba(214, 213, 212, 1);
+                                border-bottom: 0;
+                                border-right: 0;
+                                padding: 0.5rem;
+                                font-family: Arial, sans-serif;
+                                font-size: 0.875rem;
+                                cursor: pointer;
+
+                            }
+
+                            th {
+                                background-color: #f4f4f4;
+                                font-weight: bold;
+                                text-align: left;
+                            }
+                        }
+                    }
+
+                    .edit-resource-data {
+                        padding: 0 0.7rem 0 1rem;
+                        width: 100%;
+                        max-height: 25.5rem;
+                        overflow: auto;
+
+                        @include custom-scrollbar;
+
+                        .edit-resource-data-table {
+                            width: 100% !important;
                             background: rgb(255, 255, 255);
 
-                        }
+                            th,
+                            td {
+                                p {
+                                    display: flex !important;
+                                    align-items: center;
+                                    min-width: 7.578rem;
+                                    height: 2.5rem;
+                                    padding-left: 0.5rem;
+                                    padding-right: 0.5rem;
+                                    font-family: Roboto;
+                                    margin: 0;
+                                    font-size: 1rem;
+                                    font-weight: 400;
+                                    text-align: left;
+                                    border: 0.063rem solid rgba(80, 90, 95, 1);
+                                    color: rgba(80, 90, 95, 1);
+                                    text-wrap: wrap;
+                                }
 
-                        td {
-                            padding: 1.2rem 1.9rem 0 0;
-                        }
+                                background: rgb(255, 255, 255);
 
-                        .old-value {
-                            p {
-                                background-color: rgba(238, 238, 238, 1);
                             }
 
-                            width: 35%;
-                        }
+                            td {
+                                padding: 1.2rem 1.9rem 0 0;
+                            }
 
-                        .new-value {
-                            width: 35%;
-                        }
+                            .old-value {
+                                p {
+                                    background-color: rgba(238, 238, 238, 1);
+                                }
 
-                        .column-names {
-                            p {
-                                font-weight: 700;
+                                width: 35%;
+                            }
+
+                            .new-value {
+                                width: 35%;
+                            }
+
+                            .column-names {
+                                p {
+                                    font-weight: 700;
+                                    border: 0;
+                                    padding-left: 0;
+                                    color: rgba(11, 12, 12, 1);
+                                }
+
+                                width: 25%;
+                            }
+
+                            th {
                                 border: 0;
-                                padding-left: 0;
+                                padding: 0;
+                                font-family: Roboto;
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                line-height: 1.758rem;
+                                text-align: left;
                                 color: rgba(11, 12, 12, 1);
                             }
-
-                            width: 25%;
-                        }
-
-                        th {
-                            border: 0;
-                            padding: 0;
-                            font-family: Roboto;
-                            font-size: 1.5rem;
-                            font-weight: 700;
-                            line-height: 1.758rem;
-                            text-align: left;
-                            color: rgba(11, 12, 12, 1);
                         }
                     }
                 }
-            }
 
-            .no-data-available-container {
-                width: 100%;
-                height: 100%;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-    }
-
-    .digit-action-cancel {
-        color: rgba(244, 119, 56, 1);
-    }
-
-    .apply-changes-hypothesis {
-        padding: 1rem;
-        padding-top: 0;
-
-        .instructions {
-            p {
-                font-weight: 400;
-                font-size: 1rem;
-                padding: 0;
-                margin: 0;
+                .no-data-available-container {
+                    width: 100%;
+                    height: 100%;
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: center;
+                }
             }
         }
 
-        .table-header {
-            font-family: Roboto;
-            font-size: 1rem;
-            font-weight: 700;
-            color: rgba(11, 12, 12, 1);
+        .digit-action-cancel {
+            color: rgba(244, 119, 56, 1);
         }
 
-        .table-container {
-            max-height: 15rem;
-            overflow-y: auto;
-            @include custom-scrollbar;
+        .apply-changes-hypothesis {
+            padding: 1rem;
+            padding-top: 0;
 
-            .custom-table {
-                width: 100%;
-                border-collapse: collapse;
-
-
-                th {
-                    font-family: Roboto;
+            .instructions {
+                p {
+                    font-weight: 400;
                     font-size: 1rem;
-                    font-weight: 700;
+                    padding: 0;
+                    margin: 0;
                 }
+            }
 
-                th,
-                td {
-                    overflow-wrap: normal;
-                    text-wrap: wrap;
-                    padding: 1rem 1.2rem;
-                    text-align: left;
-                    border: 0.063rem solid rgba(214, 213, 212, 1) !important;
-                }
+            .table-header {
+                font-family: Roboto;
+                font-size: 1rem;
+                font-weight: 700;
+                color: rgba(11, 12, 12, 1);
+            }
 
-                .even-row {
-                    background-color: rgba(238, 238, 238, 1);
-                }
+            .table-container {
+                max-height: 15rem;
+                overflow-y: auto;
+                @include custom-scrollbar;
 
-                .odd-row {
-                    background-color: white;
+                .custom-table {
+                    width: 100%;
+                    border-collapse: collapse;
+
+
+                    th {
+                        font-family: Roboto;
+                        font-size: 1rem;
+                        font-weight: 700;
+                    }
+
+                    th,
+                    td {
+                        overflow-wrap: normal;
+                        text-wrap: wrap;
+                        padding: 1rem 1.2rem;
+                        text-align: left;
+                        border: 0.063rem solid rgba(214, 213, 212, 1) !important;
+                    }
+
+                    .even-row {
+                        background-color: rgba(238, 238, 238, 1);
+                    }
+
+                    .odd-row {
+                        background-color: white;
+                    }
                 }
             }
         }
     }
-}
+
 
 
 .microplan-success-screen {

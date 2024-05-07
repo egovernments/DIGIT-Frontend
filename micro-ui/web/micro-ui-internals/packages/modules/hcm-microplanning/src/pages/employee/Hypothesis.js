@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ButtonType2, ModalHeading, inputScrollPrevention } from "../../components/ComonComponents";
+import { ButtonType1, ButtonType2, ModalHeading, inputScrollPrevention } from "../../components/CommonComponents";
 import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import { tourSteps } from "../../configs/tourSteps";
@@ -69,7 +69,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (event.key === "x" || event.key === "Escape") {
+    if (["x", "Escape"].includes(event.key)) {  
       // Perform the desired action when "x" or "esc" is pressed
       // if (modal === "upload-guidelines")
       setCheckDataCompletion("false");
@@ -86,7 +86,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (check) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
   };
-  const cancleUpdateData = () => {
+  const cancelUpdateData = () => {
     setCheckDataCompletion("false");
     setModal("none");
   };
@@ -201,7 +201,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={updateData}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancleUpdateData}
+          actionSaveOnSubmit={cancelUpdateData}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>

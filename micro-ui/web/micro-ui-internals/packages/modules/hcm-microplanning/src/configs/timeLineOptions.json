@@ -34,7 +34,7 @@
       "id": 5,
       "name": "MICROPLAN_GENERATION",
       "component": "MicroplanPreview",
-      "checkForCompleteness": true
+      "checkForCompleteness": false
     }
   ]
 }

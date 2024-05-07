@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
+import { ButtonType1, ModalHeading } from "../../components/CommonComponents";
 import AutoFilledRuleConfigurations from "../../configs/AutoFilledRuleConfigurations.json";
 import { Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
@@ -84,7 +84,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const handleKeyPress = (event) => {
     // if (modal !== "upload-guidelines") return;
-    if (event.key === "x" || event.key === "Escape") {
+    if (["x", "Escape"].includes(event.key)) {
       // Perform the desired action when "x" or "esc" is pressed
       // if (modal === "upload-guidelines")
       setCheckDataCompletion("false");
@@ -100,8 +100,10 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     check = check && rules.length !== 0;
     if (check) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
+    // const isDataValid = rules.length !== 0 && rules.every((item) => Object.values(item).every((data) => data !== ""));
+    // setCheckDataCompletion(isDataValid ? "valid" : "invalid");
   };
-  const cancleUpdateData = () => {
+  const cancelUpdateData = () => {
     setCheckDataCompletion("false");
     setModal("none");
   };
@@ -142,7 +144,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       temp = temp.ruleConfigureOperators.map((item) => item.name);
       setOperators(temp);
     }
-    if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
     if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
   }, [data]);
 
@@ -196,7 +197,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             setOperators={setOperators}
             t={t}
           />
-          <button className="add-button" onClick={() => addRulesHandler(setRules)}>
+          <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
             <div className="add-icon">
               <p>+</p>
             </div>
@@ -257,7 +258,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           actionCancelLabel={t("YES")}
           actionCancelOnSubmit={updateData}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancleUpdateData}
+          actionSaveOnSubmit={cancelUpdateData}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
@@ -352,9 +353,8 @@ const InterractableSection = React.memo(
               <p className="heading">{t("KEY")}</p>
             </div>
             <div className="invisible">
-              <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
+              <button className="delete-button invisible" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                 <div>
-                  {" "}
                   <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                 </div>
                 <p>{t("DELETE")}</p>
@@ -424,9 +424,8 @@ const InterractableSection = React.memo(
                 />
               </div>
               <div>
-                <button className="delete-button" onClick={() => deleteHandler(item)}>
+                <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                   <div>
-                    {" "}
                     <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                   </div>
                   <p>{t("DELETE")}</p>

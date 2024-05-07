@@ -62,17 +62,18 @@ const Navigator = (props) => {
   }, [navigationEvent, checkDataCompletion, props.nextEventAddon]);
 
   useEffect(() => {
-    if (checkDataCompletion === "perform-action") {
-      if (navigationEvent && navigationEvent.name === "next") {
-        if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
-          return props?.completeNavigation();
-        }
-        nextStep();
-      } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
-      else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
-      setCheckDataCompletion("false");
-      setNavigationEvent(undefined);
-    }
+    // if (checkDataCompletion === "perform-action") {
+    //   if (navigationEvent && navigationEvent.name === "next") {
+    //     if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
+    //       return props?.completeNavigation();
+    //     }
+    //     nextStep();
+    //   } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
+    //   else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
+    //   setCheckDataCompletion("false");
+    //   setNavigationEvent(undefined);
+    // }
+    handleNavigationEvent(checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, props);
   }, [checkDataCompletion, navigationEvent]);
 
   // Function to navigate to the next step
@@ -219,4 +220,21 @@ LoadCustomComponent.propTypes = {
   component: PropTypes.elementType.isRequired,
   secondaryProps: PropTypes.object,
 };
+
+
+const handleNavigationEvent = (checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, props)=>{
+  if (checkDataCompletion === "perform-action") {
+    if (navigationEvent && navigationEvent.name === "next") {
+      if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
+        return props?.completeNavigation();
+      }
+      nextStep();
+    } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
+    else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
+    setCheckDataCompletion("false");
+    setNavigationEvent(undefined);
+  }
+}
+
+
 export default Navigator;
