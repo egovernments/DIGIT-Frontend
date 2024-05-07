@@ -90,7 +90,6 @@ const MicroplanPreview = ({
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
-    console.log(tourData, state)
     if (state?.tourStateData?.name === page) return;
     dispatch({
       type: "SETINITDATA",

@@ -684,7 +684,6 @@ const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions, setRules) => {
   if (rules?.length === 0) return;
   let newRules = [];
   debugger;
-  console.log(rules, hypothesisAssumptions);
   rules.forEach((item) => {
     if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
     item["id"] = newRules.length;

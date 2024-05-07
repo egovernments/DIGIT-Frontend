@@ -117,7 +117,6 @@ const MicroplanDetails = ({
   const updateData = (check) => {
     if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
     debugger
-    console.log("microplan",microplan)
     if (check) {
       setMicroplanData((previous) => ({
         ...previous,
@@ -125,7 +124,6 @@ const MicroplanDetails = ({
           name: microplan,
         },
       }));
-      console.log(!["",null,undefined].includes(microplan))
       if (!["",null,undefined].includes(microplan)) {
         setCheckDataCompletion("valid");
       } else setCheckDataCompletion("invalid");
@@ -145,8 +143,6 @@ const MicroplanDetails = ({
   const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
   };
-
-  console.log();
 
   if (isCampaignLoading) {
     return <Loader />;

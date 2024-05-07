@@ -249,7 +249,6 @@ const Mapping = ({
     };
     const filteredSelection = filterSelection(boundaryData, boundarySelections);
     const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
-    console.log(geojsons);
     // addGeojsonToMap(map, baseDatalayers, t);
     if (geojsons) {
       removeAllLayers(map, layers);
@@ -568,7 +567,6 @@ const extractGeoData = (
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
-              console.log("hierarchicalData", hierarchicalData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
@@ -596,10 +594,8 @@ const extractGeoData = (
               });
               // Group keys and values into the desired format
               let data = { [files[fileData]?.fileName]: [keys, ...values] };
-              console.log("data", data);
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
-              console.log("hierarchicalData", hierarchicalData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
@@ -853,7 +849,6 @@ const findBounds = (data, buffer = 0.1) => {
 const removeAllLayers = (map, layer) => {
   if (!map) return;
   layer.forEach((layer) => {
-    console.log(layer);
     map.removeLayer(layer);
   });
 };
