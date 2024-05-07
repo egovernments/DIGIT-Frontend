@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { timeLineOptions } from "../../configs/timeLineOptions.json";
 import Upload from "./Upload";
@@ -23,6 +23,7 @@ export const components = {
 
 import XLSX from "xlsx";
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
+import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
 
 // will be changed laters
 const MicroplanName = "microplan 1912";
@@ -43,6 +44,7 @@ const CreateMicroplan = () => {
   const [operatorsObject, setOperatorsObject] = useState([]);
   const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
+  const [loaderActivation, setLoaderActivation] = useState(false);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -78,33 +80,51 @@ const CreateMicroplan = () => {
 
   // An addon function to pass to Navigator
   const nextEventAddon = useCallback(
-    async (currentPage, checkDataCompletion) => {
-      if (!microplanData) return;
-      if (!microplanData?.microplanDetails?.name) return;
+    async (currentPage, checkDataCompletion, setCheckDataCompletion) => {
+      if (!microplanData) {
+        setCheckDataCompletion("perform-action");
+        return;
+      }
+      if (!microplanData?.microplanDetails?.name) {
+        setCheckDataCompletion("perform-action");
+        return;
+      }
       setMicroplanData((previous) => ({
         ...previous,
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
       }));
-      if (currentPage?.name !== "FORMULA_CONFIGURATION") return;
+      if (currentPage?.name !== "FORMULA_CONFIGURATION") {
+        setCheckDataCompletion("perform-action");
+        return;
+      }
       let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
-      if (Object.keys(checkStatusValues).length == 0) return;
+      if (Object.keys(checkStatusValues).length == 0) {
+        setCheckDataCompletion("perform-action");
+        return;
+      }
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
+        if(data === "mapping") break;
         check = check && checkStatusValues?.[data];
       }
-      if (!check) return;
-      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId);
+      if (!check) {
+        setCheckDataCompletion("perform-action");
+        return;
+      }
+      setCheckDataCompletion("false");
+      setLoaderActivation(true);
+      let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT");
       if (microplanData && !microplanData.planConfigurationId) {
-        createPlanConfiguration(body);
+        await createPlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);
       } else if (microplanData && microplanData.planConfigurationId) {
-        updatePlanConfiguration(body);
+        await updatePlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);
       }
     },
     [microplanData, UpdateMutate, CreateMutate]
   );
 
-  const createPlanConfiguration = async (body) => {
+  const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
         setMicroplanData((previous) => ({
@@ -115,6 +135,8 @@ const CreateMicroplan = () => {
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
+          setLoaderActivation(false);
+          setCheckDataCompletion("perform-action");
         }, 2000);
       },
       onError: (error, variables) => {
@@ -124,12 +146,13 @@ const CreateMicroplan = () => {
         });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
+          setCheckDataCompletion("perform-action");
         }, 2000);
       },
     });
   };
 
-  const updatePlanConfiguration = async (body) => {
+  const updatePlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
@@ -137,6 +160,8 @@ const CreateMicroplan = () => {
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
+          setLoaderActivation(false);
+          setCheckDataCompletion("perform-action");
         }, 2000);
       },
       onError: (error, variables) => {
@@ -173,75 +198,36 @@ const CreateMicroplan = () => {
     [microplanData, setMicroplanData, Navigator]
   );
 
-  const completeNavigation=()=>{
-    setToRender("success-screen")
-  }
-  return (
-    <div className="create-microplan">
-      {toRender === "navigator" &&
-      <Navigator
-        config={timeLineOptions}
-        checkDataCompleteness={true}
-        stepNavigationActive={true}
-        components={components}
-        childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
-        nextEventAddon={nextEventAddon}
-        setCurrentPageExternally={setCurrentPageExternally}
-        completeNavigation={completeNavigation}
-      />
-  }
-  {
-    toRender === "success-screen" &&
-    <MicroplanCreatedScreen microplanData={microplanData}/>
-  }
-
-      {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
-        <Toast style={{ bottom: "5.5rem" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
-      )}
-      {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
-        <Toast style={{ bottom: "5.5rem" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} error />
-      )}
-    </div>
-  );
-};
-
-export const mapDataForApi = (data, Operators, microplanName, campaignId) => {
-  let files = [],
-    resourceMapping = [];
-  Object.values(data?.upload).forEach((item) => {
-    if (item?.error) return;
-    const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
-    files.push(data);
-  });
-  Object.values(data?.upload).forEach((item) => {
-    if (item?.error) return;
-    resourceMapping.push(item?.resourceMapping);
-  });
-  resourceMapping = resourceMapping.flatMap((inner) => inner);
-
-  // return a Create API body
-  return {
-    PlanConfiguration: {
-      status: "DRAFT",
-      tenantId: Digit.ULBService.getStateId(),
-      name: microplanName,
-      executionPlanId: campaignId,
-      files,
-      assumptions: data?.hypothesis?.map((item) => {
-        let templist = JSON.parse(JSON.stringify(item));
-        delete templist.id;
-        return templist;
-      }),
-      operations: data?.ruleEngine?.map((item) => {
-        const data = JSON.parse(JSON.stringify(item));
-        delete data.id;
-        const operator = Operators.find((e) => e.name === data.operator);
-        if (operator && operator.code) data.operator = operator?.code;
-        return data;
-      }),
-      resourceMapping,
-    },
+  const completeNavigation = () => {
+    setToRender("success-screen");
   };
+  return (
+    <>
+      <div className="create-microplan">
+        {toRender === "navigator" && (
+          <Navigator
+            config={timeLineOptions}
+            checkDataCompleteness={true}
+            stepNavigationActive={true}
+            components={components}
+            childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
+            nextEventAddon={nextEventAddon}
+            setCurrentPageExternally={setCurrentPageExternally}
+            completeNavigation={completeNavigation}
+          />
+        )}
+        {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
+
+        {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
+          <Toast style={{ bottom: "5.5rem", zIndex:"999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
+        )}
+        {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
+          <Toast style={{ bottom: "5.5rem", zIndex:"999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} error />
+        )}
+      </div>
+      {loaderActivation && <LoaderWithGap text={"LOADING"} />}
+    </>
+  );
 };
 
 export default CreateMicroplan;

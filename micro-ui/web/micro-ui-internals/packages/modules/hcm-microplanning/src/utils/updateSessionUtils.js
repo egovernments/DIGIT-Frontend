@@ -2,6 +2,7 @@ import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheets } from "../utils/exceltojson";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
+import { EXCEL, GEOJSON, SHAPEFILE } from "../configs/constants";
 
 function parseBlobToExcel(blob) {
   return new Promise((resolve, reject) => {
@@ -171,11 +172,11 @@ export const updateSessionUtils = {
       //run a loop and set the data object of every file
       files.forEach((file, idx) => {
         switch (file.inputFileType) {
-          case "Shapefile":
+          case SHAPEFILE:
             break;
-          case "Excel":
+          case EXCEL:
             break;
-          case "GeoJSON":
+          case GEOJSON:
             handleGeoJson();
           default:
             break;
@@ -199,7 +200,6 @@ export const updateSessionUtils = {
       sessionObj.upload = upload;
       return sessionObj;
     } catch (error) {
-      console.log("error occured in updateSeshUtils", error.message);
     }
   },
 };

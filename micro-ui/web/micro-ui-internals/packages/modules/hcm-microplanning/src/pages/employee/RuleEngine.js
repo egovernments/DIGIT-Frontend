@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ModalHeading } from "../../components/ComonComponents";
+import { ButtonType1, ModalHeading } from "../../components/CommonComponents";
 import AutoFilledRuleConfigurations from "../../configs/AutoFilledRuleConfigurations.json";
 import { Modal } from "@egovernments/digit-ui-components";
+import { tourSteps } from "../../configs/tourSteps";
+import { useMyContext } from "../../utils/context";
+
+const page = "ruleEngine";
 
 const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
@@ -21,6 +25,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [operators, setOperators] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
+  const { state, dispatch } = useMyContext();
 
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
@@ -29,6 +34,16 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     { name: "RuleConfigureOutput" },
     { name: "Schemas" },
   ]);
+
+  // Set TourSteps
+  useEffect(() => {
+    const tourData = tourSteps(t)?.[page] || {};
+    if (state?.tourStateData?.name === page) return;
+    dispatch({
+      type: "SETINITDATA",
+      state: { tourStateData: tourData },
+    });
+  }, []);
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -50,17 +65,48 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!rules || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+    if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
+    else updateData();
+  }, [checkDataCompletion]);
+
+  // // UseEffect to store current data
+  // useEffect(() => {
+  //   if (!rules || !setMicroplanData) return;
+  //   setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+  // }, [rules]);
+
+  // UseEffect to add a event listener for keyboard
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [modal]);
+
+  const handleKeyPress = (event) => {
+    // if (modal !== "upload-guidelines") return;
+    if (["x", "Escape"].includes(event.key)) {
+      // Perform the desired action when "x" or "esc" is pressed
+      // if (modal === "upload-guidelines")
+      setCheckDataCompletion("false");
+      setModal("none");
+    }
+  };
+
+  // check if data has changed or not
+  const updateData = () => {
+    if (!rules || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
     let check = rules.every((item) => Object.values(item).every((data) => data !== ""));
     check = check && rules.length !== 0;
     if (check) setCheckDataCompletion("valid");
     else setCheckDataCompletion("invalid");
-  }, [checkDataCompletion]);
-
-  // UseEffect to store current data
-  useEffect(() => {
-    if (!rules || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-  }, [rules]);
+    // const isDataValid = rules.length !== 0 && rules.every((item) => Object.values(item).every((data) => data !== ""));
+    // setCheckDataCompletion(isDataValid ? "valid" : "invalid");
+  };
+  const cancelUpdateData = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -111,7 +157,9 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       hypothesisAssumptionsList,
       outputs,
       operators,
-      getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas)
+      getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas),
+      setInputs,
+      setOutputs
     );
   }, [autofillData]);
 
@@ -127,66 +175,97 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
   return (
-    <div className={sectionClass}>
-      <div className="rule-engine-body">
-        {/* NonInterractable Section */}
-        <NonInterractableSection t={t} />
-        {/* Interractable Section that includes the example as well as the rules */}
-        <InterractableSection
-          rules={rules}
-          setRules={setRules}
-          hypothesisAssumptionsList={hypothesisAssumptionsList}
-          setHypothesisAssumptionsList={setHypothesisAssumptionsList}
-          setModal={setModal}
-          setItemForDeletion={setItemForDeletion}
-          exampleOption={exampleOption}
-          inputs={inputs}
-          setInputs={setInputs}
-          outputs={outputs}
-          setOutputs={setOutputs}
-          operators={operators}
-          setOperators={setOperators}
-          t={t}
-        />
-        <button className="add-button" onClick={() => addRulesHandler(setRules)}>
-          <div className="add-icon">
-            <p>+</p>
-          </div>
-          <p>{t("ADD_ROW")}</p>
-        </button>
-      </div>
-      <RuleEngineInformation t={t} />
-      {/* delete conformation */}
-      {modal === "delete-conformation" && (
-        <Modal
-        popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-        popupModuleActionBarStyles={{
-          display: "flex",
-          flex: 1,
-          justifyContent: "flex-start",
-          padding: 0,
-          width: "100%",
-          padding: "1rem",
-        }}
-        popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
-        style={{
-          flex: 1,
-          backgroundColor: "white",
-          border: "0.063rem solid rgba(244, 119, 56, 1)",
-        }}
-        headerBarMainStyle={{ padding: 0, margin: 0 }}
-        headerBarMain={<ModalHeading style={{fontSize:"1.5rem"}} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-        actionCancelLabel={t("YES")}
-        actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-        actionSaveLabel={t("NO")}
-        actionSaveOnSubmit={closeModal}
-      >
-        <div className="modal-body">
-          <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+    <>
+      <div className={sectionClass}>
+        <div className="rule-engine-body">
+          {/* NonInterractable Section */}
+          <NonInterractableSection t={t} />
+          {/* Interractable Section that includes the example as well as the rules */}
+          <InterractableSection
+            rules={rules}
+            setRules={setRules}
+            hypothesisAssumptionsList={hypothesisAssumptionsList}
+            setHypothesisAssumptionsList={setHypothesisAssumptionsList}
+            setModal={setModal}
+            setItemForDeletion={setItemForDeletion}
+            exampleOption={exampleOption}
+            inputs={inputs}
+            setInputs={setInputs}
+            outputs={outputs}
+            setOutputs={setOutputs}
+            operators={operators}
+            setOperators={setOperators}
+            t={t}
+          />
+          <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
+            <div className="add-icon">
+              <p>+</p>
+            </div>
+            <p>{t("ADD_ROW")}</p>
+          </button>
         </div>
-      </Modal>
+        <RuleEngineInformation t={t} />
+        {/* delete conformation */}
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              padding: 0,
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              border: "0.063rem solid rgba(244, 119, 56, 1)",
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
+      </div>
+      {modal === "data-change-check" && (
+        <Modal
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupModuleActionBarStyles={{
+            display: "flex",
+            flex: 1,
+            justifyContent: "flex-start",
+            padding: 0,
+            width: "100%",
+            padding: "1rem",
+          }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          style={{
+            flex: 1,
+            backgroundColor: "white",
+            border: "0.063rem solid rgba(244, 119, 56, 1)",
+          }}
+          headerBarMainStyle={{ padding: 0, margin: 0 }}
+          headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
+          actionCancelLabel={t("YES")}
+          actionCancelOnSubmit={updateData}
+          actionSaveLabel={t("NO")}
+          actionSaveOnSubmit={cancelUpdateData}
+        >
+          <div className="modal-body">
+            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+          </div>
+        </Modal>
       )}
-    </div>
+    </>
   );
 };
 
@@ -274,9 +353,8 @@ const InterractableSection = React.memo(
               <p className="heading">{t("KEY")}</p>
             </div>
             <div className="invisible">
-              <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
+              <button className="delete-button invisible" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                 <div>
-                  {" "}
                   <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                 </div>
                 <p>{t("DELETE")}</p>
@@ -302,7 +380,7 @@ const InterractableSection = React.memo(
 
               <div className="equal-to-icon">=</div>
 
-              <div className="value-input-key">
+              <div className="value-input-key input">
                 <Select
                   key={item.id}
                   item={item}
@@ -346,9 +424,8 @@ const InterractableSection = React.memo(
                 />
               </div>
               <div>
-                <button className="delete-button" onClick={() => deleteHandler(item)}>
+                <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                   <div>
-                    {" "}
                     <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
                   </div>
                   <p>{t("DELETE")}</p>
@@ -529,7 +606,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
 // get schema for validation
 const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
-  if (!schemas || !microplanData || !microplanData?.upload|| !campaignType) return [];
+  if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
   Object.entries(microplanData?.upload)
@@ -559,10 +636,9 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
   return [...new Set(finalData)];
 };
 
-
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
-const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsList, outputs, operators, inputs) => {
-  if(rules?.length !== 0) return 
+const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
+  if (rules?.length !== 0) return;
   let newRules = [];
   const ruleOuputList = rules.map((item) => item?.output) || [];
   let rulePlusInputs;
@@ -578,11 +654,21 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
       !hypothesisAssumptionsList?.includes(item?.assumptionValue)
     )
       return;
-    item["id"] = newRules.length
+    item["id"] = newRules.length;
     newRules.push(item);
     rulePlusInputs?.push(item?.output);
     ruleOuputList?.push(item?.output);
   });
-  if (newRules.length !== 0) setRules((previous) => [...previous, ...newRules]);
+  if (newRules.length !== 0) {
+    let newOutputs = [];
+    outputs.forEach((e) => {
+      if (!ruleOuputList.includes(e)) {
+        newOutputs.push(e);
+      }
+    });
+    setOutputs(newOutputs);
+    setInputs(rulePlusInputs);
+    setRules((previous) => [...previous, ...newRules]);
+  }
 };
 export default RuleEngine;

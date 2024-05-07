@@ -11,21 +11,21 @@ const MicroplanningCard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let links = [
-    {
-      label: t("Upload Page"),
-      link: `/${window?.contextPath}/employee/microplanning/upload`,
-      roles: ROLES.MICROPLAN,
-    },
-    {
-      label: t("Hypothesis Page"),
-      link: `/${window?.contextPath}/employee/microplanning/hypothesis`,
-      roles: ROLES.MICROPLAN,
-    },
-    {
-      label: t("Rule Engine Page"),
-      link: `/${window?.contextPath}/employee/microplanning/rule-engine`,
-      roles: ROLES.MICROPLAN,
-    },
+    // {
+    //   label: t("Upload Page"),
+    //   link: `/${window?.contextPath}/employee/microplanning/upload`,
+    //   roles: ROLES.MICROPLAN,
+    // },
+    // {
+    //   label: t("Hypothesis Page"),
+    //   link: `/${window?.contextPath}/employee/microplanning/hypothesis`,
+    //   roles: ROLES.MICROPLAN,
+    // },
+    // {
+    //   label: t("Rule Engine Page"),
+    //   link: `/${window?.contextPath}/employee/microplanning/rule-engine`,
+    //   roles: ROLES.MICROPLAN,
+    // },
     {
       label: t("CREATE_NEW_MICROPLAN"),
       link: `/${window?.contextPath}/employee/microplanning/select-campaign`,

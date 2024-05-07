@@ -9,8 +9,13 @@ import CustomScaleControl from "../../components/CustomScaleControl";
 import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline } from "@egovernments/digit-ui-react-components";
+import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
+import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
+import { tourSteps } from "../../configs/tourSteps";
+import { useMyContext } from "../../utils/context";
+
+const page = "mapping";
 
 // Mapping component definition
 const Mapping = ({
@@ -45,7 +50,7 @@ const Mapping = ({
   );
 
   // request body for boundary hierarchy api
-  const reqCriteria = {
+  var reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     params: {},
     body: {
@@ -62,6 +67,18 @@ const Mapping = ({
     },
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  // request body for boundary hierarchy api
+  var reqCriteria = {
+    url: `/boundary-service/boundary/_search`,
+    params: { codes: Digit.ULBService.getCurrentTenantId(), tenantId: Digit.ULBService.getCurrentTenantId() },
+    body: {},
+    config: {
+      select: (data) => {
+        return data?.Boundary || {};
+      },
+    },
+  };
+  const { isLoading: isBoundaryLoading, data: Boundary } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // Setting up state variables
   const [editable, setEditable] = useState(true);
@@ -81,13 +98,24 @@ const Mapping = ({
   const [filterData, setFilterData] = useState({}); // State for facility data
   const [boundarySelections, setBoundarySelections] = useState([]);
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
+  const { state, dispatch } = useMyContext();
 
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
 
+  // Set TourSteps
+  useEffect(() => {
+    const tourData = tourSteps(t)?.[page] || {};
+    if (state?.tourStateData?.name === page) return;
+    dispatch({
+      type: "SETINITDATA",
+      state: { tourStateData: tourData },
+    });
+  }, []);
+
   // Effect to initialize map when data is fetched
   useEffect(() => {
-    if (!data) return;
+    if (!data || !Boundary) return;
     let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
     if (UIConfiguration) {
       const filterDataOriginList = UIConfiguration.find((item) => item.name === "mapping");
@@ -120,12 +148,12 @@ const Mapping = ({
     setSelectedBaseMapName(defaultBaseMap?.name);
     setBaseMaps(baseMaps);
     if (!map) {
-      init(_mapNode, defaultBaseMap);
+      init(_mapNode, defaultBaseMap, Boundary);
     }
-  }, [data]);
+  }, [data, Boundary]);
 
   useEffect(() => {
-    if (filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
+    if (map && filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
       // Check if all the data is present or not, if it is then extract it in a format that can be used for mapping and other mapping related operations
       extractGeoData(
         campaignType,
@@ -143,15 +171,17 @@ const Mapping = ({
   }, [filterDataOrigin, hierarchy]);
 
   // Function to initialize map
-  const init = (id, defaultBaseMap) => {
+  const init = (id, defaultBaseMap, Boundary) => {
     if (map !== null) return;
+
+    let bounds;
 
     let mapConfig = {
       center: [0, 0],
       zoomControl: false,
       zoom: 2,
       scrollwheel: true,
-      minZoom:2,
+      minZoom: 2,
     };
 
     let map_i = L.map(id, mapConfig);
@@ -163,6 +193,7 @@ const Mapping = ({
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
+
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
@@ -184,11 +215,18 @@ const Mapping = ({
   };
 
   useEffect(() => {
-    // const geojson = prepareGeojson(boundaryData,selection);
     const geojsons = prepareGeojson(boundaryData, "ALL");
-    if (geojsons) addGeojsonToMap(map, geojsons);
-    const bounds = findBounds(geojsons);
-    if (bounds) map?.fitBounds(bounds);
+    if (geojsons) addGeojsonToMap(map, geojsons, t);
+    // setting bounds if they exist
+    let bounds = findBounds(geojsons);
+    if (bounds) {
+      map?.fitBounds(bounds);
+    } else {
+      if (Boundary) {
+        let bounds = findBounds(Boundary);
+        if (bounds) map?.fitBounds(L.latLngBounds(bounds));
+      }
+    }
   }, [boundaryData]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
@@ -265,77 +303,23 @@ const BoundarySelection = memo(
     t,
   }) => {
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
-      let processedHierarchyTemp = fetchDropdownValues(boundaryData, hierarchy);
+      let processedHierarchyTemp = fetchDropdownValues(
+        boundaryData,
+        processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
+        boundarySelections
+      );
       setProcessedHierarchy(processedHierarchyTemp);
-    }, [boundaryData, hierarchy]);
-
-    const handleSelection = useCallback(
-      (e) => {
-        let tempData = {};
-        let TempHierarchy = _.cloneDeep(processedHierarchy);
-        let oldSelections = boundarySelections;
-        let selections = [];
-        e.forEach((item) => {
-          selections.push(item?.[1]?.name);
-          // Enpty previous options
-          let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-          if (index !== -1) {
-            TempHierarchy[index].dropDownOptions = [];
-          }
-        });
-
-        // filtering current option. if its itself and its parent is not selected it will be discarded
-        if (hierarchy)
-          for (let key of hierarchy) {
-            if (Array.isArray(oldSelections?.[key?.boundaryType])) {
-              oldSelections[key.boundaryType] = oldSelections[key?.boundaryType].filter((e) => {
-                return (selections.includes(e?.parentBoundaryType) && selections.includes(e?.name)) || (e?.parentBoundaryType === null && selections?.length !== 0);
-              });
-            }
-          }
-        e.forEach((item) => {
-          // insert new data into tempData
-          if (tempData[item?.[1]?.boundaryType]) tempData[item?.[1]?.boundaryType] = [...tempData[item?.[1]?.boundaryType], item?.[1]];
-          else tempData[item?.[1]?.boundaryType] = [item?.[1]];
-
-          // Filter the options
-          let index = TempHierarchy.findIndex((e) => e?.parentBoundaryType === item?.[1]?.boundaryType);
-          if (index !== -1) {
-            const tempData = findFilteredData(item?.[1]?.name, item?.[1]?.boundaryType, boundaryData);
-            if (tempData) TempHierarchy[index].dropDownOptions = [...TempHierarchy[index].dropDownOptions, ...tempData];
-          }
-
-          // set the parent as selected
-          let parent = findParent(item?.[1]?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-          if (
-            !(
-              tempData?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name) ||
-              oldSelections?.[parent?.boundaryType]?.find((e) => e?.name === parent?.name)
-            ) &&
-            !!parent
-          ) {
-            var parentBoundaryType = hierarchy.find((e) => e?.name === parent?.name)?.parentBoundaryType;
-            if (!tempData?.[parent?.boundaryType]) tempData[parent.boundaryType] = [];
-            tempData?.[parent?.boundaryType]?.push({
-              name: parent?.name,
-              code: parent?.name,
-              boundaryType: parent?.boundaryType,
-              parentBoundaryType: parentBoundaryType,
-            });
-          }
-        });
-        setProcessedHierarchy(TempHierarchy);
-        setBoundarySelections({ ...oldSelections, ...tempData });
-      },
-      [boundaryData, boundarySelections, hierarchy, processedHierarchy, setBoundarySelections, setProcessedHierarchy]
-    );
+      setIsLoading(false);
+    }, [boundaryData, hierarchy, boundarySelections]);
 
     return (
       <div className="filter-by-boundary" ref={filterBoundaryRef}>
+        {isLoading && <LoaderWithGap text={"LOADING"} />}
         <Button
           icon="FilterAlt"
           variation="secondary"
@@ -356,11 +340,14 @@ const BoundarySelection = memo(
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
                   style={{ maxWidth: "23.75rem", margin: 0 }}
+                  ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem", position: "sticky" } : { position: "sticky" }}
                   type={"multiselectdropdown"}
                   t={t}
                   options={item?.dropDownOptions || []}
                   optionsKey="name"
-                  onSelect={handleSelection}
+                  onSelect={(e) =>
+                    Digit.Utils.microplan.handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)
+                  }
                 />
               </div>
             ))}
@@ -489,7 +476,7 @@ const extractGeoData = (
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
           switch (files[fileData]?.fileType) {
-            case "Excel": {
+            case EXCEL: {
               let columnList = Object.values(files[fileData]?.data)[0][0];
               let check = true;
               if (latLngColumns) {
@@ -520,12 +507,16 @@ const extractGeoData = (
                   }
                   const latIndex = item?.[0].findIndex((cell) => cell === "lat");
                   const lonIndex = item?.[0].findIndex((cell) => cell === "long");
+                  let properties = {};
+                  row.map((e, index) => {
+                    properties[item?.[0]?.[index]] = e;
+                  });
                   if (latIndex !== -1 && lonIndex !== -1) {
                     const lat = row[latIndex];
                     const lon = row[lonIndex];
                     const feature = {
                       type: "Feature",
-                      properties: {},
+                      properties: properties,
                       geometry: {
                         type: "Point",
                         coordinates: [lon, lat],
@@ -547,8 +538,8 @@ const extractGeoData = (
                 setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
               break;
             }
-            case "GeoJSON":
-            case "Shapefile":
+            case GEOJSON:
+            case SHAPEFILE:
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
               // Extract keys from the first feature's properties
               var keys = Object.keys(files[fileData]?.data.features[0].properties);
@@ -617,7 +608,6 @@ const extractGeoData = (
       message: t("MAPPING_NO_DATA_TO_SHOW"),
     });
   }
-
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
 };
@@ -640,59 +630,37 @@ const prepareGeojson = (boundaryData, selection) => {
   return geojsonRawFeatures.filter(Boolean);
 };
 const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
+  let tempStorage = [];
   if (parameter === "ALL") {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
-    let tempStorage = [];
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      if (entityValue?.children)
-        tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-      else tempStorage = [...tempStorage, entityValue?.data?.feature];
+      if (entityValue?.data?.feature) {
+        let feature = entityValue.data.feature;
+        feature.properties["name"] = entityKey;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        else tempStorage = [...tempStorage, feature];
+      } else {
+        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+      }
     }
     return tempStorage;
   } else if (Array.isArray(parameter)) {
-    let tempStorage = [];
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      if (parameter.includes(entityKey)) {
-        if (entityValue?.children)
-          tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-        else tempStorage = [...tempStorage, entityValue?.data?.feature];
-      } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+      if (entityValue?.data?.feature) {
+        if (parameter.includes(entityKey)) {
+          if (entityValue?.children)
+            tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+          else tempStorage = [...tempStorage, entityValue?.data?.feature];
+        } else {
+          if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        }
       }
     }
     return tempStorage;
   }
 };
 
-// Filters data for dropdown with when a parent is selected
-const findFilteredData = (name, boundaryType, boundaryData) => {
-  let geojsonRawFeatures = [];
-  for (let data of Object.values(boundaryData)) {
-    const templist = findFilteredDataHierarchyTraveler(data?.hierarchicalData, name, boundaryType);
-    if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
-  }
-  return geojsonRawFeatures;
-};
-const findFilteredDataHierarchyTraveler = (data, name, boundaryType) => {
-  if (!data) return;
-  let tempStorage = [];
-  for (let [entityKey, entityValue] of Object.entries(data)) {
-    if (entityKey === name && entityValue?.boundaryType === boundaryType)
-      tempStorage = [
-        ...tempStorage,
-        ...Object.values(entityValue?.children)?.map((item) => ({
-          name: item?.name,
-          code: item?.name,
-          boundaryType: item?.boundaryType,
-          parentBoundaryType: boundaryType,
-        })),
-      ];
-    else if (entityValue?.children) tempStorage = [...tempStorage, ...findFilteredDataHierarchyTraveler(entityValue?.children, name, boundaryType)];
-  }
-  return tempStorage;
-};
-
-const addGeojsonToMap = (map, geojson) => {
+const addGeojsonToMap = (map, geojson, t) => {
   if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
@@ -707,8 +675,29 @@ const addGeojsonToMap = (map, geojson) => {
     },
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
-        icon: MapMarker
-      })
+        icon: MapMarker,
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      if (feature.properties) {
+        let popupContent = "<div style='background-color: white; padding: 0rem;'>";
+        popupContent += "<table style='border-collapse: collapse;'>";
+        popupContent +=
+          "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
+          feature.properties["name"] +
+          "</div>";
+        for (let prop in feature.properties) {
+          if (prop !== "name")
+            popupContent +=
+              "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
+              t(prop) +
+              "</td><td>" +
+              feature.properties[prop] +
+              "</td></tr>";
+        }
+        popupContent += "</table></div>";
+        layer.bindPopup(popupContent);
+      }
     },
   });
   geojsonLayer.addTo(map);
@@ -816,19 +805,17 @@ const findBounds = (data, buffer = 0.1) => {
   return bounds;
 };
 
-
 // Map-Marker
 const MapMarker = L.divIcon({
-  className: 'custom-svg-icon',
+  className: "custom-svg-icon",
   html: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="50" height="50" viewBox="0 0 256 256" xml:space="preserve">
   <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
     <path d="M 45 90 c -1.415 0 -2.725 -0.748 -3.444 -1.966 l -4.385 -7.417 C 28.167 65.396 19.664 51.02 16.759 45.189 c -2.112 -4.331 -3.175 -8.955 -3.175 -13.773 C 13.584 14.093 27.677 0 45 0 c 17.323 0 31.416 14.093 31.416 31.416 c 0 4.815 -1.063 9.438 -3.157 13.741 c -0.025 0.052 -0.053 0.104 -0.08 0.155 c -2.961 5.909 -11.41 20.193 -20.353 35.309 l -4.382 7.413 C 47.725 89.252 46.415 90 45 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(4,136,219); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
     <path d="M 45 45.678 c -8.474 0 -15.369 -6.894 -15.369 -15.368 S 36.526 14.941 45 14.941 c 8.474 0 15.368 6.895 15.368 15.369 S 53.474 45.678 45 45.678 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
   </g>
   </svg>`,
-  iconAnchor: [12.5, 25]
+  iconAnchor: [12.5, 25],
 });
-
 
 // Exporting Mapping component
 export default Mapping;

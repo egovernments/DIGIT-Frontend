@@ -21,8 +21,9 @@ const Navigator = (props) => {
    * checkDataCompletion
    * "true": check for data completeness
    * "false": do nothing
-   * "valid": data is present move to the respective step
+   * "valid": data is present
    * "invalid": whole or a part of the data is missing
+   * "perform-action": move to the respective step ( had to add this as mutate addons need some buffer time)
    */
   const [checkDataCompletion, setCheckDataCompletion] = useState("false");
 
@@ -49,17 +50,31 @@ const Navigator = (props) => {
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
     // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (checkDataCompletion === "false" || checkDataCompletion === "true" || navigationEvent === undefined) return;
-    if (typeof props.nextEventAddon === "function") {
-      if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
-        props.nextEventAddon(currentPage, checkDataCompletion);
-      else props.nextEventAddon(currentPage, true);
+    if (checkDataCompletion === "valid" || checkDataCompletion === "invalid") {
+      if (typeof props.nextEventAddon === "function") {
+        if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
+          props.nextEventAddon(currentPage, checkDataCompletion, setCheckDataCompletion);
+        else props.nextEventAddon(currentPage, true, setCheckDataCompletion);
+      } else {
+        setCheckDataCompletion("perform-action");
+      }
     }
-    if (navigationEvent && navigationEvent.name === "next") nextStep();
-    else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
-    setCheckDataCompletion("false");
-    setNavigationEvent(undefined);
   }, [navigationEvent, checkDataCompletion, props.nextEventAddon]);
+
+  useEffect(() => {
+    // if (checkDataCompletion === "perform-action") {
+    //   if (navigationEvent && navigationEvent.name === "next") {
+    //     if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
+    //       return props?.completeNavigation();
+    //     }
+    //     nextStep();
+    //   } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
+    //   else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
+    //   setCheckDataCompletion("false");
+    //   setNavigationEvent(undefined);
+    // }
+    handleNavigationEvent(checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, nextStep, previousStep, props);
+  }, [checkDataCompletion, navigationEvent]);
 
   // Function to navigate to the next step
   const nextStep = useCallback(() => {
@@ -73,7 +88,7 @@ const Navigator = (props) => {
   const previousStep = useCallback(() => {
     changeCurrentPage(props.config[currentPage?.id - 1]);
     setCurrentPage((previous) => props.config[previous?.id - 1]);
-  }, []);
+  }, [currentPage]);
 
   // Function to handle step click and navigate to the selected step
   const onStepClick = useCallback((index) => {
@@ -83,19 +98,28 @@ const Navigator = (props) => {
   });
 
   // Function to handle next button click
-  const nextbuttonClickHandler = useCallback(
-    () => {
-      if (
-        props.checkDataCompleteness &&
-        props?.config[currentPage?.id]?.checkForCompleteness &&
-        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
-      ) {
-        setCheckDataCompletion("true");
-        setNavigationEvent({ name: "next" });
-      } else nextStep();
-    },
-    [props.checkDataCompleteness, nextStep]
-  );
+  const previousbuttonClickHandler = useCallback(() => {
+    if (
+      props.checkDataCompleteness &&
+      props?.config[currentPage?.id]?.checkForCompleteness &&
+      LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+    ) {
+      setCheckDataCompletion("true");
+      setNavigationEvent({ name: "previousStep" });
+    } else nextStep();
+  }, [props.checkDataCompleteness, previousStep]);
+
+  // Function to handle next button click
+  const nextbuttonClickHandler = useCallback(() => {
+    if (
+      props.checkDataCompleteness &&
+      props?.config[currentPage?.id]?.checkForCompleteness &&
+      LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+    ) {
+      setCheckDataCompletion("true");
+      setNavigationEvent({ name: "next" });
+    } else nextStep();
+  }, [props.checkDataCompleteness, nextStep]);
 
   // Function to handle step click
   const stepClickHandler = useCallback(
@@ -122,6 +146,11 @@ const Navigator = (props) => {
     }
   };
 
+  const completeNavigation = () => {
+      setNavigationEvent({ name: "next" });
+      setCheckDataCompletion("true");
+  };
+
   return (
     <div className="create-microplan">
       {/* Stepper component */}
@@ -138,7 +167,9 @@ const Navigator = (props) => {
         <LoadCustomComponent
           component={props.components[currentPage?.component]}
           secondaryProps={
-            checkDataCompletion ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, ...props.childProps } : {}
+            checkDataCompletion
+              ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, navigationEvent, ...props.childProps }
+              : {}
           }
         />
       ) : (
@@ -153,7 +184,7 @@ const Navigator = (props) => {
             type="button"
             className="custom-button custom-button-left-icon"
             label={t("BACK")}
-            onButtonClick={previousStep}
+            onButtonClick={previousbuttonClickHandler}
             isSuffix={false}
             variation={"secondary"}
             icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"} />}
@@ -164,13 +195,7 @@ const Navigator = (props) => {
           type="button"
           className="custom-button"
           label={currentPage?.id < props.config.length - 1 ? t("NEXT") : t("GENERATE_MICROPLAN")}
-          onButtonClick={
-            currentPage?.id < props.config.length - 1
-              ? nextbuttonClickHandler
-              : typeof props?.completeNavigation == "function"
-              ? props?.completeNavigation
-              : () => {}
-          }
+          onButtonClick={currentPage?.id < props.config.length - 1 ? nextbuttonClickHandler : completeNavigation}
           isSuffix={true}
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}
@@ -195,4 +220,21 @@ LoadCustomComponent.propTypes = {
   component: PropTypes.elementType.isRequired,
   secondaryProps: PropTypes.object,
 };
+
+
+const handleNavigationEvent = (checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, nextStep, previousStep, props)=>{
+  if (checkDataCompletion === "perform-action") {
+    if (navigationEvent && navigationEvent.name === "next") {
+      if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
+        return props?.completeNavigation();
+      }
+      nextStep();
+    } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) onStepClick(navigationEvent.step);
+    else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
+    setCheckDataCompletion("false");
+    setNavigationEvent(undefined);
+  }
+}
+
+
 export default Navigator;
