@@ -1,6 +1,6 @@
-import React from "react";
+import React,{useState} from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposerV2 } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposerV2,Loader } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { useMyContext } from "../../utils/context";
@@ -114,21 +114,29 @@ const configs = {
 };
 
 const SavedMicroplans = () => {
+  const [showLoader,setShowLoader] = useState(false) 
   const {state} = useMyContext()
   const history = useHistory()
   const { t } = useTranslation();
 
   const onClickRow = async (row) => {
+    setShowLoader(true)
     try {
       //here compute the sessionObject based on the row?.original data and then re-route
       const computedSession = await updateSessionUtils.computeSessionObject(row.original,state)
       Digit.SessionStorage.set("microplanData", computedSession);
+      setShowLoader(false)
       history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
     } catch (error) {
+      console.error(error.message)
     }
   };
 
   const savedMircoplanSession = Digit.Hooks.useSessionStorage("SAVED_MICROPLAN_SESSION", {});
+
+  if(showLoader){
+    return <Loader />
+  }
 
   return (
     <React.Fragment>
