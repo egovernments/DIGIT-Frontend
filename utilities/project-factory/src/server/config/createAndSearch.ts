@@ -29,10 +29,9 @@ const createAndSearch: any = {
                     "enum": ["Temporary", "Permanent"]
                 },
                 "Capacity": {
-                    "type": "integer",
+                    "type": "number",
                     "minimum": 1,
-                    "maximum": 100000000,
-                    "multipleOf": 1
+                    "maximum": 100000000
                 }
             },
             "required": [
@@ -50,7 +49,7 @@ const createAndSearch: any = {
         uniqueIdentifierColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CODE",
         matchEachKey: true,
         parseArrayConfig: {
-            sheetName: "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES",
+            sheetName: "HCM_ADMIN_CONSOLE_FACILITIES",
             parseLogic: [
                 {
                     sheetColumn: "A",
@@ -150,7 +149,7 @@ const createAndSearch: any = {
                     "maxLength": 128,
                     "minLength": 1
                 },
-                "Phone Number": {
+                "Phone Number (Mandatory)": {
                     "type": "integer",
                     "minimum": 100000000,
                     "maximum": 9999999999
@@ -165,12 +164,12 @@ const createAndSearch: any = {
             },
             "required": [
                 "Name of the Person (Mandatory)",
-                "Phone Number",
+                "Phone Number (Mandatory)",
                 "Role (Mandatory)",
                 "Employment Type (Mandatory)"
             ],
             "unique": [
-                "Phone Number"
+                "Phone Number (Mandatory)"
             ]
         },
         parseArrayConfig: {

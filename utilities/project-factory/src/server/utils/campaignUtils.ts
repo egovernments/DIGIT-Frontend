@@ -9,7 +9,7 @@ import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
-import { getBoundaryRelationshipData, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
+import { getBoundaryRelationshipData, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -221,7 +221,7 @@ async function updateStatusFileForTargets(request: any) {
     const sheetNames = workbook.SheetNames;
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
-        throwError("FILE", 500, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
+        throwError("FILE", 400, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
     }
     sheetNames.forEach(sheetName => {
         processErrorDataForTargets(request, createAndSearchConfig, workbook, sheetName);
@@ -424,7 +424,7 @@ async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boo
     if (firstPersist) {
         request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
     }
-    request.body.CampaignDetails.campaignDetails = { ...request?.body?.CampaignDetails?.campaignDetails, deliveryRules: request?.body?.CampaignDetails?.deliveryRules, resources: request?.body?.CampaignDetails?.resources || [], boundaries: request?.body?.CampaignDetails?.boundaries || [] };
+    request.body.CampaignDetails.campaignDetails = { deliveryRules: request?.body?.CampaignDetails?.deliveryRules || [], resources: request?.body?.CampaignDetails?.resources || [], boundaries: request?.body?.CampaignDetails?.boundaries || [] };
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
     request.body.CampaignDetails.boundaryCode = getRootBoundaryCode(request.body.CampaignDetails.boundaries)
     request.body.CampaignDetails.projectType = request?.body?.CampaignDetails?.projectType || null;
@@ -449,36 +449,17 @@ async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boo
     produceModifiedMessages(request?.body, topic);
 }
 
-function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: any, existingInnerCampaignDetails: any) {
-    if (request?.body?.CampaignDetails?.resources) {
-        updatedInnerCampaignDetails.resources = request?.body?.CampaignDetails?.resources
-    }
-    else {
-        updatedInnerCampaignDetails.resources = existingInnerCampaignDetails.resources || []
-    }
-    if (request?.body?.CampaignDetails?.deliveryRules) {
-        updatedInnerCampaignDetails.deliveryRules = request?.body?.CampaignDetails?.deliveryRules
-    }
-    else {
-        updatedInnerCampaignDetails.deliveryRules = existingInnerCampaignDetails.deliveryRules || {}
-    }
-    if (request?.body?.CampaignDetails?.resourceDetailsIds) {
-        updatedInnerCampaignDetails.resourceDetailsIds = request?.body?.CampaignDetails?.resourceDetailsIds
-    }
-    if (request?.body?.CampaignDetails?.boundaries) {
-        updatedInnerCampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries
-    }
-    else {
-        updatedInnerCampaignDetails.boundaries = existingInnerCampaignDetails.boundaries || []
-    }
+function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: any) {
+    updatedInnerCampaignDetails.resources = request?.body?.CampaignDetails?.resources || []
+    updatedInnerCampaignDetails.deliveryRules = request?.body?.CampaignDetails?.deliveryRules || []
+    updatedInnerCampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries || []
 }
 
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
-    var existingInnerCampaignDetails = ExistingCampaignDetails?.campaignDetails || {}
-    var updatedInnerCampaignDetails = request?.body?.CampaignDetails?.campaignDetails || {}
-    enrichInnerCampaignDetails(request, updatedInnerCampaignDetails, existingInnerCampaignDetails)
+    var updatedInnerCampaignDetails = {}
+    enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
     request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber
     request.body.CampaignDetails.campaignDetails = updatedInnerCampaignDetails
     request.body.CampaignDetails.status = action == "create" ? "started" : "drafted";
@@ -506,7 +487,11 @@ async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boo
     delete request.body.ExistingCampaignDetails
 }
 
-async function persistForCampaignProjectMapping(request: any) {
+function getResourceIds(resources: any[]) {
+    return resources.map((resource: any) => resource.resourceId)
+}
+
+async function persistForCampaignProjectMapping(request: any, localizationMap?: any) {
     console.log((request?.body?.CampaignDetails?.campaignDetails?.resourceDetailsIds && request?.body?.CampaignDetails?.projectId))
     if (request?.body?.CampaignDetails?.campaignDetails?.resourceDetailsIds && request?.body?.CampaignDetails?.projectId) {
         var requestBody: any = {
@@ -523,15 +508,16 @@ async function persistForCampaignProjectMapping(request: any) {
         requestBody.Campaign.additionalDetails = request?.body?.CampaignDetails?.additionalDetails
         requestBody.Campaign.deliveryRules = request?.body?.CampaignDetails?.deliveryRules
         requestBody.Campaign.rootProjectId = request?.body?.CampaignDetails?.projectId
-        requestBody.Campaign.resourceDetailsIds = request?.body?.CampaignDetails?.campaignDetails?.resourceDetailsIds
+        requestBody.Campaign.resourceDetailsIds = getResourceIds(request?.body?.CampaignDetails?.resources)
         requestBody.CampaignDetails = request?.body?.CampaignDetails
+        requestBody.localizationMap = localizationMap
         logger.info("Persisting CampaignProjectMapping : " + JSON.stringify(requestBody));
         produceModifiedMessages(requestBody, config.KAFKA_START_CAMPAIGN_MAPPING_TOPIC);
     }
 }
 
 
-async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl: any, firstPersist: boolean = false) {
+async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl: any, firstPersist: boolean = false, localizationMap?: any) {
     if (actionInUrl == "create") {
         await enrichAndPersistCampaignForCreate(request, firstPersist)
     }
@@ -539,7 +525,7 @@ async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl:
         await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
     if (request?.body?.CampaignDetails?.action == "create") {
-        await persistForCampaignProjectMapping(request);
+        await persistForCampaignProjectMapping(request, localizationMap);
     }
 }
 
@@ -685,7 +671,13 @@ async function searchProjectCampaignResourcData(request: any) {
     const queryData = buildSearchQuery(tenantId, pagination, ids, searchFields);
     logger.info("queryData : " + JSON.stringify(queryData));
     await getTotalCount(request)
-    const responseData = await executeSearchQuery(queryData.query, queryData.values);
+    const responseData: any[] = await executeSearchQuery(queryData.query, queryData.values);
+    for (const data of responseData) {
+        data.resources = data?.campaignDetails?.resources
+        data.boundaries = data?.campaignDetails?.boundaries
+        data.deliveryRules = data?.campaignDetails?.deliveryRules;
+        delete data.campaignDetails;
+    }
     request.body.CampaignDetails = responseData;
 }
 
@@ -1093,13 +1085,14 @@ async function createProject(request: any, actionUrl: any) {
 
 async function processAfterPersist(request: any, actionInUrl: any) {
     try {
+        const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
             await createProjectCampaignResourcData(request);
             await createProject(request, actionInUrl)
-            await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
+            await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
         }
         else {
-            await enrichAndPersistProjectCampaignRequest(request, actionInUrl)
+            await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
         }
     } catch (error: any) {
         logger.error(error)
