@@ -388,6 +388,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     ...i,
                     fileName: fileName,
                     type: fileType,
+                    resourceId: temp?.id,
                   };
                 });
                 onFileDelete(uploadedFile);
@@ -447,6 +448,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          if(result?.GeneratedResource?.[0]?.status === "failed"){
+            setShowToast({key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            return ;
+          }
+          if(!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0){
+            setShowToast({key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            return ;
+          }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
           const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
           const fileData = fileUrl?.map((i) => {
@@ -469,7 +478,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
-          setShowToast({key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
           closeToast();
         },
       }

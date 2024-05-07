@@ -233,6 +233,22 @@ const SetupCampaign = () => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
+
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName :`${hierarchyType2}`,
+    body: {
+      "BoundaryTypeHierarchySearchCriteria": {
+        "tenantId": tenantId,
+        "limit": 2,
+        "offset": 0,
+        "hierarchyType": hierarchyType2
+    }
+    },
+  };
+
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -273,7 +289,7 @@ const SetupCampaign = () => {
   useEffect(() => {
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
-    const delivery = Array.isArray(draftData?.campaignDetails?.deliveryRules) ? draftData?.campaignDetails?.deliveryRules : [];
+    const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i.code === draftData?.projectType);
     const restructureFormData = {
       HCM_CAMPAIGN_TYPE: { projectType: filteredProjectType?.[0] },
@@ -305,13 +321,13 @@ const SetupCampaign = () => {
         selectedData: draftData?.boundaries,
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
-        uploadBoundary: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "boundary"),
+        uploadBoundary: draftData?.resources?.filter((i) => i?.type === "boundary"),
       },
       HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
-        uploadFacility: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "facility"),
+        uploadFacility: draftData?.resources?.filter((i) => i?.type === "facility"),
       },
       HCM_CAMPAIGN_UPLOAD_USER_DATA: {
-        uploadUser: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "user"),
+        uploadUser: draftData?.resources?.filter((i) => i?.type === "user"),
       },
     };
     setParams({ ...restructureFormData });
@@ -772,6 +788,21 @@ const SetupCampaign = () => {
     }
     return false;
   }
+
+  function validateBoundaryLevel(data) {
+    // Extracting boundary types from hierarchy response
+    const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map(item => item?.boundaryType));
+
+    // Extracting unique boundary types from data
+    const uniqueDataBoundaryTypes = new Set(data?.map(item => item.boundaryType));
+
+    // Checking if all unique boundary types from hierarchy response are present in data
+    const allBoundaryTypesPresent = [...boundaryTypes].every(type => uniqueDataBoundaryTypes.has(type));
+
+    return allBoundaryTypesPresent;
+}
+
+  // validating the screen data on clicking next button
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
     switch (key) {
@@ -807,13 +838,19 @@ const SetupCampaign = () => {
         } else {
           return true;
         }
-        case "boundaryType":
-        if (formData?.boundaryType?.selectedData && formData.boundaryType.selectedData.length !== 0) {
-          return true;
-        } else {
-          setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
-          return false;
-        }
+        // case "boundaryType":
+        // if(formData?.boundaryType?.selectedData){
+        //   const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+        //   if(!validateBoundary){
+        //     setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+        //     return false;
+        //   }
+        //   return true;
+        // }
+        // else {
+        //   setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+        //   return false;
+        // }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isError) {
