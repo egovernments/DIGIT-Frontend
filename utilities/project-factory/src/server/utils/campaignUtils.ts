@@ -411,7 +411,7 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     }
     requestBody.CampaignDetails.additionalDetails = {
         ...requestBody?.CampaignDetails?.additionalDetails,
-        error: String(error?.message || error)
+        error: String((error?.message + " : " + error?.description) || error)
     }
     logger.info("Persisting CampaignDetails : " + JSON.stringify(requestBody?.CampaignDetails));
     const topic = config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
@@ -487,13 +487,18 @@ async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boo
     delete request.body.ExistingCampaignDetails
 }
 
-function getResourceIds(resources: any[]) {
-    return resources.map((resource: any) => resource.resourceId)
+function getCreateResourceIds(resources: any[]) {
+    return resources
+        .filter((resource: any) => typeof resource.createResourceId === 'string' && resource.createResourceId.trim() !== '')
+        .map((resource: any) => {
+            const resourceId = resource.createResourceId;
+            delete resource.createResourceId;
+            return resourceId;
+        });
 }
 
-async function persistForCampaignProjectMapping(request: any, localizationMap?: any) {
-    console.log((request?.body?.CampaignDetails?.campaignDetails?.resourceDetailsIds && request?.body?.CampaignDetails?.projectId))
-    if (request?.body?.CampaignDetails?.campaignDetails?.resourceDetailsIds && request?.body?.CampaignDetails?.projectId) {
+async function persistForCampaignProjectMapping(request: any, createResourceDetailsIds: any, localizationMap?: any) {
+    if (createResourceDetailsIds && request?.body?.CampaignDetails?.projectId) {
         var requestBody: any = {
             RequestInfo: request?.body?.RequestInfo,
             Campaign: {}
@@ -508,7 +513,7 @@ async function persistForCampaignProjectMapping(request: any, localizationMap?: 
         requestBody.Campaign.additionalDetails = request?.body?.CampaignDetails?.additionalDetails
         requestBody.Campaign.deliveryRules = request?.body?.CampaignDetails?.deliveryRules
         requestBody.Campaign.rootProjectId = request?.body?.CampaignDetails?.projectId
-        requestBody.Campaign.resourceDetailsIds = getResourceIds(request?.body?.CampaignDetails?.resources)
+        requestBody.Campaign.resourceDetailsIds = createResourceDetailsIds
         requestBody.CampaignDetails = request?.body?.CampaignDetails
         requestBody.localizationMap = localizationMap
         logger.info("Persisting CampaignProjectMapping : " + JSON.stringify(requestBody));
@@ -518,6 +523,7 @@ async function persistForCampaignProjectMapping(request: any, localizationMap?: 
 
 
 async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl: any, firstPersist: boolean = false, localizationMap?: any) {
+    const createResourceDetailsIds = getCreateResourceIds(request?.body?.CampaignDetails?.resources);
     if (actionInUrl == "create") {
         await enrichAndPersistCampaignForCreate(request, firstPersist)
     }
@@ -525,7 +531,7 @@ async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl:
         await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
     if (request?.body?.CampaignDetails?.action == "create") {
-        await persistForCampaignProjectMapping(request, localizationMap);
+        await persistForCampaignProjectMapping(request, createResourceDetailsIds, localizationMap);
     }
 }
 
@@ -677,6 +683,16 @@ async function searchProjectCampaignResourcData(request: any) {
         data.boundaries = data?.campaignDetails?.boundaries
         data.deliveryRules = data?.campaignDetails?.deliveryRules;
         delete data.campaignDetails;
+        data.auditDetails = {
+            createdBy: data?.createdBy,
+            lastModifiedBy: data?.lastModifiedBy,
+            createdTime: data?.createdTime,
+            lastModifiedTime: data?.lastModifiedTime
+        }
+        delete data.createdBy;
+        delete data.lastModifiedBy;
+        delete data.createdTime;
+        delete data.lastModifiedTime;
     }
     request.body.CampaignDetails = responseData;
 }
@@ -782,10 +798,12 @@ async function processDataSearchRequest(request: any) {
         fileStoreId: row.filestoreid,
         processedFilestoreId: row.processedfilestoreid,
         type: row.type,
-        createdBy: row.createdby,
-        lastModifiedBy: row.lastmodifiedby,
-        createdTime: Number(row?.createdtime),
-        lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+        auditDetails: {
+            createdBy: row.createdby,
+            lastModifiedBy: row.lastmodifiedby,
+            createdTime: Number(row?.createdtime),
+            lastModifiedTime: row.lastmodifiedtime ? Number(row.lastmodifiedtime) : null,
+        },
         additionalDetails: row.additionaldetails
     }));
     request.body.ResourceDetails = results;
