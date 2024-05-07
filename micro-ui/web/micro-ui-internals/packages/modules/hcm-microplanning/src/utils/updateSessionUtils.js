@@ -155,7 +155,7 @@ export const updateSessionUtils = {
       
       const url = responseFileStoreUrl.fileStoreIds[0].url
       const response = await fetch(url, {
-        mode: 'no-cors',
+        // mode: 'no-cors',
         // responseType: "arraybuffer",
         // headers: {
         //   "Content-Type": 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
