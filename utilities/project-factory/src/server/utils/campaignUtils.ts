@@ -9,7 +9,7 @@ import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
-import { getBoundaryRelationshipData, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
+import { getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -1107,7 +1107,7 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
-async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnLevel: any) {
+async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnLevel: any, localizationMap?: any) {
     try {
         const uniqueDistrictsForMainSheet: string[] = [];
         const workbook = XLSX.utils.book_new();
@@ -1133,7 +1133,8 @@ async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnL
             }
         }
         const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
-        XLSX.utils.book_append_sheet(workbook, mainSheet, config.sheetName);
+        const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+        XLSX.utils.book_append_sheet(workbook, mainSheet, localizedBoundaryTab);
         for (const uniqueData of uniqueDistrictsForMainSheet) {
             const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
             const districtDataFiltered = boundaryData.filter(boundary => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs);
@@ -1282,9 +1283,9 @@ function createBoundaryMap(boundaries: any[], boundaryMap: Map<string, string>):
     }
 }
 
-async function boundaryBulkUpload(request: any) {
+async function boundaryBulkUpload(request: any, localizationMap?: any) {
     try {
-        await autoGenerateBoundaryCodes(request);
+        await autoGenerateBoundaryCodes(request, localizationMap);
         await generateProcessedFileAndPersist(request);
     }
     catch (error: any) {
@@ -1292,9 +1293,10 @@ async function boundaryBulkUpload(request: any) {
     }
 }
 
-const autoGenerateBoundaryCodes = async (request: any) => {
+const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) => {
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.body?.ResourceDetails?.tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
-    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName, false);
+    const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedBoundaryTab, false, undefined, localizationMap);
     const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(boundaryData);
     const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
     const childParentMap = getChildParentMap(withoutBoundaryCode);
@@ -1305,9 +1307,10 @@ const autoGenerateBoundaryCodes = async (request: any) => {
     await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap);
     const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    const headers = [...hierarchy, "Boundary Code"];
+    const headers = [...hierarchy, config.boundaryCode];
     const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
-    const boundarySheetData = await createExcelSheet(data, headers, config.sheetName);
+    const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
+    const boundarySheetData = await createExcelSheet(data, localizedHeaders, localizedBoundaryTab);
     const boundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
     request.body.ResourceDetails.processedFileStoreId = boundaryFileDetails?.[0]?.fileStoreId;
 }
@@ -1325,21 +1328,22 @@ function modifyChildParentMap(childParentMap: any, boundaryMap: any) {
     });
     return modifiedMap;
 }
-async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any) {
+async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
     // create different tabs on the level of hierarchy we want to 
-    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData, differentTabsBasedOnLevel);
+    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData, differentTabsBasedOnLevel, localizationMap);
     // upload the excel and generate file store id
     const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
     return boundaryDetails;
 }
 
-async function getBoundaryDataAfterGeneration(result: any, request: any) {
+async function getBoundaryDataAfterGeneration(result: any, request: any, localizationMap?: any) {
     const fileStoreId = result[0].fileStoreId;
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId: request?.query?.tenantId, fileStoreIds: fileStoreId }, "get");
     if (!fileResponse?.fileStoreIds?.[0]?.url) {
         throwError("FILE", 400, "INVALID_FILE");
     }
-    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.sheetName);
+    console.log(localizationMap, "afteeeeeeeeeeeeeerrrrrrrrrrrrrrrr")
+    const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, config.boundaryTab, false, undefined, localizationMap);
     return boundaryData;
 }
 

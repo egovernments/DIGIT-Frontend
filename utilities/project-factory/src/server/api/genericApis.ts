@@ -4,7 +4,7 @@ import config from "../config"; // Import configuration settings
 import FormData from 'form-data'; // Import FormData for handling multipart/form-data requests
 import { httpRequest } from "../utils/request"; // Import httpRequest function for making HTTP requests
 import { logger } from "../utils/logger"; // Import logger for logging
-import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
+import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
 import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getHierarchy } from './campaignApis';
@@ -56,6 +56,7 @@ const getTargetWorkbook = async (fileUrl: string) => {
 const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any, localizationMap?: { [key: string]: string }) => {
     // Retrieve workbook using the getWorkbook function
     const localizedSheetName = getLocalizedName(sheetName, localizationMap);
+    console.log(localizationMap,"kkkkkkkkkkkkkkkkkk")
     const workbook: any = await getWorkbook(fileUrl, localizedSheetName)
 
     // If parsing array configuration is provided, validate first row of each column
@@ -494,7 +495,7 @@ function generateElementCode(sequence: any, parentCode: any, element: any) {
  * @param request The HTTP request object.
  * @returns Boundary sheet data.
  */
-async function getBoundarySheetData(request: any) {
+async function getBoundarySheetData(request: any, localizationMap?: { [key: string]: string }) {
     // Retrieve boundary data based on the request parameters
     const params = {
         ...request?.query,
@@ -503,9 +504,10 @@ async function getBoundarySheetData(request: any) {
     const boundaryData = await getBoundaryRelationshipData(request, params);
     if (!boundaryData || boundaryData.length === 0) {
         const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
-        const headers = hierarchy;
+        const localizedHeaders =  getLocalizedHeaders(hierarchy, localizationMap);
         // create empty sheet if no boundary present in system
-        return await createExcelSheet(boundaryData, headers, config.sheetName);
+        const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+        return await createExcelSheet(boundaryData, localizedHeaders, localizedBoundaryTab);
     }
     else {
         logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
@@ -514,7 +516,7 @@ async function getBoundarySheetData(request: any) {
             return await getDataSheetReady(filteredBoundaryData, request);
         }
         else {
-            return await getDataSheetReady(boundaryData, request);
+            return await getDataSheetReady(boundaryData, request, localizationMap);
         }
     }
 }

@@ -132,7 +132,7 @@ const createAndSearch: any = {
     },
     "boundary": {
         parseArrayConfig: {
-            sheetName: "Boundary Data",
+            sheetName: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
         }
     },
     "user": {

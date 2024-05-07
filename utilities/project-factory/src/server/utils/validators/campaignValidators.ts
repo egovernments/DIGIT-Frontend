@@ -7,7 +7,7 @@ import { campaignDetailsSchema } from "../../config/models/campaignDetails";
 import Ajv from "ajv";
 import axios from "axios";
 import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
-import { calculateKeyIndex, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
+import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
 import { validateBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
@@ -305,7 +305,7 @@ function validateStorageCapacity(obj: any, index: any) {
 }
 
 
-async function validateCreateRequest(request: any) {
+async function validateCreateRequest(request: any, localizationMap?: any) {
     if (!request?.body?.ResourceDetails || Object.keys(request.body.ResourceDetails).length === 0) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "ResourceDetails is missing or empty or null");
     }
@@ -317,14 +317,15 @@ async function validateCreateRequest(request: any) {
         }
         const fileUrl = await validateFile(request);
         if (request.body.ResourceDetails.type == 'boundary') {
-            await validateBoundarySheetData(request, fileUrl);
+            await validateBoundarySheetData(request, fileUrl, localizationMap);
         }
     }
 }
 
-async function validateBoundarySheetData(request: any, fileUrl: any) {
-    const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, config.sheetName, false);
-    await validateHeaders(headersOfBoundarySheet, request)
+async function validateBoundarySheetData(request: any, fileUrl: any, localizationMap?: any) {
+    const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+    const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, localizedBoundaryTab, false, localizationMap);
+    await validateHeaders(headersOfBoundarySheet, request, localizationMap)
 }
 
 async function validateFile(request: any) {
@@ -734,12 +735,14 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
 
 
 
-async function validateHeaders(headersOfBoundarySheet: any, request: any) {
+async function validateHeaders(headersOfBoundarySheet: any, request: any, localizationMap?: any) {
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    validateBoundarySheetHeaders(headersOfBoundarySheet, hierarchy, request);
+    const localizedHierarchy = getLocalizedHeaders(hierarchy, localizationMap);
+    validateBoundarySheetHeaders(headersOfBoundarySheet, localizedHierarchy, request, localizationMap);
 }
-function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any) {
-    const boundaryCodeIndex = headersOfBoundarySheet.indexOf('Boundary Code');
+function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
+    const localizedBoundaryCode = getLocalizedName(config.boundaryCode, localizationMap)
+    const boundaryCodeIndex = headersOfBoundarySheet.indexOf(localizedBoundaryCode);
     const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
     if (keysBeforeBoundaryCode.some((key: any, index: any) => (key === undefined || key === null) || key !== hierarchy[index]) || keysBeforeBoundaryCode.length !== hierarchy.length) {
         const errorMessage = `"Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type: ${request?.body?.ResourceDetails?.hierarchyType}"`;

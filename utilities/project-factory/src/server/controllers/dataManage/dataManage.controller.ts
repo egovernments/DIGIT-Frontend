@@ -92,8 +92,9 @@ class dataManageController {
         response: express.Response
     ) => {
         try {
+            const localizationMap = await getLocalizedMessagesHandler(request,request?.body?.ResourceDetails?.tenantId||request?.query?.tenantId||'mz');
             // Retrieve boundary sheet data
-            const boundarySheetData: any = await getBoundarySheetData(request);
+            const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
             // Create and upload file
             const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
             // Return boundary file details

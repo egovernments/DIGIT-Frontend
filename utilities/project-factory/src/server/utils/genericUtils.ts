@@ -455,12 +455,12 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       const result = await dataManagerController.getBoundaryData(request, response);
       let updatedResult = result;
       // get boundary sheet data after being generated
-      const boundaryData = await getBoundaryDataAfterGeneration(result, request);
+      const boundaryData = await getBoundaryDataAfterGeneration(result, request,localizationMap);
       const differentTabsBasedOnLevel = config.generateDifferentTabsOnBasisOf;
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
       const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
       if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config.numberOfBoundaryDataOnWhichWeSplit)) {
-        updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel);
+        updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel,localizationMap);
       }
       // final upodated response to be sent to update topic 
       const finalResponse = await getFinalUpdatedResponse(updatedResult, newEntryResponse, request);
@@ -580,7 +580,7 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   const schema = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].properties;
   const keys = Object.keys(schema);
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
-  const localizedHeaders = await getLocalizedHeaders(headers, localizationMap);
+  const localizedHeaders =  getLocalizedHeaders(headers, localizationMap);
 
   const facilities = allFacilities.map((facility: any) => {
     return [
@@ -598,7 +598,7 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   return facilitySheetData;
 }
 
-async function getLocalizedHeaders(headers: any, localizationMap?: { [key: string]: string }) {
+ function getLocalizedHeaders(headers: any, localizationMap?: { [key: string]: string }) {
   const messages = headers.map((header: any) => (localizationMap ? localizationMap[header] || header : header));
   return messages;
 }
@@ -658,7 +658,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   const mdmsResponse = await callMdmsData(request, config.moduleName, config.userSchemaMasterName, tenantId)
   const schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].properties;
   const headers = Object.keys(schema);
-  const localizedHeaders = await getLocalizedHeaders(headers, localizationMap);
+  const localizedHeaders =  getLocalizedHeaders(headers, localizationMap);
   const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
   const userSheetData = await createExcelSheet(userData, localizedHeaders, localizedUserTab);
   const boundarySheetData: any = await getBoundarySheetData(request);
@@ -823,7 +823,7 @@ async function getBoundaryRelationshipData(request: any, params: any) {
   return boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
 }
 
-async function getDataSheetReady(boundaryData: any, request: any) {
+async function getDataSheetReady(boundaryData: any, request: any, localizationMap?: { [key: string]: string }) {
   const type = request?.query?.type;
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)
@@ -852,6 +852,7 @@ async function getDataSheetReady(boundaryData: any, request: any) {
       ...reducedHierarchy,
       "Boundary Code"
     ];
+  const localizedHeaders =  getLocalizedHeaders(headers, localizationMap);
   const data = boundaryList.map(boundary => {
     const boundaryParts = boundary.split(',');
     const boundaryCode = boundaryParts[boundaryParts.length - 1];
@@ -867,7 +868,8 @@ async function getDataSheetReady(boundaryData: any, request: any) {
   if (type != "facilityWithBoundary") {
     request.body.generatedResourceCount = sheetRowCount;
   }
-  return await createExcelSheet(data, headers, config.sheetName);
+  const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+  return await createExcelSheet(data, localizedHeaders, localizedBoundaryTab);
 }
 
 function modifyTargetData(data: any) {
@@ -974,7 +976,8 @@ export {
   modifyDataBasedOnDifferentTab,
   modifyRequestForLocalisation,
   translateSchema,
-  getLocalizedMessagesHandler
+  getLocalizedMessagesHandler,
+  getLocalizedHeaders
 };
 
 
