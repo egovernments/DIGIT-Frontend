@@ -63,7 +63,7 @@ const MicroplanDetails = ({
           },
           {
             label: t("CAMPAIGN_DATE"),
-            value: data.campaignDetails.startDate ? Digit.DateUtils.ConvertEpochToDate(data.campaignDetails.startDate) : t("ES_COMMON_NA"),
+            value: data.startDate ? Digit.DateUtils.ConvertEpochToDate(data.startDate) : t("ES_COMMON_NA"),
           },
         ];
         return campaignCard;
