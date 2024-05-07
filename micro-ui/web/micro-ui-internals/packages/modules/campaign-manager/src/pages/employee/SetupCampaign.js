@@ -289,7 +289,7 @@ const SetupCampaign = () => {
   useEffect(() => {
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
-    const delivery = Array.isArray(draftData?.campaignDetails?.deliveryRules) ? draftData?.campaignDetails?.deliveryRules : [];
+    const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i.code === draftData?.projectType);
     const restructureFormData = {
       HCM_CAMPAIGN_TYPE: { projectType: filteredProjectType?.[0] },
@@ -321,13 +321,13 @@ const SetupCampaign = () => {
         selectedData: draftData?.boundaries,
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
-        uploadBoundary: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "boundary"),
+        uploadBoundary: draftData?.resources?.filter((i) => i?.type === "boundary"),
       },
       HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
-        uploadFacility: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "facility"),
+        uploadFacility: draftData?.resources?.filter((i) => i?.type === "facility"),
       },
       HCM_CAMPAIGN_UPLOAD_USER_DATA: {
-        uploadUser: draftData?.campaignDetails?.resources?.filter((i) => i?.type === "user"),
+        uploadUser: draftData?.resources?.filter((i) => i?.type === "user"),
       },
     };
     setParams({ ...restructureFormData });
@@ -1069,7 +1069,7 @@ const SetupCampaign = () => {
         onSecondayActionClick={onSecondayActionClick}
         label={noAction === "false" ? null : filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
-      {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
+      {showToast && <Toast error={showToast?.key === "error" ? true : false} label={t(showToast?.label)} onClose={closeToast} />}
     </React.Fragment>
   );
 };

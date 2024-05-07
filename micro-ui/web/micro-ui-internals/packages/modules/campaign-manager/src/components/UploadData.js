@@ -388,6 +388,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     ...i,
                     fileName: fileName,
                     type: fileType,
+                    resourceId: temp?.id,
                   };
                 });
                 onFileDelete(uploadedFile);
@@ -477,7 +478,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
-          setShowToast({key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
           closeToast();
         },
       }
