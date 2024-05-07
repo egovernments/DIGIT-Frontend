@@ -12,7 +12,7 @@ import JSZip from "jszip";
 import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, ButtonType2, CloseButton, ModalHeading, convertGeojsonToExcelSingleSheet } from "../../components/CommonComponents";
+import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { Loader, Modal, Toast } from "@egovernments/digit-ui-components";
 import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
@@ -48,7 +48,7 @@ const Upload = ({
   const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
-  const [loaderActivation, setLoderActivation] = useState(false);
+  const [loaderActivation, setLoaderActivation] = useState(false);
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
@@ -101,7 +101,7 @@ const Upload = ({
       type: "SETINITDATA",
       state: { tourStateData: tourData },
     });
-  }, []);
+  }, [t]);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
@@ -197,7 +197,7 @@ const Upload = ({
       state: "error",
       message: t("ERROR_UNKNOWN"),
     });
-    setLoderActivation(false);
+    setLoaderActivation(false);
     return;
   };
 
@@ -262,7 +262,7 @@ const Upload = ({
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       // setting loader
-      setLoderActivation(true);
+      setLoaderActivation(true);
       let check;
       let fileDataToStore;
       let error;
@@ -270,7 +270,7 @@ const Upload = ({
       let callMapping = false;
       // Checking if the file follows name convention rules
       if (!validateNamingConvention(file, selectedFileType["namingConvention"], setToast, t)) {
-        setLoderActivation(false);
+        setLoaderActivation(false);
         return;
       }
 
@@ -283,7 +283,7 @@ const Upload = ({
             state: "error",
             message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
           });
-          setLoderActivation(false);
+          setLoaderActivation(false);
           return;
         }
       }
@@ -307,7 +307,7 @@ const Upload = ({
               setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             }
             if (response.interruptUpload) {
-              setLoderActivation(false);
+              setLoaderActivation(false);
               return;
             }
           } catch (error) {
@@ -320,7 +320,7 @@ const Upload = ({
             response = await handleGeojsonFile(file, schemaData);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
-              setLoderActivation(false);
+              setLoaderActivation(false);
               setToast(response.toast);
               return;
             }
@@ -351,7 +351,7 @@ const Upload = ({
             state: "error",
             message: t("ERROR_UNKNOWN_FILETYPE"),
           });
-          setLoderActivation(false);
+          setLoaderActivation(false);
           return;
       }
       let filestoreId;
@@ -394,10 +394,10 @@ const Upload = ({
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       if (error === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
-      setLoderActivation(false);
+      setLoaderActivation(false);
     } catch (error) {
       setUploadedFileError("ERROR_UPLOADING_FILE");
-      setLoderActivation(false);
+      setLoaderActivation(false);
     }
   };
 
@@ -516,7 +516,7 @@ const Upload = ({
           });
           return;
         }
-        const result = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+        const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
@@ -569,7 +569,7 @@ const Upload = ({
   // Function for handling the validations for geojson and shapefiles after mapping of properties
   const validationForMappingAndDataSaving = async () => {
     try {
-      setLoderActivation(true);
+      setLoaderActivation(true);
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
@@ -595,11 +595,11 @@ const Upload = ({
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
     } catch (error) {
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
     }
   };
@@ -638,19 +638,19 @@ const Upload = ({
     setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
     if (error) setUploadedFileError(error);
-    setLoderActivation(false);
+    setLoaderActivation(false);
   };
 
   const checkForSchemaData = (schemaData) => {
     if (resourceMapping?.length === 0) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return false;
     }
 
     if (!schemaData || !schemaData.schema || !schemaData.schema["Properties"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return;
     }
 
@@ -666,7 +666,7 @@ const Upload = ({
     const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
     if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoderActivation(false);
+      setLoaderActivation(false);
       return false;
     }
     setModal("none");
@@ -739,7 +739,7 @@ const Upload = ({
           });
           return;
         }
-        data = convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+        data = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
         break;
     }
     setPreviewUploadedData(data);
@@ -984,7 +984,7 @@ const Upload = ({
           actionSaveOnSubmit={cancelUpdateData}
         >
           <div className="modal-body">
-            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+            <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
       )}

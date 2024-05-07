@@ -24,7 +24,6 @@ export const components = {
 import XLSX from "xlsx";
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
-import { mapDataForApi } from "../../components/CommonComponents";
 
 // will be changed laters
 const MicroplanName = "microplan 1912";
@@ -45,7 +44,7 @@ const CreateMicroplan = () => {
   const [operatorsObject, setOperatorsObject] = useState([]);
   const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
-  const [loaderActivation, setLoderActivation] = useState(false);
+  const [loaderActivation, setLoaderActivation] = useState(false);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -114,18 +113,18 @@ const CreateMicroplan = () => {
         return;
       }
       setCheckDataCompletion("false");
-      setLoderActivation(true);
-      let body = mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT");
+      setLoaderActivation(true);
+      let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT");
       if (microplanData && !microplanData.planConfigurationId) {
-        await createPlanConfiguration(body, setCheckDataCompletion, setLoderActivation);
+        await createPlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);
       } else if (microplanData && microplanData.planConfigurationId) {
-        await updatePlanConfiguration(body, setCheckDataCompletion, setLoderActivation);
+        await updatePlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);
       }
     },
     [microplanData, UpdateMutate, CreateMutate]
   );
 
-  const createPlanConfiguration = async (body, setCheckDataCompletion, setLoderActivation) => {
+  const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
         setMicroplanData((previous) => ({
@@ -136,7 +135,7 @@ const CreateMicroplan = () => {
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
-          setLoderActivation(false);
+          setLoaderActivation(false);
           setCheckDataCompletion("perform-action");
         }, 2000);
       },
@@ -153,7 +152,7 @@ const CreateMicroplan = () => {
     });
   };
 
-  const updatePlanConfiguration = async (body, setCheckDataCompletion, setLoderActivation) => {
+  const updatePlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
@@ -161,7 +160,7 @@ const CreateMicroplan = () => {
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
-          setLoderActivation(false);
+          setLoaderActivation(false);
           setCheckDataCompletion("perform-action");
         }, 2000);
       },

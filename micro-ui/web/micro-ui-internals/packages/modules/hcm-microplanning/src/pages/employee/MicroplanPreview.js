@@ -2,7 +2,7 @@ import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInpu
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { CloseButton, ModalHeading, handleSelection, mapDataForApi } from "../../components/CommonComponents";
+import { CloseButton, ModalHeading } from "../../components/CommonComponents";
 import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
 import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -45,7 +45,7 @@ const MicroplanPreview = ({
   const [modal, setModal] = useState("none");
   const [operatorsObject, setOperatorsObject] = useState([]);
 
-  const [loaderActivation, setLoderActivation] = useState(false);
+  const [loaderActivation, setLoaderActivation] = useState(false);
 
   const [userEditedResources, setUserEditedResources] = useState({}); // state to maintain a record of the resources that the user has edited ( boundaryCode : {resource : value})
   const [microplanPreviewAggregates, setMicroplaPreviewAggregates] = useState();
@@ -148,9 +148,6 @@ const MicroplanPreview = ({
   const updateData = () => {
     if (!dataToShow || !setMicroplanData) return;
     setMicroplanData((previous) => ({ ...previous, microplanPreview: dataToShow }));
-    // const valueList = fileDataList ? Object.values(fileDataList) : [];
-    // if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
-    // else setCheckDataCompletion("invalid");
     setCheckDataCompletion("perform-action");
   };
 
@@ -158,7 +155,7 @@ const MicroplanPreview = ({
     setCheckDataCompletion("false");
     setModal("none");
   };
-  
+
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
@@ -177,10 +174,10 @@ const MicroplanPreview = ({
 
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
-    
+
     const microData = updateMicroplanData(hypothesisAssumptionsList);
-    setLoderActivation(true);
-    
+    setLoaderActivation(true);
+
     updateHyothesisAPICall(
       microData,
       operatorsObject,
@@ -189,22 +186,36 @@ const MicroplanPreview = ({
       UpdateMutate,
       setToast,
       updateData,
-      setLoderActivation,
+      setLoaderActivation,
       navigationEvent?.name === "next" ? "GENERATED" : "DRAFT",
       t
     );
-    
-    setModal("none");
-  }, [hypothesisAssumptionsList, setMicroplanData, operatorsObject, campaignId, UpdateMutate, setToast, updateData, setLoderActivation, navigationEvent, t]);
 
-  const updateMicroplanData = useCallback((hypothesisAssumptionsList) => {
-    let microData = {};
-    setMicroplanData((previous) => {
-      microData = { ...previous, hypothesis: hypothesisAssumptionsList };
+    setModal("none");
+  }, [
+    hypothesisAssumptionsList,
+    setMicroplanData,
+    operatorsObject,
+    campaignId,
+    UpdateMutate,
+    setToast,
+    updateData,
+    setLoaderActivation,
+    navigationEvent,
+    t,
+  ]);
+
+  const updateMicroplanData = useCallback(
+    (hypothesisAssumptionsList) => {
+      let microData = {};
+      setMicroplanData((previous) => {
+        microData = { ...previous, hypothesis: hypothesisAssumptionsList };
+        return microData;
+      });
       return microData;
-    });
-    return microData;
-  }, [setMicroplanData]);
+    },
+    [setMicroplanData]
+  );
 
   // Set microplan preview data
   useEffect(() => {
@@ -329,7 +340,7 @@ const MicroplanPreview = ({
   );
 };
 
-const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
+const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
@@ -373,7 +384,7 @@ const HypothesisValues = ({ boundarySelections, hypothesisAssumptionsList, setHy
       </div>
     </div>
   );
-};
+});
 
 const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
   const [processedHierarchy, setProcessedHierarchy] = useState([]);
@@ -406,7 +417,17 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
             t={t}
             options={item?.dropDownOptions || []}
             optionsKey="name"
-            onSelect={(e) => handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)}
+            onSelect={(e) =>
+              Digit.Utils.microplan.handleSelection(
+                e,
+                item?.boundaryType,
+                boundarySelections,
+                hierarchy,
+                setBoundarySelections,
+                boundaryData,
+                setIsLoading
+              )
+            }
           />
         </div>
       ))}
@@ -838,19 +859,19 @@ const updateHyothesisAPICall = async (
   UpdateMutate,
   setToast,
   updateData,
-  setLoderActivation,
+  setLoaderActivation,
   status,
   t
 ) => {
   try {
-    let body = mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
+    let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         setToast({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         updateData();
-        setLoderActivation(false);
+        setLoaderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -861,7 +882,7 @@ const updateHyothesisAPICall = async (
           state: "error",
         });
         updateData();
-        setLoderActivation(false);
+        setLoaderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -1034,7 +1055,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
   );
 };
 
-const Aggregates = ({ microplanPreviewAggregates, dataToShow, t }) => {
+const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
   if (!microplanPreviewAggregates) return <Loader />;
   return (
     <div className="aggregates">
@@ -1046,7 +1067,7 @@ const Aggregates = ({ microplanPreviewAggregates, dataToShow, t }) => {
       ))}
     </div>
   );
-};
+});
 
 const calulateAggregate = (aggregateName, dataToShow) => {
   if (!aggregateName || !dataToShow || dataToShow.length === 0) return;

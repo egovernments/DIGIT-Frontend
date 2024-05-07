@@ -12,7 +12,6 @@ import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
-import { handleSelection } from "../../components/CommonComponents";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
 
@@ -347,7 +346,7 @@ const BoundarySelection = memo(
                   options={item?.dropDownOptions || []}
                   optionsKey="name"
                   onSelect={(e) =>
-                    handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)
+                    Digit.Utils.microplan.handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)
                   }
                 />
               </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, ButtonType2, ModalHeading, inputScrollPrevention } from "../../components/CommonComponents";
+import { ButtonType1, ButtonType2, ModalHeading } from "../../components/CommonComponents";
 import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import { tourSteps } from "../../configs/tourSteps";
@@ -445,7 +445,7 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
     [item, setAssumptions]
   );
 
-  return <input onFocus={inputScrollPrevention} type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
+  return <input onFocus={Digit.Utils.microplan.inputScrollPrevention} type="number" step="0.01" value={inputValue} onChange={inputChangeHandler} disabled={disabled} />;
 });
 
 const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptions) => {
