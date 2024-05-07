@@ -227,7 +227,7 @@ const SetupCampaign = () => {
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
   const hierarchyType = "ADMIN";
-  const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
+  // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -236,13 +236,13 @@ const SetupCampaign = () => {
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    changeQueryName :`${hierarchyType2}`,
+    changeQueryName :`${hierarchyType}`,
     body: {
       "BoundaryTypeHierarchySearchCriteria": {
         "tenantId": tenantId,
         "limit": 2,
         "offset": 0,
-        "hierarchyType": hierarchyType2
+        "hierarchyType": hierarchyType
     }
     },
   };
@@ -334,7 +334,7 @@ const SetupCampaign = () => {
   }, [params, draftData]);
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
-  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType2, filteredBoundaryData);
+  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
   const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
