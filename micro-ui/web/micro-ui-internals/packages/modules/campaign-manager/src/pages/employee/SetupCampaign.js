@@ -791,15 +791,17 @@ const SetupCampaign = () => {
 
   function validateBoundaryLevel(data) {
     // Extracting boundary types from hierarchy response
-    const boundaryTypes = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map(item => item?.boundaryType);
+    const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map(item => item?.boundaryType));
 
-    // Extracting boundary types from data
-    const dataBoundaryTypes = data.map(item => item.boundaryType);
+    // Extracting unique boundary types from data
+    const uniqueDataBoundaryTypes = new Set(data?.map(item => item.boundaryType));
 
-    // Checking if all boundary types from hierarchy response are present in data
-    const allBoundaryTypesPresent = boundaryTypes.every(type => dataBoundaryTypes.includes(type));
+    // Checking if all unique boundary types from hierarchy response are present in data
+    const allBoundaryTypesPresent = [...boundaryTypes].every(type => uniqueDataBoundaryTypes.has(type));
+
     return allBoundaryTypesPresent;
 }
+
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
@@ -836,20 +838,19 @@ const SetupCampaign = () => {
         } else {
           return true;
         }
-        case "boundaryType":
-        if(formData?.boundaryType?.selectedData){
-          const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
-          if(!validateBoundary){
-
-            setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
-            return false;
-          }
-          return true;
-        }
-        else {
-          setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
-          return false;
-        }
+        // case "boundaryType":
+        // if(formData?.boundaryType?.selectedData){
+        //   const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+        //   if(!validateBoundary){
+        //     setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+        //     return false;
+        //   }
+        //   return true;
+        // }
+        // else {
+        //   setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+        //   return false;
+        // }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isError) {
