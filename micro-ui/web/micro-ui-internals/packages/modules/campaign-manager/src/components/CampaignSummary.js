@@ -133,6 +133,12 @@ const CampaignSummary = () => {
     },
     config: {
       select: (data) => {
+        const resourceIdArr = [];
+        data?.[0]?.resources?.map((i) => {
+          if (i?.createResourceId) {
+            resourceIdArr.push(i?.createResourceId);
+          }
+        });
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target);
         return {
@@ -219,6 +225,27 @@ const CampaignSummary = () => {
                         documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                       },
                       cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0 } },
+                      cardSecondaryAction: noAction !== "false" && (
+                        <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
+                          <span>{t(`CAMPAIGN_EDIT`)}</span>
+                          <EditIcon />
+                        </div>
+                      ),
+                    },
+                  ],
+                }
+              : {},
+            resourceIdArr?.length > 0
+              ? {
+                  sections: [
+                    {
+                      type: "COMPONENT",
+                      component: "CampaignResourceDocuments",
+                      props: {
+                        isUserGenerate: true,
+                        resources: resourceIdArr,
+                      },
+                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0 } },
                       cardSecondaryAction: noAction !== "false" && (
                         <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
                           <span>{t(`CAMPAIGN_EDIT`)}</span>
