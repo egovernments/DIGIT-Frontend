@@ -45,6 +45,13 @@ const configs = {
               style: {
                 marginBottom: "0px",
               },
+              error: "ERR_MIN_LENGTH_CAMPAIGN_NAME",
+              validationErrorStyles:{
+                marginTop:"5px"
+              },
+              validation:{
+                minLength:2
+              }
             },
           },
           {
