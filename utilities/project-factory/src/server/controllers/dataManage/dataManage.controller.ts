@@ -94,7 +94,7 @@ class dataManageController {
         response: express.Response
     ) => {
         try {
-            const localizationMap = await getLocalizedMessagesHandler(request,request?.body?.ResourceDetails?.tenantId||request?.query?.tenantId||'mz');
+            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId || request?.query?.tenantId || 'mz');
             // Retrieve boundary sheet data
             const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
             // Create and upload file
@@ -117,9 +117,10 @@ class dataManageController {
    */
     createData = async (request: any, response: any) => {
         try {
-            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
             // Validate the create request
-            await validateCreateRequest(request,localizationMap);
+            await validateCreateRequest(request);
+
+            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
 
             // Enrich resource details
             await enrichResourceDetails(request);

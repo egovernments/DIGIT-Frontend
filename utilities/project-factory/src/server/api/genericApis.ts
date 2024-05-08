@@ -6,7 +6,7 @@ import { httpRequest } from "../utils/request"; // Import httpRequest function f
 import { logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getCodeFromLocalizedMessage, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getHierarchy } from './campaignApis';
 const _ = require('lodash'); // Import lodash library
 
@@ -503,7 +503,8 @@ async function getBoundarySheetData(request: any, localizationMap?: { [key: stri
     const boundaryData = await getBoundaryRelationshipData(request, params);
     if (!boundaryData || boundaryData.length === 0) {
         const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
-        const localizedHeaders =  getLocalizedHeaders(hierarchy, localizationMap);
+        const modifiedHierarchy= hierarchy.map(ele=>`${request?.query?.hierarchyType}_${ele}`.toUpperCase())
+        const localizedHeaders =  getLocalizedHeaders(modifiedHierarchy, localizationMap);
         // create empty sheet if no boundary present in system
         const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
         return await createExcelSheet(boundaryData, localizedHeaders, localizedBoundaryTab);
@@ -702,11 +703,11 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
         const allCodes = extractCodesFromBoundaryRelationshipResponse(boundaryData);
         let flag = 1;
         for (const [boundaryCode, boundaryType] of Object.entries(boundaryTypeMap)) {
+            const localizedBoundaryType = getLocalizedName(boundaryType,localizationMap);
             if (!allCodes.has(boundaryCode)) {
-                const codeFromLocalizedMessageForBoundaryType = getCodeFromLocalizedMessage(boundaryType,localizationMap);
                 const boundary = {
                     tenantId: request?.body?.ResourceDetails?.tenantId,
-                    boundaryType: codeFromLocalizedMessageForBoundaryType,
+                    boundaryType: localizedBoundaryType,
                     code: boundaryCode,
                     hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
                     parent: modifiedChildParentMap.get(boundaryCode)

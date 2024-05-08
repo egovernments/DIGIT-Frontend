@@ -1132,11 +1132,13 @@ async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnL
         const workbook = XLSX.utils.book_new();
         const mainSheetData: any[] = [];
         const headersForMainSheet = differentTabsBasedOnLevel ? Object.keys(boundaryData[0]).slice(0, Object.keys(boundaryData[0]).indexOf(differentTabsBasedOnLevel) + 1) : [];
-        headersForMainSheet.push('Boundary Code');
-        mainSheetData.push([...headersForMainSheet]);
+        const localizedHeadersForMainSheet = getLocalizedHeaders(headersForMainSheet, localizationMap);
+        const localizedBoundaryCode = getLocalizedName(config?.boundaryCode, localizationMap);
+        localizedHeadersForMainSheet.push(localizedBoundaryCode);
+        mainSheetData.push([...localizedHeadersForMainSheet]);
         const districtLevelRowBoundaryCodeMap = new Map();
         for (const data of boundaryData) {
-            const modifiedData = modifyDataBasedOnDifferentTab(data, differentTabsBasedOnLevel);
+            const modifiedData = modifyDataBasedOnDifferentTab(data, differentTabsBasedOnLevel, localizationMap);
             const rowData = Object.values(modifiedData);
             const districtIndex = modifiedData[differentTabsBasedOnLevel] !== '' ? rowData.indexOf(data[differentTabsBasedOnLevel]) : -1;
             if (districtIndex == -1) {
@@ -1157,19 +1159,21 @@ async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnL
         for (const uniqueData of uniqueDistrictsForMainSheet) {
             const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
             const districtDataFiltered = boundaryData.filter(boundary => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs);
-            const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData));
+            const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
             if (modifiedFilteredData?.[0]) {
                 const districtIndex = Object.keys(modifiedFilteredData[0]).indexOf(differentTabsBasedOnLevel);
                 const headers = Object.keys(modifiedFilteredData[0]).slice(districtIndex);
-                const modifiedHeaders = [...headers, "Target at the Selected Boundary level"];
-                const newSheetData = [modifiedHeaders];
+                const modifiedHeaders = [...headers, "HCM_ADMIN_CONSOLE_TARGET"];
+                const localizedHeaders = getLocalizedHeaders(modifiedHeaders, localizationMap);
+                const newSheetData = [localizedHeaders];
 
                 for (const data of modifiedFilteredData) {
                     const rowData = Object.values(data).slice(districtIndex).map(value => value === null ? '' : String(value)); // Replace null with empty string
                     newSheetData.push(rowData);
                 }
                 const ws = XLSX.utils.aoa_to_sheet(newSheetData);
-                XLSX.utils.book_append_sheet(workbook, ws, districtLevelRowBoundaryCodeMap.get(uniqueData));
+                const localizedDifferentTabsName = getLocalizedName(districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
+                XLSX.utils.book_append_sheet(workbook, ws, localizedDifferentTabsName);
             }
         }
 
@@ -1178,7 +1182,7 @@ async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnL
         throw Error("An error occurred while creating tabs based on district:");
     }
 }
-function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any): any {
+function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, localizationMap?: any): any {
 
     // Step 2: Slice the boundary code up to the last underscore
     const slicedBoundaryCode = targetBoundaryCode.slice(0, targetBoundaryCode.lastIndexOf('_') + 1);
@@ -1186,7 +1190,8 @@ function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any):
     // Step 3: Filter the rows that contain the sliced boundary code
     const modifiedFilteredData = districtDataFiltered.filter((row: any, index: any) => {
         // Extract the boundary code from the current row
-        const boundaryCode = row['Boundary Code'];
+        const localizedBoundaryCode = getLocalizedName(config?.boundaryCode, localizationMap);
+        const boundaryCode = row[localizedBoundaryCode];
         // Check if the boundary code starts with the sliced boundary code
         return boundaryCode.startsWith(slicedBoundaryCode);
     });
@@ -1327,7 +1332,8 @@ const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) =>
     await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap, localizationMap);
     const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    const headers = [...hierarchy, config.boundaryCode];
+    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails.hierarchyType}_${ele}`.toUpperCase())
+    const headers = [...modifiedHierarchy, config.boundaryCode];
     const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
     const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
     const boundarySheetData = await createExcelSheet(data, localizedHeaders, localizedBoundaryTab);
@@ -1373,18 +1379,7 @@ function getLocalizedName(expectedName: string, localizationMap?: { [key: string
     const localizedName = localizationMap[expectedName];
     return localizedName;
 }
-function getCodeFromLocalizedMessage(value: string, localizationMap?: any) {
-    if (!localizationMap) {
-        return value; // Return the original value if localizationMap is not provided
-    }
-    for (const key in localizationMap) {
-        if (localizationMap.hasOwnProperty(key) && localizationMap[key] === value) {
-            return key;
-        }
-    }
-    // If value is not found, return the original value
-    return value;
-}
+
 
 
 
@@ -1409,6 +1404,5 @@ export {
     getBoundaryDataAfterGeneration,
     boundaryBulkUpload,
     enrichAndPersistCampaignWithError,
-    getLocalizedName,
-    getCodeFromLocalizedMessage
+    getLocalizedName
 }

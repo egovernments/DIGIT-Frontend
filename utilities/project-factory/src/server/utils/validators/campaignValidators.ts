@@ -105,33 +105,34 @@ async function validateBoundaryData(data: any[], request: any, boundaryColumn: a
 async function validateTargetBoundaryData(data: any[], request: any, boundaryColumn: any, errors: any[]) {
     const responseBoundaries = await fetchBoundariesInChunks(request);
     const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
-
     // Iterate through each array of objects
     for (const key in data) {
         if (Array.isArray(data[key])) {
             const boundaryData = data[key];
             const boundarySet = new Set(); // Create a Set to store unique boundaries for given sheet 
             boundaryData.forEach((element: any, index: number) => {
-                const boundaries = element[boundaryColumn]; // Access "Boundary Code" property directly
+                const boundaries = element?.[boundaryColumn]; // Access "Boundary Code" property directly
                 if (!boundaries) {
                     errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is required for element at row ${element["!row#number!"] + 1} for sheet ${key}`, sheetName: key })
-                }
-                const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
-                if (boundaryList.length === 0) {
-                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
-                }
-                if (boundaryList.length > 1) {
-                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
-                }
-                if (boundaryList.length === 1) {
-                    const boundaryCode = boundaryList[0];
-                    if (boundarySet.has(boundaryCode)) {
-                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
+                } else {
+                    const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
+                    if (boundaryList.length === 0) {
+                        console.log(boundaryList, "lisssssssttttttttttttttttt")
+                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
                     }
-                    if (!responseBoundaryCodes.includes(boundaryCode)) {
-                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key}not found in the system`, sheetName: key })
+                    if (boundaryList.length > 1) {
+                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
                     }
-                    boundarySet.add(boundaryCode);
+                    if (boundaryList.length === 1) {
+                        const boundaryCode = boundaryList[0];
+                        if (boundarySet.has(boundaryCode)) {
+                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
+                        }
+                        if (!responseBoundaryCodes.includes(boundaryCode)) {
+                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key}not found in the system`, sheetName: key })
+                        }
+                        boundarySet.add(boundaryCode);
+                    }
                 }
             });
         }
@@ -341,7 +342,7 @@ function validateStorageCapacity(obj: any, index: any) {
 }
 
 
-async function validateCreateRequest(request: any, localizationMap?: any) {
+async function validateCreateRequest(request: any) {
     if (!request?.body?.ResourceDetails || Object.keys(request.body.ResourceDetails).length === 0) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "ResourceDetails is missing or empty or null");
     }
@@ -353,6 +354,7 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
         }
         const fileUrl = await validateFile(request);
         if (request.body.ResourceDetails.type == 'boundary') {
+            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
             await validateBoundarySheetData(request, fileUrl, localizationMap);
         }
     }
@@ -804,7 +806,10 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
 
 async function validateHeaders(headersOfBoundarySheet: any, request: any, localizationMap?: any) {
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    const localizedHierarchy = getLocalizedHeaders(hierarchy, localizationMap);
+    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails.hierarchyType}_${ele}`.toUpperCase())
+    console.log(modifiedHierarchy, "hhhhhhhhhhhhhhh")
+    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+    console.log(localizedHierarchy,"iiiiiiiiiiiiiii")
     validateBoundarySheetHeaders(headersOfBoundarySheet, localizedHierarchy, request, localizationMap);
 }
 function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
