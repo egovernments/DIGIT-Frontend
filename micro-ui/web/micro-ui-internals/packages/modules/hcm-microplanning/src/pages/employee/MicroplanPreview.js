@@ -839,7 +839,6 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       }
     } else value = parseFloat(e.newValue);
     value = !isNaN(value) ? value : "";
-    debugger
 
     // update the state with user input
     let newhypothesisEntityIndex = hypothesisAssumptionsList.findIndex((item) => item?.id === e?.item?.id);
