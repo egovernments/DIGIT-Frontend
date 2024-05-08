@@ -361,36 +361,6 @@ const SetupCampaign = () => {
   }, [totalFormData]);
 
   useEffect(() => {
-    const convertFormData = (totalFormData) => {
-      const modifiedData = [
-        {
-          startDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
-          endDate: totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
-          projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType.code,
-          campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.campaignName,
-        },
-      ];
-    };
-    convertFormData(totalFormData);
-  }, [totalFormData]);
-
-  // function to convert payload to formData
-  const convertPayload = (dummyData) => {
-    return {
-      1: {},
-      2: {
-        projectType: dummyData?.projectType,
-      },
-      3: {
-        campaignName: dummyData?.campaignName,
-      },
-      4: {
-        boundaries: dummyData?.boundaries,
-      },
-    };
-  };
-
-  useEffect(() => {
     updateUrlParams({ key: currentKey });
   }, [currentKey]);
 
