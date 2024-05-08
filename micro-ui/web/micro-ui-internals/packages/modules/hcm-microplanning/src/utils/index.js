@@ -156,7 +156,7 @@ const inputScrollPrevention = (e) => {
 const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   let files = [],
     resourceMapping = [];
-  if (data || data.upload) {
+  if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
       if (item?.error) return;
       const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
