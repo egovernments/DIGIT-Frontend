@@ -296,6 +296,7 @@ const MicroplanPreview = ({
                 resources={resources}
                 modal={modal}
                 setModal={setModal}
+                data={data}
                 t={t}
               />
             ) : (
@@ -436,7 +437,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
 });
 
 const DataPreview = memo(
-  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, userEditedResources, setUserEditedResources, modal, setModal, t }) => {
+  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, userEditedResources, setUserEditedResources, modal, setModal, data, t }) => {
     if (!previewData) return;
     const [tempResourceChanges, setTempResourceChanges] = useState(userEditedResources);
     const [selectedRow, setSelectedRow] = useState();
@@ -532,6 +533,7 @@ const DataPreview = memo(
               resources={resources}
               tempResourceChanges={tempResourceChanges}
               setTempResourceChanges={setTempResourceChanges}
+              data={data}
               t={t}
             />
           </Modal>
@@ -1002,7 +1004,8 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
   return combinedData;
 };
 
-const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges, t }) => {
+const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges,data, t }) => {
+  debugger
   const conmmonColumnData = useMemo(() => {
     const index = previewData?.[0]?.indexOf(commonColumn);
     if (index == -1) return;
@@ -1027,8 +1030,33 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
           </tr>
         </thead>
         <tbody>
+        {data[0].map((item) => {
+            let index = data?.[0]?.indexOf(item);
+            if(index === -1 ) return 
+            const currentData = data?.[selectedRow]?.[index];
+            return (
+              <tr key={item}>
+                <td className="column-names">
+                  <p>{t(item)}</p>
+                </td>
+                <td className="old-value">
+                  <p>{currentData || t("NO_DATA")}</p>
+                </td>
+                <td className="new-value no-left-padding">
+                  <TextInput
+                    name={"data_" + index}
+                    value={item?.value}
+                    style={{ margin: 0, backgroundColor:"rgba(238, 238, 238, 1)" }}
+                    t={t}
+                    disabled={true}
+                  />
+                </td>
+              </tr>
+            );
+          })}
           {resources.map((item) => {
             let index = previewData?.[0]?.indexOf(item);
+            if(index === -1 ) return 
             const currentData = previewData?.[selectedRow]?.[index];
             return (
               <tr key={item}>
@@ -1043,6 +1071,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                     name={"hyopthesis_" + index}
                     value={item?.value}
                     style={{ margin: 0 }}
+                    type="number"
                     t={t}
                     onChange={(value) => valueChangeHandler(item, value.target.value)}
                   />
