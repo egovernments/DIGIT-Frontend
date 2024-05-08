@@ -10,6 +10,7 @@ import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
 import { getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
+import { enrichProjectDetailsFromCampaignDetails } from "./projectTypeUtils";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -406,7 +407,7 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     if (action == "create" && !requestBody?.CampaignDetails?.projectId) {
         enrichRootProjectId(requestBody);
     }
-    else {
+    else if (!requestBody?.CampaignDetails?.projectId) {
         requestBody.CampaignDetails.projectId = null
     }
     requestBody.CampaignDetails.additionalDetails = {
@@ -447,6 +448,7 @@ async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boo
     logger.info("Persisting CampaignDetails : " + JSON.stringify(request?.body?.CampaignDetails));
     const topic = firstPersist ? config.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC : config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
     produceModifiedMessages(request?.body, topic);
+    delete request.body.CampaignDetails.campaignDetails
 }
 
 function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: any) {
@@ -485,6 +487,7 @@ async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boo
     logger.info("Persisting CampaignDetails : " + JSON.stringify(request?.body?.CampaignDetails));
     produceModifiedMessages(request?.body, config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC);
     delete request.body.ExistingCampaignDetails
+    delete request.body.CampaignDetails.campaignDetails
 }
 
 function getCreateResourceIds(resources: any[]) {
@@ -514,6 +517,10 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
         requestBody.Campaign.rootProjectId = request?.body?.CampaignDetails?.projectId
         requestBody.Campaign.resourceDetailsIds = createResourceDetailsIds
         requestBody.CampaignDetails = request?.body?.CampaignDetails
+        var updatedInnerCampaignDetails = {}
+        enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
+        requestBody.CampaignDetails = request?.body?.CampaignDetails
+        requestBody.CampaignDetails.campaignDetails = updatedInnerCampaignDetails
         requestBody.localizationMap = localizationMap
         logger.info("Persisting CampaignProjectMapping : " + JSON.stringify(requestBody));
         produceModifiedMessages(requestBody, config.KAFKA_START_CAMPAIGN_MAPPING_TOPIC);
@@ -1062,15 +1069,7 @@ async function getCodesTarget(request: any) {
 async function createProject(request: any, actionUrl: any) {
     var { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
-        var Projects: any = [{
-            tenantId,
-            projectType,
-            startDate,
-            endDate,
-            "projectSubType": "Campaign",
-            "department": "Campaign",
-            "description": "Campaign ",
-        }]
+        var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails);
         const projectCreateBody = {
             RequestInfo: request?.body?.RequestInfo,
             Projects

@@ -51,6 +51,7 @@ class dataManageController {
 
             return sendResponse(response, { GeneratedResource: request?.body?.generatedResource }, request);
         } catch (e: any) {
+            console.log(e)
             logger.error(String(e))
             // Handle errors and send error response
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
@@ -77,6 +78,7 @@ class dataManageController {
             }
             return sendResponse(response, { GeneratedResource: responseData }, request);
         } catch (e: any) {
+            console.log(e)
             logger.error(String(e));
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
         }
@@ -101,6 +103,7 @@ class dataManageController {
             return BoundaryFileDetails;
         }
         catch (e: any) {
+            console.log(e)
             logger.error(String(e));
             // Handle errors and send error response
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
@@ -128,8 +131,8 @@ class dataManageController {
             // Send response with resource details
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
+            console.log(e)
             logger.error(String(e))
-            logger.debug(e, "Error details")
             // Handle errors and send error response
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
         }
@@ -149,6 +152,7 @@ class dataManageController {
             // Send response with resource details
             return sendResponse(response, { ResourceDetails: request?.body?.ResourceDetails }, request);
         } catch (e: any) {
+            console.log(e)
             logger.error(String(e))
             // Handle errors and send error response
             return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
