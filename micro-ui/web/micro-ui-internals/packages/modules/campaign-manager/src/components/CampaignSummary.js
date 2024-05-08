@@ -135,7 +135,7 @@ const CampaignSummary = () => {
       select: (data) => {
         const resourceIdArr = [];
         data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId) {
+          if (i?.createResourceId && i?.type === "user") {
             resourceIdArr.push(i?.createResourceId);
           }
         });
@@ -246,12 +246,6 @@ const CampaignSummary = () => {
                         resources: resourceIdArr,
                       },
                       cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0 } },
-                      cardSecondaryAction: noAction !== "false" && (
-                        <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
-                          <span>{t(`CAMPAIGN_EDIT`)}</span>
-                          <EditIcon />
-                        </div>
-                      ),
                     },
                   ],
                 }
