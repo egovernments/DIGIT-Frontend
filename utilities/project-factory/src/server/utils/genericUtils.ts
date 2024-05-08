@@ -840,9 +840,7 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
   const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
   const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
-  console.log(request?.query?.hierarchyType, "eeeeeeeeerrtttttt")
   const modifiedReducedHierarchy = reducedHierarchy.map(ele => `${request?.query?.hierarchyType}_${ele}`.toUpperCase())
-  console.log(modifiedReducedHierarchy, "reduuuuuuuuuuuuuuuu")
   const headers = (type !== "facilityWithBoundary" && type !== "userWithBoundary")
     ? [
       ...modifiedReducedHierarchy,

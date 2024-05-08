@@ -117,7 +117,6 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
                 } else {
                     const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
                     if (boundaryList.length === 0) {
-                        console.log(boundaryList, "lisssssssttttttttttttttttt")
                         errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
                     }
                     if (boundaryList.length > 1) {
@@ -807,9 +806,7 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
 async function validateHeaders(headersOfBoundarySheet: any, request: any, localizationMap?: any) {
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
     const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails.hierarchyType}_${ele}`.toUpperCase())
-    console.log(modifiedHierarchy, "hhhhhhhhhhhhhhh")
     const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
-    console.log(localizedHierarchy,"iiiiiiiiiiiiiii")
     validateBoundarySheetHeaders(headersOfBoundarySheet, localizedHierarchy, request, localizationMap);
 }
 function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
