@@ -185,7 +185,7 @@ function groupByTypeRemap(data) {
   const result = {};
 
   data.forEach((item) => {
-    const type = item.type;
+    const type = item?.boundaryType;
     const obj = {
       TenantBoundary: [
         {
