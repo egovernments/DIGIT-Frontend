@@ -21,9 +21,11 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   // const [showcomponent, setShowComponent] = useState(
   //   props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy || false
   // );
-  const [boundaryType, setBoundaryType] = useState(null);
+  // const [boundaryType, setBoundaryType] = useState(null);
+  const [boundaryType, setBoundaryType] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData  ? undefined : null);  
   const [boundaryData, setBoundaryData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {});
-  const [parentArray, setParentArray] = useState(null);
+  // const [parentArray, setParentArray] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData.filter(item => item.includeAllChildren).map(item => item.code) || null);
+  const [parentArray , setParentArray] = useState(null);
   const [boundaryTypeDataresult, setBoundaryTypeDataresult] = useState(null);
   const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
   const [parentBoundaryTypeRoot, setParentBoundaryTypeRoot] = useState(
@@ -33,46 +35,47 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [showToast, setShowToast] = useState(null);
   // const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [updatedHierarchy, setUpdatedHierarchy] = useState({});
-  const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState(null);
+  const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState(params?.hierarchy);
 
 
   useEffect(() => {
     onSelect("boundaryType", { boundaryData: boundaryData, selectedData: selectedData});
   }, [boundaryData, selectedData ]);
 
+
   // console.log("rdedrdedrde",props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData);
 
   // useEffect(() => {
+  //   setBoundaryData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData );
   //   setSelectedData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData );
-  // }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData ]);
+  // }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA ]);
 
   const closeToast = () => {
     setShowToast(null);
   };
 
-  console.log("boundaryyyyy", props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData)
+  
+//   const reqCriteriaBoundaryHierarchySearch = {
+//     url: "/boundary-service/boundary-hierarchy-definition/_search",
+//     params: {},
+//     body: {
+//       BoundaryTypeHierarchySearchCriteria: {
+//         tenantId: tenantId,
+//         hierarchyType: hierarchy,
+//       },
+//     },
+//     config: {
+//       enabled: true,
+//     },
+//   };
 
-  const reqCriteriaBoundaryHierarchySearch = {
-    url: "/boundary-service/boundary-hierarchy-definition/_search",
-    params: {},
-    body: {
-      BoundaryTypeHierarchySearchCriteria: {
-        tenantId: tenantId,
-        hierarchyType: hierarchy,
-      },
-    },
-    config: {
-      enabled: true,
-    },
-  };
+//   const { data: hierarchyTypeDataResponse} = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
-  const { data: hierarchyTypeDataResponse} = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
-
-  useEffect(() => {
-    if (hierarchyTypeDataResponse) {
-        setHierarchyTypeDataresult(hierarchyTypeDataResponse?.BoundaryHierarchy?.[0]);
-    }
-}, [hierarchyTypeDataResponse]);
+//   useEffect(() => {
+//     if (hierarchyTypeDataResponse) {
+//         setHierarchyTypeDataresult(hierarchyTypeDataResponse?.BoundaryHierarchy?.[0]);
+//     }
+// }, [hierarchyTypeDataResponse]);
 
 useEffect(() => {
   if (hierarchyTypeDataresult) {
@@ -80,20 +83,24 @@ useEffect(() => {
       hierarchyTypeDataresult?.boundaryHierarchy.forEach((boundary) => {
           boundaryDataObj[boundary.boundaryType] = [];
       });
-      setBoundaryData(boundaryDataObj);
-
+      if( !props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData){
+        setBoundaryData(boundaryDataObj);
+      }
+      // setBoundaryData(boundaryDataObj);
       const boundaryWithTypeNullParent = hierarchyTypeDataresult?.boundaryHierarchy.find((boundary) => boundary.parentBoundaryType === null);
       // Set the boundary type with null parentBoundaryType
       if (boundaryWithTypeNullParent) {
+        if( !props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData){
           setBoundaryType(boundaryWithTypeNullParent.boundaryType);
+        }
+        // setBoundaryType(boundaryWithTypeNullParent.boundaryType);
           setParentBoundaryTypeRoot(boundaryWithTypeNullParent.boundaryType);
       }
-      const hierarchyStructure = createHierarchyStructure(hierarchyTypeDataresult);
-      console.log("hierarchyStructure",hierarchyStructure);
+      createHierarchyStructure(hierarchyTypeDataresult);
+      // console.log("hierarchyStructure",hierarchyStructure);
   }
-}, [hierarchyTypeDataresult]);
+}, []);
 
-  console.log("hierarchyTypeDataresult",hierarchyTypeDataresult);
 
   function createHierarchyStructure(hierarchyTypeDataresult) {
     const hierarchyStructure = {};
@@ -125,7 +132,6 @@ useEffect(() => {
 
     setUpdatedHierarchy(hierarchyStructure);
 
-    return hierarchyStructure;
   }
 
   const newData = [];
@@ -177,19 +183,16 @@ useEffect(() => {
   useEffect(() => {
     if (boundaryTypeDataresult) {
       if (boundaryType !== undefined) {
-        console.log("koko", boundaryType);
         const updatedBoundaryData = {
           ...boundaryData,
           [boundaryType]: boundaryTypeDataresult,
         };
-        console.log("updatedBoundaryData",updatedBoundaryData);
         setBoundaryData(updatedBoundaryData);
       } else {
         const updatedBoundaryData = {
           ...boundaryData,
           [boundaryTypeDataresult?.[0]?.boundaryTypeData?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType]: boundaryTypeDataresult,
         };
-        console.log("undefoned",updatedBoundaryData,boundaryTypeDataresult?.[0]?.boundaryTypeData?.TenantBoundary?.[0]?.boundary?.[0]?.boundaryType )
         setBoundaryData(updatedBoundaryData);
       }
     }
@@ -200,7 +203,7 @@ useEffect(() => {
       const check = updatedHierarchy[boundary.boundaryType];
       if (check) {
         const typesToRemove = [boundary.boundaryType, ...check];
-        const updatedSelectedData = selectedData.filter((item) => !typesToRemove.includes(item.boundaryType));
+        const updatedSelectedData = selectedData?.filter((item) => !typesToRemove.includes(item.boundaryType));
         setSelectedData(updatedSelectedData);
       }
       return;
@@ -260,8 +263,6 @@ useEffect(() => {
       // Update only the data for the new boundaryType
       const mergedData = [...selectedData?.filter((item) => item?.boundaryType !== newBoundaryType), ...transformedRes];
 
-      
-
       // Filter out items with undefined type
       const filteredData = mergedData.filter(
         (item, index, self) => item?.boundaryType !== undefined && index === self.findIndex((t) => t.code === item.code)
@@ -269,17 +270,14 @@ useEffect(() => {
       setSelectedData(filteredData);
     }
     const parentBoundaryEntry = hierarchyTypeDataresult ? hierarchyTypeDataresult?.boundaryHierarchy.find((e) => e.parentBoundaryType === res?.[0]?.boundaryType) : null;
-    console.log("parent" ,parentBoundaryEntry )
     setBoundaryType(parentBoundaryEntry?.boundaryType);
     const codes = res.map((item) => item.code);
+
+    // console.log("updatedBoundaryData",updatedBoundaryData);
     if (JSON.stringify(codes) !== JSON.stringify(parentArray)) {
       setParentArray(codes);
     }
   };
-
-  console.log("selectedData"  ,selectedData);
-
-  console.log("boundaryData"  ,boundaryData);
 
   return (
     <>
@@ -299,7 +297,7 @@ useEffect(() => {
                       t={t}
                       options={boundaryData[boundary.boundaryType]?.map((item) => item?.boundaryTypeData?.TenantBoundary?.[0]?.boundary).flat() || []}
                       optionsKey={"code"}
-                      selected={selectedData.filter((item) => item.boundaryType === boundary.boundaryType)}
+                      selected={selectedData?.filter((item) => item.boundaryType === boundary.boundaryType)}
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
@@ -329,7 +327,7 @@ useEffect(() => {
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
-                      selected={selectedData.filter((item) => item.boundaryType === boundary.boundaryType)}
+                      selected={selectedData?.filter((item) => item.boundaryType === boundary.boundaryType)}
                       addCategorySelectAllCheck={true}
                       addSelectAllCheck={true}
                       variant="nestedmultiselect"
