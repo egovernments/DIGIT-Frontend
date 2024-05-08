@@ -973,15 +973,22 @@ const SetupCampaign = () => {
     const name = filteredSteps[0].name;
 
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
-      setCurrentKey(10);
-      setCurrentStep(7);
+        setCurrentKey(10);
+        setCurrentStep(7);
+    } else if (step === 1 && (totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_DATE"])) {
+        setCurrentKey(4);
+        setCurrentStep(2);
+    } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
+        console.log("HCM_CAMPAIGN_NAME or HCM_CAMPAIGN_DATE is missing");
+        // Do not set stepper and key
+    } else {
+        console.log("stepppp");
+        setCurrentKey(key);
+        setCurrentStep(step);
     }
+};
 
-    if (Object.keys(totalFormData).includes(name)) {
-      setCurrentKey(key);
-      setCurrentStep(step);
-    }
-  };
+
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
