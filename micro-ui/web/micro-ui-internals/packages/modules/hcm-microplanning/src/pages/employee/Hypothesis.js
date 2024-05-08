@@ -207,7 +207,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
-            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+            <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
       )}
@@ -362,7 +362,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   useEffect(() => {
     if (!options) return;
-    const filteredOptions = options.length ? options : [t("SELECT_OPTION")];
+    const filteredOptions = options.length ? options : [];
     if (item && item.key && !filteredOptions.includes(item.key)) {
       setFilteredOptions([item.key, ...filteredOptions]);
     } else setFilteredOptions(filteredOptions);

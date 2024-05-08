@@ -242,7 +242,7 @@ const MicroplanDetails = ({
           actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
-            <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
+            <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
       )}
