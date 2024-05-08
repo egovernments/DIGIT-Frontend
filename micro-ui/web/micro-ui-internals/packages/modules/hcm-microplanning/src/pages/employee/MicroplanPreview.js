@@ -145,16 +145,16 @@ const MicroplanPreview = ({
   }, [checkDataCompletion]);
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
     setMicroplanData((previous) => ({ ...previous, microplanPreview: dataToShow }));
     setCheckDataCompletion("perform-action");
-  };
+  }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
-    setModal("none");
-  };
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
+    setModal('none');
+  }, [setCheckDataCompletion, setModal]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -341,11 +341,10 @@ const MicroplanPreview = ({
 };
 
 const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
-  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList||[]);
+  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList || []);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
   const applyNewHypothesis = () => {
-    debugger
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
@@ -821,7 +820,6 @@ function filterObjects(arr1, arr2) {
 const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
   // Handles the change in hypothesis value
   const valueChangeHandler = (e, setTempHypothesisList, boundarySelections, setToast, t) => {
-    debugger
     // Checks it the boundary filters at at root level ( given constraints )
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
@@ -879,18 +877,19 @@ const updateHyothesisAPICall = async (
         }, 2000);
       },
       onError: (error, variables) => {
+        setLoaderActivation(false);
         setToast({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
         updateData();
-        setLoaderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
       },
     });
   } catch (error) {
+    setLoaderActivation(false);
     setToast({
       message: t("ERROR_DATA_NOT_SAVED"),
       state: "error",

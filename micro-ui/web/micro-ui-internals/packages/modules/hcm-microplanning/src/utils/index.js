@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { findParent } from "../utils/processHierarchyAndData";
 
-
 const formatDates = (value, type) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
@@ -157,16 +156,18 @@ const inputScrollPrevention = (e) => {
 const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   let files = [],
     resourceMapping = [];
-  Object.values(data?.upload).forEach((item) => {
-    if (item?.error) return;
-    const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
-    files.push(data);
-  });
-  Object.values(data?.upload).forEach((item) => {
-    if (item?.error) return;
-    resourceMapping.push(item?.resourceMapping);
-  });
-  resourceMapping = resourceMapping.flatMap((inner) => inner);
+  if (data || data.upload) {
+    Object.values(data?.upload).forEach((item) => {
+      if (item?.error) return;
+      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
+      files.push(data);
+    });
+    Object.values(data?.upload).forEach((item) => {
+      if (item?.error) return;
+      resourceMapping.push(item?.resourceMapping);
+    });
+    resourceMapping = resourceMapping.flatMap((inner) => inner);
+  }
 
   // return a Create API body
   return {

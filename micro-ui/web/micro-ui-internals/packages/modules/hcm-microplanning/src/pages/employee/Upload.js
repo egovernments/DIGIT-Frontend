@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Fragment } from "react";
+import React, { useState, useEffect, useMemo, Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
@@ -118,7 +118,7 @@ const Upload = ({
   // }, [fileDataList]);
 
   // check if data has changed or not
-  const updateData = (check) => {
+  const updateData = useCallback((check) => {
     if (!fileDataList || !setMicroplanData) return;
     if (check) {
       setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
@@ -130,11 +130,12 @@ const Upload = ({
       if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
       else setCheckDataCompletion("invalid");
     }
-  };
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
+  }, [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]);
+
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
     setModal("none");
-  };
+  }, [setCheckDataCompletion, setModal]);
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -986,7 +987,7 @@ const Upload = ({
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={() => updateData(true)}
+          actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
           headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
           actionSaveOnSubmit={() => updateData(false)}

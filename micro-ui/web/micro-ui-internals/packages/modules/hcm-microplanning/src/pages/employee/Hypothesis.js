@@ -43,8 +43,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (microplanData && microplanData.hypothesis) {
       setAssumptions(microplanData.hypothesis);
     }
-    
-    
+      
     let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
@@ -56,7 +55,6 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     let newHypothesislist = filterHypothesisList(newAssumptions.length !==0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
     setHypothesisAssumptionsList(newHypothesislist);
     
-
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
@@ -90,46 +88,29 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = (check) => {
+  const updateData = useCallback((check) => {
     if (!assumptions || !setMicroplanData) return;
-    if(check){
-    setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
-    let check = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
-    check = check && assumptions.length !== 0;
-    if (check) setCheckDataCompletion("valid");
-    else setCheckDataCompletion("invalid");
-    }
-    else{
-      let check = microplanData?.hypothesis?.every((item) => Object.values(item).every((data) => data !== ""));
-      check = check && assumptions.length !== 0;
-      if (check) setCheckDataCompletion("valid");
+    if (check) {
+      setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+      let checkValid = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
+      checkValid = checkValid && assumptions.length !== 0;
+      if (checkValid) setCheckDataCompletion("valid");
+      else setCheckDataCompletion("invalid");
+    } else {
+      let checkValid = microplanData?.hypothesis?.every((item) => Object.values(item).every((data) => data !== ""));
+      checkValid = checkValid && assumptions.length !== 0;
+      if (checkValid) setCheckDataCompletion("valid");
       else setCheckDataCompletion("invalid");
     }
-  };
-  const cancelUpdateData = () => {
+  }, [assumptions, setMicroplanData, microplanData, setCheckDataCompletion]);
+
+  const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("false");
     setModal("none");
-  };
+  }, [setCheckDataCompletion, setModal]);
 
   // Fetching data using custom MDMS hook
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "HypothesisAssumptions" }]);
-
-  // useEffect to initialise the data from MDMS
-  useEffect(() => {
-    if (!data || !data["hcm-microplanning"]) return;
-    // let hypothesisAssumptions = state?.HypothesisAssumptions;
-    // if (!hypothesisAssumptions) return;
-    // let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    // if (!(temp && temp.assumptions)) return;
-    // setHypothesisAssumptionsList(temp);
-    // setAutofillHypothesis(temp);
-    // setExampleOption(temp.length ? temp[0] : "");
-  }, [data]);
-
-  // useEffect(()=>{
-  // if(!autofillHypothesis) return;
-  // setAutofillHypothesisData(autofillHypothesis, assumptions, setAssumptions)
-  // },[autofillHypothesis])
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -221,7 +202,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
             headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
             actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={() => updateData(true)}
+          actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
           actionSaveOnSubmit={() => updateData(false)}
         >
@@ -494,7 +475,6 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
 };
 
 const filterHypothesisList = (assumptions, hypothesisList) => {
-  debugger;
   let alreadySelectedHypothesis = assumptions.map((item) => item?.key) || [];
   return hypothesisList.filter((item) => !alreadySelectedHypothesis.includes(item));
 };

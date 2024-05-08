@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardSubHeader,
@@ -114,9 +114,8 @@ const MicroplanDetails = ({
   };
 
   // check if data has changed or not
-  const updateData = (check) => {
+  const updateData = useCallback((check) => {
     if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    debugger
     if (check) {
       setMicroplanData((previous) => ({
         ...previous,
@@ -124,21 +123,24 @@ const MicroplanDetails = ({
           name: microplan,
         },
       }));
-      if (!["",null,undefined].includes(microplan)) {
+      if (!["", null, undefined].includes(microplan)) {
         setCheckDataCompletion("valid");
-      } else setCheckDataCompletion("invalid");
-    }
-    else{
-      if (!["",null,undefined].includes(microplanData?.microplanDetails?.name)) {
+      } else {
+        setCheckDataCompletion("invalid");
+      }
+    } else {
+      if (!["", null, undefined].includes(microplanData?.microplanDetails?.name)) {
         setCheckDataCompletion("valid");
-      } else setCheckDataCompletion("invalid");
+      } else {
+        setCheckDataCompletion("invalid");
+      }
     }
-    
-  };
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
-    setModal("none");
-  };
+  }, [checkDataCompletion, microplan, microplanData, setCheckDataCompletion, setMicroplanData]);
+
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
+    setModal('none');
+  }, [setCheckDataCompletion, setModal]);
 
   const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
@@ -235,7 +237,7 @@ const MicroplanDetails = ({
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
           headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={() => updateData(true)}
+          actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
           actionSaveOnSubmit={() => updateData(false)}
         >

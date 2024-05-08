@@ -237,9 +237,6 @@ const Mapping = ({
   // showing selected boundary data
   useEffect(() => {
     if (!boundarySelections) return;
-    // let selectionList = [];
-    // Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));
-    // console.log(selectionList);
     const style = {
       fillColor: "rgba(255, 107, 43, 1)",
       weight: 2,
@@ -295,7 +292,7 @@ const Mapping = ({
               </div>
               <div className="icon-rest filter-icon">
                 <p>{t("FILTER")}</p>
-                <div className="icon filter-icon">
+                <div className="icon">
                   <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
                 </div>
               </div>
@@ -649,6 +646,7 @@ const extractGeoData = (
 
 //prepare geojson to show on the map
 const prepareGeojson = (boundaryData, selection, style = {}) => {
+  if (!boundaryData || Object.keys(boundaryData).length === 0) return [];
   let geojsonRawFeatures = [];
   if (selection == "ALL") {
     for (let data of Object.values(boundaryData)) {
@@ -866,7 +864,6 @@ const MapMarker = L.divIcon({
 
 const filterSelection = (boundaryData, boundarySelections) => {
   if (Object.keys(boundaryData).length === 0 || Object.keys(boundarySelections).length === 0) return [];
-  debugger;
 
   let selectionList = [];
   Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));

@@ -52,7 +52,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
         setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
-        // setRules(microplanData.ruleEngine);
       }
     }
 
@@ -94,27 +93,26 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = (check) => {
+  const updateData = useCallback((check) => {
     if (!rules || !setMicroplanData) return;
     if (check) {
       setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-      let check = rules.every((item) => Object.values(item).every((data) => data !== ""));
-      check = check && rules.length !== 0;
-      if (check) setCheckDataCompletion("valid");
+      let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
+      isValid = isValid && rules.length !== 0;
+      if (isValid) setCheckDataCompletion("valid");
       else setCheckDataCompletion("invalid");
     } else {
-      let check = microplanData?.ruleEngine?.every((item) => Object.values(item).every((data) => data !== ""));
-      check = check && rules.length !== 0;
-      if (check) setCheckDataCompletion("valid");
+      let isValid = microplanData?.ruleEngine?.every((item) => Object.values(item).every((data) => data !== ""));
+      isValid = isValid && rules.length !== 0;
+      if (isValid) setCheckDataCompletion("valid");
       else setCheckDataCompletion("invalid");
     }
-    // const isDataValid = rules.length !== 0 && rules.every((item) => Object.values(item).every((data) => data !== ""));
-    // setCheckDataCompletion(isDataValid ? "valid" : "invalid");
-  };
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
+  }, [rules, setMicroplanData, microplanData, setCheckDataCompletion]);
+
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
     setModal("none");
-  };
+  }, [setCheckDataCompletion, setModal]);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -265,7 +263,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
           headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={() => updateData(true)}
+          actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
           actionSaveOnSubmit={() => updateData(false)}
         >
@@ -683,7 +681,6 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
 const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions, setRules) => {
   if (rules?.length === 0) return;
   let newRules = [];
-  debugger;
   rules.forEach((item) => {
     if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
     item["id"] = newRules.length;
