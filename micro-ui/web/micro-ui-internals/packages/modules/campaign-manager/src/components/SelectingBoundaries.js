@@ -43,8 +43,6 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   }, [boundaryData, selectedData ]);
 
 
-  // console.log("rdedrdedrde",props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData);
-
   // useEffect(() => {
   //   setBoundaryData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData );
   //   setSelectedData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData );
@@ -97,7 +95,6 @@ useEffect(() => {
           setParentBoundaryTypeRoot(boundaryWithTypeNullParent.boundaryType);
       }
       createHierarchyStructure(hierarchyTypeDataresult);
-      // console.log("hierarchyStructure",hierarchyStructure);
   }
 }, []);
 
@@ -272,8 +269,6 @@ useEffect(() => {
     const parentBoundaryEntry = hierarchyTypeDataresult ? hierarchyTypeDataresult?.boundaryHierarchy.find((e) => e.parentBoundaryType === res?.[0]?.boundaryType) : null;
     setBoundaryType(parentBoundaryEntry?.boundaryType);
     const codes = res.map((item) => item.code);
-
-    // console.log("updatedBoundaryData",updatedBoundaryData);
     if (JSON.stringify(codes) !== JSON.stringify(parentArray)) {
       setParentArray(codes);
     }
