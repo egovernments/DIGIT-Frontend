@@ -345,7 +345,7 @@ const SetupCampaign = () => {
       hierarchyType: hierarchyType,
       hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
     });
-  }, [facilityId, boundaryId, userId]); // Only run if dataParams changes
+  }, [facilityId, boundaryId, userId ,hierarchyDefinition?.BoundaryHierarchy?.[0] ]); // Only run if dataParams changes
 
   // Example usage:
   // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
@@ -469,7 +469,7 @@ const SetupCampaign = () => {
         return;
       } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
         const reqCreate = async () => {
-          let payloadData = {};
+          let payloadData = draftData;
           payloadData.hierarchyType = hierarchyType;
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
             ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
@@ -483,18 +483,12 @@ const SetupCampaign = () => {
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           }
-          if (
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          ) {
             const temp = resourceData(
               totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
             );
             payloadData.resources = temp;
-          }
           payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
@@ -559,18 +553,12 @@ const SetupCampaign = () => {
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           }
-          if (
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          ) {
             const temp = resourceData(
               totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
             );
             payloadData.resources = temp;
-          }
           payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
@@ -620,18 +608,12 @@ const SetupCampaign = () => {
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           }
-          if (
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0] ||
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          ) {
             const temp = resourceData(
               totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
               totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
             );
             payloadData.resources = temp;
-          }
           payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
@@ -809,18 +791,17 @@ const SetupCampaign = () => {
           return true;
         }
       case "boundaryType":
-      if(formData?.boundaryType?.selectedData){
-        const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
-        if(!validateBoundary){
-          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+        if (formData?.boundaryType?.selectedData) {
+          const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+          if (!validateBoundary) {
+            setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+            return false;
+          }
+          return true;
+        } else {
+          setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
           return false;
         }
-        return true;
-      }
-      else {
-        setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
-        return false;
-      }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
@@ -958,11 +939,12 @@ const SetupCampaign = () => {
       setCurrentKey(4);
       setCurrentStep(2);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
+        // Do not set stepper and key
+    } else if(Object.keys(totalFormData).includes(name)){
+        setCurrentKey(key);
+        setCurrentStep(step);
       // Do not set stepper and key
-    } else {
-      setCurrentKey(key);
-      setCurrentStep(step);
-    }
+    } 
   };
 
   const onSecondayActionClick = () => {
