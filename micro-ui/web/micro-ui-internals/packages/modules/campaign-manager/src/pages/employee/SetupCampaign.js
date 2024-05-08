@@ -979,7 +979,6 @@ const SetupCampaign = () => {
         setCurrentKey(4);
         setCurrentStep(2);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
-        console.log("HCM_CAMPAIGN_NAME or HCM_CAMPAIGN_DATE is missing");
         // Do not set stepper and key
     } else {
         console.log("stepppp");
