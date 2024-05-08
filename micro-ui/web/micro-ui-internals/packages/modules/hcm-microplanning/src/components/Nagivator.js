@@ -106,7 +106,7 @@ const Navigator = (props) => {
     ) {
       setCheckDataCompletion("true");
       setNavigationEvent({ name: "previousStep" });
-    } else nextStep();
+    } else previousStep();
   }, [props.checkDataCompleteness, previousStep]);
 
   // Function to handle next button click

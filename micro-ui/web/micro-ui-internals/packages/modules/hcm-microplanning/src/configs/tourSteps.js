@@ -6,14 +6,14 @@ export const tourSteps = (t) => {
       run: true,
       steps: [
         {
-          content: t("Idk either ok?"),
+          content: t("HELP_MICROPLAN_DETAILS_CAMPAIGN_DETAILS"),
           target: ".microplan-campaign-detials",
           disableBeacon: true,
           placement: "bottom",
           title: "",
         },
         {
-          content: t("This, this i know. This is where you name your microplan ok?"),
+          content: t("HELP_MICROPLAN_DETAILS_MICROPLAN_NAME"),
           target: ".microplan-name",
           disableBeacon: true,
           placement: "bottom",
@@ -43,11 +43,19 @@ export const tourSteps = (t) => {
         {
           content:
             t("HELP_HYPOTHESIS_INTERACTABLE_SECTION"),
-          target: ".user-input-section",
+          target: ".hypothesis-section",
           disableBeacon: true,
           placement: "top-start",
           title: "",
         },
+        // {
+        //   content:
+        //     t("HELP_HYPOTHESIS_DELETE_BUTTON"),
+        //   target: ".select-and-input-wrapper-first .delete-button-help-locator",
+        //   disableBeacon: true,
+        //   placement: "left-start",
+        //   title: "",
+        // },
         {
           content:
             t("HELP_HYPOTHESIS_ADD_BUTTON"),
@@ -55,15 +63,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "top-end",
           title: "",
-        },
-        {
-          content:
-            t("HELP_HYPOTHESIS_DELETE_BUTTON"),
-          target: ".select-and-input-wrapper-first .delete-button",
-          disableBeacon: true,
-          placement: "left-start",
-          title: "",
-        },        
+        }       
       ],
       tourActive: true,
     },
@@ -89,20 +89,20 @@ export const tourSteps = (t) => {
         },
         {
           content:
-            t("HELP_RULE_ENGINE_ADD_BUTTON"),
-          target: ".add-button",
-          disableBeacon: true,
-          placement: "top-end",
-          title: "",
-        },
-        {
-          content:
             t("HELP_RULE_ENGINE_DELETE_BUTTON"),
           target: ".select-and-input-wrapper-first .delete-button",
           disableBeacon: true,
           placement: "left-start",
           title: "",
-        },        
+        },    
+        {
+          content:
+            t("HELP_RULE_ENGINE_ADD_BUTTON"),
+          target: ".add-button",
+          disableBeacon: true,
+          placement: "top-end",
+          title: "",
+        },    
       ],
       tourActive: true,
     },
@@ -123,7 +123,38 @@ export const tourSteps = (t) => {
             t("HELP_MAPPING_BASE_MAP"),
           target: ".base-map-selector",
           disableBeacon: true,
-          placement: "right-start",
+          placement: "left-start",
+          title: "",
+        },
+        {
+          content:
+            t("HELP_MAPPING_FILTER"),
+          target: ".filter-icon",
+          disableBeacon: true,
+          placement: "left-start",
+          title: "",
+        },
+        {
+          content:
+            t("HELP_MAPPING_MAP_GEOMETRIES"),
+          target: ".map-container",
+          disableBeacon: true,
+          placement: "top-end",
+          title: "",
+        }
+      ],
+      tourActive: true,
+    },
+    microplanPreview: {
+      name: "microplanPreview",
+      run: true,
+      steps: [
+        {
+          content:
+            t("HELP_MICROPLAN_DETAILS_EDIT_ROWS"),
+          target: ".preview-container",
+          disableBeacon: true,
+          placement: "top-end",
           title: "",
         }
       ],

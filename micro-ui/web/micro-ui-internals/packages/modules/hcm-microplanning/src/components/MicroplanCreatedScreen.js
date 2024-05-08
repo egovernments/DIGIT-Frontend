@@ -43,11 +43,11 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   };
 
   const clickGoToHCM = ()=>{
-    history.replace(`/workbench-ui/employee/campaign/setup-campaign`);
+    history.push(`/workbench-ui/employee/campaign/setup-campaign`);
   }
 
   const clickGoHome = ()=>{
-    history.replace(`/microplan-ui/employee/microplanning/select-campaign`);
+    history.push(`/microplan-ui/employee/microplanning/select-campaign`);
   }
 
   return (
@@ -57,7 +57,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           <Banner
             message={t("MICROPLAN_GENERATED_SUCCESSFULLY")}
             whichSvg="tick"
-            applicationNumber={"123"}
+            applicationNumber={ microplanData?.planConfigurationId?microplanData.planConfigurationId:t("ES_COMMON_NA")}
             info={t("MICROPLAN_GENERATED_SUCCESSFULLY_ID_LABEL")}
             successful={true}
             headerStyles={{ fontWeight: "700", fontFamily: " Roboto Condensed", fontSize: "2.5rem" }}

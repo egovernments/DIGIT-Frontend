@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardSubHeader,
@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { Modal } from "@egovernments/digit-ui-components";
-import { ModalHeading } from "./CommonComponents";
+import { CloseButton, ModalHeading } from "./CommonComponents";
 
 const page = "microplanDetails";
 
@@ -93,7 +93,7 @@ const MicroplanDetails = ({
       )
     )
       setModal("data-change-check");
-    else updateData();
+    else updateData(true);
   }, [checkDataCompletion]);
 
   // UseEffect to add a event listener for keyboard
@@ -114,22 +114,33 @@ const MicroplanDetails = ({
   };
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = useCallback((check) => {
     if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    setMicroplanData((previous) => ({
-      ...previous,
-      microplanDetails: {
-        name: microplan,
-      },
-    }));
-    if (microplan !== "") {
-      setCheckDataCompletion("valid");
-    } else setCheckDataCompletion("invalid");
-  };
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
-    setModal("none");
-  };
+    if (check) {
+      setMicroplanData((previous) => ({
+        ...previous,
+        microplanDetails: {
+          name: microplan,
+        },
+      }));
+      if (!["", null, undefined].includes(microplan)) {
+        setCheckDataCompletion("valid");
+      } else {
+        setCheckDataCompletion("invalid");
+      }
+    } else {
+      if (!["", null, undefined].includes(microplanData?.microplanDetails?.name)) {
+        setCheckDataCompletion("valid");
+      } else {
+        setCheckDataCompletion("invalid");
+      }
+    }
+  }, [checkDataCompletion, microplan, microplanData, setCheckDataCompletion, setMicroplanData]);
+
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
+    setModal('none');
+  }, [setCheckDataCompletion, setModal]);
 
   const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
@@ -211,10 +222,10 @@ const MicroplanDetails = ({
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             padding: 0,
             width: "100%",
-            padding: "1rem",
+            padding: "0 0 1rem 1.3rem",
           }}
           popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
           style={{
@@ -224,10 +235,11 @@ const MicroplanDetails = ({
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
+          headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
           actionCancelLabel={t("YES")}
-          actionCancelOnSubmit={updateData}
+          actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
-          actionSaveOnSubmit={cancelUpdateData}
+          actionSaveOnSubmit={() => updateData(false)}
         >
           <div className="modal-body">
             <p className="modal-main-body-p">{t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>

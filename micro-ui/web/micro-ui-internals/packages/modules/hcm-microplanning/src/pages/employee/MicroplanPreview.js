@@ -90,7 +90,7 @@ const MicroplanPreview = ({
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
-    if (!state?.tourStateData?.name || state.tourStateData.name === page) return;
+    if (state?.tourStateData?.name === page) return;
     dispatch({
       type: "SETINITDATA",
       state: { tourStateData: tourData },
@@ -145,16 +145,16 @@ const MicroplanPreview = ({
   }, [checkDataCompletion]);
 
   // check if data has changed or not
-  const updateData = () => {
+  const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
     setMicroplanData((previous) => ({ ...previous, microplanPreview: dataToShow }));
     setCheckDataCompletion("perform-action");
-  };
+  }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
-  const cancelUpdateData = () => {
-    setCheckDataCompletion("false");
-    setModal("none");
-  };
+  const cancelUpdateData = useCallback(() => {
+    setCheckDataCompletion(false);
+    setModal('none');
+  }, [setCheckDataCompletion, setModal]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -341,7 +341,7 @@ const MicroplanPreview = ({
 };
 
 const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
-  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList);
+  const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList || []);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
 
   const applyNewHypothesis = () => {
@@ -487,7 +487,7 @@ const DataPreview = memo(
                 return (
                   <tr
                     key={rowIndex}
-                    onClick={() => {
+                    onDoubleClick={() => {
                       rowClick(rowIndex + 1);
                     }}
                   >
@@ -877,18 +877,19 @@ const updateHyothesisAPICall = async (
         }, 2000);
       },
       onError: (error, variables) => {
+        setLoaderActivation(false);
         setToast({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
         updateData();
-        setLoaderActivation(false);
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
       },
     });
   } catch (error) {
+    setLoaderActivation(false);
     setToast({
       message: t("ERROR_DATA_NOT_SAVED"),
       state: "error",

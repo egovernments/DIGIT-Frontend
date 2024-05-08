@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren } from "../../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
@@ -56,6 +56,7 @@ const Mapping = ({
     body: {
       BoundaryTypeHierarchySearchCriteria: {
         tenantId: Digit.ULBService.getStateId(),
+        // hierarchyType:  "Microplan",
         hierarchyType: campaignData?.hierarchyType,
       },
     },
@@ -85,7 +86,7 @@ const Mapping = ({
   const { t } = useTranslation();
   var [map, setMap] = useState(null);
   var [_mapNode, set__mapNode] = useState("map");
-  const [layers, setLayer] = useState();
+  const [layers, setLayer] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [filterDataOrigin, setFilterDataOrigin] = useState({});
   const [dataAvailability, setDataAvailability] = useState("true");
@@ -214,9 +215,13 @@ const Mapping = ({
     }
   };
 
+  // Showing all the validd uploaded data on the map
   useEffect(() => {
     const geojsons = prepareGeojson(boundaryData, "ALL");
-    if (geojsons) addGeojsonToMap(map, geojsons, t);
+    if (geojsons) {
+      addGeojsonToMap(map, geojsons, (e) => {}, t);
+    }
+
     // setting bounds if they exist
     let bounds = findBounds(geojsons);
     if (bounds) {
@@ -228,6 +233,25 @@ const Mapping = ({
       }
     }
   }, [boundaryData]);
+
+  // showing selected boundary data
+  useEffect(() => {
+    if (!boundarySelections) return;
+    const style = {
+      fillColor: "rgba(255, 107, 43, 1)",
+      weight: 2,
+      opacity: 1,
+      color: "rgba(255, 255, 255, 1)",
+      fillOpacity: 0.22,
+    };
+    const filteredSelection = filterSelection(boundaryData, boundarySelections);
+    const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
+    // addGeojsonToMap(map, baseDatalayers, t);
+    if (geojsons) {
+      removeAllLayers(map, layers);
+      addGeojsonToMap(map, geojsons, setLayer, t);
+    }
+  }, [boundarySelections]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
     if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
@@ -266,7 +290,7 @@ const Mapping = ({
                   t={t}
                 />
               </div>
-              <div className="icon-rest">
+              <div className="icon-rest filter-icon">
                 <p>{t("FILTER")}</p>
                 <div className="icon">
                   <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
@@ -318,7 +342,7 @@ const BoundarySelection = memo(
     }, [boundaryData, hierarchy, boundarySelections]);
 
     return (
-      <div className="filter-by-boundary" ref={filterBoundaryRef}>
+      <div className={`filter-by-boundary  ${!isboundarySelectionSelected ? "height-control" : ""}`} ref={filterBoundaryRef} >
         {isLoading && <LoaderWithGap text={"LOADING"} />}
         <Button
           icon="FilterAlt"
@@ -346,7 +370,15 @@ const BoundarySelection = memo(
                   options={item?.dropDownOptions || []}
                   optionsKey="name"
                   onSelect={(e) =>
-                    Digit.Utils.microplan.handleSelection(e, item?.boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading)
+                    Digit.Utils.microplan.handleSelection(
+                      e,
+                      item?.boundaryType,
+                      boundarySelections,
+                      hierarchy,
+                      setBoundarySelections,
+                      boundaryData,
+                      setIsLoading
+                    )
                   }
                 />
               </div>
@@ -613,23 +645,24 @@ const extractGeoData = (
 };
 
 //prepare geojson to show on the map
-const prepareGeojson = (boundaryData, selection) => {
+const prepareGeojson = (boundaryData, selection, style = {}) => {
+  if (!boundaryData || Object.keys(boundaryData).length === 0) return [];
   let geojsonRawFeatures = [];
   if (selection == "ALL") {
     for (let data of Object.values(boundaryData)) {
-      const templist = fetchFeatures(data?.hierarchicalData);
+      const templist = fetchFeatures(data?.hierarchicalData, selection, [], style);
       if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
     }
   } else if (Array.isArray(selection)) {
     for (let data of Object.values(boundaryData)) {
-      const templist = fetchFeatures(data?.hierarchicalData, selection);
+      const templist = fetchFeatures(data?.hierarchicalData, selection, [], style);
       if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
     }
   }
 
   return geojsonRawFeatures.filter(Boolean);
 };
-const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
+const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => {
   let tempStorage = [];
   if (parameter === "ALL") {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
@@ -637,41 +670,45 @@ const fetchFeatures = (data, parameter = "ALL", outputList = []) => {
       if (entityValue?.data?.feature) {
         let feature = entityValue.data.feature;
         feature.properties["name"] = entityKey;
-        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        feature.properties["style"] = style;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
         else tempStorage = [...tempStorage, feature];
       } else {
-        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
+        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
       }
     }
     return tempStorage;
   } else if (Array.isArray(parameter)) {
     for (let [entityKey, entityValue] of Object.entries(data)) {
-      if (entityValue?.data?.feature) {
-        if (parameter.includes(entityKey)) {
-          if (entityValue?.children)
-            tempStorage = [...tempStorage, entityValue?.data?.feature, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-          else tempStorage = [...tempStorage, entityValue?.data?.feature];
-        } else {
-          if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList)];
-        }
+      if (parameter.includes(entityKey) && entityValue && entityValue.data && entityValue.data.feature) {
+        let feature = entityValue.data.feature;
+        feature.properties["name"] = entityKey;
+        feature.properties["style"] = style;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        else tempStorage = [...tempStorage, feature];
+      } else {
+        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
       }
     }
     return tempStorage;
   }
 };
 
-const addGeojsonToMap = (map, geojson, t) => {
+const addGeojsonToMap = (map, geojson, setLayer, t) => {
   if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
-      return {
-        fillColor: "rgb(0,0,0,0)",
-        weight: 2,
-        opacity: 1,
-        color: "rgba(176, 176, 176, 1)",
-        dashArray: "3",
-        fillOpacity: 0,
-      };
+      if (Object.keys(feature.properties.style).length !== 0) {
+        return feature.properties.style;
+      } else {
+        return {
+          fillColor: "rgb(0,0,0,0)",
+          weight: 2,
+          opacity: 1,
+          color: "rgba(176, 176, 176, 1)",
+          fillOpacity: 0,
+        };
+      }
     },
     pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
@@ -687,7 +724,7 @@ const addGeojsonToMap = (map, geojson, t) => {
           feature.properties["name"] +
           "</div>";
         for (let prop in feature.properties) {
-          if (prop !== "name")
+          if (prop !== "name" && prop !== "style")
             popupContent +=
               "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
               t(prop) +
@@ -700,6 +737,7 @@ const addGeojsonToMap = (map, geojson, t) => {
       }
     },
   });
+  setLayer([geojsonLayer]);
   geojsonLayer.addTo(map);
   return true;
 };
@@ -805,6 +843,13 @@ const findBounds = (data, buffer = 0.1) => {
   return bounds;
 };
 
+// Remove all layers from the map
+const removeAllLayers = (map, layer) => {
+  if (!map) return;
+  layer.forEach((layer) => {
+    map.removeLayer(layer);
+  });
+};
 // Map-Marker
 const MapMarker = L.divIcon({
   className: "custom-svg-icon",
@@ -816,6 +861,27 @@ const MapMarker = L.divIcon({
   </svg>`,
   iconAnchor: [12.5, 25],
 });
+
+const filterSelection = (boundaryData, boundarySelections) => {
+  if (Object.keys(boundaryData).length === 0 || Object.keys(boundarySelections).length === 0) return [];
+
+  let selectionList = [];
+  Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));
+  const set1 = new Set(selectionList);
+  selectionList = selectionList.filter((item) => {
+    const children = findChildren([item], Object.values(boundaryData)?.[0]?.hierarchicalData);
+      if (children) {
+        const set2 = Object.keys(children);
+        const nonePresent = set2.every(item => !set1.has(item));
+        const somePresent = set2.some(item => set1.has(item));
+        return nonePresent ? true : somePresent ? false : true;
+      } else {
+        return true;
+      }
+    return true;
+  });
+  return selectionList;
+};
 
 // Exporting Mapping component
 export default Mapping;

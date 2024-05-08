@@ -1576,6 +1576,10 @@ $border-color: rgba(214, 213, 212, 1);
                 border-radius: 0.25rem;
             }
 
+            .height-control{
+                max-height: 10rem !important;
+            }
+
             .filter-by-boundary {
                 position: absolute;
                 top: 1rem;
@@ -1609,6 +1613,7 @@ $border-color: rgba(214, 213, 212, 1);
                 .display-none {
                     display: none !important;
                 }
+
 
                 .boundary-selection {
                     display: block;
