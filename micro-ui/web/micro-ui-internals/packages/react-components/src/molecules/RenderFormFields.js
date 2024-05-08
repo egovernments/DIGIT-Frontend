@@ -373,7 +373,7 @@ const RenderFormFields = ({data,...props}) => {
                 { fieldSelector(item.type, item.populators, item.isMandatory, item?.disable, item?.component, item) }
                 
                 { item?.populators?.name && errors && errors[item?.populators?.name] && Object.keys(errors[item?.populators?.name]).length ? (
-                  <CardLabelError style={{ fontSize: "12px", marginTop: "-20px" }}>
+                  <CardLabelError style={item?.populators?.validationErrorStyles ? { fontSize: "12px", marginTop: "-20px",...item?.populators?.validationErrorStyles }:{ fontSize: "12px", marginTop: "-20px"}} className={item?.populators?.validationErrorClassName}>
                     {t(item?.populators?.error)}
                   </CardLabelError> ) : null
                 }

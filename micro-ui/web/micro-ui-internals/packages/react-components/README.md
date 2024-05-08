@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.17 added error classname for fields in renderFormFields
 1.8.1-beta.16 added error classname for toast
 1.8.1-beta.15 Used a new Primary constant color "#c84c0e" ``Note use this version with css 1.8.1-beta.8 and core 1.8.1-beta.12 ``
 1.8.1-beta.14 Updated code for pagination in ResultsTable component
