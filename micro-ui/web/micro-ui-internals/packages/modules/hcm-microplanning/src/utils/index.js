@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { findParent } from "../utils/processHierarchyAndData";
-
+import { EXCEL,LOCALITY } from "../configs/constants";
 const formatDates = (value, type) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
@@ -194,6 +194,67 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   };
 };
 
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
+  
+  let resourceMappingData = [];
+  let newFileData = {};
+  let toAddInResourceMapping;
+  if (selectedFileType.id === EXCEL && fileDataToStore) {
+    // Extract all unique column names from fileDataToStore and then doing thir resource mapping
+    const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
+    if (schemaData?.schema?.["Properties"]) {
+      let toChange;
+      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
+      const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
+      schemaKeys.forEach((item) => {
+        if (columnForMapping.has(t(item))) {
+          if (LOCALITY && toChange === item) {
+            toAddInResourceMapping = {
+              mappedFrom: t(item),
+              mappedTo: LOCALITY,
+            };
+          }
+          resourceMappingData.push({
+            mappedFrom: t(item),
+            mappedTo: item,
+          });
+        }
+      });
+    }
+
+    // Filtering the columns with respect to the resource mapping and removing the columns that are not needed
+    Object.entries(fileDataToStore).forEach(([key, value]) => {
+      let data = [];
+      let headers = [];
+      let toRemove = [];
+      if (value && value.length > 0) {
+        value[0].forEach((item, index) => {
+          const mappedTo = resourceMappingData.find((e) => e.mappedFrom === item)?.mappedTo;
+          if (!mappedTo) {
+            toRemove.push(index);
+            return;
+          }
+          headers.push(mappedTo);
+          return;
+        });
+        for (let i = 1; i < value?.length; i++) {
+          let temp = [];
+          for (let j = 0; j < value[i].length; j++) {
+            if (!toRemove.includes(j)) {
+              temp.push(value[i][j]);
+            }
+          }
+          data.push(temp);
+        }
+      }
+      newFileData[key] = [headers, ...data];
+    });
+  }
+  resourceMappingData.pop();
+  resourceMappingData.push(toAddInResourceMapping);
+  return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
+};
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -202,4 +263,5 @@ export default {
   inputScrollPrevention,
   handleSelection,
   convertGeojsonToExcelSingleSheet,
+  resourceMappingAndDataFilteringForExcelFiles
 };
