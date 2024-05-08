@@ -10,6 +10,8 @@ import createAndSearch from "../config/createAndSearch";
 import pool from "../config/dbPoolConfig";
 import * as XLSX from 'xlsx';
 import { getBoundaryRelationshipData, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
+import { log } from "console";
+import { enrichProjectDetailsFromCampaignDetails } from "./projectTypeUtils";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -1067,16 +1069,9 @@ async function getCodesTarget(request: any) {
 
 async function createProject(request: any, actionUrl: any) {
     var { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
+    log(request?.body?.CampaignDetails);
     if (boundaries && projectType && !projectId) {
-        var Projects: any = [{
-            tenantId,
-            projectType,
-            startDate,
-            endDate,
-            "projectSubType": "Campaign",
-            "department": "Campaign",
-            "description": "Campaign ",
-        }]
+        var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails);
         const projectCreateBody = {
             RequestInfo: request?.body?.RequestInfo,
             Projects
