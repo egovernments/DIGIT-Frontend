@@ -1,36 +1,94 @@
 import { Request } from "@egovernments/digit-ui-libraries";
-import { parseXlsxToJsonMultipleSheets } from "../utils/exceltojson";
+import { parseXlsxToJsonMultipleSheetsForSessionUtil } from "../utils/exceltojson";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
-import { EXCEL, GEOJSON, SHAPEFILE } from "../configs/constants";
+import * as XLSX from "xlsx";
+import axios from "axios";
+import shp from "shpjs";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS } from "../configs/constants";
 
-function parseBlobToExcel(blob) {
+function handleExcelArrayBuffer(arrayBuffer, file) {
+  return new Promise((resolve, reject) => {
+    try {
+      // Read the response as an array buffer
+      // const arrayBuffer = response.arrayBuffer();
+
+      // Convert the array buffer to binary string
+      const data = new Uint8Array(arrayBuffer);
+      const binaryString = String.fromCharCode.apply(null, data);
+
+      // Parse the binary string into a workbook
+      const workbook = XLSX.read(binaryString, { type: "binary" });
+
+      // Assuming there's only one sheet in the workbook
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      // Convert the sheet to JSON object
+      const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+      resolve(jsonData);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+function shpToGeoJSON(shpBuffer, file) {
+  return new Promise((resolve, reject) => {
+    try {
+      shp(shpBuffer)
+        .then((geojson) => {
+          resolve({ jsonData: geojson, file });
+        })
+        .catch((error) => reject(error));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+function parseGeoJSONResponse(arrayBuffer, file) {
+  return new Promise((resolve, reject) => {
+    try {
+      const decoder = new TextDecoder("utf-8");
+      const jsonString = decoder.decode(arrayBuffer);
+      const jsonData = JSON.parse(jsonString);
+      resolve({ jsonData, file });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// Function to read blob data and parse it into JSON
+function parseBlobToJSON(blob, file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onload = function (event) {
-      const result = event.target.result;
-      const parsedData = [];
+      const data = new Uint8Array(event.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const jsonData = {};
 
-      // Assuming the CSV data is comma-separated
-      const rows = result.split("\n");
-      rows.forEach((row) => {
-        parsedData.push(row.split(","));
+      workbook.SheetNames.forEach((sheetName) => {
+        const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+        jsonData[sheetName] = sheetData;
       });
 
-      resolve(parsedData);
+      resolve({ jsonData, file });
     };
 
-    reader.onerror = function (event) {
-      reject(event.target.error);
+    reader.onerror = function () {
+      reject(new Error("Error reading the blob data"));
     };
 
-    reader.readAsText(blob);
+    reader.readAsArrayBuffer(blob);
   });
 }
 
 export const updateSessionUtils = {
-  computeSessionObject: async (row,state) => {
+  computeSessionObject: async (row, state) => {
     const sessionObj = {};
     const setCurrentPage = () => {
       sessionObj.currentPage = {
@@ -71,122 +129,133 @@ export const updateSessionUtils = {
       }
     };
 
-    const setMicroplanUpload = async () => {
-      const upload = {};
+    const handleGeoJson = (file, result, upload) => {
+      const { inputFileType, templateIdentifier, filestoreId } = file || {};
+
+      upload[templateIdentifier] = {
+        id: templateIdentifier,
+        section: templateIdentifier,
+        fileName: templateIdentifier,
+        fileType: inputFileType,
+        file: {},
+        error: null,
+        resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
+        data: {},
+      };
+
+      upload[templateIdentifier].data = result;
+      const newFeatures = result["features"].map((item) => {
+        let newProperties = {};
+        row?.resourceMapping
+          ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
+          .forEach((e) => {
+            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+          });
+        item["properties"] = newProperties;
+        return item;
+      });
+      upload[templateIdentifier].data.features = newFeatures;
+
+      return upload;
+    };
+
+    const handleExcel = (file, result, upload) => {
+      const { inputFileType, templateIdentifier, filestoreId } = file || {};
+
+      upload[templateIdentifier] = {
+        id: templateIdentifier,
+        section: templateIdentifier,
+        fileName: templateIdentifier,
+        fileType: inputFileType,
+        file: {},
+        error: null,
+        resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
+        data: {},
+      };
+
+      upload[templateIdentifier].data = result;
+    };
+
+    const fetchFiles = async () => {
       const files = row?.files;
       if (!files || files.length === 0) {
-        return;
+        return [];
       }
 
-      let promises = [];
-
-      // Loop through each URL
-      for (let file of files) {
-        //here every file will have {inputFileTyp,templateIdentifier(use this key to set data on upload object)}
-        const { inputFileType, templateIdentifier, filestoreId } = file || {};
-
-        upload[templateIdentifier] = {
-          id: templateIdentifier,
-          section: templateIdentifier,
-          fileName: templateIdentifier,
-          fileType: inputFileType,
-          file: {},
-          error: null,
-          resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
-          data: {},
-        };
-
-        //we need to set id,fileName,section,fileType,data,file,error,resourceMapping(filter with filestoreId) (for every file)
-        let promise = Request({
-          url: "/filestore/v1/files/id",
-          data: {},
-          useCache: false,
-          userService: true,
-          method: "GET",
-          auth: false,
-          params: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-            // fileStoreId: filestoreId,
-            fileStoreId: "733b2d5f-9876-4622-931f-9b265f7879b0",//geoj
-          },
-          plainAccessRequest: {},
-          userDownload: false,
-          setTimeParam: false,
-          headers: {
-            "auth-token": Digit.UserService.getUser()?.["access_token"],
-          },
-        });
-
-        promises.push(promise); // Push the promise into the array
-      }
-      //this will have data corresponding to all the files
-      let results = await Promise.all(promises);
-      //do other async operations here only for files such as shp and xlsx
-      
-
-
-      // var binary = atob(results?.[0]?.split(',')[1]);
-      // var binary = btoa(encodeURIComponent(results?.[0]))
-
-      // // const fileBlob = new Blob([binary], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      // const fileBlob = new Blob([binary], { type: 'application/octet-stream' });
-      // const file = new File([fileBlob], "filename");
-
-      // shp
-      // ------------
-      // const zip = await JSZip.loadAsync(file);
-      // let regx = new RegExp(namingConvension.replace(".zip$", ".shp$"));
-      // const shpFile = zip.file(regx)[0];
-      // regx = new RegExp(namingConvension.replace(".zip$", ".shx$"));
-      // const shxFile = zip.file(regx)[0];
-      // regx = new RegExp(namingConvension.replace(".zip$", ".dbf$"));
-      // const dbfFile = zip.file(regx)[0];
-      // let geojson;
-      // if (shpFile && dbfFile) {
-      //   const shpArrayBuffer = await shpFile.async("arraybuffer");
-      //   const dbfArrayBuffer = await dbfFile.async("arraybuffer");
-      //   geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
-      // }
-      // ----------
-
-
-      const handleGeoJson = (file,idx) => {
-        upload[files[idx].templateIdentifier].data = results[idx];
-          const newFeatures = results[idx]["features"].map((item) => {
-            let newProperties = {};
-            row?.resourceMapping
-              ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
-              .forEach((e) => {
-                newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+      const promises = [];
+      files.forEach(({ filestoreId, inputFileType, templateIdentifier, id }) => {
+        const promiseToAttach = axios
+          .get("/filestore/v1/files/id", {
+            responseType: "arraybuffer",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: ACCEPT_HEADERS[inputFileType],
+              "auth-token": Digit.UserService.getUser()?.["access_token"],
+            },
+            params: {
+              tenantId: Digit.ULBService.getCurrentTenantId(),
+              fileStoreId: filestoreId,
+            },
+          })
+          .then((res) => {
+            if (inputFileType === EXCEL) {
+              const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
+              return parseXlsxToJsonMultipleSheetsForSessionUtil(
+                file,
+                { header: 1 },
+                {
+                  filestoreId,
+                  inputFileType,
+                  templateIdentifier,
+                  id,
+                }
+              );
+            } else if (inputFileType === GEOJSON) {
+              return parseGeoJSONResponse(res.data, {
+                filestoreId,
+                inputFileType,
+                templateIdentifier,
+                id,
               });
-            item["properties"] = newProperties;
-            return item;
+            } else if (inputFileType === SHAPEFILE) {
+              const geoJson = shpToGeoJSON(res.data, {
+                filestoreId,
+                inputFileType,
+                templateIdentifier,
+                id,
+              });
+              return geoJson;
+            }
           });
-          upload[files[idx].templateIdentifier].data.features = newFeatures;
+        promises.push(promiseToAttach);
+      });
+
+      const result = await Promise.all(promises);
+      return result;
+    };
+    const setMicroplanUpload = async (filesResponse) => {
+      //here based on files response set data in session
+      if (filesResponse.length === 0) {
+        return {};
       }
+      //populate this object based on the files and return
+      const upload = {};
 
-      
-
-
-      // let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
-      //run a loop and set the data object of every file
-      files.forEach((file, idx) => {
+      filesResponse.forEach(({ jsonData, file }, idx) => {
         switch (file.inputFileType) {
-          case SHAPEFILE:
+          case "Shapefile":
+            handleGeoJson(file, jsonData, upload);
             break;
-          case EXCEL:
+          case "Excel":
+            handleExcel(file, jsonData, upload);
             break;
-          case GEOJSON:
-            handleGeoJson();
+          case "GeoJSON":
+            handleGeoJson(file, jsonData, upload);
           default:
             break;
         }
-        //this logic is for geoJson file type only
-        handleGeoJson(file,idx)
       });
-      //now map over this results and for each file (currently only geojson) set upload object in sessionObj
-      //also preprocess with computeGeojsonWithMappedProperties before setting on sessionObj
-
+      //here basically parse the files data from filestore parse it and populate upload object based on file type -> excel,shape,geojson
       return upload;
     };
 
@@ -196,10 +265,12 @@ export const updateSessionUtils = {
       setMicroplanDetails();
       setMicroplanHypothesis();
       setMicroplanRuleEngine();
-      const upload = await setMicroplanUpload(); //should return upload object
+      const filesResponse = await fetchFiles();
+      const upload = await setMicroplanUpload(filesResponse); //should return upload object
       sessionObj.upload = upload;
       return sessionObj;
     } catch (error) {
+      console.error(error.message);
     }
   },
 };
