@@ -114,13 +114,13 @@ class dataManageController {
    */
     createData = async (request: any, response: any) => {
         try {
+            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
             // Validate the create request
-            await validateCreateRequest(request);
+            await validateCreateRequest(request,localizationMap);
 
             // Enrich resource details
             await enrichResourceDetails(request);
 
-            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
 
             // Process the generic request
             await processGenericRequest(request, localizationMap);

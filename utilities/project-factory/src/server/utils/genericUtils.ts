@@ -882,9 +882,10 @@ function modifyTargetData(data: any) {
   return dataArray;
 }
 
-function calculateKeyIndex(obj: any, hierachy: any[]) {
+function calculateKeyIndex(obj: any, hierachy: any[],localizationMap?:any) {
   const keys = Object.keys(obj);
-  const boundaryCodeIndex = keys.indexOf('Boundary Code');
+  const localizedBoundaryCode = getLocalizedName(config.boundaryCode,localizationMap)
+  const boundaryCodeIndex = keys.indexOf(localizedBoundaryCode);
   const keyBeforeBoundaryCode = keys[boundaryCodeIndex - 1];
   return hierachy.indexOf(keyBeforeBoundaryCode);
 }

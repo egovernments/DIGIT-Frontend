@@ -417,7 +417,7 @@ async function processValidate(request: any, localizationMap?: { [key: string]: 
   const createAndSearchConfig = createAndSearch[type]
   const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, null, localizationMap)
   if (type == 'boundaryWithTarget') {
-    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation);
+    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation,localizationMap);
   }
   else {
     const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";

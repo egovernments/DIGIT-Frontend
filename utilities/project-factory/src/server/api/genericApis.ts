@@ -6,7 +6,7 @@ import { httpRequest } from "../utils/request"; // Import httpRequest function f
 import { logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getCodeFromLocalizedMessage, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getHierarchy } from './campaignApis';
 const _ = require('lodash'); // Import lodash library
 
@@ -56,7 +56,6 @@ const getTargetWorkbook = async (fileUrl: string) => {
 const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any, localizationMap?: { [key: string]: string }) => {
     // Retrieve workbook using the getWorkbook function
     const localizedSheetName = getLocalizedName(sheetName, localizationMap);
-    console.log(localizationMap,"kkkkkkkkkkkkkkkkkk")
     const workbook: any = await getWorkbook(fileUrl, localizedSheetName)
 
     // If parsing array configuration is provided, validate first row of each column
@@ -684,7 +683,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
  * @param boundaryTypeMap Map of boundary codes to types.
  * @param modifiedChildParentMap Modified child-parent map.
  */
-async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key: string]: string } = {}, modifiedChildParentMap: any) {
+async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key: string]: string } = {}, modifiedChildParentMap: any,localizationMap?:any) {
     try {
         // Create boundary relationships
         let activityMessage = [];
@@ -704,9 +703,10 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
         let flag = 1;
         for (const [boundaryCode, boundaryType] of Object.entries(boundaryTypeMap)) {
             if (!allCodes.has(boundaryCode)) {
+                const codeFromLocalizedMessageForBoundaryType = getCodeFromLocalizedMessage(boundaryType,localizationMap);
                 const boundary = {
                     tenantId: request?.body?.ResourceDetails?.tenantId,
-                    boundaryType: boundaryType,
+                    boundaryType: codeFromLocalizedMessageForBoundaryType,
                     code: boundaryCode,
                     hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
                     parent: modifiedChildParentMap.get(boundaryCode)

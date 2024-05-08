@@ -140,27 +140,29 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
 
 
 
-async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[]) {
+async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[], localizationMap?: any) {
     const hierachy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    const localizedHierarchy = getLocalizedHeaders(hierachy, localizationMap);
     const dataToBeValidated = modifyTargetData(data);
     let maxKeyIndex = -1;
     dataToBeValidated.forEach(obj => {
-        const keyIndex = calculateKeyIndex(obj, hierachy);
+        const keyIndex = calculateKeyIndex(obj, localizedHierarchy, localizationMap);
         if (keyIndex > maxKeyIndex) {
             maxKeyIndex = keyIndex;
         }
     })
-    const lowestLevelHierarchy = hierachy[maxKeyIndex];
-    validateTargets(data, lowestLevelHierarchy, errors);
+    const lowestLevelHierarchy = localizedHierarchy[maxKeyIndex];
+    validateTargets(data, lowestLevelHierarchy, errors, localizationMap);
 }
 //
-function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[]) {
+function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], localizationMap?: any) {
     for (const key in data) {
         if (Array.isArray(data[key])) {
             const boundaryData = data[key];
             boundaryData.forEach((obj: any, index: number) => {
                 if (obj.hasOwnProperty(lowestLevelHierarchy)) {
-                    const target = obj['Target at the Selected Boundary level'];
+                    const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
+                    const target = obj[localizedTargetColumnName];
                     if (target === undefined || typeof target !== 'number' || target < 0 || !Number.isInteger(target)) {
                         errors.push({ status: "INVALID", rowNumber: obj["!row#number!"], errorDetails: `Invalid target value at row ${obj['!row#number!'] + 1}. of sheet ${key}`, sheetName: key })
                     }
@@ -255,15 +257,16 @@ async function validateSheetData(data: any, request: any, schema: any, boundaryV
     }
 }
 
-async function validateTargetSheetData(data: any, request: any, boundaryValidation: any) {
+async function validateTargetSheetData(data: any, request: any, boundaryValidation: any, localizationMap?: any) {
     try {
         const errors: any[] = [];
         if (boundaryValidation) {
-            await validateTargetBoundaryData(data, request, boundaryValidation?.column, errors);
-            await validateTargetsAtLowestLevelPresentOrNot(data, request, errors);
+            const localizedBoundaryValidationColumn = getLocalizedName(boundaryValidation?.column, localizationMap)
+            await validateTargetBoundaryData(data, request, localizedBoundaryValidationColumn, errors);
+            await validateTargetsAtLowestLevelPresentOrNot(data, request, errors, localizationMap);
         }
         request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
-        await generateProcessedFileAndPersist(request);
+        await generateProcessedFileAndPersist(request, localizationMap);
     }
     catch (error) {
         await handleResouceDetailsError(request, error);
