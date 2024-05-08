@@ -227,7 +227,7 @@ const SetupCampaign = () => {
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
   const hierarchyType = "ADMIN";
-  const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType;
+  // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -235,13 +235,13 @@ const SetupCampaign = () => {
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
-    changeQueryName: `${hierarchyType2}`,
+    changeQueryName: `${hierarchyType}`,
     body: {
       BoundaryTypeHierarchySearchCriteria: {
         tenantId: tenantId,
         limit: 2,
         offset: 0,
-        hierarchyType: hierarchyType2,
+        hierarchyType: hierarchyType,
       },
     },
   };
@@ -316,8 +316,8 @@ const SetupCampaign = () => {
       HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
         boundaryType: {
           boundaryData: groupByTypeRemap(draftData?.boundaries),
+          selectedData: draftData?.boundaries,
         },
-        selectedData: draftData?.boundaries,
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
         uploadBoundary: draftData?.resources?.filter((i) => i?.type === "boundary"),
@@ -333,7 +333,7 @@ const SetupCampaign = () => {
   }, [params, draftData]);
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
-  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType2, filteredBoundaryData);
+  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
   const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
@@ -343,6 +343,7 @@ const SetupCampaign = () => {
       boundaryId: boundaryId,
       userId: userId,
       hierarchyType: hierarchyType,
+      hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
     });
   }, [facilityId, boundaryId, userId]); // Only run if dataParams changes
 
@@ -807,19 +808,19 @@ const SetupCampaign = () => {
         } else {
           return true;
         }
-      // case "boundaryType":
-      // if(formData?.boundaryType?.selectedData){
-      //   const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
-      //   if(!validateBoundary){
-      //     setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
-      //     return false;
-      //   }
-      //   return true;
-      // }
-      // else {
-      //   setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
-      //   return false;
-      // }
+      case "boundaryType":
+      if(formData?.boundaryType?.selectedData){
+        const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+        if(!validateBoundary){
+          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+          return false;
+        }
+        return true;
+      }
+      else {
+        setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
+        return false;
+      }
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
