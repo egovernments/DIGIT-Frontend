@@ -102,7 +102,7 @@ const MicroplanPreview = ({
     if (microplanData && (microplanData?.ruleEngine || microplanData?.hypothesis)) {
       const hypothesisAssumptions = microplanData?.hypothesis || [];
       const formulaConfiguration = microplanData?.ruleEngine?.filter((item) => Object.values(item).every((key) => key !== "")) || [];
-      if (hypothesisAssumptions.length !== 0) {
+      if (hypothesisAssumptions.length !== 0 && hypothesisAssumptionsList.length === 0)  {
         setHypothesisAssumptionsList(hypothesisAssumptions);
       }
       if (formulaConfiguration.length !== 0) {
@@ -152,7 +152,7 @@ const MicroplanPreview = ({
   }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
   const cancelUpdateData = useCallback(() => {
-    setCheckDataCompletion(false);
+    setCheckDataCompletion("perform-action");
     setModal('none');
   }, [setCheckDataCompletion, setModal]);
 
@@ -174,7 +174,6 @@ const MicroplanPreview = ({
 
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
-
     const microData = updateMicroplanData(hypothesisAssumptionsList);
     setLoaderActivation(true);
 
@@ -788,8 +787,8 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
             {data?.map((row, index) => (
               <tr key={row.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                 <td>{t(row?.key)}</td>
+                <td>{t(row?.oldValue)}</td>
                 <td>{t(row?.value)}</td>
-                <td>{t(newhypothesisList?.[index]?.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -812,6 +811,7 @@ function filterObjects(arr1, arr2) {
     // If the object with the same key is found in the second array and their values are the same
     if (obj2 && obj1.value !== obj2.value) {
       // Push the object to the filtered array
+      obj1.oldValue = obj2.value
       filteredArray.push(obj1);
     }
   });
