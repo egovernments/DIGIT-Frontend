@@ -122,8 +122,25 @@ const SavedMicroplans = () => {
   const onClickRow = async (row) => {
     setShowLoader(true)
     try {
+
+      const heirarchyData =  await Digit.CustomService.getResponse({
+        url: "/boundary-service/boundary-hierarchy-definition/_search",
+        useCache: false,
+        method: "POST",
+        userService: false,
+        body:{
+          BoundaryTypeHierarchySearchCriteria: {
+            tenantId: Digit.ULBService.getStateId(),
+            hierarchyType: row?.original?.CampaignDetails?.hierarchyType,
+          },
+        },
+      });
+      const additionalPropsForExcel = {
+        heirarchyData:heirarchyData?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType),
+        t
+      }
       //here compute the sessionObject based on the row?.original data and then re-route
-      const computedSession = await updateSessionUtils.computeSessionObject(row.original,state)
+      const computedSession = await updateSessionUtils.computeSessionObject(row.original,state,additionalPropsForExcel)
       Digit.SessionStorage.set("microplanData", computedSession);
       setShowLoader(false)
       history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);

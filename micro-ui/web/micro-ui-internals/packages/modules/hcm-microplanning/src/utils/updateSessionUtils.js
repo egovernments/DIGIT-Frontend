@@ -88,7 +88,7 @@ function parseBlobToJSON(blob, file) {
 }
 
 export const updateSessionUtils = {
-  computeSessionObject: async (row, state) => {
+  computeSessionObject: async (row, state, additionalPropsForExcel) => {
     const sessionObj = {};
     const setCurrentPage = () => {
       sessionObj.currentPage = {
@@ -124,9 +124,21 @@ export const updateSessionUtils = {
     };
 
     const setMicroplanRuleEngine = () => {
+      const rulesList = state.UIConfiguration?.filter((item) => item.name === "ruleConfigure")?.[0]?.ruleConfigureOperators;
+
       if (row.operations.length > 0) {
-        sessionObj.ruleEngine = row.operations;
+        sessionObj.ruleEngine = row.operations?.map((item) => {
+          return {
+            ...item,
+            operator: rulesList.filter((rule) => rule.code === item.operator)?.[0]?.name,
+          };
+        });
       }
+    };
+
+    const setDraftValues = () => {
+      sessionObj.planConfigurationId = row?.id;
+      sessionObj.auditDetails = row.auditDetails;
     };
 
     const handleGeoJson = (file, result, upload) => {
@@ -173,7 +185,28 @@ export const updateSessionUtils = {
         data: {},
       };
 
-      upload[templateIdentifier].data = result;
+      const schema = state?.Schemas?.filter((schema) => {
+        if (schema.type === inputFileType && schema.section === templateIdentifier && schema.campaignType === "ITIN") {
+          return true;
+        } else {
+          return false;
+        }
+      })?.[0];
+      if (!schema) {
+        console.error("Schema got undefined while handling excel at handleExcel");
+      }
+
+      const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
+        schema,
+        additionalPropsForExcel.heirarchyData,
+        {
+          id: inputFileType,
+        },
+        result,
+        additionalPropsForExcel.t
+      );
+      upload[templateIdentifier].data = resultAfterMapping?.tempFileDataToStore;
+      upload[templateIdentifier].resourceMapping = resultAfterMapping?.tempResourceMappingData;
     };
 
     const fetchFiles = async () => {
@@ -265,6 +298,7 @@ export const updateSessionUtils = {
       setMicroplanDetails();
       setMicroplanHypothesis();
       setMicroplanRuleEngine();
+      setDraftValues();
       const filesResponse = await fetchFiles();
       const upload = await setMicroplanUpload(filesResponse); //should return upload object
       sessionObj.upload = upload;
