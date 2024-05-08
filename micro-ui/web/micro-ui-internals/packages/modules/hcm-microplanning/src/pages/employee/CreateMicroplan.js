@@ -36,7 +36,7 @@ const CreateMicroplan = () => {
   const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
-  const [ toRender, setToRender] = useState("navigator")
+  const [toRender, setToRender] = useState("navigator");
   const { t } = useTranslation();
 
   // States
@@ -101,7 +101,7 @@ const CreateMicroplan = () => {
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
-        if(data === "mapping") break;
+        if (data === "mapping") break;
         check = check && checkStatusValues?.[data];
       }
       if (!check) {
@@ -141,6 +141,7 @@ const CreateMicroplan = () => {
           state: "error",
         });
         setTimeout(() => {
+          setLoaderActivation(false);
           setToastCreateMicroplan(undefined);
           setCheckDataCompletion("perform-action");
         }, 2000);
@@ -167,6 +168,8 @@ const CreateMicroplan = () => {
         });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
+          setLoaderActivation(false);
+          setCheckDataCompletion("perform-action");
         }, 2000);
       },
     });
@@ -215,10 +218,19 @@ const CreateMicroplan = () => {
         {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
 
         {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
-          <Toast style={{ bottom: "5.5rem", zIndex:"999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
+          <Toast
+            style={{ bottom: "5.5rem", zIndex: "999991" }}
+            label={toastCreateMicroplan.message}
+            onClose={() => setToastCreateMicroplan(undefined)}
+          />
         )}
         {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
-          <Toast style={{ bottom: "5.5rem", zIndex:"999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} error />
+          <Toast
+            style={{ bottom: "5.5rem", zIndex: "999991" }}
+            label={toastCreateMicroplan.message}
+            onClose={() => setToastCreateMicroplan(undefined)}
+            error
+          />
         )}
       </div>
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}

@@ -681,13 +681,21 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
 const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions, setRules) => {
   if (rules?.length === 0) return;
   let newRules = [];
+  let outputs = [];
   rules.forEach((item) => {
     if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
     item["id"] = newRules.length;
     newRules.push(item);
+    outputs.push(item.output)
+  });
+  let filteredRules = []
+  newRules.forEach((item) => {
+    if (!outputs?.includes(item?.input)) return;
+    item["id"] = newRules.length;
+    filteredRules.push(item);
   });
   if (newRules.length !== 0) {
-    setRules(newRules);
+    setRules(filteredRules);
   }
 };
 export default RuleEngine;
