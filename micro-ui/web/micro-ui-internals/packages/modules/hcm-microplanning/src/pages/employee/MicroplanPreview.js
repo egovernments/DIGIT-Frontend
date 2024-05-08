@@ -1005,7 +1005,6 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
 };
 
 const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges,data, t }) => {
-  debugger
   const conmmonColumnData = useMemo(() => {
     const index = previewData?.[0]?.indexOf(commonColumn);
     if (index == -1) return;
