@@ -96,10 +96,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       } else if (type === "facilityWithBoundary") {
         uploadType = "uploadFacility";
       }
-      onSelect(uploadType, uploadedFile);
+      onSelect(uploadType, { uploadedFile });
       setExecutionCount((prevCount) => prevCount + 1);
     }
-  }, [type, executionCount, onSelect, uploadedFile]);
+  });
 
   useEffect(() => {
     switch (type) {
@@ -374,12 +374,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           }
           if (temp?.status === "completed") {
             setIsValidation(false);
-            if (Object.keys(temp?.additionalDetails).length === 0) {
+            if (temp?.additionalDetails?.sheetErrors.length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (!errorsType[type]) {
                 setIsError(false);
+                return ;
                 // setIsValidation(false);
               }
+              return ;
             } else {
               const processedFileStore = temp?.processedFilestoreId;
               if (!processedFileStore) {
