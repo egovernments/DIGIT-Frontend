@@ -839,12 +839,13 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       }
     } else value = parseFloat(e.newValue);
     value = !isNaN(value) ? value : "";
+    debugger
 
     // update the state with user input
-    let newhypothesisEntity = _.cloneDeep(hypothesisAssumptionsList)?.find((item) => item?.id === e?.item?.id);
-    newhypothesisEntity.value = value;
+    let newhypothesisEntityIndex = hypothesisAssumptionsList.findIndex((item) => item?.id === e?.item?.id);
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
-    unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
+    if(newhypothesisEntityIndex!==-1 && unprocessedHypothesisList[newhypothesisEntityIndex].value)
+      unprocessedHypothesisList[newhypothesisEntityIndex].value = value;
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
