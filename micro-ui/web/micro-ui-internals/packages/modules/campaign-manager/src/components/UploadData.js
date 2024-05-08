@@ -253,7 +253,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           }
-
           const expectedHeaders = sheetHeaders[type];
           for (const header of expectedHeaders) {
             if (!headersToValidate.includes(header)) {
@@ -366,6 +365,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
+          if(temp?.isError){
+            const errorMessage = temp?.error.replaceAll(":", "-");
+            setShowToast({ key: "error", label: errorMessage });
+                return;
+          }
           if (temp?.status === "completed") {
             if (Object.keys(temp?.additionalDetails).length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
@@ -479,7 +483,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         },
         onError: (result) => {
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-          closeToast();
         },
       }
     );
