@@ -251,6 +251,8 @@ const Mapping = ({
     if (geojsons) {
       removeAllLayers(map, layers);
       addGeojsonToMap(map, geojsons, setLayer, t);
+      let bounds = findBounds(geojsons)
+      if(bounds) map.fitBounds(bounds)
     }
   }, [boundarySelections]);
 
