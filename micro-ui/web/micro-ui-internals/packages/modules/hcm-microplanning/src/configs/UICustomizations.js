@@ -13,6 +13,21 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach(obj => {
+      const value = obj[key];
+      if (!uniqueValues.has(value)) {
+          uniqueValues.add(value);
+          result.push(obj);
+      }
+  });
+
+  return result;
+}
+
 function cleanObject(obj) {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -195,11 +210,11 @@ export const UICustomizations = {
   },
   SearchCampaign: {
     preProcess: (data, additionalDetails) => {
-      const { boundaryCode = "", campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
+      const { campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {};
       data.body.CampaignDetails.pagination = data?.state?.tableForm
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.CampaignDetails.boundaryCode = boundaryCode;
+      // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
       data.body.CampaignDetails.status = "started"
       if (startDate) {
@@ -213,6 +228,42 @@ export const UICustomizations = {
       cleanObject(data.body.CampaignDetails);
 
       return data;
+    },
+    populateProjectType: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+
+      return {
+        url: "/egov-mdms-service/v1/_search",
+        params: { tenantId },
+        body: {
+         MdmsCriteria:{
+          tenantId,
+          "moduleDetails": [
+              {
+                  "moduleName": "HCM-PROJECT-TYPES",
+                  "masterDetails": [
+                      {
+                          "name": "projectTypes"
+                      }
+                  ]
+              }
+          ]
+      }
+        },
+        changeQueryName:"projectType",
+        config: {
+          enabled: true,
+          select: (data) => {
+            const dropdownData =filterUniqueByKey(data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes,"code").map(row => {
+              return {
+                ...row,
+                i18nKey:Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`)
+              }
+            })
+            return dropdownData
+          },
+        },
+      };
     },
     customValidationCheck: (data) => {
       //checking if both to and from date are present then they should be startDate<=endDate
