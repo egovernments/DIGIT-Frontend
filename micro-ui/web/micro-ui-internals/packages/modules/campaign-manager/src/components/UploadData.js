@@ -489,6 +489,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 }).map(({ id, ...rest }) => rest);
                 onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
+                setIsError(true);
               }
             }
           } else {
@@ -516,6 +517,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               }).map(({ id, ...rest }) => rest);
               onFileDelete(uploadedFile);
               setUploadedFile(fileData);
+              setIsError(true);
             }
           }
         } catch (error) {}
