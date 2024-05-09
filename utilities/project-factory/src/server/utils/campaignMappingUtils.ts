@@ -4,6 +4,7 @@ import { getDataFromSheet, throwError } from "./genericUtils";
 import { logger } from "./logger";
 import { httpRequest } from "./request";
 import { produceModifiedMessages } from "../Kafka/Listener";
+import { getLocalizedName } from "./campaignUtils";
 
 
 async function createBoundaryWithProjectMapping(projects: any, boundaryWithProject: any) {
@@ -18,7 +19,7 @@ async function createBoundaryWithProjectMapping(projects: any, boundaryWithProje
 }
 
 function getPvarIds(messageObject: any) {
-    const deliveryRules = messageObject?.CampaignDetails?.campaignDetails?.deliveryRules
+    const deliveryRules = messageObject?.CampaignDetails?.deliveryRules
     var pvarIds = []
     for (const deliveryRule of deliveryRules) {
         const products = deliveryRule?.products
@@ -29,26 +30,17 @@ function getPvarIds(messageObject: any) {
     return pvarIds;
 }
 
-
-async function fetchAndMap(resources: any[], messageObject: any) {
-    const sheetName: any = {
-        "user": createAndSearch?.user?.parseArrayConfig?.sheetName,
-        "facility": createAndSearch?.facility?.parseArrayConfig?.sheetName,
-    }
-
-    // Object to store boundary codes
-    const boundaryCodes: any = {};
-
+async function enrichBoundaryCodes(resources: any[], messageObject: any, boundaryCodes: any, sheetName: any) {
+    const localizationMap: any = messageObject?.localizationMap
     for (const resource of resources) {
         const processedFilestoreId = resource?.processedFilestoreId;
         if (processedFilestoreId) {
-            const dataFromSheet: any = await getDataFromSheet(messageObject, processedFilestoreId, messageObject?.Campaign?.tenantId, undefined, sheetName[resource?.type]);
+            const dataFromSheet: any = await getDataFromSheet(messageObject, processedFilestoreId, messageObject?.Campaign?.tenantId, undefined, sheetName[resource?.type], localizationMap);
             for (const data of dataFromSheet) {
-                const uniqueCodeColumn = createAndSearch?.[resource?.type]?.uniqueIdentifierColumnName
+                const uniqueCodeColumn = getLocalizedName(createAndSearch?.[resource?.type]?.uniqueIdentifierColumnName, localizationMap)
                 const code = data[uniqueCodeColumn];
-
                 // Extract boundary codes
-                const boundaryCode = data[createAndSearch?.[resource?.type]?.boundaryValidation?.column];
+                const boundaryCode = data[getLocalizedName(createAndSearch?.[resource?.type]?.boundaryValidation?.column, localizationMap)];
                 if (boundaryCode) {
                     // Split boundary codes if they have comma separated values
                     const boundaryCodesArray = boundaryCode.split(',');
@@ -67,7 +59,10 @@ async function fetchAndMap(resources: any[], messageObject: any) {
             }
         }
     }
+}
 
+
+async function enrichBoundaryWithProject(messageObject: any, boundaryWithProject: any, boundaryCodes: any) {
     const projectSearchBody = {
         RequestInfo: messageObject?.RequestInfo,
         Projects: [{
@@ -86,10 +81,12 @@ async function fetchAndMap(resources: any[], messageObject: any) {
     logger.info("params : " + JSON.stringify(params));
     logger.info("boundaryCodes : " + JSON.stringify(boundaryCodes));
     const response = await httpRequest(config.host.projectHost + "health-project/v1/_search", projectSearchBody, params);
-    var boundaryWithProject: any = {};
     await createBoundaryWithProjectMapping(response?.Project, boundaryWithProject);
     logger.info("boundaryWithProject mapping : " + JSON.stringify(boundaryWithProject));
     logger.info("boundaryCodes mapping : " + JSON.stringify(boundaryCodes));
+}
+
+async function getProjectMappingBody(messageObject: any, boundaryWithProject: any, boundaryCodes: any) {
     const Campaign: any = {
         tenantId: messageObject?.Campaign?.tenantId,
         CampaignDetails: []
@@ -118,10 +115,25 @@ async function fetchAndMap(resources: any[], messageObject: any) {
             })
         }
     }
-    const projectMappingBody = {
+    return {
         RequestInfo: messageObject?.RequestInfo,
         Campaign: Campaign
     }
+}
+
+async function fetchAndMap(resources: any[], messageObject: any) {
+    const localizationMap = messageObject?.localizationMap;
+    const sheetName: any = {
+        "user": getLocalizedName(createAndSearch?.user?.parseArrayConfig?.sheetName, localizationMap),
+        "facility": getLocalizedName(createAndSearch?.facility?.parseArrayConfig?.sheetName, localizationMap)
+    }
+    // Object to store boundary codes
+    const boundaryCodes: any = {};
+
+    await enrichBoundaryCodes(resources, messageObject, boundaryCodes, sheetName);
+    var boundaryWithProject: any = {};
+    await enrichBoundaryWithProject(messageObject, boundaryWithProject, boundaryCodes);
+    const projectMappingBody = await getProjectMappingBody(messageObject, boundaryWithProject, boundaryCodes);
     logger.info("projectMappingBody : " + JSON.stringify(projectMappingBody));
     const projectMappingResponse = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/createCampaign", projectMappingBody);
     logger.info("Project Mapping Response : " + JSON.stringify(projectMappingResponse));
@@ -155,10 +167,12 @@ async function processCampaignMapping(messageObject: any) {
             const response = await searchResourceDetailsById(resourceDetailId, messageObject);
             logger.info(`response for resourceDetailId ${resourceDetailId} : ` + JSON.stringify(response));
             if (response?.status == "invalid") {
+                logger.error(`resource with id ${resourceDetailId} is invalid`);
                 throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "resource with id " + resourceDetailId + " is invalid");
                 break;
             }
             else if (response?.status == "failed") {
+                logger.error(`resource with id ${resourceDetailId} is failed`);
                 throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "resource with id " + resourceDetailId + " is failed");
                 break;
             }

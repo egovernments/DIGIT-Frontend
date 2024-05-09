@@ -22,6 +22,8 @@ import CampaignDocumentsPreview from "./components/CampaignDocumentsPreview";
 import AddProduct from "./pages/employee/AddProduct";
 import AddProductField from "./components/AddProductField";
 import CycleDataPreview from "./components/CycleDataPreview";
+import { ErrorBoundary } from "@egovernments/digit-ui-components";
+import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -30,7 +32,7 @@ import CycleDataPreview from "./components/CycleDataPreview";
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
 const CampaignModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema"];
+  const moduleCode = ["campaignmanager", "workbench", "mdms", "schema","hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
@@ -44,9 +46,11 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   }
 
   return (
-    <TourProvider>
-      <EmployeeApp path={path} stateCode={stateCode} url={url} userType={userType} />
-    </TourProvider>
+    <ErrorBoundary moduleName="CAMPAIGN">
+      <TourProvider>
+        <EmployeeApp path={path} stateCode={stateCode} url={url} userType={userType} />
+      </TourProvider>
+    </ErrorBoundary>
   );
 };
 
@@ -70,6 +74,7 @@ const componentsToRegister = {
   AddProduct,
   AddProductField,
   CycleDataPreview,
+  CampaignResourceDocuments
 };
 
 const overrideHooks = () => {

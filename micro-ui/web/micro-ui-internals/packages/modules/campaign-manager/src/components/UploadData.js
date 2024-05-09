@@ -30,6 +30,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
+  const [isValidation, setIsValidation] = useState(false);
+  const [fileName , setFileName] = useState (null);
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
     { name: "facilitySchema" },
     { name: "userSchema" },
@@ -40,13 +42,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
-      onSelect("uploadFacility", { uploadedFile, isError });
+      onSelect("uploadFacility", { uploadedFile, isError, isValidation });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, isError });
+      onSelect("uploadBoundary", { uploadedFile, isError, isValidation });
     } else {
-      onSelect("uploadUser", { uploadedFile, isError });
+      onSelect("uploadUser", { uploadedFile, isError, isValidation });
     }
-  }, [uploadedFile, isError]);
+  }, [uploadedFile, isError, isValidation]);
 
   var translateSchema = (schema) => {
     var newSchema = { ...schema };
@@ -73,7 +75,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       const headers = {
         boundary: Object?.keys(newBoundarySchema?.properties),
         facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
-        User: Object?.keys(newUserSchema?.properties),
+        userWithBoundary: Object?.keys(newUserSchema?.properties),
       };
 
       const schema = {
@@ -95,10 +97,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       } else if (type === "facilityWithBoundary") {
         uploadType = "uploadFacility";
       }
-      onSelect(uploadType, uploadedFile);
+      onSelect(uploadType, { uploadedFile });
       setExecutionCount((prevCount) => prevCount + 1);
     }
-  }, [type, executionCount, onSelect, uploadedFile]);
+  });
 
   useEffect(() => {
     switch (type) {
@@ -201,6 +203,78 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return true;
   };
 
+  // Function to compare arrays for equality
+  const arraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) return false;
+    }
+    return true;
+  };
+
+  const validateMultipleTargets = (workbook) => {
+    let isValid = true;
+    const sheet = workbook.Sheets[workbook.SheetNames[1]];
+    const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
+      header: 1,
+    })[0];
+
+    // Iterate over each sheet in the workbook, starting from the second sheet
+    for (let i = 1; i < workbook.SheetNames.length; i++) {
+      const sheetName = workbook?.SheetNames[i];
+      const sheet = workbook?.Sheets[sheetName];
+      // Convert the sheet to JSON to extract headers
+      const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+      })[0];
+
+      // Check if headers match the expected headers
+      if (!arraysEqual(headersToValidate, expectedHeaders)) {
+        isValid = false;
+        break;
+      }
+
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
+
+      const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+      const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
+
+      const columnBeforeBoundaryCode = jsonData.map((row) => row[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]);
+
+      // Getting the length of data in the column before the boundary code
+      const lengthOfColumnBeforeBoundaryCode = columnBeforeBoundaryCode.filter((value) => value !== undefined && value !== "").length;
+
+      const filteredData = jsonData
+        .filter((e) => e[headersBeforeBoundaryCode[headersBeforeBoundaryCode?.length - 1]])
+        .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
+      if (filteredData?.length == 0 || filteredData?.length != lengthOfColumnBeforeBoundaryCode) {
+        const errorMessage = t("HCM_MISSING_TARGET");
+        setErrorsType((prevErrors) => ({
+          ...prevErrors,
+          [type]: errorMessage,
+        }));
+        setIsError(true);
+        isValid = false;
+        break;
+      }
+
+      const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
+
+      if (targetValue <= 0 || targetValue >= 100000000) {
+        const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
+        setErrorsType((prevErrors) => ({
+          ...prevErrors,
+          [type]: errorMessage,
+        }));
+        setIsError(true);
+        isValid = false;
+        break;
+      }
+    }
+
+    return isValid;
+  };
+
   const validateExcel = (selectedFile) => {
     return new Promise((resolve, reject) => {
       // Check if a file is selected
@@ -215,13 +289,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
-
           const sheet = workbook.Sheets[workbook.SheetNames[0]];
           const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
           })[0];
 
           const SheetNames = workbook.SheetNames[0];
+          const expectedHeaders = sheetHeaders[type];
           if (type === "boundary") {
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
@@ -253,17 +327,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           }
-
-          const expectedHeaders = sheetHeaders[type];
-          for (const header of expectedHeaders) {
-            if (!headersToValidate.includes(header)) {
-              const errorMessage = t("HCM_MISSING_HEADERS");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
+          if (type === "boundary" && workbook?.SheetNames?.length > 1) {
+            if (!validateMultipleTargets(workbook)) {
               return;
+            }
+          } else {
+            for (const header of expectedHeaders) {
+              if (!headersToValidate.includes(header)) {
+                const errorMessage = t("HCM_MISSING_HEADERS");
+                setErrorsType((prevErrors) => ({
+                  ...prevErrors,
+                  [type]: errorMessage,
+                }));
+                setIsError(true);
+                return;
+              }
             }
           }
 
@@ -281,7 +359,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           jsonData = jsonData.filter((element) => element !== undefined);
 
-          if (type === "boundary") {
+          if (type === "boundary" && workbook?.SheetNames.length == 1) {
             if (!validateTarget(jsonData, headersToValidate)) {
               return;
             }
@@ -326,20 +404,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
       return;
     }
-    const module = "HCM";
+    setFileName(file?.[0]?.name);
+    const module = "HCM-ADMIN-CONSOLE-CLIENT";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
     const fileData = fileUrl.map((i) => {
       const urlParts = i?.url?.split("/");
       const fileName = file?.[0]?.name;
-      const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+      const id = fileUrl?.[0]?.id;
+      // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+      const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
       return {
         ...i,
-        fileName: fileName,
+        filestoreId: id,
+        filename: fileName,
         type: fileType,
       };
-    });
+    }).map(({ id, ...rest }) => rest);
     setUploadedFile(fileData);
     const validate = await validateExcel(file[0]);
   };
@@ -357,64 +439,85 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
   };
-
   useEffect(() => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile.length > 0) {
-        setShowToast({ key: "warning", label: t("HCM_VALIDATION_IN_PROGRESS") });
+        setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+        setIsValidation(true);
         setIsError(true);
 
         try {
           const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
+          if (temp?.isError) {
+            const errorMessage = temp?.error.replaceAll(":", "-");
+            setShowToast({ key: "error", label: errorMessage });
+            setIsError(true);
+            setIsValidation(false);
+            return;
+          }
           if (temp?.status === "completed") {
-            if (Object.keys(temp?.additionalDetails).length === 0) {
-              setShowToast({ key: "warning", label: t("HCM_VALIDATION_COMPLETED") });
+            setIsValidation(false);
+            if (temp?.additionalDetails?.sheetErrors.length === 0) {
+              setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (!errorsType[type]) {
                 setIsError(false);
+                return;
+                // setIsValidation(false);
               }
+              return;
             } else {
               const processedFileStore = temp?.processedFilestoreId;
               if (!processedFileStore) {
                 setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+                // setIsValidation(true);
                 return;
               } else {
-                setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
                 const fileData = fileUrl.map((i) => {
                   const urlParts = i?.url?.split("/");
-                  const fileName = uploadedFile?.[0]?.fileName;
-                  const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+                  const id = fileUrl?.[0]?.id;
+                  // const fileName = fileName;
+                  const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
                   return {
                     ...i,
-                    fileName: fileName,
+                    filestoreId: id,
+                    filename: fileName,
                     type: fileType,
+                    resourceId: temp?.id,
                   };
-                });
+                }).map(({ id, ...rest }) => rest);
                 onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
+                setIsError(true);
               }
             }
           } else {
+            setIsValidation(false);
             setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
               return;
             } else {
-              setShowToast({ key: "error", label: t("HCM_CHECK_FILE_AGAIN") });
+              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
+              setIsError(true);
               const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
               const fileData = fileUrl.map((i) => {
                 const urlParts = i?.url?.split("/");
-                const fileName = file?.[0]?.name;
-                const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+                const id = fileUrl?.[0]?.id;
+                // const fileName = file?.[0]?.name;
+                const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
                 return {
                   ...i,
-                  fileName: fileName,
+                  filestoreId: id,
+                  filename: fileName,
                   type: fileType,
                 };
-              });
+              }).map(({ id, ...rest }) => rest);
               onFileDelete(uploadedFile);
               setUploadedFile(fileData);
+              setIsError(true);
             }
           }
         } catch (error) {}
@@ -423,6 +526,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
     fetchData();
   }, [errorsType]);
+
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -447,6 +551,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          if (result?.GeneratedResource?.[0]?.status === "failed") {
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            return;
+          }
+          if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            return;
+          }
           const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
           const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
           const fileData = fileUrl?.map((i) => {
@@ -455,7 +567,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             const fileName = type === "boundary" ? "Boundary Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
-              fileName: fileName,
+              filename: fileName,
             };
           });
 
@@ -465,8 +577,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             // handleFileDownload(fileData?.[0]);
             // downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
           } else {
-            setShowToast({ key: "error", label: t("HCM_PLEASE_WAIT") });
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
           }
+        },
+        onError: (result) => {
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
     );
@@ -550,7 +665,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           ]}
         />
       )}
-      {showToast && <Toast error={showToast.key === "error" ? true : false} label={t(showToast.label)} onClose={closeToast} />}
+      {showToast && (
+        <Toast
+          error={showToast.key === "error" ? true : false}
+          warning={showToast.key === "warning" ? true : false}
+          info={showToast.key === "info" ? true : false}
+          label={t(showToast.label)}
+          transitionTime={6000000000}
+          onClose={closeToast}
+        />
+      )}
     </React.Fragment>
   );
 };

@@ -1,3 +1,5 @@
+@import "../../typography.scss";
+
 /* language selection issue*/
 .customBtn-selected {
   background-color: theme(digitv2.lightTheme.primary);
@@ -71,10 +73,6 @@
 /* toast new componnet css added */
 
 .toast-success {
-  background-color: theme(digitv2.alert.error) !important;
-}
-
-.toast-success {
   gap: 0.5rem;
   height: 3rem;
   padding: 0.75rem 0.5rem 0.75rem 0.75rem !important;
@@ -82,7 +80,7 @@
   transition: bottom 0.5s ease;
   grid-gap: 0.5rem;
   &.error {
-    background-color: theme(digitv2.alert.error);
+    background-color: theme(digitv2.alert.error) !important;
   }
 
   &.warning {
@@ -120,4 +118,14 @@
 
 .toast-success.animate {
   animation: slideInFromBottom 0.5s ease forwards;
+}
+
+@media screen and (max-width: 768px) {
+  .topbar {
+    background: #0b4b66 !important;
+    color: #fff;
+  }
+}
+header {
+  @extend .typography.text-heading-xl;
 }

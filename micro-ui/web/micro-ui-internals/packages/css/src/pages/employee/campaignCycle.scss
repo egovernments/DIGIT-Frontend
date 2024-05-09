@@ -1,9 +1,14 @@
+@import "../../typography.scss";
+
 .campaign-cycle-container {
   .campaign-tabs-container {
   }
   .sub-tab-container {
     margin-top: 5px;
     padding: 1.5rem;
+    .card-text{
+      margin-bottom: 0;
+    }
   }
   .add-resource-container {
     background-color: #fafafa;
@@ -59,11 +64,13 @@
         padding: 0.6rem 2.5rem;
         height: unset;
         margin: 1.5rem;
+        background-color: theme(digitv2.lightTheme.primary);
       }
     }
   }
 }
 .campaign-breadcrumb {
+  margin: 0;
   margin-bottom: 1.5rem;
   color: theme(digitv2.lightTheme.primary) !important;
 }
@@ -79,7 +86,6 @@
   justify-content: space-between;
   margin-bottom: 1.5rem;
   .campaign-download-template-btn {
-    margin-right: 1rem;
     font-weight: 700;
   }
 }
@@ -139,6 +145,7 @@
 
 .campaign-counter-container {
   padding: 1.5rem;
+  padding-bottom: 0.5rem;
   .card-text {
     margin-top: 0;
   }
@@ -219,6 +226,7 @@
 }
 
 .delivery-rule-container {
+  padding-top: 0;
   .card-header {
     .title {
       margin: 0 !important;
@@ -233,8 +241,9 @@
     border: 1px solid #d6d5d4;
     background-color: #fafafa;
     padding: 1rem;
+    padding-top: 0;
     .add-attribute {
-      width: calc(100% / 4 * 3);
+      width: 74.5%;
       justify-content: center;
       h2 {
         font-size: 1rem;
@@ -262,6 +271,9 @@
   }
   .options-card {
     max-height: 10rem !important;
+  }
+  .card-label{
+    margin-bottom: 0.5rem;
   }
 }
 .add-rule-btn {
@@ -302,4 +314,12 @@
   flex-direction: row !important;
 }
 .add-resource-modal {
+}
+.add-resource-wrapper {
+  .link {
+    color: theme(digitv2.lightTheme.primary);
+  }
+}
+.digit-toast-success {
+  margin-bottom: -0.5rem;
 }

@@ -3,12 +3,12 @@ const createAndSearch: any = {
     "facility": {
         requiresToSearchFromSheet: [
             {
-                sheetColumnName: "Facility Code",
+                sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CODE",
                 searchPath: "Facility.id"
             }
         ],
         boundaryValidation: {
-            column: "Boundary Code"
+            column: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE"
         },
         sheetSchema: {
             "$schema": "http://json-schema.org/draft-07/schema#",
@@ -29,10 +29,9 @@ const createAndSearch: any = {
                     "enum": ["Temporary", "Permanent"]
                 },
                 "Capacity": {
-                    "type": "integer",
+                    "type": "number",
                     "minimum": 1,
-                    "maximum": 100000000,
-                    "multipleOf": 1
+                    "maximum": 100000000
                 }
             },
             "required": [
@@ -47,32 +46,32 @@ const createAndSearch: any = {
         },
         uniqueIdentifier: "id",
         uniqueIdentifierColumn: "A",
-        uniqueIdentifierColumnName: "Facility Code",
+        uniqueIdentifierColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CODE",
         matchEachKey: true,
         parseArrayConfig: {
-            sheetName: "List of Available Facilities",
+            sheetName: "HCM_ADMIN_CONSOLE_FACILITIES",
             parseLogic: [
                 {
                     sheetColumn: "A",
-                    sheetColumnName: "Facility Code",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CODE",
                     resultantPath: "id",
                     type: "string"
                 },
                 {
                     sheetColumn: "B",
-                    sheetColumnName: "Facility Name",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_NAME",
                     resultantPath: "name",
                     type: "string"
                 },
                 {
                     sheetColumn: "C",
-                    sheetColumnName: "Facility Type",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
                     resultantPath: "usage",
                     type: "string"
                 },
                 {
                     sheetColumn: "D",
-                    sheetColumnName: "Facility Status",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
                     resultantPath: "isPermanent",
                     type: "boolean",
                     conversionCondition: {
@@ -82,13 +81,13 @@ const createAndSearch: any = {
                 },
                 {
                     sheetColumn: "E",
-                    sheetColumnName: "Capacity",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
                     resultantPath: "storageCapacity",
                     type: "number"
                 },
                 {
                     sheetColumn: "F",
-                    sheetColumnName: "Boundary Code"
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE"
                 }
             ],
             tenantId: {
@@ -133,12 +132,12 @@ const createAndSearch: any = {
     },
     "boundary": {
         parseArrayConfig: {
-            sheetName: "Boundary Data",
+            sheetName: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
         }
     },
     "user": {
         boundaryValidation: {
-            column: "Boundary Code"
+            column: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE"
         },
         sheetSchema: {
             "$schema": "http://json-schema.org/draft-07/schema#",
@@ -150,53 +149,53 @@ const createAndSearch: any = {
                     "maxLength": 128,
                     "minLength": 1
                 },
-                "Phone Number": {
+                "Phone Number (Mandatory)": {
                     "type": "integer",
                     "minimum": 100000000,
                     "maximum": 9999999999
                 },
                 "Role (Mandatory)": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": ["Registrar", "Distributor", "Supervisor", "Help Desk", "Monitor Local", "Logistical officer"]
                 },
                 "Employment Type (Mandatory)": {
-                    // "type": "string",
                     "enum": ["Temporary", "Permanent"]
                 }
             },
             "required": [
                 "Name of the Person (Mandatory)",
-                "Phone Number",
+                "Phone Number (Mandatory)",
                 "Role (Mandatory)",
                 "Employment Type (Mandatory)"
             ],
             "unique": [
-                "Phone Number"
+                "Phone Number (Mandatory)"
             ]
         },
         parseArrayConfig: {
-            sheetName: "Create List of Users",
+            sheetName: "HCM_ADMIN_CONSOLE_USER_LIST",
             parseLogic: [
                 {
                     sheetColumn: "A",
-                    sheetColumnName: "Name of the Person (Mandatory)",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_USER_NAME",
                     resultantPath: "user.name",
                     type: "string"
                 },
                 {
                     sheetColumn: "B",
-                    sheetColumnName: "Phone Number",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER",
                     resultantPath: "user.mobileNumber",
                     type: "string"
                 },
                 {
                     sheetColumn: "C",
-                    sheetColumnName: "Role (Mandatory)",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_USER_ROLE",
                     resultantPath: "user.roles",
                     type: "string"
                 },
                 {
                     sheetColumn: "D",
-                    sheetColumnName: "Employment Type (Mandatory)",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_USER_EMPLOYMENT_TYPE",
                     resultantPath: "employeeType",
                     conversionCondition: {
                         "Permanent": "PERMANENT",
@@ -205,11 +204,7 @@ const createAndSearch: any = {
                 },
                 {
                     sheetColumn: "E",
-                    sheetColumnName: "User Uuids(Let It Empty)"
-                },
-                {
-                    sheetColumn: "F",
-                    sheetColumnName: "Boundary Code",
+                    sheetColumnName: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
                     resultantPath: "jurisdictions",
                     type: "string"
                 }
@@ -219,9 +214,9 @@ const createAndSearch: any = {
                 resultantPath: "tenantId"
             }
         },
-        uniqueIdentifier: "uuid",
-        uniqueIdentifierColumn: "E",
-        uniqueIdentifierColumnName: "User Uuids(Let It Empty)",
+        uniqueIdentifier: "user.userServiceUuid",
+        uniqueIdentifierColumn: "H",
+        uniqueIdentifierColumnName: "UserService Uuids",
         createBulkDetails: {
             limit: 50,
             createPath: "Employees",
@@ -254,10 +249,10 @@ const createAndSearch: any = {
     },
     "boundaryWithTarget": {
         parseArrayConfig: {
-            sheetName: "Boundary Data",
+            sheetName: "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
         },
         boundaryValidation: {
-            column: "Boundary Code"
+            column: "HCM_ADMIN_CONSOLE_BOUNDARY_CODE"
         }
     }
 }

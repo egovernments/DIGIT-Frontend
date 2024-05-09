@@ -3,10 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { getDataFromSheet, matchData, generateActivityMessage, throwError } from "../utils/genericUtils";
+import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema } from "../utils/genericUtils";
 import { fetchBoundariesInChunks, validateSheetData, validateTargetSheetData } from '../utils/validators/campaignValidators';
-import { getCampaignNumber, getWorkbook } from "./genericApis";
-import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist } from "../utils/campaignUtils";
+import { callMdmsData, getCampaignNumber, getWorkbook } from "./genericApis";
+import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
 import { produceModifiedMessages } from "../Kafka/Listener";
@@ -174,14 +174,19 @@ function changeBodyViaSearchFromSheet(elements: any, request: any, dataFromSheet
   }
 }
 
-function updateErrorsForUser(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any) {
+function updateErrorsForUser(newCreatedData: any[], newSearchedData: any[], errors: any[], createAndSearchConfig: any, userNameAndPassword: any[]) {
   newCreatedData.forEach((createdElement: any) => {
     let foundMatch = false;
     for (const searchedElement of newSearchedData) {
       if (searchedElement?.code === createdElement?.code) {
         foundMatch = true;
         newSearchedData.splice(newSearchedData.indexOf(searchedElement), 1);
-        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: searchedElement[createAndSearchConfig.uniqueIdentifier], errorDetails: "" })
+        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: _.get(searchedElement, createAndSearchConfig.uniqueIdentifier, ""), errorDetails: "" })
+        userNameAndPassword.push({
+          userName: searchedElement?.user?.userName,
+          password: "eGov@123",
+          rowNumber: createdElement["!row#number!"]
+        })
         break;
       }
     }
@@ -198,6 +203,7 @@ function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any
     for (const searchedElement of newSearchedData) {
       let match = true;
       for (const key in createdElement) {
+        // console.log(key, createdElement[key], searchedElement[key], " ssssssssssssssssssssssssssssssssss");
         if (createdElement.hasOwnProperty(key) && !searchedElement.hasOwnProperty(key) && key != '!row#number!') {
           match = false;
           break;
@@ -210,7 +216,7 @@ function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any
       if (match) {
         foundMatch = true;
         newSearchedData.splice(newSearchedData.indexOf(searchedElement), 1);
-        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: searchedElement[createAndSearchConfig.uniqueIdentifier], errorDetails: "" })
+        errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: _.get(searchedElement, createAndSearchConfig.uniqueIdentifier, ""), errorDetails: "" })
         break;
       }
     }
@@ -239,7 +245,9 @@ function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], re
     updateErrors(newCreatedData, newSearchedData, errors, createAndSearchConfig);
   }
   else {
-    updateErrorsForUser(newCreatedData, newSearchedData, errors, createAndSearchConfig);
+    var userNameAndPassword: any = []
+    updateErrorsForUser(newCreatedData, newSearchedData, errors, createAndSearchConfig, userNameAndPassword);
+    request.body.userNameAndPassword = userNameAndPassword
   }
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
   request.body.Activities = activities
@@ -391,28 +399,38 @@ async function confirmCreation(createAndSearchConfig: any, request: any, dataToC
   matchViaUserIdAndCreationTime(dataToCreate, arraysToMatch, request, creationTime, createAndSearchConfig, activities)
 }
 
-async function processValidateAfterSchema(dataFromSheet: any, request: any, createAndSearchConfig: any) {
+async function processValidateAfterSchema(dataFromSheet: any, request: any, createAndSearchConfig: any, localizationMap?: { [key: string]: string }) {
   try {
-    const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
+    const typeData = await convertToTypeData(request, dataFromSheet, createAndSearchConfig, request.body, localizationMap)
     request.body.dataToSearch = typeData.searchData;
     request.body.dataToCreate = typeData.createData;
     await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
-    await generateProcessedFileAndPersist(request);
+    await generateProcessedFileAndPersist(request, localizationMap);
   } catch (error) {
     await handleResouceDetailsError(request, error);
   }
 }
 
-async function processValidate(request: any) {
+async function processValidate(request: any, localizationMap?: { [key: string]: string }) {
   const type: string = request.body.ResourceDetails.type;
+  const tenantId = request.body.ResourceDetails.tenantId;
   const createAndSearchConfig = createAndSearch[type]
-  const dataFromSheet = await getDataFromSheet(request?.body, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
+  const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, null, localizationMap)
   if (type == 'boundaryWithTarget') {
-    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation);
+    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation,localizationMap);
   }
   else {
-    await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
-    processValidateAfterSchema(dataFromSheet, request, createAndSearchConfig)
+    const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";
+    const mdmsResponse = await callMdmsData(request, config.moduleName, schemaMasterName, tenantId);
+    let schema: any;
+    if (type === 'facility') {
+      schema = mdmsResponse.MdmsRes[config.moduleName].facilitySchema[0];
+    } if (type === 'user') {
+      schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0];
+    }
+    const translatedSchema = await translateSchema(schema, localizationMap);
+    await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap)
+    processValidateAfterSchema(dataFromSheet, request, createAndSearchConfig, localizationMap)
   }
 }
 
@@ -485,7 +503,7 @@ async function enrichEmployees(employees: any[], request: any) {
   }
 }
 
-async function performAndSaveResourceActivity(request: any, createAndSearchConfig: any, params: any, type: any) {
+async function performAndSaveResourceActivity(request: any, createAndSearchConfig: any, params: any, type: any, localizationMap?: { [key: string]: string }) {
   logger.info(type + " create data : " + JSON.stringify(request?.body?.dataToCreate));
   logger.info(type + " bulk create url : " + createAndSearchConfig?.createBulkDetails?.url, params);
   if (createAndSearchConfig?.createBulkDetails?.limit) {
@@ -521,20 +539,20 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
     }
     await confirmCreation(createAndSearchConfig, request, dataToCreate, creationTime, activities);
   }
-  await generateProcessedFileAndPersist(request);
+  await generateProcessedFileAndPersist(request, localizationMap);
 }
 
 /**
  * Processes generic requests such as create or validate.
  * @param request The HTTP request object.
  */
-async function processGenericRequest(request: any) {
+async function processGenericRequest(request: any, localizationMap?: { [key: string]: string }) {
   // Process generic requests
   if (request?.body?.ResourceDetails?.action == "create") {
-    await processCreate(request)
+    await processCreate(request, localizationMap)
   }
   else {
-    await processValidate(request)
+    await processValidate(request, localizationMap)
   }
 }
 
@@ -559,9 +577,9 @@ async function handleResouceDetailsError(request: any, error: any) {
   }
 }
 
-async function processAfterValidation(dataFromSheet: any, createAndSearchConfig: any, request: any) {
+async function processAfterValidation(dataFromSheet: any, createAndSearchConfig: any, request: any, localizationMap?: { [key: string]: string }) {
   try {
-    const typeData = convertToTypeData(dataFromSheet, createAndSearchConfig, request.body)
+    const typeData = await convertToTypeData(request, dataFromSheet, createAndSearchConfig, request.body, localizationMap)
     request.body.dataToCreate = typeData.createData;
     request.body.dataToSearch = typeData.searchData;
     await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
@@ -569,10 +587,10 @@ async function processAfterValidation(dataFromSheet: any, createAndSearchConfig:
       _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, request?.body?.dataToCreate);
       const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
       changeBodyViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request)
-      await performAndSaveResourceActivity(request, createAndSearchConfig, params, request.body.ResourceDetails.type);
+      await performAndSaveResourceActivity(request, createAndSearchConfig, params, request.body.ResourceDetails.type, localizationMap);
     }
     else if (request.body.ResourceDetails.status == "invalid") {
-      await generateProcessedFileAndPersist(request);
+      await generateProcessedFileAndPersist(request, localizationMap);
     }
   } catch (error: any) {
     await handleResouceDetailsError(request, error)
@@ -583,17 +601,27 @@ async function processAfterValidation(dataFromSheet: any, createAndSearchConfig:
  * Processes the creation of resources.
  * @param request The HTTP request object.
  */
-async function processCreate(request: any) {
+async function processCreate(request: any, localizationMap?: any) {
   // Process creation of resources
   const type: string = request.body.ResourceDetails.type;
+  const tenantId = request?.body?.ResourceDetails?.tenantId;
   if (type == "boundary") {
-    boundaryBulkUpload(request);
+    boundaryBulkUpload(request, localizationMap);
   }
   else {
     const createAndSearchConfig = createAndSearch[type]
-    const dataFromSheet = await getDataFromSheet(request?.body, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig)
-    await validateSheetData(dataFromSheet, request, createAndSearchConfig?.sheetSchema, createAndSearchConfig?.boundaryValidation)
-    processAfterValidation(dataFromSheet, createAndSearchConfig, request)
+    const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
+    const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";
+    const mdmsResponse = await callMdmsData(request, config.moduleName, schemaMasterName, tenantId);
+    let schema: any;
+    if (type === 'facility') {
+      schema = mdmsResponse.MdmsRes[config.moduleName].facilitySchema[0];
+    } if (type === 'user') {
+      schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0];
+    }
+    const translatedSchema = await translateSchema(schema, localizationMap);
+    await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap)
+    processAfterValidation(dataFromSheet, createAndSearchConfig, request, localizationMap)
   }
 }
 
@@ -603,28 +631,28 @@ async function processCreate(request: any) {
  */
 async function createProjectCampaignResourcData(request: any) {
   // Create resources for a project campaign
-  var resourceDetailsIds: any[] = []
   if (request?.body?.CampaignDetails?.action == "create" && request?.body?.CampaignDetails?.resources) {
     for (const resource of request?.body?.CampaignDetails?.resources) {
-      const resourceDetails = {
-        type: resource.type,
-        fileStoreId: resource.filestoreId,
-        tenantId: request?.body?.CampaignDetails?.tenantId,
-        action: "create",
-        hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-        additionalDetails: {}
-      };
-      logger.info("resourceDetails " + JSON.stringify(resourceDetails))
-      const response = await httpRequest(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
-        RequestInfo: request.body.RequestInfo,
-        ResourceDetails: resourceDetails
-      });
-      if (response?.ResourceDetails?.id) {
-        resourceDetailsIds.push(response?.ResourceDetails?.id)
+      if (resource.type != "boundaryWithTarget") {
+        const resourceDetails = {
+          type: resource.type,
+          fileStoreId: resource.filestoreId,
+          tenantId: request?.body?.CampaignDetails?.tenantId,
+          action: "create",
+          hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+          additionalDetails: {}
+        };
+        logger.info("resourceDetails " + JSON.stringify(resourceDetails))
+        const response = await httpRequest(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+          RequestInfo: request.body.RequestInfo,
+          ResourceDetails: resourceDetails
+        });
+        if (response?.ResourceDetails?.id) {
+          resource.createResourceId = response?.ResourceDetails?.id
+        }
       }
     }
   }
-  request.body.CampaignDetails.campaignDetails = { ...request.body.CampaignDetails.campaignDetails, resourceDetailsIds: resourceDetailsIds }
 }
 
 async function projectCreate(projectCreateBody: any, request: any) {
@@ -680,8 +708,9 @@ const getHierarchy = async (request: any, tenantId: string, hierarchyType: strin
   return generateHierarchy(boundaryList);
 };
 
-const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, getRow = false) => {
-  const workbook: any = await getWorkbook(fileUrl, sheetName);
+const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, getRow = false, localizationMap?: any) => {
+  const localizedBoundarySheetName = getLocalizedName(sheetName, localizationMap)
+  const workbook: any = await getWorkbook(fileUrl, localizedBoundarySheetName);
   const columnsToValidate = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
     header: 1,
   })[0] as (any)[];

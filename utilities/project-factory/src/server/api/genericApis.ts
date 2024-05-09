@@ -4,9 +4,9 @@ import config from "../config"; // Import configuration settings
 import FormData from 'form-data'; // Import FormData for handling multipart/form-data requests
 import { httpRequest } from "../utils/request"; // Import httpRequest function for making HTTP requests
 import { logger } from "../utils/logger"; // Import logger for logging
-import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
-import { validateProjectFacilityResponse, validateProjectResourceResponse } from "../utils/validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData } from '../utils/campaignUtils'; // Import utility functions
+import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
+import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getHierarchy } from './campaignApis';
 const _ = require('lodash'); // Import lodash library
 
@@ -53,33 +53,34 @@ const getTargetWorkbook = async (fileUrl: string) => {
 
 
 // Function to retrieve data from a specific sheet in an Excel file
-const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any) => {
+const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any, localizationMap?: { [key: string]: string }) => {
     // Retrieve workbook using the getWorkbook function
-    const workbook: any = await getWorkbook(fileUrl, sheetName)
+    const localizedSheetName = getLocalizedName(sheetName, localizationMap);
+    const workbook: any = await getWorkbook(fileUrl, localizedSheetName)
 
     // If parsing array configuration is provided, validate first row of each column
     if (createAndSearchConfig && createAndSearchConfig.parseArrayConfig && createAndSearchConfig.parseArrayConfig.parseLogic) {
         const parseLogic = createAndSearchConfig.parseArrayConfig.parseLogic;
-
         // Iterate over each column configuration
         for (const columnConfig of parseLogic) {
             const { sheetColumn } = columnConfig;
             const expectedColumnName = columnConfig.sheetColumnName;
-
+            var localizedColumnName;
+            localizedColumnName = getLocalizedName(expectedColumnName, localizationMap);
             // Get the value of the first row in the current column
-            if (sheetColumn && expectedColumnName) {
-                const firstRowValue = workbook.Sheets[sheetName][`${sheetColumn}1`]?.v;
+            if (sheetColumn && localizedColumnName) {
+                const firstRowValue = workbook.Sheets[localizedSheetName][`${sheetColumn}1`]?.v;
 
                 // Validate the first row of the current column
-                if (firstRowValue !== expectedColumnName) {
-                    throwError("FILE", 400, "INVALID_COLUMNS", `Invalid format: Expected '${expectedColumnName}' in the first row of column ${sheetColumn}.`);
+                if (firstRowValue !== localizedColumnName) {
+                    throwError("FILE", 400, "INVALID_COLUMNS", `Invalid format: Expected '${localizedColumnName}' in the first row of column ${sheetColumn}.`);
                 }
             }
         }
     }
 
     // Convert sheet data to JSON format
-    const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { blankrows: true });
+    const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[localizedSheetName], { blankrows: true });
     var jsonData = sheetData.map((row: any, index: number) => {
         const rowData: any = {};
         if (Object.keys(row).length > 0) {
@@ -289,7 +290,7 @@ async function createAndUploadFile(updatedWorkbook: XLSX.WorkBook, request: any,
     const formData = new FormData();
     formData.append('file', buffer, 'filename.xlsx');
     formData.append('tenantId', tenantId ? tenantId : request?.body?.RequestInfo?.userInfo?.tenantId);
-    formData.append('module', 'pgr');
+    formData.append('module', 'HCM-ADMIN-CONSOLE-SERVER');
 
     // Log file uploading URL
     logger.info("File uploading url : " + config.host.filestore + config.paths.filestore);
@@ -493,7 +494,7 @@ function generateElementCode(sequence: any, parentCode: any, element: any) {
  * @param request The HTTP request object.
  * @returns Boundary sheet data.
  */
-async function getBoundarySheetData(request: any) {
+async function getBoundarySheetData(request: any, localizationMap?: { [key: string]: string }) {
     // Retrieve boundary data based on the request parameters
     const params = {
         ...request?.query,
@@ -502,30 +503,32 @@ async function getBoundarySheetData(request: any) {
     const boundaryData = await getBoundaryRelationshipData(request, params);
     if (!boundaryData || boundaryData.length === 0) {
         const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType);
-        const headers = hierarchy;
+        const modifiedHierarchy= hierarchy.map(ele=>`${request?.query?.hierarchyType}_${ele}`.toUpperCase())
+        const localizedHeaders =  getLocalizedHeaders(modifiedHierarchy, localizationMap);
         // create empty sheet if no boundary present in system
-        return await createExcelSheet(boundaryData, headers, config.sheetName);
+        const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+        return await createExcelSheet(boundaryData, localizedHeaders, localizedBoundaryTab);
     }
     else {
         logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
         if (request?.body?.Filters != null) {
             const filteredBoundaryData = await generateFilteredBoundaryData(request);
-            return await getDataSheetReady(filteredBoundaryData, request);
+            return await getDataSheetReady(filteredBoundaryData, request,localizationMap);
         }
         else {
-            return await getDataSheetReady(boundaryData, request);
+            return await getDataSheetReady(boundaryData, request, localizationMap);
         }
     }
 }
-// async function createStaff(resouceBody: any) {
-//     // Create staff
-//     const staffCreateUrl = `${config.host.projectHost}` + `${config.paths.staffCreate}`
-//     logger.info("Staff Creation url " + staffCreateUrl)
-//     logger.info("Staff Creation body " + JSON.stringify(resouceBody))
-//     const staffResponse = await httpRequest(staffCreateUrl, resouceBody, undefined, "post", undefined, undefined);
-//     logger.info("Staff Creation response" + JSON.stringify(staffResponse))
-//     validateStaffResponse(staffResponse);
-// }
+async function createStaff(resouceBody: any) {
+    // Create staff
+    const staffCreateUrl = `${config.host.projectHost}` + `${config.paths.staffCreate}`
+    logger.info("Staff Creation url " + staffCreateUrl)
+    logger.info("Staff Creation body " + JSON.stringify(resouceBody))
+    const staffResponse = await httpRequest(staffCreateUrl, resouceBody, undefined, "post", undefined, undefined);
+    logger.info("Staff Creation response" + JSON.stringify(staffResponse))
+    validateStaffResponse(staffResponse);
+}
 
 /**
  * Asynchronously creates project resources based on the provided resource body.
@@ -578,8 +581,7 @@ async function createRelatedEntity(resources: any, tenantId: any, projectId: any
                     endDate
                 }
                 resouceBody.ProjectStaff = ProjectStaff
-                // TODO : create staff when health hrms is fixed
-                // await createStaff(resouceBody)
+                await createStaff(resouceBody)
             }
             else if (type == "resource") {
                 const ProjectResource = {
@@ -682,7 +684,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<string, str
  * @param boundaryTypeMap Map of boundary codes to types.
  * @param modifiedChildParentMap Modified child-parent map.
  */
-async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key: string]: string } = {}, modifiedChildParentMap: any) {
+async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key: string]: string } = {}, modifiedChildParentMap: any,localizationMap?:any) {
     try {
         // Create boundary relationships
         let activityMessage = [];
@@ -701,10 +703,11 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
         const allCodes = extractCodesFromBoundaryRelationshipResponse(boundaryData);
         let flag = 1;
         for (const [boundaryCode, boundaryType] of Object.entries(boundaryTypeMap)) {
+            const localizedBoundaryType = getLocalizedName(boundaryType,localizationMap);
             if (!allCodes.has(boundaryCode)) {
                 const boundary = {
                     tenantId: request?.body?.ResourceDetails?.tenantId,
-                    boundaryType: boundaryType,
+                    boundaryType: localizedBoundaryType,
                     code: boundaryCode,
                     hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
                     parent: modifiedChildParentMap.get(boundaryCode)
@@ -739,7 +742,7 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
     }
 }
 
-async function callMdmsData(request: any, moduleName: string, masterName: string,tenantId:string) {
+async function callMdmsData(request: any, moduleName: string, masterName: string, tenantId: string) {
     const { RequestInfo } = request?.body;
     const requestBody = {
         RequestInfo, MdmsCriteria: {
@@ -757,7 +760,7 @@ async function callMdmsData(request: any, moduleName: string, masterName: string
         }
     }
     const url = config.host.mdms + config.paths.mdms_v1_search;
-    const response = await httpRequest(url, requestBody, {tenantId:tenantId});
+    const response = await httpRequest(url, requestBody, { tenantId: tenantId });
     return response;
 }
 

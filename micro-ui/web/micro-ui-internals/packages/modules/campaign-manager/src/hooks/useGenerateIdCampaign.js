@@ -1,4 +1,8 @@
 export const useGenerateIdCampaign = (type ,hierarchyType, filters) => {
+  const updatedFilters = filters?.map(({ type, ...rest }) => ({
+    ...rest,
+    boundaryType: type
+}));
   const reqCriteria = {
     url: `/project-factory/v1/data/_generate`,
     changeQueryName :`${type}${hierarchyType}${filters}`,
@@ -8,7 +12,7 @@ export const useGenerateIdCampaign = (type ,hierarchyType, filters) => {
       forceUpdate: true,
       hierarchyType: hierarchyType,
     },
-    body: (type === 'boundary' ? (filters === undefined ? { "Filters": null } : { "Filters": { "boundaries": filters } }) : {}),
+    body: (type === 'boundary' ? (updatedFilters === undefined ? { "Filters": null } : { "Filters": { "boundaries": updatedFilters } }) : {}),
   };
 
   const { data: Data } = Digit.Hooks.useCustomAPIHook(reqCriteria);

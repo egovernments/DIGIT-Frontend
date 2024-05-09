@@ -1,5 +1,4 @@
 // config.js
-
 // Importing necessary module
 import { getErrorCodes } from "./constants";
 const dotenv = require('dotenv');
@@ -7,26 +6,27 @@ dotenv.config();
 // Defining the HOST variable
 const HOST = process.env.EGOV_HOST ||
   "https://unified-dev.digit.org/";
-
 // Checking if HOST is set, if not, exiting the process
 if (!HOST) {
   console.log("You need to set the HOST variable");
   process.exit(1);
 }
-
 // Configuration object containing various environment variables
 const config = {
-  facilityTab : "HCM_ADMIN_LIST_OF_FACILITIES_TAB",
-  locale: "en_MZ",
-  localizationModule: "rainmaker-hcm-admin-schemas",
-  //module name 
-  moduleName: "HCM-ADMIN-CONSOLE",
+  boundaryCode: process.env.BOUNDARY_CODE_HEADER_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
+  facilityTab: process.env.FACILITY_TAB_NAME || "HCM_ADMIN_CONSOLE_FACILITIES",
+  boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
+  userTab: process.env.USER_TAB_NAME || "HCM_ADMIN_CONSOLE_USER_LIST",
+  locale: process.env.LOCALE || "en_MZ",
+  localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
+  //module name
+  moduleName: process.env.MODULE_NAME || "HCM-ADMIN-CONSOLE",
   // facility master
-  facilitySchemaMasterName: "facilitySchema",
+  facilitySchemaMasterName: process.env.FACILITY_SCHEMA_MASTER || "facilitySchema",
   // user master
-  userSchemaMasterName: "userSchema",
+  userSchemaMasterName: process.env.USER_SCHEMA_MASTER || "userSchema",
   // Default sheet name for boundary data
-  sheetName: process.env.BOUNDARY_MAIN_SHEET_NAME || "Boundary Data",
+  // boundarySheetName: process.env.BOUNDARY_MAIN_SHEET_NAME || "Boundary Data",
   // Default criteria for generating different tabs
   generateDifferentTabsOnBasisOf: process.env.SPLIT_BOUNDARIES_ON || "Distrito",
   // default configurable number of data of boundary type on which generate different tabs
@@ -118,7 +118,7 @@ const config = {
   // Default search template
   SEARCH_TEMPLATE: "HCM.APIResourceTemplate3"
 };
-
 // Exporting getErrorCodes function and config object
 export { getErrorCodes };
 export default config;
+

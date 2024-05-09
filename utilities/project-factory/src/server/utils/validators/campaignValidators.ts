@@ -6,14 +6,17 @@ import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } fr
 import { campaignDetailsSchema } from "../../config/models/campaignDetails";
 import Ajv from "ajv";
 import axios from "axios";
-import { createBoundaryMap, generateProcessedFileAndPersist } from "../campaignUtils";
-import { calculateKeyIndex, modifyTargetData, throwError } from "../genericUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
+import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
 import { validateBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
 import { campaignDetailsDraftSchema } from "../../config/models/campaignDetailsDraftSchema";
 import { downloadRequestSchema } from "../../config/models/downloadRequestSchema";
 import { createRequestSchema } from "../../config/models/createRequestSchema"
+import { getSheetData } from "../../api/genericApis";
+const _ = require('lodash');
+
 
 
 
@@ -49,7 +52,7 @@ async function fetchBoundariesInChunks(request: any) {
 // Compares unique boundaries with response boundaries and throws error for missing codes.
 function compareBoundariesWithUnique(uniqueBoundaries: any[], responseBoundaries: any[], request: any) {
     // Extracts boundary codes from response boundaries
-    const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
+    const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code.trim());
 
     // Finds missing codes from unique boundaries
     const missingCodes = uniqueBoundaries.filter(code => !responseBoundaryCodes.includes(code));
@@ -105,33 +108,33 @@ async function validateBoundaryData(data: any[], request: any, boundaryColumn: a
 async function validateTargetBoundaryData(data: any[], request: any, boundaryColumn: any, errors: any[]) {
     const responseBoundaries = await fetchBoundariesInChunks(request);
     const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
-
     // Iterate through each array of objects
     for (const key in data) {
         if (Array.isArray(data[key])) {
             const boundaryData = data[key];
             const boundarySet = new Set(); // Create a Set to store unique boundaries for given sheet 
             boundaryData.forEach((element: any, index: number) => {
-                const boundaries = element[boundaryColumn]; // Access "Boundary Code" property directly
+                const boundaries = element?.[boundaryColumn]; // Access "Boundary Code" property directly
                 if (!boundaries) {
                     errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is required for element at row ${element["!row#number!"] + 1} for sheet ${key}`, sheetName: key })
-                }
-                const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
-                if (boundaryList.length === 0) {
-                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
-                }
-                if (boundaryList.length > 1) {
-                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
-                }
-                if (boundaryList.length === 1) {
-                    const boundaryCode = boundaryList[0];
-                    if (boundarySet.has(boundaryCode)) {
-                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
+                } else {
+                    const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
+                    if (boundaryList.length === 0) {
+                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
                     }
-                    if (!responseBoundaryCodes.includes(boundaryCode)) {
-                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key}not found in the system`, sheetName: key })
+                    if (boundaryList.length > 1) {
+                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
                     }
-                    boundarySet.add(boundaryCode);
+                    if (boundaryList.length === 1) {
+                        const boundaryCode = boundaryList[0];
+                        if (boundarySet.has(boundaryCode)) {
+                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
+                        }
+                        if (!responseBoundaryCodes.includes(boundaryCode)) {
+                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key}not found in the system`, sheetName: key })
+                        }
+                        boundarySet.add(boundaryCode);
+                    }
                 }
             });
         }
@@ -140,27 +143,29 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
 
 
 
-async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[]) {
+async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[], localizationMap?: any) {
     const hierachy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    const localizedHierarchy = getLocalizedHeaders(hierachy, localizationMap);
     const dataToBeValidated = modifyTargetData(data);
     let maxKeyIndex = -1;
     dataToBeValidated.forEach(obj => {
-        const keyIndex = calculateKeyIndex(obj, hierachy);
+        const keyIndex = calculateKeyIndex(obj, localizedHierarchy, localizationMap);
         if (keyIndex > maxKeyIndex) {
             maxKeyIndex = keyIndex;
         }
     })
-    const lowestLevelHierarchy = hierachy[maxKeyIndex];
-    validateTargets(data, lowestLevelHierarchy, errors);
+    const lowestLevelHierarchy = localizedHierarchy[maxKeyIndex];
+    validateTargets(data, lowestLevelHierarchy, errors, localizationMap);
 }
 //
-function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[]) {
+function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], localizationMap?: any) {
     for (const key in data) {
         if (Array.isArray(data[key])) {
             const boundaryData = data[key];
             boundaryData.forEach((obj: any, index: number) => {
                 if (obj.hasOwnProperty(lowestLevelHierarchy)) {
-                    const target = obj['Target at the Selected Boundary level'];
+                    const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
+                    const target = obj[localizedTargetColumnName];
                     if (target === undefined || typeof target !== 'number' || target < 0 || !Number.isInteger(target)) {
                         errors.push({ status: "INVALID", rowNumber: obj["!row#number!"], errorDetails: `Invalid target value at row ${obj['!row#number!'] + 1}. of sheet ${key}`, sheetName: key })
                     }
@@ -171,6 +176,7 @@ function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[]) 
 }
 
 async function validateUnique(schema: any, data: any[], request: any) {
+    const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
     if (schema?.unique) {
         const uniqueElements = schema.unique;
         const errors = [];
@@ -181,9 +187,10 @@ async function validateUnique(schema: any, data: any[], request: any) {
             // Iterate over each data object and check uniqueness
             for (const item of data) {
                 const uniqueIdentifierColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName;
+                const localizedUniqueIdentifierColumnName = await getLocalizedName(uniqueIdentifierColumnName, localizationMap);
                 const value = item[element];
                 const rowNum = item['!row#number!'] + 1;
-                if (!uniqueIdentifierColumnName || !item[uniqueIdentifierColumnName]) {
+                if (!localizedUniqueIdentifierColumnName || !item[localizedUniqueIdentifierColumnName]) {
                     // Check if the value is already in the map
                     if (uniqueMap.has(value)) {
                         errors.push(`Duplicate value '${value}' found for '${element}' at row number ${rowNum}.`);
@@ -201,24 +208,56 @@ async function validateUnique(schema: any, data: any[], request: any) {
     }
 }
 
+function validatePhoneNumber(datas: any[]) {
+    var digitErrorRows = [];
+    var missingNumberRows = [];
+    for (const data of datas) {
+        if (data["Phone Number (Mandatory)"]) {
+            var phoneNumber = data["Phone Number (Mandatory)"];
+            phoneNumber = phoneNumber.toString().replace(/^0+/, '');
+            if (phoneNumber.length != 10) {
+                digitErrorRows.push(data["!row#number!"] + 1);
+            }
+        }
+        else {
+            missingNumberRows.push(data["!row#number!"] + 1);
+        }
+    }
+    var isError = false;
+    var errorMessage = "";
+    if (digitErrorRows.length > 0) {
+        isError = true;
+        errorMessage = "PhoneNumber should be of 10 digit on rows " + digitErrorRows.join(" , ");
+    }
+    if (missingNumberRows.length > 0) {
+        isError = true;
+        if (errorMessage.length > 0) {
+            errorMessage += " :: ";
+        }
+        errorMessage += "PhoneNumber is missing on rows " + missingNumberRows.join(" , ");
+    }
+    if (isError) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
+    }
+}
 
-
-
-async function validateViaSchema(data: any, schema: any, request: any) {
+async function validateViaSchema(data: any, schema: any, request: any, localizationMap?: any) {
     if (schema) {
         const ajv = new Ajv();
         const validate = ajv.compile(schema);
         const validationErrors: any[] = [];
+        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap)
+        if (request?.body?.ResourceDetails?.type == "user") {
+            validatePhoneNumber(data)
+        }
         if (data?.length > 0) {
             data.forEach((item: any) => {
-                if (!item?.[createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName])
+                if (!item?.[uniqueIdentifierColumnName])
                     if (!validate(item)) {
                         validationErrors.push({ index: item?.["!row#number!"] + 1, errors: validate.errors });
                     }
             });
             await validateUnique(schema, data, request)
-
-            // Throw errors if any
             if (validationErrors.length > 0) {
                 const errorMessage = validationErrors.map(({ index, errors }) => {
                     const formattedErrors = errors.map((error: any) => {
@@ -246,22 +285,24 @@ async function validateViaSchema(data: any, schema: any, request: any) {
 
 
 
-async function validateSheetData(data: any, request: any, schema: any, boundaryValidation: any) {
-    await validateViaSchema(data, schema, request);
+async function validateSheetData(data: any, request: any, schema: any, boundaryValidation: any, localizationMap?: { [key: string]: string }) {
+    await validateViaSchema(data, schema, request, localizationMap);
     if (boundaryValidation) {
-        await validateBoundaryData(data, request, boundaryValidation?.column);
+        const localisedBoundaryCode = getLocalizedName(boundaryValidation?.column, localizationMap)
+        await validateBoundaryData(data, request, localisedBoundaryCode);
     }
 }
 
-async function validateTargetSheetData(data: any, request: any, boundaryValidation: any) {
+async function validateTargetSheetData(data: any, request: any, boundaryValidation: any, localizationMap?: any) {
     try {
         const errors: any[] = [];
         if (boundaryValidation) {
-            await validateTargetBoundaryData(data, request, boundaryValidation?.column, errors);
-            await validateTargetsAtLowestLevelPresentOrNot(data, request, errors);
+            const localizedBoundaryValidationColumn = getLocalizedName(boundaryValidation?.column, localizationMap)
+            await validateTargetBoundaryData(data, request, localizedBoundaryValidationColumn, errors);
+            await validateTargetsAtLowestLevelPresentOrNot(data, request, errors, localizationMap);
         }
         request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
-        await generateProcessedFileAndPersist(request);
+        await generateProcessedFileAndPersist(request, localizationMap);
     }
     catch (error) {
         await handleResouceDetailsError(request, error);
@@ -308,6 +349,7 @@ async function validateCreateRequest(request: any) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "ResourceDetails is missing or empty or null");
     }
     else {
+        // validate create request body 
         validateBodyViaSchema(createRequestSchema, request.body.ResourceDetails);
         await validateHierarchyType(request, request?.body?.ResourceDetails?.hierarchyType, request?.body?.ResourceDetails?.tenantId);
         if (request?.body?.ResourceDetails?.tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
@@ -315,14 +357,43 @@ async function validateCreateRequest(request: any) {
         }
         const fileUrl = await validateFile(request);
         if (request.body.ResourceDetails.type == 'boundary') {
-            await validateBoundarySheetData(request, fileUrl);
+            const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
+            await validateBoundarySheetData(request, fileUrl, localizationMap);
         }
     }
 }
 
-async function validateBoundarySheetData(request: any, fileUrl: any) {
-    const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, config.sheetName, false);
-    await validateHeaders(headersOfBoundarySheet, request)
+async function validateBoundarySheetData(request: any, fileUrl: any, localizationMap?: any) {
+    const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+    const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, localizedBoundaryTab, false, localizationMap);
+    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    await validateHeaders(hierarchy, headersOfBoundarySheet, request, localizationMap)
+    const boundaryData = await getSheetData(fileUrl, localizedBoundaryTab, true, undefined, localizationMap);
+    //validate for whether root boundary level column should not be empty
+    validateForRootElementExists(boundaryData, hierarchy);
+    // validate for duplicate rows(array of objects)
+    validateForDupicateRows(boundaryData);
+}
+
+function validateForRootElementExists(boundaryData: any[], hierachy: any[]) {
+    const root = hierachy[0];
+    if (!(boundaryData.filter(e => e[root]).length == boundaryData.length)) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid Boundary Sheet. Root level Boundary not present in every row")
+    }
+}
+function validateForDupicateRows(boundaryData: any[]) {
+    const uniqueRows = _.uniqWith(boundaryData, (obj1: any, obj2: any) => {
+        // Exclude '!row#number!' property when comparing objects
+        const filteredObj1 = _.omit(obj1, ['!row#number!']);
+        const filteredObj2 = _.omit(obj2, ['!row#number!']);
+        return _.isEqual(filteredObj1, filteredObj2);
+    });
+    const duplicateBoundaryRows = boundaryData.filter(e => !uniqueRows.includes(e));
+    const duplicateRowNumbers = duplicateBoundaryRows.map(obj => obj['!row#number!'] + 1);
+    const rowNumbersSeparatedWithCommas = duplicateRowNumbers.join(', ');
+    if (duplicateRowNumbers.length > 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", `Boundary Sheet has duplicate rows at rowNumber ${rowNumbersSeparatedWithCommas}`);
+    }
 }
 
 async function validateFile(request: any) {
@@ -412,57 +483,93 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
 
 async function validateResources(resources: any, request: any) {
     for (const resource of resources) {
-        const resourceDetails = {
-            type: resource.type,
-            fileStoreId: resource.filestoreId,
-            tenantId: request?.body?.CampaignDetails?.tenantId,
-            action: "validate",
-            hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-            additionalDetails: {}
-        };
-        try {
-            await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
-                RequestInfo: request.body.RequestInfo,
-                ResourceDetails: resourceDetails
-            });
-        } catch (error: any) {
-            logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
-            throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+        if (resource?.resourceId) {
+            var searchBody = {
+                RequestInfo: request?.body?.RequestInfo,
+                SearchCriteria: {
+                    id: [resource?.resourceId],
+                    tenantId: request?.body?.CampaignDetails?.tenantId
+                }
+            }
+            logger.info("searchBody : " + JSON.stringify(searchBody));
+            const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
+            if (response?.ResourceDetails?.[0]) {
+                if (!(response?.ResourceDetails?.[0]?.status == "completed" && response?.ResourceDetails?.[0]?.action == "validate")) {
+                    logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
+                }
+                if (response?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
+                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`)
+                }
+            }
+            else {
+                logger.error(`No resource data found for resource with Id ${resource?.resourceId} :`);
+                throwError("COMMON", 400, "VALIDATION_ERROR", `No resource data found for resource with Id ${resource?.resourceId} . If resourceId is invalid, don't send resourceId in resources`);
+            }
+        }
+        else {
+            const resourceDetails = {
+                type: resource.type,
+                fileStoreId: resource.filestoreId,
+                tenantId: request?.body?.CampaignDetails?.tenantId,
+                action: "validate",
+                hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+                additionalDetails: {}
+            };
+            try {
+                await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+                    RequestInfo: request.body.RequestInfo,
+                    ResourceDetails: resourceDetails
+                });
+            } catch (error: any) {
+                logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+                throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+            }
         }
     }
 }
 
 async function validateProjectCampaignResources(resources: any, request: any) {
-    const requiredTypes = ["user", "facility"];
+    const requiredTypes = ["user", "facility", "boundaryWithTarget"];
     const typeCounts: any = {
         "user": 0,
-        "facility": 0
+        "facility": 0,
+        "boundaryWithTarget": 0
     };
 
-    if (resources) {
-        if (!Array.isArray(resources) || resources.length === 0) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be a non-empty array");
-        }
+    const missingTypes: string[] = [];
 
-        for (const resource of resources) {
-            const { type } = resource;
-            if (!type || !requiredTypes.includes(type)) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", "Invalid resource type");
-            }
-            typeCounts[type]++;
-        }
+    if (!resources || !Array.isArray(resources) || resources.length === 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "resources should be a non-empty array");
+    }
 
-        for (const type of requiredTypes) {
-            if (typeCounts[type] === 0) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `Missing resource of type ${type}`);
-            }
+    for (const resource of resources) {
+        const { type } = resource;
+        if (!type || !requiredTypes.includes(type)) {
+            throwError(
+                "COMMON",
+                400,
+                "VALIDATION_ERROR",
+                `Invalid resource type. Allowed types are: ${requiredTypes.join(', ')}`
+            );
         }
+        typeCounts[type]++;
+    }
 
-        if (request?.body?.CampaignDetails?.action === "create" && request?.body?.CampaignDetails?.resources) {
-            await validateResources(request.body.CampaignDetails.resources, request);
+    for (const type of requiredTypes) {
+        if (typeCounts[type] === 0) {
+            missingTypes.push(type);
         }
-    } else {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "Missing resources array");
+    }
+
+    if (missingTypes.length > 0) {
+        const missingTypesMessage = `Missing resources of types: ${missingTypes.join(', ')}`;
+        throwError("COMMON", 400, "VALIDATION_ERROR", missingTypesMessage);
+    }
+
+    if (request?.body?.CampaignDetails?.action === "create" && request?.body?.CampaignDetails?.resources) {
+        await validateResources(request.body.CampaignDetails.resources, request);
     }
 }
 
@@ -609,7 +716,12 @@ async function validateProjectType(request: any, projectType: any, tenantId: any
 
 async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     const CampaignDetails = request.body.CampaignDetails;
-    const { hierarchyType, action, tenantId, boundaries, resources, projectType } = CampaignDetails;
+    const { id, hierarchyType, action, tenantId, boundaries, resources, projectType } = CampaignDetails;
+    if (actionInUrl == "update") {
+        if (!id) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "id is required for update");
+        }
+    }
     if (!CampaignDetails) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "CampaignDetails is required");
     }
@@ -731,12 +843,14 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
 
 
 
-async function validateHeaders(headersOfBoundarySheet: any, request: any) {
-    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    validateBoundarySheetHeaders(headersOfBoundarySheet, hierarchy, request);
+async function validateHeaders(hierarchy: any[], headersOfBoundarySheet: any, request: any, localizationMap?: any) {
+    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails.hierarchyType}_${ele}`.toUpperCase())
+    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+    validateBoundarySheetHeaders(headersOfBoundarySheet, localizedHierarchy, request, localizationMap);
 }
-function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any) {
-    const boundaryCodeIndex = headersOfBoundarySheet.indexOf('Boundary Code');
+function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
+    const localizedBoundaryCode = getLocalizedName(config.boundaryCode, localizationMap)
+    const boundaryCodeIndex = headersOfBoundarySheet.indexOf(localizedBoundaryCode);
     const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
     if (keysBeforeBoundaryCode.some((key: any, index: any) => (key === undefined || key === null) || key !== hierarchy[index]) || keysBeforeBoundaryCode.length !== hierarchy.length) {
         const errorMessage = `"Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type: ${request?.body?.ResourceDetails?.hierarchyType}"`;
