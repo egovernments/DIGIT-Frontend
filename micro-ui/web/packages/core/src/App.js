@@ -2,7 +2,7 @@ import React, { lazy, Suspense,useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
-import registerRemotes from "./modules/registerRemotes"
+import registerRemotes from "./utils/registerRemotes"
 import { useTranslation } from "react-i18next";
 // import { queryClient } from "./bootstrap";
 import { Loader } from "@egovernments/digit-ui-react-components";
