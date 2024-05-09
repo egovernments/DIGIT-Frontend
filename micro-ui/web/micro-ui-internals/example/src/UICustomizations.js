@@ -216,7 +216,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
-      data.body.CampaignDetails.status = "started"
+      data.body.CampaignDetails.status = ["started","In Progress"]
       if (startDate) {
         data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
       }
