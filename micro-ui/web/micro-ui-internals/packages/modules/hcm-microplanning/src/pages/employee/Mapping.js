@@ -10,7 +10,7 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren } from "../../utils/processHierarchyAndData";
+import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
@@ -643,9 +643,21 @@ const extractGeoData = (
       message: t("MAPPING_NO_DATA_TO_SHOW"),
     });
   }
+  setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary)
+  setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter)
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
 };
+
+const calculateAggregateForTreeMicroplanWrapper = (entity)=>{
+  if(!entity) return {}
+  let newObject = {}
+  for( let [key, value] of Object.entries(entity)){
+    let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"])
+    newObject[key] = {...value,hierarchicalData:aggregatedTree}
+  }
+  return newObject
+}
 
 //prepare geojson to show on the map
 const prepareGeojson = (boundaryData, selection, style = {}) => {
