@@ -54,23 +54,40 @@ const configs = {
               }
             },
           },
+          // {
+          //   label: "CAMPAIGN_TYPE",
+          //   type: "dropdown",
+          //   isMandatory: false,
+          //   disable: false,
+          //   populators: {
+          //     name: "projectType",
+          //     optionsKey: "name",
+          //     optionsCustomStyle: {
+          //       top: "2.3rem",
+          //     },
+          //     mdmsConfig: {
+          //       masterName: "projectTypes",
+          //       moduleName: "HCM-PROJECT-TYPES",
+          //       localePrefix: "CAMPAIGN_TYPE",
+          //     },
+          //   },
+          // },
           {
-            label: "CAMPAIGN_TYPE",
-            type: "dropdown",
-            isMandatory: false,
-            disable: false,
-            populators: {
+            "label": "CAMPAIGN_TYPE",
+            "type": "apidropdown",
+            "isMandatory": false,
+            "disable": false,
+            "populators": {
               name: "projectType",
-              optionsKey: "name",
+              optionsKey: "i18nKey",
               optionsCustomStyle: {
                 top: "2.3rem",
               },
-              mdmsConfig: {
-                masterName: "projectTypes",
-                moduleName: "HCM-PROJECT-TYPES",
-                localePrefix: "CAMPAIGN_TYPE",
-              },
-            },
+              "allowMultiSelect": false,
+              "masterName": "commonUiConfig",
+              "moduleName": "SearchCampaign",
+              "customfn": "populateProjectType"
+            }
           },
           {
             label: "CAMPAIGN_START_DATE",
@@ -108,18 +125,18 @@ const configs = {
               },
             },
           },
-          {
-            label: "CAMPAIGN_BOUNDARY",
-            type: "text",
-            isMandatory: false,
-            disable: false,
-            populators: {
-              name: "boundaryCode",
-              style: {
-                marginBottom: "0px",
-              },
-            },
-          },
+          // {
+          //   label: "CAMPAIGN_BOUNDARY",
+          //   type: "text",
+          //   isMandatory: false,
+          //   disable: false,
+          //   populators: {
+          //     name: "boundaryCode",
+          //     style: {
+          //       marginBottom: "0px",
+          //     },
+          //   },
+          // },
         ],
       },
       label: "",
