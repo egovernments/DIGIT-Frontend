@@ -40,18 +40,16 @@ export const processHierarchyAndData = (hierarchy, allData) => {
           if (cellValue) {
             if (index === hierarchy.length - 1) {
               currentNode[cellValue].data = createDataObject(data[0], row);
-            } else if (index + 1 < hierarchy.length)
-               {
-                let nextHierarchyList = hierarchy.slice(index + 1);
-                let check = true;
-                nextHierarchyList.forEach((e) => {
-                  const boundaryType = e.boundaryType;
-                  const dataIndex = data?.[0].indexOf(boundaryType);
-                  if (dataIndex === -1) return;
-                  check = check && !row[dataIndex];
-                });
-                if(check)
-                  currentNode[cellValue].data = createDataObject(data[0], row);
+            } else if (index + 1 < hierarchy.length) {
+              let nextHierarchyList = hierarchy.slice(index + 1);
+              let check = true;
+              nextHierarchyList.forEach((e) => {
+                const boundaryType = e.boundaryType;
+                const dataIndex = data?.[0].indexOf(boundaryType);
+                if (dataIndex === -1) return;
+                check = check && !row[dataIndex];
+              });
+              if (check) currentNode[cellValue].data = createDataObject(data[0], row);
             }
           }
 
@@ -273,57 +271,90 @@ const constructNewHierarchyTree = (hierarchy, oldTree, boundarySelection, level 
 // Recursively calculates aggregate values for numerical properties within the `data` objects of each node in a hierarchical tree structure.
 // Updates the `properties` object within the `feature` object of each node with the aggregate values, if present.
 export const calculateAggregateForTree = (tree) => {
-  function calculateAggregate(node) {
-    if (!node.children || Object.keys(node.children).length === 0) {
-      // if the node has no children, return a new node with its own data
-      return { ...node, data: { ...node.data } };
+  try {
+    function calculateAggregate(node) {
+      if (!node.children || Object.keys(node.children).length === 0) {
+        // if the node has no children, return a new node with its own data
+        return { ...node, data: { ...node.data } };
+      }
+
+      // Recursively calculate aggregate values for each child
+      const newChildren = {};
+
+      for (const childKey in node.children) {
+        const child = node.children[childKey];
+        const newChild = calculateAggregate(child);
+        newChildren[childKey] = newChild;
+      }
+
+      // Aggregate numerical values dynamically
+      const aggregate = {};
+      for (const childKey in newChildren) {
+        const child = newChildren[childKey];
+        for (const prop in child.data) {
+          if (typeof child.data[prop] === "number") {
+            aggregate[prop] = (aggregate[prop] || 0) + child.data[prop];
+          }
+        }
+      }
+
+      // Create a new node with updated data
+      const newNode = {
+        ...node,
+        data: { ...node.data, ...aggregate },
+        children: newChildren,
+      };
+
+      // Update properties in the feature object
+      if (newNode.data.feature) {
+        newNode.data.feature.properties = { ...newNode.data.feature.properties, ...aggregate };
+      }
+
+      return newNode;
     }
 
-    // Recursively calculate aggregate values for each child
-    const newChildren = {};
+    const newTree = {};
 
-    for (const childKey in node.children) {
-      const child = node.children[childKey];
-      const newChild = calculateAggregate(child);
-      newChildren[childKey] = newChild;
+    // Iterate over each node object
+    for (const nodeKey in tree) {
+      const node = tree[nodeKey];
+      // Calculate aggregate values for the current node
+      const newNode = calculateAggregate(node);
+      // Add the updated node to the new tree
+      newTree[nodeKey] = newNode;
     }
 
-    // Aggregate numerical values dynamically
-    const aggregate = {};
-    for (const childKey in newChildren) {
-      const child = newChildren[childKey];
-      for (const prop in child.data) {
-        if (typeof child.data[prop] === 'number') {
-          aggregate[prop] = (aggregate[prop] || 0) + child.data[prop];
+    // Function to recursively set aggregate values to 0 for nodes without children
+    function setLeafAggregateToZero(node) {
+      if (!node.children || Object.keys(node.children).length === 0) {
+    // Create a new object containing only numerical properties for the data
+    const numericProperties = {};
+    for (const prop in node.data) {
+      if (typeof node.data[prop] === 'number') {
+        numericProperties[prop] = 0;
+      }
+    }
+        // Update properties in the feature object with aggregate values of 0
+        if (node.data.feature) {
+          node.data.feature.properties = { ...node.data.feature.properties, ...numericProperties };
+        }
+
+        node.data = { ...node.data,...numericProperties };
+      } else {
+        for (const childKey in node.children) {
+          setLeafAggregateToZero(node.children[childKey]);
         }
       }
     }
 
-    // Create a new node with updated data
-    const newNode = {
-      ...node,
-      data: { ...node.data, ...aggregate },
-      children: newChildren
-    };
-
-    // Update properties in the feature object
-    if (newNode.data.feature) {
-      newNode.data.feature.properties = { ...newNode.data.feature.properties, ...aggregate };
+    for (const nodeKey in newTree) {
+      setLeafAggregateToZero(newTree[nodeKey]);
     }
 
-    return newNode;
+    return newTree;
+  } catch (error) {
+    console.error("Failed to calculate treenode aggregates");
+    return {};
   }
+};
 
-  const newTree = {};
-
-  // Iterate over each node object
-  for (const nodeKey in tree) {
-    const node = tree[nodeKey];
-    // Calculate aggregate values for the current node
-    const newNode = calculateAggregate(node);
-    // Add the updated node to the new tree
-    newTree[nodeKey] = newNode;
-  }
-
-  return newTree;
-}

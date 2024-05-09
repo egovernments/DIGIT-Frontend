@@ -653,6 +653,7 @@ const calculateAggregateForTreeMicroplanWrapper = (entity)=>{
   if(!entity) return {}
   let newObject = {}
   for( let [key, value] of Object.entries(entity)){
+    if (!value?.["hierarchicalData"]) continue;
     let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"])
     newObject[key] = {...value,hierarchicalData:aggregatedTree}
   }
