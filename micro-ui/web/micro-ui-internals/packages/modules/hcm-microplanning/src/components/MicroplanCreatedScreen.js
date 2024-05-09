@@ -5,6 +5,7 @@ import { ArrowBack, FileDownload } from "@egovernments/digit-ui-svg-components";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import { Button } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   };
 
   const clickGoToHCM = ()=>{
-    history.push(`/workbench-ui/employee/campaign/setup-campaign`);
+    // history.push(`/workbench-ui/employee/campaign/setup-campaign`);
   }
 
   const clickGoHome = ()=>{
@@ -81,6 +82,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"} />}
         />
         {/* Next/Submit button */}
+        <a style={{textDecoration: "none"}} href={"/workbench-ui/employee/campaign/setup-campaign"}>
         <Button
           type="button"
           className="custom-button"
@@ -90,6 +92,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}
         />
+        </a>
       </ActionBar>
     </div>
   );

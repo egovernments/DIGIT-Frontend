@@ -102,7 +102,7 @@ const MicroplanPreview = ({
     if (microplanData && (microplanData?.ruleEngine || microplanData?.hypothesis)) {
       const hypothesisAssumptions = microplanData?.hypothesis || [];
       const formulaConfiguration = microplanData?.ruleEngine?.filter((item) => Object.values(item).every((key) => key !== "")) || [];
-      if (hypothesisAssumptions.length !== 0) {
+      if (hypothesisAssumptions.length !== 0 && hypothesisAssumptionsList.length === 0)  {
         setHypothesisAssumptionsList(hypothesisAssumptions);
       }
       if (formulaConfiguration.length !== 0) {
@@ -152,7 +152,7 @@ const MicroplanPreview = ({
   }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
   const cancelUpdateData = useCallback(() => {
-    setCheckDataCompletion(false);
+    setCheckDataCompletion("perform-action");
     setModal('none');
   }, [setCheckDataCompletion, setModal]);
 
@@ -174,7 +174,6 @@ const MicroplanPreview = ({
 
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
-
     const microData = updateMicroplanData(hypothesisAssumptionsList);
     setLoaderActivation(true);
 
@@ -296,6 +295,7 @@ const MicroplanPreview = ({
                 resources={resources}
                 modal={modal}
                 setModal={setModal}
+                data={data}
                 t={t}
               />
             ) : (
@@ -436,7 +436,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
 });
 
 const DataPreview = memo(
-  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, userEditedResources, setUserEditedResources, modal, setModal, t }) => {
+  ({ previewData, isCampaignLoading, ishierarchyLoading, resources, userEditedResources, setUserEditedResources, modal, setModal, data, t }) => {
     if (!previewData) return;
     const [tempResourceChanges, setTempResourceChanges] = useState(userEditedResources);
     const [selectedRow, setSelectedRow] = useState();
@@ -532,6 +532,7 @@ const DataPreview = memo(
               resources={resources}
               tempResourceChanges={tempResourceChanges}
               setTempResourceChanges={setTempResourceChanges}
+              data={data}
               t={t}
             />
           </Modal>
@@ -786,8 +787,8 @@ const AppplyChangedHypothesisConfirmation = ({ newhypothesisList, hypothesisList
             {data?.map((row, index) => (
               <tr key={row.id} className={index % 2 === 0 ? "even-row" : "odd-row"}>
                 <td>{t(row?.key)}</td>
+                <td>{t(row?.oldValue)}</td>
                 <td>{t(row?.value)}</td>
-                <td>{t(newhypothesisList?.[index]?.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -810,6 +811,7 @@ function filterObjects(arr1, arr2) {
     // If the object with the same key is found in the second array and their values are the same
     if (obj2 && obj1.value !== obj2.value) {
       // Push the object to the filtered array
+      obj1.oldValue = obj2.value
       filteredArray.push(obj1);
     }
   });
@@ -839,10 +841,10 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
     value = !isNaN(value) ? value : "";
 
     // update the state with user input
-    let newhypothesisEntity = _.cloneDeep(hypothesisAssumptionsList)?.find((item) => item?.id === e?.item?.id);
-    newhypothesisEntity.value = value;
+    let newhypothesisEntityIndex = hypothesisAssumptionsList.findIndex((item) => item?.id === e?.item?.id);
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
-    unprocessedHypothesisList[e?.item?.id] = newhypothesisEntity;
+    if(newhypothesisEntityIndex!==-1 && unprocessedHypothesisList[newhypothesisEntityIndex].value)
+      unprocessedHypothesisList[newhypothesisEntityIndex].value = value;
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
@@ -1002,7 +1004,7 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
   return combinedData;
 };
 
-const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges, t }) => {
+const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges,data, t }) => {
   const conmmonColumnData = useMemo(() => {
     const index = previewData?.[0]?.indexOf(commonColumn);
     if (index == -1) return;
@@ -1027,8 +1029,33 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
           </tr>
         </thead>
         <tbody>
+        {data[0].map((item) => {
+            let index = data?.[0]?.indexOf(item);
+            if(index === -1 ) return 
+            const currentData = data?.[selectedRow]?.[index];
+            return (
+              <tr key={item}>
+                <td className="column-names">
+                  <p>{t(item)}</p>
+                </td>
+                <td className="old-value">
+                  <p>{currentData || t("NO_DATA")}</p>
+                </td>
+                <td className="new-value no-left-padding">
+                  <TextInput
+                    name={"data_" + index}
+                    value={item?.value}
+                    style={{ margin: 0, backgroundColor:"rgba(238, 238, 238, 1)" }}
+                    t={t}
+                    disabled={true}
+                  />
+                </td>
+              </tr>
+            );
+          })}
           {resources.map((item) => {
             let index = previewData?.[0]?.indexOf(item);
+            if(index === -1 ) return 
             const currentData = previewData?.[selectedRow]?.[index];
             return (
               <tr key={item}>
@@ -1043,6 +1070,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                     name={"hyopthesis_" + index}
                     value={item?.value}
                     style={{ margin: 0 }}
+                    type="number"
                     t={t}
                     onChange={(value) => valueChangeHandler(item, value.target.value)}
                   />

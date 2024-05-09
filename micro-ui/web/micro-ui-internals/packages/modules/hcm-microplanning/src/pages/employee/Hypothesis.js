@@ -465,8 +465,8 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
   let newAssumptions = [];
   for (let i in autofillHypothesis) {
     newAssumptions.push({
-      id: i,
-      key: autofillHypothesis[i],
+      id: Number(i),
+      key: autofillHypothesis[Number(i)],
       value: "",
     });
   }
