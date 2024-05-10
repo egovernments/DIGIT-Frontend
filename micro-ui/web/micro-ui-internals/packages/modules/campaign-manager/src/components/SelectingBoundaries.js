@@ -78,7 +78,8 @@ useEffect(() => {
 
     // Recursive function to gather all descendants for a given boundary type
     function gatherDescendants(boundaryType) {
-      const descendants = [];hierarchyTypeDataresult
+      const descendants = [];
+      hierarchyTypeDataresult;
 
       // Find all children for the current boundary type
       const children = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === boundaryType);
@@ -177,13 +178,13 @@ useEffect(() => {
         const updatedSelectedData = selectedData?.filter((item) => !typesToRemove?.includes(item?.type));
         const updatedBoundaryData = { ...boundaryData };
 
-        typesToRemove.forEach(type => {
+        typesToRemove.forEach((type) => {
           if (type !== boundary.boundaryType && updatedBoundaryData.hasOwnProperty(type)) {
-              updatedBoundaryData[type] = [];
+            updatedBoundaryData[type] = [];
           }
-      });
+        });
         setSelectedData(updatedSelectedData);
-        setBoundaryData(updatedBoundaryData)
+        setBoundaryData(updatedBoundaryData);
       }
       return;
     }
@@ -274,7 +275,7 @@ useEffect(() => {
                     <MultiSelectDropdown
                       t={t}
                       options={boundaryData[boundary?.boundaryType]?.map((item) => item?.boundaryTypeData?.TenantBoundary?.[0]?.boundary)?.flat() || []}
-                      optionsKey={"code"}
+                      optionsKey={t("code")}
                       selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType)}
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
@@ -301,7 +302,7 @@ useEffect(() => {
                             })) || [],
                         })) || []
                       }
-                      optionsKey={"code"}
+                      optionsKey={t("code")}
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
