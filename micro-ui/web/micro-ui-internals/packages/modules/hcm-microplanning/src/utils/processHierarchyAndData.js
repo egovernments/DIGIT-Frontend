@@ -324,33 +324,6 @@ export const calculateAggregateForTree = (tree) => {
       newTree[nodeKey] = newNode;
     }
 
-    // Function to recursively set aggregate values to 0 for nodes without children
-    function setLeafAggregateToZero(node) {
-      if (!node.children || Object.keys(node.children).length === 0) {
-    // Create a new object containing only numerical properties for the data
-    const numericProperties = {};
-    for (const prop in node.data) {
-      if (typeof node.data[prop] === 'number') {
-        numericProperties[prop] = 0;
-      }
-    }
-        // Update properties in the feature object with aggregate values of 0
-        if (node.data.feature) {
-          node.data.feature.properties = { ...node.data.feature.properties, ...numericProperties };
-        }
-
-        node.data = { ...node.data,...numericProperties };
-      } else {
-        for (const childKey in node.children) {
-          setLeafAggregateToZero(node.children[childKey]);
-        }
-      }
-    }
-
-    for (const nodeKey in newTree) {
-      setLeafAggregateToZero(newTree[nodeKey]);
-    }
-
     return newTree;
   } catch (error) {
     console.error("Failed to calculate treenode aggregates");

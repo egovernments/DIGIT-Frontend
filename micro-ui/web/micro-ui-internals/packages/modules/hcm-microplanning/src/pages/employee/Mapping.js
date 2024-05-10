@@ -97,7 +97,7 @@ const Mapping = ({
   const [showBaseMapSelector, setShowBaseMapSelector] = useState(false);
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
   const [filterData, setFilterData] = useState({}); // State for facility data
-  const [boundarySelections, setBoundarySelections] = useState([]);
+  const [boundarySelections, setBoundarySelections] = useState({});
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
 
