@@ -290,7 +290,7 @@ export const UICustomizations = {
       data.body.PlanConfigurationSearchCriteria.pagination = data?.state?.tableForm
       data.body.PlanConfigurationSearchCriteria.name = name
       data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-      // data.body.PlanConfigurationSearchCriteria.id = Digit.UserService.getUser().info.uuid;
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
       // delete data.body.PlanConfigurationSearchCriteria.pagination
       data.body.PlanConfigurationSearchCriteria.status = status?.status
       cleanObject(data.body.PlanConfigurationSearchCriteria);

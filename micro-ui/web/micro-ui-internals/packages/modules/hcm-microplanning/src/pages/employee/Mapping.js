@@ -1,5 +1,5 @@
 // Importing necessary modules
-import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect } from "@egovernments/digit-ui-components";
+import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect,Modal } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,8 +14,21 @@ import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren,
 import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
+import { CloseButton, ModalHeading } from "../../components/CommonComponents"
 
 const page = "mapping";
+
+
+function checkTruthyKeys(obj) {
+  for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+          if (obj[key] && !(Array.isArray(obj[key]) && obj[key].length === 0)) {
+              return true;
+          }
+      }
+  }
+  return false;
+}
 
 // Mapping component definition
 const Mapping = ({
@@ -331,7 +344,7 @@ const BoundarySelection = memo(
   }) => {
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const [showConfirmationModal,setShowConformationModal] = useState(false)
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -343,6 +356,20 @@ const BoundarySelection = memo(
       setProcessedHierarchy(processedHierarchyTemp);
       setIsLoading(false);
     }, [boundaryData, hierarchy, boundarySelections]);
+   
+    const handleClearAll = () => {
+      setShowConformationModal(true)
+      
+    }
+
+    const handleSubmitConfModal = () => {
+      setBoundarySelections({})
+      setShowConformationModal(false)
+    }
+
+    const handleCancelConfModal = () => {
+      setShowConformationModal(false)
+    }
 
     return (
       <div className={`filter-by-boundary  ${!isboundarySelectionSelected ? "height-control" : ""}`} ref={filterBoundaryRef}>
@@ -386,6 +413,46 @@ const BoundarySelection = memo(
                 />
               </div>
             ))}
+            {checkTruthyKeys(boundarySelections) && <div>
+              <Button
+                label={t("CLEAR_ALL")}
+                variation="primary"
+                type="button"
+                onClick={handleClearAll}
+                className={"header-btn"}
+                style={{ marginTop: "2rem", width: "14rem" }}
+              />
+            </div>}
+            {showConfirmationModal && (
+              <Modal
+                popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+                popupModuleActionBarStyles={{
+                  display: "flex",
+                  flex: 1,
+                  justifyContent: "space-between",
+                  padding: 0,
+                  width: "100%",
+                  padding: "0 0 1rem 1.3rem",
+                }}
+                popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+                style={{
+                  flex: 1,
+                  backgroundColor: "white",
+                  border: "0.063rem solid rgba(244, 119, 56, 1)",
+                }}
+                headerBarMainStyle={{ padding: 0, margin: 0 }}
+                headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
+                headerBarEnd={<CloseButton clickHandler={()=>setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+                actionCancelLabel={t("YES")}
+                actionCancelOnSubmit={handleSubmitConfModal}
+                actionSaveLabel={t("NO")}
+                actionSaveOnSubmit={handleCancelConfModal}
+              >
+                <div className="modal-body">
+                  <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
+                </div>
+              </Modal>
+            )}
           </div>
         </Card>
       </div>

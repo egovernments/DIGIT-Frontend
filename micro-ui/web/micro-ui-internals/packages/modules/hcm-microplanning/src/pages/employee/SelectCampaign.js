@@ -174,7 +174,7 @@ const configs = {
           },
           {
             label: "CAMPAIGN_DATE",
-            jsonPath: "campaignDetails.startDate",
+            jsonPath: "startDate",
             additionalCustomization: true,
           },
         ],
