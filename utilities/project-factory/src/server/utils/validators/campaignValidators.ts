@@ -36,8 +36,6 @@ async function fetchBoundariesInChunks(request: any) {
         tenantId, hierarchyType, includeChildren: true
     };
     const responseBoundaries: any[] = [];
-    logger.info("Boundary search url : " + config.host.boundaryHost + config.paths.boundaryRelationship);
-    logger.info("Boundary search params : " + JSON.stringify(boundaryEntitySearchParams));
     var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, boundaryEntitySearchParams);
     const TenantBoundary = response.TenantBoundary;
     TenantBoundary.forEach((tenantBoundary: any) => {
@@ -491,7 +489,6 @@ async function validateResources(resources: any, request: any) {
                     tenantId: request?.body?.CampaignDetails?.tenantId
                 }
             }
-            logger.info("searchBody : " + JSON.stringify(searchBody));
             const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
             if (response?.ResourceDetails?.[0]) {
                 if (!(response?.ResourceDetails?.[0]?.status == "completed" && response?.ResourceDetails?.[0]?.action == "validate")) {
@@ -626,8 +623,6 @@ async function validateCampaignName(request: any, actionInUrl: any) {
             campaignName: campaignName
         }
     }
-    logger.info("searchBody : " + JSON.stringify(searchBody));
-    logger.info("Url : " + config.host.projectFactoryBff + "project-factory/v1/project-type/search");
     const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
     if (Array.isArray(searchResponse?.CampaignDetails)) {
         if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
@@ -654,8 +649,6 @@ async function validateById(request: any) {
             ids: [id]
         }
     }
-    logger.info("searchBody : " + JSON.stringify(searchBody));
-    logger.info("Url : " + config.host.projectFactoryBff + "project-factory/v1/project-type/search");
     const searchResponse: any = await axios.post(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
     if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
         if (searchResponse?.data?.CampaignDetails?.length > 0) {
@@ -697,7 +690,6 @@ async function validateProjectType(request: any, projectType: any, tenantId: any
             }
         }
         const params = { tenantId: tenantId }
-        logger.info("Url : " + config.host.mdms + "egov-mdms-service/v1/_search");
         const searchResponse: any = await httpRequest(config.host.mdms + "egov-mdms-service/v1/_search", searchBody, params);
         if (searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes && Array.isArray(searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes)) {
             const projectTypes = searchResponse?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
