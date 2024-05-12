@@ -20,7 +20,7 @@ export const UICustomizations = {
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
-        status: ["started"],
+        status: ["started","In Progress"],
         createdBy: Digit.UserService.getUser().info.uuid,
         // startDate: Date.now(),
         pagination: {
@@ -111,7 +111,7 @@ export const UICustomizations = {
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
-        status: ["started"],
+        status: ["started","In Progress"],
         endDate: Date.now() - 24 * 60 * 60 * 1000,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
@@ -125,7 +125,7 @@ export const UICustomizations = {
         data.body.CampaignDetails.campaignName = campaignName;
       }
       if (campaignType) {
-        data.body.CampaignDetails.projectType = campaignType?.[0]?.id;
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
       }
       delete data.body.custom;
       delete data.body.inbox;
@@ -215,7 +215,7 @@ export const UICustomizations = {
         data.body.CampaignDetails.campaignName = campaignName;
       }
       if (campaignType) {
-        data.body.CampaignDetails.projectType = campaignType?.[0]?.id;
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
       }
       delete data.body.custom;
       delete data.body.custom;
@@ -306,7 +306,7 @@ export const UICustomizations = {
         data.body.CampaignDetails.campaignName = campaignName;
       }
       if (campaignType) {
-        data.body.CampaignDetails.projectType = campaignType?.[0]?.id;
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
       }
       delete data.body.custom;
       delete data.body.inbox;
