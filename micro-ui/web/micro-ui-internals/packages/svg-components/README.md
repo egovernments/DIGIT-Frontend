@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-svg-components":"1.0.5",
+"@egovernments/digit-ui-svg-components":"1.0.7",
 ```
 
 then navigate to App.js
@@ -61,6 +61,7 @@ const { Accessibility } = SVG;
 ### Changelog
 
 ```bash
+1.0.7 adding NorthArrow and MapLayerIcon icon
 1.0.6 Used a new Primary constant color "#c84c0e"
 1.0.5 Adding Pagination icons and Fixing Population and Facility icons
 1.0.4 fixed Excel icon
