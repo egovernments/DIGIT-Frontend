@@ -186,17 +186,19 @@ function groupByTypeRemap(data) {
   const result = {};
 
   data.forEach((item) => {
-    const type = item?.boundaryType;
+    const type = item?.type;
+    const boundaryType = item?.type;
     const obj = {
+      boundaryTypeData:{
       TenantBoundary: [
         {
-          boundary: [item],
+          boundary: [{ ...item, boundaryType }],
         },
       ],
-    };
+    }};
 
     if (result[type]) {
-      result[type][0].TenantBoundary[0].boundary.push(item);
+      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
     } else {
       result[type] = [obj];
     }
@@ -338,6 +340,7 @@ const SetupCampaign = () => {
   const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
+    if(hierarchyDefinition?.BoundaryHierarchy?.[0]){
     setDataParams({
       ...dataParams,
       facilityId: facilityId,
@@ -345,7 +348,7 @@ const SetupCampaign = () => {
       userId: userId,
       hierarchyType: hierarchyType,
       hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
-    });
+    })}
   }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   // Example usage:
@@ -446,20 +449,6 @@ const SetupCampaign = () => {
   useEffect(async () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
-    }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA) {
-      const FacilityTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA, hierarchyType, "facility");
-      setDataParams({
-        ...dataParams,
-        ValidateFacilityId: FacilityTemp?.ResourceDetails?.id,
-      });
-    }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA) {
-      const UserTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA, hierarchyType, "user");
-      setDataParams({
-        ...dataParams,
-        ValidateUserId: UserTemp?.ResourceDetails?.id,
-      });
     }
   }, [shouldUpdate]);
 
