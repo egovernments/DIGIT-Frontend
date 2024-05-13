@@ -170,7 +170,7 @@ function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], 
                 if (obj.hasOwnProperty(lowestLevelHierarchy)) {
                     const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
                     const target = obj[localizedTargetColumnName];
-                    if (target === undefined || typeof target !== 'number' || target < 0 ||  target > 100000 ||!Number.isInteger(target)) {
+                    if (target === undefined || typeof target !== 'number' || target < 0 || target > 100000 || !Number.isInteger(target)) {
                         errors.push({ status: "INVALID", rowNumber: obj["!row#number!"], errorDetails: `Invalid target value at row ${obj['!row#number!'] + 1}. of sheet ${key}`, sheetName: key })
                     }
                 }
@@ -398,17 +398,19 @@ async function validateBoundarySheetData(request: any, fileUrl: any, localizatio
     const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
     const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, localizedBoundaryTab, false, localizationMap);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    await validateHeaders(hierarchy, headersOfBoundarySheet, request, localizationMap)
+    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
+    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+    await validateHeaders(localizedHierarchy, headersOfBoundarySheet, request, localizationMap)
     const boundaryData = await getSheetData(fileUrl, localizedBoundaryTab, true, undefined, localizationMap);
     //validate for whether root boundary level column should not be empty
-    validateForRootElementExists(boundaryData, hierarchy, localizedBoundaryTab);
+    validateForRootElementExists(boundaryData, localizedHierarchy, localizedBoundaryTab);
     // validate for duplicate rows(array of objects)
     validateForDupicateRows(boundaryData);
 }
 
 function validateForRootElementExists(boundaryData: any[], hierachy: any[], sheetName: string) {
     const root = hierachy[0];
-    log(hierachy,"hierachy",boundaryData)
+    log(hierachy, "hierachy", boundaryData)
 
     if (!(boundaryData.filter(e => e[root]).length == boundaryData.length)) {
         throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid Boundary Sheet. Root level Boundary not present in every row  of Sheet ${sheetName}`)
@@ -829,7 +831,7 @@ async function validateFilters(request: any, boundaryData: any[]) {
     const rootBoundaries = boundaries.filter((boundary: any) => boundary.isRoot);
 
     if (rootBoundaries.length !== 1) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid Filter Criteria: Exactly one root boundary is required, but found "${rootBoundaries.length}`);
+        throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid Filter Criteria: Exactly one root boundary can be there, but found "${rootBoundaries.length}`);
     }
 
     const boundaryTypeOfRoot = rootBoundaries[0]?.boundaryType;
@@ -871,9 +873,7 @@ function validateBoundariesOfFilters(boundaries: any[], boundaryMap: Map<string,
 
 
 async function validateHeaders(hierarchy: any[], headersOfBoundarySheet: any, request: any, localizationMap?: any) {
-    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails.hierarchyType}_${ele}`.toUpperCase())
-    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
-    validateBoundarySheetHeaders(headersOfBoundarySheet, localizedHierarchy, request, localizationMap);
+    validateBoundarySheetHeaders(headersOfBoundarySheet, hierarchy, request, localizationMap);
 }
 function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
     const localizedBoundaryCode = getLocalizedName(config.boundaryCode, localizationMap)
@@ -895,35 +895,34 @@ async function validateDownloadRequest(request: any) {
     await validateHierarchyType(request, hierarchyType, tenantId);
 }
 
-function immediateValidationForTargetSheet(dataFromSheet:any,localizationMap:any)
-{
+function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
     const keys = Object.keys(dataFromSheet);
     if (keys.length > 0) {
-      const boundaryTab = keys[0];
-      if (boundaryTab != getLocalizedName(config.boundaryTab, localizationMap)) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "INVALID SHEET NAME. SHEET NAME MUST BE BOUNDARY DATA FOR FIRST TAB")
-      }
+        const boundaryTab = keys[0];
+        if (boundaryTab != getLocalizedName(config.boundaryTab, localizationMap)) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "INVALID SHEET NAME. SHEET NAME MUST BE BOUNDARY DATA FOR FIRST TAB")
+        }
     }
     for (const key in dataFromSheet) {
-      if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
-        const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
-        if (dataArray.length === 0) {
-          throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
-        }
-        if (key != getLocalizedName(config.boundaryTab, localizationMap)) {
-          const root = config.generateDifferentTabsOnBasisOf;
-          for (const boundaryRow of dataArray) {
-            for (const columns in boundaryRow) {
-              if (columns.startsWith('__EMPTY')) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid column has some random data in Target Sheet ${key} at row number ${boundaryRow['!row#number!']+1}`);
-              }
+        if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
+            const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
+            if (dataArray.length === 0) {
+                throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
             }
-            if (!boundaryRow[root]) {
-              throwError("COMMON", 400, "VALIDATION_ERROR", ` "${config.generateDifferentTabsOnBasisOf}"  column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!']+1}`);
+            if (key != getLocalizedName(config.boundaryTab, localizationMap)) {
+                const root = config.generateDifferentTabsOnBasisOf;
+                for (const boundaryRow of dataArray) {
+                    for (const columns in boundaryRow) {
+                        if (columns.startsWith('__EMPTY')) {
+                            throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid column has some random data in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
+                        }
+                    }
+                    if (!boundaryRow[root]) {
+                        throwError("COMMON", 400, "VALIDATION_ERROR", ` "${config.generateDifferentTabsOnBasisOf}"  column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
+                    }
+                }
             }
-          }
         }
-      }
     }
 }
 
