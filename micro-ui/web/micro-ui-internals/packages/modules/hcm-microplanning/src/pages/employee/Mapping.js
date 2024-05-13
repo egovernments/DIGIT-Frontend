@@ -32,6 +32,8 @@ import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
 import { CloseButton, ModalHeading } from "../../components/CommonComponents";
+import { PopulationSvg } from "../../icons/Svg";
+import chroma from "chroma-js";
 
 const page = "mapping";
 
@@ -122,7 +124,7 @@ const Mapping = ({
   const [boundarySelections, setBoundarySelections] = useState({});
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
-
+  const [chloroplethProperty, setChloroplethProperty] = useState("targetPopulation");
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
 
@@ -241,7 +243,7 @@ const Mapping = ({
   useEffect(() => {
     const geojsons = prepareGeojson(boundaryData, "ALL");
     if (geojsons) {
-      addGeojsonToMap(map, geojsons, (e) => {}, t);
+      addGeojsonToMap(map, geojsons, t);
     }
 
     // setting bounds if they exist
@@ -259,7 +261,7 @@ const Mapping = ({
   // showing selected boundary data
   useEffect(() => {
     if (!boundarySelections) return;
-    const style = {
+    let style = {
       fillColor: "rgba(255, 107, 43, 1)",
       weight: 2,
       opacity: 1,
@@ -268,15 +270,27 @@ const Mapping = ({
       fill: "rgb(4,136,219)",
     };
     const filteredSelection = filterSelection(boundaryData, boundarySelections);
-    const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
     // addGeojsonToMap(map, baseDatalayers, t);
+    removeAllLayers(map, layers);
+    let newLayer = [];
+    let geojsonLayer;
+    if (chloroplethProperty) {
+      const chloroplethGeojson = prepareGeojson(boundaryData, "ALL") || [];
+      geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t, chloroplethProperty);
+      if (geojsonLayer) {
+        newLayer.push(geojsonLayer);
+        style.fillOpacity = 0;
+      }
+    }
+    const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
+    geojsonLayer = addGeojsonToMap(map, geojsons, t);
     if (geojsons) {
-      removeAllLayers(map, layers);
-      addGeojsonToMap(map, geojsons, setLayer, t);
+      if (geojsonLayer) newLayer.push(geojsonLayer);
+      setLayer(newLayer);
       let bounds = findBounds(geojsons);
       if (bounds) map.fitBounds(bounds);
     }
-  }, [boundarySelections]);
+  }, [boundarySelections, chloroplethProperty]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
     if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
@@ -787,19 +801,35 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
   }
 };
 
-const addGeojsonToMap = (map, geojson, setLayer, t) => {
+const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
   if (!map || !geojson) return false;
+
+  // Calculate min and max values of the property
+  const values = geojson.map((feature) => feature.properties[chloroplethProperty]) || [];
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+
+  // Define the colors of the gradient
+  const colors = [
+    { percent: 0, color: "#FF7373" },
+    { percent: 50, color: "#FFFFFF" },
+    { percent: 100, color: "#BA2900" },
+  ];
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
-      if (Object.keys(feature.properties.style).length !== 0) {
+      let color;
+      if (chloroplethProperty) color = interpolateColor(feature.properties[chloroplethProperty] || [], minValue, maxValue, colors);
+      if (Object.keys(feature.properties.style).length !== 0 && !chloroplethProperty) {
         return feature.properties.style;
       } else {
         return {
-          fillColor: "rgb(0,0,0,0)",
+          // fillColor: "rgb(0,0,0,0)",
           weight: 2,
           opacity: 1,
           color: "rgba(176, 176, 176, 1)",
-          fillOpacity: 0,
+          ...(feature.properties.style ? feature.properties.style : {}),
+          fillColor: chloroplethProperty ? color : "rgb(0,0,0,0)",
+          fillOpacity: chloroplethProperty ? 0.7 : 0,
         };
       }
     },
@@ -830,10 +860,32 @@ const addGeojsonToMap = (map, geojson, setLayer, t) => {
       }
     },
   });
-  setLayer([geojsonLayer]);
   geojsonLayer.addTo(map);
-  return true;
+  return geojsonLayer;
 };
+
+function interpolateColor(value, minValue, maxValue, colors) {
+  // Handle case where min and max values are the same
+  if (minValue === maxValue) {
+    // Return a default color or handle the case as needed
+    return colors[0].color;
+  }
+
+  // Normalize the value to a percentage between 0 and 100
+  const percent = ((value - minValue) / (maxValue - minValue)) * 100;
+  // Find the two colors to interpolate between
+  let lowerColor, upperColor;
+  for (let i = 0; i < colors.length - 1; i++) {
+    if (percent >= colors[i].percent && percent <= colors[i + 1].percent) {
+      lowerColor = colors[i];
+      upperColor = colors[i + 1];
+      break;
+    }
+  }
+  // Interpolate between the two colors
+  const t = (percent - lowerColor.percent) / (upperColor.percent - lowerColor.percent);
+  return chroma.mix(lowerColor.color, upperColor.color, t, "lab").hex();
+}
 
 // Find bounds for multiple geojson together
 const findBounds = (data, buffer = 0.1) => {
@@ -977,14 +1029,7 @@ const removeAllLayers = (map, layer) => {
 const MapMarker = (style = {}) => {
   return L.divIcon({
     className: "custom-svg-icon",
-    html: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="50" height="50" viewBox="0 0 256 256" xml:space="preserve">
-  <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
-    <path d="M 45 90 c -1.415 0 -2.725 -0.748 -3.444 -1.966 l -4.385 -7.417 C 28.167 65.396 19.664 51.02 16.759 45.189 c -2.112 -4.331 -3.175 -8.955 -3.175 -13.773 C 13.584 14.093 27.677 0 45 0 c 17.323 0 31.416 14.093 31.416 31.416 c 0 4.815 -1.063 9.438 -3.157 13.741 c -0.025 0.052 -0.053 0.104 -0.08 0.155 c -2.961 5.909 -11.41 20.193 -20.353 35.309 l -4.382 7.413 C 47.725 89.252 46.415 90 45 90 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: ${
-      style.fill ? style.fill : "rgba(176, 176, 176, 1)"
-    }; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-    <path d="M 45 45.678 c -8.474 0 -15.369 -6.894 -15.369 -15.368 S 36.526 14.941 45 14.941 c 8.474 0 15.368 6.895 15.368 15.369 S 53.474 45.678 45 45.678 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-  </g>
-  </svg>`,
+    html: PopulationSvg(style),
     iconAnchor: [25, 50],
   });
 };

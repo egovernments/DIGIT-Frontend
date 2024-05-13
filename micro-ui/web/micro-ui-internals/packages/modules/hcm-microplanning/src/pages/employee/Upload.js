@@ -86,7 +86,68 @@ const Upload = ({
     },
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const Template = {
+    url: "/project-factory/v1/data/_download",
+    params: {
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      // type: type,
+      type: "boundary" ,
+      hierarchyType: campaignData?.hierarchyType,
+      // id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
+      id: "boundary" ,
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
+  const downloadTemplate1 = async () => {
+    await mutation.mutate(
+      {
+        params: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          type: "boundary",
+          hierarchyType: campaignData?.hierarchyType,
+          // id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
+          id: "boundary",
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          if (result?.GeneratedResource?.[0]?.status === "failed") {
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            return;
+          }
+          if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            return;
+          }
+          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
+          const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, Digit.ULBService.getCurrentTenantId());
+          const fileData = fileUrl?.map((i) => {
+            const urlParts = i?.url?.split("/");
+            // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
+            const fileName = type === "boundary" ? "Boundary Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
+            return {
+              ...i,
+              filename: fileName,
+            };
+          });
+
+          if (fileData && fileData?.[0]?.url) {
+            // downloadExcel(fileData[0].blob, fileData[0].fileName);
+            window.location.href = fileData?.[0]?.url;
+            // handleFileDownload(fileData?.[0]);
+            // downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
+          } else {
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+          }
+        },
+        onError: (result) => {
+          setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+        },
+      }
+    );
+  };
+  
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
@@ -455,7 +516,6 @@ const Upload = ({
       }
     });
     if (error && !error?.check) return error;
-debugger
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
     if (!response.valid) setUploadedFileError(response.message);
@@ -796,6 +856,7 @@ debugger
             )}
             {!dataPresent && dataUpload && <UploadInstructions setModal={() => setModal("upload-guidelines")} t={t} />}
           </div>
+          <button onClick={downloadTemplate1}>apple</button>
 
           <div className="upload-section-option">{sectionOptions}</div>
         </div>
@@ -883,7 +944,7 @@ debugger
         )}
         {modal === "spatial-data-property-mapping" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height:"fit-content" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -892,7 +953,7 @@ debugger
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "48.5rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               backgroundColor: "white",
               border: "0.063rem solid rgba(244, 119, 56, 1)",

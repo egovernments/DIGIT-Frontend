@@ -6,7 +6,6 @@ ajv.addKeyword("isRuleConfigureInputs");
 
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
-  debugger
   const translate = () => {
     const required = Object.entries(schemaData?.Properties || {})
       .reduce((acc, [key, value]) => {
