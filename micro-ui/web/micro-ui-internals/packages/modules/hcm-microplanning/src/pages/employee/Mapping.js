@@ -541,6 +541,17 @@ const getSchema = (campaignType, type, section, schemas) => {
   });
 };
 
+const calculateAggregateForTreeMicroplanWrapper = (entity) => {
+  if (!entity || typeof entity !== 'object') return {};
+  let newObject = {};
+  for (let [key, value] of Object.entries(entity)) {
+    if (!value?.["hierarchicalData"]) continue;
+    let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"]);
+    newObject[key] = { ...value, hierarchicalData: aggregatedTree };
+  }
+  return newObject;
+};
+
 const extractGeoData = (
   campaignType,
   microplanData,
@@ -738,17 +749,6 @@ const extractGeoData = (
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
-};
-
-const calculateAggregateForTreeMicroplanWrapper = (entity) => {
-  if (!entity) return {};
-  let newObject = {};
-  for (let [key, value] of Object.entries(entity)) {
-    if (!value?.["hierarchicalData"]) continue;
-    let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"]);
-    newObject[key] = { ...value, hierarchicalData: aggregatedTree };
-  }
-  return newObject;
 };
 
 //prepare geojson to show on the map
