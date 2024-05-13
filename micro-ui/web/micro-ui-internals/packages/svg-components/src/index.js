@@ -791,6 +791,9 @@ import {PaginationFirst } from "./svg/PaginationFirst"
 import {PaginationLast } from "./svg/PaginationLast"
 import {PaginationNext } from "./svg/PaginationNext"
 import {PaginationPrevious } from "./svg/PaginationPrevious"
+import {NorthArrow} from "./svg/NorthArrow"
+import {MapLayerIcon } from "./svg/MapLayerIcon"
+
 export {
   Success,
   TickMark,
@@ -1584,5 +1587,7 @@ export {
   PaginationPrevious,
   PaginationNext,
   PaginationLast,
-  PaginationFirst
+  PaginationFirst,
+  NorthArrow,
+  MapLayerIcon
 };

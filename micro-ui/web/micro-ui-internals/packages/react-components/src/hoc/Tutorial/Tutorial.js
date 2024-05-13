@@ -9,6 +9,7 @@ const theme = {
   primaryColor: '#F47738',
   arrowColor: '#FFFFFF',
   textColor: '#505A5F',
+  zIndex: 99999999,
 };
 
 const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
