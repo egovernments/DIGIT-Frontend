@@ -1,5 +1,16 @@
 // Importing necessary modules
-import { Button, Card, CardLabel, CustomDropdown, Dropdown, Header, MultiSelectDropdown, Toast, TreeSelect,Modal } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  Card,
+  CardLabel,
+  CustomDropdown,
+  Dropdown,
+  Header,
+  MultiSelectDropdown,
+  Toast,
+  TreeSelect,
+  Modal,
+} from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -10,22 +21,27 @@ import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../../utils/processHierarchyAndData";
+import {
+  processHierarchyAndData,
+  findParent,
+  fetchDropdownValues,
+  findChildren,
+  calculateAggregateForTree,
+} from "../../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
-import { CloseButton, ModalHeading } from "../../components/CommonComponents"
+import { CloseButton, ModalHeading } from "../../components/CommonComponents";
 
 const page = "mapping";
 
-
 function checkTruthyKeys(obj) {
   for (let key in obj) {
-      if (obj.hasOwnProperty(key)) {
-          if (obj[key] && !(Array.isArray(obj[key]) && obj[key].length === 0)) {
-              return true;
-          }
+    if (obj.hasOwnProperty(key)) {
+      if (obj[key] && !(Array.isArray(obj[key]) && obj[key].length === 0)) {
+        return true;
       }
+    }
   }
   return false;
 }
@@ -41,13 +57,6 @@ const Mapping = ({
   pages,
   ...props
 }) => {
-  // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-    { name: "BaseMapLayers" },
-    { name: "Schemas" },
-    { name: "UIConfiguration" },
-  ]);
-
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
@@ -129,14 +138,14 @@ const Mapping = ({
 
   // Effect to initialize map when data is fetched
   useEffect(() => {
-    if (!data || !Boundary) return;
-    let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
+    if (!state || !Boundary) return;
+    let UIConfiguration = state?.UIConfiguration;
     if (UIConfiguration) {
       const filterDataOriginList = UIConfiguration.find((item) => item.name === "mapping");
       setFilterDataOrigin(filterDataOriginList);
     }
-    const BaseMapLayers = data["hcm-microplanning"]["BaseMapLayers"];
-    let schemas = data["hcm-microplanning"]["Schemas"];
+    const BaseMapLayers = state?.BaseMapLayers;
+    let schemas = state?.Schemas;
     if (schemas) setValidationSchemas(schemas);
     if (!BaseMapLayers || (BaseMapLayers && BaseMapLayers.length === 0)) return;
     let baseMaps = {};
@@ -164,7 +173,7 @@ const Mapping = ({
     if (!map) {
       init(_mapNode, defaultBaseMap, Boundary);
     }
-  }, [data, Boundary]);
+  }, [state?.UIConfiguration, state?.Schemas, state?.BaseMapLayers, Boundary]);
 
   useEffect(() => {
     if (map && filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
@@ -264,8 +273,8 @@ const Mapping = ({
     if (geojsons) {
       removeAllLayers(map, layers);
       addGeojsonToMap(map, geojsons, setLayer, t);
-      let bounds = findBounds(geojsons)
-      if(bounds) map.fitBounds(bounds)
+      let bounds = findBounds(geojsons);
+      if (bounds) map.fitBounds(bounds);
     }
   }, [boundarySelections]);
 
@@ -344,7 +353,7 @@ const BoundarySelection = memo(
   }) => {
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [showConfirmationModal,setShowConformationModal] = useState(false)
+    const [showConfirmationModal, setShowConformationModal] = useState(false);
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -356,20 +365,19 @@ const BoundarySelection = memo(
       setProcessedHierarchy(processedHierarchyTemp);
       setIsLoading(false);
     }, [boundaryData, hierarchy, boundarySelections]);
-   
+
     const handleClearAll = () => {
-      setShowConformationModal(true)
-      
-    }
+      setShowConformationModal(true);
+    };
 
     const handleSubmitConfModal = () => {
-      setBoundarySelections({})
-      setShowConformationModal(false)
-    }
+      setBoundarySelections({});
+      setShowConformationModal(false);
+    };
 
     const handleCancelConfModal = () => {
-      setShowConformationModal(false)
-    }
+      setShowConformationModal(false);
+    };
 
     return (
       <div className={`filter-by-boundary  ${!isboundarySelectionSelected ? "height-control" : ""}`} ref={filterBoundaryRef}>
@@ -394,7 +402,7 @@ const BoundarySelection = memo(
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
                   style={{ maxWidth: "23.75rem", margin: 0 }}
-                  ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem", position: "sticky" } : { position: "sticky" }}
+                  ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
                   type={"multiselectdropdown"}
                   t={t}
                   options={item?.dropDownOptions || []}
@@ -413,16 +421,18 @@ const BoundarySelection = memo(
                 />
               </div>
             ))}
-            {checkTruthyKeys(boundarySelections) && <div>
-              <Button
-                label={t("CLEAR_ALL")}
-                variation="primary"
-                type="button"
-                onClick={handleClearAll}
-                className={"header-btn"}
-                style={{ marginTop: "2rem", width: "14rem" }}
-              />
-            </div>}
+            {checkTruthyKeys(boundarySelections) && (
+              <div>
+                <Button
+                  label={t("CLEAR_ALL")}
+                  variation="primary"
+                  type="button"
+                  onClick={handleClearAll}
+                  className={"header-btn"}
+                  style={{ marginTop: "2rem", width: "14rem" }}
+                />
+              </div>
+            )}
             {showConfirmationModal && (
               <Modal
                 popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
@@ -442,7 +452,7 @@ const BoundarySelection = memo(
                 }}
                 headerBarMainStyle={{ padding: 0, margin: 0 }}
                 headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
-                headerBarEnd={<CloseButton clickHandler={()=>setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+                headerBarEnd={<CloseButton clickHandler={() => setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
                 actionCancelLabel={t("YES")}
                 actionCancelOnSubmit={handleSubmitConfModal}
                 actionSaveLabel={t("NO")}
@@ -710,22 +720,22 @@ const extractGeoData = (
       message: t("MAPPING_NO_DATA_TO_SHOW"),
     });
   }
-  setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary)
-  setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter)
+  setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
+  setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
 };
 
-const calculateAggregateForTreeMicroplanWrapper = (entity)=>{
-  if(!entity) return {}
-  let newObject = {}
-  for( let [key, value] of Object.entries(entity)){
+const calculateAggregateForTreeMicroplanWrapper = (entity) => {
+  if (!entity) return {};
+  let newObject = {};
+  for (let [key, value] of Object.entries(entity)) {
     if (!value?.["hierarchicalData"]) continue;
-    let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"])
-    newObject[key] = {...value,hierarchicalData:aggregatedTree}
+    let aggregatedTree = calculateAggregateForTree(value?.["hierarchicalData"]);
+    newObject[key] = { ...value, hierarchicalData: aggregatedTree };
   }
-  return newObject
-}
+  return newObject;
+};
 
 //prepare geojson to show on the map
 const prepareGeojson = (boundaryData, selection, style = {}) => {

@@ -72,6 +72,9 @@ const App = ({ path }) => {
     { name: "RuleConfigureOutput" },
     { name: "Resources" },
     { name: "HypothesisAssumptions" },
+    { name: "BaseMapLayers" },
+    { name: "MicroplanPreviewAggregates" },
+    { name: "AutoFilledRuleConfigurations" }
   ],
   {
     select:(data) => {

@@ -82,7 +82,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"} />}
         />
         {/* Next/Submit button */}
-        <a style={{textDecoration: "none"}} href={"/workbench-ui/employee/campaign/setup-campaign"}>
+        <Link style={{textDecoration: "none"}} to={"/workbench-ui/employee/campaign/setup-campaign"}>
         <Button
           type="button"
           className="custom-button"
@@ -92,7 +92,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}
         />
-        </a>
+        </Link>
       </ActionBar>
     </div>
   );

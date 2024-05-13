@@ -33,13 +33,6 @@ const Upload = ({
 }) => {
   const { t } = useTranslation();
 
-  // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-    { name: "UploadConfiguration" },
-    { name: "UIConfiguration" },
-    { name: "Schemas" },
-  ]);
-
   // States
   const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
@@ -170,10 +163,10 @@ const Upload = ({
 
   // Effect to update sections and selected section when data changes
   useEffect(() => {
-    if (data) {
-      let uploadSections = data["hcm-microplanning"]["UploadConfiguration"];
-      let schemas = data["hcm-microplanning"]["Schemas"];
-      let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
+    if (state) {
+      let uploadSections = state?.UploadConfiguration;
+      let schemas = state?.Schemas;
+      let UIConfiguration = state?.UIConfiguration;
       if (UIConfiguration) {
         const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
         setUploadGuideLines(uploadGuideLinesList);
@@ -184,7 +177,7 @@ const Upload = ({
         setSections(uploadSections);
       }
     }
-  }, [data]);
+  }, [state?.UploadConfiguration,state?.Schemas,state?.UIConfiguration]);
 
   // Memoized section options to prevent unnecessary re-renders
   const sectionOptions = useMemo(() => {
@@ -431,6 +424,7 @@ const Upload = ({
         toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") },
       };
     }
+
     // checking if the hierarchy and common column is present the  uploaded data
     let extraColumns = [...hierarchy, commonColumn];
     let data = Object.values(tempFileDataToStore);
@@ -461,7 +455,7 @@ const Upload = ({
       }
     });
     if (error && !error?.check) return error;
-
+debugger
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
     if (!response.valid) setUploadedFileError(response.message);

@@ -21,19 +21,17 @@ export const components = {
   MicroplanPreview,
 };
 
-import XLSX from "xlsx";
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
+import { useMyContext } from "../../utils/context";
 
 // will be changed laters
-const MicroplanName = "microplan 1912";
 const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
   // Fetching data using custom MDMS hook
   const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "UIConfiguration" }]);
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const [toRender, setToRender] = useState("navigator");
@@ -45,16 +43,17 @@ const CreateMicroplan = () => {
   const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
   const [loaderActivation, setLoaderActivation] = useState(false);
+  const { state } = useMyContext();
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     let temp;
-    if (!data || !data["hcm-microplanning"]) return;
-    let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
+    if (!state || !state.UIConfiguration) return;
+    let UIConfiguration = state.UIConfiguration;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!(temp && temp.ruleConfigureOperators)) return;
     setOperatorsObject(temp.ruleConfigureOperators);
-  }, [data]);
+  }, [state?.UIConfiguration]);
 
   // useEffect to store data in session storage
   useEffect(() => {

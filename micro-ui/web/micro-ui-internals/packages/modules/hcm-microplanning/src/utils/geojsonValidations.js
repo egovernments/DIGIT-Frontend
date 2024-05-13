@@ -71,7 +71,7 @@ const geometryValidation = (data) => {
 // Function responsible for property verification of geojson data
 export const geojsonPropetiesValidation = (data, schemaData, t) => {
   const translate = () => {
-    const required = Object.entries(schemaData?.schema?.Properties || {})
+    const required = Object.entries(schemaData?.Properties || {})
       .reduce((acc, [key, value]) => {
         if (value?.isRequired) {
           acc.push(key);
