@@ -6,6 +6,7 @@ import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
 import { BOUNDARY_HIERARCHY_TYPE } from "../../Module";
+import _ from "lodash";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -186,17 +187,19 @@ function groupByTypeRemap(data) {
   const result = {};
 
   data.forEach((item) => {
-    const type = item?.boundaryType;
+    const type = item?.type;
+    const boundaryType = item?.type;
     const obj = {
+      boundaryTypeData:{
       TenantBoundary: [
         {
-          boundary: [item],
+          boundary: [{ ...item, boundaryType }],
         },
       ],
-    };
+    }};
 
     if (result[type]) {
-      result[type][0].TenantBoundary[0].boundary.push(item);
+      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
     } else {
       result[type] = [obj];
     }
@@ -338,6 +341,7 @@ const SetupCampaign = () => {
   const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
+    if(hierarchyDefinition?.BoundaryHierarchy?.[0]){
     setDataParams({
       ...dataParams,
       facilityId: facilityId,
@@ -345,7 +349,7 @@ const SetupCampaign = () => {
       userId: userId,
       hierarchyType: hierarchyType,
       hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
-    });
+    })}
   }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   // Example usage:
@@ -447,22 +451,11 @@ const SetupCampaign = () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
     }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA) {
-      const FacilityTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA, hierarchyType, "facility");
-      setDataParams({
-        ...dataParams,
-        ValidateFacilityId: FacilityTemp?.ResourceDetails?.id,
-      });
-    }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA) {
-      const UserTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA, hierarchyType, "user");
-      setDataParams({
-        ...dataParams,
-        ValidateUserId: UserTemp?.ResourceDetails?.id,
-      });
-    }
   }, [shouldUpdate]);
 
+  const compareIdentical = (draftData, payload) => {
+    return _.isEqual(draftData, payload);
+  };
   //API CALL
   useEffect(async () => {
     if (shouldUpdate === true) {
@@ -470,7 +463,7 @@ const SetupCampaign = () => {
         return;
       } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
         const reqCreate = async () => {
-          let payloadData = draftData;
+          let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
             ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
@@ -514,24 +507,26 @@ const SetupCampaign = () => {
           //     Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
           //   },
           // });
-          await updateCampaign(payloadData, {
-            onError: (error, variables) => {
-              console.log(error);
-              setShowToast({ key: "error", label: error });
-            },
-            onSuccess: async (data) => {
-              draftRefetch();
-              history.push(
-                `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-                {
-                  message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                  text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                  info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                }
-              );
-              Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-            },
-          });
+          if (compareIdentical(draftData, payloadData) === false) {
+            await updateCampaign(payloadData, {
+              onError: (error, variables) => {
+                console.log(error);
+                setShowToast({ key: "error", label: error });
+              },
+              onSuccess: async (data) => {
+                draftRefetch();
+                history.push(
+                  `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+                  {
+                    message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+                    text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+                    info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                  }
+                );
+                Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+              },
+            });
+          }
         };
 
         reqCreate();
@@ -592,7 +587,7 @@ const SetupCampaign = () => {
         reqCreate();
       } else {
         const reqCreate = async () => {
-          let payloadData = draftData;
+          let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate) {
             payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -629,21 +624,23 @@ const SetupCampaign = () => {
             delete payloadData?.startDate;
             delete payloadData?.endDate;
           }
-          await updateCampaign(payloadData, {
-            onError: (error, variables) => {
-              console.log(error);
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setShowToast({ key: "error", label: error });
-              }
-            },
-            onSuccess: async (data) => {
-              updateUrlParams({ id: data?.CampaignDetails?.id });
-              draftRefetch();
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setCurrentKey(currentKey + 1);
-              }
-            },
-          });
+          if (compareIdentical(draftData, payloadData) === false) {
+            await updateCampaign(payloadData, {
+              onError: (error, variables) => {
+                console.log(error);
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setShowToast({ key: "error", label: error });
+                }
+              },
+              onSuccess: async (data) => {
+                updateUrlParams({ id: data?.CampaignDetails?.id });
+                draftRefetch();
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setCurrentKey(currentKey + 1);
+                }
+              },
+            });
+          }
         };
 
         reqCreate();
@@ -862,8 +859,23 @@ const SetupCampaign = () => {
         }
         const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
         const isDeliveryError = validateDeliveryRules(deliveryCycleData);
+        const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId ? false : true;
+        const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId ? false : true;
+        const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId ? false : true;
         if (isDeliveryError === false) {
           setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
+          return false;
+        }
+        if (isTargetError) {
+          setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
+          return false;
+        }
+        if (isFacilityError) {
+          setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
+          return false;
+        }
+        if (isUserError) {
+          setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
         return true;
