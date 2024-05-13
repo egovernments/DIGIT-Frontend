@@ -48,6 +48,8 @@ const UploadBoundary = () => {
 
   const simplifiedData = filteredXlsxData?.[0]?.boundaryHierarchy.map((item) => item.boundaryType);
 
+  const modifiedHierarchy = simplifiedData?.map(ele => t((`${selectedValue?.hierarchyType}_${ele}`).toUpperCase()));
+
   const formattedHierarchyTypes = hierarchyTypeData?.BoundaryHierarchy?.map((item) => ({ hierarchyType: item.hierarchyType }));
 
   const hierarchyTypeDropdownConfig = {
@@ -234,7 +236,7 @@ const UploadBoundary = () => {
             isDisabled={!selectedValue}
             onButtonClick={callInputClick}
           />
-          <GenerateXlsx inputRef={inputRef} jsonData={[simplifiedData]} skipHeader={true} sheetName="Boundary Data"/>
+          <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data"/>
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
         {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}

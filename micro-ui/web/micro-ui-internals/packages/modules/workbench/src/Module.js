@@ -11,7 +11,7 @@ import LevelCards from "./components/LevelCards";
 import * as parsingUtils from "../src/utils/ParsingUtils"
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["workbench","mdms","schema"];
+  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
