@@ -290,7 +290,7 @@ useEffect(() => {
               boundary?.parentBoundaryType == null ? (
                 <LabelFieldPair key={index}>
                   <CardLabel>
-                  {t(`ES_CAMPAIGN_HIERARCHY_${hierarchy?.toUpperCase()}_${boundary?.boundaryType?.split(" ")?.join("_")?.toUpperCase()}`)}
+                  {t((`${hierarchy}_${boundary?.boundaryType}`)?.toUpperCase())}
                     <span className="mandatory-span">*</span>
                   </CardLabel>
                   <div className="digit-field">
@@ -308,7 +308,7 @@ useEffect(() => {
               ) : (
                 <LabelFieldPair key={index}>
                   <CardLabel>
-                  {t(`ES_CAMPAIGN_HIERARCHY_${hierarchy?.toUpperCase()}_${boundary?.boundaryType?.split(" ")?.join("_")?.toUpperCase()}`)}
+                  {t((`${hierarchy}_${boundary?.boundaryType}`)?.toUpperCase())}
                     <span className="mandatory-span">*</span>
                   </CardLabel>
                   <div className="digit-field">
