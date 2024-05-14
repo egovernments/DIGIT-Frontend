@@ -822,7 +822,6 @@ const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
     style: function (feature) {
       let color;
       if (chloroplethProperty) color = interpolateColor(feature.properties[chloroplethProperty] || [], minValue, maxValue, colors);
-      console.log(color);
       if (Object.keys(feature.properties.style).length !== 0 && !chloroplethProperty) {
         return feature.properties.style;
       } else {
