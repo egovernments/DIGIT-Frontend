@@ -49,7 +49,11 @@ module.exports = () => {
           // app1: "app1@https://localhost:8001/remoteEntry.js",
 
         },
-        shared: packageJson.dependencies,
+        shared: {
+          ...packageJson.dependencies,
+          react: { singleton: true }, // React will be shared as a singleton
+          'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton
+        },
       }),
     ],
   };

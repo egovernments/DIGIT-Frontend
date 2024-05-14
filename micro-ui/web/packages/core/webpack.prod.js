@@ -23,7 +23,11 @@ module.exports = () => {
           // engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
           // tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
         },
-        shared: packageJson.dependencies,
+        shared: {
+          ...packageJson.dependencies,
+          react: { singleton: true }, // React will be shared as a singleton
+          'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton
+        },
       }),
     ],
   };
