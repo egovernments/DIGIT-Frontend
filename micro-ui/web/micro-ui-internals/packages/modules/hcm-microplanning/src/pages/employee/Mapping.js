@@ -124,7 +124,7 @@ const Mapping = ({
   const [boundarySelections, setBoundarySelections] = useState({});
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
-  const [chloroplethProperty, setChloroplethProperty] = useState("targetPopulation");
+  const [chloroplethProperty, setChloroplethProperty] = useState();
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
 
@@ -270,22 +270,17 @@ const Mapping = ({
       fill: "rgb(4,136,219)",
     };
     const filteredSelection = filterSelection(boundaryData, boundarySelections);
-    // addGeojsonToMap(map, baseDatalayers, t);
     removeAllLayers(map, layers);
     let newLayer = [];
     let geojsonLayer;
-    // if (chloroplethProperty) {
-    //   style.fillOpacity = 0.7;
-    //   style.opacity = 0.7
-    //   const chloroplethGeojson = prepareGeojson(boundaryData, "ALL", style) || [];
-    //   geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t, chloroplethProperty);
-    //   if (geojsonLayer) {
-    //     newLayer.push(geojsonLayer);
-    //     style.fillOpacity = 0.22;
-    //   }
-    // }
-    // style.fillOpacity = 0.7
-    //   style.opacity = 1
+    if (chloroplethProperty) {
+      let chloroplethGeojson = prepareGeojson(boundaryData, "ALL", style) || [];
+      chloroplethGeojson = addChloroplethProperties(chloroplethGeojson, chloroplethProperty, filteredSelection)
+      geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t);
+      if (geojsonLayer) {
+        newLayer.push(geojsonLayer);
+      }
+    }
     const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
     geojsonLayer = addGeojsonToMap(map, geojsons, t);
     if (geojsons) {
@@ -335,6 +330,12 @@ const Mapping = ({
               </div>
               <div className="icon-rest filter-icon">
                 <p>{t("FILTER")}</p>
+                <div className="icon">
+                  <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+                </div>
+              </div>
+              <div className="icon-rest filter-icon" onClick={() =>chloroplethProperty? setChloroplethProperty(): setChloroplethProperty("targetPopulation")}>
+                <p>{t("VIRTUALIZATION")}</p>
                 <div className="icon">
                   <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
                 </div>
@@ -756,7 +757,7 @@ const extractGeoData = (
 };
 
 //prepare geojson to show on the map
-const prepareGeojson = (boundaryData, selection, style = {}) => {
+const prepareGeojson = (boundaryData, selection, style = {}, chloropleth) => {
   if (!boundaryData || Object.keys(boundaryData).length === 0) return [];
   let geojsonRawFeatures = [];
   if (selection == "ALL") {
@@ -805,8 +806,7 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
   }
 };
 
-const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
-  if (!map || !geojson) return false;
+const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelection) => {
   // Calculate min and max values of the property
   const values = geojson.map((feature) => feature.properties[chloroplethProperty]) || [];
   const minValue = Math.min(...values);
@@ -818,21 +818,44 @@ const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
     { percent: 50, color: "#FFFFFF" },
     { percent: 100, color: "#BA2900" },
   ];
+  // Create a new geojson object
+  const newGeojson = geojson.map((feature) => {
+    const newFeature = { ...feature, properties: { ...feature.properties, style: { ...feature.properties.style } } };
+    let color;
+
+    if (chloroplethProperty) {
+      color = interpolateColor(newFeature.properties[chloroplethProperty], minValue, maxValue, colors);
+    }
+
+    newFeature.properties.style.fillColor = color;
+    newFeature.properties.style.color = "rgba(0, 0, 0, 1)"
+    if (!filterSelection || filteredSelection.length ===0 || filteredSelection.includes(newFeature.properties.name)) {
+      newFeature.properties.style.fillOpacity = 1;
+    } else {
+      newFeature.properties.style.fillOpacity = 0.4; 
+      newFeature.properties.style.opacity = 0.7; 
+    }
+
+    return newFeature;
+  });
+  return newGeojson
+};
+
+const addGeojsonToMap = (map, geojson, t) => {
+  if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
-      let color;
-      if (chloroplethProperty) color = interpolateColor(feature.properties[chloroplethProperty] || [], minValue, maxValue, colors);
-      if (Object.keys(feature.properties.style).length !== 0 && !chloroplethProperty) {
+      if (Object.keys(feature.properties.style).length !== 0) {
         return feature.properties.style;
       } else {
         return {
-          // fillColor: "rgb(0,0,0,0)",
-          ...(feature.properties.style ? feature.properties.style : {}),
           weight: 2,
           opacity: 1,
           color: "rgba(176, 176, 176, 1)",
-          fillColor: chloroplethProperty ? color : "rgb(0,0,0,0)",
-          fillOpacity: chloroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
+          fillColor: "rgb(0,0,0,0)",
+          // fillColor: chloroplethProperty ? color : "rgb(0,0,0,0)",
+          fillOpacity: 0,
+          // fillOpacity: chloroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
         };
       }
     },
