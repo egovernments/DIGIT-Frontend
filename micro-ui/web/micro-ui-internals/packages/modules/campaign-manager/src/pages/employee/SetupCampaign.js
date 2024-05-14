@@ -817,7 +817,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadBoundary?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -828,7 +831,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadFacility?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadFacility?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -838,7 +844,9 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadUser?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadUser?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
+          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -896,7 +904,7 @@ const SetupCampaign = () => {
 
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 5000);
+      setTimeout(closeToast, 10000);
     }
   }, [showToast]);
 
@@ -1066,6 +1074,7 @@ const SetupCampaign = () => {
           info={showToast?.key === "info" ? true : false}
           error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
           onClose={closeToast}
         />
       )}
