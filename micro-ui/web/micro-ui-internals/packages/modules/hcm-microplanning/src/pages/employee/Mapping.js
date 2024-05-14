@@ -833,7 +833,7 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
       newFeature.properties.style.fillOpacity = 1;
     } else {
       newFeature.properties.style.fillOpacity = 0.4; 
-      newFeature.properties.style.opacity = 0.4; 
+      newFeature.properties.style.opacity = 0.7; 
     }
 
     return newFeature;

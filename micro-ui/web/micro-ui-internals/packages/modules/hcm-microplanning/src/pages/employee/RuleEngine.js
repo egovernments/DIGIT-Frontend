@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonComponents";
-import { CollectionsBookmarIcons, Modal } from "@egovernments/digit-ui-components";
+import { Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
 
