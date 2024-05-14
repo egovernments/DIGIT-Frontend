@@ -25,9 +25,9 @@ import Response from "./pages/Response";
 
 var Digit = window.Digit || {};
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = "HR";
-  const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  // const moduleCode = "HR";
+  // const language = Digit.StoreData.getCurrentLanguage();
+  // const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
    
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   const { path, url } = useRouteMatch();
