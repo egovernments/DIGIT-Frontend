@@ -281,7 +281,7 @@ async function getResponseFromDb(request: any, response: any) {
     logger.error(`Error fetching data from the database: ${error.message}`);
     throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", error?.message);
     return null; // Return null in case of an error
-  } 
+  }
 }
 
 async function getModifiedResponse(responseData: any) {
@@ -779,7 +779,7 @@ async function getDataFromSheet(request: any, fileStoreId: any, tenantId: any, c
     throwError("FILE", 500, "DOWNLOAD_URL_NOT_FOUND");
   }
   if (type == 'boundaryWithTarget') {
-    return await getTargetSheetData(fileResponse?.fileStoreIds?.[0]?.url, true, true,localizationMap);
+    return await getTargetSheetData(fileResponse?.fileStoreIds?.[0]?.url, true, true, localizationMap);
   }
   return await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, createAndSearchConfig?.parseArrayConfig?.sheetName || optionalSheetName, true, createAndSearchConfig, localizationMap)
 }
@@ -916,9 +916,6 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
 
   return translatedSchema;
 }
-
-
-
 
 export {
   errorResponder,

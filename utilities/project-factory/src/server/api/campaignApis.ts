@@ -701,6 +701,7 @@ const getHierarchy = async (request: any, tenantId: string, hierarchyType: strin
 
 const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, getRow = false, localizationMap?: any) => {
   const localizedBoundarySheetName = getLocalizedName(sheetName, localizationMap)
+  console.log(localizationMap,"kkkkkkkkkkkkkkkkkkkk")
   const workbook: any = await getWorkbook(fileUrl, localizedBoundarySheetName);
   const columnsToValidate = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
     header: 1,
@@ -713,6 +714,20 @@ const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, get
     }
   }
   return columnsToValidate;
+}
+async function getFiltersFromCampaignSearchResponse(request: any) {
+  const url = config.host.projectFactoryBff + config.paths.projectTypeSearch;
+  const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
+  const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
+  const requestBody = { ...requestInfo, ...campaignDetails };
+  const projectTypeSearchResponse = await httpRequest(url, requestBody);
+  console.log(projectTypeSearchResponse, "resssssssssssssssssssssss")
+  const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries;
+  if (!boundaries) {
+    console.log("aaaaaaaaaaaaaaaaaa")
+    return {Filters: null};
+  }
+  return { Filters: { boundaries: boundaries } };
 }
 
 export {
@@ -729,5 +744,6 @@ export {
   generateHierarchyList,
   getHierarchy,
   getHeadersOfBoundarySheet,
-  handleResouceDetailsError
+  handleResouceDetailsError,
+  getFiltersFromCampaignSearchResponse
 };
