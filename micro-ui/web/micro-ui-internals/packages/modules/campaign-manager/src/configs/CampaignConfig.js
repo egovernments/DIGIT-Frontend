@@ -1,4 +1,4 @@
-export const CampaignConfig = (totalFormData) => {
+export const CampaignConfig = (totalFormData, dataParams) => {
   return [
     {
       form: [
@@ -31,7 +31,7 @@ export const CampaignConfig = (totalFormData) => {
           name: "HCM_CAMPAIGN_NAME",
           body: [
             {
-              isMandatory: true,
+              isMandatory: false,
               key: "campaignName",
               type: "component",
               component: "CampaignName",
@@ -55,7 +55,7 @@ export const CampaignConfig = (totalFormData) => {
           name: "HCM_CAMPAIGN_DATE",
           body: [
             {
-              isMandatory: true,
+              isMandatory: false,
               key: "campaignDates",
               type: "component",
               component: "CampaignDates",
@@ -142,6 +142,7 @@ export const CampaignConfig = (totalFormData) => {
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
+                dataParams: dataParams,
               },
               populators: {
                 name: "boundaryType",

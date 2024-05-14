@@ -4,7 +4,7 @@ import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema } from "../utils/genericUtils";
-import { fetchBoundariesInChunks, validateSheetData, validateTargetSheetData } from '../utils/validators/campaignValidators';
+import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../utils/validators/campaignValidators';
 import { callMdmsData, getCampaignNumber, getWorkbook } from "./genericApis";
 import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
 const _ = require('lodash');
@@ -408,8 +408,10 @@ async function processValidate(request: any, localizationMap?: { [key: string]: 
   const createAndSearchConfig = createAndSearch[type]
   const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, null, localizationMap)
   if (type == 'boundaryWithTarget') {
-    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation,localizationMap);
+    immediateValidationForTargetSheet(dataFromSheet, localizationMap);
+    validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation, localizationMap);
   }
+
   else {
     const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";
     const mdmsResponse = await callMdmsData(request, config.moduleName, schemaMasterName, tenantId);
@@ -444,7 +446,7 @@ function generateHash(input: string): string {
   for (let i = 0; i < input.length; i++) {
     hash = (hash * prime + input.charCodeAt(i)) % 100000; // Limit hash to 5 digits
   }
-  return hash.toString().padStart(5, '0');
+  return hash.toString().padStart(6, '0');
 }
 
 function enrichUserNameAndPassword(employees: any[]) {
@@ -460,26 +462,15 @@ function enrichUserNameAndPassword(employees: any[]) {
 }
 
 async function enrichJurisdictions(employee: any, request: any) {
-  const boundaryCodeArray = employee.jurisdictions.split(',').map((code: any) => code.trim());
-  const boundaryCodeSet = new Set(boundaryCodeArray);
-  const boundaryCodeArrayUnique: any[] = Array.from(boundaryCodeSet);
-  const responseBoundaries = await fetchBoundariesInChunks(request);
-  var boundaryObject: any = {};
-  responseBoundaries.forEach((element: any) => {
-    element.boundary = element.code
-    element.roles = employee.user.roles
-    element.hierarchy = element.hierarchyType
-    delete element.hierarchyType
-    delete element.code
-    delete element.parentId
-    delete element.id
-    boundaryObject[element.boundary] = element;
-  });
-  var newJurisdictions: any[] = [];
-  for (const boundaryCode of boundaryCodeArrayUnique) {
-    newJurisdictions.push(boundaryObject[boundaryCode])
-  }
-  employee.jurisdictions = newJurisdictions
+  employee.jurisdictions = [
+    {
+      tenantId: request?.body?.ResourceDetails?.tenantId,
+      boundaryType: config.values.userMainBoundaryType,
+      boundary: config.values.userMainBoundary,
+      hierarchy: request?.body?.ResourceDetails?.hierarchyType,
+      roles: employee?.user?.roles
+    }
+  ]
 }
 
 async function enrichEmployees(employees: any[], request: any) {
