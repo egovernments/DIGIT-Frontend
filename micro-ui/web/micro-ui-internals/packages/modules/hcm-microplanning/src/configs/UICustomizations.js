@@ -223,7 +223,7 @@ export const UICustomizations = {
       if (endDate) {
         data.body.CampaignDetails.endDate = Digit.Utils.date.convertDateToEpoch(endDate);
       }
-      data.body.CampaignDetails.projectType = projectType?.code;
+      data.body.CampaignDetails.projectType = projectType?.[0]?.code;
 
       cleanObject(data.body.CampaignDetails);
 
