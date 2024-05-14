@@ -109,9 +109,6 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     setModal("none");
   }, [setCheckDataCompletion, setModal]);
 
-  // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [{ name: "HypothesisAssumptions" }]);
-
   const closeModal = useCallback(() => {
     setModal("none");
   }, []);

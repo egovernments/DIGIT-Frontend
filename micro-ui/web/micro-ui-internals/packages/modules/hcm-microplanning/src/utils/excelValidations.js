@@ -7,8 +7,9 @@ ajv.addKeyword("isRuleConfigureInputs");
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
   const translate = () => {
-    const required = Object.entries(schemaData?.schema?.Properties || {})
+    const required = Object.entries(schemaData?.Properties || {})
       .reduce((acc, [key, value]) => {
+
         if (value?.isRequired) {
           acc.push(key);
         }
@@ -20,6 +21,7 @@ export const excelValidations = (data, schemaData, t) => {
     return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
+  console.log(required,properties)
   const schema = {
     type: "object",
     patternProperties: {

@@ -3,7 +3,6 @@ import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "../../components/CommonComponents";
-import MicroplanPreviewAggregates from "../../configs/MicroplanPreviewAggregates.json";
 import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../../configs/tourSteps";
@@ -22,12 +21,6 @@ const MicroplanPreview = ({
   navigationEvent,
   ...props
 }) => {
-  // Fetching data using custom MDMS hook
-  const { isLoading, data: MDMSData } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-    { name: "UIConfiguration" },
-    { name: "Schemas" },
-    { name: "Resources" },
-  ]);
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const userInfo = Digit.SessionStorage.get("User")?.info;
   const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
@@ -113,11 +106,11 @@ const MicroplanPreview = ({
 
   // Fetch and assign MDMS data
   useEffect(() => {
-    if (!MDMSData) return;
-    let UIConfiguration = MDMSData["hcm-microplanning"]?.["UIConfiguration"];
-    let schemas = MDMSData["hcm-microplanning"]?.["Schemas"];
-    let resourcelist = MDMSData["hcm-microplanning"]?.["Resources"];
-    let microplanPreviewAggregatesList = MicroplanPreviewAggregates.MicroplanPreviewAggregates;
+    if (!state) return;
+    let UIConfiguration = state?.UIConfiguration;
+    let schemas = state?.Schemas;
+    let resourcelist = state?.Resources;
+    let microplanPreviewAggregatesList = state?.MicroplanPreviewAggregates;
     microplanPreviewAggregatesList = microplanPreviewAggregatesList.find((item) => item.campaignType === campaignType)?.data;
     if (schemas) setValidationSchemas(schemas);
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
@@ -132,7 +125,7 @@ const MicroplanPreview = ({
       setOperatorsObject(temp.ruleConfigureOperators);
     }
     if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
-  }, [MDMSData]);
+  }, [state?.UIConfiguration, state?.Schemas, state?.Resources, state?.MicroplanPreviewAggregates]);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {

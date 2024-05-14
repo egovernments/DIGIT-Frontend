@@ -124,6 +124,7 @@ const Navigator = (props) => {
   // Function to handle step click
   const stepClickHandler = useCallback(
     (index) => {
+      if(index === currentPage?.id) return;
       if (!props.stepNavigationActive) return;
       if (
         props.checkDataCompleteness &&

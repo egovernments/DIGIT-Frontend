@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonComponents";
-import AutoFilledRuleConfigurations from "../../configs/AutoFilledRuleConfigurations.json";
 import { Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
@@ -26,14 +25,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
-
-  // Fetching data using custom MDMS hook
-  const { isLoading, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-    { name: "UIConfiguration" },
-    { name: "RuleConfigureInputs" },
-    { name: "RuleConfigureOutput" },
-    { name: "Schemas" },
-  ]);
 
   // Set TourSteps
   useEffect(() => {
@@ -116,14 +107,14 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
-    if (!data || !data["hcm-microplanning"]) return;
-    let schemas = data["hcm-microplanning"]["Schemas"];
+    if (!state) return;
+    let schemas = state?.Schemas;
     let hypothesisAssumptions = [];
     microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
-    let ruleConfigureOutput = data["hcm-microplanning"]["RuleConfigureOutput"];
-    let UIConfiguration = data["hcm-microplanning"]["UIConfiguration"];
+    let ruleConfigureOutput = state?.RuleConfigureOutput;
+    let UIConfiguration = state?.UIConfiguration;
     let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
-    let AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurations.AutoFilledRuleConfigurations;
+    let AutoFilledRuleConfigurationsList = state?.AutoFilledRuleConfigurations;
     AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurationsList.find((item) => item.campaignType === campaignType)?.data;
     microplanData?.ruleEngine?.forEach((item) => {
       if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
@@ -151,7 +142,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       setOperators(temp);
     }
     if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
-  }, [data]);
+  }, [state?.Schemas, state?.RuleConfigureOutput, state?.UIConfiguration, state?.AutoFilledRuleConfigurations]);
 
   // useEffect to set autofill data
   useEffect(() => {
@@ -171,7 +162,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   const closeModal = useCallback(() => {
     setModal("none");
-  }, [data]);
+  }, [setModal]);
 
   // Function to Delete an assumption
   const deleteAssumptionHandlerCallback = useCallback(() => {

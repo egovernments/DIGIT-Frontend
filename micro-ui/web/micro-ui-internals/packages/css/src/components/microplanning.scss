@@ -520,7 +520,7 @@ $border-color: rgba(214, 213, 212, 1);
     .spatial-data-property-mapping {
         width: calc(100%-2rem);
         padding: 1rem;
-        max-height: 31.68rem;
+        max-height: 30rem;
         padding-top: 0;
         margin: 1rem;
         border: 0.063rem rgba(0, 0, 0, 0.16) solid;
@@ -571,7 +571,7 @@ $border-color: rgba(214, 213, 212, 1);
                 background-position: right 0.7em top 50%, 0 0;
                 background-size: 1.5em auto;
                 background-color: rgb(255, 255, 255, 0);
-                border: 0.0623rem solid black !important;
+                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
                 padding: 0.5rem;
                 font-weight: 400;
                 font-size: 1rem;
@@ -579,7 +579,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             select:focus {
                 outline: none;
-                border-color: black;
+                border-color: rgba(80, 90, 95, 1);
             }
 
             option {
@@ -587,7 +587,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0.5rem;
                 font-size: 1rem;
                 max-height: 50%;
-                border: 0.0623rem solid black !important;
+                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
                 border-radius: 0;
             }
 
@@ -617,6 +617,7 @@ $border-color: rgba(214, 213, 212, 1);
                 background-position: right 0.7em top 50%, 0 0;
                 background-size: 1.5em auto;
                 background-color: rgb(255, 255, 255, 0);
+                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
                 padding: 0.25rem;
                 font-weight: 400;
                 font-size: 1rem;
@@ -906,6 +907,9 @@ $border-color: rgba(214, 213, 212, 1);
                 display: flex;
                 flex-wrap: wrap;
                 opacity: 0.6;
+                p{
+                    font-weight: 400;
+                }
             }
 
             .key {
@@ -1035,7 +1039,7 @@ $border-color: rgba(214, 213, 212, 1);
             background-position: right 0.7em top 50%, 0 0;
             background-size: 1.5em auto;
             background-color: rgb(255, 255, 255, 0);
-            border: 0.0623rem solid black !important;
+            border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
             padding: 0.5rem 2rem 0.5rem 1rem;
             font-weight: 400;
             min-height: 2.5rem;
@@ -1046,7 +1050,7 @@ $border-color: rgba(214, 213, 212, 1);
 
         select:focus {
             outline: none;
-            border-color: black;
+            border-color: rgba(80, 90, 95, 1);
         }
 
         select option {
@@ -1054,7 +1058,7 @@ $border-color: rgba(214, 213, 212, 1);
             padding: 0.5rem;
             font-size: 1rem;
             max-height: 50%;
-            border: 0.0623rem solid black !important;
+            border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
             border-radius: 0;
         }
 
@@ -1182,6 +1186,9 @@ $border-color: rgba(214, 213, 212, 1);
                     display: flex;
                     flex-wrap: wrap;
                     opacity: 0.6;
+                    p{
+                        font-weight: 400;
+                    }
                 }
 
                 .value-input-key {
@@ -1286,7 +1293,7 @@ $border-color: rgba(214, 213, 212, 1);
                 background-position: right 0.7em top 50%, 0 0;
                 background-size: 1.5em auto;
                 background-color: rgb(255, 255, 255, 0);
-                border: 0.0623rem solid black !important;
+                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
                 padding: 0.5rem 2rem 0.5rem 1rem;
                 font-weight: 400;
                 min-height: 2.5rem;
@@ -1297,7 +1304,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             select:focus {
                 outline: none;
-                border-color: black;
+                border-color: rgba(80, 90, 95, 1);
             }
 
             select option {
@@ -1305,7 +1312,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0.5rem;
                 font-size: 1rem;
                 max-height: 50%;
-                border: 0.0623rem solid black !important;
+                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
                 border-radius: 0;
             }
 
