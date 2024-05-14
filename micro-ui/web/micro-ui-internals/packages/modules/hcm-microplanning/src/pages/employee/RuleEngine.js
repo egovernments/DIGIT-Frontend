@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "../../components/Modal";
 import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonComponents";
-import { Modal } from "@egovernments/digit-ui-components";
+import { CollectionsBookmarIcons, Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
 
@@ -38,14 +38,6 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
-      const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
-      if (hypothesisAssumptions.length !== 0) {
-        setHypothesisAssumptionsList(hypothesisAssumptions);
-        setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
-      }
-    }
-
     if (pages) {
       const previouspage = pages[currentPage?.id - 1];
       if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
@@ -84,21 +76,24 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = useCallback((check) => {
-    if (!rules || !setMicroplanData) return;
-    if (check) {
-      setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-      let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
-      isValid = isValid && rules.length !== 0;
-      if (isValid) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    } else {
-      let isValid = microplanData?.ruleEngine?.every((item) => Object.values(item).every((data) => data !== ""));
-      isValid = isValid && rules.length !== 0;
-      if (isValid) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    }
-  }, [rules, setMicroplanData, microplanData, setCheckDataCompletion]);
+  const updateData = useCallback(
+    (check) => {
+      if (!rules || !setMicroplanData) return;
+      if (check) {
+        setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+        let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
+        isValid = isValid && rules.length !== 0;
+        if (isValid) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      } else {
+        let isValid = microplanData?.ruleEngine?.every((item) => Object.values(item).every((data) => data !== ""));
+        isValid = isValid && rules.length !== 0;
+        if (isValid) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      }
+    },
+    [rules, setMicroplanData, microplanData, setCheckDataCompletion]
+  );
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion(false);
@@ -124,41 +119,65 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     let temp;
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
-
+let outputs;
     if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
         data = data.filter((e) => e !== item?.output);
       });
+      outputs= data
       setOutputs(data);
     }
 
     if (ruleConfigureInputs) setInputs(ruleConfigureInputs);
-
+    let operator;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (temp && temp.ruleConfigureOperators) {
       temp = temp.ruleConfigureOperators.map((item) => item.name);
+      operator= temp
       setOperators(temp);
     }
     if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
-  }, [state?.Schemas, state?.RuleConfigureOutput, state?.UIConfiguration, state?.AutoFilledRuleConfigurations]);
 
-  // useEffect to set autofill data
-  useEffect(() => {
-    if (!autofillData || !outputs || !hypothesisAssumptionsList || !validationSchemas) return;
-    setAutoFillRules(
-      autofillData,
-      rules,
-      setRules,
-      hypothesisAssumptionsList,
+    let filteredRules = [];
+    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
+      const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
+      if (hypothesisAssumptions.length !== 0) {
+        setHypothesisAssumptionsList(hypothesisAssumptions);
+        filteredRules = setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
+      }
+    }
+    if (!AutoFilledRuleConfigurationsList || !outputs || !hypothesisAssumptions || !schemas) return;
+    filteredRules = setAutoFillRules(
+      AutoFilledRuleConfigurationsList,
+      filteredRules,
+      hypothesisAssumptions,
       outputs,
-      operators,
-      getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas),
+      operator,
+      getRuleConfigInputsFromSchema(campaignType, microplanData, schemas),
       setInputs,
       setOutputs
     );
-  }, [autofillData]);
+    if(filteredRules)
+      setRules(filteredRules);
+  }, [state?.Schemas, state?.RuleConfigureOutput, state?.UIConfiguration, state?.AutoFilledRuleConfigurations]);
+
+  // // useEffect to set autofill data
+  // useEffect(() => {
+  //   if (!autofillData || !outputs || !hypothesisAssumptionsList || !validationSchemas) return;
+  //   setAutoFillRules(
+  //     autofillData,
+  //     rules,
+  //     setRules,
+  //     hypothesisAssumptionsList,
+  //     outputs,
+  //     operators,
+  //     getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas),
+  //     setInputs,
+  //     setOutputs
+  //   );
+  // }, [autofillData]);
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -635,12 +654,12 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 };
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
-const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
-  if (rules?.length !== 0) return;
+const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
+  if (rules && rules.length !== 0) return rules;
   let newRules = [];
-  const ruleOuputList = rules.map((item) => item?.output) || [];
+  const ruleOuputList = rules ? rules.map((item) => item?.output) : [];
   let rulePlusInputs;
-  if (ruleOuputList) rulePlusInputs = [...inputs, ...rules.map((item) => item?.output)];
+  if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
   else rulePlusInputs = inputs;
   autofillData.forEach((item) => {
     if (
@@ -665,28 +684,27 @@ const setAutoFillRules = (autofillData, rules, setRules, hypothesisAssumptionsLi
     });
     setOutputs(newOutputs);
     setInputs(rulePlusInputs);
-    setRules((previous) => [...previous, ...newRules]);
+    // setRules((previous) => [...previous, ...newRules]);
+    return newRules;
   }
 };
 
-const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions, setRules) => {
-  if (rules?.length === 0) return;
+const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
+  if (rules && rules.length === 0) return;
   let newRules = [];
   let outputs = [];
-  rules.forEach((item) => {
-    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
-    item["id"] = newRules.length;
+  rules.forEach((item, index) => {
+    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return ;
+    item["id"] = index;
     newRules.push(item);
-    outputs.push(item.output)
+    outputs.push(item.output);
   });
-  let filteredRules = []
-  newRules.forEach((item) => {
-    if (!outputs?.includes(item?.input)) return;
-    item["id"] = newRules.length;
-    filteredRules.push(item);
-  });
-  if (newRules.length !== 0) {
-    setRules(filteredRules);
-  }
+  // let filteredRules = [];
+  // newRules.forEach((item) => {
+  //   // if (!outputs?.includes(item?.input)) return; 
+  //   item["id"] = newRules.length;
+  //   filteredRules.push(item);
+  // });
+  return newRules;
 };
 export default RuleEngine;
