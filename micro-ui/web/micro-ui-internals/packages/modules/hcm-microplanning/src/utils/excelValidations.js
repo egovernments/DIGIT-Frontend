@@ -21,7 +21,6 @@ export const excelValidations = (data, schemaData, t) => {
     return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
-  console.log(required,properties)
   const schema = {
     type: "object",
     patternProperties: {

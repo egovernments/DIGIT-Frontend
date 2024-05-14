@@ -260,7 +260,7 @@ const Mapping = ({
 
   // showing selected boundary data
   useEffect(() => {
-    if (!boundarySelections) return;
+    if (!boundarySelections && !chloroplethProperty) return;
     let style = {
       fillColor: "rgba(255, 107, 43, 1)",
       weight: 2,
@@ -274,22 +274,26 @@ const Mapping = ({
     removeAllLayers(map, layers);
     let newLayer = [];
     let geojsonLayer;
-    if (chloroplethProperty) {
-      const chloroplethGeojson = prepareGeojson(boundaryData, "ALL") || [];
-      geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t, chloroplethProperty);
-      if (geojsonLayer) {
-        newLayer.push(geojsonLayer);
-        style.fillOpacity = 0;
-      }
-    }
+    // if (chloroplethProperty) {
+    //   style.fillOpacity = 0.7;
+    //   style.opacity = 0.7
+    //   const chloroplethGeojson = prepareGeojson(boundaryData, "ALL", style) || [];
+    //   geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t, chloroplethProperty);
+    //   if (geojsonLayer) {
+    //     newLayer.push(geojsonLayer);
+    //     style.fillOpacity = 0.22;
+    //   }
+    // }
+    // style.fillOpacity = 0.7
+    //   style.opacity = 1
     const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
     geojsonLayer = addGeojsonToMap(map, geojsons, t);
     if (geojsons) {
       if (geojsonLayer) newLayer.push(geojsonLayer);
-      setLayer(newLayer);
       let bounds = findBounds(geojsons);
       if (bounds) map.fitBounds(bounds);
     }
+    setLayer(newLayer);
   }, [boundarySelections, chloroplethProperty]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
@@ -542,7 +546,7 @@ const getSchema = (campaignType, type, section, schemas) => {
 };
 
 const calculateAggregateForTreeMicroplanWrapper = (entity) => {
-  if (!entity || typeof entity !== 'object') return {};
+  if (!entity || typeof entity !== "object") return {};
   let newObject = {};
   for (let [key, value] of Object.entries(entity)) {
     if (!value?.["hierarchicalData"]) continue;
@@ -803,7 +807,6 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
 
 const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
   if (!map || !geojson) return false;
-
   // Calculate min and max values of the property
   const values = geojson.map((feature) => feature.properties[chloroplethProperty]) || [];
   const minValue = Math.min(...values);
@@ -819,17 +822,18 @@ const addGeojsonToMap = (map, geojson, t, chloroplethProperty = undefined) => {
     style: function (feature) {
       let color;
       if (chloroplethProperty) color = interpolateColor(feature.properties[chloroplethProperty] || [], minValue, maxValue, colors);
+      console.log(color);
       if (Object.keys(feature.properties.style).length !== 0 && !chloroplethProperty) {
         return feature.properties.style;
       } else {
         return {
           // fillColor: "rgb(0,0,0,0)",
+          ...(feature.properties.style ? feature.properties.style : {}),
           weight: 2,
           opacity: 1,
           color: "rgba(176, 176, 176, 1)",
-          ...(feature.properties.style ? feature.properties.style : {}),
           fillColor: chloroplethProperty ? color : "rgb(0,0,0,0)",
-          fillOpacity: chloroplethProperty ? 0.7 : 0,
+          fillOpacity: chloroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
         };
       }
     },
