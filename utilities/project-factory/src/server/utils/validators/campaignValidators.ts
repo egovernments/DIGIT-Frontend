@@ -18,6 +18,7 @@ import { getSheetData, getTargetWorkbook } from "../../api/genericApis";
 import { log } from "console";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
+import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
 
 
 
@@ -528,7 +529,7 @@ async function validateResources(resources: any, request: any) {
             }
             const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
             if (response?.ResourceDetails?.[0]) {
-                if (!(response?.ResourceDetails?.[0]?.status == "completed" && response?.ResourceDetails?.[0]?.action == "validate")) {
+                if (!(response?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && response?.ResourceDetails?.[0]?.action == "validate")) {
                     logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
                     throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
                 }
@@ -691,8 +692,8 @@ async function validateById(request: any) {
         if (searchResponse?.data?.CampaignDetails?.length > 0) {
             logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
             request.body.ExistingCampaignDetails = searchResponse?.data?.CampaignDetails[0];
-            if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != "drafted") {
-                throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in drafted state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
+            if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
+                throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in ${campaignStatuses?.drafted} state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
             }
         }
         else {

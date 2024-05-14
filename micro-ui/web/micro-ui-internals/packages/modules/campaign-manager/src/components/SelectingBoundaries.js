@@ -15,7 +15,7 @@ import { mailConfig } from "../configs/mailConfig";
 function SelectingBoundaries({ onSelect, formData, ...props }) {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [params,setParams] = useState(Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID"));
+  const [params,setParams] = useState(props?.props?.dataParams);
   const [hierarchy, setHierarchy] = useState(params?.hierarchyType);
   // const [hierarchy, setHierarchy] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy || {});
   // const [showcomponent, setShowComponent] = useState(
@@ -36,6 +36,12 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [updatedHierarchy, setUpdatedHierarchy] = useState({});
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState(params?.hierarchy);
   const [executionCount, setExecutionCount] = useState(0);
+
+  useEffect(() => {
+    if(props?.props?.dataParams){
+      setParams(props?.props?.dataParams)
+    }
+  },[props?.props?.dataParams])
 
   useEffect(() => {
     onSelect("boundaryType", { boundaryData: boundaryData, selectedData: selectedData});
@@ -86,7 +92,7 @@ useEffect(() => {
       }
       createHierarchyStructure(hierarchyTypeDataresult);
   }
-}, []);
+}, [hierarchyTypeDataresult]);
 
 
   function createHierarchyStructure(hierarchyTypeDataresult) {
@@ -188,6 +194,7 @@ useEffect(() => {
   const handleBoundaryChange = (data, boundary) => {
     if (!data || data.length === 0) {
       const check = updatedHierarchy[boundary?.boundaryType];
+
       if (check) {
         const typesToRemove = [boundary?.boundaryType, ...check];
         const updatedSelectedData = selectedData?.filter((item) => !typesToRemove?.includes(item?.type));
@@ -291,7 +298,7 @@ useEffect(() => {
                       t={t}
                       options={boundaryData[boundary?.boundaryType]?.map((item) => item?.boundaryTypeData?.TenantBoundary?.[0]?.boundary)?.flat() || []}
                       optionsKey={"code"}
-                      selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType)}
+                      selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
@@ -321,7 +328,7 @@ useEffect(() => {
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
-                      selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType)}
+                      selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                       addCategorySelectAllCheck={true}
                       addSelectAllCheck={true}
                       variant="nestedmultiselect"

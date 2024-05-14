@@ -30,6 +30,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName , setFileName] = useState (null);
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
@@ -42,13 +43,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
-      onSelect("uploadFacility", { uploadedFile, isError, isValidation });
+      onSelect("uploadFacility", { uploadedFile, isError, isValidation ,apiError });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, isError, isValidation });
+      onSelect("uploadBoundary", { uploadedFile, isError, isValidation  ,apiError});
     } else {
-      onSelect("uploadUser", { uploadedFile, isError, isValidation });
+      onSelect("uploadUser", { uploadedFile, isError, isValidation ,apiError });
     }
-  }, [uploadedFile, isError, isValidation]);
+  }, [uploadedFile, isError, isValidation ,apiError]);
 
   var translateSchema = (schema) => {
     var newSchema = { ...schema };
@@ -395,7 +396,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 5000);
+      setTimeout(closeToast, 5000000);
     }
   }, [showToast]);
 
@@ -450,8 +451,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
           if (temp?.isError) {
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: errorMessage });
+            setShowToast({ key: "error", label: errorMessage , transitionTime: 5000000});
             setIsError(true);
+            setApiError(errorMessage);
             setIsValidation(false);
             return;
           }
@@ -671,7 +673,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           warning={showToast.key === "warning" ? true : false}
           info={showToast.key === "info" ? true : false}
           label={t(showToast.label)}
-          transitionTime={6000000000}
+          transitionTime={showToast.transitionTime}
           onClose={closeToast}
         />
       )}
