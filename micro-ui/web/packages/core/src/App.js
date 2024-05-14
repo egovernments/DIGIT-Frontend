@@ -48,10 +48,6 @@ const App = ({queryClient}) => {
     },
     i18n,
   })
-
-  useEffect(() => {
-    registerRemotes(queryClient,t,i18n)
-  }, [])
   
 
   

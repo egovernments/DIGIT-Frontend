@@ -4,7 +4,7 @@
 
 import { registerApplication,start } from "single-spa";
 
-export default (queryClient,t,i18n) => {
+export default (queryClient) => {
   const userType = Digit.UserService.getType();
 
   // registerApplication({
@@ -26,8 +26,6 @@ export default (queryClient,t,i18n) => {
       title: "Workbench is running on host",
       queryClient,
       userType,
-      t,
-      i18n
     },
   });
 
@@ -73,8 +71,6 @@ export default (queryClient,t,i18n) => {
       title: "HRMS is running on host",
       queryClient,
       userType,
-      t,
-      i18n
     },
   }); 
 
