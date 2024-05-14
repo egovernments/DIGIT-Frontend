@@ -46,7 +46,6 @@ const MicroplanDetails = ({
     {
       enabled: !!id,
       select: (data) => {
-        debugger
         const campaignCard = [
           {
             label: t("CAMPAIGN_NAME"),
@@ -64,7 +63,11 @@ const MicroplanDetails = ({
           },
           {
             label: t("CAMPAIGN_DATE"),
-            value: data.startDate ? data.endDate? Digit.DateUtils.ConvertEpochToDate(data.startDate) +" - "+Digit.DateUtils.ConvertEpochToDate(data.endDate) :Digit.DateUtils.ConvertEpochToDate(data.startDate) : t("ES_COMMON_NA"),
+            value: data.startDate 
+                    ? data.endDate 
+                      ? `${Digit.DateUtils.ConvertEpochToDate(data.startDate)} - ${Digit.DateUtils.ConvertEpochToDate(data.endDate)}`
+                      : Digit.DateUtils.ConvertEpochToDate(data.startDate)
+                    : t("ES_COMMON_NA"),
           },
         ];
         return campaignCard;
