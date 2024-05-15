@@ -13,7 +13,7 @@ import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration, getLocaliz
 import localisationController from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
-import { generatedResourceStatuses, resourceDataStatuses } from "../config/constants";
+import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -564,7 +564,7 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   return facilitySheetData;
 }
 
-async function createReadMeSheet(request: any, workbook: any, mainHeader: any) {
+async function createReadMeSheet(request: any, workbook: any, mainHeader: any, localizationMap?: any) {
   const readMeConfig = await getReadMeConfig(request);
   const maxCharsBeforeLineBreak = 100; // Set the maximum number of characters before line break
   const datas = readMeConfig.texts.flatMap((text: any) => {
@@ -572,7 +572,7 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any) {
     let stepCount = 1; // Initialize the step counter
     const descriptions = text.descriptions.map((description: any) => {
       let textWithLineBreaks = '';
-      let remainingText = description.text;
+      let remainingText = getLocalizedName(description.text, localizationMap);
       while (remainingText.length > maxCharsBeforeLineBreak) {
         let breakIndex = remainingText.lastIndexOf(' ', maxCharsBeforeLineBreak);
         if (breakIndex === -1) breakIndex = maxCharsBeforeLineBreak;
@@ -584,10 +584,13 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any) {
       if (description.isStepRequired) {
         stepText = `Step ${stepCount}: `;
         stepCount++;
+        return stepText + textWithLineBreaks;
       }
-      return stepText + textWithLineBreaks;
+      else {
+        return textWithLineBreaks;
+      }
     });
-    return [text.header, ...descriptions, "", "", "", ""];
+    return [getLocalizedName(text.header, localizationMap), ...descriptions, "", "", "", ""];
   });
 
   // Ensure mainHeader is an array
@@ -649,7 +652,10 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   const workbook = XLSX.utils.book_new();
   // Add facility sheet to the workbook
   const localizedFacilityTab = getLocalizedName(config?.facilityTab, localizationMap);
-  await createReadMeSheet(request, workbook, "Read me instructions for facility upload");
+  const type = request?.query?.type;
+  const headingInSheet = headingMapping?.[type]
+  const localisedHeading = getLocalizedName(headingInSheet, localizationMap)
+  await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
   XLSX.utils.book_append_sheet(workbook, facilitySheetData.ws, localizedFacilityTab);
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(config?.boundaryTab, localizationMap)
@@ -661,6 +667,10 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
 async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: any, request: any, localizationMap?: { [key: string]: string }) {
   const workbook = XLSX.utils.book_new();
   const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
+  const type = request?.query?.type;
+  const headingInSheet = headingMapping?.[type]
+  const localisedHeading = getLocalizedName(headingInSheet, localizationMap)
+  await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
   // Add facility sheet to the workbook
   XLSX.utils.book_append_sheet(workbook, userSheetData.ws, localizedUserTab);
   // Add boundary sheet to the workbook
