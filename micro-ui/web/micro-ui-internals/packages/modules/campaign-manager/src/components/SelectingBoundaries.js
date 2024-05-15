@@ -235,7 +235,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
     res.forEach((boundary) => {
       const index = transformedRes?.findIndex((item) => item?.code === boundary?.code);
       if (index !== -1) {
-        transformedRes[index].includeAllChildren = false; // Set includeAllChildren to true for the selected boundary
+        transformedRes[index].includeAllChildren = false; 
       }
       // Find the parent boundary type using the hierarchy data
       const parentBoundaryType = hierarchyTypeDataresult?.boundaryHierarchy?.find((e) => e?.boundaryType === boundary?.boundaryType)
