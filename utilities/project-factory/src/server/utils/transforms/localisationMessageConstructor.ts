@@ -15,7 +15,6 @@ export const transformAndCreateLocalisation = (
   boundaryMap: any,
   request: any
 ) => {
-  console.log(boundaryMap, "mapoooooooooooooooooooooooooooooooo")
   const { tenantId, hierarchyType } = request?.body?.ResourceDetails || {};
 
   // Get localisation module name based on hierarchy type
@@ -37,7 +36,6 @@ export const transformAndCreateLocalisation = (
     });
 
   })
-  console.log(localisationMessages,"messagessssssssssssssssssssssss")
 
   logger.info("localisation message transformed successfully from the boundary map")
   // Instantiate localisation controller

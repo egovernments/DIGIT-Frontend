@@ -752,7 +752,7 @@ function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
   // Initialize arrays to store data
   const withBoundaryCode: { key: string, value: string }[][] = [];
   const withoutBoundaryCode: { key: string, value: string }[][] = [];
-
+  console.log(boundaryData,"ldatrrrr")
   // Process each object in boundaryData
   boundaryData.forEach((obj:any) => {
     // Convert object entries to an array of {key, value} objects
@@ -769,11 +769,10 @@ function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
     } else {
       withoutBoundaryCode.push(row);
     }
-    console.log(withoutBoundaryCode,"withhhhhhhhhhhhhhhhh")
   });
 
   // Log the result for debugging
-  console.log(withBoundaryCode, withoutBoundaryCode, "wiiiiiiiiiiiiiiiiiiiiiiiiii");
+  console.log(withoutBoundaryCode, "wiiiiiiiiiiiiiiiiiiiiiiiiii");
 
   // Return the arrays
   return [withBoundaryCode, withoutBoundaryCode];

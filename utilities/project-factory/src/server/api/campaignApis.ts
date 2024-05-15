@@ -529,7 +529,6 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
 async function processGenericRequest(request: any, localizationMap?: { [key: string]: string }) {
   // Process generic requests
   if (request?.body?.ResourceDetails?.action == "create") {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     await processCreate(request, localizationMap)
   }
   else {
