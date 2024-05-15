@@ -228,14 +228,14 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       code: item.code,
       type: item.type || item.boundaryType,
       isRoot: item.boundaryType === parentBoundaryTypeRoot,
-      includeAllChildren: true,
+      includeAllChildren: false,
       parent: item?.parent,
     }));
 
     res.forEach((boundary) => {
       const index = transformedRes?.findIndex((item) => item?.code === boundary?.code);
       if (index !== -1) {
-        transformedRes[index].includeAllChildren = true; // Set includeAllChildren to true for the selected boundary
+        transformedRes[index].includeAllChildren = false; // Set includeAllChildren to true for the selected boundary
       }
       // Find the parent boundary type using the hierarchy data
       const parentBoundaryType = hierarchyTypeDataresult?.boundaryHierarchy?.find((e) => e?.boundaryType === boundary?.boundaryType)
@@ -251,7 +251,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         }, []);
 
         parentIndexes?.forEach((parentIndex) => {
-          selectedData[parentIndex].includeAllChildren = false;
+          selectedData[parentIndex].includeAllChildren = true;
         });
       }
     });
