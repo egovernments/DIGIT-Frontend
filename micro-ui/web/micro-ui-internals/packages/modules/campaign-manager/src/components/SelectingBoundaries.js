@@ -36,6 +36,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [updatedHierarchy, setUpdatedHierarchy] = useState({});
   const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState(params?.hierarchy);
   const [executionCount, setExecutionCount] = useState(0);
+  // State variable to store the lowest hierarchy level
   const [lowestHierarchy , setLowestHierarchy] = useState(null);
 
   useEffect(() => {
