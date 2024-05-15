@@ -396,13 +396,16 @@ function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any) 
 }
 
 async function validateBoundarySheetData(request: any, fileUrl: any, localizationMap?: any) {
+    console.log(localizationMap,"???????????????????????????????")
     const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+    console.log(localizedBoundaryTab,"tabbbbbbbbbbbbbbbbbbbb")
     const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, localizedBoundaryTab, false, localizationMap);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
     const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
     const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
     await validateHeaders(localizedHierarchy, headersOfBoundarySheet, request, localizationMap)
     const boundaryData = await getSheetData(fileUrl, localizedBoundaryTab, true, undefined, localizationMap);
+    console.log("bbbbbbbbb")
     //validate for whether root boundary level column should not be empty
     validateForRootElementExists(boundaryData, localizedHierarchy, localizedBoundaryTab);
     // validate for duplicate rows(array of objects)
@@ -922,7 +925,7 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                         }
                     }
                     if (!boundaryRow[root]) {
-                        throwError("COMMON", 400, "VALIDATION_ERROR", ` root column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
+                        throwError("COMMON", 400, "VALIDATION_ERROR", ` ${root} column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
                     }
                 }
             }

@@ -1196,15 +1196,15 @@ function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, 
     return modifiedFilteredData;
 }
 
-async function generateFilteredBoundaryData(request: any) {
-    const rootBoundary: any = (request?.body?.Filters?.boundaries).filter((boundary: any) => boundary.isRoot);
+async function generateFilteredBoundaryData(request: any,responseFromCampaignSearch:any) {
+    const rootBoundary: any = (responseFromCampaignSearch?.Filters?.boundaries).filter((boundary: any) => boundary.isRoot);
     const params = {
         ...request?.query,
         includeChildren: true,
         codes: rootBoundary?.[0]?.code
     };
     const boundaryDataFromRootOnwards = await getBoundaryRelationshipData(request, params);
-    const filteredBoundaryList = filterBoundaries(boundaryDataFromRootOnwards, request?.body?.Filters)
+    const filteredBoundaryList = filterBoundaries(boundaryDataFromRootOnwards, responseFromCampaignSearch?.Filters)
     return filteredBoundaryList;
 }
 
