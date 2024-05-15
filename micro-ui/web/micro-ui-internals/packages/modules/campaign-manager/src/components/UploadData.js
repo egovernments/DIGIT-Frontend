@@ -212,10 +212,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
     return true;
   };
-  console.log("workbook2");
 
   const validateMultipleTargets = (workbook) => {
-    console.log("workbook1",workbook);
     let isValid = true;
     const sheet = workbook.Sheets[workbook.SheetNames[2]];
     const mdmsHeaders = sheetHeaders[type];
@@ -237,7 +235,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
 
     if (!isValid) return isValid; 
-    console.log("workbook" , workbook)
 
     // Iterate over each sheet in the workbook, starting from the second sheet
     for (let i = 2; i < workbook.SheetNames.length; i++) {
@@ -322,11 +319,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             header: 1,
           })[0];
 
-          console.log("headersToValidate",headersToValidate);
 
           const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
-          console.log("sheetNames", SheetNames);
           if (type === "boundary") {
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
@@ -430,7 +425,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [showToast]);
 
-  console.log("error" , errorsType);
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
