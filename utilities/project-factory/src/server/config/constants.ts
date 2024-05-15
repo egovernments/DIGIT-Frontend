@@ -44,6 +44,9 @@ export const CONSTANTS: any = {
             PROJECT_SEARCH_ERROR: "Error occured during project search , Check projectId",
             PROJECT_UPDATE_ERROR: "Error occured during project update , Check projectId",
             PROJECT_CREATION_ERROR: "Some error occured during project creation",
+        },
+        MDMS: {
+            INVALID_README_CONFIG: "Invalid readme config"
         }
     }
 }
