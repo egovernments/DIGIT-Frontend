@@ -603,8 +603,8 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any, l
   // Set the width of column A to 130
   const wscols = [{ wch: 130 }];
   worksheet['!cols'] = wscols;
-
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Read Me");
+  const readMeSheetName = getLocalizedName("HCM_README_SHEETNAME", localizationMap);
+  XLSX.utils.book_append_sheet(workbook, worksheet, readMeSheetName);
 }
 
 
