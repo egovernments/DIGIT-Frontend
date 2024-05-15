@@ -777,6 +777,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "CAMPAIGN_NAME_TOO_LONG_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "projectType":
@@ -784,6 +785,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "PROJECT_TYPE_UNDEFINED_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "campaignDates":
@@ -799,6 +801,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "boundaryType":
@@ -808,6 +811,7 @@ const SetupCampaign = () => {
             setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
             return false;
           }
+          setShowToast(null);
           return true;
         } else {
           setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
@@ -816,34 +820,34 @@ const SetupCampaign = () => {
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
           if (formData?.uploadBoundary?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
-          } 
-          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
 
       case "uploadFacility":
         if (formData?.uploadFacility?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadFacility?.isError) {
           if (formData?.uploadFacility?.apiError) {
             setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
-          } 
-          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "uploadUser":
         if (formData?.uploadUser?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadUser?.isError) {
           if (formData?.uploadUser?.apiError) {
@@ -851,6 +855,7 @@ const SetupCampaign = () => {
           } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
 
@@ -861,6 +866,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "deliveryRule":
@@ -869,6 +875,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: isAttributeValid });
           return false;
         }
+        setShowToast(null);
         return;
       case "summary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
@@ -898,6 +905,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
+        setShowToast(null);
         return true;
       default:
         break;
