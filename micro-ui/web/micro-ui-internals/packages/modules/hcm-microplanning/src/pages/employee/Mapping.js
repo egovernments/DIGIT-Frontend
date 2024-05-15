@@ -10,7 +10,7 @@ import {
   Toast,
   TreeSelect,
   Modal,
-  CheckBox,
+
 } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -21,7 +21,7 @@ import CustomScaleControl from "../../components/CustomScaleControl";
 import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { CardSectionHeader, InfoIconOutline, LoaderWithGap, CheckBox } from "@egovernments/digit-ui-react-components";
 import {
   processHierarchyAndData,
   findParent,
@@ -365,6 +365,7 @@ const Mapping = ({
 };
 
 const FilterSection = memo(({ filterProperties, t }) => {
+  console.log(filterProperties)
   return (
     <div className="filter-section-wrapper">
       <div className="icon-rest filter-icon">
@@ -375,7 +376,7 @@ const FilterSection = memo(({ filterProperties, t }) => {
       </div>
       <div className="base-map-area-wrapper">
         {filterProperties.map((item) => (
-          <CheckBox label={t(item)} />
+          <CheckBox label={t(item)} style={{color:"rgba(11, 12, 12, 1)"}}/>
         ))}
       </div>
     </div>

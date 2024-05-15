@@ -1037,7 +1037,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                 <td className="new-value no-left-padding">
                   <TextInput
                     name={"data_" + index}
-                    value={item?.value}
+                    value={currentData || t("NO_DATA")}
                     style={{ margin: 0, backgroundColor:"rgba(238, 238, 238, 1)" }}
                     t={t}
                     disabled={true}

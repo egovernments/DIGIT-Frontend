@@ -1789,7 +1789,8 @@ $border-color: rgba(214, 213, 212, 1);
                     max-height: 9.752rem;
                     display: block;
                     overflow-x: auto;
-
+                    background-color: rgba(255, 255, 255, 1);
+                    
                     @include custom-scrollbar;
                 }
 
