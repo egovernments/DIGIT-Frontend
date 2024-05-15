@@ -7,7 +7,7 @@ import { logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
 import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
-import { getHierarchy } from './campaignApis';
+import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
 const _ = require('lodash'); // Import lodash library
@@ -25,7 +25,7 @@ const getWorkbook = async (fileUrl: string, sheetName: string) => {
 
     // Read Excel file into workbook
     const workbook = XLSX.read(responseFile, { type: 'buffer' });
-
+    console.log(sheetName,"nameeeeeeeeeeeeeeeee")
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
         throwError("FILE", 400, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
@@ -62,7 +62,9 @@ const getTargetWorkbook = async (fileUrl: string, localizationMap?: any) => {
 // Function to retrieve data from a specific sheet in an Excel file
 const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any, localizationMap?: { [key: string]: string }) => {
     // Retrieve workbook using the getWorkbook function
+    console.log(localizationMap,"mapppppppppppppppp")
     const localizedSheetName = getLocalizedName(sheetName, localizationMap);
+    console.log(localizedSheetName,"loccccccccccccccccccccccc")
     const workbook: any = await getWorkbook(fileUrl, localizedSheetName)
 
     // If parsing array configuration is provided, validate first row of each column
@@ -510,8 +512,10 @@ async function getBoundarySheetData(request: any, localizationMap?: { [key: stri
     }
     else {
         // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
-        if (request?.body?.Filters != null) {
-            const filteredBoundaryData = await generateFilteredBoundaryData(request);
+        const responseFromCampaignSearch = await getFiltersFromCampaignSearchResponse(request);
+        console.log(responseFromCampaignSearch?.Filters, "filllllllllllllllllllllllllllllllll")
+        if (responseFromCampaignSearch?.Filters != null) {
+            const filteredBoundaryData = await generateFilteredBoundaryData(request,responseFromCampaignSearch);
             return await getDataSheetReady(filteredBoundaryData, request, localizationMap);
         }
         else {

@@ -915,9 +915,6 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
   return translatedSchema;
 }
 
-
-
-
 export {
   errorResponder,
   errorLogger,
