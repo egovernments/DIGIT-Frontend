@@ -54,7 +54,8 @@ export const CONSTANTS: any = {
 
 export const headingMapping: any = {
     "userWithBoundary": "USERWITHBOUNDARY_README_MAINHEADER",
-    "facilityWithBoundary": "FACILITYWITHBOUNDARY_README_MAINHEADER"
+    "facilityWithBoundary": "FACILITYWITHBOUNDARY_README_MAINHEADER",
+    "boundary": "BOUNDARY_README_MAINHEADER"
 }
 
 const unknownError = "Unknown Error. Check Logs";

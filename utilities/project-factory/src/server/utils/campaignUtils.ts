@@ -8,12 +8,12 @@ import { getCampaignNumber, createAndUploadFile, getSheetData, createBoundaryRel
 import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import * as XLSX from 'xlsx';
-import { getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
+import { createReadMeSheet, getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
 import { enrichProjectDetailsFromCampaignDetails } from "./projectTypeUtils";
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
-import { campaignStatuses, resourceDataStatuses } from "../config/constants";
+import { campaignStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
 
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
@@ -1123,10 +1123,14 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
-async function appendSheetsToWorkbook(boundaryData: any[], differentTabsBasedOnLevel: any, localizationMap?: any) {
+async function appendSheetsToWorkbook(request: any, boundaryData: any[], differentTabsBasedOnLevel: any, localizationMap?: any) {
     try {
         const uniqueDistrictsForMainSheet: string[] = [];
         const workbook = XLSX.utils.book_new();
+        const type = request?.query?.type
+        const headingInSheet = headingMapping?.[type]
+        const localisedHeading = getLocalizedName(headingInSheet, localizationMap)
+        await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const mainSheetData: any[] = [];
         const headersForMainSheet = differentTabsBasedOnLevel ? Object.keys(boundaryData[0]).slice(0, Object.keys(boundaryData[0]).indexOf(differentTabsBasedOnLevel) + 1) : [];
         const localizedHeadersForMainSheet = getLocalizedHeaders(headersForMainSheet, localizationMap);
@@ -1378,7 +1382,7 @@ function modifyChildParentMap(childParentMap: any, boundaryMap: any) {
 }
 async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
     // create different tabs on the level of hierarchy we want to 
-    const updatedWorkbook = await appendSheetsToWorkbook(boundaryData, differentTabsBasedOnLevel, localizationMap);
+    const updatedWorkbook = await appendSheetsToWorkbook(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     // upload the excel and generate file store id
     const boundaryDetails = await createAndUploadFile(updatedWorkbook, request);
     return boundaryDetails;
