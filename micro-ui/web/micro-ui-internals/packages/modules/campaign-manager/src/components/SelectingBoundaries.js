@@ -259,6 +259,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
     //   }
     // });
 
+
     const newBoundaryType = transformedRes?.[0]?.type;
     const existingBoundaryType = selectedData?.length > 0 ? selectedData?.[0]?.type : null;
     if (existingBoundaryType === newBoundaryType) {
