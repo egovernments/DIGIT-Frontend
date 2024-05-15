@@ -208,11 +208,13 @@ export const UICustomizations = {
       return inboxModuleNameMap;
     }
   },
-  SearchCampaign: {
+  SearchMicroplan: {
     preProcess: (data, additionalDetails) => {
       const { campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {};
-      data.body.CampaignDetails.pagination = data?.state?.tableForm
+      // data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit
+      data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
@@ -229,59 +231,12 @@ export const UICustomizations = {
 
       return data;
     },
-    populateProjectType: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-
-      return {
-        url: "/egov-mdms-service/v1/_search",
-        params: { tenantId },
-        body: {
-         MdmsCriteria:{
-          tenantId,
-          "moduleDetails": [
-              {
-                  "moduleName": "HCM-PROJECT-TYPES",
-                  "masterDetails": [
-                      {
-                          "name": "projectTypes"
-                      }
-                  ]
-              }
-          ]
-      }
-        },
-        changeQueryName:"projectType",
-        config: {
-          enabled: true,
-          select: (data) => {
-            const dropdownData =filterUniqueByKey(data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes,"code").map(row => {
-              return {
-                ...row,
-                i18nKey:Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`)
-              }
-            })
-            return dropdownData
-          },
-        },
-      };
-    },
-    customValidationCheck: (data) => {
-      //checking if both to and from date are present then they should be startDate<=endDate
-      const { startDate, endDate } = data;
-      const startDateEpoch = Digit.Utils.date.convertDateToEpoch(startDate)
-      const endDateEpoch = Digit.Utils.date.convertDateToEpoch(endDate)
-
-      if((startDate && endDate) && (startDateEpoch>endDateEpoch) ){
-        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
-      }
-      return false
-    },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       if (key === "CAMPAIGN_DATE") {
         return Digit.DateUtils.ConvertEpochToDate(value);
       }
+    },
   },
-},
   SearchMicroplan: {
     preProcess: (data, additionalDetails) => {
       const { name,status } = data?.state?.searchForm || {};
