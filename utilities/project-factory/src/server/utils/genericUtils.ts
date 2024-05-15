@@ -14,6 +14,8 @@ import localisationController from "../controllers/localisationController/locali
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
 import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
+import { getLocaleFromRequest } from "./localisationUtils";
+import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -621,7 +623,7 @@ function modifyRequestForLocalisation(request: any, tenanId: string) {
   const { RequestInfo } = request?.body;
   const query = {
     "tenantId": tenanId,
-    "locale": config.locale,
+    "locale": getLocaleFromRequest(request),
     "module": config.localizationModule
   };
   const updatedRequest = { ...request };
@@ -658,7 +660,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
   XLSX.utils.book_append_sheet(workbook, facilitySheetData.ws, localizedFacilityTab);
   // Add boundary sheet to the workbook
-  const localizedBoundaryTab = getLocalizedName(config?.boundaryTab, localizationMap)
+  const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap)
   XLSX.utils.book_append_sheet(workbook, boundarySheetData.ws, localizedBoundaryTab);
   const fileDetails = await createAndUploadFile(workbook, request)
   request.body.fileDetails = fileDetails;
@@ -674,7 +676,7 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
   // Add facility sheet to the workbook
   XLSX.utils.book_append_sheet(workbook, userSheetData.ws, localizedUserTab);
   // Add boundary sheet to the workbook
-  const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap)
+  const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap)
   XLSX.utils.book_append_sheet(workbook, boundarySheetData.ws, localizedBoundaryTab);
   const fileDetails = await createAndUploadFile(workbook, request)
   request.body.fileDetails = fileDetails;
@@ -895,12 +897,12 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   const headers = (type !== "facilityWithBoundary" && type !== "userWithBoundary")
     ? [
       ...modifiedReducedHierarchy,
-      config.boundaryCode,
+      getBoundaryColumnName(),
       "Target at the Selected Boundary level"
     ]
     : [
       ...modifiedReducedHierarchy,
-      config.boundaryCode
+      getBoundaryColumnName()
     ];
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
   const data = boundaryList.map(boundary => {
@@ -918,7 +920,7 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   if (type != "facilityWithBoundary") {
     request.body.generatedResourceCount = sheetRowCount;
   }
-  const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+  const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
   return await createExcelSheet(data, localizedHeaders, localizedBoundaryTab);
 }
 
@@ -934,7 +936,7 @@ function modifyTargetData(data: any) {
 
 function calculateKeyIndex(obj: any, hierachy: any[], localizationMap?: any) {
   const keys = Object.keys(obj);
-  const localizedBoundaryCode = getLocalizedName(config.boundaryCode, localizationMap)
+  const localizedBoundaryCode = getLocalizedName(getBoundaryColumnName(), localizationMap)
   const boundaryCodeIndex = keys.indexOf(localizedBoundaryCode);
   const keyBeforeBoundaryCode = keys[boundaryCodeIndex - 1];
   return hierachy.indexOf(keyBeforeBoundaryCode);
@@ -950,7 +952,7 @@ function modifyDataBasedOnDifferentTab(boundaryData: any, differentTabsBasedOnLe
       break;
     }
   }
-  const localizedBoundaryCode = getLocalizedName(config?.boundaryCode, localizationMap);
+  const localizedBoundaryCode = getLocalizedName(getBoundaryColumnName(), localizationMap);
   boundaryCode = boundaryData[localizedBoundaryCode];
   if (boundaryCode !== undefined) {
     newData[localizedBoundaryCode] = boundaryCode;
@@ -986,9 +988,6 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
 
   return translatedSchema;
 }
-
-
-
 
 export {
   errorResponder,
