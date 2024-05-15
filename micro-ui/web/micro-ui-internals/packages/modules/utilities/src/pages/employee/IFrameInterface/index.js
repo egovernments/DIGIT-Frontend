@@ -66,9 +66,9 @@ const IFrameInterface = (props) => {
           console.error('Failed to access iframe content window.');
           return;
         }
-  
+        console.log(iframeWindow,"ifw in fetch");
         const originalFetch = iframeWindow.fetch;
-  
+        console.log(originalFetch,"original fetch");
         iframeWindow.fetch = function (url, options) {
           // Intercepting here
           const oidcToken = window.localStorage.getItem(localStorageKey);
