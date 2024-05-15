@@ -17,7 +17,7 @@ const config = {
   facilityTab: process.env.FACILITY_TAB_NAME || "HCM_ADMIN_CONSOLE_FACILITIES",
   boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
   userTab: process.env.USER_TAB_NAME || "HCM_ADMIN_CONSOLE_USER_LIST",
-  locale: process.env.LOCALE || "en_MZ",
+  locale: process.env.LOCALE || "en_IN",
   localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
   //module name
   moduleName: process.env.MODULE_NAME || "HCM-ADMIN-CONSOLE",
@@ -64,7 +64,7 @@ const config = {
     debugLogCharLimit: process.env.APP_MAX_DEBUG_CHAR ? Number(process.env.APP_MAX_DEBUG_CHAR) : 1000
   },
   localisation: {
-    defaultLocale: process.env.LOCALE || "en_MZ",
+    defaultLocale: process.env.LOCALE || "en_IN",
     boundaryPrefix: "rainmaker-boundary"
   },
   // Host configuration
