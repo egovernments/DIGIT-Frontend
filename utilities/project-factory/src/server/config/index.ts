@@ -15,7 +15,7 @@ const config = {
   facilityTab: process.env.FACILITY_TAB_NAME || "HCM_ADMIN_CONSOLE_FACILITIES",
   boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
   userTab: process.env.USER_TAB_NAME || "HCM_ADMIN_CONSOLE_USER_LIST",
-  locale: process.env.LOCALE || "en_MZ",
+  locale: process.env.LOCALE || "en_IN",
   localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
   //module name
   moduleName: process.env.MODULE_NAME || "HCM-ADMIN-CONSOLE",
@@ -34,7 +34,7 @@ const config = {
   // Wait time for generic create
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   // Kafka broker host
-  KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+  KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092",
   // Kafka topics
   KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC: process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "save-project-campaign-details",
   KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC: process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "update-project-campaign-details",
@@ -58,28 +58,28 @@ const config = {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
     contextPath: process.env.CONTEXT_PATH || "/project-factory",
-    logLevel: process.env.APP_LOG_LEVEL || "debug",
-    debugLogCharLimit: process.env.APP_MAX_DEBUG_CHAR ? Number(process.env.APP_MAX_DEBUG_CHAR) : 1000
+    logLevel: "debug" ,// TODO add a env variable and set it default to info
+    debugLogCharLimit : 1000
   },
-  localisation: {
-    defaultLocale: process.env.LOCALE || "en_MZ",
-    boundaryPrefix: "rainmaker-boundary"
+  localisation:{
+    defaultLocale:"en_IN",
+    boundaryPrefix:"rainmaker-boundary"
   },
   // Host configuration
   host: {
     serverHost: HOST,
     // URLs for various services
-    mdms: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
-    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
+    mdms: process.env.EGOV_MDMS_HOST || "http://localhost:8085/",
+    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "http://localhost:8083/",
     projectFactoryBff: "http://localhost:8080/",
     idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-dev.digit.org/",
-    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-dev.digit.org/",
-    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST || "http://localhost:8082/",
+    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "http://localhost:8087/",
     projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-dev.digit.org/",
     userHost: process.env.EGOV_USER_HOST || "https://unified-dev.digit.org/",
     productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-dev.digit.org/",
-    hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-dev.digit.org/",
-    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/"
+    hrmsHost: process.env.EGOV_HRMS_HOST || "http://localhost:8086/",
+    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "http://localhost:8084/"
   },
   // Paths for different services
   paths: {
@@ -105,13 +105,11 @@ const config = {
     hrmsEmployeeCreate: process.env.EGOV_HRMS_EMPLOYEE_CREATE_PATH || "health-hrms/employees/_create",
     hrmsEmployeeSearch: process.env.EGOV_HRMS_EMPLOYEE_SEARCH_PATH || "health-hrms/employees/_search",
     localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
-    localizationCreate: "localization/messages/v1/_upsert"
-
+    localizationCreate: "localization/messages/v1/_create",
+    projectTypeSearch: process.env.HAELTH_PROJECT_TYPE_SEARCH || "project-factory/v1/project-type/search"
   },
   // Values configuration
   values: {
-    userMainBoundary: "mz",
-    userMainBoundaryType: "Country",
     parsingTemplate: "HCM.ParsingTemplate",
     transfromTemplate: "HCM.TransformTemplate",
     campaignType: "HCM.HCMTemplate",
@@ -121,7 +119,9 @@ const config = {
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
     },
     matchFacilityData: false,
-    retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
+    retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3",
+    userMainBoundary: "mz",
+    userMainBoundaryType: "Country",
   },
   // Default search template
   SEARCH_TEMPLATE: "HCM.APIResourceTemplate3"
@@ -129,4 +129,3 @@ const config = {
 // Exporting getErrorCodes function and config object
 export { getErrorCodes };
 export default config;
-

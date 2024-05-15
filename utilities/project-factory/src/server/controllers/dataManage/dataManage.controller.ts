@@ -134,6 +134,7 @@ class dataManageController {
 
 
             const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
+            console.log('pppppppppppppppp')
 
             // Enrich resource details
             await enrichResourceDetails(request);

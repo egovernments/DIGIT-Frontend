@@ -171,7 +171,7 @@ function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], 
                 if (obj.hasOwnProperty(lowestLevelHierarchy)) {
                     const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
                     const target = obj[localizedTargetColumnName];
-                    if (target === undefined || typeof target !== 'number' || target < 0 || target > 100000 || !Number.isInteger(target)) {
+                    if (target === undefined || typeof target !== 'number' || target <= 0 || target > 100000 || !Number.isInteger(target)) {
                         errors.push({ status: "INVALID", rowNumber: obj["!row#number!"], errorDetails: `Invalid target value at row ${obj['!row#number!'] + 1}. of sheet ${key}`, sheetName: key })
                     }
                 }

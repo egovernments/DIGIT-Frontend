@@ -748,29 +748,38 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-function modifyBoundaryData(boundaryData: unknown[]) {
-  let withBoundaryCode: string[][] = [];
-  let withoutBoundaryCode: string[][] = [];
+function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
+  // Initialize arrays to store data
+  const withBoundaryCode: { key: string, value: string }[][] = [];
+  const withoutBoundaryCode: { key: string, value: string }[][] = [];
 
-  for (const obj of boundaryData) {
-    const row: string[] = [];
-    if (typeof obj === 'object' && obj !== null) {
-      for (const value of Object.values(obj)) {
-        if (value !== null && value !== undefined) {
-          row.push(value.toString()); // Convert value to string and push to row
-        }
-      }
+  // Process each object in boundaryData
+  boundaryData.forEach((obj:any) => {
+    // Convert object entries to an array of {key, value} objects
+    const row:any = Object.entries(obj)
+      .filter(([key, value]) => value !== null && value !== undefined)
+      .map(([key, value]) => ({ key, value }));
 
-      if (obj.hasOwnProperty('Boundary Code')) {
-        withBoundaryCode.push(row);
-      } else {
-        withoutBoundaryCode.push(row);
-      }
+    // Determine whether the object has a boundary code property
+    const hasBoundaryCode = obj.hasOwnProperty(getLocalizedName(config.boundaryCode, localizationMap));
+
+    // Push the row to the appropriate array based on whether it has a boundary code property
+    if (hasBoundaryCode) {
+      withBoundaryCode.push(row);
+    } else {
+      withoutBoundaryCode.push(row);
     }
-  }
+    console.log(withoutBoundaryCode,"withhhhhhhhhhhhhhhhh")
+  });
 
+  // Log the result for debugging
+  console.log(withBoundaryCode, withoutBoundaryCode, "wiiiiiiiiiiiiiiiiiiiiiiiiii");
+
+  // Return the arrays
   return [withBoundaryCode, withoutBoundaryCode];
 }
+
+
 
 async function getDataFromSheet(request: any, fileStoreId: any, tenantId: any, createAndSearchConfig: any, optionalSheetName?: any, localizationMap?: { [key: string]: string }) {
   const type = request?.body?.ResourceDetails?.type;
@@ -917,6 +926,25 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
   return translatedSchema;
 }
 
+// function findMapValue(map: Map<any, any>, key:any): any {
+//   for (const [mapKey, value] of map.entries()) {
+//       if (mapKey.key === key.key && mapKey.value === key.value) {
+//           return value;
+//       }
+//   }
+//   return null;
+// }
+function findMapValue(map: Map<any, any>, key: any): any | null {
+  let foundValue = null;
+  map.forEach((value, mapKey) => {
+      if (mapKey.key === key.key && mapKey.value === key.value) {
+          foundValue = value;
+      }
+  });
+  return foundValue;
+}
+
+
 
 
 
@@ -959,7 +987,8 @@ export {
   modifyRequestForLocalisation,
   translateSchema,
   getLocalizedMessagesHandler,
-  getLocalizedHeaders
+  getLocalizedHeaders,
+  findMapValue
 };
 
 
