@@ -690,7 +690,6 @@ const getHierarchy = async (request: any, tenantId: string, hierarchyType: strin
 
 const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, getRow = false, localizationMap?: any) => {
   const localizedBoundarySheetName = getLocalizedName(sheetName, localizationMap)
-  console.log(localizationMap,"kkkkkkkkkkkkkkkkkkkk")
   const workbook: any = await getWorkbook(fileUrl, localizedBoundarySheetName);
   const columnsToValidate = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
     header: 1,
@@ -710,10 +709,8 @@ async function getFiltersFromCampaignSearchResponse(request: any) {
   const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
   const requestBody = { ...requestInfo, ...campaignDetails };
   const projectTypeSearchResponse = await httpRequest(url, requestBody);
-  console.log(projectTypeSearchResponse, "resssssssssssssssssssssss")
-  const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries;
+  const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries?.map((ele:any)=>({...ele,boundaryType:ele?.type}));
   if (!boundaries) {
-    console.log("aaaaaaaaaaaaaaaaaa")
     return {Filters: null};
   }
   return { Filters: { boundaries: boundaries } };

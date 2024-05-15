@@ -15,10 +15,10 @@ import { campaignDetailsDraftSchema } from "../../config/models/campaignDetailsD
 import { downloadRequestSchema } from "../../config/models/downloadRequestSchema";
 import { createRequestSchema } from "../../config/models/createRequestSchema"
 import { getSheetData, getTargetWorkbook } from "../../api/genericApis";
-import { log } from "console";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
 import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
+import { getBoundaryColumnName, getBoundaryTabName } from "../boundaryUtils";
 
 
 
@@ -396,16 +396,13 @@ function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any) 
 }
 
 async function validateBoundarySheetData(request: any, fileUrl: any, localizationMap?: any) {
-    console.log(localizationMap,"???????????????????????????????")
-    const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
-    console.log(localizedBoundaryTab,"tabbbbbbbbbbbbbbbbbbbb")
+    const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
     const headersOfBoundarySheet = await getHeadersOfBoundarySheet(fileUrl, localizedBoundaryTab, false, localizationMap);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
     const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
     const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
     await validateHeaders(localizedHierarchy, headersOfBoundarySheet, request, localizationMap)
     const boundaryData = await getSheetData(fileUrl, localizedBoundaryTab, true, undefined, localizationMap);
-    console.log("bbbbbbbbb")
     //validate for whether root boundary level column should not be empty
     validateForRootElementExists(boundaryData, localizedHierarchy, localizedBoundaryTab);
     // validate for duplicate rows(array of objects)
@@ -414,8 +411,6 @@ async function validateBoundarySheetData(request: any, fileUrl: any, localizatio
 
 function validateForRootElementExists(boundaryData: any[], hierachy: any[], sheetName: string) {
     const root = hierachy[0];
-    log(hierachy, "hierachy", boundaryData)
-
     if (!(boundaryData.filter(e => e[root]).length == boundaryData.length)) {
         throwError("COMMON", 400, "VALIDATION_ERROR", `Invalid Boundary Sheet. Root level Boundary not present in every row  of Sheet ${sheetName}`)
     }
@@ -883,7 +878,7 @@ async function validateHeaders(hierarchy: any[], headersOfBoundarySheet: any, re
     validateBoundarySheetHeaders(headersOfBoundarySheet, hierarchy, request, localizationMap);
 }
 function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: any[], request: any, localizationMap?: any) {
-    const localizedBoundaryCode = getLocalizedName(config.boundaryCode, localizationMap)
+    const localizedBoundaryCode = getLocalizedName(getBoundaryColumnName(), localizationMap)
     const boundaryCodeIndex = headersOfBoundarySheet.indexOf(localizedBoundaryCode);
     const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
     if (keysBeforeBoundaryCode.some((key: any, index: any) => (key === undefined || key === null) || key !== hierarchy[index]) || keysBeforeBoundaryCode.length !== hierarchy.length) {
@@ -906,7 +901,7 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
     const keys = Object.keys(dataFromSheet);
     if (keys.length > 0) {
         const boundaryTab = keys[0];
-        if (boundaryTab != getLocalizedName(config.boundaryTab, localizationMap)) {
+        if (boundaryTab != getLocalizedName(getBoundaryTabName(), localizationMap)) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "INVALID SHEET NAME. SHEET NAME MUST BE BOUNDARY DATA FOR FIRST TAB")
         }
     }
@@ -916,7 +911,7 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
             if (dataArray.length === 0) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
             }
-            if (key != getLocalizedName(config.boundaryTab, localizationMap)) {
+            if (key != getLocalizedName(getBoundaryTabName(), localizationMap)) {
                 const root = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
                 for (const boundaryRow of dataArray) {
                     for (const columns in boundaryRow) {

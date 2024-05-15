@@ -10,6 +10,7 @@ import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryD
 import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
+import { getBoundaryTabName } from '../utils/boundaryUtils';
 const _ = require('lodash'); // Import lodash library
 
 // Function to retrieve workbook from Excel file URL and sheet name
@@ -25,7 +26,6 @@ const getWorkbook = async (fileUrl: string, sheetName: string) => {
 
     // Read Excel file into workbook
     const workbook = XLSX.read(responseFile, { type: 'buffer' });
-    console.log(sheetName,"nameeeeeeeeeeeeeeeee")
     // Check if the specified sheet exists in the workbook
     if (!workbook.Sheets.hasOwnProperty(sheetName)) {
         throwError("FILE", 400, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
@@ -62,9 +62,7 @@ const getTargetWorkbook = async (fileUrl: string, localizationMap?: any) => {
 // Function to retrieve data from a specific sheet in an Excel file
 const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, createAndSearchConfig?: any, localizationMap?: { [key: string]: string }) => {
     // Retrieve workbook using the getWorkbook function
-    console.log(localizationMap,"mapppppppppppppppp")
     const localizedSheetName = getLocalizedName(sheetName, localizationMap);
-    console.log(localizedSheetName,"loccccccccccccccccccccccc")
     const workbook: any = await getWorkbook(fileUrl, localizedSheetName)
 
     // If parsing array configuration is provided, validate first row of each column
@@ -507,13 +505,12 @@ async function getBoundarySheetData(request: any, localizationMap?: { [key: stri
         const modifiedHierarchy = hierarchy.map(ele => `${request?.query?.hierarchyType}_${ele}`.toUpperCase())
         const localizedHeaders = getLocalizedHeaders(modifiedHierarchy, localizationMap);
         // create empty sheet if no boundary present in system
-        const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+        const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
         return await createExcelSheet(boundaryData, localizedHeaders, localizedBoundaryTab);
     }
     else {
         // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
         const responseFromCampaignSearch = await getFiltersFromCampaignSearchResponse(request);
-        console.log(responseFromCampaignSearch?.Filters, "filllllllllllllllllllllllllllllllll")
         if (responseFromCampaignSearch?.Filters != null) {
             const filteredBoundaryData = await generateFilteredBoundaryData(request,responseFromCampaignSearch);
             return await getDataSheetReady(filteredBoundaryData, request, localizationMap);
