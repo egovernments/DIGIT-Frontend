@@ -544,7 +544,7 @@ const SetupCampaign = () => {
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 console.log(error);
-                setShowToast({ key: "error", label: error });
+                setShowToast({ key: "error", label: error?.message ? error?.message : error });
               },
               onSuccess: async (data) => {
                 draftRefetch();
@@ -603,7 +603,7 @@ const SetupCampaign = () => {
           await mutate(payloadData, {
             onError: (error, variables) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setShowToast({ key: "error", label: error });
+                setShowToast({ key: "error", label: error?.message ? error?.message : error });
               }
             },
             onSuccess: async (data) => {
@@ -665,7 +665,7 @@ const SetupCampaign = () => {
               onError: (error, variables) => {
                 console.log(error);
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                  setShowToast({ key: "error", label: error });
+                  setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 }
               },
               onSuccess: async (data) => {
