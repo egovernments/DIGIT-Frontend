@@ -189,7 +189,9 @@ function groupByTypeRemap(data) {
   data.forEach((item) => {
     const type = item?.type;
     const boundaryType = item?.type;
+    const parentCode = item?.parent;
     const obj = {
+      parentCode, 
       boundaryTypeData: {
         TenantBoundary: [
           {
@@ -291,6 +293,7 @@ const SetupCampaign = () => {
 
   //DATA STRUCTURE
   useEffect(() => {
+    if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
@@ -339,7 +342,7 @@ const SetupCampaign = () => {
       },
     };
     setParams({ ...restructureFormData });
-  }, [params, draftData]);
+  }, [params, draftData, isLoading, projectType]);
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
   const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
@@ -816,7 +819,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadBoundary?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -827,7 +833,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadFacility?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadFacility?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -837,7 +846,9 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadUser?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadUser?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
+          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -895,7 +906,7 @@ const SetupCampaign = () => {
 
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 5000);
+      setTimeout(closeToast, 10000);
     }
   }, [showToast]);
 
@@ -950,6 +961,9 @@ const SetupCampaign = () => {
   };
 
   const onStepClick = (step) => {
+    if ((currentKey === 4 || currentKey === 5) && step > 1) {
+      return;
+    }
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
 
     const key = parseInt(filteredSteps[0].key);
@@ -960,7 +974,7 @@ const SetupCampaign = () => {
       setCurrentStep(7);
     } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
-      setCurrentStep(2);
+      setCurrentStep(1);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
       // Do not set stepper and key
     } else if (Object.keys(totalFormData).includes(name)) {
@@ -1062,6 +1076,7 @@ const SetupCampaign = () => {
           info={showToast?.key === "info" ? true : false}
           error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
           onClose={closeToast}
         />
       )}
