@@ -287,7 +287,9 @@ export const UICustomizations = {
       const { name,status } = data?.state?.searchForm || {};
       
       data.body.PlanConfigurationSearchCriteria = {}
-      data.body.PlanConfigurationSearchCriteria.pagination = data?.state?.tableForm
+      // data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit
+      data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset
       data.body.PlanConfigurationSearchCriteria.name = name
       data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;

@@ -212,7 +212,9 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       const { campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {};
-      data.body.CampaignDetails.pagination = data?.state?.tableForm
+      // data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit
+      data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
