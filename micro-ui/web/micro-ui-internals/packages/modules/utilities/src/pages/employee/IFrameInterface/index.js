@@ -24,6 +24,7 @@ const IFrameInterface = (props) => {
     enabled: true,
   });
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
+  console.log("iFrame",iframeWindow)
   
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
@@ -57,8 +58,49 @@ const IFrameInterface = (props) => {
       }
     };
 
+    const injectCustomHttpInterceptorFetch = () => {
+      try {
+        if (!iframeWindow) {
+          console.error('Failed to access iframe content window.');
+          return;
+        }
+  
+        const originalFetch = iframeWindow.fetch;
+  
+        iframeWindow.fetch = function (url, options) {
+          // Intercepting here
+          const oidcToken = window.localStorage.getItem(localStorageKey);
+          if (!oidcToken) {
+            console.error('OIDC token not found in local storage.');
+            return originalFetch(url, options);
+          }
+  
+          const accessToken = oidcToken;
+          if (!options.headers) {
+            options.headers = {};
+          }
+          options.headers['Authorization'] = `Bearer ${accessToken}`;
+  
+          return originalFetch(url, options)
+            .then(response => {
+              // You can handle response here if needed
+              console.log('Response:', response);
+              return response;
+            })
+            .catch(error => {
+              // You can handle errors here if needed
+              console.error('Fetch error:', error);
+              throw error;
+            });
+        };
+      } catch (error) {
+        console.error('Error injecting custom HTTP interceptor:', error);
+      }
+    };
+
     if (iframeRef.current) {
       injectCustomHttpInterceptor();
+      injectCustomHttpInterceptorFetch();
     }
   }, [localStorageKey,iframeWindow]);
 
