@@ -10,6 +10,7 @@ import {
   Toast,
   TreeSelect,
   Modal,
+  CheckBox,
 } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -34,6 +35,7 @@ import { useMyContext } from "../../utils/context";
 import { CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { PopulationSvg } from "../../icons/Svg";
 import chroma from "chroma-js";
+import { Schemas } from "./Schemas.json";
 
 const page = "mapping";
 
@@ -125,6 +127,7 @@ const Mapping = ({
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
   const [chloroplethProperty, setChloroplethProperty] = useState();
+  const [filterProperties, setFilterProperties] = useState();
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
 
@@ -147,7 +150,7 @@ const Mapping = ({
       setFilterDataOrigin(filterDataOriginList);
     }
     const BaseMapLayers = state?.BaseMapLayers;
-    let schemas = state?.Schemas;
+    let schemas = Schemas;
     if (schemas) setValidationSchemas(schemas);
     if (!BaseMapLayers || (BaseMapLayers && BaseMapLayers.length === 0)) return;
     let baseMaps = {};
@@ -190,6 +193,7 @@ const Mapping = ({
         hierarchy,
         setBoundaryData,
         setFilterData,
+        setFilterProperties,
         t
       );
     }
@@ -263,19 +267,19 @@ const Mapping = ({
     if (!boundarySelections && !chloroplethProperty) return;
     let style = {
       fillColor: "rgba(255, 107, 43, 1)",
-      weight: 2,
+      weight: 3.5,
       opacity: 1,
       color: "rgba(255, 255, 255, 1)",
       fillOpacity: 0.22,
       fill: "rgb(4,136,219)",
     };
-    const filteredSelection = filterSelection(boundaryData, boundarySelections);
+    const { filteredSelection, childrenList } = filterSelection(boundaryData, boundarySelections);
     removeAllLayers(map, layers);
     let newLayer = [];
     let geojsonLayer;
     if (chloroplethProperty) {
       let chloroplethGeojson = prepareGeojson(boundaryData, "ALL", style) || [];
-      chloroplethGeojson = addChloroplethProperties(chloroplethGeojson, chloroplethProperty, filteredSelection)
+      chloroplethGeojson = addChloroplethProperties(chloroplethGeojson, chloroplethProperty, filteredSelection);
       geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t);
       if (geojsonLayer) {
         newLayer.push(geojsonLayer);
@@ -283,6 +287,9 @@ const Mapping = ({
     }
     const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
     geojsonLayer = addGeojsonToMap(map, geojsons, t);
+    const childrenGeojson = prepareGeojson(boundaryData, childrenList, { ...style, opacity: 0, fillOpacity: 0 });
+    let childrenGeojsonLayer = addGeojsonToMap(map, childrenGeojson, t);
+    if (childrenGeojsonLayer) newLayer.push(childrenGeojsonLayer);
     if (geojsons) {
       if (geojsonLayer) newLayer.push(geojsonLayer);
       let bounds = findBounds(geojsons);
@@ -328,13 +335,11 @@ const Mapping = ({
                   t={t}
                 />
               </div>
-              <div className="icon-rest filter-icon">
-                <p>{t("FILTER")}</p>
-                <div className="icon">
-                  <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
-                </div>
-              </div>
-              <div className="icon-rest filter-icon" onClick={() =>chloroplethProperty? setChloroplethProperty(): setChloroplethProperty("targetPopulation")}>
+              {filterData && Object.keys(filterData).length !== 0 && <FilterSection filterProperties={filterProperties} t={t} />}
+              <div
+                className="icon-rest filter-icon"
+                onClick={() => (chloroplethProperty ? setChloroplethProperty() : setChloroplethProperty("targetPopulation"))}
+              >
                 <p>{t("VIRTUALIZATION")}</p>
                 <div className="icon">
                   <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
@@ -358,6 +363,24 @@ const Mapping = ({
     </div>
   );
 };
+
+const FilterSection = memo(({ filterProperties, t }) => {
+  return (
+    <div className="filter-section-wrapper">
+      <div className="icon-rest filter-icon">
+        <p>{t("FILTER")}</p>
+        <div className="icon">
+          <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+        </div>
+      </div>
+      <div className="base-map-area-wrapper">
+        {filterProperties.map((item) => (
+          <CheckBox label={t(item)} />
+        ))}
+      </div>
+    </div>
+  );
+});
 
 const BoundarySelection = memo(
   ({
@@ -567,13 +590,14 @@ const extractGeoData = (
   hierarchy,
   setBoundaryData,
   setFilterData,
+  setFilterProperties,
   t
 ) => {
   if (!hierarchy) return;
 
   let setBoundary = {};
   let setFilter = {};
-
+  let filterPropertiesCollector = [];
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
@@ -612,6 +636,16 @@ const extractGeoData = (
               return acc;
             }, [])
             .map((item) => t(item)) || [];
+
+        if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData)) {
+          let temp = Object.entries(schema?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+            if (value?.isFilterPropertyOfMapSection) {
+              acc.push(key);
+            }
+            return acc;
+          }, []);
+          filterPropertiesCollector = [...filterPropertiesCollector, ...temp];
+        }
 
         // Check if file contains latitude and longitude columns
         if (files[fileData]?.data) {
@@ -754,6 +788,8 @@ const extractGeoData = (
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
+  console.log(filterPropertiesCollector);
+  setFilterProperties([new Set(filterPropertiesCollector)]);
 };
 
 //prepare geojson to show on the map
@@ -814,9 +850,8 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
 
   // Define the colors of the gradient
   const colors = [
-    { percent: 0, color: "#FF7373" },
-    { percent: 50, color: "#FFFFFF" },
-    { percent: 100, color: "#BA2900" },
+    { percent: 0, color: "rgba(239, 198, 191, 1)" },
+    { percent: 100, color: "#d5381f" },
   ];
   // Create a new geojson object
   const newGeojson = geojson.map((feature) => {
@@ -828,17 +863,17 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
     }
 
     newFeature.properties.style.fillColor = color;
-    newFeature.properties.style.color = "rgba(0, 0, 0, 1)"
-    if (!filterSelection || filteredSelection.length ===0 || filteredSelection.includes(newFeature.properties.name)) {
+    newFeature.properties.style.color = "rgba(0, 0, 0, 1)";
+    if (!filteredSelection || filteredSelection.length === 0 || filteredSelection.includes(newFeature.properties.name)) {
       newFeature.properties.style.fillOpacity = 1;
     } else {
-      newFeature.properties.style.fillOpacity = 0.4; 
-      newFeature.properties.style.opacity = 0.7; 
+      newFeature.properties.style.fillOpacity = 0.4;
+      newFeature.properties.style.opacity = 0.7;
     }
 
     return newFeature;
   });
-  return newGeojson
+  return newGeojson;
 };
 
 const addGeojsonToMap = (map, geojson, t) => {
@@ -1018,19 +1053,21 @@ const filterSelection = (boundaryData, boundarySelections) => {
   if (Object.keys(boundaryData).length === 0 || Object.keys(boundarySelections).length === 0) return [];
   let selectionList = [];
   Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));
+  let childrenList = [];
   const set1 = new Set(selectionList);
   selectionList = selectionList.filter((item) => {
     const children = findChildren([item], Object.values(boundaryData)?.[0]?.hierarchicalData);
     if (children) {
-      let childrenList = getAllKeys(children);
-      const nonePresent = childrenList.every((item) => !set1.has(item));
-      const allPresent = childrenList.every((item) => set1.has(item));
+      let childrenKeyList = getAllKeys(children);
+      childrenList = [...childrenList, ...childrenKeyList];
+      const nonePresent = childrenKeyList.every((item) => !set1.has(item));
+      const allPresent = childrenKeyList.every((item) => set1.has(item));
       return nonePresent ? true : allPresent ? true : false;
     } else {
       return true;
     }
   });
-  return selectionList;
+  return { filteredSelection: selectionList, childrenList };
 };
 
 // Recursive function to extract all keys

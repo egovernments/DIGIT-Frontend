@@ -87,7 +87,6 @@ const Upload = ({
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
@@ -112,19 +111,22 @@ const Upload = ({
   // }, [fileDataList]);
 
   // check if data has changed or not
-  const updateData = useCallback((check) => {
-    if (!fileDataList || !setMicroplanData) return;
-    if (check) {
-      setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-      const valueList = fileDataList ? Object.values(fileDataList) : [];
-      if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    } else {
-      const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
-      if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    }
-  }, [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]);
+  const updateData = useCallback(
+    (check) => {
+      if (!fileDataList || !setMicroplanData) return;
+      if (check) {
+        setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+        const valueList = fileDataList ? Object.values(fileDataList) : [];
+        if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      } else {
+        const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
+        if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      }
+    },
+    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]
+  );
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion(false);
@@ -178,7 +180,7 @@ const Upload = ({
         setSections(uploadSections);
       }
     }
-  }, [state?.UploadConfiguration,state?.Schemas,state?.UIConfiguration]);
+  }, [state?.UploadConfiguration, state?.Schemas, state?.UIConfiguration]);
 
   // Memoized section options to prevent unnecessary re-renders
   const sectionOptions = useMemo(() => {
@@ -883,7 +885,7 @@ const Upload = ({
         )}
         {modal === "spatial-data-property-mapping" && (
           <Modal
-            popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height:"fit-content" }}
+            popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -1209,15 +1211,24 @@ const UploadedFile = ({
 
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
-  const regx = new RegExp(namingConvention);
-  if (regx && !regx.test(file.name)) {
+  try {
+    const regx = new RegExp(namingConvention);
+
+    if (regx && !regx.test(file.name)) {
+      setToast({
+        state: "error",
+        message: t("ERROR_NAMING_CONVENSION"),
+      });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(error.message);
     setToast({
       state: "error",
-      message: t("ERROR_NAMING_CONVENSION"),
+      message: t("ERROR_UNKNOWN"),
     });
-    return false;
   }
-  return true;
 };
 
 // Function for reading ancd checking geojson data

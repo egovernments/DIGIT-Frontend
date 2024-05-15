@@ -1748,6 +1748,9 @@ $border-color: rgba(214, 213, 212, 1);
                     height: 1.667rem;
                 }
             }
+            .filter-section-wrapper{
+
+            }
 
             .base-map-selector {
                 display: flex !important;
@@ -1779,11 +1782,11 @@ $border-color: rgba(214, 213, 212, 1);
 
                 }
 
-                .base-map-area-wrapper {
+                .base-map-area-wrapper  {
                     position: absolute;
                     top: 2rem;
-                    max-width: 27.5rem;
-                    max-height: 9rem;
+                    max-width: 14.438rem;
+                    max-height: 9.752rem;
                     display: block;
                     overflow-x: auto;
 
@@ -1847,6 +1850,7 @@ $border-color: rgba(214, 213, 212, 1);
             }
         }
     }
+    
 
 }
 
