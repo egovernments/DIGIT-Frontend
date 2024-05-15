@@ -180,6 +180,10 @@ async function validateProjectResource(requestBody: any) {
 
 // Function to validate the campaign details including resource validation
 async function validateCampaign(requestBody: any) {
+    const id = requestBody?.Campaign?.id
+    if (!id) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "Enter id of campaign for mapping");
+    }
     for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
         var { startDate, endDate } = campaignDetails;
         startDate = parseInt(startDate);

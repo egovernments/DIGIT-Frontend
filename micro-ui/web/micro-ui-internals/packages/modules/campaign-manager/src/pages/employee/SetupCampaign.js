@@ -6,6 +6,7 @@ import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
 import { BOUNDARY_HIERARCHY_TYPE } from "../../Module";
+import _ from "lodash";
 
 /**
  * The `SetupCampaign` function in JavaScript handles the setup and management of campaign details,
@@ -186,17 +187,22 @@ function groupByTypeRemap(data) {
   const result = {};
 
   data.forEach((item) => {
-    const type = item?.boundaryType;
+    const type = item?.type;
+    const boundaryType = item?.type;
+    const parentCode = item?.parent;
     const obj = {
-      TenantBoundary: [
-        {
-          boundary: [item],
-        },
-      ],
+      parentCode, 
+      boundaryTypeData: {
+        TenantBoundary: [
+          {
+            boundary: [{ ...item, boundaryType }],
+          },
+        ],
+      },
     };
 
     if (result[type]) {
-      result[type][0].TenantBoundary[0].boundary.push(item);
+      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
     } else {
       result[type] = [obj];
     }
@@ -287,10 +293,11 @@ const SetupCampaign = () => {
 
   //DATA STRUCTURE
   useEffect(() => {
+    if (isLoading) return;
     if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
-    const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i.code === draftData?.projectType);
+    const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
       HCM_CAMPAIGN_TYPE: { projectType: filteredProjectType?.[0] },
       HCM_CAMPAIGN_NAME: {
@@ -304,11 +311,15 @@ const SetupCampaign = () => {
       },
       HCM_CAMPAIGN_CYCLE_CONFIGURE: {
         cycleConfigure: {
-          cycleConfgureDate: {
-            cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
-            deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
-          },
-          cycleData: cycleDataRemap(delivery),
+          cycleConfgureDate: draftData?.additionalDetails?.cycleData?.cycleConfgureDate
+            ? draftData?.additionalDetails?.cycleData?.cycleConfgureDate
+            : {
+                cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
+                deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
+              },
+          cycleData: draftData?.additionalDetails?.cycleData?.cycleData
+            ? draftData?.additionalDetails?.cycleData?.cycleData
+            : cycleDataRemap(delivery),
         },
       },
       HCM_CAMPAIGN_DELIVERY_DATA: {
@@ -331,21 +342,23 @@ const SetupCampaign = () => {
       },
     };
     setParams({ ...restructureFormData });
-  }, [params, draftData]);
+  }, [params, draftData, isLoading, projectType]);
 
   const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign("facilityWithBoundary", hierarchyType);
   const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign("boundary", hierarchyType, filteredBoundaryData);
   const userId = Digit.Hooks.campaign.useGenerateIdCampaign("userWithBoundary", hierarchyType); // to be integrated later
 
   useEffect(() => {
-    setDataParams({
-      ...dataParams,
-      facilityId: facilityId,
-      boundaryId: boundaryId,
-      userId: userId,
-      hierarchyType: hierarchyType,
-      hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
-    });
+    if (hierarchyDefinition?.BoundaryHierarchy?.[0]) {
+      setDataParams({
+        ...dataParams,
+        facilityId: facilityId,
+        boundaryId: boundaryId,
+        userId: userId,
+        hierarchyType: hierarchyType,
+        hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
+      });
+    }
   }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   // Example usage:
@@ -359,8 +372,8 @@ const SetupCampaign = () => {
   }
 
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData));
-  }, [totalFormData]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams));
+  }, [totalFormData, dataParams]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -447,22 +460,11 @@ const SetupCampaign = () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
     }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA) {
-      const FacilityTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA, hierarchyType, "facility");
-      setDataParams({
-        ...dataParams,
-        ValidateFacilityId: FacilityTemp?.ResourceDetails?.id,
-      });
-    }
-    if (totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA) {
-      const UserTemp = await Digit.Hooks.campaign.useResourceData(totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA, hierarchyType, "user");
-      setDataParams({
-        ...dataParams,
-        ValidateUserId: UserTemp?.ResourceDetails?.id,
-      });
-    }
   }, [shouldUpdate]);
 
+  const compareIdentical = (draftData, payload) => {
+    return _.isEqual(draftData, payload);
+  };
   //API CALL
   useEffect(async () => {
     if (shouldUpdate === true) {
@@ -470,7 +472,7 @@ const SetupCampaign = () => {
         return;
       } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
         const reqCreate = async () => {
-          let payloadData = draftData;
+          let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
             ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
@@ -514,24 +516,26 @@ const SetupCampaign = () => {
           //     Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
           //   },
           // });
-          await updateCampaign(payloadData, {
-            onError: (error, variables) => {
-              console.log(error);
-              setShowToast({ key: "error", label: error });
-            },
-            onSuccess: async (data) => {
-              draftRefetch();
-              history.push(
-                `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-                {
-                  message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                  text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                  info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT")
-                }
-              );
-              Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-            },
-          });
+          if (compareIdentical(draftData, payloadData) === false) {
+            await updateCampaign(payloadData, {
+              onError: (error, variables) => {
+                console.log(error);
+                setShowToast({ key: "error", label: error });
+              },
+              onSuccess: async (data) => {
+                draftRefetch();
+                history.push(
+                  `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+                  {
+                    message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+                    text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+                    info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                  }
+                );
+                Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+              },
+            });
+          }
         };
 
         reqCreate();
@@ -592,7 +596,7 @@ const SetupCampaign = () => {
         reqCreate();
       } else {
         const reqCreate = async () => {
-          let payloadData = draftData;
+          let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate) {
             payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
@@ -621,6 +625,9 @@ const SetupCampaign = () => {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
           };
+          if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
+            payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+          }
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
             payloadData.deliveryRules = temp;
@@ -629,21 +636,23 @@ const SetupCampaign = () => {
             delete payloadData?.startDate;
             delete payloadData?.endDate;
           }
-          await updateCampaign(payloadData, {
-            onError: (error, variables) => {
-              console.log(error);
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setShowToast({ key: "error", label: error });
-              }
-            },
-            onSuccess: async (data) => {
-              updateUrlParams({ id: data?.CampaignDetails?.id });
-              draftRefetch();
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setCurrentKey(currentKey + 1);
-              }
-            },
-          });
+          if (compareIdentical(draftData, payloadData) === false) {
+            await updateCampaign(payloadData, {
+              onError: (error, variables) => {
+                console.log(error);
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setShowToast({ key: "error", label: error });
+                }
+              },
+              onSuccess: async (data) => {
+                updateUrlParams({ id: data?.CampaignDetails?.id });
+                draftRefetch();
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setCurrentKey(currentKey + 1);
+                }
+              },
+            });
+          }
         };
 
         reqCreate();
@@ -658,18 +667,18 @@ const SetupCampaign = () => {
 
     // Validate cycle and deliveries
     if (cycle <= 0 || deliveries <= 0) {
-      return { error: true, message: "Cycle and deliveries should be greater than 0" };
+      return { error: true, message: "DELIVERY_CYCLE_EMPTY_ERROR" };
     }
 
     // Validate cycleData length
     if (cycleData.length !== cycle) {
-      return { error: true, message: "Cycle data length should be equal to cycle" };
+      return { error: true, message: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" };
     }
 
     // Validate fromDate and startDate in cycleData
     for (const item of cycleData) {
       if (!item.fromDate || !item.toDate) {
-        return { error: true, message: "From date and start date should not be empty in cycle data" };
+        return { error: true, message: "DELIVERY_CYCLE_DATE_ERROR" };
       }
     }
 
@@ -810,7 +819,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadBoundary?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadBoundary?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -821,7 +833,10 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadFacility?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadFacility?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadFacility?.apiError, transitionTime: 6000000000 });
+          } 
+          else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -831,7 +846,9 @@ const SetupCampaign = () => {
           setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
           return false;
         } else if (formData?.uploadUser?.isError) {
-          setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
+          if (formData?.uploadUser?.apiError) {
+            setShowToast({ key: "error", label: formData?.uploadUser?.apiError, transitionTime: 6000000000 });
+          } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
           return true;
@@ -862,8 +879,23 @@ const SetupCampaign = () => {
         }
         const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
         const isDeliveryError = validateDeliveryRules(deliveryCycleData);
+        const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId ? false : true;
+        const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId ? false : true;
+        const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId ? false : true;
         if (isDeliveryError === false) {
           setShowToast({ key: "error", label: "DELIVERY_RULES_ERROR" });
+          return false;
+        }
+        if (isTargetError) {
+          setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
+          return false;
+        }
+        if (isFacilityError) {
+          setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
+          return false;
+        }
+        if (isUserError) {
+          setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
         return true;
@@ -874,7 +906,7 @@ const SetupCampaign = () => {
 
   useEffect(() => {
     if (showToast) {
-      setTimeout(closeToast, 5000);
+      setTimeout(closeToast, 10000);
     }
   }, [showToast]);
 
@@ -929,6 +961,9 @@ const SetupCampaign = () => {
   };
 
   const onStepClick = (step) => {
+    if ((currentKey === 4 || currentKey === 5) && step > 1) {
+      return;
+    }
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
 
     const key = parseInt(filteredSteps[0].key);
@@ -939,7 +974,7 @@ const SetupCampaign = () => {
       setCurrentStep(7);
     } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
       setCurrentKey(4);
-      setCurrentStep(2);
+      setCurrentStep(1);
     } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
       // Do not set stepper and key
     } else if (Object.keys(totalFormData).includes(name)) {
@@ -1041,6 +1076,7 @@ const SetupCampaign = () => {
           info={showToast?.key === "info" ? true : false}
           error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
           onClose={closeToast}
         />
       )}

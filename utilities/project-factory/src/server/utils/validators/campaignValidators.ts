@@ -18,6 +18,7 @@ import { getSheetData, getTargetWorkbook } from "../../api/genericApis";
 import { log } from "console";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
+import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
 
 
 
@@ -403,7 +404,6 @@ async function validateBoundarySheetData(request: any, fileUrl: any, localizatio
     const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
     const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
     await validateHeaders(localizedHierarchy, headersOfBoundarySheet, request, localizationMap)
-    console.log("aaaaaaaaaaaaa")
     const boundaryData = await getSheetData(fileUrl, localizedBoundaryTab, true, undefined, localizationMap);
     console.log("bbbbbbbbb")
     //validate for whether root boundary level column should not be empty
@@ -532,7 +532,7 @@ async function validateResources(resources: any, request: any) {
             }
             const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
             if (response?.ResourceDetails?.[0]) {
-                if (!(response?.ResourceDetails?.[0]?.status == "completed" && response?.ResourceDetails?.[0]?.action == "validate")) {
+                if (!(response?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && response?.ResourceDetails?.[0]?.action == "validate")) {
                     logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
                     throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
                 }
@@ -657,24 +657,26 @@ async function validateCampaignName(request: any, actionInUrl: any) {
     if (!tenantId) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is required");
     }
-    const searchBody = {
-        RequestInfo: request.body.RequestInfo,
-        CampaignDetails: {
-            tenantId: tenantId,
-            campaignName: campaignName
+    if (campaignName.length >= 2) {
+        const searchBody = {
+            RequestInfo: request.body.RequestInfo,
+            CampaignDetails: {
+                tenantId: tenantId,
+                campaignName: campaignName
+            }
         }
-    }
-    const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
-    if (Array.isArray(searchResponse?.CampaignDetails)) {
-        if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "Campaign name already exists");
+        const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+        if (Array.isArray(searchResponse?.CampaignDetails)) {
+            if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
+                throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+            }
+            else if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "update" && searchResponse?.CampaignDetails?.[0]?.id != CampaignDetails?.id) {
+                throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+            }
         }
-        else if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "update" && searchResponse?.CampaignDetails?.[0]?.id != CampaignDetails?.id) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "Campaign name already exists for another campaign");
+        else {
+            throwError("CAMPAIGN", 500, "CAMPAIGN_SEARCH_ERROR");
         }
-    }
-    else {
-        throwError("CAMPAIGN", 500, "CAMPAIGN_SEARCH_ERROR");
     }
 }
 
@@ -695,8 +697,8 @@ async function validateById(request: any) {
         if (searchResponse?.data?.CampaignDetails?.length > 0) {
             logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
             request.body.ExistingCampaignDetails = searchResponse?.data?.CampaignDetails[0];
-            if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != "drafted") {
-                throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in drafted state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
+            if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
+                throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in ${campaignStatuses?.drafted} state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
             }
         }
         else {
@@ -764,9 +766,9 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     if (!(action == "create" || action == "draft")) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "action can only be create or draft");
     }
-    await validateCampaignName(request, actionInUrl);
     if (action == "create") {
         validateProjectCampaignMissingFields(CampaignDetails);
+        await validateCampaignName(request, actionInUrl);
         if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is not matching with userInfo");
         }
@@ -777,6 +779,7 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     }
     else {
         validateDraftProjectCampaignMissingFields(CampaignDetails);
+        await validateCampaignName(request, actionInUrl);
         await validateHierarchyType(request, hierarchyType, tenantId);
         await validateProjectType(request, projectType, tenantId);
     }
@@ -914,7 +917,7 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                 throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
             }
             if (key != getLocalizedName(config.boundaryTab, localizationMap)) {
-                const root = config.generateDifferentTabsOnBasisOf;
+                const root = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
                 for (const boundaryRow of dataArray) {
                     for (const columns in boundaryRow) {
                         if (columns.startsWith('__EMPTY')) {
@@ -922,7 +925,7 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                         }
                     }
                     if (!boundaryRow[root]) {
-                        throwError("COMMON", 400, "VALIDATION_ERROR", ` "${config.generateDifferentTabsOnBasisOf}"  column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
+                        throwError("COMMON", 400, "VALIDATION_ERROR", ` ${root} column is empty in Target Sheet ${key} at row number ${boundaryRow['!row#number!'] + 1}`);
                     }
                 }
             }

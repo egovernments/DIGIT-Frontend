@@ -13,9 +13,9 @@ import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration, getLocaliz
 import localisationController from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
+import { generatedResourceStatuses, resourceDataStatuses } from "../config/constants";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
-
 
 const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -247,7 +247,7 @@ async function getResponseFromDb(request: any, response: any) {
   try {
     const { type } = request.query;
     const { tenantId, hierarchyType } = request.query;
-    const status = 'Completed';
+    const status = generatedResourceStatuses.completed;
     let queryResult: any;
     let queryString: string;
     let queryValues: any[] = [];
@@ -307,7 +307,7 @@ async function getNewEntryResponse(request: any) {
     id: uuidv4(),
     fileStoreid: null,
     type: type,
-    status: "In Progress",
+    status: generatedResourceStatuses.inprogress,
     hierarchyType: request?.query?.hierarchyType,
     tenantId: request?.query?.tenantId,
     auditDetails: {
@@ -324,7 +324,7 @@ async function getNewEntryResponse(request: any) {
 async function getOldEntryResponse(modifiedResponse: any[], request: any) {
   return modifiedResponse.map((item: any) => {
     const newItem = { ...item };
-    newItem.status = "expired";
+    newItem.status = generatedResourceStatuses.expired;
     newItem.auditDetails.lastModifiedTime = Date.now();
     newItem.auditDetails.lastModifiedBy = request?.body?.RequestInfo?.userInfo?.uuid;
     return newItem;
@@ -343,7 +343,7 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
         lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid
       },
       fileStoreid: result?.[0]?.fileStoreId,
-      status: "Completed"
+      status: resourceDataStatuses.completed
     };
   });
 }
@@ -423,7 +423,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       let updatedResult = result;
       // get boundary sheet data after being generated
       const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
-      const differentTabsBasedOnLevel = config.generateDifferentTabsOnBasisOf;
+      const differentTabsBasedOnLevel = getLocalizedName(config.generateDifferentTabsOnBasisOf,localizationMap);
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
       const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
       if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config.numberOfBoundaryDataOnWhichWeSplit)) {
@@ -544,8 +544,7 @@ function correctParentValues(campaignDetails: any) {
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const mdmsResponse = await callMdmsData(request, config.moduleName, config.facilitySchemaMasterName, tenantId);
-  const schema = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].properties;
-  const keys = Object.keys(schema);
+  const keys = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].required;
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
 
@@ -623,8 +622,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
   const mdmsResponse = await callMdmsData(request, config.moduleName, config.userSchemaMasterName, tenantId)
-  const schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].properties;
-  const headers = Object.keys(schema);
+  const headers = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].required;
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
   const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
   const userSheetData = await createExcelSheet(userData, localizedHeaders, localizedUserTab);
@@ -651,7 +649,7 @@ async function processGenerateForNew(request: any, response: any, generatedResou
 }
 
 function handleGenerateError(newEntryResponse: any, generatedResource: any, error: any) {
-  newEntryResponse.map((item: any) => { item.status = "failed", item.additionalDetails = { ...item.additionalDetails, error: error.message || String(error) } })
+  newEntryResponse.map((item: any) => { item.status = generatedResourceStatuses.failed, item.additionalDetails = { ...item.additionalDetails, error: error.message || String(error) } })
   generatedResource = { generatedResource: newEntryResponse };
   logger.error(String(error));
   produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
@@ -697,10 +695,10 @@ async function enrichResourceDetails(request: any) {
   request.body.ResourceDetails.id = uuidv4();
   request.body.ResourceDetails.processedFileStoreId = null;
   if (request?.body?.ResourceDetails?.action == "create") {
-    request.body.ResourceDetails.status = "data-accepted"
+    request.body.ResourceDetails.status = resourceDataStatuses.accepted
   }
   else {
-    request.body.ResourceDetails.status = "validation-started"
+    request.body.ResourceDetails.status = resourceDataStatuses.started
   }
   request.body.ResourceDetails.auditDetails = {
     createdBy: request?.body?.RequestInfo?.userInfo?.uuid,

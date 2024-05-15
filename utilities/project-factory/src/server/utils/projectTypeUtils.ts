@@ -1,4 +1,3 @@
-import { log } from "console";
 
 /* 
 TODO: Update configObject with appropriate values.
@@ -13,6 +12,10 @@ const configObject: any = {
         default: null,
         other: "30",
     },
+    mandatoryWaitSinceLastDeliveryInDays:{
+        default: null,
+        other: null,
+    }
 };
 
 /* TODO: Update the logic to fetch the projecttype master */
@@ -89,7 +92,7 @@ const deliveryRulesToCyles = (delivery = []) => {
 /* 
 Convert delivery rules to a format suitable for processing.
 */
-const deliveriesConv = (deliveryObj = {}) => {
+const deliveriesConv = (deliveryObj:any = {}) => {
     return Object.keys(deliveryObj).map((key, ind) => {
         return {
             id: key,
@@ -98,10 +101,9 @@ const deliveriesConv = (deliveryObj = {}) => {
 
             mandatoryWaitSinceLastDeliveryInDays:
                 configObject.mandatoryWaitSinceLastDeliveryInDays?.["default"],
-            doseCriteria: configObject?.[key]?.map((e: any) => {
-                log(e);
+            doseCriteria: deliveryObj?.[key]?.map((e: any) => {
                 return {
-                    ProductVariants: configObject?.[key].flatMap(
+                    ProductVariants: deliveryObj?.[key].flatMap(
                         (elem: { products: any }) =>
                             [...elem.products].map((ele, index) => ({
                                 isBaseUnitVariant: index == 0,
@@ -109,7 +111,7 @@ const deliveriesConv = (deliveryObj = {}) => {
                             }))
                     ),
                     // cylce conditions hardcoded TODO update logic
-                    conditions: "3<=age<11",
+                    condition: getRequiredCondition(e?.conditions),
                 };
             }),
         };
@@ -188,3 +190,50 @@ export const enrichProjectDetailsFromCampaignDetails = (
         },
     ];
 };
+
+
+
+// Function to get the key based on condition and attribute
+const getConditionsKey = (condition:any, key:string) => {
+    // Get all keys of the condition object
+    const keys = Object.keys(condition);
+
+    // Check if the key is present in the condition object
+    if (keys.filter(e => e == key).length > 0) {
+        return `${key.includes('LESS_THAN') ? (condition[key] + '<') : ('>' + condition[key])}`;
+    } else if (keys.filter(e => e.includes(key)).length > 0) {
+        return `${key.includes('LESS_THAN') ? (condition[key] + '<=') : ('>=' + condition[key])}`;
+    } else if (keys.includes("EQUAL_TO")) {
+        return `${condition[key]}=`;
+    } else {
+        return `${key.includes('LESS_THAN') ? '0<' : '>100'}`;
+    }
+}
+
+// Function to get the condition based on attribute
+const getCondition = (condition:any = {}, attribute:string) => {
+    // Call getConditionsKey function to get the condition for LESS_THAN and GREATER_THAN
+    return `${getConditionsKey(condition, "LESS_THAN")}${attribute}${getConditionsKey(condition, "GREATER_THAN")}`;
+}
+
+// Function to get the required condition
+const getRequiredCondition = (conditions:any = []) => {
+    // Format the conditions into an object with attribute keys
+    const formattedCondition = conditions.reduce((acc:any, curr:any) => {
+        if (acc[curr.attribute.toLowerCase()]) {
+            acc[curr.attribute.toLowerCase()] = {
+                [curr.operator]: curr.value,
+                ...acc[curr.attribute.toLowerCase()]
+            }
+        } else {
+            acc[curr.attribute?.toLowerCase()] = {
+                [curr.operator]: curr.value,
+            }
+        }
+        return { ...acc };
+    }, {});
+
+    // Sort keys of formattedCondition and get the first one
+    const sortedKeys = Object.keys(formattedCondition).slice().sort();
+    return getCondition(formattedCondition[sortedKeys[0]], sortedKeys[0]);
+}

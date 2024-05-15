@@ -8,6 +8,8 @@ import { correctParentValues, generateActivityMessage, getBoundaryRelationshipDa
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../utils/validators/genericValidator"; // Import validation functions
 import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
+import { validateMappingId } from '../utils/campaignMappingUtils';
+import { campaignStatuses } from '../config/constants';
 const _ = require('lodash'); // Import lodash library
 
 // Function to retrieve workbook from Excel file URL and sheet name
@@ -619,19 +621,26 @@ async function createRelatedEntity(resources: any, tenantId: any, projectId: any
  * @param requestBody The request body.
  */
 async function createRelatedResouce(requestBody: any) {
-    sortCampaignDetails(requestBody?.Campaign?.CampaignDetails)
-    correctParentValues(requestBody?.Campaign?.CampaignDetails)
-    // Create related resources
-    const { tenantId } = requestBody?.Campaign
+    const id = requestBody?.Campaign?.id
+    const campaignDetails = await validateMappingId(requestBody, id);
+    if (campaignDetails?.status == campaignStatuses.inprogress) {
+        logger.info("Campaign Already In Progress and Mapped");
+    }
+    else {
+        sortCampaignDetails(requestBody?.Campaign?.CampaignDetails)
+        correctParentValues(requestBody?.Campaign?.CampaignDetails)
+        // Create related resources
+        const { tenantId } = requestBody?.Campaign
 
-    for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
-        const resouceBody: any = {
-            RequestInfo: requestBody.RequestInfo,
+        for (const campaignDetails of requestBody?.Campaign?.CampaignDetails) {
+            const resouceBody: any = {
+                RequestInfo: requestBody.RequestInfo,
+            }
+            var { projectId, startDate, endDate, resources } = campaignDetails;
+            startDate = parseInt(startDate);
+            endDate = parseInt(endDate);
+            await createRelatedEntity(resources, tenantId, projectId, startDate, endDate, resouceBody);
         }
-        var { projectId, startDate, endDate, resources } = campaignDetails;
-        startDate = parseInt(startDate);
-        endDate = parseInt(endDate);
-        await createRelatedEntity(resources, tenantId, projectId, startDate, endDate, resouceBody);
     }
 }
 
@@ -720,7 +729,7 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: { [key:
                 if (!response.TenantBoundary || !Array.isArray(response.TenantBoundary) || response.TenantBoundary.length === 0) {
                     throwError("BOUNDARY", 500, "BOUNDARY_RELATIONSHIP_CREATE_ERROR");
                 }
-                console.log('Boundary relationship created:', response);
+                logger.info('Boundary relationship created');
                 const newRequestBody = JSON.parse(JSON.stringify(request.body));
                 activityMessage.push(await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, response, request?.body?.ResourceDetails?.type, url, response?.statusCode));
             }

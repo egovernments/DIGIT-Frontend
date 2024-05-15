@@ -28,6 +28,7 @@ export const CONSTANTS: any = {
             CAMPAIGN_NOT_FOUND: "Campaign not found",
             GENERATION_REQUIRE: "First Generate then Download",
             RESOURCE_CREATION_ERROR: "Some error occured during resource creation",
+            CAMPAIGN_NAME_ERROR: "Campaign name already exists"
         },
         BOUNDARY: {
             BOUNDARY_DATA_NOT_FOUND: "No boundary data found in the system.",
@@ -76,6 +77,28 @@ export const userRoles: any = {
     "Help Desk": "HELPDESK_USER",
     "Monitor Local": "MONITOR_LOCAL",
     "Logistical officer": "LOGISTICAL_OFFICER",
+}
+
+export const campaignStatuses: any = {
+    drafted: "drafted",
+    started: "started",
+    inprogress: "In Progress",
+    failed: "failed"
+}
+
+export const resourceDataStatuses: any = {
+    failed: "failed",
+    completed: "completed",
+    invalid: "invalid",
+    started: "validation-started",
+    accepted: "data-accepted"
+}
+
+export const generatedResourceStatuses: any = {
+    inprogress: "In Progress",
+    failed: "failed",
+    completed: "Completed",
+    expired: "expired"
 }
 
 
