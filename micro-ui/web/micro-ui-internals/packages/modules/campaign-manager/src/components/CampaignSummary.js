@@ -35,7 +35,7 @@ function mergeObjects(item) {
   return mergedArr;
 }
 
-function loopAndReturn(dataa) {
+function loopAndReturn(dataa, t) {
   let newArray = [];
   const data = dataa?.map((i) => ({ ...i, operator: i?.operator, attribute: i?.attribute }));
 
@@ -54,7 +54,7 @@ function loopAndReturn(dataa) {
     } else if (item?.operator === "EQUAL_TO") {
       newArray.push({
         ...item,
-        value: item?.value ? item?.value : null,
+        value: item?.value ? t(item?.value) : null,
       });
     } else {
       newArray.push(item);
@@ -76,7 +76,7 @@ function loopAndReturn(dataa) {
   return format;
 }
 
-function reverseDeliveryRemap(data) {
+function reverseDeliveryRemap(data, t) {
   if (!data) return null;
   const reversedData = [];
   let currentCycleIndex = null;
@@ -111,7 +111,7 @@ function reverseDeliveryRemap(data) {
     delivery.deliveryRules.push({
       ruleKey: item.deliveryRuleNumber,
       delivery: {},
-      attributes: loopAndReturn(item.conditions),
+      attributes: loopAndReturn(item.conditions, t),
       products: [...item.products],
     });
   });
@@ -142,14 +142,14 @@ const CampaignSummary = () => {
           }
         });
         const target = data?.[0]?.deliveryRules;
-        const cycleData = reverseDeliveryRemap(target);
+        const cycleData = reverseDeliveryRemap(target, t);
         return {
           cards: [
             {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0 } },
+                  cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -186,7 +186,7 @@ const CampaignSummary = () => {
                       props: {
                         documents: data?.[0]?.resources?.filter((i) => i.type === "boundaryWithTarget"),
                       },
-                      cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0 } },
+                      cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                       cardSecondaryAction: noAction !== "false" && (
                         <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
                           <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -206,7 +206,7 @@ const CampaignSummary = () => {
                       props: {
                         documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
                       },
-                      cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0 } },
+                      cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                       cardSecondaryAction: noAction !== "false" && (
                         <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
                           <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -226,7 +226,7 @@ const CampaignSummary = () => {
                       props: {
                         documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
                       },
-                      cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0 } },
+                      cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                       cardSecondaryAction: noAction !== "false" && (
                         <div className="campaign-preview-edit-container" onClick={() => handleRedirect(9)}>
                           <span>{t(`CAMPAIGN_EDIT`)}</span>
@@ -247,7 +247,7 @@ const CampaignSummary = () => {
                         isUserGenerate: true,
                         resources: resourceIdArr,
                       },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0 } },
+                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                     },
                   ],
                 }
@@ -256,7 +256,7 @@ const CampaignSummary = () => {
               sections: [
                 {
                   type: "DATA",
-                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0 } },
+                  cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
                     <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
