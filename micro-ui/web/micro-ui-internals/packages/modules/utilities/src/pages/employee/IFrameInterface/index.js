@@ -23,6 +23,7 @@ const IFrameInterface = (props) => {
     },
     enabled: true,
   });
+  console.log("this is hcm iframe");
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
   console.log("iFrame",iframeWindow)
   
@@ -59,6 +60,7 @@ const IFrameInterface = (props) => {
     };
 
     const injectCustomHttpInterceptorFetch = () => {
+      console.log("In fetch interceptor");
       try {
         if (!iframeWindow) {
           console.error('Failed to access iframe content window.');
@@ -99,7 +101,7 @@ const IFrameInterface = (props) => {
     };
 
     if (iframeRef.current) {
-      injectCustomHttpInterceptor();
+      // injectCustomHttpInterceptor();
       injectCustomHttpInterceptorFetch();
     }
   }, [localStorageKey,iframeWindow]);
@@ -122,6 +124,7 @@ const IFrameInterface = (props) => {
       }
     }
     setUrl(url);
+    console.log("url",url)
     setTitle(title);
   }, [data, moduleName, pageName]);
 
