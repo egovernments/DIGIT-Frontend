@@ -1156,6 +1156,8 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         }
         const mainSheet = XLSX.utils.aoa_to_sheet(mainSheetData);
         const localizedBoundaryTab = getLocalizedName(config.boundaryTab, localizationMap);
+        const columnWidths = Array(8).fill({ width: 30 });
+        mainSheet['!cols'] = columnWidths;
         XLSX.utils.book_append_sheet(workbook, mainSheet, localizedBoundaryTab);
         for (const uniqueData of uniqueDistrictsForMainSheet) {
             const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
@@ -1174,6 +1176,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
                 }
                 const ws = XLSX.utils.aoa_to_sheet(newSheetData);
                 const localizedDifferentTabsName = getLocalizedName(districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
+                ws['!cols'] = columnWidths;
                 XLSX.utils.book_append_sheet(workbook, ws, localizedDifferentTabsName);
             }
         }
