@@ -423,7 +423,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, r
       let updatedResult = result;
       // get boundary sheet data after being generated
       const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
-      const differentTabsBasedOnLevel = config.generateDifferentTabsOnBasisOf;
+      const differentTabsBasedOnLevel = getLocalizedName(config.generateDifferentTabsOnBasisOf,localizationMap);
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
       const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
       if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config.numberOfBoundaryDataOnWhichWeSplit)) {
@@ -544,8 +544,7 @@ function correctParentValues(campaignDetails: any) {
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const mdmsResponse = await callMdmsData(request, config.moduleName, config.facilitySchemaMasterName, tenantId);
-  const schema = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].properties;
-  const keys = Object.keys(schema);
+  const keys = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].required;
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
 
@@ -623,8 +622,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
   const mdmsResponse = await callMdmsData(request, config.moduleName, config.userSchemaMasterName, tenantId)
-  const schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].properties;
-  const headers = Object.keys(schema);
+  const headers = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].required;
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
   const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
   const userSheetData = await createExcelSheet(userData, localizedHeaders, localizedUserTab);
