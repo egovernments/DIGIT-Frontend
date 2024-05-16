@@ -38,6 +38,7 @@ const makeSequential = (jsonArray, keyName) => {
 };
 
 const AddAttributeField = ({
+  config,
   deliveryRuleIndex,
   delivery,
   deliveryRules,
@@ -511,7 +512,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
 
   return (
     <Card className="attribute-container">
-      {filteredDeliveryConfig?.customAttribute
+      {filteredDeliveryConfig?.customAttribute && filteredDeliveryConfig?.projectType === "LLIN-mz"
         ? delivery.attributes.map((item, index) => (
             <AddCustomAttributeField
               deliveryRuleIndex={deliveryRuleIndex}
@@ -530,6 +531,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
           ))
         : delivery.attributes.map((item, index) => (
             <AddAttributeField
+              config={filteredDeliveryConfig?.attributeConfig?.[index]}
               deliveryRuleIndex={deliveryRuleIndex}
               delivery={delivery}
               deliveryRules={deliveryRules}
