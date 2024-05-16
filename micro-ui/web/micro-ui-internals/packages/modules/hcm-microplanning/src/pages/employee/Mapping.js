@@ -10,7 +10,7 @@ import {
   Toast,
   TreeSelect,
   Modal,
-
+  CheckSvg,
 } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -21,7 +21,7 @@ import CustomScaleControl from "../../components/CustomScaleControl";
 import { MapLayerIcon } from "../../icons/MapLayerIcon";
 import { NorthArrow } from "../../icons/NorthArrow";
 import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline, LoaderWithGap, CheckBox } from "@egovernments/digit-ui-react-components";
+import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import {
   processHierarchyAndData,
   findParent,
@@ -36,7 +36,8 @@ import { CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { PopulationSvg } from "../../icons/Svg";
 import chroma from "chroma-js";
 import { Schemas } from "./Schemas.json";
-
+import * as IconCollection from "../../icons/Svg";
+import { MapFilters } from "./MapFilters.json";
 const page = "mapping";
 
 function checkTruthyKeys(obj) {
@@ -127,9 +128,13 @@ const Mapping = ({
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
   const [chloroplethProperty, setChloroplethProperty] = useState();
+  const [filterPropertyNames, setFilterPropertyNames] = useState();
   const [filterProperties, setFilterProperties] = useState();
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [filterSelections, setFilterSelections] = useState([]);
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
+  const showFilterOptionRef = useRef();
 
   // Set TourSteps
   useEffect(() => {
@@ -194,6 +199,8 @@ const Mapping = ({
         setBoundaryData,
         setFilterData,
         setFilterProperties,
+        setFilterSelections,
+        setFilterPropertyNames,
         t
       );
     }
@@ -264,7 +271,7 @@ const Mapping = ({
 
   // showing selected boundary data
   useEffect(() => {
-    if (!boundarySelections && !chloroplethProperty) return;
+    if (!boundarySelections && !chloroplethProperty && !filterSelections) return;
     let style = {
       fillColor: "rgba(255, 107, 43, 1)",
       weight: 3.5,
@@ -273,7 +280,7 @@ const Mapping = ({
       fillOpacity: 0.22,
       fill: "rgb(4,136,219)",
     };
-    const { filteredSelection, childrenList } = filterSelection(boundaryData, boundarySelections);
+    const { filteredSelection, childrenList } = filterBoundarySelection(boundaryData, boundarySelections);
     removeAllLayers(map, layers);
     let newLayer = [];
     let geojsonLayer;
@@ -295,15 +302,35 @@ const Mapping = ({
       let bounds = findBounds(geojsons);
       if (bounds) map.fitBounds(bounds);
     }
+
+    // filters
+    let filter = {
+      filterSelections,
+      iconMapping: MapFilters,
+    };
+    const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", style);
+    const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, MapFilters);
+    let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t, filter);
+    if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
+
     setLayer(newLayer);
-  }, [boundarySelections, chloroplethProperty]);
+  }, [boundarySelections, chloroplethProperty, filterSelections]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
     if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
     if (showBaseMapSelector) setShowBaseMapSelector(false);
-  }, [isboundarySelectionSelected, showBaseMapSelector, setIsboundarySelectionSelected, setShowBaseMapSelector]);
+    if (showFilterOptions) setShowFilterOptions(false);
+  }, [
+    isboundarySelectionSelected,
+    showBaseMapSelector,
+    showFilterOptions,
+    setIsboundarySelectionSelected,
+    setShowBaseMapSelector,
+    setShowFilterOptions,
+  ]);
   Digit?.Hooks.useClickOutside(filterBoundaryRef, handleOutsideClickAndSubmitSimultaneously, isboundarySelectionSelected, { capture: true });
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
+  Digit?.Hooks.useClickOutside(showFilterOptionRef, handleOutsideClickAndSubmitSimultaneously, showFilterOptions, { capture: true });
 
   // Rendering component
   return (
@@ -335,7 +362,17 @@ const Mapping = ({
                   t={t}
                 />
               </div>
-              {filterData && Object.keys(filterData).length !== 0 && <FilterSection filterProperties={filterProperties} t={t} />}
+              {filterProperties && Object.keys(filterProperties).length !== 0 && (
+                <FilterSection
+                  filterProperties={filterProperties}
+                  showFilterOptionRef={showFilterOptionRef}
+                  showFilterOptions={showFilterOptions}
+                  setShowFilterOptions={setShowFilterOptions}
+                  filterSelections={filterSelections}
+                  setFilterSelections={setFilterSelections}
+                  t={t}
+                />
+              )}
               <div
                 className="icon-rest filter-icon"
                 onClick={() => (chloroplethProperty ? setChloroplethProperty() : setChloroplethProperty("targetPopulation"))}
@@ -354,6 +391,10 @@ const Mapping = ({
               </div>
               <CustomScaleControl map={map} />
             </div>
+
+            <div className="bottom-right-map-subcomponents">
+              <MapIndex filterSelections={filterSelections} MapFilters={MapFilters} t={t} />
+            </div>
           </div>
         </Card>
       </Card>
@@ -364,24 +405,87 @@ const Mapping = ({
   );
 };
 
-const FilterSection = memo(({ filterProperties, t }) => {
-  console.log(filterProperties)
+const MapIndex = ({ filterSelections, MapFilters, t }) => {
   return (
-    <div className="filter-section-wrapper">
-      <div className="icon-rest filter-icon">
-        <p>{t("FILTER")}</p>
-        <div className="icon">
-          <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+    <div>
+      {filterSelections && filterSelections.length > 0 ? (
+        <div>
+          {filterSelections.map((item) => (
+            <FilterItemBuilder item={item} MapFilters={MapFilters} t={t} />
+          ))}
         </div>
-      </div>
-      <div className="base-map-area-wrapper">
-        {filterProperties.map((item) => (
-          <CheckBox label={t(item)} style={{color:"rgba(11, 12, 12, 1)"}}/>
-        ))}
-      </div>
+      ) : (
+        ""
+      )}
     </div>
   );
-});
+};
+const FilterItemBuilder = ({ item, MapFilters, t }) => {
+  let temp = MapFilters?.find((e) => e?.name == item)?.icon?.index;
+  let DynamicIcon = IconCollection?.[temp];
+  // let icon;
+  // if (typeof DynamicIcon === "function") icon = DynamicIcon({});
+  return DynamicIcon && typeof DynamicIcon === "function" ? (
+    <div>
+      <DynamicIcon />
+      <p>{t(item)}</p>
+    </div>
+  ) : (
+    ""
+  );
+};
+
+const FilterSection = memo(
+  ({ filterProperties, showFilterOptionRef, showFilterOptions, setShowFilterOptions, filterSelections, setFilterSelections, t }) => {
+    const handleChange = useCallback(
+      (e, item) => {
+        let tempFilterSelections = [...filterSelections]; // Clone the array to avoid mutating state directly
+        filterSelections.includes(item)
+          ? (tempFilterSelections = tempFilterSelections.filter((element) => element !== item))
+          : tempFilterSelections.push(item);
+        setFilterSelections(tempFilterSelections);
+      },
+      [filterSelections]
+    );
+
+    return (
+      <div className="filter-section" ref={showFilterOptionRef}>
+        <div className="icon-rest filter-icon" onClick={() => setShowFilterOptions((previous) => !previous)}>
+          <p>{t("FILTER")}</p>
+          <div className="icon">
+            <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+          </div>
+        </div>
+        {showFilterOptions && (
+          <div className="filter-section-option-wrapper">
+            {filterProperties.map((item) => (
+              <div id={item}>
+                <CheckBox onChange={(e) => handleChange(e, item)} label={t(item)} checked={!!filterSelections.includes(item)} fontclass="" />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+const CheckBox = ({ onChange, label, checked, fontclass }) => {
+  return (
+    <div className="custom-checkbox" onClick={onChange}>
+      <input
+        type="checkbox"
+        id={label}
+        checked={checked}
+        // onChange={onChange}
+        className={fontclass}
+      />
+      <label htmlFor={label}>
+        <span className="custom-icon">{checked && <CheckSvg />}</span>
+        {label}
+      </label>
+    </div>
+  );
+};
 
 const BoundarySelection = memo(
   ({
@@ -592,13 +696,16 @@ const extractGeoData = (
   setBoundaryData,
   setFilterData,
   setFilterProperties,
+  setFilterSelections,
+  setFilterPropertyNames,
   t
 ) => {
   if (!hierarchy) return;
 
   let setBoundary = {};
   let setFilter = {};
-  let filterPropertiesCollector = [];
+  let filterPropertiesCollector = new Set();
+  let filterPropertieNameCollector = new Set();
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
@@ -637,15 +744,15 @@ const extractGeoData = (
               return acc;
             }, [])
             .map((item) => t(item)) || [];
-
+        let filterProperty;
         if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData)) {
-          let temp = Object.entries(schema?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+          filterProperty = Object.entries(schema?.schema?.Properties || {}).reduce((acc, [key, value]) => {
             if (value?.isFilterPropertyOfMapSection) {
               acc.push(key);
             }
             return acc;
           }, []);
-          filterPropertiesCollector = [...filterPropertiesCollector, ...temp];
+          filterPropertieNameCollector = [...filterPropertieNameCollector, ...filterProperty];
         }
 
         // Check if file contains latitude and longitude columns
@@ -706,6 +813,17 @@ const extractGeoData = (
                   return row;
                 })
               );
+              if (Object.values(files[fileData]?.data).length > 0 && filterProperty) {
+                filterProperty?.forEach((item) => {
+                  Object.values(files[fileData]?.data).forEach((data) => {
+                    let filterPropertyIndex = data?.[0].indexOf(item);
+                    if (filterPropertyIndex && filterPropertyIndex !== -1)
+                      data.slice(1).forEach((e) => {
+                        return filterPropertiesCollector.add(e[filterPropertyIndex]);
+                      });
+                  });
+                });
+              }
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
@@ -734,6 +852,17 @@ const extractGeoData = (
                 });
                 return temp;
               });
+
+              if (files[fileData]?.data?.features && filterProperty) {
+                filterProperty?.forEach((item) => {
+                  if (Object.values(files[fileData]?.data).length > 0) {
+                    files[fileData]?.data?.features.forEach((e) => {
+                      if (e?.properties?.[item]) filterPropertiesCollector.add(e?.properties?.[item]);
+                    });
+                  }
+                });
+              }
+
               // Group keys and values into the desired format
               let data = { [files[fileData]?.fileName]: [keys, ...values] };
               // extract dada
@@ -789,8 +918,9 @@ const extractGeoData = (
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
-  console.log(filterPropertiesCollector);
-  setFilterProperties([new Set(filterPropertiesCollector)]);
+  setFilterProperties([...filterPropertiesCollector]);
+  setFilterSelections([...filterPropertiesCollector]);
+  setFilterPropertyNames([...filterPropertieNameCollector]);
 };
 
 //prepare geojson to show on the map
@@ -811,7 +941,7 @@ const prepareGeojson = (boundaryData, selection, style = {}, chloropleth) => {
 
   return geojsonRawFeatures.filter(Boolean);
 };
-const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => {
+const fetchFeatures = (data, parameter = "ALL", outputList = [], addOn = {}) => {
   let tempStorage = [];
   if (parameter === "ALL") {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
@@ -819,11 +949,11 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
       if (entityValue?.data?.feature) {
         let feature = entityValue.data.feature;
         feature.properties["name"] = entityKey;
-        feature.properties["style"] = style;
-        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        feature.properties["addOn"] = addOn;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
         else tempStorage = [...tempStorage, feature];
       } else {
-        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
       }
     }
     return tempStorage;
@@ -832,11 +962,11 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
       if (parameter.includes(entityKey) && entityValue && entityValue.data && entityValue.data.feature) {
         let feature = entityValue.data.feature;
         feature.properties["name"] = entityKey;
-        feature.properties["style"] = style;
-        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        feature.properties["addOn"] = addOn;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
         else tempStorage = [...tempStorage, feature];
       } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
       }
     }
     return tempStorage;
@@ -856,20 +986,20 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
   ];
   // Create a new geojson object
   const newGeojson = geojson.map((feature) => {
-    const newFeature = { ...feature, properties: { ...feature.properties, style: { ...feature.properties.style } } };
+    const newFeature = { ...feature, properties: { ...feature.properties, addOn: { ...feature.properties.addOn } } };
     let color;
 
     if (chloroplethProperty) {
       color = interpolateColor(newFeature.properties[chloroplethProperty], minValue, maxValue, colors);
     }
 
-    newFeature.properties.style.fillColor = color;
-    newFeature.properties.style.color = "rgba(0, 0, 0, 1)";
+    newFeature.properties.addOn.fillColor = color;
+    newFeature.properties.addOn.color = "rgba(0, 0, 0, 1)";
     if (!filteredSelection || filteredSelection.length === 0 || filteredSelection.includes(newFeature.properties.name)) {
-      newFeature.properties.style.fillOpacity = 1;
+      newFeature.properties.addOn.fillOpacity = 1;
     } else {
-      newFeature.properties.style.fillOpacity = 0.4;
-      newFeature.properties.style.opacity = 0.7;
+      newFeature.properties.addOn.fillOpacity = 0.4;
+      newFeature.properties.addOn.opacity = 0.7;
     }
 
     return newFeature;
@@ -877,12 +1007,51 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
   return newGeojson;
 };
 
+/**
+ * filterGeojsons : json
+ * filterSelection : array
+ * MapFilters :
+ */
+const addFilterProperties = (filterGeojsons, filterSelections, filterPropertyNames, iconMapping) => {
+  if (!filterGeojsons || !MapFilters || !filterSelections) return [];
+  let newFilterGeojson = [];
+  filterGeojsons.forEach((item) => {
+    if (filterPropertyNames && filterPropertyNames.length !== 0 && item.properties) {
+      let icon;
+      filterPropertyNames.forEach((name) => {
+        if (item.properties[name]) {
+          let temp = item.properties[name];
+          if (!filterSelections.includes(temp)) return;
+          temp = iconMapping?.find((e) => e?.name == temp)?.icon?.marker;
+          let DynamicIcon = IconCollection?.[temp];
+          if (typeof DynamicIcon === "function") {
+            icon = L.divIcon({
+              className: "custom-svg-icon",
+              html: DynamicIcon({}),
+              iconAnchor: [25, 50],
+            });
+            newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
+          }
+        }
+      });
+    }
+    return item;
+  });
+  return newFilterGeojson;
+};
+
+/**
+ * map: map
+ * geojson: geojson
+ * t: translator
+ */
+
 const addGeojsonToMap = (map, geojson, t) => {
   if (!map || !geojson) return false;
   const geojsonLayer = L.geoJSON(geojson, {
     style: function (feature) {
-      if (Object.keys(feature.properties.style).length !== 0) {
-        return feature.properties.style;
+      if (Object.keys(feature.properties.addOn).length !== 0) {
+        return feature.properties.addOn;
       } else {
         return {
           weight: 2,
@@ -896,30 +1065,67 @@ const addGeojsonToMap = (map, geojson, t) => {
       }
     },
     pointToLayer: function (feature, latlng) {
+      if (feature.properties.addOn.icon) {
+        let icon = feature.properties.addOn.icon;
+        if (icon) {
+          return L.marker(latlng, {
+            icon: icon,
+          });
+        }
+      }
       return L.marker(latlng, {
-        icon: MapMarker(feature.properties.style),
+        icon: MapMarker(feature.properties.addOn),
       });
     },
     onEachFeature: function (feature, layer) {
-      if (feature.properties) {
-        let popupContent = "<div style='background-color: white; padding: 0rem;'>";
-        popupContent += "<table style='border-collapse: collapse;'>";
-        popupContent +=
-          "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
-          feature.properties["name"] +
-          "</div>";
-        for (let prop in feature.properties) {
-          if (prop !== "name" && prop !== "style")
-            popupContent +=
-              "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
-              t(prop) +
-              "</td><td>" +
-              feature.properties[prop] +
-              "</td></tr>";
+      let popupContent;
+      popupContent = "<div style='background-color: white; padding: 0rem;'>";
+      popupContent += "<table style='border-collapse: collapse;'>";
+      popupContent +=
+        "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
+        feature.properties["name"] +
+        "</div>";
+      for (let prop in feature.properties) {
+        if (prop !== "name" && prop !== "addOn") {
+          let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
+          popupContent +=
+            "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
+            t(prop) +
+            "</td><td>" +
+            data +
+            "</td></tr>";
         }
-        popupContent += "</table></div>";
-        layer.bindPopup(popupContent);
       }
+      popupContent += "</table></div>";
+      layer.bindPopup(popupContent);
+
+      layer.on({
+        mouseover: function (e) {
+          const layer = e.target;
+          if (layer.setStyle)
+            layer.setStyle({
+              weight: 2.7,
+              opacity: 1,
+              color: "rgba(255, 255, 255, 1)",
+            });
+          // layer.openPopup();
+        },
+        mouseout: function (e) {
+          const layer = e.target;
+          if (layer.setStyle) {
+            if (layer.feature.properties.addOn && Object.keys(layer.feature.properties.addOn).length !== 0)
+              layer.setStyle({
+                ...layer.feature.properties.addOn,
+              });
+            else
+              layer.setStyle({
+                weight: 2,
+                color: "rgba(176, 176, 176, 1)",
+              });
+          }
+          // layer.closePopup();
+        },
+      });
     },
   });
   geojsonLayer.addTo(map);
@@ -1050,7 +1256,7 @@ const findBounds = (data, buffer = 0.1) => {
   return bounds;
 };
 
-const filterSelection = (boundaryData, boundarySelections) => {
+const filterBoundarySelection = (boundaryData, boundarySelections) => {
   if (Object.keys(boundaryData).length === 0 || Object.keys(boundarySelections).length === 0) return [];
   let selectionList = [];
   Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));
