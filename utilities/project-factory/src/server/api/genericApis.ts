@@ -11,29 +11,33 @@ import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignAp
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
 import { getBoundaryTabName } from '../utils/boundaryUtils';
+import readXlsxFile from 'read-excel-file/node';
 const _ = require('lodash'); // Import lodash library
 
 // Function to retrieve workbook from Excel file URL and sheet name
 const getWorkbook = async (fileUrl: string, sheetName: string) => {
-    // Define headers for HTTP request
     const headers = {
         'Content-Type': 'application/json',
         Accept: 'application/pdf',
     };
-
-    // Make HTTP request to retrieve Excel file as arraybuffer
+    // Make HTTP request to retrieve Excel file
     const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
 
-    // Read Excel file into workbook
-    const workbook = XLSX.read(responseFile, { type: 'buffer' });
+    // Read Excel file
+    const workbook = await readXlsxFile(responseFile);
+
+    // Extract sheet names from workbook
+    const sheetNames = workbook.map((sheet: any) => sheet.name);
+
     // Check if the specified sheet exists in the workbook
-    if (!workbook.Sheets.hasOwnProperty(sheetName)) {
+    if (!sheetNames.includes(sheetName)) {
         throwError("FILE", 400, "INVALID_SHEETNAME", `Sheet with name "${sheetName}" is not present in the file.`);
     }
 
     // Return the workbook
     return workbook;
 }
+
 
 //Function to get Workbook with different tabs (for type target)
 const getTargetWorkbook = async (fileUrl: string, localizationMap?: any) => {
@@ -87,13 +91,14 @@ const getSheetData = async (fileUrl: string, sheetName: string, getRow = false, 
     }
 
     // Convert sheet data to JSON format
-    const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[localizedSheetName], { blankrows: true });
+    const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[localizedSheetName], { blankrows: true, raw: true });
     var jsonData = sheetData.map((row: any, index: number) => {
         const rowData: any = {};
         if (Object.keys(row).length > 0) {
             Object.keys(row).forEach(key => {
                 rowData[key] = row[key] === undefined || row[key] === '' ? '' : row[key];
             });
+            console.log(rowData, " rrrrrrrrrrdddddddddddddddddddddddd")
             if (getRow) rowData['!row#number!'] = index + 1; // Adding row number
             return rowData;
         }
@@ -512,7 +517,7 @@ async function getBoundarySheetData(request: any, localizationMap?: { [key: stri
         // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
         const responseFromCampaignSearch = await getFiltersFromCampaignSearchResponse(request);
         if (responseFromCampaignSearch?.Filters != null) {
-            const filteredBoundaryData = await generateFilteredBoundaryData(request,responseFromCampaignSearch);
+            const filteredBoundaryData = await generateFilteredBoundaryData(request, responseFromCampaignSearch);
             return await getDataSheetReady(filteredBoundaryData, request, localizationMap);
         }
         else {
@@ -620,6 +625,7 @@ async function createRelatedEntity(resources: any, tenantId: any, projectId: any
 async function createRelatedResouce(requestBody: any) {
     const id = requestBody?.Campaign?.id
     const campaignDetails = await validateMappingId(requestBody, id);
+    console.log(campaignDetails, campaignDetails?.status, campaignStatuses.inprogress, " pppppppppppppppppppppppppppppppppppppp")
     if (campaignDetails?.status == campaignStatuses.inprogress) {
         logger.info("Campaign Already In Progress and Mapped");
     }

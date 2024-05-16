@@ -187,6 +187,8 @@ async function processCampaignMapping(messageObject: any) {
         throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "Campaign id is missing");
     }
     const campaignDetails = await validateMappingId(messageObject, id);
+    console.log(campaignDetails, campaignDetails?.status, campaignStatuses.inprogress, " pppppppppppppppppppppppppppppppppppppp222222222222222")
+
     if (campaignDetails?.status == campaignStatuses.inprogress) {
         logger.info("Campaign Already In Progress and Mapped");
     }
@@ -205,7 +207,7 @@ async function processCampaignMapping(messageObject: any) {
                 }
                 else if (response?.status == resourceDataStatuses.failed) {
                     logger.error(`resource with id ${resourceDetailId} is ${resourceDataStatuses.failed}`);
-                    throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", `resource with id ${resourceDetailId} is ${resourceDataStatuses.failed}`);
+                    throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", `resource with id ${resourceDetailId} is ${resourceDataStatuses.failed} : with errorlog ${response?.additionalDetails?.error}`);
                     break;
                 }
                 else if (response?.status == resourceDataStatuses.completed) {

@@ -3,7 +3,8 @@
 import { getErrorCodes } from "./constants";
 // Defining the HOST variable
 const HOST = process.env.EGOV_HOST ||
-  "https://unified-dev.digit.org/";
+  "http://localhost:8080/" ||
+  "https://unified-qa.digit.org/";
 // Checking if HOST is set, if not, exiting the process
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -26,7 +27,7 @@ const config = {
   // Default sheet name for boundary data
   // boundarySheetName: process.env.BOUNDARY_MAIN_SHEET_NAME || "Boundary Data",
   // Default criteria for generating different tabs
-  generateDifferentTabsOnBasisOf: process.env.SPLIT_BOUNDARIES_ON || "ADMIN_DISTRITO",
+  generateDifferentTabsOnBasisOf: process.env.SPLIT_BOUNDARIES_ON || "Distrito",
   // default configurable number of data of boundary type on which generate different tabs
   numberOfBoundaryDataOnWhichWeSplit: process.env.SPLIT_BOUNDARIES_ON_LENGTH || "2",
   // Authentication token
@@ -34,7 +35,7 @@ const config = {
   // Wait time for generic create
   waitTime: process.env.WAIT_FOR_GENERIC_CREATE || "30000",
   // Kafka broker host
-  KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+  KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092" || "kafka-v2.kafka-cluster:9092",
   // Kafka topics
   KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC: process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "save-project-campaign-details",
   KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC: process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "update-project-campaign-details",
@@ -69,17 +70,17 @@ const config = {
   host: {
     serverHost: HOST,
     // URLs for various services
-    mdms: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
-    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
+    mdms: process.env.EGOV_MDMS_HOST || "https://unified-qa.digit.org/",
+    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-qa.digit.org/",
     projectFactoryBff: "http://localhost:8080/",
-    idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-dev.digit.org/",
-    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-dev.digit.org/",
-    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
-    projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-dev.digit.org/",
-    userHost: process.env.EGOV_USER_HOST || "https://unified-dev.digit.org/",
-    productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-dev.digit.org/",
-    hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-dev.digit.org/",
-    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/"
+    idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-qa.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-qa.digit.org/",
+    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-qa.digit.org/",
+    projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-qa.digit.org/",
+    userHost: process.env.EGOV_USER_HOST || "https://unified-qa.digit.org/",
+    productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-qa.digit.org/",
+    hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-qa.digit.org/",
+    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-qa.digit.org/"
   },
   // Paths for different services
   paths: {
@@ -129,3 +130,4 @@ const config = {
 // Exporting getErrorCodes function and config object
 export { getErrorCodes };
 export default config;
+
