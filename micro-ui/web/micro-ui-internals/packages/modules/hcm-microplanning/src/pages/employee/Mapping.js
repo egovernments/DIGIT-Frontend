@@ -35,9 +35,10 @@ import { useMyContext } from "../../utils/context";
 import { CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { PopulationSvg } from "../../icons/Svg";
 import chroma from "chroma-js";
-import { Schemas } from "./Schemas.json";
+import { Schemas } from "./ToBeShifted/Schemas.json";
 import * as IconCollection from "../../icons/Svg";
-import { MapFilters } from "./MapFilters.json";
+import { MapFilters } from "./ToBeShifted/MapFilters.json";
+import CheckBox from "./ToBeShifted/CheckBox";
 const page = "mapping";
 
 function checkTruthyKeys(obj) {
@@ -303,14 +304,10 @@ const Mapping = ({
       if (bounds) map.fitBounds(bounds);
     }
 
-    // filters
-    let filter = {
-      filterSelections,
-      iconMapping: MapFilters,
-    };
+    //filters
     const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", style);
     const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, MapFilters);
-    let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t, filter);
+    let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t);
     if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
 
     setLayer(newLayer);
@@ -393,7 +390,7 @@ const Mapping = ({
             </div>
 
             <div className="bottom-right-map-subcomponents">
-              <MapIndex filterSelections={filterSelections} MapFilters={MapFilters} t={t} />
+              <MapIndex filterProperties={filterProperties} MapFilters={MapFilters} t={t} />
             </div>
           </div>
         </Card>
@@ -405,12 +402,12 @@ const Mapping = ({
   );
 };
 
-const MapIndex = ({ filterSelections, MapFilters, t }) => {
+const MapIndex = ({ filterProperties, MapFilters, t }) => {
   return (
     <div>
-      {filterSelections && filterSelections.length > 0 ? (
+      {filterProperties && filterProperties.length > 0 ? (
         <div>
-          {filterSelections.map((item) => (
+          {filterProperties.map((item) => (
             <FilterItemBuilder item={item} MapFilters={MapFilters} t={t} />
           ))}
         </div>
@@ -460,7 +457,15 @@ const FilterSection = memo(
           <div className="filter-section-option-wrapper">
             {filterProperties.map((item) => (
               <div id={item}>
-                <CheckBox onChange={(e) => handleChange(e, item)} label={t(item)} checked={!!filterSelections.includes(item)} fontclass="" />
+                <CheckBox
+                  onChange={(e) => handleChange(e, item)}
+                  label={t(item)}
+                  checked={!!filterSelections.includes(item)}
+                  mainStyles={{ marginBottom: 0 }}
+                  labelStyle={{ margin:0, marginRight: "auto"}}
+                  inputWrapperStyle={{margin:0,padding:0, border:"1px red solid"}}
+                  inputStyle={{margin:0}}
+                />
               </div>
             ))}
           </div>
@@ -469,23 +474,23 @@ const FilterSection = memo(
     );
   }
 );
-const CheckBox = ({ onChange, label, checked, fontclass }) => {
-  return (
-    <div className="custom-checkbox" onClick={onChange}>
-      <input
-        type="checkbox"
-        id={label}
-        checked={checked}
-        // onChange={onChange}
-        className={fontclass}
-      />
-      <label htmlFor={label}>
-        <span className="custom-icon">{checked && <CheckSvg />}</span>
-        {label}
-      </label>
-    </div>
-  );
-};
+// const CheckBox = ({ onChange, label, checked, fontclass }) => {
+//   return (
+//     <div className="custom-checkbox" onClick={onChange}>
+//       <input
+//         type="checkbox"
+//         id={label}
+//         checked={checked}
+//         // onChange={onChange}
+//         className={fontclass}
+//       />
+//       <label htmlFor={label}>
+//         <span className="custom-icon">{checked && <CheckSvg />}</span>
+//         {label}
+//       </label>
+//     </div>
+//   );
+// };
 
 const BoundarySelection = memo(
   ({
