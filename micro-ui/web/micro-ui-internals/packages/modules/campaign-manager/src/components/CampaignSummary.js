@@ -162,7 +162,6 @@ const CampaignSummary = () => {
           return;
         };
         ss();
-        // console.log(processid, ss(), "NABEELLLL", processid);
         const target = data?.[0]?.deliveryRules;
         const cycleData = reverseDeliveryRemap(target, t);
         return {
