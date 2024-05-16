@@ -1,7 +1,7 @@
 import { Button, Header } from "@egovernments/digit-ui-react-components";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect , Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
+import { DownloadIcon ,Card } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
@@ -33,13 +33,19 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName , setFileName] = useState (null);
+  const [downloadError, setDownloadError] = useState(false);
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
     { name: "facilitySchema" },
     { name: "userSchema" },
     { name: "Boundary" },
   ]);
+
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
+    { name: "ReadMeConfig" },
+  ]);
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
+  const [readMeInfo , setReadMeInfo] = useState({});
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -68,6 +74,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return { ...newSchema };
   };
 
+  var translateReadMeInfo = (schema) => {
+    const translatedSchema = schema.map(item => {
+      return {
+          header: t(item.header),
+          isHeaderBold: item.isHeaderBold,
+          inSheet: item.inSheet,
+          inUiInfo: item.inUiInfo,
+          descriptions: item.descriptions.map(desc => {
+              return {
+                  text: t(desc.text),
+                  isStepRequired: desc.isStepRequired
+              };
+          })
+      };
+  });
+  return translatedSchema;
+  };
+
   useEffect(async () => {
     if (Schemas?.["HCM-ADMIN-CONSOLE"]) {
       const newFacilitySchema = await translateSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.facilitySchema?.[0]);
@@ -89,6 +113,25 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setTranslatedSchema(schema);
     }
   }, [Schemas?.["HCM-ADMIN-CONSOLE"]]);
+
+  useEffect(async () =>{
+    if(readMe?.["HCM-ADMIN-CONSOLE"]){
+      const newReadMeFacility = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts)
+      const newReadMeboundary = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts)
+
+
+    const readMeText ={
+      boundary: newReadMeboundary,
+      facilityWithBoundary: newReadMeFacility,
+      userWithBoundary: newReadMeUser
+    }
+
+    setReadMeInfo(readMeText);
+    
+  }
+
+  } , [readMe?.["HCM-ADMIN-CONSOLE"]])
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -215,7 +258,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   const validateMultipleTargets = (workbook) => {
     let isValid = true;
-    const sheet = workbook.Sheets[workbook.SheetNames[1]];
+    const sheet = workbook.Sheets[workbook.SheetNames[2]];
     const mdmsHeaders = sheetHeaders[type];
     const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
       header: 1,
@@ -237,8 +280,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     if (!isValid) return isValid; 
 
     // Iterate over each sheet in the workbook, starting from the second sheet
-    for (let i = 1; i < workbook.SheetNames.length; i++) {
+    for (let i = 2; i < workbook.SheetNames.length; i++) {
       const sheetName = workbook?.SheetNames[i];
+
       const sheet = workbook?.Sheets[sheetName];
 
       // Convert the sheet to JSON to extract headers
@@ -313,12 +357,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const sheet = workbook.Sheets[workbook.SheetNames[1]];
           const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
           })[0];
 
-          const SheetNames = workbook.SheetNames[0];
+
+          const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
           if (type === "boundary") {
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
@@ -369,7 +414,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { blankrows: true });
+          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]], { blankrows: true });
           var jsonData = sheetData.map((row, index) => {
             const rowData = {};
             if (Object.keys(row).length > 0) {
@@ -423,6 +468,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [showToast]);
 
+
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
@@ -440,7 +486,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
       const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
       return {
-        ...i,
+        // ...i,
         filestoreId: id,
         filename: fileName,
         type: fileType,
@@ -453,6 +499,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const onFileDelete = (file, index) => {
     setUploadedFile((prev) => prev.filter((i) => i.id !== file.id));
     setIsError(false);
+    setIsValidation(false);
+    setApiError(null);
   };
 
   const onFileDownload = (file) => {
@@ -576,6 +624,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadError(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
@@ -606,6 +655,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
+          setDownloadError(true)
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
@@ -646,7 +696,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   return (
-    <React.Fragment>
+    <>
+    <Card>
       <div className="campaign-bulk-upload">
         <Header className="digit-form-composer-sub-header">
           {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
@@ -690,7 +741,30 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           ]}
         />
       )}
-      {showToast && (
+      </Card>
+      <InfoCard
+        populators={{
+          name: "infocard",
+        }}
+        variant="default"
+        style={{ margin: "0rem", maxWidth: "100%" }}
+        additionalElements={readMeInfo[type]?.map((info, index) => (
+          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+            <h2>{info?.header}</h2>
+            <ul style={{ paddingLeft: 0 }}>
+              {info?.descriptions.map((desc, i) => (
+
+                <li key={i} className="info-points">
+                <p>{i + 1}. </p>
+                <p>{desc.text}</p>
+              </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        label={"Info"}
+      />
+      {showToast && (uploadedFile?.length > 0 || downloadError) && (
         <Toast
           error={showToast.key === "error" ? true : false}
           warning={showToast.key === "warning" ? true : false}
@@ -700,7 +774,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           onClose={closeToast}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

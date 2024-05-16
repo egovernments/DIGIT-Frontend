@@ -211,6 +211,16 @@ function groupByTypeRemap(data) {
   return result;
 }
 
+// Example usage:
+// updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 const SetupCampaign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -240,6 +250,10 @@ const SetupCampaign = () => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
+  const [lowest, setLowest] = useState(null);
+  const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
+  const [fetchUpload, setFetchUpload] = useState(false);
+
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `${hierarchyType}`,
@@ -255,6 +269,15 @@ const SetupCampaign = () => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  useEffect(() => {
+    if (hierarchyDefinition) {
+      setLowest(
+        hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
+          (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
+        )
+      );
+    }
+  }, [hierarchyDefinition]);
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -269,6 +292,15 @@ const SetupCampaign = () => {
   });
 
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+
+  useEffect(() => {
+    if (fetchUpload) {
+      setFetchUpload(false);
+    }
+    if (fetchBoundary && currentKey > 5) {
+      setFetchBoundary(false);
+    }
+  }, [fetchUpload, fetchBoundary]);
 
   useEffect(() => {
     if (isPreview === "true") {
@@ -349,7 +381,7 @@ const SetupCampaign = () => {
     hierarchyType: hierarchyType,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -359,7 +391,7 @@ const SetupCampaign = () => {
     filters: filteredBoundaryData,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -368,7 +400,7 @@ const SetupCampaign = () => {
     hierarchyType: hierarchyType,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -384,16 +416,6 @@ const SetupCampaign = () => {
       });
     }
   }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
-
-  // Example usage:
-  // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
-  function updateUrlParams(params) {
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }
 
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData, dataParams));
@@ -554,6 +576,8 @@ const SetupCampaign = () => {
                     message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
                     text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                     info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                    actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
+                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -789,6 +813,26 @@ const SetupCampaign = () => {
     return allBoundaryTypesPresent;
   }
 
+  function recursiveParentFind(filteredData) {
+    const parentChildrenMap = {};
+
+    // Build the parent-children map
+    filteredData?.forEach((item) => {
+      if (item?.parent) {
+        if (!parentChildrenMap[item?.parent]) {
+          parentChildrenMap[item?.parent] = [];
+        }
+        parentChildrenMap[item?.parent].push(item.code);
+      }
+    });
+
+    // Check for missing children
+    const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
+    const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
+    
+    return extraParent;
+  }
+
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
@@ -801,6 +845,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "CAMPAIGN_NAME_TOO_LONG_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "projectType":
@@ -808,6 +853,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "PROJECT_TYPE_UNDEFINED_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "campaignDates":
@@ -823,15 +869,25 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "boundaryType":
         if (formData?.boundaryType?.selectedData) {
           const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+          const missedType = recursiveParentFind(formData?.boundaryType?.selectedData);
           if (!validateBoundary) {
-            setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+            setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
             return false;
           }
+          else if(recursiveParentFind(formData?.boundaryType?.selectedData).length >0){
+            setShowToast({ key: "error", 
+            label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(missedType?.[0]?.type)} ${t(missedType?.[0]?.code)} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`
+          })
+            return false;
+          }
+          setShowToast(null);
+          setFetchUpload(true);
           return true;
         } else {
           setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
@@ -840,7 +896,7 @@ const SetupCampaign = () => {
 
       case "uploadBoundary":
         if (formData?.uploadBoundary?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadBoundary?.isError) {
           if (formData?.uploadBoundary?.apiError) {
@@ -848,12 +904,13 @@ const SetupCampaign = () => {
           } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
 
       case "uploadFacility":
         if (formData?.uploadFacility?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadFacility?.isError) {
           if (formData?.uploadFacility?.apiError) {
@@ -861,11 +918,12 @@ const SetupCampaign = () => {
           } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "uploadUser":
         if (formData?.uploadUser?.isValidation) {
-          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}` });
+          setShowToast({ key: "info", label: `${t("HCM_FILE_VALIDATION_PROGRESS")}`, transitionTime: 6000000000 });
           return false;
         } else if (formData?.uploadUser?.isError) {
           if (formData?.uploadUser?.apiError) {
@@ -873,6 +931,7 @@ const SetupCampaign = () => {
           } else setShowToast({ key: "error", label: `${t("HCM_FILE_VALIDATION")}` });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
 
@@ -883,6 +942,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
           return false;
         } else {
+          setShowToast(null);
           return true;
         }
       case "deliveryRule":
@@ -891,6 +951,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: isAttributeValid });
           return false;
         }
+        setShowToast(null);
         return;
       case "summary":
         const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
@@ -920,6 +981,7 @@ const SetupCampaign = () => {
           setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
           return false;
         }
+        setShowToast(null);
         return true;
       default:
         break;
@@ -931,6 +993,7 @@ const SetupCampaign = () => {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
+
 
   const onSubmit = (formData, cc) => {
     const checkValid = handleValidate(formData);
@@ -1089,7 +1152,7 @@ const SetupCampaign = () => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle={currentStep === 1 || currentStep === 6 || currentStep === 2 ? true : false}
+        noCardStyle={currentStep === 7 || currentStep === 0 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={noAction === "false" ? null : filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />

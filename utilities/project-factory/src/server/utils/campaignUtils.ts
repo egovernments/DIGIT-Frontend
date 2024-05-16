@@ -220,14 +220,10 @@ async function updateStatusFileForTargets(request: any, localizationMap?: { [key
     };
 
     const fileUrl = fileResponse?.fileStoreIds?.[0]?.url;
-    const localizedsheetName = getLocalizedName(createAndSearchConfig?.parseArrayConfig?.sheetName, localizationMap);
     const responseFile = await httpRequest(fileUrl, null, {}, 'get', 'arraybuffer', headers);
     const workbook = XLSX.read(responseFile, { type: 'buffer' });
     const sheetNames = workbook.SheetNames;
-    // Check if the specified sheet exists in the workbook
-    if (!workbook.Sheets.hasOwnProperty(localizedsheetName)) {
-        throwError("FILE", 400, "INVALID_SHEETNAME", `Sheet with name "${localizedsheetName}" is not present in the file.`);
-    }
+  
     sheetNames.forEach(sheetName => {
         processErrorDataForTargets(request, createAndSearchConfig, workbook, sheetName);
     });
@@ -1151,7 +1147,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
                 const districtLevelRow = rowData.slice(0, districtIndex + 1);
                 if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
                     uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
-                    districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('_'), data[getLocalizedName(getBoundaryColumnName(),localizationMap)]);
+                    districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('_'), data[getLocalizedName(getBoundaryColumnName(), localizationMap)]);
                     mainSheetData.push(rowData);
                 }
             }
@@ -1206,7 +1202,7 @@ function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, 
     return modifiedFilteredData;
 }
 
-async function generateFilteredBoundaryData(request: any,responseFromCampaignSearch:any) {
+async function generateFilteredBoundaryData(request: any, responseFromCampaignSearch: any) {
     const rootBoundary: any = (responseFromCampaignSearch?.Filters?.boundaries).filter((boundary: any) => boundary.isRoot);
     const params = {
         ...request?.query,
