@@ -42,6 +42,7 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+1.8.1-beta.10 fixed login header alignment
 1.8.1-beta.8 Used a new Primary constant color "#c84c0e" ``Note use this version with component 1.8.1-beta.15 and core  1.8.1-beta.12``
 1.8.1-beta.7 Added CSS for Loader With Gap
 1.8.1-beta.7 Added CSS for viewcomposer header

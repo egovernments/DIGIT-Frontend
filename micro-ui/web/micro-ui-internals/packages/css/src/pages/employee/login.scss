@@ -245,6 +245,12 @@
       text-align: center;
       margin-top: 10px;
     }
+
+    header.digit-header-content {
+      &:not(.label){
+        text-align: center;
+      }
+    }
   }
 
   .buttonClassName {
