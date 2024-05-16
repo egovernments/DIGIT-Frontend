@@ -211,6 +211,16 @@ function groupByTypeRemap(data) {
   return result;
 }
 
+// Example usage:
+// updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 const SetupCampaign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -239,7 +249,11 @@ const SetupCampaign = () => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+
   const [lowest, setLowest] = useState(null);
+  const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
+  const [fetchUpload, setFetchUpload] = useState(false);
+
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `${hierarchyType}`,
@@ -278,6 +292,15 @@ const SetupCampaign = () => {
   });
 
   const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }]);
+
+  useEffect(() => {
+    if (fetchUpload) {
+      setFetchUpload(false);
+    }
+    if (fetchBoundary && currentKey > 5) {
+      setFetchBoundary(false);
+    }
+  }, [fetchUpload, fetchBoundary]);
 
   useEffect(() => {
     if (isPreview === "true") {
@@ -358,7 +381,7 @@ const SetupCampaign = () => {
     hierarchyType: hierarchyType,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -368,7 +391,7 @@ const SetupCampaign = () => {
     filters: filteredBoundaryData,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -377,7 +400,7 @@ const SetupCampaign = () => {
     hierarchyType: hierarchyType,
     campaignId: id,
     config: {
-      enabled: currentKey === 7,
+      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
@@ -393,16 +416,6 @@ const SetupCampaign = () => {
       });
     }
   }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
-
-  // Example usage:
-  // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
-  function updateUrlParams(params) {
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }
 
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData, dataParams));
@@ -872,6 +885,7 @@ const SetupCampaign = () => {
             return false;
           }
           setShowToast(null);
+          setFetchUpload(true);
           return true;
         } else {
           setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
@@ -1105,7 +1119,6 @@ const SetupCampaign = () => {
   if (isDraft === "true" && !draftData) {
     return <Loader />;
   }
-
 
   return (
     <React.Fragment>
