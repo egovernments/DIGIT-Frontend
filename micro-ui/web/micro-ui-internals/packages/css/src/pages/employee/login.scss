@@ -247,7 +247,9 @@
     }
 
     header.digit-header-content {
-      text-align: center;
+      &:not(.label){
+        text-align: center;
+      }
     }
   }
 
