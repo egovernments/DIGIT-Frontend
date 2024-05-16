@@ -23,7 +23,9 @@ const IFrameInterface = (props) => {
     },
     enabled: true,
   });
+  console.log("this is hcm iframe");
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
+  console.log("iFrame",iframeWindow)
   
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
@@ -57,8 +59,50 @@ const IFrameInterface = (props) => {
       }
     };
 
+    const injectCustomHttpInterceptorFetch = () => {
+      console.log("In fetch interceptor");
+      try {
+        if (!iframeWindow) {
+          console.error('Failed to access iframe content window.');
+          return;
+        }
+        console.log(iframeWindow,"ifw in fetch");
+        const originalFetch = iframeWindow.fetch;
+        console.log(originalFetch,"original fetch");
+        iframeWindow.fetch = function (url, options) {
+          // Intercepting here
+          const oidcToken = window.localStorage.getItem(localStorageKey);
+          if (!oidcToken) {
+            console.error('OIDC token not found in local storage.');
+            return originalFetch(url, options);
+          }
+  
+          const accessToken = oidcToken;
+          if (!options.headers) {
+            options.headers = {};
+          }
+          options.headers['Authorization'] = `Bearer ${accessToken}`;
+  
+          return originalFetch(url, options)
+            .then(response => {
+              // You can handle response here if needed
+              console.log('Response:', response);
+              return response;
+            })
+            .catch(error => {
+              // You can handle errors here if needed
+              console.error('Fetch error:', error);
+              throw error;
+            });
+        };
+      } catch (error) {
+        console.error('Error injecting custom HTTP interceptor:', error);
+      }
+    };
+
     if (iframeRef.current) {
       injectCustomHttpInterceptor();
+      injectCustomHttpInterceptorFetch();
     }
   }, [localStorageKey,iframeWindow]);
 
@@ -80,6 +124,7 @@ const IFrameInterface = (props) => {
       }
     }
     setUrl(url);
+    console.log("url",url)
     setTitle(title);
   }, [data, moduleName, pageName]);
 
