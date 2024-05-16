@@ -27,48 +27,6 @@ $border-color: rgba(214, 213, 212, 1);
     }
 }
 
-
-@mixin custom-checkbox {
-    .custom-checkbox input[type="checkbox"] {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .custom-checkbox label {
-        position: relative;
-        display: inline-block;
-        padding-left: 30px;
-        cursor: pointer;
-    }
-
-    .custom-checkbox .custom-icon {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        z-index: -1;
-        transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
-        border: 2px solid #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-    }
-
-    .custom-checkbox input[type="checkbox"]:checked+label .custom-icon {
-        background-color: #4caf50;
-        border-color: #4caf50;
-    }
-
-    .custom-checkbox input[type="checkbox"]:checked+label .custom-icon i {
-        color: white;
-    }
-
-
-}
-
 .navigator-componet-not-found {
     position: absolute;
     top: 50%;
@@ -1730,7 +1688,7 @@ $border-color: rgba(214, 213, 212, 1);
                     }
                 }
             }
-            
+
 
             .zoom-container {
                 width: fit-content;
@@ -1767,6 +1725,33 @@ $border-color: rgba(214, 213, 212, 1);
                 bottom: 1.5rem;
                 right: 1rem;
                 z-index: 500;
+
+                .filter-index {
+                    background-color: rgba(255, 255, 255, 1);
+                    border: 0.063rem solid rgba(214, 213, 212, 1);
+                    border-radius: 0.25rem;
+                    padding: 0.7rem;
+                    padding-top: 0.3rem;
+
+                    .filter-row {
+                        display: flex !important;
+                        flex-direction: row;
+                        align-items: center;
+                        width: 6.813rem;
+                        min-height: 1.5rem;
+                        padding-top: 0.4rem;
+
+                        p {
+                            margin: 0 0 0 0.4rem;
+                            padding: 0;
+                            font-family: Roboto;
+                            font-size: 0.75rem;
+                            font-weight: 400;
+                            text-align: left;
+                            text-wrap: wrap;
+                        }
+                    }
+                }
             }
 
             .top-right-map-subcomponents {
@@ -1801,16 +1786,58 @@ $border-color: rgba(214, 213, 212, 1);
             }
 
             .filter-section {
+                width: 14.438rem;
+
+
+
                 .filter-section-option-wrapper {
                     position: absolute;
-                    top: 2rem;
-                    max-width: 14.438rem;
-                    max-height: 9.752rem;
-                    display: block;
-                    overflow-x: auto;
-                    background-color: rgba(255, 255, 255, 1);
+                    max-height: 12.19rem;
+                    width: 14.438rem;
 
-                    @include custom-scrollbar;
+                    .custom-check-box-wrapper {
+
+                        display: block;
+                        max-height: 9.752rem;
+                        overflow-x: auto;
+                        background-color: rgba(255, 255, 255, 1);
+
+                        @include custom-scrollbar;
+
+                        .custom-check-box {
+                            padding: 0.7rem;
+                            border-bottom: 0.063rem solid rgba(214, 213, 212, 1);
+
+                            .mainClasaName {
+                                margin-bottom: 0;
+                                display: flex;
+                                align-items: center;
+                            }
+
+                            .inputWrapperClassName {
+                                margin: 0;
+                                padding: 0;
+
+                            }
+
+                            .labelClassName {
+                                margin: 0;
+                                margin-right: auto;
+                            }
+
+                            input:checked~.inputIconClassname {
+                                border-color: rgba(244, 119, 56, 1);
+                            }
+
+                            .inputIconClassname {
+                                margin: 0;
+                            }
+
+                            .inputClassName {
+                                margin: 0;
+                            }
+                        }
+                    }
                 }
             }
 

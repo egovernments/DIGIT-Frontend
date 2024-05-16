@@ -23,7 +23,7 @@ const CheckBox = ({
 }) => {
   const { t } = useTranslation();
   const userType = pageType || window?.Digit?.SessionStorage.get("userType");
-  let styles = props.mainStyles;
+  let styles = props.styles;
 
   const sentenceCaseLabel = StringManipulator("TOSENTENCECASE", label);
 
@@ -31,11 +31,10 @@ const CheckBox = ({
     <div
       className={`digit-checkbox-container ${
         !isLabelFirst ? "checkboxFirst" : "labelFirst"
-      } ${disabled ? "disabled" : " "}`}
-      style={props.mainStyles}
+      } ${disabled ? "disabled" : " "} ${props.mainClasaName}`}
     >
       {isLabelFirst ? (
-        <p className="label" style={{ maxWidth: "100%", width: "auto" ,marginRight:"0rem", ...props.labelStyle}}>
+        <p className={`label ${labelClassName} `} style={{ maxWidth: "100%", width: "auto" ,marginRight:"0rem"}} onClick={props.onLabelClick}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
@@ -50,10 +49,10 @@ const CheckBox = ({
           )}
         </p>
       ) : null}
-      <div style={{ cursor: "pointer", display: "flex", position: "relative", ...props.inputWrapperStyle }} >
+      <div style={{ cursor: "pointer", display: "flex", position: "relative" }} className={props.inputWrapperClassName}>
         <input
           type="checkbox"
-          className={`input ${userType === "employee" ? "input-emp" : ""}`}
+          className={`input ${userType === "employee" ? "input-emp" : ""} ${props.inputClassName} `}
           onChange={onChange}
           value={value || label}
           {...props}
@@ -64,14 +63,13 @@ const CheckBox = ({
         <p
           className={`digit-custom-checkbox ${
             userType === "employee" ? "digit-custom-checkbox-emp" : ""
-          }`}
-          style={props.inputStyle}
+          } ${props.inputIconClassname} `}
         >
-          <Check fill={disabled ? "#C5C5C5" : "#C84C0E"} />
+          <Check fill={props.iconFill?props.iconFill:disabled ? "#C5C5C5" : "#C84C0E"} />
         </p>
       </div>
       {!isLabelFirst ? (
-        <p className="label" style={{ maxWidth: "100%", width: "100%",marginRight:"0rem", ...props.labelStyle }}>
+        <p className={`label ${props.labelClassName} `} style={{ maxWidth: "100%", width: "100%",marginRight:"0rem" }} onClick={props.onLabelClick}>
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
