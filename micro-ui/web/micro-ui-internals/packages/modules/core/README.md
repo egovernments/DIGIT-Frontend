@@ -78,6 +78,7 @@ and add its related functions
 ## Changelog
 
 ```bash
+1.8.1-beta.15 updated ui-components dropdown option labels and version of ui-components and css
 1.8.1-beta.14 updated ui-components and css versions for dropdown option labels and toast info 
 1.8.1-beta.13 updated ui-components and css versions
 1.8.1-beta.12 Used a new Primary constant color "#c84c0e" ``Note use this version with css 1.8.1-beta.8 , component 1.8.1-beta.15 ``
