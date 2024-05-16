@@ -23,9 +23,9 @@ const IFrameInterface = (props) => {
     },
     enabled: true,
   });
-  console.log("this is hcm iframe");
+  
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-  console.log("iFrame",iframeWindow)
+  
   
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
@@ -60,15 +60,13 @@ const IFrameInterface = (props) => {
     };
 
     const injectCustomHttpInterceptorFetch = () => {
-      console.log("In fetch interceptor");
+    
       try {
         if (!iframeWindow) {
           console.error('Failed to access iframe content window.');
           return;
         }
-        console.log(iframeWindow,"ifw in fetch");
         const originalFetch = iframeWindow.fetch;
-        console.log(originalFetch,"original fetch");
         iframeWindow.fetch = function (url, options) {
           // Intercepting here
           const oidcToken = window.localStorage.getItem(localStorageKey);
@@ -86,7 +84,7 @@ const IFrameInterface = (props) => {
           return originalFetch(url, options)
             .then(response => {
               // You can handle response here if needed
-              console.log('Response:', response);
+              // console.log('Response:', response);
               return response;
             })
             .catch(error => {
@@ -124,7 +122,6 @@ const IFrameInterface = (props) => {
       }
     }
     setUrl(url);
-    console.log("url",url)
     setTitle(title);
   }, [data, moduleName, pageName]);
 
