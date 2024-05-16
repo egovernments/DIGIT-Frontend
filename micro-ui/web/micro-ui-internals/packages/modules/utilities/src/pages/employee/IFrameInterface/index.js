@@ -101,7 +101,7 @@ const IFrameInterface = (props) => {
     };
 
     if (iframeRef.current) {
-      // injectCustomHttpInterceptor();
+      injectCustomHttpInterceptor();
       injectCustomHttpInterceptorFetch();
     }
   }, [localStorageKey,iframeWindow]);
