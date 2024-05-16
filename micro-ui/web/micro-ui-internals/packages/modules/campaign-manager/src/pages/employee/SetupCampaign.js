@@ -239,7 +239,7 @@ const SetupCampaign = () => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-
+  const [lowest, setLowest] = useState(null);
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `${hierarchyType}`,
@@ -255,6 +255,15 @@ const SetupCampaign = () => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  useEffect(() => {
+    if (hierarchyDefinition) {
+      setLowest(
+        hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
+          (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
+        )
+      );
+    }
+  }, [hierarchyDefinition]);
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -789,6 +798,26 @@ const SetupCampaign = () => {
     return allBoundaryTypesPresent;
   }
 
+  function recursiveParentFind(filteredData) {
+    const parentChildrenMap = {};
+
+    // Build the parent-children map
+    filteredData?.forEach((item) => {
+      if (item?.parent) {
+        if (!parentChildrenMap[item?.parent]) {
+          parentChildrenMap[item?.parent] = [];
+        }
+        parentChildrenMap[item?.parent].push(item.code);
+      }
+    });
+
+    // Check for missing children
+    const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
+    const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
+    
+    return extraParent;
+  }
+
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
     const key = Object.keys(formData)?.[0];
@@ -831,8 +860,15 @@ const SetupCampaign = () => {
       case "boundaryType":
         if (formData?.boundaryType?.selectedData) {
           const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData);
+          const missedType = recursiveParentFind(formData?.boundaryType?.selectedData);
           if (!validateBoundary) {
-            setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY")}` });
+            setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
+            return false;
+          }
+          else if(recursiveParentFind(formData?.boundaryType?.selectedData).length >0){
+            setShowToast({ key: "error", 
+            label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(missedType?.[0]?.type)} ${t(missedType?.[0]?.code)} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`
+          })
             return false;
           }
           setShowToast(null);
@@ -941,6 +977,7 @@ const SetupCampaign = () => {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
+
 
   const onSubmit = (formData, cc) => {
     const checkValid = handleValidate(formData);
@@ -1100,7 +1137,7 @@ const SetupCampaign = () => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle={currentStep === 7 || currentStep === 0? false : true}
+        noCardStyle={currentStep === 7 || currentStep === 0 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={noAction === "false" ? null : filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
