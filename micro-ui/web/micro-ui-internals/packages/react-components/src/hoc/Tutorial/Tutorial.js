@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
 import { useHistory } from 'react-router-dom';
 
-const theme = {
+let theme = {
   // primaryColor: '#ad7bff',
   // arrowColor: '#000',
   // textColor: '#fff',
   primaryColor: '#F47738',
   arrowColor: '#FFFFFF',
   textColor: '#505A5F',
-  zIndex: 99999999,
+  zIndex:9999
 };
 
 const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
   const history = useHistory()
   const { run, stepIndex, steps } = tutorial;
-
+  
+  useEffect(()=>{
+    if(props?.theme){
+      theme = {...theme,...props?.theme}
+    }  
+  },[])
   
   const handleCallback = (event) => {
     
@@ -42,6 +47,7 @@ const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
           backgroundColor: theme.arrowColor,
           primaryColor: theme.primaryColor,
           textColor: theme.textColor,
+          zIndex: theme.zIndex
         },
       }}
       showProgress={true}
