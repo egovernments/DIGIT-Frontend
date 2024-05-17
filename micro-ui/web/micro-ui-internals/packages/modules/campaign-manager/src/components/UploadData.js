@@ -33,6 +33,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName , setFileName] = useState (null);
+  const [downloadError, setDownloadError] = useState(false);
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
     { name: "facilitySchema" },
     { name: "userSchema" },
@@ -115,10 +116,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(async () =>{
     if(readMe?.["HCM-ADMIN-CONSOLE"]){
-      const newReadMeFacility = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[0]?.texts)
-      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[1]?.texts)
-      const newReadMeboundary = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[2]?.texts)
-    
+      const newReadMeFacility = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts);
+      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts)
+      const newReadMeboundary = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter(item => item.type === type)?.[0]?.texts)
+
 
     const readMeText ={
       boundary: newReadMeboundary,
@@ -623,6 +624,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       },
       {
         onSuccess: async (result) => {
+          setDownloadError(false);
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
@@ -653,6 +655,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           }
         },
         onError: (result) => {
+          setDownloadError(true)
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
@@ -750,14 +753,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             <h2>{info?.header}</h2>
             <ul style={{ paddingLeft: 0 }}>
               {info?.descriptions.map((desc, i) => (
-                <li key={i}>{desc.text}</li>
+
+                <li key={i} className="info-points">
+                <p>{i + 1}. </p>
+                <p>{desc.text}</p>
+              </li>
               ))}
             </ul>
           </div>
         ))}
         label={"Info"}
       />
-      {showToast && uploadedFile?.length > 0 && (
+      {showToast && (uploadedFile?.length > 0 || downloadError) && (
         <Toast
           error={showToast.key === "error" ? true : false}
           warning={showToast.key === "warning" ? true : false}
