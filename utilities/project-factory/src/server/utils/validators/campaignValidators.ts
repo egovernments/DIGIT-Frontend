@@ -111,7 +111,8 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
     const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
     // Iterate through each array of objects
     for (const key in data) {
-        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+        const isNotBoundaryOrReadMeTab = key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap);
+        if (isNotBoundaryOrReadMeTab) {
             if (Array.isArray(data[key])) {
                 const boundaryData = data[key];
                 const boundarySet = new Set(); // Create a Set to store unique boundaries for given sheet 
