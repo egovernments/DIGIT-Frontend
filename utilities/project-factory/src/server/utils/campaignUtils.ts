@@ -578,10 +578,12 @@ function getChildParentMap(modifiedBoundaryData: any) {
             const existingMapping = Array.from(childParentMap.entries()).find(([existingChild, existingParent]) =>
                 _.isEqual(existingChild, childIdentifier) && _.isEqual(existingParent, parentIdentifier)
             );
+            console.log(existingMapping,"existingggggggggggggggggggg")
 
             // If the mapping doesn't exist, add it to the childParentMap
             if (!existingMapping) {
                 childParentMap.set(childIdentifier, parentIdentifier);
+                console.log(childParentMap,"childddddddddddddd")
             }
         }
     });
@@ -663,9 +665,7 @@ function addBoundaryCodeToData(withBoundaryCode: any[], withoutBoundaryCode: any
     });
     
     const boundaryDataForWithoutBoundaryCode = withoutBoundaryCode.map((row: any[]) => {
-        console.log(row, "rowwwwwwwwwwwwwwwwwwwwww")
         const boundaryName = row[row.length - 1]; // Get the last element of the row
-        console.log(boundaryName, "nameeeeeeeeeeeeeeeeeeeee")
         const boundaryCode = findMapValue(boundaryMap, boundaryName); // Fetch corresponding boundary code from map
         return [...row, boundaryCode]; // Append boundary code to the row and return updated row
     });
@@ -1462,7 +1462,6 @@ function modifyChildParentMap(childParentMap: Map<any, any>, boundaryMap: Map<an
         // Set the modified key-value pair in modifiedMap
         modifiedMap.set(modifiedKey, modifiedValue);
     });
-    console.log(modifiedMap, "-11111111====++++++++++++++")
     return modifiedMap;
 }
 

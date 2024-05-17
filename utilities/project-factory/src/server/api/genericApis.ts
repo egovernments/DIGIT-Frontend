@@ -701,8 +701,10 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<any, any>) 
  * @param boundaryTypeMap Map of boundary codes to types.
  * @param modifiedChildParentMap Modified child-parent map.
  */
-async function createBoundaryRelationship(request: any, boundaryTypeMap: Map<string, string>, modifiedChildParentMap: any, localizationMap?: any) {
+async function createBoundaryRelationship(request: any, boundaryTypeMap: Map<string, string>, modifiedChildParentMap: Map<string,string|null>, localizationMap?: any) {
     try {
+        console.log(modifiedChildParentMap,"111111111")
+        console.log(boundaryTypeMap,"typeeeeeee")
         // Create boundary relationships
         let activityMessage :any []=[];
         const requestBody = { "RequestInfo": request.body.RequestInfo } as { RequestInfo: any; BoundaryRelationship?: any };
@@ -718,8 +720,8 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: Map<str
         const boundaryRelationshipResponse = await httpRequest(url, request.body, params);
         const boundaryData = boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
         const allCodes = extractCodesFromBoundaryRelationshipResponse(boundaryData);
+        console.log(allCodes,"qqqqqqqqqqq")
         let flag = 1;
-        console.log(boundaryTypeMap, "tttttttttttttttttttttttttttttttttttttt")
         boundaryTypeMap.forEach(async(boundaryType, boundaryCode) => {
             if (!allCodes.has(boundaryCode)) {
                 console.log(boundaryCode, boundaryType, "::::::::::::::!!!!!!!!!!!!!!!!!!")
@@ -732,9 +734,9 @@ async function createBoundaryRelationship(request: any, boundaryTypeMap: Map<str
                 }
                 flag = 0;
                 requestBody.BoundaryRelationship = boundary;
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                console.log(boundary,"parentyyyyyyyyyyyyy")
                 const response = await httpRequest(`${config.host.boundaryHost}boundary-service/boundary-relationships/_create`, requestBody, {}, 'POST', undefined, undefined, true);
+                console.log(response.TenantBoundary,"boundaryResponseeeeeeeeeeeeeeeee")
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 if (!response.TenantBoundary || !Array.isArray(response.TenantBoundary) || response.TenantBoundary.length === 0) {
                     throwError("BOUNDARY", 500, "BOUNDARY_RELATIONSHIP_CREATE_ERROR");
                 }
