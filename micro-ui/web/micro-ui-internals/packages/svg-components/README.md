@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-svg-components":"1.0.8",
+"@egovernments/digit-ui-svg-components":"1.0.9",
 ```
 
 then navigate to App.js
