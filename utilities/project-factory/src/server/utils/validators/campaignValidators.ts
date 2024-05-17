@@ -121,8 +121,8 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
                     if (!boundaries) {
                         errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is required for element at row ${element["!row#number!"] + 1} for sheet ${key}`, sheetName: key })
                     } else {
-                        if (!(typeof boundaries === 'string')) {
-                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is not of type string at row  ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
+                        if (typeof boundaries !== 'string') {
+                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is not of type string at row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key });
                         } else {
                             const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
                             if (boundaryList.length === 0) {
