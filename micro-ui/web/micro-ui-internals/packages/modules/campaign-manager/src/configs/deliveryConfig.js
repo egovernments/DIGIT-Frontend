@@ -31,37 +31,24 @@ export const deliveryConfig = [
             label: "Custom",
             attrType: "text",
             attrValue: "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
-            operatorValue: "GREATER_THAN",
-            value: 2,
+            // operatorValue: "GREATER_THAN",
+            // value: 2,
           },
           {
             key: 2,
             label: "Custom",
             attrType: "text",
             attrValue: "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
-            operatorValue: "LESS_THAN",
-            value: 3,
-          },
-        ],
-        // productConfig: [{}],
-      },
-      {
-        attributeConfig: [
-          {
-            key: 1,
-            label: "Custom",
-            attrType: "dropdown",
-            attrValue: "Age",
-            operatorValue: "GREATER_THAN",
-            value: 30,
+            // operatorValue: "LESS_THAN",
+            // value: 3,
           },
         ],
         productConfig: [
           {
             key: 1,
             count: 1,
-            value: "PVAR-2024-02-19-000224",
-            name: "paracetamol - 250mg",
+            value: "PVAR-2024-02-09-000150",
+            name: "Bednet - 500mg",
           },
         ],
       },
@@ -96,7 +83,14 @@ export const deliveryConfig = [
             value: 50,
           },
         ],
-        // productConfig: [{}],
+        productConfig: [
+          {
+            key: 1,
+            count: 1,
+            value: "PVAR-2024-02-19-000224",
+            name: "paracetamol - 250mg",
+          },
+        ],
       },
       {
         attributeConfig: [
