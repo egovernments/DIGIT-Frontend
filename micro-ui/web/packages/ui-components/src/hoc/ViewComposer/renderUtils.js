@@ -12,7 +12,10 @@ export const RenderDataSection = ({ section }) => {
   const { t } = useTranslation();
   return (
     <>
-      {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
+      <div className="view-composer-header-section">
+        {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
+        {section.cardSecondaryAction ? section.cardSecondaryAction : null}
+      </div>
       <StatusTable style={section?.inlineStyles}>
         {section.sectionHeader && <CardSectionHeader style={section?.sectionHeader?.inlineStyles}>{section.sectionHeader.value}</CardSectionHeader>}
         {section.values.map((row, rowIdx) => {

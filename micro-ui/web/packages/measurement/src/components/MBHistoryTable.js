@@ -1,4 +1,4 @@
-import { Card, Header, Button, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Header, Button, Loader } from "@digit-ui/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";

@@ -5,7 +5,7 @@ import {
   CardLabel,
   Loader,
   CardLabelError,
-} from '@egovernments/digit-ui-react-components';
+} from '@digit-ui/digit-ui-react-components';
 import { useTranslation } from 'react-i18next';
 import { useForm, Controller } from 'react-hook-form';
 

@@ -121,7 +121,10 @@ const renderCardSectionJSX = (section) => {
       const Component = Digit.ComponentRegistryService.getComponent(section.component);
       return (
         <>
-          {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
+          <div className="view-composer-header-section">
+            {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
+            {section.cardSecondaryAction ? section.cardSecondaryAction : null}
+          </div>
           <Component {...section.props} />
         </>
       );

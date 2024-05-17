@@ -27,7 +27,9 @@ const IndeterminateCheckbox = forwardRef(
     )
   }
 )
-
+const getNoColumnBorder=(noColumnBorder)=>noColumnBorder?({
+  cellspacing:"0" ,cellpadding:"0"
+}):null;
 const Table = ({
   className = "table",
   t,
@@ -59,7 +61,11 @@ const Table = ({
   isReportTable = false,
   showCheckBox = false,
   actionLabel = 'CS_COMMON_DOWNLOAD',
-  tableSelectionHandler = () => {}
+  tableSelectionHandler = () => {},
+  onClickRow= ()=>{},
+  rowClassName = "",
+  noColumnBorder=false,
+  customPageSizesArray = null
 }) => {
   const {
     getTableProps,
@@ -159,7 +165,7 @@ const Table = ({
     <React.Fragment>
       <span className={customTableWrapperClassName}>
         {tableTopComponent ? tableTopComponent : null}
-        <table className={className} {...getTableProps()} style={styles} ref={tableRef}>
+        <table className={className} {...getTableProps()} style={styles} ref={tableRef} {...getNoColumnBorder(noColumnBorder)}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -182,7 +188,7 @@ const Table = ({
               // rows.slice(0, 10).map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr {...row.getRowProps()} onClick={()=>onClickRow(row)} className={rowClassName}>
                   {showAutoSerialNo && <td>{i + 1}</td>}
                   {row.cells.map((cell) => {
                     return (
@@ -222,11 +228,17 @@ const Table = ({
             style={{ marginRight: "15px" }}
             onChange={manualPagination ? onPageSizeChange : (e) => setPageSize(Number(e.target.value))}
           >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
+            {customPageSizesArray ?
+              customPageSizesArray.map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              )): 
+              [10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}
               </option>
-            ))}
+              ))}
           </select>
           <span>
             <span>

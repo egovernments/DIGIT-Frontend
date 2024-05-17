@@ -1,4 +1,4 @@
-import { EditIcon, DownloadImgIcon, InfoBannerIcon, Modal, Row, StatusTable } from "@egovernments/digit-ui-react-components";
+import { EditIcon, DownloadImgIcon, InfoBannerIcon, Modal, Row, StatusTable } from "@digit-ui/digit-ui-react-components";
 import React, { useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, Link } from "react-router-dom";

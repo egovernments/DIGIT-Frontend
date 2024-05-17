@@ -1,5 +1,5 @@
 import React, { useState,useEffect,useMemo } from 'react'
-import { AddIcon, DeleteIcon,TextInput, CardLabelError,Loader,Dropdown, parse } from '@egovernments/digit-ui-react-components'
+import { AddIcon, DeleteIcon,TextInput, CardLabelError,Loader,Dropdown, parse } from '@digit-ui/digit-ui-react-components'
 import { Controller } from 'react-hook-form';
 import _ from "lodash"
 

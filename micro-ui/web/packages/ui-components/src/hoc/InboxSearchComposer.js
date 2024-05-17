@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState,useMemo } from "react";
+import Toast from "../atoms/Toast";
 import ResultsTable from "./ResultsTable"
 import reducer, { initialInboxState } from "./InboxSearchComposerReducer";
 import InboxSearchLinks from "../atoms/InboxSearchLinks";
@@ -15,17 +16,21 @@ import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
 
 
-const InboxSearchComposer = ({configs,headerLabel}) => {
+const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange}) => {
     const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
-    const [state, dispatch] = useReducer(reducer, initialInboxState);
-
+    const [state, dispatch] = useReducer(reducer, initialInboxState(configs));
+    const [showToast, setShowToast] = useState(false);
     //for mobile view
     const [type, setType] = useState("");
     const [popup, setPopup] = useState(false);
    
-    const apiDetails = configs?.apiDetails
+    const [apiDetails, setApiDetails] = useState(configs?.apiDetails);
+
+    useEffect(()=>{
+        setApiDetails(configs?.apiDetails)
+    },[configs])
 
     const mobileSearchSession = Digit.Hooks.useSessionStorage("MOBILE_SEARCH_MODAL_FORM", 
         {}
@@ -74,6 +79,11 @@ const InboxSearchComposer = ({configs,headerLabel}) => {
     },[state])
     
 
+    useEffect(() => {
+        onFormValueChange(state)
+    }, [state])
+    
+
     let requestCriteria = {
         url:configs?.apiDetails?.serviceName,
         params:configs?.apiDetails?.requestParam,
@@ -103,18 +113,38 @@ const InboxSearchComposer = ({configs,headerLabel}) => {
     //     };
     // }, [location]);
     
-
-
     const updatedReqCriteria = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.preProcess(requestCriteria,configs.additionalDetails) : requestCriteria 
-
+    
     if(configs.customHookName){
-        var { isLoading, data, revalidate,isFetching } = eval(`Digit.Hooks.${configs.customHookName}(updatedReqCriteria)`);
+        var { isLoading, data, revalidate,isFetching,refetch,error } = eval(`Digit.Hooks.${configs.customHookName}(updatedReqCriteria)`);
     }
     else {
-       var { isLoading, data, revalidate,isFetching } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
+       var { isLoading, data, revalidate,isFetching,error } = Digit.Hooks.useCustomAPIHook(updatedReqCriteria);
         
     }
+
+    const closeToast = () => {
+        setTimeout(() => {
+          setShowToast(null);
+        }, 5000);
+      };
+
+    useEffect(() => {
+        if(error){
+            setShowToast({ label:error?.message, isError: true });
+            closeToast()
+        }
+    }, [error])
     
+    
+    useEffect(() => {
+        if(additionalConfig?.search?.callRefetch) {
+            refetch()
+            additionalConfig?.search?.setCallRefetch(false)
+        }
+    }, [additionalConfig?.search?.callRefetch])
+    
+
     useEffect(() => {
         return () => {
             revalidate();
@@ -146,13 +176,16 @@ const InboxSearchComposer = ({configs,headerLabel}) => {
                 }
                 {
                     configs?.type === 'search' && configs?.sections?.search?.show &&
-                        <div className="section search">
+                        <div className={`section search ${showTab ? "tab": ""}`}>
                             <SearchComponent 
                                 uiConfig={ configs?.sections?.search?.uiConfig} 
                                 header={configs?.sections?.search?.label} 
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTab={showTab}
+                                tabData={tabData}
+                                onTabChange={onTabChange}
                                 />
                         </div>
 
@@ -234,7 +267,9 @@ const InboxSearchComposer = ({configs,headerLabel}) => {
                                 data={data} 
                                 isLoading={isLoading} 
                                 isFetching={isFetching} 
-                                fullConfig={configs}/>
+                                fullConfig={configs}
+                                additionalConfig={additionalConfig}
+                                />
                             </MediaQuery>
                             <MediaQuery maxWidth={426}>
                             <MobileSearchResults
@@ -288,6 +323,7 @@ const InboxSearchComposer = ({configs,headerLabel}) => {
                 {/* One can use this Parent to add additional sub parents to render more sections */}
             </div>
             </div>   
+            {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=>setShowToast(null)}></Toast>}
         </InboxContext.Provider>
     )
 }

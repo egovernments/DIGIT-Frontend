@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { ActionBar, CardCaption, CardSubHeader, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar, CardCaption, CardSubHeader, SubmitBar } from "@digit-ui/digit-ui-react-components";
 import CardReading from "./CardReadings";
 import CardMessage from "./CardMessage";
 import { useTranslation } from "react-i18next";

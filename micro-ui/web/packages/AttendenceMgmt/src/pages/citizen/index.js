@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, BackButton, AppContainer } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, BackButton, AppContainer } from "@digit-ui/digit-ui-react-components";
 import { Switch, useLocation } from "react-router-dom";
 import ShgInbox from "./markAttendenceInbox/ShgInbox";
 import ShgHome from "../../components/shgHome/ShgHome";

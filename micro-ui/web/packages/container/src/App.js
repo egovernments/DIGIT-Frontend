@@ -4,7 +4,7 @@ import { Loader } from "./components";
 import useAuth from "./hooks/useAuth";
 // import Header from "./modules/Header";
 import useRouter from "./hooks/useRouter";
-import {AppContainer, Header} from "@egovernments/digit-ui-react-components";
+import {AppContainer, Header} from "@digit-ui/digit-ui-react-components";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 // const LandingLazy = lazy(() => import("./modules/Landing"));
 const AuthLazy = lazy(() => import("./modules/Auth"));

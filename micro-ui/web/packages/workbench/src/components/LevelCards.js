@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, Button, TextInput, SVG, LabelFieldPair, Close, Toast, CardLabel, DeleteIconv2 , AddFilled } from "@egovernments/digit-ui-react-components";
+import { Card, Button, TextInput, SVG, LabelFieldPair, Close, Toast, CardLabel, DeleteIconv2 , AddFilled } from "@digit-ui/digit-ui-react-components";
 
 const LevelCards = ({ onSelect, formData, props }) => {
   const { t } = useTranslation();

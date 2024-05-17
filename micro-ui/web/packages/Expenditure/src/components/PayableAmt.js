@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CardSectionHeader } from '@egovernments/digit-ui-react-components'
+import { CardSectionHeader } from '@digit-ui/digit-ui-react-components'
 
 const PayableAmt = ({ detail }) => {
     const { t } = useTranslation() 

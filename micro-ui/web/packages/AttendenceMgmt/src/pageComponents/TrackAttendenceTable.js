@@ -1,4 +1,4 @@
-import { Table,ArrowDown } from '@egovernments/digit-ui-react-components'
+import { Table,ArrowDown } from '@digit-ui/digit-ui-react-components'
 import React,{useState,useMemo,useEffect,Fragment,useCallback} from 'react'
 import { useTranslation } from 'react-i18next'
 import SkillSelector from './SkillSelector'

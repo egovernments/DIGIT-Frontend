@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { onConfirm, generateJsonTemplate, downloadTemplate } from "../utils/BulkUploadUtils";
 import Ajv from "ajv";
 import { useTranslation } from "react-i18next";
-import { FileUploadModal, Toast, Loader, Card, SVG } from "@egovernments/digit-ui-react-components";
-import { CloseSvg } from "@egovernments/digit-ui-react-components";
+import { FileUploadModal, Toast, Loader, Card, SVG } from "@digit-ui/digit-ui-react-components";
+import { CloseSvg } from "@digit-ui/digit-ui-react-components";
 
 const ProgressBar = ({ progress, onClose, results }) => {
     const [selectedErrorIndex, setSelectedErrorIndex] = useState(null);

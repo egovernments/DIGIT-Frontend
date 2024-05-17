@@ -1,4 +1,4 @@
-import { Modal, Text } from "@egovernments/digit-ui-react-components";
+import { Modal, Text } from "@digit-ui/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 
 const Heading = ({ t, heading }) => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CardLabel } from '@egovernments/digit-ui-react-components'
+import { CardLabel } from '@digit-ui/digit-ui-react-components'
 
 const SkillDetails = ({ data }) => {
     const { t } = useTranslation()

@@ -9,6 +9,7 @@ const theme = {
   primaryColor: '#F47738',
   arrowColor: '#FFFFFF',
   textColor: '#505A5F',
+  zIndex: 99999999,
 };
 
 const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
@@ -17,7 +18,6 @@ const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
 
   
   const handleCallback = (event) => {
-    
     
     const {type,action,status,step} = event
     //when we want to end the tutorial and reset the state

@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import InboxLinks from './InboxLinks'
 import { useTranslation } from "react-i18next";
-import { Table, Loader, Card } from "@egovernments/digit-ui-react-components";
+import { Table, Loader, Card } from "@digit-ui/digit-ui-react-components";
 import { inboxTableColumns } from '../../config/inboxTableColumns';
 
 const DesktopInbox = (props) => {

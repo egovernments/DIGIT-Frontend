@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, CardSectionHeader, CollapseAndExpandGroups } from '@egovernments/digit-ui-react-components'
+import { Card, CardSectionHeader, CollapseAndExpandGroups } from '@digit-ui/digit-ui-react-components'
 import MustorRollDetailsTable from './MustorRollDetailsTable'
 
 const mustorRollIds = ['Muster Roll 1- ID (MSR/2022-23/08/0004) - Date (20-09-2022-27/09-2022)', 'Muster Roll 2- ID (MSR/2022-23/08/0004) - Date (20-09-2022-27/09-2022)', 'Muster Roll 3- ID (MSR/2022-23/08/0004) - Date (20-09-2022-27/09-2022)', 'Muster Roll 4- ID (MSR/2022-23/08/0004) - Date (20-09-2022-27/09-2022)']

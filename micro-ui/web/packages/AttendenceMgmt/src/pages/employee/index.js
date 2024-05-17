@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute, AppContainer, BreadCrumb } from "@digit-ui/digit-ui-react-components";
 import Response from "../../components/Response";
 import SearchAttendance from "./SearchAttendance";
 import SearchAttendancePlainSearch from "./SearchAttendencePlainSearch";

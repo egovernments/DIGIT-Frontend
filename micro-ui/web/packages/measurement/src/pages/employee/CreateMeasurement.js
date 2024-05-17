@@ -1,4 +1,4 @@
-import { Loader, FormComposerV2, Header, Toast, ActionBar, Menu, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2, Header, Toast, ActionBar, Menu, SubmitBar } from "@digit-ui/digit-ui-react-components";
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";

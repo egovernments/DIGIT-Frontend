@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Loader, NotificationComponent, TreatmentQualityIcon } from "@egovernments/digit-ui-react-components";
+import { Loader, NotificationComponent, TreatmentQualityIcon } from "@digit-ui/digit-ui-react-components";
 
 function TQMPendingTask(props) {
   const tenantId = Digit.ULBService.getCurrentTenantId();

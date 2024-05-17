@@ -13,7 +13,7 @@ import {
   IssueIcon,
   TreatmentQualityIcon,
   VehicleLogIcon,
-} from "@egovernments/digit-ui-react-components";
+} from "@digit-ui/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import TQMPendingTask from "./TQMPendingTask";

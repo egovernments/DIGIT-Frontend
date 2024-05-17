@@ -1,4 +1,4 @@
-import { PrivateRoute,Loader } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute,Loader } from "@digit-ui/digit-ui-react-components";
 import React,{ useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation,  BrowserRouter as Router } from "react-router-dom";
@@ -8,7 +8,7 @@ const EmployeeApp = ({ path, url, userType }) => {
   const {t,i18n} = useTranslation()
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
-      tenantId: Digit.ULBService.getCurrentTenantId(),
+      tenantId: Digit.ULBService.getStateId(),
       module: 'rainmaker-hrms,rainmaker-hr,rainmaker-common',
       locale:i18n.language,
     },

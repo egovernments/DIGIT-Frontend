@@ -1,0 +1,70 @@
+{
+  "name": "@digit-ui/digit-ui-svg-components",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "module": "dist/main.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=14"
+  },
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "license": "MIT",
+  "scripts": {
+    "example": "cd example && npm run start",
+    "build-webpack": "webpack --mode=production --node-env=production",
+    "build":"yarn build-webpack",
+    "publish": "webpack --config webpack.config.js && npm publish --tag mfe",
+    "build-old": "microbundle-crl --compress --no-sourcemap --format cjs",
+    "starts": "microbundle-crl watch --no-compress --format modern,cjs",
+    "prepare": "yarn build",
+    "predeploy": "cd example && yarn install && yarn run build",
+    "deploy": "gh-pages -d example/build",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public -o dist-storybook",
+    "deploy-storybook": "npm run build-storybook && surge --project dist-storybook --domain svg-components-$npm_package_version.surge.sh",
+    "start": "webpack serve --config webpack.config.js"
+  },
+  "peerDependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.1.0",
+    "cross-env": "7.0.3",
+    "husky": "7.0.4",
+    "lint-staged": "12.3.7",
+    "microbundle-crl": "0.13.11",
+    "gh-pages": "2.2.0",
+    "react-scripts": "^4.0.1",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.8.1",
+    "webpack-merge": "5.7.3"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "files": [
+    "dist"
+  ],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "keywords": [
+    "digit",
+    "svg",
+    "components",
+    "egov",
+    "DPG"
+  ]
+}
