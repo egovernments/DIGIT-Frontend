@@ -56,12 +56,23 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                   ruleKey: index + 1,
                   delivery: {},
                   attributes: item?.attributeConfig
-                    ? item?.attributeConfig?.map((i, c) => ({
-                        key: c + 1,
-                        attribute: { code: i?.attrValue },
-                        operator: { code: i?.operatorValue },
-                        value: i?.value,
-                      }))
+                    ? item?.attributeConfig?.map((i, c) => {
+                        if (i?.operatorValue === "IN_BETWEEN") {
+                          return {
+                            key: c + 1,
+                            attribute: { code: i?.attrValue },
+                            operator: { code: i?.operatorValue },
+                            toValue: i?.toValue,
+                            fromValue: i?.fromValue,
+                          };
+                        }
+                        return {
+                          key: c + 1,
+                          attribute: { code: i?.attrValue },
+                          operator: { code: i?.operatorValue },
+                          value: i?.value,
+                        };
+                      })
                     : [{ key: 1, attribute: null, operator: null, value: "" }],
                   // products: [],
                   products: item?.productConfig

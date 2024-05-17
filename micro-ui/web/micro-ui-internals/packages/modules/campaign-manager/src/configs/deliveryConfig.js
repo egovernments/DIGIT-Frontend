@@ -99,8 +99,9 @@ export const deliveryConfig = [
             label: "Custom",
             attrType: "dropdown",
             attrValue: "Age",
-            operatorValue: "GREATER_THAN",
-            value: 30,
+            operatorValue: "IN_BETWEEN",
+            toValue: 10,
+            fromValue: 20,
           },
         ],
         productConfig: [
