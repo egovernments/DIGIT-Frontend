@@ -4,7 +4,7 @@ import { Switch, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Container from "./components/container";
-import {Header} from "@egovernments/digit-ui-react-components";
+import {Header} from "@digit-ui/digit-ui-react-components";
 
 export const Card = (props) => (
   <Container

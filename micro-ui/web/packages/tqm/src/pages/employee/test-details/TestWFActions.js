@@ -1,4 +1,4 @@
-import { CardText, FormComposerV2, Loader, Modal, WarningIcon } from "@egovernments/digit-ui-react-components";
+import { CardText, FormComposerV2, Loader, Modal, WarningIcon } from "@digit-ui/digit-ui-react-components";
 import React, { Fragment, useEffect, useState } from "react";
 import { updateConfig } from "./config/updateTestConfig";
 import { testResultsConfig } from "./config/testResultsConfig";

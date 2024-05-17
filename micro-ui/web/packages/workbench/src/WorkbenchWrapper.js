@@ -3,7 +3,7 @@ import { initWorkbenchComponents } from './Module';
 import { QueryClientProvider } from 'react-query';
 import EmployeeApp from './pages/employee';
 import { Switch, useLocation, BrowserRouter as Router } from 'react-router-dom';
-import { Loader } from '@egovernments/digit-ui-react-components';
+import { Loader } from '@digit-ui/digit-ui-react-components';
 
 const App = ({ queryClient }) => {
   initWorkbenchComponents();

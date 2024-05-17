@@ -1,4 +1,4 @@
-import { PrivateRoute,Loader } from "@egovernments/digit-ui-react-components";
+import { PrivateRoute,Loader } from "@digit-ui/digit-ui-react-components";
 import React,{ useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation,  BrowserRouter as Router } from "react-router-dom";

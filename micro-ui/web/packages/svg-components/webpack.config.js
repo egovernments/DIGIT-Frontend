@@ -7,7 +7,7 @@ module.exports = {
     filename: "main.js", // Output file name
     path: path.resolve(__dirname, "dist"), // Output directory
     library: {
-      name: "@egovernments/digit-ui-svg-components",
+      name: "@digit-ui/digit-ui-svg-components",
       type: "umd",
     },
   },

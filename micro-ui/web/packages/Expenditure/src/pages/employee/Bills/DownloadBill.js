@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header, InboxSearchComposer, Loader} from '@egovernments/digit-ui-react-components';
+import { Header, InboxSearchComposer, Loader} from '@digit-ui/digit-ui-react-components';
 import { DownloadBillConfig } from '../../../configs/DownloadBillConfig';
 import { useTranslation } from 'react-i18next';
 

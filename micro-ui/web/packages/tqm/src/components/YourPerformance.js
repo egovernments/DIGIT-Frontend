@@ -1,5 +1,5 @@
 import React, { Fragment,useState,useRef } from 'react'
-import { Card, Header, CardSubHeader, CardHeader, MultiLink, ShareIcon, ArrowDownward, ArrowUpward,EmailIcon,WhatsappIcon } from '@egovernments/digit-ui-react-components'
+import { Card, Header, CardSubHeader, CardHeader, MultiLink, ShareIcon, ArrowDownward, ArrowUpward,EmailIcon,WhatsappIcon } from '@digit-ui/digit-ui-react-components'
 import { useTranslation } from "react-i18next"
 
 

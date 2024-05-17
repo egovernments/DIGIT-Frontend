@@ -1,6 +1,6 @@
 import React, {useMemo,useState,useEffect} from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer,Loader } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer,Loader } from "@digit-ui/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 import { tqmInboxConfig } from "./ConfigUlbAdmin";
 import { tqmInboxConfigPlantOperator } from "./ConfigPlantOperator";

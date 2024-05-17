@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
-import { Amount, LinkLabel } from "@egovernments/digit-ui-react-components";
+import { Amount, LinkLabel } from "@digit-ui/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)

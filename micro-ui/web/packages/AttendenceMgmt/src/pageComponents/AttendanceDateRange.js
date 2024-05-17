@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Calender } from "@egovernments/digit-ui-react-components";
+import { Calender } from "@digit-ui/digit-ui-react-components";
 import { DateRange, createStaticRanges } from "react-date-range";
 import {
   format,

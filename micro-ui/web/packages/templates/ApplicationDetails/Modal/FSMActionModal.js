@@ -1,4 +1,4 @@
-import { Loader, Modal, FormComposer, Toast } from "@egovernments/digit-ui-react-components";
+import { Loader, Modal, FormComposer, Toast } from "@digit-ui/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useQueryClient } from "react-query";
 

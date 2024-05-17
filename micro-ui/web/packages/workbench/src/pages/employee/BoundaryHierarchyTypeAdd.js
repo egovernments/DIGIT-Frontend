@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
-import { FormComposerV2, TextInput, Button, Card, CardLabel } from "@egovernments/digit-ui-react-components";
-import { Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, TextInput, Button, Card, CardLabel } from "@digit-ui/digit-ui-react-components";
+import { Header } from "@digit-ui/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar } from "@egovernments/digit-ui-react-components";
-import { SubmitBar } from "@egovernments/digit-ui-react-components";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Toast } from "@egovernments/digit-ui-react-components";
+import { ActionBar } from "@digit-ui/digit-ui-react-components";
+import { SubmitBar } from "@digit-ui/digit-ui-react-components";
+import { LabelFieldPair } from "@digit-ui/digit-ui-react-components";
+import { Toast } from "@digit-ui/digit-ui-react-components";
 import LevelCards from "../../components/LevelCards";
 import { addBoundaryHierarchyConfig } from "../../configs/BoundaryHierarchyConfig";
 

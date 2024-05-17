@@ -1,5 +1,5 @@
 import React from "react";
-import { AppContainer, EmployeeAppContainer } from "@egovernments/digit-ui-react-components";
+import { AppContainer, EmployeeAppContainer } from "@digit-ui/digit-ui-react-components";
 import Complaint from "./pages/employee/index";
 import { Provider } from "react-redux";
 import getStore from "./redux/store";

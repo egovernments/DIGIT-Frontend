@@ -4,7 +4,7 @@
 ## Install
 
 ```bash
-npm install --save @egovernments/digit-ui-svg-components
+npm install --save @digit-ui/digit-ui-svg-components
 ```
 
 ## Limitation
@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-svg-components":"1.0.7",
+"@digit-ui/digit-ui-svg-components":"1.0.7",
 ```
 
 then navigate to App.js
@@ -38,7 +38,7 @@ Syntax for importing any SVGs
 # from svg library
 
 ```jsx
-import { Accessibility } from "@egovernments/digit-ui-svg-components";
+import { Accessibility } from "@digit-ui/digit-ui-svg-components";
 
 <Accessibility />;
 ```
@@ -46,13 +46,13 @@ import { Accessibility } from "@egovernments/digit-ui-svg-components";
 # from digit-ui-react-components
 
 ```jsx
-import { SVG } from "@egovernments/digit-ui-react-components";
+import { SVG } from "@digit-ui/digit-ui-react-components";
 
 <SVG.Accessibility />;
 
 or;
 
-import { SVG } from "@egovernments/digit-ui-react-components";
+import { SVG } from "@digit-ui/digit-ui-react-components";
 
 const { Accessibility } = SVG;
 <Accessibility />;

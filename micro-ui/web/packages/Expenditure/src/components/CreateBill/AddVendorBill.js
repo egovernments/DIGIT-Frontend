@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FormComposer, LinkLabel, Card, CardSectionHeader, BreakLine } from "@egovernments/digit-ui-react-components";
+import { FormComposer, LinkLabel, Card, CardSectionHeader, BreakLine } from "@digit-ui/digit-ui-react-components";
 import { addVendorBillConfig } from '../../configs/addVendorBillConfig';
 
 const AddVendorBill = (props) => {

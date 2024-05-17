@@ -30,7 +30,7 @@
     "single-spa-react": "^4.6.1",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.16",
     "@digit-ui/digit-ui-module-core-base": "1.0.8",
-    "@egovernments/digit-ui-react-components": "1.4.118",
+    "@digit-ui/digit-ui-react-components": "1.0.0",
     "@digit-ui/digit-ui-svg-components": "1.0.0",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",

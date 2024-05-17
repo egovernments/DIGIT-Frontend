@@ -5,7 +5,7 @@ import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import registerRemotes from "./utils/registerRemotes"
 import { useTranslation } from "react-i18next";
 // import { queryClient } from "./bootstrap";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@digit-ui/digit-ui-react-components";
 
 const initDigitUI = () => {
   // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
