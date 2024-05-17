@@ -20,7 +20,7 @@ const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
     if(props?.theme){
       theme = {...theme,...props?.theme}
     }  
-  },[])
+  },[props?.theme])
   
   const handleCallback = (event) => {
     

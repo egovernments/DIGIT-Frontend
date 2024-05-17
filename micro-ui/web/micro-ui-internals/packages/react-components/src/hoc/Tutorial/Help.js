@@ -8,7 +8,7 @@ const Help = ({startTour, ...props}) => {
   return (
     <div className="header-icon-container" onClick={startTour}>
       <Label className={props?.labelClassName}>{t('Help')}</Label>
-      <HelpOutlineIcon fille={props?.fill}/>
+      <HelpOutlineIcon fill={props?.fill}/>
     </div>
   );
 };

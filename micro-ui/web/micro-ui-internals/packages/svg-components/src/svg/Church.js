@@ -6,7 +6,7 @@ export const Church = ({ className = "", fill = COLOR_FILL, fillBackground = "#0
   return (
     <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={style} className={className} onClick={onClick}>
       <rect x="0.5" y="0.5" width={width} height={height} rx="3.5" fill={fillBackground} stroke="#D6D5D4" />
-      <g clip-path="url(#clip0_6391_89292)">
+      <g clipPath="url(#clip0_6391_89292)">
         <path
           d="M12.0942 10.9979C12.3785 10.9984 12.6549 11.0897 12.8813 11.2578L15.0118 12.847V11.217C15.0118 11.084 14.961 10.9559 14.8694 10.8577L12.6443 8.4715V6.52864H14.1296V5.4525H12.6443V4H11.544V5.4525H10.0588V6.52864H11.544V8.4715L9.3189 10.8577C9.22729 10.9559 9.17651 11.084 9.17651 11.217V12.8471L11.307 11.2579C11.5334 11.0897 11.8098 10.9984 12.0942 10.9979Z"
           fill={fill}
