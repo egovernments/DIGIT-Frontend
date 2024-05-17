@@ -17,7 +17,7 @@ const WorkbenchHeader = () => {
   const { tourState, setTourState } = useState();
   // const { tutorial, updateTutorial } = useContext(TutorialContext);
   const { t } = useTranslation();
-  //using location.pathname we can update the stepIndex accordingly when help is clicked from any other screen(other than home screen)
+  //using location?.pathname we can update the stepIndex accordingly when help is clicked from any other screen(other than home screen)
   const { pathname } = useLocation();
   
   const startTour = () => {

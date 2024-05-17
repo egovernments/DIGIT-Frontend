@@ -12,7 +12,7 @@ const App = ({ queryClient }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <EmployeeApp path={'/workbench-ui/employee/workbench/'}/>
+        <EmployeeApp path={`/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench/`}/>
       </Router>
     </QueryClientProvider>
   );

@@ -17,9 +17,9 @@ import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
-  const search = useLocation().search;
+  const search = location.search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
-  const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
+  const pathVar = location?.pathname.replace(defaultPath + '/', "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
 
   const crumbs = [
@@ -66,6 +66,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 };
 
 const App = ({ path }) => {
+  
   const {t,i18n} = useTranslation()
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
@@ -92,7 +93,7 @@ const App = ({ path }) => {
         }
       });
     };
-    const currentUrl = window.location.href;
+    const currentUrl = window?.location?.href;
     if (!currentUrl.includes("mdms-add-v2") && !currentUrl.includes("mdms-add-v4") && !currentUrl.includes("mdms-view")) {
       clearSessionStorageWithPrefix('MDMS_add');
     }
@@ -102,13 +103,13 @@ const App = ({ path }) => {
     if (!currentUrl.includes("mdms-edit")) {
       clearSessionStorageWithPrefix('MDMS_edit');
     }
-  }, [window.location.href]);
+  }, [window?.location?.href]);
 
   useEffect(() => {
-    if (!window.location.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
+    if (!window?.location?.href.includes("mdms-add-v2") && sessionFormData && Object.keys(sessionFormData) != 0) {
       clearSessionFormData();
     }
-    if (!window.location.href.includes("mdms-view") && sessionFormDataView) {
+    if (!window?.location?.href.includes("mdms-view") && sessionFormDataView) {
       clearSessionFormDataView();
     }
   }, [location]);
