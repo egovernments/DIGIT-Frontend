@@ -8,7 +8,7 @@ const EmployeeApp = ({ path, url, userType }) => {
   const {t,i18n} = useTranslation()
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
-      tenantId: Digit.ULBService.getCurrentTenantId(),
+      tenantId: Digit.ULBService.getStateId(),
       module: 'rainmaker-hrms,rainmaker-hr,rainmaker-common',
       locale:i18n.language,
     },

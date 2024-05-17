@@ -42,8 +42,8 @@ const App = ({queryClient}) => {
   const moduleReducers = (initData) => initData;
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
-      tenantId: Digit.ULBService.getCurrentTenantId(),
-      module: `rainmaker-common,rainmaker-${Digit.ULBService.getCurrentTenantId()}`,
+      tenantId: Digit.ULBService.getStateId(),
+      module: `rainmaker-common,rainmaker-${Digit.ULBService.getCurrentTenantId()},rainmaker-${Digit.ULBService.getStateId()}`,
       locale:i18n.language,
     },
     i18n,
