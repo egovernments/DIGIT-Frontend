@@ -787,12 +787,16 @@ import { TickMarkBackgroundFilled } from "./svg/TickMarkBackgroundFilled";
 import { Excel } from "./svg/Excel";
 import { SpatialDocument } from "./svg/SpatialDocument";
 import { Trash } from "./svg/Trash";
-import {PaginationFirst } from "./svg/PaginationFirst"
-import {PaginationLast } from "./svg/PaginationLast"
-import {PaginationNext } from "./svg/PaginationNext"
-import {PaginationPrevious } from "./svg/PaginationPrevious"
-import {NorthArrow} from "./svg/NorthArrow"
-import {MapLayerIcon } from "./svg/MapLayerIcon"
+import { PaginationFirst } from "./svg/PaginationFirst"
+import { PaginationLast } from "./svg/PaginationLast"
+import { PaginationNext } from "./svg/PaginationNext"
+import { PaginationPrevious } from "./svg/PaginationPrevious"
+import { NorthArrow } from "./svg/NorthArrow"
+import { MapLayerIcon } from "./svg/MapLayerIcon"
+import { Church } from "./svg/Church"
+import { HealthFacility } from "./svg/HealthFacility"
+import { SchoolBuilding } from "./svg/SchoolBuilding"
+import { Warehouse } from "./svg/Warehouse "
 
 export {
   Success,
@@ -1589,5 +1593,9 @@ export {
   PaginationLast,
   PaginationFirst,
   NorthArrow,
-  MapLayerIcon
+  MapLayerIcon,
+  Church,
+  HealthFacility,
+  SchoolBuilding,
+  Warehouse
 };
