@@ -126,7 +126,9 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
                         } else {
                             const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
                             if (boundaryList.length === 0) {
-                                errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
+                                if (boundaryList.length === 0 || boundaryList.includes('')) {
+                                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"] + 1} in boundary sheet ${key}`, sheetName: key })
+                                }
                             }
                             if (boundaryList.length > 1) {
                                 errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
