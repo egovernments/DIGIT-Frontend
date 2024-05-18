@@ -83,7 +83,8 @@ const UploadBoundary = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(requestCriteriaBulkUpload);
 
   const validateHeaderRow = (headerRow) => {
-    const expectedHeaders = simplifiedData;
+    const expectedHeaders = modifiedHierarchy;
+    
     // Check if the length of the headerRow matches the length of expectedHeaders
     if (headerRow.length !== expectedHeaders.length) {
       return false;
@@ -121,13 +122,7 @@ const UploadBoundary = () => {
             header: 1,
           })[0];
 
-          // Find the index of "Boundary Code" column
-          const boundaryCodeIndex = columnsToValidate.indexOf("Boundary Code");
-
-          // Slice the array to include only columns before the "Boundary Code" column
-          const columnsBeforeBoundaryCode = boundaryCodeIndex !== -1 ? columnsToValidate.slice(0, boundaryCodeIndex) : columnsToValidate;
-
-          if (validateHeaderRow(columnsBeforeBoundaryCode)) {
+          if (validateHeaderRow(columnsToValidate)) {
             resolve(true);
           } else {
             const label = "HCM_FILE_VALIDATION_ERROR";
@@ -135,6 +130,7 @@ const UploadBoundary = () => {
             closeToast();
           }
         } catch (error) {
+          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
