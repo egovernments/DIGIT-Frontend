@@ -159,7 +159,7 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
       if (item?.error) return;
-      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
+      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section, id: item.fileId };
       files.push(data);
     });
     Object.values(data?.upload).forEach((item) => {
@@ -179,12 +179,10 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
       files,
       assumptions: data?.hypothesis?.map((item) => {
         let templist = JSON.parse(JSON.stringify(item));
-        delete templist.id;
         return templist;
       }),
       operations: data?.ruleEngine?.map((item) => {
         const data = JSON.parse(JSON.stringify(item));
-        delete data.id;
         const operator = Operators.find((e) => e.name === data.operator);
         if (operator && operator.code) data.operator = operator?.code;
         return data;
@@ -194,7 +192,7 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   };
 };
 
-const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore,t, translatedData = true) => {
   
   let resourceMappingData = [];
   let newFileData = {};
@@ -207,7 +205,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
       const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
       schemaKeys.forEach((item) => {
-        if (columnForMapping.has(t(item))) {
+        if ((translatedData && columnForMapping.has(t(item))) || (!translatedData && columnForMapping.has(item))) {
           if (LOCALITY && toChange === item) {
             toAddInResourceMapping = {
               mappedFrom: t(item),
@@ -229,7 +227,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       let toRemove = [];
       if (value && value.length > 0) {
         value[0].forEach((item, index) => {
-          const mappedTo = resourceMappingData.find((e) => e.mappedFrom === item)?.mappedTo;
+          const mappedTo = resourceMappingData.find((e) => (translatedData && e.mappedFrom === item) || (!translatedData && e.mappedFrom === t(item)))?.mappedTo;
           if (!mappedTo) {
             toRemove.push(index);
             return;

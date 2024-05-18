@@ -143,7 +143,7 @@ const SavedMicroplans = () => {
       const computedSession = await updateSessionUtils.computeSessionObject(row.original,state,additionalPropsForExcel)
       Digit.SessionStorage.set("microplanData", computedSession);
       setShowLoader(false)
-      history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
+      history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.executionPlanId}`);
     } catch (error) {
       console.error(error.message)
     }

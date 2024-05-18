@@ -17,8 +17,6 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState, Fragmen
 import { useTranslation } from "react-i18next";
 import ZoomControl from "../../components/ZoomControl";
 import CustomScaleControl from "../../components/CustomScaleControl";
-import { MapLayerIcon } from "../../icons/MapLayerIcon";
-import { NorthArrow } from "../../icons/NorthArrow";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import {
@@ -378,7 +376,7 @@ const Mapping = ({
               >
                 <p>{t("VIRTUALIZATION")}</p>
                 <div className="icon">
-                  <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+                  {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
                 </div>
               </div>
             </div>
@@ -386,7 +384,7 @@ const Mapping = ({
             <div className="bottom-left-map-subcomponents">
               <ZoomControl map={map} t={t} />
               <div className="north-arrow">
-                <NorthArrow width={"2.5rem"} height={"2.5rem"} fill={"rgba(255, 255, 255, 1)"} />
+                {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
               </div>
               <CustomScaleControl map={map} />
             </div>
@@ -429,7 +427,7 @@ const FilterItemBuilder = ({ item, MapFilters, t }) => {
   // if (typeof DynamicIcon === "function") icon = DynamicIcon({});
   return DynamicIcon && typeof DynamicIcon === "function" ? (
     <div className="filter-row">
-      <DynamicIcon width={"1.5rem"} height={"1.5rem"} />
+      <DynamicIcon width={"1.5rem"} height={"1.5rem"} fill={"white"} />
       <p>{t(item)}</p>
     </div>
   ) : (
@@ -456,7 +454,7 @@ const FilterSection = memo(
         <div className="icon-rest filter-icon" onClick={() => setShowFilterOptions((previous) => !previous)}>
           <p>{t("FILTERS")}</p>
           <div className="icon">
-            <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+            {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
           </div>
         </div>
         {showFilterOptions && (
@@ -481,9 +479,9 @@ const FilterSection = memo(
             </div>
             <Button
               variation="secondary"
-              textStyles={{ width: "fit-content", fontSize:"0.875rem", fontWeight:"400" }}
+              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "400" }}
               className="button-primary"
-              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0 , padding:"0 0.7rem 0 0.7rem" }}
+              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
               icon={"AutoRenew"}
               label={t("CLEAR_ALL_FILTERS")}
               onClick={() => setFilterSelections([])}
@@ -509,6 +507,7 @@ const BoundarySelection = memo(
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationModal, setShowConformationModal] = useState(false);
+
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -634,7 +633,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
         <p>{t("LAYERS")}</p>
         <div className="icon">
-          <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+          {DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
         </div>
       </div>
       <div className="base-map-area-wrapper" ref={basemapRef}>

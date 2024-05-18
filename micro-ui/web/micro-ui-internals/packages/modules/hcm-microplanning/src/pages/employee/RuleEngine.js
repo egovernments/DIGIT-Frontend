@@ -6,6 +6,7 @@ import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonC
 import { Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
+import { v4 as uuidv4 } from "uuid";
 
 const page = "ruleEngine";
 
@@ -119,14 +120,14 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     let temp;
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
-let outputs;
+    let outputs;
     if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
         data = data.filter((e) => e !== item?.output);
       });
-      outputs= data
+      outputs = data;
       setOutputs(data);
     }
 
@@ -135,7 +136,7 @@ let outputs;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (temp && temp.ruleConfigureOperators) {
       temp = temp.ruleConfigureOperators.map((item) => item.name);
-      operator= temp
+      operator = temp;
       setOperators(temp);
     }
     if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
@@ -159,8 +160,7 @@ let outputs;
       setInputs,
       setOutputs
     );
-    if(filteredRules)
-      setRules(filteredRules);
+    if (filteredRules) setRules(filteredRules);
   }, [state?.Schemas, state?.RuleConfigureOutput, state?.UIConfiguration, state?.AutoFilledRuleConfigurations]);
 
   // // useEffect to set autofill data
@@ -302,10 +302,12 @@ const RuleEngineInformation = ({ t }) => {
 
 // Function to add a new assumption
 const addRulesHandler = (setRules) => {
+    let uuid = uuidv4();
   setRules((previous) => [
     ...previous,
     {
-      id: previous.length ? previous[previous.length - 1].id + 1 : 0,
+      id: uuid,
+      // previous.length ? previous[previous.length - 1].id + 1 : 0,
       output: "",
       input: "",
       operator: "",
@@ -670,7 +672,10 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
       !hypothesisAssumptionsList?.includes(item?.assumptionValue)
     )
       return;
-    item["id"] = newRules.length;
+    if (!item["id"]) {
+      let uuid = uuidv4();
+      item["id"] = uuid;
+    }
     newRules.push(item);
     rulePlusInputs?.push(item?.output);
     ruleOuputList?.push(item?.output);
@@ -694,14 +699,17 @@ const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
   let newRules = [];
   let outputs = [];
   rules.forEach((item, index) => {
-    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return ;
-    item["id"] = index;
+    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
+    if (!item["id"]) {
+      let uuid = uuidv4();
+      item["id"] = uuid;
+    }
     newRules.push(item);
     outputs.push(item.output);
   });
   // let filteredRules = [];
   // newRules.forEach((item) => {
-  //   // if (!outputs?.includes(item?.input)) return; 
+  //   // if (!outputs?.includes(item?.input)) return;
   //   item["id"] = newRules.length;
   //   filteredRules.push(item);
   // });

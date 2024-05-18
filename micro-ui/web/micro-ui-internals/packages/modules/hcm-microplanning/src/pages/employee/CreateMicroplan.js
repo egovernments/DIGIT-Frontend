@@ -24,6 +24,7 @@ export const components = {
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
 import { useMyContext } from "../../utils/context";
+import { updateSessionUtils } from "../../utils/updateSessionUtils";
 
 // will be changed laters
 const campaignType = "ITIN";
@@ -44,6 +45,40 @@ const CreateMicroplan = () => {
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
   const [loaderActivation, setLoaderActivation] = useState(false);
   const { state } = useMyContext();
+
+  //fetch campaign data
+  const { id = "" } = Digit.Hooks.useQueryParams();
+  const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        ids: [id],
+      },
+    },
+    {
+      enabled: !!id,
+    }
+  );
+
+  // request body for boundary hierarchy api
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    params: {},
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: Digit.ULBService.getStateId(),
+        hierarchyType: campaignData?.hierarchyType,
+        // hierarchyType:  "Microplan",
+      },
+    },
+    config: {
+      enabled: !!campaignData?.hierarchyType,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType) || {};
+      },
+    },
+  };
+  const { isLoading: ishierarchyLoading, data: heirarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -122,11 +157,19 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
-        setMicroplanData((previous) => ({
-          ...previous,
-          planConfigurationId: data?.PlanConfiguration[0]?.id,
-          auditDetails: data?.PlanConfiguration[0]?.auditDetails,
-        }));
+        // setMicroplanData((previous) => ({
+        //   ...previous,
+        //   planConfigurationId: data?.PlanConfiguration[0]?.id,
+        //   auditDetails: data?.PlanConfiguration[0]?.auditDetails,
+        // }));
+        debugger
+        const additionalPropsForExcel = {
+          heirarchyData: heirarchyData,
+          t,
+        };
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
+        setMicroplanData(computedSession);
+        debugger
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -153,6 +196,12 @@ const CreateMicroplan = () => {
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
+        const additionalPropsForExcel = {
+          heirarchyData: heirarchyData,
+          t,
+        };
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
+        setMicroplanData(computedSession);
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);

@@ -799,7 +799,7 @@ function filterObjects(arr1, arr2) {
   // Iterate through the first array
   arr1.forEach((obj1) => {
     // Find the corresponding object in the second array
-    let obj2 = arr2.find((item) => item.key === obj1.key);
+    let obj2 = _.cloneDeep(arr2.find((item) => item.key === obj1.key));
 
     // If the object with the same key is found in the second array and their values are the same
     if (obj2 && obj1.value !== obj2.value) {

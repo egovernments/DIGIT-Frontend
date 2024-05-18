@@ -1008,7 +1008,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   return (
     <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
       <div className="icon">
-        <CustomIcon Icon={Icons[item.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
+        <CustomIcon Icon={Icons[item?.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.code)}</p>
     </div>

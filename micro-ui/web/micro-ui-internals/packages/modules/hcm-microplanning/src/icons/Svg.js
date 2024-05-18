@@ -45,6 +45,30 @@ export const DefaultMapMarkerSvg = (style) => {
   </svg>`;
 };
 
+
+export const WarehouseMarker = ({
+  className = "",
+  fill = "white",
+  fillBackground = "#42BBFF",
+  style = {},
+  width = "3.125rem",
+  height = "3.125rem",
+}) => {
+  return `
+    <svg width="${width}" height="${height}" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg" style=${style} className=${className}>
+      <path d="M9 0C4.03714 0 0 4.082 0 9.1C0 15.925 9 26 9 26C9 26 18 15.925 18 9.1C18 4.082 13.9629 0 9 0Z" fill=${fillBackground} />
+      <g clip-path="url(#clip0_5909_17198)">
+        <path d="M9 4.5L5 7.5V13.5H7.5V10H10.5V13.5H13V7.5L9 4.5Z" fill=${fill} />
+      </g>
+      <defs>
+        <clipPath id="clip0_5909_17198">
+          <rect width="12" height="12" fill="white" transform="translate(3 3)" />
+        </clipPath>
+      </defs>
+    </svg>
+    `;
+};
+
 export const Warehouse = ({ className = "", fill = "white", fillBackground = "#42BBFF", style = {}, width = "1.5rem", height = "1.5rem" }) => {
   return (
     <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={style} className={className}>
@@ -59,22 +83,6 @@ export const Warehouse = ({ className = "", fill = "white", fillBackground = "#4
       </defs>
     </svg>
   );
-};
-
-export const WarehouseMarker = ({ className = "", fill = "white", fillBackground = "#42BBFF", style = {} , width="3.125rem",height="3.125rem" }) => {
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg" style=${style} className=${className}>
-      <path d="M9 0C4.03714 0 0 4.082 0 9.1C0 15.925 9 26 9 26C9 26 18 15.925 18 9.1C18 4.082 13.9629 0 9 0Z" fill=${fillBackground} />
-      <g clip-path="url(#clip0_5909_17198)">
-        <path d="M9 4.5L5 7.5V13.5H7.5V10H10.5V13.5H13V7.5L9 4.5Z" fill=${fill} />
-      </g>
-      <defs>
-        <clipPath id="clip0_5909_17198">
-          <rect width="12" height="12" fill="white" transform="translate(3 3)" />
-        </clipPath>
-      </defs>
-    </svg>
-    `;
 };
 
 export const Church = ({ className = "", fill = "white", fillBackground = "#064466", style = {}, width = "1.5rem", height = "1.5rem" }) => {
@@ -124,20 +132,18 @@ export const School = ({ className = "", fill = "white", fillBackground = "#FF7B
   );
 };
 
-export const HealthFacility = ({ className = "", fill = "white", fillBackground = "#FF7B42", style = {}, width = "1.5rem", height = "1.5rem" }) => {
+export const HealthFacility = ({ className = "", fill = "white", fillBackground = "#0C9219", style = {}, width = "1.5rem", height = "1.5rem" , onClick=null}) => {
   return (
-    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={style} className={className}>
-      <rect x="0.5" y="0.5" width={width} height={height} rx="3.5" fill={fillBackground} stroke="#D6D5D4" />
-      <g clip-path="url(#clip0_6393_89340)">
-        <path
-          d="M12.6667 2H3.33333C2.6 2 2.00667 2.6 2.00667 3.33333L2 12.6667C2 13.4 2.6 14 3.33333 14H12.6667C13.4 14 14 13.4 14 12.6667V3.33333C14 2.6 13.4 2 12.6667 2ZM12 9.33333H9.33333V12H6.66667V9.33333H4V6.66667H6.66667V4H9.33333V6.66667H12V9.33333Z"
-          fill={fill}
-        />
+    <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={style} className={className} onClick={onClick}>
+      <rect x="0.5" y="0.5" width={width} height={height} rx="3.5" fill={fillBackground} stroke="#D6D5D4"/>
+      <g clip-path="url(#clip0_7657_78223)">
+      <path d="M16.6667 6H7.33333C6.6 6 6.00667 6.6 6.00667 7.33333L6 16.6667C6 17.4 6.6 18 7.33333 18H16.6667C17.4 18 18 17.4 18 16.6667V7.33333C18 6.6 17.4 6 16.6667 6ZM16 13.3333H13.3333V16H10.6667V13.3333H8V10.6667H10.6667V8H13.3333V10.6667H16V13.3333Z" 
+      fill={fill}/>
       </g>
       <defs>
-        <clipPath id="clip0_6393_89340">
-          <rect width="16" height="16" fill={fill} transform="translate(4 4)" />
-        </clipPath>
+      <clipPath id="clip0_7657_78223">
+      <rect width="16" height="16" fill={fill} transform="translate(4 4)"/>
+      </clipPath>
       </defs>
     </svg>
   );
@@ -174,7 +180,14 @@ export const SchoolMarker = ({ className = "", fill = "white", fillBackground = 
 `;
 };
 
-export const HealthFacilityMarker = ({ className = "", fill = "white", fillBackground = "#0C9219", style = {}, width = "3.125rem", height = "3.125rem" }) => {
+export const HealthFacilityMarker = ({
+  className = "",
+  fill = "white",
+  fillBackground = "#0C9219",
+  style = {},
+  width = "3.125rem",
+  height = "3.125rem",
+}) => {
   return `
   <svg width="${width}" height="${height}" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg"  style=${style} className=${className}>
     <path d="M9 0C4.03714 0 0 4.082 0 9.1C0 15.925 9 26 9 26C9 26 18 15.925 18 9.1C18 4.082 13.9629 0 9 0Z" fill="${fillBackground}"/>
@@ -189,4 +202,3 @@ export const HealthFacilityMarker = ({ className = "", fill = "white", fillBackg
   </svg>
 `;
 };
-
