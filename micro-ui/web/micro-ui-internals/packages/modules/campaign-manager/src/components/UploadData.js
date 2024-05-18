@@ -1,7 +1,7 @@
 import { Button, Header } from "@egovernments/digit-ui-react-components";
-import React, { useRef, useState, useEffect , Fragment } from "react";
+import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { DownloadIcon ,Card } from "@egovernments/digit-ui-react-components";
+import { DownloadIcon, Card } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
@@ -32,29 +32,28 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [isError, setIsError] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
-  const [fileName , setFileName] = useState (null);
+  const [fileName, setFileName] = useState(null);
+  const [downloadError, setDownloadError] = useState(false);
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
     { name: "facilitySchema" },
     { name: "userSchema" },
     { name: "Boundary" },
   ]);
 
-  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
-    { name: "ReadMeConfig" },
-  ]);
+  const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
-  const [readMeInfo , setReadMeInfo] = useState({});
+  const [readMeInfo, setReadMeInfo] = useState({});
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
-      onSelect("uploadFacility", { uploadedFile, isError, isValidation ,apiError });
+      onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, isError, isValidation  ,apiError});
+      onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError });
     } else {
-      onSelect("uploadUser", { uploadedFile, isError, isValidation ,apiError });
+      onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError });
     }
-  }, [uploadedFile, isError, isValidation ,apiError]);
+  }, [uploadedFile, isError, isValidation, apiError]);
 
   var translateSchema = (schema) => {
     var newSchema = { ...schema };
@@ -74,21 +73,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   var translateReadMeInfo = (schema) => {
-    const translatedSchema = schema.map(item => {
+    const translatedSchema = schema.map((item) => {
       return {
-          header: t(item.header),
-          isHeaderBold: item.isHeaderBold,
-          inSheet: item.inSheet,
-          inUiInfo: item.inUiInfo,
-          descriptions: item.descriptions.map(desc => {
-              return {
-                  text: t(desc.text),
-                  isStepRequired: desc.isStepRequired
-              };
-          })
+        header: t(item.header),
+        isHeaderBold: item.isHeaderBold,
+        inSheet: item.inSheet,
+        inUiInfo: item.inUiInfo,
+        descriptions: item.descriptions.map((desc) => {
+          return {
+            text: t(desc.text),
+            isStepRequired: desc.isStepRequired,
+          };
+        }),
       };
-  });
-  return translatedSchema;
+    });
+    return translatedSchema;
   };
 
   useEffect(async () => {
@@ -111,26 +110,28 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setSheetHeaders(headers);
       setTranslatedSchema(schema);
     }
-  }, [Schemas?.["HCM-ADMIN-CONSOLE"]]);
+  }, [Schemas?.["HCM-ADMIN-CONSOLE"] , type]);
 
-  useEffect(async () =>{
-    if(readMe?.["HCM-ADMIN-CONSOLE"]){
-      const newReadMeFacility = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[0]?.texts)
-      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[1]?.texts)
-      const newReadMeboundary = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.[2]?.texts)
-    
+  useEffect(async () => {
+    if (readMe?.["HCM-ADMIN-CONSOLE"]) {
+      const newReadMeFacility = await translateReadMeInfo(
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+      );
+      const newReadMeUser = await translateReadMeInfo(readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts);
+      const newReadMeboundary = await translateReadMeInfo(
+        readMe?.["HCM-ADMIN-CONSOLE"]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+      );
 
-    const readMeText ={
-      boundary: newReadMeboundary,
-      facilityWithBoundary: newReadMeFacility,
-      userWithBoundary: newReadMeUser
+      const readMeText = {
+        boundary: newReadMeboundary,
+        facilityWithBoundary: newReadMeFacility,
+        userWithBoundary: newReadMeUser,
+      };
+
+      setReadMeInfo(readMeText);
     }
+  }, [readMe?.["HCM-ADMIN-CONSOLE"] , type]);
 
-    setReadMeInfo(readMeText);
-    
-  }
-
-  } , [readMe?.["HCM-ADMIN-CONSOLE"]])
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -149,12 +150,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     switch (type) {
       case "boundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -276,7 +289,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     }
 
-    if (!isValid) return isValid; 
+    if (!isValid) return isValid;
 
     // Iterate over each sheet in the workbook, starting from the second sheet
     for (let i = 2; i < workbook.SheetNames.length; i++) {
@@ -360,7 +373,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
           })[0];
-
 
           const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
@@ -467,7 +479,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [showToast]);
 
-
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
@@ -478,19 +489,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-    const fileData = fileUrl.map((i) => {
-      const urlParts = i?.url?.split("/");
-      const fileName = file?.[0]?.name;
-      const id = fileUrl?.[0]?.id;
-      // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
-      const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
-      return {
-        // ...i,
-        filestoreId: id,
-        filename: fileName,
-        type: fileType,
-      };
-    }).map(({ id, ...rest }) => rest);
+    const fileData = fileUrl
+      .map((i) => {
+        const urlParts = i?.url?.split("/");
+        const fileName = file?.[0]?.name;
+        const id = fileUrl?.[0]?.id;
+        // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
+        const fileType =
+          type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
+        return {
+          // ...i,
+          filestoreId: id,
+          filename: fileName,
+          type: fileType,
+        };
+      })
+      .map(({ id, ...rest }) => rest);
     setUploadedFile(fileData);
     const validate = await validateExcel(file[0]);
   };
@@ -506,7 +520,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     if (file && file?.url) {
       window.location.href = file?.url;
       // Splitting filename before .xlsx or .xls
-      // const fileNameWithoutExtension = file?.fileName.split(/\.(xlsx|xls)/)[0];
+      // const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
       // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
   };
@@ -521,7 +535,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
           if (temp?.isError) {
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: errorMessage , transitionTime: 5000000});
+            setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
             setIsValidation(false);
@@ -546,19 +560,28 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               } else {
                 setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
-                const fileData = fileUrl.map((i) => {
-                  const urlParts = i?.url?.split("/");
-                  const id = fileUrl?.[0]?.id;
-                  // const fileName = fileName;
-                  const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
-                  return {
-                    ...i,
-                    filestoreId: id,
-                    filename: fileName,
-                    type: fileType,
-                    resourceId: temp?.id,
-                  };
-                }).map(({ id, ...rest }) => rest);
+                const fileData = fileUrl
+                  .map((i) => {
+                    const urlParts = i?.url?.split("/");
+                    const id = fileUrl?.[0]?.id;
+                    // const fileName = fileName;
+                    const fileType =
+                      type === "facilityWithBoundary"
+                        ? "facility"
+                        : type === "userWithBoundary"
+                        ? "user"
+                        : type === "boundary"
+                        ? "boundaryWithTarget"
+                        : type;
+                    return {
+                      ...i,
+                      filestoreId: id,
+                      filename: fileName,
+                      type: fileType,
+                      resourceId: temp?.id,
+                    };
+                  })
+                  .map(({ id, ...rest }) => rest);
                 onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
                 setIsError(true);
@@ -575,18 +598,27 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
               setIsError(true);
               const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
-              const fileData = fileUrl.map((i) => {
-                const urlParts = i?.url?.split("/");
-                const id = fileUrl?.[0]?.id;
-                // const fileName = file?.[0]?.name;
-                const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
-                return {
-                  ...i,
-                  filestoreId: id,
-                  filename: fileName,
-                  type: fileType,
-                };
-              }).map(({ id, ...rest }) => rest);
+              const fileData = fileUrl
+                .map((i) => {
+                  const urlParts = i?.url?.split("/");
+                  const id = fileUrl?.[0]?.id;
+                  // const fileName = file?.[0]?.name;
+                  const fileType =
+                    type === "facilityWithBoundary"
+                      ? "facility"
+                      : type === "userWithBoundary"
+                      ? "user"
+                      : type === "boundary"
+                      ? "boundaryWithTarget"
+                      : type;
+                  return {
+                    ...i,
+                    filestoreId: id,
+                    filename: fileName,
+                    type: fileType,
+                  };
+                })
+                .map(({ id, ...rest }) => rest);
               onFileDelete(uploadedFile);
               setUploadedFile(fileData);
               setIsError(true);
@@ -598,7 +630,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
     fetchData();
   }, [errorsType]);
-
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -624,10 +655,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       {
         onSuccess: async (result) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
+            setDownloadError(true);
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
             return;
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
+            setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
             return;
           }
@@ -644,15 +677,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           });
 
           if (fileData && fileData?.[0]?.url) {
+            setDownloadError(false);
             // downloadExcel(fileData[0].blob, fileData[0].fileName);
             window.location.href = fileData?.[0]?.url;
             // handleFileDownload(fileData?.[0]);
-            // downloadExcel(new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),fileData?.[0]?.fileName );
+            // downloadExcel(
+            // new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+            // fileData?.[0]?.filename
+            // );
           } else {
+            setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
           }
         },
         onError: (result) => {
+          setDownloadError(true);
           setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
         },
       }
@@ -694,50 +733,50 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
-    <Card>
-      <div className="campaign-bulk-upload">
-        <Header className="digit-form-composer-sub-header">
-          {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-        </Header>
-        <Button
-          label={t("WBH_DOWNLOAD_TEMPLATE")}
-          variation="secondary"
-          icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
-          type="button"
-          className="campaign-download-template-btn"
-          onButtonClick={downloadTemplate}
-        />
-      </div>
-      {uploadedFile.length === 0 && (
-        <div className="info-text">
-          {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+      <Card>
+        <div className="campaign-bulk-upload">
+          <Header className="digit-form-composer-sub-header">
+            {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+          </Header>
+          <Button
+            label={t("WBH_DOWNLOAD_TEMPLATE")}
+            variation="secondary"
+            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
+            type="button"
+            className="campaign-download-template-btn"
+            onButtonClick={downloadTemplate}
+          />
         </div>
-      )}
-      <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
-      {showInfoCard && (
-        <InfoCard
-          populators={{
-            name: "infocard",
-          }}
-          variant="error"
-          style={{ marginLeft: "0rem", maxWidth: "100%" }}
-          label={t("HCM_ERROR")}
-          additionalElements={[
-            <React.Fragment key={type}>
-              {errorsType[type] && (
-                <React.Fragment>
-                  {errorsType[type].split(",").map((error, index) => (
-                    <React.Fragment key={index}>
-                      {index > 0 && <br />}
-                      {error.trim()}
-                    </React.Fragment>
-                  ))}
-                </React.Fragment>
-              )}
-            </React.Fragment>,
-          ]}
-        />
-      )}
+        {uploadedFile.length === 0 && (
+          <div className="info-text">
+            {type === "boundary" ? t("HCM_BOUNDARY_MESSAGE") : type === "facilityWithBoundary" ? t("HCM_FACILITY_MESSAGE") : t("HCM_USER_MESSAGE")}
+          </div>
+        )}
+        <BulkUpload onSubmit={onBulkUploadSubmit} fileData={uploadedFile} onFileDelete={onFileDelete} onFileDownload={onFileDownload} />
+        {showInfoCard && (
+          <InfoCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="error"
+            style={{ marginLeft: "0rem", maxWidth: "100%" }}
+            label={t("HCM_ERROR")}
+            additionalElements={[
+              <React.Fragment key={type}>
+                {errorsType[type] && (
+                  <React.Fragment>
+                    {errorsType[type].split(",").map((error, index) => (
+                      <React.Fragment key={index}>
+                        {index > 0 && <br />}
+                        {error.trim()}
+                      </React.Fragment>
+                    ))}
+                  </React.Fragment>
+                )}
+              </React.Fragment>,
+            ]}
+          />
+        )}
       </Card>
       <InfoCard
         populators={{
@@ -746,18 +785,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         variant="default"
         style={{ margin: "0rem", maxWidth: "100%" }}
         additionalElements={readMeInfo[type]?.map((info, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+          <div key={index} style={{ display: "flex", flexDirection: "column" }}>
             <h2>{info?.header}</h2>
             <ul style={{ paddingLeft: 0 }}>
               {info?.descriptions.map((desc, i) => (
-                <li key={i}>{desc.text}</li>
+                <li key={i} className="info-points">
+                  <p>{i + 1}. </p>
+                  <p>{desc.text}</p>
+                </li>
               ))}
             </ul>
           </div>
         ))}
         label={"Info"}
       />
-      {showToast && uploadedFile?.length > 0 && (
+      {showToast && (uploadedFile?.length > 0 || downloadError) && (
         <Toast
           error={showToast.key === "error" ? true : false}
           warning={showToast.key === "warning" ? true : false}
