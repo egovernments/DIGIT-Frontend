@@ -699,7 +699,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any, 
   logger.info(`Facilities generation completed and found ${allFacilities?.length} facilities`);
   const facilitySheetData: any = await createFacilitySheet(request, allFacilities, localizationMap);
   // request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
-  const boundarySheetData: any = await getBoundarySheetData(request,localizationMap);
+  const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
   await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request, localizationMap);
 }
 async function generateUserAndBoundarySheet(request: any, localizationMap?: { [key: string]: string }) {
@@ -711,7 +711,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
   logger.info("Generated an empty user template");
   const userSheetData = await createExcelSheet(userData, localizedHeaders, localizedUserTab);
-  const boundarySheetData: any = await getBoundarySheetData(request,localizationMap);
+  const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
   await createUserAndBoundaryFile(userSheetData, boundarySheetData, request, localizationMap);
 }
 async function processGenerateRequest(request: any, localizationMap?: { [key: string]: string }) {
@@ -724,7 +724,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
   }
 }
 
-async function processGenerateForNew(request: any, response: any, generatedResource: any, newEntryResponse: any, localizationMap?:any) {
+async function processGenerateForNew(request: any, response: any, generatedResource: any, newEntryResponse: any, localizationMap?: any) {
   request.body.generatedResource = newEntryResponse;
   try {
     await fullProcessFlowForNewEntry(newEntryResponse, request, response, localizationMap);
@@ -835,11 +835,10 @@ function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
   // Initialize arrays to store data
   const withBoundaryCode: { key: string, value: string }[][] = [];
   const withoutBoundaryCode: { key: string, value: string }[][] = [];
-  console.log(boundaryData,"ldatrrrr")
   // Process each object in boundaryData
-  boundaryData.forEach((obj:any) => {
+  boundaryData.forEach((obj: any) => {
     // Convert object entries to an array of {key, value} objects
-    const row:any = Object.entries(obj)
+    const row: any = Object.entries(obj)
       .filter(([key, value]) => value !== null && value !== undefined)
       .map(([key, value]) => ({ key, value }));
 
@@ -853,9 +852,6 @@ function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
       withoutBoundaryCode.push(row);
     }
   });
-
-  // Log the result for debugging
-  console.log(withoutBoundaryCode, "wiiiiiiiiiiiiiiiiiiiiiiiiii");
 
   // Return the arrays
   return [withBoundaryCode, withoutBoundaryCode];
@@ -990,9 +986,9 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
 function findMapValue(map: Map<any, any>, key: any): any | null {
   let foundValue = null;
   map.forEach((value, mapKey) => {
-      if (mapKey.key === key.key && mapKey.value === key.value) {
-          foundValue = value;
-      }
+    if (mapKey.key === key.key && mapKey.value === key.value) {
+      foundValue = value;
+    }
   });
   return foundValue;
 }

@@ -548,23 +548,6 @@ async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl:
     }
 }
 
-
-// function getChildParentMap(modifiedBoundaryData: any) {
-//     const childParentMap: Map<string, string | null> = new Map();
-//    console.log(modifiedBoundaryData,"modiiiiiiiiiiiii")
-//     modifiedBoundaryData.forEach((row: any) => {
-//         for (let j = row.length - 1; j >= 0; j--) {
-//             const child = row[j];
-//             const parent = j - 1 >= 0 ? row[j - 1] : null;
-//             if (!childParentMap.has(child)) {
-//                 childParentMap.set(child, parent);
-//             }
-//         }
-//     });
-
-//     return childParentMap;
-// }
-
 function getChildParentMap(modifiedBoundaryData: any) {
     const childParentMap: Map<{ key: string, value: string }, { key: string, value: string } | null> = new Map();
 
@@ -581,17 +564,13 @@ function getChildParentMap(modifiedBoundaryData: any) {
             const existingMapping = Array.from(childParentMap.entries()).find(([existingChild, existingParent]) =>
                 _.isEqual(existingChild, childIdentifier) && _.isEqual(existingParent, parentIdentifier)
             );
-            console.log(existingMapping,"existingggggggggggggggggggg")
 
             // If the mapping doesn't exist, add it to the childParentMap
             if (!existingMapping) {
                 childParentMap.set(childIdentifier, parentIdentifier);
-                console.log(childParentMap,"childddddddddddddd")
             }
         }
     });
-    console.log(childParentMap);
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
     return childParentMap;
 }
 
@@ -601,64 +580,38 @@ function getChildParentMap(modifiedBoundaryData: any) {
 
 
 function getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode: any[]) {
-    console.log(withBoundaryCode, "euuuuuuuuuuuuuuuuuuu")
     const countMap = new Map<{ key: string, value: string }, number>();
     const mappingMap = new Map<{ key: string, value: string }, string>();
 
     withBoundaryCode.forEach((row: any[]) => {
-        console.log(row, "rowwwwwwwwwwwwww")
         const len = row.length;
         if (len >= 3) {
             let grandParentFound = false;
             const grandParent = row[len - 3];
-            if(findMapValue(mappingMap,grandParent)){
-            const countMapArray = Array.from(countMap.entries());
-            for (const [key, value] of countMapArray) {
-                if (_.isEqual(key, grandParent)) {
-                    countMap.set(key, value + 1);
-                    grandParentFound = true;
-                    break;
+            if (findMapValue(mappingMap, grandParent)) {
+                const countMapArray = Array.from(countMap.entries());
+                for (const [key, value] of countMapArray) {
+                    if (_.isEqual(key, grandParent)) {
+                        countMap.set(key, value + 1);
+                        grandParentFound = true;
+                        break;
+                    }
+                }
+                if (grandParentFound == false) {
+                    countMap.set(grandParent, 1);
                 }
             }
-            if (grandParentFound == false) {
-                countMap.set(grandParent, 1);
-            }
-        }
         }
         mappingMap.set(row[len - 2], row[len - 1].value);
     });
-    console.log(countMap, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
     return { mappingMap, countMap };
-}
-
-
-
-
-
-function getBoundaryTypeMap(boundaryData: any[], boundaryMap: Map<any, any>, localizationMap?: any) {
-    const boundaryTypeMap: Map<string, string> = new Map();
-    const modifiedBoundaryData: { key: string, value: string }[][] = []; boundaryData.forEach((obj: any) => {
-        const row: any = Object.entries(obj)
-            .filter(([key, value]) => value !== null && value !== undefined)
-            .map(([key, value]) => ({ key, value }));
-        modifiedBoundaryData.push(row);
-    });
-    modifiedBoundaryData.forEach((boundary) => {
-        boundary.forEach((boundaryObject) => {
-            const boundaryCode = findMapValue(boundaryMap, boundaryObject);
-            if (boundaryCode !== undefined && boundaryObject.key !== getLocalizedName(config.boundaryCode, localizationMap)) {
-                boundaryTypeMap.set(boundaryCode, boundaryObject.key);
-            }
-        });
-    });
-    return boundaryTypeMap;
 }
 
 
 function addBoundaryCodeToData(withBoundaryCode: any[], withoutBoundaryCode: any[], boundaryMap: Map<any, any>) {
     const boundaryDataWithBoundaryCode = withBoundaryCode;
     const modifiedBoundaryDataWithBoundaryCode = boundaryDataWithBoundaryCode.map((array) => {
-        return array.map((obj:any) => {
+        return array.map((obj: any) => {
             if (obj.key === 'Boundary Code') {
                 return obj.value;
             } else {
@@ -666,7 +619,7 @@ function addBoundaryCodeToData(withBoundaryCode: any[], withoutBoundaryCode: any
             }
         });
     });
-    
+
     const boundaryDataForWithoutBoundaryCode = withoutBoundaryCode.map((row: any[]) => {
         const boundaryName = row[row.length - 1]; // Get the last element of the row
         const boundaryCode = findMapValue(boundaryMap, boundaryName); // Fetch corresponding boundary code from map
@@ -1396,17 +1349,17 @@ const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) =>
     const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId, fileStoreIds: request?.body?.ResourceDetails?.fileStoreId }, "get");
     const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
     const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedBoundaryTab, false, undefined, localizationMap);
+    const updatedBoundaryData = updateBoundaryData(boundaryData);
     const hierarchy = await getHierarchy(request, tenantId, hierarchyType);
-    const modifiedBoundaryData = modifyBoundaryDataHeaders(boundaryData, hierarchy, localizationMap);
+    const modifiedBoundaryData = modifyBoundaryDataHeaders(updatedBoundaryData, hierarchy, localizationMap);
     const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(modifiedBoundaryData, localizationMap);
     const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
     const childParentMap = getChildParentMap(withoutBoundaryCode);
     const boundaryMap = await getAutoGeneratedBoundaryCodesHandler(withoutBoundaryCode, childParentMap, mappingMap, countMap, request);
     logger.info("Boundary Code Auto Generation Completed");
-    const boundaryTypeMap = getBoundaryTypeMap(modifiedBoundaryData, boundaryMap, localizationMap);
     await createBoundaryEntities(request, boundaryMap);
-    const modifiedMap = modifyChildParentMap(childParentMap, boundaryMap);
-    await createBoundaryRelationship(request, boundaryTypeMap, modifiedMap, localizationMap);
+    const modifiedChildParentMap = modifyChildParentMap(childParentMap, boundaryMap);
+    await createBoundaryRelationship(request, boundaryMap, modifiedChildParentMap);
     const boundaryDataForSheet = addBoundaryCodeToData(withBoundaryCode, withoutBoundaryCode, boundaryMap);
     logger.info("Initiated the localisation message creation for the uploaded boundary");
     transformAndCreateLocalisation(boundaryMap, request);
@@ -1420,15 +1373,44 @@ const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) =>
 }
 
 
+
+function updateBoundaryData(boundaryData: any[]): any[] {
+    const map: Map<string, string> = new Map();
+    const count: Map<string, number> = new Map();
+
+    boundaryData.forEach((row) => {
+        const keys = Object.keys(row);
+        keys.forEach((key, index) => {
+            if (index > 0) {
+                const element = row[key];
+                const previousElement = row[keys[index - 1]];
+                const elementKey = `${key}:${element}`;
+
+                if (!map.has(elementKey)) {
+                    map.set(elementKey, previousElement);
+                    count.set(elementKey, 1);
+                } else if (map.get(elementKey) !== previousElement) {
+                    const currentCount = count.get(elementKey)!;
+                    const uniqueElement = `${element}-${currentCount.toString().padStart(2, '0')}`;
+                    row[key] = uniqueElement;
+                    map.set(`${key}:${uniqueElement}`, previousElement);
+                    count.set(elementKey, currentCount + 1);
+                } else {
+                    logger.info("Same data in this column")
+                }
+            }
+        });
+    });
+    return boundaryData;
+}
+
 function modifyBoundaryDataHeaders(boundaryData: any[], hierarchy: any[], localizationMap?: any) {
-    console.log(boundaryData,"originasl")
     const updatedData = boundaryData.map((obj: any) => {
         const updatedObj: { [key: string]: string | undefined } = {}; // Updated object with modified keys
 
         let hierarchyIndex = 0; // Track the index of the hierarchy array
 
         for (const key in obj) {
-            console.log(getLocalizedName(config.boundaryCode, localizationMap),"locccccccccccccccccc")
             if (key != getLocalizedName(config.boundaryCode, localizationMap)) {
                 if (Object.prototype.hasOwnProperty.call(obj, key)) {
                     const hierarchyKey = hierarchy[hierarchyIndex]; // Get the key from the hierarchy array
@@ -1437,7 +1419,6 @@ function modifyBoundaryDataHeaders(boundaryData: any[], hierarchy: any[], locali
                 }
             }
             else {
-                console.log("hhhhhhhhhhhhhhhhh")
                 updatedObj[key] = obj[key];
             }
         }
@@ -1445,10 +1426,8 @@ function modifyBoundaryDataHeaders(boundaryData: any[], hierarchy: any[], locali
 
         return updatedObj;
     });
-    console.log(updatedData, "oooooooooooooooooooooooooooo")
     return updatedData;
 }
-
 
 function modifyChildParentMap(childParentMap: Map<any, any>, boundaryMap: Map<any, any>): Map<string, string | null> {
     const modifiedMap: Map<string, string | null> = new Map();
@@ -1456,19 +1435,16 @@ function modifyChildParentMap(childParentMap: Map<any, any>, boundaryMap: Map<an
     // Iterate over each entry in childParentMap
     childParentMap.forEach((value, key) => {
         // Get the modified key and value from boundaryMap
-        const modifiedKey = findMapValue(boundaryMap, key);
-        console.log(modifiedKey)
-        let modifiedValue = null;
-        if (value != null) {
-            modifiedValue = findMapValue(boundaryMap, value);
-        }
-        console.log(modifiedValue)
+        const modifiedKey = findMapValue(boundaryMap, key) || null;
+        const modifiedValue = value ? findMapValue(boundaryMap, value) : null;
 
         // Set the modified key-value pair in modifiedMap
         modifiedMap.set(modifiedKey, modifiedValue);
     });
+
     return modifiedMap;
 }
+
 
 async function convertSheetToDifferentTabs(request: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
     // create different tabs on the level of hierarchy we want to 
@@ -1503,7 +1479,6 @@ export {
     generateProcessedFileAndPersist,
     convertToTypeData,
     getChildParentMap,
-    getBoundaryTypeMap,
     addBoundaryCodeToData,
     prepareDataForExcel,
     extractCodesFromBoundaryRelationshipResponse,
