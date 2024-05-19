@@ -684,7 +684,7 @@ const Upload = ({
     let schemaKeys;
     if (schemaData?.schema?.["Properties"]) schemaKeys = hierarchy.concat(Object.keys(schemaData.schema["Properties"]));
     // Sorting the resourceMapping list inorder to maintain the column sequence
-    const sortedSecondList = sortSecondListBasedOnFirstListOrder(schemaKeys, resourceMapping);
+    const sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, resourceMapping);
     // Creating a object with input data with MDMS keys
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
@@ -1479,30 +1479,5 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   resourceMappingData.push(toAddInResourceMapping);
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
-
-// Sorting 2 lists, The first list is a list of string and second one is list of Objects
-function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
-  // Create a map to store the indices of elements in the first list
-  const indexMap = {};
-  firstList.forEach((value, index) => {
-    indexMap[value] = index;
-  });
-
-  // Sort the second list based on the order of elements in the first list
-  secondList.sort((a, b) => {
-    // Get the mappedTo values of each object
-    const mappedToA = a.mappedTo;
-    const mappedToB = b.mappedTo;
-
-    // Get the indices of mappedTo values in the first list
-    const indexA = indexMap[mappedToA];
-    const indexB = indexMap[mappedToB];
-
-    // Compare the indices
-    return indexA - indexB;
-  });
-
-  return secondList;
-}
 
 export default Upload;

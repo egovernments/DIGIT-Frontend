@@ -172,11 +172,12 @@ const CreateMicroplan = () => {
         //   planConfigurationId: data?.PlanConfiguration[0]?.id,
         //   auditDetails: data?.PlanConfiguration[0]?.auditDetails,
         // }));
-        const additionalPropsForExcel = {
+        const additionalProps = {
           heirarchyData: heirarchyData,
           t,
+          campaignType
         };
-        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps, false);
         if (computedSession) {
           computedSession.microplanStatus = "DRAFT";
           setMicroplanData(computedSession);
@@ -209,11 +210,12 @@ const CreateMicroplan = () => {
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
-        const additionalPropsForExcel = {
+        const additionalProps = {
           heirarchyData: heirarchyData,
           t,
+          campaignType
         };
-        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps , false);
         if (computedSession) {
           computedSession.microplanStatus = "DRAFT";
           setMicroplanData(computedSession);

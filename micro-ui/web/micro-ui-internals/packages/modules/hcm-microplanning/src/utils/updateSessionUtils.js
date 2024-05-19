@@ -88,7 +88,7 @@ function parseBlobToJSON(blob, file) {
 }
 
 export const updateSessionUtils = {
-  computeSessionObject: async (row, state, additionalPropsForExcel) => {
+  computeSessionObject: async (row, state, additionalProps, translatedData = true) => {
     const sessionObj = {};
     const setCurrentPage = () => {
       sessionObj.currentPage = {
@@ -141,12 +141,12 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload) => {
+    const handleGeoJson = (file, result, upload, shapefileOrigin = false) => {
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
       upload[templateIdentifier] = {
         id: templateIdentifier,
         section: templateIdentifier,
-        fileName: templateIdentifier,
+        fileName: templateIdentifier + (shapefileOrigin ? ".zip" : ".geojson"),
         fileType: inputFileType,
         file: {},
         fileId: fileId,
@@ -156,10 +156,23 @@ export const updateSessionUtils = {
         data: {},
       };
 
+      const schema = state?.Schemas?.find((schema) => {
+        if (schema.type === inputFileType && schema.section === templateIdentifier && schema.campaignType === additionalProps?.campaignType) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (!schema) {
+        console.error("Schema got undefined while handling excel at handleExcel");
+      }
+      let schemaKeys;
+      if (schema?.schema?.["Properties"]) schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
+      const sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
       upload[templateIdentifier].data = result;
       const newFeatures = result["features"].map((item) => {
         let newProperties = {};
-        row?.resourceMapping
+        sortedSecondList
           ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
           .forEach((e) => {
             newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
@@ -178,7 +191,7 @@ export const updateSessionUtils = {
       upload[templateIdentifier] = {
         id: templateIdentifier,
         section: templateIdentifier,
-        fileName: templateIdentifier,
+        fileName: templateIdentifier + ".xlsx",
         fileType: inputFileType,
         file: {},
         fileId: fileId,
@@ -201,13 +214,13 @@ export const updateSessionUtils = {
 
       const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
         schema,
-        additionalPropsForExcel.heirarchyData,
+        additionalProps.heirarchyData,
         {
           id: inputFileType,
         },
         result,
-        additionalPropsForExcel.t,
-        false
+        additionalProps.t,
+        translatedData
       );
       upload[templateIdentifier].data = resultAfterMapping?.tempFileDataToStore;
       // upload[templateIdentifier].resourceMapping = resultAfterMapping?.tempResourceMappingData;
@@ -295,7 +308,7 @@ export const updateSessionUtils = {
       filesResponse.forEach(({ jsonData, file }, idx) => {
         switch (file.inputFileType) {
           case "Shapefile":
-            handleGeoJson(file, jsonData, upload);
+            handleGeoJson(file, jsonData, upload, true);
             break;
           case "Excel":
             handleExcel(file, jsonData, upload);

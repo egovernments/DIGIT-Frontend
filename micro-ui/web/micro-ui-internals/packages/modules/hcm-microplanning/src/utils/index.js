@@ -25,7 +25,8 @@ const getSchema = (campaignType, type, section, schemas) => {
   });
 };
 
-function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
+// Sorting 2 lists, The first list is a list of string and second one is list of Objects
+const sortSecondListBasedOnFirstListOrder = (firstList, secondList)=> {
   // Create a map to store the indices of elements in the first list
   const indexMap = {};
   firstList.forEach((value, index) => {
@@ -253,6 +254,9 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
+
+
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -261,5 +265,6 @@ export default {
   inputScrollPrevention,
   handleSelection,
   convertGeojsonToExcelSingleSheet,
-  resourceMappingAndDataFilteringForExcelFiles
+  resourceMappingAndDataFilteringForExcelFiles,
+  sortSecondListBasedOnFirstListOrder
 };
