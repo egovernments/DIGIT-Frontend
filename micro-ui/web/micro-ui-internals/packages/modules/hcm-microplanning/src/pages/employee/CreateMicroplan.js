@@ -99,6 +99,7 @@ const CreateMicroplan = () => {
   // useEffect to store data in session storage
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
+    if (data?.microplanStatus === "GENERATED") setToRender("success-screen");
     let statusData = {};
     let toCheckCompletenesData = [];
     timeLineOptions.forEach((item) => {
@@ -135,11 +136,20 @@ const CreateMicroplan = () => {
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
-        if (data === "mapping") break;
-        check = check && checkStatusValues?.[data];
+        check = check && checkStatusValues && checkStatusValues[data];
+        if (data === currentPage?.name) break;
       }
       if (!check) {
-        setCheckDataCompletion("perform-action");
+        setToastCreateMicroplan({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setLoaderActivation(true);
+        setTimeout(() => {
+          setLoaderActivation(false);
+          setToastCreateMicroplan(undefined);
+          setCheckDataCompletion("perform-action");
+        }, 1000);
         return;
       }
       setCheckDataCompletion("false");
@@ -162,14 +172,17 @@ const CreateMicroplan = () => {
         //   planConfigurationId: data?.PlanConfiguration[0]?.id,
         //   auditDetails: data?.PlanConfiguration[0]?.auditDetails,
         // }));
-        debugger
         const additionalPropsForExcel = {
           heirarchyData: heirarchyData,
           t,
         };
         const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
-        setMicroplanData(computedSession);
-        debugger
+        if (computedSession) {
+          computedSession.microplanStatus = "DRAFT";
+          setMicroplanData(computedSession);
+        } else {
+          console.error("Failed to compute session data.");
+        }
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -201,7 +214,12 @@ const CreateMicroplan = () => {
           t,
         };
         const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalPropsForExcel);
-        setMicroplanData(computedSession);
+        if (computedSession) {
+          computedSession.microplanStatus = "DRAFT";
+          setMicroplanData(computedSession);
+        } else {
+          console.error("Failed to compute session data.");
+        }
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);

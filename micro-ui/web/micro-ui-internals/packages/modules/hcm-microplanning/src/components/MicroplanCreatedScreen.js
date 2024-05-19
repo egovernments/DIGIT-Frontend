@@ -48,7 +48,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
   }
 
   const clickGoHome = ()=>{
-    history.push(`/microplan-ui/employee/microplanning/select-campaign`);
+    history.push(`/microplan-ui/employee`);
   }
 
   return (

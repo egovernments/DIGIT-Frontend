@@ -73,7 +73,17 @@ const Navigator = (props) => {
     //   setCheckDataCompletion("false");
     //   setNavigationEvent(undefined);
     // }
-    handleNavigationEvent(checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, nextStep, previousStep, props);
+    handleNavigationEvent(
+      checkDataCompletion,
+      navigationEvent,
+      currentPage,
+      setCheckDataCompletion,
+      setNavigationEvent,
+      onStepClick,
+      nextStep,
+      previousStep,
+      props
+    );
   }, [checkDataCompletion, navigationEvent]);
 
   // Function to navigate to the next step
@@ -100,9 +110,10 @@ const Navigator = (props) => {
   // Function to handle next button click
   const previousbuttonClickHandler = useCallback(() => {
     if (
-      props.checkDataCompleteness &&
-      props?.config[currentPage?.id]?.checkForCompleteness &&
-      LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+      (props.checkDataCompleteness &&
+        props?.config[currentPage?.id]?.checkForCompleteness &&
+        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) ||
+      currentPage?.id === props.config[props.config.length - 1].id
     ) {
       setCheckDataCompletion("true");
       setNavigationEvent({ name: "previousStep" });
@@ -124,12 +135,13 @@ const Navigator = (props) => {
   // Function to handle step click
   const stepClickHandler = useCallback(
     (index) => {
-      if(index === currentPage?.id) return;
+      if (index === currentPage?.id) return;
       if (!props.stepNavigationActive) return;
       if (
-        props.checkDataCompleteness &&
-        props?.config[currentPage?.id]?.checkForCompleteness &&
-        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null
+        (props.checkDataCompleteness &&
+          props?.config[currentPage?.id]?.checkForCompleteness &&
+          LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) ||
+        currentPage?.id === props.config[props.config.length - 1].id
       ) {
         setCheckDataCompletion("true");
         setNavigationEvent({ name: "step", step: index });
@@ -148,8 +160,8 @@ const Navigator = (props) => {
   };
 
   const completeNavigation = () => {
-      setNavigationEvent({ name: "next" });
-      setCheckDataCompletion("true");
+    setNavigationEvent({ name: "next" });
+    setCheckDataCompletion("true");
   };
 
   return (
@@ -222,8 +234,17 @@ LoadCustomComponent.propTypes = {
   secondaryProps: PropTypes.object,
 };
 
-
-const handleNavigationEvent = (checkDataCompletion, navigationEvent, currentPage,setCheckDataCompletion,setNavigationEvent, onStepClick, nextStep, previousStep, props)=>{
+const handleNavigationEvent = (
+  checkDataCompletion,
+  navigationEvent,
+  currentPage,
+  setCheckDataCompletion,
+  setNavigationEvent,
+  onStepClick,
+  nextStep,
+  previousStep,
+  props
+) => {
   if (checkDataCompletion === "perform-action") {
     if (navigationEvent && navigationEvent.name === "next") {
       if (currentPage?.id >= props.config.length - 1 && typeof props?.completeNavigation == "function") {
@@ -235,7 +256,6 @@ const handleNavigationEvent = (checkDataCompletion, navigationEvent, currentPage
     setCheckDataCompletion("false");
     setNavigationEvent(undefined);
   }
-}
-
+};
 
 export default Navigator;

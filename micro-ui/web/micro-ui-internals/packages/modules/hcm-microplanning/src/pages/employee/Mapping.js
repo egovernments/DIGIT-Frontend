@@ -10,6 +10,7 @@ import {
   TreeSelect,
   Modal,
   Button,
+  CheckBox,
 } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -35,7 +36,6 @@ import chroma from "chroma-js";
 import { Schemas } from "./ToBeShifted/Schemas.json";
 import * as MicroplanIconCollection from "../../icons/Svg";
 import { MapFilters } from "./ToBeShifted/MapFilters.json";
-import CheckBox from "./ToBeShifted/CheckBox";
 
 const IconCollection = { ...MicroplanIconCollection, ...DigitSvgs };
 
@@ -466,7 +466,7 @@ const FilterSection = memo(
                     onChange={(e) => handleChange(e, item)}
                     label={t(item)}
                     checked={!!filterSelections.includes(item)}
-                    mainClasaName="mainClasaName"
+                    mainClassName="mainClassName"
                     labelClassName="labelClassName"
                     inputWrapperClassName="inputWrapperClassName"
                     inputClassName="inputClassName"

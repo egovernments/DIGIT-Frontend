@@ -222,7 +222,6 @@ export const updateSessionUtils = {
       const promises = [];
       let storedData = [];
       files.forEach(({ filestoreId, inputFileType, templateIdentifier, id }) => {
-        debugger;
         let fileData = {
           filestoreId,
           inputFileType,
@@ -283,7 +282,6 @@ export const updateSessionUtils = {
       const resolvedPromises = await Promise.all(promises);
       let result = storedData;
       if (resolvedPromises) result = [...storedData, ...resolvedPromises];
-      debugger;
       return result;
     };
     const setMicroplanUpload = async (filesResponse) => {

@@ -117,7 +117,9 @@ const Upload = ({
       if (check) {
         setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
         const valueList = fileDataList ? Object.values(fileDataList) : [];
-        if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
+        const sectionCheckList = sections.filter(item=>item.required)
+        console.log(sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null))
+        if (valueList.length !== 0 && sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
         const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
