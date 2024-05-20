@@ -97,10 +97,48 @@ const IFrameInterface = (props) => {
         console.error('Error injecting custom HTTP interceptor:', error);
       }
     };
+    const injectCustomHttpInterceptorDocumentApi = () => {
+      try {
+        if (!iframeWindow) {
+          console.error('Failed to access iframe content window.');
+          return;
+        }
+        const originalDocumentApi = iframeWindow.document.api;
+        iframeWindow.document.api = function (url, options) {
+          // Intercepting here
+          const oidcToken = window.localStorage.getItem(localStorageKey);
+          if (!oidcToken) {
+            console.error('OIDC token not found in local storage.');
+            return originalDocumentApi(url, options);
+          }
+    
+          const accessToken = oidcToken;
+          if (!options.headers) {
+            options.headers = {};
+          }
+          options.headers['Authorization'] = `Bearer ${accessToken}`;
+    
+          return originalDocumentApi(url, options)
+            .then(response => {
+              // You can handle response here if needed
+              // console.log('Response:', response);
+              return response;
+            })
+            .catch(error => {
+              // You can handle errors here if needed
+              console.error('Document API error:', error);
+              throw error;
+            });
+        };
+      } catch (error) {
+        console.error('Error injecting custom HTTP interceptor for document.api:', error);
+      }
+    };
 
     if (iframeRef.current) {
       injectCustomHttpInterceptor();
       injectCustomHttpInterceptorFetch();
+      injectCustomHttpInterceptorDocumentApi();
     }
   }, [localStorageKey,iframeWindow]);
 
