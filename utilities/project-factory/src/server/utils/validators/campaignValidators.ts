@@ -5,9 +5,8 @@ import { httpRequest } from "../request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../../api/campaignApis";
 import { campaignDetailsSchema } from "../../config/models/campaignDetails";
 import Ajv from "ajv";
-import axios from "axios";
 import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
+import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequestAndResponse, throwError } from "../genericUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
@@ -19,6 +18,8 @@ const _ = require('lodash');
 import * as XLSX from 'xlsx';
 import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../boundaryUtils";
+import { createDataService, searchDataService } from "../../service/dataManageService";
+import { searchProjectTypeCampaignService } from "../../service/campaignManageService";
 
 
 
@@ -569,15 +570,16 @@ async function validateResources(resources: any, request: any) {
                     tenantId: request?.body?.CampaignDetails?.tenantId
                 }
             }
-            const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
-            if (response?.ResourceDetails?.[0]) {
-                if (!(response?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && response?.ResourceDetails?.[0]?.action == "validate")) {
+            const req: any = replicateRequestAndResponse(request, searchBody);
+            const res: any = await searchDataService(req.request, req.response);
+            if (res?.ResourceDetails?.[0]) {
+                if (!(res?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && res?.ResourceDetails?.[0]?.action == "validate")) {
                     logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
                     throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
                 }
-                if (response?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
-                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`);
-                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`)
+                if (res?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
+                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${res?.ResourceDetails?.[0]?.fileStoreId}`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${res?.ResourceDetails?.[0]?.fileStoreId}`)
                 }
             }
             else {
@@ -595,10 +597,11 @@ async function validateResources(resources: any, request: any) {
                 additionalDetails: {}
             };
             try {
-                await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+                const req: any = replicateRequestAndResponse(request, {
                     RequestInfo: request.body.RequestInfo,
                     ResourceDetails: resourceDetails
-                });
+                })
+                await createDataService(req.request, req.response);
             } catch (error: any) {
                 logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
                 throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
@@ -694,7 +697,9 @@ async function validateCampaignName(request: any, actionInUrl: any) {
                 campaignName: campaignName
             }
         }
-        const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+        const req: any = replicateRequestAndResponse(request, searchBody)
+        const searchResponse: any = await searchProjectTypeCampaignService(req.request, req.response)
+        console.log(searchResponse, " SSSSSSSSSSSSSSSS")
         if (Array.isArray(searchResponse?.CampaignDetails)) {
             if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
                 throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
@@ -721,7 +726,8 @@ async function validateById(request: any) {
             ids: [id]
         }
     }
-    const searchResponse: any = await axios.post(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+    const req: any = replicateRequestAndResponse(request, searchBody)
+    const searchResponse: any = await searchProjectTypeCampaignService(req.request, req.response)
     if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
         if (searchResponse?.data?.CampaignDetails?.length > 0) {
             logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
