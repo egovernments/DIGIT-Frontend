@@ -953,7 +953,7 @@ async function createBoundaryRelationship(request: any, boundaryMap: Map<{ key: 
                 // Introducing a delay of 1 second
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 try {
-                    const response = await httpRequest(`${config.host.boundaryHost}boundary-service/boundary-relationships/_create`, requestBody, {}, 'POST', undefined, undefined, true);
+                    const response = await httpRequest(`${config.host.boundaryHost}${config.paths.boundaryRelationshipCreate}`, requestBody, {}, 'POST', undefined, undefined, true);
 
                     if (!response.TenantBoundary || !Array.isArray(response.TenantBoundary) || response.TenantBoundary.length === 0) {
                         throwError("BOUNDARY", 500, "BOUNDARY_RELATIONSHIP_CREATE_ERROR");
@@ -1018,7 +1018,6 @@ async function callMdmsData(
 
 async function getMDMSV1Data(request: any, moduleName: string, masterName: string, tenantId: string) {
     const resp=await callMdmsData(request, moduleName, masterName, tenantId);
-    logger.info(resp);
     return resp;
 }
 

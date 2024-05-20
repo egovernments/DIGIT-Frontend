@@ -980,16 +980,16 @@ async function reorderBoundaries(request: any, localizationMap?: any) {
             const codesTargetMapping = await getCodesTarget(request, localizationMap)
             mapTargets(boundaryResponse?.TenantBoundary?.[0]?.boundary, codesTargetMapping)
             request.body.CampaignDetails.codesTargetMapping = codesTargetMapping
-            logger.info("codesTargetMapping " );
+            logger.info("codesTargetMapping ");
             logger.debug("codesTargetMapping mapping :: " + getFormattedStringForDebug(codesTargetMapping));
             mapBoundariesParent(boundaryResponse?.TenantBoundary?.[0]?.boundary, request, null)
         }
     }
     await addBoundaries(request)
-    logger.info("Boundaries for campaign creation in received" )
+    logger.info("Boundaries for campaign creation in received")
     logger.debug("Boundaries after addition " + getFormattedStringForDebug(request?.body?.CampaignDetails?.boundaries));
     reorderBoundariesWithParentFirst(request?.body?.CampaignDetails?.boundaries, request?.body?.boundaryProjectMapping)
-    logger.info("Reordered the Boundaries for mapping" );
+    logger.info("Reordered the Boundaries for mapping");
     logger.debug("Reordered Boundaries " + getFormattedStringForDebug(request?.body?.CampaignDetails?.boundaries));
 }
 
@@ -1353,7 +1353,7 @@ const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) =>
     const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
     const boundaryData = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedBoundaryTab, false, undefined, localizationMap);
     const updatedBoundaryData = updateBoundaryData(boundaryData);
-    const hierarchy = await getHierarchy(request, tenantId, hierarchyType);
+    const hierarchy = await getHierarchy(request, tenantId, hierarchyType) || [];
     const modifiedBoundaryData = modifyBoundaryDataHeaders(updatedBoundaryData, hierarchy, localizationMap);
     const [withBoundaryCode, withoutBoundaryCode] = modifyBoundaryData(modifiedBoundaryData, localizationMap);
     const { mappingMap, countMap } = getCodeMappingsOfExistingBoundaryCodes(withBoundaryCode);
