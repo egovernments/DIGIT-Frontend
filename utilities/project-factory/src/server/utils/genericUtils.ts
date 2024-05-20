@@ -8,7 +8,6 @@ import { searchMDMS, getCount, getBoundarySheetData, getSheetData, createAndUplo
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { logger } from "./logger";
-import dataManageController from "../controllers/dataManage/dataManage.controller";
 import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration, getLocalizedName } from "./campaignUtils";
 import Localisation from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
@@ -16,6 +15,7 @@ import { generatedResourceTransformer } from "./transforms/searchResponseConstru
 import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
 import { getLocaleFromRequest } from "./localisationUtils";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
+import { getBoundaryDataService } from "../service/dataManageService";
 const NodeCache = require("node-cache");
 const _ = require('lodash');
 
@@ -67,37 +67,13 @@ const throwError = (module = "COMMON", status = 500, code = "UNKNOWN_ERROR", des
 };
 
 
-const replicateRequestAndResponse = (originalRequest: Request, requestBody: any, requestQuery?: any) => {
+const replicateRequest = (originalRequest: Request, requestBody: any, requestQuery?: any) => {
   const newRequest = {
     ...originalRequest,
     body: requestBody,
     query: requestQuery || originalRequest.query
   };
-
-  // Create a new custom response object
-  const newResponse: any = {
-    statusCode: 200,
-    headers: {},
-    body: null,
-    status(statusCode: number) {
-      this.statusCode = statusCode;
-      return this;
-    },
-    send(body: any) {
-      this.body = body;
-      return this;
-    },
-    json(body: any) {
-      this.body = body;
-      return this;
-    },
-    setHeader(name: string, value: string) {
-      this.headers[name] = value;
-      return this;
-    }
-  };
-
-  return { request: newRequest, response: newResponse };
+  return newRequest;
 };
 
 
@@ -140,7 +116,6 @@ const sendResponse = (
     ...getResponseInfo(code),
     ...responseBody,
   });
-  return responseBody;
 };
 
 /* 
@@ -286,7 +261,7 @@ async function generateActivityMessage(tenantId: any, requestBody: any, requestP
 }
 
 /* Fetches data from the database */
-async function getResponseFromDb(request: any, response: any) {
+async function getResponseFromDb(request: any) {
   try {
     const { type } = request.query;
     const { tenantId, hierarchyType } = request.query;
@@ -453,16 +428,15 @@ async function callSearchApi(request: any, response: any) {
   }
 }
 
-async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, response: any, localizationMap?: { [key: string]: string }) {
+async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any, localizationMap?: { [key: string]: string }) {
   const type = request?.query?.type;
   const generatedResource: any = { generatedResource: newEntryResponse }
   // send message to create toppic
   logger.info(`processing the generate request for type ${type}`)
   produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
   if (type === 'boundary') {
-    const dataManagerController = new dataManageController();
     // get boundary data from boundary relationship search api
-    const result = await dataManagerController.getBoundaryData(request, response);
+    const result = await getBoundaryDataService(request);
     let updatedResult = result;
     // get boundary sheet data after being generated
     const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
@@ -713,11 +687,12 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
   }
 }
 
-async function processGenerateForNew(request: any, response: any, generatedResource: any, newEntryResponse: any, localizationMap?: any) {
+async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, localizationMap?: any) {
   request.body.generatedResource = newEntryResponse;
   try {
-    await fullProcessFlowForNewEntry(newEntryResponse, request, response, localizationMap);
+    await fullProcessFlowForNewEntry(newEntryResponse, request, localizationMap);
   } catch (error: any) {
+    console.log(error)
     handleGenerateError(newEntryResponse, generatedResource, error);
   }
 }
@@ -729,7 +704,7 @@ function handleGenerateError(newEntryResponse: any, generatedResource: any, erro
   produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
 }
 
-async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, response: any, localizationMap?: { [key: string]: string }) {
+async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, localizationMap?: { [key: string]: string }) {
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
   let generatedResource: any;
@@ -740,7 +715,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    processGenerateForNew(request, response, generatedResource, newEntryResponse, localizationMap)
+    processGenerateForNew(request, generatedResource, newEntryResponse, localizationMap)
   }
   else {
     request.body.generatedResource = responseData
@@ -749,9 +724,9 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 /* 
 
 */
-async function processGenerate(request: any, response: any, localizationMap?: { [key: string]: string }) {
+async function processGenerate(request: any, localizationMap?: { [key: string]: string }) {
   // fetch the data from db 
-  const responseData = await getResponseFromDb(request, response);
+  const responseData = await getResponseFromDb(request);
   // modify response from db 
   const modifiedResponse = await getModifiedResponse(responseData);
   // generate new random id and make filestore id null
@@ -759,7 +734,7 @@ async function processGenerate(request: any, response: any, localizationMap?: { 
   // make old data status as expired
   const oldEntryResponse = await getOldEntryResponse(modifiedResponse, request);
   // generate data 
-  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, response, localizationMap);
+  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, localizationMap);
 }
 /*
 TODO add comments @nitish-egov
@@ -1007,7 +982,7 @@ export {
   getLocalizedMessagesHandler,
   getLocalizedHeaders,
   createReadMeSheet,
-  replicateRequestAndResponse
+  replicateRequest
 };
 
 

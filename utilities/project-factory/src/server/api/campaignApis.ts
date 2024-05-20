@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema, replicateRequestAndResponse } from "../utils/genericUtils";
+import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema, replicateRequest } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../utils/validators/campaignValidators';
 import { callMdmsData, getCampaignNumber, getWorkbook } from "./genericApis";
 import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
@@ -12,7 +12,6 @@ import * as XLSX from 'xlsx';
 import { produceModifiedMessages } from "../Kafka/Listener";
 import { userRoles } from "../config/constants";
 import { createDataService } from "../service/dataManageService";
-import { response } from "express";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 
 
@@ -630,13 +629,10 @@ async function createProjectCampaignResourcData(request: any) {
           RequestInfo: request.body.RequestInfo,
           ResourceDetails: resourceDetails
         }
-        const createRequest = {
-          ...request,
-          body: createRequestBody
-        }
-        const res: any = await createDataService(createRequest, response)
-        if (res?.ResourceDetails?.id) {
-          resource.createResourceId = res?.ResourceDetails?.id
+        const req = replicateRequest(request, createRequestBody)
+        const res: any = await createDataService(req)
+        if (res?.id) {
+          resource.createResourceId = res?.id
         }
       }
     }
@@ -716,8 +712,8 @@ async function getFiltersFromCampaignSearchResponse(request: any) {
   const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
   const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
   const requestBody = { ...requestInfo, ...campaignDetails };
-  const req: any = replicateRequestAndResponse(request, requestBody)
-  const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req.request, req.response);
+  const req: any = replicateRequest(request, requestBody)
+  const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
   const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries?.map((ele: any) => ({ ...ele, boundaryType: ele?.type }));
   if (!boundaries) {
     logger.info(`no boundaries found so considering the complete hierarchy`);

@@ -6,7 +6,7 @@ import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } fr
 import { campaignDetailsSchema } from "../../config/models/campaignDetails";
 import Ajv from "ajv";
 import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequestAndResponse, throwError } from "../genericUtils";
+import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../genericUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
@@ -570,9 +570,9 @@ async function validateResources(resources: any, request: any) {
                     tenantId: request?.body?.CampaignDetails?.tenantId
                 }
             }
-            const req: any = replicateRequestAndResponse(request, searchBody);
-            const res: any = await searchDataService(req.request, req.response);
-            if (res?.ResourceDetails?.[0]) {
+            const req: any = replicateRequest(request, searchBody);
+            const res: any = await searchDataService(req);
+            if (res?.[0]) {
                 if (!(res?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && res?.ResourceDetails?.[0]?.action == "validate")) {
                     logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
                     throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
@@ -597,11 +597,11 @@ async function validateResources(resources: any, request: any) {
                 additionalDetails: {}
             };
             try {
-                const req: any = replicateRequestAndResponse(request, {
+                const req: any = replicateRequest(request, {
                     RequestInfo: request.body.RequestInfo,
                     ResourceDetails: resourceDetails
                 })
-                await createDataService(req.request, req.response);
+                await createDataService(req);
             } catch (error: any) {
                 logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
                 throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
@@ -697,9 +697,8 @@ async function validateCampaignName(request: any, actionInUrl: any) {
                 campaignName: campaignName
             }
         }
-        const req: any = replicateRequestAndResponse(request, searchBody)
-        const searchResponse: any = await searchProjectTypeCampaignService(req.request, req.response)
-        console.log(searchResponse, " SSSSSSSSSSSSSSSS")
+        const req: any = replicateRequest(request, searchBody)
+        const searchResponse: any = await searchProjectTypeCampaignService(req)
         if (Array.isArray(searchResponse?.CampaignDetails)) {
             if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
                 throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
@@ -726,8 +725,8 @@ async function validateById(request: any) {
             ids: [id]
         }
     }
-    const req: any = replicateRequestAndResponse(request, searchBody)
-    const searchResponse: any = await searchProjectTypeCampaignService(req.request, req.response)
+    const req: any = replicateRequest(request, searchBody)
+    const searchResponse: any = await searchProjectTypeCampaignService(req)
     if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
         if (searchResponse?.data?.CampaignDetails?.length > 0) {
             logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));

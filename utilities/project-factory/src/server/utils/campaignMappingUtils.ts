@@ -1,14 +1,12 @@
 import createAndSearch from "../config/createAndSearch";
 import config from "../config";
-import { getDataFromSheet, replicateRequestAndResponse, throwError } from "./genericUtils";
+import { getDataFromSheet, throwError } from "./genericUtils";
 import { logger } from "./logger";
 import { httpRequest } from "./request";
 import { produceModifiedMessages } from "../Kafka/Listener";
 import { getLocalizedName } from "./campaignUtils";
 import { campaignStatuses, resourceDataStatuses } from "../config/constants";
-import { createCampaignService, searchProjectTypeCampaignService } from "../service/campaignManageService";
-import { request } from "express";
-import { searchDataService } from "../service/dataManageService";
+import { createCampaignService } from "../service/campaignManageService";
 
 
 async function createBoundaryWithProjectMapping(projects: any, boundaryWithProject: any) {
@@ -144,10 +142,9 @@ async function fetchAndMap(resources: any[], messageObject: any) {
     await enrichBoundaryWithProject(messageObject, boundaryWithProject, boundaryCodes);
     const projectMappingBody = await getProjectMappingBody(messageObject, boundaryWithProject, boundaryCodes);
     logger.info("projectMappingBody : " + JSON.stringify(projectMappingBody));
-    const req: any = replicateRequestAndResponse(request, projectMappingBody);
-    const projectMappingResponse: any = await createCampaignService(req.request, req.response);
+    const projectMappingResponse: any = await createCampaignService(projectMappingBody);
     logger.info("Project Mapping Response : " + JSON.stringify(projectMappingResponse));
-    if (projectMappingResponse?.Campaign) {
+    if (projectMappingResponse) {
         logger.info("Campaign Mapping done")
         messageObject.CampaignDetails.status = campaignStatuses.inprogress
         produceModifiedMessages(messageObject, config.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC)
@@ -162,8 +159,7 @@ async function searchResourceDetailsById(resourceDetailId: string, messageObject
             tenantId: messageObject?.Campaign?.tenantId
         }
     }
-    const req: any = replicateRequestAndResponse(request, searchBody);
-    const response: any = await searchDataService(req.request, req.response);
+    const response: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
     return response?.ResourceDetails?.[0];
 }
 
@@ -175,8 +171,7 @@ async function validateMappingId(messageObject: any, id: string) {
             tenantId: messageObject?.Campaign?.tenantId,
         }
     }
-    const req: any = replicateRequestAndResponse(request, searchBody);
-    const response: any = await searchProjectTypeCampaignService(req.request, req.response);
+    const response: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
     logger.info("searchBody for campaign search : " + JSON.stringify(searchBody));
     if (!response?.CampaignDetails?.[0]) {
         throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "Campaign with id " + id + " does not exist");
