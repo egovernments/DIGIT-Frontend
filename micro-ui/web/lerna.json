@@ -6,7 +6,11 @@
     "packages/ui-libraries",
     "packages/ui-components",
     "packages/workbench",
-    "packages/hrms"
+    "packages/hrms",
+    "packages/engagement",
+    "packages/dss",
+    "packages/pgr"
+    
   ],
   "command": {
     "run": {

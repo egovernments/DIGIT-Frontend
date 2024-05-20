@@ -43,27 +43,27 @@ export default (queryClient,t,i18n) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "PGR",
-  //   app: () => import("pgr/PGRModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr/`,
-  //   customProps: {
-  //     title: "PGR is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  //  });
+  registerApplication({
+    name: "PGR",
+    app: () => import("pgr/PGRModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr/`,
+    customProps: {
+      title: "PGR is running on host",
+      queryClient,
+      userType
+    },
+   });
 
-  //  registerApplication({
-  //   name: "Dss",
-  //   app: () => import("dss/DSSModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
-  //   customProps: {
-  //     title: "DSS is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+   registerApplication({
+    name: "Dss",
+    app: () => import("dss/DSSModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
+    customProps: {
+      title: "DSS is running on host",
+      queryClient,
+      userType
+    },
+  });
 
     registerApplication({
     name: "HRMS",
@@ -89,16 +89,16 @@ export default (queryClient,t,i18n) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "Engagement",
-  //   app: () => import("engagement/EngagementModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
-  //   customProps: {
-  //     title: "Engagement is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // }); 
+  registerApplication({
+    name: "Engagement",
+    app: () => import("engagement/EngagementModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
+    customProps: {
+      title: "Engagement is running on host",
+      queryClient,
+      userType
+    },
+  }); 
 
   start();
 }

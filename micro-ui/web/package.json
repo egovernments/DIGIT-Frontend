@@ -7,12 +7,12 @@
   "author": "Jagankumar <53823168+jagankumar-egov@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.17.2",
     "@babel/plugin-proposal-unicode-property-regex": "^7.18.6",
-    "babel-plugin-react-html-attrs": "^3.0.5",
     "@babel/preset-env": "7.23.9",
     "@babel/preset-react": "7.12.10",
-    "@babel/core": "^7.17.2",
     "babel-loader": "8.2.2",
+    "babel-plugin-react-html-attrs": "^3.0.5",
     "lerna": "^7.1.5",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
@@ -24,7 +24,11 @@
     "packages/ui-libraries",
     "packages/ui-components",
     "packages/workbench",
-    "packages/hrms"
+    "packages/hrms",
+    "packages/engagement",
+    "packages/dss",
+    "packages/pgr"
+    
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -34,9 +38,16 @@
     "build:workbench": "cd packages/workbench && yarn build",
     "build:dss": "cd packages/dss && yarn build",
     "start:core": "cd packages/core && yarn start",
-    "start:workbench": "cd packages/workbench && yarn start"
+    "start:workbench": "cd packages/workbench && yarn start",
+    "build:engagement": "cd packages/engagement && yarn build",
+    "start:engagement": "cd packages/engagement && yarn start",
+    "start:dss": "cd packages/dss && yarn start",
+    "build:pgr": "cd packages/pgr && yarn build",
+    "start:pgr": "cd packages/pgr && yarn start"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "react-time-picker": "^7.0.0",
+    "recharts": "^2.12.7"
   }
 }
