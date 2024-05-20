@@ -25,7 +25,8 @@
     "packages/ui-components",
     "packages/workbench",
     "packages/hrms",
-    "packages/svg-components"
+    "packages/svg-components",
+    "packages/pgr"
   ],
   "scripts": {
     "build": "yarn lerna run build",

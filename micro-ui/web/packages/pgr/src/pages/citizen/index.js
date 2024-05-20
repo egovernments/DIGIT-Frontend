@@ -11,9 +11,10 @@ import ComplaintDetailsPage from "./ComplaintDetails";
 import Response from "./Response";
 import { useTranslation } from "react-i18next";
 
-const App = () => {
+const App = ({path,...props}) => {
+  debugger
   const { t } = useTranslation();
-  const { path, url, ...match } = useRouteMatch();
+  const { url, ...match } = useRouteMatch();
   const location = useLocation();
 
   const CreateComplaint = Digit?.ComponentRegistryService?.getComponent("PGRCreateComplaintCitizen");

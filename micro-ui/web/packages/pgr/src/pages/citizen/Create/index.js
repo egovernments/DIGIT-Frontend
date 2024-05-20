@@ -11,6 +11,7 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch, useLocation } from 
 import { useQueryClient } from "react-query";
 
 export const CreateComplaint = () => {
+  debugger
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const { t } = useTranslation();
   const { pathname } = useLocation();

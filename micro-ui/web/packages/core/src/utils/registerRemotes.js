@@ -2,7 +2,7 @@
 //routing and all we have to handle in remote app itself
 //need to share history obj i think(we need to rethink the routing part)
 
-import { registerApplication,start } from "single-spa";
+import { registerApplication, start } from 'single-spa';
 
 export default (queryClient) => {
   const userType = Digit.UserService.getType();
@@ -19,16 +19,43 @@ export default (queryClient) => {
   // });
 
   registerApplication({
-    name: "Workbench",
-    app: () => import("workbench/WorkbenchModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/workbench`,
+    name: 'PGR',
+    app: () => import('pgr/PGRModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/${userType}/pgr`,
     customProps: {
-      title: "Workbench is running on host",
+      title: 'PGR is running on host',
       queryClient,
       userType,
     },
   });
 
+  registerApplication({
+    name: 'Workbench',
+    app: () => import('workbench/WorkbenchModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/workbench`,
+    customProps: {
+      title: 'Workbench is running on host',
+      queryClient,
+      userType,
+    },
+  });
+
+  registerApplication({
+    name: 'HRMS',
+    app: () => import('hrms/HRMSModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/hrms`,
+    customProps: {
+      title: 'HRMS is running on host',
+      queryClient,
+      userType,
+    },
+  });
 
   // registerApplication({
   //   name: "Common",
@@ -41,17 +68,6 @@ export default (queryClient) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "PGR",
-  //   app: () => import("pgr/PGRModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/pgr/`,
-  //   customProps: {
-  //     title: "PGR is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  //  });
-
   //  registerApplication({
   //   name: "Dss",
   //   app: () => import("dss/DSSModule"),
@@ -62,17 +78,6 @@ export default (queryClient) => {
   //     userType
   //   },
   // });
-
-    registerApplication({
-    name: "HRMS",
-    app: () => import("hrms/HRMSModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/hrms`,
-    customProps: {
-      title: "HRMS is running on host",
-      queryClient,
-      userType,
-    },
-  }); 
 
   // registerApplication({
   //   name: "TQM",
@@ -94,8 +99,7 @@ export default (queryClient) => {
   //     queryClient,
   //     userType
   //   },
-  // }); 
+  // });
 
   start();
-}
-
+};
