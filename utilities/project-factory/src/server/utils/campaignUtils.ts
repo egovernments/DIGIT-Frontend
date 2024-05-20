@@ -555,7 +555,6 @@ function getChildParentMap(modifiedBoundaryData: any) {
         for (let j = row.length - 1; j >= 0; j--) {
             const child = row[j];
             const parent = j - 1 >= 0 ? row[j - 1] : null;
-            console.log(parent)
             const childIdentifier = { key: child.key, value: child.value }; // Unique identifier for the child
             const parentIdentifier = parent ? { key: parent.key, value: parent.value } : null; // Unique identifier for the parent, set to null if parent doesn't exist
 
@@ -1383,20 +1382,23 @@ function updateBoundaryData(boundaryData: any[]): any[] {
         keys.forEach((key, index) => {
             if (index > 0) {
                 const element = row[key];
+                const previousKey = keys[index - 1];
                 const previousElement = row[keys[index - 1]];
+                const previousElementKey = `${previousKey}:${previousElement}`;
                 const elementKey = `${key}:${element}`;
 
                 if (!map.has(elementKey)) {
-                    map.set(elementKey, previousElement);
+                    map.set(elementKey, previousElementKey);
                     count.set(elementKey, 1);
-                } else if (map.get(elementKey) !== previousElement) {
-                    const currentCount = count.get(elementKey)!;
-                    const uniqueElement = `${element}-${currentCount.toString().padStart(2, '0')}`;
-                    row[key] = uniqueElement;
-                    map.set(`${key}:${uniqueElement}`, previousElement);
-                    count.set(elementKey, currentCount + 1);
                 } else {
-                    logger.info("Same data in this column")
+                    const currentCount = count.get(elementKey)!;
+                    if (map.get(elementKey) !== previousElementKey) {
+                        map.set(elementKey, previousElementKey);
+                        count.set(elementKey, currentCount + 1);
+                    }
+                    const uniqueCount = count.get(elementKey)!;
+                    const uniqueElement = (uniqueCount > 1) ? `${element}-${(uniqueCount - 1).toString().padStart(2, '0')}` : `${element}`;
+                    row[key] = uniqueElement;
                 }
             }
         });
