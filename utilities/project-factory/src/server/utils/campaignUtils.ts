@@ -15,6 +15,7 @@ import { campaignDetailsTransformer, genericResourceTransformer } from "./transf
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
 import { campaignStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
+// import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 // import * as xlsx from 'xlsx-populate';
 const _ = require('lodash');
 
@@ -895,7 +896,6 @@ function mapTargets(boundaryResponses: any, codesTargetMapping: any) {
 
 
 async function processBoundary(boundary: any, boundaryCodes: any, boundaries: any[], request: any, includeAllChildren: any = false, parent?: any) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
     if (!boundaryCodes.has(boundary.code)) {
         boundaries.push({ code: boundary?.code, type: boundary?.boundaryType });
         boundaryCodes.add(boundary?.code);
@@ -1074,7 +1074,6 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
             RequestInfo: request?.body?.RequestInfo,
             Projects
         }
-        await reorderBoundaries(request, localizationMap)
         boundaries = request?.body?.CampaignDetails?.boundaries;
         for (const boundary of boundaries) {
             Projects[0].address = { tenantId: tenantId, boundary: boundary?.code, boundaryType: boundary?.type }
@@ -1440,5 +1439,6 @@ export {
     getBoundaryDataAfterGeneration,
     boundaryBulkUpload,
     enrichAndPersistCampaignWithError,
-    getLocalizedName
+    getLocalizedName,
+    reorderBoundaries
 }
