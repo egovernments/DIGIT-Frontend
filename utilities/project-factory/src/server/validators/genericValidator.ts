@@ -1,12 +1,12 @@
 // Importing necessary modules
 import * as express from "express";
-import { logger } from "../logger";
+import { logger } from "../utils/logger";
 import Ajv from "ajv";
-import config from "../../config/index";
-import { httpRequest } from "../request";
-import { getBoundaryRelationshipData, throwError } from "../genericUtils";
+import config from "../config/index";
+import { httpRequest } from "../utils/request";
+import { getBoundaryRelationshipData, throwError } from "../utils/genericUtils";
 import { validateFilters } from "./campaignValidators";
-import { generateRequestSchema } from "../../config/models/generateRequestSchema";
+import { generateRequestSchema } from "../config/models/generateRequestSchema";
 
 // Function to validate data against a JSON schema
 function validateDataWithSchema(data: any, schema: any): { isValid: boolean; error: Ajv.ErrorObject[] | null | undefined } {
