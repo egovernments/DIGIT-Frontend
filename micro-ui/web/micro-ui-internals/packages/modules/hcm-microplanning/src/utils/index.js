@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { findParent } from "../utils/processHierarchyAndData";
-import { EXCEL,LOCALITY } from "../configs/constants";
+import { EXCEL,LOCALITY, commonColumn } from "../configs/constants";
+
 const formatDates = (value, type) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
@@ -256,6 +257,81 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
 
 
 
+const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
+  const data = _.cloneDeep(previewData);
+  const checkUserEditedData = (commonColumnData, resourceName) => {
+    if (userEditedResources?.[commonColumnData]) {
+      return userEditedResources?.[commonColumnData]?.[resourceName];
+    }
+  };
+  const conmmonColumnIndex = data?.[0]?.indexOf(commonColumn);
+
+  const combinedData = data.map((item, index) => {
+    if (index === 0) {
+      resources.forEach((e) => item?.push(e));
+      return item;
+    }
+
+    resources.forEach((resourceName, resourceIndex) => {
+      let savedData = checkUserEditedData(item?.[conmmonColumnIndex], resourceName);
+      if (savedData) {
+        item.push(savedData);
+        return item;
+      }
+      // if (checkUserEditedData(item?.[conmmonColumnIndex], resourceName)!!item[item?.length + resourceIndex]) return;
+      let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
+      if (calculations !== null) calculations = Math.round(calculations);
+      // item[item?.length + resourceIndex] = !!calculations || calculations === 0? calculations:t("NO_DATA");
+      item.push(!!calculations || calculations === 0 ? calculations : undefined);
+      return item;
+    });
+
+    return item;
+  });
+  return combinedData;
+};
+
+
+const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
+  let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
+  if (!formula) return null;
+
+  // Finding Input
+  // check for Uploaded Data
+  let inputValue = findInputValue(formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
+  if (inputValue == undefined || inputValue === null) return null;
+  let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.key === formula?.assumptionValue)?.value;
+  if (assumptionValue == undefined) return null;
+
+  return findResult(inputValue, assumptionValue, formula?.operator);
+};
+
+// function to find input value, it calls calculateResource fucntion recurcively until it get a proper value
+const findInputValue = (formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
+  const inputIndex = headers?.indexOf(formula?.input);
+  if (inputIndex === -1 || !rowData[inputIndex]) {
+    // let tempFormula = formulaConfiguration.find((item) => item?.output === formula?.input);
+    return calculateResource(formula?.input, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
+  } else return rowData[inputIndex];
+};
+
+const findResult = (inputValue, assumptionValue, operator) => {
+  switch (operator) {
+    case "DEVIDED_BY":
+      if (assumptionValue === 0) return;
+      return inputValue / assumptionValue;
+    case "MULTIPLIED_BY":
+      return inputValue * assumptionValue;
+    case "ADDITION":
+      return inputValue + assumptionValue;
+    case "SUBSTRACTION":
+      return inputValue - assumptionValue;
+    case "RAISE_TO":
+      return inputValue ** assumptionValue;
+    default:
+      return;
+  }
+};
 
 export default {
   formatDates,
@@ -266,5 +342,7 @@ export default {
   handleSelection,
   convertGeojsonToExcelSingleSheet,
   resourceMappingAndDataFilteringForExcelFiles,
-  sortSecondListBasedOnFirstListOrder
+  sortSecondListBasedOnFirstListOrder,
+  addResourcesToFilteredDataToShow,
+  calculateResource
 };

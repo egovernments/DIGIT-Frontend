@@ -202,6 +202,7 @@ const Mapping = ({
         setFilterProperties,
         setFilterSelections,
         setFilterPropertyNames,
+        state,
         t
       );
     }
@@ -632,9 +633,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
     <div className="base-map-selector">
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
         <p>{t("LAYERS")}</p>
-        <div className="icon">
-          {DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
-        </div>
+        <div className="icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}</div>
       </div>
       <div className="base-map-area-wrapper" ref={basemapRef}>
         {showBaseMapSelector && (
@@ -706,6 +705,7 @@ const extractGeoData = (
   setFilterProperties,
   setFilterSelections,
   setFilterPropertyNames,
+  state,
   t
 ) => {
   if (!hierarchy) return;
@@ -714,6 +714,10 @@ const extractGeoData = (
   let setFilter = {};
   let filterPropertiesCollector = new Set();
   let filterPropertieNameCollector = new Set();
+  let resources = state?.Resources?.find((item) => item.campaignType === campaignType)?.data
+
+  let hypothesisAssumptionsList = microplanData?.hypothesis;
+  let formulaConfiguration = microplanData?.ruleEngine;
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
@@ -787,9 +791,24 @@ const extractGeoData = (
                 : dataAvailabilityCheck === "false"
                 ? "false"
                 : "partial"; // Update data availability based on column check
+              let dataWithResources = Object.values(files[fileData]?.data);
+              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+                dataWithResources = dataWithResources?.map((item) =>{
+                  return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+                    item,
+                    resources,
+                    hypothesisAssumptionsList,
+                    formulaConfiguration,
+                    microplanData?.microplanPreview?.userEditedResources?microplanData?.microplanPreview?.userEditedResources:[],
+                    t
+                  )
+                }
+                );
+              }
+
               let hasLocationData = false;
               // has lat lon a points
-              const convertedData = Object.values(files[fileData]?.data)?.map((item) =>
+              const convertedData = dataWithResources?.map((item) =>
                 item?.map((row, rowIndex) => {
                   if (rowIndex === 0) {
                     if (row.indexOf("features") === -1) {
@@ -875,9 +894,22 @@ const extractGeoData = (
               }
 
               // Group keys and values into the desired format
-              let data = { [files[fileData]?.fileName]: [keys, ...values] };
+              // let data = { [files[fileData]?.fileName]: [keys, ...values] };
+              // Adding resource data
+              let dataWithResources = [keys, ...values];
+              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+                dataWithResources =  Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+                  dataWithResources,
+                    resources,
+                    hypothesisAssumptionsList,
+                    formulaConfiguration,
+                    microplanData?.microplanPreview?.userEditedResources?microplanData?.microplanPreview?.userEditedResources:[],
+                    t
+                  )
+              }
+
               // extract dada
-              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
+              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))

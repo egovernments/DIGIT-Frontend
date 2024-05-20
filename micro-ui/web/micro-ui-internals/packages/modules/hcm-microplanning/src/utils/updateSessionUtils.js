@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
-import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY } from "../configs/constants";
 
 function handleExcelArrayBuffer(arrayBuffer, file) {
   return new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ function parseBlobToJSON(blob, file) {
 }
 
 export const updateSessionUtils = {
-  computeSessionObject: async (row, state, additionalProps, translatedData = true) => {
+  computeSessionObject: async (row, state, additionalProps) => {
     const sessionObj = {};
     const setCurrentPage = () => {
       sessionObj.currentPage = {
@@ -141,7 +141,7 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload, shapefileOrigin = false) => {
+    const handleGeoJson = (file, result, upload, translatedData, shapefileOrigin = false) => {
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
       upload[templateIdentifier] = {
         id: templateIdentifier,
@@ -168,24 +168,30 @@ export const updateSessionUtils = {
       }
       let schemaKeys;
       if (schema?.schema?.["Properties"]) schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
-      const sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
+      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
+      sortedSecondList = sortedSecondList.map(item=>{
+        if(item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[ additionalProps.heirarchyData?.length-1]) return {...item, mappedTo:additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length-1]}
+        else return item
+      })
       upload[templateIdentifier].data = result;
-      const newFeatures = result["features"].map((item) => {
-        let newProperties = {};
-        sortedSecondList
-          ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
-          .forEach((e) => {
-            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
-          });
-        item["properties"] = newProperties;
-        return item;
-      });
-      upload[templateIdentifier].data.features = newFeatures;
+      if (translatedData) {
+        const newFeatures = result["features"].map((item) => {
+          let newProperties = {};
+          sortedSecondList
+            ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
+            .forEach((e) => {
+              newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+            });
+          item["properties"] = newProperties;
+          return item;
+        });
+        upload[templateIdentifier].data.features = newFeatures;
+      }
 
       return upload;
     };
 
-    const handleExcel = (file, result, upload) => {
+    const handleExcel = (file, result, upload, translatedData) => {
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
 
       upload[templateIdentifier] = {
@@ -243,7 +249,7 @@ export const updateSessionUtils = {
         };
         let dataInSsn = Digit.SessionStorage.get("microplanData")?.upload?.[templateIdentifier];
         if (dataInSsn && dataInSsn.filestoreId === filestoreId) {
-          storedData.push({ file: fileData, jsonData: dataInSsn?.data });
+          storedData.push({ file: fileData, jsonData: dataInSsn?.data, translatedData: false  });
         } else {
           const promiseToAttach = axios
             .get("/filestore/v1/files/id", {
@@ -258,10 +264,10 @@ export const updateSessionUtils = {
                 fileStoreId: filestoreId,
               },
             })
-            .then((res) => {
+            .then(async (res) => {
               if (inputFileType === EXCEL) {
                 const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
-                return parseXlsxToJsonMultipleSheetsForSessionUtil(
+                const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
                   file,
                   { header: 1 },
                   {
@@ -270,22 +276,24 @@ export const updateSessionUtils = {
                     templateIdentifier,
                     id,
                   }
-                );
+                )
+                return {...response,translatedData: true};
               } else if (inputFileType === GEOJSON) {
-                return parseGeoJSONResponse(res.data, {
+                let response = await parseGeoJSONResponse(res.data, {
                   filestoreId,
                   inputFileType,
                   templateIdentifier,
                   id,
-                });
+                })
+                return {...response,translatedData: true};
               } else if (inputFileType === SHAPEFILE) {
-                const geoJson = shpToGeoJSON(res.data, {
+                const geoJson = await shpToGeoJSON(res.data, {
                   filestoreId,
                   inputFileType,
                   templateIdentifier,
                   id,
                 });
-                return geoJson;
+                return {...geoJson,translatedData: true};
               }
             });
           promises.push(promiseToAttach);
@@ -305,16 +313,16 @@ export const updateSessionUtils = {
       //populate this object based on the files and return
       const upload = {};
 
-      filesResponse.forEach(({ jsonData, file }, idx) => {
-        switch (file.inputFileType) {
+      filesResponse.forEach(({ jsonData, file, translatedData }, idx) => {
+        switch (file?.inputFileType) {
           case "Shapefile":
-            handleGeoJson(file, jsonData, upload, true);
+            handleGeoJson(file, jsonData, upload, translatedData, true);
             break;
           case "Excel":
-            handleExcel(file, jsonData, upload);
+            handleExcel(file, jsonData, upload ,translatedData);
             break;
           case "GeoJSON":
-            handleGeoJson(file, jsonData, upload);
+            handleGeoJson(file, jsonData, upload, translatedData);
           default:
             break;
         }

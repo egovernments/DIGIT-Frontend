@@ -177,7 +177,7 @@ const CreateMicroplan = () => {
           t,
           campaignType
         };
-        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps, false);
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
         if (computedSession) {
           computedSession.microplanStatus = "DRAFT";
           setMicroplanData(computedSession);
@@ -215,7 +215,7 @@ const CreateMicroplan = () => {
           t,
           campaignType
         };
-        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps , false);
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
         if (computedSession) {
           computedSession.microplanStatus = "DRAFT";
           setMicroplanData(computedSession);
