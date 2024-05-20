@@ -3,7 +3,7 @@ const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPl
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
 
-const domain = process.env.PRODUCTION_DOMAIN || "https://unified-dev.digit.org";
+const domain = process.env.PRODUCTION_DOMAIN || "https://staging.digit.org";
 
 module.exports = () => {
   const prodConfig = {

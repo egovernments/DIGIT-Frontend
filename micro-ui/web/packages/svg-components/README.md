@@ -93,7 +93,7 @@ Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-g
 
 ## Reference
 
-Home Page (https://unified-dev.digit.org/storybook-svg/)
+Home Page (https://staging.digit.org/storybook-svg/)
 
 ## Maintainer
 
