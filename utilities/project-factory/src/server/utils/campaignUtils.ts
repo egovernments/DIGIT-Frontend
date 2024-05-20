@@ -1083,8 +1083,8 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
     logger.info("Create Projects started for the given Campaign")
     var { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
-        const projectTypeResponse=await getMDMSV1Data({},'HCM-PROJECT-TYPES',"projectTypes",tenantId);
-        var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails,projectTypeResponse);
+        const projectTypeResponse = await getMDMSV1Data({}, 'HCM-PROJECT-TYPES', "projectTypes", tenantId);
+        var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails, projectTypeResponse);
         const projectCreateBody = {
             RequestInfo: request?.body?.RequestInfo,
             Projects
