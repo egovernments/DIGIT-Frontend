@@ -5,8 +5,8 @@ import { processDataSearchRequest } from "../utils/campaignUtils";
 import { enrichResourceDetails, getLocalizedMessagesHandler, getResponseFromDb, processGenerate, throwError } from "../utils/genericUtils";
 import { getLocalisationModuleName } from "../utils/localisationUtils";
 import { logger } from "../utils/logger";
-import { validateCreateRequest, validateDownloadRequest, validateSearchRequest } from "../utils/validators/campaignValidators";
-import { validateGenerateRequest } from "../utils/validators/genericValidator";
+import { validateCreateRequest, validateDownloadRequest, validateSearchRequest } from "../validators/campaignValidators";
+import { validateGenerateRequest } from "../validators/genericValidator";
 
 const generateDataService = async (request: express.Request) => {
     // Validate the generate request
