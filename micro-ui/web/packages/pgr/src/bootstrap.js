@@ -5,17 +5,18 @@ import { createBrowserHistory } from "history";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initPGRComponents } from "./Module.js";
 
-initLibraries()
+initLibraries();
 initDigitUI();
+
 initPGRComponents();
 
 const mount = (el, { history,login }) => {
   
-  // const moduleReducers = (initData) => {
-  // };
-  // const enabledModules=["PT","HRMS"]
+  const moduleReducers = (initData) => {
+  };
+  const enabledModules=["PGR"]
 
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   ReactDOM.render(
     // <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
     <div>PGR MODULE</div>,
@@ -35,7 +36,7 @@ if (process.env.NODE_ENV === "development") {
   }
 }
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   window.Digit.Customizations = {
 
   };
@@ -46,11 +47,11 @@ const initDigitUI = () => {
   });
 
  // initHRMSComponents();
-  // const enabledModules=["PT"]
+  const enabledModules=["PT"]
 
-  // const moduleReducers = (initData) => initData;
+  const moduleReducers = (initData) => initData;
 
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   // initTokens(stateCode);
 
   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);

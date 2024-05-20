@@ -18,15 +18,11 @@ module.exports = () => {
           "./PGRModule": "./src/SingleSpaEntry",
         },
         // shared: packageJson.dependencies,
-        shared: {
+        shared:  {
+          ...packageJson.dependencies,
           react: { singleton: true }, // React will be shared as a singleton
-          'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton,
+          'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton
           'react-query': { singleton: true },
-          "@digit-ui/digit-ui-libraries-mfe": "1.0.16",
-          "react-date-range": "1.4.0",
-          "react-hook-form": "6.15.8",
-          "react-i18next": "11.16.2",
-          "react-router-dom": "5.3.0"
         },
       }),
     ],
