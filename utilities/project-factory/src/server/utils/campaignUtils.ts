@@ -9,7 +9,7 @@ import { logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import * as XLSX from 'xlsx';
 import { createReadMeSheet, findMapValue, getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, throwError } from "./genericUtils";
-import { enrichProjectDetailsFromCampaignDetails } from "./projectTypeUtils";
+import { enrichProjectDetailsFromCampaignDetails } from "./transforms/projectTypeUtils";
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
