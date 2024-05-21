@@ -5,6 +5,7 @@ ajv.addKeyword("isRequired");
 ajv.addKeyword("isLocationDataColumns");
 ajv.addKeyword("isRuleConfigureInputs");
 ajv.addKeyword("isFilterPropertyOfMapSection");
+ajv.addKeyword("isVitualizationPropertyOfMapSection")
 
 //the postion must be valid point on the earth, x between -180 and 180
 gjv.define("Position", (position) => {

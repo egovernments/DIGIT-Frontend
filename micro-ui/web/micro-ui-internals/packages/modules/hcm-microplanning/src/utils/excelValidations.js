@@ -4,6 +4,7 @@ ajv.addKeyword("isRequired");
 ajv.addKeyword("isLocationDataColumns");
 ajv.addKeyword("isRuleConfigureInputs");
 ajv.addKeyword("isFilterPropertyOfMapSection");
+ajv.addKeyword("isVitualizationPropertyOfMapSection")
 
 // Function responsible for excel data validation with respect to the template/schema provided
 export const excelValidations = (data, schemaData, t) => {
