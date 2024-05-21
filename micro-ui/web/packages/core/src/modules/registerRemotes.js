@@ -54,16 +54,16 @@ export default (queryClient,t,i18n) => {
   //   },
   //  });
 
-  //  registerApplication({
-  //   name: "Dss",
-  //   app: () => import("dss/DSSModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
-  //   customProps: {
-  //     title: "DSS is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+   registerApplication({
+    name: "Dss",
+    app: () => import("dss/DSSModule"),
+    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
+    customProps: {
+      title: "DSS is running on host",
+      queryClient,
+      userType
+    },
+  });
 
     registerApplication({
     name: "HRMS",
@@ -92,7 +92,11 @@ export default (queryClient,t,i18n) => {
   registerApplication({
     name: "Engagement",
     app: () => import("engagement/EngagementModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
+    activeWhen: [
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/citizen/engagement`,
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`
+    ],
+    
     customProps: {
       title: "Engagement is running on host",
       queryClient,

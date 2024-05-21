@@ -46,8 +46,6 @@
     "start:pgr": "cd packages/pgr && yarn start"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
-    "react-time-picker": "^7.0.0",
     "recharts": "^2.12.7"
   }
 }
