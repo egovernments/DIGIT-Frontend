@@ -1299,7 +1299,6 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
       }
       const files = Object.keys(zip.files);
       const allFilesMatchRegex = files.every((fl) => {
-      debugger
       return fileRegex.test(fl);
       });
       let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));

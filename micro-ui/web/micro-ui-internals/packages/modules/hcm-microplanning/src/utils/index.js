@@ -194,26 +194,35 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   };
 };
 
-const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore,t, translatedData = true) => {
-  
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t, translatedData = true) => {
   let resourceMappingData = [];
   let newFileData = {};
   let toAddInResourceMapping;
+
   if (selectedFileType.id === EXCEL && fileDataToStore) {
-    // Extract all unique column names from fileDataToStore and then doing thir resource mapping
+    // Extract all unique column names from the first row of each sheet in fileDataToStore for resource mapping
     const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
+
     if (schemaData?.schema?.["Properties"]) {
       let toChange;
-      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
+      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) {
+        toChange = hierarchy[hierarchy?.length - 1];
+      }
+
+      // Get schema keys and hierarchy to map columns
       const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
+
       schemaKeys.forEach((item) => {
+        // Check if the column is present in the file, either in translated form or original form based on translatedData flag
         if ((translatedData && columnForMapping.has(t(item))) || (!translatedData && columnForMapping.has(item))) {
+          // Special case for LOCALITY
           if (LOCALITY && toChange === item) {
             toAddInResourceMapping = {
               mappedFrom: t(item),
               mappedTo: LOCALITY,
             };
           }
+          // Add the mapping information
           resourceMappingData.push({
             mappedFrom: t(item),
             mappedTo: item,
@@ -222,74 +231,112 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       });
     }
 
-    // Filtering the columns with respect to the resource mapping and removing the columns that are not needed
+    // Filter and map the columns of fileDataToStore based on resource mapping
     Object.entries(fileDataToStore).forEach(([key, value]) => {
       let data = [];
       let headers = [];
       let toRemove = [];
+
       if (value && value.length > 0) {
+        // Process header row
         value[0].forEach((item, index) => {
+          // Find the corresponding mapped column name
           const mappedTo = resourceMappingData.find((e) => (translatedData && e.mappedFrom === item) || (!translatedData && e.mappedFrom === t(item)))?.mappedTo;
           if (!mappedTo) {
-            toRemove.push(index);
+            toRemove.push(index); // Mark column for removal if not mapped
             return;
           }
-          headers.push(mappedTo);
-          return;
+          headers.push(mappedTo); // Add mapped column name to headers
         });
+
+        // Process data rows
         for (let i = 1; i < value?.length; i++) {
           let temp = [];
           for (let j = 0; j < value[i].length; j++) {
             if (!toRemove.includes(j)) {
-              temp.push(value[i][j]);
+              temp.push(value[i][j]); // Keep only the columns that are mapped
             }
           }
           data.push(temp);
         }
       }
+
+      // Combine headers and data for each sheet
       newFileData[key] = [headers, ...data];
     });
   }
+
+  // Finalize the resource mapping data
   resourceMappingData.pop();
   resourceMappingData.push(toAddInResourceMapping);
+
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
 
 
+
 const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
+  // Clone the preview data to avoid mutating the original data
   const data = _.cloneDeep(previewData);
+
+  // Helper function to check for user-edited data
   const checkUserEditedData = (commonColumnData, resourceName) => {
-    if (userEditedResources?.[commonColumnData]) {
-      return userEditedResources?.[commonColumnData]?.[resourceName];
+    if (userEditedResources && userEditedResources[commonColumnData]) {
+      return userEditedResources[commonColumnData][resourceName];
     }
   };
-  const conmmonColumnIndex = data?.[0]?.indexOf(commonColumn);
 
+  // Ensure the previewData has at least one row and the first row is an array
+  if (!Array.isArray(data) || !Array.isArray(data[0])) {
+    console.error('Invalid previewData format');
+    return [];
+  }
+
+  // Identify the index of the common column
+  const conmmonColumnIndex = data[0].indexOf(commonColumn);
+  if (conmmonColumnIndex === -1) {
+    console.error('Common column not found in previewData');
+    return [];
+  }
+
+  // Ensure resources is a valid array
+  if (!Array.isArray(resources)) {
+    console.error('Invalid resources format');
+    return data;
+  }
+
+  // Process each row of the data
   const combinedData = data.map((item, index) => {
-    if (index === 0) {
-      resources.forEach((e) => item?.push(e));
+    if (!Array.isArray(item)) {
+      console.error(`Invalid data format at row ${index}`);
       return item;
     }
 
-    resources.forEach((resourceName, resourceIndex) => {
-      let savedData = checkUserEditedData(item?.[conmmonColumnIndex], resourceName);
-      if (savedData) {
-        item.push(savedData);
-        return item;
-      }
-      // if (checkUserEditedData(item?.[conmmonColumnIndex], resourceName)!!item[item?.length + resourceIndex]) return;
-      let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
-      if (calculations !== null) calculations = Math.round(calculations);
-      // item[item?.length + resourceIndex] = !!calculations || calculations === 0? calculations:t("NO_DATA");
-      item.push(!!calculations || calculations === 0 ? calculations : undefined);
+    if (index === 0) {
+      // Add resource names to the header row
+      resources.forEach((e) => item.push(e));
       return item;
+    }
+
+    // Process each resource for the current row
+    resources.forEach((resourceName, resourceIndex) => {
+      let savedData = checkUserEditedData(item[conmmonColumnIndex], resourceName);
+      if (savedData !== undefined) {
+        item.push(savedData);
+      } else {
+        let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
+        if (calculations !== null) calculations = Math.round(calculations);
+        item.push(calculations !== null && calculations !== undefined ? calculations : undefined);
+      }
     });
 
     return item;
   });
+
   return combinedData;
 };
+
 
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {

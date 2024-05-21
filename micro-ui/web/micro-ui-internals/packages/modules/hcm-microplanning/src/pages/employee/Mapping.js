@@ -503,7 +503,6 @@ const BoundarySelection = memo(
     setIsboundarySelectionSelected,
     t,
   }) => {
-    debugger
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationModal, setShowConformationModal] = useState(false);
@@ -905,6 +904,20 @@ const extractGeoData = (
                     microplanData?.microplanPreview?.userEditedResources?microplanData?.microplanPreview?.userEditedResources:[],
                     t
                   )
+                let indexOfFeatureInDataWithResources = dataWithResources?.[0]?.indexOf("feature")
+                dataWithResources= dataWithResources.map((item, index)=>{
+                  if(index ===0)return item;
+                  let newProperties = {}
+                  keys.forEach(e=>{
+                    if(e === "feature") return
+                    let index = dataWithResources?.[0]?.indexOf(e)
+                    newProperties[e] = item[index]
+
+                  })
+                  let newRow = _.cloneDeep(item)
+                  newRow[indexOfFeatureInDataWithResources] = {...item[indexOfFeatureInDataWithResources],properties:newProperties}
+                  return newRow
+                })
               }
 
               // extract dada
