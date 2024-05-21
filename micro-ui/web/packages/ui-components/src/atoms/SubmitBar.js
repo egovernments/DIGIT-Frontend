@@ -12,7 +12,7 @@ const SubmitBar = forwardRef((props, ref) => {
       onClick={props.onSubmit}
       {... props.form ? {form: props.form} : {}}
     >
-      <header>{props.label}</header>
+      <header style={{...props?.headerStyle}}>{props.label}</header>
     </button>
   );
 });

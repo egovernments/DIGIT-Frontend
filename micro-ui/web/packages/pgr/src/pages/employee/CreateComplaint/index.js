@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { Dropdown } from "@digit-ui/digit-ui-react-components";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 
@@ -9,17 +9,39 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
-  const cities = Digit.Hooks.pgr.useTenants();
+  
+  const cities = [
+    { code:"pg.citya",
+      name:"City A",
+      i18nKey:"City A",
+      city:{
+        name:"City A",
+      }
+    },
+    { code:"pg.cityb",
+    name:"City B",
+    i18nKey:"City B",
+    city:{
+      name:"City B",
+    }
+    },
+    { code:"pg.cityc",
+    name:"City C",
+    i18nKey:"City C",
+    city:{
+      name:"City C",
+    }
+    }
+  ]
   const { t } = useTranslation();
-
+  
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
-
+  
   const [complaintType, setComplaintType] = useState({});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
-
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     getCities()[0]?.code,
     "admin",
@@ -58,12 +80,12 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   useEffect(() => {
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
-    if (city?.code === getCities()[0]?.code) {
+    if (city?.code&&city?.code === getCities()[0]?.code) {
       setPincodeNotValid(false);
       setSelectedCity(city);
       setSelectedLocality(null);
       const __localityList = fetchedLocalities;
-      const __filteredLocalities = __localityList.filter((city) => city["pincode"] == pincode);
+      const __filteredLocalities = __localityList?.filter((city) => city["pincode"] == pincode);
       setLocalities(__filteredLocalities);
     } else if (pincode === "" || pincode === null) {
       setPincodeNotValid(false);
@@ -196,7 +218,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           type: "text",
           populators: {
             name: "pincode",
-            validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
+            // validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
             error: t("CORE_COMMON_PINCODE_INVALID"),
             onChange: handlePincode,
           },

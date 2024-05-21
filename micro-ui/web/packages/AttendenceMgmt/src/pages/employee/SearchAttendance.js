@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer, Loader } from "@digit-ui/digit-ui-react-components";
 import searchConfig from "../../config/searchConfig";
 
 const SearchAttendance = () => {

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useTranslation } from 'react-i18next'
-import { Header, Card, BreakLine, CardSectionHeader, ActionBar, SubmitBar } from '@egovernments/digit-ui-react-components'
+import { Header, Card, BreakLine, CardSectionHeader, ActionBar, SubmitBar } from '@digit-ui/digit-ui-react-components'
 import AddVendorBill from '../../components/CreateBill/AddVendorBill'
 import MustorRollDetails from '../../components/CreateBill/MustorRollDetails'
 import CommissionDetails from '../../components/CreateBill/CommissionDetails'

@@ -1,4 +1,4 @@
-import { EmployeeModuleCard, CaseIcon, MuktaHomeIcon } from "@egovernments/digit-ui-react-components";
+import { EmployeeModuleCard, CaseIcon, MuktaHomeIcon } from "@digit-ui/digit-ui-react-components";
 import React, { useState } from "react";
 
 

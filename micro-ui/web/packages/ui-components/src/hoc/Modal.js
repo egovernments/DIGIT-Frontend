@@ -19,31 +19,31 @@ const Modal = ({
   formId,
   isDisabled,
   hideSubmit,
-  style={},
+  style = {},
   popupModuleMianStyles,
   headerBarMainStyle,
   isOBPSFlow = false,
-  popupModuleActionBarStyles={}
+  popupModuleActionBarStyles = {}
 }) => {
   /**
    * TODO: It needs to be done from the desgin changes
    */
-   const mobileView = Digit.Utils.browser.isMobile() ? true : false;
+  const mobileView = Digit.Utils.browser.isMobile() ? true : false;
   useEffect(() => {
     document.body.style.overflowY = 'hidden';
-    return () =>{
+    return () => {
       document.body.style.overflowY = 'auto';
     }
   }, [])
   return (
     <PopUp>
       <div className="popup-module" style={popupStyles}>
-        <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}}/>
+        <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}} />
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
-          <div className="popup-module-action-bar" style={isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles}>
-            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style}/> : null}
-            {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style}/> : null}
+          <div className="popup-module-action-bar" style={isOBPSFlow ? !mobileView ? { marginRight: "18px" } : { position: "absolute", bottom: "5%", right: "10%", left: window.location.href.includes("employee") ? "0%" : "7%" } : popupModuleActionBarStyles}>
+            {actionCancelLabel ? <ButtonSelector textStyles={{ margin: "0px" }} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style} /> : <div></div>}
+            {!hideSubmit ? <ButtonSelector textStyles={{ margin: "0px" }} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style} /> : null}
           </div>
         </div>
       </div>

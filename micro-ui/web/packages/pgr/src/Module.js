@@ -5,7 +5,7 @@ import getRootReducer from "./redux/reducers";
 import CitizenApp from "./pages/citizen";
 
 import EmployeeApp from "./EmployeeApp";
-import { ComplaintIcon, CitizenHomeCard, Loader } from "@egovernments/digit-ui-react-components";
+import { ComplaintIcon, CitizenHomeCard, Loader } from "@digit-ui/digit-ui-react-components";
 import { PGR_CITIZEN_CREATE_COMPLAINT } from "./constants/Citizen";
 import { useTranslation } from "react-i18next";
 import { LOCALE } from "./constants/Localization";
@@ -19,7 +19,6 @@ import { ComplaintsList } from "./pages/citizen/ComplaintsList";
 import ComplaintDetailsPage from "./pages/citizen/ComplaintDetails";
 import SelectRating from "./pages/citizen/Rating/SelectRating";
 import ResponseCitizen from "./pages/citizen/Response";
-import InboxV2 from "./pages/employee/InboxV2";
 
 
 export const PGRReducers = getRootReducer;
@@ -33,7 +32,7 @@ const PGRModule = ({ stateCode, userType, tenants }) => {
     return <Loader />;
   }
 
-  Digit.SessionStorage.set("PGR_TENANTS", tenants);
+ 
 
   if (userType === "citizen") {
     return <CitizenApp />;
@@ -71,7 +70,6 @@ const componentsToRegister = {
   PGRComplaintDetails : ComplaintDetails,
   PGRCreateComplaintEmp : CreateComplaintEmp,
   PGRInbox : Inbox,
-  PGRInboxV2 : InboxV2,
   PGRResponseEmp : ResponseEmp,
   PGRCreateComplaintCitizen : CreateComplaintCitizen,
   PGRComplaintsList : ComplaintsList,
@@ -81,6 +79,7 @@ const componentsToRegister = {
 };
 
 export const initPGRComponents = () => {
+  Digit.SessionStorage.set("PGR_TENANTS", tenants);
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

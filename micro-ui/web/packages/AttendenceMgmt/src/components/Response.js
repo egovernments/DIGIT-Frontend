@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ActionBar, Banner, Card, CardText, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar, Banner, Card, CardText, SubmitBar } from "@digit-ui/digit-ui-react-components";
 
 const Response = () => {
     

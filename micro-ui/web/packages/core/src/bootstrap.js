@@ -5,6 +5,7 @@ import { HashRouter } from 'react-router-dom';
 import '../src/locale/i18n';
 import { CustomisedHooks } from './hooks';
 import { QueryClient,QueryClientProvider } from 'react-query';
+import registerRemotes from './utils/registerRemotes';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +21,9 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+
+registerRemotes(queryClient)
 
 /* To Overide any existing hook we need to use similar method */
 const setupHooks = (HookName, HookFunction, method, isHook = true) => {

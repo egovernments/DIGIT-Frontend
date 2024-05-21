@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
-import { Header, Loader, MultiLink, Toast, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, MultiLink, Toast, ViewComposer } from "@digit-ui/digit-ui-react-components";
 
 const TQMSummary = () => {
   const { t } = useTranslation();

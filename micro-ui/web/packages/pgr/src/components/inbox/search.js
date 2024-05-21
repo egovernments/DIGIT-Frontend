@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg } from "@egovernments/digit-ui-react-components";
+import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg } from "@digit-ui/digit-ui-react-components";
 
 const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   const [complaintNo, setComplaintNo] = useState(searchParams?.search?.serviceRequestId || "");
@@ -87,7 +87,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
               </span>
               {type === "desktop" && (
                 <SubmitBar
-                  style={{ marginTop: 32, marginLeft: "16px", width: "calc( 100% - 16px )" }}
+                  style={{ marginTop: "47px", marginLeft: "16px", width: "calc( 100% - 16px )" }}
                   label={t("ES_COMMON_SEARCH")}
                   submit={true}
                   disabled={Object.keys(errors).filter((i) => errors[i]).length}

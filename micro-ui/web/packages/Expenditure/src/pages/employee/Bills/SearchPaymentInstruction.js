@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from 'react-router-dom';
-import { Header, InboxSearchComposer, Loader, Button, DownloadImgIcon} from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer, Loader, Button, DownloadImgIcon} from "@digit-ui/digit-ui-react-components";
 import { SearchPaymentInstructionConfig } from '../../../configs/SearchPaymentInstructionConfig';
 import { SearchPIConfigNew } from '../../../configs/SearchPaymentInstructionConfigNew';
 

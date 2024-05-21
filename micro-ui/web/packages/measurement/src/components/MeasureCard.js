@@ -1,4 +1,4 @@
-import { Button } from "@egovernments/digit-ui-react-components";
+import { Button } from "@digit-ui/digit-ui-react-components";
 import React, { useReducer, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import MeasureRow from "./MeasureRow";

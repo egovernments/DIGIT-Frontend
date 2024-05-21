@@ -2,7 +2,7 @@ name: hrms ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker", "mf","mf-stable-common-module","mf-localisation-test-core" ]
+    branches: [ "mf-build-docker", "mf","mf-stable-common-module","mf-localisation-test-core","mf-localisation-test-core-test" ]
   pull_request:
     branches: [ "mf-build" ]
 

@@ -1,4 +1,4 @@
-import { Hamburger, Dropdown } from '@egovernments/digit-ui-react-components';
+import { Hamburger, Dropdown } from '@digit-ui/digit-ui-react-components';
 import React from 'react';
 import ChangePlant from './ChangePlant';
 const TextToImg = (props) => (

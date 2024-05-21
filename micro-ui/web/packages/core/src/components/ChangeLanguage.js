@@ -1,4 +1,4 @@
-import { CustomButton, Dropdown } from "@egovernments/digit-ui-react-components";
+import { CustomButton, Dropdown } from "@digit-ui/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 

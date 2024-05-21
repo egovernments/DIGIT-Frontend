@@ -1,34 +1,29 @@
-import React, { forwardRef, useCallback, useRef } from "react";
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import LinkButton from "./LinkButton";
 import { PrimaryDownlaodIcon } from "./svgindex";
 import { useTranslation } from "react-i18next";
 
-const MultiLink = forwardRef(({ className, onHeadClick, displayOptions = false, options, label, icon, setShowOptions = null, showOptions, downloadBtnClassName, downloadOptionsClassName, optionsClassName, style, optionsStyle, reportStyles, optionStyle }, ref) => {
+const MultiLink = forwardRef(({ className, onHeadClick, displayOptions = false, options, label, icon, showOptions, setShowOptions = () => {}, downloadBtnClassName, downloadOptionsClassName, optionsClassName, style, optionsStyle, reportStyles }, ref) => {
   const { t } = useTranslation();
   const menuRef = useRef();
-  const parRef = useRef();
-  const handleOnClick = useCallback(() => {
-    setShowOptions ? setShowOptions(false) : null
-  }, [])
-
-  const handleClickOutside = (event) => {
-    if (parRef.current && !parRef.current.contains(event.target)) {
-      handleOnClick();
+  const [showMenu, setshowMenu] = useState(false);
+  const handleOnClick = () => {
+    if(!(setShowOptions.toString().replace(/\s+/g,``) === "function(){}" ||setShowOptions.toString().replace(/\s+/g,``) === "()=>{}"))
+    { 
+      setShowOptions(false);
+      setshowMenu(false);
     }
-  };
+  }
+  Digit.Hooks.useClickOutside(menuRef, handleOnClick, showMenu);
   
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  useMemo(() => {
+    setshowMenu(displayOptions);
+  },[displayOptions])
 
   const MenuWrapper = React.forwardRef((props, ref) => {
     return <div ref={ref} className={`multilink-optionWrap ${optionsClassName} ${downloadOptionsClassName}`} style={optionsStyle}>
       {options.map((option, index) => (
-        <div onClick={() => option.onClick()} key={index} className={`multilink-option`} style={optionStyle}>
+        <div onClick={() => option.onClick()} key={index} className={`multilink-option`}>
           {option?.icon}
           {option.label}
         </div>
@@ -37,12 +32,12 @@ const MultiLink = forwardRef(({ className, onHeadClick, displayOptions = false, 
   })
 
   return (
-    <div className={className} ref={parRef} style={reportStyles}>
+    <div className={className} ref={menuRef} style={reportStyles}>
       <div className={`multilink-labelWrap ${downloadBtnClassName}`} onClick={onHeadClick} style={style}>
         {icon ? icon : <PrimaryDownlaodIcon />}
-        <LinkButton label={label || t("CS_COMMON_DOWNLOAD")} className="multilink-link-button multilink-label" />
+        <LinkButton label={label || t("CS_COMMON_DOWNLOAD")} className="multilink-link-button" />
       </div>
-      {displayOptions ? <MenuWrapper ref={ref} /> : null}
+      {showMenu ? <MenuWrapper ref={ref} /> : null}
     </div>
   );
 });

@@ -1,4 +1,4 @@
-import { Header, Toast, WorkflowActions,Loader,ActionBar,SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Header, Toast, WorkflowActions,Loader,ActionBar,SubmitBar } from "@digit-ui/digit-ui-react-components";
 import React, { Fragment, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetails from "../../../../templates/ApplicationDetails";

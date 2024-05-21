@@ -2,7 +2,7 @@ import React, {useState, useEffect, useMemo} from 'react'
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import InboxLinks from './InboxLinks'
-import { SearchAction, FilterAction, PopUp, Card, Loader, DetailsCard} from "@egovernments/digit-ui-react-components";
+import { SearchAction, FilterAction, PopUp, Card, Loader, DetailsCard} from "@digit-ui/digit-ui-react-components";
 
 const MobileInbox = (props) => {
   const {isFilter, isSearch, parentRoute, data, onFilterChange, onSearch, isLoading, filterComponent, searchComponent, sortParams, tenantId } = props;

@@ -6,7 +6,7 @@ import ButtonSelector from "./ButtonSelector";
 const Toast = (props) => {
   if (props.error) {
     return (
-      <div className="toast-success" style={{ backgroundColor: "red", ...props.style }}>
+      <div className="toast-success error" style={{ backgroundColor: "red", ...props.style }}>
         <ErrorIcon />
         <h2 style={{...props.labelstyle}}>{props.label}</h2>
         { props.isDleteBtn ? <DeleteBtn fill="none" className="toast-close-btn" onClick={props.onClose} /> : null }

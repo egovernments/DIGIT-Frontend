@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@digit-ui/digit-ui-react-components";
 import _ from "lodash";
 
 const customStyles = {

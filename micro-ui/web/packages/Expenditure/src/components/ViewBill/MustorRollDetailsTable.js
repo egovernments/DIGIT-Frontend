@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table,ArrowDown } from '@egovernments/digit-ui-react-components'
+import { Table,ArrowDown } from '@digit-ui/digit-ui-react-components'
 import { mustorRollDetailsTableColumns } from '../../configs/mustorRollDetailsTableColumns'
 import { mustorRollDummyData } from '../../configs/mustorRollDummyData'
 
