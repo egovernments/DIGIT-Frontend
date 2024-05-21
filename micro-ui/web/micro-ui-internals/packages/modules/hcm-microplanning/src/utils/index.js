@@ -35,10 +35,10 @@ const sortSecondListBasedOnFirstListOrder = (firstList, secondList)=> {
   });
 
   // Sort the second list based on the order of elements in the first list
-  secondList.sort((a, b) => {
+  secondList.sort((objecta, objectb) => {
     // Get the mappedTo values of each object
-    const mappedToA = a.mappedTo;
-    const mappedToB = b.mappedTo;
+    const mappedToA = objecta.mappedTo;
+    const mappedToB = objectb.mappedTo;
 
     // Get the indices of mappedTo values in the first list
     const indexA = indexMap[mappedToA];

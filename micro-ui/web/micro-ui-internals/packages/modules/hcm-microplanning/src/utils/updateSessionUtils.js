@@ -246,7 +246,7 @@ export const updateSessionUtils = {
 
       const promises = [];
       let storedData = [];
-      files.forEach(({ filestoreId, inputFileType, templateIdentifier, id }) => {
+      for (const { filestoreId, inputFileType, templateIdentifier, id } of files) {
         let fileData = {
           filestoreId,
           inputFileType,
@@ -304,7 +304,7 @@ export const updateSessionUtils = {
             });
           promises.push(promiseToAttach);
         }
-      });
+      };
 
       const resolvedPromises = await Promise.all(promises);
       let result = storedData;
