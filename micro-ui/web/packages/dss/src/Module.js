@@ -72,18 +72,52 @@ const Routes = ({ path, stateCode }) => {
   );
 };
 
-export const DSSModule = ({ stateCode, userType, tenants }) => {
+export const DSSModule = ({ stateCode="pg", userType="employee",path }) => {
   // const { path, url } = useRouteMatch();
-  const { path, url } = useRouteMatch();
- 
+  // const { path, url } = useRouteMatch();
+  const tenants = [
+    { code:"pg.citya",
+      name:"City A",
+      i18nKey:"City A",
+      city:{
+        name:"City A",
+      }
+    },
+    { code:"pg.cityb",
+    name:"City B",
+    i18nKey:"City B",
+    city:{
+      name:"City B",
+    }
+    },
+    { code:"pg.cityc",
+    name:"City C",
+    i18nKey:"City C",
+    city:{
+      name:"City C",
+    }
+    }
+  ]
   const language = Digit.StoreData.getCurrentLanguage();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleCode = ["DSS","common-masters",tenantId];
-  const { isLoading, data: store } = Digit.Services.useStore({
-      stateCode,
-      moduleCode,
-      language,
-  });
+  // const { isLoading, data: store } = Digit.Services.useStore({
+  //     stateCode,
+  //     moduleCode,
+  //     language,
+  // });
+
+  
+
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getStateId(),
+      module: 'rainmaker-dss',
+      locale:i18n.language,
+    },
+    i18n,
+  })
 
   if (isLoading) {
     return <Loader />;

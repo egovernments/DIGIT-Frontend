@@ -11,7 +11,7 @@ const App = ({ queryClient, title,userType }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <DSSModule path={`/${window.contextPath}/${userType}/dss/`} />
+        <DSSModule path={`/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss/`} />
       </Router>
     </QueryClientProvider>
   );
