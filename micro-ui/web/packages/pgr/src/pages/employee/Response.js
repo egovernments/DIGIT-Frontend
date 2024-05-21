@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Banner, CardText, SubmitBar } from "@digit-ui/digit-ui-react-components";
+import { Card, Banner, CardText, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { PgrRoutes, getRoute } from "../../constants/Routes";
@@ -38,7 +38,7 @@ const Response = (props) => {
     <Card>
       {appState.complaints.response && <BannerPicker response={appState} />}
       <CardText>{t("ES_COMMON_TRACK_COMPLAINT_TEXT")}</CardText>
-      <Link to={`/${window?.contextPath}/employee`}>
+      <Link to="/digit-ui/employee">
         <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
       </Link>
     </Card>

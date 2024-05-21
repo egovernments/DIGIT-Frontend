@@ -10,7 +10,7 @@ import {
   SVG,
   Menu,
   CollapseAndExpandGroups,
-} from "@digit-ui/digit-ui-react-components";
+} from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";

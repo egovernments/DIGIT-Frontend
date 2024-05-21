@@ -1,4 +1,4 @@
-export const PGR_BASE = `/${window?.contextPath}/pgr/citizen/`;
+export const PGR_BASE = "/digit-ui/pgr/citizen/";
 
 const CREATE_COMPLAINT_PATH = "/create-complaint/";
 const REOPEN_COMPLAINT_PATH = "/reopen/";
@@ -28,10 +28,11 @@ export const PgrRoutes = {
 
 export const Employee = {
   Inbox: "/inbox",
+  InboxV2: "/inbox/v2",
   ComplaintDetails: PGR_EMPLOYEE_COMPLAINT_DETAILS,
   CreateComplaint: PGR_EMPLOYEE_CREATE_COMPLAINT,
   Response: "/response",
-  Home: `/${window?.contextPath}/employee`,
+  Home: "/digit-ui/employee",
 };
 
 export const getRoute = (match, route) => `${match.path}${route}`;

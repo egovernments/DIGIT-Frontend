@@ -1,4 +1,4 @@
-import { BreakLine, CardSectionHeader } from "@digit-ui/digit-ui-react-components";
+import { BreakLine, CardSectionHeader } from "@egovernments/digit-ui-react-components";
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 

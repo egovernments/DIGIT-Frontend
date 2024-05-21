@@ -1,4 +1,4 @@
-import { Card } from "@digit-ui/digit-ui-react-components";
+import { Card } from "@egovernments/digit-ui-react-components";
 import React from "react";
 
 function CardMessage(props) {

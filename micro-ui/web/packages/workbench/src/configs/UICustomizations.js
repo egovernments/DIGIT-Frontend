@@ -1,7 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
 import React from 'react';
-import { Button } from "@digit-ui/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-react-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]

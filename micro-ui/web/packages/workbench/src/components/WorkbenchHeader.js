@@ -3,7 +3,7 @@ import {
   Tutorial,
   useTourState,
   Help,
-} from '@digit-ui/digit-ui-react-components';
+} from '@egovernments/digit-ui-react-components';
 
 import React, { useEffect, useContext, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ const WorkbenchHeader = () => {
   const { tourState, setTourState } = useState();
   // const { tutorial, updateTutorial } = useContext(TutorialContext);
   const { t } = useTranslation();
-  //using location?.pathname we can update the stepIndex accordingly when help is clicked from any other screen(other than home screen)
+  //using location.pathname we can update the stepIndex accordingly when help is clicked from any other screen(other than home screen)
   const { pathname } = useLocation();
   
   const startTour = () => {

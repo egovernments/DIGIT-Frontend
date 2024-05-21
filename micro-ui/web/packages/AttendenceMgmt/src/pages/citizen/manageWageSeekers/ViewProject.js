@@ -1,4 +1,4 @@
-import { Card, StatusTable, Row, DetailsCard, SearchIcon, Dropdown, SearchableDropdown,Table, DeleteIcon,SubmitBar,Toast} from '@digit-ui/digit-ui-react-components'
+import { Card, StatusTable, Row, DetailsCard, SearchIcon, Dropdown, SearchableDropdown,Table, DeleteIcon,SubmitBar,Toast} from '@egovernments/digit-ui-react-components'
 import React,{useMemo,useState} from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from 'react-query'

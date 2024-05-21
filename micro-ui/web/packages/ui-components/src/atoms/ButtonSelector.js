@@ -3,12 +3,16 @@ import PropTypes from "prop-types";
 
 const ButtonSelector = (props) => {
   let theme = "selector-button-primary";
+  const customTheme = props?.customTheme || "";
   switch (props.theme) {
     case "border":
-      theme = "selector-button-border";
+      theme = `selector-button-border ${customTheme}`;
+      break;
+    case "secondary":
+      theme = `selector-button-secondary ${customTheme}`;
       break;
     default:
-      theme = "selector-button-primary";
+      theme = `selector-button-primary ${customTheme}`;
       break;
   }
   return (
@@ -21,7 +25,6 @@ const ButtonSelector = (props) => {
       style={props.style ? props.style : null}
     >
       <h2 style={{ ...props?.textStyles, ...{ width: "100%" } }}>{props.label}</h2>
-      {props.ButtonBody ? props.ButtonBody : ""}
     </button>
   );
 };
@@ -39,17 +42,12 @@ ButtonSelector.propTypes = {
    * click handler
    */
   onSubmit: PropTypes.func,
-  /**
-   * CustomBody
-   */
-  ButtonBody: PropTypes.any
 };
 
 ButtonSelector.defaultProps = {
   label: "",
   theme: "",
   onSubmit: undefined,
-  ButtonBody: undefined
 };
 
 export default ButtonSelector;

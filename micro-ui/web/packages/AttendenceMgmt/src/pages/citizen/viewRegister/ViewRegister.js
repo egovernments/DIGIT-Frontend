@@ -1,4 +1,4 @@
-import { Card, KeyNote, DatePicker, DateRange, SearchIcon, SearchIconSvg,Table,StatusTable,Row,WeekPicker, TextInput,SubmitBar } from '@digit-ui/digit-ui-react-components';
+import { Card, KeyNote, DatePicker, DateRange, SearchIcon, SearchIconSvg,Table,StatusTable,Row,WeekPicker, TextInput,SubmitBar } from '@egovernments/digit-ui-react-components';
 import React, { Fragment, useState, useContext, useCallback, useMemo, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";

@@ -1425,7 +1425,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@digit-ui/digit-ui-module-hrms-mfe/-/digit-ui-module-hrms-1.5.27.tgz#f6734a26a9abbc7a54dbeb19bdd232f2a61b1f29"
     integrity sha512-EQx2L/mWh6o/W60bah1L3p6nq3I26svLA4CTazubyVcRa3xpgSN1Gmdd4BprOjd6NxXOLUaToC5M3CNbDkphOg==
     dependencies:
-      "@digit-ui/digit-ui-react-components" "1.5.27"
+      "@egovernments/digit-ui-react-components" "1.5.27"
       react "17.0.2"
       react-dom "17.0.2"
       react-hook-form "6.15.8"
@@ -1434,12 +1434,12 @@ Lockfile:
       react-router-dom "5.3.0"
       rooks "^4.4.0"
   
-  "@digit-ui/digit-ui-react-components@1.4.100":
+  "@egovernments/digit-ui-react-components@1.4.100":
     version "1.4.100"
-    resolved "https://registry.npmjs.org/@digit-ui/digit-ui-react-components/-/digit-ui-react-components-1.4.100.tgz"
+    resolved "https://registry.npmjs.org/@egovernments/digit-ui-react-components/-/digit-ui-react-components-1.4.100.tgz"
     integrity sha512-3si7Ce8sQoOg7xHCpkW2mmjWwuYgPzkAfaSC2v2Fuxd12ZPuVd+Y/NSybgtD6dFmhM6d5nkE5DhcBjicI1wrBw==
     dependencies:
-      "@digit-ui/digit-ui-svg-components" "0.0.6"
+      "@egovernments/digit-ui-svg-components" "0.0.6"
       "@googlemaps/js-api-loader" "1.13.10"
       "@hookform/resolvers" "1.3.7"
       ajv "^8.12.0"
@@ -1459,9 +1459,9 @@ Lockfile:
       react-router-dom "5.3.0"
       react-table "7.7.0"
   
-  "@digit-ui/digit-ui-react-components@1.5.25":
+  "@egovernments/digit-ui-react-components@1.5.25":
     version "1.5.25"
-    resolved "https://registry.yarnpkg.com/@digit-ui/digit-ui-react-components/-/digit-ui-react-components-1.5.25.tgz#ab19a010a68b79ed70357d056b881b1c0e2e7549"
+    resolved "https://registry.yarnpkg.com/@egovernments/digit-ui-react-components/-/digit-ui-react-components-1.5.25.tgz#ab19a010a68b79ed70357d056b881b1c0e2e7549"
     integrity sha512-sltdM920+BfLZ7TbEYetuMPNKRoQrfFf36/MdFx0OxcGJySteumfn1VxiW5mANVYAw2Dnzu7Mk02Hq9q+T/b/g==
     dependencies:
       "@googlemaps/js-api-loader" "1.13.10"
@@ -1470,21 +1470,21 @@ Lockfile:
       react-i18next "11.16.2"
       react-table "7.7.0"
   
-  "@digit-ui/digit-ui-react-components@1.5.27":
+  "@egovernments/digit-ui-react-components@1.5.27":
     version "1.5.27"
-    resolved "https://registry.yarnpkg.com/@digit-ui/digit-ui-react-components/-/digit-ui-react-components-1.5.27.tgz#0eda7feb4d61a42012558dfc8fe9ef480a223145"
+    resolved "https://registry.yarnpkg.com/@egovernments/digit-ui-react-components/-/digit-ui-react-components-1.5.27.tgz#0eda7feb4d61a42012558dfc8fe9ef480a223145"
     integrity sha512-X6mC5vpC/GNehJRdS2LDpviHuyBWFQwham8Jf/8QwwqM/I2HLAEKUR/vW7kC6VtLWljLU/6YXyPwXEDm1lCeXw==
     dependencies:
-      "@digit-ui/digit-ui-svg-components" "0.0.1"
+      "@egovernments/digit-ui-svg-components" "0.0.1"
       "@googlemaps/js-api-loader" "1.13.10"
       react-date-range "1.3.0"
       react-hook-form "6.15.8"
       react-i18next "11.16.2"
       react-table "7.7.0"
   
-  "@digit-ui/digit-ui-svg-components@0.0.1":
+  "@egovernments/digit-ui-svg-components@0.0.1":
     version "0.0.1"
-    resolved "https://registry.yarnpkg.com/@digit-ui/digit-ui-svg-components/-/digit-ui-svg-components-0.0.1.tgz#32875896eff1e051659cfa6e10d8fb3915be85c4"
+    resolved "https://registry.yarnpkg.com/@egovernments/digit-ui-svg-components/-/digit-ui-svg-components-0.0.1.tgz#32875896eff1e051659cfa6e10d8fb3915be85c4"
     integrity sha512-qge462csifVTc4bAUAnGgJrD2/1zpBvyEPCI5areob+pyJCR0Nm/3U9NqZOPUgYS6xKqRGoT10Ze7g79u+P3Lg==
     dependencies:
       "@googlemaps/js-api-loader" "1.13.10"
@@ -1493,9 +1493,9 @@ Lockfile:
       react-i18next "11.16.2"
       react-table "7.7.0"
   
-  "@digit-ui/digit-ui-svg-components@0.0.6":
+  "@egovernments/digit-ui-svg-components@0.0.6":
     version "0.0.6"
-    resolved "https://registry.npmjs.org/@digit-ui/digit-ui-svg-components/-/digit-ui-svg-components-0.0.6.tgz"
+    resolved "https://registry.npmjs.org/@egovernments/digit-ui-svg-components/-/digit-ui-svg-components-0.0.6.tgz"
     integrity sha512-4NjZ+R2JL82zXrMnuUkNJd8zHUyGP41nXcWXwWsFCD+SJtyHGf45BhhguOj6w7/KB7M4IquFcWb7V8+nrHmI7Q==
   
   "@emotion/babel-plugin@^11.0.0":

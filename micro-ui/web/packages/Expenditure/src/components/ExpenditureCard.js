@@ -1,4 +1,4 @@
-import { EmployeeModuleCard, DocumentIconSolid } from "@digit-ui/digit-ui-react-components";
+import { EmployeeModuleCard, DocumentIconSolid } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

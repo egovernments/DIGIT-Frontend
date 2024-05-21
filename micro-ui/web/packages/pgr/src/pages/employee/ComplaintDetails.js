@@ -28,8 +28,8 @@ import {
   Loader,
   Modal,
   SectionalDropdown,
-} from "@digit-ui/digit-ui-react-components";
-import { useLocation } from "react-router-dom";
+} from "@egovernments/digit-ui-react-components";
+
 import { Close } from "../../Icons";
 import { useTranslation } from "react-i18next";
 import { isError, useQueryClient } from "react-query";
@@ -202,6 +202,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
           onDelete={() => {
             setUploadedFile(null);
           }}
+          uploadedFiles={[]}
           message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
         />
       </Card>
@@ -209,18 +210,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   );
 };
 
-function getLastIdFromUrl(url) {
-  const parts = url.split('/');
-  for (let i = parts.length - 1; i >= 0; i--) {
-    if (parts[i] !== '') {
-      return parts[i];
-    }
-  }
-  return null; // Return null if no valid id is found
-}
-
 export const ComplaintDetails = (props) => {
-  let id = getLastIdFromUrl(useLocation().pathname) 
+  let { id } = useParams();
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);

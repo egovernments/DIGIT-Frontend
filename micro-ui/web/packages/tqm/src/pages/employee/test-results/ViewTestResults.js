@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { ViewComposer, Header, Loader, MultiLink } from "@digit-ui/digit-ui-react-components";
+import { ViewComposer, Header, Loader, MultiLink } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 

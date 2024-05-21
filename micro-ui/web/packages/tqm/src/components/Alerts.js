@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Card, Header } from '@digit-ui/digit-ui-react-components'
+import { Card, Header } from '@egovernments/digit-ui-react-components'
 import { useTranslation } from "react-i18next"
 const alerts = ({ ale }) => {
   const { t } = useTranslation();

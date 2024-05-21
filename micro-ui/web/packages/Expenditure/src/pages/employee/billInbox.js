@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@digit-ui/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/BillInbox/DesktopInbox";
 import MobileInbox from "../../components/BillInbox/MobileInbox";
 import { useForm, Controller } from "react-hook-form";

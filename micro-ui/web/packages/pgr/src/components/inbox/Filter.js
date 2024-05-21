@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Dropdown, RadioButtons, ActionBar, RemoveableTag, RoundedLabel } from "@digit-ui/digit-ui-react-components";
-import { ApplyFilterBar, CloseSvg } from "@digit-ui/digit-ui-react-components";
+import { Dropdown, RadioButtons, ActionBar, RemoveableTag, RoundedLabel } from "@egovernments/digit-ui-react-components";
+import { ApplyFilterBar, CloseSvg } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import Status from "./Status";
 
@@ -23,7 +23,7 @@ const Filter = (props) => {
 
   const [selectAssigned, setSelectedAssigned] = useState(isAssignedToMe ? assignedToOptions[0] : assignedToOptions[1]);
 
-  useEffect(() => setSelectedAssigned(isAssignedToMe ? assignedToOptions[0] : assignedToOptions[1]), [t]);
+  // useEffect(() => setSelectedAssigned(isAssignedToMe ? assignedToOptions[0] : assignedToOptions[1]), [t]);
 
   const [selectedComplaintType, setSelectedComplaintType] = useState(null);
   const [selectedLocality, setSelectedLocality] = useState(null);

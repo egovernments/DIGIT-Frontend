@@ -1,4 +1,4 @@
-import { Card, InfoIcon, Row } from "@digit-ui/digit-ui-react-components";
+import { Card, InfoIcon, Row } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

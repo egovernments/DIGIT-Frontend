@@ -1,4 +1,4 @@
-import { Dropdown } from "@digit-ui/digit-ui-react-components";
+import { Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 

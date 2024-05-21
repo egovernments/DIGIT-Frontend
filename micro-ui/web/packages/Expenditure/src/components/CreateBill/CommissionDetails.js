@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CardSectionHeader, Card} from "@digit-ui/digit-ui-react-components";
+import { CardSectionHeader, Card} from "@egovernments/digit-ui-react-components";
 import ApplicationDetails from "../../../../templates/ApplicationDetails";
 
 const CommissionDetails = ({ wrapInCard }) => {

@@ -1,4 +1,4 @@
-import { Modal,RadioButtons } from '@digit-ui/digit-ui-react-components'
+import { Modal,RadioButtons } from '@egovernments/digit-ui-react-components'
 import React from 'react'
 
 const Heading = (props) => {

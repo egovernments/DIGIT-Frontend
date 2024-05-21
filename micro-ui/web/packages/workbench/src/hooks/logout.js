@@ -32,7 +32,7 @@ export const logoutV1 = async () => {
   };
   const userType = Digit.UserService.getType();
   try {
-    await fetch(`${window?.location?.origin}/user/v1/_logout?tenantId=${tenantId}`, requestOptions)
+    await fetch(`${window.location.origin}/user/v1/_logout?tenantId=${tenantId}`, requestOptions)
       .then((response) => response.json())
       .catch((error) => console.log("error", error));
   } catch (e) {
@@ -40,9 +40,9 @@ export const logoutV1 = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
     if (userType === "citizen") {
-      window?.location?.replace("/digit-ui/citizen");
+      window.location.replace("/digit-ui/citizen");
     } else {
-      window?.location?.replace("/digit-ui/employee/user/language-selection");
+      window.location.replace("/digit-ui/employee/user/language-selection");
     }
   }
 };

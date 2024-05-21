@@ -1,4 +1,4 @@
-import { EmployeeModuleCard, TqmHomePageCardIcon, Loader } from "@digit-ui/digit-ui-react-components";
+import { EmployeeModuleCard, TqmHomePageCardIcon, Loader } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";

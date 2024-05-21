@@ -1,5 +1,5 @@
 import React from "react";
-import { Amount } from '@digit-ui/digit-ui-react-components'
+import { Amount } from '@egovernments/digit-ui-react-components'
 
 const GetCell = (value) => <span className="cell-text">{value}</span>;
 

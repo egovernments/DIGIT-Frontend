@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import ApplicationDetails from "../../../../../templates/ApplicationDetails";
 import { useTranslation } from "react-i18next";
-import { Header,Loader } from "@digit-ui/digit-ui-react-components";
+import { Header,Loader } from "@egovernments/digit-ui-react-components";
 
 const ViewSupervisionbill = ({ ...props }) => {
   const { t } = useTranslation();

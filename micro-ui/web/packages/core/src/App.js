@@ -2,10 +2,10 @@ import React, { lazy, Suspense,useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { DigitUI } from "./Module";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
-import registerRemotes from "./utils/registerRemotes"
+import registerRemotes from "./modules/registerRemotes"
 import { useTranslation } from "react-i18next";
 // import { queryClient } from "./bootstrap";
-import { Loader } from "@digit-ui/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-react-components";
 
 const initDigitUI = () => {
   // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
@@ -42,12 +42,16 @@ const App = ({queryClient}) => {
   const moduleReducers = (initData) => initData;
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
-      tenantId: Digit.ULBService.getStateId(),
-      module: `rainmaker-common,rainmaker-${Digit.ULBService.getCurrentTenantId()},rainmaker-${Digit.ULBService.getStateId()}`,
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      module: `rainmaker-common,rainmaker-${Digit.ULBService.getCurrentTenantId()}`,
       locale:i18n.language,
     },
     i18n,
   })
+
+  useEffect(() => {
+    registerRemotes(queryClient,t,i18n)
+  }, [])
   
 
   

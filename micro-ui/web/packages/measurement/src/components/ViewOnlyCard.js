@@ -1,4 +1,4 @@
-import { Amount } from "@digit-ui/digit-ui-react-components";
+import { Amount } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";

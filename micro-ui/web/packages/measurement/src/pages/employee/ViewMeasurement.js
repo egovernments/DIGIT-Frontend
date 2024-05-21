@@ -1,4 +1,4 @@
-import { Header, Card, Loader, WorkflowActions, CardSubHeader } from "@digit-ui/digit-ui-react-components";
+import { Header, Card, Loader, WorkflowActions, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import { transformEstimateData } from "../../utils/transformEstimateData";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";

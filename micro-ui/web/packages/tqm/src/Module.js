@@ -1,4 +1,4 @@
-import { Loader, TourProvider } from "@digit-ui/digit-ui-react-components";
+import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 // import { Link, useRouteMatch } from "react-router-dom";
 import TqmCard from "./components/TqmCard";

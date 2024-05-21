@@ -70,7 +70,7 @@ const SubMenu = ({ item, t, isEmployee }) => {
 
       {subnav &&
         item.links
-          .sort((a, b) => a.orderNumber - b.orderNumber)
+          ?.sort((a, b) => a.orderNumber - b.orderNumber)
           .map((item, index) => {
             if (item.navigationURL.indexOf(`/${window?.contextPath}`) === -1) {
               const getOrigin = window.location.origin;

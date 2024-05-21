@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CloseSvg, DateRangeNew, FilterIcon, FormComposer, RefreshIcon } from "@digit-ui/digit-ui-react-components";
+import { CloseSvg, DateRangeNew, FilterIcon, FormComposer, RefreshIcon } from "@egovernments/digit-ui-react-components";
 
 const InboxFilter = ({ type, onFilterChange, onClose }) => {
   const { t } = useTranslation();

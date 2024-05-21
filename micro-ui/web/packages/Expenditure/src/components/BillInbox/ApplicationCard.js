@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Card, DetailsCard, Loader, PopUp, SearchAction } from "@digit-ui/digit-ui-react-components";
-import { FilterAction } from "@digit-ui/digit-ui-react-components";
+import { Card, DetailsCard, Loader, PopUp, SearchAction } from "@egovernments/digit-ui-react-components";
+import { FilterAction } from "@egovernments/digit-ui-react-components";
 import SearchApplication from "./search";
 import SortBy from "./SortBy";
 

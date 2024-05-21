@@ -1,4 +1,4 @@
-import { FormComposer, Header, Toast, WorkflowModal } from "@digit-ui/digit-ui-react-components";
+import { FormComposer, Header, Toast, WorkflowModal } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";

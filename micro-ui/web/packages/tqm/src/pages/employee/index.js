@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, Fragment } from "react";
 import { Switch, useLocation, useRouteMatch, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb, BackButton } from "@digit-ui/digit-ui-react-components";
+import { PrivateRoute, AppContainer, BreadCrumb, BackButton } from "@egovernments/digit-ui-react-components";
 import SampleComp from "./SampleComp";
 import TQMPendingTask from "./TQMPendingTask";
 import TQMLanding from "./TQMLanding";

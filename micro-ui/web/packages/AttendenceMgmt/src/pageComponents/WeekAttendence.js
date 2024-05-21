@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Table, CardLabelError} from "@digit-ui/digit-ui-react-components";
+import { Table, CardLabelError} from "@egovernments/digit-ui-react-components";
 
 const WeekAttendence = ({ state, dispatch, modify, setSaveAttendanceState, weekDates, workflowDetails, setAttendanceError}) => {
   const { t } = useTranslation();

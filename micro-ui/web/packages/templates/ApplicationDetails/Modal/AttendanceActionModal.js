@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import _ from "lodash";
-import { Loader, Modal, FormComposer,WorkflowModal } from "@digit-ui/digit-ui-react-components";
+import { Loader, Modal, FormComposer,WorkflowModal } from "@egovernments/digit-ui-react-components";
 import { configAttendanceApproveModal, configAttendanceRejectModal, configAttendanceCheckModal } from "../config";
 import getModalConfig from "../config/AttendanceSaveConfig";
 const Heading = (props) => {

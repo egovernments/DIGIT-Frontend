@@ -1,4 +1,4 @@
-import { TextInput, Dropdown, DeleteIcon } from "@digit-ui/digit-ui-react-components";
+import { TextInput, Dropdown, DeleteIcon } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react";

@@ -1,11 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { EditIcon, AddNewIcon, InboxIcon , ArrowRightInbox , CreateLoiIcon } from "@digit-ui/digit-ui-react-components";
+import { EditIcon, AddNewIcon, InboxIcon , ArrowRightInbox , CreateLoiIcon } from "@egovernments/digit-ui-react-components";
 
 import { useHistory } from "react-router-dom";
 
-import { Banner, Card, ActionBar, SubmitBar } from "@digit-ui/digit-ui-react-components"; // Import the Banner component you provided
+import { Banner, Card, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components"; // Import the Banner component you provided
 import { withRouter } from "react-router-dom";
 const MeasurementServiceResponse = () => {
 

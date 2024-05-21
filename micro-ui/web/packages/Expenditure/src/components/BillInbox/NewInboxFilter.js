@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, DatePicker, CloseSvg, SubmitBar, FilterIcon, RefreshIcon } from "@digit-ui/digit-ui-react-components";
+import { Dropdown, DatePicker, CloseSvg, SubmitBar, FilterIcon, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { Controller, useForm} from 'react-hook-form'

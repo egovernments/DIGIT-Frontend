@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { CardLabel } from '@digit-ui/digit-ui-react-components'
-import { DisplayPhotos } from '@digit-ui/digit-ui-react-components'
+import { CardLabel } from '@egovernments/digit-ui-react-components'
+import { DisplayPhotos } from '@egovernments/digit-ui-react-components'
 
 const Photos = ({ data, OpenImage }) => {
     const { t } = useTranslation()

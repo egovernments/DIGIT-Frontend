@@ -31,7 +31,6 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
-import Button from "../atoms/Button"
 
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { validateResolver } from "./validateResolver";
@@ -99,7 +98,6 @@ export const FormComposer = (props) => {
     clearErrors,
     unregister,
   } = useForm(inputProps);
-  // console.log(formState,'formState');
   const formData = watch();
   const selectedFormCategory = props?.currentFormCategory;
   const [showErrorToast, setShowErrorToast] = useState(false); 
@@ -135,8 +133,9 @@ export const FormComposer = (props) => {
   useEffect(()=>{
     setCustomToast(props?.customToast);
   },[props?.customToast])
+
   function onSubmit(data) {
-    props.onSubmit(data,setValue);
+    props.onSubmit(data);
   }
 
   function onSecondayActionClick(data) {
@@ -717,9 +716,6 @@ export const FormComposer = (props) => {
             );
           return (
             <Fragment>
-              {field?.withoutLabelFieldPair === true ? (
-                fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)
-              ) : (
               <LabelFieldPair
                 key={index}
                 style={
@@ -739,7 +735,7 @@ export const FormComposer = (props) => {
                   >
                     {t(field.label)}
                     {field?.appendColon ? ' : ' : null}
-                    {field.isMandatory ? <span className="mandatory-span">*</span> : null}
+                    {field.isMandatory ? " * " : null}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
@@ -747,7 +743,6 @@ export const FormComposer = (props) => {
                   {field?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(field?.description)}</CardText>}
                 </div>
               </LabelFieldPair>
-              )}
               {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
                 <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
                   {t( errors?.[field?.populators?.name]?.message || field?.populators?.error)}
@@ -803,13 +798,13 @@ export const FormComposer = (props) => {
   const renderFormFields = (props, section, index, array, sectionFormCategory) => (
       <React.Fragment key={index}>
           {!props.childrenAtTheBottom && props.children}
-          {props.heading && <CardSubHeader className={props?.cardSubHeaderClassName ? props?.cardSubHeaderClassName : ""} style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
-          {props.description && <CardLabelDesc className={"repos"} style={{ ...props.descriptionStyle }}> {props.description} </CardLabelDesc>}
+          {props.heading && <CardSubHeader style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
+          {props.description && <CardLabelDesc className={"repos"}> {props.description} </CardLabelDesc>}
           {props.text && <CardText>{props.text}</CardText>}
           {formFields(section, index, array, sectionFormCategory)}
           {props.childrenAtTheBottom && props.children}
           {props.submitInForm && (
-            <SubmitBar label={t(props.label)} style={{ ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className={`w-full ${props?.buttonClassName ? props?.buttonClassName : ""}`} />
+            <SubmitBar label={t(props.label)} style={{ ...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full" />
           )}
           {props.secondaryActionLabel && (
           <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
@@ -875,12 +870,8 @@ export const FormComposer = (props) => {
         )
       }
       {!props.submitInForm && props.label && (
-        <ActionBar className={props.actionClassName}>
-          
+        <ActionBar>
           <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
-          {props.secondaryLabel && props.showSecondaryLabel && (
-            <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
-          )}
           {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}

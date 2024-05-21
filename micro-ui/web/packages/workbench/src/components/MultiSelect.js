@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Loader, InfoBannerIcon, Button, Close } from "@digit-ui/digit-ui-react-components";
+import { Loader, InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
 import MDMSSearchv2Popup from "../pages/employee/MDMSSearchv2Popup";
 
 const customStyles = {

@@ -1,4 +1,4 @@
-import { Dropdown } from '@digit-ui/digit-ui-react-components';
+import { Dropdown } from '@egovernments/digit-ui-react-components';
 import React, { useState } from 'react'
 
 const configApproveModal = ({

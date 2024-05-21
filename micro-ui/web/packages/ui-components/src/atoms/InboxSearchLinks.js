@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import {SVG} from "./SVG"
+import { PropertyHouse, BioMetricIcon,WorksMgmtIcon} from "./svgindex";
+
 const getIconComponent = (iconName="")=>{
-    return SVG?.[iconName];
+    return <span></span>;
 }
 
 const InboxSearchLinks = ({headerText, links, businessService, customClass="", logoIcon}) => {

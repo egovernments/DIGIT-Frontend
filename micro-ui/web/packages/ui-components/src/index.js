@@ -70,99 +70,116 @@ import ULBHomeCard from "./atoms/ULBHomeCard";
 import ViewDetailsCard from "./atoms/ViewDetailsCard";
 
 import {
+  InputIcon,
+  TreatmentQualityIcon,
+  HelpOutlineIcon,
   AnnouncementIcon,
-  ArrowDown,
-  ArrowLeft,
-  ArrowLeftWhite,
-  ArrowRightInbox,
-  Calender,
-  CaseIcon,
-  CitizenTruck,
-  CloseSvg,
-  Close,
-  ComplaintIcon,
-  Details,
-  DocumentSVG,
-  DownloadIcon,
-  DownloadImgIcon,
-  DownwardArrow,
-  DropIcon,
-  Ellipsis,
-  EmailIcon,
-  FilterIcon,
-  GetApp,
-  HomeIcon,
-  PrevIcon,
-  ViewsIcon,
-  LanguageIcon,
-  FilterSvg,
-  LogoutIcon,
-  Person,
-  PersonIcon,
-  Poll,
-  PrintIcon,
-  PropertyHouse,
-  PTIcon,
   ReceiptIcon,
+  CreateEstimateIcon,
+  GotoInboxIcon,
+  ArrowLeft,
+  ArrowDown,
+  CameraSvg,
+  DeleteBtn,
+  DownloadIcon,
+  Ellipsis,
+  SuccessSvg,
+  ErrorSvg,
+  StarFilled,
+  StarEmpty,
+  SearchIconSvg,
+  CheckSvg,
+  RoundedCheck,
+  Calender,
+  Phone,
+  FilterSvg,
+  SortSvg,
+  Close,
+  Feedback,
+  GetApp,
+  HamburgerIcon,
+  ArrowBack,
+  ArrowForward,
+  ArrowRightInbox,
+  SortDown,
+  SortUp,
+  ShippingTruck,
+  CloseSvg,
+  CalendarIcon,
+  UpwardArrow,
+  DownwardArrow,
+  Poll,
+  FilterIcon,
   RefreshIcon,
   RefreshSVG,
-  RupeeIcon,
-  SearchIconSvg,
+  Details,
+  PrintIcon,
+  PrimaryDownlaodIcon,
+  InfoBannerIcon,
   ShareIcon,
-  ShippingTruck,
-  SortDown,
-  SortSvg,
-  GenericFileIcon,
-  SortUp,
-  UpwardArrow,
+  RupeeIcon,
+  ComplaintIcon,
+  DropIcon,
+  Person,
   WhatsappIcon,
+  EmailIcon,
+  DocumentIcon,
+  DocumentIconSolid,
+  EventsIconSolid,
+  SurveyIconSolid,
+  PMBIconSolid,
+  DustbinIcon,
+  ExternalLinkIcon,
+  DownloadImgIcon,
+  ViewsIcon,
+  PrevIcon,
+  DocumentSVG,
+  ArrowToFirst,
+  ArrowToLast,
+  DownloadPrefixIcon,
+  CaseIcon,
+  PersonIcon,
+  PTIcon,
   OBPSIcon,
+  OBPSIconSolidBg,
+  CitizenTruck,
+  FSMIcon,
   EDCRIcon,
   BPAIcon,
   BPAHomeIcon,
-  DocumentIcon,
-  ExternalLinkIcon,
-  PMBIcon,
-  PDFSvg,
-  DownloadPrefixIcon,
   HelpIcon,
-  TickMark,
   NotificationBell,
   MapMarker,
   Clock,
   EventCalendar,
   ImageIcon,
+  TickMark,
+  PDFSvg,
   EditIcon,
   SearchIcon,
   DeleteIcon,
   CreateLoiIcon,
-  OBPSIconSolidBg,
-  DocumentIconSolid,
-  PMBIconSolid,
-  EventsIconSolid,
-  SurveyIconSolid,
-  DustbinIcon,
-  InfoBannerIcon,
+  PMBIcon,
+  GenericFileIcon,
+  ArrowLeftWhite,
   WSICon,
-  ArrowForward,
   ArrowVectorDown,
   ArrowDirection,
   CameraIcon,
-  EditPencilIcon,
-  GalleryIcon,
   RemoveIcon,
-  CheckSvg,
+  GalleryIcon,
+  EditPencilIcon,
   AddressBookIcon,
   LocationIcon,
   CollectionsBookmarIcons,
   FinanceChartIcon,
   CollectionIcon,
-  FSMIcon,
   MCollectIcon,
   PGRIcon,
   TLIcon,
   BillsIcon,
   ErrorIcon,
+  DownloadBtnCommon,
   PrintBtnCommon,
   WhatsappIconGreen,
   HelpLineIcon,
@@ -173,20 +190,18 @@ import {
   AddIcon,
   SubtractIcon,
   AddNewIcon,
-  InboxIcon,
   ViewReportIcon,
+  InboxIcon,
   PrivacyMaskIcon,
-  DeathIcon,
-  BirthIcon,
   FirenocIcon,
-  CreateEstimateIcon,
-  GotoInboxIcon,
+  BirthIcon,
+  DeathIcon,
+  ArrowCollapseUp,
+  ArrowCollapseDown,
   AddFilled,
   AddFileFilled,
   LocateIcon,
-
   /* Works Management  */
-
   NoResultsFoundIcon,
   WorksMgmtIcon,
   BioMetricIcon,
@@ -201,21 +216,33 @@ import {
   HelperIcon,
   DashboardIcon,
   ExpenditureIcon,
+  DoubleTickIcon,
+  InfoIcon,
   PaymentIcon,
   HistoryIcon,
   WarningIcon,
+  LoginIcon,
+  PropertyHouse,
+  TqmHomePageCardIcon,
+  TqmInboxIcon,
+  MaintainanceIcon,
+  IssueIcon,
+  ViewReportsIcon,
+  VehicleLogIcon,
+  ArrowUpward,
+  ArrowDownward,
+  DocumentRect,
   AttentionListIcon,
   UploadIcon,
   FileIcon,
   DeleteIconv2,
   InfoIconOutline,
-  HelpOutlineIcon,
-  InputIcon,
-  TreatmentQualityIcon,
+  HomeIcon,
+  LanguageIcon,
+  LogoutIcon
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
-import { Phone } from "./atoms/svgindex";
 import TextArea from "./atoms/TextArea";
 import InputTextAmount from "./atoms/InputTextAmount";
 import TextInput from "./atoms/TextInput";
@@ -231,9 +258,9 @@ import PopupHeadingLabel from "./atoms/PopupHeadingLabel";
 
 import { FormComposer } from "./hoc/FormComposer";
 import { FormComposer as FormComposerV2 } from "./hoc/FormComposerV2";
+import ViewComposer from "./hoc/ViewComposer";
 import RenderFormFields from "./molecules/RenderFormFields";
 import Modal from "./hoc/Modal";
-import FileUploadModal from "./hoc/FileUploadModal"
 import ResponseComposer from "./hoc/ResponseComposer";
 import InboxComposer from "./hoc/InboxComposer";
 
@@ -251,6 +278,7 @@ import PitDimension from "./molecules/PitDimension";
 import RadioOrSelect from "./molecules/RadioOrSelect";
 import RatingCard from "./molecules/RatingCard";
 import RemoveableTag from "./atoms/RemoveableTag";
+import RemoveableTagNew from "./atoms/RemovableTagNew";
 import SearchAction from "./molecules/SearchAction";
 import SortAction from "./molecules/SortAction";
 import { SearchField, SearchForm } from "./molecules/SearchForm";
@@ -261,9 +289,9 @@ import SearchOnRadioButtons from "./molecules/SearchOnRadioButtons";
 import OnGroundEventCard from "./molecules/OnGroundEventCard";
 import MultiUploadWrapper from "./molecules/MultiUploadWrapper";
 import { FilterForm, FilterFormField } from "./molecules/FilterForm";
+import WrapUnMaskComponent from "./molecules/WrapUnMaskComponent";
 import OpenLinkContainer from "./atoms/OpenLinkContainer";
 import UploadPitPhoto from "./molecules/UploadPitPhoto";
-import { DownloadBtnCommon } from "./atoms/svgindex";
 import ToggleSwitch from "./atoms/ToggleSwitch";
 import WeekPicker from "./atoms/WeekPicker";
 import CollapseAndExpandGroups from "./atoms/CollapseAndExpandGroups";
@@ -271,7 +299,7 @@ import HorizontalNav from "./atoms/HorizontalNav";
 import NoResultsFound from "./atoms/NoResultsFound";
 import { ViewImages } from "./atoms/ViewImages";
 import InboxSearchComposer from "./hoc/InboxSearchComposer";
-import InboxSearchComposerV2 from "./hoc/InboxSearchComposerV2";
+import NotificationComponent from "./atoms/NotificationComponent";
 import MobileSearchResults from "./hoc/MobileView/MobileSearchResults";
 import MobileSearchComponent from "./hoc/MobileView/MobileSearchComponent";
 import ResultsTable from "./hoc/ResultsTable";
@@ -282,28 +310,22 @@ import WorkflowActions from "./atoms/WorkflowActions";
 import Amount from "./atoms/Amount";
 import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
-import CloseButton from "./atoms/CloseButton";
-import LoaderWithGap from "./atoms/LoaderWithGap";
-// Importing From SVG Library
-import {SVG} from "./atoms/SVG";
 
-//Tutorial
+// Importing From SVG Library
+// import {SVG} from "./atoms/SVG";
+
+import Notification from "./atoms/Notification";
 import Tutorial from "./hoc/Tutorial/Tutorial";
-import { useTourState,TourProvider } from "./hoc/Tutorial/TourProvider";
+import { useTourState, TourProvider } from "./hoc/Tutorial/TourProvider";
 import Help from "./hoc/Tutorial/Help";
 
-//View Composer
-import ViewComposer from "./hoc/ViewComposer";
-import XlsPreview from "./atoms/XlsPreview";
 export {
-  XlsPreview,
-  ViewComposer,
+  Notification,
   HelpOutlineIcon,
   InputIcon,
-  TreatmentQualityIcon,
   Help,
   Tutorial,
-  useTourState,
+  useTourState, 
   TourProvider,
   InputTextAmount,
   Button,
@@ -366,7 +388,6 @@ export {
   CityMohalla,
   DetailsCard,
   WorkflowModal,
-  FileUploadModal,
   Label,
   Table,
   PopUp,
@@ -402,7 +423,6 @@ export {
   HorizontalNav,
   NoResultsFound,
   Amount,
-  LoaderWithGap,
   // Icons
   GetApp,
   ArrowLeft,
@@ -451,6 +471,7 @@ export {
   FilterAction,
   ApplyFilterBar,
   RemoveableTag,
+  RemoveableTagNew,
   RadioOrSelect,
   Localities,
   SearchForm,
@@ -463,7 +484,6 @@ export {
   FilterFormField,
   SortAction,
   CustomDropdown,
-  CloseButton,
   // hoc
   FormComposer,
   FormComposerV2,
@@ -487,12 +507,12 @@ export {
   Details,
   InboxComposer,
   InboxSearchComposer,
-  InboxSearchComposerV2,
   MobileSearchResults,
   MobileSearchComponent,
   ResultsTable,
   InboxSearchLinks,
   UploadFileComposer,
+  ViewComposer,
   // Icons
   FilterIcon,
   FilterSvg,
@@ -562,6 +582,7 @@ export {
   ViewReportIcon,
   InboxIcon,
   UnMaskComponent,
+  WrapUnMaskComponent,
   PrivacyMaskIcon,
   DeathIcon,
   BirthIcon,
@@ -569,13 +590,11 @@ export {
   CreateEstimateIcon,
   GotoInboxIcon,
   LocateIcon,
-  UploadIcon,
-  FileIcon,
-  DeleteIconv2,
-  InfoIconOutline,
 
   /* Works Management  */
 
+  InfoIcon,
+  LoginIcon,
   NoResultsFoundIcon,
   WorksMgmtIcon,
   BioMetricIcon,
@@ -592,10 +611,21 @@ export {
   ExpenditureIcon,
   PaymentIcon,
   HistoryIcon,
+  NotificationComponent,
+  TqmHomePageCardIcon,
+  TqmInboxIcon,
+  TreatmentQualityIcon,
+  MaintainanceIcon,
+  IssueIcon,
+  ViewReportsIcon,
+  VehicleLogIcon,
+  ArrowDownward,
+  ArrowUpward,
   WarningIcon,
+  DocumentRect,
   AttentionListIcon,
 
 
   // Exported all svgs from svg-component library
-  SVG
+  // SVG
 };

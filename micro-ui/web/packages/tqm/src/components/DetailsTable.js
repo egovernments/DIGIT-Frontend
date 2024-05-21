@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useTable } from "react-table";
 import { useTranslation } from "react-i18next";
-import { CardSubHeader } from "@digit-ui/digit-ui-react-components";
+import { CardSubHeader } from "@egovernments/digit-ui-react-components";
 
 const DetailsTable = ({ columnsData, rowsData, summaryRows, cardHeader }) => {
   const { t } = useTranslation();

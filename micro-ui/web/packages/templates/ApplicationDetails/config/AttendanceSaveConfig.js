@@ -1,4 +1,4 @@
-import { Dropdown, Loader } from '@digit-ui/digit-ui-react-components';
+import { Dropdown, Loader } from '@egovernments/digit-ui-react-components';
 import React, { useState } from 'react'
 
 const getModalConfig = ({

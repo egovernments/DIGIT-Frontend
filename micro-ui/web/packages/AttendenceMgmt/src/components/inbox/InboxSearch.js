@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, LinkLabel, SubmitBar, ActionBar, CloseSvg } from "@digit-ui/digit-ui-react-components";
+import { Dropdown, TextInput, LinkLabel, SubmitBar, ActionBar, CloseSvg } from "@egovernments/digit-ui-react-components";
 
 
 const InboxSearch = ({type, isInboxPage, onSearch, onClose}) => {

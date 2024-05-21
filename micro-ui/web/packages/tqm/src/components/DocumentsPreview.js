@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { DocumentRect } from "@digit-ui/digit-ui-react-components";
+import { DocumentRect } from "@egovernments/digit-ui-react-components";
 
 function DocumentsPreview({ documents, svgStyles = {} }) {
   const { t } = useTranslation();

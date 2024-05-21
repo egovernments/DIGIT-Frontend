@@ -9,7 +9,7 @@ import {
     PGRIcon,
     PTIcon,
     TLIcon,
-    WSICon } from '@digit-ui/digit-ui-react-components'
+    WSICon } from '@egovernments/digit-ui-react-components'
 import React from 'react'
 import { useTranslation } from "react-i18next";
 import configSHGHOME from './config';
