@@ -9,9 +9,12 @@ import {
     Poll,
     ShareIcon,
     WhatsappIcon,
-  } from "@digit-ui/digit-ui-react-components";
+
+  } from "@egovernments/digit-ui-react-components";
+  
+
   import { format } from "date-fns";
-  import React, { useMemo, useRef, useState, useContext } from "react";
+  import React, { useMemo, useRef, useState, useContext,useEffect } from "react";
   import { useTranslation } from "react-i18next";
   import { useParams } from "react-router-dom";
   import FilterContext from "../components/FilterContext";

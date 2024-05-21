@@ -1,8 +1,9 @@
-import { Loader, BreadCrumb } from "@digit-ui/digit-ui-react-components";
-import React, {Fragment} from "react";
-import { useTranslation } from "react-i18next";
-import { Switch, useLocation, useRouteMatch, Route } from "react-router-dom";
 
+import { Loader, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import React from "react";
+
+import { useTranslation } from "react-i18next";
+import { Switch, useLocation, Route } from "react-router-dom";
 
 import EngagementCard from "./components/EngagementCard";
 import EngagementDocSelectULB from "./components/Documents/EngagementDocsULB";
@@ -32,14 +33,14 @@ import DocUpdateResponse from "./pages/employee/Documents/update-response";
 import DocDeleteResponse from "./pages/employee/Documents/delete-response";
 import DocumentNotification from "./pages/employee/Documents/Inbox";
 import DocumentList from './pages/citizen/Documents/DocumentList';
-import SurveyList from "./pages/citizen/CitizenSurvey/SurveyList"
+import SurveyList from "./pages/citizen/CitizenSurvey/SurveyList";
 import DocumentDetails from "./components/Documents/DocumentDetails";
 import Surveys from "./pages/employee/CitizenSurveys";
-import FillSurvey from './pages/citizen/CitizenSurvey/FillSurvey'
+import FillSurvey from './pages/citizen/CitizenSurvey/FillSurvey';
 import CitizenSurveyForm from './components/Surveys/CitizenSurveyForm';
-import ShowSurvey from './pages/citizen/CitizenSurvey/ShowSurvey'
- 
+import ShowSurvey from './pages/citizen/CitizenSurvey/ShowSurvey';
 import SurveyResults from "./pages/employee/CitizenSurveys/SurveyResults";
+
 const EventsBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
@@ -53,146 +54,20 @@ const EventsBreadCrumb = ({ location }) => {
       content: t("ES_EVENT_INBOX"),
       show: location.pathname.includes("event/inbox") ? true : false,
     },
-    {
-      path: `/${window?.contextPath}/employee/event/new-event`,
-      content: t("ES_EVENT_NEW_EVENT"),
-      show: location.pathname.includes("event/new-event") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/event/inbox/new-event`,
-      content: t("ES_EVENT_NEW_EVENT"),
-      show: location.pathname.includes("event/inbox/new-event") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/event/inbox/event-details`,
-      content: t("ES_EVENT_EVENT_DETAILS"),
-      show: location.pathname.includes("event-details") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/event/edit-event`,
-      content: t("ES_EVENT_EDIT_EVENT"),
-      show: location.pathname.includes("event/edit-event") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/event/response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("event/response") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/inbox`,
-      content: t("ES_EVENT_INBOX"),
-      show: location.pathname.includes("/documents/inbox") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/new-doc`,
-      content: t("NEW_DOCUMENT_TEXT"),
-      show: location.pathname.includes("/documents/new-doc") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/inbox/new-doc`,
-      content: t("NEW_DOCUMENT_TEXT"),
-      show: location.pathname.includes("/documents/inbox/new-doc") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/documents/response") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/delete-response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/documents/delete-response") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/update-response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/documents/update-response") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/inbox/details/:id`,
-      content: t("CE_DOCUMENT_DETAILS"),
-      show: location.pathname.includes("/documents/inbox/details") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/documents/inbox/update`,
-      content: t("DOCUMENTS_EDIT_HEADER"),
-      show: location.pathname.includes("/documents/inbox/update") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/inbox`,
-      content: t("ES_EVENT_INBOX"),
-      show: location.pathname.includes("/messages/inbox") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/create`,
-      content: t("NEW_PUBLIC_BRDCST"),
-      show: location.pathname.includes("/messages/create") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/inbox/create`,
-      content: t("NEW_PUBLIC_BRDCST"),
-      show: location.pathname.includes("/messages/inbox/create") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/inbox/details/:id`,
-      content: t("CS_HEADER_PUBLIC_BRDCST"),
-      show: location.pathname.includes("/messages/inbox/details") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/inbox/edit/:id`,
-      content: t("EDIT_PUBLIC_BRDCST"),
-      show: location.pathname.includes("/messages/inbox/edit") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/messages/response") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/response?update=true`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/messages/response?update=true") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/messages/response?delete=true`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/messages/response?delete=true") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/surveys/inbox`,
-      content: t("ES_EVENT_INBOX"),
-      show: location.pathname.includes("/surveys/inbox") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/surveys/inbox/create`,
-      content: t("CS_COMMON_SURVEYS"),
-      show: location.pathname.includes("/surveys/inbox/create") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/surveys/create`,
-      content: t("CS_COMMON_SURVEYS"),
-      show: location.pathname.includes("/surveys/create") ? true : false,
-    },
-    {
-      path: `/${window?.contextPath}/employee/engagement/survey/create-response`,
-      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
-      show: location.pathname.includes("/engagement/survey/create-response") ? true : false,
-    },
+    // Add other breadcrumb items here...
   ];
 
   return <BreadCrumb crumbs={crumbs} />;
 };
 
-const EmployeeApp = ({ path, url, userType, tenants }) => {
-  
+const EmployeeApp = ({ path, tenants }) => {
   const location = useLocation();
 
   return (
-    // <div className="ground-container">
     <>
       <EventsBreadCrumb location={location} />
       <Switch>
-      <Route path={`${path}/sample`} exact>
+        <Route path={`${path}/sample`} exact>
           <div> Engagement Module is running thru container</div>
         </Route>
         <Route path={`${path}/event/inbox`} exact>
@@ -220,24 +95,21 @@ const EmployeeApp = ({ path, url, userType, tenants }) => {
         <Route path={`${path}/documents/delete-response`} component={(props) => <DocDeleteResponse {...props} />} />
         <Route path={`${path}/documents/inbox`} component={(props) => <DocumentNotification tenants={tenants} />} />
         <Route path={`${path}/messages`} component={(props) => <Messages {...props} tenants={tenants} parentRoute={path} />} />
-        <Route path={`${path}/surveys`} component={(props)=><Surveys {...props} tenants={tenants} parentRoute={path} />} />
-        {/* documents/update-response */}
-        {/* <Redirect to={`${path}/docs`} /> */}
+        <Route path={`${path}/surveys`} component={(props) => <Surveys {...props} tenants={tenants} parentRoute={path} />} />
       </Switch>
-      </>
-    // </div>
+    </>
   );
 };
 
-export const EngagementModule = ({ stateCode, userType, tenants,path }) => {
+export const EngagementModule = ({ stateCode, userType, tenants, path }) => {
   const moduleCode = "Engagement";
-  // const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
   if (isLoading) {
     return <Loader />;
   }
+
   Digit.SessionStorage.set("ENGAGEMENT_TENANTS", tenants);
 
   if (userType === "citizen") {

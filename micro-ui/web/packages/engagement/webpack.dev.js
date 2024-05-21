@@ -19,22 +19,21 @@ module.exports = () => {
           target: 'https://unified-dev.digit.org',
           secure: true,
           changeOrigin: true,
-          bypass: function (req, res, proxyOptions){
-            if(req.headers.accept.indexOf('html') !== -1){
+          bypass: function (req, res, proxyOptions) {
+            if (req.headers.accept.indexOf('html') !== -1) {
               console.log('Skipping proxy for browser request.');
               return '/index.html';
             }
           },
-          headers:{
-            "Connection" : "keep-alive"
+          headers: {
+            "Connection": "keep-alive"
           },
         },
-      
       ],
       historyApiFallback: {
         index: "/",
       },
-      server:"https", //Enable HTTPS
+      server: "https", //Enable HTTPS
     },
     plugins: [
       new ModuleFederationPlugin({
@@ -44,7 +43,11 @@ module.exports = () => {
           "./EngagementModule": "./src/SingleSpaEntry",
         },
         shared: {
-          ...packageJson.dependencies
+          '@egovernments/digit-ui-react-components': {
+            singleton: true,
+            requiredVersion: packageJson.dependencies['@egovernments/digit-ui-react-components'],
+          },
+          ...packageJson.dependencies,
         },
       }),
       new HtmlWebpackPlugin({

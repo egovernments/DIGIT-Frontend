@@ -68,6 +68,7 @@ export default (queryClient) => {
   //   },
   // });
 
+
   //  registerApplication({
   //   name: "Dss",
   //   app: () => import("dss/DSSModule"),
@@ -78,6 +79,7 @@ export default (queryClient) => {
   //     userType
   //   },
   // });
+
 
   // registerApplication({
   //   name: "TQM",
@@ -90,16 +92,22 @@ export default (queryClient) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "Engagement",
-  //   app: () => import("engagement/EngagementModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
-  //   customProps: {
-  //     title: "Engagement is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+
+  registerApplication({
+    name: "Engagement",
+    app: () => import("engagement/EngagementModule"),
+    activeWhen: [
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/citizen/engagement`,
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`
+    ],
+    
+    customProps: {
+      title: "Engagement is running on host",
+      queryClient,
+      userType
+    },
+  }); 
+
 
   start();
 };

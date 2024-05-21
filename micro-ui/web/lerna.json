@@ -7,8 +7,11 @@
     "packages/ui-components",
     "packages/workbench",
     "packages/hrms",
-    "packages/svg-components",
+
+    "packages/engagement",
+    "packages/dss",
     "packages/pgr"
+    
   ],
   "command": {
     "run": {
