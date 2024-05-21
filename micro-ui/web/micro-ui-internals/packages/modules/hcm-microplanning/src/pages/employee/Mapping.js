@@ -33,9 +33,7 @@ import { useMyContext } from "../../utils/context";
 import { ClearAllIcon, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { PopulationSvg } from "../../icons/Svg";
 import chroma from "chroma-js";
-import { Schemas } from "./ToBeShifted/Schemas.json";
 import * as MicroplanIconCollection from "../../icons/Svg";
-import { MapFilters } from "./ToBeShifted/MapFilters.json";
 
 const IconCollection = { ...MicroplanIconCollection, ...DigitSvgs };
 
@@ -156,7 +154,7 @@ const Mapping = ({
       setFilterDataOrigin(filterDataOriginList);
     }
     const BaseMapLayers = state?.BaseMapLayers;
-    let schemas = Schemas;
+    let schemas = state?.Schemas;
     if (schemas) setValidationSchemas(schemas);
     if (!BaseMapLayers || (BaseMapLayers && BaseMapLayers.length === 0)) return;
     let baseMaps = {};
@@ -307,7 +305,7 @@ const Mapping = ({
 
     //filters
     const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", style);
-    const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, MapFilters);
+    const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, state?.MapFilters);
     let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t);
     if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
 
@@ -329,7 +327,7 @@ const Mapping = ({
   Digit?.Hooks.useClickOutside(filterBoundaryRef, handleOutsideClickAndSubmitSimultaneously, isboundarySelectionSelected, { capture: true });
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
   Digit?.Hooks.useClickOutside(showFilterOptionRef, handleOutsideClickAndSubmitSimultaneously, showFilterOptions, { capture: true });
-
+  console.log("boundaryData",boundaryData)
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -391,7 +389,7 @@ const Mapping = ({
             </div>
 
             <div className="bottom-right-map-subcomponents">
-              {filterSelections && filterSelections.length > 0 && <MapIndex filterSelections={filterSelections} MapFilters={MapFilters} t={t} />}
+              {filterSelections && filterSelections.length > 0 && <MapIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />}
             </div>
           </div>
         </Card>
@@ -505,6 +503,7 @@ const BoundarySelection = memo(
     setIsboundarySelectionSelected,
     t,
   }) => {
+    debugger
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationModal, setShowConformationModal] = useState(false);
@@ -1057,7 +1056,7 @@ const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelectio
  */
 const addFilterProperties = (filterGeojsons, filterSelections, filterPropertyNames, iconMapping) => {
   try {
-    if (!filterGeojsons || !MapFilters || !filterSelections) return [];
+    if (!filterGeojsons || !iconMapping || !filterSelections) return [];
     let newFilterGeojson = [];
     filterGeojsons.forEach((item) => {
       if (filterPropertyNames && filterPropertyNames.length !== 0 && item.properties) {

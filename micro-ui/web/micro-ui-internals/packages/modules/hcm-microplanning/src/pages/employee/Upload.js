@@ -118,7 +118,6 @@ const Upload = ({
         setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
         const valueList = fileDataList ? Object.values(fileDataList) : [];
         const sectionCheckList = sections.filter(item=>item.required)
-        console.log(sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null))
         if (valueList.length !== 0 && sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
@@ -1214,7 +1213,8 @@ const UploadedFile = ({
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
   try {
-    const regx = new RegExp(namingConvention);
+    let processedConvention = namingConvention.replace("$", ".*$")
+    const regx = new RegExp(processedConvention);
 
     if (regx && !regx.test(file.name)) {
       setToast({
@@ -1277,12 +1277,12 @@ const trimJSON = (jsonObject) => {
   return trimmedObject;
 };
 // Function for reading and validating shape file data
-const readAndValidateShapeFiles = async (file, t, namingConvension) => {
+const readAndValidateShapeFiles = async (file, t, namingConvention) => {
   return new Promise(async (resolve, reject) => {
     if (!file) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
-    const fileRegex = new RegExp(namingConvension.replace(".zip$", ".*$"));
+    const fileRegex = new RegExp(namingConvention.replace("$", "\.*$"));
     // File Size Check
     const fileSizeInBytes = file.size;
     const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
@@ -1299,13 +1299,14 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
       }
       const files = Object.keys(zip.files);
       const allFilesMatchRegex = files.every((fl) => {
-        return fileRegex.test(fl);
+      debugger
+      return fileRegex.test(fl);
       });
-      let regx = new RegExp(namingConvension.replace(".zip$", ".shp$"));
+      let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));
       const shpFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvension.replace(".zip$", ".shx$"));
+      regx = new RegExp(namingConvention.replace("$", "\\.shx$"));
       const shxFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvension.replace(".zip$", ".dbf$"));
+      regx = new RegExp(namingConvention.replace("$", "\\.dbf$"));
       const dbfFile = zip.file(regx)[0];
 
       let geojson;
