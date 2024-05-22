@@ -403,26 +403,28 @@ async function validateCreateRequest(request: any) {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             // const mainSheetName = targetWorkbook.SheetNames[1];
             // const sheetData = await getSheetData(fileUrl, mainSheetName, true, undefined, localizationMap);
-            // const hierachy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase());
+            const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+            const index = localizedHierarchy.indexOf(getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+            let expectedHeadersForTargetSheet = index !== -1 ? localizedHierarchy.slice(index) : throwError("COMMON", 400, "VALIDATION_ERROR", `${getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap)} level not present in the hierarchy`);
+            expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheet, getLocalizedName(config.boundaryCode, localizationMap), getLocalizedName("HCM_ADMIN_CONSOLE_TARGET", localizationMap)]
             // validateForRootElementExists(sheetData, hierachy, mainSheetName);
-            validateTabsWithTargetInTargetSheet(request, targetWorkbook);
+            validateTabsWithTargetInTargetSheet(request, targetWorkbook, expectedHeadersForTargetSheet);
         }
     }
 }
 
-function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any) {
-    const sheet = targetWorkbook.Sheets[targetWorkbook.SheetNames[2]];
-    const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-    })[0];
+function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any, expectedHeadersForTargetSheet: any) {
     for (let i = 2; i < targetWorkbook.SheetNames.length; i++) {
         const sheetName = targetWorkbook?.SheetNames[i];
         const sheet = targetWorkbook?.Sheets[sheetName];
         // Convert the sheet to JSON to extract headers
-        const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+        let headersToValidate: any = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
         })[0];
-        if (!_.isEqual(expectedHeaders, headersToValidate)) {
+        headersToValidate= headersToValidate.map((header: any) => header.trim());
+        if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
             throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in target sheet ${sheetName}`)
         }
     }
