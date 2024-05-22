@@ -1,9 +1,9 @@
 import React from "react";
-import {ReactComponent as Arrow_Upward} from "../images/Arrow_Upward.svg";
+import {SVG} from "@digit-ui/digit-ui-react-components";
 
 export function ArrowUpwardElement(marginRight, marginLeft) 
 { 
-    return <Arrow_Upward style={
+    return <SVG.ArrowUpward style={
         {
             display: "inline-block", 
             verticalAlign: "baseline", 

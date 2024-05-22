@@ -48,56 +48,33 @@ const DssBreadCrumb = ({ location }) => {
     } 
   ];
 
-return <BreadCrumb crumbs={crumbs?.filter(ele=>ele.show)} />;
+  return <BreadCrumb crumbs={crumbs?.filter(ele=>ele.show)} />;
 };
 
 const Routes = ({ path, stateCode }) => {
   const location = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
   return (
-    <React.Fragment>
-   
     <div className="chart-wrapper" style={isMobile ? {marginTop:"unset"} : {}}>
-      <DssBreadCrumb location={location} defaultPath={path} />
+      <DssBreadCrumb location={location} />
       <Switch>
-       <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} /> 
-       <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} /> 
-        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown  stateCode={stateCode}  />} /> 
-        <PrivateRoute path={`${path}/national-faq`} component={() => <FAQsSection  stateCode={stateCode}  />} /> 
-        <PrivateRoute path={`${path}/national-about`} component={() => <About  stateCode={stateCode}  />} /> 
-
-      </Switch>     
-    </div> 
-    </React.Fragment>
+        <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown  stateCode={stateCode}  />} />
+        <Route key={"national-faq"} path={`${path}/national-faqs`}>
+          <FAQsSection/>
+        </Route>
+        <Route key={"national-about"} path={`${path}/national-about`}>
+          <About/>
+        </Route>
+      </Switch>
+    </div>
   );
 };
 
-export const DSSModule = ({ stateCode="pg", userType="employee",path }) => {
+export const DSSModule = ({ stateCode, userType, tenants,path }) => {
   // const { path, url } = useRouteMatch();
   // const { path, url } = useRouteMatch();
-  const tenants = [
-    { code:"pg.citya",
-      name:"City A",
-      i18nKey:"City A",
-      city:{
-        name:"City A",
-      }
-    },
-    { code:"pg.cityb",
-    name:"City B",
-    i18nKey:"City B",
-    city:{
-      name:"City B",
-    }
-    },
-    { code:"pg.cityc",
-    name:"City C",
-    i18nKey:"City C",
-    city:{
-      name:"City C",
-    }
-    }
-  ]
   const language = Digit.StoreData.getCurrentLanguage();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleCode = ["DSS","common-masters",tenantId];
@@ -106,8 +83,6 @@ export const DSSModule = ({ stateCode="pg", userType="employee",path }) => {
   //     moduleCode,
   //     language,
   // });
-
-  
 
   const {t,i18n} = useTranslation()
   const { isLoading } = Digit.Hooks.core.useLocalization({
@@ -133,7 +108,7 @@ export const DSSModule = ({ stateCode="pg", userType="employee",path }) => {
 const componentsToRegister = {
   DSSModule,
   DSSCard,
-NDSSCard
+  NDSSCard
 };
 
 export const initDSSComponents = () => {

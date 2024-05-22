@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 const About = () => {
   const { t } = useTranslation();
   const { isLoading, data } = Digit.Hooks.useGetDSSAboutJSON(Digit.ULBService.getStateId());
-  const moduleAbout = data?.MdmsRes["dss-dashboard"]?.About?.[0]?.[`DSS`].About;
+  const moduleAbout = data?.MdmsRes["dss-dashboard"]?.About[0]?.[`DSS`].About;
   const definitionlist = (defineObj) => {
     let array = [];
     for (var i = 0; i < defineObj.length; i++) {
@@ -18,7 +18,7 @@ const About = () => {
   return (
     <Fragment>
       <Header styles={{ marginLeft: "15px", paddingTop: "10px", fontSize: "36px" }}>{t("DSS_ABOUT_DASHBOARD")}</Header>
-      <Card>{moduleAbout?.map((obj) => (
+      <Card>{moduleAbout.map((obj) => (
         <div>
           <CardSubHeader style={{ marginBottom: "0", fontSize: "24px" , marginBottom:"10px"}} >{t(obj?.titleHeader)}</CardSubHeader>
           <div style={{ fontSize: "16px" ,marginBottom:"20px"}}>{definitionlist(obj?.define)}</div>
