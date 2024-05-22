@@ -24,6 +24,7 @@ export const components = {
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
 import { LoaderWithGap, Tutorial } from "@egovernments/digit-ui-react-components";
 import { useMyContext } from "../../utils/context";
+import { updateSessionUtils } from "../../utils/updateSessionUtils";
 
 // will be changed laters
 const campaignType = "ITIN";
@@ -45,6 +46,40 @@ const CreateMicroplan = () => {
   const [loaderActivation, setLoaderActivation] = useState(false);
   const { state } = useMyContext();
 
+  //fetch campaign data
+  const { id = "" } = Digit.Hooks.useQueryParams();
+  const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
+    {
+      CampaignDetails: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        ids: [id],
+      },
+    },
+    {
+      enabled: !!id,
+    }
+  );
+
+  // request body for boundary hierarchy api
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    params: {},
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: Digit.ULBService.getStateId(),
+        hierarchyType: campaignData?.hierarchyType,
+        // hierarchyType:  "Microplan",
+      },
+    },
+    config: {
+      enabled: !!campaignData?.hierarchyType,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType) || {};
+      },
+    },
+  };
+  const { isLoading: ishierarchyLoading, data: heirarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     let temp;
@@ -64,6 +99,7 @@ const CreateMicroplan = () => {
   // useEffect to store data in session storage
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
+    if (data?.microplanStatus === "GENERATED") setToRender("success-screen");
     let statusData = {};
     let toCheckCompletenesData = [];
     timeLineOptions.forEach((item) => {
@@ -100,11 +136,20 @@ const CreateMicroplan = () => {
       checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
       let check = true;
       for (let data of checkForCompleteness) {
-        if (data === "mapping") break;
-        check = check && checkStatusValues?.[data];
+        check = check && checkStatusValues && checkStatusValues[data];
+        if (data === currentPage?.name) break;
       }
       if (!check) {
-        setCheckDataCompletion("perform-action");
+        setToastCreateMicroplan({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setLoaderActivation(true);
+        setTimeout(() => {
+          setLoaderActivation(false);
+          setToastCreateMicroplan(undefined);
+          setCheckDataCompletion("perform-action");
+        }, 1000);
         return;
       }
       setCheckDataCompletion("false");
@@ -122,11 +167,23 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
-        setMicroplanData((previous) => ({
-          ...previous,
-          planConfigurationId: data?.PlanConfiguration[0]?.id,
-          auditDetails: data?.PlanConfiguration[0]?.auditDetails,
-        }));
+        // setMicroplanData((previous) => ({
+        //   ...previous,
+        //   planConfigurationId: data?.PlanConfiguration[0]?.id,
+        //   auditDetails: data?.PlanConfiguration[0]?.auditDetails,
+        // }));
+        const additionalProps = {
+          heirarchyData: heirarchyData,
+          t,
+          campaignType
+        };
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
+        if (computedSession) {
+          computedSession.microplanStatus = "DRAFT";
+          setMicroplanData(computedSession);
+        } else {
+          console.error("Failed to compute session data.");
+        }
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);
@@ -153,6 +210,18 @@ const CreateMicroplan = () => {
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
+        const additionalProps = {
+          heirarchyData: heirarchyData,
+          t,
+          campaignType
+        };
+        const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
+        if (computedSession) {
+          computedSession.microplanStatus = "DRAFT";
+          setMicroplanData(computedSession);
+        } else {
+          console.error("Failed to compute session data.");
+        }
         setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         setTimeout(() => {
           setToastCreateMicroplan(undefined);

@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-components": "0.0.1-beta.17",
-    "@egovernments/digit-ui-react-components": "1.8.1-beta.17",
+    "@egovernments/digit-ui-components": "0.0.1-beta.20",
+    "@egovernments/digit-ui-react-components": "1.8.1-beta.19",
     "@egovernments/digit-ui-svg-components": "1.0.7",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
@@ -44,7 +44,8 @@
     "safe-buffer": "^5.2.1",
     "shpjs": "^4.0.4",
     "uuid": "^9.0.1",
-    "xlsx": "0.17.5"
+    "xlsx": "0.17.5",
+    "react-joyride": "2.5.5"
   },
   "license": "MIT",
   "keywords": [

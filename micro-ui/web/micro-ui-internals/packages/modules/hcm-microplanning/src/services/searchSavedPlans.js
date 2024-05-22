@@ -35,6 +35,8 @@ const SearchSavedPlans = async (body) => {
     });
 
     const { PlanConfiguration } = responsePlan;
+    if(!PlanConfiguration || PlanConfiguration.length === 0) return [];
+    
     const executionPlanIds = PlanConfiguration?.map((row) => row?.executionPlanId)?.filter((item) => item);
     const CampaignDetails = {
       tenantId: Digit.ULBService.getCurrentTenantId(),

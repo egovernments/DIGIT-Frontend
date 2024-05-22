@@ -113,16 +113,16 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
         </span>
         <div className="navigation">
           <button onClick={() => handlePageClick(0)} disabled={currentPage === 0}>
-            <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"} />
+            {PaginationFirst && <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"} />}
           </button>
           <button onClick={() => handlePageClick(currentPage - 1)} disabled={currentPage === 0}>
-            <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"} />
+            {PaginationPrevious && <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"} />}
           </button>
           <button onClick={() => handlePageClick(currentPage + 1)} disabled={currentPage === totalPages - 1}>
-            <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"} />
+            {PaginationNext && <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"} />}
           </button>
           <button onClick={() => handlePageClick(totalPages - 1)} disabled={currentPage === totalPages - 1}>
-            <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"} />
+            {PaginationLast && <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"} />}
           </button>
         </div>
       </div>

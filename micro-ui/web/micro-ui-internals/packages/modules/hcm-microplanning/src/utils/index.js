@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { findParent } from "../utils/processHierarchyAndData";
-import { EXCEL,LOCALITY } from "../configs/constants";
+import { EXCEL,LOCALITY, commonColumn } from "../configs/constants";
+
 const formatDates = (value, type) => {
   if (type != "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
@@ -25,7 +26,8 @@ const getSchema = (campaignType, type, section, schemas) => {
   });
 };
 
-function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
+// Sorting 2 lists, The first list is a list of string and second one is list of Objects
+const sortSecondListBasedOnFirstListOrder = (firstList, secondList)=> {
   // Create a map to store the indices of elements in the first list
   const indexMap = {};
   firstList.forEach((value, index) => {
@@ -33,10 +35,10 @@ function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
   });
 
   // Sort the second list based on the order of elements in the first list
-  secondList.sort((a, b) => {
+  secondList.sort((objecta, objectb) => {
     // Get the mappedTo values of each object
-    const mappedToA = a.mappedTo;
-    const mappedToB = b.mappedTo;
+    const mappedToA = objecta.mappedTo;
+    const mappedToB = objectb.mappedTo;
 
     // Get the indices of mappedTo values in the first list
     const indexA = indexMap[mappedToA];
@@ -159,7 +161,7 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
       if (item?.error) return;
-      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section };
+      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section, id: item.fileId };
       files.push(data);
     });
     Object.values(data?.upload).forEach((item) => {
@@ -179,12 +181,10 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
       files,
       assumptions: data?.hypothesis?.map((item) => {
         let templist = JSON.parse(JSON.stringify(item));
-        delete templist.id;
         return templist;
       }),
       operations: data?.ruleEngine?.map((item) => {
         const data = JSON.parse(JSON.stringify(item));
-        delete data.id;
         const operator = Operators.find((e) => e.name === data.operator);
         if (operator && operator.code) data.operator = operator?.code;
         return data;
@@ -194,26 +194,35 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
   };
 };
 
-const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
-  
+const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t, translatedData = true) => {
   let resourceMappingData = [];
   let newFileData = {};
   let toAddInResourceMapping;
+
   if (selectedFileType.id === EXCEL && fileDataToStore) {
-    // Extract all unique column names from fileDataToStore and then doing thir resource mapping
+    // Extract all unique column names from the first row of each sheet in fileDataToStore for resource mapping
     const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
+
     if (schemaData?.schema?.["Properties"]) {
       let toChange;
-      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
+      if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) {
+        toChange = hierarchy[hierarchy?.length - 1];
+      }
+
+      // Get schema keys and hierarchy to map columns
       const schemaKeys = Object.keys(schemaData.schema["Properties"]).concat(hierarchy);
+
       schemaKeys.forEach((item) => {
-        if (columnForMapping.has(t(item))) {
+        // Check if the column is present in the file, either in translated form or original form based on translatedData flag
+        if ((translatedData && columnForMapping.has(t(item))) || (!translatedData && columnForMapping.has(item))) {
+          // Special case for LOCALITY
           if (LOCALITY && toChange === item) {
             toAddInResourceMapping = {
               mappedFrom: t(item),
               mappedTo: LOCALITY,
             };
           }
+          // Add the mapping information
           resourceMappingData.push({
             mappedFrom: t(item),
             mappedTo: item,
@@ -222,37 +231,153 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
       });
     }
 
-    // Filtering the columns with respect to the resource mapping and removing the columns that are not needed
+    // Filter and map the columns of fileDataToStore based on resource mapping
     Object.entries(fileDataToStore).forEach(([key, value]) => {
       let data = [];
       let headers = [];
       let toRemove = [];
+
       if (value && value.length > 0) {
+        // Process header row
         value[0].forEach((item, index) => {
-          const mappedTo = resourceMappingData.find((e) => e.mappedFrom === item)?.mappedTo;
+          // Find the corresponding mapped column name
+          const mappedTo = resourceMappingData.find((e) => (translatedData && e.mappedFrom === item) || (!translatedData && e.mappedFrom === t(item)))?.mappedTo;
           if (!mappedTo) {
-            toRemove.push(index);
+            toRemove.push(index); // Mark column for removal if not mapped
             return;
           }
-          headers.push(mappedTo);
-          return;
+          headers.push(mappedTo); // Add mapped column name to headers
         });
+
+        // Process data rows
         for (let i = 1; i < value?.length; i++) {
           let temp = [];
           for (let j = 0; j < value[i].length; j++) {
             if (!toRemove.includes(j)) {
-              temp.push(value[i][j]);
+              temp.push(value[i][j]); // Keep only the columns that are mapped
             }
           }
           data.push(temp);
         }
       }
+
+      // Combine headers and data for each sheet
       newFileData[key] = [headers, ...data];
     });
   }
+
+  // Finalize the resource mapping data
   resourceMappingData.pop();
   resourceMappingData.push(toAddInResourceMapping);
+
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
+};
+
+
+
+
+const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
+  // Clone the preview data to avoid mutating the original data
+  const data = _.cloneDeep(previewData);
+
+  // Helper function to check for user-edited data
+  const checkUserEditedData = (commonColumnData, resourceName) => {
+    if (userEditedResources && userEditedResources[commonColumnData]) {
+      return userEditedResources[commonColumnData][resourceName];
+    }
+  };
+
+  // Ensure the previewData has at least one row and the first row is an array
+  if (!Array.isArray(data) || !Array.isArray(data[0])) {
+    console.error('Invalid previewData format');
+    return [];
+  }
+
+  // Identify the index of the common column
+  const conmmonColumnIndex = data[0].indexOf(commonColumn);
+  if (conmmonColumnIndex === -1) {
+    console.error('Common column not found in previewData');
+    return [];
+  }
+
+  // Ensure resources is a valid array
+  if (!Array.isArray(resources)) {
+    console.error('Invalid resources format');
+    return data;
+  }
+
+  // Process each row of the data
+  const combinedData = data.map((item, index) => {
+    if (!Array.isArray(item)) {
+      console.error(`Invalid data format at row ${index}`);
+      return item;
+    }
+
+    if (index === 0) {
+      // Add resource names to the header row
+      resources.forEach((e) => item.push(e));
+      return item;
+    }
+
+    // Process each resource for the current row
+    resources.forEach((resourceName, resourceIndex) => {
+      let savedData = checkUserEditedData(item[conmmonColumnIndex], resourceName);
+      if (savedData !== undefined) {
+        item.push(savedData);
+      } else {
+        let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
+        if (calculations !== null) calculations = Math.round(calculations);
+        item.push(calculations !== null && calculations !== undefined ? calculations : undefined);
+      }
+    });
+
+    return item;
+  });
+
+  return combinedData;
+};
+
+
+
+const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
+  let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
+  if (!formula) return null;
+
+  // Finding Input
+  // check for Uploaded Data
+  let inputValue = findInputValue(formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
+  if (inputValue == undefined || inputValue === null) return null;
+  let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.key === formula?.assumptionValue)?.value;
+  if (assumptionValue == undefined) return null;
+
+  return findResult(inputValue, assumptionValue, formula?.operator);
+};
+
+// function to find input value, it calls calculateResource fucntion recurcively until it get a proper value
+const findInputValue = (formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
+  const inputIndex = headers?.indexOf(formula?.input);
+  if (inputIndex === -1 || !rowData[inputIndex]) {
+    // let tempFormula = formulaConfiguration.find((item) => item?.output === formula?.input);
+    return calculateResource(formula?.input, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
+  } else return rowData[inputIndex];
+};
+
+const findResult = (inputValue, assumptionValue, operator) => {
+  switch (operator) {
+    case "DEVIDED_BY":
+      if (assumptionValue === 0) return;
+      return inputValue / assumptionValue;
+    case "MULTIPLIED_BY":
+      return inputValue * assumptionValue;
+    case "ADDITION":
+      return inputValue + assumptionValue;
+    case "SUBSTRACTION":
+      return inputValue - assumptionValue;
+    case "RAISE_TO":
+      return inputValue ** assumptionValue;
+    default:
+      return;
+  }
 };
 
 export default {
@@ -263,5 +388,8 @@ export default {
   inputScrollPrevention,
   handleSelection,
   convertGeojsonToExcelSingleSheet,
-  resourceMappingAndDataFilteringForExcelFiles
+  resourceMappingAndDataFilteringForExcelFiles,
+  sortSecondListBasedOnFirstListOrder,
+  addResourcesToFilteredDataToShow,
+  calculateResource
 };

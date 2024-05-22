@@ -6,7 +6,7 @@ import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "../../compo
 import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../../utils/context";
 import { tourSteps } from "../../configs/tourSteps";
-
+import { v4 as uuidv4 } from 'uuid';
 const page = "hypothesis";
 
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
@@ -214,10 +214,12 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
 // Function to add a new assumption
 const addAssumptionsHandler = (setAssumptions) => {
+  let uuid = uuidv4();
   setAssumptions((previous) => [
     ...previous,
     {
-      id: previous.length ? previous[previous.length - 1].id + 1 : 0,
+      id: uuid,
+      // previous.length ? previous[previous.length - 1].id + 1 : 0,
       key: "",
       value: "",
     },
@@ -461,8 +463,9 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
   if (assumptions?.length !== 0) return [];
   let newAssumptions = [];
   for (let i in autofillHypothesis) {
+     let uuid = uuidv4();
     newAssumptions.push({
-      id: Number(i),
+      id: uuid,
       key: autofillHypothesis[Number(i)],
       value: "",
     });

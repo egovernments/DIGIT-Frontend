@@ -1,6 +1,5 @@
 // Importing necessary modules
 import {
-  Button,
   Card,
   CardLabel,
   CustomDropdown,
@@ -10,16 +9,17 @@ import {
   Toast,
   TreeSelect,
   Modal,
+  Button,
+  CheckBox,
+  RadioButtons,
 } from "@egovernments/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import ZoomControl from "../../components/ZoomControl";
 import CustomScaleControl from "../../components/CustomScaleControl";
-import { MapLayerIcon } from "../../icons/MapLayerIcon";
-import { NorthArrow } from "../../icons/NorthArrow";
-import { FilterAlt, Info } from "@egovernments/digit-ui-svg-components";
+import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import {
   processHierarchyAndData,
@@ -28,12 +28,15 @@ import {
   findChildren,
   calculateAggregateForTree,
 } from "../../utils/processHierarchyAndData";
-import { EXCEL, GEOJSON, SHAPEFILE } from "../../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, colors } from "../../configs/constants";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
-import { CloseButton, ModalHeading } from "../../components/CommonComponents";
+import { ClearAllIcon, CloseButton, ModalHeading } from "../../components/CommonComponents";
 import { PopulationSvg } from "../../icons/Svg";
 import chroma from "chroma-js";
+import * as MicroplanIconCollection from "../../icons/Svg";
+
+const IconCollection = { ...MicroplanIconCollection, ...DigitSvgs };
 
 const page = "mapping";
 
@@ -124,9 +127,18 @@ const Mapping = ({
   const [boundarySelections, setBoundarySelections] = useState({});
   const [isboundarySelectionSelected, setIsboundarySelectionSelected] = useState(false);
   const { state, dispatch } = useMyContext();
-  const [chloroplethProperty, setChloroplethProperty] = useState();
+  const [filterPropertyNames, setFilterPropertyNames] = useState();
+  const [filterProperties, setFilterProperties] = useState();
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [filterSelections, setFilterSelections] = useState([]);
+  const [choroplethProperties, setChoroplethProperties] = useState([]);
+  const [showChoroplethOptions, setShowChoroplethOptions] = useState(false);
+  const [choroplethProperty, setChoroplethProperty] = useState();
+
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
+  const showChoroplethOptionRef = useRef();
+  const showFilterOptionRef = useRef();
 
   // Set TourSteps
   useEffect(() => {
@@ -190,6 +202,11 @@ const Mapping = ({
         hierarchy,
         setBoundaryData,
         setFilterData,
+        setFilterProperties,
+        setFilterSelections,
+        setFilterPropertyNames,
+        state,
+        setChoroplethProperties,
         t
       );
     }
@@ -239,65 +256,89 @@ const Mapping = ({
     }
   };
 
-  // Showing all the validd uploaded data on the map
-  useEffect(() => {
-    const geojsons = prepareGeojson(boundaryData, "ALL");
-    if (geojsons) {
-      addGeojsonToMap(map, geojsons, t);
-    }
-
-    // setting bounds if they exist
-    let bounds = findBounds(geojsons);
-    if (bounds) {
-      map?.fitBounds(bounds);
-    } else {
-      if (Boundary) {
-        let bounds = findBounds(Boundary);
-        if (bounds) map?.fitBounds(L.latLngBounds(bounds));
-      }
-    }
-  }, [boundaryData]);
-
   // showing selected boundary data
   useEffect(() => {
-    if (!boundarySelections && !chloroplethProperty) return;
-    let style = {
+    if (!boundarySelections && !choroplethProperty && !filterSelections) return;
+    removeAllLayers(map, layers);
+    const { filteredSelection, childrenList } = filterBoundarySelection(boundaryData, boundarySelections);
+    let newLayer = [];
+    let addOn = {
+      fillColor: "rgba(255, 107, 43, 0)",
+      weight: 3.5,
+      opacity: 1,
+      color: "rgba(176, 176, 176, 1)",
+      fillOpacity: 0,
+      fill: "rgb(4,136,219,0)",
+      child: !childrenList || childrenList.length === 0 ? true : false, // so that this layer also has mounse in and mouse out events
+    };
+    let geojsonsBase = prepareGeojson(boundaryData, "ALL", addOn);
+    if (geojsonsBase) {
+      let baseLayer = addGeojsonToMap(map, geojsonsBase, t);
+      if (baseLayer) newLayer.push(baseLayer);
+      let bounds = findBounds(geojsonsBase);
+      if (bounds) map.fitBounds(bounds);
+    }
+
+    addOn = {
       fillColor: "rgba(255, 107, 43, 1)",
-      weight: 2,
+      weight: 3.5,
       opacity: 1,
       color: "rgba(255, 255, 255, 1)",
       fillOpacity: 0.22,
       fill: "rgb(4,136,219)",
     };
-    const filteredSelection = filterSelection(boundaryData, boundarySelections);
-    removeAllLayers(map, layers);
-    let newLayer = [];
+
     let geojsonLayer;
-    if (chloroplethProperty) {
-      let chloroplethGeojson = prepareGeojson(boundaryData, "ALL", style) || [];
-      chloroplethGeojson = addChloroplethProperties(chloroplethGeojson, chloroplethProperty, filteredSelection)
-      geojsonLayer = addGeojsonToMap(map, chloroplethGeojson, t);
+    if (choroplethProperty) {
+      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true }) || [];
+      if (choroplethGeojson && choroplethGeojson.length !== 0)
+        choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
+      geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
       if (geojsonLayer) {
         newLayer.push(geojsonLayer);
       }
     }
-    const geojsons = prepareGeojson(boundaryData, filteredSelection, style);
-    geojsonLayer = addGeojsonToMap(map, geojsons, t);
-    if (geojsons) {
-      if (geojsonLayer) newLayer.push(geojsonLayer);
+    geojsonLayer = null;
+    const geojsons = prepareGeojson(boundaryData, filteredSelection, addOn);
+    if (geojsons && geojsons.length > 0) {
+      geojsonLayer = addGeojsonToMap(map, geojsons, t);
+      newLayer.push(geojsonLayer);
       let bounds = findBounds(geojsons);
       if (bounds) map.fitBounds(bounds);
     }
+
+    const childrenGeojson = prepareGeojson(boundaryData, childrenList, { ...addOn, opacity: 0, fillOpacity: 0, child: true });
+    let childrenGeojsonLayer = addGeojsonToMap(map, childrenGeojson, t);
+    if (childrenGeojsonLayer) newLayer.push(childrenGeojsonLayer);
+
+    //filters
+    const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", addOn);
+    const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, state?.MapFilters);
+    let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t);
+    if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
+
     setLayer(newLayer);
-  }, [boundarySelections, chloroplethProperty]);
+  }, [boundarySelections, choroplethProperty, filterSelections]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
     if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
     if (showBaseMapSelector) setShowBaseMapSelector(false);
-  }, [isboundarySelectionSelected, showBaseMapSelector, setIsboundarySelectionSelected, setShowBaseMapSelector]);
+    if (showFilterOptions) setShowFilterOptions(false);
+    if(showChoroplethOptions) setShowChoroplethOptions(false);
+  }, [
+    isboundarySelectionSelected,
+    showBaseMapSelector,
+    showFilterOptions,
+    setIsboundarySelectionSelected,
+    setShowBaseMapSelector,
+    setShowFilterOptions,
+    showChoroplethOptions,
+    setShowChoroplethOptions
+  ]);
   Digit?.Hooks.useClickOutside(filterBoundaryRef, handleOutsideClickAndSubmitSimultaneously, isboundarySelectionSelected, { capture: true });
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
-
+  Digit?.Hooks.useClickOutside(showFilterOptionRef, handleOutsideClickAndSubmitSimultaneously, showFilterOptions, { capture: true });
+  Digit?.Hooks.useClickOutside(showChoroplethOptionRef, handleOutsideClickAndSubmitSimultaneously, showChoroplethOptions, { capture: true });
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -328,26 +369,48 @@ const Mapping = ({
                   t={t}
                 />
               </div>
-              <div className="icon-rest filter-icon">
-                <p>{t("FILTER")}</p>
+              {filterProperties && Object.keys(filterProperties).length !== 0 && (
+                <FilterSection
+                  filterProperties={filterProperties}
+                  showFilterOptionRef={showFilterOptionRef}
+                  showFilterOptions={showFilterOptions}
+                  setShowFilterOptions={setShowFilterOptions}
+                  filterSelections={filterSelections}
+                  setFilterSelections={setFilterSelections}
+                  t={t}
+                />
+              )}
+              <ChoroplethSelection
+                choroplethProperties={choroplethProperties}
+                showChoroplethOptions={showChoroplethOptions}
+                setShowChoroplethOptions={setShowChoroplethOptions}
+                choroplethProperty={choroplethProperty}
+                setChoroplethProperty={setChoroplethProperty}
+                t={t}
+              />
+              {/* <div
+                className="icon-rest filter-icon"
+                onClick={() => (choroplethProperty ? setChoroplethProperty() : setChoroplethProperty("targetPopulation"))}
+              >
+                <p>{t("VISUALIZATIONS")}</p>
                 <div className="icon">
-                  <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
+                  {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
                 </div>
-              </div>
-              <div className="icon-rest filter-icon" onClick={() =>chloroplethProperty? setChloroplethProperty(): setChloroplethProperty("targetPopulation")}>
-                <p>{t("VIRTUALIZATION")}</p>
-                <div className="icon">
-                  <FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
-                </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="bottom-left-map-subcomponents">
               <ZoomControl map={map} t={t} />
               <div className="north-arrow">
-                <NorthArrow width={"2.5rem"} height={"2.5rem"} fill={"rgba(255, 255, 255, 1)"} />
+                {DigitSvgs.NorthArrow && <DigitSvgs.NorthArrow width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
               </div>
               <CustomScaleControl map={map} />
+            </div>
+
+            <div className="bottom-right-map-subcomponents">
+              {filterSelections && filterSelections.length > 0 && (
+                <MapIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
+              )}
             </div>
           </div>
         </Card>
@@ -358,6 +421,151 @@ const Mapping = ({
     </div>
   );
 };
+
+const MapIndex = ({ filterSelections, MapFilters, t }) => {
+  return (
+    <div className="filter-index">
+      {filterSelections && filterSelections.length > 0 ? (
+        <>
+          {filterSelections.map((item) => (
+            // <div className="filter-row">
+            <FilterItemBuilder item={item} MapFilters={MapFilters} t={t} />
+            //   <p>{t(item)}</p>
+            // </div>
+          ))}
+        </>
+      ) : (
+        ""
+      )}
+    </div>
+  );
+};
+const FilterItemBuilder = ({ item, MapFilters, t }) => {
+  let temp = MapFilters?.find((e) => e?.name == item)?.icon?.index;
+  let DynamicIcon = IconCollection?.[temp];
+  // let icon;
+  // if (typeof DynamicIcon === "function") icon = DynamicIcon({});
+  return DynamicIcon && typeof DynamicIcon === "function" ? (
+    <div className="filter-row">
+      <DynamicIcon width={"1.5rem"} height={"1.5rem"} fill={"white"} />
+      <p>{t(item)}</p>
+    </div>
+  ) : (
+    // <div style={{width:"1.5rem"}}></div>
+    ""
+  );
+};
+
+const ChoroplethSelection = memo(
+  ({
+    choroplethProperties,
+    showChoroplethOptions,
+    showChoroplethOptionRef,
+    setShowChoroplethOptions,
+    choroplethProperty,
+    setChoroplethProperty,
+    t,
+  }) => {
+    const handleChange = useCallback(
+      (value) => {
+        setChoroplethProperty(value?.code);
+      },
+      [choroplethProperties]
+    );
+
+    return (
+      <div className="choropleth-section" ref={showChoroplethOptionRef}>
+        <div
+          className="icon-rest filter-icon"
+        >
+          <p onClick={() => setShowChoroplethOptions((previous) => !previous)}>{t("VISUALIZATIONS")}</p>
+          <div className="icon" onClick={() => setShowChoroplethOptions((previous) => !previous)}>
+            {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
+          </div>
+        </div>
+        {showChoroplethOptions && (
+          <div className="choropleth-section-option-wrapper">
+            <div className="custom-box-wrapper">
+              <RadioButtons
+                additionalWrapperClass="custom-box"
+                options={choroplethProperties.map((item) => ({ name: item, id: item, code: item }))}
+                optionsKey="name"
+                onSelect={handleChange}
+                selectedOption={choroplethProperty}
+              />
+            </div>
+            <Button
+              variation="secondary"
+              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "400" }}
+              className="button-primary"
+              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
+              icon={"AutoRenew"}
+              label={t("CLEAR_ALL_FILTERS")}
+              onClick={() => setChoroplethProperty()}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+
+const FilterSection = memo(
+  ({ filterProperties, showFilterOptionRef, showFilterOptions, setShowFilterOptions, filterSelections, setFilterSelections, t }) => {
+    const handleChange = useCallback(
+      (e, item) => {
+        let tempFilterSelections = [...filterSelections]; // Clone the array to avoid mutating state directly
+        filterSelections.includes(item)
+          ? (tempFilterSelections = tempFilterSelections.filter((element) => element !== item))
+          : tempFilterSelections.push(item);
+        setFilterSelections(tempFilterSelections);
+      },
+      [filterSelections]
+    );
+
+    return (
+      <div className="filter-section" ref={showFilterOptionRef}>
+        <div className="icon-rest filter-icon" >
+          <p onClick={() => setShowFilterOptions((previous) => !previous)}>{t("FILTERS")}</p>
+          <div className="icon" onClick={() => setShowFilterOptions((previous) => !previous)}>
+            {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
+          </div>
+        </div>
+        {showFilterOptions && (
+          <div className="filter-section-option-wrapper">
+            <div className="custom-box-wrapper">
+              {filterProperties.map((item) => (
+                <div id={item} className="custom-box">
+                  <CheckBox
+                    onChange={(e) => handleChange(e, item)}
+                    label={t(item)}
+                    checked={!!filterSelections.includes(item)}
+                    mainClassName="mainClassName"
+                    labelClassName="labelClassName"
+                    inputWrapperClassName="inputWrapperClassName"
+                    inputClassName="inputClassName"
+                    inputIconClassname="inputIconClassname"
+                    iconFill={"rgba(244, 119, 56, 1)"}
+                    onLabelClick={(e) => handleChange(e, item)}
+                  />
+                </div>
+              ))}
+            </div>
+            <Button
+              variation="secondary"
+              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "400" }}
+              className="button-primary"
+              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
+              icon={"AutoRenew"}
+              label={t("CLEAR_ALL_FILTERS")}
+              onClick={() => setFilterSelections([])}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 const BoundarySelection = memo(
   ({
@@ -373,6 +581,7 @@ const BoundarySelection = memo(
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationModal, setShowConformationModal] = useState(false);
+
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -414,7 +623,7 @@ const BoundarySelection = memo(
             <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
             <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
           </div>
-          <div className="hierarchy-selection-container">
+          <div className="hierarchy-selection-container" style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}}>
             {processedHierarchy?.map((item, index) => (
               <div key={index} className="hierarchy-selection-element">
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
@@ -440,49 +649,50 @@ const BoundarySelection = memo(
                 />
               </div>
             ))}
-            {checkTruthyKeys(boundarySelections) && (
-              <div>
-                <Button
-                  label={t("CLEAR_ALL")}
-                  variation="primary"
-                  type="button"
-                  onClick={handleClearAll}
-                  className={"header-btn"}
-                  style={{ marginTop: "2rem", width: "14rem" }}
-                />
-              </div>
-            )}
-            {showConfirmationModal && (
-              <Modal
-                popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
-                popupModuleActionBarStyles={{
-                  display: "flex",
-                  flex: 1,
-                  justifyContent: "space-between",
-                  padding: 0,
-                  width: "100%",
-                  padding: "0 0 1rem 1.3rem",
-                }}
-                popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
-                style={{
-                  flex: 1,
-                  backgroundColor: "white",
-                  border: "0.063rem solid rgba(244, 119, 56, 1)",
-                }}
-                headerBarMainStyle={{ padding: 0, margin: 0 }}
-                headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
-                headerBarEnd={<CloseButton clickHandler={() => setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-                actionCancelLabel={t("YES")}
-                actionCancelOnSubmit={handleSubmitConfModal}
-                actionSaveLabel={t("NO")}
-                actionSaveOnSubmit={handleCancelConfModal}
-              >
-                <div className="modal-body">
-                  <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
-                </div>
-              </Modal>
-            )}
           </div>
+          {checkTruthyKeys(boundarySelections) && (
+            <div>
+              <Button
+                variation="secondary"
+                className="button-primary"
+                textStyles={{ width: "fit-content" }}
+                style={{ marginTop: "2rem", width: "14rem", display: "flex", alignItem: "start" }}
+                icon={"AutoRenew"}
+                label={t("CLEAR_ALL_FILTERS")}
+                onClick={handleClearAll}
+              />
+            </div>
+          )}
+          {showConfirmationModal && (
+            <Modal
+              popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+              popupModuleActionBarStyles={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "space-between",
+                padding: 0,
+                width: "100%",
+                padding: "0 0 1rem 1.3rem",
+              }}
+              popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+              style={{
+                flex: 1,
+                backgroundColor: "white",
+                border: "0.063rem solid rgba(244, 119, 56, 1)",
+              }}
+              headerBarMainStyle={{ padding: 0, margin: 0 }}
+              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
+              headerBarEnd={<CloseButton clickHandler={() => setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              actionCancelLabel={t("YES")}
+              actionCancelOnSubmit={handleSubmitConfModal}
+              actionSaveLabel={t("NO")}
+              actionSaveOnSubmit={handleCancelConfModal}
+            >
+              <div className="modal-body">
+                <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
+              </div>
+            </Modal>
+          )}
         </Card>
       </div>
     );
@@ -496,9 +706,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
     <div className="base-map-selector">
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
         <p>{t("LAYERS")}</p>
-        <div className="icon">
-          <MapLayerIcon width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />
-        </div>
+        <div className="icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}</div>
       </div>
       <div className="base-map-area-wrapper" ref={basemapRef}>
         {showBaseMapSelector && (
@@ -567,13 +775,23 @@ const extractGeoData = (
   hierarchy,
   setBoundaryData,
   setFilterData,
+  setFilterProperties,
+  setFilterSelections,
+  setFilterPropertyNames,
+  state,
+  setChoroplethProperties,
   t
 ) => {
   if (!hierarchy) return;
 
   let setBoundary = {};
   let setFilter = {};
-
+  let virtualizationPropertiesCollector = new Set();
+  let filterPropertiesCollector = new Set();
+  let filterPropertieNameCollector = new Set();
+  let resources = state?.Resources?.find((item) => item.campaignType === campaignType)?.data;
+  let hypothesisAssumptionsList = microplanData?.hypothesis;
+  let formulaConfiguration = microplanData?.ruleEngine;
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
@@ -603,23 +821,31 @@ const extractGeoData = (
 
         // Get validation schema for the file
         let schema = getSchema(campaignType, files[fileData]?.fileType, files[fileData]?.section, validationSchemas);
-        let latLngColumns =
-          Object.entries(schema?.schema?.Properties || {})
-            .reduce((acc, [key, value]) => {
-              if (value?.isLocationDataColumns) {
-                acc.push(key);
-              }
-              return acc;
-            }, [])
-            .map((item) => t(item)) || [];
+        const properties = Object.entries(schema?.schema?.Properties || {});
+        const latLngColumns = [];
+        let filterProperty = [];
+
+        for (const [key, value] of properties) {
+          if (value?.isLocationDataColumns) {
+            latLngColumns.push(t(key));
+          }
+          if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData) && value?.isFilterPropertyOfMapSection) {
+            filterProperty.push(key);
+          }
+          if (value?.isVitualizationPropertyOfMapSection) {
+            virtualizationPropertiesCollector.add(key);
+          }
+        }
+
+        filterProperty.forEach((property) => filterPropertieNameCollector.add(property));
 
         // Check if file contains latitude and longitude columns
-        if (files[fileData]?.data) {
+        if (files[fileData]?.data && Object.keys(files[fileData]?.data).length > 0) {
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
           switch (files[fileData]?.fileType) {
             case EXCEL: {
-              let columnList = Object.values(files[fileData]?.data)[0][0];
+              let columnList = Object.values(files[fileData]?.data)?.[0]?.[0];
               let check = true;
               if (latLngColumns) {
                 for (let colName of latLngColumns) {
@@ -637,9 +863,23 @@ const extractGeoData = (
                 : dataAvailabilityCheck === "false"
                 ? "false"
                 : "partial"; // Update data availability based on column check
+              let dataWithResources = Object.values(files[fileData]?.data);
+              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+                dataWithResources = dataWithResources?.map((item) => {
+                  return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+                    item,
+                    resources,
+                    hypothesisAssumptionsList,
+                    formulaConfiguration,
+                    microplanData?.microplanPreview?.userEditedResources ? microplanData?.microplanPreview?.userEditedResources : [],
+                    t
+                  );
+                });
+              }
 
+              let hasLocationData = false;
               // has lat lon a points
-              const convertedData = Object.values(files[fileData]?.data)?.map((item) =>
+              const convertedData = dataWithResources?.map((item) =>
                 item?.map((row, rowIndex) => {
                   if (rowIndex === 0) {
                     if (row.indexOf("features") === -1) {
@@ -654,6 +894,7 @@ const extractGeoData = (
                     properties[item?.[0]?.[index]] = e;
                   });
                   if (latIndex !== -1 && lonIndex !== -1) {
+                    if (!hasLocationData) hasLocationData = true;
                     const lat = row[latIndex];
                     const lon = row[lonIndex];
                     const feature = {
@@ -671,6 +912,25 @@ const extractGeoData = (
                   return row;
                 })
               );
+
+              if (hasLocationData) {
+                if (Object.values(files[fileData]?.data).length > 0 && filterProperty) {
+                  filterProperty?.forEach((item) => {
+                    Object.values(files[fileData]?.data).forEach((data) => {
+                      let filterPropertyIndex = data?.[0].indexOf(item);
+                      if (filterPropertyIndex && filterPropertyIndex !== -1)
+                        data.slice(1).forEach((e) => {
+                          return filterPropertiesCollector.add(e[filterPropertyIndex]);
+                        });
+                    });
+                  });
+                }
+              }
+
+              // check if virtualisation field exist in uploaded data
+              [...virtualizationPropertiesCollector].forEach((item) => {
+                if (!convertedData?.[0].includes(item)) virtualizationPropertiesCollector.delete(item);
+              });
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
@@ -699,10 +959,51 @@ const extractGeoData = (
                 });
                 return temp;
               });
+
+              if (files[fileData]?.data?.features && filterProperty) {
+                filterProperty?.forEach((item) => {
+                  if (Object.values(files[fileData]?.data).length > 0) {
+                    files[fileData]?.data?.features.forEach((e) => {
+                      if (e?.properties?.[item]) filterPropertiesCollector.add(e?.properties?.[item]);
+                    });
+                  }
+                });
+              }
+
               // Group keys and values into the desired format
-              let data = { [files[fileData]?.fileName]: [keys, ...values] };
+              // let data = { [files[fileData]?.fileName]: [keys, ...values] };
+              // Adding resource data
+              let dataWithResources = [keys, ...values];
+              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+                dataWithResources = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+                  dataWithResources,
+                  resources,
+                  hypothesisAssumptionsList,
+                  formulaConfiguration,
+                  microplanData?.microplanPreview?.userEditedResources ? microplanData?.microplanPreview?.userEditedResources : [],
+                  t
+                );
+                let indexOfFeatureInDataWithResources = dataWithResources?.[0]?.indexOf("feature");
+                dataWithResources = dataWithResources.map((item, index) => {
+                  if (index === 0) return item;
+                  let newProperties = {};
+                  keys.forEach((e) => {
+                    if (e === "feature") return;
+                    let index = dataWithResources?.[0]?.indexOf(e);
+                    newProperties[e] = item[index];
+                  });
+                  let newRow = _.cloneDeep(item);
+                  newRow[indexOfFeatureInDataWithResources] = { ...item[indexOfFeatureInDataWithResources], properties: newProperties };
+                  return newRow;
+                });
+              }
+              // check if virtualisation field exist in uploaded data
+              [...virtualizationPropertiesCollector].forEach((item) => {
+                if (!dataWithResources?.[0].includes(item)) virtualizationPropertiesCollector.delete(item);
+              });
+
               // extract dada
-              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, Object.values(data));
+              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
                 setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
@@ -754,10 +1055,15 @@ const extractGeoData = (
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
+  setFilterProperties([...filterPropertiesCollector]);
+  setFilterSelections([...filterPropertiesCollector]);
+  setFilterPropertyNames([...filterPropertieNameCollector]);
+  let tempVirtualizationPropertiesCollectorArray = [...virtualizationPropertiesCollector];
+  if (tempVirtualizationPropertiesCollectorArray.length !== 0) setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...resources]);
 };
 
 //prepare geojson to show on the map
-const prepareGeojson = (boundaryData, selection, style = {}, chloropleth) => {
+const prepareGeojson = (boundaryData, selection, style = {}) => {
   if (!boundaryData || Object.keys(boundaryData).length === 0) return [];
   let geojsonRawFeatures = [];
   if (selection == "ALL") {
@@ -774,7 +1080,7 @@ const prepareGeojson = (boundaryData, selection, style = {}, chloropleth) => {
 
   return geojsonRawFeatures.filter(Boolean);
 };
-const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => {
+const fetchFeatures = (data, parameter = "ALL", outputList = [], addOn = {}) => {
   let tempStorage = [];
   if (parameter === "ALL") {
     // outputList(Object.values(data).flatMap(item=>item?.data?.feature))
@@ -782,11 +1088,11 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
       if (entityValue?.data?.feature) {
         let feature = entityValue.data.feature;
         feature.properties["name"] = entityKey;
-        feature.properties["style"] = style;
-        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        feature.properties["addOn"] = addOn;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
         else tempStorage = [...tempStorage, feature];
       } else {
-        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
       }
     }
     return tempStorage;
@@ -795,99 +1101,187 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], style = {}) => 
       if (parameter.includes(entityKey) && entityValue && entityValue.data && entityValue.data.feature) {
         let feature = entityValue.data.feature;
         feature.properties["name"] = entityKey;
-        feature.properties["style"] = style;
-        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        feature.properties["addOn"] = addOn;
+        if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
         else tempStorage = [...tempStorage, feature];
       } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, style)];
+        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
       }
     }
     return tempStorage;
   }
 };
 
-const addChloroplethProperties = (geojson, chloroplethProperty, filteredSelection) => {
+const addChoroplethProperties = (geojson, choroplethProperty, filteredSelection) => {
   // Calculate min and max values of the property
-  const values = geojson.map((feature) => feature.properties[chloroplethProperty]) || [];
+  const values = geojson.map((feature) => feature.properties[choroplethProperty]).filter(Boolean) || [];
+  if (!values || values.length === 0) return [];
   const minValue = Math.min(...values);
   const maxValue = Math.max(...values);
 
-  // Define the colors of the gradient
-  const colors = [
-    { percent: 0, color: "#FF7373" },
-    { percent: 50, color: "#FFFFFF" },
-    { percent: 100, color: "#BA2900" },
-  ];
   // Create a new geojson object
   const newGeojson = geojson.map((feature) => {
-    const newFeature = { ...feature, properties: { ...feature.properties, style: { ...feature.properties.style } } };
+    const newFeature = { ...feature, properties: { ...feature.properties, addOn: { ...feature.properties.addOn } } };
     let color;
 
-    if (chloroplethProperty) {
-      color = interpolateColor(newFeature.properties[chloroplethProperty], minValue, maxValue, colors);
+    if (choroplethProperty) {
+      color = interpolateColor(newFeature.properties[choroplethProperty], minValue, maxValue, colors);
     }
 
-    newFeature.properties.style.fillColor = color;
-    newFeature.properties.style.color = "rgba(0, 0, 0, 1)"
-    if (!filterSelection || filteredSelection.length ===0 || filteredSelection.includes(newFeature.properties.name)) {
-      newFeature.properties.style.fillOpacity = 1;
+    newFeature.properties.addOn.fillColor = color;
+    newFeature.properties.addOn.color = "rgba(0, 0, 0, 1)";
+    if (!filteredSelection || filteredSelection.length === 0 || filteredSelection.includes(newFeature.properties.name)) {
+      newFeature.properties.addOn.fillOpacity = 1;
     } else {
-      newFeature.properties.style.fillOpacity = 0.4; 
-      newFeature.properties.style.opacity = 0.7; 
+      newFeature.properties.addOn.fillOpacity = 0.4;
+      newFeature.properties.addOn.opacity = 0.7;
     }
 
     return newFeature;
   });
-  return newGeojson
+  return newGeojson;
 };
 
-const addGeojsonToMap = (map, geojson, t) => {
-  if (!map || !geojson) return false;
-  const geojsonLayer = L.geoJSON(geojson, {
-    style: function (feature) {
-      if (Object.keys(feature.properties.style).length !== 0) {
-        return feature.properties.style;
-      } else {
-        return {
-          weight: 2,
-          opacity: 1,
-          color: "rgba(176, 176, 176, 1)",
-          fillColor: "rgb(0,0,0,0)",
-          // fillColor: chloroplethProperty ? color : "rgb(0,0,0,0)",
-          fillOpacity: 0,
-          // fillOpacity: chloroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
-        };
+/**
+ * filterGeojsons : json
+ * filterSelection : array
+ * MapFilters :
+ */
+const addFilterProperties = (filterGeojsons, filterSelections, filterPropertyNames, iconMapping) => {
+  try {
+    if (!filterGeojsons || !iconMapping || !filterSelections) return [];
+    let newFilterGeojson = [];
+    filterGeojsons.forEach((item) => {
+      if (filterPropertyNames && filterPropertyNames.length !== 0 && item.properties) {
+        let icon;
+        filterPropertyNames.forEach((name) => {
+          if (item.properties[name]) {
+            let temp = item.properties[name];
+            if (!filterSelections.includes(temp)) return;
+            temp = iconMapping?.find((e) => e?.name == temp)?.icon?.marker;
+            let DynamicIcon = IconCollection?.[temp];
+            if (typeof DynamicIcon === "function") {
+              icon = L.divIcon({
+                className: "custom-svg-icon",
+                html: DynamicIcon({}),
+                iconAnchor: [25, 50],
+              });
+              newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
+            } else {
+              icon = DefaultMapMarker({});
+              newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
+            }
+          }
+        });
       }
-    },
-    pointToLayer: function (feature, latlng) {
-      return L.marker(latlng, {
-        icon: MapMarker(feature.properties.style),
-      });
-    },
-    onEachFeature: function (feature, layer) {
-      if (feature.properties) {
-        let popupContent = "<div style='background-color: white; padding: 0rem;'>";
+      return item;
+    });
+    return newFilterGeojson;
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+/**
+ * map: map
+ * geojson: geojson
+ * t: translator
+ */
+
+const addGeojsonToMap = (map, geojson, t) => {
+  try {
+    if (!map || !geojson) return false;
+    const geojsonLayer = L.geoJSON(geojson, {
+      style: function (feature) {
+        if (Object.keys(feature.properties.addOn).length !== 0) {
+          return feature.properties.addOn;
+        } else {
+          return {
+            weight: 2,
+            opacity: 1,
+            color: "rgba(176, 176, 176, 1)",
+            fillColor: "rgb(0,0,0,0)",
+            // fillColor: choroplethProperty ? color : "rgb(0,0,0,0)",
+            fillOpacity: 0,
+            // fillOpacity: choroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
+          };
+        }
+      },
+      pointToLayer: function (feature, latlng) {
+        if (feature.properties.addOn.icon) {
+          let icon = feature.properties.addOn.icon;
+          if (icon) {
+            return L.marker(latlng, {
+              icon: icon,
+            });
+          }
+        }
+        return L.marker(latlng, {
+          icon: MapMarker(feature.properties.addOn),
+        });
+      },
+      onEachFeature: function (feature, layer) {
+        let popupContent;
+        popupContent = "<div style='background-color: white; padding: 0rem;'>";
         popupContent += "<table style='border-collapse: collapse;'>";
         popupContent +=
           "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
           feature.properties["name"] +
           "</div>";
         for (let prop in feature.properties) {
-          if (prop !== "name" && prop !== "style")
+          if (prop !== "name" && prop !== "addOn") {
+            let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
             popupContent +=
               "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
               t(prop) +
               "</td><td>" +
-              feature.properties[prop] +
+              data +
               "</td></tr>";
+          }
         }
         popupContent += "</table></div>";
         layer.bindPopup(popupContent);
-      }
-    },
-  });
-  geojsonLayer.addTo(map);
-  return geojsonLayer;
+
+        layer.on({
+          mouseover: function (e) {
+            const layer = e.target;
+            if (layer.feature.properties.addOn && !layer.feature.properties.addOn.child) {
+              return;
+            }
+            if (layer.setStyle)
+              layer.setStyle({
+                weight: 2.7,
+                opacity: 1,
+                color: "rgba(255, 255, 255, 1)",
+              });
+            // layer.openPopup();
+          },
+          mouseout: function (e) {
+            const layer = e.target;
+            if (layer.feature.properties.addOn && !layer.feature.properties.addOn.child) {
+              return;
+            }
+            if (layer.setStyle) {
+              if (layer.feature.properties.addOn && Object.keys(layer.feature.properties.addOn).length !== 0)
+                layer.setStyle({
+                  ...layer.feature.properties.addOn,
+                });
+              else
+                layer.setStyle({
+                  weight: 2,
+                  color: "rgba(176, 176, 176, 1)",
+                });
+            }
+            // layer.closePopup();
+          },
+        });
+      },
+    });
+    geojsonLayer.addTo(map);
+    return geojsonLayer;
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 function interpolateColor(value, minValue, maxValue, colors) {
@@ -1014,23 +1408,25 @@ const findBounds = (data, buffer = 0.1) => {
   return bounds;
 };
 
-const filterSelection = (boundaryData, boundarySelections) => {
+const filterBoundarySelection = (boundaryData, boundarySelections) => {
   if (Object.keys(boundaryData).length === 0 || Object.keys(boundarySelections).length === 0) return [];
   let selectionList = [];
   Object.values(boundarySelections).forEach((item) => (selectionList = [...selectionList, ...item.map((e) => e.name)]));
+  let childrenList = [];
   const set1 = new Set(selectionList);
   selectionList = selectionList.filter((item) => {
     const children = findChildren([item], Object.values(boundaryData)?.[0]?.hierarchicalData);
     if (children) {
-      let childrenList = getAllKeys(children);
-      const nonePresent = childrenList.every((item) => !set1.has(item));
-      const allPresent = childrenList.every((item) => set1.has(item));
+      let childrenKeyList = getAllKeys(children);
+      childrenList = [...childrenList, ...childrenKeyList];
+      const nonePresent = childrenKeyList.every((item) => !set1.has(item));
+      const allPresent = childrenKeyList.every((item) => set1.has(item));
       return nonePresent ? true : allPresent ? true : false;
     } else {
       return true;
     }
   });
-  return selectionList;
+  return { filteredSelection: selectionList, childrenList };
 };
 
 // Recursive function to extract all keys
@@ -1056,6 +1452,13 @@ const MapMarker = (style = {}) => {
   return L.divIcon({
     className: "custom-svg-icon",
     html: PopulationSvg(style),
+    iconAnchor: [25, 50],
+  });
+};
+const DefaultMapMarker = (style = {}) => {
+  return L.divIcon({
+    className: "custom-svg-icon",
+    html: IconCollection.DefaultMapMarkerSvg(style),
     iconAnchor: [25, 50],
   });
 };

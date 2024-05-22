@@ -74,7 +74,8 @@ const App = ({ path }) => {
     { name: "HypothesisAssumptions" },
     { name: "BaseMapLayers" },
     { name: "MicroplanPreviewAggregates" },
-    { name: "AutoFilledRuleConfigurations" }
+    { name: "AutoFilledRuleConfigurations" },
+    { name: "MapFilters" }
   ],
   {
     select:(data) => {

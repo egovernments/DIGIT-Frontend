@@ -7,6 +7,7 @@ import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../../configs/tourSteps";
 import { useMyContext } from "../../utils/context";
+import { timeLineOptions } from "../../configs/timeLineOptions.json";
 
 const page = "microplanPreview";
 
@@ -95,7 +96,7 @@ const MicroplanPreview = ({
     if (microplanData && (microplanData?.ruleEngine || microplanData?.hypothesis)) {
       const hypothesisAssumptions = microplanData?.hypothesis || [];
       const formulaConfiguration = microplanData?.ruleEngine?.filter((item) => Object.values(item).every((key) => key !== "")) || [];
-      if (hypothesisAssumptions.length !== 0 && hypothesisAssumptionsList.length === 0)  {
+      if (hypothesisAssumptions.length !== 0 && hypothesisAssumptionsList.length === 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
       }
       if (formulaConfiguration.length !== 0) {
@@ -146,7 +147,7 @@ const MicroplanPreview = ({
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("perform-action");
-    setModal('none');
+    setModal("none");
   }, [setCheckDataCompletion, setModal]);
 
   // UseEffect to add a event listener for keyboard
@@ -165,13 +166,43 @@ const MicroplanPreview = ({
     }
   };
 
+  const cancleNavigation = () => {
+    setCheckDataCompletion("false");
+    setModal("none");
+  };
+
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
     const microData = updateMicroplanData(hypothesisAssumptionsList);
+    let toCheckCompletenesData = [];
+    let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
+    timeLineOptions.forEach((item) => {
+      if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
+    });
+    let check = true;
+    for (let data of toCheckCompletenesData) {
+      check = check && checkStatusValues && checkStatusValues[data];
+      if (data === currentPage?.name) break;
+    }
+    if (!check) {
+      setToast({
+        message: t("ERROR_DATA_NOT_SAVED"),
+        state: "error",
+      });
+      setLoaderActivation(true);
+      setTimeout(() => {
+        setLoaderActivation(false);
+        setToast(undefined);
+        if (navigationEvent.name === "next") setCheckDataCompletion("false");
+        else setCheckDataCompletion("perform-action");
+      }, 1000);
+      return;
+    }
     setLoaderActivation(true);
 
     updateHyothesisAPICall(
       microData,
+      setMicroplanData,
       operatorsObject,
       microData?.microplanDetails?.name,
       campaignId,
@@ -180,6 +211,7 @@ const MicroplanPreview = ({
       updateData,
       setLoaderActivation,
       navigationEvent?.name === "next" ? "GENERATED" : "DRAFT",
+      cancleNavigation,
       t
     );
 
@@ -229,9 +261,9 @@ const MicroplanPreview = ({
     if (!boundarySelections && !resources) return;
     let tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
     // Adding resources to the data we need to show
-    tempData = addResourcesToFilteredDataToShow(tempData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t);
+    tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(tempData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t);
     setDataToShow(tempData);
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: tempData }));
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: {...previous.microplanPreview,previewData:tempData, userEditedResources }}));
   }, [boundarySelections, resources, hypothesisAssumptionsList, userEditedResources]);
 
   if (isCampaignLoading || ishierarchyLoading) {
@@ -535,47 +567,6 @@ const DataPreview = memo(
   }
 );
 
-const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
-  let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
-  if (!formula) return null;
-
-  // Finding Input
-  // check for Uploaded Data
-  let inputValue = findInputValue(formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
-  if (inputValue == undefined || inputValue === null) return null;
-  let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.key === formula?.assumptionValue)?.value;
-  if (assumptionValue == undefined) return null;
-
-  return findResult(inputValue, assumptionValue, formula?.operator);
-};
-
-// function to find input value, it calls calculateResource fucntion recurcively until it get a proper value
-const findInputValue = (formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
-  const inputIndex = headers?.indexOf(formula?.input);
-  if (inputIndex === -1 || !rowData[inputIndex]) {
-    // let tempFormula = formulaConfiguration.find((item) => item?.output === formula?.input);
-    return calculateResource(formula?.input, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
-  } else return rowData[inputIndex];
-};
-
-const findResult = (inputValue, assumptionValue, operator) => {
-  switch (operator) {
-    case "DEVIDED_BY":
-      if (assumptionValue === 0) return;
-      return inputValue / assumptionValue;
-    case "MULTIPLIED_BY":
-      return inputValue * assumptionValue;
-    case "ADDITION":
-      return inputValue + assumptionValue;
-    case "SUBSTRACTION":
-      return inputValue - assumptionValue;
-    case "RAISE_TO":
-      return inputValue ** assumptionValue;
-    default:
-      return;
-  }
-};
-
 // get schema for validation
 const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
@@ -799,12 +790,12 @@ function filterObjects(arr1, arr2) {
   // Iterate through the first array
   arr1.forEach((obj1) => {
     // Find the corresponding object in the second array
-    let obj2 = arr2.find((item) => item.key === obj1.key);
+    let obj2 = _.cloneDeep(arr2.find((item) => item.key === obj1.key));
 
     // If the object with the same key is found in the second array and their values are the same
     if (obj2 && obj1.value !== obj2.value) {
       // Push the object to the filtered array
-      obj1.oldValue = obj2.value
+      obj1.oldValue = obj2.value;
       filteredArray.push(obj1);
     }
   });
@@ -836,7 +827,7 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
     // update the state with user input
     let newhypothesisEntityIndex = hypothesisAssumptionsList.findIndex((item) => item?.id === e?.item?.id);
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
-    if(newhypothesisEntityIndex!==-1 && unprocessedHypothesisList[newhypothesisEntityIndex].value)
+    if (newhypothesisEntityIndex !== -1)
       unprocessedHypothesisList[newhypothesisEntityIndex].value = value;
     setTempHypothesisList(unprocessedHypothesisList);
   };
@@ -848,6 +839,7 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
 
 const updateHyothesisAPICall = async (
   microplanData,
+  setMicroplanData,
   operatorsObject,
   MicroplanName,
   campaignId,
@@ -856,6 +848,7 @@ const updateHyothesisAPICall = async (
   updateData,
   setLoaderActivation,
   status,
+  cancleNavigation,
   t
 ) => {
   try {
@@ -867,6 +860,7 @@ const updateHyothesisAPICall = async (
         setToast({ state: "success", message: t("SUCCESS_DATA_SAVED") });
         updateData();
         setLoaderActivation(false);
+        setMicroplanData((previous) => ({ ...previous, microplanStatus: "GENERATED" }));
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -877,7 +871,10 @@ const updateHyothesisAPICall = async (
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
-        updateData();
+        if(status == "GENERATED")
+          cancleNavigation();
+        else
+          updateData();
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -963,41 +960,9 @@ const fetchMicroplanData = (microplanData) => {
   return combinesDataList;
 };
 
-const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
-  const data = _.cloneDeep(previewData);
-  const checkUserEditedData = (commonColumnData, resourceName) => {
-    if (userEditedResources?.[commonColumnData]) {
-      return userEditedResources?.[commonColumnData]?.[resourceName];
-    }
-  };
-  const conmmonColumnIndex = data?.[0]?.indexOf(commonColumn);
 
-  const combinedData = data.map((item, index) => {
-    if (index === 0) {
-      resources.forEach((e) => item?.push(e));
-      return item;
-    }
 
-    resources.forEach((resourceName, resourceIndex) => {
-      let savedData = checkUserEditedData(item?.[conmmonColumnIndex], resourceName);
-      if (savedData) {
-        item.push(savedData);
-        return item;
-      }
-      // if (checkUserEditedData(item?.[conmmonColumnIndex], resourceName)!!item[item?.length + resourceIndex]) return;
-      let calculations = calculateResource(resourceName, item, formulaConfiguration, previewData[0], hypothesisAssumptionsList, t);
-      if (calculations !== null) calculations = Math.round(calculations);
-      // item[item?.length + resourceIndex] = !!calculations || calculations === 0? calculations:t("NO_DATA");
-      item.push(!!calculations || calculations === 0 ? calculations : undefined);
-      return item;
-    });
-
-    return item;
-  });
-  return combinedData;
-};
-
-const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges,data, t }) => {
+const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges, data, t }) => {
   const conmmonColumnData = useMemo(() => {
     const index = previewData?.[0]?.indexOf(commonColumn);
     if (index == -1) return;
@@ -1022,9 +987,9 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
           </tr>
         </thead>
         <tbody>
-        {data[0].map((item) => {
+          {data[0].map((item) => {
             let index = data?.[0]?.indexOf(item);
-            if(index === -1 ) return 
+            if (index === -1) return;
             const currentData = data?.[selectedRow]?.[index];
             return (
               <tr key={item}>
@@ -1037,8 +1002,8 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                 <td className="new-value no-left-padding">
                   <TextInput
                     name={"data_" + index}
-                    value={item?.value}
-                    style={{ margin: 0, backgroundColor:"rgba(238, 238, 238, 1)" }}
+                    value={currentData || t("NO_DATA")}
+                    style={{ margin: 0, backgroundColor: "rgba(238, 238, 238, 1)" }}
                     t={t}
                     disabled={true}
                   />
@@ -1048,7 +1013,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
           })}
           {resources.map((item) => {
             let index = previewData?.[0]?.indexOf(item);
-            if(index === -1 ) return 
+            if (index === -1) return;
             const currentData = previewData?.[selectedRow]?.[index];
             return (
               <tr key={item}>

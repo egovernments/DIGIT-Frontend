@@ -87,7 +87,6 @@ const Upload = ({
   };
   const { isLoading: ishierarchyLoading, data: hierarchy } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
@@ -112,19 +111,23 @@ const Upload = ({
   // }, [fileDataList]);
 
   // check if data has changed or not
-  const updateData = useCallback((check) => {
-    if (!fileDataList || !setMicroplanData) return;
-    if (check) {
-      setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-      const valueList = fileDataList ? Object.values(fileDataList) : [];
-      if (valueList.length !== 0 && fileDataList.Population?.error === null) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    } else {
-      const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
-      if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    }
-  }, [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]);
+  const updateData = useCallback(
+    (check) => {
+      if (!fileDataList || !setMicroplanData) return;
+      if (check) {
+        setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+        const valueList = fileDataList ? Object.values(fileDataList) : [];
+        const sectionCheckList = sections.filter(item=>item.required)
+        if (valueList.length !== 0 && sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      } else {
+        const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
+        if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      }
+    },
+    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]
+  );
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion(false);
@@ -178,7 +181,7 @@ const Upload = ({
         setSections(uploadSections);
       }
     }
-  }, [state?.UploadConfiguration,state?.Schemas,state?.UIConfiguration]);
+  }, [state?.UploadConfiguration, state?.Schemas, state?.UIConfiguration]);
 
   // Memoized section options to prevent unnecessary re-renders
   const sectionOptions = useMemo(() => {
@@ -680,7 +683,7 @@ const Upload = ({
     let schemaKeys;
     if (schemaData?.schema?.["Properties"]) schemaKeys = hierarchy.concat(Object.keys(schemaData.schema["Properties"]));
     // Sorting the resourceMapping list inorder to maintain the column sequence
-    const sortedSecondList = sortSecondListBasedOnFirstListOrder(schemaKeys, resourceMapping);
+    const sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, resourceMapping);
     // Creating a object with input data with MDMS keys
     const newFeatures = fileData.data["features"].map((item) => {
       let newProperties = {};
@@ -883,7 +886,7 @@ const Upload = ({
         )}
         {modal === "spatial-data-property-mapping" && (
           <Modal
-            popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height:"fit-content" }}
+            popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -1006,7 +1009,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   return (
     <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
       <div className="icon">
-        <CustomIcon Icon={Icons[item.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
+        <CustomIcon Icon={Icons[item?.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.code)}</p>
     </div>
@@ -1209,15 +1212,25 @@ const UploadedFile = ({
 
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
-  const regx = new RegExp(namingConvention);
-  if (regx && !regx.test(file.name)) {
+  try {
+    let processedConvention = namingConvention.replace("$", ".*$")
+    const regx = new RegExp(processedConvention);
+
+    if (regx && !regx.test(file.name)) {
+      setToast({
+        state: "error",
+        message: t("ERROR_NAMING_CONVENSION"),
+      });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(error.message);
     setToast({
       state: "error",
-      message: t("ERROR_NAMING_CONVENSION"),
+      message: t("ERROR_UNKNOWN"),
     });
-    return false;
   }
-  return true;
 };
 
 // Function for reading ancd checking geojson data
@@ -1264,12 +1277,12 @@ const trimJSON = (jsonObject) => {
   return trimmedObject;
 };
 // Function for reading and validating shape file data
-const readAndValidateShapeFiles = async (file, t, namingConvension) => {
+const readAndValidateShapeFiles = async (file, t, namingConvention) => {
   return new Promise(async (resolve, reject) => {
     if (!file) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
-    const fileRegex = new RegExp(namingConvension.replace(".zip$", ".*$"));
+    const fileRegex = new RegExp(namingConvention.replace("$", "\.*$"));
     // File Size Check
     const fileSizeInBytes = file.size;
     const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
@@ -1286,13 +1299,13 @@ const readAndValidateShapeFiles = async (file, t, namingConvension) => {
       }
       const files = Object.keys(zip.files);
       const allFilesMatchRegex = files.every((fl) => {
-        return fileRegex.test(fl);
+      return fileRegex.test(fl);
       });
-      let regx = new RegExp(namingConvension.replace(".zip$", ".shp$"));
+      let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));
       const shpFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvension.replace(".zip$", ".shx$"));
+      regx = new RegExp(namingConvention.replace("$", "\\.shx$"));
       const shxFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvension.replace(".zip$", ".dbf$"));
+      regx = new RegExp(namingConvention.replace("$", "\\.dbf$"));
       const dbfFile = zip.file(regx)[0];
 
       let geojson;
@@ -1466,30 +1479,5 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   resourceMappingData.push(toAddInResourceMapping);
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
-
-// Sorting 2 lists, The first list is a list of string and second one is list of Objects
-function sortSecondListBasedOnFirstListOrder(firstList, secondList) {
-  // Create a map to store the indices of elements in the first list
-  const indexMap = {};
-  firstList.forEach((value, index) => {
-    indexMap[value] = index;
-  });
-
-  // Sort the second list based on the order of elements in the first list
-  secondList.sort((a, b) => {
-    // Get the mappedTo values of each object
-    const mappedToA = a.mappedTo;
-    const mappedToB = b.mappedTo;
-
-    // Get the indices of mappedTo values in the first list
-    const indexA = indexMap[mappedToA];
-    const indexB = indexMap[mappedToB];
-
-    // Compare the indices
-    return indexA - indexB;
-  });
-
-  return secondList;
-}
 
 export default Upload;

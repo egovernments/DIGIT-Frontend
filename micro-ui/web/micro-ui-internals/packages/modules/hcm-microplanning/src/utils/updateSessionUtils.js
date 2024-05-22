@@ -5,7 +5,7 @@ import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
-import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY } from "../configs/constants";
 
 function handleExcelArrayBuffer(arrayBuffer, file) {
   return new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ function parseBlobToJSON(blob, file) {
 }
 
 export const updateSessionUtils = {
-  computeSessionObject: async (row, state, additionalPropsForExcel) => {
+  computeSessionObject: async (row, state, additionalProps) => {
     const sessionObj = {};
     const setCurrentPage = () => {
       sessionObj.currentPage = {
@@ -141,72 +141,101 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload) => {
-      const { inputFileType, templateIdentifier, filestoreId } = file || {};
+    const handleGeoJson = (file, result, upload, translatedData, shapefileOrigin = false) => {
+      if (!file) {
+        console.error(`${shapefileOrigin ? "Shapefile" : "Geojson"} file is undefined`);
+        return upload;
+      }
 
-      upload[templateIdentifier] = {
-        id: templateIdentifier,
-        section: templateIdentifier,
-        fileName: templateIdentifier,
-        fileType: inputFileType,
-        file: {},
-        error: null,
-        resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
-        data: {},
-      };
+      const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
+      upload[templateIdentifier] = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, shapefileOrigin ? ".zip" : ".geojson");
 
-      upload[templateIdentifier].data = result;
-      const newFeatures = result["features"].map((item) => {
-        let newProperties = {};
-        row?.resourceMapping
-          ?.filter((resourse) => resourse.filestoreId === file.filestoreId)
-          .forEach((e) => {
-            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
-          });
-        item["properties"] = newProperties;
-        return item;
-      });
-      upload[templateIdentifier].data.features = newFeatures;
+      const schema = findSchema(inputFileType, templateIdentifier, additionalProps?.campaignType);
+      if (!schema) {
+        console.error("Schema got undefined while handling geojson at handleGeoJson");
+        return upload;
+      }
+
+      handleGeoJsonSpecific(schema, upload, templateIdentifier, result, translatedData, filestoreId);
 
       return upload;
     };
 
-    const handleExcel = (file, result, upload) => {
-      const { inputFileType, templateIdentifier, filestoreId } = file || {};
+    const handleExcel = (file, result, upload, translatedData) => {
+      if (!file) {
+        console.error("Excel file is undefined");
+        return upload;
+      }
 
-      upload[templateIdentifier] = {
-        id: templateIdentifier,
-        section: templateIdentifier,
-        fileName: templateIdentifier,
-        fileType: inputFileType,
-        file: {},
-        error: null,
-        resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId),
-        data: {},
-      };
+      const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
+      upload[templateIdentifier] = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, ".xlsx");
 
-      const schema = state?.Schemas?.filter((schema) => {
-        if (schema.type === inputFileType && schema.section === templateIdentifier && schema.campaignType === "ITIN") {
-          return true;
-        } else {
-          return false;
-        }
-      })?.[0];
+      const schema = findSchema(inputFileType, templateIdentifier, "ITIN");
       if (!schema) {
         console.error("Schema got undefined while handling excel at handleExcel");
+        return upload;
       }
 
       const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
         schema,
-        additionalPropsForExcel.heirarchyData,
-        {
-          id: inputFileType,
-        },
+        additionalProps.heirarchyData,
+        { id: inputFileType },
         result,
-        additionalPropsForExcel.t
+        additionalProps.t,
+        translatedData
       );
       upload[templateIdentifier].data = resultAfterMapping?.tempFileDataToStore;
-      upload[templateIdentifier].resourceMapping = resultAfterMapping?.tempResourceMappingData;
+
+      return upload;
+    };
+
+    const createUploadObject = (templateIdentifier, inputFileType, fileId, filestoreId, extension) => ({
+      id: templateIdentifier,
+      section: templateIdentifier,
+      fileName: `${templateIdentifier}${extension}`,
+      fileType: inputFileType,
+      file: {},
+      fileId: fileId,
+      filestoreId: filestoreId,
+      error: null,
+      resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId).map((item) => ({ ...item, filestoreId })),
+      data: {},
+    });
+
+    const findSchema = (inputFileType, templateIdentifier, campaignType) =>
+      state?.Schemas?.find(
+        (schema) => schema.type === inputFileType && schema.section === templateIdentifier && schema.campaignType === campaignType
+      );
+
+    const handleGeoJsonSpecific = (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
+      let schemaKeys;
+      if (schema?.schema?.["Properties"]) {
+        schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
+      }
+
+      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
+      sortedSecondList = sortedSecondList.map((item) => {
+        if (item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1]) {
+          return { ...item, mappedTo: additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1] };
+        } else {
+          return item;
+        }
+      });
+
+      upload[templateIdentifier].data = result;
+      if (translatedData) {
+        const newFeatures = result["features"].map((item) => {
+          let newProperties = {};
+          sortedSecondList
+            ?.filter((resourse) => resourse.filestoreId === filestoreId)
+            .forEach((e) => {
+              newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+            });
+          item["properties"] = newProperties;
+          return item;
+        });
+        upload[templateIdentifier].data.features = newFeatures;
+      }
     };
 
     const fetchFiles = async () => {
@@ -216,54 +245,70 @@ export const updateSessionUtils = {
       }
 
       const promises = [];
-      files.forEach(({ filestoreId, inputFileType, templateIdentifier, id }) => {
-        const promiseToAttach = axios
-          .get("/filestore/v1/files/id", {
-            responseType: "arraybuffer",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: ACCEPT_HEADERS[inputFileType],
-              "auth-token": Digit.UserService.getUser()?.["access_token"],
-            },
-            params: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-              fileStoreId: filestoreId,
-            },
-          })
-          .then((res) => {
-            if (inputFileType === EXCEL) {
-              const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
-              return parseXlsxToJsonMultipleSheetsForSessionUtil(
-                file,
-                { header: 1 },
-                {
+      let storedData = [];
+      for (const { filestoreId, inputFileType, templateIdentifier, id } of files) {
+        let fileData = {
+          filestoreId,
+          inputFileType,
+          templateIdentifier,
+          id,
+        };
+        let dataInSsn = Digit.SessionStorage.get("microplanData")?.upload?.[templateIdentifier];
+        if (dataInSsn && dataInSsn.filestoreId === filestoreId) {
+          storedData.push({ file: fileData, jsonData: dataInSsn?.data, translatedData: false });
+        } else {
+          const promiseToAttach = axios
+            .get("/filestore/v1/files/id", {
+              responseType: "arraybuffer",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: ACCEPT_HEADERS[inputFileType],
+                "auth-token": Digit.UserService.getUser()?.["access_token"],
+              },
+              params: {
+                tenantId: Digit.ULBService.getCurrentTenantId(),
+                fileStoreId: filestoreId,
+              },
+            })
+            .then(async (res) => {
+              if (inputFileType === EXCEL) {
+                const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
+                const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
+                  file,
+                  { header: 1 },
+                  {
+                    filestoreId,
+                    inputFileType,
+                    templateIdentifier,
+                    id,
+                  }
+                );
+                return { ...response, translatedData: true };
+              } else if (inputFileType === GEOJSON) {
+                let response = await parseGeoJSONResponse(res.data, {
                   filestoreId,
                   inputFileType,
                   templateIdentifier,
                   id,
-                }
-              );
-            } else if (inputFileType === GEOJSON) {
-              return parseGeoJSONResponse(res.data, {
-                filestoreId,
-                inputFileType,
-                templateIdentifier,
-                id,
-              });
-            } else if (inputFileType === SHAPEFILE) {
-              const geoJson = shpToGeoJSON(res.data, {
-                filestoreId,
-                inputFileType,
-                templateIdentifier,
-                id,
-              });
-              return geoJson;
-            }
-          });
-        promises.push(promiseToAttach);
-      });
+                });
+                return { ...response, translatedData: true };
+              } else if (inputFileType === SHAPEFILE) {
+                const geoJson = await shpToGeoJSON(res.data, {
+                  filestoreId,
+                  inputFileType,
+                  templateIdentifier,
+                  id,
+                });
+                return { ...geoJson, translatedData: true };
+              }
+            });
+          promises.push(promiseToAttach);
+        }
+      };
 
-      const result = await Promise.all(promises);
+      const resolvedPromises = await Promise.all(promises);
+      let result = storedData;
+      if (resolvedPromises) result = [...storedData, ...resolvedPromises];
       return result;
     };
     const setMicroplanUpload = async (filesResponse) => {
@@ -274,16 +319,16 @@ export const updateSessionUtils = {
       //populate this object based on the files and return
       const upload = {};
 
-      filesResponse.forEach(({ jsonData, file }, idx) => {
-        switch (file.inputFileType) {
+      filesResponse.forEach(({ jsonData, file, translatedData }, idx) => {
+        switch (file?.inputFileType) {
           case "Shapefile":
-            handleGeoJson(file, jsonData, upload);
+            handleGeoJson(file, jsonData, upload, translatedData, true);
             break;
           case "Excel":
-            handleExcel(file, jsonData, upload);
+            handleExcel(file, jsonData, upload, translatedData);
             break;
           case "GeoJSON":
-            handleGeoJson(file, jsonData, upload);
+            handleGeoJson(file, jsonData, upload, translatedData);
           default:
             break;
         }

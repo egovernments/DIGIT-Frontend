@@ -216,7 +216,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
-      data.body.CampaignDetails.status = ["started","In Progress"]
+      data.body.CampaignDetails.status = ["creating","created"]
       if (startDate) {
         data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
       }
@@ -287,7 +287,9 @@ export const UICustomizations = {
       const { name,status } = data?.state?.searchForm || {};
       
       data.body.PlanConfigurationSearchCriteria = {}
-      data.body.PlanConfigurationSearchCriteria.pagination = data?.state?.tableForm
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset
       data.body.PlanConfigurationSearchCriteria.name = name
       data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
