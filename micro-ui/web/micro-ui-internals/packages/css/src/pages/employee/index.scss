@@ -247,3 +247,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     }
   }
 }
+.selecting-boundaries-dropdown{
+  .digit-multiselectdropdown-server{
+    max-height: 15rem;
+  }
+}
+.hover{
+  cursor: pointer;
+}
+.digit-dropdown-employee-select-wrap{
+  .digit-dropdown-employee-select-wrap--elipses{
+    font-size: 1rem !important;
+  }
+}
