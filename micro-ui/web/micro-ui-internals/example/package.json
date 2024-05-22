@@ -18,7 +18,7 @@
     "@egovernments/digit-ui-module-hrms": "1.8.0",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.9",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
-    "@egovernments/digit-ui-react-components": "1.8.1-beta.19",
+    "@egovernments/digit-ui-react-components": "1.8.1-beta.21",
     "@egovernments/digit-ui-components": "0.0.1-beta.20",
     "http-proxy-middleware": "^1.0.5",
     "react": "17.0.2",
