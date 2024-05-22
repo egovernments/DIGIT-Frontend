@@ -1,10 +1,9 @@
-import {  HelpOutlineIcon, useTourState } from "@egovernments/digit-ui-react-components";
+import {  HelpOutlineIcon, Tutorial, useTourState } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useContext, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useMyContext } from "../utils/context";
 
-// import { TourSteps } from '../utils/TourSteps';
 
 const MicroplanningHeader = () => {
   const { tourState, setTourState } = useTourState();
@@ -19,7 +18,7 @@ const MicroplanningHeader = () => {
 
   return (
     <>
-      {/* <Tutorial tutorial={tourState} updateTutorial={setTourState} theme={{zIndex:9999}} /> */}
+      <Tutorial tutorial={tourState} updateTutorial={setTourState} theme={{zIndex:9999}} />
       <div className="wbh-header">
         {/* <Help startTour={startTour} /> */}
         <div className="header-icon-container" onClick={startTour}>
