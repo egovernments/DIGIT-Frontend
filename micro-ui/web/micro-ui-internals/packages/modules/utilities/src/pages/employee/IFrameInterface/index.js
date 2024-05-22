@@ -24,7 +24,7 @@ const IFrameInterface = (props) => {
   });
 
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-
+  console.log(iframeWindow);
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
       try {
