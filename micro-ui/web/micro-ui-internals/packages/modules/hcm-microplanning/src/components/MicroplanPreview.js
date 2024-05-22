@@ -339,7 +339,7 @@ const MicroplanPreview = ({
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
             style={{
               flex: 1,
               backgroundColor: "white",

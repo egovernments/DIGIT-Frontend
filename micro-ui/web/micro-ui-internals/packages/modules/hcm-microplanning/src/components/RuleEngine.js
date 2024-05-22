@@ -263,7 +263,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             width: "100%",
             padding: "0 0 1rem 1rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
           style={{
             flex: 1,
             backgroundColor: "white",
