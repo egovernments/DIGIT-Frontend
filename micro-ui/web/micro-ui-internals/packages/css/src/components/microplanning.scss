@@ -1,7 +1,6 @@
 $box-shadow-color: #00000029;
 $border-color: rgba(214, 213, 212, 1);
 $highlight-color: rgba(244, 119, 56, 1);
-$highlight-color: rgba(244, 119, 56, 1);
 $border-color: rgba(214, 213, 212, 1);
 
 @mixin custom-scrollbar {
@@ -27,6 +26,37 @@ $border-color: rgba(214, 213, 212, 1);
     }
 }
 
+.wbh-header-container{
+    margin: 0;
+}
+
+.guideline-actionbar-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+    .custom-button {
+        min-width: 12.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        h2 {
+            width: fit-content !important;
+        }
+
+        .icon {
+            margin: 0 0 0 1rem !important;
+        }
+    }
+
+    .custom-button-left-icon {
+        .icon {
+            margin: 0 1rem 0 0 !important;
+        }
+    }
+}
+
 .navigator-componet-not-found {
     position: absolute;
     top: 50%;
@@ -47,8 +77,6 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .modal-header {
-    width: 30rem;
-    font-weight: 700 !important;
     padding-left: 1rem !important;
     margin-bottom: 0 !important;
     display: flex !important;
@@ -85,6 +113,7 @@ $border-color: rgba(214, 213, 212, 1);
     align-items: center !important;
     padding: 0.625rem 0.5rem 0.625rem 0.5rem !important;
     margin: 0 !important;
+    height: 2.5rem !important;
 
     p {
         font-weight: 600 !important;
@@ -100,6 +129,7 @@ $border-color: rgba(214, 213, 212, 1);
     padding: 0.625rem 0.5rem 0.625rem 0.5rem !important;
     margin: 0 !important;
     align-items: center !important;
+    height: 2.5rem !important;
 
     .icon {
         display: flex !important;
@@ -143,6 +173,8 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .upload-section-option {
+        position: relative;
+        right: 0;
         width: 12.7rem;
         min-height: 32rem;
         background-color: #ffffff;
@@ -451,6 +483,11 @@ $border-color: rgba(214, 213, 212, 1);
             .deletebutton {
                 background-color: rgb(255, 255, 255, 0);
                 border: none;
+                display: flex !important;
+                flex-direction: row;
+                align-items: center !important;
+                justify-content: center;
+                margin: 0 1rem;
             }
         }
     }
@@ -531,7 +568,16 @@ $border-color: rgba(214, 213, 212, 1);
         overflow: auto;
         padding-bottom: 0;
 
+        .select-dropdown {
+            background-color: rgb(0, 0, 0, 0);
+            font-family: Roboto;
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: left;
+        }
+
         table {
+            background-color: rgb(0, 0, 0, 0);
             width: 100%;
 
             th {
@@ -540,7 +586,6 @@ $border-color: rgba(214, 213, 212, 1);
                 font-size: 1rem;
                 padding: 1.5rem;
                 margin: 0;
-                border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
                 text-align: left;
             }
 
@@ -550,7 +595,6 @@ $border-color: rgba(214, 213, 212, 1);
                 font-size: 1rem;
                 padding: 1.5rem;
                 margin: 0;
-                border-bottom: 0.063rem rgba(214, 213, 212, 1) solid !important;
 
                 p {
                     max-width: 20.594rem;
@@ -559,45 +603,12 @@ $border-color: rgba(214, 213, 212, 1);
                     text-wrap: wrap;
                     overflow: hidden;
                 }
+
             }
 
-            select {
-                width: 100%;
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
-                background-repeat: no-repeat;
-                background-position: right 0.7em top 50%, 0 0;
-                background-size: 1.5em auto;
-                background-color: rgb(255, 255, 255, 0);
-                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-                padding: 0.5rem;
-                font-weight: 400;
-                font-size: 1rem;
-            }
-
-            select:focus {
-                outline: none;
-                border-color: rgba(80, 90, 95, 1);
-            }
-
-            option {
-                font-weight: 400;
-                padding: 0.5rem;
-                font-size: 1rem;
-                max-height: 50%;
-                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-                border-radius: 0;
-            }
-
-            option:focus {
-                outline: none;
-                border-color: black;
-            }
         }
 
-        .pagination-toolbar {
+        .pagination {
             position: sticky;
             bottom: 0;
             left: 0;
@@ -607,49 +618,18 @@ $border-color: rgba(214, 213, 212, 1);
             align-items: center;
             justify-content: end;
             padding: 1rem 0;
-
-            select {
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
-                background-repeat: no-repeat;
-                background-position: right 0.7em top 50%, 0 0;
-                background-size: 1.5em auto;
-                background-color: rgb(255, 255, 255, 0);
-                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-                padding: 0.25rem;
-                font-weight: 400;
-                font-size: 1rem;
-                color: rgba(80, 90, 95, 1);
-                padding-right: 2em;
-            }
-
-            select:focus {
-                outline: none;
-            }
-
-            option {
-                font-weight: 400;
-                padding: 0.25rem;
-                font-size: 1rem;
-                max-height: 50%;
-                color: rgba(80, 90, 95, 1);
-                border-radius: 0;
-            }
-
-            span {
-                font-weight: 400;
-                padding: 0.25rem;
-                font-size: 1rem;
-                color: rgba(80, 90, 95, 1);
-            }
-
-            .navigation {
-                display: flex;
-                align-items: center;
-            }
+            padding-right: 2rem;
         }
+
+        @include custom-scrollbar;
+
+        &::-webkit-scrollbar-track {
+            background-color: rgb(0, 0, 0, 0)
+        }
+    }
+
+    .popup-wrap {
+        background-color: rgba(0, 0, 0, 0.8);
     }
 
     .preview-data {
@@ -666,16 +646,16 @@ $border-color: rgba(214, 213, 212, 1);
 
         .excel-wrapper {
             width: 100%;
-            padding: 1rem 0.5rem;
+            padding: 1rem 0.5rem 0 0.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 0.5rem;
             background-color: white !important;
             border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
             border-radius: 0.25rem;
 
             .sheet-wrapper {
-                height: 80vh;
+                height: 76vh;
                 overflow: auto;
                 background-color: white;
                 padding: 0.3rem;
@@ -709,6 +689,27 @@ $border-color: rgba(214, 213, 212, 1);
                     }
                 }
             }
+
+            .excel-tab-list {
+                padding: 0.3rem;
+                display: flex;
+                margin-bottom: 0.625rem;
+
+                .tab {
+                    padding: 0.625rem;
+                    margin-right: 0.313rem;
+                    cursor: pointer;
+                    background-color: #f1f1f1;
+                    border: 1px solid #ccc;
+                }
+
+                .tab.active {
+                    background-color: #007bff;
+                    color: white;
+                }
+
+            }
+
         }
     }
 
@@ -788,7 +789,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             .link {
                 text-decoration: underline;
-                color: rgba(11, 12, 12, 1);
+                color: rgba(244, 119, 56, 1);
             }
 
         }
@@ -802,7 +803,6 @@ $border-color: rgba(214, 213, 212, 1);
                 min-width: 1.2rem !important;
             }
 
-            .text {}
         }
 
         .flex {
@@ -1102,6 +1102,7 @@ $border-color: rgba(214, 213, 212, 1);
 
     .add-button {
         max-width: 12.5rem;
+        height: 2.5rem;
         margin-top: 1.5rem;
         display: flex;
         align-items: center;
@@ -1374,6 +1375,7 @@ $border-color: rgba(214, 213, 212, 1);
         .add-button {
             max-width: 12.5rem;
             margin-top: 1.5rem;
+            height: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center !important;
@@ -1452,11 +1454,10 @@ $border-color: rgba(214, 213, 212, 1);
 
     .custom-action-bar,
     .custom-action-bar-no-first-button {
-        padding: 1.5rem 1.5rem 1.5rem 5.3rem;
+        height: 4rem;
         display: flex !important;
         justify-content: space-between;
-        align-items: center;
-        height: 5.5rem;
+        align-items: center !important;
 
         .custom-button {
             min-width: 12.5rem;
@@ -1474,6 +1475,8 @@ $border-color: rgba(214, 213, 212, 1);
         }
 
         .custom-button-left-icon {
+            margin-left: 5.2rem;
+
             .icon {
                 margin: 0 1rem 0 0 !important;
             }
@@ -1628,7 +1631,7 @@ $border-color: rgba(214, 213, 212, 1);
                     display: block;
                     min-width: 16.5rem;
                     margin: 0.5rem 0 0 0 !important;
-                    padding: 1rem;
+                    padding: 1rem 0.7rem 1rem 1rem;
                     background: rgba(255, 255, 255, 1) !important;
                     box-shadow: 0 0.063rem 0.25rem 0 rgba(0, 0, 0, 0.16);
                     position: relative;
@@ -1637,7 +1640,7 @@ $border-color: rgba(214, 213, 212, 1);
                     .header-section {
                         display: flex !important;
                         align-items: center;
-                        justify-content: space-between;
+                        gap: 0.5rem;
                         padding: 0;
                     }
 
@@ -1654,6 +1657,7 @@ $border-color: rgba(214, 213, 212, 1);
                         .hierarchy-selection-element {
                             position: relative;
                             padding-top: 1rem;
+                            padding-right: 0.3rem;
                         }
                     }
                 }
@@ -1785,12 +1789,14 @@ $border-color: rgba(214, 213, 212, 1);
                 }
             }
 
-            .filter-section , .choropleth-section {
+            .filter-section,
+            .choropleth-section {
                 width: 14.438rem;
 
 
 
-                .filter-section-option-wrapper, .choropleth-section-option-wrapper {
+                .filter-section-option-wrapper,
+                .choropleth-section-option-wrapper {
                     position: absolute;
                     max-height: 12.19rem;
                     width: 14.438rem;
@@ -1801,7 +1807,7 @@ $border-color: rgba(214, 213, 212, 1);
                         max-height: 9.752rem;
                         overflow-x: auto;
                         background-color: rgba(255, 255, 255, 1);
-
+                        
                         @include custom-scrollbar;
 
                         .custom-box {
@@ -1996,11 +2002,10 @@ $border-color: rgba(214, 213, 212, 1);
 
     .aggregates {
         width: 100%;
-        min-height: 8.063rem;
         background-color: rgb(255, 255, 255, 1);
         display: flex;
         align-items: center;
-        padding: 1.5rem;
+        padding: 2.3rem;
         justify-content: space-between;
 
         .aggregate-value {
@@ -2102,19 +2107,23 @@ $border-color: rgba(214, 213, 212, 1);
             }
 
             .hypothesis-list-entity {
-                margin: 0 0 0.7rem 0;
+                margin: 0 0 1.5rem 0;
             }
 
             .input {
-                padding: 1rem 0 0 0;
+                padding: 0.3rem 0 0 0;
                 width: 100%;
+            }
+
+            .hypothesis-list-wrapper{
+                align-self: flex-end;
             }
 
             .hypothesis-list {
                 overflow-y: auto;
                 max-height: 17rem;
                 @include custom-scrollbar;
-
+                padding-right: 0.3rem;
                 h3 {
                     background-color: #f4f4f4;
                     padding: 0.625rem;
@@ -2127,6 +2136,7 @@ $border-color: rgba(214, 213, 212, 1);
                 justify-content: space-between;
                 padding: 1rem 0 0 0;
                 width: 100%;
+                margin-top: 0.5rem;
 
                 .button-primary {
                     font-family: Roboto;

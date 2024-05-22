@@ -1,4 +1,4 @@
-import { ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
+import {  ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -218,7 +218,7 @@ const Navigator = (props) => {
       </ActionBar>
 
       {/* Toast notification */}
-      {toast && <Toast style={{ bottom: "5.5rem" }} label={toast} error={true} onClose={() => setToast(undefined)} />}
+      {toast && <Toast label={toast} error={true} onClose={() => setToast(undefined)} />}
     </div>
   );
 };

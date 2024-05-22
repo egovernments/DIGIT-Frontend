@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposerV2,Loader } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposerV2, Loader } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { useMyContext } from "../../utils/context";

@@ -1,13 +1,13 @@
 import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { processHierarchyAndData, findParent, fetchDropdownValues } from "../../utils/processHierarchyAndData";
-import { CloseButton, ModalHeading } from "../../components/CommonComponents";
-import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../../configs/constants";
+import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
+import { CloseButton, ModalHeading } from "./CommonComponents";
+import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../configs/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { tourSteps } from "../../configs/tourSteps";
-import { useMyContext } from "../../utils/context";
-import { timeLineOptions } from "../../configs/timeLineOptions.json";
+import { tourSteps } from "../configs/tourSteps";
+import { useMyContext } from "../utils/context";
+import { timeLineOptions } from "../configs/timeLineOptions.json";
 
 const page = "microplanPreview";
 
@@ -141,7 +141,7 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: dataToShow }));
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: {previewData:dataToShow} }));
     setCheckDataCompletion("perform-action");
   }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
@@ -357,7 +357,7 @@ const MicroplanPreview = ({
           </Modal>
         )}
         {toast && toast.state === "error" && (
-          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
         )}
       </div>
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
@@ -374,13 +374,9 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
   };
-
-  const closeModal = () => {
-    setModal("none");
-  };
-
+  
   return (
-    <div>
+    <div className="hypothesis-list-wrapper">
       <div className="hypothesis-list">
         {tempHypothesisList
           ?.filter((item) => item.key !== "")
@@ -898,7 +894,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
   const fetchedData = fetchMicroplanData(microplanData);
-
+  debugger
   // Perform inner joins using reduce
   const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
     if (index === 0) {
@@ -929,9 +925,12 @@ const fetchMicroplanData = (microplanData) => {
         switch (files[fileData]?.fileType) {
           case EXCEL: {
             // extract dada
+            let mergedData =[];
             for (let data of Object.values(files[fileData]?.data)) {
-              combinesDataList.push(data);
+              mergedData = [...mergedData,...data]
             }
+            const uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[6], entry])).values());
+            combinesDataList.push(uniqueEntries)
             break;
           }
           case GEOJSON:
@@ -1047,7 +1046,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
   return (
     <div className="aggregates">
       {microplanPreviewAggregates.map((item, index) => (
-        <div key={index}>
+        <div key={index} >
           <p className="aggregate-value">{calulateAggregate(item, dataToShow)}</p>
           <p className="aggregate-label">{t(item)}</p>
         </div>

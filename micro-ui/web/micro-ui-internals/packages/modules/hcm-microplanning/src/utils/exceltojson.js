@@ -18,9 +18,9 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
           for (let i = 0; i < jsonSheetData.length; i++) {
             for (let j = 0; j < jsonSheetData[i].length; j++) {
               const cell = jsonSheetData[i][j];
-              if (typeof cell === "string") {
-                jsonSheetData[i][j] = cell.trim();
-              }
+              // if (typeof cell === "string") {
+              //   jsonSheetData[i][j] = cell.trim();
+              // }
             }
           }
           jsonData[sheetName] = jsonSheetData;

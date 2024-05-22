@@ -1,5 +1,7 @@
+import { Dropdown } from "@egovernments/digit-ui-components";
+import { Table } from "@egovernments/digit-ui-react-components";
 import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, t }) => {
   // If no data is uploaded, display a message
@@ -30,10 +32,11 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   // Fetch template columns when schema changes
   useEffect(() => {
-    if (!schema || !schema["schema"] || !schema.schema["Properties"]) return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-    
+    if (!schema || !schema["schema"] || !schema.schema["Properties"])
+      return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
+
     const columns = Object.keys(schema.schema["Properties"]);
-    if (columns) setTemplateColumns([...hierarchy,...columns]);
+    if (columns) setTemplateColumns([...hierarchy, ...columns]);
   }, [schema]);
 
   // Update user columns when uploaded data changes
@@ -47,85 +50,71 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   // Dropdown component for selecting user columns
   const DropDownUserColumnSelect = ({ id }) => {
+    console.log(userColumns)
     const [selectedOption, setSelectedOption] = useState("");
     useEffect(() => {
       const obj = resourceMapping.find((item) => item["mappedTo"] == id);
-      if (obj) setSelectedOption(obj["mappedFrom"]);
-      else setSelectedOption("");
+      if (obj) setSelectedOption({ code: obj["mappedFrom"] });
+      else setSelectedOption({});
     }, [id, resourceMapping]);
 
     const handleSelectChange = (event) => {
-      const newValue = event.target.value;
-      setSelectedOption(newValue);
+      console.log(event);
+      const newValue = event.code;
+      setSelectedOption(event);
       setResourceMapping((previous) => {
         const revisedData = previous.filter((item) => !(item["mappedTo"] === id || item["mappedFrom"] === newValue));
         return [...revisedData, { mappedTo: id, mappedFrom: newValue }];
       });
     };
     return (
-      <select value={selectedOption} onChange={handleSelectChange}>
-        <option value="" disabled>
-          {t("SELECT_OPTION")}
-        </option>
-        {userColumns.map((key) => {
-          return (
-            <option key={key} value={key}>
-              {key}
-            </option>
-          );
-        })}
-      </select>
+      <Dropdown
+        variant="select-dropdown"
+        t={t}
+        isMandatory={false}
+        option={userColumns?.map((item) => ({ code: item }))}
+        selected={selectedOption}
+        optionKey="code"
+        select={handleSelectChange}
+        style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)" }}
+      />
+      // <div></div>
     );
   };
 
+  const tableColumns = useMemo(
+    () => [
+      {
+        Header: t("COLUMNS_IN_TEMPLATE"),
+        accessor: "COLUMNS_IN_TEMPLATE",
+      },
+      {
+        Header: t("COLUMNS_IN_USER_UPLOAD"),
+        accessor: "COLUMNS_IN_USER_UPLOAD",
+        Cell: ({ cell: { value } }) => <DropDownUserColumnSelect key={value} id={value} />,
+      },
+    ],
+    [userColumns]
+  );
+  const data = useMemo(()=>templateColumns.map(item=>({COLUMNS_IN_TEMPLATE:item,COLUMNS_IN_USER_UPLOAD:item})),[templateColumns])
   return (
     <div className="spatial-data-property-mapping">
-      <table>
-        <thead>
-          <tr>
-            <th>{t("COLUMNS_IN_TEMPLATE")}</th>
-            <th>{t("COLUMNS_IN_USER_UPLOAD")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((entry, index) => (
-            <tr key={index}>
-              <td>
-                <p>{t(entry)}</p>
-              </td>
-              <td>{<DropDownUserColumnSelect key={entry} id={entry} />}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="pagination-toolbar">
-        <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
-          {[5, 10, 15, 20].map((value) => (
-            <option key={value} value={value}>
-              {t("ROWS")} {value}
-            </option>
-          ))}
-        </select>
-        <span>
-          {currentPage * itemsPerPage + 1}-
-          {(currentPage + 1) * itemsPerPage > templateColumns.length ? templateColumns.length : (currentPage + 1) * itemsPerPage} of{" "}
-          {templateColumns.length}
-        </span>
-        <div className="navigation">
-          <button onClick={() => handlePageClick(0)} disabled={currentPage === 0}>
-            {PaginationFirst && <PaginationFirst width="24" height="24" fill={"rgb(0,0,0)"} />}
-          </button>
-          <button onClick={() => handlePageClick(currentPage - 1)} disabled={currentPage === 0}>
-            {PaginationPrevious && <PaginationPrevious width="24" height="24" fill={"rgb(0,0,0)"} />}
-          </button>
-          <button onClick={() => handlePageClick(currentPage + 1)} disabled={currentPage === totalPages - 1}>
-            {PaginationNext && <PaginationNext width="24" height="24" fill={"rgb(0,0,0)"} />}
-          </button>
-          <button onClick={() => handlePageClick(totalPages - 1)} disabled={currentPage === totalPages - 1}>
-            {PaginationLast && <PaginationLast width="24" height="24" fill={"rgb(0,0,0)"} />}
-          </button>
-        </div>
-      </div>
+      <Table
+        customTableWrapperClassName="table-waper"
+        t={t}
+        disableSort={true}
+        autoSort={false}
+        manualPagination={false}
+        isPaginationRequired={true}
+        data={data}
+        columns={tableColumns}
+        getCellProps={(cellInfo) => {
+          return { style: {} };
+        }}
+        getHeaderProps={(cellInfo) => {
+          return { style: {} };
+        }}
+      />
     </div>
   );
 };

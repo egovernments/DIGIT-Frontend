@@ -1,12 +1,13 @@
 import { Button, DownloadIcon, SVG } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const JsonPreviewInExcelForm = (props) => {
   const { t } = useTranslation();
   const sheetsData = props?.sheetsData;
+  const [currentSheetName, setCurrentSheetName] = useState(Object.keys(sheetsData).length > 0 ? Object.keys(sheetsData)[0] : undefined);
   return (
-    <div className="preview-data " >
+    <div className="preview-data ">
       <div
         className="operational-buttons"
         style={{
@@ -16,41 +17,48 @@ export const JsonPreviewInExcelForm = (props) => {
         <Button
           label={t("BUTTON_BACK")}
           variation="secondary"
-          icon={<SVG.ArrowBackIos styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+          icon={<SVG.ArrowBack height={"2rem"} width={"2rem"}  fill="#F47738" />}
           type="button"
           onButtonClick={() => props?.onBack()}
         />
         <Button
           label={t("BUTTON_DOWNLOAD")}
           variation="secondary"
-          icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill="#F47738" />}
+          icon={<DownloadIcon height={"1.25rem"} width={"1.25rem"}  fill="#F47738" />}
           type="button"
           onButtonClick={() => props?.onDownload()}
         />
       </div>
       <div className="excel-wrapper">
-        {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
-          <div key={index} className="sheet-wrapper">
-            <table className="excel-table">
-              <thead>
-                <tr>
-                  {sheetData[0].map((header, columnIndex) => (
-                    <th key={columnIndex}>{t(header)}</th>
+        {/* {Object.entries(sheetsData).map(([sheetName, sheetData], index) => ( */}
+        <div key={sheetsData?.[currentSheetName]} className="sheet-wrapper">
+          <table className="excel-table">
+            <thead>
+              <tr>
+                {sheetsData?.[currentSheetName]?.[0].map((header, columnIndex) => (
+                  <th key={columnIndex}>{t(header)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
+                <tr key={rowIndex}>
+                  {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => (
+                    <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {sheetData.slice(1).map((rowData, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {Object.values(sheetData[0]).map((_, cellIndex) => (
-                      <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="excel-tab-list">
+        {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
+          <button key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() => setCurrentSheetName(sheetName)}>
+            {sheetName}
+          </button>
         ))}
+        </div>
+        {/* ))} */}
       </div>
     </div>
   );

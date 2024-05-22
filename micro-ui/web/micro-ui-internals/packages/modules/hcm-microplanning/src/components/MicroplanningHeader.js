@@ -1,4 +1,4 @@
-import {  HelpOutlineIcon, Tutorial, useTourState } from "@egovernments/digit-ui-react-components";
+import {  Help, HelpOutlineIcon, Tutorial, useTourState } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useContext, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
@@ -20,11 +20,7 @@ const MicroplanningHeader = () => {
     <>
       <Tutorial tutorial={tourState} updateTutorial={setTourState} theme={{zIndex:9999}} />
       <div className="wbh-header">
-        {/* <Help startTour={startTour} /> */}
-        <div className="header-icon-container" onClick={startTour}>
-          <h4 className="h4">{t("Help")}</h4>
-          <HelpOutlineIcon fill={"rgba(244, 119, 56, 1)"} />
-        </div>
+        <Help startTour={startTour} />
       </div>
     </>
   );

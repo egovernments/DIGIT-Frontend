@@ -3,20 +3,20 @@ import { useTranslation } from "react-i18next";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
-import { convertJsonToXlsx } from "../../utils/jsonToExcelBlob";
-import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
-import { ModalWrapper } from "../../components/Modal";
-import { checkForErrorInUploadedFileExcel } from "../../utils/excelValidations";
-import { geojsonPropetiesValidation, geojsonValidations } from "../../utils/geojsonValidations";
+import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
+import { parseXlsxToJsonMultipleSheets } from "../utils/exceltojson";
+import { ModalWrapper } from "./Modal";
+import { checkForErrorInUploadedFileExcel } from "../utils/excelValidations";
+import { geojsonPropetiesValidation, geojsonValidations } from "../utils/geojsonValidations";
 import JSZip from "jszip";
-import { SpatialDataPropertyMapping } from "../../components/resourceMapping";
+import { SpatialDataPropertyMapping } from "./resourceMapping";
 import shp from "shpjs";
-import { JsonPreviewInExcelForm } from "../../components/JsonPreviewInExcelForm";
-import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "../../components/CommonComponents";
+import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
+import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
 import { Loader, Modal, Toast } from "@egovernments/digit-ui-components";
-import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../../configs/constants";
-import { tourSteps } from "../../configs/tourSteps";
-import { useMyContext } from "../../utils/context";
+import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../configs/constants";
+import { tourSteps } from "../configs/tourSteps";
+import { useMyContext } from "../utils/context";
 
 const page = "upload";
 const commonColumn = "boundaryCode";
@@ -117,8 +117,8 @@ const Upload = ({
       if (check) {
         setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
         const valueList = fileDataList ? Object.values(fileDataList) : [];
-        const sectionCheckList = sections.filter(item=>item.required)
-        if (valueList.length !== 0 && sectionCheckList.every(item=>fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
+        const sectionCheckList = sections.filter((item) => item.required);
+        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
         const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
@@ -815,6 +815,11 @@ const Upload = ({
             LeftButtonHandler={() => UploadFileClickHandler(false)}
             RightButtonHandler={() => UploadFileClickHandler(true)}
             sections={sections}
+            popupModuleActionBarStyles={{
+              flex:1,
+              padding:"1rem",
+              gap:"1rem"
+            }}
             footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
             footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} showDownloadIcon={true} />}
             header={
@@ -843,7 +848,7 @@ const Upload = ({
               backgroundColor: "white",
               border: "0.063rem solid rgba(244, 119, 56, 1)",
             }}
-            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMainStyle={{ padding: 0, paddingRight: "1rem", margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={deleteFile}
@@ -866,13 +871,13 @@ const Upload = ({
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{padding:0, margin: 0, maxWidth: "31.188rem" }}
             style={{
               flex: 1,
               backgroundColor: "white",
               border: "0.063rem solid rgba(244, 119, 56, 1)",
             }}
-            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMainStyle={{ padding: 0, margin: 0}}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_REUPLOAD_FILE_CONFIRMATION")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={reuplaodFile}
@@ -943,20 +948,12 @@ const Upload = ({
           </Modal>
         )}
         {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
-        {toast && toast.state === "success" && (
-          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />
-        )}
+        {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
         {toast && toast.state === "error" && (
-          <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
         )}
         {toast && toast.state === "warning" && (
-          <Toast
-            style={{ bottom: "5.5rem", zIndex: "9999999", backgroundColor: "#F19100" }}
-            label={toast.message}
-            isDleteBtn
-            error
-            onClose={() => setToast(null)}
-          />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn error onClose={() => setToast(null)} />
         )}
         {previewUploadedData && (
           <div className="popup-wrap">
@@ -973,9 +970,9 @@ const Upload = ({
             justifyContent: "space-between",
             padding: 0,
             width: "100%",
-            padding: "0 0 1rem 1.3rem",
+            padding: "0 1rem 1rem 1.3rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
           style={{
             flex: 1,
             backgroundColor: "white",
@@ -1188,7 +1185,7 @@ const UploadedFile = ({
               <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("Download")}</p>
             </div>
-            <div className="button deletebutton" onClick={DeleteFile}>
+            <div className="deletebutton" onClick={DeleteFile}>
               <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={"rgba(244, 119, 56, 1)"} />
               <p>{t("DELETE")}</p>
             </div>
@@ -1213,7 +1210,7 @@ const UploadedFile = ({
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
   try {
-    let processedConvention = namingConvention.replace("$", ".*$")
+    let processedConvention = namingConvention.replace("$", ".*$");
     const regx = new RegExp(processedConvention);
 
     if (regx && !regx.test(file.name)) {
@@ -1282,7 +1279,7 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
     if (!file) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
-    const fileRegex = new RegExp(namingConvention.replace("$", "\.*$"));
+    const fileRegex = new RegExp(namingConvention.replace("$", ".*$"));
     // File Size Check
     const fileSizeInBytes = file.size;
     const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
@@ -1299,7 +1296,7 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
       }
       const files = Object.keys(zip.files);
       const allFilesMatchRegex = files.every((fl) => {
-      return fileRegex.test(fl);
+        return fileRegex.test(fl);
       });
       let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));
       const shpFile = zip.file(regx)[0];
