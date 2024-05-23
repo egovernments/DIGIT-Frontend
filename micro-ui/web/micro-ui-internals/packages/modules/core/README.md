@@ -78,6 +78,7 @@ and add its related functions
 ## Changelog
 
 ```bash
+1.8.1-beta.19 Updated Toast Component Props
 1.8.1-beta.17 Updated ui-components Toast,RemoveableTag and ErrorMessage components
 1.8.1-beta.16 Updated library with spacers and css and modified dropdown in ui-components
 1.8.1-beta.15 updated ui-components dropdown option labels and version of ui-components and css
