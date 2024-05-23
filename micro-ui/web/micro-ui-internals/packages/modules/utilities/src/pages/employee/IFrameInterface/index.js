@@ -161,7 +161,7 @@ const IFrameInterface = (props) => {
             setIframeLoaded(true);
           }} 
         />
-        {iframeLoaded && <Toast info={iframeLoaded} label={"Iframe Loaded"}></Toast>}
+        {iframeLoaded && <Toast type={iframeLoaded ? "info" : ""} label={"Iframe Loaded"}></Toast>}
       </div>
     </React.Fragment>
   );
