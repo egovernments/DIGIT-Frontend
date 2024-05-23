@@ -925,9 +925,12 @@ const fetchMicroplanData = (microplanData) => {
           case EXCEL: {
             // extract dada
             const mergedData = Object.values(files[fileData]?.data).flatMap(data => data);
-            let commonColumnIndex = mergedData?.[0].indexOf(commonColumn)
-            const uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[commonColumnIndex], entry])).values());
-            combinesDataList.push(uniqueEntries)
+            let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn)
+            
+            let uniqueEntries;
+            if(commonColumnIndex)
+              uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[commonColumnIndex], entry])).values());
+            if(uniqueEntries)combinesDataList.push(uniqueEntries)
             break;
           }
           case GEOJSON:

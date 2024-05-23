@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
-import { ModalWrapper } from "./Modal";
-import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
-import { Modal, Toast } from "@egovernments/digit-ui-components";
+import { CloseButton, ModalHeading } from "./CommonComponents";
+import { Dropdown, Modal, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 import { tourSteps } from "../configs/tourSteps";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+
 const page = "hypothesis";
 
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
@@ -43,18 +43,21 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (microplanData && microplanData.hypothesis) {
       setAssumptions(microplanData.hypothesis);
     }
-      
+
     let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
-    let hypothesisAssumptionsList = temp.assumptions
-    setExampleOption(temp.length ? temp[0] : "");
+    let hypothesisAssumptionsList = temp.assumptions;
+    setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
 
-    let newAssumptions = setAutofillHypothesisData(hypothesisAssumptionsList, microplanData?.hypothesis ? microplanData?.hypothesis : assumptions, setAssumptions);
-    let newHypothesislist = filterHypothesisList(newAssumptions.length !==0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
+    let newAssumptions = setAutofillHypothesisData(
+      hypothesisAssumptionsList,
+      microplanData?.hypothesis ? microplanData?.hypothesis : assumptions,
+      setAssumptions
+    );
+    let newHypothesislist = filterHypothesisList(newAssumptions.length !== 0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
     setHypothesisAssumptionsList(newHypothesislist);
-    
   }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
@@ -88,21 +91,24 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   };
 
   // check if data has changed or not
-  const updateData = useCallback((check) => {
-    if (!assumptions || !setMicroplanData) return;
-    if (check) {
-      setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
-      let checkValid = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
-      checkValid = checkValid && assumptions.length !== 0;
-      if (checkValid) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    } else {
-      let checkValid = microplanData?.hypothesis?.every((item) => Object.values(item).every((data) => data !== ""));
-      checkValid = checkValid && assumptions.length !== 0;
-      if (checkValid) setCheckDataCompletion("valid");
-      else setCheckDataCompletion("invalid");
-    }
-  }, [assumptions, setMicroplanData, microplanData, setCheckDataCompletion]);
+  const updateData = useCallback(
+    (check) => {
+      if (!assumptions || !setMicroplanData) return;
+      if (check) {
+        setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+        let checkValid = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
+        checkValid = checkValid && assumptions.length !== 0;
+        if (checkValid) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      } else {
+        let checkValid = microplanData?.hypothesis?.every((item) => Object.values(item).every((data) => data !== ""));
+        checkValid = checkValid && assumptions.length !== 0;
+        if (checkValid) setCheckDataCompletion("valid");
+        else setCheckDataCompletion("invalid");
+      }
+    },
+    [assumptions, setMicroplanData, microplanData, setCheckDataCompletion]
+  );
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("false");
@@ -174,7 +180,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
         )}
 
         {toast && toast.state === "error" && (
-          <Toast style={{zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
         )}
       </div>
       {modal === "data-change-check" && (
@@ -184,7 +190,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             display: "flex",
             flex: 1,
             justifyContent: "space-between",
-            margin:0,
+            margin: 0,
             padding: 0,
             width: "100%",
             padding: "0 0 1rem 1.3rem",
@@ -197,8 +203,8 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
-            headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-            actionCancelLabel={t("YES")}
+          headerBarEnd={<CloseButton clickHandler={cancelUpdateData} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+          actionCancelLabel={t("YES")}
           actionCancelOnSubmit={updateData.bind(null, true)}
           actionSaveLabel={t("NO")}
           actionSaveOnSubmit={() => updateData(false)}
@@ -283,7 +289,7 @@ const InterractableSection = React.memo(
                 />
               </div>
               <div className="value">
-                <Input key={item.id} item={item} assumptions={assumptions} setAssumptions={setAssumptions} />
+                <Input key={item.id} item={item} t={t} assumptions={assumptions} setAssumptions={setAssumptions} />
               </div>
               <div>
                 <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
@@ -309,21 +315,22 @@ const Example = ({ exampleOption, t }) => {
       <div className="example-body">
         <div className="key">
           <p className="heading">{t("KEY")}</p>
-          <select value={exampleOption} disabled>
-            <option value={exampleOption} disabled>
-              {t(exampleOption)}
-            </option>
-            {/* {hypothesisAssumptionsList.map((item, index) => (
-              <option key={item} id={index} value={item}>
-                {t(item)}
-              </option>
-            ))} */}
-          </select>
+          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t(exampleOption)} />
           <p className="heading">{t("HYPOTHESIS_KEY_HELP_TEXT")}</p>
         </div>
         <div className="value">
           <p className="heading">{t("VALUE")}</p>
-          <input disabled />
+          <TextInput
+            name={"input"}
+            type={"number"}
+            value={null}
+            t={t}
+            config={{}}
+            disabled={true}
+            onChange={null}
+            inputClassName="input"
+            style={{ backgroundColor: "rgb(0,0,0,0)", border: "1px solid red" }}
+          />
           <p className="heading">{t("HYPOTHESIS_VALUE_HELP_TEXT")}</p>
         </div>
       </div>
@@ -352,11 +359,11 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHy
 };
 
 const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false, options, setOptions, t }) => {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState();
   const [filteredOptions, setFilteredOptions] = useState([]);
 
   useEffect(() => {
-    if (item) setSelected(item.key);
+    if (item && item.key) setSelected({ code: item.key });
   }, [item]);
 
   useEffect(() => {
@@ -369,11 +376,11 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   const selectChangeHandler = useCallback(
     (e) => {
-      const existingEntry = assumptions.find((item) => item.key === e.target.value);
+      const existingEntry = assumptions.find((item) => item.key === e?.code);
       if (existingEntry) return;
       const newDataSegment = {
         id: item.id,
-        key: e.target.value,
+        key: e?.code,
         value: item.value,
       };
       setAssumptions((previous) => {
@@ -385,7 +392,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       });
 
       setOptions((previous) => {
-        let newOptions = previous.filter((item) => item !== e.target.value);
+        let newOptions = previous.filter((item) => item !== e?.code);
         if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
         return newOptions;
       });
@@ -394,20 +401,22 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
   );
 
   return (
-    <select value={selected} onChange={selectChangeHandler} disabled={disabled}>
-      <option value="" disabled>
-        {t("SELECT_OPTION")}
-      </option>
-      {filteredOptions.map((item, index) => (
-        <option key={item} id={index} value={item}>
-          {t(item)}
-        </option>
-      ))}
-    </select>
+    <Dropdown
+      variant="select-dropdown"
+      t={t}
+      isMandatory={false}
+      option={[...filteredOptions?.map((item) => ({ code: item })), { code: t("SELECT_OPTION") }]}
+      selected={selected}
+      optionKey="code"
+      select={selectChangeHandler}
+      // style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)", position:"sticky" }}
+      optionCardStyles={{ position: "absolute" }}
+      placeholder={t("SELECT_OPTION")}
+    />
   );
 });
 
-const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
+const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
@@ -448,13 +457,17 @@ const Input = React.memo(({ item, setAssumptions, disabled = false }) => {
   );
 
   return (
-    <input
-      onFocus={Digit.Utils.microplan.inputScrollPrevention}
-      type="number"
-      step="0.01"
+    <TextInput
+      name={"input"}
+      type={"number"}
       value={inputValue}
-      onChange={inputChangeHandler}
-      disabled={disabled}
+      t={t}
+      config={{}}
+      onChange={
+        // valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
+        inputChangeHandler
+      }
+      disable={false}
     />
   );
 });
@@ -463,7 +476,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
   if (assumptions?.length !== 0) return [];
   let newAssumptions = [];
   for (let i in autofillHypothesis) {
-     let uuid = uuidv4();
+    let uuid = uuidv4();
     newAssumptions.push({
       id: uuid,
       key: autofillHypothesis[Number(i)],
@@ -471,7 +484,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
     });
   }
   setAssumptions(newAssumptions);
-  return newAssumptions
+  return newAssumptions;
 };
 
 const filterHypothesisList = (assumptions, hypothesisList) => {

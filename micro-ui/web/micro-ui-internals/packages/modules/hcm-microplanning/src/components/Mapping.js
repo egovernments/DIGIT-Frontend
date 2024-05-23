@@ -438,7 +438,7 @@ const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
   );
 };
 
-// Function to create the gradient string from the colors array
+// Function to create the gradient from the colors array for choropleth index
 const MapChoroplethIndex = ({ t }) => {
   const createGradientString = (colors) => {
     return colors.map((color) => `${color.color} ${color.percent}%`).join(", ");
