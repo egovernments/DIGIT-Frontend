@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
-import { ModalWrapper } from "../../components/Modal";
-import { ButtonType1, CloseButton, ModalHeading } from "../../components/CommonComponents";
+import { ModalWrapper } from "./Modal";
+import { ButtonType1, CloseButton, ModalHeading } from "./CommonComponents";
 import { Modal } from "@egovernments/digit-ui-components";
-import { tourSteps } from "../../configs/tourSteps";
-import { useMyContext } from "../../utils/context";
+import { tourSteps } from "../configs/tourSteps";
+import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
 
 const page = "ruleEngine";
@@ -263,7 +263,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             width: "100%",
             padding: "0 0 1rem 1rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
           style={{
             flex: 1,
             backgroundColor: "white",

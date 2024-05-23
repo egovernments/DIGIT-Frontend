@@ -17,24 +17,18 @@ import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import ZoomControl from "../../components/ZoomControl";
-import CustomScaleControl from "../../components/CustomScaleControl";
+import ZoomControl from "./ZoomControl";
+import CustomScaleControl from "./CustomScaleControl";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import {
-  processHierarchyAndData,
-  findParent,
-  fetchDropdownValues,
-  findChildren,
-  calculateAggregateForTree,
-} from "../../utils/processHierarchyAndData";
-import { EXCEL, GEOJSON, SHAPEFILE, colors } from "../../configs/constants";
-import { tourSteps } from "../../configs/tourSteps";
-import { useMyContext } from "../../utils/context";
-import { ClearAllIcon, CloseButton, ModalHeading } from "../../components/CommonComponents";
-import { PopulationSvg } from "../../icons/Svg";
+import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../utils/processHierarchyAndData";
+import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors } from "../configs/constants";
+import { tourSteps } from "../configs/tourSteps";
+import { useMyContext } from "../utils/context";
+import { ClearAllIcon, CloseButton, ModalHeading } from "./CommonComponents";
+import { PopulationSvg } from "../icons/Svg";
 import chroma from "chroma-js";
-import * as MicroplanIconCollection from "../../icons/Svg";
+import * as MicroplanIconCollection from "../icons/Svg";
 
 const IconCollection = { ...MicroplanIconCollection, ...DigitSvgs };
 
@@ -134,7 +128,7 @@ const Mapping = ({
   const [choroplethProperties, setChoroplethProperties] = useState([]);
   const [showChoroplethOptions, setShowChoroplethOptions] = useState(false);
   const [choroplethProperty, setChoroplethProperty] = useState();
-
+  const [dataCompleteness, setDataCompleteness] = useState();
   const basemapRef = useRef();
   const filterBoundaryRef = useRef();
   const showChoroplethOptionRef = useRef();
@@ -207,6 +201,7 @@ const Mapping = ({
         setFilterPropertyNames,
         state,
         setChoroplethProperties,
+        setDataCompleteness,
         t
       );
     }
@@ -268,7 +263,7 @@ const Mapping = ({
       opacity: 1,
       color: "rgba(176, 176, 176, 1)",
       fillOpacity: 0,
-      fill: "rgb(4,136,219,0)",
+      fill: "rgb(4,136,219,1)",
       child: !childrenList || childrenList.length === 0 ? true : false, // so that this layer also has mounse in and mouse out events
     };
     let geojsonsBase = prepareGeojson(boundaryData, "ALL", addOn);
@@ -281,7 +276,7 @@ const Mapping = ({
 
     addOn = {
       fillColor: "rgba(255, 107, 43, 1)",
-      weight: 3.5,
+      weight: 2.5,
       opacity: 1,
       color: "rgba(255, 255, 255, 1)",
       fillOpacity: 0.22,
@@ -290,7 +285,13 @@ const Mapping = ({
 
     let geojsonLayer;
     if (choroplethProperty) {
-      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true }) || [];
+      if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
+        setToast({
+          state: "error",
+          message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
+        });
+      }
+      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor: "rgb(0,0,0,0)" }) || [];
       if (choroplethGeojson && choroplethGeojson.length !== 0)
         choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
       geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
@@ -324,16 +325,16 @@ const Mapping = ({
     if (isboundarySelectionSelected) setIsboundarySelectionSelected(false);
     if (showBaseMapSelector) setShowBaseMapSelector(false);
     if (showFilterOptions) setShowFilterOptions(false);
-    if(showChoroplethOptions) setShowChoroplethOptions(false);
+    if (showChoroplethOptions) setShowChoroplethOptions(false);
   }, [
     isboundarySelectionSelected,
     showBaseMapSelector,
     showFilterOptions,
+    showChoroplethOptions,
     setIsboundarySelectionSelected,
     setShowBaseMapSelector,
     setShowFilterOptions,
-    showChoroplethOptions,
-    setShowChoroplethOptions
+    setShowChoroplethOptions,
   ]);
   Digit?.Hooks.useClickOutside(filterBoundaryRef, handleOutsideClickAndSubmitSimultaneously, isboundarySelectionSelected, { capture: true });
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
@@ -384,19 +385,11 @@ const Mapping = ({
                 choroplethProperties={choroplethProperties}
                 showChoroplethOptions={showChoroplethOptions}
                 setShowChoroplethOptions={setShowChoroplethOptions}
+                showChoroplethOptionRef={showChoroplethOptionRef}
                 choroplethProperty={choroplethProperty}
                 setChoroplethProperty={setChoroplethProperty}
                 t={t}
               />
-              {/* <div
-                className="icon-rest filter-icon"
-                onClick={() => (choroplethProperty ? setChoroplethProperty() : setChoroplethProperty("targetPopulation"))}
-              >
-                <p>{t("VISUALIZATIONS")}</p>
-                <div className="icon">
-                  {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
-                </div>
-              </div> */}
             </div>
 
             <div className="bottom-left-map-subcomponents">
@@ -409,20 +402,24 @@ const Mapping = ({
 
             <div className="bottom-right-map-subcomponents">
               {filterSelections && filterSelections.length > 0 && (
-                <MapIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
+                <MapFilterIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
               )}
+              {choroplethProperty && <MapChoroplethIndex t={t} />}
             </div>
           </div>
         </Card>
       </Card>
       {toast && toast.state === "error" && (
-        <Toast style={{ bottom: "5.5rem", zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+      )}
+      {toast && toast.state === "warning" && (
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
       )}
     </div>
   );
 };
 
-const MapIndex = ({ filterSelections, MapFilters, t }) => {
+const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
   return (
     <div className="filter-index">
       {filterSelections && filterSelections.length > 0 ? (
@@ -440,6 +437,30 @@ const MapIndex = ({ filterSelections, MapFilters, t }) => {
     </div>
   );
 };
+
+// Function to create the gradient string from the colors array
+const MapChoroplethIndex = ({ t }) => {
+  const createGradientString = (colors) => {
+    return colors.map((color) => `${color.color} ${color.percent}%`).join(", ");
+  };
+
+  const gradientString = createGradientString(MapChoroplethGradientColors);
+  const gradientStyle = {
+    background: `linear-gradient(to right, ${gradientString})`,
+  };
+
+  return (
+    <div className="choropleth-index">
+      <div className="gradient-wrapper">
+        <p>0%</p>
+        <div className="gradient" style={gradientStyle}></div>
+        <p>100%</p>
+      </div>
+      <p className="label">{t("CHOROPLETH_INDEX_COVERAGE")}</p>
+    </div>
+  );
+};
+
 const FilterItemBuilder = ({ item, MapFilters, t }) => {
   let temp = MapFilters?.find((e) => e?.name == item)?.icon?.index;
   let DynamicIcon = IconCollection?.[temp];
@@ -475,9 +496,7 @@ const ChoroplethSelection = memo(
 
     return (
       <div className="choropleth-section" ref={showChoroplethOptionRef}>
-        <div
-          className="icon-rest filter-icon"
-        >
+        <div className="icon-rest filter-icon">
           <p onClick={() => setShowChoroplethOptions((previous) => !previous)}>{t("VISUALIZATIONS")}</p>
           <div className="icon" onClick={() => setShowChoroplethOptions((previous) => !previous)}>
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
@@ -525,7 +544,7 @@ const FilterSection = memo(
 
     return (
       <div className="filter-section" ref={showFilterOptionRef}>
-        <div className="icon-rest filter-icon" >
+        <div className="icon-rest filter-icon">
           <p onClick={() => setShowFilterOptions((previous) => !previous)}>{t("FILTERS")}</p>
           <div className="icon" onClick={() => setShowFilterOptions((previous) => !previous)}>
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
@@ -619,7 +638,7 @@ const BoundarySelection = memo(
           onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
         />
         <Card className={`boundary-selection ${!isboundarySelectionSelected ? "display-none" : ""}`}>
-          <div className="header-section">
+          <div className="header-section" title={t("SELECT_A_BOUNDARY_TOOLTIP")}>
             <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
             <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
           </div>
@@ -656,7 +675,7 @@ const BoundarySelection = memo(
                 variation="secondary"
                 className="button-primary"
                 textStyles={{ width: "fit-content" }}
-                style={{ marginTop: "2rem", width: "14rem", display: "flex", alignItem: "start" }}
+                style={{ marginTop: "0.7rem", width: "14rem", display: "flex", alignItem: "start" }}
                 icon={"AutoRenew"}
                 label={t("CLEAR_ALL_FILTERS")}
                 onClick={handleClearAll}
@@ -674,7 +693,7 @@ const BoundarySelection = memo(
                 width: "100%",
                 padding: "0 0 1rem 1.3rem",
               }}
-              popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+              popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
               style={{
                 flex: 1,
                 backgroundColor: "white",
@@ -780,6 +799,7 @@ const extractGeoData = (
   setFilterPropertyNames,
   state,
   setChoroplethProperties,
+  setDataCompleteness,
   t
 ) => {
   if (!hierarchy) return;
@@ -793,9 +813,10 @@ const extractGeoData = (
   let hypothesisAssumptionsList = microplanData?.hypothesis;
   let formulaConfiguration = microplanData?.ruleEngine;
   // Check if microplanData and its upload property exist
+  let dataAvailabilityCheck; // Initialize data availability check
   if (microplanData && microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
-    let dataAvailabilityCheck = "initialStage"; // Initialize data availability check
+    dataAvailabilityCheck = "initialStage"; // Initialize data availability check
     // Loop through each file in the microplan upload
     for (let fileData in files) {
       // Check if the file is not part of boundary or layer data origins
@@ -832,7 +853,7 @@ const extractGeoData = (
           if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData) && value?.isFilterPropertyOfMapSection) {
             filterProperty.push(key);
           }
-          if (value?.isVitualizationPropertyOfMapSection) {
+          if (value?.isVisualizationPropertyOfMapSection) {
             virtualizationPropertiesCollector.add(key);
           }
         }
@@ -927,11 +948,6 @@ const extractGeoData = (
                 }
               }
 
-              // check if virtualisation field exist in uploaded data
-              [...virtualizationPropertiesCollector].forEach((item) => {
-                if (!convertedData?.[0].includes(item)) virtualizationPropertiesCollector.delete(item);
-              });
-
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
@@ -997,10 +1013,6 @@ const extractGeoData = (
                   return newRow;
                 });
               }
-              // check if virtualisation field exist in uploaded data
-              [...virtualizationPropertiesCollector].forEach((item) => {
-                if (!dataWithResources?.[0].includes(item)) virtualizationPropertiesCollector.delete(item);
-              });
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
@@ -1033,14 +1045,14 @@ const extractGeoData = (
       case undefined:
         // Set warning toast message for no data to show
         setToast({
-          state: "error",
+          state: "warning",
           message: t("MAPPING_NO_DATA_TO_SHOW"),
         });
         break;
       case "partial":
         // Set warning toast message for partial data to show
         setToast({
-          state: "error",
+          state: "warning",
           message: t("MAPPING_PARTIAL_DATA_TO_SHOW"),
         });
         break;
@@ -1051,6 +1063,7 @@ const extractGeoData = (
       message: t("MAPPING_NO_DATA_TO_SHOW"),
     });
   }
+  setDataCompleteness(dataAvailabilityCheck);
   setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
@@ -1125,7 +1138,7 @@ const addChoroplethProperties = (geojson, choroplethProperty, filteredSelection)
     let color;
 
     if (choroplethProperty) {
-      color = interpolateColor(newFeature.properties[choroplethProperty], minValue, maxValue, colors);
+      color = interpolateColor(newFeature.properties[choroplethProperty], minValue, maxValue, MapChoroplethGradientColors);
     }
 
     newFeature.properties.addOn.fillColor = color;

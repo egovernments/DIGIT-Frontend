@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { timeLineOptions } from "../../configs/timeLineOptions.json";
-import Upload from "./Upload";
-import Hypothesis from "./Hypothesis";
-import RuleEngine from "./RuleEngine";
-import Mapping from "./Mapping";
+import Upload from "../../components/Upload";
+import Hypothesis from "../../components/Hypothesis";
+import RuleEngine from "../../components/RuleEngine";
+import Mapping from "../../components/Mapping";
 import Navigator from "../../components/Nagivator";
 import { Toast } from "@egovernments/digit-ui-components";
-import MicroplanPreview from "./MicroplanPreview";
+import MicroplanPreview from "../../components/MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
 import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheets } from "../../utils/exceltojson";
@@ -287,14 +287,14 @@ const CreateMicroplan = () => {
 
         {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
           <Toast
-            style={{ bottom: "5.5rem", zIndex: "999991" }}
+            style={{ zIndex: "999991" }}
             label={toastCreateMicroplan.message}
             onClose={() => setToastCreateMicroplan(undefined)}
           />
         )}
         {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
           <Toast
-            style={{ bottom: "5.5rem", zIndex: "999991" }}
+            style={{ zIndex: "999991" }}
             label={toastCreateMicroplan.message}
             onClose={() => setToastCreateMicroplan(undefined)}
             error
