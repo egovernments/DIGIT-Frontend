@@ -291,7 +291,6 @@ const Mapping = ({
 
     let geojsonLayer;
     if (choroplethProperty) {
-      debugger
       if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
         setToast({
           state: "error",
@@ -825,7 +824,6 @@ const extractGeoData = (
         const latLngColumns = [];
         let filterProperty = [];
 
-        debugger
         for (const [key, value] of properties) {
           if (value?.isLocationDataColumns) {
             latLngColumns.push(t(key));

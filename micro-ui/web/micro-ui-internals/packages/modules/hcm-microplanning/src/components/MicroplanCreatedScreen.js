@@ -59,7 +59,7 @@ const MicroplanCreatedScreen = ({ microplanData, ...props }) => {
             message={t("MICROPLAN_GENERATED_SUCCESSFULLY")}
             whichSvg="tick"
             applicationNumber={ microplanData?.microplanDetails?.name?microplanData?.microplanDetails?.name:""}
-            info={t("MICROPLAN_GENERATED_SUCCESSFULLY_ID_LABEL")}
+            info={t("MICROPLAN_GENERATED_SUCCESSFULLY_NAME_LABEL")}
             successful={true}
             headerStyles={{ fontWeight: "700", fontFamily: " Roboto Condensed", fontSize: "2.5rem" }}
           />

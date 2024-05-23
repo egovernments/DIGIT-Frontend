@@ -50,7 +50,6 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   // Dropdown component for selecting user columns
   const DropDownUserColumnSelect = ({ id }) => {
-    console.log(userColumns)
     const [selectedOption, setSelectedOption] = useState("");
     useEffect(() => {
       const obj = resourceMapping.find((item) => item["mappedTo"] == id);
@@ -59,7 +58,6 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     }, [id, resourceMapping]);
 
     const handleSelectChange = (event) => {
-      console.log(event);
       const newValue = event.code;
       setSelectedOption(event);
       setResourceMapping((previous) => {

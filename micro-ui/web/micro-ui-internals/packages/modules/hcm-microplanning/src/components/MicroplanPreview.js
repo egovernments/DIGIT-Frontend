@@ -894,7 +894,6 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
   };
   let filteredSchemaColumns = getfilteredSchemaColumnsList();
   const fetchedData = fetchMicroplanData(microplanData);
-  debugger
   // Perform inner joins using reduce
   const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
     if (index === 0) {
@@ -925,11 +924,9 @@ const fetchMicroplanData = (microplanData) => {
         switch (files[fileData]?.fileType) {
           case EXCEL: {
             // extract dada
-            let mergedData =[];
-            for (let data of Object.values(files[fileData]?.data)) {
-              mergedData = [...mergedData,...data]
-            }
-            const uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[6], entry])).values());
+            const mergedData = Object.values(files[fileData]?.data).flatMap(data => data);
+            let commonColumnIndex = mergedData?.[0].indexOf(commonColumn)
+            const uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[commonColumnIndex], entry])).values());
             combinesDataList.push(uniqueEntries)
             break;
           }
@@ -1047,7 +1044,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
     <div className="aggregates">
       {microplanPreviewAggregates.map((item, index) => (
         <div key={index} >
-          <p className="aggregate-value">{calulateAggregate(item, dataToShow)}</p>
+          <p className="aggregate-value">{calculateAggregateValue (item, dataToShow)}</p>
           <p className="aggregate-label">{t(item)}</p>
         </div>
       ))}
@@ -1055,7 +1052,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
   );
 });
 
-const calulateAggregate = (aggregateName, dataToShow) => {
+const calculateAggregateValue = (aggregateName, dataToShow) => {
   if (!aggregateName || !dataToShow || dataToShow.length === 0) return;
   let aggregateNameList = aggregateName;
   if (!Array.isArray(aggregateName)) aggregateNameList = [aggregateName];
