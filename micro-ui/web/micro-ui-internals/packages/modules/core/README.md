@@ -78,6 +78,7 @@ and add its related functions
 ## Changelog
 
 ```bash
+1.8.1-beta.21 Updated Toast Component Props
 1.8.1-beta.18 Updated utilities module kibana logic to support sidebar actions
 1.8.1-beta.17 Updated ui-components Toast,RemoveableTag and ErrorMessage components
 1.8.1-beta.16 Updated library with spacers and css and modified dropdown in ui-components
