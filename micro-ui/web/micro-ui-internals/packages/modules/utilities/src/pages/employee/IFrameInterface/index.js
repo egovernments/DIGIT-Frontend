@@ -13,6 +13,7 @@ const IFrameInterface = (props) => {
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
+  const [sendAuth,setSendAuth] = useState(true)
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const { data, isLoading } = Digit.Hooks.dss.useMDMS(stateCode, "common-masters", ["uiCommonConstants"], {
@@ -24,7 +25,8 @@ const IFrameInterface = (props) => {
   });
 
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-  console.log(iframeWindow);
+  console.log("myIframe",iframeWindow);
+  console.log("sendAuth",sendAuth);
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
       try {
@@ -42,6 +44,9 @@ const IFrameInterface = (props) => {
               if (oidcToken) {
                 const accessToken = oidcToken;
                 this.setRequestHeader('Authorization', "Bearer " + accessToken);
+                if(sendAuth==="invalid"){
+                  this.setRequestHeader('Authorization', "Bearer " + "authToken");
+                }
               }
               this.setRequestHeader('type-req', 'xhr');
             }
@@ -67,6 +72,9 @@ const IFrameInterface = (props) => {
           if (oidcToken) {
             const accessToken = oidcToken;
             options.headers['Authorization'] = `Bearer ${accessToken}`;
+            if(sendAuth==="invalid"){
+              options.headers['Authorization'] = `Bearer authToken`;
+            }
           }
           options.headers['type-req'] = 'fetch';
           return originalFetch(url, options)
@@ -97,6 +105,9 @@ const IFrameInterface = (props) => {
           if (oidcToken) {
             const accessToken = oidcToken;
             options.headers['Authorization'] = `Bearer ${accessToken}`;
+            if(sendAuth==="invalid"){
+              options.headers['Authorization'] = `Bearer authToken`;
+            }
           }
           options.headers['type-req'] = 'document';
           return originalDocumentApi(url, options)
@@ -114,14 +125,27 @@ const IFrameInterface = (props) => {
     };
 
     if (iframeRef.current) {
-      injectCustomHttpInterceptor();
-      injectCustomHttpInterceptorFetch();
-      injectCustomHttpInterceptorDocumentApi();
+      if(sendAuth){
+        injectCustomHttpInterceptor();
+        injectCustomHttpInterceptorFetch();
+        injectCustomHttpInterceptorDocumentApi();
+      }
     }
-  }, [localStorageKey, iframeWindow]);
+  }, [localStorageKey, iframeWindow,sendAuth]);
 
   useEffect(() => {
     const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
+
+    if(pageObject?.Authorization) {
+      if(pageObject?.SendInvalidAuthorization){
+        setSendAuth("invalid")
+      }else{
+        setSendAuth(true)
+      }  
+    }else {
+      setSendAuth(false)
+    }
+
     const isOrign = pageObject?.["isOrigin"] || false;
     const domain = isOrign ? (process.env.NODE_ENV === "development" ? "https://unified-dev.digit.org" : document.location.origin) : pageObject?.["domain"];
     const contextPath = pageObject?.["routePath"] || "";
