@@ -404,7 +404,7 @@ const Mapping = ({
               {filterSelections && filterSelections.length > 0 && (
                 <MapFilterIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
               )}
-              {choroplethProperty && <MapChoroplethIndex t={t}/>}
+              {choroplethProperty && <MapChoroplethIndex t={t} />}
             </div>
           </div>
         </Card>
@@ -439,7 +439,7 @@ const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
 };
 
 // Function to create the gradient string from the colors array
-const MapChoroplethIndex = ({t}) => {
+const MapChoroplethIndex = ({ t }) => {
   const createGradientString = (colors) => {
     return colors.map((color) => `${color.color} ${color.percent}%`).join(", ");
   };
@@ -456,7 +456,7 @@ const MapChoroplethIndex = ({t}) => {
         <div className="gradient" style={gradientStyle}></div>
         <p>100%</p>
       </div>
-        <p className="label">{t("CHOROPLETH_INDEX_COVERAGE")}</p>
+      <p className="label">{t("CHOROPLETH_INDEX_COVERAGE")}</p>
     </div>
   );
 };
