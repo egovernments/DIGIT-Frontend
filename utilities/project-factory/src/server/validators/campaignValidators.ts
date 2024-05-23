@@ -5,7 +5,7 @@ import { httpRequest } from "../utils/request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
+import { calculateKeyIndex, getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
 import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
@@ -423,7 +423,7 @@ function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any, 
         let headersToValidate: any = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
         })[0];
-        headersToValidate= headersToValidate.map((header: any) => header.trim());
+        headersToValidate = headersToValidate.map((header: any) => header.trim());
         if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
             throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in target sheet ${sheetName}`)
         }
@@ -964,13 +964,14 @@ async function validateDownloadRequest(request: any) {
 }
 
 function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+    validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
     for (const key in dataFromSheet) {
-        if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
-            const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
-            if (dataArray.length === 0) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
-            }
-            if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+            if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
+                const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
+                if (dataArray.length === 0) {
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
+                }
                 const root = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
                 for (const boundaryRow of dataArray) {
                     for (const columns in boundaryRow) {
@@ -983,6 +984,24 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                     }
                 }
             }
+        }
+    }
+}
+
+
+function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
+    let tabsIndex = 2;
+    const tabsOfDistrict = getDifferentDistrictTabs(modifyTargetData(dataFromSheet), getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+    const tabsFromTargetSheet = Object.keys(dataFromSheet);
+    for (let tab of tabsOfDistrict) {
+        if (tabsIndex >= tabsFromTargetSheet.length) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`);
+        }
+        if (tabsFromTargetSheet[tabsIndex] === tab) {
+            tabsIndex++;
+        }
+        else {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`)
         }
     }
 }
