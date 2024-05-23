@@ -1,19 +1,20 @@
 import { Header, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 
 const IFrameInterface = (props) => {
   const { stateCode } = props;
   const { moduleName, pageName } = useParams();
+  const location = useLocation();
   const iframeRef = useRef(null);
   const localStorageKey = 'Employee.token';
 
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
-  const [sendAuth,setSendAuth] = useState(true)
+  const [sendAuth, setSendAuth] = useState(true);
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const { data, isLoading } = Digit.Hooks.dss.useMDMS(stateCode, "common-masters", ["uiCommonConstants"], {
@@ -25,8 +26,9 @@ const IFrameInterface = (props) => {
   });
 
   const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-  console.log("myIframe",iframeWindow);
-  console.log("sendAuth",sendAuth);
+  console.log("myIframe", iframeWindow);
+  console.log("sendAuth", sendAuth);
+
   useEffect(() => {
     const injectCustomHttpInterceptor = () => {
       try {
@@ -43,9 +45,11 @@ const IFrameInterface = (props) => {
               const oidcToken = window.localStorage.getItem(localStorageKey);
               if (oidcToken) {
                 const accessToken = oidcToken;
-                this.setRequestHeader('Authorization', "Bearer " + accessToken);
-                if(sendAuth==="invalid"){
+                
+                if (sendAuth === "invalid") {
                   this.setRequestHeader('Authorization', "Bearer " + "authToken");
+                } else {
+                  this.setRequestHeader('Authorization', "Bearer " + accessToken);
                 }
               }
               this.setRequestHeader('type-req', 'xhr');
@@ -71,9 +75,11 @@ const IFrameInterface = (props) => {
           const oidcToken = window.localStorage.getItem(localStorageKey);
           if (oidcToken) {
             const accessToken = oidcToken;
-            options.headers['Authorization'] = `Bearer ${accessToken}`;
-            if(sendAuth==="invalid"){
+            
+            if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
+            } else {
+              options.headers['Authorization'] = `Bearer ${accessToken}`;
             }
           }
           options.headers['type-req'] = 'fetch';
@@ -104,9 +110,11 @@ const IFrameInterface = (props) => {
           const oidcToken = window.localStorage.getItem(localStorageKey);
           if (oidcToken) {
             const accessToken = oidcToken;
-            options.headers['Authorization'] = `Bearer ${accessToken}`;
-            if(sendAuth==="invalid"){
+            
+            if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
+            } else {
+              options.headers['Authorization'] = `Bearer ${accessToken}`;
             }
           }
           options.headers['type-req'] = 'document';
@@ -125,25 +133,25 @@ const IFrameInterface = (props) => {
     };
 
     if (iframeRef.current) {
-      if(sendAuth){
+      if (sendAuth) {
         injectCustomHttpInterceptor();
         injectCustomHttpInterceptorFetch();
         injectCustomHttpInterceptorDocumentApi();
       }
     }
-  }, [localStorageKey, iframeWindow,sendAuth]);
+  }, [localStorageKey, iframeWindow, sendAuth, location]);
 
   useEffect(() => {
     const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
 
-    if(pageObject?.Authorization) {
-      if(pageObject?.SendInvalidAuthorization){
-        setSendAuth("invalid")
-      }else{
-        setSendAuth(true)
+    if (pageObject?.Authorization) {
+      if (pageObject?.SendInvalidAuthorization) {
+        setSendAuth("invalid");
+      } else {
+        setSendAuth(true);
       }  
-    }else {
-      setSendAuth(false)
+    } else {
+      setSendAuth(false);
     }
 
     const isOrign = pageObject?.["isOrigin"] || false;
@@ -162,7 +170,7 @@ const IFrameInterface = (props) => {
     }
     setUrl(url);
     setTitle(title);
-  }, [data, moduleName, pageName]);
+  }, [data, moduleName, pageName, location]);
 
   if (isLoading) {
     return <Loader />;
@@ -173,7 +181,7 @@ const IFrameInterface = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <React.Fragment key={location.pathname}>
       <Header>{t(title)}</Header>
       <div className="app-iframe-wrapper">
         <iframe 
