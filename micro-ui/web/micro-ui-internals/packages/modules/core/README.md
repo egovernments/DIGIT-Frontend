@@ -78,7 +78,7 @@ and add its related functions
 ## Changelog
 
 ```bash
-1.8.1-beta.18 Updated utilities module kibana logic
+1.8.1-beta.18 Updated utilities module kibana logic to support sidebar actions
 1.8.1-beta.17 Updated ui-components Toast,RemoveableTag and ErrorMessage components
 1.8.1-beta.16 Updated library with spacers and css and modified dropdown in ui-components
 1.8.1-beta.15 updated ui-components dropdown option labels and version of ui-components and css
