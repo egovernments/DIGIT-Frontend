@@ -5,7 +5,7 @@ import { httpRequest } from "../utils/request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
+import { calculateKeyIndex, getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
 import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
@@ -338,7 +338,7 @@ async function validateTargetSheetData(data: any, request: any, boundaryValidati
             await validateTargetsAtLowestLevelPresentOrNot(data, request, errors, localizationMap);
         }
         request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
-        if (request.body.sheetErrorDetails.length != 0) {
+        if (request?.body?.sheetErrorDetails && Array.isArray(request?.body?.sheetErrorDetails) && request?.body?.sheetErrorDetails?.length > 0) {
             request.body.ResourceDetails.status = resourceDataStatuses.invalid;
         }
         await generateProcessedFileAndPersist(request, localizationMap);
@@ -403,26 +403,28 @@ async function validateCreateRequest(request: any) {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             // const mainSheetName = targetWorkbook.SheetNames[1];
             // const sheetData = await getSheetData(fileUrl, mainSheetName, true, undefined, localizationMap);
-            // const hierachy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase());
+            const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+            const index = localizedHierarchy.indexOf(getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+            let expectedHeadersForTargetSheet = index !== -1 ? localizedHierarchy.slice(index) : throwError("COMMON", 400, "VALIDATION_ERROR", `${getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap)} level not present in the hierarchy`);
+            expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheet, getLocalizedName(config.boundaryCode, localizationMap), getLocalizedName("HCM_ADMIN_CONSOLE_TARGET", localizationMap)]
             // validateForRootElementExists(sheetData, hierachy, mainSheetName);
-            validateTabsWithTargetInTargetSheet(request, targetWorkbook);
+            validateTabsWithTargetInTargetSheet(request, targetWorkbook, expectedHeadersForTargetSheet);
         }
     }
 }
 
-function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any) {
-    const sheet = targetWorkbook.Sheets[targetWorkbook.SheetNames[2]];
-    const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-    })[0];
+function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any, expectedHeadersForTargetSheet: any) {
     for (let i = 2; i < targetWorkbook.SheetNames.length; i++) {
         const sheetName = targetWorkbook?.SheetNames[i];
         const sheet = targetWorkbook?.Sheets[sheetName];
         // Convert the sheet to JSON to extract headers
-        const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+        let headersToValidate: any = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
         })[0];
-        if (!_.isEqual(expectedHeaders, headersToValidate)) {
+        headersToValidate = headersToValidate.map((header: any) => header.trim());
+        if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
             throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in target sheet ${sheetName}`)
         }
     }
@@ -561,38 +563,45 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
     }
 }
 
+async function validateBoundariesForTabs(CampaignDetails: any, resource: any, request: any, localizedTab: any, localizationMap?: any) {
+    const { boundaries, tenantId } = CampaignDetails;
+    const boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code.trim()));
+
+    // Fetch file response
+    const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId, fileStoreIds: resource.fileStoreId }, "get");
+    const datas = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedTab, true, undefined, localizationMap);
+
+    const boundaryColumn = getLocalizedName(createAndSearch?.[resource.type]?.boundaryValidation?.column, localizationMap);
+
+    // Initialize resource boundary codes as a set for uniqueness
+    const resourceBoundaryCodesArray: any[] = [];
+    datas.forEach((data: any) => {
+        const codes = data?.[boundaryColumn]?.split(',').map((code: string) => code.trim()) || [];
+        resourceBoundaryCodesArray.push({ boundaryCodes: codes, rowNumber: data?.['!row#number!'] })
+    });
+
+    // Convert sets to arrays for comparison
+    const boundaryCodesArray = Array.from(boundaryCodes);
+    var errors = []
+    // Check for missing boundary codes
+    for (const rowData of resourceBoundaryCodesArray) {
+        var missingBoundaries = rowData.boundaryCodes.filter((code: any) => !boundaryCodesArray.includes(code));
+        if (missingBoundaries.length > 0) {
+            const errorString = `The following boundary codes are not present in selected boundaries : ${missingBoundaries.join(', ')}`
+            errors.push({ status: "BOUNDARYMISSING", rowNumber: rowData.rowNumber, errorDetails: errorString })
+        }
+    }
+    if (errors?.length > 0) {
+        request.body.ResourceDetails.status = resourceDataStatuses.invalid
+    }
+    request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
+}
+
 async function validateBoundaryOfResouces(CampaignDetails: any, request: any, localizationMap?: any) {
     const resource = request?.body?.ResourceDetails
     if (resource?.type == "user" || resource?.type == "facility") {
-        const { boundaries, tenantId } = CampaignDetails;
         const localizedTab = getLocalizedName(createAndSearch?.[resource.type]?.parseArrayConfig?.sheetName, localizationMap);
-        const boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code.trim()));
-
-        // Fetch file response
-        const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId, fileStoreIds: resource.fileStoreId }, "get");
-        const datas = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedTab, true, undefined, localizationMap);
-
-        const boundaryColumn = getLocalizedName(createAndSearch?.[resource.type]?.boundaryValidation?.column, localizationMap);
-
-        // Initialize resource boundary codes as a set for uniqueness
-        const resourceBoundaryCodesArray: any[] = [];
-        datas.forEach((data: any) => {
-            const codes = data?.[boundaryColumn]?.split(',').map((code: string) => code.trim()) || [];
-            resourceBoundaryCodesArray.push({ boundaryCodes: codes, rowNumber: data?.['!row#number!'] })
-        });
-
-        // Convert sets to arrays for comparison
-        const boundaryCodesArray = Array.from(boundaryCodes);
-        var errors = []
-        // Check for missing boundary codes
-        for (const rowData of resourceBoundaryCodesArray) {
-            var missingBoundaries = rowData.boundaryCodes.filter((code: any) => !boundaryCodesArray.includes(code));
-            if (missingBoundaries.length > 0) {
-                const errorString = `The following boundary codes are not present in selected boundaries : ${missingBoundaries.join(', ')}`
-                errors.push({ status: "BOUNDARYMISSING", rowNumber: rowData.rowNumber, errorDetails: errorString })
-            }
-        }
-        request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
+        await validateBoundariesForTabs(CampaignDetails, resource, request, localizedTab, localizationMap)
     }
 }
 
@@ -959,13 +968,14 @@ async function validateDownloadRequest(request: any) {
 }
 
 function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+    validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
     for (const key in dataFromSheet) {
-        if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
-            const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
-            if (dataArray.length === 0) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
-            }
-            if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+            if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
+                const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
+                if (dataArray.length === 0) {
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
+                }
                 const root = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
                 for (const boundaryRow of dataArray) {
                     for (const columns in boundaryRow) {
@@ -978,6 +988,24 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                     }
                 }
             }
+        }
+    }
+}
+
+
+function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
+    let tabsIndex = 2;
+    const tabsOfDistrict = getDifferentDistrictTabs(modifyTargetData(dataFromSheet), getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+    const tabsFromTargetSheet = Object.keys(dataFromSheet);
+    for (let tab of tabsOfDistrict) {
+        if (tabsIndex >= tabsFromTargetSheet.length) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`);
+        }
+        if (tabsFromTargetSheet[tabsIndex] === tab) {
+            tabsIndex++;
+        }
+        else {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`)
         }
     }
 }
