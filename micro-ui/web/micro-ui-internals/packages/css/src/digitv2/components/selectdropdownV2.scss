@@ -168,3 +168,13 @@
 
 @screen dt {
 }
+
+.digit-dropdown-employee-select-wrap{
+  
+  &.language-dropdown{
+
+    .digit-dropdown-options-card{
+      min-width: fit-content;
+    }
+  }
+}

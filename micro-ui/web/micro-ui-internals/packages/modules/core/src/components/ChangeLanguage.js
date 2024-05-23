@@ -18,6 +18,7 @@ const ChangeLanguage = (prop) => {
     return (
       <div>
         <Dropdown
+          className={"language-dropdown"}
           option={languages}
           selected={languages.find((language) => language.value === selectedLanguage)}
           optionKey={"label"}
@@ -34,7 +35,11 @@ const ChangeLanguage = (prop) => {
         <div className="language-selector">
           {languages.map((language, index) => (
             <div className="language-button-container" key={index}>
-              <Button label={language.label} onClick={() => handleChangeLanguage(language)} variation={language.value === selected ? "primary" : ""} />
+              <Button
+                label={language.label}
+                onClick={() => handleChangeLanguage(language)}
+                variation={language.value === selected ? "primary" : ""}
+              />
             </div>
           ))}
         </div>
