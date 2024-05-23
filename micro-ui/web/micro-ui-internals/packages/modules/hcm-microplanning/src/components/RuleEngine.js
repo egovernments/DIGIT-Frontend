@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "./Modal";
 import { ButtonType1, CloseButton, ModalHeading } from "./CommonComponents";
-import { Modal } from "@egovernments/digit-ui-components";
+import { Dropdown, Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -302,7 +302,7 @@ const RuleEngineInformation = ({ t }) => {
 
 // Function to add a new assumption
 const addRulesHandler = (setRules) => {
-    let uuid = uuidv4();
+  let uuid = uuidv4();
   setRules((previous) => [
     ...previous,
     {
@@ -465,16 +465,7 @@ const Example = ({ exampleOption, t }) => {
       <div className="example-body">
         <div className="value-input-key">
           <p className="heading">{t("VALUE")}</p>
-          <select value={exampleOption} disabled>
-            {/* <option value={exampleOption} disabled>
-              {t(exampleOption)}
-            </option> */}
-            {/* {hypothesisAssumptionsList.map((item, index) => (
-              <option key={item} id={index} value={item}>
-                {t(item)}
-              </option>
-            ))} */}
-          </select>
+          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
           <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
         </div>
 
@@ -487,44 +478,17 @@ const Example = ({ exampleOption, t }) => {
 
         <div className="value-input-key">
           <p className="heading">{t("RULE_ENGINE_INPUT")}</p>
-          <select value={exampleOption} disabled>
-            {/* <option value={exampleOption} disabled>
-              {t(exampleOption)}
-            </option> */}
-            {/* {hypothesisAssumptionsList.map((item, index) => (
-              <option key={item} id={index} value={item}>
-                {t(item)}
-              </option>
-            ))} */}
-          </select>
+          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
           <p className="heading">{t("RULE_ENGINE_INPUT_HELP_TEXT")}</p>
         </div>
         <div className="operator">
           <p className="heading">{t("RULE_ENGINE_OPERATOR")}</p>
-          <select value={exampleOption} disabled>
-            {/* <option value={exampleOption} disabled>
-              {t(exampleOption)}
-            </option> */}
-            {/* {hypothesisAssumptionsList.map((item, index) => (
-              <option key={item} id={index} value={item}>
-                {t(item)}
-              </option>
-            ))} */}
-          </select>
+          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
           <p className="heading">{t("RULE_ENGINE_OPERATOR_HELP_TEXT")}</p>
         </div>
         <div className="value-input-key">
           <p className="heading">{t("KEY")}</p>
-          <select value={exampleOption} disabled>
-            {/* <option value={exampleOption} disabled>
-              {t(exampleOption)}
-            </option> */}
-            {/* {hypothesisAssumptionsList.map((item, index) => (
-              <option key={item} id={index} value={item}>
-                {t(item)}
-              </option>
-            ))} */}
-          </select>
+          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
           <p className="heading">{t("RULE_ENGINE_KEY_HELP_TEXT")}</p>
         </div>
       </div>
@@ -556,8 +520,8 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   useEffect(() => {
     if (item) {
       if (outputs && outputs.some((e) => e == item?.input)) {
-        if (rules.some((e) => e?.output == item?.input)) setSelected(item[toChange]);
-      } else setSelected(item[toChange]);
+        if (rules.some((e) => e?.output == item?.input)) setSelected({code:item[toChange]});
+      } else setSelected({code:item[toChange]});
     }
   }, [item]);
 
@@ -577,11 +541,11 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
   const selectChangeHandler = useCallback(
     (e) => {
-      if (e.target.value === "SELECT_OPTION") return;
-      const existingEntry = rules.find((item) => item[toChange] === e.target.value);
+      if (e.code === "SELECT_OPTION") return;
+      const existingEntry = rules.find((item) => item[toChange] === e.code);
       if (existingEntry && unique) return;
       const newDataSegment = { ...item };
-      newDataSegment[toChange] = e.target.value;
+      newDataSegment[toChange] = e.code;
       setRules((previous) => {
         let filteredAssumptionsList = previous.map((data) => {
           if (data.id === item.id) return newDataSegment;
@@ -593,7 +557,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
         setInputs((previous) => {
           let temp = _.cloneDeep(previous);
           if (toChange == "output") {
-            temp = temp.filter((item) => item != selected);
+            temp = temp.filter((item) => item != selected?.code);
           }
           if (Object.values(newDataSegment).every((item) => item != "")) temp = [...temp, newDataSegment.output];
           return temp;
@@ -601,8 +565,8 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
       }
       if (unique)
         setOptions((previous) => {
-          let newOptions = previous.filter((item) => item !== e.target.value);
-          if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
+          let newOptions = previous.filter((item) => item !== e.code);
+          if (selected?.code && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
           return newOptions;
         });
     },
@@ -610,16 +574,26 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   );
 
   return (
-    <select value={selected} onChange={selectChangeHandler} disabled={disabled}>
-      <option value="" disabled>
-        {t("SELECT_OPTION")}
-      </option>
-      {filteredOptions.map((item, index) => (
-        <option key={item} id={index} value={item}>
-          {t(item)}
-        </option>
-      ))}
-    </select>
+    // <select value={selected} onChange={selectChangeHandler} disabled={disabled}>
+    //   <option value="" disabled>
+    //     {t("SELECT_OPTION")}
+    //   </option>
+    //   {filteredOptions.map((item, index) => (
+    //     <option key={item} id={index} value={item}>
+    //       {t(item)}
+    //     </option>
+    //   ))}
+    // </select>
+    <Dropdown
+      variant="select-dropdown"
+      t={t}
+      isMandatory={false}
+      option={filteredOptions.map((item) => ({ code: item }))}
+      selected={selected}
+      select={selectChangeHandler}
+      optionKey="code"
+      placeholder={t("SELECT_OPTION")}
+    />
   );
 });
 

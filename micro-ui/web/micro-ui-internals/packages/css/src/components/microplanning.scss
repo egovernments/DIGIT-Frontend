@@ -886,6 +886,7 @@ $border-color: rgba(214, 213, 212, 1);
         display: block;
         overflow-y: scroll;
         height: 21rem;
+        position: relative;
 
         @include custom-scrollbar;
 
@@ -969,9 +970,9 @@ $border-color: rgba(214, 213, 212, 1);
         .interactable-section {
             padding-top: 1.5rem;
             width: 41.5rem;
-            overflow: hidden;
             display: flex;
             flex-wrap: wrap;
+            position: relative;
 
             @media (max-width: 48rem) {
                 width: 95%;
@@ -994,11 +995,15 @@ $border-color: rgba(214, 213, 212, 1);
 
         .key {
             width: 22.75rem;
-
+            position: relative;
             @media (max-width: 48rem) {
                 width: 60%;
             }
+            .select-dropdown{
+                @include select-dropdown;
+            }
         }
+               
 
         .value {
             margin-left: 10%;
@@ -1014,6 +1019,7 @@ $border-color: rgba(214, 213, 212, 1);
             width: 100%;
             display: flex;
             align-items: center;
+            position: relative;
         }
 
         .select-and-input-wrapper-first {
@@ -1021,6 +1027,7 @@ $border-color: rgba(214, 213, 212, 1);
             width: 100%;
             display: flex;
             align-items: center;
+            position: relative;
         }
 
 
@@ -1038,51 +1045,12 @@ $border-color: rgba(214, 213, 212, 1);
             padding: 0;
             margin: 0;
         }
-
-        select {
-            width: 100%;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 0.7em top 50%, 0 0;
-            background-size: 1.5em auto;
-            background-color: rgb(255, 255, 255, 0);
-            border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-            padding: 0.5rem 2rem 0.5rem 1rem;
-            font-weight: 400;
-            min-height: 2.5rem;
-            font-size: 1rem;
-            text-wrap: wrap;
-            line-height: 1.1rem;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: rgba(80, 90, 95, 1);
-        }
-
-        select option {
-            font-weight: 400;
-            padding: 0.5rem;
-            font-size: 1rem;
-            max-height: 50%;
-            border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-            border-radius: 0;
-        }
-
-        option:focus {
-            outline: none;
-            border-color: black;
-        }
-
-        input {
+        .input {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
             width: 100%;
-            border: 0.063rem solid rgba(80, 90, 95, 1);
+            border: 0.063rem solid rgb(255, 255, 255);
             background-color: rgb(255, 255, 255, 0);
             padding: 0.5rem;
             font-weight: 400;
@@ -1211,6 +1179,10 @@ $border-color: rgba(214, 213, 212, 1);
                         width: 60%;
                     }
                 }
+                
+                .select-dropdown{
+                    @include select-dropdown;
+                }
 
                 .operator {
                     margin-left: 10%;
@@ -1251,7 +1223,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             .value-input-key {
                 width: 22.75rem;
-                overflow: hidden;
+                position: relative;
 
                 @media (max-width: 48rem) {
                     width: 60%;
@@ -1260,7 +1232,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             .operator {
                 margin-left: 10%;
-                overflow: hidden;
+                position: relative;
                 width: 11rem;
                 margin: 0 1rem;
 
@@ -1268,7 +1240,9 @@ $border-color: rgba(214, 213, 212, 1);
                     margin-left: 1rem;
                 }
             }
-
+            .select-dropdown{
+                @include select-dropdown;
+            }
             .equal-to-icon {
                 margin: 0 3%;
                 font-family: Roboto Condensed;
@@ -1295,56 +1269,7 @@ $border-color: rgba(214, 213, 212, 1);
                 width: 100%;
             }
 
-            select {
-                width: 100%;
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="black" d="M5 7l5 5 5-5H5z"/></svg>');
-                background-repeat: no-repeat;
-                background-position: right 0.7em top 50%, 0 0;
-                background-size: 1.5em auto;
-                background-color: rgb(255, 255, 255, 0);
-                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-                padding: 0.5rem 2rem 0.5rem 1rem;
-                font-weight: 400;
-                min-height: 2.5rem;
-                font-size: 1rem;
-                text-wrap: wrap;
-                line-height: 1.1rem;
-            }
 
-            select:focus {
-                outline: none;
-                border-color: rgba(80, 90, 95, 1);
-            }
-
-            select option {
-                font-weight: 400;
-                padding: 0.5rem;
-                font-size: 1rem;
-                max-height: 50%;
-                border: 0.0623rem solid rgba(80, 90, 95, 1) !important;
-                border-radius: 0;
-            }
-
-            option:focus {
-                outline: none;
-                border-color: black;
-            }
-
-            input {
-                appearance: none;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                width: 100%;
-                border: 0.063rem solid rgba(80, 90, 95, 1);
-                background-color: rgb(255, 255, 255, 0);
-                padding: 0.5rem;
-                font-weight: 400;
-                line-height: 1.1rem;
-                font-size: 1rem;
-            }
         }
 
         .headerbar {
@@ -1735,13 +1660,17 @@ $border-color: rgba(214, 213, 212, 1);
 
             .bottom-right-map-subcomponents {
                 position: absolute;
-                bottom: 1.5rem;
+                bottom: 2rem;
                 right: 1rem;
                 z-index: 500;
                 display: flex !important;
                 flex-direction: column;
                 align-items: end;
                 gap: 1rem;
+
+                @media (max-width: 62.188rem) {
+                    bottom: 3rem;
+                }
 
                 .filter-index {
                     background-color: rgba(255, 255, 255, 1);
