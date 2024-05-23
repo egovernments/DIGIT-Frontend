@@ -21,14 +21,8 @@ import ZoomControl from "./ZoomControl";
 import CustomScaleControl from "./CustomScaleControl";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import {
-  processHierarchyAndData,
-  findParent,
-  fetchDropdownValues,
-  findChildren,
-  calculateAggregateForTree,
-} from "../utils/processHierarchyAndData";
-import { EXCEL, GEOJSON, SHAPEFILE, colors } from "../configs/constants";
+import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../utils/processHierarchyAndData";
+import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { ClearAllIcon, CloseButton, ModalHeading } from "./CommonComponents";
@@ -297,7 +291,7 @@ const Mapping = ({
           message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
         });
       }
-      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor:"rgb(0,0,0,0)" }) || [];
+      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor: "rgb(0,0,0,0)" }) || [];
       if (choroplethGeojson && choroplethGeojson.length !== 0)
         choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
       geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
@@ -408,8 +402,9 @@ const Mapping = ({
 
             <div className="bottom-right-map-subcomponents">
               {filterSelections && filterSelections.length > 0 && (
-                <MapIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
+                <MapFilterIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
               )}
+              {choroplethProperty && <MapChoroplethIndex t={t}/>}
             </div>
           </div>
         </Card>
@@ -417,11 +412,14 @@ const Mapping = ({
       {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
       )}
+      {toast && toast.state === "warning" && (
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
+      )}
     </div>
   );
 };
 
-const MapIndex = ({ filterSelections, MapFilters, t }) => {
+const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
   return (
     <div className="filter-index">
       {filterSelections && filterSelections.length > 0 ? (
@@ -439,6 +437,30 @@ const MapIndex = ({ filterSelections, MapFilters, t }) => {
     </div>
   );
 };
+
+// Function to create the gradient string from the colors array
+const MapChoroplethIndex = ({t}) => {
+  const createGradientString = (colors) => {
+    return colors.map((color) => `${color.color} ${color.percent}%`).join(", ");
+  };
+
+  const gradientString = createGradientString(MapChoroplethGradientColors);
+  const gradientStyle = {
+    background: `linear-gradient(to right, ${gradientString})`,
+  };
+
+  return (
+    <div className="choropleth-index">
+      <div className="gradient-wrapper">
+        <p>0%</p>
+        <div className="gradient" style={gradientStyle}></div>
+        <p>100%</p>
+      </div>
+        <p className="label">{t("CHOROPLETH_INDEX_COVERAGE")}</p>
+    </div>
+  );
+};
+
 const FilterItemBuilder = ({ item, MapFilters, t }) => {
   let temp = MapFilters?.find((e) => e?.name == item)?.icon?.index;
   let DynamicIcon = IconCollection?.[temp];
@@ -1023,14 +1045,14 @@ const extractGeoData = (
       case undefined:
         // Set warning toast message for no data to show
         setToast({
-          state: "error",
+          state: "warning",
           message: t("MAPPING_NO_DATA_TO_SHOW"),
         });
         break;
       case "partial":
         // Set warning toast message for partial data to show
         setToast({
-          state: "error",
+          state: "warning",
           message: t("MAPPING_PARTIAL_DATA_TO_SHOW"),
         });
         break;
@@ -1116,7 +1138,7 @@ const addChoroplethProperties = (geojson, choroplethProperty, filteredSelection)
     let color;
 
     if (choroplethProperty) {
-      color = interpolateColor(newFeature.properties[choroplethProperty], minValue, maxValue, colors);
+      color = interpolateColor(newFeature.properties[choroplethProperty], minValue, maxValue, MapChoroplethGradientColors);
     }
 
     newFeature.properties.addOn.fillColor = color;

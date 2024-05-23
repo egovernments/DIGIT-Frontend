@@ -9,26 +9,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   // State variables
   const [userColumns, setUserColumns] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [templateColumns, setTemplateColumns] = useState([]);
-
-  // Calculate total pages for pagination
-  const totalPages = Math.ceil(templateColumns.length / itemsPerPage);
-
-  // Slice data for pagination
-  const paginatedData = templateColumns.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
-  // Handle page click in pagination
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  // Handle items per page change
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(parseInt(e.target.value));
-    setCurrentPage(0);
-  };
 
   // Fetch template columns when schema changes
   useEffect(() => {
@@ -76,7 +57,6 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
         select={handleSelectChange}
         style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)" }}
       />
-      // <div></div>
     );
   };
 
@@ -94,11 +74,11 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     ],
     [userColumns]
   );
-  const data = useMemo(()=>templateColumns.map(item=>({COLUMNS_IN_TEMPLATE:item,COLUMNS_IN_USER_UPLOAD:item})),[templateColumns])
+  const data = useMemo(() => templateColumns.map((item) => ({ COLUMNS_IN_TEMPLATE: t(item), COLUMNS_IN_USER_UPLOAD: item })), [templateColumns]);
   return (
     <div className="spatial-data-property-mapping">
       <Table
-        customTableWrapperClassName="table-waper"
+        customTableWrapperClassName=""
         t={t}
         disableSort={true}
         autoSort={false}

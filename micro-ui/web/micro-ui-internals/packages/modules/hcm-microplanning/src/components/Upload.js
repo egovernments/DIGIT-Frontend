@@ -953,7 +953,7 @@ const Upload = ({
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
         )}
         {toast && toast.state === "warning" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn error onClose={() => setToast(null)} />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning/>
         )}
         {previewUploadedData && (
           <div className="popup-wrap">

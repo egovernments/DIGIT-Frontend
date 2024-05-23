@@ -99,7 +99,7 @@ const CreateMicroplan = () => {
   // useEffect to store data in session storage
   useEffect(() => {
     const data = Digit.SessionStorage.get("microplanData");
-    // if (data?.microplanStatus === "GENERATED") setToRender("success-screen");
+    if (data?.microplanStatus === "GENERATED") setToRender("success-screen");
     let statusData = {};
     let toCheckCompletenesData = [];
     timeLineOptions.forEach((item) => {

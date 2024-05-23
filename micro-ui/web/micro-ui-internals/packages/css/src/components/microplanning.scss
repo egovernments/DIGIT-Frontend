@@ -26,8 +26,16 @@ $border-color: rgba(214, 213, 212, 1);
     }
 }
 
-.wbh-header-container{
+.wbh-header-container {
     margin: 0;
+}
+
+@mixin select-dropdown {
+    background-color: rgb(0, 0, 0, 0);
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
 }
 
 .guideline-actionbar-content {
@@ -217,7 +225,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .upload-section-options-active {
-        border-right: 0.3rem solid rgba(244, 119, 56, 1);
+        border-right: 0.3rem solid $highlight-color;
         background-color: rgba(244, 119, 56, 0.12);
 
         p {
@@ -298,7 +306,7 @@ $border-color: rgba(214, 213, 212, 1);
                 p {
                     padding: 0;
                     margin: 0;
-                    color: rgba(244, 119, 56, 1);
+                    color: $highlight-color;
                     font-weight: 600;
                     font-size: 1rem;
                 }
@@ -319,7 +327,7 @@ $border-color: rgba(214, 213, 212, 1);
 
         .upload-option-container-selected {
             border: 0.125rem $highlight-color solid;
-            color: rgba(244, 119, 56, 1);
+            color: $highlight-color;
         }
     }
 
@@ -343,7 +351,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             p {
                 font-weight: 500;
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
             }
         }
 
@@ -353,7 +361,7 @@ $border-color: rgba(214, 213, 212, 1);
 
         .upload-option-selected {
             border: 0.125rem $highlight-color solid;
-            color: rgba(244, 119, 56, 1);
+            color: $highlight-color;
         }
 
         .select-button {
@@ -363,7 +371,7 @@ $border-color: rgba(214, 213, 212, 1);
             width: 11rem;
             height: 2.5rem;
             justify-content: center;
-            color: rgba(244, 119, 56, 1);
+            color: $highlight-color;
             font-size: 1rem;
             font-weight: 600;
         }
@@ -375,7 +383,7 @@ $border-color: rgba(214, 213, 212, 1);
             justify-self: end;
             justify-content: center;
             border: 0.063rem solid $highlight-color;
-            background-color: rgba(244, 119, 56, 1);
+            background-color: $highlight-color;
             width: 11rem;
             height: 2.5rem;
             padding: 0.6rem 0.5rem;
@@ -409,7 +417,7 @@ $border-color: rgba(214, 213, 212, 1);
             .browse-text {
                 margin: 0;
                 padding: 0;
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
                 text-decoration: underline;
                 cursor: pointer;
             }
@@ -475,7 +483,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0;
                 margin: 0;
                 margin-left: 0.5rem;
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
                 font-weight: 600;
                 font-size: 1rem;
             }
@@ -568,17 +576,19 @@ $border-color: rgba(214, 213, 212, 1);
         overflow: auto;
         padding-bottom: 0;
 
-        .select-dropdown {
-            background-color: rgb(0, 0, 0, 0);
-            font-family: Roboto;
-            font-size: 1rem;
-            font-weight: 400;
-            text-align: left;
-        }
+        @include select-dropdown;
 
         table {
             background-color: rgb(0, 0, 0, 0);
             width: 100%;
+
+            .select-dropdown {
+                background-color: rgb(0, 0, 0, 0);
+                font-family: Roboto;
+                font-size: 1rem;
+                font-weight: 400;
+                text-align: left;
+            }
 
             th {
                 width: 50%;
@@ -603,7 +613,6 @@ $border-color: rgba(214, 213, 212, 1);
                     text-wrap: wrap;
                     overflow: hidden;
                 }
-
             }
 
         }
@@ -789,7 +798,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             .link {
                 text-decoration: underline;
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
             }
 
         }
@@ -832,12 +841,12 @@ $border-color: rgba(214, 213, 212, 1);
 
     input[type="number"]:focus,
     input[type="number"]:hover {
-        border: 0.063rem solid rgba(244, 119, 56, 1);
+        border: 0.063rem solid $highlight-color;
         outline: none;
     }
 
     .add-icon {
-        background-color: rgba(244, 119, 56, 1);
+        background-color: $highlight-color;
         border-radius: 50%;
         width: 1.05rem;
         height: 1.05rem;
@@ -1095,7 +1104,7 @@ $border-color: rgba(214, 213, 212, 1);
             padding: 0 0 0 0.5rem;
             font-size: 1rem;
             font-weight: 600;
-            color: rgba(244, 119, 56, 1);
+            color: $highlight-color;
             text-align: left;
         }
     }
@@ -1111,7 +1120,7 @@ $border-color: rgba(214, 213, 212, 1);
         border: 0.063rem solid $highlight-color;
 
         p {
-            color: rgba(244, 119, 56, 1);
+            color: $highlight-color;
             padding: 0;
             margin: 0;
             font-size: 1.188rem;
@@ -1367,7 +1376,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0 0 0 0.5rem;
                 font-size: 1rem;
                 font-weight: 600;
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
                 text-align: left;
             }
         }
@@ -1383,7 +1392,7 @@ $border-color: rgba(214, 213, 212, 1);
             border: 0.063rem solid $highlight-color;
 
             p {
-                color: rgba(244, 119, 56, 1);
+                color: $highlight-color;
                 padding: 0;
                 margin: 0;
                 font-size: 1.188rem;
@@ -1392,7 +1401,7 @@ $border-color: rgba(214, 213, 212, 1);
             }
 
             .add-icon {
-                background-color: rgba(244, 119, 56, 1);
+                background-color: $highlight-color;
                 border-radius: 50%;
                 width: 1.05rem;
                 height: 1.05rem;
@@ -1710,7 +1719,7 @@ $border-color: rgba(214, 213, 212, 1);
                     width: 2rem;
                     height: 2rem;
                     text-align: center;
-                    color: rgba(244, 119, 56, 1);
+                    color: $highlight-color;
                     background-color: rgb(255, 255, 255);
                     cursor: pointer;
                     font-family: Roboto;
@@ -1729,6 +1738,10 @@ $border-color: rgba(214, 213, 212, 1);
                 bottom: 1.5rem;
                 right: 1rem;
                 z-index: 500;
+                display: flex !important;
+                flex-direction: column;
+                align-items: end;
+                gap: 1rem;
 
                 .filter-index {
                     background-color: rgba(255, 255, 255, 1);
@@ -1736,6 +1749,12 @@ $border-color: rgba(214, 213, 212, 1);
                     border-radius: 0.25rem;
                     padding: 0.7rem;
                     padding-top: 0.3rem;
+                    width: 8.5rem;
+                    max-height: 8.5rem;
+                    overflow-y: auto;
+
+                    @include custom-scrollbar;
+
 
                     .filter-row {
                         display: flex !important;
@@ -1753,6 +1772,50 @@ $border-color: rgba(214, 213, 212, 1);
                             font-weight: 400;
                             text-align: left;
                             text-wrap: wrap;
+                        }
+                    }
+                }
+
+                .choropleth-index {
+                    width: 20.292rem;
+                    height: 4.438rem;
+
+                    @media (max-width: 20.292rem) {
+                        width: 50%;
+                    }
+
+                    border-radius: 0.25rem;
+                    background-color: rgba(250, 250, 250, 1);
+                    padding: 0.8rem;
+
+                    p {
+                        font-family: Roboto;
+                        font-size: 1rem;
+                        font-weight: 700;
+                        text-align: left;
+                        padding: unset;
+                        margin: unset;
+                    }
+
+                    .label {
+                        width: 100%;
+                        padding-top: 0.3rem;
+                        text-align: center;
+                    }
+
+                    .gradient-wrapper {
+                        width: 100%;
+                        display: flex !important;
+                        justify-content: center;
+                        align-items: center;
+
+                        p {
+                            padding: 0 0.5rem;
+                        }
+
+                        .gradient {
+                            width: 80%;
+                            height: 0.875rem;
                         }
                     }
                 }
@@ -1807,7 +1870,7 @@ $border-color: rgba(214, 213, 212, 1);
                         max-height: 9.752rem;
                         overflow-x: auto;
                         background-color: rgba(255, 255, 255, 1);
-                        
+
                         @include custom-scrollbar;
 
                         .custom-box {
@@ -1832,7 +1895,7 @@ $border-color: rgba(214, 213, 212, 1);
                             }
 
                             input:checked~.inputIconClassname {
-                                border-color: rgba(244, 119, 56, 1);
+                                border-color: $highlight-color;
                             }
 
                             .inputIconClassname {
@@ -1932,11 +1995,11 @@ $border-color: rgba(214, 213, 212, 1);
                         background-color: rgba(255, 255, 255, 1);
 
                         .base-map-img {
-                            border: 0.125rem solid rgba(244, 119, 56, 1) !important;
+                            border: 0.125rem solid $highlight-color !important;
                         }
 
                         p {
-                            color: rgba(244, 119, 56, 1) !important;
+                            color: $highlight-color !important;
                         }
                     }
 
@@ -2115,7 +2178,7 @@ $border-color: rgba(214, 213, 212, 1);
                 width: 100%;
             }
 
-            .hypothesis-list-wrapper{
+            .hypothesis-list-wrapper {
                 align-self: flex-end;
             }
 
@@ -2124,6 +2187,7 @@ $border-color: rgba(214, 213, 212, 1);
                 max-height: 17rem;
                 @include custom-scrollbar;
                 padding-right: 0.3rem;
+
                 h3 {
                     background-color: #f4f4f4;
                     padding: 0.625rem;
@@ -2201,7 +2265,7 @@ $border-color: rgba(214, 213, 212, 1);
 
                         tr:hover {
                             width: 100%;
-                            outline: 0.1rem solid rgba(244, 119, 56, 1);
+                            outline: 0.1rem solid $highlight-color;
 
                             td {
                                 border-top: 0.063rem solid rgba(244, 119, 56, 0);
@@ -2325,7 +2389,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .digit-action-cancel {
-        color: rgba(244, 119, 56, 1);
+        color: $highlight-color;
     }
 
     .apply-changes-hypothesis {
@@ -2433,20 +2497,20 @@ $border-color: rgba(214, 213, 212, 1);
 
 .digit-action-cancel {
     .digit-button-label {
-        color: rgba(244, 119, 56, 1) !important;
+        color: $highlight-color !important;
     }
 }
 
 .digit-stepper-checkpoint {
     .digit-stepper-content {
         .active {
-            background-color: rgba(244, 119, 56, 1) !important;
-            border-color: rgba(244, 119, 56, 1) !important;
+            background-color: $highlight-color !important;
+            border-color: $highlight-color !important;
         }
     }
 
     .active {
-        background-color: rgba(244, 119, 56, 1) !important;
-        border-color: rgba(244, 119, 56, 1) !important;
+        background-color: $highlight-color !important;
+        border-color: $highlight-color !important;
     }
 }

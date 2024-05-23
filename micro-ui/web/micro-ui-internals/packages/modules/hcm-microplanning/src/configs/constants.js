@@ -15,7 +15,7 @@ export const ACCEPT_HEADERS = {
 };
 
 // Define the colors of the gradient for choropleth mapping
-export const colors = [
+export const MapChoroplethGradientColors = [
   { percent: 0, color: "#edd1cf" },
   { percent: 100, color: "#b52626" },
 ];
