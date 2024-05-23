@@ -25,11 +25,7 @@ const IFrameInterface = (props) => {
     enabled: true,
   });
 
-  const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-  console.log("myIframe", iframeWindow);
-  console.log("sendAuth", sendAuth);
-
-  useEffect(() => {
+  const injectCustomHttpInterceptors = (iframeWindow) => {
     const injectCustomHttpInterceptor = () => {
       try {
         if (!iframeWindow) {
@@ -39,7 +35,7 @@ const IFrameInterface = (props) => {
 
         const xhrOpen = iframeWindow.XMLHttpRequest.prototype.open;
         iframeWindow.XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
-          //intercepting here
+          // Intercepting here
           this.addEventListener('readystatechange', function() {
             if (this.readyState === XMLHttpRequest.OPENED) {
               const oidcToken = window.localStorage.getItem(localStorageKey);
@@ -104,6 +100,11 @@ const IFrameInterface = (props) => {
           return;
         }
 
+        if (typeof iframeWindow.document.api !== 'function') {
+          console.error('document.api is not a function.');
+          return;
+        }
+
         const originalDocumentApi = iframeWindow.document.api;
         iframeWindow.document.api = function (url, options = {}) {
           options.headers = options.headers || {};
@@ -132,14 +133,21 @@ const IFrameInterface = (props) => {
       }
     };
 
-    if (iframeRef.current) {
-      if (sendAuth) {
-        injectCustomHttpInterceptor();
-        injectCustomHttpInterceptorFetch();
-        injectCustomHttpInterceptorDocumentApi();
-      }
+    if (sendAuth) {
+      injectCustomHttpInterceptor();
+      injectCustomHttpInterceptorFetch();
+      injectCustomHttpInterceptorDocumentApi();
     }
-  }, [localStorageKey, iframeWindow, sendAuth, location]);
+  };
+
+  useEffect(() => {
+    const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
+    console.log("myIframe window",iframeWindow);
+    console.log("sendAuth in effect",sendAuth);
+    if (iframeRef.current) {
+      injectCustomHttpInterceptors(iframeWindow);
+    }
+  }, [localStorageKey, sendAuth, location]);
 
   useEffect(() => {
     const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
