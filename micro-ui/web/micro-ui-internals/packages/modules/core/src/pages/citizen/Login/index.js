@@ -260,7 +260,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           <Route path={`${path}/name`}>
             <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
           </Route>
-          {error && <Toast error={true} label={error} onClose={() => setError(null)} />}
+          {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
         </AppContainer>
       </Switch>
     </div>

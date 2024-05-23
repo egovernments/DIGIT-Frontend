@@ -948,7 +948,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
       ) : null}
       {toast && (
         <Toast
-          error={toast.key === "error"}
+          type={toast.key}
           label={t(
             toast.key === "success"
               ? `CORE_COMMON_PROFILE_UPDATE_SUCCESS`
