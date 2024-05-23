@@ -15,6 +15,7 @@ import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { Modal } from "@egovernments/digit-ui-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 const page = "microplanDetails";
 
@@ -222,7 +223,7 @@ const MicroplanDetails = ({
       </Card>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
@@ -231,11 +232,11 @@ const MicroplanDetails = ({
             width: "100%",
             padding: "0 0 1rem 1.3rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0 }}
           style={{
             flex: 1,
             backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
+            border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}

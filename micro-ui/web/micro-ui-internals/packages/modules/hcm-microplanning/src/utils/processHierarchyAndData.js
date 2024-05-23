@@ -15,6 +15,7 @@ export const processHierarchyAndData = (hierarchy, allData) => {
       data.slice(1).forEach((row) => {
         // Exclude the header row
         let currentNode = dataHierarchicalData;
+        let parent = null;
         hierarchy.forEach((item, index) => {
           const boundaryType = item.boundaryType;
           const dataIndex = data?.[0].indexOf(boundaryType);
@@ -39,7 +40,7 @@ export const processHierarchyAndData = (hierarchy, allData) => {
           // Assign row data to the correct hierarchical level
           if (cellValue) {
             if (index === hierarchy.length - 1) {
-              currentNode[cellValue].data = createDataObject(data[0], row);
+              currentNode[cellValue].data = createDataObject(data[0], row, null, parent);
             } else if (index + 1 < hierarchy.length) {
               let nextHierarchyList = hierarchy.slice(index + 1);
               let check = true;
@@ -49,10 +50,10 @@ export const processHierarchyAndData = (hierarchy, allData) => {
                 if (dataIndex === -1) return;
                 check = check && !row[dataIndex];
               });
-              if (check) currentNode[cellValue].data = createDataObject(data[0], row);
+              if (check) currentNode[cellValue].data = createDataObject(data[0], row,Object.keys( currentNode[cellValue].children));
             }
           }
-
+          parent = cellValue
           currentNode = currentNode[cellValue].children;
         });
       });
@@ -83,6 +84,9 @@ const mergeHierarchicalData = (data1, data2) => {
       data1[key] = value;
     } else {
       data1[key].data = value.data; // Merge data
+      if(data1[key].data.feature){
+        data1[key].data.feature.properties = {...data1[key].data.feature?.properties, ...{...value.data,feature:undefined}}
+      }
       mergeHierarchicalData(data1[key].children, value.children); // Recursively merge children
     }
   }
@@ -90,11 +94,13 @@ const mergeHierarchicalData = (data1, data2) => {
 };
 
 // Function to create a data object with key-value pairs from headers and row data
-const createDataObject = (headers, row) => {
+const createDataObject = (headers, row, children, parent) => {
   const dataObject = {};
   headers.forEach((header, index) => {
     dataObject[header] = row[index];
   });
+  dataObject["children"] = children;
+  dataObject["parent"] = parent;
   return dataObject;
 };
 

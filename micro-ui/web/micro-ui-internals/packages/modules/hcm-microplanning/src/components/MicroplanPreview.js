@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
-import { EXCEL, GEOJSON, SHAPEFILE, commonColumn } from "../configs/constants";
+import { EXCEL, GEOJSON, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
@@ -126,7 +126,7 @@ const MicroplanPreview = ({
       setOperatorsObject(temp.ruleConfigureOperators);
     }
     if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
-  }, [state?.UIConfiguration, state?.Schemas, state?.Resources, state?.MicroplanPreviewAggregates]);
+  }, []);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
@@ -330,7 +330,7 @@ const MicroplanPreview = ({
         </div>
         {modal === "confirm-apply-changed-hypothesis" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -339,11 +339,11 @@ const MicroplanPreview = ({
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
               backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
@@ -532,7 +532,7 @@ const DataPreview = memo(
             }}
             style={{
               backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
               marginTop: "0.5rem",
               marginBottom: "0.5rem",
               marginRight: "1.4rem",
@@ -928,7 +928,7 @@ const fetchMicroplanData = (microplanData) => {
             let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn)
             
             let uniqueEntries;
-            if(commonColumnIndex)
+            if(commonColumnIndex !== undefined)
               uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[commonColumnIndex], entry])).values());
             if(uniqueEntries)combinesDataList.push(uniqueEntries)
             break;

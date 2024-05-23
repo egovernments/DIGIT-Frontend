@@ -22,7 +22,7 @@ import CustomScaleControl from "./CustomScaleControl";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../utils/processHierarchyAndData";
-import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors, PRIMARY_THEME_COLOR } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { ClearAllIcon, CloseButton, ModalHeading } from "./CommonComponents";
@@ -181,7 +181,7 @@ const Mapping = ({
     if (!map) {
       init(_mapNode, defaultBaseMap, Boundary);
     }
-  }, [state?.UIConfiguration, state?.Schemas, state?.BaseMapLayers, Boundary]);
+  }, [Boundary]);
 
   useEffect(() => {
     if (map && filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
@@ -564,7 +564,7 @@ const FilterSection = memo(
                     inputWrapperClassName="inputWrapperClassName"
                     inputClassName="inputClassName"
                     inputIconClassname="inputIconClassname"
-                    iconFill={"rgba(244, 119, 56, 1)"}
+                    iconFill={PRIMARY_THEME_COLOR}
                     onLabelClick={(e) => handleChange(e, item)}
                   />
                 </div>
@@ -697,7 +697,7 @@ const BoundarySelection = memo(
               style={{
                 flex: 1,
                 backgroundColor: "white",
-                border: "0.063rem solid rgba(244, 119, 56, 1)",
+                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
               }}
               headerBarMainStyle={{ padding: 0, margin: 0 }}
               headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}

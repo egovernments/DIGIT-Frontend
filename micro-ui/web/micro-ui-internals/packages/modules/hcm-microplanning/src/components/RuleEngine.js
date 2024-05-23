@@ -7,6 +7,8 @@ import { Dropdown, Modal } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
+import { PlusWithSurroundingCircle } from "../icons/Svg";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 const page = "ruleEngine";
 
@@ -161,23 +163,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       setOutputs
     );
     if (filteredRules) setRules(filteredRules);
-  }, [state?.Schemas, state?.RuleConfigureOutput, state?.UIConfiguration, state?.AutoFilledRuleConfigurations]);
-
-  // // useEffect to set autofill data
-  // useEffect(() => {
-  //   if (!autofillData || !outputs || !hypothesisAssumptionsList || !validationSchemas) return;
-  //   setAutoFillRules(
-  //     autofillData,
-  //     rules,
-  //     setRules,
-  //     hypothesisAssumptionsList,
-  //     outputs,
-  //     operators,
-  //     getRuleConfigInputsFromSchema(campaignType, microplanData, validationSchemas),
-  //     setInputs,
-  //     setOutputs
-  //   );
-  // }, [autofillData]);
+  }, []);
 
   const closeModal = useCallback(() => {
     setModal("none");
@@ -214,9 +200,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             t={t}
           />
           <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
-            <div className="add-icon">
-              <p>+</p>
-            </div>
+            <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
             <p>{t("ADD_ROW")}</p>
           </button>
         </div>
@@ -224,7 +208,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
         {/* delete conformation */}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -233,11 +217,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
               backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
@@ -254,7 +238,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
@@ -263,11 +247,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             width: "100%",
             padding: "0 0 1rem 1rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0 }}
           style={{
             flex: 1,
             backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
+            border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
@@ -374,7 +358,7 @@ const InterractableSection = React.memo(
             <div className="invisible">
               <button className="delete-button invisible" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                 <div>
-                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                 </div>
                 <p>{t("DELETE")}</p>
               </button>
@@ -445,7 +429,7 @@ const InterractableSection = React.memo(
               <div>
                 <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
                   <div>
-                    <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                    <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                   </div>
                   <p>{t("DELETE")}</p>
                 </button>
@@ -465,7 +449,15 @@ const Example = ({ exampleOption, t }) => {
       <div className="example-body">
         <div className="value-input-key">
           <p className="heading">{t("VALUE")}</p>
-          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
+          <Dropdown
+            variant="select-dropdown"
+            t={t}
+            isMandatory={false}
+            option={[]}
+            selected={null}
+            optionKey="code"
+            placeholder={t("SELECT_OPTION")}
+          />
           <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
         </div>
 
@@ -478,17 +470,41 @@ const Example = ({ exampleOption, t }) => {
 
         <div className="value-input-key">
           <p className="heading">{t("RULE_ENGINE_INPUT")}</p>
-          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
+          <Dropdown
+            variant="select-dropdown"
+            t={t}
+            isMandatory={false}
+            option={[]}
+            selected={null}
+            optionKey="code"
+            placeholder={t("SELECT_OPTION")}
+          />
           <p className="heading">{t("RULE_ENGINE_INPUT_HELP_TEXT")}</p>
         </div>
         <div className="operator">
           <p className="heading">{t("RULE_ENGINE_OPERATOR")}</p>
-          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
+          <Dropdown
+            variant="select-dropdown"
+            t={t}
+            isMandatory={false}
+            option={[]}
+            selected={null}
+            optionKey="code"
+            placeholder={t("SELECT_OPTION")}
+          />
           <p className="heading">{t("RULE_ENGINE_OPERATOR_HELP_TEXT")}</p>
         </div>
         <div className="value-input-key">
           <p className="heading">{t("KEY")}</p>
-          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t("SELECT_OPTION")} />
+          <Dropdown
+            variant="select-dropdown"
+            t={t}
+            isMandatory={false}
+            option={[]}
+            selected={null}
+            optionKey="code"
+            placeholder={t("SELECT_OPTION")}
+          />
           <p className="heading">{t("RULE_ENGINE_KEY_HELP_TEXT")}</p>
         </div>
       </div>
@@ -520,8 +536,8 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   useEffect(() => {
     if (item) {
       if (outputs && outputs.some((e) => e == item?.input)) {
-        if (rules.some((e) => e?.output == item?.input)) setSelected({code:item[toChange]});
-      } else setSelected({code:item[toChange]});
+        if (rules.some((e) => e?.output == item?.input)) setSelected({ code: item[toChange] });
+      } else setSelected({ code: item[toChange] });
     }
   }, [item]);
 

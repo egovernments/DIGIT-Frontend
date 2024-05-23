@@ -194,7 +194,7 @@ export const updateSessionUtils = {
       section: templateIdentifier,
       fileName: `${templateIdentifier}${extension}`,
       fileType: inputFileType,
-      file: {},
+      file: undefined,
       fileId: fileId,
       filestoreId: filestoreId,
       error: null,
@@ -202,10 +202,14 @@ export const updateSessionUtils = {
       data: {},
     });
 
-    const findSchema = (inputFileType, templateIdentifier, campaignType) =>
-      state?.Schemas?.find(
-        (schema) => schema.type === inputFileType && schema.section === templateIdentifier && schema.campaignType === campaignType
-      );
+    const findSchema = (inputFileType, templateIdentifier, campaignType) => {
+      return state?.Schemas?.find((schema) => {
+        if (!schema.campaignType) {
+          return schema.type === inputFileType && schema.section === templateIdentifier;
+        }
+        return schema.campaignType === campaignType && schema.type === inputFileType && schema.section === templateIdentifier;
+      });
+    };
 
     const handleGeoJsonSpecific = (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
       let schemaKeys;
@@ -304,7 +308,7 @@ export const updateSessionUtils = {
             });
           promises.push(promiseToAttach);
         }
-      };
+      }
 
       const resolvedPromises = await Promise.all(promises);
       let result = storedData;

@@ -1,6 +1,7 @@
 import { Button, DownloadIcon, SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 export const JsonPreviewInExcelForm = (props) => {
   const { t } = useTranslation();
@@ -17,14 +18,14 @@ export const JsonPreviewInExcelForm = (props) => {
         <Button
           label={t("BUTTON_BACK")}
           variation="secondary"
-          icon={<SVG.ArrowBack height={"2rem"} width={"2rem"}  fill="#F47738" />}
+          icon={<SVG.ArrowBack height={"2rem"} width={"2rem"}  fill={PRIMARY_THEME_COLOR} />}
           type="button"
           onButtonClick={() => props?.onBack()}
         />
         <Button
           label={t("BUTTON_DOWNLOAD")}
           variation="secondary"
-          icon={<DownloadIcon height={"1.25rem"} width={"1.25rem"}  fill="#F47738" />}
+          icon={<DownloadIcon height={"1.25rem"} width={"1.25rem"}  fill={PRIMARY_THEME_COLOR} />}
           type="button"
           onButtonClick={() => props?.onDownload()}
         />
