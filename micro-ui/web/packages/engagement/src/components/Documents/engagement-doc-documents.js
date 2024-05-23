@@ -1,4 +1,4 @@
-import { CardLabel, LabelFieldPair, TextInput, UploadFile, CardLabelError, Loader } from "@egovernments/digit-ui-react-components";
+import { CardLabel, LabelFieldPair, TextInput, CardLabelError, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useLocation } from "react-router-dom";
@@ -47,9 +47,9 @@ const EngagementDocUploadDocument = ({ userType, t, onSelect, setValue, config, 
     }
   };
 
-  useEffect(() => {
-    if (file) uploadFile();
-  }, [file]);
+  // useEffect(() => {
+  //   if (file) uploadFile();
+  // }, [file]);
 
   useEffect(() => {
     if (fileStoreId) disableUrlField();
@@ -57,21 +57,21 @@ const EngagementDocUploadDocument = ({ userType, t, onSelect, setValue, config, 
     controllerProps?.onChange?.({ fileStoreId, fileSize, fileType });
   }, [fileStoreId, controllerProps]);
 
-  const uploadFile = async () => {
-    try {
-      setIsUploadingImage(true)
-      const response = await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
-      if (response?.data?.files?.length > 0) {
-        setFileStoreId(response?.data?.files[0]?.fileStoreId);
-      } else {
-        setError(t("CS_FILE_UPLOAD_ERROR"));
-      }
+  // const uploadFile = async () => {
+  //   try {
+  //     setIsUploadingImage(true)
+  //     const response = await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
+  //     if (response?.data?.files?.length > 0) {
+  //       setFileStoreId(response?.data?.files[0]?.fileStoreId);
+  //     } else {
+  //       setError(t("CS_FILE_UPLOAD_ERROR"));
+  //     }
 
-    } catch (err) {
-    } finally {
-      setIsUploadingImage(false)
-    }
-  };
+  //   } catch (err) {
+  //   } finally {
+  //     setIsUploadingImage(false)
+  //   }
+  // };
 
   const location = useLocation();
   const isInEditFormMode = useMemo(() => {
@@ -87,22 +87,7 @@ const EngagementDocUploadDocument = ({ userType, t, onSelect, setValue, config, 
           <Controller
             name={config.key + ".filestoreId"}
             control={control}
-            render={(props) => (
-              <UploadFile
-                id={"city-engagement-doc"}
-                onUpload={(d) => selectFile(d, props)}
-                onDelete={() => {
-                  setFileStoreId(null);
-                  setFileSize(100);
-                }}
-                accept="image/*, .pdf, .png, .jpeg, .doc"
-                showHintBelow={true}
-                hintText={t("DOCUMENTS_ATTACH_RESTRICTIONS_SIZE")}
-                message={isUploadingImage ? <Loader /> : documentUploadMessage(t, fileStoreId, isInEditFormMode)}
-                textStyles={{ width: "100%" }}
-                inputStyles={{ width: "280px" }}
-              />
-            )}
+            
           />
           {fileSize ? `${getFileSize(fileSize)}` : null}
           {imageUploadError ? <CardLabelError>{t(imageUploadError)}</CardLabelError> : null}

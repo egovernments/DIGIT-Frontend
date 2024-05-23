@@ -8,10 +8,11 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import ActionModal from "./Modal";
 
 import { useHistory, useParams } from "react-router-dom";
-import ApplicationDetailsContent from "./components/ApplicationDetailsContent";
+import  ApplicationDetailsContent from "./components/ApplicationDetailsContent";
 import ApplicationDetailsToast from "./components/ApplicationDetailsToast";
 import ApplicationDetailsActionBar from "./components/ApplicationDetailsActionBar";
 import ApplicationDetailsWarningPopup from "./components/ApplicationDetailsWarningPopup";
+
 
 const ApplicationDetails = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();

@@ -18,6 +18,7 @@ const ApplicationCard = ({
   const [popup, setPopup] = useState(false);
   const [params, setParams] = useState(searchParams);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+ 
   const history = useHistory()
   useEffect(() => {
     if (type) setPopup(true);
