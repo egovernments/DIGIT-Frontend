@@ -142,6 +142,8 @@ const IFrameInterface = (props) => {
 
   useEffect(() => {
     const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
+    console.log("myIframe window",iframeWindow);
+    console.log("sendAuth in effect",sendAuth);
     if (iframeRef.current) {
       injectCustomHttpInterceptors(iframeWindow);
     }
