@@ -46,7 +46,7 @@ import {
   import ShowTotalValue from "../../../Expenditure/src/components/ViewBill/ShowTotalValue";
   import SkillDetails from "./SkillDetails";
   import Photos from "./Photos";
-  
+  debugger;
   
   function ApplicationDetailsContent({
     applicationDetails,
@@ -496,4 +496,4 @@ import {
     );
   }
   
-  export default ApplicationDetailsContent;
+  export default  ApplicationDetailsContent;

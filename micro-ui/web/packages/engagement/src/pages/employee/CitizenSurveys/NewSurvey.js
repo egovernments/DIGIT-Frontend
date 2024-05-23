@@ -39,6 +39,7 @@ export const mapQuestions = (questions =[]) =>{
 }
 
 const NewSurveys = () => {
+  
   const { t } = useTranslation();
   const history = useHistory();
   

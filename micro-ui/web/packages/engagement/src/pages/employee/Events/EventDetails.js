@@ -2,7 +2,7 @@ import React, { Fragment, useState ,useEffect} from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Header, Card, CardSectionHeader, PDFSvg, Loader, StatusTable, Menu, ActionBar, SubmitBar, Modal, CardText } from "@egovernments/digit-ui-react-components";
-import ApplicationDetailsTemplate from "../../../../../templates/ApplicationDetails";
+import ApplicationDetailsContent from "../../../../../templates/ApplicationDetails/components/ApplicationDetailsContent";
 
 const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
@@ -68,7 +68,7 @@ const EventDetails = () => {
   return (
     <Fragment>
       <Header>{t("ES_TITLE_APPLICATION_DETAILS")}</Header>
-      <ApplicationDetailsTemplate
+      <ApplicationDetailsContent
         applicationData={data?.applicationData}
         applicationDetails={data}
         isLoading={isLoading}

@@ -40,6 +40,7 @@ const Documents = (props) => {
       documentLink: data.document?.documentLink,
       tenantId: data?.ULB?.code,
     };
+    
 
     delete DocumentEntity.ULB;
     delete DocumentEntity.docCategory;

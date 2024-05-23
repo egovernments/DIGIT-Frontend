@@ -53,6 +53,131 @@ const EventsBreadCrumb = ({ location }) => {
       show: location.pathname.includes("event/inbox") ? true : false,
     },
     // Add other breadcrumb items here...
+    {
+      path: `/${window?.contextPath}/employee/event/new-event`,
+      content: t("ES_EVENT_NEW_EVENT"),
+      show: location.pathname.includes("event/new-event") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/event/inbox/new-event`,
+      content: t("ES_EVENT_NEW_EVENT"),
+      show: location.pathname.includes("event/inbox/new-event") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/event/inbox/event-details`,
+      content: t("ES_EVENT_EVENT_DETAILS"),
+      show: location.pathname.includes("event-details") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/event/edit-event`,
+      content: t("ES_EVENT_EDIT_EVENT"),
+      show: location.pathname.includes("event/edit-event") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/event/response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("event/response") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/inbox`,
+      content: t("ES_EVENT_INBOX"),
+      show: location.pathname.includes("/documents/inbox") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/new-doc`,
+      content: t("NEW_DOCUMENT_TEXT"),
+      show: location.pathname.includes("/documents/new-doc") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/inbox/new-doc`,
+      content: t("NEW_DOCUMENT_TEXT"),
+      show: location.pathname.includes("/documents/inbox/new-doc") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/documents/response") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/delete-response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/documents/delete-response") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/update-response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/documents/update-response") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/inbox/details/:id`,
+      content: t("CE_DOCUMENT_DETAILS"),
+      show: location.pathname.includes("/documents/inbox/details") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/documents/inbox/update`,
+      content: t("DOCUMENTS_EDIT_HEADER"),
+      show: location.pathname.includes("/documents/inbox/update") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/inbox`,
+      content: t("ES_EVENT_INBOX"),
+      show: location.pathname.includes("/messages/inbox") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/create`,
+      content: t("NEW_PUBLIC_BRDCST"),
+      show: location.pathname.includes("/messages/create") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/inbox/create`,
+      content: t("NEW_PUBLIC_BRDCST"),
+      show: location.pathname.includes("/messages/inbox/create") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/inbox/details/:id`,
+      content: t("CS_HEADER_PUBLIC_BRDCST"),
+      show: location.pathname.includes("/messages/inbox/details") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/inbox/edit/:id`,
+      content: t("EDIT_PUBLIC_BRDCST"),
+      show: location.pathname.includes("/messages/inbox/edit") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/messages/response") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/response?update=true`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/messages/response?update=true") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/messages/response?delete=true`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/messages/response?delete=true") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/surveys/inbox`,
+      content: t("ES_EVENT_INBOX"),
+      show: location.pathname.includes("/surveys/inbox") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/surveys/inbox/create`,
+      content: t("CS_COMMON_SURVEYS"),
+      show: location.pathname.includes("/surveys/inbox/create") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/surveys/create`,
+      content: t("CS_COMMON_SURVEYS"),
+      show: location.pathname.includes("/surveys/create") ? true : false,
+    },
+    {
+      path: `/${window?.contextPath}/employee/engagement/survey/create-response`,
+      content: t("ES_EVENT_NEW_EVENT_RESPONSE"),
+      show: location.pathname.includes("/engagement/survey/create-response") ? true : false,
+    },
   ];
 
   return <BreadCrumb crumbs={crumbs} />;

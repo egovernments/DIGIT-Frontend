@@ -5,7 +5,12 @@ import { useLocation } from "react-router-dom";
 import { alphabeticalSortFunctionForTenantsBasedOnName } from "../../utils";
 
 const SelectULB = ({ userType, t, setValue, onSelect, config, data, formData, register, errors, setError, clearErrors, formState, control }) => {
-  const ulbs = Digit.SessionStorage.get("ENGAGEMENT_TENANTS");
+  //const ulbs = Digit.SessionStorage.get("ENGAGEMENT_TENANTS");
+  const ulbs = [
+    { code: "pg.citya", name: "City A" ,i18nKey:"City A"},
+  { code: "pg.cityb", name: "City B" ,i18nKey:"City B"},
+  { code: "pg.cityc", name: "City C" ,i18nKey:"City C"}
+  ]
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const selectedTenat = useMemo(() => {
     if (formData?.defaultTenantId) {
@@ -20,8 +25,8 @@ const SelectULB = ({ userType, t, setValue, onSelect, config, data, formData, re
   
     const userInfo = Digit.SessionStorage.get("citizen.userRequestObject")
     const userUlbs = ulbs.filter(ulb => userInfo?.info?.roles?.some(role => role?.tenantId === ulb?.code)).sort(alphabeticalSortFunctionForTenantsBasedOnName)
-    
-    const dropDownData = Digit.ULBService.getUserUlbs("SUPERUSER").sort(alphabeticalSortFunctionForTenantsBasedOnName);
+    const  dropDownData = [{ code: "pg.citya", name: "City A" ,i18nKey:"City A"}]
+    //const dropDownData = Digit.ULBService.getUserUlbs("SUPERUSER").sort(alphabeticalSortFunctionForTenantsBasedOnName);
   return (
     <React.Fragment>
       <LabelFieldPair

@@ -46,6 +46,6 @@
     "start:pgr": "cd packages/pgr && yarn start"
   },
   "dependencies": {
-    "recharts": "^2.12.7"
+    "dotenv": "^16.3.1"
   }
 }

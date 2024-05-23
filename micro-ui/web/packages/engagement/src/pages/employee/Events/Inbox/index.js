@@ -14,14 +14,18 @@ const Inbox = ({ tenants, parentRoute }) => {
   const [pageSize, setPageSize] = useState(10);
   const [pageOffset, setPageOffset] = useState(0);
   const [searchParams, setSearchParams] = useState({
+    
     eventStatus: [],
     range: {
       startDate: null,
       endDate: new Date(""),
       title: ""
     },
+    
     ulb: tenants?.find(tenant => tenant?.code === tenantId)
   });
+  
+
   let isMobile = window.Digit.Utils.browser.isMobile();
 
   const getSearchFields = () => {
@@ -114,6 +118,7 @@ const Inbox = ({ tenants, parentRoute }) => {
         {t("EVENTS_EVENTS_HEADER")}
         {Number(data?.totalCount) ? <p className="inbox-count">{Number(data?.totalCount)}</p> : null}
       </Header>
+     
       <DesktopInbox
         t={t}
         data={data?.events}
