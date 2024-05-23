@@ -270,12 +270,11 @@ const UploadBoundaryPure = () => {
         });
       }
       
-  
       const dynamicParentType = Digit.Utils.workbench.generateDynamicParentType(results);
       const transformedData = Digit.Utils.workbench.transformBoundary(results, dynamicParentType);
-  
-      setShowToast({ label: "Loading..." ,isInfo:true});
-  
+
+      setShowToast({ label: "Loading...", type: "info" });
+
       await Promise.all(
         Object.keys(transformedData).map(async (key) => {
           for (const entry of transformedData[key]) {
@@ -299,7 +298,7 @@ const UploadBoundaryPure = () => {
                 onError: (error, variables) => {
                   setShowToast({
                     label: t('WBH_BOUNDARY_CREATION_FAILED'),
-                    isError: true,
+                    type: "error",
                   });
                   setTimeout(() => {
                     setShowToast(false);
@@ -309,7 +308,7 @@ const UploadBoundaryPure = () => {
                   console.log(resp);
                   setShowToast({
                     label: t('WBH_BOUNDARY_CREATION_SUCCESS'),
-                    isError: false,
+                    type: "success",
                   });
                   setTimeout(() => {
                     setShowToast(false);
@@ -325,10 +324,9 @@ const UploadBoundaryPure = () => {
   
     } catch (error) {
       let label = `${t("WBH_BOUNDARY_UPSERT_FAIL")}: `;
-      setShowToast({ label, isError: true });
+      setShowToast({ label, type: "error" });
     }
   };
-  
   
 
   return (
@@ -375,7 +373,7 @@ const UploadBoundaryPure = () => {
           <GenerateXlsx inputRef={inputRef} jsonData={filteredXlsxData} />
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} />
-        {showToast && <Toast label={showToast.label} error={showToast?.isError} warning={showToast?.isWarning} info={showToast?.isInfo} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+        {showToast && <Toast label={showToast.label} type={showToast.type} isDleteBtn={true} onClose={() => setShowToast(null)} />}
       </Card>
     </React.Fragment>
   );
