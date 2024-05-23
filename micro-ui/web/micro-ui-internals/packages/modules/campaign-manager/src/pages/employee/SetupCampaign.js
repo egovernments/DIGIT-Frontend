@@ -253,6 +253,7 @@ const SetupCampaign = () => {
   const [lowest, setLowest] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
+  const [enabled, setEnabled] = useState(false);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -376,37 +377,54 @@ const SetupCampaign = () => {
     setParams({ ...restructureFormData });
   }, [params, draftData, isLoading, projectType]);
 
-  const { data: facilityId, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  useEffect(() => {
+    setTimeout(() => {
+      setEnabled(fetchUpload || (fetchBoundary && currentKey > 6));
+    }, 3000);
+
+    // return () => clearTimeout(timeoutId);
+  }, [fetchUpload, fetchBoundary, currentKey]);
+
+  const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "facilityWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
+    // config: {
+    //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
 
-  useEffect(() => {
-    if (filteredBoundaryData) {
-      refetchBoundary();
-    }
-  }, [filteredBoundaryData]);
+  // useEffect(() => {
+  //   if (filteredBoundaryData) {
+  //     refetchBoundary();
+  //   }
+  // }, [filteredBoundaryData]);
 
-  const { data: boundaryId, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "boundary",
     hierarchyType: hierarchyType,
-    filters: filteredBoundaryData,
+    // filters: filteredBoundaryData,
     campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
 
-  const { data: userId, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "userWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
 
@@ -419,16 +437,23 @@ const SetupCampaign = () => {
         userId: userId,
         hierarchyType: hierarchyType,
         hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
+        isBoundaryLoading,
+        isFacilityLoading,
+        isUserLoading,
       });
     }
-  }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
+  }, [isBoundaryLoading, isFacilityLoading, isUserLoading, facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData, dataParams));
   }, [totalFormData, dataParams]);
 
   useEffect(() => {
-    updateUrlParams({ key: currentKey });
+    if (currentKey === 10 && isPreview !== "true") {
+      updateUrlParams({ key: currentKey, preview: true });
+    } else {
+      updateUrlParams({ key: currentKey, preview: false });
+    }
   }, [currentKey]);
 
   function restructureData(data) {
@@ -706,6 +731,8 @@ const SetupCampaign = () => {
                 }
               },
             });
+          } else {
+            setCurrentKey(currentKey + 1);
           }
         };
 
@@ -1165,8 +1192,9 @@ const SetupCampaign = () => {
       />
       {showToast && (
         <Toast
-          info={showToast?.key === "info" ? true : false}
-          error={showToast?.key === "error" ? true : false}
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          // info={showToast?.key === "info" ? true : false}
+          // error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

@@ -328,6 +328,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
                 </CardLabel>
                 <div className="digit-field">
                   <MultiSelectDropdown
+                    props={{ className: "selecting-boundaries-dropdown" }}
                     t={t}
                     options={boundaryData[boundary?.boundaryType]?.map((item) => item?.boundaryTypeData?.TenantBoundary?.[0]?.boundary)?.flat() || []}
                     optionsKey={"code"}
@@ -347,6 +348,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
                 <div className="digit-field">
                   <MultiSelectDropdown
                     t={t}
+                    props={{ className: "selecting-boundaries-dropdown" }}
                     options={
                       boundaryData[boundary?.boundaryType]?.map((item) => ({
                         code: item?.parentCode,
@@ -391,9 +393,10 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       />
       {showToast && (
         <Toast
-          error={showToast.key === "error" ? true : false}
-          warning={showToast.key === "warning" ? true : false}
-          info={showToast.key === "info" ? true : false}
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          // error={showToast.key === "error" ? true : false}
+          // warning={showToast.key === "warning" ? true : false}
+          // info={showToast.key === "info" ? true : false}
           label={t(showToast.label)}
           onClose={closeToast}
         />

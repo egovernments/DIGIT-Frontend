@@ -30,10 +30,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const type = props?.props?.type;
   const [executionCount, setExecutionCount] = useState(0);
   const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [isValidation, setIsValidation] = useState(false);
   const [fileName, setFileName] = useState(null);
   const [downloadError, setDownloadError] = useState(false);
+  const [resourceId, setResourceId] = useState(null);
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
   const { isLoading, data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
     { name: "facilitySchema" },
     { name: "userSchema" },
@@ -47,14 +51,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
-      onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError });
+      onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "boundary") {
-      onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError });
+      onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else {
-      onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError });
+      onSelect("uploadUser", { uploadedFile, isError, isValidation, apiError, isSuccess });
     }
-  }, [uploadedFile, isError, isValidation, apiError]);
+  }, [uploadedFile, isError, isValidation, apiError, isSuccess]);
 
+  useEffect(() => {
+    if (resourceId) {
+      setUploadedFile((prev) =>
+        prev.map((i) => ({
+          ...i,
+          resourceId: resourceId,
+        }))
+      );
+    }
+  }, [resourceId]);
   var translateSchema = (schema) => {
     var newSchema = { ...schema };
     var newProp = {};
@@ -110,7 +124,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setSheetHeaders(headers);
       setTranslatedSchema(schema);
     }
-  }, [Schemas?.["HCM-ADMIN-CONSOLE"] , type]);
+  }, [Schemas?.["HCM-ADMIN-CONSOLE"], type]);
 
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
@@ -130,8 +144,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setReadMeInfo(readMeText);
     }
-  }, [readMe?.["HCM-ADMIN-CONSOLE"] , type]);
-
+  }, [readMe?.["HCM-ADMIN-CONSOLE"], type]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -154,6 +167,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -161,6 +175,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -168,6 +183,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setIsValidation(false);
         setDownloadError(false);
         setIsError(false);
+        setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -407,11 +423,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           }
-          if (type === "boundary" && workbook?.SheetNames?.length > 1) {
+          if (type === "boundary" && workbook?.SheetNames?.length > 3) {
             if (!validateMultipleTargets(workbook)) {
               return;
             }
-          } else {
+          } else if (type !== "boundary") {
             for (const header of expectedHeaders) {
               if (!headersToValidate.includes(header)) {
                 const errorMessage = t("HCM_MISSING_HEADERS");
@@ -500,6 +516,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         return {
           // ...i,
           filestoreId: id,
+          resourceId: resourceId,
           filename: fileName,
           type: fileType,
         };
@@ -512,8 +529,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const onFileDelete = (file, index) => {
     setUploadedFile((prev) => prev.filter((i) => i.id !== file.id));
     setIsError(false);
+    setIsSuccess(false);
     setIsValidation(false);
     setApiError(null);
+    setShowToast(null);
   };
 
   const onFileDownload = (file) => {
@@ -526,13 +545,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile.length > 0) {
+      if (!errorsType[type] && uploadedFile?.length > 0) {
         setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsValidation(true);
         setIsError(true);
 
         try {
-          const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId);
+          const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId, id);
           if (temp?.isError) {
             const errorMessage = temp?.error.replaceAll(":", "-");
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
@@ -545,8 +564,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setIsValidation(false);
             if (temp?.additionalDetails?.sheetErrors.length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
+              if (temp?.id) {
+                setResourceId(temp?.id);
+              }
               if (!errorsType[type]) {
                 setIsError(false);
+                setIsSuccess(true);
                 return;
                 // setIsValidation(false);
               }
@@ -643,6 +666,26 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    if (type === "boundary" && params?.isBoundaryLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    if (type === "userWithBoundary" && params?.isUserLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
     await mutation.mutate(
       {
         params: {
@@ -801,9 +844,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       />
       {showToast && (uploadedFile?.length > 0 || downloadError) && (
         <Toast
-          error={showToast.key === "error" ? true : false}
-          warning={showToast.key === "warning" ? true : false}
-          info={showToast.key === "info" ? true : false}
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          // error={showToast.key === "error" ? true : false}
+          // warning={showToast.key === "warning" ? true : false}
+          // info={showToast.key === "info" ? true : false}
           label={t(showToast.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

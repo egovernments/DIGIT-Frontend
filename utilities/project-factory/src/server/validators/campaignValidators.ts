@@ -1,24 +1,26 @@
-import createAndSearch from "../../config/createAndSearch";
-import config from "../../config";
-import { logger } from "../logger";
-import { httpRequest } from "../request";
-import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../../api/campaignApis";
-import { campaignDetailsSchema } from "../../config/models/campaignDetails";
+import createAndSearch from "../config/createAndSearch";
+import config from "../config";
+import { logger } from "../utils/logger";
+import { httpRequest } from "../utils/request";
+import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
+import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import axios from "axios";
-import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
+import { calculateKeyIndex, getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName, getTargetBoundariesRelatedToCampaignId } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
-import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
-import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
-import { campaignDetailsDraftSchema } from "../../config/models/campaignDetailsDraftSchema";
-import { downloadRequestSchema } from "../../config/models/downloadRequestSchema";
-import { createRequestSchema } from "../../config/models/createRequestSchema"
-import { getSheetData, getTargetWorkbook } from "../../api/genericApis";
+import { searchCriteriaSchema } from "../config/models/SearchCriteria";
+import { searchCampaignDetailsSchema } from "../config/models/searchCampaignDetails";
+import { campaignDetailsDraftSchema } from "../config/models/campaignDetailsDraftSchema";
+import { downloadRequestSchema } from "../config/models/downloadRequestSchema";
+import { createRequestSchema } from "../config/models/createRequestSchema"
+import { getSheetData, getTargetWorkbook } from "../api/genericApis";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
-import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
-import { getBoundaryColumnName, getBoundaryTabName } from "../boundaryUtils";
+import { searchDataService } from "../service/dataManageService";
+import { searchProjectTypeCampaignService } from "../service/campaignManageService";
+import { campaignStatuses, resourceDataStatuses } from "../config/constants";
+import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
+
 
 
 
@@ -130,8 +132,9 @@ async function validateBoundaryData(data: any[], request: any, boundaryColumn: a
 }
 
 async function validateTargetBoundaryData(data: any[], request: any, boundaryColumn: any, errors: any[], localizationMap?: any) {
-    const responseBoundaries = await fetchBoundariesInChunks(request);
-    const responseBoundaryCodes = responseBoundaries.map(boundary => boundary.code);
+    // const responseBoundaries = await fetchBoundariesInChunks(request);
+    const responseBoundaries = await getTargetBoundariesRelatedToCampaignId(request, localizationMap);
+    const responseBoundaryCodes = responseBoundaries.map((boundary: any) => boundary.code);
     // Iterate through each array of objects
     for (const key in data) {
         const isNotBoundaryOrReadMeTab = key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap);
@@ -160,7 +163,7 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
                                     errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"] + 1} of sheet ${key}`, sheetName: key })
                                 }
                                 if (!responseBoundaryCodes.includes(boundaryCode)) {
-                                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key}not found in the system`, sheetName: key })
+                                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"] + 1}  of sheet ${key} is not present in the selected boundaries`, sheetName: key })
                                 }
                                 boundarySet.add(boundaryCode);
                             }
@@ -196,12 +199,39 @@ function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], 
             if (Array.isArray(data[key])) {
                 const boundaryData = data[key];
                 boundaryData.forEach((obj: any, index: number) => {
-                    if (obj.hasOwnProperty(lowestLevelHierarchy)) {
+                    if (obj.hasOwnProperty(lowestLevelHierarchy) && obj[lowestLevelHierarchy]) {
                         const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
                         const target = obj[localizedTargetColumnName];
-                        if (target === undefined || typeof target !== 'number' || target <= 0 || target > 100000 || !Number.isInteger(target)) {
-                            errors.push({ status: "INVALID", rowNumber: obj["!row#number!"], errorDetails: `Invalid target value at row ${obj['!row#number!'] + 1}. of sheet ${key}`, sheetName: key })
+                        if (target === undefined) {
+                            errors.push({ 
+                                status: "INVALID", 
+                                rowNumber: obj["!row#number!"], 
+                                errorDetails: `Target value is missing at row ${obj['!row#number!'] + 1} in sheet ${key}. Please provide a numeric integer between 1 and 100000.`, 
+                                sheetName: key 
+                            });
+                        } else if (typeof target !== 'number') {
+                            errors.push({ 
+                                status: "INVALID", 
+                                rowNumber: obj["!row#number!"], 
+                                errorDetails: `Target value at row ${obj['!row#number!'] + 1} in sheet ${key} is not a number. Target values must be numeric integers between 1 and 100000.`, 
+                                sheetName: key 
+                            });
+                        } else if (target <= 0 || target > 100000) {
+                            errors.push({ 
+                                status: "INVALID", 
+                                rowNumber: obj["!row#number!"], 
+                                errorDetails: `Target value ${target} at row ${obj['!row#number!'] + 1} in sheet ${key} is out of range. Target values must be numeric integers between 1 and 100000.`, 
+                                sheetName: key 
+                            });
+                        } else if (!Number.isInteger(target)) {
+                            errors.push({ 
+                                status: "INVALID", 
+                                rowNumber: obj["!row#number!"], 
+                                errorDetails: `Target value ${target} at row ${obj['!row#number!'] + 1} in sheet ${key} is not an integer. Target values must be whole numbers between 1 and 100000.`, 
+                                sheetName: key 
+                            });
                         }
+                        
                     }
                 });
             }
@@ -336,7 +366,7 @@ async function validateTargetSheetData(data: any, request: any, boundaryValidati
             await validateTargetsAtLowestLevelPresentOrNot(data, request, errors, localizationMap);
         }
         request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
-        if (request.body.sheetErrorDetails.length != 0) {
+        if (request?.body?.sheetErrorDetails && Array.isArray(request?.body?.sheetErrorDetails) && request?.body?.sheetErrorDetails?.length > 0) {
             request.body.ResourceDetails.status = resourceDataStatuses.invalid;
         }
         await generateProcessedFileAndPersist(request, localizationMap);
@@ -401,27 +431,29 @@ async function validateCreateRequest(request: any) {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             // const mainSheetName = targetWorkbook.SheetNames[1];
             // const sheetData = await getSheetData(fileUrl, mainSheetName, true, undefined, localizationMap);
-            // const hierachy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase());
+            const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+            const index = localizedHierarchy.indexOf(getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+            let expectedHeadersForTargetSheet = index !== -1 ? localizedHierarchy.slice(index) : throwError("COMMON", 400, "VALIDATION_ERROR", `${getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap)} level not present in the hierarchy`);
+            expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheet, getLocalizedName(config.boundaryCode, localizationMap), getLocalizedName("HCM_ADMIN_CONSOLE_TARGET", localizationMap)]
             // validateForRootElementExists(sheetData, hierachy, mainSheetName);
-            validateTabsWithTargetInTargetSheet(request, targetWorkbook);
+            validateTabsWithTargetInTargetSheet(request, targetWorkbook, expectedHeadersForTargetSheet);
         }
     }
 }
 
-function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any) {
-    const sheet = targetWorkbook.Sheets[targetWorkbook.SheetNames[2]];
-    const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-    })[0];
+function validateTabsWithTargetInTargetSheet(request: any, targetWorkbook: any, expectedHeadersForTargetSheet: any) {
     for (let i = 2; i < targetWorkbook.SheetNames.length; i++) {
         const sheetName = targetWorkbook?.SheetNames[i];
         const sheet = targetWorkbook?.Sheets[sheetName];
         // Convert the sheet to JSON to extract headers
-        const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+        let headersToValidate: any = XLSX.utils.sheet_to_json(sheet, {
             header: 1,
         })[0];
-        if (!_.isEqual(expectedHeaders, headersToValidate)) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in target sheet ${sheetName}`)
+        headersToValidate = headersToValidate.map((header: any) => header.trim());
+        if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in Target sheet ${sheetName}`)
         }
     }
 
@@ -559,6 +591,49 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
     }
 }
 
+async function validateBoundariesForTabs(CampaignDetails: any, resource: any, request: any, localizedTab: any, localizationMap?: any) {
+    const { boundaries, tenantId } = CampaignDetails;
+    const boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code.trim()));
+
+    // Fetch file response
+    const fileResponse = await httpRequest(config.host.filestore + config.paths.filestore + "/url", {}, { tenantId, fileStoreIds: resource.fileStoreId }, "get");
+    const datas = await getSheetData(fileResponse?.fileStoreIds?.[0]?.url, localizedTab, true, undefined, localizationMap);
+
+    const boundaryColumn = getLocalizedName(createAndSearch?.[resource.type]?.boundaryValidation?.column, localizationMap);
+
+    // Initialize resource boundary codes as a set for uniqueness
+    const resourceBoundaryCodesArray: any[] = [];
+    datas.forEach((data: any) => {
+        const codes = data?.[boundaryColumn]?.split(',').map((code: string) => code.trim()) || [];
+        resourceBoundaryCodesArray.push({ boundaryCodes: codes, rowNumber: data?.['!row#number!'] })
+    });
+
+    // Convert sets to arrays for comparison
+    const boundaryCodesArray = Array.from(boundaryCodes);
+    var errors = []
+    // Check for missing boundary codes
+    for (const rowData of resourceBoundaryCodesArray) {
+        var missingBoundaries = rowData.boundaryCodes.filter((code: any) => !boundaryCodesArray.includes(code));
+        if (missingBoundaries.length > 0) {
+            const errorString = `The following boundary codes are not present in selected boundaries : ${missingBoundaries.join(', ')}`
+            errors.push({ status: "BOUNDARYMISSING", rowNumber: rowData.rowNumber, errorDetails: errorString })
+        }
+    }
+    if (errors?.length > 0) {
+        request.body.ResourceDetails.status = resourceDataStatuses.invalid
+    }
+    request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
+}
+
+async function validateBoundaryOfResouces(CampaignDetails: any, request: any, localizationMap?: any) {
+    const resource = request?.body?.ResourceDetails
+    if (resource?.type == "user" || resource?.type == "facility") {
+        const localizedTab = getLocalizedName(createAndSearch?.[resource.type]?.parseArrayConfig?.sheetName, localizationMap);
+        await validateBoundariesForTabs(CampaignDetails, resource, request, localizedTab, localizationMap)
+    }
+}
+
+
 async function validateResources(resources: any, request: any) {
     for (const resource of resources) {
         if (resource?.resourceId) {
@@ -569,39 +644,21 @@ async function validateResources(resources: any, request: any) {
                     tenantId: request?.body?.CampaignDetails?.tenantId
                 }
             }
-            const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
-            if (response?.ResourceDetails?.[0]) {
-                if (!(response?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && response?.ResourceDetails?.[0]?.action == "validate")) {
-                    logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
-                    throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
+            const req: any = replicateRequest(request, searchBody);
+            const res: any = await searchDataService(req);
+            if (res?.[0]) {
+                if (!(res?.[0]?.status == resourceDataStatuses.completed && res?.[0]?.action == "validate")) {
+                    logger.error(`Error during validation of type ${resource.type}, validation is not successful or not completed. Resource id : ${resource?.resourceId}`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of type ${resource.type}, validation is not successful or not completed.`);
                 }
-                if (response?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
-                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`);
-                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`)
+                if (res?.[0]?.fileStoreId != resource?.filestoreId) {
+                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${res?.[0]?.fileStoreId}`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `Uploaded file doesn't match for resource of type ${resource.type}.`)
                 }
             }
             else {
-                logger.error(`No resource data found for resource with Id ${resource?.resourceId} :`);
-                throwError("COMMON", 400, "VALIDATION_ERROR", `No resource data found for resource with Id ${resource?.resourceId} . If resourceId is invalid, don't send resourceId in resources`);
-            }
-        }
-        else {
-            const resourceDetails = {
-                type: resource.type,
-                fileStoreId: resource.filestoreId,
-                tenantId: request?.body?.CampaignDetails?.tenantId,
-                action: "validate",
-                hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-                additionalDetails: {}
-            };
-            try {
-                await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
-                    RequestInfo: request.body.RequestInfo,
-                    ResourceDetails: resourceDetails
-                });
-            } catch (error: any) {
-                logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
-                throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
+                logger.error(`No resource data found for resource with Id ${resource?.resourceId}`);
+                throwError("COMMON", 400, "VALIDATION_ERROR", `No resource data found for validation of resource type ${resource.type}.`);
             }
         }
     }
@@ -694,13 +751,19 @@ async function validateCampaignName(request: any, actionInUrl: any) {
                 campaignName: campaignName
             }
         }
-        const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+        const req: any = replicateRequest(request, searchBody)
+        const searchResponse: any = await searchProjectTypeCampaignService(req)
         if (Array.isArray(searchResponse?.CampaignDetails)) {
-            if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
-                throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
-            }
-            else if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "update" && searchResponse?.CampaignDetails?.[0]?.id != CampaignDetails?.id) {
-                throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+            if (searchResponse?.CampaignDetails?.length > 0) {
+                const allCampaigns = searchResponse?.CampaignDetails;
+                logger.info(`campaignName to match : ${"'"}${campaignName}${"'"}`)
+                const campaignWithMatchingName: any = allCampaigns.find((campaign: any) => "'" + campaign?.campaignName + "'" == "'" + campaignName + "'") || null;
+                if (campaignWithMatchingName && actionInUrl == "create") {
+                    throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                }
+                else if (campaignWithMatchingName && actionInUrl == "update" && campaignWithMatchingName?.id != CampaignDetails?.id) {
+                    throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                }
             }
         }
         else {
@@ -721,11 +784,12 @@ async function validateById(request: any) {
             ids: [id]
         }
     }
-    const searchResponse: any = await axios.post(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
-    if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
-        if (searchResponse?.data?.CampaignDetails?.length > 0) {
-            logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
-            request.body.ExistingCampaignDetails = searchResponse?.data?.CampaignDetails[0];
+    const req: any = replicateRequest(request, searchBody)
+    const searchResponse: any = await searchProjectTypeCampaignService(req)
+    if (Array.isArray(searchResponse?.CampaignDetails)) {
+        if (searchResponse?.CampaignDetails?.length > 0) {
+            logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.CampaignDetails));
+            request.body.ExistingCampaignDetails = searchResponse?.CampaignDetails[0];
             if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
                 throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in ${campaignStatuses?.drafted} state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
             }
@@ -932,13 +996,14 @@ async function validateDownloadRequest(request: any) {
 }
 
 function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+    validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
     for (const key in dataFromSheet) {
-        if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
-            const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
-            if (dataArray.length === 0) {
-                throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
-            }
-            if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.readMeTab, localizationMap)) {
+            if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
+                const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
+                if (dataArray.length === 0) {
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `The Target Sheet ${key} you have uploaded is empty`)
+                }
                 const root = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
                 for (const boundaryRow of dataArray) {
                     for (const columns in boundaryRow) {
@@ -951,6 +1016,24 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
                     }
                 }
             }
+        }
+    }
+}
+
+
+function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
+    let tabsIndex = 2;
+    const tabsOfDistrict = getDifferentDistrictTabs(dataFromSheet[getLocalizedName(config.boundaryTab, localizationMap)], getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap));
+    const tabsFromTargetSheet = Object.keys(dataFromSheet);
+    for (let tab of tabsOfDistrict) {
+        if (tabsIndex >= tabsFromTargetSheet.length) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`);
+        }
+        if (tabsFromTargetSheet[tabsIndex] === tab) {
+            tabsIndex++;
+        }
+        else {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`)
         }
     }
 }
@@ -969,5 +1052,6 @@ export {
     validateBoundarySheetData,
     validateDownloadRequest,
     validateTargetSheetData,
-    immediateValidationForTargetSheet
+    immediateValidationForTargetSheet,
+    validateBoundaryOfResouces
 }

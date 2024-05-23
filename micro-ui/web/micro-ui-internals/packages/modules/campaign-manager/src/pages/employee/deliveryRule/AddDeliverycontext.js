@@ -550,7 +550,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT`)}
-          className="add-attribute"
+          className="add-attribute hover"
           icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} width="20" height="20" />}
           onButtonClick={addMoreAttribute}
         />
@@ -613,8 +613,17 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           </p>
           {deliveryRules.length !== 1 && (
             <div
+              className="hover"
               onClick={() => onDelete()}
-              style={{ fontWeight: "600", fontSize: "1rem", color: PRIMARY_COLOR, display: "flex", gap: "0.5rem", alignItems: "center" }}
+              style={{
+                fontWeight: "600",
+                fontSize: "1rem",
+                color: PRIMARY_COLOR,
+                display: "flex",
+                gap: "0.5rem",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
             >
               <DustbinIcon /> {t(`CAMPAIGN_DELETE_CONDITION_LABEL`)}
             </div>
@@ -646,7 +655,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         </div>
         <Button
           variation="secondary"
-          className={"add-product-btn"}
+          className={"add-product-btn hover"}
           label={t(`CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT`)}
           icon={<SVG.AppRegistration />}
           onButtonClick={() => setShowModal(true)}
@@ -744,7 +753,7 @@ const AddDeliveryRuleWrapper = ({}) => {
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-          className={"add-rule-btn"}
+          className={"add-rule-btn hover"}
           icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
           onButtonClick={addMoreDelivery}
         />
