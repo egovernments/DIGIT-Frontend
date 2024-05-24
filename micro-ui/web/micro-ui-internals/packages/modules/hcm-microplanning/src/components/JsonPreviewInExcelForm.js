@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 export const JsonPreviewInExcelForm = (props) => {
+  debugger
   const { t } = useTranslation();
   const sheetsData = props?.sheetsData;
   const [currentSheetName, setCurrentSheetName] = useState(Object.keys(sheetsData).length > 0 ? Object.keys(sheetsData)[0] : undefined);
@@ -54,7 +55,9 @@ export const JsonPreviewInExcelForm = (props) => {
         </div>
         <div className="excel-tab-list">
         {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
-          <button key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() => setCurrentSheetName(sheetName)}>
+          <button key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() =>{
+           setCurrentSheetName(sheetName);
+          }}>
             {sheetName}
           </button>
         ))}

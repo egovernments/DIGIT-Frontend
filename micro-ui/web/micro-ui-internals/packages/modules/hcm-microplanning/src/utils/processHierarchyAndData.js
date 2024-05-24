@@ -103,8 +103,7 @@ const mergeHierarchicalData = (data1, data2) => {
       mergeHierarchicalData(data1[key].children, value.children); // Recursively merge children
     }
     if (data1[key].data.feature) {
-      let temp = _.cloneDeep(value.data);
-      delete temp.feature;
+      const { feature, ...temp } = _.cloneDeep(value.data);
       data1[key].data.feature.properties = { ...data1[key].data.feature?.properties, ...temp };
     }
   }

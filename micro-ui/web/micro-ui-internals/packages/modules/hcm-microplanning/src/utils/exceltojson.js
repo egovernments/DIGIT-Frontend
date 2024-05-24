@@ -10,7 +10,7 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
         const arrayBuffer = event.target.result;
         const workbook = XLSX.read(arrayBuffer, { type: "arraybuffer" });
         const jsonData = {};
-
+        debugger
         workbook.SheetNames.forEach((sheetName) => {
           const worksheet = workbook.Sheets[sheetName];
           // const options = { header: 1 };
@@ -51,6 +51,7 @@ export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options,fileDa
         const jsonData = {};
 
         workbook.SheetNames.forEach((sheetName) => {
+
           const worksheet = workbook.Sheets[sheetName];
           // const options = { header: 1 };
           const jsonSheetData = XLSX.utils.sheet_to_json(worksheet, options);
