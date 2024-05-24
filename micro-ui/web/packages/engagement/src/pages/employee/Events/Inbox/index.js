@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { format, isValid } from "date-fns";
-import { Header } from "@digit-ui/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../../../components/Events/DesktopInbox";
 import MobileInbox from "../../../../components/Events/MobileInbox";
-
-
-
 const Inbox = ({ tenants, parentRoute }) => {
   const { t } = useTranslation()
   Digit.SessionStorage.set("ENGAGEMENT_TENANTS", tenants);
@@ -14,14 +11,18 @@ const Inbox = ({ tenants, parentRoute }) => {
   const [pageSize, setPageSize] = useState(10);
   const [pageOffset, setPageOffset] = useState(0);
   const [searchParams, setSearchParams] = useState({
+
     eventStatus: [],
     range: {
       startDate: null,
       endDate: new Date(""),
       title: ""
     },
+
     ulb: tenants?.find(tenant => tenant?.code === tenantId)
   });
+
+
   let isMobile = window.Digit.Utils.browser.isMobile();
 
   const getSearchFields = () => {
@@ -37,14 +38,12 @@ const Inbox = ({ tenants, parentRoute }) => {
       }
     ]
   }
-
   const links = [
     {
       text: t("ES_TITLE_NEW_EVENTS"),
       link: `/${window?.contextPath}/employee/engagement/event/inbox/new-event`,
     }
   ]
-
   const { data, isLoading } = Digit.Hooks.events.useInbox(searchParams?.ulb?.code, {},
     {
       eventTypes: "EVENTSONGROUND", limit: pageSize,
@@ -53,7 +52,6 @@ const Inbox = ({ tenants, parentRoute }) => {
     {
       select: (data) => ({ events: data?.events, totalCount: data?.totalCount })
     });
-
   const onSearch = (params) => {
     let updatedParams = { ...params };
     if (!params?.ulb) {
@@ -61,11 +59,9 @@ const Inbox = ({ tenants, parentRoute }) => {
     }
     setSearchParams({ ...searchParams, ...updatedParams });
   }
-
   const handleFilterChange = (data) => {
     setSearchParams({ ...searchParams, ...data })
   }
-
   const globalSearch = (rows, columnIds) => {
     // return rows;
     return rows?.filter(row =>
@@ -76,21 +72,15 @@ const Inbox = ({ tenants, parentRoute }) => {
       (isValid(searchParams?.range?.startDate) ? row.original.eventDetails?.fromDate >= new Date(searchParams?.range?.startDate).getTime() : true) &&
       (isValid(searchParams?.range?.endDate) ? row.original.eventDetails?.toDate <= new Date(searchParams?.range?.endDate).getTime() : true))
   }
-
   const fetchNextPage = useCallback(() => {
     setPageOffset((prevPageOffSet) => ((parseInt(prevPageOffSet) + parseInt(pageSize))));
   }, [pageSize])
-
   const fetchPrevPage = useCallback(() => {
     setPageOffset((prevPageOffSet) => ((parseInt(prevPageOffSet) - parseInt(pageSize))));
   }, [pageSize])
-
   const handlePageSizeChange = (e) => {
     setPageSize((prevPageSize) => (e.target.value));
   };
-
-
-
   if (isMobile) {
     return (
       <MobileInbox
@@ -107,13 +97,13 @@ const Inbox = ({ tenants, parentRoute }) => {
       />
     )
   }
-
   return (
     <div>
       <Header>
         {t("EVENTS_EVENTS_HEADER")}
         {Number(data?.totalCount) ? <p className="inbox-count">{Number(data?.totalCount)}</p> : null}
       </Header>
+
       <DesktopInbox
         t={t}
         data={data?.events}
@@ -128,7 +118,7 @@ const Inbox = ({ tenants, parentRoute }) => {
         totalRecords={data?.totalCount}
         title={"EVENTS_EVENTS_HEADER"}
         iconName={"calender"}
-        links={links}
+        
         currentPage={parseInt(pageOffset / pageSize)}
         onNextPage={fetchNextPage}
         onPrevPage={fetchPrevPage}
@@ -137,5 +127,4 @@ const Inbox = ({ tenants, parentRoute }) => {
     </div>
   );
 }
-
 export default Inbox;

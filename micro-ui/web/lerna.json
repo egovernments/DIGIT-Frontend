@@ -8,8 +8,8 @@
     "packages/workbench",
     "packages/hrms",
     "packages/svg-components",
-    "packages/pgr",
-    "packages/dss"
+    "packages/engagement"
+
   ],
   "command": {
     "run": {

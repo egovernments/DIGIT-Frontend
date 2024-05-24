@@ -1,9 +1,8 @@
-import { CloseSvg, FormComposer, Header } from "@digit-ui/digit-ui-react-components";
+import { CloseSvg, FormComposer, Header } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import CreateNewSurvey from "../../../components/Surveys/SurveyForms";
-
 export const answerTypeEnum = {
   "Short Answer": "SHORT_ANSWER_TYPE",
   Paragraph: "LONG_ANSWER_TYPE",
@@ -12,8 +11,6 @@ export const answerTypeEnum = {
   Date: "DATE_ANSWER_TYPE",
   Time: "TIME_ANSWER_TYPE",
 };
-
-
 /**TODO NRJ-egov handle this by setting correct state inside the surveyFormMaker */
 export const mapQuestions = (questions =[]) =>{
   //Added this condition to avoid a bug in which the question type is set as undefined when question type dropdown is not touched and create survey form is submitted. 
@@ -29,7 +26,6 @@ export const mapQuestions = (questions =[]) =>{
   if(!questions.length) return;
   return questions.map(({formConfig},index)=>{
       const {options:choices, questionStatement,required, type:stringType} = formConfig;
-
       const finalQuestion = {questionStatement, required, type:answerTypeEnum[stringType.title]};
       if(stringType?.title === "Multiple Choice" || stringType?.title ==="Check Boxes") {
         finalQuestion["options"] = choices;
@@ -39,9 +35,10 @@ export const mapQuestions = (questions =[]) =>{
 }
 
 const NewSurveys = () => {
+
   const { t } = useTranslation();
   const history = useHistory();
-  
+
   const onSubmit = (data) => {
     const { collectCitizenInfo, title, description, tenantIds, fromDate, toDate, fromTime, toTime, questions } = data;
     const mappedQuestions = mapQuestions(questions);
@@ -58,7 +55,6 @@ const NewSurveys = () => {
     };
     history.push(`/${window?.contextPath}/employee/engagement/surveys/create-response`, details)
   };
-
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const ulbs = Digit.SessionStorage.get("ENGAGEMENT_TENANTS");
   const userInfo = Digit.UserService.getUser().info;
@@ -76,7 +72,6 @@ const NewSurveys = () => {
     // tenantIds:[]
     tenantIds:userUlbs,
   };
-
   const stylesForForm = {
     marginLeft:'-20px',
   }
@@ -91,5 +86,4 @@ const NewSurveys = () => {
     </Fragment>
   );
 };
-
 export default NewSurveys;

@@ -1,15 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { Card, Header, LabelFieldPair, CardLabel, TextInput, Dropdown, FormComposer, SubmitBar, ActionBar } from "@digit-ui/digit-ui-react-components";
+import { Card, Header, LabelFieldPair, CardLabel, TextInput, Dropdown, FormComposer, SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { documentsFormConfig } from "../../../config/doc-update";
 import { useHistory } from "react-router-dom";
-
-
 const Documents = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
-
   const onFormValueChange = useCallback(
     (setValue, updatedFormData, formState) => {
       if (
@@ -25,7 +22,6 @@ const Documents = (props) => {
     },
     [],
   )
-
   const update = (data) => {
     const fileSize = data.document?.filestoreId?.fileSize ? data.document?.filestoreId?.fileSize : props.location.state?.DocumentEntity?.fileSize;
     const fileType = data.document?.filestoreId?.fileType ? data.document?.filestoreId?.fileType : props.location.state?.DocumentEntity?.fileType;
@@ -40,6 +36,7 @@ const Documents = (props) => {
       documentLink: data.document?.documentLink,
       tenantId: data?.ULB?.code,
     };
+
 
     delete DocumentEntity.ULB;
     delete DocumentEntity.docCategory;
@@ -60,9 +57,7 @@ const Documents = (props) => {
         defaultValues={props.location.state?.DocumentEntity}
         isDisabled={!canSubmit}
       />
-
     </React.Fragment>
   );
 };
-
 export default Documents;
