@@ -59,8 +59,6 @@ export const processHierarchyAndData = (hierarchy, allData) => {
       });
 
       // Merge dataHierarchicalData into hierarchicalData
-      debugger
-
       hierarchicalData = mergeHierarchicalData(hierarchicalData, dataHierarchicalData);
     });
 
