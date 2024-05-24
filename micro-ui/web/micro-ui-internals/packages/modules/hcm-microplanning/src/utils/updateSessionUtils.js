@@ -203,9 +203,7 @@ export const updateSessionUtils = {
     });
 
     const findSchema = (inputFileType, templateIdentifier, campaignType) => {
-      return state?.Schemas?.find((schema) => {
-        return schema.type === inputFileType && schema.section === templateIdentifier && (!schema.campaignType || schema.campaignType === campaignType);
-      });
+      return state?.Schemas?.find(schema => schema.type === inputFileType && schema.section === templateIdentifier && (!schema.campaignType || schema.campaignType === campaignType));
     };
 
     const handleGeoJsonSpecific = (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
