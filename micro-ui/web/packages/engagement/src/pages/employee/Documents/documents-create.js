@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { FormComposer, Header } from "@digit-ui/digit-ui-react-components";
+import { FormComposer, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { documentsFormConfig } from "../../../config/doc-create";
 import { useHistory } from "react-router-dom";
-
 const Documents = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
-
   const onFormValueChange = (setValue, formData, formState) => {
     if (
       formData?.documentName &&
@@ -21,6 +19,7 @@ const Documents = () => {
       setSubmitValve(false);
     }
   };
+
 
   const onSubmit = (data) => {  
     const DocumentEntity = {
@@ -35,9 +34,7 @@ const Documents = () => {
     };
 
     history.push(`/${window?.contextPath}/employee/engagement/documents/response`, { DocumentEntity });
-  };
-
-  return (
+  };return (
     <div>
      <Header>{t("ES_ENGAGEMENT_DOCUMENTS")}</Header>
     <FormComposer
@@ -52,5 +49,4 @@ const Documents = () => {
     </div>
   );
 };
-
 export default Documents;

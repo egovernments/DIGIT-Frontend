@@ -13,25 +13,25 @@ export const documentsFormConfig = [
         component: "EnagementDocName",
         withoutLabel: true,
       },
-      {
-        type: "form",
-        key: "docCategory",
-        component: "EngagementDocCategory",
-        withoutLabel: true,
-      },
+      // {
+      //   type: "form",
+      //   key: "docCategory",
+      //   component: "EngagementDocCategory",
+      //   withoutLabel: true,
+      // },
       {
         type: "form",
         key: "description",
         component: "EngagementDocDescription",
         withoutLabel: true,
       },
-      {
-        type: "form",
-        key: "document",
-        component: "EngagementDocUploadDocument",
-        withoutLabel: true,
-        inputs: [{ name: "" }],
-      },
+       // {
+      //   type: "form",
+      //   key: "document",
+      //   component: "EngagementDocUploadDocument",
+      //   withoutLabel: true,
+      //   inputs: [{ name: "" }],
+      // },
     ],
   },
 ];
