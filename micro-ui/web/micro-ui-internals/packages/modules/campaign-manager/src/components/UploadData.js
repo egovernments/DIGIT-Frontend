@@ -752,7 +752,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     if (showToast) {
       const t = setTimeout(closeToast, 5000);
-      return () => clearTimeout(t);  // Clear the timeout when showToast changes or the component unmounts
+      return () => clearTimeout(t); 
     }
   }, [showToast]);
 
