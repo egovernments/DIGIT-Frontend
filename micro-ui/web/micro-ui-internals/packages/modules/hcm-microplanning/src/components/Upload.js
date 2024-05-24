@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { LoaderWithGap, Modal } from "@egovernments/digit-ui-react-components";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
@@ -13,8 +13,8 @@ import { SpatialDataPropertyMapping } from "./resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
-import { Loader, Modal, Toast } from "@egovernments/digit-ui-components";
-import { EXCEL, GEOJSON, LOCALITY, SHAPEFILE } from "../configs/constants";
+import { Loader, Toast } from "@egovernments/digit-ui-components";
+import { EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 
@@ -181,7 +181,7 @@ const Upload = ({
         setSections(uploadSections);
       }
     }
-  }, [state?.UploadConfiguration, state?.Schemas, state?.UIConfiguration]);
+  }, []);
 
   // Memoized section options to prevent unnecessary re-renders
   const sectionOptions = useMemo(() => {
@@ -240,7 +240,7 @@ const Upload = ({
   useEffect(() => {
     if (selectedSection) {
       let file = fileDataList?.[`${selectedSection.id}`];
-      if (file && file?.file && file?.resourceMapping) {
+      if (file && file?.resourceMapping) {
         setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item?.id === file?.fileType));
         setUploadedFileError(file?.error);
         setFileData(file);
@@ -514,40 +514,52 @@ const Upload = ({
         break;
       case SHAPEFILE:
       case GEOJSON:
-        if (!fileData || !fileData.data) {
-          setToast({
-            state: "error",
-            message: t("ERROR_DATA_NOT_PRESENT"),
-          });
-          return;
+        if (fileData && fileData.data) {
+          const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+          blob = convertJsonToXlsx(result, { skipHeader: true });
         }
-        const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
-        blob = convertJsonToXlsx(result, { skipHeader: true });
         break;
     }
     return blob;
   };
 
   // Download the selected file
-  const downloadFile = () => {
+  const downloadFile = async () => {
     try {
       let blob = dataToBlob();
-      // Crating a url object for the blob
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
+      if (blob) {
+        // Crating a url object for the blob
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
 
-      // Forming a name for downloaded file
-      const fileNameParts = fileData.fileName.split(".");
-      fileNameParts.pop();
-      fileNameParts.push("xlsx");
-      fileNameParts.join(".");
+        // Forming a name for downloaded file
+        let fileNameParts = fileData.fileName.split(".");
+        fileNameParts.pop();
+        fileNameParts.push("xlsx");
+        fileNameParts.join(".");
 
-      //Downloading the file
-      link.download = fileNameParts.join(".");
-      link.click();
-      URL.revokeObjectURL(url);
+        //Downloading the file
+        link.download = fileNameParts.join(".");
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+      else{
+        let downloadUrl = await Digit.UploadServices.Filefetch([fileData.filestoreId], Digit.ULBService.getStateId());
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        // Forming a name for downloaded file
+        let fileNameParts = fileData.fileName.split(".");
+        fileNameParts.pop();
+        fileNameParts.push("xlsx");
+        fileNameParts.join(".");
+        link.download = fileNameParts; // Replace with the desired file name and extension
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     } catch (error) {
+      console.error(error.message);
       setToast({
         state: "error",
         message: t("ERROR_UNKNOWN_ERROR"),
@@ -816,9 +828,9 @@ const Upload = ({
             RightButtonHandler={() => UploadFileClickHandler(true)}
             sections={sections}
             popupModuleActionBarStyles={{
-              flex:1,
-              padding:"1rem",
-              gap:"1rem"
+              flex: 1,
+              padding: "1rem",
+              gap: "1rem",
             }}
             footerLeftButtonBody={<ButtonType1 text={t("ALREADY_HAVE_IT")} />}
             footerRightButtonBody={<ButtonType2 text={t("DOWNLOAD_TEMPLATE")} showDownloadIcon={true} />}
@@ -833,7 +845,7 @@ const Upload = ({
         )}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -842,11 +854,10 @@ const Upload = ({
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, paddingRight: "1rem", margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
@@ -862,7 +873,7 @@ const Upload = ({
         )}
         {modal === "reupload-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -871,13 +882,12 @@ const Upload = ({
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{padding:0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
-            headerBarMainStyle={{ padding: 0, margin: 0}}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_REUPLOAD_FILE_CONFIRMATION")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={reuplaodFile}
@@ -903,7 +913,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} />}
@@ -953,7 +963,7 @@ const Upload = ({
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
         )}
         {toast && toast.state === "warning" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning/>
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
         )}
         {previewUploadedData && (
           <div className="popup-wrap">
@@ -963,7 +973,7 @@ const Upload = ({
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
@@ -972,11 +982,11 @@ const Upload = ({
             width: "100%",
             padding: "0 1rem 1rem 1.3rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0 }}
           style={{
             flex: 1,
             backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
+            border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
@@ -1006,7 +1016,7 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
   return (
     <div className={` ${selected ? "upload-section-options-active" : "upload-section-options-inactive"}`} onClick={handleClick}>
       <div className="icon">
-        <CustomIcon Icon={Icons[item?.iconName]} height="26" color={selected ? "rgba(244, 119, 56, 1)" : "rgba(214, 213, 212, 1)"} />
+        <CustomIcon Icon={Icons[item?.iconName]} height="26" color={selected ? PRIMARY_THEME_COLOR : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.code)}</p>
     </div>
@@ -1054,7 +1064,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
       <div
         key={item.id}
         className="upload-option"
-        style={selectedFileType.id === item.id ? { border: "2px rgba(244, 119, 56, 1) solid", color: "rgba(244, 119, 56, 1)" } : {}}
+        style={selectedFileType.id === item.id ? { border: `0.125rem solid ${PRIMARY_THEME_COLOR}`, color: PRIMARY_THEME_COLOR } : {}}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -1063,7 +1073,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
           Icon={Icons[item.iconName]}
           width={"2.5rem"}
           height={"3rem"}
-          color={selectedFileType.id === item.id || isHovered ? "rgba(244, 119, 56, 1)" : "rgba(80, 90, 95, 1)"}
+          color={selectedFileType.id === item.id || isHovered ? PRIMARY_THEME_COLOR : "rgba(80, 90, 95, 1)"}
         />
         <p>{t(item.code)}</p>
         <button
@@ -1119,7 +1129,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
             onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
           >
             <div className="icon">
-              <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
+              <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
             <p>{t("DOWNLOAD_TEMPLATE")}</p>
           </div>
@@ -1162,7 +1172,7 @@ const UploadedFile = ({
             onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
           >
             <div className="icon">
-              <CustomIcon color={"rgba(244, 119, 56, 1)"} height={"24"} width={"24"} Icon={Icons.FileDownload} />
+              <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
             <p>{t("DOWNLOAD_TEMPLATE")}</p>
           </div>
@@ -1178,15 +1188,15 @@ const UploadedFile = ({
           </div>
           <div className="uploaded-file-operations">
             <div className="button" onClick={ReuplaodFile}>
-              <CustomIcon Icon={Icons.FileUpload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
+              <CustomIcon Icon={Icons.FileUpload} width={"1.5rem"} height={"1.5rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("Reupload")}</p>
             </div>
             <div className="button" onClick={DownloadFile}>
-              <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={"rgba(244, 119, 56, 1)"} />
+              <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("Download")}</p>
             </div>
             <div className="deletebutton" onClick={DeleteFile}>
-              <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={"rgba(244, 119, 56, 1)"} />
+              <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("DELETE")}</p>
             </div>
           </div>

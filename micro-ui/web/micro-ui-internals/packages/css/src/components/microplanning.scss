@@ -1,6 +1,6 @@
 $box-shadow-color: #00000029;
 $border-color: rgba(214, 213, 212, 1);
-$highlight-color: rgba(244, 119, 56, 1);
+$highlight-color: #C84C0E;
 $border-color: rgba(214, 213, 212, 1);
 
 @mixin custom-scrollbar {
@@ -167,10 +167,11 @@ $border-color: rgba(214, 213, 212, 1);
 
     .upload-component-wrapper {
         width: 100%;
-
+/*
         @media (min-width: 68.75rem) {
             padding-right: 4rem;
         }
+        */
     }
 
     .upload {
@@ -182,7 +183,7 @@ $border-color: rgba(214, 213, 212, 1);
 
     .upload-section-option {
         position: relative;
-        right: 0;
+        right: -1.68rem;
         width: 12.7rem;
         min-height: 32rem;
         background-color: #ffffff;
@@ -394,7 +395,6 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .upload-file {
-        min-width: 90%;
         min-height: 10rem;
         padding-top: 0.625;
         border: 0.063rem $border-color;
@@ -845,26 +845,6 @@ $border-color: rgba(214, 213, 212, 1);
         outline: none;
     }
 
-    .add-icon {
-        background-color: $highlight-color;
-        border-radius: 50%;
-        width: 1.05rem;
-        height: 1.05rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 0.5rem;
-
-        p {
-            margin: auto;
-            font-size: 1.25rem;
-            font-weight: 400;
-            padding: 0;
-            margin: 0;
-            color: white !important;
-        }
-    }
-
     .heading {
         padding: 0.5rem 0;
         margin: 0;
@@ -1089,7 +1069,7 @@ $border-color: rgba(214, 213, 212, 1);
 
         p {
             color: $highlight-color;
-            padding: 0;
+            padding: 0 0 0 0.6rem;
             margin: 0;
             font-size: 1.188rem;
             font-weight: 600;
@@ -1318,31 +1298,11 @@ $border-color: rgba(214, 213, 212, 1);
 
             p {
                 color: $highlight-color;
-                padding: 0;
+                padding: 0 0 0 0.6rem;
                 margin: 0;
                 font-size: 1.188rem;
                 font-weight: 600;
                 text-align: center;
-            }
-
-            .add-icon {
-                background-color: $highlight-color;
-                border-radius: 50%;
-                width: 1.05rem;
-                height: 1.05rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 0.5rem;
-
-                p {
-                    font-size: 1.25rem;
-                    font-weight: 400;
-                    padding: 0;
-                    margin: 0;
-                    color: white !important;
-                    text-align: center;
-                }
             }
         }
     }
@@ -2424,22 +2384,14 @@ $border-color: rgba(214, 213, 212, 1);
 
 }
 
-.digit-action-cancel {
-    .digit-button-label {
+.selector-button-border {
+    h2 {
         color: $highlight-color !important;
     }
+    background-color: white !important;
 }
 
-.digit-stepper-checkpoint {
-    .digit-stepper-content {
-        .active {
-            background-color: $highlight-color !important;
-            border-color: $highlight-color !important;
-        }
-    }
-
-    .active {
-        background-color: $highlight-color !important;
-        border-color: $highlight-color !important;
-    }
+.selector-button-primary{
+    background-color: $highlight-color !important;
 }
+

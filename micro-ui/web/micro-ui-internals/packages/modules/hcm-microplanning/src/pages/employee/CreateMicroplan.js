@@ -88,7 +88,7 @@ const CreateMicroplan = () => {
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!(temp && temp.ruleConfigureOperators)) return;
     setOperatorsObject(temp.ruleConfigureOperators);
-  }, [state?.UIConfiguration]);
+  }, []);
 
   // useEffect to store data in session storage
   useEffect(() => {

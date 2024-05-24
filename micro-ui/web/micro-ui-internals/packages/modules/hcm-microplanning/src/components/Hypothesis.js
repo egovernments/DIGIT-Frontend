@@ -2,12 +2,16 @@ import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown, Modal, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Dropdown,  TextInput, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 import { tourSteps } from "../configs/tourSteps";
 import { v4 as uuidv4 } from "uuid";
+import { PlusWithSurroundingCircle } from "../icons/Svg";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
+import { Modal } from "@egovernments/digit-ui-react-components";
 
 const page = "hypothesis";
+
 
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
@@ -44,21 +48,27 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       setAssumptions(microplanData.hypothesis);
     }
 
+    fetchDataAndUpdateState();
+  }, []);
+
+  const fetchDataAndUpdateState = useCallback(() => {
     let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
-    let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+    let temp = hypothesisAssumptions.find(item => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
     let hypothesisAssumptionsList = temp.assumptions;
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
-
+    
     let newAssumptions = setAutofillHypothesisData(
       hypothesisAssumptionsList,
       microplanData?.hypothesis ? microplanData?.hypothesis : assumptions,
       setAssumptions
     );
+
     let newHypothesislist = filterHypothesisList(newAssumptions.length !== 0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
     setHypothesisAssumptionsList(newHypothesislist);
-  }, []);
+  }, [state, campaignType, microplanData, setAutofillHypothesisData, filterHypothesisList, assumptions, setAssumptions]);
+
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
@@ -96,7 +106,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (!assumptions || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
-        let checkValid = assumptions.every((item) => Object.values(item).every((data) => data !== ""));
+        let checkValid = validateAssumptions(assumptions);
         checkValid = checkValid && assumptions.length !== 0;
         if (checkValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
@@ -109,6 +119,12 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     },
     [assumptions, setMicroplanData, microplanData, setCheckDataCompletion]
   );
+
+  const validateAssumptions = useCallback((assumptions) => {
+    return assumptions.every((item) => 
+      Object.values(item).every((data) => data !== "")
+    ) && assumptions.length !== 0;
+  }, []);
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("false");
@@ -143,15 +159,13 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           t={t}
         />
         <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
-          <div className="add-icon">
-            <p>+</p>
-          </div>
+          <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem"/>
           <p>{t("ADD_ROW")}</p>
         </button>
         {/* delete conformation */}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+            popupStyles={{borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -160,11 +174,10 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
               width: "100%",
               padding: "1rem",
             }}
-            popupModuleMianStyles={{ padding: 0, margin: 0, maxWidth: "31.188rem" }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              backgroundColor: "white",
-              border: "0.063rem solid rgba(244, 119, 56, 1)",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
@@ -185,7 +198,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+          popupStyles={{  borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
@@ -195,11 +208,11 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             width: "100%",
             padding: "0 0 1rem 1.3rem",
           }}
-          popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+          popupModuleMianStyles={{ padding: 0, margin: 0 }}
           style={{
             flex: 1,
             backgroundColor: "white",
-            border: "0.063rem solid rgba(244, 119, 56, 1)",
+            border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
           }}
           headerBarMainStyle={{ padding: 0, margin: 0 }}
           headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DATA_WAS_UPDATED_WANT_TO_SAVE")} />}
@@ -269,7 +282,7 @@ const InterractableSection = React.memo(
               <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
                 <div>
                   {" "}
-                  <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                  <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                 </div>
                 <p>{t("DELETE")}</p>
               </button>
@@ -295,7 +308,7 @@ const InterractableSection = React.memo(
                 <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
                   <div>
                     {" "}
-                    <Trash width={"0.8rem"} height={"1rem"} fill={"rgba(244, 119, 56, 1)"} />
+                    <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                   </div>
                   <p>{t("DELETE")}</p>
                 </button>

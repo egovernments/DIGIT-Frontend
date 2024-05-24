@@ -19,3 +19,6 @@ export const MapChoroplethGradientColors = [
   { percent: 0, color: "#edd1cf" },
   { percent: 100, color: "#b52626" },
 ];
+
+
+export const PRIMARY_THEME_COLOR = "#C84C0E"

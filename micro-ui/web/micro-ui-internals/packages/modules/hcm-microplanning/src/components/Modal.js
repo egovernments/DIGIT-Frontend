@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { PopUp, HeaderBar, Toast, CloseButton, ButtonSelector } from "@egovernments/digit-ui-react-components";
 import { Close } from "@egovernments/digit-ui-svg-components";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 const Modal = ({
   headerBarMain,
@@ -118,16 +119,16 @@ export const ModalWrapper = ({
         height: "fit-content",
         textStyles: { fontWeight: "600" },
         backgroundColor: "rgba(255, 255, 255, 1)",
-        color: "rgba(244, 119, 56, 1)",
+        color: PRIMARY_THEME_COLOR,
         minWidth: "13rem",
-        border: "1px solid rgba(244, 119, 56, 1)",
+        border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
       }}
       footerRightButtonstyle={{
         padding: 0,
         alignSelf: "flex-end",
         height: "fit-content",
         textStyles: { fontWeight: "500" },
-        backgroundColor: "rgba(244, 119, 56, 1)",
+        backgroundColor: PRIMARY_THEME_COLOR,
         color: "rgba(255, 255, 255, 1)",
         minWidth: "13rem",
         boxShadow: "0px -2px 0px 0px rgba(11, 12, 12, 1) inset",

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-react-components";
 import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
+import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 /**
  *
@@ -200,7 +201,7 @@ const Navigator = (props) => {
             onButtonClick={previousbuttonClickHandler}
             isSuffix={false}
             variation={"secondary"}
-            icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={"rgba(244, 119, 56, 1)"} />}
+            icon={<ArrowBack className={"icon"} width={"1.5rem"} height={"1.5rem"} fill={PRIMARY_THEME_COLOR} />}
           />
         )}
         {/* Next/Submit button */}
