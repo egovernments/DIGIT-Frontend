@@ -59,11 +59,11 @@ const NonIFrameInterface = (props) => {
           if (xhr.status === 200) {
             console.log(xhr.responseText);
             setHtmlContent(xhr.responseText);
-            setIframeLoaded({info:true,label:"External Website getting loaded"})
+            setIframeLoaded({type:"info",label:"External Website getting loaded"})
             // Handle successful response here
           } else {
             console.error('Request failed with status:', xhr.status);
-            setIframeLoaded({erroe:true,label:'Request failed with status:'+ xhr.status})
+            setIframeLoaded({type:"error",label:'Request failed with status:'+ xhr.status})
 
             // Handle error here
           }
@@ -128,7 +128,7 @@ const NonIFrameInterface = (props) => {
        {/* Render HTML content */}
        <div style={{height:"100vh",width:"100vw"}} dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
-        {iframeLoaded && <Toast info={iframeLoaded?.info} error={iframeLoaded?.error} label={iframeLoaded?.label}></Toast>}
+        {iframeLoaded && <Toast type={iframeLoaded?.type} label={iframeLoaded?.label}></Toast>}
       </div>
     </React.Fragment>
   );

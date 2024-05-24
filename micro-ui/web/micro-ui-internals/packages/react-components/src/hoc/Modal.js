@@ -23,7 +23,15 @@ const Modal = ({
   popupModuleMianStyles,
   headerBarMainStyle,
   isOBPSFlow = false,
-  popupModuleActionBarStyles = {}
+  popupModuleActionBarStyles = {},
+  popmoduleClassName = "",
+  popUpContainerClassName="",
+  popupModuleActionBarClass = "",
+  popupMainModuleClass = "",
+  customTheme = "",
+  actionSingleLabel,
+  actionSingleSubmit,
+
 }) => {
   /**
    * TODO: It needs to be done from the desgin changes
@@ -36,12 +44,12 @@ const Modal = ({
     }
   }, [])
   return (
-    <PopUp>
-      <div className="popup-module" style={popupStyles}>
+    <PopUp className={popUpContainerClassName}>
+      <div className={`popup-module ${popmoduleClassName}`} style={popupStyles}>
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}} />
-        <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
+        <div className={`popup-module-main ${popupMainModuleClass}`} style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
-          <div className="popup-module-action-bar" style={isOBPSFlow ? !mobileView ? { marginRight: "18px" } : { position: "absolute", bottom: "5%", right: "10%", left: window.location.href.includes("employee") ? "0%" : "7%" } : popupModuleActionBarStyles}>
+          <div className={`popup-module-action-bar ${popupModuleActionBarClass}`} style={isOBPSFlow ? !mobileView ? { marginRight: "18px" } : { position: "absolute", bottom: "5%", right: "10%", left: window.location.href.includes("employee") ? "0%" : "7%" } : popupModuleActionBarStyles}>
             {actionCancelLabel ? <ButtonSelector textStyles={{ margin: "0px" }} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style} /> : <div></div>}
             {!hideSubmit ? <ButtonSelector textStyles={{ margin: "0px" }} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style} /> : null}
           </div>
