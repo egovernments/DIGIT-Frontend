@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.22 Fixed Tutorial
 1.8.1-beta.21 Added classname in Modal
 1.8.1-beta.20 changes in Tutorial, help for more customizability
 1.8.1-beta.19 increasing zIndex in Tutorial, so it appears on top of every thing
