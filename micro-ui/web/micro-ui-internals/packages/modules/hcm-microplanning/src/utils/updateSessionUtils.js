@@ -194,7 +194,7 @@ export const updateSessionUtils = {
       section: templateIdentifier,
       fileName: `${templateIdentifier}${extension}`,
       fileType: inputFileType,
-      file: undefined,
+      file: null,
       fileId: fileId,
       filestoreId: filestoreId,
       error: null,
@@ -204,10 +204,7 @@ export const updateSessionUtils = {
 
     const findSchema = (inputFileType, templateIdentifier, campaignType) => {
       return state?.Schemas?.find((schema) => {
-        if (!schema.campaignType) {
-          return schema.type === inputFileType && schema.section === templateIdentifier;
-        }
-        return schema.campaignType === campaignType && schema.type === inputFileType && schema.section === templateIdentifier;
+        return schema.type === inputFileType && schema.section === templateIdentifier && (!schema.campaignType || schema.campaignType === campaignType);
       });
     };
 

@@ -330,7 +330,7 @@ const MicroplanPreview = ({
         </div>
         {modal === "confirm-apply-changed-hypothesis" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ orderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,

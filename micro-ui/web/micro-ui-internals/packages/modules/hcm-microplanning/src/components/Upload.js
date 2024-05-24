@@ -845,7 +845,7 @@ const Upload = ({
         )}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -873,7 +873,7 @@ const Upload = ({
         )}
         {modal === "reupload-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -973,7 +973,7 @@ const Upload = ({
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+          popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,

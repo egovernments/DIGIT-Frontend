@@ -208,7 +208,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
         {/* delete conformation */}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -238,7 +238,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+          popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
@@ -535,8 +535,8 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
   useEffect(() => {
     if (item) {
-      if (outputs && outputs.some((e) => e == item?.input)) {
-        if (rules.some((e) => e?.output == item?.input)) setSelected({ code: item[toChange] });
+      if (outputs && outputs.some((e) => e === item?.input)) {
+        if (rules.some((e) => e?.output === item?.input)) setSelected({ code: item[toChange] });
       } else setSelected({ code: item[toChange] });
     }
   }, [item]);
@@ -569,11 +569,11 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
         });
         return filteredAssumptionsList;
       });
-      if (typeof setInputs == "function") {
+      if (typeof setInputs === "function") {
         setInputs((previous) => {
           let temp = _.cloneDeep(previous);
-          if (toChange == "output") {
-            temp = temp.filter((item) => item != selected?.code);
+          if (toChange === "output") {
+            temp = temp.filter((item) => item !== selected?.code);
           }
           if (Object.values(newDataSegment).every((item) => item != "")) temp = [...temp, newDataSegment.output];
           return temp;

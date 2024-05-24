@@ -165,7 +165,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
         {/* delete conformation */}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -198,7 +198,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       </div>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+          popupStyles={{  borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,

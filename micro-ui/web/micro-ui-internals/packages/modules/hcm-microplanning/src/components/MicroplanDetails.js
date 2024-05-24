@@ -223,7 +223,7 @@ const MicroplanDetails = ({
       </Card>
       {modal === "data-change-check" && (
         <Modal
-          popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "31.188rem" }}
+          popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
           popupModuleActionBarStyles={{
             display: "flex",
             flex: 1,
