@@ -27,7 +27,8 @@
     "packages/hrms",
     "packages/svg-components",
     "packages/pgr",
-    "packages/dss"
+    "packages/dss",
+    "packages/engagement"
   ],
   "scripts": {
     "build": "yarn lerna run build",
@@ -35,9 +36,11 @@
     "build:core": "cd packages/core && yarn build",
     "build:hrms": "cd packages/hrms && yarn build",
     "build:workbench": "cd packages/workbench && yarn build",
-    "build:dss": "cd packages/dss && yarn build",
+      "build:dss": "cd packages/dss && yarn build",
     "start:core": "cd packages/core && yarn start",
-    "start:workbench": "cd packages/workbench && yarn start"
+    "start:workbench": "cd packages/workbench && yarn start",
+    "build:engagement": "cd packages/engagement && yarn build",
+    "start:engagement": "cd packages/engagement && yarn start"
   },
   "dependencies": {
     "dotenv": "^16.3.1"
