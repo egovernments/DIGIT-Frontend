@@ -16,6 +16,7 @@ const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
   const history = useHistory()
   const { run, stepIndex, steps } = tutorial;
   
+  //UseEffect to update theme externally
   useEffect(()=>{
     if(props?.theme){
       theme = {...theme,...props?.theme}
