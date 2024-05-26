@@ -1,11 +1,30 @@
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { Table } from "@egovernments/digit-ui-react-components";
 import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, t }) => {
   // If no data is uploaded, display a message
-  if (!uploadedData) return <div className="spatial-data-property-mapping"> No Data To Map</div>;
+  if (!uploadedData) return <div className="spatial-data-property-mapping"> {t("NO_DATA_TO_DO_MAPPING")}</div>;
+
+  const itemRefs = useRef([]);
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  useEffect(() => {
+    // Scroll to the expanded item's child element after the state has updated and the DOM has re-rendered
+    if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+      // Use a timeout to ensure the DOM has updated
+      setTimeout(() => {
+        try {
+          const childElement = itemRefs.current[expandedIndex].children[0]; // Assuming child content is the second child
+          if (childElement) {
+            childElement.scrollIntoView({ behavior: "smooth" });
+          }
+        } catch (error) {}
+      }, 0);
+    }
+    return () => {};
+  }, [expandedIndex]);
 
   // State variables
   const [userColumns, setUserColumns] = useState([]);
@@ -30,12 +49,12 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
   }, [uploadedData]);
 
   // Dropdown component for selecting user columns
-  const DropDownUserColumnSelect = ({ id }) => {
+  const DropDownUserColumnSelect = ({ id, index }) => {
     const [selectedOption, setSelectedOption] = useState("");
     useEffect(() => {
       const obj = resourceMapping.find((item) => item["mappedTo"] == id);
       if (obj) setSelectedOption({ code: obj["mappedFrom"] });
-      else setSelectedOption({});
+      else setSelectedOption();
     }, [id, resourceMapping]);
 
     const handleSelectChange = (event) => {
@@ -46,17 +65,24 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
         return [...revisedData, { mappedTo: id, mappedFrom: newValue }];
       });
     };
+
+    const toggleExpand = (index) => {
+      setExpandedIndex(index === expandedIndex ? null : index);
+    };
+
     return (
-      <Dropdown
-        variant="select-dropdown"
-        t={t}
-        isMandatory={false}
-        option={userColumns?.map((item) => ({ code: item }))}
-        selected={selectedOption}
-        optionKey="code"
-        select={handleSelectChange}
-        style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)" }}
-      />
+      <div ref={(el) => (itemRefs.current[index] = el)} onClick={() => toggleExpand(index)}>
+        <Dropdown
+          variant="select-dropdown"
+          t={t}
+          isMandatory={false}
+          option={userColumns?.map((item) => ({ code: item }))}
+          selected={selectedOption}
+          optionKey="code"
+          select={handleSelectChange}
+          style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)" }}
+        />
+      </div>
     );
   };
 
@@ -69,10 +95,10 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
       {
         Header: t("COLUMNS_IN_USER_UPLOAD"),
         accessor: "COLUMNS_IN_USER_UPLOAD",
-        Cell: ({ cell: { value } }) => <DropDownUserColumnSelect key={value} id={value} />,
+        Cell: ({ cell: { value }, row: { index } }) => <DropDownUserColumnSelect key={value} id={value} index={index} />,
       },
     ],
-    [userColumns]
+    [userColumns, setResourceMapping, resourceMapping, t, itemRefs]
   );
   const data = useMemo(() => templateColumns.map((item) => ({ COLUMNS_IN_TEMPLATE: t(item), COLUMNS_IN_USER_UPLOAD: item })), [templateColumns]);
   return (

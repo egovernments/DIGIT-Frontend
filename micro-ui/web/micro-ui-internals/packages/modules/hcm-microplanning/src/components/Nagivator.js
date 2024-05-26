@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-react-components";
 import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
+import { memo } from "react";
 
 /**
  *
@@ -13,7 +14,7 @@ import { PRIMARY_THEME_COLOR } from "../configs/constants";
  *
  */
 // Main component for creating a microplan
-const Navigator = (props) => {
+const Navigator = memo( (props) => {
   // States
   const [currentPage, setCurrentPage] = useState();
   const [toast, setToast] = useState();
@@ -219,10 +220,10 @@ const Navigator = (props) => {
       </ActionBar>
 
       {/* Toast notification */}
-      {toast && <Toast label={toast} error={true} onClose={() => setToast(undefined)} />}
+      {toast && <Toast label={toast} type="error" onClose={() => setToast(undefined)} />}
     </div>
   );
-};
+});
 
 // Component to load custom component based on current page
 const LoadCustomComponent = (props) => {

@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Trash } from "@egovernments/digit-ui-svg-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown,  TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { useMyContext } from "../utils/context";
 import { tourSteps } from "../configs/tourSteps";
 import { v4 as uuidv4 } from "uuid";
 import { PlusWithSurroundingCircle } from "../icons/Svg";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import { Modal } from "@egovernments/digit-ui-react-components";
-
 const page = "hypothesis";
-
 
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
   const { t } = useTranslation();
@@ -45,7 +43,8 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {
-      setAssumptions(microplanData.hypothesis);
+      let temp  = microplanData.hypothesis.filter(item=>item.active)
+      setAssumptions(temp);
     }
 
     fetchDataAndUpdateState();
@@ -54,11 +53,11 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   const fetchDataAndUpdateState = useCallback(() => {
     let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
-    let temp = hypothesisAssumptions.find(item => item.campaignType === campaignType);
+    let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
     let hypothesisAssumptionsList = temp.assumptions;
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
-    
+
     let newAssumptions = setAutofillHypothesisData(
       hypothesisAssumptionsList,
       microplanData?.hypothesis ? microplanData?.hypothesis : assumptions,
@@ -67,21 +66,22 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
     let newHypothesislist = filterHypothesisList(newAssumptions.length !== 0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
     setHypothesisAssumptionsList(newHypothesislist);
-  }, [state, campaignType, microplanData, setAutofillHypothesisData, filterHypothesisList, assumptions, setAssumptions]);
-
+  }, [campaignType, microplanData, setAutofillHypothesisData, filterHypothesisList, assumptions, setAssumptions]);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!assumptions || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (!microplanData?.hypothesis || !_.isEqual(assumptions, microplanData.hypothesis)) setModal("data-change-check");
-    else updateData(true);
+    // uncomment to activate data change save check
+    // if (!microplanData?.hypothesis || !_.isEqual(assumptions, microplanData.hypothesis)) setModal("data-change-check");
+    // else
+    updateData(true);
   }, [checkDataCompletion]);
 
-  // // UseEffect to store current data
-  // useEffect(() => {
-  //   if (!assumptions || !setMicroplanData) return;
-  //   setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
-  // }, [assumptions]);
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!assumptions || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+  }, [assumptions]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -121,9 +121,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   );
 
   const validateAssumptions = useCallback((assumptions) => {
-    return assumptions.every((item) => 
-      Object.values(item).every((data) => data !== "")
-    ) && assumptions.length !== 0;
+    return assumptions.every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
   }, []);
 
   const cancelUpdateData = useCallback(() => {
@@ -159,13 +157,13 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           t={t}
         />
         <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
-          <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem"/>
+          <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
           <p>{t("ADD_ROW")}</p>
         </button>
         {/* delete conformation */}
         {modal === "delete-conformation" && (
           <Modal
-            popupStyles={{borderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -193,9 +191,10 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
         )}
 
         {toast && toast.state === "error" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
         )}
       </div>
+      {/* might need it
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{  borderRadius: "0.25rem", width: "31.188rem" }}
@@ -226,7 +225,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
@@ -241,6 +240,7 @@ const addAssumptionsHandler = (setAssumptions) => {
       // previous.length ? previous[previous.length - 1].id + 1 : 0,
       key: "",
       value: "",
+      active:true
     },
   ]);
 };
@@ -258,6 +258,68 @@ const NonInterractableSection = React.memo(({ t }) => {
 // Defination for NonInterractable Section
 const InterractableSection = React.memo(
   ({ assumptions, setAssumptions, hypothesisAssumptionsList, setHypothesisAssumptionsList, setModal, setItemForDeletion, exampleOption, t }) => {
+    const itemRefs = useRef([]);
+    const [expandedIndex, setExpandedIndex] = useState(null);
+    const scrollContainerRef = useRef(null);
+    const [renderCycle, setRenderCycle] = useState(0);
+
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        setRenderCycle(0); // Reset render cycle count when expandedIndex changes
+      }
+    }, [expandedIndex]);
+
+    useEffect(() => {    
+      // Scroll to the expanded item after the state has updated and the DOM has re-rendered
+      if (renderCycle < 2) {
+        setRenderCycle(prev => prev + 1); // Increment render cycle count
+      } else if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+        try {
+          const parentElement = itemRefs.current[expandedIndex];
+          const childElement = itemRefs.current[expandedIndex].children[1]; 
+          
+          if (parentElement) {
+            const scrollContainer = scrollContainerRef.current;
+            const parentRect = parentElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+            
+            // Calculate the offset from the top of the container
+            const offset = parentRect.top - containerRect.top;
+            
+            // Scroll the container
+            scrollContainer.scrollTo({
+              top: scrollContainer.scrollTop + offset - 10,
+              behavior: 'smooth'
+            });
+          }
+  
+          if (childElement) {
+            childElement.focus();
+          }
+        } catch (error) {
+          console.error("Error scrolling to element:", error);
+        }
+      }
+    }, [renderCycle,expandedIndex]);
+
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        const observer = new MutationObserver(() => {
+          setRenderCycle((prev) => prev + 1); // Trigger render cycle when the DOM changes
+        });
+  
+        if (itemRefs.current[expandedIndex]) {
+          observer.observe(itemRefs.current[expandedIndex], { childList: true, subtree: true });
+        }
+  
+        return () => observer.disconnect();
+      }
+    }, [expandedIndex]);
+
+    const toggleExpand = (index) => {
+      setExpandedIndex(index === expandedIndex ? null : index);
+    };
+
     // Handler for deleting an assumption on conformation
     const deleteHandler = useCallback(
       (item) => {
@@ -268,7 +330,7 @@ const InterractableSection = React.memo(
     );
 
     return (
-      <div className="user-input-section">
+      <div className="user-input-section"  ref={scrollContainerRef}>
         <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
           <div className="headerbar">
@@ -288,9 +350,15 @@ const InterractableSection = React.memo(
               </button>
             </div>
           </div>
-          {assumptions.map((item, index) => (
-            <div key={index} className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
-              <div className="key">
+          {assumptions?.filter(item=>item.active)?.map((item, index) => (
+            <div
+              key={index}
+              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
+            >
+              <div className="key" 
+              ref={(el) => (itemRefs.current[index] = el)}
+              onClick={() => {toggleExpand(index)}}
+              >
                 <Select
                   key={item.id}
                   item={item}
@@ -360,7 +428,10 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHy
       add = false;
       return previous;
     }
-    const filteredData = previous.filter((data) => data.id !== item.id);
+    // const filteredData = previous.filter((data) => data.id !== item.id);
+    const  deletionElementIndex = previous.findIndex(data=>data.id !== item.id)
+    let filteredData = _.cloneDeep(previous)
+    filteredData[deletionElementIndex].active = false
     return filteredData || [];
   });
   if (add && item && item.key)
@@ -392,6 +463,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       const existingEntry = assumptions.find((item) => item.key === e?.code);
       if (existingEntry) return;
       const newDataSegment = {
+        ...item,
         id: item.id,
         key: e?.code,
         value: item.value,
@@ -418,7 +490,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       variant="select-dropdown"
       t={t}
       isMandatory={false}
-      option={[...filteredOptions?.map((item) => ({ code: item })), { code: t("SELECT_OPTION") }]}
+      option={filteredOptions?.map((item) => ({ code: item }))}
       selected={selected}
       optionKey="code"
       select={selectChangeHandler}
@@ -438,7 +510,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if ((e.target.value <= 0 || e.target.value / 1000 >= 1) && e.target.value !== "") return;
+      if ((e.target.value <= 0 || e.target.value / 1000 >= 1) && e.target.value ) return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {
@@ -452,6 +524,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
       setInputValue(!isNaN(value) ? value : "");
       const newDataSegment = {
+        ...item,
         id: item.id,
         key: item.key,
         value: !isNaN(value) ? value : "",
@@ -472,7 +545,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   return (
     <TextInput
       name={"input"}
-      type={"number"}
+      type={"text"}
       value={inputValue}
       t={t}
       config={{}}
@@ -494,6 +567,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
       id: uuid,
       key: autofillHypothesis[Number(i)],
       value: "",
+      active:true
     });
   }
   setAssumptions(newAssumptions);

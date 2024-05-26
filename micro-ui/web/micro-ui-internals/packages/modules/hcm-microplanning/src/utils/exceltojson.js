@@ -10,7 +10,6 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
         const arrayBuffer = event.target.result;
         const workbook = XLSX.read(arrayBuffer, { type: "arraybuffer" });
         const jsonData = {};
-        debugger
         workbook.SheetNames.forEach((sheetName) => {
           const worksheet = workbook.Sheets[sheetName];
           // const options = { header: 1 };
@@ -18,12 +17,12 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
           for (let i = 0; i < jsonSheetData.length; i++) {
             for (let j = 0; j < jsonSheetData[i].length; j++) {
               const cell = jsonSheetData[i][j];
-              // if (typeof cell === "string") {
-              //   jsonSheetData[i][j] = cell.trim();
-              // }
+              if (typeof cell === "string") {
+                jsonSheetData[i][j] = cell.trim();
+              }
             }
           }
-          jsonData[sheetName] = jsonSheetData;
+          if (jsonSheetData.length !== 0) jsonData[sheetName] = jsonSheetData;
         });
 
         resolve(jsonData);
@@ -40,7 +39,7 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
   });
 };
 
-export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options,fileData) => {
+export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options, fileData) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -51,7 +50,6 @@ export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options,fileDa
         const jsonData = {};
 
         workbook.SheetNames.forEach((sheetName) => {
-
           const worksheet = workbook.Sheets[sheetName];
           // const options = { header: 1 };
           const jsonSheetData = XLSX.utils.sheet_to_json(worksheet, options);
@@ -66,7 +64,7 @@ export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options,fileDa
           jsonData[sheetName] = jsonSheetData;
         });
 
-        resolve({jsonData,file:fileData});
+        resolve({ jsonData, file: fileData });
       } catch (error) {
         resolve({ error: true });
       }

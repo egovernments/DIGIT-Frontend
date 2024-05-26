@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "./Modal";
@@ -51,15 +51,17 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!rules || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
-    else updateData(true);
+    // uncomment to activate data change save check
+    // if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
+    // else
+    updateData(true);
   }, [checkDataCompletion]);
 
-  // // UseEffect to store current data
-  // useEffect(() => {
-  //   if (!rules || !setMicroplanData) return;
-  //   setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-  // }, [rules]);
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!rules || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+  }, [rules]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -236,6 +238,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           </Modal>
         )}
       </div>
+      {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
@@ -265,7 +268,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
@@ -296,6 +299,7 @@ const addRulesHandler = (setRules) => {
       input: "",
       operator: "",
       assumptionValue: "",
+      active : true
     },
   ]);
 };
@@ -328,6 +332,68 @@ const InterractableSection = React.memo(
     setOperators,
     t,
   }) => {
+    const itemRefs = useRef([]);
+    const [expandedIndex, setExpandedIndex] = useState(null);
+    const scrollContainerRef = useRef(null);
+    const [renderCycle, setRenderCycle] = useState(0);
+
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        setRenderCycle(0); // Reset render cycle count when expandedIndex changes
+      }
+    }, [expandedIndex]);
+
+    useEffect(() => {    
+      // Scroll to the expanded item after the state has updated and the DOM has re-rendered
+      if (renderCycle < 3) {
+        setRenderCycle(prev => prev + 1); // Increment render cycle count
+      } else if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+        try {
+          const parentElement = itemRefs.current[expandedIndex];
+          const childElement = itemRefs.current[expandedIndex].children[1]; 
+          
+          if (parentElement) {
+            const scrollContainer = scrollContainerRef.current;
+            const parentRect = parentElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+            
+            // Calculate the offset from the top of the container
+            const offset = parentRect.top - containerRect.top;
+            
+            // Scroll the container
+            scrollContainer.scrollTo({
+              top: scrollContainer.scrollTop + offset - 10,
+              behavior: 'smooth'
+            });
+          }
+  
+          if (childElement) {
+            childElement.focus();
+          }
+        } catch (error) {
+          console.error("Error scrolling to element:", error);
+        }
+      }
+    }, [renderCycle,expandedIndex]);
+
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        const observer = new MutationObserver(() => {
+          setRenderCycle((prev) => prev + 1); // Trigger render cycle when the DOM changes
+        });
+  
+        if (itemRefs.current[expandedIndex]) {
+          observer.observe(itemRefs.current[expandedIndex], { childList: true, subtree: true });
+        }
+  
+        return () => observer.disconnect();
+      }
+    }, [expandedIndex]);
+
+    const toggleExpand = (index) => {
+      setExpandedIndex(index === expandedIndex ? null : index);
+    };
+
     // Handler for deleting an assumption on conformation
     const deleteHandler = useCallback(
       (item) => {
@@ -338,7 +404,7 @@ const InterractableSection = React.memo(
     );
 
     return (
-      <div className="user-input-section">
+      <div className="user-input-section"ref={scrollContainerRef}>
         <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
           <div className="headerbar">
@@ -364,8 +430,13 @@ const InterractableSection = React.memo(
               </button>
             </div>
           </div>
-          {rules.map((item, index) => (
-            <div key={index} className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
+          {rules.filter(item=>item.active).map((item, index) => (
+            <div
+              key={index}
+              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
+              ref={(el) => (itemRefs.current[index] = el)}
+              onClick={() => toggleExpand(index)}
+            >
               <div key={item.id} className="value-input-key">
                 <Select
                   key={item.id}
@@ -618,10 +689,10 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
-  Object.entries(microplanData?.upload)
-    ?.filter(([key, value]) => value?.error === null)
-    .forEach(([key, value]) => {
-      sortData.push({ section: key, fileType: value?.fileType });
+  microplanData?.upload
+    ?.filter((value) => value?.error === null)
+    .forEach((value) => {
+      sortData.push({ section:value?.section, fileType: value?.fileType });
     });
   const filteredSchemas =
     schemas?.filter((schema) => {
@@ -666,6 +737,7 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
       let uuid = uuidv4();
       item["id"] = uuid;
     }
+      item.active = true;
     newRules.push(item);
     rulePlusInputs?.push(item?.output);
     ruleOuputList?.push(item?.output);

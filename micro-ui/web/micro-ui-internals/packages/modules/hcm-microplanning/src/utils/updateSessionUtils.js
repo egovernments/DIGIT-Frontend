@@ -119,7 +119,7 @@ export const updateSessionUtils = {
 
     const setMicroplanHypothesis = () => {
       if (row.assumptions.length > 0) {
-        sessionObj.hypothesis = row.assumptions;
+        sessionObj.hypothesis = row.assumptions?.filter(item => item.active);
       }
     };
 
@@ -141,39 +141,39 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload, translatedData, shapefileOrigin = false) => {
+    const handleGeoJson = (file, result, upload, translatedData, active, shapefileOrigin = false) => {
       if (!file) {
         console.error(`${shapefileOrigin ? "Shapefile" : "Geojson"} file is undefined`);
         return upload;
       }
 
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
-      upload[templateIdentifier] = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, shapefileOrigin ? ".zip" : ".geojson");
+      let uploadObject = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, shapefileOrigin ? ".zip" : ".geojson",active);
 
       const schema = findSchema(inputFileType, templateIdentifier, additionalProps?.campaignType);
       if (!schema) {
         console.error("Schema got undefined while handling geojson at handleGeoJson");
-        return upload;
+        return [...upload, uploadObject];
       }
 
-      handleGeoJsonSpecific(schema, upload, templateIdentifier, result, translatedData, filestoreId);
-
+      handleGeoJsonSpecific(schema, uploadObject, templateIdentifier, result, translatedData, filestoreId);
+      upload.push(uploadObject) 
       return upload;
     };
 
-    const handleExcel = (file, result, upload, translatedData) => {
+    const handleExcel = (file, result, upload, translatedData, active) => {
       if (!file) {
         console.error("Excel file is undefined");
         return upload;
       }
 
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
-      upload[templateIdentifier] = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, ".xlsx");
+      let uploadObject = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, ".xlsx", active);
 
       const schema = findSchema(inputFileType, templateIdentifier, "ITIN");
       if (!schema) {
         console.error("Schema got undefined while handling excel at handleExcel");
-        return upload;
+        return[...upload,uploadObject];
       }
 
       const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
@@ -184,13 +184,14 @@ export const updateSessionUtils = {
         additionalProps.t,
         translatedData
       );
-      upload[templateIdentifier].data = resultAfterMapping?.tempFileDataToStore;
-
+      uploadObject.data = resultAfterMapping?.tempFileDataToStore;
+      upload.push(uploadObject)
       return upload;
     };
 
-    const createUploadObject = (templateIdentifier, inputFileType, fileId, filestoreId, extension) => ({
-      id: templateIdentifier,
+    const createUploadObject = (templateIdentifier, inputFileType, fileId, filestoreId, extension, active) => ({
+      id: fileId,
+      templateIdentifier,
       section: templateIdentifier,
       fileName: `${templateIdentifier}${extension}`,
       fileType: inputFileType,
@@ -200,6 +201,7 @@ export const updateSessionUtils = {
       error: null,
       resourceMapping: row?.resourceMapping?.filter((resourse) => resourse.filestoreId === filestoreId).map((item) => ({ ...item, filestoreId })),
       data: {},
+      active,
     });
 
     const findSchema = (inputFileType, templateIdentifier, campaignType) => {
@@ -221,7 +223,7 @@ export const updateSessionUtils = {
         }
       });
 
-      upload[templateIdentifier].data = result;
+      upload.data = result;
       if (translatedData) {
         const newFeatures = result["features"].map((item) => {
           let newProperties = {};
@@ -233,7 +235,7 @@ export const updateSessionUtils = {
           item["properties"] = newProperties;
           return item;
         });
-        upload[templateIdentifier].data.features = newFeatures;
+        upload.data.features = newFeatures;
       }
     };
 
@@ -245,16 +247,17 @@ export const updateSessionUtils = {
 
       const promises = [];
       let storedData = [];
-      for (const { filestoreId, inputFileType, templateIdentifier, id } of files) {
+      for (const { filestoreId, inputFileType, templateIdentifier, id, active } of files) {
+        if(!active) continue
         let fileData = {
           filestoreId,
           inputFileType,
           templateIdentifier,
           id,
         };
-        let dataInSsn = Digit.SessionStorage.get("microplanData")?.upload?.[templateIdentifier];
+        let dataInSsn = Digit.SessionStorage.get("microplanData")?.upload?.find(item => item.active && item.id === id);
         if (dataInSsn && dataInSsn.filestoreId === filestoreId) {
-          storedData.push({ file: fileData, jsonData: dataInSsn?.data, translatedData: false });
+          storedData.push({ file: fileData, jsonData: dataInSsn?.data, translatedData: false, active });
         } else {
           const promiseToAttach = axios
             .get("/filestore/v1/files/id", {
@@ -282,7 +285,7 @@ export const updateSessionUtils = {
                     id,
                   }
                 );
-                return { ...response, translatedData: true };
+                return { ...response, translatedData: true , active};
               } else if (inputFileType === GEOJSON) {
                 let response = await parseGeoJSONResponse(res.data, {
                   filestoreId,
@@ -290,7 +293,7 @@ export const updateSessionUtils = {
                   templateIdentifier,
                   id,
                 });
-                return { ...response, translatedData: true };
+                return { ...response, translatedData: true, active };
               } else if (inputFileType === SHAPEFILE) {
                 const geoJson = await shpToGeoJSON(res.data, {
                   filestoreId,
@@ -298,7 +301,7 @@ export const updateSessionUtils = {
                   templateIdentifier,
                   id,
                 });
-                return { ...geoJson, translatedData: true };
+                return { ...geoJson, translatedData: true, active };
               }
             });
           promises.push(promiseToAttach);
@@ -316,18 +319,18 @@ export const updateSessionUtils = {
         return {};
       }
       //populate this object based on the files and return
-      const upload = {};
+      let upload = [];
 
-      filesResponse.forEach(({ jsonData, file, translatedData }, idx) => {
+      filesResponse.forEach(({ jsonData, file, translatedData, active }, idx) => {
         switch (file?.inputFileType) {
           case "Shapefile":
-            handleGeoJson(file, jsonData, upload, translatedData, true);
+            upload = handleGeoJson(file, jsonData, upload, translatedData, active, true);
             break;
           case "Excel":
-            handleExcel(file, jsonData, upload, translatedData);
+            upload = handleExcel(file, jsonData, upload, translatedData, active);
             break;
           case "GeoJSON":
-            handleGeoJson(file, jsonData, upload, translatedData);
+            upload = handleGeoJson(file, jsonData, upload, translatedData, active);
           default:
             break;
         }

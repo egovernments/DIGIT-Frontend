@@ -5,7 +5,8 @@ ajv.addKeyword("isRequired");
 ajv.addKeyword("isLocationDataColumns");
 ajv.addKeyword("isRuleConfigureInputs");
 ajv.addKeyword("isFilterPropertyOfMapSection");
-ajv.addKeyword("isVisualizationPropertyOfMapSection")
+ajv.addKeyword("isVisualizationPropertyOfMapSection");
+ajv.addKeyword("toShowInMicroplanPreview");
 
 //the postion must be valid point on the earth, x between -180 and 180
 gjv.define("Position", (position) => {
@@ -137,7 +138,7 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
           break;
       }
     }
-    const columnList = [...columns].map(item=>t(item));
+    const columnList = [...columns].map((item) => t(item));
     // if(column)
     const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
       columns:
@@ -181,4 +182,3 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
 // };
 
 ////////////////////////////
-

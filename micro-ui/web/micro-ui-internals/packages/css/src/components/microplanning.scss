@@ -1,6 +1,6 @@
 $box-shadow-color: #00000029;
 $border-color: rgba(214, 213, 212, 1);
-$highlight-color: #C84C0E;
+$primary-theme-color: #C84C0E;
 $border-color: rgba(214, 213, 212, 1);
 
 @mixin custom-scrollbar {
@@ -161,7 +161,6 @@ $border-color: rgba(214, 213, 212, 1);
     cursor: pointer;
     overflow: visible;
 }
-
 .upload-section {
     font-family: Roboto;
 
@@ -226,7 +225,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .upload-section-options-active {
-        border-right: 0.3rem solid $highlight-color;
+        border-right: 0.3rem solid $primary-theme-color;
         background-color: rgba(244, 119, 56, 0.12);
 
         p {
@@ -295,7 +294,7 @@ $border-color: rgba(214, 213, 212, 1);
                 align-items: center !important;
                 min-width: 13.5rem;
                 height: 2.5rem;
-                border: 0.063rem $highlight-color solid;
+                border: 0.063rem $primary-theme-color solid;
 
                 .icon {
                     display: flex;
@@ -307,7 +306,7 @@ $border-color: rgba(214, 213, 212, 1);
                 p {
                     padding: 0;
                     margin: 0;
-                    color: $highlight-color;
+                    color: $primary-theme-color;
                     font-weight: 600;
                     font-size: 1rem;
                 }
@@ -327,8 +326,8 @@ $border-color: rgba(214, 213, 212, 1);
         flex-wrap: wrap;
 
         .upload-option-container-selected {
-            border: 0.125rem $highlight-color solid;
-            color: $highlight-color;
+            border: 0.125rem $primary-theme-color solid;
+            color: $primary-theme-color;
         }
     }
 
@@ -347,32 +346,33 @@ $border-color: rgba(214, 213, 212, 1);
         margin: 0 1.25rem;
         cursor: pointer;
 
-        &:hover {
-            outline: 0.125rem $highlight-color solid;
-
-            p {
-                font-weight: 500;
-                color: $highlight-color;
-            }
-        }
-
         p {
             margin-top: 0.625rem;
+            font-weight: 600;
+            color:rgba(80, 90, 95, 1);
+        }
+        .label:hover{
+            color: $primary-theme-color;
         }
 
+        &:hover {
+            outline: 0.125rem $primary-theme-color solid;
+        }
+      
+
         .upload-option-selected {
-            border: 0.125rem $highlight-color solid;
-            color: $highlight-color;
+            border: 0.125rem $primary-theme-color solid;
+            color: $primary-theme-color;
         }
 
         .select-button {
             justify-self: end;
-            border: 0.063rem solid $highlight-color;
+            border: 0.063rem solid $primary-theme-color;
             background-color: rgba(255, 255, 255, 1);
             width: 11rem;
             height: 2.5rem;
             justify-content: center;
-            color: $highlight-color;
+            color: $primary-theme-color;
             font-size: 1rem;
             font-weight: 600;
         }
@@ -383,8 +383,8 @@ $border-color: rgba(214, 213, 212, 1);
             align-items: center !important;
             justify-self: end;
             justify-content: center;
-            border: 0.063rem solid $highlight-color;
-            background-color: $highlight-color;
+            border: 0.063rem solid $primary-theme-color;
+            background-color: $primary-theme-color;
             width: 11rem;
             height: 2.5rem;
             padding: 0.6rem 0.5rem;
@@ -417,7 +417,7 @@ $border-color: rgba(214, 213, 212, 1);
             .browse-text {
                 margin: 0;
                 padding: 0;
-                color: $highlight-color;
+                color: $primary-theme-color;
                 text-decoration: underline;
                 cursor: pointer;
             }
@@ -474,7 +474,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-left: 1rem;
                 min-width: 9rem;
                 height: 2.5rem;
-                border: 0.063rem $highlight-color solid;
+                border: 0.063rem $primary-theme-color solid;
                 background-color: white;
                 cursor: pointer;
             }
@@ -483,12 +483,12 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0;
                 margin: 0;
                 margin-left: 0.5rem;
-                color: $highlight-color;
+                color: $primary-theme-color;
                 font-weight: 600;
                 font-size: 1rem;
             }
 
-            .deletebutton {
+            .delete-button {
                 background-color: rgb(255, 255, 255, 0);
                 border: none;
                 display: flex !important;
@@ -496,6 +496,7 @@ $border-color: rgba(214, 213, 212, 1);
                 align-items: center !important;
                 justify-content: center;
                 margin: 0 1rem;
+                cursor: pointer;
             }
         }
     }
@@ -798,7 +799,7 @@ $border-color: rgba(214, 213, 212, 1);
 
             .link {
                 text-decoration: underline;
-                color: $highlight-color;
+                color: $primary-theme-color;
             }
 
         }
@@ -841,7 +842,7 @@ $border-color: rgba(214, 213, 212, 1);
 
     input[type="number"]:focus,
     input[type="number"]:hover {
-        border: 0.063rem solid $highlight-color;
+        border: 0.063rem solid $primary-theme-color;
         outline: none;
     }
 
@@ -1052,7 +1053,7 @@ $border-color: rgba(214, 213, 212, 1);
             padding: 0 0 0 0.5rem;
             font-size: 1rem;
             font-weight: 600;
-            color: $highlight-color;
+            color: $primary-theme-color;
             text-align: left;
         }
     }
@@ -1065,10 +1066,10 @@ $border-color: rgba(214, 213, 212, 1);
         align-items: center;
         justify-content: center;
         background: rgba(255, 255, 255, 1);
-        border: 0.063rem solid $highlight-color;
+        border: 0.063rem solid $primary-theme-color;
 
         p {
-            color: $highlight-color;
+            color: $primary-theme-color;
             padding: 0 0 0 0.6rem;
             margin: 0;
             font-size: 1.188rem;
@@ -1281,7 +1282,7 @@ $border-color: rgba(214, 213, 212, 1);
                 padding: 0 0 0 0.5rem;
                 font-size: 1rem;
                 font-weight: 600;
-                color: $highlight-color;
+                color: $primary-theme-color;
                 text-align: left;
             }
         }
@@ -1294,10 +1295,10 @@ $border-color: rgba(214, 213, 212, 1);
             align-items: center;
             justify-content: center !important;
             background: rgba(255, 255, 255, 1);
-            border: 0.063rem solid $highlight-color;
+            border: 0.063rem solid $primary-theme-color;
 
             p {
-                color: $highlight-color;
+                color: $primary-theme-color;
                 padding: 0 0 0 0.6rem;
                 margin: 0;
                 font-size: 1.188rem;
@@ -1604,7 +1605,7 @@ $border-color: rgba(214, 213, 212, 1);
                     width: 2rem;
                     height: 2rem;
                     text-align: center;
-                    color: $highlight-color;
+                    color: $primary-theme-color;
                     background-color: rgb(255, 255, 255);
                     cursor: pointer;
                     font-family: Roboto;
@@ -1784,7 +1785,7 @@ $border-color: rgba(214, 213, 212, 1);
                             }
 
                             input:checked~.inputIconClassname {
-                                border-color: $highlight-color;
+                                border-color: $primary-theme-color;
                             }
 
                             .inputIconClassname {
@@ -1884,11 +1885,11 @@ $border-color: rgba(214, 213, 212, 1);
                         background-color: rgba(255, 255, 255, 1);
 
                         .base-map-img {
-                            border: 0.125rem solid $highlight-color !important;
+                            border: 0.125rem solid $primary-theme-color !important;
                         }
 
                         p {
-                            color: $highlight-color !important;
+                            color: $primary-theme-color !important;
                         }
                     }
 
@@ -2154,7 +2155,7 @@ $border-color: rgba(214, 213, 212, 1);
 
                         tr:hover {
                             width: 100%;
-                            outline: 0.1rem solid $highlight-color;
+                            outline: 0.1rem solid $primary-theme-color;
 
                             td {
                                 border-top: 0.063rem solid rgba(244, 119, 56, 0);
@@ -2278,7 +2279,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .digit-action-cancel {
-        color: $highlight-color;
+        color: $primary-theme-color;
     }
 
     .apply-changes-hypothesis {
@@ -2384,14 +2385,27 @@ $border-color: rgba(214, 213, 212, 1);
 
 }
 
-.selector-button-border {
-    h2 {
-        color: $highlight-color !important;
+.selector-button-border, .digit-button-secondary {
+    h2 ,.digit-button-label{
+        color: $primary-theme-color !important;
     }
     background-color: white !important;
 }
 
 .selector-button-primary{
-    background-color: $highlight-color !important;
+    background-color: $primary-theme-color !important;
 }
 
+.jk-digit-primary-btn{
+    background-color: $primary-theme-color !important;
+}
+
+.jk-digit-secondary-btn{
+    h2{
+        color: $primary-theme-color !important;
+    }
+}
+
+.help-lable{
+    color: $primary-theme-color
+}

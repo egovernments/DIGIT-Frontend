@@ -94,8 +94,8 @@ const mergeHierarchicalData = (data1, data2) => {
       data1[key].data = value.data; // Merge data
       if (value.children) {
         if (Array.isArray(data1[key].data.children))
-          data1[key].data.children = [...data1[key].data.children, ...Object.keys(value.children)].join(", ");
-        else data1[key].data.children = Object.keys(value.children).join(", ");
+          data1[key].data.children = [...data1[key].data.children, ...Object.keys(value.children)];
+        else data1[key].data.children = Object.keys(value.children);
       } else data1[key].data.children = null;
       if(data1[key].data.children?.length === 0)
         data1[key].data.children = null

@@ -8,7 +8,6 @@ import {
   MultiSelectDropdown,
   Toast,
   TreeSelect,
-  Modal,
   Button,
   CheckBox,
   RadioButtons,
@@ -20,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import ZoomControl from "./ZoomControl";
 import CustomScaleControl from "./CustomScaleControl";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { CardSectionHeader, InfoIconOutline, LoaderWithGap, Modal } from "@egovernments/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors, PRIMARY_THEME_COLOR } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
@@ -410,10 +409,10 @@ const Mapping = ({
         </Card>
       </Card>
       {toast && toast.state === "error" && (
-        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
       )}
       {toast && toast.state === "warning" && (
-        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"warning"} />
       )}
     </div>
   );
@@ -600,7 +599,41 @@ const BoundarySelection = memo(
     const [processedHierarchy, setProcessedHierarchy] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showConfirmationModal, setShowConformationModal] = useState(false);
-
+    const itemRefs = useRef([]);
+    const [expandedIndex, setExpandedIndex] = useState(null);
+    const scrollContainerRef = useRef(null);
+    
+    useEffect(() => {
+      // Scroll to the expanded item's child element after the state has updated and the DOM has re-rendered
+      if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+        // Use a timeout to ensure the DOM has updated
+        setTimeout(() => {
+          const childElement = itemRefs.current[expandedIndex].children[0]; // Assuming child content is the second child
+          // if (childElement) {
+          //   childElement.scrollIntoView({ behavior: 'smooth' });
+          // }
+          if (childElement) {
+            const scrollContainer = scrollContainerRef.current;
+            const childElementBound = childElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+            
+            // Calculate the offset from the top of the container
+            const offset = childElementBound.top - containerRect.top;
+            
+            // Scroll the container
+            scrollContainer.scrollTo({
+              top: scrollContainer.scrollTop + offset - 10,
+              behavior: 'smooth'
+            });
+          }
+        }, 0);
+      }
+    }, [expandedIndex]);
+    
+    const toggleExpand = (index) => {
+      setExpandedIndex(index === expandedIndex ? null : index);
+    };
+    
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -642,9 +675,9 @@ const BoundarySelection = memo(
             <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
             <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
           </div>
-          <div className="hierarchy-selection-container" style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}}>
+          <div className="hierarchy-selection-container" style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}} ref={scrollContainerRef}>
             {processedHierarchy?.map((item, index) => (
-              <div key={index} className="hierarchy-selection-element">
+              <div key={index} className="hierarchy-selection-element" ref={(el) => (itemRefs.current[index] = el)} onClick={()=>toggleExpand(index)}>
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
@@ -653,8 +686,8 @@ const BoundarySelection = memo(
                   type={"multiselectdropdown"}
                   t={t}
                   options={item?.dropDownOptions || []}
-                  optionsKey="name"
-                  onSelect={(e) =>
+                  optionsKey="name" 
+                  onSelect={(e) =>                    
                     Digit.Utils.microplan.handleSelection(
                       e,
                       item?.boundaryType,
@@ -684,24 +717,22 @@ const BoundarySelection = memo(
           )}
           {showConfirmationModal && (
             <Modal
-              popupStyles={{ width: "fit-content", borderRadius: "0.25rem" }}
+              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem"  }}
               popupModuleActionBarStyles={{
                 display: "flex",
                 flex: 1,
                 justifyContent: "space-between",
                 padding: 0,
                 width: "100%",
-                padding: "0 0 1rem 1.3rem",
+                padding: "1rem",
               }}
-              popupModuleMianStyles={{ padding: 0, margin: 0, width: "31.188rem" }}
+              popupModuleMianStyles={{ padding: 0, margin: 0, }}
               style={{
                 flex: 1,
-                backgroundColor: "white",
                 border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
               }}
               headerBarMainStyle={{ padding: 0, margin: 0 }}
               headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
-              headerBarEnd={<CloseButton clickHandler={() => setShowConformationModal(false)} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
               actionCancelLabel={t("YES")}
               actionCancelOnSubmit={handleSubmitConfModal}
               actionSaveLabel={t("NO")}
@@ -818,18 +849,21 @@ const extractGeoData = (
     let files = _.cloneDeep(microplanData?.upload);
     dataAvailabilityCheck = "initialStage"; // Initialize data availability check
     // Loop through each file in the microplan upload
-    for (let fileData in files) {
+    for (let fileData of files) {
+
+      if(!fileData.active) continue // if file is inactive skip it
+
       // Check if the file is not part of boundary or layer data origins
       if (
-        !(filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData)) &&
-        !(filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
+        !(filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section)) &&
+        !(filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
       ) {
         dataAvailabilityCheck = "false"; // Set data availability to false if file not found in data origins
       }
 
       // If data availability is not false, proceed with further checks
       if (dataAvailabilityCheck !== false) {
-        if (files[fileData]?.error) {
+        if (fileData?.error) {
           dataAvailabilityCheck =
             dataAvailabilityCheck === "partial"
               ? "partial"
@@ -838,10 +872,10 @@ const extractGeoData = (
               : "partial";
           continue;
         }
-        if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
+        if (!fileData?.fileType || !fileData?.section) continue; // Skip files with errors or missing properties
 
         // Get validation schema for the file
-        let schema = getSchema(campaignType, files[fileData]?.fileType, files[fileData]?.section, validationSchemas);
+        let schema = getSchema(campaignType, fileData?.fileType, fileData?.section, validationSchemas);
         const properties = Object.entries(schema?.schema?.Properties || {});
         const latLngColumns = [];
         let filterProperty = [];
@@ -850,7 +884,7 @@ const extractGeoData = (
           if (value?.isLocationDataColumns) {
             latLngColumns.push(t(key));
           }
-          if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData) && value?.isFilterPropertyOfMapSection) {
+          if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section) && value?.isFilterPropertyOfMapSection) {
             filterProperty.push(key);
           }
           if (value?.isVisualizationPropertyOfMapSection) {
@@ -861,12 +895,12 @@ const extractGeoData = (
         filterProperty.forEach((property) => filterPropertieNameCollector.add(property));
 
         // Check if file contains latitude and longitude columns
-        if (files[fileData]?.data && Object.keys(files[fileData]?.data).length > 0) {
+        if (fileData?.data && Object.keys(fileData?.data).length > 0) {
           if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
           // Check file type and update data availability accordingly
-          switch (files[fileData]?.fileType) {
+          switch (fileData?.fileType) {
             case EXCEL: {
-              let columnList = Object.values(files[fileData]?.data)?.[0]?.[0];
+              let columnList = Object.values(fileData?.data)?.[0]?.[0];
               let check = true;
               if (latLngColumns) {
                 for (let colName of latLngColumns) {
@@ -884,7 +918,7 @@ const extractGeoData = (
                 : dataAvailabilityCheck === "false"
                 ? "false"
                 : "partial"; // Update data availability based on column check
-              let dataWithResources = Object.values(files[fileData]?.data);
+              let dataWithResources = Object.values(fileData?.data);
               if (resources && formulaConfiguration && hypothesisAssumptionsList) {
                 dataWithResources = dataWithResources?.map((item) => {
                   return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
@@ -935,9 +969,9 @@ const extractGeoData = (
               );
 
               if (hasLocationData) {
-                if (Object.values(files[fileData]?.data).length > 0 && filterProperty) {
+                if (Object.values(fileData?.data).length > 0 && filterProperty) {
                   filterProperty?.forEach((item) => {
-                    Object.values(files[fileData]?.data).forEach((data) => {
+                    Object.values(fileData?.data).forEach((data) => {
                       let filterPropertyIndex = data?.[0].indexOf(item);
                       if (filterPropertyIndex && filterPropertyIndex !== -1)
                         data.slice(1).forEach((e) => {
@@ -950,21 +984,21 @@ const extractGeoData = (
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
-              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
-                setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
-                setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
+              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
+                setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
+              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
+                setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
               break;
             }
             case GEOJSON:
             case SHAPEFILE:
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
               // Extract keys from the first feature's properties
-              var keys = Object.keys(files[fileData]?.data.features[0].properties);
+              var keys = Object.keys(fileData?.data.features[0].properties);
               keys.push("feature");
 
               // Extract corresponding values for each feature
-              const values = files[fileData]?.data?.features.map((feature) => {
+              const values = fileData?.data?.features.map((feature) => {
                 // list with features added to it
                 const temp = keys.map((key) => {
                   if (feature.properties[key] === "") {
@@ -976,10 +1010,10 @@ const extractGeoData = (
                 return temp;
               });
 
-              if (files[fileData]?.data?.features && filterProperty) {
+              if (fileData?.data?.features && filterProperty) {
                 filterProperty?.forEach((item) => {
-                  if (Object.values(files[fileData]?.data).length > 0) {
-                    files[fileData]?.data?.features.forEach((e) => {
+                  if (Object.values(fileData?.data).length > 0) {
+                    fileData?.data?.features.forEach((e) => {
                       if (e?.properties?.[item]) filterPropertiesCollector.add(e?.properties?.[item]);
                     });
                   }
@@ -1016,10 +1050,10 @@ const extractGeoData = (
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
-              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData))
-                setBoundary = { ...setBoundary, [fileData]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData))
-                setFilter = { ...setFilter, [fileData]: { hierarchyLists, hierarchicalData } };
+              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
+                setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
+              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
+                setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
           }
         }
       }
@@ -1066,6 +1100,7 @@ const extractGeoData = (
   setDataCompleteness(dataAvailabilityCheck);
   setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
+  console.log(setBoundary,setFilter)
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
   setFilterProperties([...filterPropertiesCollector]);

@@ -28,6 +28,22 @@ function filterUniqueByKey(arr, key) {
   return result;
 }
 
+const epochTimeForTomorrow12 = () => {
+  // Get the current date and time
+  const now = new Date();
+  
+  // Create a new Date object for tomorrow at 12:00 AM
+  const tomorrow = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0, 0, 0, 0
+  );
+  
+  // Return the epoch time (in milliseconds) for tomorrow at 12:00 AM
+  return Math.floor(tomorrow.getTime() / 1000);
+};
+
 function cleanObject(obj) {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -216,6 +232,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
+      data.body.CampaignDetails.startDate = epochTimeForTomorrow12();
       data.body.CampaignDetails.status = ["drafted"]
       if (startDate) {
         data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
