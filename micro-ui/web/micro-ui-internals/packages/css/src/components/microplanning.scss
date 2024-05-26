@@ -38,6 +38,10 @@ $border-color: rgba(214, 213, 212, 1);
     text-align: left;
 }
 
+.help-label{
+    color: $primary-theme-color;
+}
+
 .guideline-actionbar-content {
     display: flex;
     flex-direction: row;
