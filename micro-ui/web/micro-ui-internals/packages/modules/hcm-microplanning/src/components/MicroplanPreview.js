@@ -567,11 +567,13 @@ const DataPreview = memo(
 const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
-  microplanData?.upload
-    ?.filter((value) => value.active && value?.error === null)
-    .forEach((value) => {
-  sortData.push({ section: value.section, fileType: value?.fileType });
-    });
+  if (microplanData?.upload) {
+    for (const value of microplanData.upload) {
+      if (value.active && value?.error === null) {
+        sortData.push({ section: value.section, fileType: value?.fileType });
+      }
+    }
+  }
   const filteredSchemas =
     schemas?.filter((schema) => {
   if (schema.campaignType) {

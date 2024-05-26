@@ -71,7 +71,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     };
 
     return (
-      <div ref={(el) => (itemRefs.current[index] = el)} onClick={() => toggleExpand(index)}>
+      <div ref={el => { itemRefs.current[index] = el; }} onClick={() => toggleExpand(index)}>
         <Dropdown
           variant="select-dropdown"
           t={t}

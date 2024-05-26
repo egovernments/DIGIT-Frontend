@@ -3,7 +3,7 @@ import { findParent } from "../utils/processHierarchyAndData";
 import { EXCEL, LOCALITY, commonColumn } from "../configs/constants";
 
 const formatDates = (value, type) => {
-  if (type != "EPOC" && (!value || Number.isNaN(value))) {
+  if (type !== "EPOC" && (!value || Number.isNaN(value))) {
     value = new Date();
   }
   switch (type) {
@@ -440,7 +440,6 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
   if (!data || !campaignType || !state) return false;
 
   const { hypothesisList, rulesOutputs, uploadList } = fetchData(state, campaignType);
-  console.log(hypothesisList, rulesOutputs, uploadList);
   let checks =
     // microplan name check
     (!data || !data.name) &&

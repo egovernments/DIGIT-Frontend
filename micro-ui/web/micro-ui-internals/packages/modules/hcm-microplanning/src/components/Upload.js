@@ -243,7 +243,7 @@ const Upload = ({
   useEffect(() => {
     if (selectedSection) {
       let file = fileDataList?.find(item=>item.active && item.templateIdentifier === selectedSection.id);
-      if (file && file?.resourceMapping) {
+      if (file?.resourceMapping) {
         setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item?.id === file?.fileType));
         setUploadedFileError(file?.error);
         setFileData(file);
@@ -767,7 +767,6 @@ const Upload = ({
   // Cancle mapping and uplaod in case of geojson and shapefiles
   const cancelUpload = () => {
     setFileDataList(previous=>{
-      debugger
       let temp = previous?.filter((item) => item.id !== fileData?.id);
       return temp;
     });

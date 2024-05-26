@@ -54,7 +54,7 @@ export const JsonPreviewInExcelForm = (props) => {
         </div>
         <div className="excel-tab-list">
         {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
-          <button key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() =>{
+          <button type="button" key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() =>{
            setCurrentSheetName(sheetName);
           }}>
             {sheetName}

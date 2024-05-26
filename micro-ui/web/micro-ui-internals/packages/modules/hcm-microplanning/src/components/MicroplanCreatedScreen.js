@@ -39,11 +39,9 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
       link.download = fileNameParts;
       link.click();
       URL.revokeObjectURL(url);
-    } catch (error) {}
-  };
-
-  const clickGoToHCM = () => {
-    // history.push(`/workbench-ui/employee/campaign/setup-campaign`);
+    } catch (error) {
+      console.error("Failed to download microplan: ", error.message);
+    }
   };
 
   const clickGoHome = () => {

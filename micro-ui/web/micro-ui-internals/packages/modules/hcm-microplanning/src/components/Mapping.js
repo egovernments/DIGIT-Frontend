@@ -677,7 +677,7 @@ const BoundarySelection = memo(
           </div>
           <div className="hierarchy-selection-container" style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}} ref={scrollContainerRef}>
             {processedHierarchy?.map((item, index) => (
-              <div key={index} className="hierarchy-selection-element" ref={(el) => (itemRefs.current[index] = el)} onClick={()=>toggleExpand(index)}>
+              <div key={index} className="hierarchy-selection-element" ref={el => { itemRefs.current[index] = el; }} onClick={()=>toggleExpand(index)}>
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
@@ -722,7 +722,6 @@ const BoundarySelection = memo(
                 display: "flex",
                 flex: 1,
                 justifyContent: "space-between",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -1100,7 +1099,6 @@ const extractGeoData = (
   setDataCompleteness(dataAvailabilityCheck);
   setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
   setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
-  console.log(setBoundary,setFilter)
   setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
   setFilterData((previous) => ({ ...previous, ...setFilter }));
   setFilterProperties([...filterPropertiesCollector]);

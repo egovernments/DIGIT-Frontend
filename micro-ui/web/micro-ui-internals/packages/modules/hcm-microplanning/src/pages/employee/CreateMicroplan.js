@@ -46,10 +46,6 @@ const CreateMicroplan = () => {
   const [loaderActivation, setLoaderActivation] = useState(false);
   const { state } = useMyContext();
 
-  useEffect(()=>{
-    console.log(toastCreateMicroplan)
-  },[toastCreateMicroplan])
-
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
@@ -125,7 +121,7 @@ const CreateMicroplan = () => {
       }
       setMicroplanData((previous) => ({
         ...previous,
-        status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" ? true : false },
+        status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid"},
       }));
       // if (currentPage?.name !== "FORMULA_CONFIGURATION") {
       //   setCheckDataCompletion("perform-action");
@@ -161,7 +157,7 @@ const CreateMicroplan = () => {
         return
       }
       setLoaderActivation(true);
-      if (microplanData && !microplanData.planConfigurationId) {
+      if (!microplanData?.planConfigurationId) {
         await createPlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);
       } else if (microplanData && microplanData.planConfigurationId) {
         await updatePlanConfiguration(body, setCheckDataCompletion, setLoaderActivation);

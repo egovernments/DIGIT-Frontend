@@ -43,7 +43,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {
-      let temp  = microplanData.hypothesis.filter(item=>item.active)
+      let temp  = microplanData?.hypothesis.filter(item=>item.active)
       setAssumptions(temp);
     }
 
@@ -356,7 +356,7 @@ const InterractableSection = React.memo(
               className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
             >
               <div className="key" 
-              ref={(el) => (itemRefs.current[index] = el)}
+              ref={el => { itemRefs.current[index] = el; }}
               onClick={() => {toggleExpand(index)}}
               >
                 <Select
