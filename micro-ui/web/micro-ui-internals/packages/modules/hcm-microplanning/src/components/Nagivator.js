@@ -1,4 +1,4 @@
-import {  ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ import { memo } from "react";
  *
  */
 // Main component for creating a microplan
-const Navigator = memo( (props) => {
+const Navigator = memo((props) => {
   // States
   const [currentPage, setCurrentPage] = useState();
   const [toast, setToast] = useState();
@@ -178,17 +178,21 @@ const Navigator = memo( (props) => {
       />
 
       {/* Load custom component based on current page */}
-      {LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null ? (
-        <LoadCustomComponent
-          component={props.components[currentPage?.component]}
-          secondaryProps={
-            checkDataCompletion
-              ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, navigationEvent, ...props.childProps }
-              : {}
-          }
-        />
+      {props?.components[currentPage?.component] ? (
+        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null ? (
+          <LoadCustomComponent
+            component={props.components[currentPage?.component]}
+            secondaryProps={
+              checkDataCompletion
+                ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, navigationEvent, ...props.childProps }
+                : {}
+            }
+          />
+        ) : (
+          <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
+        )
       ) : (
-        <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
+        ""
       )}
 
       {/* Action bar */}
