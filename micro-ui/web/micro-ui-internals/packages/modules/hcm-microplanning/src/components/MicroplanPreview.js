@@ -214,6 +214,7 @@ const MicroplanPreview = ({
       state,
       campaignType,
       navigationEvent,
+      setCheckDataCompletion,
       t
     );
 
@@ -863,6 +864,7 @@ const updateHyothesisAPICall = async (
   state,
   campaignType,
   navigationEvent,
+  setCheckDataCompletion,
   t
 ) => {
   try {
@@ -870,7 +872,14 @@ const updateHyothesisAPICall = async (
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
-      if (navigationEvent.name === "next") setCheckDataCompletion("false");
+      setLoaderActivation(false);
+      if (navigationEvent.name === "next") {
+        setToast({
+          message: t("ERROR_DATA_NOT_SAVED"),
+          state: "error",
+        });
+        setCheckDataCompletion("false")
+      }
       else setCheckDataCompletion("perform-action");
       return;
     }
