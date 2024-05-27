@@ -46,7 +46,7 @@ export const JsonPreviewInExcelForm = (props) => {
                 <tr key={rowIndex}>
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
                     return (
-                      <td key={cellIndex} style={!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}}>
+                      <td key={cellIndex} style={!Number.isNaN(parseFloat(rowData[cellIndex])) ? { textAlign: "end" } : {}}>
                         {rowData[cellIndex] || ""}
                       </td>
                     );

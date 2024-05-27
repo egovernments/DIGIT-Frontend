@@ -29,19 +29,22 @@ function filterUniqueByKey(arr, key) {
 }
 
 const epochTimeForTomorrow12 = () => {
-    // Get the current date and time
-    const now = new Date();
-    
-    // Create a new Date object for tomorrow at 12:00 PM
-    const tomorrowNoon = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1,
-      12, 0, 0, 0
-    );
-    
-    // Return the epoch time (in milliseconds) for tomorrow at 12:00 PM
-    return tomorrowNoon.getTime();
+  const now = new Date();
+  
+  // Create a new Date object for tomorrow at 12:00 PM
+  const tomorrowNoon = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    12, 0, 0, 0
+  );
+  
+  // Format the date as "YYYY-MM-DD"
+  const year = tomorrowNoon.getFullYear();
+  const month = String(tomorrowNoon.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(tomorrowNoon.getDate()).padStart(2, '0');
+  
+  return Digit.Utils.date.convertDateToEpoch(`${year}-${month}-${day}`);
 };
 
 function cleanObject(obj) {
@@ -232,10 +235,12 @@ export const UICustomizations = {
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
-      data.body.CampaignDetails.startDate = epochTimeForTomorrow12();
       data.body.CampaignDetails.status = ["drafted"]
       if (startDate) {
         data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
+      }
+      else{
+        data.body.CampaignDetails.startDate = epochTimeForTomorrow12();
       }
       if (endDate) {
         data.body.CampaignDetails.endDate = Digit.Utils.date.convertDateToEpoch(endDate);

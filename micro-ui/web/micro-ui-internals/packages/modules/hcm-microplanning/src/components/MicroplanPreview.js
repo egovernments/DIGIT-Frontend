@@ -890,7 +890,7 @@ const updateHyothesisAPICall = async (
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
-        if (status == "GENERATED") cancleNavigation();
+        if (status === "GENERATED") cancleNavigation();
         else updateData();
         setTimeout(() => {
           setToast(undefined);
