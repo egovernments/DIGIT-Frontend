@@ -511,7 +511,11 @@ const DataPreview = memo(
             <tbody>
               {previewData.slice(1).map((rowData, rowIndex) => {
                 const rowDataList = Object.values(previewData[0]).map((_, cellIndex) => (
-                  <td className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`} key={cellIndex}>
+                  <td
+                    className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`}
+                    key={cellIndex}
+                    style={rowData[cellIndex]?!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}:{}}
+                  >
                     {rowData[cellIndex] || t("NO_DATA")}
                   </td>
                 ));
@@ -867,7 +871,7 @@ const updateHyothesisAPICall = async (
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
       if (navigationEvent.name === "next") setCheckDataCompletion("false");
-        else setCheckDataCompletion("perform-action");
+      else setCheckDataCompletion("perform-action");
       return;
     }
     await UpdateMutate(body, {

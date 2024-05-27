@@ -18,14 +18,14 @@ export const JsonPreviewInExcelForm = (props) => {
         <Button
           label={t("BUTTON_BACK")}
           variation="secondary"
-          icon={<SVG.ArrowBack height={"2rem"} width={"2rem"}  fill={PRIMARY_THEME_COLOR} />}
+          icon={<SVG.ArrowBack height={"2rem"} width={"2rem"} fill={PRIMARY_THEME_COLOR} />}
           type="button"
           onButtonClick={() => props?.onBack()}
         />
         <Button
           label={t("BUTTON_DOWNLOAD")}
           variation="secondary"
-          icon={<DownloadIcon height={"1.25rem"} width={"1.25rem"}  fill={PRIMARY_THEME_COLOR} />}
+          icon={<DownloadIcon height={"1.25rem"} width={"1.25rem"} fill={PRIMARY_THEME_COLOR} />}
           type="button"
           onButtonClick={() => props?.onDownload()}
         />
@@ -44,22 +44,31 @@ export const JsonPreviewInExcelForm = (props) => {
             <tbody>
               {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
                 <tr key={rowIndex}>
-                  {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => (
-                    <td key={cellIndex}>{rowData[cellIndex] || ""}</td>
-                  ))}
+                  {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
+                    return (
+                      <td key={cellIndex} style={!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}}>
+                        {rowData[cellIndex] || ""}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <div className="excel-tab-list">
-        {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
-          <button type="button" key={sheetName} className={`tab ${sheetName === currentSheetName ? "active" : ""}`} onClick={() =>{
-           setCurrentSheetName(sheetName);
-          }}>
-            {sheetName}
-          </button>
-        ))}
+          {Object.entries(sheetsData).map(([sheetName, sheetData], index) => (
+            <button
+              type="button"
+              key={sheetName}
+              className={`tab ${sheetName === currentSheetName ? "active" : ""}`}
+              onClick={() => {
+                setCurrentSheetName(sheetName);
+              }}
+            >
+              {sheetName}
+            </button>
+          ))}
         </div>
         {/* ))} */}
       </div>

@@ -22,7 +22,7 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
               }
             }
           }
-          if (jsonSheetData.length !== 0) jsonData[sheetName] = jsonSheetData;
+          if (jsonSheetData.length !== 0 && jsonSheetData?.[0].length !== 0) jsonData[sheetName] = jsonSheetData;
         });
 
         resolve(jsonData);
@@ -61,7 +61,7 @@ export const parseXlsxToJsonMultipleSheetsForSessionUtil = (file, options, fileD
               }
             }
           }
-          jsonData[sheetName] = jsonSheetData;
+          if (jsonSheetData.length !== 0 && jsonSheetData?.[0].length !== 0) jsonData[sheetName] = jsonSheetData;
         });
 
         resolve({ jsonData, file: fileData });
