@@ -45,7 +45,7 @@ const IFrameInterface = (props) => {
                 if (sendAuth === "invalid") {
                   this.setRequestHeader('Authorization', "Bearer " + "authToken");
                 } else {
-                  this.setRequestHeader('Authorization', "Bearer " + accessToken);
+                  this.setRequestHeader('Authorization', accessToken);
                 }
               }
               this.setRequestHeader('type-req', 'xhr');
@@ -75,7 +75,7 @@ const IFrameInterface = (props) => {
             if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
-              options.headers['Authorization'] = `Bearer ${accessToken}`;
+              options.headers['Authorization'] = `${accessToken}`;
             }
           }
           options.headers['type-req'] = 'fetch';
@@ -115,7 +115,7 @@ const IFrameInterface = (props) => {
             if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
-              options.headers['Authorization'] = `Bearer ${accessToken}`;
+              options.headers['Authorization'] = `${accessToken}`;
             }
           }
           options.headers['type-req'] = 'document';
