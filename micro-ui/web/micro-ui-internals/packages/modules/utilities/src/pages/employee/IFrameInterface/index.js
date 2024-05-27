@@ -26,6 +26,7 @@ const IFrameInterface = (props) => {
   });
 
   const injectCustomHttpInterceptors = (iframeWindow) => {
+    console.log("iframeInInterceptor",iframeWindow)
     const injectCustomHttpInterceptor = () => {
       try {
         if (!iframeWindow) {
