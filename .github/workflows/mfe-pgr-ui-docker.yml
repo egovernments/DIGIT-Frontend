@@ -5,7 +5,6 @@ on:
     branches: [ "develop-mfe" ]
   pull_request:
     branches: [ "develop-mfe" ]
-
 jobs:
 
   build:
