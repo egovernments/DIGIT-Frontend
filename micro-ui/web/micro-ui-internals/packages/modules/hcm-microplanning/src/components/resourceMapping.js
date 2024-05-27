@@ -1,7 +1,7 @@
 import { Dropdown } from "@egovernments/digit-ui-components";
 import { Table } from "@egovernments/digit-ui-react-components";
 import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, t }) => {
   // If no data is uploaded, display a message
@@ -71,7 +71,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     };
 
     return (
-      <div ref={el => { itemRefs.current[index] = el; }} onClick={() => toggleExpand(index)}>
+      <div ref={el => { itemRefs.current[index] = el; }} onClick={() => toggleExpand(index)} onKeyDown={() => toggleExpand(index)} tabIndex="0">
         <Dropdown
           variant="select-dropdown"
           t={t}
@@ -95,7 +95,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
       {
         Header: t("COLUMNS_IN_USER_UPLOAD"),
         accessor: "COLUMNS_IN_USER_UPLOAD",
-        Cell: ({ cell: { value }, row: { index } }) => <DropDownUserColumnSelect key={value} id={value} index={index} />,
+        Cell: ({ cell: { value }, row: { index } }) => useMemo(() => <DropDownUserColumnSelect key={value} id={value} index={index} />, [value, index]),
       },
     ],
     [userColumns, setResourceMapping, resourceMapping, t, itemRefs]

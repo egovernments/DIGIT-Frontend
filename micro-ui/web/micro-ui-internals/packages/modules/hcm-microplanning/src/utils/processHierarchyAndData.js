@@ -84,8 +84,7 @@ const mergeHierarchicalData = (data1, data2) => {
       if (!value.data) value.data = {};
       data1[key] = value || {};
       if (value.children) {
-        if (Array.isArray(data1[key].data.children)) data1[key].data.children = [...new Set([...data1[key].data.children, ...Object.keys(value.children)])];
-        else data1[key].data.children = Object.keys(value.children);
+        data1[key].data.children = Array.isArray(data1[key].data.children) ? [...new Set([...data1[key].data.children, ...Object.keys(value.children)])] : Object.keys(value.children);
       } else data1[key].data.children = null;
     } else {
       if (data1[key]?.data?.children)
@@ -103,7 +102,7 @@ const mergeHierarchicalData = (data1, data2) => {
       mergeHierarchicalData(data1[key].children, value.children); // Recursively merge children
     }
     if (data1[key].data.feature) {
-      const { feature, ...temp } = _.cloneDeep(value.data);
+      const { feature, ...temp } = value.data ? _.cloneDeep(value.data) : {};
       data1[key].data.feature.properties = { ...data1[key].data.feature?.properties, ...temp };
     }
   }
