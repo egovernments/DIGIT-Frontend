@@ -824,7 +824,7 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
 
     // validating user input
-    if ((e?.newValue <= 0 || e?.newValue / 1000 >= 1) && e?.newValue !== "") return;
+    if ((e?.newValue <= 0 || e?.newValue / 100000000000 >= 1) && e?.newValue !== "") return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
     if (decimalIndex !== -1) {

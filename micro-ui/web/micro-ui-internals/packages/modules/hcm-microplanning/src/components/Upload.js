@@ -634,7 +634,7 @@ const Upload = ({
         let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
         if(index !== -1)
           temp[index] = {...temp[index],active:false}
-        temp.puch(fileObject) 
+        temp.push(fileObject) 
         return temp;
       });
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
@@ -684,7 +684,7 @@ const Upload = ({
       let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
       if(index !== -1)
         temp[index] = {...temp[index],active:false}
-      temp.puch(fileObject)
+      temp.push(fileObject)
       return temp;
     });
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });

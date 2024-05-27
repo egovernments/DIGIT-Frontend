@@ -511,7 +511,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if ((e.target.value <= 0 || e.target.value / 1000 >= 1) && e.target.value ) return;
+      if ((e.target.value <= 0 || e.target.value / 100000000000 >= 1) && e.target.value ) return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {
