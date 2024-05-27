@@ -24,11 +24,8 @@ module.exports = () => {
           "./WorkbenchModule": "./src/SingleSpaEntry",
         },
         shared: {
-          ...packageJson.dependencies,
-          react: { singleton: true }, // React will be shared as a singleton
-          'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton
-          'react-query': { singleton: true }
-        },
+          ...packageJson.dependencies
+        }
       }),
       new MiniCssExtractPlugin(
         false
