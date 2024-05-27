@@ -2415,14 +2415,6 @@ $border-color: rgba(214, 213, 212, 1);
     color: $primary-theme-color
 }
 
-.loginFormStyleEmployee {
-    .loginCardClassName {
-      .digit-header-content {
-        &:not(label) {
-          display: flex;
-          justify-content: center;
-          font-size: 2rem;
-        }
-      }
-    }
-  }
+.digit-header-content {
+    font-size: 2rem;
+}
