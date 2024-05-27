@@ -1,7 +1,7 @@
-import { Loader, BreadCrumb } from "@digit-ui/digit-ui-react-components";
-import React, {Fragment} from "react";
+import { Loader, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Switch, useLocation, useRouteMatch, Route } from "react-router-dom";
+import { Switch, useLocation, Route } from "react-router-dom";
 
 
 import EngagementCard from "./components/EngagementCard";
@@ -183,7 +183,7 @@ const EventsBreadCrumb = ({ location }) => {
   return <BreadCrumb crumbs={crumbs} />;
 };
 
-const EmployeeApp = ({ path, url, userType, tenants }) => {
+const EmployeeApp = ({ path,  tenants }) => {
   
   const location = useLocation();
 

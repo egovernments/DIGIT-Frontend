@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Header, Card, CardSectionHeader, PDFSvg, Loader, StatusTable, Menu, ActionBar, SubmitBar, Modal, CardText } from "@digit-ui/digit-ui-react-components";
-import ApplicationDetailsTemplate from "../../../../../templates/ApplicationDetails";
+import { Header, Card, CardSectionHeader, PDFSvg, Loader, StatusTable, Menu, ActionBar, SubmitBar, Modal, CardText } from "@egovernments/digit-ui-react-components";
+//import ApplicationDetailsTemplate from "../../../../../templates/ApplicationDetails";
 import { format } from "date-fns";
 
 const Heading = (props) => {

@@ -1,5 +1,4 @@
-import { Card, CardLabelError, CheckBox, RadioButtons, TextArea, TextInput } from "@digit-ui/digit-ui-react-components";
-import React, { Fragment } from "react";
+import { Card, CardLabelError, CheckBox, RadioButtons, TextArea, TextInput } from "@egovernments/digit-ui-react-components";
 import { Controller } from "react-hook-form";
 
 const CitizenSurveyQuestion = ({ t, question, control, register, values, formState,formDisabled }) => {

@@ -1,11 +1,11 @@
 import React,{Fragment,useEffect,useMemo,useState} from 'react'
-import { Card, CardLabelError, CheckBox, RadioButtons, TextArea, TextInput, Loader, CardHeader, BreakLine, CardLabel, CardSectionHeader, Header, MultiLink } from "@digit-ui/digit-ui-react-components";
+import { Card, CardLabelError, CheckBox, RadioButtons, TextArea, TextInput, Loader, CardHeader, BreakLine, CardLabel, CardSectionHeader, Header, MultiLink } from "@egovernments/digit-ui-react-components";
 import { bindQuesWithAns } from './bindquesansutil';
 import WhoHasResponded from './WhoHasResponded';
 import SurveyDetailsView from './SurveyDetailsView';
 import { useTranslation } from "react-i18next";
 import McqChart from './McqChart';
-import CheckBoxChart from './CheckBoxChart';
+import CheckBoxChart from './CheckBoxChart'
 
 const transformDate = (date) => {
     const split = date.split('-');

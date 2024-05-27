@@ -38,7 +38,7 @@ initDigitUI()
 
 const App = ({queryClient}) => {
   const {t,i18n} = useTranslation()
-  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement"]
+  const enabledModules=["PT","HRMS","Workbench","DSS","Measurement","PGR","Engagement"]
   const moduleReducers = (initData) => initData;
   const { isLoading } = Digit.Hooks.core.useLocalization({
     params:{
