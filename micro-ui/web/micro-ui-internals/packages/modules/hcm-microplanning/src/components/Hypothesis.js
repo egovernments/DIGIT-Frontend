@@ -175,6 +175,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -545,7 +546,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   return (
     <TextInput
       name={"input"}
-      type={"text"}
+      type={"number"}
       value={inputValue}
       t={t}
       config={{}}

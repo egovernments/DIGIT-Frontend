@@ -497,7 +497,7 @@ const ChoroplethSelection = memo(
       <div className="choropleth-section" ref={showChoroplethOptionRef}>
         <div className="icon-rest virtualization-icon">
           <p onClick={() => setShowChoroplethOptions((previous) => !previous)}>{t("VISUALIZATIONS")}</p>
-          <div className="icon" onClick={() => setShowChoroplethOptions((previous) => !previous)}>
+          <div className="icon" onClick={() => setShowChoroplethOptions((previous) => !previous)} onKeyUp={() => setShowChoroplethOptions((previous) => !previous)} tabIndex={0}>
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
           </div>
         </div>
@@ -728,6 +728,7 @@ const BoundarySelection = memo(
               popupModuleMianStyles={{ padding: 0, margin: 0, }}
               style={{
                 flex: 1,
+                height:"2.5rem",
                 border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
               }}
               headerBarMainStyle={{ padding: 0, margin: 0 }}

@@ -29,19 +29,19 @@ function filterUniqueByKey(arr, key) {
 }
 
 const epochTimeForTomorrow12 = () => {
-  // Get the current date and time
-  const now = new Date();
-  
-  // Create a new Date object for tomorrow at 12:00 AM
-  const tomorrow = new Date(
+    // Get the current date and time
+    const now = new Date();
+    
+    // Create a new Date object for tomorrow at 12:00 PM
+    const tomorrowNoon = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate() + 1,
-      0, 0, 0, 0
-  );
-  
-  // Return the epoch time (in milliseconds) for tomorrow at 12:00 AM
-  return Math.floor(tomorrow.getTime() / 1000);
+      12, 0, 0, 0
+    );
+    
+    // Return the epoch time (in milliseconds) for tomorrow at 12:00 PM
+    return tomorrowNoon.getTime();
 };
 
 function cleanObject(obj) {
