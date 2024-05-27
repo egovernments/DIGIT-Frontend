@@ -866,6 +866,7 @@ const Upload = ({
             sections={sections}
             popupModuleActionBarStyles={{
               flex: 1,
+              justifyContent: "space-between",
               padding: "1rem",
               gap: "1rem",
             }}
@@ -894,6 +895,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, paddingRight: "1rem", margin: 0 }}
@@ -922,6 +924,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -950,6 +953,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               backgroundColor: "white",
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}

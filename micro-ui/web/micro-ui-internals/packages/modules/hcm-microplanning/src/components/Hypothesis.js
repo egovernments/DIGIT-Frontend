@@ -175,6 +175,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -353,7 +354,7 @@ const InterractableSection = React.memo(
           {assumptions?.filter(item=>item.active)?.map((item, index) => (
             <div
               key={index}
-              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
+              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"} ${index ===assumptions?.filter(item=>item.active)?.length -1 ?"last-container":""} `}
             >
               <div className="key" 
               ref={el => { itemRefs.current[index] = el; }}
@@ -545,7 +546,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   return (
     <TextInput
       name={"input"}
-      type={"text"}
+      type={"number"}
       value={inputValue}
       t={t}
       config={{}}

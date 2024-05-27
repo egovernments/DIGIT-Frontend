@@ -50,10 +50,18 @@ export const tourSteps = (t) => {
         },
         // {
         //   content:
-        //     t("HELP_HYPOTHESIS_DELETE_BUTTON"),
-        //   target: ".select-and-input-wrapper-first .delete-button-help-locator",
+        //     t("HELP_RULE_ENGINE_INPUT"),
+        //   target: ".last-container .key",
         //   disableBeacon: true,
-        //   placement: "left-start",
+        //   placement: "top-start",
+        //   title: "",
+        // },
+        // {
+        //   content:
+        //     t("HELP_HYPOTHESIS_DELETE_BUTTON"),
+        //   target: ".last-containe .delete-button-help-locator",
+        //   disableBeacon: true,
+        //   placement: "top-start",
         //   title: "",
         // },
         {
@@ -130,6 +138,14 @@ export const tourSteps = (t) => {
           content:
             t("HELP_MAPPING_FILTER"),
           target: ".filter-icon",
+          disableBeacon: true,
+          placement: "left-start",
+          title: "",
+        },
+        {
+          content:
+            t("HELP_MAPPING_VIRTUALIZATION"),
+          target: ".virtualization-icon",
           disableBeacon: true,
           placement: "left-start",
           title: "",

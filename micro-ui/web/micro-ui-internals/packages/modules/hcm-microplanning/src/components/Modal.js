@@ -107,8 +107,8 @@ export const ModalWrapper = ({
       actionCancelOnSubmit={LeftButtonHandler}
       actionSaveOnSubmit={RightButtonHandler}
       formId="microplanning"
-      popupStyles={{ width: "34rem", borderRadius: "0.25rem", ...(popupStyles ? popupStyles : {}) }}
-      headerBarMainStyle={{ margin: 0, width: "34rem", overflow: "hidden", ...(headerBarMainStyle ? headerBarMainStyle : {}) }}
+      popupStyles={{ width: "33.375rem", borderRadius: "0.25rem", ...(popupStyles ? popupStyles : {}) }}
+      headerBarMainStyle={{ margin: 0, width: "33.375rem", overflow: "hidden", ...(headerBarMainStyle ? headerBarMainStyle : {}) }}
       popupModuleMianStyles={{ margin: 0, padding: 0 }}
       popupModuleActionBarStyles={popupModuleActionBarStyles ? popupModuleActionBarStyles : { justifyContent: "space-between", padding: "1rem" }}
       style={{}}
@@ -120,7 +120,7 @@ export const ModalWrapper = ({
         textStyles: { fontWeight: "600" },
         backgroundColor: "rgba(255, 255, 255, 1)",
         color: PRIMARY_THEME_COLOR,
-        minWidth: "13rem",
+        minWidth: "15.063rem",
         border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
       }}
       footerRightButtonstyle={{
@@ -130,7 +130,7 @@ export const ModalWrapper = ({
         textStyles: { fontWeight: "500" },
         backgroundColor: PRIMARY_THEME_COLOR,
         color: "rgba(255, 255, 255, 1)",
-        minWidth: "13rem",
+        minWidth: "15.063rem",
         boxShadow: "0px -2px 0px 0px rgba(11, 12, 12, 1) inset",
       }}
       footerLeftButtonBody={footerLeftButtonBody}

@@ -223,6 +223,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             style={{
               flex: 1,
               backgroundColor: "white",
+              height:"2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}

@@ -1,10 +1,10 @@
-import { CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { EXCEL, GEOJSON, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
-import { Button, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Button, LoaderWithGap, Modal } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { timeLineOptions } from "../configs/timeLineOptions.json";
@@ -141,7 +141,7 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: {previewData:dataToShow} }));
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: { previewData: dataToShow } }));
     setCheckDataCompletion("perform-action");
   }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
 
@@ -174,32 +174,31 @@ const MicroplanPreview = ({
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
     const microData = updateMicroplanData(hypothesisAssumptionsList);
-    let toCheckCompletenesData = [];
-    let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
-    timeLineOptions.forEach((item) => {
-      if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
-    });
-    let check = true;
-    for (let data of toCheckCompletenesData) {
-      check = check && checkStatusValues && checkStatusValues[data];
-      if (data === currentPage?.name) break;
-    }
-    if (!check) {
-      setToast({
-        message: t("ERROR_DATA_NOT_SAVED"),
-        state: "error",
-      });
-      setLoaderActivation(true);
-      setTimeout(() => {
-        setLoaderActivation(false);
-        setToast(undefined);
-        if (navigationEvent.name === "next") setCheckDataCompletion("false");
-        else setCheckDataCompletion("perform-action");
-      }, 1000);
-      return;
-    }
+    // let toCheckCompletenesData = [];
+    // let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
+    // timeLineOptions.forEach((item) => {
+    //   if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
+    // });
+    // let check = true;
+    // for (let data of toCheckCompletenesData) {
+    //   check = check && checkStatusValues && checkStatusValues[data];
+    //   if (data === currentPage?.name) break;
+    // }
+    // if (!check) {
+    //   setToast({
+    //     message: t("ERROR_DATA_NOT_SAVED"),
+    //     state: "error",
+    //   });
+    //   setLoaderActivation(true);
+    //   setTimeout(() => {
+    //     setLoaderActivation(false);
+    //     setToast(undefined);
+    //     if (navigationEvent.name === "next") setCheckDataCompletion("false");
+    //     else setCheckDataCompletion("perform-action");
+    //   }, 1000);
+    //   return;
+    // }
     setLoaderActivation(true);
-
     updateHyothesisAPICall(
       microData,
       setMicroplanData,
@@ -212,6 +211,9 @@ const MicroplanPreview = ({
       setLoaderActivation,
       navigationEvent?.name === "next" ? "GENERATED" : "DRAFT",
       cancleNavigation,
+      state,
+      campaignType,
+      navigationEvent,
       t
     );
 
@@ -261,9 +263,16 @@ const MicroplanPreview = ({
     if (!boundarySelections && !resources) return;
     let tempData = filterMicroplanDataToShowWithHierarchySelection(data, boundarySelections, hierarchy);
     // Adding resources to the data we need to show
-    tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(tempData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t);
+    tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+      tempData,
+      resources,
+      hypothesisAssumptionsList,
+      formulaConfiguration,
+      userEditedResources,
+      t
+    );
     setDataToShow(tempData);
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: {...previous.microplanPreview,previewData:tempData, userEditedResources }}));
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: { ...previous.microplanPreview, previewData: tempData, userEditedResources } }));
   }, [boundarySelections, resources, hypothesisAssumptionsList, userEditedResources]);
 
   if (isCampaignLoading || ishierarchyLoading) {
@@ -330,7 +339,7 @@ const MicroplanPreview = ({
         </div>
         {modal === "confirm-apply-changed-hypothesis" && (
           <Modal
-            popupStyles={{ orderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -342,10 +351,11 @@ const MicroplanPreview = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
+              height: "2.5rem",
               backgroundColor: "white",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
-            headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={createMicroplan}
@@ -374,7 +384,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
   };
-  
+
   return (
     <div className="hypothesis-list-wrapper">
       <div className="hypothesis-list">
@@ -387,7 +397,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
                 {/* Dropdown for boundaries */}
                 <TextInput
                   name={"hyopthesis_" + index}
-                  type={"text"}
+                  type={"number"}
                   value={item?.value}
                   t={t}
                   config={{}}
@@ -401,7 +411,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
           ))}
       </div>
       <div className="hypothesis-controllers">
-        <Button className={"button-primary"} style={{ width: "100%" }} onClick={applyNewHypothesis} label={t("APPLY")} />
+        <Button className={"button-primary"} style={{ width: "100%" }} onButtonClick={applyNewHypothesis} label={t("APPLY")} />
       </div>
     </div>
   );
@@ -501,7 +511,11 @@ const DataPreview = memo(
             <tbody>
               {previewData.slice(1).map((rowData, rowIndex) => {
                 const rowDataList = Object.values(previewData[0]).map((_, cellIndex) => (
-                  <td className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`} key={cellIndex}>
+                  <td
+                    className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`}
+                    key={cellIndex}
+                    style={rowData[cellIndex]?!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}:{}}
+                  >
                     {rowData[cellIndex] || t("NO_DATA")}
                   </td>
                 ));
@@ -576,7 +590,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   }
   const filteredSchemas =
     schemas?.filter((schema) => {
-  if (schema.campaignType) {
+      if (schema.campaignType) {
         return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       } else {
         return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
@@ -600,7 +614,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   tempdata = filteredSchemas
     ?.map((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-        if (value?.isRuleConfigureInputs && value?.toShowInMicroplanPreview ) {
+        if (value?.isRuleConfigureInputs && value?.toShowInMicroplanPreview) {
           acc.push(key);
         }
         return acc;
@@ -613,8 +627,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   tempdata = filteredSchemas
     ?.map((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-        if(value?.toShowInMicroplanPreview)
-        acc.push(key);
+        if (value?.toShowInMicroplanPreview) acc.push(key);
         return acc;
       }, [])
     )
@@ -826,8 +839,7 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
     // update the state with user input
     let newhypothesisEntityIndex = hypothesisAssumptionsList.findIndex((item) => item?.id === e?.item?.id);
     let unprocessedHypothesisList = _.cloneDeep(tempHypothesisList);
-    if (newhypothesisEntityIndex !== -1)
-      unprocessedHypothesisList[newhypothesisEntityIndex].value = value;
+    if (newhypothesisEntityIndex !== -1) unprocessedHypothesisList[newhypothesisEntityIndex].value = value;
     setTempHypothesisList(unprocessedHypothesisList);
   };
 
@@ -848,12 +860,20 @@ const updateHyothesisAPICall = async (
   setLoaderActivation,
   status,
   cancleNavigation,
+  state,
+  campaignType,
+  navigationEvent,
   t
 ) => {
   try {
     let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
     body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+    if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
+      if (navigationEvent.name === "next") setCheckDataCompletion("false");
+      else setCheckDataCompletion("perform-action");
+      return;
+    }
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         setToast({ state: "success", message: t("SUCCESS_DATA_SAVED") });
@@ -870,10 +890,8 @@ const updateHyothesisAPICall = async (
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
-        if(status == "GENERATED")
-          cancleNavigation();
-        else
-          updateData();
+        if (status === "GENERATED") cancleNavigation();
+        else updateData();
         setTimeout(() => {
           setToast(undefined);
         }, 2000);
@@ -927,13 +945,13 @@ const fetchMicroplanData = (microplanData) => {
         switch (fileData?.fileType) {
           case EXCEL: {
             // extract dada
-            const mergedData = Object.values(fileData?.data).flatMap(data => data);
-            let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn)
-            
+            const mergedData = Object.values(fileData?.data).flatMap((data) => data);
+            let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn);
+
             let uniqueEntries;
-            if(commonColumnIndex !== undefined)
-              uniqueEntries = Array.from(new Map(mergedData.map(entry => [entry[commonColumnIndex], entry])).values());
-            if(uniqueEntries)combinesDataList.push(uniqueEntries)
+            if (commonColumnIndex !== undefined)
+              uniqueEntries = Array.from(new Map(mergedData.map((entry) => [entry[commonColumnIndex], entry])).values());
+            if (uniqueEntries) combinesDataList.push(uniqueEntries);
             break;
           }
           case GEOJSON:
@@ -961,8 +979,6 @@ const fetchMicroplanData = (microplanData) => {
   }
   return combinesDataList;
 };
-
-
 
 const EditResourceData = ({ previewData, selectedRow, resources, tempResourceChanges, setTempResourceChanges, data, t }) => {
   const conmmonColumnData = useMemo(() => {
@@ -1049,8 +1065,8 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
   return (
     <div className="aggregates">
       {microplanPreviewAggregates.map((item, index) => (
-        <div key={index} >
-          <p className="aggregate-value">{calculateAggregateValue (item, dataToShow)}</p>
+        <div key={index}>
+          <p className="aggregate-value">{calculateAggregateValue(item, dataToShow)}</p>
           <p className="aggregate-label">{t(item)}</p>
         </div>
       ))}

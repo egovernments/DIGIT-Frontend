@@ -21,7 +21,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
         data[i] = data[i].map((item) => (item ? t(item) : t("NO_DATA")));
       }
 
-      let blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data }, { skipHeader: true });
+      const blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data }, { skipHeader: true });
 
       if (!blob) {
         return;
@@ -45,7 +45,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
   };
 
   const clickGoHome = () => {
-    history.push(`/microplan-ui/employee`);
+    history.push('/microplan-ui/employee');
   };
 
   return (
@@ -73,7 +73,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
         </div>
       </div>
 
-      <ActionBar className={`custom-action-bar-success-screen`}>
+      <ActionBar className={'custom-action-bar-success-screen'}>
         {/* Back button */}
         <Button
           type="button"
@@ -90,7 +90,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
             type="button"
             className="custom-button"
             label={t("GO_TO_HCM")}
-            onButtonClick={clickGoToHCM}
+            onButtonClick={()=>{}}
             isSuffix={true}
             variation={"primary"}
             textStyles={{ padding: 0, margin: 0 }}
