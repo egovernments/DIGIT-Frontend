@@ -1,7 +1,8 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+// import { Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import CitizenSurveyForm from "../../../components/Surveys/CitizenSurveyForm";
+import { Loader } from "@egovernments/digit-ui-react-components";
 
 const ShowSurvey = ({ location }) => {
   const surveyData = location?.state;

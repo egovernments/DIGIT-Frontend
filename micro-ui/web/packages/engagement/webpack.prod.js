@@ -17,12 +17,13 @@ module.exports = () => {
         exposes: {
           './EngagementModule': './src/SingleSpaEntry',
         },
-        shared: {
-          '@egovernments/digit-ui-react-components': {
-            singleton: true,
-            requiredVersion: packageJson.dependencies['@egovernments/digit-ui-react-components'],
-          },
-        ...packageJson.dependencies
+       
+          shared: {
+            '@egovernments/digit-ui-react-components': {
+              singleton: true,
+              requiredVersion: packageJson.dependencies['@egovernments/digit-ui-react-components'],
+            },
+          ...packageJson.dependencies
         },
       }),
     ],
