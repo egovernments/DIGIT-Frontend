@@ -90,7 +90,7 @@ const configs = {
           },
           {
             label: "CAMPAIGN_DATE",
-            jsonPath: "CampaignDetails.campaignDetails.startDate",
+            jsonPath: "CampaignDetails.startDate",
             additionalCustomization: true,
           },
         ],

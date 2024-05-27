@@ -299,6 +299,7 @@ export const UICustomizations = {
       return false
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      debugger
       if (key === "CAMPAIGN_DATE") {
         return Digit.DateUtils.ConvertEpochToDate(value);
       }
