@@ -90,16 +90,19 @@ export default (queryClient) => {
   //   },
   // });
 
-  // registerApplication({
-  //   name: "Engagement",
-  //   app: () => import("engagement/EngagementModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`,
-  //   customProps: {
-  //     title: "Engagement is running on host",
-  //     queryClient,
-  //     userType
-  //   },
-  // });
+  registerApplication({
+    name: "Engagement",
+    app: () => import("engagement/EngagementModule"),
+    activeWhen: [
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`,
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`
+    ],
+    customProps: {
+      title: "Engagement is running on host",
+      queryClient,
+      userType
+    },
+  });
 
   start();
 };

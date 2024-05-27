@@ -1,10 +1,15 @@
-import { CardLabelError, Dropdown, RemoveableTag, TextInput, MultiSelectDropdown } from "@digit-ui/digit-ui-react-components";
+import { CardLabelError, Dropdown, RemoveableTag, TextInput, MultiSelectDropdown } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useMemo } from "react";
 import { Controller } from "react-hook-form";
 
 import { alphabeticalSortFunctionForTenantsBasedOnName } from "../../../utils/index";
 const SurveyDetailsForms = ({ t, registerRef, controlSurveyForm, surveyFormState, surveyFormData, disableInputs, enableDescriptionOnly }) => {
-  const ulbs = Digit.SessionStorage.get("ENGAGEMENT_TENANTS");
+  //const ulbs = Digit.SessionStorage.get("ENGAGEMENT_TENANTS");
+  const ulbs = [
+    { code: "pg.citya", name: "City A" ,i18nKey:"City A"},
+  { code: "pg.cityb", name: "City B" ,i18nKey:"City B"},
+  { code: "pg.cityc", name: "City C" ,i18nKey:"City C"}
+  ]
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser().info;
   const userUlbs = ulbs
