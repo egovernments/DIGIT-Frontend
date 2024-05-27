@@ -18,7 +18,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
       let data = _.cloneDeep(microplanData?.microplanPreview?.previewData);
       data[0] = data[0].map((item) => t(item));
       for (let i in data) {
-        data[i] = data[i].map((item) => (item ? item : t("NO_DATA")));
+        data[i] = data[i].map((item) => (item ? t(item) : t("NO_DATA")));
       }
 
       let blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data }, { skipHeader: true });
