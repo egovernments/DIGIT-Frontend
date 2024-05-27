@@ -1,7 +1,7 @@
 
 # microfrontends 
 
-A React App using Webpack and modulefederation
+A React App using Webpack and module federation
 
 
 # UI using Webpack and microfrontends
