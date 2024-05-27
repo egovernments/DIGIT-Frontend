@@ -1,4 +1,4 @@
-name: fsm ui service docker Image CI
+name: fsm ui service docker Image CI 
 
 on:
   push:
