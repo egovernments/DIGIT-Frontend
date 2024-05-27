@@ -2,9 +2,9 @@ name: fsm ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker" ]
+    branches: [ "develop-mfe" ]
   pull_request:
-    branches: [ "mf-build" ]
+    branches: [ "develop-mfe" ]
 
 jobs:
 

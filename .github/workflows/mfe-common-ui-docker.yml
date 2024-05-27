@@ -2,9 +2,9 @@ name: common ui service docker Image CI
 
 on:
   push:
-    branches: [ "mf-build-docker", "mf" ,"mf-stable","mf-stable-common-module" ]
+    branches: [ "develop-mfe" ]
   pull_request:
-    branches: [ "mf-build" ]
+    branches: [ "develop-mfe" ]
 
 jobs:
 
