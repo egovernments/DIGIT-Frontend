@@ -1,10 +1,11 @@
-import {  ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar, Stepper, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-react-components";
 import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
+import { memo } from "react";
 
 /**
  *
@@ -13,7 +14,7 @@ import { PRIMARY_THEME_COLOR } from "../configs/constants";
  *
  */
 // Main component for creating a microplan
-const Navigator = (props) => {
+const Navigator = memo((props) => {
   // States
   const [currentPage, setCurrentPage] = useState();
   const [toast, setToast] = useState();
@@ -177,17 +178,21 @@ const Navigator = (props) => {
       />
 
       {/* Load custom component based on current page */}
-      {LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null ? (
-        <LoadCustomComponent
-          component={props.components[currentPage?.component]}
-          secondaryProps={
-            checkDataCompletion
-              ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, navigationEvent, ...props.childProps }
-              : {}
-          }
-        />
+      {props?.components[currentPage?.component] ? (
+        LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null ? (
+          <LoadCustomComponent
+            component={props.components[currentPage?.component]}
+            secondaryProps={
+              checkDataCompletion
+                ? { checkDataCompletion, setCheckDataCompletion, currentPage, pages: props.config, navigationEvent, ...props.childProps }
+                : {}
+            }
+          />
+        ) : (
+          <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
+        )
       ) : (
-        <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
+        ""
       )}
 
       {/* Action bar */}
@@ -219,10 +224,10 @@ const Navigator = (props) => {
       </ActionBar>
 
       {/* Toast notification */}
-      {toast && <Toast label={toast} error={true} onClose={() => setToast(undefined)} />}
+      {toast && <Toast label={toast} type="error" onClose={() => setToast(undefined)} />}
     </div>
   );
-};
+});
 
 // Component to load custom component based on current page
 const LoadCustomComponent = (props) => {

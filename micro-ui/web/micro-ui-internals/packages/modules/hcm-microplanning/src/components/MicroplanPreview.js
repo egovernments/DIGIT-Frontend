@@ -1,10 +1,10 @@
-import { Button, CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { EXCEL, GEOJSON, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
-import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Button, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { timeLineOptions } from "../configs/timeLineOptions.json";
@@ -357,7 +357,7 @@ const MicroplanPreview = ({
           </Modal>
         )}
         {toast && toast.state === "error" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
         )}
       </div>
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
@@ -567,14 +567,16 @@ const DataPreview = memo(
 const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
-  Object.entries(microplanData?.upload)
-    ?.filter(([key, value]) => value?.error === null)
-    .forEach(([key, value]) => {
-      sortData.push({ section: key, fileType: value?.fileType });
-    });
+  if (microplanData?.upload) {
+    for (const value of microplanData.upload) {
+      if (value.active && value?.error === null) {
+        sortData.push({ section: value.section, fileType: value?.fileType });
+      }
+    }
+  }
   const filteredSchemas =
     schemas?.filter((schema) => {
-      if (schema.campaignType) {
+  if (schema.campaignType) {
         return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       } else {
         return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
@@ -582,10 +584,23 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
     }) || [];
 
   let finalData = [];
-  let tempdata = filteredSchemas
+  let tempdata;
+  // tempdata = filteredSchemas
+  //   ?.map((item) =>
+  //     Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+  //       if (value?.isLocationDataColumns) {
+  //         acc.push(key);
+  //       }
+  //       return acc;
+  //     }, [])
+  //   )
+  //   .flatMap((item) => item)
+  //   .filter((item) => !!item);
+  // finalData = [...finalData, ...tempdata];
+  tempdata = filteredSchemas
     ?.map((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-        if (value?.isLocationDataColumns) {
+        if (value?.isRuleConfigureInputs && value?.toShowInMicroplanPreview ) {
           acc.push(key);
         }
         return acc;
@@ -598,19 +613,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   tempdata = filteredSchemas
     ?.map((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-        if (value?.isRuleConfigureInputs) {
-          acc.push(key);
-        }
-        return acc;
-      }, [])
-    )
-    .flatMap((item) => item)
-    .filter((item) => !!item);
-  finalData = [...finalData, ...tempdata];
-
-  tempdata = filteredSchemas
-    ?.map((item) =>
-      Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+        if(value?.toShowInMicroplanPreview)
         acc.push(key);
         return acc;
       }, [])
@@ -914,17 +917,17 @@ const fetchMicroplanData = (microplanData) => {
   if (microplanData && microplanData?.upload) {
     let files = microplanData?.upload;
     // Loop through each file in the microplan upload
-    for (let fileData in files) {
+    for (let fileData of files) {
       // Check if the file is not part of boundary or layer data origins
-      if (!files[fileData]?.fileType || !files[fileData]?.section) continue; // Skip files with errors or missing properties
+      if (!fileData.fileType || !fileData?.section) continue; // Skip files with errors or missing properties
 
       // Check if file contains latitude and longitude columns
-      if (files[fileData]?.data) {
+      if (fileData?.data) {
         // Check file type and update data availability accordingly
-        switch (files[fileData]?.fileType) {
+        switch (fileData?.fileType) {
           case EXCEL: {
             // extract dada
-            const mergedData = Object.values(files[fileData]?.data).flatMap(data => data);
+            const mergedData = Object.values(fileData?.data).flatMap(data => data);
             let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn)
             
             let uniqueEntries;
@@ -936,10 +939,10 @@ const fetchMicroplanData = (microplanData) => {
           case GEOJSON:
           case SHAPEFILE:
             // Extract keys from the first feature's properties
-            var keys = Object.keys(files[fileData]?.data.features[0].properties);
+            var keys = Object.keys(fileData?.data.features[0].properties);
 
             // Extract corresponding values for each feature
-            const values = files[fileData]?.data?.features.map((feature) => {
+            const values = fileData?.data?.features.map((feature) => {
               // list with features added to it
               const temp = keys.map((key) => {
                 if (feature.properties[key] === "") {

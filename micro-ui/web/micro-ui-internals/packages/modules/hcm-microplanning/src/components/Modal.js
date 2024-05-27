@@ -69,7 +69,7 @@ const Modal = ({
           </div>
         </div>
       </div>
-      {error && <Toast label={error} onClose={() => setError(null)} error />}
+      {error && <Toast label={error} onClose={() => setError(null)} type="error" />}
     </PopUp>
   );
 };

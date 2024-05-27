@@ -1,9 +1,9 @@
 import _ from "lodash";
 import { findParent } from "../utils/processHierarchyAndData";
-import { EXCEL,LOCALITY, commonColumn } from "../configs/constants";
+import { EXCEL, LOCALITY, commonColumn } from "../configs/constants";
 
 const formatDates = (value, type) => {
-  if (type != "EPOC" && (!value || Number.isNaN(value))) {
+  if (type !== "EPOC" && (!value || Number.isNaN(Number(value)))) {
     value = new Date();
   }
   switch (type) {
@@ -27,7 +27,7 @@ const getSchema = (campaignType, type, section, schemas) => {
 };
 
 // Sorting 2 lists, The first list is a list of string and second one is list of Objects
-const sortSecondListBasedOnFirstListOrder = (firstList, secondList)=> {
+const sortSecondListBasedOnFirstListOrder = (firstList, secondList) => {
   // Create a map to store the indices of elements in the first list
   const indexMap = {};
   firstList.forEach((value, index) => {
@@ -49,7 +49,7 @@ const sortSecondListBasedOnFirstListOrder = (firstList, secondList)=> {
   });
 
   return secondList;
-}
+};
 
 const computeGeojsonWithMappedProperties = ({ campaignType, fileType, templateIdentifier, validationSchemas }) => {
   const schemaData = getSchema(campaignType, fileType, templateIdentifier, validationSchemas);
@@ -160,12 +160,27 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
     resourceMapping = [];
   if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
-      if (item?.error) return;
-      const data = { filestoreId: item.filestoreId, inputFileType: item.fileType, templateIdentifier: item.section, id: item.fileId };
+      if (!item || item.error || !item.filestoreId) return;
+      const data = {
+        active: item?.active,
+        filestoreId: item?.filestoreId,
+        inputFileType: item?.fileType,
+        templateIdentifier: item?.section,
+        id: item?.fileId,
+      };
       files.push(data);
     });
     Object.values(data?.upload).forEach((item) => {
-      if (item?.error) return;
+      if (
+        !item ||
+        !item.resourceMapping ||
+        Object.keys(item.resourceMapping).length === 0 ||
+        item.error ||
+        !Array.isArray(item.resourceMapping) ||
+        !item.resourceMapping.every((item) => item.mappedFrom) ||
+        !item.resourceMapping.every((item) => item.mappedTo)
+      )
+        return;
       resourceMapping.push(item?.resourceMapping);
     });
     resourceMapping = resourceMapping.flatMap((inner) => inner);
@@ -179,16 +194,21 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
       name: microplanName,
       executionPlanId: campaignId,
       files,
-      assumptions: data?.hypothesis?.map((item) => {
-        let templist = JSON.parse(JSON.stringify(item));
-        return templist;
-      }),
-      operations: data?.ruleEngine?.map((item) => {
-        const data = JSON.parse(JSON.stringify(item));
-        const operator = Operators.find((e) => e.name === data.operator);
-        if (operator && operator.code) data.operator = operator?.code;
-        return data;
-      }),
+      assumptions: data?.hypothesis?.reduce((acc, item) => {
+        if (item.key && item.value) {
+          acc.push(JSON.parse(JSON.stringify(item)));
+        }
+        return acc;
+      }, []),
+      operations: data?.ruleEngine?.reduce((acc, item) => {
+        if (item.operator && item.output && item.input && item.assumptionValue) {
+          const data = JSON.parse(JSON.stringify(item));
+          const operator = Operators.find((e) => e.name === data.operator);
+          if (operator && operator.code) data.operator = operator?.code;
+          acc.push(data);
+        }
+        return acc;
+      }, []),
       resourceMapping,
     },
   };
@@ -241,7 +261,8 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
         // Process header row
         value[0].forEach((item, index) => {
           // Find the corresponding mapped column name
-          const mappedTo = resourceMappingData.find((e) => (translatedData && e.mappedFrom === item) || (!translatedData && e.mappedFrom === t(item)))?.mappedTo;
+          const mappedTo = resourceMappingData.find((e) => (translatedData && e.mappedFrom === item) || (!translatedData && e.mappedFrom === t(item)))
+            ?.mappedTo;
           if (!mappedTo) {
             toRemove.push(index); // Mark column for removal if not mapped
             return;
@@ -273,9 +294,6 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
-
-
-
 const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssumptionsList, formulaConfiguration, userEditedResources, t) => {
   // Clone the preview data to avoid mutating the original data
   const data = _.cloneDeep(previewData);
@@ -289,27 +307,23 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
 
   // Ensure the previewData has at least one row and the first row is an array
   if (!Array.isArray(data) || !Array.isArray(data[0])) {
-    console.error('Invalid previewData format');
     return [];
   }
 
   // Identify the index of the common column
   const conmmonColumnIndex = data[0].indexOf(commonColumn);
   if (conmmonColumnIndex === -1) {
-    console.error('Common column not found in previewData');
     return [];
   }
 
   // Ensure resources is a valid array
   if (!Array.isArray(resources)) {
-    console.error('Invalid resources format');
     return data;
   }
 
   // Process each row of the data
   const combinedData = data.map((item, index) => {
     if (!Array.isArray(item)) {
-      console.error(`Invalid data format at row ${index}`);
       return item;
     }
 
@@ -336,8 +350,6 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
 
   return combinedData;
 };
-
-
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
   let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
@@ -380,6 +392,68 @@ const findResult = (inputValue, assumptionValue, operator) => {
   }
 };
 
+const fetchData = (state, campaignType) => {
+  let hypothesis = [];
+  let rulesOutputs = [];
+  let uploadList = [];
+
+  hypothesis = state?.HypothesisAssumptions?.find((item) => item.campaignType === campaignType)?.assumptions;
+  rulesOutputs = state?.RuleConfigureOutput?.find((item) => item.campaignType === campaignType)?.data;
+  uploadList = state?.UploadConfiguration?.reduce((acc, item) => {
+    if (item.required) acc.push(item.id);
+    return acc;
+  }, []);
+  return { hypothesisList: hypothesis, rulesOutputs, uploadList };
+};
+const hypothesisCheck = (hypothesis, validList) => {
+  if (hypothesis && Array.isArray(hypothesis) && hypothesis.length !== 0 && validList && Array.isArray(validList) && validList.length !== 0) {
+    return hypothesis.every((item) => validList.includes(item.key));
+  }
+  return false;
+};
+const ruleOutputCheck = (rules, ruleOuputList) => {
+  if (
+    rules &&
+    Array.isArray(rules) &&
+    rules.filter((item) => item.active).length !== 0 &&
+    ruleOuputList &&
+    Array.isArray(ruleOuputList) &&
+    ruleOuputList.length !== 0
+  ) {
+    return rules.every((item) => ruleOuputList.includes(item.output));
+  }
+  return false;
+};
+const ruleHypothesisCheck = (rules, ruleHypothesis) => {
+  if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {
+    return rules.every((item) => ruleHypothesis.includes(item.assumptionValue));
+  }
+  return false;
+};
+const uploadCheck = (uploads, uploadList) => {
+  if (uploads && Array.isArray(uploads) && uploads.length !== 0 && uploadList && Array.isArray(uploadList) && uploadList.length !== 0) {
+    return uploads.some((item) => uploadList.includes(item.templateIdentifier) && item.active);
+  }
+  return false;
+};
+const planConfigRequestBodyValidator = (data, state, campaignType) => {
+  if (!data || !campaignType || !state) return false;
+
+  const { hypothesisList, rulesOutputs, uploadList } = fetchData(state, campaignType);
+  let checks =
+    // microplan name check
+    (!data || !data.name) &&
+    hypothesisCheck(data?.PlanConfiguration?.assumptions, hypothesisList) &&
+    ruleOutputCheck(data?.PlanConfiguration?.operations, rulesOutputs) &&
+    ruleHypothesisCheck(
+      data?.PlanConfiguration?.operations,
+      data?.PlanConfiguration?.assumptions?.map((item) => item.key)
+    ) &&
+    uploadCheck(data?.PlanConfiguration?.files, uploadList);
+  return checks;
+  // if()
+};
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -391,5 +465,6 @@ export default {
   resourceMappingAndDataFilteringForExcelFiles,
   sortSecondListBasedOnFirstListOrder,
   addResourcesToFilteredDataToShow,
-  calculateResource
+  calculateResource,
+  planConfigRequestBodyValidator,
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalWrapper } from "./Modal";
@@ -51,15 +51,17 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!rules || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
-    else updateData(true);
+    // uncomment to activate data change save check
+    // if (!microplanData?.ruleEngine || !_.isEqual(rules, microplanData.ruleEngine)) setModal("data-change-check");
+    // else
+    updateData(true);
   }, [checkDataCompletion]);
 
-  // // UseEffect to store current data
-  // useEffect(() => {
-  //   if (!rules || !setMicroplanData) return;
-  //   setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-  // }, [rules]);
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!rules || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
+  }, [rules]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -236,6 +238,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           </Modal>
         )}
       </div>
+      {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
@@ -265,7 +268,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
@@ -296,6 +299,7 @@ const addRulesHandler = (setRules) => {
       input: "",
       operator: "",
       assumptionValue: "",
+      active: true,
     },
   ]);
 };
@@ -328,6 +332,77 @@ const InterractableSection = React.memo(
     setOperators,
     t,
   }) => {
+    // References to the items in the list
+    const itemRefs = useRef([]);
+    // State to keep track of the currently expanded item index
+    const [expandedIndex, setExpandedIndex] = useState(null);
+    // Reference to the scroll container
+    const scrollContainerRef = useRef(null);
+    // State to track the render cycle count
+    const [renderCycle, setRenderCycle] = useState(0);
+
+    // Effect to reset the render cycle count whenever the expandedIndex changes
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        setRenderCycle(0);
+      }
+    }, [expandedIndex]);
+
+    // Effect to handle scrolling to the expanded item after the DOM has updated
+    useEffect(() => {
+      if (renderCycle < 3) {
+        // Increment render cycle count to ensure multiple render checks
+        setRenderCycle((prev) => prev + 1);
+      } else if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+        try {
+          const parentElement = itemRefs.current[expandedIndex];
+          const childElement = itemRefs.current[expandedIndex].children[1];
+
+          if (parentElement) {
+            const scrollContainer = scrollContainerRef.current;
+            const parentRect = parentElement.getBoundingClientRect();
+            const containerRect = scrollContainer.getBoundingClientRect();
+
+            // Calculate the offset from the top of the container
+            const offset = parentRect.top - containerRect.top;
+
+            // Scroll the container to the target position
+            scrollContainer.scrollTo({
+              top: scrollContainer.scrollTop + offset - 10,
+              behavior: "smooth",
+            });
+          }
+
+          if (childElement) {
+            // Focus the child element if it exists
+            childElement.focus();
+          }
+        } catch (error) {
+          console.error("Error scrolling to element:", error);
+        }
+      }
+    }, [renderCycle, expandedIndex]);
+
+    // Effect to observe DOM changes in the expanded item and trigger render cycle
+    useEffect(() => {
+      if (expandedIndex !== null) {
+        const observer = new MutationObserver(() => {
+          setRenderCycle((prev) => prev + 1);
+        });
+
+        if (itemRefs.current[expandedIndex]) {
+          observer.observe(itemRefs.current[expandedIndex], { childList: true, subtree: true });
+        }
+
+        return () => observer.disconnect();
+      }
+    }, [expandedIndex]);
+
+    // Function to toggle the expanded state of an item
+    const toggleExpand = (index) => {
+      setExpandedIndex(index === expandedIndex ? null : index);
+    };
+
     // Handler for deleting an assumption on conformation
     const deleteHandler = useCallback(
       (item) => {
@@ -338,7 +413,7 @@ const InterractableSection = React.memo(
     );
 
     return (
-      <div className="user-input-section">
+      <div className="user-input-section" ref={scrollContainerRef}>
         <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
           <div className="headerbar">
@@ -364,78 +439,87 @@ const InterractableSection = React.memo(
               </button>
             </div>
           </div>
-          {rules.map((item, index) => (
-            <div key={index} className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}>
-              <div key={item.id} className="value-input-key">
-                <Select
-                  key={item.id}
-                  item={item}
-                  rules={rules}
-                  setRules={setRules}
-                  options={outputs}
-                  setOptions={setOutputs}
-                  toChange={"output"}
-                  unique={true}
-                  setInputs={setInputs}
-                  t={t}
-                />
-              </div>
+          {rules
+            .filter((item) => item.active)
+            .map((item, index) => (
+              <div
+                key={index}
+                className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
+                ref={(el) => {
+                  itemRefs.current[index] = el;
+                }}
+                onClick={() => toggleExpand(index)}
+              >
+                <div key={item.id} className="value-input-key">
+                  <Select
+                    key={item.id}
+                    item={item}
+                    rules={rules}
+                    setRules={setRules}
+                    options={outputs}
+                    setOptions={setOutputs}
+                    toChange={"output"}
+                    unique={true}
+                    setInputs={setInputs}
+                    t={t}
+                  />
+                </div>
 
-              <div className="equal-to-icon">=</div>
+                <div className="equal-to-icon">=</div>
 
-              <div className="value-input-key input">
-                <Select
-                  key={item.id}
-                  item={item}
-                  rules={rules}
-                  setRules={setRules}
-                  options={inputs}
-                  setOptions={setInputs}
-                  toChange={"input"}
-                  unique={false}
-                  setInputs={setInputs}
-                  outputs={outputs}
-                  t={t}
-                />
+                <div className="value-input-key input">
+                  <Select
+                    key={item.id}
+                    item={item}
+                    rules={rules}
+                    setRules={setRules}
+                    options={inputs}
+                    setOptions={setInputs}
+                    toChange={"input"}
+                    unique={false}
+                    setInputs={setInputs}
+                    outputs={outputs}
+                    t={t}
+                  />
+                </div>
+                <div className="operator">
+                  <Select
+                    key={item.id}
+                    item={item}
+                    rules={rules}
+                    setRules={setRules}
+                    options={operators}
+                    setOptions={setOperators}
+                    toChange={"operator"}
+                    unique={false}
+                    setInputs={setInputs}
+                    t={t}
+                  />
+                </div>
+                <div className="value-input-key">
+                  <Select
+                    key={item.id}
+                    item={item}
+                    rules={rules}
+                    setRules={setRules}
+                    options={hypothesisAssumptionsList}
+                    setOptions={setHypothesisAssumptionsList}
+                    toChange={"assumptionValue"}
+                    unique={false}
+                    setInputs={setInputs}
+                    t={t}
+                  />
+                </div>
+                <div>
+                  <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
+                    <div>
+                      <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
+                    </div>
+                    <p>{t("DELETE")}</p>
+                  </button>
+                </div>
               </div>
-              <div className="operator">
-                <Select
-                  key={item.id}
-                  item={item}
-                  rules={rules}
-                  setRules={setRules}
-                  options={operators}
-                  setOptions={setOperators}
-                  toChange={"operator"}
-                  unique={false}
-                  setInputs={setInputs}
-                  t={t}
-                />
-              </div>
-              <div className="value-input-key">
-                <Select
-                  key={item.id}
-                  item={item}
-                  rules={rules}
-                  setRules={setRules}
-                  options={hypothesisAssumptionsList}
-                  setOptions={setHypothesisAssumptionsList}
-                  toChange={"assumptionValue"}
-                  unique={false}
-                  setInputs={setInputs}
-                  t={t}
-                />
-              </div>
-              <div>
-                <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
-                  <div>
-                    <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
-                  </div>
-                  <p>{t("DELETE")}</p>
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     );
@@ -618,18 +702,15 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
-  Object.entries(microplanData?.upload)
-    ?.filter(([key, value]) => value?.error === null)
-    .forEach(([key, value]) => {
-      sortData.push({ section: key, fileType: value?.fileType });
-    });
+  for (const value of microplanData?.upload?.filter((value) => value?.error === null) || []) {
+    sortData.push({ section: value?.section, fileType: value?.fileType });
+  }
   const filteredSchemas =
     schemas?.filter((schema) => {
       if (schema.campaignType) {
         return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
-      } else {
-        return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       }
+      return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
     }) || [];
   const finalData = filteredSchemas
     ?.map((item) =>
@@ -666,6 +747,7 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
       let uuid = uuidv4();
       item["id"] = uuid;
     }
+    item.active = true;
     newRules.push(item);
     rulePlusInputs?.push(item?.output);
     ruleOuputList?.push(item?.output);

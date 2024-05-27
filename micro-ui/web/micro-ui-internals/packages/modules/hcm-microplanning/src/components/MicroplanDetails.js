@@ -86,18 +86,29 @@ const MicroplanDetails = ({
     });
   }, []);
 
+  // Save data to ssn of data change
+  useEffect(()=>{
+    setMicroplanData((previous) => ({
+      ...previous,
+      microplanDetails: {
+        name: microplan,
+      },
+    }));
+  },[microplan])
+
   useEffect(() => {
     if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (
-      !microplanData?.microplanDetails ||
-      !_.isEqual(
-        {
-          name: microplan,
-        },
-        microplanData.microplanDetails
-      )
-    )
-      setModal("data-change-check");
+    // uncomment to activate data change save check
+    // if (
+    //   !microplanData?.microplanDetails ||
+    //   !_.isEqual(
+    //     {
+    //       name: microplan,
+    //     },
+    //     microplanData.microplanDetails
+    //   )
+    // )
+    //   setModal("data-change-check");
     else updateData(true);
   }, [checkDataCompletion]);
 
@@ -142,10 +153,10 @@ const MicroplanDetails = ({
     }
   }, [checkDataCompletion, microplan, microplanData, setCheckDataCompletion, setMicroplanData]);
 
-  const cancelUpdateData = useCallback(() => {
-    setCheckDataCompletion(false);
-    setModal('none');
-  }, [setCheckDataCompletion, setModal]);
+  // const cancelUpdateData = useCallback(() => {
+  //   setCheckDataCompletion(false);
+  //   setModal('none');
+  // }, [setCheckDataCompletion, setModal]);
 
   const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
@@ -204,7 +215,7 @@ const MicroplanDetails = ({
           <div style={{ width: "100%", maxWidth: "960px", marginTop: "1rem" }}>
             <TextInput
               t={t}
-              style={{ width: "60%" }}
+              style={{ width: "100%" }}
               type={"text"}
               isMandatory={false}
               name="name"
@@ -221,6 +232,7 @@ const MicroplanDetails = ({
           </div>
         </LabelFieldPair>
       </Card>
+      {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
@@ -250,7 +262,7 @@ const MicroplanDetails = ({
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };

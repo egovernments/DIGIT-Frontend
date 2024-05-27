@@ -17,6 +17,7 @@ import { Loader, Toast } from "@egovernments/digit-ui-components";
 import { EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
+import { v4 as uuidv4 } from "uuid";
 
 const page = "upload";
 const commonColumn = "boundaryCode";
@@ -45,7 +46,7 @@ const Upload = ({
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
-  const [fileDataList, setFileDataList] = useState({});
+  const [fileDataList, setFileDataList] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [template, setTemplate] = useState([]);
   const [resourceMapping, setResourceMapping] = useState([]);
@@ -100,15 +101,17 @@ const Upload = ({
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (!microplanData?.upload || !_.isEqual(fileDataList, microplanData.upload)) setModal("data-change-check");
-    else updateData(true);
+    // uncomment to activate data change save check
+    // if (!microplanData?.upload || !_.isEqual(fileDataList, microplanData.upload)) setModal("data-change-check");
+    // else
+    updateData(true);
   }, [checkDataCompletion]);
 
-  // // UseEffect to store current data
-  // useEffect(() => {
-  //   if (!fileDataList || !setMicroplanData) return;
-  //   setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-  // }, [fileDataList]);
+  // UseEffect to store current data
+  useEffect(() => {
+    if (!fileDataList || !setMicroplanData) return;
+    setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
+  }, [fileDataList]);
 
   // check if data has changed or not
   const updateData = useCallback(
@@ -116,23 +119,23 @@ const Upload = ({
       if (!fileDataList || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
-        const valueList = fileDataList ? Object.values(fileDataList) : [];
-        const sectionCheckList = sections.filter((item) => item.required);
-        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.[item?.id]?.error === null)) setCheckDataCompletion("valid");
+        const valueList = fileDataList ? fileDataList : [];
+        const sectionCheckList = sections?.filter((item) => item.required);
+        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.filter(e=>e.active && e.templateIdentifier===item.id)?.every(element => element?.error === null))) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
         const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
-        if (valueList.length !== 0 && microplanData.Upload.Population?.error === null) setCheckDataCompletion("valid");
+        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.filter(e=>e.templateIdentifier===item.id)?.every(element =>element.active && element?.error === null))) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       }
     },
     [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion]
   );
 
-  const cancelUpdateData = useCallback(() => {
-    setCheckDataCompletion(false);
-    setModal("none");
-  }, [setCheckDataCompletion, setModal]);
+  // const cancelUpdateData = useCallback(() => {
+  //   setCheckDataCompletion(false);
+  //   setModal("none");
+  // }, [setCheckDataCompletion, setModal]);
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -239,8 +242,8 @@ const Upload = ({
   // Effect for updating current session data in case of section change
   useEffect(() => {
     if (selectedSection) {
-      let file = fileDataList?.[`${selectedSection.id}`];
-      if (file && file?.resourceMapping) {
+      let file = fileDataList?.find(item=>item.active && item.templateIdentifier === selectedSection.id);
+      if (file?.resourceMapping) {
         setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item?.id === file?.fileType));
         setUploadedFileError(file?.error);
         setFileData(file);
@@ -382,9 +385,12 @@ const Upload = ({
       if (selectedFileType.id === EXCEL) {
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
+
+      let uuid = uuidv4();
       // creating a fileObject to save all the data collectively
       let fileObject = {
-        id: `${selectedSection.id}`,
+        id: uuid,
+        templateIdentifier: `${selectedSection.id}`,
         fileName: file.name,
         section: selectedSection.id,
         fileType: selectedFileType.id,
@@ -393,10 +399,19 @@ const Upload = ({
         error: error ? error : null,
         filestoreId,
         resourceMapping: resourceMappingData,
+        active: true,
       };
 
+      setFileDataList((prevFileDataList) => {
+        let temp = _.cloneDeep(prevFileDataList)
+        if(!temp )return temp
+        let index = prevFileDataList?.findIndex((item) =>   ( item.active && item.templateIdentifier === selectedSection.id) );
+        if(index !== -1)
+          temp[index] = {...temp[index],active:false}
+        temp.push(fileObject) 
+        return temp;
+      });
       setFileData(fileObject);
-      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
       if (error === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
       setLoaderActivation(false);
@@ -428,9 +443,9 @@ const Upload = ({
         toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") },
       };
     }
-
+    let extraColumns = [commonColumn];
     // checking if the hierarchy and common column is present the  uploaded data
-    let extraColumns = [...hierarchy, commonColumn];
+    if (schemaData?.doHierarchyCheckInUploadedData) extraColumns = [...hierarchy, commonColumn];
     let data = Object.values(tempFileDataToStore);
     let error;
     let toast;
@@ -543,10 +558,9 @@ const Upload = ({
         link.download = fileNameParts.join(".");
         link.click();
         URL.revokeObjectURL(url);
-      }
-      else{
+      } else {
         let downloadUrl = await Digit.UploadServices.Filefetch([fileData.filestoreId], Digit.ULBService.getStateId());
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = downloadUrl;
         // Forming a name for downloaded file
         let fileNameParts = fileData.fileName.split(".");
@@ -571,8 +585,12 @@ const Upload = ({
   const deleteFile = () => {
     setResourceMapping([]);
     setFileDataList((previous) => {
-      let temp = _.cloneDeep(previous);
-      delete temp[fileData.id];
+      let temp = _.cloneDeep(previous)
+      if(!temp )return temp
+      let index = temp?.findIndex((item) =>{ 
+        return item.id === fileData.id});
+      if(index !== -1)
+        temp[index] = {...temp[index],active:false}
       return temp;
     });
     setFileData(undefined);
@@ -610,7 +628,15 @@ const Upload = ({
       let fileObject = _.cloneDeep(fileData);
       fileObject = { ...fileData, data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
       setFileData(fileObject);
-      setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileObject.id]: fileObject }));
+      setFileDataList((prevFileDataList) => {
+        let temp = _.cloneDeep(prevFileDataList)
+        if(!temp )return temp
+        let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
+        if(index !== -1)
+          temp[index] = {...temp[index],active:false}
+        temp.puch(fileObject) 
+        return temp;
+      });
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoaderActivation(false);
     } catch (error) {
@@ -652,7 +678,15 @@ const Upload = ({
     const fileObject = fileData;
     fileObject.error = error;
     setFileData((previous) => ({ ...previous, error }));
-    setFileDataList((prevFileDataList) => ({ ...prevFileDataList, [fileData.id]: fileObject }));
+    setFileDataList((prevFileDataList) => {
+      let temp = _.cloneDeep(prevFileDataList)
+      if(!temp )return temp
+      let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
+      if(index !== -1)
+        temp[index] = {...temp[index],active:false}
+      temp.puch(fileObject)
+      return temp;
+    });
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
     if (error) setUploadedFileError(error);
     setLoaderActivation(false);
@@ -732,7 +766,10 @@ const Upload = ({
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
   const cancelUpload = () => {
-    setFileDataList({ ...fileDataList, [fileData.id]: undefined });
+    setFileDataList(previous=>{
+      let temp = previous?.filter((item) => item.id !== fileData?.id);
+      return temp;
+    });
     setFileData(undefined);
     setDataPresent(false);
     setUploadedFileError(null);
@@ -960,10 +997,10 @@ const Upload = ({
         {loaderActivation && <LoaderWithGap text={"FILE_UPLOADING"} />}
         {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
         {toast && toast.state === "error" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} error />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
         )}
         {toast && toast.state === "warning" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} warning />
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
         )}
         {previewUploadedData && (
           <div className="popup-wrap">
@@ -971,6 +1008,7 @@ const Upload = ({
           </div>
         )}
       </div>
+      {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
@@ -1000,7 +1038,7 @@ const Upload = ({
             <p className="modal-main-body-p">{t("INSTRUCTION_DATA_WAS_UPDATED_WANT_TO_SAVE")}</p>
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
@@ -1075,7 +1113,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
           height={"3rem"}
           color={selectedFileType.id === item.id || isHovered ? PRIMARY_THEME_COLOR : "rgba(80, 90, 95, 1)"}
         />
-        <p>{t(item.code)}</p>
+        <p style={{ color: selectedFileType.id === item.id || isHovered ? PRIMARY_THEME_COLOR : "rgba(80, 90, 95, 1)" }}>{t(item.code)}</p>
         <button
           className={selectedFileType && selectedFileType.id === item.id ? "selected-button" : "select-button"}
           type="button"
@@ -1195,7 +1233,7 @@ const UploadedFile = ({
               <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("Download")}</p>
             </div>
-            <div className="deletebutton" onClick={DeleteFile}>
+            <div className="delete-button" onClick={DeleteFile}>
               <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("DELETE")}</p>
             </div>
