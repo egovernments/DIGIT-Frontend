@@ -47,3 +47,4 @@ jobs:
           # Push the image to Docker Hub
           docker push $IMAGE_NAME
           echo "Docker image pushed: $IMAGE_NAME"
+          
