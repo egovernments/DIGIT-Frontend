@@ -94,8 +94,8 @@ export default (queryClient) => {
     name: "Engagement",
     app: () => import("engagement/EngagementModule"),
     activeWhen: [
-      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/citizen/engagement`,
-      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`,
+      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`
     ],
     customProps: {
       title: "Engagement is running on host",
