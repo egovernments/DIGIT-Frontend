@@ -634,7 +634,7 @@ const Upload = ({
         let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
         if(index !== -1)
           temp[index] = {...temp[index],active:false}
-        temp.puch(fileObject) 
+        temp.push(fileObject) 
         return temp;
       });
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
@@ -684,7 +684,7 @@ const Upload = ({
       let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
       if(index !== -1)
         temp[index] = {...temp[index],active:false}
-      temp.puch(fileObject)
+      temp.push(fileObject)
       return temp;
     });
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
@@ -823,6 +823,7 @@ const Upload = ({
                     onTypeError={onTypeErrorWhileFileUpload}
                     setToast={setToast}
                     template={template}
+                    campaignType={campaignType}
                   />
                 </div>
               ) : (
@@ -842,6 +843,7 @@ const Upload = ({
                     setToast={setToast}
                     template={template}
                     openDataPreview={openDataPreview}
+                    campaignType={campaignType}
                   />
                 )}
               </div>
@@ -1154,7 +1156,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 };
 
 // Component for uploading file
-const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, setToast, template }) => {
+const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, setToast, template, campaignType }) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
   let types;
@@ -1202,6 +1204,7 @@ const UploadedFile = ({
   setToast,
   template,
   openDataPreview,
+  campaignType,
 }) => {
   const { t } = useTranslation();
   return (

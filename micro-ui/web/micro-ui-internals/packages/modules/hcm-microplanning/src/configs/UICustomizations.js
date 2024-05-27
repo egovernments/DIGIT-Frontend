@@ -236,7 +236,6 @@ export const UICustomizations = {
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
       data.body.CampaignDetails.campaignName = campaignName;
       data.body.CampaignDetails.status = ["drafted"]
-      debugger
       if (startDate) {
         data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
       }
