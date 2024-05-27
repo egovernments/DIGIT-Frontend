@@ -353,7 +353,7 @@ const InterractableSection = React.memo(
           {assumptions?.filter(item=>item.active)?.map((item, index) => (
             <div
               key={index}
-              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"}`}
+              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"} ${index ===assumptions?.filter(item=>item.active)?.length -1 ?"last-container":""} `}
             >
               <div className="key" 
               ref={el => { itemRefs.current[index] = el; }}

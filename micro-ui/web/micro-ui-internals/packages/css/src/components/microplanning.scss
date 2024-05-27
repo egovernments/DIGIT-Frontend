@@ -160,6 +160,7 @@ $border-color: rgba(214, 213, 212, 1);
 
 .microplan-close-button {
     margin: 0.5rem 0.5rem 0 0;
+    align-self: flex-start;
     border: none;
     color: inherit;
     cursor: pointer;

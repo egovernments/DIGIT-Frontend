@@ -1,10 +1,10 @@
-import { CardLabel, Header, Loader, Modal, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { EXCEL, GEOJSON, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
-import { Button, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Button, LoaderWithGap, Modal } from "@egovernments/digit-ui-react-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { timeLineOptions } from "../configs/timeLineOptions.json";
@@ -330,7 +330,7 @@ const MicroplanPreview = ({
         </div>
         {modal === "confirm-apply-changed-hypothesis" && (
           <Modal
-            popupStyles={{ orderRadius: "0.25rem", width: "31.188rem" }}
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
             popupModuleActionBarStyles={{
               display: "flex",
               flex: 1,
@@ -345,7 +345,7 @@ const MicroplanPreview = ({
               backgroundColor: "white",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
-            headerBarMainStyle={{ padding: "1rem 0 0 0", margin: 0 }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_PROCEED_WITH_NEW_HYPOTHESIS")} />}
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={createMicroplan}
@@ -401,7 +401,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
           ))}
       </div>
       <div className="hypothesis-controllers">
-        <Button className={"button-primary"} style={{ width: "100%" }} onClick={applyNewHypothesis} label={t("APPLY")} />
+        <Button className={"button-primary"} style={{ width: "100%" }} onButtonClick={applyNewHypothesis} label={t("APPLY")} />
       </div>
     </div>
   );

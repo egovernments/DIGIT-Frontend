@@ -866,6 +866,7 @@ const Upload = ({
             sections={sections}
             popupModuleActionBarStyles={{
               flex: 1,
+              justifyContent:"space-between",
               padding: "1rem",
               gap: "1rem",
             }}
