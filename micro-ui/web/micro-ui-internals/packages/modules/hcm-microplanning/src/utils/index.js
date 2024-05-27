@@ -3,7 +3,7 @@ import { findParent } from "../utils/processHierarchyAndData";
 import { EXCEL, LOCALITY, commonColumn } from "../configs/constants";
 
 const formatDates = (value, type) => {
-  if (type !== "EPOC" && (!value || Number.isNaN(value))) {
+  if (type !== "EPOC" && (!value || Number.isNaN(Number(value)))) {
     value = new Date();
   }
   switch (type) {

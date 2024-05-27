@@ -43,7 +43,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {
-      let temp  = microplanData?.hypothesis.filter(item=>item.active)
+      const temp  = microplanData?.hypothesis.filter(item=>item.active)
       setAssumptions(temp);
     }
 
@@ -55,7 +55,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (!hypothesisAssumptions) return;
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!(temp && temp.assumptions)) return;
-    let hypothesisAssumptionsList = temp.assumptions;
+    const hypothesisAssumptionsList = temp.assumptions;
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
 
     let newAssumptions = setAutofillHypothesisData(

@@ -52,7 +52,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
   const DropDownUserColumnSelect = ({ id, index }) => {
     const [selectedOption, setSelectedOption] = useState("");
     useEffect(() => {
-      const obj = resourceMapping.find((item) => item["mappedTo"] == id);
+      const obj = resourceMapping.find((item) => item["mappedTo"] === id);
       if (obj) setSelectedOption({ code: obj["mappedFrom"] });
       else setSelectedOption();
     }, [id, resourceMapping]);
