@@ -29,4 +29,4 @@ To set up the ProjectFactory service in your local system, clone the [Digit Fron
                                                                                                                                                  
     `yarn dev`
 
-> Note: After running the above command if kafka error comes then make sure that kafka and zookeeper runs in background and if other microservice connection error comes then make sure that in data config the url mentioned in external mapping is correct or you can port-forward that particular service
+> Note: After running the above command, if a Kafka error occurs, ensure that Kafka and Zookeeper are running in the background. If a connection error with another microservice occurs, ensure that the URL mentioned in the external mapping of the data config is correct, or you can port-forward that particular service.
