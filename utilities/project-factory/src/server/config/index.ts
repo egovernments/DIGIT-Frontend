@@ -104,7 +104,8 @@ const config = {
     localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
     localizationCreate: "localization/messages/v1/_upsert",
     projectTypeSearch: "project-factory/v1/project-type/search",
-    boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create"
+    boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
+    mdmsV2SchemaSearch: "mdms-v2/schema/v1/_search"
   },
   // Values configuration
   values: {
