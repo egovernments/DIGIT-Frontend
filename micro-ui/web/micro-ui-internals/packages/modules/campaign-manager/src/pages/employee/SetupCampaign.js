@@ -237,6 +237,7 @@ const SetupCampaign = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
@@ -454,10 +455,10 @@ const SetupCampaign = () => {
 
   useEffect(() => {
     setIsSubmitting(false);
-    if (currentKey === 10 && isPreview !== "true") {
-      updateUrlParams({ key: currentKey, preview: true });
+    if (currentKey === 10 && isSummary !== "true") {
+      updateUrlParams({ key: currentKey, summary: true });
     } else {
-      updateUrlParams({ key: currentKey, preview: false });
+      updateUrlParams({ key: currentKey, summary: false });
     }
   }, [currentKey]);
 
