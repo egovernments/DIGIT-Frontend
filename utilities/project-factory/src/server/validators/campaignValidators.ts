@@ -998,7 +998,7 @@ async function validateDownloadRequest(request: any) {
 function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
     validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
     for (const key in dataFromSheet) {
-        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.values?.readMeTab, localizationMap)) {
+        if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
             if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
                 const dataArray = (dataFromSheet as { [key: string]: any[] })[key];
                 if (dataArray.length === 0) {
