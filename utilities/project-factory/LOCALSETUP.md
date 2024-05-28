@@ -18,7 +18,7 @@ To setup the ProjectFactory service in your local system, clone the [Digit Front
 ### Local setup
 1. To setup the ProjectFactory service, clone the [Digit Frontend repository](https://github.com/egovernments/DIGIT-Frontend).
 2. Install Node.js version 20 using nvm (Node Version Manager).
-3. Update the configs in utilities/project-factory/src/server/config/index.ts, change HOST to "http://localhost:8080/" and KAFKA_BROKER_HOST to "localhost:9092".
+3. Update the configs in [utilities/project-factory/src/server/config/index.ts](utilities/project-factory/src/server/config/index.ts), change HOST to "http://localhost:8080/" and KAFKA_BROKER_HOST to "localhost:9092".
 4. Also update DB config values as per your local system config.
 5. Update all dependency service host either on any unified-env or port-forward.
 6. Open the terminal and run the following command
