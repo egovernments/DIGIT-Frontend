@@ -43,16 +43,22 @@ const Navigator = memo((props) => {
 
   // Might need it later
   // Effect to handle data completion validation and show toast
-  // useEffect(() => {
-  //   if (checkDataCompletion === "false" || checkDataCompletion === "true" || checkDataCompletion === "valid") return;
-  //   if (checkDataCompletion === "invalid") setToast(t("COMMON_PLEASE_FILL_ALL_THE_FIELDS"));
-  //   setCheckDataCompletion("false");
-  // }, [checkDataCompletion]);
+  useEffect(() => {
+    if (checkDataCompletion === "invalid") {
+      if (navigationEvent && navigationEvent.name === "next") {
+        setToast(t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS"));
+      } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) {
+        if (navigationEvent.step > currentPage.id) setToast(t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS"));
+        else onStepClick(navigationEvent.step);
+      } else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
+      setCheckDataCompletion("false");
+    }
+  }, [checkDataCompletion]);
 
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
     // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (checkDataCompletion === "valid" || checkDataCompletion === "invalid") {
+    if (checkDataCompletion === "valid" && ((navigationEvent.step && currentPage.id + 1 === navigationEvent.step || currentPage.id > navigationEvent.step) || !navigationEvent.step)) {
       if (typeof props.nextEventAddon === "function") {
         if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
           props.nextEventAddon(currentPage, checkDataCompletion, setCheckDataCompletion);

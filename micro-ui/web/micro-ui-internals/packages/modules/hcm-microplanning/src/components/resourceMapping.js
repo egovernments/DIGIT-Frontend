@@ -9,21 +9,65 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
   const itemRefs = useRef([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  // State to track the render cycle count
+  const [renderCycle, setRenderCycle] = useState(0);
+  const scrollContainerRef = useRef(null);
 
+  // Effect to reset the render cycle count whenever the expandedIndex changes
   useEffect(() => {
-    // Scroll to the expanded item's child element after the state has updated and the DOM has re-rendered
-    if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
-      // Use a timeout to ensure the DOM has updated
-      setTimeout(() => {
-        try {
-          const childElement = itemRefs.current[expandedIndex].children[0]; // Assuming child content is the second child
-          if (childElement) {
-            childElement.scrollIntoView({ behavior: "smooth" });
-          }
-        } catch (error) {}
-      }, 0);
+    if (expandedIndex !== null) {
+      setRenderCycle(0);
     }
-    return () => {};
+  }, [expandedIndex]);
+
+  // Effect to handle scrolling to the expanded item after the DOM has updated
+  useEffect(() => {
+    if (renderCycle < 3) {
+      // Increment render cycle count to ensure multiple render checks
+      setRenderCycle((prev) => prev + 1);
+    } else if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
+      try {
+        const parentElement = itemRefs.current[expandedIndex];
+        const childElement = itemRefs.current[expandedIndex].children[1];
+
+        if (parentElement) {
+          const scrollContainer = scrollContainerRef.current;
+          const parentRect = parentElement.getBoundingClientRect();
+          const containerRect = scrollContainer.getBoundingClientRect();
+
+          // Calculate the offset from the top of the container
+          const offset = parentRect.top - containerRect.top;
+
+          // Scroll the container to the target position
+          scrollContainer.scrollTo({
+            top: scrollContainer.scrollTop + offset - 10,
+            behavior: "smooth",
+          });
+        }
+
+        if (childElement) {
+          // Focus the child element if it exists
+          childElement.focus();
+        }
+      } catch (error) {
+        console.error("Error scrolling to element:", error);
+      }
+    }
+  }, [renderCycle, expandedIndex]);
+
+  // Effect to observe DOM changes in the expanded item and trigger render cycle
+  useEffect(() => {
+    if (expandedIndex !== null) {
+      const observer = new MutationObserver(() => {
+        setRenderCycle((prev) => prev + 1);
+      });
+
+      if (itemRefs.current[expandedIndex]) {
+        observer.observe(itemRefs.current[expandedIndex], { childList: true, subtree: true });
+      }
+
+      return () => observer.disconnect();
+    }
   }, [expandedIndex]);
 
   // State variables
@@ -71,7 +115,14 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     };
 
     return (
-      <div ref={el => { itemRefs.current[index] = el; }} onClick={() => toggleExpand(index)} onKeyDown={() => toggleExpand(index)} tabIndex="0">
+      <div
+        ref={(el) => {
+          itemRefs.current[index] = el;
+        }}
+        onClick={() => toggleExpand(index)}
+        onKeyDown={() => toggleExpand(index)}
+        tabIndex="0"
+      >
         <Dropdown
           variant="select-dropdown"
           t={t}
@@ -95,14 +146,15 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
       {
         Header: t("COLUMNS_IN_USER_UPLOAD"),
         accessor: "COLUMNS_IN_USER_UPLOAD",
-        Cell: ({ cell: { value }, row: { index } }) => useMemo(() => <DropDownUserColumnSelect key={value} id={value} index={index} />, [value, index]),
+        Cell: ({ cell: { value }, row: { index } }) =>
+          useMemo(() => <DropDownUserColumnSelect key={value} id={value} index={index} />, [value, index]),
       },
     ],
     [userColumns, setResourceMapping, resourceMapping, t, itemRefs]
   );
   const data = useMemo(() => templateColumns.map((item) => ({ COLUMNS_IN_TEMPLATE: t(item), COLUMNS_IN_USER_UPLOAD: item })), [templateColumns]);
   return (
-    <div className="spatial-data-property-mapping">
+    <div className="spatial-data-property-mapping" ref={scrollContainerRef}>
       <Table
         customTableWrapperClassName=""
         t={t}

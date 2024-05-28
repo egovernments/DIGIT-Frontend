@@ -511,16 +511,18 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if ((e.target.value <= 0 || e.target.value / 100000000000 >= 1) && e.target.value ) return;
+      if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "" && ["+","e"].includes(e.target.value)) return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {
         const numDecimals = e.target.value.length - decimalIndex - 1;
-        if (numDecimals > 2) {
-          value = parseFloat(e.target.value.substring(0, decimalIndex + 3));
-        } else {
-          value = parseFloat(e.target.value);
+        value = e.target.value;
+        if(numDecimals <= 2 ){
+          value = e.target.value;
         }
+        else if (numDecimals > 2) {
+          value = value.substring(0, decimalIndex + 3);
+        } 
       } else value = parseFloat(e.target.value);
 
       setInputValue(!isNaN(value) ? value : "");
@@ -546,7 +548,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   return (
     <TextInput
       name={"input"}
-      type={"number"}
+      type={"text"}
       value={inputValue}
       t={t}
       config={{}}
@@ -554,6 +556,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
         // valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
         inputChangeHandler
       }
+      style={{paddingRight:"0.7rem"}}
       disable={false}
     />
   );

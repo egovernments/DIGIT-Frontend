@@ -398,7 +398,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
                 {/* Dropdown for boundaries */}
                 <TextInput
                   name={"hyopthesis_" + index}
-                  type={"number"}
+                  type={"text"}
                   value={item?.value}
                   t={t}
                   config={{}}
@@ -824,15 +824,16 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
 
     // validating user input
-    if ((e?.newValue <= 0 || e?.newValue / 100000000000 >= 1) && e?.newValue !== "") return;
+    if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "" || ["+","e"].includes(e?.newValue) ) return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
     if (decimalIndex !== -1) {
       const numDecimals = e.newValue.length - decimalIndex - 1;
-      if (numDecimals > 2) {
-        value = parseFloat(e.newValue.substring(0, decimalIndex + 3));
-      } else {
-        value = parseFloat(e.newValue);
+      if(numDecimals <= 2 ){
+        value = e.newValue;
+      }
+      else if (numDecimals > 2) {
+        value = e.newValue.substring(0, decimalIndex + 3);
       }
     } else value = parseFloat(e.newValue);
     value = !isNaN(value) ? value : "";

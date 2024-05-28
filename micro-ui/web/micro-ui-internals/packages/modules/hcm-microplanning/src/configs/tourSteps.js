@@ -11,6 +11,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "bottom",
           title: "",
+          disableScrolling :true
         },
         {
           content: t("HELP_MICROPLAN_DETAILS_MICROPLAN_NAME"),
@@ -18,6 +19,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "bottom",
           title: "",
+          disableScrolling :true
         },
       ],
       tourActive: true,
@@ -32,6 +34,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "top-end",
           title: "",
+          disableScrolling :true
         }
       ],
       tourActive: true,
@@ -47,6 +50,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "top-start",
           title: "",
+          disableScrolling :true,
         },
         // {
         //   content:
@@ -69,7 +73,7 @@ export const tourSteps = (t) => {
             t("HELP_HYPOTHESIS_ADD_BUTTON"),
           target: ".add-button",
           disableBeacon: true,
-          placement: "top-end",
+          placement: "right-end",
           title: "",
         }       
       ],
@@ -123,8 +127,9 @@ export const tourSteps = (t) => {
             t("HELP_MAPPING_BOUNDARY_SELECTION"),
           target: ".filter-by-boundary .button-primary",
           disableBeacon: true,
-          placement: "right-start",
+          placement: "right-end",
           title: "",
+          disableScrolling :true
         },
         {
           content:
@@ -133,6 +138,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "left-start",
           title: "",
+          disableScrolling :true
         },
         {
           content:
@@ -141,6 +147,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "left-start",
           title: "",
+          disableScrolling :true
         },
         {
           content:
@@ -149,6 +156,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "left-start",
           title: "",
+          disableScrolling :true
         },
         {
           content:
@@ -157,6 +165,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "top-end",
           title: "",
+          disableScrolling :true
         }
       ],
       tourActive: true,
