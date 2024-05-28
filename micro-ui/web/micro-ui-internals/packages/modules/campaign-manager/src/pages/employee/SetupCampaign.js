@@ -1,5 +1,5 @@
 import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect , useMemo} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
@@ -244,7 +244,6 @@ const SetupCampaign = () => {
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
-  const hierarchyType = BOUNDARY_HIERARCHY_TYPE;
   // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -255,9 +254,8 @@ const SetupCampaign = () => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
-  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [
-    { name: "hierarchyConfig" },
-  ]);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
 
   // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
   const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
@@ -354,9 +352,9 @@ const SetupCampaign = () => {
           cycleConfgureDate: draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             ? draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             : {
-              cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
-              deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
-            },
+                cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
+                deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
+              },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData
             : cycleDataRemap(delivery),
@@ -456,7 +454,7 @@ const SetupCampaign = () => {
   }, [totalFormData, dataParams, isSubmitting]);
 
   useEffect(() => {
-    setIsSubmitting(false)
+    setIsSubmitting(false);
     if (currentKey === 10 && isPreview !== "true") {
       updateUrlParams({ key: currentKey, preview: true });
     } else {
@@ -487,8 +485,8 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                    ? attribute?.attribute
-                    : null,
+                  ? attribute?.attribute
+                  : null,
                 operator: "LESS_THAN",
                 value: attribute.fromValue ? Number(attribute.fromValue) : null,
               });
@@ -497,8 +495,8 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                    ? attribute?.attribute
-                    : null,
+                  ? attribute?.attribute
+                  : null,
                 operator: "GREATER_THAN",
                 value: attribute.toValue ? Number(attribute.toValue) : null,
               });
@@ -507,15 +505,15 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                    ? attribute?.attribute
-                    : null,
+                  ? attribute?.attribute
+                  : null,
                 operator: attribute.operator ? attribute.operator.code : null,
                 value:
                   attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
                     ? attribute?.value
                     : attribute?.value
-                      ? Number(attribute?.value)
-                      : null,
+                    ? Number(attribute?.value)
+                    : null,
               });
             }
           });
@@ -855,7 +853,6 @@ const SetupCampaign = () => {
   // }
 
   function validateBoundaryLevel(data) {
-
     // Extracting boundary hierarchy from hierarchy definition
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
 
@@ -863,11 +860,7 @@ const SetupCampaign = () => {
     const lowestIndex = boundaryHierarchy.findIndex((item) => item?.boundaryType === lowestHierarchy);
 
     // Create a set of boundary types including only up to the lowest hierarchy
-    const boundaryTypes = new Set(
-      boundaryHierarchy
-        .filter((_, index) => index <= lowestIndex)
-        .map((item) => item?.boundaryType)
-    );
+    const boundaryTypes = new Set(boundaryHierarchy.filter((_, index) => index <= lowestIndex).map((item) => item?.boundaryType));
 
     // Extracting unique boundary types from data
     const uniqueDataBoundaryTypes = new Set(data?.map((item) => item.type));
@@ -876,8 +869,7 @@ const SetupCampaign = () => {
     const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
 
     return allBoundaryTypesPresent;
-}
-
+  }
 
   // function recursiveParentFind(filteredData) {
   //   const parentChildrenMap = {};
@@ -918,7 +910,6 @@ const SetupCampaign = () => {
 
     return extraParent;
   }
-
 
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
@@ -1084,7 +1075,7 @@ const SetupCampaign = () => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
       return;
