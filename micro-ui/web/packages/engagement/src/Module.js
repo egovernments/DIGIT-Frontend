@@ -185,6 +185,8 @@ const EventsBreadCrumb = ({ location }) => {
 
 const EmployeeApp = ({ path,  tenants }) => {
   
+
+
   const location = useLocation();
 
   return (
@@ -233,7 +235,17 @@ export const EngagementModule = ({ stateCode, userType, tenants,path }) => {
   const moduleCode = "Engagement";
   // const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  // const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getStateId(),
+      module: 'rainmaker-engagement',
+      locale:i18n.language,
+    },
+    i18n,
+  })
 
   if (isLoading) {
     return <Loader />;

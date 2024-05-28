@@ -24,9 +24,19 @@ import ResponseCitizen from "./pages/citizen/Response";
 export const PGRReducers = getRootReducer;
 
 const PGRModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = "PGR";
-  const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  // const moduleCode = "PGR";
+  // const language = Digit.StoreData.getCurrentLanguage();
+  // const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getStateId(),
+      module: 'rainmaker-pgr',
+      locale:i18n.language,
+    },
+    i18n,
+  })
 
   if (isLoading) {
     return <Loader />;

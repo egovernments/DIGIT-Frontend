@@ -59,7 +59,7 @@ const Complaint = ({path,...props}) => {
   if (isLoading) {
     return <Loader />;
   }
-  console.log(`${path}/${Employee.ComplaintDetails}`);
+
 
   return (
     <React.Fragment>
