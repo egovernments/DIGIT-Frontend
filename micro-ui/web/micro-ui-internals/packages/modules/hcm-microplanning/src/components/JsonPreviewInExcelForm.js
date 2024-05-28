@@ -51,7 +51,7 @@ export const JsonPreviewInExcelForm = (props) => {
                       <td
                         key={cellIndex}
                         style={{
-                          ...(!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}),
+                          ...(!isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex]) ? { textAlign: "end" } : {}),
                           ...( error? {backgroundColor:"rgb(250,148,148)"} : {}),
                         }}
                         title={error? t(error):undefined}
