@@ -24,7 +24,7 @@ To setup the ProjectFactory service in your local system, clone the [Digit Front
 6. Open the terminal and run the following command
 
     `cd utilities/project-factory/`
-                                                      
+     `cd utilities/project-factory/`
     `yarn install`             (run this command only once when you clone the repo)
                                                                                                                                                  
     `yarn dev`
