@@ -68,6 +68,7 @@ const config = {
     // Kafka broker host
     KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
     mdms: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
+    mdmsV2: process.env.EGOV_MDMS_V2_HOST || "https://unified-dev.digit.org/",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
     projectFactoryBff: "http://localhost:8080/",
     idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-dev.digit.org/",

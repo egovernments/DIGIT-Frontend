@@ -1035,7 +1035,7 @@ async function callMdmsSchema(
       codes: [`${moduleName}.${masterName}`]
     }
   };
-  const url = config.host.mdms + config.paths.mdmsV2SchemaSearch;
+  const url = config.host.mdmsV2 + config.paths.mdmsV2SchemaSearch;
   const response = await httpRequest(url, requestBody);
   if (!response?.SchemaDefinitions?.[0]?.definition) {
     throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Error occured during schema search");
