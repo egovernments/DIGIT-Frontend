@@ -195,7 +195,7 @@ async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: an
 //
 function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], localizationMap?: any) {
     for (const key in data) {
-        if (key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.values?.readMeTab, localizationMap)) {
+        if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
             if (Array.isArray(data[key])) {
                 const boundaryData = data[key];
                 boundaryData.forEach((obj: any, index: number) => {
