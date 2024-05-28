@@ -28,22 +28,22 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
 
   useEffect(() => {
     if (props?.props?.isSubmitting && !endDate && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY", endDate: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY", endDate: "CAMPAIGN_FIELD_MANDATORY" });
     } else if (props?.props?.isSubmitting && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY" });
     } else if (props?.props?.isSubmitting && !endDate) {
-      setError({ endDate: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ endDate: "CAMPAIGN_FIELD_MANDATORY" });
     } else {
-      setError(null)
+      setError(null);
     }
-  }, [props?.props?.isSubmitting])
+  }, [props?.props?.isSubmitting]);
   useEffect(() => {
     if (!startDate && startValidation) {
       setError({ startDate: "CAMPAIGN_START_DATE_ERROR" });
     } else if (!endDate && startValidation) {
       setError({ endDate: "CAMPAIGN_END_DATE_ERROR" });
-    } else if ((new Date(endDate).getTime() < new Date(startDate).getTime()) && startValidation) {
-      setError({ endDate: "CAMPAIGN_END_DATE_BEFORE_ERROR" })
+    } else if (new Date(endDate).getTime() < new Date(startDate).getTime() && startValidation) {
+      setError({ endDate: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
     } else if (startDate || endDate) {
       setError(null);
       onSelect("campaignDates", { startDate: startDate, endDate: endDate });
@@ -53,7 +53,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
   useEffect(() => {
     if (executionCount < 5) {
       onSelect("campaignDates", { startDate: startDate, endDate: endDate });
-      setExecutionCount(prevCount => prevCount + 1);
+      setExecutionCount((prevCount) => prevCount + 1);
     }
   });
 
@@ -83,11 +83,11 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
               placeholder={t("HCM_START_DATE")}
               min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
               onChange={(d) => {
-                setStartValidation(true)
-                setStart(d)
+                setStartValidation(true);
+                setStart(d);
               }}
             />
-            {error?.startDate && <ErrorMessage message={error?.startDate} showIcon={true} />}
+            {error?.startDate && <ErrorMessage message={t(error?.startDate)} showIcon={true} />}
           </div>
           <div>
             <TextInput
@@ -97,11 +97,11 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
               placeholder={t("HCM_END_DATE")}
               min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
               onChange={(d) => {
-                setStartValidation(true)
-                setEnd(d)
+                setStartValidation(true);
+                setEnd(d);
               }}
             />
-            {error?.endDate && <ErrorMessage message={error?.endDate} showIcon={true} />}
+            {error?.endDate && <ErrorMessage message={t(error?.endDate)} showIcon={true} />}
           </div>
         </div>
       </LabelFieldPair>

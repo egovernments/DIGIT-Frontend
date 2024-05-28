@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-react-components";
-// import { deliveryConfig } from "../../../configs/deliveryConfig";
+import { deliveryConfig } from "../../../configs/deliveryConfig";
 
 const CycleContext = createContext();
 
@@ -25,8 +25,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     {
       select: (data) => {
         const temp = data?.["HCM-ADMIN-CONSOLE"]?.deliveryConfig;
-        return temp?.find((i) => i?.projectType === selectedProjectType);
-        // return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
+        // return temp?.find((i) => i?.projectType === selectedProjectType);
+        return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
       },
     }
   );
@@ -50,64 +50,95 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
         deliveries: [...Array(subTabs || 1)].map((_, subTabIndex) => ({
           deliveryIndex: `${subTabIndex + 1}`,
           active: subTabIndex === 0 ? true : false,
-          deliveryRules: filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
-            ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
-              if (item) {
-                return {
-                  ruleKey: index + 1,
-                  delivery: {},
-                  attributes: item?.attributeConfig
-                    ? item?.attributeConfig?.map((i, c) => {
-                      if (i?.operatorValue === "IN_BETWEEN") {
-                        return {
-                          key: c + 1,
-                          attribute: { code: i?.attrValue },
-                          operator: { code: i?.operatorValue },
-                          toValue: i?.fromValue,
-                          fromValue: i?.toValue,
-                        };
-                      }
-                      return {
-                        key: c + 1,
-                        attribute: { code: i?.attrValue },
-                        operator: { code: i?.operatorValue },
-                        value: i?.value,
-                      };
-                    })
-                    : [{ key: 1, attribute: null, operator: null, value: "" }],
-                  // products: [],
-                  products: item?.productConfig
-                    ? item?.productConfig?.map((i, c) => ({
-                      ...i,
-                    }))
-                    : [],
-                };
-              } else {
-                return {
-                  ruleKey: index + 1,
-                  delivery: {},
-                  attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                  products: [],
-                };
-              }
-            })
-            : [
-              {
-                ruleKey: 1,
-                delivery: {},
-                attributes: filteredDeliveryConfig && filteredDeliveryConfig?.attributeConfig
-                  ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
+          deliveryRules: filteredDeliveryConfig?.projectType === "LLIN-mz" ? filteredDeliveryConfig?.deliveryConfig?.map((item, index) => {
+            return {
+              ruleKey: index + 1,
+              delivery: {},
+              attributes: item?.attributeConfig
+                ? item?.attributeConfig?.map((i, c) => {
+                  if (i?.operatorValue === "IN_BETWEEN") {
+                    return {
+                      key: c + 1,
+                      attribute: { code: i?.attrValue },
+                      operator: { code: i?.operatorValue },
+                      toValue: i?.fromValue,
+                      fromValue: i?.toValue,
+                    };
+                  }
+                  return {
                     key: c + 1,
                     attribute: { code: i?.attrValue },
                     operator: { code: i?.operatorValue },
                     value: i?.value,
-                  }))
-                  : // : filteredDeliveryConfig?.projectType === "LLIN-mz"
-                  // ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({ key: c + 1, attribute: i.attrValue, operator: null, value: "" }))
-                  [{ key: 1, attribute: null, operator: null, value: "" }],
-                products: [],
-              },
-            ],
+                  };
+                })
+                : [{ key: 1, attribute: null, operator: null, value: "" }],
+              // products: [],
+              products: item?.productConfig
+                ? item?.productConfig?.map((i, c) => ({
+                  ...i,
+                }))
+                : [],
+            };
+          }) :
+            filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
+              ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
+                if (item) {
+                  return {
+                    ruleKey: index + 1,
+                    delivery: {},
+                    attributes: item?.attributeConfig
+                      ? item?.attributeConfig?.map((i, c) => {
+                        if (i?.operatorValue === "IN_BETWEEN") {
+                          return {
+                            key: c + 1,
+                            attribute: { code: i?.attrValue },
+                            operator: { code: i?.operatorValue },
+                            toValue: i?.fromValue,
+                            fromValue: i?.toValue,
+                          };
+                        }
+                        return {
+                          key: c + 1,
+                          attribute: { code: i?.attrValue },
+                          operator: { code: i?.operatorValue },
+                          value: i?.value,
+                        };
+                      })
+                      : [{ key: 1, attribute: null, operator: null, value: "" }],
+                    // products: [],
+                    products: item?.productConfig
+                      ? item?.productConfig?.map((i, c) => ({
+                        ...i,
+                      }))
+                      : [],
+                  };
+                } else {
+                  return {
+                    ruleKey: index + 1,
+                    delivery: {},
+                    attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
+                    products: [],
+                  };
+                }
+              })
+              : [
+                {
+                  ruleKey: 1,
+                  delivery: {},
+                  attributes: filteredDeliveryConfig && filteredDeliveryConfig?.attributeConfig
+                    ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({
+                      key: c + 1,
+                      attribute: { code: i?.attrValue },
+                      operator: { code: i?.operatorValue },
+                      value: i?.value,
+                    }))
+                    : // : filteredDeliveryConfig?.projectType === "LLIN-mz"
+                    // ? filteredDeliveryConfig?.attributeConfig?.map((i, c) => ({ key: c + 1, attribute: i.attrValue, operator: null, value: "" }))
+                    [{ key: 1, attribute: null, operator: null, value: "" }],
+                  products: [],
+                },
+              ],
         })),
       }));
     }

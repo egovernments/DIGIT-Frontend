@@ -9,53 +9,32 @@ export const deliveryConfig = [
       cycle: 1,
       deliveries: 1,
     },
-    attributeConfig: [
-      {
-        key: 1,
-        label: "Custom",
-        attrType: "text",
-        attrValue: "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
-      },
-      {
-        key: 2,
-        label: "Custom",
-        attrType: "text",
-        attrValue: "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
-      },
-    ],
     deliveryConfig: [
       {
-        delivery: 1,
-        conditionConfig: [{
-          attributeConfig: [
-            {
-              key: 1,
-              label: "Custom",
-              attrType: "text",
-              attrValue: "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
-              operatorValue: "LESS_THAN_EQUAL_TO",
-              value: 3,
-            },
-            {
-              key: 2,
-              label: "Custom",
-              attrType: "text",
-              attrValue: "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
-              operatorValue: "LESS_THAN_EQUAL_TO",
-              value: 1.8,
-            },
-          ],
-          productConfig: [
-            {
-              key: 1,
-              count: 1,
-              value: "PVAR-2024-02-09-000150",
-              name: "Bednet - 500mg",
-            },
-          ],
-        },
-        ]
-      }],
+        attributeConfig: [
+          {
+            key: 1,
+            label: "Custom",
+            attrType: "text",
+            attrValue: "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
+          },
+          {
+            key: 2,
+            label: "Custom",
+            attrType: "text",
+            attrValue: "CAMPAIGN_BEDNET_HOUSEHOLD_LABEL",
+          },
+        ],
+        productConfig: [
+          {
+            key: 1,
+            count: 1,
+            value: "PVAR-2024-05-03-000305",
+            name: "SP - 250mg",
+          },
+        ],
+      },
+    ],
   },
   {
     projectType: "MR-DN",
@@ -119,7 +98,7 @@ export const deliveryConfig = [
               },
             ],
           },
-        ]
+        ],
       },
       {
         delivery: 2,
@@ -173,8 +152,8 @@ export const deliveryConfig = [
               },
             ],
           },
-        ]
-      }
+        ],
+      },
     ],
   },
 ];

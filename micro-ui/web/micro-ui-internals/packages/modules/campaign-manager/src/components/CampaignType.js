@@ -17,9 +17,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
   useEffect(() => {
     if (props?.props?.isSubmitting && !type) {
-      setError({ message: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ message: "CAMPAIGN_FIELD_MANDATORY" });
     }
-  }, [props?.props?.isSubmitting])
+  }, [props?.props?.isSubmitting]);
   useEffect(() => {
     setType(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType);
     setBeneficiaryType(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType);
@@ -34,9 +34,9 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
   useEffect(() => {
     if (!type && startValidation) {
-      setError({ message: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ message: "CAMPAIGN_FIELD_MANDATORY" });
     } else {
-      setError(null)
+      setError(null);
       onSelect("projectType", type);
     }
   }, [type]);
@@ -69,7 +69,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               handleChange(value);
             }}
           />
-          {error?.message && <ErrorMessage wrapperStyles={{ marginTop: "-10px" }} message={error?.message} showIcon={true} />}
+          {error?.message && <ErrorMessage wrapperStyles={{ marginTop: "-10px" }} message={t(error?.message)} showIcon={true} />}
         </div>
       </LabelFieldPair>
       {showBeneficiary && (

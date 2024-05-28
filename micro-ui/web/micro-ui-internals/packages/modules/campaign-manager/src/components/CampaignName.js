@@ -16,16 +16,16 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
 
   useEffect(() => {
     if (props?.props?.isSubmitting && !name) {
-      setError({ message: "CAMPAIGN_FIELD_MANDATORY" })
+      setError({ message: "CAMPAIGN_FIELD_MANDATORY" });
     } else {
-      setError(null)
+      setError(null);
     }
-  }, [props?.props?.isSubmitting])
+  }, [props?.props?.isSubmitting]);
   useEffect(() => {
     if (startValidation && !name) {
-      setError({ message: "CAMPAIGN_NAME_ERROR" })
+      setError({ message: "CAMPAIGN_NAME_ERROR" });
     } else if (name) {
-      setError(null)
+      setError(null);
       onSelect("campaignName", name);
     }
   }, [name, props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName]);
@@ -47,11 +47,17 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
           <span className="mandatory-span">*</span>
         </div>
         <div>
-          <TextInput error={!!error} style={{ width: "40rem", marginBottom: "0" }} name="campaignName" value={name} onChange={(event) => {
-            setStartValidation(true);
-            setName(event.target.value);
-          }} />
-          {error?.message && <ErrorMessage message={error?.message} showIcon={true} />}
+          <TextInput
+            error={!!error}
+            style={{ width: "40rem", marginBottom: "0" }}
+            name="campaignName"
+            value={name}
+            onChange={(event) => {
+              setStartValidation(true);
+              setName(event.target.value);
+            }}
+          />
+          {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
         </div>
       </LabelFieldPair>
     </React.Fragment>
