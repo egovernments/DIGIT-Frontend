@@ -14,6 +14,9 @@ The Project Factory Service is responsible for managing project-type campaigns, 
 - egov-persister
 - egov-mdms
 - egov-idgen
+- health-project
+- health-hrms
+- health-facility
 
 ### Swagger API Contract
 Please refer to the  below Swagger API contarct for ProjectFactory service to understand the structure of APIs and to have visualization of all internal APIs [Swagger API contract](https://editor.swagger.io/?url=https://raw.githubusercontent.com/jagankumar-egov/DIGIT-Specs/hcm-workbench/Domain%20Services/Health/project-factory.yaml)
