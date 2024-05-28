@@ -9,7 +9,7 @@ import { InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { schemaConfig } from "../configs/schemaConfig";
 import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
-
+import { downloadExcelWithCustomName } from "../utils";
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -307,7 +307,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
     if (!isValid) return isValid;
 
-    // Iterate over each sheet in the workbook, starting from the second sheet
     for (let i = 2; i < workbook.SheetNames.length; i++) {
       const sheetName = workbook?.SheetNames[i];
 
@@ -329,6 +328,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         isValid = false;
         break;
       }
+    }
+
+    if (!isValid) return isValid;
+
+    // Iterate over each sheet in the workbook, starting from the second sheet
+    for (let i = 2; i < workbook.SheetNames.length; i++) {
+      const sheetName = workbook?.SheetNames[i];
+
+      const sheet = workbook?.Sheets[sheetName];
+
+      // Convert the sheet to JSON to extract headers
+      const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+      })[0];
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
 
@@ -486,15 +499,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     });
   };
 
-  const closeToast = () => {
-    setShowToast(null);
-  };
-  useEffect(() => {
-    if (showToast) {
-      setTimeout(closeToast, 5000000);
-    }
-  }, [showToast]);
-
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
@@ -532,15 +536,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setIsSuccess(false);
     setIsValidation(false);
     setApiError(null);
-    setShowToast(null);
+    // setShowToast(null);
   };
 
   const onFileDownload = (file) => {
     if (file && file?.url) {
-      window.location.href = file?.url;
       // Splitting filename before .xlsx or .xls
-      // const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
-      // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
+      const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
+      downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
   useEffect(() => {
@@ -712,7 +715,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const fileData = fileUrl?.map((i) => {
             const urlParts = i?.url?.split("/");
             // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Boundary Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
+            const fileName = type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
               filename: fileName,
@@ -721,13 +724,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
-            // downloadExcel(fileData[0].blob, fileData[0].fileName);
-            window.location.href = fileData?.[0]?.url;
-            // handleFileDownload(fileData?.[0]);
-            // downloadExcel(
-            // new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
-            // fileData?.[0]?.filename
-            // );
+            if (fileData?.[0]?.id) {
+              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+            }
           } else {
             setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
@@ -741,38 +740,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     );
   };
 
-  // const downloadExcel = (blob, fileName) => {
-  //   console.log("fileName", fileName);
-  //     const link = document.createElement("a");
-  //     link.href = URL.createObjectURL(blob);
-  //     link.download = fileName + ".xlsx";
-  //     document.body.append(link);
-  //     link.click();
-  //     link.remove();
-  //     // document.body.removeChild(link);
-  //     setTimeout(() => URL.revokeObjectURL(link.href), 7000);
-  // };
 
-  const downloadExcel = (blob, fileName) => {
-    if (window.mSewaApp && window.mSewaApp.isMsewaApp() && window.mSewaApp.downloadBase64File) {
-      var reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = function () {
-        var base64data = reader.result;
-        // Adjust MIME type and file extension if necessary
-        window.mSewaApp.downloadBase64File(base64data, fileName + ".xlsx");
-      };
-    } else {
-      const link = document.createElement("a");
-      // Adjust MIME type to Excel format
-      link.href = URL.createObjectURL(blob);
-      link.download = fileName + ".xlsx"; // Adjust file extension
-      document.body.append(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(link.href), 7000);
-    }
+  // useEffect(() => {
+  //   if (showToast) {
+  //     setTimeout(closeToast, 5000);
+  //   }
+  // }, [showToast]);
+  const closeToast = () => {
+    setShowToast(null);
   };
+  useEffect(() => {
+    if (showToast) {
+      const t = setTimeout(closeToast, 5000);
+      return () => clearTimeout(t); 
+    }
+  }, [showToast]);
 
   return (
     <>
