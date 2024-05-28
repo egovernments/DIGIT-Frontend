@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-react-components";
-import { deliveryConfig } from "../../../configs/deliveryConfig";
+// import { deliveryConfig } from "../../../configs/deliveryConfig";
 
 const CycleContext = createContext();
 
@@ -25,8 +25,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     {
       select: (data) => {
         const temp = data?.["HCM-ADMIN-CONSOLE"]?.deliveryConfig;
-        // return temp?.find((i) => i?.projectType === selectedProjectType);
-        return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
+        return temp?.find((i) => i?.projectType === selectedProjectType);
+        // return deliveryConfig?.find((i) => i?.projectType === selectedProjectType);
       },
     }
   );
