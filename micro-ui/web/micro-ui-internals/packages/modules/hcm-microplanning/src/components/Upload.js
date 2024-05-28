@@ -127,7 +127,7 @@ const Upload = ({
           sectionCheckList.every((item) => {
             let filteredList = fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id);
             if (filteredList?.length === 0) return false;
-            else return filteredList?.every((element) => element?.error === null);
+            return filteredList?.every((element) => element?.error === null);
           })
         )
           setCheckDataCompletion("valid");
@@ -683,7 +683,6 @@ const Upload = ({
   };
   const computeMappedDataAndItsValidations = (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
-    debugger;
     const response = geojsonPropetiesValidation(data, schemaData.schema, fileData?.section, t);
     if (!response.valid) {
       handleValidationErrorResponse(response.message, response.errors);

@@ -45,10 +45,8 @@ export const JsonPreviewInExcelForm = (props) => {
               {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
-                    let headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex]
-                    let error;
-                    if(headerName)
-                      error = props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName]
+                    const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex]
+                    const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
                     return (
                       <td
                         key={cellIndex}

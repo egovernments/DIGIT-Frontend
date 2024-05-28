@@ -59,13 +59,14 @@ export const excelValidations = (data, schemaData, t) => {
           hasDataErrors = "true";
           break;
         case "type":
+          {
           const instancePathType = validateExcel.errors[i].instancePath.split("/");
           tempErrorStore = locationDataColumns.includes(instancePathType[instancePathType.length - 1])
             ? "ERROR_INCORRECT_LOCATION_COORDINATES"
             : "ERROR_DATA_TYPE";
           hasDataErrors = "true";
+          }
           break;
-
         case "required":
           const missing = validateExcel.errors[i].params.missingProperty;
           missingColumnsList.add(missing);

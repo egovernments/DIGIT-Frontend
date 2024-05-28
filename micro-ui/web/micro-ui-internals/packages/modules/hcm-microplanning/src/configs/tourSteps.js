@@ -1,5 +1,4 @@
 export const tourSteps = (t) => {
-
   return {
     microplanDetails: {
       name: "microplanDetails",
@@ -11,7 +10,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "bottom",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
         {
           content: t("HELP_MICROPLAN_DETAILS_MICROPLAN_NAME"),
@@ -19,7 +18,7 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "bottom",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
       ],
       tourActive: true,
@@ -34,8 +33,8 @@ export const tourSteps = (t) => {
           disableBeacon: true,
           placement: "top-end",
           title: "",
-          disableScrolling :true
-        }
+          disableScrolling: true,
+        },
       ],
       tourActive: true,
     },
@@ -44,13 +43,12 @@ export const tourSteps = (t) => {
       run: true,
       steps: [
         {
-          content:
-            t("HELP_HYPOTHESIS_INTERACTABLE_SECTION"),
+          content: t("HELP_HYPOTHESIS_INTERACTABLE_SECTION"),
           target: ".hypothesis-section",
           disableBeacon: true,
           placement: "top-start",
           title: "",
-          disableScrolling :true,
+          disableScrolling: true,
         },
         // {
         //   content:
@@ -69,13 +67,12 @@ export const tourSteps = (t) => {
         //   title: "",
         // },
         {
-          content:
-            t("HELP_HYPOTHESIS_ADD_BUTTON"),
+          content: t("HELP_HYPOTHESIS_ADD_BUTTON"),
           target: ".add-button",
           disableBeacon: true,
           placement: "right-end",
           title: "",
-        }       
+        },
       ],
       tourActive: true,
     },
@@ -84,37 +81,33 @@ export const tourSteps = (t) => {
       run: true,
       steps: [
         {
-          content:
-            t("HELP_RULE_ENGINE_INTERACTABLE_SECTION"),
+          content: t("HELP_RULE_ENGINE_INTERACTABLE_SECTION"),
           target: ".rule-engine-section",
           disableBeacon: true,
           placement: "top-start",
           title: "",
         },
         {
-          content:
-            t("HELP_RULE_ENGINE_INPUT"),
+          content: t("HELP_RULE_ENGINE_INPUT"),
           target: ".user-input-section .interactable-section .select-and-input-wrapper-first .input",
           disableBeacon: true,
           placement: "top-end",
           title: "",
         },
         {
-          content:
-            t("HELP_RULE_ENGINE_DELETE_BUTTON"),
+          content: t("HELP_RULE_ENGINE_DELETE_BUTTON"),
           target: ".select-and-input-wrapper-first .delete-button",
           disableBeacon: true,
           placement: "left-start",
           title: "",
-        },    
+        },
         {
-          content:
-            t("HELP_RULE_ENGINE_ADD_BUTTON"),
+          content: t("HELP_RULE_ENGINE_ADD_BUTTON"),
           target: ".add-button",
           disableBeacon: true,
           placement: "top-end",
           title: "",
-        },    
+        },
       ],
       tourActive: true,
     },
@@ -123,50 +116,45 @@ export const tourSteps = (t) => {
       run: true,
       steps: [
         {
-          content:
-            t("HELP_MAPPING_BOUNDARY_SELECTION"),
+          content: t("HELP_MAPPING_BOUNDARY_SELECTION"),
           target: ".filter-by-boundary .button-primary",
           disableBeacon: true,
           placement: "right-end",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
         {
-          content:
-            t("HELP_MAPPING_BASE_MAP"),
+          content: t("HELP_MAPPING_BASE_MAP"),
           target: ".base-map-selector",
           disableBeacon: true,
           placement: "left-start",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
         {
-          content:
-            t("HELP_MAPPING_FILTER"),
+          content: t("HELP_MAPPING_FILTER"),
           target: ".filter-icon",
           disableBeacon: true,
           placement: "left-start",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
         {
-          content:
-            t("HELP_MAPPING_VIRTUALIZATION"),
+          content: t("HELP_MAPPING_VIRTUALIZATION"),
           target: ".virtualization-icon",
           disableBeacon: true,
           placement: "left-start",
           title: "",
-          disableScrolling :true
+          disableScrolling: true,
         },
         {
-          content:
-            t("HELP_MAPPING_MAP_GEOMETRIES"),
+          content: t("HELP_MAPPING_MAP_GEOMETRIES"),
           target: ".map-container",
           disableBeacon: true,
           placement: "top-end",
           title: "",
-          disableScrolling :true
-        }
+          disableScrolling: true,
+        },
       ],
       tourActive: true,
     },
@@ -175,13 +163,12 @@ export const tourSteps = (t) => {
       run: true,
       steps: [
         {
-          content:
-            t("HELP_MICROPLAN_DETAILS_EDIT_ROWS"),
+          content: t("HELP_MICROPLAN_DETAILS_EDIT_ROWS"),
           target: ".preview-container",
           disableBeacon: true,
           placement: "top-end",
           title: "",
-        }
+        },
       ],
       tourActive: true,
     },
