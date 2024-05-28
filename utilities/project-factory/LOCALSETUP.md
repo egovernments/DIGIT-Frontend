@@ -1,6 +1,6 @@
 # Local Setup
 
-To setup the ProjectFactory service in your local system, clone the [Digit Frontend repository](https://github.com/egovernments/DIGIT-Frontend).
+To set up the ProjectFactory service in your local system, clone the [Digit Frontend repository](https://github.com/egovernments/DIGIT-Frontend).
 
 ## Dependencies
 
