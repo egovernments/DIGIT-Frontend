@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState, Fragment ,useMemo} from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, Modal } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Dropdown, InfoCard, MultiSelectDropdown, Toast } from "@egovernments/digit-ui-components";
@@ -45,7 +45,8 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const [updateBoundary, setUpdateBoundary] = useState(null);
   const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
 
-  const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
+  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
+  const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item => item.parentBoundaryType === lowestHierarchy))?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);
   const isDraft = searchParams.get("draft");
@@ -373,7 +374,9 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             boundary?.parentBoundaryType == null ? (
               <LabelFieldPair key={index}>
                 <CardLabel>
-                  {t(`${hierarchy}_${boundary?.boundaryType}`?.toUpperCase())}
+                  {/* {t(`${hierarchy}_${boundary?.boundaryType}`?.toUpperCase())} */}
+                  {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
+
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="digit-field">
@@ -393,7 +396,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
             ) : (
               <LabelFieldPair key={index}>
                 <CardLabel>
-                  {t(`${hierarchy}_${boundary?.boundaryType}`?.toUpperCase())}
+                {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="digit-field">

@@ -1,5 +1,5 @@
 import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
@@ -258,7 +258,8 @@ const SetupCampaign = () => {
     { name: "hierarchyConfig" },
   ]);
 
-  const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
+  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
+  const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
