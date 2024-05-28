@@ -5,7 +5,6 @@ import { useHistory, useParams } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
-import { BOUNDARY_HIERARCHY_TYPE } from "../../Module";
 import _ from "lodash";
 
 /**
