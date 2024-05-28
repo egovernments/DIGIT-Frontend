@@ -227,7 +227,8 @@ const SetupCampaign = () => {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -347,9 +348,9 @@ const SetupCampaign = () => {
           cycleConfgureDate: draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             ? draftData?.additionalDetails?.cycleData?.cycleConfgureDate
             : {
-                cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
-                deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
-              },
+              cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
+              deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
+            },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData
             : cycleDataRemap(delivery),
@@ -445,10 +446,11 @@ const SetupCampaign = () => {
   }, [isBoundaryLoading, isFacilityLoading, isUserLoading, facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams));
-  }, [totalFormData, dataParams]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting));
+  }, [totalFormData, dataParams, isSubmitting]);
 
   useEffect(() => {
+    setIsSubmitting(false)
     if (currentKey === 10 && isPreview !== "true") {
       updateUrlParams({ key: currentKey, preview: true });
     } else {
@@ -479,8 +481,8 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
+                    ? attribute?.attribute
+                    : null,
                 operator: "LESS_THAN",
                 value: attribute.fromValue ? Number(attribute.fromValue) : null,
               });
@@ -489,8 +491,8 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
+                    ? attribute?.attribute
+                    : null,
                 operator: "GREATER_THAN",
                 value: attribute.toValue ? Number(attribute.toValue) : null,
               });
@@ -499,15 +501,15 @@ const SetupCampaign = () => {
                 attribute: attribute?.attribute?.code
                   ? attribute?.attribute?.code
                   : typeof attribute?.attribute === "string"
-                  ? attribute?.attribute
-                  : null,
+                    ? attribute?.attribute
+                    : null,
                 operator: attribute.operator ? attribute.operator.code : null,
                 value:
                   attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
                     ? attribute?.value
                     : attribute?.value
-                    ? Number(attribute?.value)
-                    : null,
+                      ? Number(attribute?.value)
+                      : null,
               });
             }
           });
@@ -1030,6 +1032,7 @@ const SetupCampaign = () => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
+    setIsSubmitting(true)
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
       return;
@@ -1093,6 +1096,7 @@ const SetupCampaign = () => {
     if (isDraft === "true" && isSkip !== "false") {
       updateUrlParams({ skip: "false" });
     }
+    return;
   };
 
   const onStepClick = (step) => {
