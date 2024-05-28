@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { ErrorMessage, TextInput } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1, TextInput } from "@egovernments/digit-ui-components";
 
 const CampaignDates = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
       setError({ startDate: "CAMPAIGN_FIELD_MANDATORY" });
     } else if (props?.props?.isSubmitting && !endDate) {
       setError({ endDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else {
+    } else if (!props?.props?.isSubmitting) {
       setError(null);
     }
   }, [props?.props?.isSubmitting]);
@@ -44,6 +44,7 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
       setError({ endDate: "CAMPAIGN_END_DATE_ERROR" });
     } else if (new Date(endDate).getTime() < new Date(startDate).getTime() && startValidation) {
       setError({ endDate: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
+      onSelect("campaignDates", { startDate: startDate, endDate: endDate });
     } else if (startDate || endDate) {
       setError(null);
       onSelect("campaignDates", { startDate: startDate, endDate: endDate });
@@ -75,34 +76,40 @@ const CampaignDates = ({ onSelect, formData, ...props }) => {
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
-          <div>
-            <TextInput
-              error={error?.startDate}
-              type="date"
-              value={startDate}
-              placeholder={t("HCM_START_DATE")}
-              min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
-              onChange={(d) => {
-                setStartValidation(true);
-                setStart(d);
-              }}
-            />
-            {error?.startDate && <ErrorMessage message={t(error?.startDate)} showIcon={true} />}
-          </div>
-          <div>
-            <TextInput
-              error={error?.endDate}
-              type="date"
-              value={endDate}
-              placeholder={t("HCM_END_DATE")}
-              min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
-              onChange={(d) => {
-                setStartValidation(true);
-                setEnd(d);
-              }}
-            />
-            {error?.endDate && <ErrorMessage message={t(error?.endDate)} showIcon={true} />}
-          </div>
+          <FieldV1
+            error={error?.startDate ? t(error?.startDate) : ""}
+            withoutLabel={true}
+            type="date"
+            value={startDate}
+            placeholder={t("HCM_START_DATE")}
+            populators={{
+              validation: {
+                min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
+              },
+            }}
+            min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
+            onChange={(d) => {
+              setStartValidation(true);
+              setStart(d);
+            }}
+          />
+          <FieldV1
+            error={error?.endDate ? t(error?.endDate) : ""}
+            withoutLabel={true}
+            type="date"
+            value={endDate}
+            placeholder={t("HCM_END_DATE")}
+            populators={{
+              validation: {
+                min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
+              },
+            }}
+            min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
+            onChange={(d) => {
+              setStartValidation(true);
+              setEnd(d);
+            }}
+          />
         </div>
       </LabelFieldPair>
     </React.Fragment>

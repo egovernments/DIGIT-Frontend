@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { ErrorMessage, TextInput } from "@egovernments/digit-ui-components";
+import { ErrorMessage, FieldV1 } from "@egovernments/digit-ui-components";
 
 const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
-  const [name, setName] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || null);
+  const [name, setName] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || "");
   const [executionCount, setExecutionCount] = useState(0);
   const [startValidation, setStartValidation] = useState(null);
   const [error, setError] = useState(null);
@@ -16,14 +16,14 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
 
   useEffect(() => {
     if (props?.props?.isSubmitting && !name) {
-      setError({ message: "CAMPAIGN_FIELD_MANDATORY" });
+      setError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
     } else {
       setError(null);
     }
   }, [props?.props?.isSubmitting]);
   useEffect(() => {
     if (startValidation && !name) {
-      setError({ message: "CAMPAIGN_NAME_ERROR" });
+      setError({ message: "CAMPAIGN_NAME_FIELD_ERROR" });
     } else if (name) {
       setError(null);
       onSelect("campaignName", name);
@@ -46,19 +46,17 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
           <span>{`${t("HCM_CAMPAIGN_NAME")}`}</span>
           <span className="mandatory-span">*</span>
         </div>
-        <div>
-          <TextInput
-            error={!!error}
-            style={{ width: "40rem", marginBottom: "0" }}
-            name="campaignName"
-            value={name}
-            onChange={(event) => {
-              setStartValidation(true);
-              setName(event.target.value);
-            }}
-          />
-          {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
-        </div>
+        <FieldV1
+          type="text"
+          error={error?.message ? t(error?.message) : ""}
+          style={{ width: "40rem", marginBottom: "0" }}
+          populators={{ name: "campaignName" }}
+          value={name}
+          onChange={(event) => {
+            setStartValidation(true);
+            setName(event.target.value);
+          }}
+        />
       </LabelFieldPair>
     </React.Fragment>
   );
