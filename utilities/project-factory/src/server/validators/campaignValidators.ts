@@ -137,7 +137,7 @@ async function validateTargetBoundaryData(data: any[], request: any, boundaryCol
     const responseBoundaryCodes = responseBoundaries.map((boundary: any) => boundary.code);
     // Iterate through each array of objects
     for (const key in data) {
-        const isNotBoundaryOrReadMeTab = key != getLocalizedName(getBoundaryTabName(), localizationMap) && key != getLocalizedName(config?.values?.readMeTab, localizationMap);
+        const isNotBoundaryOrReadMeTab = key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap);
         if (isNotBoundaryOrReadMeTab) {
             if (Array.isArray(data[key])) {
                 const boundaryData = data[key];
