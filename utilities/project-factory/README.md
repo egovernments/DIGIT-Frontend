@@ -9,11 +9,17 @@ The Project Factory Service is responsible for managing project-type campaigns, 
 
 
 ### Service Dependencies
+
+#### Core services
+
 - egov-localization
 - egov-filestore
 - egov-persister
 - egov-mdms
 - egov-idgen
+- egov-boundaryservice-v2
+
+#### Health services
 - health-project
 - health-hrms
 - health-facility
