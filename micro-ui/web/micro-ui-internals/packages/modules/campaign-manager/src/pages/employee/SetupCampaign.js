@@ -1,11 +1,10 @@
 import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
-import { BOUNDARY_HIERARCHY_TYPE } from "../../Module";
 import _ from "lodash";
 
 /**
@@ -221,13 +220,14 @@ function updateUrlParams(params) {
   window.history.replaceState({}, "", url);
 }
 
-const SetupCampaign = () => {
+const SetupCampaign = ({ hierarchyType }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
-  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [campaignConfig, setCampaignConfig] = useState(CampaignConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_FORM_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
@@ -237,22 +237,28 @@ const SetupCampaign = () => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
   const client = useQueryClient();
-  const hierarchyType = BOUNDARY_HIERARCHY_TYPE;
   // const hierarchyType2 = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.hierarchy?.hierarchyType
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-  const [lowest, setLowest] = useState(null);
+  // const [lowest, setLowest] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
+  const [enabled, setEnabled] = useState(false);
+  const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
+
+  // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
+  const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -269,15 +275,15 @@ const SetupCampaign = () => {
 
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  useEffect(() => {
-    if (hierarchyDefinition) {
-      setLowest(
-        hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
-          (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
-        )
-      );
-    }
-  }, [hierarchyDefinition]);
+  // useEffect(() => {
+  //   if (hierarchyDefinition) {
+  //     setLowest(
+  //       hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
+  //         (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
+  //       )
+  //     );
+  //   }
+  // }, [hierarchyDefinition]);
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -376,28 +382,33 @@ const SetupCampaign = () => {
     setParams({ ...restructureFormData });
   }, [params, draftData, isLoading, projectType]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setEnabled(fetchUpload || (fetchBoundary && currentKey > 6));
+    }, 3000);
+  }, [fetchUpload, fetchBoundary, currentKey]);
+
   const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "facilityWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
+    // config: {
+    //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
-
-  useEffect(() => {
-    if (filteredBoundaryData) {
-      refetchBoundary();
-    }
-  }, [filteredBoundaryData]);
 
   const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "boundary",
     hierarchyType: hierarchyType,
-    // filters: filteredBoundaryData,
     campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
 
@@ -405,8 +416,11 @@ const SetupCampaign = () => {
     type: "userWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
     config: {
-      enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+      enabled: enabled,
     },
   });
 
@@ -427,14 +441,15 @@ const SetupCampaign = () => {
   }, [isBoundaryLoading, isFacilityLoading, isUserLoading, facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   useEffect(() => {
-    setCampaignConfig(CampaignConfig(totalFormData, dataParams));
-  }, [totalFormData, dataParams]);
+    setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting));
+  }, [totalFormData, dataParams, isSubmitting]);
 
   useEffect(() => {
-    if (currentKey === 10 && isPreview !== "true") {
-      updateUrlParams({ key: currentKey, preview: true });
+    setIsSubmitting(false);
+    if (currentKey === 10 && isSummary !== "true") {
+      updateUrlParams({ key: currentKey, summary: true });
     } else {
-      updateUrlParams({ key: currentKey });
+      updateUrlParams({ key: currentKey, summary: false });
     }
   }, [currentKey]);
 
@@ -713,6 +728,8 @@ const SetupCampaign = () => {
                 }
               },
             });
+          } else {
+            setCurrentKey(currentKey + 1);
           }
         };
 
@@ -813,18 +830,57 @@ const SetupCampaign = () => {
     return false;
   }
 
+  // function validateBoundaryLevel(data) {
+  //   // Extracting boundary types from hierarchy response
+  //   const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map((item) => item?.boundaryType));
+
+  //   // Extracting unique boundary types from data
+  //   const uniqueDataBoundaryTypes = new Set(data?.map((item) => item.type));
+
+  //   // Checking if all unique boundary types from hierarchy response are present in data
+  //   const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
+
+  //   return allBoundaryTypesPresent;
+  // }
+
   function validateBoundaryLevel(data) {
-    // Extracting boundary types from hierarchy response
-    const boundaryTypes = new Set(hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.map((item) => item?.boundaryType));
+    // Extracting boundary hierarchy from hierarchy definition
+    const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
+
+    // Find the index of the lowest hierarchy
+    const lowestIndex = boundaryHierarchy.findIndex((item) => item?.boundaryType === lowestHierarchy);
+
+    // Create a set of boundary types including only up to the lowest hierarchy
+    const boundaryTypes = new Set(boundaryHierarchy.filter((_, index) => index <= lowestIndex).map((item) => item?.boundaryType));
 
     // Extracting unique boundary types from data
     const uniqueDataBoundaryTypes = new Set(data?.map((item) => item.type));
 
-    // Checking if all unique boundary types from hierarchy response are present in data
+    // Checking if all boundary types from the filtered hierarchy are present in data
     const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
 
     return allBoundaryTypesPresent;
   }
+
+  // function recursiveParentFind(filteredData) {
+  //   const parentChildrenMap = {};
+
+  //   // Build the parent-children map
+  //   filteredData?.forEach((item) => {
+  //     if (item?.parent) {
+  //       if (!parentChildrenMap[item?.parent]) {
+  //         parentChildrenMap[item?.parent] = [];
+  //       }
+  //       parentChildrenMap[item?.parent].push(item.code);
+  //     }
+  //   });
+
+  //   // Check for missing children
+  //   const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
+  //   const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
+
+  //   return extraParent;
+  // }
 
   function recursiveParentFind(filteredData) {
     const parentChildrenMap = {};
@@ -841,7 +897,7 @@ const SetupCampaign = () => {
 
     // Check for missing children
     const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
-    const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
+    const extraParent = missingParents?.filter((i) => i?.type !== lowestHierarchy);
 
     return extraParent;
   }
@@ -1010,6 +1066,7 @@ const SetupCampaign = () => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
+    setIsSubmitting(true);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
       return;
@@ -1030,6 +1087,22 @@ const SetupCampaign = () => {
         [name]: { ...formData },
         ["HCM_CAMPAIGN_CYCLE_CONFIGURE"]: {},
         ["HCM_CAMPAIGN_DELIVERY_DATA"]: {},
+      });
+    } else if (name === "HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA" && formData?.boundaryType?.updateBoundary === true) {
+      setTotalFormData((prevData) => ({
+        ...prevData,
+        [name]: formData,
+        ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
+      }));
+      //to set the data in the local storage
+      setParams({
+        ...params,
+        [name]: { ...formData },
+        ["HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {},
+        ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {},
       });
     } else {
       setTotalFormData((prevData) => ({
@@ -1057,6 +1130,7 @@ const SetupCampaign = () => {
     if (isDraft === "true" && isSkip !== "false") {
       updateUrlParams({ skip: "false" });
     }
+    return;
   };
 
   const onStepClick = (step) => {
@@ -1172,8 +1246,9 @@ const SetupCampaign = () => {
       />
       {showToast && (
         <Toast
-          info={showToast?.key === "info" ? true : false}
-          error={showToast?.key === "error" ? true : false}
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          // info={showToast?.key === "info" ? true : false}
+          // error={showToast?.key === "error" ? true : false}
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}
           onClose={closeToast}

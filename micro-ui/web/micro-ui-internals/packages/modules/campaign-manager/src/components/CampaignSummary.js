@@ -1,8 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
+import { DownloadIcon } from "@egovernments/digit-ui-react-components";
+import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 
 function mergeObjects(item) {
   const arr = item;
@@ -140,7 +142,7 @@ const CampaignSummary = () => {
   const id = searchParams.get("id");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
-
+  const [userCredential, setUserCredential] = useState(null);
   const { isLoading, data, error } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -258,7 +260,7 @@ const CampaignSummary = () => {
                   ],
                 }
               : {},
-            resourceIdArr?.length > 0 
+            resourceIdArr?.length > 0
               ? {
                   sections: [
                     {
@@ -322,30 +324,11 @@ const CampaignSummary = () => {
                 ],
               };
             }),
-            // ...data?.[0]?.campaignDetails?.deliveryRules?.map((item, index) => {
-            //   return {
-            //     sections: [
-            //       {
-            //         type: "COMPONENT",
-            //         cardHeader: { value: t("DELIVERY_CYCLE_DETAILS"), inlineStyles: { marginTop: 0 } },
-            //         cardSecondaryAction: (
-            //           <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
-            //             <span>{t(`CAMPAIGN_EDIT`)}</span>
-            //             <EditIcon />
-            //           </div>
-            //         ),
-            //         component: "CycleDetaisPreview",
-            //         props: {
-            //           data: data?.[0],
-            //           items: item,
-            //           index: index,
-            //         },
-            //       },
-            //     ],
-            //   };
-            // }),
           ],
           error: data?.[0]?.additionalDetails?.error,
+          data: data?.[0],
+          status: data?.[0]?.status,
+          userGenerationSuccess: resourceIdArr,
         };
       },
       enabled: id ? true : false,
@@ -385,16 +368,69 @@ const CampaignSummary = () => {
     }
   }, [showToast]);
   useEffect(() => {
-    if (data?.error) {
+    if (data?.status === "failed" && data?.error) {
       setShowToast({ label: data?.error, key: "error" });
+    }
+    if (data?.status === "creating") {
+      setShowToast({ label: "CAMPAIGN_STATUS_CREATING_MESSAGE", key: "info" });
+    }
+    if (data?.status === "created" && data?.userGenerationSuccess?.length > 0) {
+      setShowToast({ label: "CAMPAIGN_USER_GENERATION_SUCCESS", key: "success" });
+    }
+  }, [data]);
+
+  const downloadUserCred = async () => {
+    downloadExcelWithCustomName(userCredential);
+  };
+
+  useEffect(() => {
+    if (data?.userGenerationSuccess?.length > 0) {
+      const fetchUser = async () => {
+        const responseTemp = await Digit.CustomService.getResponse({
+          url: `/project-factory/v1/data/_search`,
+          body: {
+            SearchCriteria: {
+              tenantId: tenantId,
+              id: data?.userGenerationSuccess,
+            },
+          },
+        });
+
+        const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+
+        if (response?.[0]) {
+          setUserCredential({ fileStoreId: response?.[0], customName: "userCredential" });
+        }
+      };
+      fetchUser();
     }
   }, [data]);
   return (
     <>
-      <Header>{t("ES_TQM_SUMMARY_HEADING")}</Header>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Header className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</Header>
+        {userCredential && (
+          <Button
+            label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+            variation="secondary"
+            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
+            type="button"
+            className="campaign-download-template-btn hover"
+            onButtonClick={downloadUserCred}
+          />
+        )}
+      </div>
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
-        {showToast && <Toast error={showToast?.key === "error" ? true : false} label={showToast?.label} onClose={closeToast} />}
+        {showToast && (
+          <Toast
+            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : "success"}
+            // error={showToast?.key === "error" ? true : false}
+            // info={showToast?.key === "info" ? true : false}
+            label={t(showToast?.label)}
+            onClose={closeToast}
+          />
+        )}
       </div>
     </>
   );

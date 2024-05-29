@@ -38,6 +38,7 @@ const makeSequential = (jsonArray, keyName) => {
 };
 
 const AddAttributeField = ({
+  config,
   deliveryRuleIndex,
   delivery,
   deliveryRules,
@@ -358,7 +359,7 @@ const AddCustomAttributeField = ({
           {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
         </CardLabel>
         <div className="field" style={{ display: "flex", width: "100%", marginBottom: "24px" }}>
-          <TextInput type="text" textInputStyle={{ width: "100%" }} value={t(config?.attrValue)} disabled={true} />
+          <TextInput type="text" textInputStyle={{ width: "100%" }} value={t(attribute?.attribute?.code)} disabled={true} />
         </div>
         {/* <Dropdown
           className="form-field"
@@ -442,7 +443,7 @@ const AddCustomAttributeField = ({
   );
 };
 
-const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
+const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -511,7 +512,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
 
   return (
     <Card className="attribute-container">
-      {filteredDeliveryConfig?.customAttribute
+      {filteredDeliveryConfig?.customAttribute && filteredDeliveryConfig?.projectType === "LLIN-mz"
         ? delivery.attributes.map((item, index) => (
             <AddCustomAttributeField
               deliveryRuleIndex={deliveryRuleIndex}
@@ -520,7 +521,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
               setDeliveryRules={setDeliveryRules}
               attribute={item}
               setAttributes={setAttributes}
-              config={filteredDeliveryConfig?.attributeConfig?.[index]}
+              config={filteredDeliveryConfig?.deliveryConfig?.[targetedData?.deliveryIndex - 1]?.conditionConfig?.[delivery?.ruleKey - 1]?.attributeConfig?.[index]}
               key={index}
               index={index}
               onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
@@ -530,6 +531,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
           ))
         : delivery.attributes.map((item, index) => (
             <AddAttributeField
+              config={filteredDeliveryConfig?.attributeConfig?.[index]}
               deliveryRuleIndex={deliveryRuleIndex}
               delivery={delivery}
               deliveryRules={deliveryRules}
@@ -548,7 +550,7 @@ const AddAttributeWrapper = ({ deliveryRuleIndex, delivery, deliveryRules, setDe
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_MORE_ATTRIBUTE_TEXT`)}
-          className="add-attribute"
+          className="add-attribute hover"
           icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} width="20" height="20" />}
           onButtonClick={addMoreAttribute}
         />
@@ -611,14 +613,24 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           </p>
           {deliveryRules.length !== 1 && (
             <div
+              className="hover"
               onClick={() => onDelete()}
-              style={{ fontWeight: "600", fontSize: "1rem", color: PRIMARY_COLOR, display: "flex", gap: "0.5rem", alignItems: "center" }}
+              style={{
+                fontWeight: "600",
+                fontSize: "1rem",
+                color: PRIMARY_COLOR,
+                display: "flex",
+                gap: "0.5rem",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
             >
               <DustbinIcon /> {t(`CAMPAIGN_DELETE_CONDITION_LABEL`)}
             </div>
           )}
         </CardHeader>
         <AddAttributeWrapper
+          targetedData={targetedData}
           deliveryRuleIndex={delivery.ruleKey}
           delivery={delivery}
           deliveryRules={deliveryRules}
@@ -644,7 +656,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
         </div>
         <Button
           variation="secondary"
-          className={"add-product-btn"}
+          className={"add-product-btn hover"}
           label={t(`CAMPAIGN_ADD_PRODUCTS_BUTTON_TEXT`)}
           icon={<SVG.AppRegistration />}
           onButtonClick={() => setShowModal(true)}
@@ -742,7 +754,7 @@ const AddDeliveryRuleWrapper = ({}) => {
         <Button
           variation="secondary"
           label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-          className={"add-rule-btn"}
+          className={"add-rule-btn hover"}
           icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
           onButtonClick={addMoreDelivery}
         />

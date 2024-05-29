@@ -4,7 +4,7 @@ import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from "../kafka/Listener";
 import { generateHierarchyList, getAllFacilities, getHierarchy } from "../api/campaignApis";
-import { searchMDMS, getCount, getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData } from "../api/genericApis";
+import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsSchema } from "../api/genericApis";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { logger } from "./logger";
@@ -17,10 +17,9 @@ import { getLocaleFromRequest, getLocalisationModuleName } from "./localisationU
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
 const NodeCache = require("node-cache");
-const _ = require('lodash');
 
-const updateGeneratedResourceTopic = config.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
-const createGeneratedResourceTopic = config.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
+const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
+const createGeneratedResourceTopic = config?.kafka?.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 
 /*
   stdTTL: (default: 0) the standard ttl as number in seconds for every generated
@@ -366,103 +365,49 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
   });
 }
 
-async function callSearchApi(request: any, response: any) {
+
+
+async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResource: any, request: any) {
   try {
-    let result: any;
-    const { type } = request.query;
-    result = await searchMDMS([type], config.SEARCH_TEMPLATE, request.body.RequestInfo, response);
-    const filter = request?.body?.Filters;
-    const requestBody = { "RequestInfo": request?.body?.RequestInfo, filter };
-    const responseData = result?.mdms?.[0]?.data;
-    if (!responseData || responseData.length === 0) {
-      return errorResponder({ message: "Invalid ApiResource Type. Check Logs" }, request, response);
-    }
-    const host = responseData?.host;
-    const url = responseData?.searchConfig?.url;
-    var queryParams: any = {};
-    for (const searchItem of responseData?.searchConfig?.searchBody) {
-      if (searchItem.isInParams) {
-        queryParams[searchItem.path] = searchItem.value;
+    const { type, hierarchyType } = request?.query;
+    generatedResource = { generatedResource: newEntryResponse }
+    // send message to create toppic
+    logger.info(`processing the generate request for type ${type}`)
+    produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
+    const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
+    const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
+    const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
+    if (type === 'boundary') {
+      // get boundary data from boundary relationship search api
+      const result = await getBoundaryDataService(request);
+      let updatedResult = result;
+      // get boundary sheet data after being generated
+      const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
+      const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+      logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
+      const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
+      const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
+      if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
+        logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
+        updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
       }
-      else if (searchItem.isInBody) {
-        _.set(requestBody, `${searchItem.path}`, searchItem.value);
-      }
+      // final upodated response to be sent to update topic 
+      const finalResponse = await getFinalUpdatedResponse(updatedResult, newEntryResponse, request);
+      const generatedResourceNew: any = { generatedResource: finalResponse }
+      // send to update topic
+      produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+      request.body.generatedResource = finalResponse;
     }
-    const countknown = responseData?.searchConfig?.isCountGiven === true;
-    let responseDatas: any[] = [];
-    const searchPath = responseData?.searchConfig?.keyName;
-    let fetchedData: any;
-    let responseObject: any;
-
-    if (countknown) {
-      const count = await getCount(responseData, request, response);
-      let noOfTimesToFetchApi = Math.ceil(count / queryParams.limit);
-      for (let i = 0; i < noOfTimesToFetchApi; i++) {
-        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
-        fetchedData = _.get(responseObject, searchPath);
-        fetchedData.forEach((item: any) => {
-          responseDatas.push(item);
-        });
-        queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
-      }
+    else if (type == "facilityWithBoundary" || type == 'userWithBoundary') {
+      await processGenerateRequest(request, localizationMap);
+      const finalResponse = await getFinalUpdatedResponse(request?.body?.fileDetails, newEntryResponse, request);
+      const generatedResourceNew: any = { generatedResource: finalResponse }
+      produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
+      request.body.generatedResource = finalResponse;
     }
-
-    else {
-      while (true) {
-        responseObject = await httpRequest(host + url, requestBody, queryParams, undefined, undefined, undefined);
-        fetchedData = _.get(responseObject, searchPath);
-        fetchedData.forEach((item: any) => {
-          responseDatas.push(item);
-        });
-        queryParams.offset = (parseInt(queryParams.offset) + parseInt(queryParams.limit)).toString();
-        if (fetchedData.length < parseInt(queryParams.limit)) {
-          break;
-        }
-      }
-    }
-    return responseDatas;
-  }
-  catch (e: any) {
-    logger.error(String(e))
-    return errorResponder({ message: String(e) + "    Check Logs" }, request, response);
-  }
-}
-
-async function fullProcessFlowForNewEntry(newEntryResponse: any, request: any) {
-  const {type,hierarchyType} = request?.query;
-  const generatedResource: any = { generatedResource: newEntryResponse }
-  // send message to create toppic
-  logger.info(`processing the generate request for type ${type}`)
-  produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
-  hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
-  const localizationMap = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
-  if (type === 'boundary') {
-    // get boundary data from boundary relationship search api
-    const result = await getBoundaryDataService(request);
-    let updatedResult = result;
-    // get boundary sheet data after being generated
-    const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
-    const differentTabsBasedOnLevel = getLocalizedName(config.generateDifferentTabsOnBasisOf, localizationMap);
-    logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
-    const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-    const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
-    if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config.numberOfBoundaryDataOnWhichWeSplit)) {
-      logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
-      updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
-    }
-    // final upodated response to be sent to update topic 
-    const finalResponse = await getFinalUpdatedResponse(updatedResult, newEntryResponse, request);
-    const generatedResourceNew: any = { generatedResource: finalResponse }
-    // send to update topic
-    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
-    request.body.generatedResource = finalResponse;
-  }
-  else if (type == "facilityWithBoundary" || type == 'userWithBoundary') {
-    await processGenerateRequest(request, localizationMap);
-    const finalResponse = await getFinalUpdatedResponse(request?.body?.fileDetails, newEntryResponse, request);
-    const generatedResourceNew: any = { generatedResource: finalResponse }
-    produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
-    request.body.generatedResource = finalResponse;
+  } catch (error: any) {
+    console.log(error)
+    handleGenerateError(newEntryResponse, generatedResource, error);
   }
 }
 
@@ -518,8 +463,8 @@ function correctParentValues(campaignDetails: any) {
 
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
-  const mdmsResponse = await callMdmsData(request, config.moduleName, config.facilitySchemaMasterName, tenantId);
-  const keys = mdmsResponse.MdmsRes[config?.moduleName].facilitySchema[0].required;
+  const schema = await callMdmsSchema(request, config?.values?.moduleName, "facility", tenantId);
+  const keys = schema?.required;
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
 
@@ -534,7 +479,7 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
     ]
   })
   logger.info("facilities : " + JSON.stringify(facilities));
-  const localizedFacilityTab = getLocalizedName(config.facilityTab, localizationMap);
+  const localizedFacilityTab = getLocalizedName(config?.facility?.facilityTab, localizationMap);
   const facilitySheetData: any = await createExcelSheet(facilities, localizedHeaders, localizedFacilityTab);
   return facilitySheetData;
 }
@@ -597,7 +542,7 @@ function modifyRequestForLocalisation(request: any, tenantId: string) {
   const query = {
     "tenantId": tenantId,
     "locale": getLocaleFromRequest(request),
-    "module": config.localizationModule
+    "module": config.localisation.localizationModule
   };
   const updatedRequest = { ...request };
   updatedRequest.body = { RequestInfo };
@@ -626,7 +571,7 @@ async function getReadMeConfig(request: any) {
 async function createFacilityAndBoundaryFile(facilitySheetData: any, boundarySheetData: any, request: any, localizationMap?: { [key: string]: string }) {
   const workbook = XLSX.utils.book_new();
   // Add facility sheet to the workbook
-  const localizedFacilityTab = getLocalizedName(config?.facilityTab, localizationMap);
+  const localizedFacilityTab = getLocalizedName(config?.facility?.facilityTab, localizationMap);
   const type = request?.query?.type;
   const headingInSheet = headingMapping?.[type]
   const localisedHeading = getLocalizedName(headingInSheet, localizationMap)
@@ -641,7 +586,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
 
 async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: any, request: any, localizationMap?: { [key: string]: string }) {
   const workbook = XLSX.utils.book_new();
-  const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
+  const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
   const type = request?.query?.type;
   const headingInSheet = headingMapping?.[type]
   const localisedHeading = getLocalizedName(headingInSheet, localizationMap)
@@ -670,10 +615,10 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any, 
 async function generateUserAndBoundarySheet(request: any, localizationMap?: { [key: string]: string }) {
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
-  const mdmsResponse = await callMdmsData(request, config.moduleName, config.userSchemaMasterName, tenantId)
-  const headers = mdmsResponse.MdmsRes[config.moduleName].userSchema[0].required;
+  const schema = await callMdmsSchema(request, config?.values?.moduleName, "user", tenantId);
+  const headers = schema?.required;
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
-  const localizedUserTab = getLocalizedName(config.userTab, localizationMap);
+  const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
   logger.info("Generated an empty user template");
   const userSheetData = await createExcelSheet(userData, localizedHeaders, localizedUserTab);
   const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
@@ -691,13 +636,8 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
   request.body.generatedResource = newEntryResponse;
-  try {
-    fullProcessFlowForNewEntry(newEntryResponse, request);
-    return request.body.generatedResource;
-  } catch (error: any) {
-    console.log(error)
-    handleGenerateError(newEntryResponse, generatedResource, error);
-  }
+  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
+  return request.body.generatedResource;
 }
 
 function handleGenerateError(newEntryResponse: any, generatedResource: any, error: any) {
@@ -758,7 +698,7 @@ async function enrichResourceDetails(request: any) {
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now()
   }
-  produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+  produceModifiedMessages(request?.body, config?.kafka?.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
 }
 
 function getFacilityIds(data: any) {
@@ -798,29 +738,33 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-function modifyBoundaryData(boundaryData: unknown[]) {
-  let withBoundaryCode: string[][] = [];
-  let withoutBoundaryCode: string[][] = [];
+function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
+  // Initialize arrays to store data
+  const withBoundaryCode: { key: string, value: string }[][] = [];
+  const withoutBoundaryCode: { key: string, value: string }[][] = [];
+  // Process each object in boundaryData
+  boundaryData.forEach((obj: any) => {
+    // Convert object entries to an array of {key, value} objects
+    const row: any = Object.entries(obj)
+      .filter(([key, value]) => value !== null && value !== undefined)
+      .map(([key, value]) => ({ key, value }));
 
-  for (const obj of boundaryData) {
-    const row: string[] = [];
-    if (typeof obj === 'object' && obj !== null) {
-      for (const value of Object.values(obj)) {
-        if (value !== null && value !== undefined) {
-          row.push(value.toString()); // Convert value to string and push to row
-        }
-      }
+    // Determine whether the object has a boundary code property
+    const hasBoundaryCode = obj.hasOwnProperty(getLocalizedName(config?.boundary?.boundaryCode, localizationMap));
 
-      if (obj.hasOwnProperty('Boundary Code')) {
-        withBoundaryCode.push(row);
-      } else {
-        withoutBoundaryCode.push(row);
-      }
+    // Push the row to the appropriate array based on whether it has a boundary code property
+    if (hasBoundaryCode) {
+      withBoundaryCode.push(row);
+    } else {
+      withoutBoundaryCode.push(row);
     }
-  }
+  });
 
+  // Return the arrays
   return [withBoundaryCode, withoutBoundaryCode];
 }
+
+
 
 async function getDataFromSheet(request: any, fileStoreId: any, tenantId: any, createAndSearchConfig: any, optionalSheetName?: any, localizationMap?: { [key: string]: string }) {
   const type = request?.body?.ResourceDetails?.type;
@@ -921,7 +865,7 @@ function modifyDataBasedOnDifferentTab(boundaryData: any, differentTabsBasedOnLe
   return newData;
 }
 
-async function getLocalizedMessagesHandler(request: any, tenantId: any, module = config?.localizationModule) {
+async function getLocalizedMessagesHandler(request: any, tenantId: any, module = config.localisation.localizationModule) {
   const localisationcontroller = Localisation.getInstance();
   const locale = getLocaleFromRequest(request);
   const localizationResponse = await localisationcontroller.getLocalisedData(module, locale, tenantId);
@@ -945,6 +889,43 @@ async function translateSchema(schema: any, localizationMap?: { [key: string]: s
   return translatedSchema;
 }
 
+
+function findMapValue(map: Map<any, any>, key: any): any | null {
+  let foundValue = null;
+  map.forEach((value, mapKey) => {
+    if (mapKey.key === key.key && mapKey.value === key.value) {
+      foundValue = value;
+    }
+  });
+  return foundValue;
+}
+
+function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: any) {
+  const uniqueDistrictsForMainSheet: string[] = [];
+  const differentDistrictTabs: any[] = [];
+  for (const data of boundaryData) {
+    const rowData = Object.values(data);
+    const districtValue = data[differentTabsBasedOnLevel];
+    const districtIndex = districtValue !== '' ? rowData.indexOf(districtValue) : -1;
+
+    if (districtIndex != -1) {
+      const districtLevelRow = rowData.slice(0, districtIndex + 1);
+      const districtKey = districtLevelRow.join('_');
+
+      if (!uniqueDistrictsForMainSheet.includes(districtKey)) {
+        uniqueDistrictsForMainSheet.push(districtKey);
+      }
+    }
+  }
+  for (const uniqueData of uniqueDistrictsForMainSheet) {
+    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('_') + 1));
+  }
+  return differentDistrictTabs;
+}
+
+
+
+
 export {
   errorResponder,
   errorLogger,
@@ -960,7 +941,6 @@ export {
   generateAuditDetails,
   generateActivityMessage,
   getResponseFromDb,
-  callSearchApi,
   getModifiedResponse,
   getNewEntryResponse,
   getOldEntryResponse,
@@ -985,7 +965,9 @@ export {
   getLocalizedMessagesHandler,
   getLocalizedHeaders,
   createReadMeSheet,
-  replicateRequest
+  findMapValue,
+  replicateRequest,
+  getDifferentDistrictTabs
 };
 
 

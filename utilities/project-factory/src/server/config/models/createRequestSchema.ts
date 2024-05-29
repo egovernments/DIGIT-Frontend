@@ -4,7 +4,7 @@ export const createRequestSchema = {
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["boundary", "facility", "user","boundaryWithTarget"]
+            "enum": ["boundary", "facility", "user", "boundaryWithTarget"]
         },
         "tenantId": {
             "type": "string",
@@ -21,6 +21,11 @@ export const createRequestSchema = {
             "enum": ["create", "validate"]
         },
         "hierarchyType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+        },
+        "campaignId": {
             "type": "string",
             "minLength": 1,
             "maxLength": 128

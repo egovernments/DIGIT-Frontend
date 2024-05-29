@@ -5,8 +5,8 @@ import { getFormattedStringForDebug, logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema, replicateRequest } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../validators/campaignValidators';
-import { callMdmsData, getCampaignNumber, getWorkbook } from "./genericApis";
-import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
+import { callMdmsSchema, getCampaignNumber, getWorkbook } from "./genericApis";
+import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName, reorderBoundariesOfDataAndValidate } from "../utils/campaignUtils";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
 import { produceModifiedMessages } from "../kafka/Listener";
@@ -398,6 +398,7 @@ async function processValidateAfterSchema(dataFromSheet: any, request: any, crea
     request.body.dataToSearch = typeData.searchData;
     request.body.dataToCreate = typeData.createData;
     await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
+    await reorderBoundariesOfDataAndValidate(request, localizationMap)
     await generateProcessedFileAndPersist(request, localizationMap);
   } catch (error) {
     await handleResouceDetailsError(request, error);
@@ -415,13 +416,10 @@ async function processValidate(request: any, localizationMap?: { [key: string]: 
   }
 
   else {
-    const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";
-    const mdmsResponse = await callMdmsData(request, config.moduleName, schemaMasterName, tenantId);
     let schema: any;
-    if (type === 'facility') {
-      schema = mdmsResponse.MdmsRes[config.moduleName].facilitySchema[0];
-    } if (type === 'user') {
-      schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0];
+    if (type == "facility" || type == "user") {
+      const mdmsResponse = await callMdmsSchema(request, config?.values?.moduleName, type, tenantId);
+      schema = mdmsResponse
     }
     const translatedSchema = await translateSchema(schema, localizationMap);
     await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap)
@@ -494,7 +492,7 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
     const limit = createAndSearchConfig?.createBulkDetails?.limit;
     const dataToCreate = request?.body?.dataToCreate;
     const chunks = Math.ceil(dataToCreate.length / limit); // Calculate number of chunks
-    const creationTime = Date.now();
+    var creationTime = Date.now();
     var activities = [];
     for (let i = 0; i < chunks; i++) {
       const start = i * limit;
@@ -504,15 +502,31 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
         RequestInfo: request?.body?.RequestInfo,
       }
       _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
-      if (type == "facility") {
-        for (const facility of newRequestBody.Facilities) {
-          facility.address = {}
+      var gotFailed = true, retryCount = 7;
+      while (gotFailed && retryCount > 0) {
+        try {
+          creationTime = Date.now();
+          retryCount = retryCount - 1;
+          gotFailed = false;
+          if (type == "facility") {
+            for (const facility of newRequestBody.Facilities) {
+              facility.address = {}
+            }
+            logger.info("Facility create data : " + JSON.stringify(newRequestBody));
+            var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+          }
+          else if (type == "user") {
+            var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+          }
+        } catch (error) {
+          var e = error;
+          gotFailed = true;
         }
-        logger.info("Facility create data : " + JSON.stringify(newRequestBody));
-        var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+        logger.info("Creation got failed, Waiting for 30 seconds to retry.. retryCounts left : " + retryCount)
+        await new Promise(resolve => setTimeout(resolve, 30000));
       }
-      else if (type == "user") {
-        var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+      if (gotFailed) {
+        throw e;
       }
       var activity = await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
       logger.info("Activity : " + JSON.stringify(activity));
@@ -551,11 +565,11 @@ async function handleResouceDetailsError(request: any, error: any) {
         message: error.message || ''
       })
     };
-    produceModifiedMessages(request?.body, config.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
+    produceModifiedMessages(request?.body, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
   }
   if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
     await new Promise(resolve => setTimeout(resolve, 2000));
-    produceModifiedMessages(request?.body, config.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+    produceModifiedMessages(request?.body, config?.kafka?.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
   }
 }
 
@@ -565,6 +579,7 @@ async function processAfterValidation(dataFromSheet: any, createAndSearchConfig:
     request.body.dataToCreate = typeData.createData;
     request.body.dataToSearch = typeData.searchData;
     await processSearchAndValidation(request, createAndSearchConfig, dataFromSheet)
+    await reorderBoundariesOfDataAndValidate(request, localizationMap)
     if (createAndSearchConfig?.createBulkDetails && request.body.ResourceDetails.status != "invalid") {
       _.set(request.body, createAndSearchConfig?.createBulkDetails?.createPath, request?.body?.dataToCreate);
       const params: any = getParamsViaElements(createAndSearchConfig?.createBulkDetails?.createElements, request);
@@ -593,13 +608,10 @@ async function processCreate(request: any, localizationMap?: any) {
   else {
     const createAndSearchConfig = createAndSearch[type]
     const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
-    const schemaMasterName: string = type === 'facility' ? config.facilitySchemaMasterName : type === 'user' ? config.userSchemaMasterName : "";
-    const mdmsResponse = await callMdmsData(request, config.moduleName, schemaMasterName, tenantId);
     let schema: any;
-    if (type === 'facility') {
-      schema = mdmsResponse.MdmsRes[config.moduleName].facilitySchema[0];
-    } if (type === 'user') {
-      schema = mdmsResponse.MdmsRes[config.moduleName].userSchema[0];
+    if (type == "facility" || type == "user") {
+      const mdmsResponse = await callMdmsSchema(request, config?.values?.moduleName, type, tenantId);
+      schema = mdmsResponse
     }
     const translatedSchema = await translateSchema(schema, localizationMap);
     await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap)
@@ -622,7 +634,8 @@ async function createProjectCampaignResourcData(request: any) {
           tenantId: request?.body?.CampaignDetails?.tenantId,
           action: "create",
           hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-          additionalDetails: {}
+          additionalDetails: {},
+          campaignId: request?.body?.CampaignDetails?.id
         };
         logger.info(`Creating the resources for type ${resource.type}`)
         logger.debug("resourceDetails " + getFormattedStringForDebug(resourceDetails))
@@ -640,14 +653,47 @@ async function createProjectCampaignResourcData(request: any) {
   }
 }
 
+async function confirmProjectParentCreation(request: any, projectId: any) {
+  const searchBody = {
+    RequestInfo: request.body.RequestInfo,
+    Projects: [
+      {
+        id: projectId,
+        tenantId: request.body.CampaignDetails.tenantId
+      }
+    ]
+  }
+  const params = {
+    tenantId: request.body.CampaignDetails.tenantId,
+    offset: 0,
+    limit: 5
+  }
+  var projectFound = false;
+  var retry = 6;
+  while (!projectFound && retry >= 0) {
+    const response = await httpRequest(config.host.projectHost + config.paths.projectSearch, searchBody, params);
+    if (response?.Project?.[0]) {
+      projectFound = true;
+    }
+    else {
+      logger.info("Project not found. Waiting for 1 seconds");
+      retry = retry - 1
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+  if (!projectFound) {
+    throwError("PROJECT", 500, "PROJECT_CONFIRMATION_FAILED", "Project confirmation failed, for the project with id " + projectId);
+  }
+}
+
 async function projectCreate(projectCreateBody: any, request: any) {
   logger.info("Project creation url " + config.host.projectHost + config.paths.projectCreate)
   logger.debug("Project creation body " + getFormattedStringForDebug(projectCreateBody))
   const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
-  logger.info("Project creation response" + JSON.stringify(projectCreateResponse))
+  logger.debug("Project creation response" + getFormattedStringForDebug(projectCreateResponse))
   if (projectCreateResponse?.Project[0]?.id) {
     logger.info("Project created successfully with id " + JSON.stringify(projectCreateResponse?.Project[0]?.id))
-    logger.info(`for boundary type ${projectCreateResponse?.Project[0]?.address?.boundaryType} and code ${projectCreateResponse?.Project[0]?.address?.boundary}` )
+    logger.info(`for boundary type ${projectCreateResponse?.Project[0]?.address?.boundaryType} and code ${projectCreateResponse?.Project[0]?.address?.boundary}`)
     request.body.boundaryProjectMapping[projectCreateBody?.Projects?.[0]?.address?.boundary].projectId = projectCreateResponse?.Project[0]?.id
   }
   else {
@@ -740,5 +786,6 @@ export {
   getHierarchy,
   getHeadersOfBoundarySheet,
   handleResouceDetailsError,
-  getFiltersFromCampaignSearchResponse
+  getFiltersFromCampaignSearchResponse,
+  confirmProjectParentCreation
 };
