@@ -19,7 +19,7 @@ import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
 import { createTemplate } from "../utils/createTemplate";
-import XLSX from 'xlsx';
+import XLSX from "xlsx";
 
 const page = "upload";
 const commonColumn = "boundaryCode";
@@ -1446,16 +1446,15 @@ const downloadTemplate = async (campaignType, type, section, setToast, campaignD
       hierarchyType,
     });
 
-    
     const workbook = XLSX.utils.book_new();
 
-    template.forEach(({sheetName,data}) => {
-      const worksheet = XLSX.utils.json_to_sheet(data, options);
+    template.forEach(({ sheetName, data }) => {
+      const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     });
-  
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', compression: true });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array", compression: true });
+    const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -1463,7 +1462,6 @@ const downloadTemplate = async (campaignType, type, section, setToast, campaignD
     link.click();
     URL.revokeObjectURL(url);
   } catch (error) {
-    console.log(error);
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
 };

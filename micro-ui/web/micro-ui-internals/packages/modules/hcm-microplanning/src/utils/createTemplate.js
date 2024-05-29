@@ -14,21 +14,21 @@ export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   return response;
 };
 
-export const getFacilities = async (tenantId,body)=>{
-    // request for boundary relation api
-    const reqCriteria = {
-      url: `/facility/v1/_search`,
-      params: { tenantId },
-      body: body,
-    };
-    let response;
-    try {
-      response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
-    } catch (error) {
-      throw new Error(error);
-    }
-    return response;
-}
+export const getFacilities = async (tenantId, body) => {
+  // request for boundary relation api
+  const reqCriteria = {
+    url: `/facility/v1/_search`,
+    params: { tenantId },
+    body: body,
+  };
+  let response;
+  try {
+    response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
+  } catch (error) {
+    throw new Error(error);
+  }
+  return response;
+};
 
 // export const fetchColumnsFromMdms = (schema)=>{
 //   return
@@ -249,59 +249,54 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
   return result;
 };
 
-
-
 function filterBoundaries(boundaryData, boundaryFilters) {
+  if (!boundaryFilters) return boundaryData;
   // Define a helper function to recursively filter boundaries
   function filterRecursive(boundary) {
-      // Find the filter that matches the current boundary
-      const filter = boundaryFilters?.find(f => f.code === boundary.code && f.boundaryType === boundary.boundaryType);
+    // Find the filter that matches the current boundary
+    const filter = boundaryFilters?.find((f) => f.code === boundary.code && f.boundaryType === boundary.boundaryType);
 
-      // If no filter is found, return the boundary with its children filtered recursively
-      if (!filter) {
-          return {
-              ...boundary,
-              children: boundary.children.map(filterRecursive)
-          };
-      }
-
-      // If the boundary has no children, handle the case where includeAllChildren is false
-      if (!boundary.children.length) {
-          // Return the boundary with an empty children array
-          return {
-              ...boundary,
-              children: []
-          };
-      }
-
-      // If includeAllChildren is true, return the boundary with all children
-      if (filter.includeAllChildren) {
-          return {
-              ...boundary,
-              children: boundary.children.map(filterRecursive)
-          };
-      }
-
-      // Filter children based on the filters
-      const filteredChildren = boundary.children
-          .filter(child =>
-              boundaryFilters.some(f => f.code === child.code && f.boundaryType === child.boundaryType))
-          .map(filterRecursive);
-
-      // Return the boundary with filtered children
+    // If no filter is found, return the boundary with its children filtered recursively
+    if (!filter) {
       return {
-          ...boundary,
-          children: filteredChildren
+        ...boundary,
+        children: boundary.children.map(filterRecursive),
       };
+    }
+
+    // If the boundary has no children, handle the case where includeAllChildren is false
+    if (!boundary.children.length) {
+      // Return the boundary with an empty children array
+      return {
+        ...boundary,
+        children: [],
+      };
+    }
+
+    // If includeAllChildren is true, return the boundary with all children
+    if (filter.includeAllChildren) {
+      return {
+        ...boundary,
+        children: boundary.children.map(filterRecursive),
+      };
+    }
+
+    // Filter children based on the filters
+    const filteredChildren = boundary.children
+      .filter((child) => boundaryFilters.some((f) => f.code === child.code && f.boundaryType === child.boundaryType))
+      .map(filterRecursive);
+
+    // Return the boundary with filtered children
+    return {
+      ...boundary,
+      children: filteredChildren,
+    };
   }
 
   // Map through the boundary data and apply the recursive filter function to each boundary
   const filteredData = boundaryData.map(filterRecursive);
   return filteredData;
 }
-
-
-
 
 /**
  * Retrieves all facilities for a given tenant ID.
@@ -313,13 +308,13 @@ async function getAllFacilities(tenantId, requestBody) {
   // Retrieve all facilities for the given tenant ID
   const facilitySearchBody = {
     RequestInfo: requestBody?.RequestInfo,
-    Facility: { isPermanent: true }
+    Facility: { isPermanent: true },
   };
 
   const facilitySearchParams = {
     limit: 50,
     offset: 0,
-    tenantId: tenantId
+    tenantId: tenantId,
   };
 
   const searchedFacilities = [];
@@ -333,7 +328,6 @@ async function getAllFacilities(tenantId, requestBody) {
   return searchedFacilities;
 }
 
-
 /**
  *
  * @param {boolean} hierarchyLevelWiseSheets
@@ -342,14 +336,22 @@ async function getAllFacilities(tenantId, requestBody) {
  * @param {Object} schema
  *
  */
-export const createTemplate = async ({ hierarchyLevelWise: hierarchyLevelWiseSheets = true, hierarchyLevelName, addFacilityData = false, schema, boundaries, tenentId, hierarchyType }) => {
-  if(!boundaries) throw Error("Boundaries not provided")
+export const createTemplate = async ({
+  hierarchyLevelWise: hierarchyLevelWiseSheets = true,
+  hierarchyLevelName,
+  addFacilityData = false,
+  schema,
+  boundaries,
+  tenentId,
+  hierarchyType,
+}) => {
+  if (!boundaries) throw Error("Boundaries not provided");
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot);
   const boundaryData = await fetchBoundaryData(tenentId, hierarchyType, rootBoundary?.[0]?.code);
-  const filteredBoundaryData = filterBoundaries(boundaryData,boundaries)
+  const filteredBoundaryData = filterBoundaries(boundaryData, boundaries);
   let xlsxData = [];
   // adding boundary data to xlsxData
-  xlsxData = addBoundaryData(xlsxData, boundaryData);
+  xlsxData = addBoundaryData(xlsxData, filteredBoundaryData);
 
   if (hierarchyLevelWiseSheets) {
     // district wise boundary Data sheets
