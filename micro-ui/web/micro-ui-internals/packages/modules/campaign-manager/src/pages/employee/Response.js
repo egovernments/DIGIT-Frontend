@@ -24,7 +24,7 @@ const Response = () => {
   };
 
   const children = [
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex" }} key="response-text">
       {state?.boldText ? (
         <p style={{ margin: "0rem" }}>
           {t(state?.preText)}
