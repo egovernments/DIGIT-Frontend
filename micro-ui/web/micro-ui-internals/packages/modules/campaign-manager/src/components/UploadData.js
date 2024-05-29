@@ -1,4 +1,4 @@
-import { Button, Header } from "@egovernments/digit-ui-react-components";
+import { Button, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { DownloadIcon, Card } from "@egovernments/digit-ui-react-components";
@@ -10,6 +10,7 @@ import { schemaConfig } from "../configs/schemaConfig";
 import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
 import { downloadExcelWithCustomName } from "../utils";
+
 /**
  * The `UploadData` function in JavaScript handles the uploading, validation, and management of files
  * for different types of data in a web application.
@@ -796,6 +797,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
+      {isValidation && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
       <Card>
         <div className="campaign-bulk-upload">
           <Header className="digit-form-composer-sub-header">
