@@ -45,8 +45,17 @@ export const JsonPreviewInExcelForm = (props) => {
               {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
+                    const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex]
+                    const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
                     return (
-                      <td key={cellIndex} style={!Number.isNaN(parseFloat(rowData[cellIndex])) ? { textAlign: "end" } : {}}>
+                      <td
+                        key={cellIndex}
+                        style={{
+                          ...(!isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex]) ? { textAlign: "end" } : {}),
+                          ...( error? {backgroundColor:"rgb(250,148,148)"} : {}),
+                        }}
+                        title={error? t(error):undefined}
+                      >
                         {rowData[cellIndex] || ""}
                       </td>
                     );

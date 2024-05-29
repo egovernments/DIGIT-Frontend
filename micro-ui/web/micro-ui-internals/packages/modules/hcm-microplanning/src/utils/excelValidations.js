@@ -4,7 +4,7 @@ ajv.addKeyword("isRequired");
 ajv.addKeyword("isLocationDataColumns");
 ajv.addKeyword("isRuleConfigureInputs");
 ajv.addKeyword("isFilterPropertyOfMapSection");
-ajv.addKeyword("isVisualizationPropertyOfMapSection")
+ajv.addKeyword("isVisualizationPropertyOfMapSection");
 ajv.addKeyword("toShowInMicroplanPreview");
 
 // Function responsible for excel data validation with respect to the template/schema provided
@@ -12,15 +12,12 @@ export const excelValidations = (data, schemaData, t) => {
   const translate = () => {
     const required = Object.entries(schemaData?.Properties || {})
       .reduce((acc, [key, value]) => {
-
         if (value?.isRequired) {
           acc.push(key);
         }
         return acc;
       }, [])
       .map((item) => item);
-
-    // const properties = prepareProperties(schemaData.Properties, t);
     return { required, properties: schemaData.Properties };
   };
   const { required, properties } = translate();
@@ -41,77 +38,92 @@ export const excelValidations = (data, schemaData, t) => {
   };
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
-  let locationDataColumns = Object.entries(schemaData?.Properties || {})
-    .reduce((acc, [key, value]) => {
-  if (value?.isLocationDataColumns) {
-        acc.push(key);
-      }
-      return acc;
-    }, [])
+  let locationDataColumns = Object.entries(schemaData?.Properties || {}).reduce((acc, [key, value]) => {
+    if (value?.isLocationDataColumns) {
+      acc.push(key);
+    }
+    return acc;
+  }, []);
   if (!valid) {
-    let columns = new Set();
+    let errors = {};
+    let hasDataErrors = "false"; // true, false, missing_properties, unknown
+    let missingColumnsList = new Set();
+    let errorMessages = [];
+
     for (let i = 0; i < validateExcel.errors.length; i++) {
+      let tempErrorStore = "";
+      const instancePathType = validateExcel.errors[i].instancePath.split("/");
       switch (validateExcel.errors[i].keyword) {
         case "additionalProperties":
-          return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
-        case "type":
-          const instancePathType = validateExcel.errors[i].instancePath.split("/");
-          if (locationDataColumns.includes(instancePathType[instancePathType.length - 1])) {
-            return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
-          }
-          columns.add(instancePathType[instancePathType.length - 1]);
+          tempErrorStore = "ERROR_ADDITIONAL_PROPERTIES";
+          hasDataErrors = "true";
           break;
-
+        case "type":
+          {
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          tempErrorStore = locationDataColumns.includes(instancePathType[instancePathType.length - 1])
+            ? "ERROR_INCORRECT_LOCATION_COORDINATES"
+            : "ERROR_DATA_TYPE";
+          hasDataErrors = "true";
+          }
+          break;
         case "required":
           const missing = validateExcel.errors[i].params.missingProperty;
-          if (locationDataColumns.includes(missing)) {
-            return { valid, message: "ERROR_MISSING_LOCATION_COORDINATES", error: validateExcel.errors };
-          }
-          columns.add(missing);
+          missingColumnsList.add(missing);
+          hasDataErrors = "missing_properties";
           break;
 
         case "maximum":
         case "minimum":
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          if (locationDataColumns.includes(instancePathMinMax[instancePathMinMax.length - 1])) {
-            return { valid, message: "ERROR_INCORRECT_LOCATION_COORDINATES", error: validateExcel.errors };
-          }
-          columns.add(instancePathPattern[instancePathPattern.length - 1]);
+          tempErrorStore = locationDataColumns.includes(instancePathMinMax[instancePathType.length - 1])
+            ? "ERROR_INCORRECT_LOCATION_COORDINATES"
+            : "ERROR_DATA_EXCEEDS_LIMIT_CONSTRAINTS";
+          hasDataErrors = "true";
           break;
         case "pattern":
-          const instancePathPattern = validateExcel.errors[i].instancePath.split("/");
-          columns.add(instancePathPattern[instancePathPattern.length - 1]);
+          tempErrorStore = "ERROR_VALUE_NOT_ALLOWED"
+          hasDataErrors = "true";
           break;
-
         default:
-          return { valid, message: "ERROR_UNKNOWN" };
+          hasDataErrors = "unknown";
+      }
+      if (tempErrorStore)
+        errors[instancePathType[1]] = {
+          ...(errors[instancePathType[1]] ? errors[instancePathType[1]] : {}),
+          [instancePathType[2]]: {
+            ...(errors?.[instancePathType[1]]?.[instancePathType[2]] ? errors?.[instancePathType[1]]?.[instancePathType[2]] : {}),
+            [instancePathType[3]]: [
+              ...new Set(
+                ...(errors?.[instancePathType[1]]?.[instancePathType[2]]?.[instancePathType[3]]
+                  ? errors?.[instancePathType[1]]?.[instancePathType[2]]?.[instancePathType[3]]
+                  : [])
+              ),
+              tempErrorStore,
+            ],
+          },
+        };
+
+      switch (hasDataErrors) {
+        case "true":
+          errorMessages = [...new Set([...errorMessages,(t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"))])];
+          break;
+        case "unknown":
+          errorMessages= [...new Set([...errorMessages,(t("ERROR_UNKNOWN"))])];
+          break;
+        case "missing_properties":
+          errorMessages= [...new Set([...errorMessages,(t("ERROR_MISSING_PROPERTY",{properties: [...missingColumnsList].map(item=>t(item)).join(", ")}))])];
+          break;
+        case "false":
+          break;
       }
     }
-    const columnList = [...columns];
-    return { valid, columnList, error: validateExcel.errors };
+
+    return { valid: !hasDataErrors, message: errorMessages, errors, validationError: validateExcel.errors };
   }
   ajv.removeSchema();
   return { valid };
 };
-
-// Might need it later
-// function filterOutWordAndLocalise(inputString, operation) {
-//   // Define a regular expression to match the string parts
-//   var regex = /(\w+)/g; // Matches one or more word characters
-
-//   // Replace each match using the provided function
-//   var replacedString = inputString.replace(regex, function (match) {
-//     // Apply the function to each matched string part
-//     return operation(match);
-//   });
-
-//   return replacedString;
-// }
-// const prepareProperties = (properties, t) => {
-//   let newProperties = {};
-//   Object.keys(properties).forEach((item) => (newProperties[filterOutWordAndLocalise(item, t)] = properties[item]));
-//   return newProperties;
-// };
 
 export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t) => {
   try {
@@ -119,17 +131,11 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
     if (valid.valid) {
       return { valid: true };
     } else {
-      if (valid["message"] !== undefined) {
-        return { valid: false, message: valid.message };
-      }
-      const columnList = valid.columnList?.map((item) => t(item));
-      const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
-        columns:
-          columnList.length > 1
-            ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-            : `${columnList[columnList.length - 1]}`,
-      });
-      return { valid: false, message };
+      return {
+        valid: false,
+        message: valid.message,
+        errors: valid.errors,
+      };
     }
   } catch (error) {
     return { valid: false, message: "ERROR_PARSING_FILE" };

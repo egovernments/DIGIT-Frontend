@@ -72,7 +72,7 @@ const geometryValidation = (data) => {
 };
 
 // Function responsible for property verification of geojson data
-export const geojsonPropetiesValidation = (data, schemaData, t) => {
+export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
   const translate = () => {
     const required = Object.entries(schemaData?.Properties || {})
       .reduce((acc, [key, value]) => {
@@ -112,49 +112,78 @@ export const geojsonPropetiesValidation = (data, schemaData, t) => {
   };
   const validateGeojson = ajv.compile(schema);
   const valid = validateGeojson(data);
+  let errors = {};
+  let hasDataErrors = "false"; // true, false, missing_properties, unknown
+  let missingColumnsList = new Set();
+  let errorMessages = [];
   if (!valid) {
-    let columns = new Set();
-    // Sorting out the Specific errors
     for (let i = 0; i < validateGeojson.errors.length; i++) {
+      let tempErrorStore = "";
+      const instancePathType = validateGeojson.errors[i].instancePath.split("/");
       switch (validateGeojson.errors[i].keyword) {
         case "additionalProperties":
-          return { valid, message: "ERROR_ADDITIONAL_PROPERTIES " };
+          tempErrorStore = "ERROR_ADDITIONAL_PROPERTIES";
+          hasDataErrors = "true";
+          break;
         case "type":
-          const instancePathType = validateGeojson.errors[i].instancePath.split("/");
-          columns.add(t(instancePathType[instancePathType.length - 1]));
+          tempErrorStore = "ERROR_DATA_TYPE";
+          hasDataErrors = "true";
           break;
         case "const":
-          if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") return { valid, message: "ERROR_FEATURECOLLECTION" };
+          if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") tempErrorStore = "ERROR_FEATURECOLLECTION";
+          hasDataErrors = "true";
           break;
         case "required":
-          columns.add(t(validateGeojson.errors[i].params.missingProperty));
+          missingColumnsList.add(validateGeojson.errors[i].params.missingProperty); 
+          hasDataErrors = "missing_properties";
           break;
         case "pattern":
-          const instancePathPattern = validateGeojson.errors[i].instancePath.split("/");
-          columns.add(t(instancePathPattern[instancePathPattern.length - 1]));
+          tempErrorStore = "ERROR_VALUE_NOT_ALLOWED";
+          hasDataErrors = "true";
           break;
-
         default:
+          hasDataErrors = "unknown";
           break;
       }
+      if (tempErrorStore)
+        errors[name] = {
+          ...(errors[name] ? errors[name] : {}),
+          [instancePathType[2]]: {
+            ...(errors?.[name]?.[instancePathType[2]] ? errors?.[name]?.[instancePathType[2]] : {}),
+            [instancePathType[4]]: [
+              ...new Set(
+                ...(errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]]
+                  ? errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]]
+                  : [])
+              ),
+              tempErrorStore,
+            ],
+          },
+        };
     }
-    const columnList = [...columns].map((item) => t(item));
-    // if(column)
-    const message = t("ERROR_COLUMNS_DO_NOT_MATCH_TEMPLATE", {
-      columns:
-        columnList.length > 1
-          ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-          : `${columnList[columnList.length - 1]}`,
-    });
-    // .replace(
-    //   "PLACEHOLDER",
-    //   columnList.length > 1
-    //     ? `${columnList.slice(0, columnList.length - 1).join(", ")} ${t("AND")} ${columnList[columnList.length - 1]}`
-    //     : `${columnList[columnList.length - 1]}`
-    // );
+
+    switch (hasDataErrors) {
+      case "true":
+        errorMessages = [...new Set([...errorMessages,(t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"))])];
+        break;
+      case "unknown":
+        errorMessages= [...new Set([...errorMessages,(t("ERROR_UNKNOWN"))])];
+        break;
+      case "missing_properties":
+        errorMessages= [...new Set([...errorMessages,t("ERROR_MISSING_PROPERTY", {properties:[...missingColumnsList].map(item=>t(item)).join(", ")})])];
+        break;
+      case "false":
+        break;
+    }
+    
     ajv.removeSchema();
 
-    return { valid, columnList, message, error: validateGeojson.errors };
+    return {
+      valid: !hasDataErrors,
+      errors,
+      message: errorMessages,
+      validationError: validateGeojson.errors,
+    };
   }
   ajv.removeSchema();
   if (!geometryValidation(data)) return { valid: false, message: t("ERROR_MULTIPLE_GEOMETRY_TYPES") };

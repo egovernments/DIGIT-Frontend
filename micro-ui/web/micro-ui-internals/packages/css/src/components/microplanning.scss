@@ -688,14 +688,17 @@ $border-color: rgba(214, 213, 212, 1);
                     width: 100%;
                     border: 0.063rem solid #ccc;
                     border-collapse: collapse;
-
+                    
                     th,
                     td {
                         min-width: 7.578rem;
                         border: 0.063rem solid #ccc;
                         padding: 8px;
                         font-family: Arial, sans-serif;
-                        font-size: 14px;
+                        font-size: 0.875rem;
+                        height: 100%;
+                        outline-offset: -0.07rem;
+                        box-sizing: border-box;
                     }
 
                     th {

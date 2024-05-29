@@ -121,11 +121,26 @@ const Upload = ({
         setMicroplanData((previous) => ({ ...previous, upload: fileDataList }));
         const valueList = fileDataList ? fileDataList : [];
         const sectionCheckList = sections?.filter((item) => item.required);
-        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.filter(e=>e.active && e.templateIdentifier===item.id)?.every(element => element?.error === null))) setCheckDataCompletion("valid");
+
+        if (
+          valueList.length !== 0 &&
+          sectionCheckList.every((item) => {
+            let filteredList = fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id);
+            if (filteredList?.length === 0) return false;
+            return filteredList?.every((element) => element?.error === null);
+          })
+        )
+          setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
         const valueList = microplanData?.Upload ? Object.values(microplanData?.Upload) : [];
-        if (valueList.length !== 0 && sectionCheckList.every((item) => fileDataList?.filter(e=>e.templateIdentifier===item.id)?.every(element =>element.active && element?.error === null))) setCheckDataCompletion("valid");
+        if (
+          valueList.length !== 0 &&
+          sectionCheckList.every((item) =>
+            fileDataList?.filter((e) => e.templateIdentifier === item.id)?.every((element) => element.active && element?.error === null)
+          )
+        )
+          setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       }
     },
@@ -242,7 +257,7 @@ const Upload = ({
   // Effect for updating current session data in case of section change
   useEffect(() => {
     if (selectedSection) {
-      let file = fileDataList?.find(item=>item.active && item.templateIdentifier === selectedSection.id);
+      let file = fileDataList?.find((item) => item.active && item.templateIdentifier === selectedSection.id);
       if (file?.resourceMapping) {
         setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item?.id === file?.fileType));
         setUploadedFileError(file?.error);
@@ -273,7 +288,8 @@ const Upload = ({
       setLoaderActivation(true);
       let check;
       let fileDataToStore;
-      let error;
+      let errorMsg;
+      let errorLocationObject; // object containing the location and type of error
       let response;
       let callMapping = false;
       // Checking if the file follows name convention rules
@@ -303,7 +319,8 @@ const Upload = ({
           try {
             response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, t);
             check = response.check;
-            error = response.error;
+            errorMsg = response.errorMsg;
+            errorLocationObject = response.errors;
             fileDataToStore = response.fileDataToStore;
             resourceMappingData = response?.tempResourceMappingData;
             if (check === true) {
@@ -333,7 +350,7 @@ const Upload = ({
               return;
             }
             check = response.check;
-            error = response.error;
+            errorMsg = response.error;
             fileDataToStore = response.fileDataToStore;
             callMapping = true;
           } catch (error) {
@@ -346,7 +363,7 @@ const Upload = ({
             response = await handleShapefiles(file, schemaData);
             file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
-            error = response.error;
+            errorMsg = response.error;
             fileDataToStore = response.fileDataToStore;
             callMapping = true;
           } catch (error) {
@@ -363,21 +380,21 @@ const Upload = ({
           return;
       }
       let filestoreId;
-      if (!error && !callMapping) {
+      if (!errorMsg && !callMapping) {
         try {
           const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getStateId());
           if (filestoreResponse?.data?.files?.length > 0) {
             filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
           } else {
-            error = t("ERROR_UPLOADING_FILE");
+            errorMsg = t("ERROR_UPLOADING_FILE");
             setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-            setFileData((previous) => ({ ...previous, error }));
-            setUploadedFileError(error);
+            setFileData((previous) => ({ ...previous, error: errorMsg }));
+            setUploadedFileError(errorMsg);
           }
         } catch (errorData) {
-          error = t("ERROR_UPLOADING_FILE");
+          errorMsg = t("ERROR_UPLOADING_FILE");
           setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-          setUploadedFileError(error);
+          setUploadedFileError(errorMsg);
           handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
         }
       }
@@ -385,7 +402,6 @@ const Upload = ({
       if (selectedFileType.id === EXCEL) {
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
-
       let uuid = uuidv4();
       // creating a fileObject to save all the data collectively
       let fileObject = {
@@ -396,23 +412,23 @@ const Upload = ({
         fileType: selectedFileType.id,
         data: fileDataToStore,
         file,
-        error: error ? error : null,
+        error: errorMsg ? errorMsg : null,
         filestoreId,
         resourceMapping: resourceMappingData,
         active: true,
+        errorLocationObject, // contains location and type of error
       };
 
       setFileDataList((prevFileDataList) => {
-        let temp = _.cloneDeep(prevFileDataList)
-        if(!temp )return temp
-        let index = prevFileDataList?.findIndex((item) =>   ( item.active && item.templateIdentifier === selectedSection.id) );
-        if(index !== -1)
-          temp[index] = {...temp[index],active:false}
-        temp.push(fileObject) 
+        let temp = _.cloneDeep(prevFileDataList);
+        if (!temp) return temp;
+        let index = prevFileDataList?.findIndex((item) => item.active && item.templateIdentifier === selectedSection.id);
+        if (index !== -1) temp[index] = { ...temp[index], active: false };
+        temp.push(fileObject);
         return temp;
       });
       setFileData(fileObject);
-      if (error === undefined && callMapping) setModal("spatial-data-property-mapping");
+      if (errorMsg === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
       setLoaderActivation(false);
     } catch (error) {
@@ -447,7 +463,8 @@ const Upload = ({
     // checking if the hierarchy and common column is present the  uploaded data
     if (schemaData?.doHierarchyCheckInUploadedData) extraColumns = [...hierarchy, commonColumn];
     let data = Object.values(tempFileDataToStore);
-    let error;
+    let errorMsg;
+    let errors; // object containing the location and type of error
     let toast;
     let latLngColumns =
       Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
@@ -460,7 +477,7 @@ const Upload = ({
       const keys = item[0];
       if (keys?.length !== 0) {
         if (!extraColumns?.every((e) => keys.includes(e))) {
-          error = {
+          errorMsg = {
             check: false,
             interruptUpload: true,
             error: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT"),
@@ -473,14 +490,15 @@ const Upload = ({
         }
       }
     });
-    if (error && !error?.check) return error;
+    if (errorMsg && !errorMsg?.check) return errorMsg;
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
     if (!response.valid) setUploadedFileError(response.message);
-    error = response.message;
+    errorMsg = response.message;
+    errors = response.errors;
     let check = response.valid;
 
-    return { check, error, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
+    return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
   };
   const handleGeojsonFile = async (file, schemaData) => {
     // Reading and checking geojson data
@@ -585,12 +603,12 @@ const Upload = ({
   const deleteFile = () => {
     setResourceMapping([]);
     setFileDataList((previous) => {
-      let temp = _.cloneDeep(previous)
-      if(!temp )return temp
-      let index = temp?.findIndex((item) =>{ 
-        return item.id === fileData.id});
-      if(index !== -1)
-        temp[index] = {...temp[index],active:false}
+      let temp = _.cloneDeep(previous);
+      if (!temp) return temp;
+      let index = temp?.findIndex((item) => {
+        return item.id === fileData.id;
+      });
+      if (index !== -1) temp[index] = { ...temp[index], active: false };
       return temp;
     });
     setFileData(undefined);
@@ -609,7 +627,7 @@ const Upload = ({
       let error;
       if (!checkForSchemaData(schemaData)) return;
 
-      const { data, valid } = computeMappedDataAndItsValidations(schemaData);
+      const { data, valid, errors } = computeMappedDataAndItsValidations(schemaData);
       if (!valid) return;
       let filestoreId;
       if (!error) {
@@ -629,12 +647,11 @@ const Upload = ({
       fileObject = { ...fileData, data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
       setFileData(fileObject);
       setFileDataList((prevFileDataList) => {
-        let temp = _.cloneDeep(prevFileDataList)
-        if(!temp )return temp
+        let temp = _.cloneDeep(prevFileDataList);
+        if (!temp) return temp;
         let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
-        if(index !== -1)
-          temp[index] = {...temp[index],active:false}
-        temp.push(fileObject) 
+        if (index !== -1) temp[index] = { ...temp[index], active: false };
+        temp.push(fileObject);
         return temp;
       });
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
@@ -666,25 +683,25 @@ const Upload = ({
   };
   const computeMappedDataAndItsValidations = (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
-    const response = geojsonPropetiesValidation(data, schemaData.schema, t);
+    const response = geojsonPropetiesValidation(data, schemaData.schema, fileData?.section, t);
     if (!response.valid) {
-      handleValidationErrorResponse(response.message);
-      return { data: data, valid: response.valid };
+      handleValidationErrorResponse(response.message, response.errors);
+      return { data: data, errors: response.errors, valid: response.valid };
     }
     return { data: data, valid: response.valid };
   };
 
-  const handleValidationErrorResponse = (error) => {
+  const handleValidationErrorResponse = (error, errorLocationObject = {}) => {
     const fileObject = fileData;
     fileObject.error = error;
-    setFileData((previous) => ({ ...previous, error }));
+    if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
+    setFileData((previous) => ({ ...previous, error, errorLocationObject }));
     setFileDataList((prevFileDataList) => {
-      let temp = _.cloneDeep(prevFileDataList)
-      if(!temp )return temp
+      let temp = _.cloneDeep(prevFileDataList);
+      if (!temp) return temp;
       let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
-      if(index !== -1)
-        temp[index] = {...temp[index],active:false}
-      temp.push(fileObject)
+      if (index !== -1) temp[index] = { ...temp[index], active: false };
+      temp.push(fileObject);
       return temp;
     });
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
@@ -766,7 +783,7 @@ const Upload = ({
 
   // Cancle mapping and uplaod in case of geojson and shapefiles
   const cancelUpload = () => {
-    setFileDataList(previous=>{
+    setFileDataList((previous) => {
       let temp = previous?.filter((item) => item.id !== fileData?.id);
       return temp;
     });
@@ -793,7 +810,7 @@ const Upload = ({
           });
           return;
         }
-        data = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+        data = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section);
         break;
     }
     setPreviewUploadedData(data);
@@ -897,7 +914,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              height:"2.5rem",
+              height: "2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, paddingRight: "1rem", margin: 0 }}
@@ -926,7 +943,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              height:"2.5rem",
+              height: "2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -955,7 +972,7 @@ const Upload = ({
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               backgroundColor: "white",
-              height:"2.5rem",
+              height: "2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -1010,7 +1027,12 @@ const Upload = ({
         )}
         {previewUploadedData && (
           <div className="popup-wrap">
-            <JsonPreviewInExcelForm sheetsData={previewUploadedData} onBack={() => setPreviewUploadedData(undefined)} onDownload={downloadFile} />
+            <JsonPreviewInExcelForm
+              sheetsData={previewUploadedData}
+              errorLocationObject={fileData?.errorLocationObject}
+              onBack={() => setPreviewUploadedData(undefined)}
+              onDownload={downloadFile}
+            />
           </div>
         )}
       </div>
@@ -1156,7 +1178,16 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 };
 
 // Component for uploading file
-const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, setToast, template, campaignType }) => {
+const FileUploadComponent = ({
+  selectedSection,
+  selectedFileType,
+  UploadFileToFileStorage,
+  section,
+  onTypeError,
+  setToast,
+  template,
+  campaignType,
+}) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
   let types;
@@ -1254,7 +1285,7 @@ const UploadedFile = ({
             <p>{t("ERROR_UPLOADED_FILE")}</p>
           </div>
           <div className="body">
-            <p>{t(error)}</p>
+            {error.map(item=><p>{item}</p>)}
           </div>
         </div>
       )}

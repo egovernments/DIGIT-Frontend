@@ -43,7 +43,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {
-      const temp  = microplanData?.hypothesis.filter(item=>item.active)
+      const temp = microplanData?.hypothesis.filter((item) => item.active);
       setAssumptions(temp);
     }
 
@@ -175,7 +175,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             popupModuleMianStyles={{ padding: 0, margin: 0 }}
             style={{
               flex: 1,
-              height:"2.5rem",
+              height: "2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -241,7 +241,7 @@ const addAssumptionsHandler = (setAssumptions) => {
       // previous.length ? previous[previous.length - 1].id + 1 : 0,
       key: "",
       value: "",
-      active:true
+      active: true,
     },
   ]);
 };
@@ -270,30 +270,30 @@ const InterractableSection = React.memo(
       }
     }, [expandedIndex]);
 
-    useEffect(() => {    
+    useEffect(() => {
       // Scroll to the expanded item after the state has updated and the DOM has re-rendered
       if (renderCycle < 2) {
-        setRenderCycle(prev => prev + 1); // Increment render cycle count
+        setRenderCycle((prev) => prev + 1); // Increment render cycle count
       } else if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
         try {
           const parentElement = itemRefs.current[expandedIndex];
-          const childElement = itemRefs.current[expandedIndex].children[1]; 
-          
+          const childElement = itemRefs.current[expandedIndex].children[1];
+
           if (parentElement) {
             const scrollContainer = scrollContainerRef.current;
             const parentRect = parentElement.getBoundingClientRect();
             const containerRect = scrollContainer.getBoundingClientRect();
-            
+
             // Calculate the offset from the top of the container
             const offset = parentRect.top - containerRect.top;
-            
+
             // Scroll the container
             scrollContainer.scrollTo({
               top: scrollContainer.scrollTop + offset - 10,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
           }
-  
+
           if (childElement) {
             childElement.focus();
           }
@@ -301,18 +301,18 @@ const InterractableSection = React.memo(
           console.error("Error scrolling to element:", error);
         }
       }
-    }, [renderCycle,expandedIndex]);
+    }, [renderCycle, expandedIndex]);
 
     useEffect(() => {
       if (expandedIndex !== null) {
         const observer = new MutationObserver(() => {
           setRenderCycle((prev) => prev + 1); // Trigger render cycle when the DOM changes
         });
-  
+
         if (itemRefs.current[expandedIndex]) {
           observer.observe(itemRefs.current[expandedIndex], { childList: true, subtree: true });
         }
-  
+
         return () => observer.disconnect();
       }
     }, [expandedIndex]);
@@ -331,7 +331,7 @@ const InterractableSection = React.memo(
     );
 
     return (
-      <div className="user-input-section"  ref={scrollContainerRef}>
+      <div className="user-input-section" ref={scrollContainerRef}>
         <Example exampleOption={exampleOption} t={t} />
         <div className="interactable-section">
           <div className="headerbar">
@@ -351,39 +351,48 @@ const InterractableSection = React.memo(
               </button>
             </div>
           </div>
-          {assumptions?.filter(item=>item.active)?.map((item, index) => (
-            <div
-              key={index}
-              className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"} ${index ===assumptions?.filter(item=>item.active)?.length -1 ?"last-container":""} `}
-            >
-              <div className="key" 
-              ref={el => { itemRefs.current[index] = el; }}
-              onClick={() => {toggleExpand(index)}}
+          {assumptions
+            ?.filter((item) => item.active)
+            ?.map((item, index) => (
+              <div
+                key={index}
+                className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"} ${
+                  index === assumptions?.filter((item) => item.active)?.length - 1 ? "last-container" : ""
+                } `}
               >
-                <Select
-                  key={item.id}
-                  item={item}
-                  assumptions={assumptions}
-                  setAssumptions={setAssumptions}
-                  options={hypothesisAssumptionsList}
-                  setOptions={setHypothesisAssumptionsList}
-                  t={t}
-                />
+                <div
+                  className="key"
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
+                  onClick={() => {
+                    toggleExpand(index);
+                  }}
+                >
+                  <Select
+                    key={item.id}
+                    item={item}
+                    assumptions={assumptions}
+                    setAssumptions={setAssumptions}
+                    options={hypothesisAssumptionsList}
+                    setOptions={setHypothesisAssumptionsList}
+                    t={t}
+                  />
+                </div>
+                <div className="value">
+                  <Input key={item.id} item={item} t={t} assumptions={assumptions} setAssumptions={setAssumptions} />
+                </div>
+                <div>
+                  <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
+                    <div>
+                      {" "}
+                      <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
+                    </div>
+                    <p>{t("DELETE")}</p>
+                  </button>
+                </div>
               </div>
-              <div className="value">
-                <Input key={item.id} item={item} t={t} assumptions={assumptions} setAssumptions={setAssumptions} />
-              </div>
-              <div>
-                <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
-                  <div>
-                    {" "}
-                    <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
-                  </div>
-                  <p>{t("DELETE")}</p>
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     );
@@ -430,9 +439,9 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHy
       return previous;
     }
     // const filteredData = previous.filter((data) => data.id !== item.id);
-    const  deletionElementIndex = previous.findIndex(data=>data.id !== item.id)
-    let filteredData = _.cloneDeep(previous)
-    filteredData[deletionElementIndex].active = false
+    const deletionElementIndex = previous.findIndex((data) => data.id !== item.id);
+    let filteredData = _.cloneDeep(previous);
+    filteredData[deletionElementIndex].active = false;
     return filteredData || [];
   });
   if (add && item && item.key)
@@ -511,15 +520,16 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if ((e.target.value <= 0 || e.target.value / 100000000000 >= 1) && e.target.value ) return;
+      if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "" && ["+", "e"].includes(e.target.value)) return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {
         const numDecimals = e.target.value.length - decimalIndex - 1;
-        if (numDecimals > 2) {
-          value = parseFloat(e.target.value.substring(0, decimalIndex + 3));
-        } else {
-          value = parseFloat(e.target.value);
+        value = e.target.value;
+        if (numDecimals <= 2) {
+          value = e.target.value;
+        } else if (numDecimals > 2) {
+          value = value.substring(0, decimalIndex + 3);
         }
       } else value = parseFloat(e.target.value);
 
@@ -546,7 +556,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   return (
     <TextInput
       name={"input"}
-      type={"number"}
+      type={"text"}
       value={inputValue}
       t={t}
       config={{}}
@@ -554,6 +564,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
         // valueChangeHandler({ item, newValue: value?.target?.value }, setTempHypothesisList, boundarySelections, setToast, t)
         inputChangeHandler
       }
+      style={{ paddingRight: "0.7rem" }}
       disable={false}
     />
   );
@@ -568,7 +579,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
       id: uuid,
       key: autofillHypothesis[Number(i)],
       value: "",
-      active:true
+      active: true,
     });
   }
   setAssumptions(newAssumptions);
