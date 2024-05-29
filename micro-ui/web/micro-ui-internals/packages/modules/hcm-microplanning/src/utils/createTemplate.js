@@ -1,7 +1,7 @@
 export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   // request for boundary relation api
   const reqCriteria = {
-    url: `/boundary-service/boundary-relationships/_search`,
+    url: "/boundary-service/boundary-relationships/_search",
     params: { tenantId, hierarchyType, codes, includeChildren: true },
     body: {},
   };
@@ -17,7 +17,7 @@ export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
 export const getFacilities = async (tenantId, body) => {
   // request for boundary relation api
   const reqCriteria = {
-    url: `/facility/v1/_search`,
+    url: "/facility/v1/_search",
     params: { tenantId },
     body: body,
   };
@@ -60,7 +60,7 @@ const addBoundaryData = (xlsxData, boundaryData) => {
     let tempHierarchyAccumulator = new Set(hierarchyAccumulator);
 
     // Iterate over each item in the boundary data array
-    boundaryData.forEach((item) => {
+    for (const item of boundaryData) {
       if (item?.code) {
         // Create a new row with the current item's code
         let tempRow = [...rowData, item?.code];
@@ -78,7 +78,7 @@ const addBoundaryData = (xlsxData, boundaryData) => {
           tempHierarchyAccumulator = response.tempHierarchyAccumulator;
         }
       }
-    });
+    };
 
     // Return the accumulated data and hierarchy
     return { tempDataAccumulator, tempHierarchyAccumulator };
@@ -125,7 +125,7 @@ const addSchemaData = (xlsxData, schema) => {
   let newXlsxData = [];
   let columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
 
-  Object.entries(columnSchema).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(columnSchema)) {
     columnList[0].push(key); // Add key to the first array
 
     columnList[1].push(value.type || ""); // Add type to the second array
@@ -133,9 +133,9 @@ const addSchemaData = (xlsxData, schema) => {
     columnList[2].push(value.isRequired ? "MANDATORY" : "OPTIONAL"); // Add requirement status to the third array
 
     columnList[3].push(value.pattern || ""); // Add pattern to the fourth array
-  });
+  };
 
-  xlsxData.forEach(({ sheetName, data }) => {
+  for (const { sheetName, data } of xlsxData) {
     columnList.forEach((item, index) => {
       // Append the new items to the row
       if (data[index]) {
@@ -146,7 +146,7 @@ const addSchemaData = (xlsxData, schema) => {
     });
 
     newXlsxData.push({ sheetName, data });
-  });
+  };
 
   return newXlsxData;
 };
@@ -167,7 +167,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
   let emptyHierarchyRow = [];
 
   // Iterate over each sheet in the xlsxData
-  xlsxData.forEach((sheet) => {
+  for (const sheet of xlsxData) {
     const sheetData = sheet.data;
 
     // Find the index of the hierarchy level name in the header row
@@ -201,7 +201,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
         emptyHierarchyRow.push(row);
       } else {
         // store the empty data in the danglingDataMap for the current hierarchy value
-        if (emptyHierarchyRow.length && hierarchyValue == "") {
+        if (emptyHierarchyRow.length && hierarchyValue === "") {
           emptyHierarchyRow = []; // Reset emptyHierarchyRow
         }
       }
@@ -229,7 +229,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
     }
 
     // Combine danglingDataMap with sheetsMap
-    Object.keys(danglingDataMap).forEach((key) => {
+    for (const key of Object.keys(danglingDataMap)) {
       if (sheetsMap[key]) {
         // Combine dangling data with existing sheet data
         sheetsMap[key].data = [sheetData[0], ...danglingDataMap[key], ...sheetsMap[key].data.slice(1)];
@@ -240,11 +240,11 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
           data: [...danglingDataMap[key], sheetData[0]], // Include header row
         };
       }
-    });
+    };
 
     // Convert the sheets map to an array of objects and add to the result
     result.push(...Object.values(sheetsMap));
-  });
+  };
 
   return result;
 };
@@ -345,7 +345,6 @@ export const createTemplate = async ({
   tenentId,
   hierarchyType,
 }) => {
-  if (!boundaries) throw Error("Boundaries not provided");
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot);
   const boundaryData = await fetchBoundaryData(tenentId, hierarchyType, rootBoundary?.[0]?.code);
   const filteredBoundaryData = filterBoundaries(boundaryData, boundaries);

@@ -257,17 +257,18 @@ const Upload = ({
   };
 
   const downloadTemplateHandler = () => {
-    downloadTemplate(
+    const params = {
       campaignType,
-      selectedFileType.id,
-      selectedSection.id,
+      type: selectedFileType.id,
+      section: selectedSection.id,
       setToast,
       campaignData,
-      campaignData?.hierarchyType,
-      validationSchemas,
-      state?.HierarchyConfigurations,
+      hierarchyType: campaignData?.hierarchyType,
+      Schemas: validationSchemas,
+      HierarchyConfigurations: state?.HierarchyConfigurations,
       t
-    );
+    };
+    downloadTemplate(params);
   };
   // Effect for updating current session data in case of section change
   useEffect(() => {
@@ -1430,8 +1431,9 @@ const checkProjection = async (zip) => {
 };
 
 // Function to handle the template download
-const downloadTemplate = async (campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t) => {
+const downloadTemplate = async ({campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t}) => {
   try {
+    debugger
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
@@ -1458,7 +1460,7 @@ const downloadTemplate = async (campaignType, type, section, setToast, campaignD
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "template.xlsx";
+    link.download = t(section)+".xlsx";
     link.click();
     URL.revokeObjectURL(url);
   } catch (error) {
