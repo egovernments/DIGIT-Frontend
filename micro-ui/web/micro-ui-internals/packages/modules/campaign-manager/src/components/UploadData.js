@@ -48,6 +48,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -436,7 +437,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           }
-          if (type === "boundary" && workbook?.SheetNames?.length > 3) {
+          if (type === "boundary" && workbook?.SheetNames?.length >= 3) {
             if (!validateMultipleTargets(workbook)) {
               return;
             }
@@ -615,13 +616,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           } else {
             setIsValidation(false);
-            setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+            setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
-              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED") });
+              setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               return;
             } else {
-              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
+              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
               const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
               const fileData = fileUrl
@@ -657,6 +658,42 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     fetchData();
   }, [errorsType]);
 
+  const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
+    type: "facilityWithBoundary",
+    hierarchyType: params?.hierarchyType,
+    campaignId: id,
+    // config: {
+    //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
+    // },
+    config: {
+      enabled: enabled,
+    },
+  });
+
+  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
+    type: "boundary",
+    hierarchyType: params?.hierarchyType,
+    campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
+    config: {
+      enabled: enabled,
+    },
+  });
+
+  const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
+    type: "userWithBoundary",
+    hierarchyType: params?.hierarchyType,
+    campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
+    config: {
+      enabled: enabled,
+    },
+  });
+
   const Template = {
     url: "/project-factory/v1/data/_download",
     params: {
@@ -685,6 +722,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       return;
     }
     if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
+      setEnabled(true);
+
       setDownloadError(true);
       setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
       return;
@@ -740,7 +779,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     );
   };
 
-
   // useEffect(() => {
   //   if (showToast) {
   //     setTimeout(closeToast, 5000);
@@ -751,8 +789,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   useEffect(() => {
     if (showToast) {
-      const t = setTimeout(closeToast, 5000);
-      return () => clearTimeout(t); 
+      const t = setTimeout(closeToast, 50000);
+      return () => clearTimeout(t);
     }
   }, [showToast]);
 
