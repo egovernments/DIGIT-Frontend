@@ -25,7 +25,15 @@ export const getFacilities = async (tenantId, body) => {
   try {
     response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
   } catch (error) {
-    throw new Error(error);
+    if (error.response) {
+      throw new Error('Failed to fetch boundary data: ' + error.response.data.message);
+    } else if (error.request) {
+      // Network error
+      throw new Error('Network error while fetching boundary data');
+    } else {
+      // Other errors
+      throw new Error('Error while fetching boundary data: ' + error.message);
+    }
   }
   return response;
 };
@@ -53,9 +61,9 @@ const addBoundaryData = (xlsxData, boundaryData) => {
     if (!boundaryData || !Array.isArray(boundaryData)) return;
 
     // Clone the current boundary predecessor to avoid modifying the original data
-    let rowData = _.cloneDeep(currentBoundaryPredecessor);
+    let rowData = [...currentBoundaryPredecessor]
     // Clone the data accumulator to preserve the accumulated data
-    let tempDataAccumulator = _.cloneDeep(dataAccumulator);
+    let tempDataAccumulator = [...dataAccumulator];
     // Use a set to accumulate unique hierarchy levels
     let tempHierarchyAccumulator = new Set(hierarchyAccumulator);
 

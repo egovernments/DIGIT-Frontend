@@ -257,7 +257,7 @@ const Upload = ({
   };
 
   const downloadTemplateHandler = () => {
-    const params = {
+    const downloadParams = {
       campaignType,
       type: selectedFileType.id,
       section: selectedSection.id,
@@ -268,7 +268,7 @@ const Upload = ({
       HierarchyConfigurations: state?.HierarchyConfigurations,
       t
     };
-    downloadTemplate(params);
+    downloadTemplate(downloadParams);
   };
   // Effect for updating current session data in case of section change
   useEffect(() => {
