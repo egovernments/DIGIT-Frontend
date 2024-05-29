@@ -1433,7 +1433,6 @@ const checkProjection = async (zip) => {
 // Function to handle the template download
 const downloadTemplate = async ({campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t}) => {
   try {
-    debugger
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
