@@ -414,7 +414,7 @@ const Example = ({ exampleOption, t }) => {
           <TextInput
             name={"input"}
             type={"number"}
-            value={null}
+            value={t(10)}
             t={t}
             config={{}}
             disabled={true}
@@ -520,7 +520,8 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "" && ["+", "e"].includes(e.target.value)) return;
+      if( e.target.value.includes("+") || e.target.value.includes("e") ) return
+      if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "") return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {

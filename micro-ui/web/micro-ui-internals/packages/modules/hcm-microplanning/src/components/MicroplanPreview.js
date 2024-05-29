@@ -515,9 +515,9 @@ const DataPreview = memo(
                   <td
                     className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`}
                     key={cellIndex}
-                    style={rowData[cellIndex]?!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}:{}}
+                    style={rowData[cellIndex] || rowData[cellIndex] === 0 ? (!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}) : {}}
                   >
-                    {rowData[cellIndex] || t("NO_DATA")}
+                    {rowData[cellIndex] || rowData[cellIndex] === 0 ? rowData[cellIndex] : t("NO_DATA")}
                   </td>
                 ));
                 return (
@@ -824,15 +824,15 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
 
     // validating user input
-    if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "" || ["+","e"].includes(e?.newValue) ) return;
+      if( e?.newValue.includes("+") || e?.newValue.includes("e") ) return
+      if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "") return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
     if (decimalIndex !== -1) {
       const numDecimals = e.newValue.length - decimalIndex - 1;
-      if(numDecimals <= 2 ){
+      if (numDecimals <= 2) {
         value = e.newValue;
-      }
-      else if (numDecimals > 2) {
+      } else if (numDecimals > 2) {
         value = e.newValue.substring(0, decimalIndex + 3);
       }
     } else value = parseFloat(e.newValue);
@@ -879,9 +879,8 @@ const updateHyothesisAPICall = async (
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
         });
-        setCheckDataCompletion("false")
-      }
-      else setCheckDataCompletion("perform-action");
+        setCheckDataCompletion("false");
+      } else setCheckDataCompletion("perform-action");
       return;
     }
     await UpdateMutate(body, {

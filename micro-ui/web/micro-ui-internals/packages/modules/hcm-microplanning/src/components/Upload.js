@@ -18,6 +18,8 @@ import { EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE } from "../con
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
+import { createTemplate } from "../utils/createTemplate";
+import XLSX from "xlsx";
 
 const page = "upload";
 const commonColumn = "boundaryCode";
@@ -248,12 +250,26 @@ const Upload = ({
   // handler for show file upload screen
   const UploadFileClickHandler = (download = false) => {
     if (download) {
-      downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template);
+      downloadTemplateHandler();
     }
     setModal("none");
     setDataUpload(true);
   };
 
+  const downloadTemplateHandler = () => {
+    const downloadParams = {
+      campaignType,
+      type: selectedFileType.id,
+      section: selectedSection.id,
+      setToast,
+      campaignData,
+      hierarchyType: campaignData?.hierarchyType,
+      Schemas: validationSchemas,
+      HierarchyConfigurations: state?.HierarchyConfigurations,
+      t
+    };
+    downloadTemplate(downloadParams);
+  };
   // Effect for updating current session data in case of section change
   useEffect(() => {
     if (selectedSection) {
@@ -838,9 +854,7 @@ const Upload = ({
                     selectedFileType={selectedFileType}
                     UploadFileToFileStorage={UploadFileToFileStorage}
                     onTypeError={onTypeErrorWhileFileUpload}
-                    setToast={setToast}
-                    template={template}
-                    campaignType={campaignType}
+                    downloadTemplateHandler={downloadTemplateHandler}
                   />
                 </div>
               ) : (
@@ -857,10 +871,8 @@ const Upload = ({
                     DownloadFile={downloadFile}
                     DeleteFile={() => setModal("delete-conformation")}
                     error={uploadedFileError}
-                    setToast={setToast}
-                    template={template}
                     openDataPreview={openDataPreview}
-                    campaignType={campaignType}
+                    downloadTemplateHandler={downloadTemplateHandler}
                   />
                 )}
               </div>
@@ -1178,16 +1190,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 };
 
 // Component for uploading file
-const FileUploadComponent = ({
-  selectedSection,
-  selectedFileType,
-  UploadFileToFileStorage,
-  section,
-  onTypeError,
-  setToast,
-  template,
-  campaignType,
-}) => {
+const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, downloadTemplateHandler }) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
   let types;
@@ -1199,10 +1202,7 @@ const FileUploadComponent = ({
       <div>
         <div className="heading">
           <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <div
-            className="download-template-button"
-            onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
-          >
+          <div className="download-template-button" onClick={downloadTemplateHandler}>
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -1232,10 +1232,8 @@ const UploadedFile = ({
   DownloadFile,
   DeleteFile,
   error,
-  setToast,
-  template,
   openDataPreview,
-  campaignType,
+  downloadTemplateHandler,
 }) => {
   const { t } = useTranslation();
   return (
@@ -1243,10 +1241,7 @@ const UploadedFile = ({
       <div>
         <div className="heading">
           <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <div
-            className="download-template-button"
-            onClick={() => downloadTemplate(campaignType, selectedFileType.id, selectedSection.id, setToast, template)}
-          >
+          <div className="download-template-button" onClick={downloadTemplateHandler}>
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -1285,7 +1280,9 @@ const UploadedFile = ({
             <p>{t("ERROR_UPLOADED_FILE")}</p>
           </div>
           <div className="body">
-            {error.map(item=><p>{item}</p>)}
+            {error.map((item) => (
+              <p>{item}</p>
+            ))}
           </div>
         </div>
       )}
@@ -1434,25 +1431,35 @@ const checkProjection = async (zip) => {
 };
 
 // Function to handle the template download
-const downloadTemplate = (campaignType, type, section, setToast, Templates) => {
+const downloadTemplate = async ({campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t}) => {
   try {
     // Find the template based on the provided parameters
-    const schema = getSchema(campaignType, type, section, Templates);
+    const schema = getSchema(campaignType, type, section, Schemas);
+    const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
 
-    if (!schema) {
-      // Handle if template is not found
-      setToast({ state: "error", message: "Template not found" });
-      return;
-    }
-    const template = {
-      sheet: [schema.schema.required],
-    };
-    const blob = convertJsonToXlsx(template, { skipHeader: true });
+    let template = await createTemplate({
+      hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
+      hierarchyLevelName,
+      addFacilityData: schema?.template?.includeFacilityData,
+      schema,
+      boundaries: campaignData?.boundaries,
+      tenentId: Digit.ULBService.getCurrentTenantId(),
+      hierarchyType,
+    });
 
+    const workbook = XLSX.utils.book_new();
+
+    template.forEach(({ sheetName, data }) => {
+      const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    });
+
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array", compression: true });
+    const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "template.xlsx";
+    link.download = t(section)+".xlsx";
     link.click();
     URL.revokeObjectURL(url);
   } catch (error) {

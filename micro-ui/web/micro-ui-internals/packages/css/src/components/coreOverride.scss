@@ -1,0 +1,78 @@
+.selector-button-border,
+.digit-button-secondary {
+    h2,
+    .digit-button-label {
+        color: $primary-theme-color !important;
+    }
+
+    background-color: white !important;
+}
+
+.selector-button-primary {
+    background-color: $primary-theme-color !important;
+}
+
+.jk-digit-primary-btn {
+    background-color: $primary-theme-color !important;
+}
+
+.jk-digit-secondary-btn {
+    h2 {
+        color: $primary-theme-color !important;
+    }
+}
+
+.help-lable {
+    color: $primary-theme-color;
+}
+
+.digit-header-content {
+    font-size: 2rem;
+}
+
+.user-img-txt {
+    background-color: $primary-theme-color !important;
+}
+
+.submit-bar {
+    background-color: $primary-theme-color !important;
+}
+
+.bread-crumb--item a{
+    color: $primary-theme-color !important;
+}
+
+.employeeCard,
+.card-home .complaint-links-container .header {
+    .logo {
+        background-color: $primary-theme-color !important;
+    }
+
+    .body {
+        .links-wrapper .link {
+            color: $primary-theme-color !important;
+        }
+    }
+}
+
+.primary-label-btn {
+    color: $primary-theme-color !important;
+}
+
+
+.language-button-container {
+    .customBtn-selected {
+        background-color: $primary-theme-color !important;
+    }
+}
+
+.search-button-wrapper {
+    .link-label {
+        color: $primary-theme-color !important;
+
+    }
+}
+
+.employee-card-input:hover, employee-select-wrap--elipses:hover {
+    border-color: $primary-theme-color !important;
+}

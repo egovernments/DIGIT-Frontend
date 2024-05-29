@@ -12,7 +12,7 @@ import { ProviderContext } from "./utils/context";
 
 const MicroplanningModule = ({ stateCode, userType, tenants }) => {
   
-  const moduleCode = ["Microplanning"];
+  const moduleCode = ["Microplanning", "campaignmanager"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

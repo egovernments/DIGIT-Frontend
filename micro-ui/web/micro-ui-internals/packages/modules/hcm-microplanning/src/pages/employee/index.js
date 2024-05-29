@@ -72,7 +72,8 @@ const App = ({ path }) => {
     { name: "BaseMapLayers" },
     { name: "MicroplanPreviewAggregates" },
     { name: "AutoFilledRuleConfigurations" },
-    { name: "MapFilters" }
+    { name: "MapFilters" },
+    { name: "HierarchyConfigurations" }
   ],
   {
     select:(data) => {

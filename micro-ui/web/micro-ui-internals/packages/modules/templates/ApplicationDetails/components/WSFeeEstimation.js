@@ -332,8 +332,9 @@ const WSFeeEstimation = ({ wsAdditionalDetails, workflowDetails }) => {
                 {showToast &&
                     <Toast
                         style={{ zIndex: "10000" }}
-                        warning={showToast?.isWarning}
-                        error={showToast?.isWarning ? false : true}
+                        // warning={showToast?.isWarning}
+                        // error={showToast?.isWarning ? false : true}
+                        type={!showToast?.isWarning?"error":"warning"}
                         label={t(showToast?.message)}
                         onClose={closeToast}
                         isDleteBtn={true}
