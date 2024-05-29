@@ -55,7 +55,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp path={path} stateCode={stateCode} url={url} userType={userType} />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} path={path} stateCode={stateCode} url={url} userType={userType} />
       </TourProvider>
     </ErrorBoundary>
   );
