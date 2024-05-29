@@ -18,6 +18,7 @@ const formatDates = (value, type) => {
 
 // get schema for validation
 const getSchema = (campaignType, type, section, schemas) => {
+  if(!campaignType || !type || !section || !schemas) return {}
   return schemas.find((schema) => {
     if (!schema.campaignType) {
       return schema.type === type && schema.section === section;
@@ -467,4 +468,5 @@ export default {
   addResourcesToFilteredDataToShow,
   calculateResource,
   planConfigRequestBodyValidator,
+  getSchema,
 };

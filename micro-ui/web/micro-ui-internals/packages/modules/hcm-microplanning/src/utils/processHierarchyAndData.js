@@ -40,7 +40,7 @@ export const processHierarchyAndData = (hierarchy, allData) => {
           // Assign row data to the correct hierarchical level
           if (cellValue) {
             if (index === hierarchy.length - 1) {
-              currentNode[cellValue].data = createDataObject(data[0], row, parent);
+              currentNode[cellValue].data = createDataObject(data[0], row);
             } else if (index + 1 < hierarchy.length) {
               let nextHierarchyList = hierarchy.slice(index + 1);
               let check = true;
@@ -53,7 +53,6 @@ export const processHierarchyAndData = (hierarchy, allData) => {
               if (check) currentNode[cellValue].data = createDataObject(data[0], row);
             }
           }
-          parent = cellValue;
           currentNode = currentNode[cellValue].children;
         });
       });
@@ -83,22 +82,8 @@ const mergeHierarchicalData = (data1, data2) => {
     if (!data1[key]) {
       if (!value.data) value.data = {};
       data1[key] = value || {};
-      if (value.children) {
-        data1[key].data.children = Array.isArray(data1[key].data.children) ? [...new Set([...data1[key].data.children, ...Object.keys(value.children)])] : Object.keys(value.children);
-      } else data1[key].data.children = null;
     } else {
-      if (data1[key]?.data?.children)
-        if (value.data.children) value.data.children = [...new Set([...data1[key].data.children, ...Object.keys(value.children)])];
-        else value.data.children = data1[key].data.children;
       data1[key].data = value.data; // Merge data
-      if (value.children) {
-        if (Array.isArray(data1[key].data.children))
-          data1[key].data.children = [...new Set([...data1[key].data.children, ...Object.keys(value.children)])];
-        else data1[key].data.children = Object.keys(value.children);
-      } else data1[key].data.children = null;
-      if(data1[key].data.children?.length === 0)
-        data1[key].data.children = null
-
       mergeHierarchicalData(data1[key].children, value.children); // Recursively merge children
     }
     if (data1[key].data.feature) {
@@ -110,12 +95,11 @@ const mergeHierarchicalData = (data1, data2) => {
 };
 
 // Function to create a data object with key-value pairs from headers and row data
-const createDataObject = (headers, row, parent) => {
+const createDataObject = (headers, row) => {
   const dataObject = {};
   headers.forEach((header, index) => {
     dataObject[header] = row[index];
   });
-  dataObject.parent = parent || dataObject.parent;
   return dataObject;
 };
 
