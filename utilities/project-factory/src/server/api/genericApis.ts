@@ -144,8 +144,8 @@ const getSheetData = async (
         rowData[key] = isNumeric(row[key])
           ? Number(row[key])
           : row[key] === undefined || row[key] === ""
-          ? ""
-          : row[key];
+            ? ""
+            : row[key];
       });
       if (getRow) rowData["!row#number!"] = index + 1;
       return rowData;
@@ -170,7 +170,7 @@ const getTargetSheetData = async (
 
   for (const sheetName of localizedSheetNames) {
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-      blankrows: true,raw:false
+      blankrows: true, raw: false
     });
     var jsonData = sheetData.map((row: any, index: number) => {
       const rowData: any = {};
@@ -955,7 +955,7 @@ async function createBoundaryRelationship(request: any, boundaryMap: Map<{ key: 
         flag = 0;
         requestBody.BoundaryRelationship = boundary;
         // Introducing a delay of 1 second
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, config.boundary.boundaryRelationShipDelay));
         try {
           const response = await httpRequest(`${config.host.boundaryHost}${config.paths.boundaryRelationshipCreate}`, requestBody, {}, 'POST', undefined, undefined, true);
 
@@ -1020,6 +1020,29 @@ async function callMdmsData(
   return response;
 }
 
+async function callMdmsSchema(
+  request: any,
+  moduleName: string,
+  masterName: string,
+  tenantId: string
+) {
+  const { RequestInfo = {} } = request?.body || {};
+  const requestBody = {
+    RequestInfo,
+    SchemaDefCriteria: {
+      tenantId: tenantId,
+      limit: 5,
+      codes: [`${moduleName}.${masterName}`]
+    }
+  };
+  const url = config.host.mdmsV2 + config.paths.mdmsV2SchemaSearch;
+  const response = await httpRequest(url, requestBody);
+  if (!response?.SchemaDefinitions?.[0]?.definition) {
+    throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Error occured during schema search");
+  }
+  return response?.SchemaDefinitions?.[0]?.definition;
+}
+
 async function getMDMSV1Data(request: any, moduleName: string, masterName: string, tenantId: string) {
   const resp = await callMdmsData(request, moduleName, masterName, tenantId);
   return resp;
@@ -1046,5 +1069,6 @@ export {
   getTargetWorkbook,
   getTargetSheetData,
   callMdmsData,
-  getMDMSV1Data
+  getMDMSV1Data,
+  callMdmsSchema
 }
