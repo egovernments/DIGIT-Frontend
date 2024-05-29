@@ -531,12 +531,19 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
     }
 }
 
+function removeBoundariesFromRequest(request: any) {
+    if (request?.body?.CampaignDetails?.boundaries && Array.isArray(request?.body?.CampaignDetails?.boundaries) && request?.body?.CampaignDetails?.boundaries?.length > 0) {
+        request.body.CampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries?.filter((boundary: any) => !boundary?.insertedAfter)
+    }
+}
+
 
 async function enrichAndPersistProjectCampaignRequest(request: any, actionInUrl: any, firstPersist: boolean = false, localizationMap?: any) {
     var createResourceDetailsIds: any[] = []
     if (request?.body?.CampaignDetails?.resources && Array.isArray(request?.body?.CampaignDetails?.resources) && request?.body?.CampaignDetails?.resources?.length > 0 && request?.body?.CampaignDetails?.action == "create") {
         createResourceDetailsIds = getCreateResourceIds(request?.body?.CampaignDetails?.resources);
     }
+    removeBoundariesFromRequest(request);
     if (actionInUrl == "create") {
         await enrichAndPersistCampaignForCreate(request, firstPersist)
     }
@@ -908,71 +915,67 @@ function mapTargets(boundaryResponses: any, codesTargetMapping: any) {
     }
 }
 
-async function processBoundaryForData(boundary: any, boundaryCodes: any, boundaries: any[], request: any, includeAllChildren: any = false, parent?: any) {
-    if (!boundaryCodes.has(boundary.code)) {
-        boundaries.push({ code: boundary?.code, type: boundary?.boundaryType });
-        boundaryCodes.add(boundary?.code);
+async function processBoundaryForData(boundaryResponse: any, boundaries: any, includeAllChildren: any, boundaryCodes: any) {
+    if (!boundaryResponse) return;
+    if (!boundaryCodes.has(boundaryResponse.code)) {
+        boundaries.push({ code: boundaryResponse?.code, type: boundaryResponse?.boundaryType, insertedAfter: true });
+        boundaryCodes.add(boundaryResponse?.code);
     }
-    if (boundary?.includeAllChildren || includeAllChildren) {
-        const params = {
-            tenantId: request?.body?.ResourceDetails?.tenantId,
-            codes: boundary?.code,
-            hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
-            includeChildren: true
-        }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
-        if (boundaryResponse?.TenantBoundary?.[0]) {
-            logger.info("Boundary found " + JSON.stringify(boundaryResponse?.TenantBoundary?.[0]?.boundary));
-            if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]?.children) {
-                for (const childBoundary of boundaryResponse.TenantBoundary[0]?.boundary?.[0].children) {
-                    await processBoundaryForData(childBoundary, boundaryCodes, boundaries, request, true, boundary?.code);
-                }
-            }
+    if (includeAllChildren && boundaryResponse?.children && Array.isArray(boundaryResponse?.children) && boundaryResponse?.children?.length > 0) {
+        for (const child of boundaryResponse.children) {
+            processBoundary(child, boundaries, true, boundaryCodes);
         }
     }
 }
 
 
-async function processBoundary(boundary: any, boundaryCodes: any, boundaries: any[], request: any, includeAllChildren: any = false, parent?: any) {
-    if (!boundaryCodes.has(boundary.code)) {
-        boundaries.push({ code: boundary?.code, type: boundary?.boundaryType });
-        boundaryCodes.add(boundary?.code);
+async function processBoundary(boundaryResponse: any, boundaries: any, includeAllChildren: any, boundaryCodes: any) {
+    if (!boundaryResponse) return;
+    if (!boundaryCodes.has(boundaryResponse.code)) {
+        boundaries.push({ code: boundaryResponse?.code, type: boundaryResponse?.boundaryType, insertedAfter: true });
+        boundaryCodes.add(boundaryResponse?.code);
     }
-    if (boundary?.includeAllChildren || includeAllChildren) {
-        const params = {
-            tenantId: request?.body?.CampaignDetails?.tenantId,
-            codes: boundary?.code,
-            hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
-            includeChildren: true
-        }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
-        if (boundaryResponse?.TenantBoundary?.[0]) {
-            logger.info("Boundary found " + JSON.stringify(boundaryResponse?.TenantBoundary?.[0]?.boundary));
-            if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]?.children) {
-                for (const childBoundary of boundaryResponse.TenantBoundary[0]?.boundary?.[0].children) {
-                    await processBoundary(childBoundary, boundaryCodes, boundaries, request, true, boundary?.code);
-                }
-            }
+    if (includeAllChildren && boundaryResponse?.children && Array.isArray(boundaryResponse?.children) && boundaryResponse?.children?.length > 0) {
+        for (const child of boundaryResponse.children) {
+            processBoundary(child, boundaries, true, boundaryCodes);
         }
     }
 }
 
-async function addBoundaries(request: any) {
+async function addBoundaries(request: any, boundaryResponse: any, boundaryChildren: any) {
     var { boundaries } = request?.body?.CampaignDetails;
     var boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code));
-    for (const boundary of boundaries) {
-        await processBoundary(boundary, boundaryCodes, boundaries, request, false);
-    }
+    await processBoundary(boundaryResponse, boundaries, boundaryChildren[boundaryResponse?.code], boundaryCodes);
     request.body.CampaignDetails.boundaries = boundaries
 }
 
 async function addBoundariesForData(request: any, CampaignDetails: any) {
     var { boundaries } = CampaignDetails;
-    var boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code));
-    for (const boundary of boundaries) {
-        await processBoundaryForData(boundary, boundaryCodes, boundaries, request, false);
+    const rootBoundary = getRootBoundaryCode(boundaries)
+    if (rootBoundary) {
+        const params = {
+            tenantId: request?.body?.CampaignDetails?.tenantId,
+            codes: rootBoundary,
+            hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+            includeChildren: true
+        }
+        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+        if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
+            var boundaryChildren = boundaries.reduce((acc: any, boundary: any) => {
+                acc[boundary.code] = boundary?.includeAllChildren;
+                return acc;
+            }, {});
+            var boundaryCodes = new Set(boundaries.map((boundary: any) => boundary.code));
+            await processBoundaryForData(request, boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0], boundaryChildren, boundaryCodes);
+            CampaignDetails.boundaries = boundaries
+        }
+        else {
+            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Some internal server error occured during boundary validation.");
+        }
     }
-    CampaignDetails.boundaries = boundaries
+    else {
+        throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "There is no root boundary for this campaign.");
+    }
 }
 
 function reorderBoundariesWithParentFirst(reorderedBoundaries: any[], boundaryProjectMapping: any) {
@@ -1021,7 +1024,8 @@ async function reorderBoundariesOfDataAndValidate(request: any, localizationMap?
 }
 
 async function reorderBoundaries(request: any, localizationMap?: any) {
-    const rootBoundary = getRootBoundaryCode(request?.body?.CampaignDetails?.boundaries)
+    var { boundaries } = request?.body?.CampaignDetails;
+    const rootBoundary = getRootBoundaryCode(boundaries)
     request.body.boundaryProjectMapping = {}
     if (rootBoundary) {
         const params = {
@@ -1031,16 +1035,25 @@ async function reorderBoundaries(request: any, localizationMap?: any) {
             includeChildren: true
         }
         const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
-        if (boundaryResponse?.TenantBoundary?.[0]?.boundary) {
+        if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
             const codesTargetMapping = await getCodesTarget(request, localizationMap)
             mapTargets(boundaryResponse?.TenantBoundary?.[0]?.boundary, codesTargetMapping)
             request.body.CampaignDetails.codesTargetMapping = codesTargetMapping
-            logger.info("codesTargetMapping ");
             logger.debug("codesTargetMapping mapping :: " + getFormattedStringForDebug(codesTargetMapping));
-            mapBoundariesParent(boundaryResponse?.TenantBoundary?.[0]?.boundary, request, null)
+            mapBoundariesParent(boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0], request, null)
+            var boundaryChildren = boundaries.reduce((acc: any, boundary: any) => {
+                acc[boundary.code] = boundary?.includeAllChildren;
+                return acc;
+            }, {});
+            await addBoundaries(request, boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0], boundaryChildren)
+        }
+        else {
+            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Some internal server error occured during boundary validation.");
         }
     }
-    await addBoundaries(request)
+    else {
+        throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "There is no root boundary for this campaign.");
+    }
     logger.info("Boundaries for campaign creation in received")
     logger.debug("Boundaries after addition " + getFormattedStringForDebug(request?.body?.CampaignDetails?.boundaries));
     reorderBoundariesWithParentFirst(request?.body?.CampaignDetails?.boundaries, request?.body?.boundaryProjectMapping)
