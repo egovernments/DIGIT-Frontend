@@ -141,8 +141,8 @@ const CitizenHome = ({
 const EmployeeHome = ({ modules, additionalComponent }) => {
   return (
     <>
-      <div className="employee-app-container">
-        <div className="ground-container moduleCardWrapper gridModuleWrapper">
+      <div className="employee-app-container digit-home-screen">
+        <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-screen">
           {modules.map(({ code }, index) => {
             const Card =
               Digit.ComponentRegistryService.getComponent(`${code}Card`) ||

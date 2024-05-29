@@ -110,8 +110,8 @@ const EmployeeApp = ({
             logoUrl={logoUrl}
             modules={modules}
           />
-          <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div className="employee-app-wrapper">
+          <div className={`main ${DSO ? "m-auto" : ""} digit-home-screen`}>
+            <div className="employee-app-wrapper digit-home-screen">
               <ErrorBoundary initData={initData}>
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} additionalComponent={additionalComponent} />
               </ErrorBoundary>
