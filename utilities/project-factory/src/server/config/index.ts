@@ -109,7 +109,7 @@ const config = {
     projectTypeSearch: "project-factory/v1/project-type/search",
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
     mdmsV2SchemaSearch: "mdms-v2/schema/v1/_search",
-    mdms_v2_search: process.env.EGOV_MDMS_V2_SEARCH || "mdms-v2/v2/_search",
+    mdms_v2_search: "mdms-v2/v2/_search",
   },
   // Values configuration
   values: {
