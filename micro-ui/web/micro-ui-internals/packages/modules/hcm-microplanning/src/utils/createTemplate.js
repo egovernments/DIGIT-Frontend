@@ -1,3 +1,5 @@
+import { commonColumn } from "../configs/constants";
+
 export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   // request for boundary relation api
   const reqCriteria = {
@@ -26,13 +28,13 @@ export const getFacilities = async (tenantId, body) => {
     response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
   } catch (error) {
     if (error.response) {
-      throw new Error('Failed to fetch boundary data: ' + error.response.data.message);
+      throw new Error("Failed to fetch boundary data: " + error.response.data.message);
     } else if (error.request) {
       // Network error
-      throw new Error('Network error while fetching boundary data');
+      throw new Error("Network error while fetching boundary data");
     } else {
       // Other errors
-      throw new Error('Error while fetching boundary data: ' + error.message);
+      throw new Error("Error while fetching boundary data: " + error.message);
     }
   }
   return response;
@@ -61,7 +63,7 @@ const addBoundaryData = (xlsxData, boundaryData) => {
     if (!boundaryData || !Array.isArray(boundaryData)) return;
 
     // Clone the current boundary predecessor to avoid modifying the original data
-    let rowData = [...currentBoundaryPredecessor]
+    let rowData = [...currentBoundaryPredecessor];
     // Clone the data accumulator to preserve the accumulated data
     let tempDataAccumulator = [...dataAccumulator];
     // Use a set to accumulate unique hierarchy levels
@@ -86,7 +88,7 @@ const addBoundaryData = (xlsxData, boundaryData) => {
           tempHierarchyAccumulator = response.tempHierarchyAccumulator;
         }
       }
-    };
+    }
 
     // Return the accumulated data and hierarchy
     return { tempDataAccumulator, tempHierarchyAccumulator };
@@ -102,13 +104,22 @@ const addBoundaryData = (xlsxData, boundaryData) => {
   const topIndex = Math.max(...sortedBoundaryDataForXlsxSheet.map((row) => row.length)) - 1;
 
   // Ensure all rows are of the same length by filling them with empty strings
-  sortedBoundaryDataForXlsxSheet = sortedBoundaryDataForXlsxSheet.map((item) => {
-    if (!item) {
-      item = [];
+  sortedBoundaryDataForXlsxSheet = sortedBoundaryDataForXlsxSheet.map((item, index) => {
+    if (index !== 0) {
+      if (!item) {
+        item = [];
+      }
+      let itemLength = item.length
+      while (item.length <= topIndex) {
+        item.push("");
+      }
+      debugger;
+      item.push(item[itemLength - 1]);
     }
-    while (item.length <= topIndex) {
-      item.push("");
+    else{
+      item.push(commonColumn);
     }
+
     return item;
   });
 
@@ -134,6 +145,7 @@ const addSchemaData = (xlsxData, schema) => {
   let columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
 
   for (const [key, value] of Object.entries(columnSchema)) {
+    if(key === commonColumn) continue
     columnList[0].push(key); // Add key to the first array
 
     columnList[1].push(value.type || ""); // Add type to the second array
@@ -141,7 +153,7 @@ const addSchemaData = (xlsxData, schema) => {
     columnList[2].push(value.isRequired ? "MANDATORY" : "OPTIONAL"); // Add requirement status to the third array
 
     columnList[3].push(value.pattern || ""); // Add pattern to the fourth array
-  };
+  }
 
   for (const { sheetName, data } of xlsxData) {
     columnList.forEach((item, index) => {
@@ -154,7 +166,7 @@ const addSchemaData = (xlsxData, schema) => {
     });
 
     newXlsxData.push({ sheetName, data });
-  };
+  }
 
   return newXlsxData;
 };
@@ -248,11 +260,11 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
           data: [...danglingDataMap[key], sheetData[0]], // Include header row
         };
       }
-    };
+    }
 
     // Convert the sheets map to an array of objects and add to the result
     result.push(...Object.values(sheetsMap));
-  };
+  }
 
   return result;
 };
