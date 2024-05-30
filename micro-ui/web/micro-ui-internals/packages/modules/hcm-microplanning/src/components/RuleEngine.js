@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
-import { ModalWrapper } from "./Modal";
-import { ButtonType1, CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown, Modal } from "@egovernments/digit-ui-components";
+import { ModalHeading } from "./CommonComponents";
+import { Modal } from "@egovernments/digit-ui-react-components";
+import { Dropdown } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -86,7 +86,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (!rules || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-        let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
+        let isValid = rules.every((item) => Object.values(item).filter(item=>item.active).every((data) => data !== ""));
         isValid = isValid && rules.length !== 0;
         if (isValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
@@ -600,7 +600,15 @@ const Example = ({ exampleOption, t }) => {
 const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs) => {
   setRules((previous) => {
     if (!previous.length) return [];
-    const filteredData = previous.filter((data) => data.id !== item.id);
+    if (previous?.length <= 1) {
+      setToast({ state: "error", message: t("ERROR_CANNOT_DELETE_LAST_HYPOTHESIS") });
+      add = false;
+      return previous;
+    }
+    // const filteredData = previous.filter((data) => data.id !== item.id);
+    const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
+    let filteredData = _.cloneDeep(previous);
+    filteredData[deletionElementIndex].active = false;
     return filteredData || [];
   });
   if (item && item.output) {

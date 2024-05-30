@@ -11,8 +11,13 @@ import { ProviderContext } from "./utils/context";
 
 
 const MicroplanningModule = ({ stateCode, userType, tenants }) => {
-  
-  const moduleCode = ["Microplanning", "campaignmanager"];
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
+    select: (data) => {
+      return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
+    },
+  });
+  const moduleCode = ["Microplanning", `boundary-${BOUNDARY_HIERARCHY_TYPE}`];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

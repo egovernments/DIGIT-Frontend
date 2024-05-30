@@ -103,7 +103,10 @@ const MicroplanPreview = ({
         setFormulaConfiguration(formulaConfiguration);
       }
     }
-  }, [microplanData?.ruleEngine, microplanData?.hypothesis]);
+    if(microplanData?.microplanPreview?.userEditedResources){
+      setUserEditedResources(microplanData?.microplanPreview?.userEditedResources);
+    }
+  }, []);
 
   // Fetch and assign MDMS data
   useEffect(() => {
@@ -141,9 +144,9 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: { previewData: dataToShow } }));
+    setMicroplanData((previous) => ({ ...previous, microplanPreview: { previewData: dataToShow , userEditedResources:userEditedResources } }));
     setCheckDataCompletion("perform-action");
-  }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
+  }, [dataToShow, setMicroplanData, userEditedResources,setCheckDataCompletion]);
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("perform-action");
