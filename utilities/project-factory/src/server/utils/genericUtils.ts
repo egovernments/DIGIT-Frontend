@@ -4,7 +4,7 @@ import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from "../kafka/Listener";
 import { generateHierarchyList, getAllFacilities, getHierarchy } from "../api/campaignApis";
-import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsSchema } from "../api/genericApis";
+import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsSchema, callMdmsV2Data } from "../api/genericApis";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { logger } from "./logger";
@@ -379,14 +379,16 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
     const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
     if (type === 'boundary') {
       // get boundary data from boundary relationship search api
+      logger.info("Generating Boundary Data")
       const result = await getBoundaryDataService(request);
+      logger.info(`Boundary data generated successfully: ${JSON.stringify(result)}`);
       let updatedResult = result;
       // get boundary sheet data after being generated
       const boundaryData = await getBoundaryDataAfterGeneration(result, request, localizationMap);
       const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
       logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-      const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel] !== null && data[differentTabsBasedOnLevel] !== undefined);
+      const boundaryTypeOnWhichWeSplit = boundaryData.filter(data => data[differentTabsBasedOnLevel]);
       if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
         updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
@@ -742,7 +744,7 @@ function modifyBoundaryData(boundaryData: any[], localizationMap?: any) {
   // Initialize arrays to store data
   const withBoundaryCode: { key: string, value: string }[][] = [];
   const withoutBoundaryCode: { key: string, value: string }[][] = [];
-  
+
   // Get the key for the boundary code
   const boundaryCodeKey = getLocalizedName(config?.boundary?.boundaryCode, localizationMap);
 
@@ -810,11 +812,33 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
   const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
   const modifiedReducedHierarchy = reducedHierarchy.map(ele => `${request?.query?.hierarchyType}_${ele}`.toUpperCase())
+
+  // Call the MDMSV2 API to get data
+const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, type, request?.query?.tenantId);
+
+// Extract columns from the response
+const columns = mdmsResponse?.mdms?.[0]?.data?.fields;
+
+// Sort the columns array based on the order number
+columns?.sort((columnA: any, columnB: any) => columnA.orderNo - columnB.orderNo);
+
+// Extract the names of columns and insert them into an array
+const sortedColumnNames = columns?.map((column: any) => column.name);
+
+// Get localized headers based on the column names
+const headerColumnsAfterHierarchy = getLocalizedHeaders(sortedColumnNames, localizationMap);
+
+// Logging
+logger.info("MDMS data fetched successfully.");
+logger.debug("Sorted columns:", columns);
+logger.debug("Sorted column names:", sortedColumnNames);
+logger.debug("Headers after hierarchy:", headerColumnsAfterHierarchy);
+
+
   const headers = (type !== "facilityWithBoundary" && type !== "userWithBoundary")
     ? [
       ...modifiedReducedHierarchy,
-      getBoundaryColumnName(),
-      "Target at the Selected Boundary level"
+      ...headerColumnsAfterHierarchy
     ]
     : [
       ...modifiedReducedHierarchy,
