@@ -126,7 +126,7 @@ const App = ({ path }) => {
       </div>
       <Switch>
         <AppContainer className="workbench">
-          <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
+          <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded wb</div>} />
           <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
           <PrivateRoute path={`${path}/mdms-search`} component={() => <MDMSSearch />} />
           <PrivateRoute path={`${path}/mdms-add`} component={() => <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
