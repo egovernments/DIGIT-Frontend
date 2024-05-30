@@ -18,8 +18,8 @@ export const CreateComplaint = () => {
   const history = useHistory();
   const registry = useContext(ComponentProvider);
   const dispatch = useDispatch();
-  const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
-  const { stateInfo } = storeData || {};
+  // const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
+  // const { stateInfo } = storeData || {};
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage(PGR_CITIZEN_CREATE_COMPLAINT, {});
   // const [customConfig, setConfig] = Digit.Hooks.useSessionStorage(PGR_CITIZEN_COMPLAINT_CONFIG, {});
   const config = useMemo(() => merge(defaultConfig, Digit.Customizations.PGR.complaintConfig), [Digit.Customizations.PGR.complaintConfig]);
@@ -86,7 +86,7 @@ export const CreateComplaint = () => {
         region: city,
         localityCode,
         localityName,
-        state: stateInfo.name,
+        state: "pg",
         uploadedImages: _uploadImages,
       };
 
@@ -105,7 +105,7 @@ export const CreateComplaint = () => {
     goNext();
   };
 
-  if (isLoading) return null;
+  // if (isLoading) return null;
 
   return (
     <Switch>
