@@ -51,7 +51,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [readMeInfo, setReadMeInfo] = useState({});
   const [enabled, setEnabled] = useState(false);
   const currentKey = searchParams.get("key");
-  console.log("currentKey",currentKey);
+  
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
