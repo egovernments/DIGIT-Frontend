@@ -131,23 +131,9 @@ const addBoundaryData = (xlsxData, boundaryData) => {
 
 const fillDataWithBlanks = (data,tillRow)=>{
   // Ensure all rows are of the same length by filling them with empty strings
-  for(let i  = 0 ; i< tillRow;i++){
-    if(!data[i]){
-      data.push([])
-    }
-  }
-  let mainIndex = data?.[0]?.length-1;
-  return data.map((item, index) => {
-    if (index !== 0) {
-      if (!item) {
-        item = [];
-      }
-      while (item.length <= mainIndex) {
-        item.push("");
-      }
-    }
-    return item;
-  });
+  data = data.concat(new Array(tillRow - data.length).fill([]));
+  const maxLength = Math.max(...data.map(row => row.length));
+  return data.map(row => [...row, ...new Array(maxLength - row.length).fill('')]);
 }
 
 
