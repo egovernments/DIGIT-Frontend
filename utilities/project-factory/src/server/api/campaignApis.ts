@@ -282,7 +282,7 @@ async function getUserWithMobileNumbers(request: any, mobileNumbers: any[]) {
 
   // Convert the results array to a Set to eliminate duplicates
   const resultSet = new Set(allResults);
-  logger.info("Already Existing mobile numbers : " + JSON.stringify(resultSet));
+  logger.info(`Already Existing mobile numbers : ${JSON.stringify(resultSet)}`);
   return resultSet;
 }
 
