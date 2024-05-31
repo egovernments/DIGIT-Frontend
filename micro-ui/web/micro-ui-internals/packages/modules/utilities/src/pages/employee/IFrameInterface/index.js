@@ -77,12 +77,6 @@ const IFrameInterface = (props) => {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
               options.headers['Authorization'] = `${accessToken}`;
-              console.log("url here",url)
-              console.log("typof url", typeof url);
-              if(typeof url === "string" && url?.includes("vector.maps.elastic.co")){
-                console.log("url vector",url)
-                options.headers['mode'] = 'no-cors';
-              }
             }
           }
           options.headers['type-req'] = 'fetch';
