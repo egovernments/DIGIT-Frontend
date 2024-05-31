@@ -527,8 +527,8 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
         requestBody.CampaignDetails = request?.body?.CampaignDetails
         requestBody.CampaignDetails.campaignDetails = updatedInnerCampaignDetails
         requestBody.localizationMap = localizationMap
-        logger.info("Persisting CampaignProjectMapping");
-        logger.debug("CampaignProjectMapping" + getFormattedStringForDebug(requestBody));
+        logger.info("Persisting CampaignProjectMapping...");
+        logger.debug(`CampaignProjectMapping: ${getFormattedStringForDebug(requestBody)}`);
         produceModifiedMessages(requestBody, config?.kafka?.KAFKA_START_CAMPAIGN_MAPPING_TOPIC);
     }
 }
