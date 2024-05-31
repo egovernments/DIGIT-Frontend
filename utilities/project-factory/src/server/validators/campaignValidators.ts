@@ -895,7 +895,7 @@ async function validateChangeDatesRequest(request: any) {
     for (const key in newCampaignDetails) {
         if (!isObjectOrArray(newCampaignDetails[key])) {
             // If the value is not an object or array, compare it with the corresponding value in ExistingCampaignDetails
-            if (!(key == "startDate" || key == "endDate" || key != "action") && newCampaignDetails[key] !== ExistingCampaignDetails[key]) {
+            if (!(key == "startDate" || key == "endDate" || key == "action") && newCampaignDetails[key] !== ExistingCampaignDetails[key]) {
                 // Handle the validation failure (for example, throw an error or log a message)
                 throwError("COMMON", 400, "VALIDATION_ERROR", `${key} value in request campaign is not matching with existing campaign`);
             }
