@@ -829,7 +829,7 @@ async function validateById(request: any) {
     const searchResponse: any = await searchProjectTypeCampaignService(req)
     if (Array.isArray(searchResponse?.CampaignDetails)) {
         if (searchResponse?.CampaignDetails?.length > 0) {
-            logger.debug("CampaignDetails : " + getFormattedStringForDebug(searchResponse?.CampaignDetails));
+            logger.debug(`CampaignDetails : ${getFormattedStringForDebug(searchResponse?.CampaignDetails)}`);
             request.body.ExistingCampaignDetails = searchResponse?.CampaignDetails[0];
             if (action != "changeDates") {
                 if (request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
