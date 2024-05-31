@@ -78,7 +78,8 @@ const IFrameInterface = (props) => {
             } else {
               options.headers['Authorization'] = `${accessToken}`;
               console.log("url here",url)
-              if(url?.url?.includes("vector.maps.elastic.co")){
+              console.log("typof url", typeof url);
+              if(typeof url === string && url?.includes("vector.maps.elastic.co")){
                 console.log("url vector",url)
                 options.headers['mode'] = 'no-cors';
               }
