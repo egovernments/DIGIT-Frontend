@@ -87,7 +87,7 @@ async function enrichBoundaryWithProject(messageObject: any, boundaryWithProject
     logger.info("boundaryCodes : " + JSON.stringify(boundaryCodes));
     const response = await httpRequest(config.host.projectHost + "health-project/v1/_search", projectSearchBody, params);
     await createBoundaryWithProjectMapping(response?.Project, boundaryWithProject);
-    logger.debug("boundaryWise Project mapping : " + getFormattedStringForDebug(boundaryWithProject));
+    logger.debug(`boundaryWise Project mapping : ${getFormattedStringForDebug(boundaryWithProject)}`);
     logger.info("boundaryCodes mapping : " + JSON.stringify(boundaryCodes));
 }
 
