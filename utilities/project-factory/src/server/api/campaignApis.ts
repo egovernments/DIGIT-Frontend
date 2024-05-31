@@ -635,7 +635,7 @@ async function processCreate(request: any, localizationMap?: any) {
     const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
     let schema: any;
     if (type == "facility" || type == "user") {
-      logger.info("getting schema to validate the craete data")
+      logger.info("Fetching schema to validate the created data for type: " + type);
       const mdmsResponse = await callMdmsSchema(request, config?.values?.moduleName, type, tenantId);
       schema = mdmsResponse
     }
