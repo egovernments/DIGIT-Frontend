@@ -32,7 +32,6 @@ async function enrichCampaign(requestBody: any) {
 }
 
 async function getAllFacilitiesInLoop(searchedFacilities: any[], facilitySearchParams: any, facilitySearchBody: any) {
-  await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
   const response = await httpRequest(config.host.facilityHost + config.paths.facilitySearch, facilitySearchBody, facilitySearchParams);
 
   if (Array.isArray(response?.Facilities)) {
@@ -100,7 +99,6 @@ async function getFacilitiesViaIds(tenantId: string, ids: any[], requestBody: an
   for (let i = 0; i < ids.length; i += 50) {
     const chunkIds = ids.slice(i, i + 50);
     facilitySearchBody.Facility.id = chunkIds;
-    logger.info("facilitySearchBody : " + JSON.stringify(facilitySearchBody));
     await getAllFacilitiesInLoop(searchedFacilities, facilitySearchParams, facilitySearchBody);
   }
 
@@ -182,7 +180,7 @@ function updateErrorsForUser(newCreatedData: any[], newSearchedData: any[], erro
         errors.push({ status: "CREATED", rowNumber: createdElement["!row#number!"], isUniqueIdentifier: true, uniqueIdentifier: _.get(searchedElement, createAndSearchConfig.uniqueIdentifier, ""), errorDetails: "" })
         userNameAndPassword.push({
           userName: searchedElement?.user?.userName,
-          password: "eGov@123",
+          password: createdElement?.user?.password,
           rowNumber: createdElement["!row#number!"]
         })
         break;
@@ -201,7 +199,6 @@ function updateErrors(newCreatedData: any[], newSearchedData: any[], errors: any
     for (const searchedElement of newSearchedData) {
       let match = true;
       for (const key in createdElement) {
-        // console.log(key, createdElement[key], searchedElement[key], " ssssssssssssssssssssssssssssssssss");
         if (createdElement.hasOwnProperty(key) && !searchedElement.hasOwnProperty(key) && key != '!row#number!') {
           match = false;
           break;
@@ -251,22 +248,57 @@ function matchCreatedAndSearchedData(createdData: any[], searchedData: any[], re
   request.body.Activities = activities
 }
 
-function matchUserValidation(createdData: any[], searchedData: any[], request: any, createAndSearchConfig: any) {
+async function getUserWithMobileNumbers(request: any, mobileNumbers: any[]) {
+  logger.info("mobileNumbers to search: " + JSON.stringify(mobileNumbers));
+  const BATCH_SIZE = 50;
+  let allResults: any[] = [];
+
+  for (let i = 0; i < mobileNumbers.length; i += BATCH_SIZE) {
+    const batch = mobileNumbers.slice(i, i + BATCH_SIZE);
+    const searchBody = {
+      RequestInfo: request?.body?.RequestInfo,
+      Individual: {
+        mobileNumber: batch
+      }
+    };
+    const params = {
+      limit: 55,
+      offset: 0,
+      tenantId: request?.body?.ResourceDetails?.tenantId,
+      includeDeleted: true
+    };
+    logger.info("Individual search to validate the mobile no initiated");
+    const response = await httpRequest(config.host.healthIndividualHost + "health-individual/v1/_search", searchBody, params);
+
+    if (!response) {
+      throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "Error occurred during user search while validating mobile number.");
+    }
+
+    if (response?.Individual?.length > 0) {
+      const resultMobileNumbers = response.Individual.map((item: any) => item?.mobileNumber);
+      allResults = allResults.concat(resultMobileNumbers);
+    }
+  }
+
+  // Convert the results array to a Set to eliminate duplicates
+  const resultSet = new Set(allResults);
+  logger.info(`Already Existing mobile numbers : ${JSON.stringify(resultSet)}`);
+  return resultSet;
+}
+
+async function matchUserValidation(createdData: any[], request: any) {
   var count = 0;
   const errors = []
-  const codeSet = new Set(searchedData.map(item => item?.code));
-  const numberSet = new Set(searchedData.map(item => item?.user?.mobileNumber));
-  for (const data of createdData) {
-    if (codeSet.has(data.code) && numberSet.has(data?.user?.mobileNumber)) {
-      errors.push({ status: "INVALID", rowNumber: data["!row#number!"], errorDetails: `User with mobileNumber ${data?.user?.mobileNumber} and userName ${data.code} already exists` })
-      count++;
-    }
-    else if (codeSet.has(data.code)) {
-      errors.push({ status: "INVALID", rowNumber: data["!row#number!"], errorDetails: `User with userName ${data.code} already exists` })
-      count++;
-    }
-    else if (numberSet.has(data?.user?.mobileNumber)) {
-      errors.push({ status: "INVALID", rowNumber: data["!row#number!"], errorDetails: `User with mobileNumber ${data?.user?.mobileNumber} already exists` })
+  const mobileNumbers = createdData.filter(item => item?.user?.mobileNumber).map(item => (item?.user?.mobileNumber));
+  const mobileNumberRowNumberMapping = createdData.reduce((acc, curr) => {
+    acc[curr.user.mobileNumber] = curr["!row#number!"];
+    return acc;
+  }, {});
+  logger.info("mobileNumberRowNumberMapping : " + JSON.stringify(mobileNumberRowNumberMapping));
+  const mobileNumberResponse = await getUserWithMobileNumbers(request, mobileNumbers);
+  for (const key in mobileNumberRowNumberMapping) {
+    if (mobileNumberResponse.has(key)) {
+      errors.push({ status: "INVALID", rowNumber: mobileNumberRowNumberMapping[key], errorDetails: `User with mobileNumber ${key} already exists` })
       count++;
     }
   }
@@ -307,7 +339,6 @@ function matchViaUserIdAndCreationTime(createdData: any[], searchedData: any[], 
 async function processSearch(createAndSearchConfig: any, request: any, params: any) {
   setSearchLimits(createAndSearchConfig, request, params);
   const arraysToMatch = await performSearch(createAndSearchConfig, request, params);
-
   return arraysToMatch;
 }
 
@@ -330,7 +361,6 @@ function setLimitOrOffset(limitOrOffsetConfig: any, params: any, requestBody: an
 async function performSearch(createAndSearchConfig: any, request: any, params: any) {
   const arraysToMatch: any[] = [];
   let searchAgain = true;
-
   while (searchAgain) {
     const searcRequestBody = {
       RequestInfo: request?.body?.RequestInfo
@@ -347,7 +377,6 @@ async function performSearch(createAndSearchConfig: any, request: any, params: a
       searchAgain = false;
     }
     updateOffset(createAndSearchConfig, params, request.body);
-    await new Promise(resolve => setTimeout(resolve, 5000));
   }
   return arraysToMatch;
 }
@@ -376,9 +405,7 @@ async function processSearchAndValidation(request: any, createAndSearchConfig: a
   }
   if (request?.body?.ResourceDetails?.type == "user") {
     await enrichEmployees(request?.body?.dataToCreate, request)
-    const params: any = getParamsViaElements(createAndSearchConfig?.searchDetails?.searchElements, request);
-    const arraysToMatch = await processSearch(createAndSearchConfig, request, params)
-    matchUserValidation(request.body.dataToCreate, arraysToMatch, request, createAndSearchConfig)
+    await matchUserValidation(request.body.dataToCreate, request)
   }
 }
 
@@ -449,14 +476,50 @@ function generateHash(input: string): string {
   return hash.toString().padStart(6, '0');
 }
 
+function generateUserPassword() {
+  // Function to generate a random lowercase letter
+  function getRandomLowercaseLetter() {
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    return letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  // Function to generate a random uppercase letter
+  function getRandomUppercaseLetter() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+
+  // Generate a random 4-letter sequence where the second letter is uppercase
+  function generate4LetterSequence() {
+    const firstLetter = getRandomLowercaseLetter();
+    const secondLetter = getRandomUppercaseLetter();
+    const thirdLetter = getRandomLowercaseLetter();
+    const fourthLetter = getRandomLowercaseLetter();
+    return firstLetter + secondLetter + thirdLetter + fourthLetter;
+  }
+
+  // Generate a random 3-digit number
+  function getRandom3DigitNumber() {
+    return Math.floor(100 + Math.random() * 900); // Ensures the number is 3 digits
+  }
+
+  // Combine parts to form the password
+  const firstSequence = generate4LetterSequence();
+  const randomNumber = getRandom3DigitNumber();
+
+  return `${firstSequence}@${randomNumber}`;
+}
+
+
 function enrichUserNameAndPassword(employees: any[]) {
   const epochTime = Date.now();
   employees.forEach((employee) => {
     const { user, "!row#number!": rowNumber } = employee;
     const nameInitials = user.name.split(' ').map((name: any) => name.charAt(0)).join('');
     const generatedCode = `${nameInitials}${generateHash(`${epochTime}`)}${rowNumber}`;
+    const generatedPassword = config?.user?.userPasswordAutoGenerate == "true" ? generateUserPassword() : config?.user?.userDefaultPassword
     user.userName = generatedCode;
-    user.password = "eGov@123";
+    user.password = generatedPassword;
     employee.code = generatedCode
   });
 }
@@ -486,8 +549,7 @@ async function enrichEmployees(employees: any[], request: any) {
 }
 
 async function performAndSaveResourceActivity(request: any, createAndSearchConfig: any, params: any, type: any, localizationMap?: { [key: string]: string }) {
-  logger.info(type + " create data : " + JSON.stringify(request?.body?.dataToCreate));
-  logger.info(type + " bulk create url : " + createAndSearchConfig?.createBulkDetails?.url, params);
+  logger.info(type + " create data  " );
   if (createAndSearchConfig?.createBulkDetails?.limit) {
     const limit = createAndSearchConfig?.createBulkDetails?.limit;
     const dataToCreate = request?.body?.dataToCreate;
@@ -512,7 +574,6 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
             for (const facility of newRequestBody.Facilities) {
               facility.address = {}
             }
-            logger.info("Facility create data : " + JSON.stringify(newRequestBody));
             var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
           }
           else if (type == "user") {
@@ -521,18 +582,18 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
         } catch (error) {
           var e = error;
           gotFailed = true;
+          logger.info("Creation got failed, Waiting for 30 seconds to retry.. retryCounts left : " + retryCount)
+          await new Promise(resolve => setTimeout(resolve, 30000));
         }
-        logger.info("Creation got failed, Waiting for 30 seconds to retry.. retryCounts left : " + retryCount)
-        await new Promise(resolve => setTimeout(resolve, 30000));
       }
       if (gotFailed) {
         throw e;
       }
       var activity = await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
-      logger.info("Activity : " + JSON.stringify(activity));
+      logger.info(`Activity : ${createAndSearchConfig?.createBulkDetails?.url} status:  ${responsePayload?.statusCode}` );
       activities.push(activity);
-      await new Promise(resolve => setTimeout(resolve, 10000));
     }
+    await new Promise(resolve => setTimeout(resolve, 5000));
     await confirmCreation(createAndSearchConfig, request, dataToCreate, creationTime, activities);
   }
   await generateProcessedFileAndPersist(request, localizationMap);
@@ -610,11 +671,14 @@ async function processCreate(request: any, localizationMap?: any) {
     const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
     let schema: any;
     if (type == "facility" || type == "user") {
+      logger.info("Fetching schema to validate the created data for type: " + type);
       const mdmsResponse = await callMdmsSchema(request, config?.values?.moduleName, type, tenantId);
       schema = mdmsResponse
     }
+    logger.info("translating schema")
     const translatedSchema = await translateSchema(schema, localizationMap);
-    await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap)
+    await validateSheetData(dataFromSheet, request, translatedSchema, createAndSearchConfig?.boundaryValidation, localizationMap);
+    logger.info("validation done sucessfully")
     processAfterValidation(dataFromSheet, createAndSearchConfig, request, localizationMap)
   }
 }

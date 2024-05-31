@@ -254,6 +254,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  // const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
   // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
 
@@ -354,6 +355,7 @@ const SetupCampaign = ({ hierarchyType }) => {
             : {
                 cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
                 deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
+                refetch: true,
               },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData
@@ -386,8 +388,6 @@ const SetupCampaign = ({ hierarchyType }) => {
     setTimeout(() => {
       setEnabled(fetchUpload || (fetchBoundary && currentKey > 6));
     }, 3000);
-
-    // return () => clearTimeout(timeoutId);
   }, [fetchUpload, fetchBoundary, currentKey]);
 
   const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
@@ -402,16 +402,9 @@ const SetupCampaign = ({ hierarchyType }) => {
     },
   });
 
-  // useEffect(() => {
-  //   if (filteredBoundaryData) {
-  //     refetchBoundary();
-  //   }
-  // }, [filteredBoundaryData]);
-
   const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "boundary",
     hierarchyType: hierarchyType,
-    // filters: filteredBoundaryData,
     campaignId: id,
     // config: {
     //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
@@ -1143,6 +1136,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   };
 
   const onStepClick = (step) => {
+    console.log("step", step);
     if ((currentKey === 4 || currentKey === 5) && step > 1) {
       return;
     }
@@ -1165,6 +1159,20 @@ const SetupCampaign = ({ hierarchyType }) => {
       // Do not set stepper and key
     }
   };
+
+  // const findHighestStepCount = () => {
+  //   const totalFormDataKeys = Object.keys(totalFormData);
+
+  //   const relatedSteps = campaignConfig?.[0]?.form.filter((step) => totalFormDataKeys.includes(step.name));
+
+  //   const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
+
+  //   setActive(highestStep);
+  // };
+
+  // useEffect(() => {
+  //   findHighestStepCount();
+  // }, [totalFormData, campaignConfig]);
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
@@ -1234,6 +1242,7 @@ const SetupCampaign = ({ hierarchyType }) => {
           ]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
+          // activeSteps={active}
         />
       )}
       <FormComposerV2

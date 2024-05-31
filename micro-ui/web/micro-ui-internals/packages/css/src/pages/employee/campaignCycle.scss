@@ -6,7 +6,7 @@
   .sub-tab-container {
     margin-top: 5px;
     padding: 1.5rem;
-    .card-text{
+    .card-text {
       margin-bottom: 0;
     }
   }
@@ -68,6 +68,9 @@
       }
     }
   }
+}
+.selector-button-primary {
+  background-color: theme(digitv2.lightTheme.primary);
 }
 .campaign-breadcrumb {
   margin: 0;
@@ -158,7 +161,7 @@
   .date-field-container {
     display: grid;
     grid-template-columns: 18.75rem 18.75rem;
-    grid-gap: 2rem;
+    grid-gap: 1.5rem;
     width: 100%;
   }
   .PlusMinus {
@@ -272,7 +275,7 @@
   .options-card {
     max-height: 10rem !important;
   }
-  .card-label{
+  .card-label {
     margin-bottom: 0.5rem;
   }
 }

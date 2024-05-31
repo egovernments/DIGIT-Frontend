@@ -359,9 +359,10 @@ async function generateProcessedFileAndPersist(request: any, localizationMap?: {
         additionalDetails: { ...request?.body?.ResourceDetails?.additionalDetails, sheetErrors: request?.body?.additionalDetailsErrors } || {}
     };
     produceModifiedMessages(request?.body, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
-    logger.info("ResourceDetails to persist : " + JSON.stringify(request?.body?.ResourceDetails));
+    logger.info(`ResourceDetails to persist : ${request.body.ResourceDetails.type}`);
     if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
-        logger.info("Activities to persist : " + JSON.stringify(request?.body?.Activities));
+        logger.info("Activities to persist : " )
+        logger.debug(getFormattedStringForDebug(request?.body?.Activities));
         await new Promise(resolve => setTimeout(resolve, 2000));
         produceModifiedMessages(request?.body, config?.kafka?.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
     }
@@ -526,7 +527,8 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
         requestBody.CampaignDetails = request?.body?.CampaignDetails
         requestBody.CampaignDetails.campaignDetails = updatedInnerCampaignDetails
         requestBody.localizationMap = localizationMap
-        logger.info("Persisting CampaignProjectMapping : " + JSON.stringify(requestBody));
+        logger.info("Persisting CampaignProjectMapping...");
+        logger.debug(`CampaignProjectMapping: ${getFormattedStringForDebug(requestBody)}`);
         produceModifiedMessages(requestBody, config?.kafka?.KAFKA_START_CAMPAIGN_MAPPING_TOPIC);
     }
 }
@@ -1087,8 +1089,6 @@ async function getRelatedProjects(request: any) {
         includeDescendants: true
     }
     logger.info("Project search params " + JSON.stringify(projectSearchParams))
-    logger.info("Project search body " + JSON.stringify(projectSearchBody))
-    logger.info("Project search url " + config?.host?.projectHost + config?.paths?.projectSearch)
     const projectSearchResponse = await httpRequest(config?.host?.projectHost + config?.paths?.projectSearch, projectSearchBody, projectSearchParams);
     if (projectSearchResponse?.Project && Array.isArray(projectSearchResponse?.Project) && projectSearchResponse?.Project?.length > 0) {
         return convertToProjectsArray(projectSearchResponse?.Project)
@@ -1099,25 +1099,27 @@ async function getRelatedProjects(request: any) {
     }
 }
 
-async function updateProjectDates(request: any) {
-    const projects = await getRelatedProjects(request);
-    const { startDate, endDate } = request?.body?.CampaignDetails;
-    for (const project of projects) {
-        project.startDate = startDate || project.startDate;
-        project.endDate = endDate || project.endDate;
-        delete project?.address;
-    }
-    logger.info("Projects related to current Campaign : " + JSON.stringify(projects));
-    const projectUpdateBody = {
-        RequestInfo: request?.body?.RequestInfo,
-        Projects: projects
-    }
-    const projectUpdateResponse = await httpRequest(config?.host?.projectHost + config?.paths?.projectUpdate, projectUpdateBody);
-    if (projectUpdateResponse?.Project && Array.isArray(projectUpdateResponse?.Project) && projectUpdateResponse?.Project?.length == projects?.length) {
-        logger.info("Project dates updated successfully")
-    }
-    else {
-        throwError("PROJECT", 500, "PROJECT_UPDATE_ERROR")
+async function updateProjectDates(request: any, actionInUrl: any) {
+    const { startDate, endDate, projectId } = request?.body?.CampaignDetails
+    if ((startDate || endDate) && projectId && actionInUrl == "update") {
+        const projects = await getRelatedProjects(request);
+        for (const project of projects) {
+            project.startDate = startDate || project.startDate;
+            project.endDate = endDate || project.endDate;
+            delete project?.address;
+        }
+        logger.info("Projects related to current Campaign : " + JSON.stringify(projects));
+        const projectUpdateBody = {
+            RequestInfo: request?.body?.RequestInfo,
+            Projects: projects
+        }
+        const projectUpdateResponse = await httpRequest(config?.host?.projectHost + config?.paths?.projectUpdate, projectUpdateBody);
+        if (projectUpdateResponse?.Project && Array.isArray(projectUpdateResponse?.Project) && projectUpdateResponse?.Project?.length == projects?.length) {
+            logger.info("Project dates updated successfully")
+        }
+        else {
+            throwError("PROJECT", 500, "PROJECT_UPDATE_ERROR")
+        }
     }
 }
 
@@ -1148,7 +1150,7 @@ async function getCodesTarget(request: any, localizationMap?: any) {
 
 async function createProject(request: any, actionUrl: any, localizationMap?: any) {
     logger.info("Create Projects started for the given Campaign")
-    var { tenantId, boundaries, projectType, projectId, startDate, endDate } = request?.body?.CampaignDetails;
+    var { tenantId, boundaries, projectType, projectId } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
         const projectTypeResponse = await getMDMSV1Data({}, 'HCM-PROJECT-TYPES', "projectTypes", tenantId);
         var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails, projectTypeResponse);
@@ -1179,9 +1181,6 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
             await projectCreate(projectCreateBody, request)
         }
     }
-    else if ((startDate || endDate) && projectId && actionUrl == "update") {
-        await updateProjectDates(request);
-    }
 }
 
 
@@ -1194,6 +1193,7 @@ async function processAfterPersist(request: any, actionInUrl: any) {
             await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
         }
         else {
+            await updateProjectDates(request, actionInUrl);
             await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
         }
     } catch (error: any) {

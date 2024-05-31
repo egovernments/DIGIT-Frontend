@@ -478,7 +478,8 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
       ""
     ]
   })
-  logger.info("facilities : " + JSON.stringify(facilities));
+  logger.info("facilities generation done ");
+  logger.debug(`facility response ${JSON.stringify(facilities)}`)
   const localizedFacilityTab = getLocalizedName(config?.facility?.facilityTab, localizationMap);
   const facilitySheetData: any = await createExcelSheet(facilities, localizedHeaders, localizedFacilityTab);
   return facilitySheetData;
@@ -615,7 +616,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any, 
 async function generateUserAndBoundarySheet(request: any, localizationMap?: { [key: string]: string }) {
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
-  const schema = await callMdmsSchema(request, config?.values?.moduleName, "facility", tenantId);
+  const schema = await callMdmsSchema(request, config?.values?.moduleName, "user", tenantId);
   const headers = schema?.required;
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
   const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
@@ -738,19 +739,32 @@ function matchData(request: any, datas: any, searchedDatas: any, createAndSearch
   request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
 }
 
-function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
+function modifyBoundaryData(boundaryData: any[], localizationMap?: any) {
   // Initialize arrays to store data
   const withBoundaryCode: { key: string, value: string }[][] = [];
   const withoutBoundaryCode: { key: string, value: string }[][] = [];
+  
+  // Get the key for the boundary code
+  const boundaryCodeKey = getLocalizedName(config?.boundary?.boundaryCode, localizationMap);
+
   // Process each object in boundaryData
   boundaryData.forEach((obj: any) => {
     // Convert object entries to an array of {key, value} objects
     const row: any = Object.entries(obj)
-      .filter(([key, value]) => value !== null && value !== undefined)
-      .map(([key, value]) => ({ key, value }));
+      .filter(([key, value]: [string, any]) => value !== null && value !== undefined) // Filter out null or undefined values
+      .map(([key, value]: [string, any]) => {
+        // Check if the current key is the "Boundary Code" key
+        if (key === boundaryCodeKey) {
+          // Keep the "Boundary Code" value as is without transformation
+          return { key, value: value.toString() };
+        } else {
+          // Transform other values
+          return { key, value: value.toString().replace(/_/g, ' ').trim() };
+        }
+      });
 
     // Determine whether the object has a boundary code property
-    const hasBoundaryCode = obj.hasOwnProperty(getLocalizedName(config?.boundary?.boundaryCode, localizationMap));
+    const hasBoundaryCode = obj.hasOwnProperty(boundaryCodeKey);
 
     // Push the row to the appropriate array based on whether it has a boundary code property
     if (hasBoundaryCode) {
@@ -763,7 +777,6 @@ function modifyBoundaryData(boundaryData: unknown[], localizationMap?: any) {
   // Return the arrays
   return [withBoundaryCode, withoutBoundaryCode];
 }
-
 
 
 async function getDataFromSheet(request: any, fileStoreId: any, tenantId: any, createAndSearchConfig: any, optionalSheetName?: any, localizationMap?: { [key: string]: string }) {
