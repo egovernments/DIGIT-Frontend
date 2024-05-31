@@ -736,7 +736,6 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
 const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
-  debugger
   if (rules && rules.filter((item) => item.active).length !== 0) return rules;
   let newRules = [];
   const ruleOuputList = rules ? rules.map((item) => item?.output) : [];
@@ -776,7 +775,6 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
 };
 
 const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
-  debugger
   if (rules && rules.length === 0) return;
   let newRules = [];
   let outputs = [];
