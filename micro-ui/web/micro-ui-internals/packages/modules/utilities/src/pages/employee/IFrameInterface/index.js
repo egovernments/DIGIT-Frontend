@@ -76,6 +76,12 @@ const IFrameInterface = (props) => {
             if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
+              console.log("url here",url)
+              console.log("typof url", typeof url);
+              if(typeof url === "string" && url?.includes("vector.maps.elastic.co")){
+                console.log("url vector",url)
+                options.headers['mode'] = 'no-cors';
+              }
               options.headers['Authorization'] = `${accessToken}`;
             }
           }
