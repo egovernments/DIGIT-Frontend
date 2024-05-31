@@ -4,6 +4,7 @@ import { getFormattedStringForDebug, logger } from '../utils/logger'; // Importi
 import { producer } from './Producer'; // Importing producer from the Producer module
 import { processCampaignMapping } from '../utils/campaignMappingUtils';
 import { enrichAndPersistCampaignWithError } from '../utils/campaignUtils';
+import { throwError } from 'server/utils/genericUtils';
 
 
 
@@ -94,7 +95,7 @@ async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
         });
     } catch (error) {
         logger.error(`KAFKA :: PRODUCER :: Exception caught: ${JSON.stringify(error)}`);
-        throw error; // Re-throw the error after logging it
+        throwError("COMMON",400,"KAKFA_ERROR","Some error occured in kafka"); // Re-throw the error after logging it
     }
 }
 
