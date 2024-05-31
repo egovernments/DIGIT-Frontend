@@ -194,7 +194,7 @@ async function processCampaignMapping(messageObject: any) {
             var retry = 30;
             while (retry--) {
                 const response = await searchResourceDetailsById(resourceDetailId, messageObject);
-                logger.info(`response for resourceDetailId : ${resourceDetailId} `);
+                logger.info(`response for resourceDetailId: ${resourceDetailId}`);
                 logger.debug(` response : ${getFormattedStringForDebug(response)}`)
                 if (response?.status == "invalid") {
                     logger.error(`resource with id ${resourceDetailId} is invalid`);
