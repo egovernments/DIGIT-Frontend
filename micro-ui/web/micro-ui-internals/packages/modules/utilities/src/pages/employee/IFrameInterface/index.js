@@ -79,7 +79,7 @@ const IFrameInterface = (props) => {
               options.headers['Authorization'] = `${accessToken}`;
               console.log("url here",url)
               if(url?.includes("vector.maps.elastic.co")){
-                options.headers['mode'] = `no-cors`;
+                options.headers['mode'] = 'no-cors';
               }
             }
           }
