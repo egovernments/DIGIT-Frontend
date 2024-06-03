@@ -411,7 +411,7 @@ const fetchData = (state, campaignType) => {
 };
 const hypothesisCheck = (hypothesis, validList) => {
   if (hypothesis && Array.isArray(hypothesis) && hypothesis.length !== 0 && validList && Array.isArray(validList) && validList.length !== 0) {
-    return hypothesis.every((item) => validList.includes(item.key));
+    return hypothesis.filter(item=>item.active).every((item) => validList.includes(item.key));
   }
   return false;
 };
@@ -424,7 +424,7 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
     Array.isArray(ruleOuputList) &&
     ruleOuputList.length !== 0
   ) {
-    return rules.every((item) => ruleOuputList.includes(item.output));
+    return rules.filter(item=>item.active).every((item) => ruleOuputList.includes(item.output));
   }
   return false;
 };
@@ -451,7 +451,7 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
     ruleOutputCheck(data?.PlanConfiguration?.operations, rulesOutputs) &&
     ruleHypothesisCheck(
       data?.PlanConfiguration?.operations,
-      data?.PlanConfiguration?.assumptions?.map((item) => item.key)
+      data?.PlanConfiguration?.assumptions?.filter(item=>item.active)?.map((item) => item.key)
     ) &&
     uploadCheck(data?.PlanConfiguration?.files, uploadList);
   return checks;

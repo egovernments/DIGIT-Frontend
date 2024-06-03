@@ -20,7 +20,6 @@ import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
 import { createTemplate } from "../utils/createTemplate";
 import XLSX from "xlsx";
-
 const page = "upload";
 const commonColumn = "boundaryCode";
 
@@ -1438,7 +1437,6 @@ const downloadTemplate = async ({ campaignType, type, section, setToast, campaig
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
-
     let template = await createTemplate({
       hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
       hierarchyLevelName,
@@ -1448,11 +1446,15 @@ const downloadTemplate = async ({ campaignType, type, section, setToast, campaig
       tenentId: Digit.ULBService.getCurrentTenantId(),
       hierarchyType,
     });
+    const translatedTemplate = translateTemplate(template, t);
 
     const workbook = XLSX.utils.book_new();
 
-    template.forEach(({ sheetName, data }) => {
+    translatedTemplate.forEach(({ sheetName, data }) => {
       const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+      let columnCount = data?.[0]?.length || 0
+      const wscols =  Array(columnCount).fill({ width: 30 });
+      worksheet['!cols'] = wscols;
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     });
 
@@ -1461,13 +1463,51 @@ const downloadTemplate = async ({ campaignType, type, section, setToast, campaig
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = t(section)+".xlsx";
+    link.download = t(section) + ".xlsx";
     link.click();
     setLoaderActivation(false);
     URL.revokeObjectURL(url);
   } catch (error) {
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
+};
+
+const translateTemplate = (template, t) => {
+  // Initialize an array to hold the transformed result
+  const transformedResult = [];
+
+  // Iterate over each sheet in the divided data
+  for (const sheet of template) {
+    const sheetData = sheet.data;
+
+    // Find the index of the boundaryCode column in the header row
+    const boundaryCodeIndex = sheetData[0].indexOf(commonColumn);
+
+    const sheetName  = t(sheet.sheetName)
+    const transformedSheet = {
+      sheetName: sheetName.length > 31 ? sheetName.slice(0, 31) : sheetName,
+      data: [],
+    };
+
+    // Iterate over each row in the sheet data
+    for (const [rowIndex, row] of sheetData.entries()) {
+      // Transform each entity in the row using the transformFunction
+      const transformedRow = row.map((entity, index) => {
+        // Skip transformation for the boundaryCode column
+        if (index === boundaryCodeIndex && rowIndex !== 0) {
+          return entity;
+        } else {
+          return t(entity);
+        }
+      });
+      transformedSheet.data.push(transformedRow);
+    }
+
+    // Add the transformed sheet to the transformed result
+    transformedResult.push(transformedSheet);
+  }
+
+  return transformedResult;
 };
 
 // get schema for validation
