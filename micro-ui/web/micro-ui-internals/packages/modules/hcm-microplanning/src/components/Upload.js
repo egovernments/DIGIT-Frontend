@@ -266,7 +266,8 @@ const Upload = ({
       hierarchyType: campaignData?.hierarchyType,
       Schemas: validationSchemas,
       HierarchyConfigurations: state?.HierarchyConfigurations,
-      t
+      setLoaderActivation,
+      t,
     };
     downloadTemplate(downloadParams);
   };
@@ -1431,8 +1432,9 @@ const checkProjection = async (zip) => {
 };
 
 // Function to handle the template download
-const downloadTemplate = async ({campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t}) => {
+const downloadTemplate = async ({ campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, setLoaderActivation,t }) => {
   try {
+    setLoaderActivation(true);
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
@@ -1461,6 +1463,7 @@ const downloadTemplate = async ({campaignType, type, section, setToast, campaign
     link.href = url;
     link.download = t(section)+".xlsx";
     link.click();
+    setLoaderActivation(false);
     URL.revokeObjectURL(url);
   } catch (error) {
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });

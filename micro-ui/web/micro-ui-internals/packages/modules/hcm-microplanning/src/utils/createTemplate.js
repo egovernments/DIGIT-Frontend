@@ -113,7 +113,6 @@ const addBoundaryData = (xlsxData, boundaryData) => {
       while (item.length <= topIndex) {
         item.push("");
       }
-      debugger;
       item.push(item[itemLength - 1]);
     }
     else{

@@ -86,8 +86,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (!rules || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-        let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
-        isValid = isValid && rules.length !== 0;
+        let isValid = rules.filter((item) => item.active).every((item) =>
+          Object.values(item)
+            .every((data) => data !== "")
+        );
+        isValid = isValid && rules.filter((item) => item.active).length !== 0;
         if (isValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
@@ -154,6 +157,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       }
     }
     if (!AutoFilledRuleConfigurationsList || !outputs || !hypothesisAssumptions || !schemas) return;
+
     filteredRules = setAutoFillRules(
       AutoFilledRuleConfigurationsList,
       filteredRules,
@@ -600,7 +604,15 @@ const Example = ({ exampleOption, t }) => {
 const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs) => {
   setRules((previous) => {
     if (!previous.length) return [];
-    const filteredData = previous.filter((data) => data.id !== item.id);
+    // const filteredData = previous.filter((data) => data.id !== item.id);
+    previous = previous.map((e) => {
+      if (e.input === item.output) {
+        return { ...e, input: "" };
+      }
+      return e;
+    });
+    const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
+    const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
     return filteredData || [];
   });
   if (item && item.output) {
@@ -621,7 +633,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   useEffect(() => {
     if (item) {
       if (outputs && outputs.some((e) => e === item?.input)) {
-        if (rules.some((e) => e?.output === item?.input)) setSelected({ code: item[toChange] });
+        if (rules.filter(item=>item.active).some((e) => e?.output === item?.input)) setSelected({ code: item[toChange] });
       } else setSelected({ code: item[toChange] });
     }
   }, [item]);
@@ -643,7 +655,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   const selectChangeHandler = useCallback(
     (e) => {
       if (e.code === "SELECT_OPTION") return;
-      const existingEntry = rules.find((item) => item[toChange] === e.code);
+      const existingEntry = rules.find((item) => item.active && item[toChange] === e.code);
       if (existingEntry && unique) return;
       const newDataSegment = { ...item };
       newDataSegment[toChange] = e.code;
@@ -703,7 +715,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
-  for (const value of microplanData?.upload?.filter((value) => value?.error === null) || []) {
+  for (const value of microplanData?.upload?.filter((value) =>  value?.active && value?.error === null) || []) {
     sortData.push({ section: value?.section, fileType: value?.fileType });
   }
   const filteredSchemas =
@@ -729,21 +741,25 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
 const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
-  if (rules && rules.length !== 0) return rules;
+  if (rules && rules.filter((item) => item.active).length !== 0) return rules;
   let newRules = [];
-  const ruleOuputList = rules ? rules.map((item) => item?.output) : [];
+  const ruleOuputList = rules ? rules.filter((item) => item.active).map((item) => item?.output) : [];
   let rulePlusInputs;
   if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
   else rulePlusInputs = inputs;
-  autofillData.forEach((item) => {
+  for (const item of autofillData) {
     if (
       ruleOuputList?.includes(item?.output) ||
-      !outputs?.includes(item?.output) ||
-      !rulePlusInputs.includes(item?.input) ||
-      !operators?.includes(item?.operator) ||
-      !hypothesisAssumptionsList?.includes(item?.assumptionValue)
+      (outputs && !outputs.includes(item?.output)) ||
+      (rulePlusInputs && !rulePlusInputs.includes(item?.input)) ||
+      (operators && !operators.includes(item?.operator)) ||
+      (hypothesisAssumptionsList && !hypothesisAssumptionsList.includes(item?.assumptionValue)) ||
+      !outputs ||
+      !rulePlusInputs ||
+      !operators ||
+      !hypothesisAssumptionsList
     )
-      return;
+      continue;
     if (!item["id"]) {
       let uuid = uuidv4();
       item["id"] = uuid;
@@ -752,7 +768,7 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
     newRules.push(item);
     rulePlusInputs?.push(item?.output);
     ruleOuputList?.push(item?.output);
-  });
+  }
   if (newRules.length !== 0) {
     let newOutputs = [];
     outputs.forEach((e) => {
@@ -763,16 +779,18 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
     setOutputs(newOutputs);
     setInputs(rulePlusInputs);
     // setRules((previous) => [...previous, ...newRules]);
-    return newRules;
+    return [...(rules ? rules : []), ...newRules];
   }
 };
 
 const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
-  if (rules && rules.length === 0) return;
+  if (rules && rules.length === 0) return [];
   let newRules = [];
   let outputs = [];
   rules.forEach((item, index) => {
-    if (!hypothesisAssumptions?.includes(item?.assumptionValue)) return;
+    if (item.active && !hypothesisAssumptions?.includes(item?.assumptionValue)) {
+      item.active = false;
+    }
     if (!item["id"]) {
       let uuid = uuidv4();
       item["id"] = uuid;
@@ -786,6 +804,6 @@ const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
   //   item["id"] = newRules.length;
   //   filteredRules.push(item);
   // });
-  return newRules;
+  return newRules || [];
 };
 export default RuleEngine;
