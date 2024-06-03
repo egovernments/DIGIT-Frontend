@@ -6,7 +6,7 @@ import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } fr
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
 import { calculateKeyIndex, getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
-import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName, getTargetBoundariesRelatedToCampaignId } from "../utils/campaignUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getConfigurableColumnHeadersBasedOnCampaignType, getLocalizedName, getTargetBoundariesRelatedToCampaignId } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../config/models/searchCampaignDetails";
@@ -473,7 +473,9 @@ async function validateCreateRequest(request: any) {
             const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
             const index = localizedHierarchy.indexOf(getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap));
             let expectedHeadersForTargetSheet = index !== -1 ? localizedHierarchy.slice(index) : throwError("COMMON", 400, "VALIDATION_ERROR", `${getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap)} level not present in the hierarchy`);
-            expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheet, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), getLocalizedName("HCM_ADMIN_CONSOLE_TARGET", localizationMap)]
+            const columnFromSchemaOfTargetTemplate = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+            console.log(columnFromSchemaOfTargetTemplate,"ssssssssssssssssssss")
+            expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheet, ...columnFromSchemaOfTargetTemplate]
             // validateForRootElementExists(sheetData, hierachy, mainSheetName);
             validateTabsWithTargetInTargetSheet(request, targetWorkbook, expectedHeadersForTargetSheet);
         }

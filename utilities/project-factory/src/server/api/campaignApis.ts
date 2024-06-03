@@ -834,20 +834,18 @@ const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, get
   }
   return columnsToValidate;
 }
-async function getFiltersFromCampaignSearchResponse(request: any) {
-  logger.info(`searching for campaign details to get the filters for boundary generation`);
-  const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
-  const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
-  const requestBody = { ...requestInfo, ...campaignDetails };
-  const req: any = replicateRequest(request, requestBody)
-  const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
-  const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries?.map((ele: any) => ({ ...ele, boundaryType: ele?.type }));
-  if (!boundaries) {
-    logger.info(`no boundaries found so considering the complete hierarchy`);
-    return { Filters: null };
+async function getCampaignSearchResponse(request: any) {
+  try {
+    logger.info(`searching for campaign details to get the filters for boundary generation`);
+    const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
+    const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
+    const requestBody = { ...requestInfo, ...campaignDetails };
+    const req: any = replicateRequest(request, requestBody)
+    const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
+    return projectTypeSearchResponse;
+  } catch (error: any) {
+    throwError("COMMON", 400, "RESPONSE_NOT_FOUND_ERROR", error?.message)
   }
-  logger.info(`boundaries found for filtering`);
-  return { Filters: { boundaries: boundaries } };
 }
 
 export {
@@ -865,6 +863,6 @@ export {
   getHierarchy,
   getHeadersOfBoundarySheet,
   handleResouceDetailsError,
-  getFiltersFromCampaignSearchResponse,
+  getCampaignSearchResponse,
   confirmProjectParentCreation
 };

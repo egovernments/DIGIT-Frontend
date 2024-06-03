@@ -6,8 +6,8 @@ import { httpRequest } from "../utils/request"; // Import httpRequest function f
 import { getFormattedStringForDebug, logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, findMapValue, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
-import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getFiltersFromCampaignSearchResponse, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
+import { getCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
 import { getBoundaryTabName } from '../utils/boundaryUtils';
@@ -661,11 +661,12 @@ async function getBoundarySheetData(
   } else {
     // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
     const responseFromCampaignSearch =
-      await getFiltersFromCampaignSearchResponse(request);
-    if (responseFromCampaignSearch?.Filters != null) {
+      await getCampaignSearchResponse(request);
+    const FiltersFromCampaignId = getFiltersFromCampaignSearchResponse(responseFromCampaignSearch)
+    if (FiltersFromCampaignId?.Filters != null) {
       const filteredBoundaryData = await generateFilteredBoundaryData(
         request,
-        responseFromCampaignSearch
+        FiltersFromCampaignId
       );
       return await getDataSheetReady(
         filteredBoundaryData,
@@ -677,6 +678,7 @@ async function getBoundarySheetData(
     }
   }
 }
+
 async function createStaff(resouceBody: any) {
   // Create staff
   const staffCreateUrl =
@@ -1070,26 +1072,31 @@ async function callMdmsData(
 }
 
 
+
 async function callMdmsV2Data(
   request: any,
   moduleName: string,
   masterName: string,
-  tenantId: string
-) {
-  const { RequestInfo = {} } = request?.body || {};
-  const requestBody = {
-    RequestInfo,
-    MdmsCriteria: {
-      tenantId: tenantId,
-      filters:{},
-      schemaCode: moduleName+"."+masterName,
-      limit:10,
-      offset:0
-    },
-  };
-  const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
-  const response = await httpRequest(url, requestBody, { tenantId: tenantId });
-  return response;
+  tenantId: string, filters: any) {
+  try {
+    const { RequestInfo = {} } = request?.body || {};
+    const requestBody = {
+      RequestInfo,
+      MdmsCriteria: {
+        tenantId: tenantId,
+        filters,
+        schemaCode: moduleName + "." + masterName,
+        limit: 10,
+        offset: 0
+      },
+    };
+    console.log(requestBody,"booooooooooooooo")
+    const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
+    const response = await httpRequest(url, requestBody, { tenantId: tenantId });
+    return response;
+  } catch (error: any) {
+    throwError("MDMS", 400, "MDMS_DATA_NOT_FOUND_ERROR", `Mdms Data not found for ${moduleName}"-"${masterName}`)
+  }
 }
 
 async function callMdmsSchema(

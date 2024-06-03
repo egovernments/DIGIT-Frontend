@@ -35,20 +35,25 @@ const downloadDataService = async (request: express.Request) => {
 }
 
 const getBoundaryDataService = async (
-    request: express.Request
-) => {
-    const { hierarchyType } = request?.query;
-    const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
-    const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
-    const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
-    // const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId || request?.query?.tenantId || 'mz');
-    // Retrieve boundary sheet data
-    const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
-    // Create and upload file
-    const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
-    // Return boundary file details
-    logger.info("RETURNS THE BOUNDARY RESPONSE");
-    return BoundaryFileDetails;
+    request: express.Request) => {
+    try {
+        const { hierarchyType } = request?.query;
+        const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
+        const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
+        const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
+        // const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId || request?.query?.tenantId || 'mz');
+        // Retrieve boundary sheet data
+        const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
+        // Create and upload file
+        const BoundaryFileDetails: any = await createAndUploadFile(boundarySheetData?.wb, request);
+        // Return boundary file details
+        logger.info("RETURNS THE BOUNDARY RESPONSE");
+        return BoundaryFileDetails;
+    } catch (e: any) {
+        logger.error(String(e))
+        // Handle errors and send error response
+        throw (e);
+    }
 };
 
 

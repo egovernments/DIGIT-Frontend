@@ -4,11 +4,11 @@ import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from "../kafka/Listener";
 import { generateHierarchyList, getAllFacilities, getHierarchy } from "../api/campaignApis";
-import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsSchema, callMdmsV2Data } from "../api/genericApis";
+import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsSchema } from "../api/genericApis";
 import * as XLSX from 'xlsx';
 import FormData from 'form-data';
 import { logger } from "./logger";
-import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration, getLocalizedName } from "./campaignUtils";
+import { convertSheetToDifferentTabs, getBoundaryDataAfterGeneration, getConfigurableColumnHeadersBasedOnCampaignType, getLocalizedName } from "./campaignUtils";
 import Localisation from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
@@ -381,6 +381,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       // get boundary data from boundary relationship search api
       logger.info("Generating Boundary Data")
       const result = await getBoundaryDataService(request);
+      console.log("hhhhhhhhhhhhhhhhh")
       logger.info(`Boundary data generated successfully: ${JSON.stringify(result)}`);
       let updatedResult = result;
       // get boundary sheet data after being generated
@@ -408,7 +409,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       request.body.generatedResource = finalResponse;
     }
   } catch (error: any) {
-    console.log(error)
+    console.log(error, "11111")
     handleGenerateError(newEntryResponse, generatedResource, error);
   }
 }
@@ -813,33 +814,14 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   const startIndex = boundaryType ? hierarchy.indexOf(boundaryType) : -1;
   const reducedHierarchy = startIndex !== -1 ? hierarchy.slice(startIndex) : hierarchy;
   const modifiedReducedHierarchy = reducedHierarchy.map(ele => `${request?.query?.hierarchyType}_${ele}`.toUpperCase())
-
-  // Call the MDMSV2 API to get data
-const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, type, request?.query?.tenantId);
-
-// Extract columns from the response
-const columns = mdmsResponse?.mdms?.[0]?.data?.fields;
-
-// Sort the columns array based on the order number
-columns?.sort((columnA: any, columnB: any) => columnA.orderNo - columnB.orderNo);
-
-// Extract the names of columns and insert them into an array
-const sortedColumnNames = columns?.map((column: any) => column.name);
-
-// Get localized headers based on the column names
-const headerColumnsAfterHierarchy = getLocalizedHeaders(sortedColumnNames, localizationMap);
-
-// Logging
-logger.info("MDMS data fetched successfully.");
-logger.debug("Sorted columns:", columns);
-logger.debug("Sorted column names:", sortedColumnNames);
-logger.debug("Headers after hierarchy:", headerColumnsAfterHierarchy);
-
+  // get Campaign Details from Campaign Search Api
+  const configurableColumnHeadersBasedOnCampaignType = await getConfigurableColumnHeadersBasedOnCampaignType(request, localizationMap);
+  console.log(configurableColumnHeadersBasedOnCampaignType,"confiiiiiiiiiiiiiiiiiiii")
 
   const headers = (type !== "facilityWithBoundary" && type !== "userWithBoundary")
     ? [
       ...modifiedReducedHierarchy,
-      ...headerColumnsAfterHierarchy
+      ...configurableColumnHeadersBasedOnCampaignType
     ]
     : [
       ...modifiedReducedHierarchy,
