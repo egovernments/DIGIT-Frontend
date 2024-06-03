@@ -529,9 +529,14 @@ const DataPreview = memo(
                     key={cellIndex}
                     style={{
                       ...(rowData[cellIndex] || rowData[cellIndex] === 0 ? (!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}) : {}),
-                      ...(userEditedResources?.[rowData?.[conmmonColumnIndex]]?.[header] ? { backgroundColor: "lightgreen" } : {}),
+                      ...(userEditedResources?.[rowData?.[conmmonColumnIndex]]?.[header] ||
+                      userEditedResources?.[rowData?.[conmmonColumnIndex]]?.[header] === 0
+                        ? { backgroundColor: "rgba(244, 119, 56, 0.12)" }
+                        : {}),
                     }}
                   >
+                    {cellIndex==0 && userEditedResources?.[rowData?.[conmmonColumnIndex]] && Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !==0 && <div className="edited-row-marker"></div>}
+
                     {rowData[cellIndex] || rowData[cellIndex] === 0 ? rowData[cellIndex] : t("NO_DATA")}
                   </td>
                 ));
@@ -541,6 +546,9 @@ const DataPreview = memo(
                     onDoubleClick={() => {
                       rowClick(rowIndex + 1);
                     }}
+                    // style={{...(userEditedResources?.[rowData?.[conmmonColumnIndex]] && Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !==0
+                    //     ? { borderL: "1px solid rgba(244, 119, 56, 0.12)" }
+                    //     : {}),}}
                   >
                     {rowDataList}
                   </tr>
@@ -1015,7 +1023,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
     if (!conmmonColumnData) return;
     if (isNaN(value) || (!isFinite(value) && value !== "")) return;
     let changedDataAgainstBoundaryCode = tempResourceChanges?.[conmmonColumnData] || {};
-    changedDataAgainstBoundaryCode[item] = value == "" ? undefined : value;
+    changedDataAgainstBoundaryCode[item] = value == "" ? undefined : parseFloat(value);
     setTempResourceChanges((previous) => ({ ...previous, [conmmonColumnData]: changedDataAgainstBoundaryCode }));
   };
 
@@ -1070,7 +1078,11 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                 <td className="new-value no-left-padding">
                   <TextInput
                     name={"hyopthesis_" + index}
-                    value={tempResourceChanges?.[conmmonColumnData]?.[item] || ""}
+                    value={
+                      tempResourceChanges?.[conmmonColumnData]?.[item] || tempResourceChanges?.[conmmonColumnData]?.[item] === 0
+                        ? tempResourceChanges[conmmonColumnData][item]
+                        : ""
+                    }
                     type="text"
                     style={{ margin: 0 }}
                     t={t}

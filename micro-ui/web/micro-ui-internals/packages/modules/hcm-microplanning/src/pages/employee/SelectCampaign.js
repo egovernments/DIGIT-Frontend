@@ -200,7 +200,8 @@ const SelectCampaign = () => {
   const history = useHistory();
 
   const onClickRow = (row) => {
-    history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`);
+    // history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`);
+    history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
   };
 
   const SelectCampaignSession = Digit.Hooks.useSessionStorage("SELECT_CAMPAIGN_SESSION", {});
