@@ -86,11 +86,8 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (!rules || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-        let isValid = rules.filter((item) => item.active).every((item) =>
-          Object.values(item)
-            .every((data) => data !== "")
-        );
-        isValid = isValid && rules.filter((item) => item.active).length !== 0;
+        const activeRules = rules.filter((item) => item.active);
+        const isValid = activeRules.every((item) => Object.values(item).every((data) => data !== "")) && activeRules.length !== 0;
         if (isValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
@@ -633,7 +630,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   useEffect(() => {
     if (item) {
       if (outputs && outputs.some((e) => e === item?.input)) {
-        if (rules.filter(item=>item.active).some((e) => e?.output === item?.input)) setSelected({ code: item[toChange] });
+        if (rules.filter(item => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
       } else setSelected({ code: item[toChange] });
     }
   }, [item]);

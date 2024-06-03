@@ -121,8 +121,8 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   );
 
   const validateAssumptions = useCallback((assumptions) => {
-    return assumptions.filter(subItem => subItem.active).every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
-  }, [assumptions]);
+    return assumptions.every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
+  }, []);
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("false");
@@ -486,7 +486,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       });
 
       setOptions((previous) => {
-        let newOptions = previous.filter((item) =>  item.active && item !== e?.code);
+        let newOptions = previous.filter((item) =>  item?.active && item !== e?.code);
         if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
         return newOptions;
       });
