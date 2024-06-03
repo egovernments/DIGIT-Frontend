@@ -229,11 +229,13 @@ export const UICustomizations = {
   },
   SearchCampaign: {
     preProcess: (data, additionalDetails) => {
+      const userInfo = Digit.SessionStorage.get("User")?.info;
       const { campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {};
       data.body.CampaignDetails.pagination = data?.state?.tableForm
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
+      data.body.CampaignDetails.createdBy = userInfo.uuid;
       data.body.CampaignDetails.campaignName = campaignName;
       data.body.CampaignDetails.status = ["drafted"]
       if (startDate) {

@@ -579,13 +579,15 @@ $border-color: rgba(214, 213, 212, 1);
     display: block;
     overflow: auto;
     padding-bottom: 0;
+    position: relative;
 
     @include select-dropdown;
 
     table {
-      background-color: rgb(0, 0, 0, 0);
+      background-color: rgb(0, 0, 0, 0) !important;
       width: 100%;
-
+      border-collapse: collapse;
+      
       .select-dropdown {
         background-color: rgb(0, 0, 0, 0);
         font-family: Roboto;
@@ -594,22 +596,32 @@ $border-color: rgba(214, 213, 212, 1);
         text-align: left;
       }
 
-      th {
+      thead {
+        position: sticky !important;
+        z-index: 100;
+        top:0;
+        background-color: rgba(250, 250, 250);
+        padding: 0;
+      }
+
+      th{
         width: 50%;
         font-weight: 700;
         font-size: 1rem;
         padding: 1.5rem;
         margin: 0;
         text-align: left;
+        border-bottom: 0.063rem solid rgba(214, 213, 212, 1) ;
       }
-
+      
       td {
         width: 50%;
         font-weight: 400;
         font-size: 1rem;
         padding: 1.5rem;
         margin: 0;
-
+        border-top: 0 !important;
+        border-bottom: 0.063rem solid rgba(214, 213, 212, 1) ;
         p {
           max-width: 20.594rem;
           font-weight: 700;

@@ -128,13 +128,14 @@ const addBoundaryData = (xlsxData, boundaryData) => {
   return newXlsxData;
 };
 
-
-const fillDataWithBlanks = (data,tillRow)=>{
-  // Ensure all rows are of the same length by filling them with empty strings
-  data = data.concat(new Array(tillRow - data.length).fill([]));
+const fillDataWithBlanks = (data, tillRow) => {
+  while (data.length < tillRow) {
+    data.push([]);
+  }
+  
   const maxLength = Math.max(...data.map(row => row.length));
   return data.map(row => [...row, ...new Array(maxLength - row.length).fill('')]);
-}
+};
 
 
 /**

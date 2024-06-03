@@ -653,7 +653,10 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
     (e) => {
       if (e.code === "SELECT_OPTION") return;
       const existingEntry = rules.find((item) => item.active && item[toChange] === e.code);
-      if (existingEntry && unique) return;
+      if (existingEntry && unique) {
+        console.error("Attempted to add a duplicate entry where uniqueness is required.");
+        return;
+      }
       const newDataSegment = { ...item };
       newDataSegment[toChange] = e.code;
       setRules((previous) => {
@@ -684,16 +687,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   );
 
   return (
-    // <select value={selected} onChange={selectChangeHandler} disabled={disabled}>
-    //   <option value="" disabled>
-    //     {t("SELECT_OPTION")}
-    //   </option>
-    //   {filteredOptions.map((item, index) => (
-    //     <option key={item} id={index} value={item}>
-    //       {t(item)}
-    //     </option>
-    //   ))}
-    // </select>
+    <div title={selected?.code ? t(selected.code) : undefined}>
     <Dropdown
       variant="select-dropdown"
       t={t}
@@ -704,6 +698,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
       optionKey="code"
       placeholder={t("SELECT_OPTION")}
     />
+    </div>
   );
 });
 

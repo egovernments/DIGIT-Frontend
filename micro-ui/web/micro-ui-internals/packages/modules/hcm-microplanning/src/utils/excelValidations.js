@@ -48,7 +48,7 @@ export const excelValidations = (data, schemaData, t) => {
     let errors = {};
     let hasDataErrors = "false"; // true, false, missing_properties, unknown
     let missingColumnsList = new Set();
-    let errorMessages = [];
+    let errorMessages = {};
 
     for (let i = 0; i < validateExcel.errors.length; i++) {
       let tempErrorStore = "";
@@ -60,11 +60,11 @@ export const excelValidations = (data, schemaData, t) => {
           break;
         case "type":
           {
-          const instancePathType = validateExcel.errors[i].instancePath.split("/");
-          tempErrorStore = locationDataColumns.includes(instancePathType[instancePathType.length - 1])
-            ? "ERROR_INCORRECT_LOCATION_COORDINATES"
-            : "ERROR_DATA_TYPE";
-          hasDataErrors = "true";
+            const instancePathType = validateExcel.errors[i].instancePath.split("/");
+            tempErrorStore = locationDataColumns.includes(instancePathType[instancePathType.length - 1])
+              ? "ERROR_INCORRECT_LOCATION_COORDINATES"
+              : "ERROR_DATA_TYPE";
+            hasDataErrors = "true";
           }
           break;
         case "required":
@@ -82,7 +82,7 @@ export const excelValidations = (data, schemaData, t) => {
           hasDataErrors = "true";
           break;
         case "pattern":
-          tempErrorStore = "ERROR_VALUE_NOT_ALLOWED"
+          tempErrorStore = "ERROR_VALUE_NOT_ALLOWED";
           hasDataErrors = "true";
           break;
         default:
@@ -106,20 +106,27 @@ export const excelValidations = (data, schemaData, t) => {
 
       switch (hasDataErrors) {
         case "true":
-          errorMessages = [...new Set([...errorMessages,(t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"))])];
+          errorMessages = { dataError: t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") };
           break;
         case "unknown":
-          errorMessages= [...new Set([...errorMessages,(t("ERROR_UNKNOWN"))])];
+          errorMessages = { unkown: t("ERROR_UNKNOWN") };
           break;
         case "missing_properties":
-          errorMessages= [...new Set([...errorMessages,(t("ERROR_MISSING_PROPERTY",{properties: [...missingColumnsList].map(item=>t(item)).join(", ")}))])];
+          errorMessages = { missingProperty: t("ERROR_MISSING_PROPERTY", { properties: [...missingColumnsList].map((item) => t(item)).join(", ") }) };
           break;
         case "false":
           break;
       }
     }
 
-    return { valid: !hasDataErrors, message: errorMessages, errors, validationError: validateExcel.errors };
+    ajv.removeSchema();
+
+    return {
+      valid: !hasDataErrors,
+      message: errorMessages ? [...new Set(Object.values(errorMessages))] : [],
+      errors,
+      validationError: validateExcel.errors,
+    };
   }
   ajv.removeSchema();
   return { valid };

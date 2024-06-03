@@ -160,28 +160,27 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
             ],
           },
         };
-    }
 
-    switch (hasDataErrors) {
-      case "true":
-        errorMessages = [...new Set([...errorMessages,(t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"))])];
-        break;
-      case "unknown":
-        errorMessages= [...new Set([...errorMessages,(t("ERROR_UNKNOWN"))])];
-        break;
-      case "missing_properties":
-        errorMessages= [...new Set([...errorMessages,t("ERROR_MISSING_PROPERTY", {properties:[...missingColumnsList].map(item=>t(item)).join(", ")})])];
-        break;
-      case "false":
-        break;
+        switch (hasDataErrors) {
+          case "true":
+            errorMessages = { ...errorMessages, dataError: t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") };
+            break;
+          case "unknown":
+            errorMessages = { ...errorMessages, unkown: t("ERROR_UNKNOWN") };
+            break;
+          case "missing_properties":
+            errorMessages = {...errorMessages, missingProperty: t("ERROR_MISSING_PROPERTY", { properties: [...missingColumnsList].map((item) => t(item)).join(", ") }) };
+            break;
+          case "false":
+            break;
+        }
     }
     
     ajv.removeSchema();
-
     return {
       valid: !hasDataErrors,
+      message: errorMessages ? [...new Set(Object.values(errorMessages))] : [],
       errors,
-      message: errorMessages,
       validationError: validateGeojson.errors,
     };
   }

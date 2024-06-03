@@ -10,7 +10,7 @@ const configs = {
     serviceName: "/project-factory/v1/project-type/search",
     requestParam: {},
     requestBody: {},
-    minParametersForSearchForm: 1,
+    minParametersForSearchForm: 0,
     masterName: "commonUiConfig",
     moduleName: "SearchCampaign",
     tableFormJsonPath: "requestBody.CampaignDetails.pagination",
