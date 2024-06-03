@@ -654,10 +654,8 @@ async function createStaff(resouceBody: any) {
   // Create staff
   const staffCreateUrl =
     `${config.host.projectHost}` + `${config.paths.staffCreate}`;
-  logger.info("Project Staff Creation url " + staffCreateUrl);
-  logger.debug(
-    "Project Staff Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+    logger.info("Project staff Creation : API :"+ config.paths.staffCreate);
+  
   const staffResponse = await httpRequest(
     staffCreateUrl,
     resouceBody,
@@ -682,10 +680,8 @@ async function createProjectResource(resouceBody: any) {
   // Create project resources
   const projectResourceCreateUrl =
     `${config.host.projectHost}` + `${config.paths.projectResourceCreate}`;
-  logger.info("Project Resource Creation url " + projectResourceCreateUrl);
-  logger.debug(
-    "Project Resource Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+  logger.info("Project Resource Creation : API : "+ config.paths.projectResourceCreate);
+  
   const projectResourceResponse = await httpRequest(
     projectResourceCreateUrl,
     resouceBody,
@@ -710,10 +706,8 @@ async function createProjectFacility(resouceBody: any) {
   // Create project facilities
   const projectFacilityCreateUrl =
     `${config.host.projectHost}` + `${config.paths.projectFacilityCreate}`;
-  logger.info("Project Facility Creation url " + projectFacilityCreateUrl);
-  logger.debug(
-    "Project Facility Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+  logger.info("Project Facility Creation  : API :"+ config.paths.projectFacilityCreate);
+
   const projectFacilityResponse = await httpRequest(
     projectFacilityCreateUrl,
     resouceBody,
@@ -796,6 +790,7 @@ async function createRelatedEntity(
   for (const resource of resources) {
     const type = resource?.type;
     for (const resourceId of resource?.resourceIds) {
+      logger.info(`creating project ${type} mapping for project : ${projectId} and resourceId ${resourceId}`);
       if (type === "staff") {
         promises.push(createStaffHelper(resourceId, projectId, resouceBody, tenantId, startDate, endDate));
       } else if (type === "resource") {
@@ -1066,8 +1061,8 @@ async function callMdmsSchema(
 }
 
 async function getMDMSV1Data(request: any, moduleName: string, masterName: string, tenantId: string) {
-  const resp = await callMdmsData(request, moduleName, masterName, tenantId);
-  return resp;
+  const resp:any = await callMdmsData(request, moduleName, masterName, tenantId);
+  return resp?.["MdmsRes"]?.[moduleName]?.[masterName];
 }
 
 export {
