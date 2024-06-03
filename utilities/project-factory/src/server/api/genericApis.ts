@@ -1069,6 +1069,29 @@ async function callMdmsData(
   return response;
 }
 
+
+async function callMdmsV2Data(
+  request: any,
+  moduleName: string,
+  masterName: string,
+  tenantId: string
+) {
+  const { RequestInfo = {} } = request?.body || {};
+  const requestBody = {
+    RequestInfo,
+    MdmsCriteria: {
+      tenantId: tenantId,
+      filters:{},
+      schemaCode: moduleName+"."+masterName,
+      limit:10,
+      offset:0
+    },
+  };
+  const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
+  const response = await httpRequest(url, requestBody, { tenantId: tenantId });
+  return response;
+}
+
 async function callMdmsSchema(
   request: any,
   moduleName: string,
@@ -1119,5 +1142,6 @@ export {
   getTargetSheetData,
   callMdmsData,
   getMDMSV1Data,
-  callMdmsSchema
+  callMdmsSchema,
+  callMdmsV2Data
 }
