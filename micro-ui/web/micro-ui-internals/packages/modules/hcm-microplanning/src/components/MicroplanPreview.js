@@ -103,7 +103,10 @@ const MicroplanPreview = ({
         setFormulaConfiguration(formulaConfiguration);
       }
     }
-  }, [microplanData?.ruleEngine, microplanData?.hypothesis]);
+    if (microplanData?.microplanPreview?.userEditedResources) {
+      setUserEditedResources(microplanData?.microplanPreview?.userEditedResources);
+    }
+  }, []);
 
   // Fetch and assign MDMS data
   useEffect(() => {
@@ -141,9 +144,15 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(() => {
     if (!dataToShow || !setMicroplanData) return;
-    setMicroplanData((previous) => ({ ...previous, microplanPreview: { previewData: dataToShow } }));
+    setMicroplanData((previous) => ({
+      ...previous,
+      microplanPreview: {
+        previewData: dataToShow,
+        userEditedResources
+      }
+    }));
     setCheckDataCompletion("perform-action");
-  }, [dataToShow, setMicroplanData, setCheckDataCompletion]);
+  }, [dataToShow, setMicroplanData, userEditedResources, setCheckDataCompletion]);
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("perform-action");
@@ -824,8 +833,8 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
 
     // validating user input
-      if( e?.newValue.includes("+") || e?.newValue.includes("e") ) return
-      if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "") return;
+    if (e?.newValue.includes("+") || e?.newValue.includes("e")) return;
+    if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "") return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
     if (decimalIndex !== -1) {

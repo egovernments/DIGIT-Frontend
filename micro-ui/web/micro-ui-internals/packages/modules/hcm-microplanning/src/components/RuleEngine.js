@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
-import { ModalWrapper } from "./Modal";
-import { ButtonType1, CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown, Modal } from "@egovernments/digit-ui-components";
+import { ModalHeading } from "./CommonComponents";
+import { Modal } from "@egovernments/digit-ui-react-components";
+import { Dropdown } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -86,7 +86,11 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (!rules || !setMicroplanData) return;
       if (check) {
         setMicroplanData((previous) => ({ ...previous, ruleEngine: rules }));
-        let isValid = rules.every((item) => Object.values(item).every((data) => data !== ""));
+        let isValid = rules.every((item) =>
+          Object.values(item)
+            .filter((item) => item.active)
+            .every((data) => data !== "")
+        );
         isValid = isValid && rules.length !== 0;
         if (isValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
@@ -110,7 +114,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     if (!state) return;
     let schemas = state?.Schemas;
     let hypothesisAssumptions = [];
-    microplanData?.hypothesis?.forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
+    microplanData?.hypothesis?.filter((item) => item.active).forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
     let ruleConfigureOutput = state?.RuleConfigureOutput;
     let UIConfiguration = state?.UIConfiguration;
     let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
@@ -147,13 +151,14 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
 
     let filteredRules = [];
     if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
-      const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.key !== "").map((item) => item.key) || [];
+      const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.active && item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
         filteredRules = setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
       }
     }
     if (!AutoFilledRuleConfigurationsList || !outputs || !hypothesisAssumptions || !schemas) return;
+    
     filteredRules = setAutoFillRules(
       AutoFilledRuleConfigurationsList,
       filteredRules,
@@ -223,7 +228,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             style={{
               flex: 1,
               backgroundColor: "white",
-              height:"2.5rem",
+              height: "2.5rem",
               border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
             }}
             headerBarMainStyle={{ padding: 0, margin: 0 }}
@@ -600,7 +605,9 @@ const Example = ({ exampleOption, t }) => {
 const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs) => {
   setRules((previous) => {
     if (!previous.length) return [];
-    const filteredData = previous.filter((data) => data.id !== item.id);
+    // const filteredData = previous.filter((data) => data.id !== item.id);
+    const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
+    const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
     return filteredData || [];
   });
   if (item && item.output) {
@@ -729,7 +736,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
 const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
-  if (rules && rules.length !== 0) return rules;
+  if (rules && rules.filter((item) => item.active).length !== 0) return rules;
   let newRules = [];
   const ruleOuputList = rules ? rules.map((item) => item?.output) : [];
   let rulePlusInputs;
@@ -763,7 +770,7 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
     setOutputs(newOutputs);
     setInputs(rulePlusInputs);
     // setRules((previous) => [...previous, ...newRules]);
-    return newRules;
+    return [...rules,...newRules];
   }
 };
 

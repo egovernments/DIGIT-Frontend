@@ -121,7 +121,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   );
 
   const validateAssumptions = useCallback((assumptions) => {
-    return assumptions.every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
+    return assumptions.every((item) => Object.values(item).filter(subItem => subItem.active).every((data) => data !== "")) && assumptions.length !== 0;
   }, []);
 
   const cancelUpdateData = useCallback(() => {
@@ -432,16 +432,15 @@ const Example = ({ exampleOption, t }) => {
 const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, setToast, t) => {
   let add = true;
   setAssumptions((previous) => {
-    if (!previous.length) return [];
+  if (!previous.length) return [];
     if (previous?.length <= 1) {
       setToast({ state: "error", message: t("ERROR_CANNOT_DELETE_LAST_HYPOTHESIS") });
       add = false;
       return previous;
     }
     // const filteredData = previous.filter((data) => data.id !== item.id);
-    const deletionElementIndex = previous.findIndex((data) => data.id !== item.id);
-    let filteredData = _.cloneDeep(previous);
-    filteredData[deletionElementIndex].active = false;
+    const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
+    const filteredData = previous.map((data, index) => index === deletionElementIndex ? { ...data, active: false } : data);
     return filteredData || [];
   });
   if (add && item && item.key)

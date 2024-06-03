@@ -16,11 +16,11 @@ export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   return response;
 };
 
-export const getFacilities = async (tenantId, body) => {
+export const getFacilities = async (params, body) => {
   // request for boundary relation api
   const reqCriteria = {
     url: "/facility/v1/_search",
-    params: { tenantId },
+    params: params,
     body: body,
   };
   let response;
@@ -28,13 +28,13 @@ export const getFacilities = async (tenantId, body) => {
     response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
   } catch (error) {
     if (error.response) {
-      throw new Error("Failed to fetch boundary data: " + error.response.data.message);
+      throw new Error("Failed to fetch facility data: " + error.response.data.message);
     } else if (error.request) {
       // Network error
-      throw new Error("Network error while fetching boundary data");
+      throw new Error("Network error while fetching facility data");
     } else {
       // Other errors
-      throw new Error("Error while fetching boundary data: " + error.message);
+      throw new Error("Error while fetching facility data: " + error.message);
     }
   }
   return response;
@@ -109,14 +109,12 @@ const addBoundaryData = (xlsxData, boundaryData) => {
       if (!item) {
         item = [];
       }
-      let itemLength = item.length
+      let itemLength = item.length;
       while (item.length <= topIndex) {
         item.push("");
       }
-      debugger;
       item.push(item[itemLength - 1]);
-    }
-    else{
+    } else {
       item.push(commonColumn);
     }
 
@@ -130,6 +128,15 @@ const addBoundaryData = (xlsxData, boundaryData) => {
   return newXlsxData;
 };
 
+
+const fillDataWithBlanks = (data,tillRow)=>{
+  // Ensure all rows are of the same length by filling them with empty strings
+  data = data.concat(new Array(tillRow - data.length).fill([]));
+  const maxLength = Math.max(...data.map(row => row.length));
+  return data.map(row => [...row, ...new Array(maxLength - row.length).fill('')]);
+}
+
+
 /**
  *
  * @param {array} xlsxData , xlsx data
@@ -138,14 +145,14 @@ const addBoundaryData = (xlsxData, boundaryData) => {
  *
  * adds schema data to sheets
  */
-const addSchemaData = (xlsxData, schema) => {
+const addSchemaData = (xlsxData, schema, extraColumnsToAdd) => {
   if (!schema) return xlsxData;
   let columnSchema = schema.schema?.Properties || {};
   let newXlsxData = [];
   let columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
 
   for (const [key, value] of Object.entries(columnSchema)) {
-    if(key === commonColumn) continue
+    if (key === commonColumn) continue;
     columnList[0].push(key); // Add key to the first array
 
     columnList[1].push(value.type || ""); // Add type to the second array
@@ -155,7 +162,10 @@ const addSchemaData = (xlsxData, schema) => {
     columnList[3].push(value.pattern || ""); // Add pattern to the fourth array
   }
 
-  for (const { sheetName, data } of xlsxData) {
+  if (extraColumnsToAdd) columnList[0].push(...extraColumnsToAdd);
+  
+  for (let { sheetName, data } of xlsxData) {
+    data = fillDataWithBlanks(data,4);
     columnList.forEach((item, index) => {
       // Append the new items to the row
       if (data[index]) {
@@ -196,7 +206,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
     // If the hierarchy level name is not found, skip this sheet
     if (hierarchyLevelIndex === -1) {
       result.push(sheet);
-      return;
+      return result;
     }
 
     // Create a map to hold new sheets data based on hierarchy level values
@@ -266,7 +276,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
     result.push(...Object.values(sheetsMap));
   }
 
-  return result;
+  return result || xlsxData;
 };
 
 function filterBoundaries(boundaryData, boundaryFilters) {
@@ -321,13 +331,11 @@ function filterBoundaries(boundaryData, boundaryFilters) {
 /**
  * Retrieves all facilities for a given tenant ID.
  * @param tenantId The ID of the tenant.
- * @param requestBody The request body containing additional parameters.
  * @returns An array of facilities.
  */
-async function getAllFacilities(tenantId, requestBody) {
+async function getAllFacilities(tenantId) {
   // Retrieve all facilities for the given tenant ID
   const facilitySearchBody = {
-    RequestInfo: requestBody?.RequestInfo,
     Facility: { isPermanent: true },
   };
 
@@ -341,12 +349,38 @@ async function getAllFacilities(tenantId, requestBody) {
   let searchAgain = true;
 
   while (searchAgain) {
-    searchAgain = await getFacilities(searchedFacilities, facilitySearchParams, facilitySearchBody);
-    facilitySearchParams.offset += 50;
+    const response = await getFacilities(facilitySearchParams, facilitySearchBody);
+    if (response) {
+      searchAgain = response.length >= 50;
+      searchedFacilities.push(...response);
+      facilitySearchParams.offset += 50;
+    } else searchAgain = false;
   }
 
   return searchedFacilities;
 }
+
+const addFacilitySheet = (xlsxData, mapping, facilities) => {
+  if (!mapping) return xlsxData;
+  // Create header row
+  const headers = Object.keys(mapping);
+
+  // Create data rows
+  const dataRow = [];
+  for (const facility of facilities) {
+    dataRow.push(headers.map((header) => facility[mapping[header]]));
+  }
+  headers.push(commonColumn);
+  // Combine headers and data rows
+  const arrayOfArrays = [headers, ...dataRow];
+
+  let facilitySheet = {
+    sheetName: "facilityData",
+    data: arrayOfArrays,
+  };
+  xlsxData = [facilitySheet, ...xlsxData];
+  return xlsxData;
+};
 
 /**
  *
@@ -357,7 +391,7 @@ async function getAllFacilities(tenantId, requestBody) {
  *
  */
 export const createTemplate = async ({
-  hierarchyLevelWise: hierarchyLevelWiseSheets = true,
+  hierarchyLevelWiseSheets = true,
   hierarchyLevelName,
   addFacilityData = false,
   schema,
@@ -368,6 +402,7 @@ export const createTemplate = async ({
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot);
   const boundaryData = await fetchBoundaryData(tenentId, hierarchyType, rootBoundary?.[0]?.code);
   const filteredBoundaryData = filterBoundaries(boundaryData, boundaries);
+  // const filteredBoundaryData = boundaryData;
   let xlsxData = [];
   // adding boundary data to xlsxData
   xlsxData = addBoundaryData(xlsxData, filteredBoundaryData);
@@ -377,6 +412,9 @@ export const createTemplate = async ({
     xlsxData = devideXlsxDataHierarchyLevelWise(xlsxData, hierarchyLevelName);
     if (addFacilityData) {
       // adding facility sheet
+      const facilities = await getAllFacilities(tenentId);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
+      else xlsxData = addSchemaData(xlsxData, schema);
     } else {
       // not adding facility sheet
       // adding schema data to xlsxData
@@ -386,6 +424,16 @@ export const createTemplate = async ({
     // total boundary Data in one sheet
     if (addFacilityData) {
       // adding facility sheet
+      const facilities = await getAllFacilities(tenentId);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
+      else {
+        let facilitySheet = {
+          sheetName: "facilityData",
+          data: [],
+        };
+        facilitySheet = addSchemaData([facilitySheet], schema, [commonColumn]);
+        xlsxData = [...facilitySheet, ...xlsxData];
+      }
     } else {
       // not adding facility sheet
 
