@@ -2,9 +2,9 @@ name: engagement ui service docker Image CI
 
 on:
   push:
-    branches: [ "develop-mfe" ]
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs" ]
   pull_request:
-    branches: [ "develop-mfe" ]
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs" ]
 
 jobs:
 
