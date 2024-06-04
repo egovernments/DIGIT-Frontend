@@ -558,7 +558,6 @@ const Upload = ({
   const dataToBlob = () => {
     try {
       let blob;
-      debugger;
       switch (fileData.fileType) {
         case EXCEL:
           if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
@@ -567,7 +566,6 @@ const Upload = ({
         case SHAPEFILE:
         case GEOJSON:
           if (fileData && fileData.data) {
-            debugger;
             const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
             if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
           }
