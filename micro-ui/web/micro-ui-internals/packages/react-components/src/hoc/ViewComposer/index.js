@@ -149,7 +149,7 @@ const ViewComposer = ({ isLoading = false, data, ...props }) => {
         ?.map((card, cardIdx) => {
           const { sections } = card;
           return (
-            <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={"employeeCard-override"}>
+            <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""}`}>
               {sections?.map((section, sectionIdx) => {
                 return renderCardSectionJSX(section);
               })}
@@ -170,7 +170,7 @@ const ViewComposer = ({ isLoading = false, data, ...props }) => {
           ?.map((card, cardIdx) => {
             const { sections } = card;
             return (
-              <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={"employeeCard-override"}>
+              <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""}`}>
                 {sections?.map((section, sectionIdx) => {
                   return renderCardSectionJSX(section);
                 })}

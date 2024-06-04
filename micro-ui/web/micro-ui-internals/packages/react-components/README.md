@@ -137,6 +137,7 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
 ### Changelog
 
 ```bash
+1.8.1-beta.25 Add classname in LabelFieldPair, viewComposer
 1.8.1-beta.23 Enhance onformvaluechange in formcomposer
 1.8.1-beta.22 Fixed Tutorial
 1.8.1-beta.21 Added classname in Modal
