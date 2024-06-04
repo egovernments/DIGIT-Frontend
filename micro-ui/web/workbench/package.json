@@ -39,7 +39,7 @@
   },
   "resolutions": {
     "**/@rollup/plugin-commonjs":"25.0.7",
-    "**/type-fest":"3.3.0"
+    "**/type-fest":"2.8.0"
     },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.0",
