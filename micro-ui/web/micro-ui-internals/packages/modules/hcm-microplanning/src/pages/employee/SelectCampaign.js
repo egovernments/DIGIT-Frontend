@@ -10,7 +10,7 @@ const configs = {
     serviceName: "/project-factory/v1/project-type/search",
     requestParam: {},
     requestBody: {},
-    minParametersForSearchForm: 1,
+    minParametersForSearchForm: 0,
     masterName: "commonUiConfig",
     moduleName: "SearchCampaign",
     tableFormJsonPath: "requestBody.CampaignDetails.pagination",
@@ -200,7 +200,8 @@ const SelectCampaign = () => {
   const history = useHistory();
 
   const onClickRow = (row) => {
-    history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`);
+    // history.push(`/${window.contextPath}/employee/microplanning/help-guidelines?id=${row?.original?.id}`);
+    history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.id}`);
   };
 
   const SelectCampaignSession = Digit.Hooks.useSessionStorage("SELECT_CAMPAIGN_SESSION", {});

@@ -107,7 +107,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (check) {
         setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
         let checkValid = validateAssumptions(assumptions);
-        checkValid = checkValid && assumptions.length !== 0;
+        checkValid = checkValid && assumptions.filter((subItem) => subItem?.active).length !== 0;
         if (checkValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
@@ -121,7 +121,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   );
 
   const validateAssumptions = useCallback((assumptions) => {
-    return assumptions.every((item) => Object.values(item).filter(subItem => subItem.active).every((data) => data !== "")) && assumptions.length !== 0;
+    return assumptions.filter((item) => item?.active).every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
   }, []);
 
   const cancelUpdateData = useCallback(() => {
@@ -143,6 +143,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   return (
     <>
       <div className={sectionClass}>
+        <div className="hypothesis-help" style={{ position: "absolute", top: "70%", left: "40%", zIndex: "-100" }} />
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />
         {/* Interractable Section that includes the example as well as the assumptions */}
@@ -432,7 +433,7 @@ const Example = ({ exampleOption, t }) => {
 const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, setToast, t) => {
   let add = true;
   setAssumptions((previous) => {
-  if (!previous.length) return [];
+    if (!previous.length) return [];
     if (previous?.length <= 1) {
       setToast({ state: "error", message: t("ERROR_CANNOT_DELETE_LAST_HYPOTHESIS") });
       add = false;
@@ -440,7 +441,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHy
     }
     // const filteredData = previous.filter((data) => data.id !== item.id);
     const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
-    const filteredData = previous.map((data, index) => index === deletionElementIndex ? { ...data, active: false } : data);
+    const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
     return filteredData || [];
   });
   if (add && item && item.key)
@@ -486,7 +487,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       });
 
       setOptions((previous) => {
-        let newOptions = previous.filter((item) => item !== e?.code);
+        let newOptions = previous.filter((item) => item?.active && item !== e?.code);
         if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
         return newOptions;
       });
@@ -495,18 +496,20 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
   );
 
   return (
-    <Dropdown
-      variant="select-dropdown"
-      t={t}
-      isMandatory={false}
-      option={filteredOptions?.map((item) => ({ code: item }))}
-      selected={selected}
-      optionKey="code"
-      select={selectChangeHandler}
-      // style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)", position:"sticky" }}
-      optionCardStyles={{ position: "absolute" }}
-      placeholder={t("SELECT_OPTION")}
-    />
+    <div title={selected?.code ? t(selected.code) : undefined}>
+      <Dropdown
+        variant="select-dropdown"
+        t={t}
+        isMandatory={false}
+        option={filteredOptions?.map((item) => ({ code: item }))}
+        selected={selected}
+        optionKey="code"
+        select={selectChangeHandler}
+        // style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)", position:"sticky" }}
+        optionCardStyles={{ position: "absolute" }}
+        placeholder={t("SELECT_OPTION")}
+      />
+    </div>
   );
 });
 
@@ -519,7 +522,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
 
   const inputChangeHandler = useCallback(
     (e) => {
-      if( e.target.value.includes("+") || e.target.value.includes("e") ) return
+      if (e.target.value.includes("+") || e.target.value.includes("e")) return;
       if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "") return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");

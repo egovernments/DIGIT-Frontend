@@ -156,12 +156,13 @@ const inputScrollPrevention = (e) => {
 };
 
 // Construct api request body
-const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
+const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqType="update") => {
   let files = [],
     resourceMapping = [];
   if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
       if (!item || item.error || !item.filestoreId) return;
+      if (reqType==="create" && !item?.active) return;
       const data = {
         active: item?.active,
         filestoreId: item?.filestoreId,
@@ -196,13 +197,15 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status) => {
       executionPlanId: campaignId,
       files,
       assumptions: data?.hypothesis?.reduce((acc, item) => {
-        if (item.key && item.value) {
+      if (reqType==="create" && !item?.active) return acc;
+      if (item.key && item.value) {
           acc.push(JSON.parse(JSON.stringify(item)));
         }
         return acc;
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
-        if (item.operator && item.output && item.input && item.assumptionValue) {
+          if (reqType==="create" && !item?.active) return acc;
+          if (item.operator && item.output && item.input && item.assumptionValue) {
           const data = JSON.parse(JSON.stringify(item));
           const operator = Operators.find((e) => e.name === data.operator);
           if (operator && operator.code) data.operator = operator?.code;
@@ -353,14 +356,14 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
 };
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
-  let formula = formulaConfiguration?.find((item) => item?.output === resourceName);
+  let formula = formulaConfiguration?.find((item) =>item?.active && item?.output  === resourceName);
   if (!formula) return null;
 
   // Finding Input
   // check for Uploaded Data
   let inputValue = findInputValue(formula, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t);
   if (inputValue == undefined || inputValue === null) return null;
-  let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.key === formula?.assumptionValue)?.value;
+  let assumptionValue = hypothesisAssumptionsList?.find((item) => item?.active && item?.key === formula?.assumptionValue)?.value;
   if (assumptionValue == undefined) return null;
 
   return findResult(inputValue, assumptionValue, formula?.operator);
@@ -427,7 +430,7 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
 };
 const ruleHypothesisCheck = (rules, ruleHypothesis) => {
   if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {
-    return rules.every((item) => ruleHypothesis.includes(item.assumptionValue));
+    return rules.filter(item=>item.active).every((item) => ruleHypothesis.includes(item.assumptionValue));
   }
   return false;
 };

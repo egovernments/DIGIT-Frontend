@@ -44,9 +44,9 @@ export const tourSteps = (t) => {
       steps: [
         {
           content: t("HELP_HYPOTHESIS_INTERACTABLE_SECTION"),
-          target: ".hypothesis-section",
+          target: ".hypothesis-help",
           disableBeacon: true,
-          placement: "top-start",
+          placement: "right-start",
           title: "",
           disableScrolling: true,
         },

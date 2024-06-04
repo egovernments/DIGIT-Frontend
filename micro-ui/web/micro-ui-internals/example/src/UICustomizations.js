@@ -234,6 +234,7 @@ export const UICustomizations = {
       data.body.CampaignDetails.pagination = data?.state?.tableForm
       data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body.CampaignDetails.boundaryCode = boundaryCode;
+      data.body.CampaignDetails.createdBy = Digit.UserService.getUser().info.uuid;
       data.body.CampaignDetails.campaignName = campaignName;
       data.body.CampaignDetails.status = ["drafted"]
       if (startDate) {

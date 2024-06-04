@@ -148,8 +148,8 @@ const MicroplanPreview = ({
       ...previous,
       microplanPreview: {
         previewData: dataToShow,
-        userEditedResources
-      }
+        userEditedResources,
+      },
     }));
     setCheckDataCompletion("perform-action");
   }, [dataToShow, setMicroplanData, userEditedResources, setCheckDataCompletion]);
@@ -481,6 +481,9 @@ const DataPreview = memo(
     if (!previewData) return;
     const [tempResourceChanges, setTempResourceChanges] = useState(userEditedResources);
     const [selectedRow, setSelectedRow] = useState();
+    const conmmonColumnIndex = useMemo(() => {
+      return previewData?.[0]?.indexOf(commonColumn);
+    }, [previewData]);
     if (isCampaignLoading || ishierarchyLoading) {
       return (
         <div className="api-data-loader">
@@ -520,12 +523,20 @@ const DataPreview = memo(
             </thead>
             <tbody>
               {previewData.slice(1).map((rowData, rowIndex) => {
-                const rowDataList = Object.values(previewData[0]).map((_, cellIndex) => (
+                const rowDataList = Object.values(previewData[0]).map((header, cellIndex) => (
                   <td
                     className={`${selectedRow && selectedRow - 1 === rowIndex ? "selected-row" : ""}`}
                     key={cellIndex}
-                    style={rowData[cellIndex] || rowData[cellIndex] === 0 ? (!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}) : {}}
+                    style={{
+                      ...(rowData[cellIndex] || rowData[cellIndex] === 0 ? (!isNaN(rowData[cellIndex]) ? { textAlign: "end" } : {}) : {}),
+                      ...(userEditedResources?.[rowData?.[conmmonColumnIndex]]?.[header] ||
+                      userEditedResources?.[rowData?.[conmmonColumnIndex]]?.[header] === 0
+                        ? { backgroundColor: "rgba(244, 119, 56, 0.12)" }
+                        : {}),
+                    }}
                   >
+                    {cellIndex==0 && userEditedResources?.[rowData?.[conmmonColumnIndex]] && Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !==0 && <div className="edited-row-marker"></div>}
+
                     {rowData[cellIndex] || rowData[cellIndex] === 0 ? rowData[cellIndex] : t("NO_DATA")}
                   </td>
                 ));
@@ -535,6 +546,9 @@ const DataPreview = memo(
                     onDoubleClick={() => {
                       rowClick(rowIndex + 1);
                     }}
+                    // style={{...(userEditedResources?.[rowData?.[conmmonColumnIndex]] && Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !==0
+                    //     ? { borderL: "1px solid rgba(244, 119, 56, 0.12)" }
+                    //     : {}),}}
                   >
                     {rowDataList}
                   </tr>
@@ -550,7 +564,6 @@ const DataPreview = memo(
               display: "flex",
               flex: 1,
               justifyContent: "flex-end",
-              padding: 0,
               width: "100%",
               padding: "1rem",
             }}
@@ -560,6 +573,7 @@ const DataPreview = memo(
               marginTop: "0.5rem",
               marginBottom: "0.5rem",
               marginRight: "1.4rem",
+              height: "2.5rem",
               width: "12.5rem",
             }}
             headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
@@ -1007,8 +1021,9 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
 
   const valueChangeHandler = (item, value) => {
     if (!conmmonColumnData) return;
+    if (isNaN(value) || (!isFinite(value) && value !== "")) return;
     let changedDataAgainstBoundaryCode = tempResourceChanges?.[conmmonColumnData] || {};
-    changedDataAgainstBoundaryCode[item] = value;
+    changedDataAgainstBoundaryCode[item] = value == "" ? undefined : parseFloat(value);
     setTempResourceChanges((previous) => ({ ...previous, [conmmonColumnData]: changedDataAgainstBoundaryCode }));
   };
 
@@ -1051,6 +1066,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
             let index = previewData?.[0]?.indexOf(item);
             if (index === -1) return;
             const currentData = previewData?.[selectedRow]?.[index];
+
             return (
               <tr key={item}>
                 <td className="column-names">
@@ -1062,9 +1078,13 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
                 <td className="new-value no-left-padding">
                   <TextInput
                     name={"hyopthesis_" + index}
-                    value={item?.value}
+                    value={
+                      tempResourceChanges?.[conmmonColumnData]?.[item] || tempResourceChanges?.[conmmonColumnData]?.[item] === 0
+                        ? tempResourceChanges[conmmonColumnData][item]
+                        : ""
+                    }
+                    type="text"
                     style={{ margin: 0 }}
-                    type="number"
                     t={t}
                     onChange={(value) => valueChangeHandler(item, value.target.value)}
                   />

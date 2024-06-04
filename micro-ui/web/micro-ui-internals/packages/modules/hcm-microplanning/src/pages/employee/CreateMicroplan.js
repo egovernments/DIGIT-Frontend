@@ -151,7 +151,7 @@ const CreateMicroplan = () => {
       //   return;
       // }
       setCheckDataCompletion("false");
-      let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT");
+      let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT",microplanData?.planConfigurationId?"update":"create");
       if(!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)){
         setCheckDataCompletion("perform-action");
         return
@@ -201,7 +201,7 @@ const CreateMicroplan = () => {
         setTimeout(() => {
           setLoaderActivation(false);
           // setToastCreateMicroplan(undefined);
-          setCheckDataCompletion("perform-action");
+          setCheckDataCompletion("false");
         }, 2000);
       },
     });
@@ -239,7 +239,7 @@ const CreateMicroplan = () => {
         setTimeout(() => {
           // setToastCreateMicroplan(undefined);
           setLoaderActivation(false);
-          setCheckDataCompletion("perform-action");
+          setCheckDataCompletion("false");
         }, 2000);
       },
     });

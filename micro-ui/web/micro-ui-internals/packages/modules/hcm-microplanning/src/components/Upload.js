@@ -265,6 +265,7 @@ const Upload = ({
       hierarchyType: campaignData?.hierarchyType,
       Schemas: validationSchemas,
       HierarchyConfigurations: state?.HierarchyConfigurations,
+      setLoaderActivation,
       t,
     };
     downloadTemplate(downloadParams);
@@ -555,20 +556,26 @@ const Upload = ({
 
   // Function for creating blob out of data
   const dataToBlob = () => {
-    let blob;
-    switch (fileData.fileType) {
-      case EXCEL:
-        blob = fileData.file;
-        break;
-      case SHAPEFILE:
-      case GEOJSON:
-        if (fileData && fileData.data) {
-          const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
-          blob = convertJsonToXlsx(result, { skipHeader: true });
-        }
-        break;
+    try {
+      let blob;
+      switch (fileData.fileType) {
+        case EXCEL:
+          if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
+          else blob = fileData.file;
+          break;
+        case SHAPEFILE:
+        case GEOJSON:
+          if (fileData && fileData.data) {
+            const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+            if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
+          }
+          break;
+      }
+      return blob;
+    } catch (error) {
+      console.error("Error generating blob:", error);
+      return;
     }
-    return blob;
   };
 
   // Download the selected file
@@ -1430,8 +1437,20 @@ const checkProjection = async (zip) => {
 };
 
 // Function to handle the template download
-const downloadTemplate = async ({ campaignType, type, section, setToast, campaignData, hierarchyType, Schemas, HierarchyConfigurations, t }) => {
+const downloadTemplate = async ({
+  campaignType,
+  type,
+  section,
+  setToast,
+  campaignData,
+  hierarchyType,
+  Schemas,
+  HierarchyConfigurations,
+  setLoaderActivation,
+  t,
+}) => {
   try {
+    setLoaderActivation(true);
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
@@ -1450,9 +1469,9 @@ const downloadTemplate = async ({ campaignType, type, section, setToast, campaig
 
     translatedTemplate.forEach(({ sheetName, data }) => {
       const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
-      let columnCount = data?.[0]?.length || 0
-      const wscols =  Array(columnCount).fill({ width: 30 });
-      worksheet['!cols'] = wscols;
+      const columnCount = data?.[0]?.length || 0;
+      const wscols = Array(columnCount).fill({ width: 30 });
+      worksheet["!cols"] = wscols;
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     });
 
@@ -1463,8 +1482,10 @@ const downloadTemplate = async ({ campaignType, type, section, setToast, campaig
     link.href = url;
     link.download = t(section) + ".xlsx";
     link.click();
+    setLoaderActivation(false);
     URL.revokeObjectURL(url);
   } catch (error) {
+    setLoaderActivation(false);
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
 };
@@ -1480,7 +1501,7 @@ const translateTemplate = (template, t) => {
     // Find the index of the boundaryCode column in the header row
     const boundaryCodeIndex = sheetData[0].indexOf(commonColumn);
 
-    const sheetName  = t(sheet.sheetName)
+    const sheetName = t(sheet.sheetName);
     const transformedSheet = {
       sheetName: sheetName.length > 31 ? sheetName.slice(0, 31) : sheetName,
       data: [],
@@ -1608,6 +1629,44 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   resourceMappingData.pop();
   resourceMappingData.push(toAddInResourceMapping);
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
+};
+
+const prepareExcelFileBlobWithErrors = (data, errors, t) => {
+  let tempData = {...data};
+  // Process each dataset within the data object
+  const processedData = {};
+  for (const key in tempData) {
+    if (tempData.hasOwnProperty(key)) {
+      const dataset = [...tempData[key]];
+
+      // Add the 'error' column to the header
+      dataset[0] = dataset[0].map((item) => t(item));
+      // Process each data row
+      if (errors) {
+        dataset[0].push(t("error"));
+        for (let i = 1; i < dataset.length; i++) {
+          const row = dataset[i];
+
+          // Check if there are errors for the given commonColumnData
+          const errorInfo = errors?.[key]?.[i - 1];
+          if (errorInfo) {
+            let rowDataAddOn = Object.entries(errorInfo)
+              .map(([key, value]) => {
+                return t(key) + ": " + value.map((item) => t(item)).join(", ");
+              })
+              .join("; ");
+            row.push({ v: rowDataAddOn });
+          } else {
+            row.push("");
+          }
+        }
+      }
+      processedData[key] = dataset;
+    }
+  }
+
+  let xlsxBlob = convertJsonToXlsx(processedData, { skipHeader: true });
+  return xlsxBlob;
 };
 
 export default Upload;
