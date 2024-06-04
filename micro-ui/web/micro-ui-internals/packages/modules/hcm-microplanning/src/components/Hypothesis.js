@@ -107,7 +107,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
       if (check) {
         setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
         let checkValid = validateAssumptions(assumptions);
-        checkValid = checkValid && assumptions.filter((subItem) => subItem.active).length !== 0;
+        checkValid = checkValid && assumptions.filter((subItem) => subItem?.active).length !== 0;
         if (checkValid) setCheckDataCompletion("valid");
         else setCheckDataCompletion("invalid");
       } else {
@@ -121,7 +121,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   );
 
   const validateAssumptions = useCallback((assumptions) => {
-    return assumptions.filter((item) => item.active).every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
+    return assumptions.filter((item) => item?.active).every((item) => Object.values(item).every((data) => data !== "")) && assumptions.length !== 0;
   }, []);
 
   const cancelUpdateData = useCallback(() => {
@@ -143,6 +143,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   return (
     <>
       <div className={sectionClass}>
+        <div className="hypothesis-help" style={{position:"absolute",top:"70%",left:"40%",zIndex:"-100"}}></div>
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />
         {/* Interractable Section that includes the example as well as the assumptions */}

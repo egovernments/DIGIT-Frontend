@@ -556,21 +556,28 @@ const Upload = ({
 
   // Function for creating blob out of data
   const dataToBlob = () => {
-    let blob;
-    switch (fileData.fileType) {
-      case EXCEL:
-        if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
-        else blob = fileData.file;
-        break;
-      case SHAPEFILE:
-      case GEOJSON:
-        if (fileData && fileData.data) {
-          const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
-        if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
-        }
-        break;
+    try {
+      let blob;
+      debugger;
+      switch (fileData.fileType) {
+        case EXCEL:
+          if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
+          else blob = fileData.file;
+          break;
+        case SHAPEFILE:
+        case GEOJSON:
+          if (fileData && fileData.data) {
+            debugger;
+            const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+            if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
+          }
+          break;
+      }
+      return blob;
+    } catch (error) {
+      console.error(error.message);
+      return;
     }
-    return blob;
   };
 
   // Download the selected file
@@ -1464,7 +1471,7 @@ const downloadTemplate = async ({
 
     translatedTemplate.forEach(({ sheetName, data }) => {
       const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
-      let columnCount = data?.[0]?.length || 0;
+      const columnCount = data?.[0]?.length || 0;
       const wscols = Array(columnCount).fill({ width: 30 });
       worksheet["!cols"] = wscols;
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
@@ -1626,39 +1633,42 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
   return { tempResourceMappingData: resourceMappingData, tempFileDataToStore: newFileData };
 };
 
-const prepareExcelFileBlobWithErrors = (data, errors, t ) => {
-  let tempData = _.cloneDeep(data)
-// Process each dataset within the data object
-const processedData = {};
-for (const key in tempData) {
-  if (tempData.hasOwnProperty(key)) {
-    const dataset = [...tempData[key]];
-    
-    // Add the 'error' column to the header
-    dataset[0].push('error');
-    
-    // Process each data row
-    for (let i = 1; i < dataset.length; i++) {
-      const row = dataset[i];
-      
-      // Check if there are errors for the given commonColumnData
-      const errorInfo = errors?.[key]?.[i-1]
-      if (errorInfo) {
-        let rowDataAddOn = Object.entries(errorInfo).map(([key,value])=>{
-          return t(key) + ": "+ value.map(item =>t(item)).join(", ")
-        }).join("; ");
-        row.push({ v: rowDataAddOn })
-      } else {
-        row.push('');
-      }
-    }
-    
-    processedData[key] = dataset;
-  }
-}
+const prepareExcelFileBlobWithErrors = (data, errors, t) => {
+  let tempData = _.cloneDeep(data);
+  // Process each dataset within the data object
+  const processedData = {};
+  for (const key in tempData) {
+    if (tempData.hasOwnProperty(key)) {
+      const dataset = [...tempData[key]];
 
-let xlsxBlob =convertJsonToXlsx(processedData, { skipHeader: true }); 
-return xlsxBlob;
+      // Add the 'error' column to the header
+      dataset[0] = dataset[0].map((item) => t(item));
+      // Process each data row
+      if (errors) {
+        dataset[0].push(t("error"));
+        for (let i = 1; i < dataset.length; i++) {
+          const row = dataset[i];
+
+          // Check if there are errors for the given commonColumnData
+          const errorInfo = errors?.[key]?.[i - 1];
+          if (errorInfo) {
+            let rowDataAddOn = Object.entries(errorInfo)
+              .map(([key, value]) => {
+                return t(key) + ": " + value.map((item) => t(item)).join(", ");
+              })
+              .join("; ");
+            row.push({ v: rowDataAddOn });
+          } else {
+            row.push("");
+          }
+        }
+      }
+      processedData[key] = dataset;
+    }
+  }
+
+  let xlsxBlob = convertJsonToXlsx(processedData, { skipHeader: true });
+  return xlsxBlob;
 };
 
 export default Upload;
