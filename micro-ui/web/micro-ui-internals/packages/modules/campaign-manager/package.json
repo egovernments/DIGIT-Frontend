@@ -17,9 +17,7 @@
     "react": "17.0.2",
     "react-router-dom": "5.3.0"
   },
-  "resolutions": {
-    "**/@rollup/plugin-commonjs":"24.1.0"
-    },
+ 
   "dependencies": {
     "@egovernments/digit-ui-react-components": "1.8.1-beta.24",
     "@egovernments/digit-ui-components": "0.0.1-beta.31",
@@ -40,6 +38,9 @@
     "react-drag-drop-files": "^2.3.10",
     "@cyntler/react-doc-viewer": "1.10.3"
   },
+  "resolutions": {
+    "**/@rollup/plugin-commonjs":"24.1.0"
+    },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
   "keywords": [
