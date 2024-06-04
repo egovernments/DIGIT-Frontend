@@ -28,7 +28,7 @@ jobs:
       run: |
         IMAGE_TAG=egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
-          --file workbench/Dockerfile \
+          --file web/workbench/Dockerfile \
           --tag $IMAGE_TAG
         echo "::set-output name=image_name::$IMAGE_TAG"
 
