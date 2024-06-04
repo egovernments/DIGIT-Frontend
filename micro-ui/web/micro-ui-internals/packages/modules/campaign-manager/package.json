@@ -35,11 +35,22 @@
     "react-select": "5.7.4",
     "react-table": "7.7.0",
     "xlsx": "0.17.5",
-    "react-drag-drop-files": "^2.3.10",
+    "react-drag-drop-files": "2.3.10",
     "@cyntler/react-doc-viewer": "1.10.3"
   },
   "resolutions": {
-    "**/@rollup/plugin-commonjs":"24.1.0"
+    "**/rollup": "1.32.1",
+		"**/rollup-plugin-babel": "4.4.0",
+		"**/rollup-plugin-bundle-size": "1.0.1",
+		"**/rollup-plugin-es3": "1.1.0",
+		"**/rollup-plugin-postcss": "2.4.1",
+		"**/rollup-plugin-smart-asset": "2.0.7",
+		"**/rollup-plugin-terser": "5.3.0",
+		"**/rollup-plugin-typescript2": "0.25.3",
+    "**/@rollup/plugin-alias": "3.0.1",
+		"**/@rollup/plugin-commonjs": "11.0.2",
+		"**/@rollup/plugin-json": "4.0.2",
+		"**/@rollup/plugin-node-resolve": "6.1.0"
     },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
