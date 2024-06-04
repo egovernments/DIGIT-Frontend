@@ -7,7 +7,7 @@ module.exports = () => {
   const prodConfig = {
     mode: 'production',
     output: {
-      publicPath: '/microplan-ui/',
+      publicPath: '/microplan-mfe/',
       filename: '[name].[contenthash].js',
     },
     plugins: [
