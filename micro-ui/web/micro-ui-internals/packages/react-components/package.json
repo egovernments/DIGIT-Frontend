@@ -59,6 +59,9 @@
     "react-i18next": "11.16.2",
     "react-table": "7.7.0"
   },
+  "resolutions": {
+    "**/ajv": "8.12.0"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
