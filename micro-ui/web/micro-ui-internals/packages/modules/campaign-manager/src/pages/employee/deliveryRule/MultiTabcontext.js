@@ -3,6 +3,7 @@ import { Card, Header, Paragraph, CardHeader, CardSubHeader, CardText } from "@e
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
+import { InfoCard } from "@egovernments/digit-ui-components";
 //just pass campaign data here
 // function restructureData(data) {
 //   const restructuredData = [];
@@ -157,6 +158,28 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
         <CardText>{t(`CAMPAIGN_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
       </div>
       {/* Add content specific to each tab as needed */}
+      <InfoCard
+        populators={{
+          name: "infocard",
+        }}
+        variant="default"
+        style={{ marginTop: "1.5rem", marginLeft: "0rem" , marginBottom: "0rem", maxWidth: "100%" }}
+        className= {"infoClass"}
+        headerWrapperClassName = {"headerWrapperClassName"}
+        additionalElements={[
+          <img className="whoLogo"
+            // style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"
+            src="https://cdn.worldvectorlogo.com/logos/world-health-organization-logo-1.svg"
+            // src="https://s3-alpha-sig.figma.com/img/3a64/80de/a05cdb28bd51a75cfb6d81fdead072a5?Expires=1718582400&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=WDUTW2wzMrFplbtHNWig6Rb6Ji0GQt3nYm4q83OmVrNoBAzWPlc4GkUieKzNoY9lsEteH~w73ZeqpDd~uZv6l~KArwzXwyEGKp6s77WzNfqYFQK3KbqYNk-y~yA8C2WNxrMb7zW9NmZYptk32JhukhQWnVujMfA8ceATpNwp3xJoCgiSzJoCWQayhu~StvCzGQ2kj0jsuImTiTYGcvIMwnND8UIqQ1h2~MxxmeNLmHfOyP69VIcCDiTQKRbj8t4--MKUk8nEaRPb0kT7LW4B7a0qi4qhj7ObuAIkD9sG233-ARsXbXE2oKeLP7MZjqbttkTDWiXkXyZ6tmFC41tmhQ__"
+            width="164"
+            height="90"
+          ></img>,
+          <span style={{ color: "#505A5F" }}>
+            {t(`CAMPAIGN_TAB_INFO_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)}
+          </span>
+        ]}
+        label={"Info"}
+      />
     </Card>
   );
 };
