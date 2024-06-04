@@ -381,7 +381,6 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       // get boundary data from boundary relationship search api
       logger.info("Generating Boundary Data")
       const result = await getBoundaryDataService(request);
-      console.log("hhhhhhhhhhhhhhhhh")
       logger.info(`Boundary data generated successfully: ${JSON.stringify(result)}`);
       let updatedResult = result;
       // get boundary sheet data after being generated
@@ -645,7 +644,16 @@ async function processGenerateForNew(request: any, generatedResource: any, newEn
 }
 
 function handleGenerateError(newEntryResponse: any, generatedResource: any, error: any) {
-  newEntryResponse.map((item: any) => { item.status = generatedResourceStatuses.failed, item.additionalDetails = { ...item.additionalDetails, error: error.message || String(error) } })
+  newEntryResponse.map((item: any) => {
+    item.status = generatedResourceStatuses.failed, item.additionalDetails = {
+      ...item.additionalDetails, error: {
+        status: error.status,
+        code: error.code,
+        description: error.description,
+        message: error.message
+      } || String(error)
+    }
+  })
   generatedResource = { generatedResource: newEntryResponse };
   logger.error(String(error));
   produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
@@ -816,7 +824,6 @@ async function getDataSheetReady(boundaryData: any, request: any, localizationMa
   const modifiedReducedHierarchy = reducedHierarchy.map(ele => `${request?.query?.hierarchyType}_${ele}`.toUpperCase())
   // get Campaign Details from Campaign Search Api
   const configurableColumnHeadersBasedOnCampaignType = await getConfigurableColumnHeadersBasedOnCampaignType(request, localizationMap);
-  console.log(configurableColumnHeadersBasedOnCampaignType,"confiiiiiiiiiiiiiiiiiiii")
 
   const headers = (type !== "facilityWithBoundary" && type !== "userWithBoundary")
     ? [
@@ -943,6 +950,20 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 }
 
 
+async function getHeadersForTargetSheet(request:any,boundaryData: any, differentTabsBasedOnLevel: any,localizationMap?:any) {
+  const districtIndex = Object.keys(boundaryData[0]).indexOf(differentTabsBasedOnLevel);
+  const headersUptoHierarchy = Object.keys(boundaryData[0]).slice(districtIndex);
+  let modifiedHeaders = [...headersUptoHierarchy];
+  const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+  const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
+  if (localizedHeadersAfterHierarchy.indexOf(getLocalizedName(config.boundary.boundaryCode, localizationMap)) != -1) {
+    localizedHeadersAfterHierarchy.splice(localizedHeadersAfterHierarchy.indexOf(getLocalizedName(config.boundary.boundaryCode, localizationMap)), 1)
+    modifiedHeaders = [...headersUptoHierarchy, ...localizedHeadersAfterHierarchy];
+  }
+  return  getLocalizedHeaders(modifiedHeaders, localizationMap);
+}
+
+
 
 
 export {
@@ -986,7 +1007,8 @@ export {
   createReadMeSheet,
   findMapValue,
   replicateRequest,
-  getDifferentDistrictTabs
+  getDifferentDistrictTabs,
+  getHeadersForTargetSheet
 };
 
 

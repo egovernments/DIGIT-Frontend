@@ -58,12 +58,12 @@ const getBoundaryDataService = async (
 
 
 const createDataService = async (request: any) => {
-    // Validate the create request
-    await validateCreateRequest(request);
-    logger.info("VALIDATED THE DATA CREATE REQUEST");
-
 
     const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
+    // Validate the create request
+    logger.info("Validating data create request")
+    await validateCreateRequest(request,localizationMap);
+    logger.info("VALIDATED THE DATA CREATE REQUEST");
 
     // Enrich resource details
     await enrichResourceDetails(request);

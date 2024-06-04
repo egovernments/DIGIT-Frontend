@@ -836,9 +836,9 @@ const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, get
 }
 async function getCampaignSearchResponse(request: any) {
   try {
-    logger.info(`searching for campaign details to get the filters for boundary generation`);
+    logger.info(`searching for campaign details`);
     const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
-    const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
+    const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, "ids": [request?.query?.campaignId || request?.body?.ResourceDetails?.campaignId] } }
     const requestBody = { ...requestInfo, ...campaignDetails };
     const req: any = replicateRequest(request, requestBody)
     const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);

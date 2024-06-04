@@ -8,7 +8,7 @@ import { getCampaignNumber, createAndUploadFile, getSheetData, createExcelSheet,
 import { getFormattedStringForDebug, logger } from "./logger";
 import createAndSearch from "../config/createAndSearch";
 import * as XLSX from 'xlsx';
-import { createReadMeSheet, findMapValue, getBoundaryRelationshipData, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, replicateRequest, throwError } from "./genericUtils";
+import { createReadMeSheet, findMapValue, getBoundaryRelationshipData, getHeadersForTargetSheet, getLocalizedHeaders, getLocalizedMessagesHandler, modifyBoundaryData, modifyDataBasedOnDifferentTab, replicateRequest, throwError } from "./genericUtils";
 import { enrichProjectDetailsFromCampaignDetails } from "./transforms/projectTypeUtils";
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
@@ -1210,6 +1210,7 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
+
 async function appendSheetsToWorkbook(request: any, boundaryData: any[], differentTabsBasedOnLevel: any, localizationMap?: any) {
     try {
         logger.info("Received Boundary data for Processing file")
@@ -1247,15 +1248,16 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const columnWidths = Array(12).fill({ width: 30 });
         mainSheet['!cols'] = columnWidths;
         XLSX.utils.book_append_sheet(workbook, mainSheet, localizedBoundaryTab);
+        let localizedHeaders;
+        if (boundaryData?.[0]) {
+            localizedHeaders = await getHeadersForTargetSheet(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
+        }
         for (const uniqueData of uniqueDistrictsForMainSheet) {
             const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
             const districtDataFiltered = boundaryData.filter(boundary => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs);
             const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
             if (modifiedFilteredData?.[0]) {
                 const districtIndex = Object.keys(modifiedFilteredData[0]).indexOf(differentTabsBasedOnLevel);
-                const headers = Object.keys(modifiedFilteredData[0]).slice(districtIndex);
-                const modifiedHeaders = [...headers, "HCM_ADMIN_CONSOLE_TARGET"];
-                const localizedHeaders = getLocalizedHeaders(modifiedHeaders, localizationMap);
                 const newSheetData = [localizedHeaders];
 
                 for (const data of modifiedFilteredData) {
@@ -1275,6 +1277,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         throw Error("An error occurred while creating tabs based on district:");
     }
 }
+
 function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, localizationMap?: any): any {
 
     // Step 2: Slice the boundary code up to the last underscore
@@ -1582,31 +1585,52 @@ function getFiltersFromCampaignSearchResponse(responseFromCampaignSearch: any) {
 
 
 const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, localizationMap?: any) => {
-    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-    const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-     
-    const filters = {
-        "type": request?.query?.type || request?.body?.ResourceDetails?.type,
-        "campaignType": campaignType
+    try {
+        const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+        const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
+
+        const filters = {
+            "type": request?.query?.type || request?.body?.ResourceDetails?.type,
+            "campaignType": campaignType
+        }
+        // Call the MDMSV2 API to get data
+        const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, request?.query?.type || request?.body?.ResourceDetails?.type, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, filters);
+        if (!mdmsResponse || mdmsResponse?.mdms.length === 0) {
+            logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
+            throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);
+        }
+        // Extract columns from the response
+        const columnsForGivenCampaignId = mdmsResponse.mdms[0].data.fields;
+
+        // Sort the columns array based on the order number
+        columnsForGivenCampaignId?.sort((columnA: any, columnB: any) => columnA.orderNo - columnB.orderNo);
+
+        // Extract the names of columns and insert them into an array
+        const sortedColumnNames = columnsForGivenCampaignId?.map((column: any) => column.name);
+
+        // Get localized headers based on the column names
+        const headerColumnsAfterHierarchy = getLocalizedHeaders(sortedColumnNames, localizationMap);
+        if (!headerColumnsAfterHierarchy.includes(getLocalizedName(config.boundary.boundaryCode, localizationMap))) {
+            logger.error(`Column Headers of generated Boundary Template does not have ${getLocalizedName(config.boundary.boundaryCode, localizationMap)} column`)
+            throwError("COMMON", 400, "VALIDATION_ERROR", `Column Headers of generated Boundary Template does not have ${getLocalizedName(config.boundary.boundaryCode, localizationMap)} column`)
+        }
+        return headerColumnsAfterHierarchy;
+    } catch (error: any) {
+        throwError("FILE", 400, "FETCHING_COLUMN_ERROR", "Error fetching column Headers From Schema (either boundary code column not found or given  Campaign Type not found in schema) Check logs")
     }
-    // Call the MDMSV2 API to get data
-    const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, "nitish2", request?.query?.tenantId, filters);
-    if (!mdmsResponse || mdmsResponse?.mdms.length === 0) {
-        throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);
-    }
-    // Extract columns from the response
-    const columnsForGivenCampaignId = mdmsResponse.mdms[0].data.fields;
-    console.log(columnsForGivenCampaignId, "ssss")
 
-    // Sort the columns array based on the order number
-    columnsForGivenCampaignId?.sort((columnA: any, columnB: any) => columnA.orderNo - columnB.orderNo);
+}
 
-    // Extract the names of columns and insert them into an array
-    const sortedColumnNames = columnsForGivenCampaignId?.map((column: any) => column.name);
 
-    // Get localized headers based on the column names
-    const headerColumnsAfterHierarchy = getLocalizedHeaders(sortedColumnNames, localizationMap);
-    return headerColumnsAfterHierarchy;
+async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request:any,hierarchy:any[],localizationMap?:any){
+    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase());
+    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+    const index = localizedHierarchy.indexOf(getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap));
+    const expectedHeadersForTargetSheetUptoHierarchy = index !== -1 ? localizedHierarchy.slice(index) : throwError("COMMON", 400, "VALIDATION_ERROR", `${getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap)} level not present in the hierarchy`);
+    const columnFromSchemaOfTargetTemplate = await getConfigurableColumnHeadersBasedOnCampaignType(request); 
+    const localizedcolumnFromSchemaOfTargetTemplate = getLocalizedHeaders(columnFromSchemaOfTargetTemplate,localizationMap)
+    const expectedHeadersForTargetSheet = [...expectedHeadersForTargetSheetUptoHierarchy, ...localizedcolumnFromSchemaOfTargetTemplate];
+    return expectedHeadersForTargetSheet;
 }
 
 
@@ -1639,5 +1663,6 @@ export {
     reorderBoundariesOfDataAndValidate,
     getTargetBoundariesRelatedToCampaignId,
     getFiltersFromCampaignSearchResponse,
-    getConfigurableColumnHeadersBasedOnCampaignType
+    getConfigurableColumnHeadersBasedOnCampaignType,
+    getFinalValidHeadersForTargetSheetAsPerCampaignType
 }

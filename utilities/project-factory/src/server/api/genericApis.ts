@@ -6,7 +6,7 @@ import { httpRequest } from "../utils/request"; // Import httpRequest function f
 import { getFormattedStringForDebug, logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, findMapValue, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getFiltersFromCampaignSearchResponse, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getConfigurableColumnHeadersBasedOnCampaignType, getFiltersFromCampaignSearchResponse, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
@@ -152,7 +152,7 @@ const getSheetData = async (
     }
   });
 
-  jsonData = jsonData.filter((element) => element !== undefined);
+  jsonData = jsonData.filter((element) => element !== undefined || element !== '');
   return jsonData;
 };
 
@@ -643,10 +643,12 @@ async function getBoundarySheetData(
     const modifiedHierarchy = hierarchy.map((ele) =>
       `${hierarchyType}_${ele}`.toUpperCase()
     );
-    const localizedHeaders = getLocalizedHeaders(
+    const localizedHeadersUptoHierarchy = getLocalizedHeaders(
       modifiedHierarchy,
       localizationMap
     );
+    const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request,localizationMap);
+    const headers = [...localizedHeadersUptoHierarchy,...headerColumnsAfterHierarchy];
     // create empty sheet if no boundary present in system
     const localizedBoundaryTab = getLocalizedName(
       getBoundaryTabName(),
@@ -655,7 +657,7 @@ async function getBoundarySheetData(
     logger.info(`generated a empty template for boundary`);
     return await createExcelSheet(
       boundaryData,
-      localizedHeaders,
+      headers,
       localizedBoundaryTab
     );
   } else {
@@ -1085,12 +1087,11 @@ async function callMdmsV2Data(
       MdmsCriteria: {
         tenantId: tenantId,
         filters,
-        schemaCode: moduleName + "." + masterName,
+        schemaCode: moduleName + "." + "boundary",
         limit: 10,
         offset: 0
       },
     };
-    console.log(requestBody,"booooooooooooooo")
     const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
     const response = await httpRequest(url, requestBody, { tenantId: tenantId });
     return response;

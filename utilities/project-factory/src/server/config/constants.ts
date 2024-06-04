@@ -10,7 +10,7 @@ export const CONSTANTS: any = {
             INVALID_PAGINATION: "Invalid pagination",
             KAFKA_ERROR: "Some error occured in kafka",
             SCHEMA_ERROR : " Schema related error",
-            RESPONSE_NOT_FOUND_ERROR: "Resposne not found"
+            RESPONSE_NOT_FOUND_ERROR: "Response not found"
         },
         FILE: {
             INVALID_FILE: "No download URL returned for the given fileStoreId",
@@ -20,7 +20,8 @@ export const CONSTANTS: any = {
             INVALID_FILE_ERROR: "Invalid file",
             DOWNLOAD_URL_NOT_FOUND: "Not any download URL returned for the given fileStoreId",
             INVALID_FILE_FORMAT: "The uploaded file is not a valid excel file (xlsx or xls).",
-            INVALID_COLUMNS: "Columns are invalid"
+            INVALID_COLUMNS: "Columns are invalid",
+            FETCHING_COLUMN_ERROR: "Error fetching Column Headers From Schema"
         },
         FACILITY: {
             FACILITY_SEARCH_FAILED: "Search failed for facility. Check logs",
