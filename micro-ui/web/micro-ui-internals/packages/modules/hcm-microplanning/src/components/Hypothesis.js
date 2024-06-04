@@ -143,7 +143,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   return (
     <>
       <div className={sectionClass}>
-        <div className="hypothesis-help" style={{position:"absolute",top:"70%",left:"40%",zIndex:"-100"}}></div>
+        <div className="hypothesis-help" style={{ position: "absolute", top: "70%", left: "40%", zIndex: "-100" }} />
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />
         {/* Interractable Section that includes the example as well as the assumptions */}

@@ -573,7 +573,7 @@ const Upload = ({
       }
       return blob;
     } catch (error) {
-      console.error(error.message);
+      console.error("Error generating blob:", error);
       return;
     }
   };
@@ -1632,7 +1632,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
 };
 
 const prepareExcelFileBlobWithErrors = (data, errors, t) => {
-  let tempData = _.cloneDeep(data);
+  let tempData = {...data};
   // Process each dataset within the data object
   const processedData = {};
   for (const key in tempData) {
