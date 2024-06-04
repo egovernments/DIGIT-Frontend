@@ -19,6 +19,11 @@ module.exports = {
       }
     ],
   },
+  resolve: {
+    fallback: {
+      "url": require.resolve("url/"),
+    },
+  },
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
