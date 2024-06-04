@@ -1,4 +1,4 @@
-import { commonColumn } from "../configs/constants";
+import { BOUNDARY_DATA_SHEET, FACILITY_DATA_SHEET, commonColumn } from "../configs/constants";
 
 export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   // request for boundary relation api
@@ -50,7 +50,7 @@ export const getFacilities = async (params, body) => {
  * @param {*} boundaryData
  * @returns xlsxData with boundary data added
  */
-const addBoundaryData = (xlsxData, boundaryData) => {
+export const addBoundaryData = (xlsxData, boundaryData) => {
   // Return the original data if there is no boundary data to add
   if (!boundaryData) return xlsxData;
 
@@ -122,7 +122,7 @@ const addBoundaryData = (xlsxData, boundaryData) => {
   });
 
   // Add the new sheet data to the original data
-  newXlsxData = [...xlsxData, ...newXlsxData, { sheetName: "boundaryData", data: sortedBoundaryDataForXlsxSheet }];
+  newXlsxData = [...xlsxData, ...newXlsxData, { sheetName: BOUNDARY_DATA_SHEET, data: sortedBoundaryDataForXlsxSheet }];
 
   // Return the updated data
   return newXlsxData;
@@ -132,11 +132,10 @@ const fillDataWithBlanks = (data, tillRow) => {
   while (data.length < tillRow) {
     data.push([]);
   }
-  
-  const maxLength = Math.max(...data.map(row => row.length));
-  return data.map(row => [...row, ...new Array(maxLength - row.length).fill('')]);
-};
 
+  const maxLength = Math.max(...data.map((row) => row.length));
+  return data.map((row) => [...row, ...new Array(maxLength - row.length).fill("")]);
+};
 
 /**
  *
@@ -156,17 +155,17 @@ const addSchemaData = (xlsxData, schema, extraColumnsToAdd) => {
     if (key === commonColumn) continue;
     columnList[0].push(key); // Add key to the first array
 
-    columnList[1].push(value.type || ""); // Add type to the second array
+    //   columnList[1].push(value.type || ""); // Add type to the second array
 
-    columnList[2].push(value.isRequired ? "MANDATORY" : "OPTIONAL"); // Add requirement status to the third array
+    //   columnList[2].push(value.isRequired ? "MANDATORY" : "OPTIONAL"); // Add requirement status to the third array
 
-    columnList[3].push(value.pattern || ""); // Add pattern to the fourth array
+    //   columnList[3].push(value.pattern || ""); // Add pattern to the fourth array
   }
 
   if (extraColumnsToAdd) columnList[0].push(...extraColumnsToAdd);
-  
+
   for (let { sheetName, data } of xlsxData) {
-    data = fillDataWithBlanks(data,4);
+    data = fillDataWithBlanks(data, 4);
     columnList.forEach((item, index) => {
       // Append the new items to the row
       if (data[index]) {
@@ -376,7 +375,7 @@ const addFacilitySheet = (xlsxData, mapping, facilities) => {
   const arrayOfArrays = [headers, ...dataRow];
 
   let facilitySheet = {
-    sheetName: "facilityData",
+    sheetName: FACILITY_DATA_SHEET,
     data: arrayOfArrays,
   };
   xlsxData = [facilitySheet, ...xlsxData];
@@ -397,23 +396,39 @@ export const createTemplate = async ({
   addFacilityData = false,
   schema,
   boundaries,
-  tenentId,
+  tenantId,
   hierarchyType,
 }) => {
-  const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot);
-  const boundaryData = await fetchBoundaryData(tenentId, hierarchyType, rootBoundary?.[0]?.code);
-  const filteredBoundaryData = filterBoundaries(boundaryData, boundaries);
+  const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+  const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+  let boundaryData = sessionData.filterBoundaries;
+  let filteredBoundaries;
+
+  if (!boundaryData) {
+    // Only fetch boundary data if not present in session storage
+    boundaryData = await fetchBoundaryData(tenantId, hierarchyType, rootBoundary?.[0]?.code);
+    filteredBoundaries = filterBoundaries(boundaryData, boundaries);
+
+    // Update the session storage with the new filtered boundaries
+    Digit.SessionStorage.set("microplanHelperData", {
+      ...sessionData,
+      filteredBoundaries: filteredBoundaries,
+    });
+  } else {
+    filteredBoundaries = boundaryData;
+  }
+
   // const filteredBoundaryData = boundaryData;
   let xlsxData = [];
   // adding boundary data to xlsxData
-  xlsxData = addBoundaryData(xlsxData, filteredBoundaryData);
+  xlsxData = addBoundaryData(xlsxData, filteredBoundaries);
 
   if (hierarchyLevelWiseSheets) {
     // district wise boundary Data sheets
     xlsxData = devideXlsxDataHierarchyLevelWise(xlsxData, hierarchyLevelName);
     if (addFacilityData) {
       // adding facility sheet
-      const facilities = await getAllFacilities(tenentId);
+      const facilities = await getAllFacilities(tenantId);
       if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
       else xlsxData = addSchemaData(xlsxData, schema);
     } else {
@@ -425,11 +440,11 @@ export const createTemplate = async ({
     // total boundary Data in one sheet
     if (addFacilityData) {
       // adding facility sheet
-      const facilities = await getAllFacilities(tenentId);
+      const facilities = await getAllFacilities(tenantId);
       if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
       else {
         let facilitySheet = {
-          sheetName: "facilityData",
+          sheetName: FACILITY_DATA_SHEET,
           data: [],
         };
         facilitySheet = addSchemaData([facilitySheet], schema, [commonColumn]);

@@ -31,7 +31,7 @@
             "isVisualizationPropertyOfMapSection": false,
             "toShowInMicroplanPreview": true
           },
-          "targetPopulationDemo1": {
+          "targetPopulationAge3MTo11M": {
             "type": "number",
             "isRequired": true,
             "isLocationDataColumns": false,
@@ -40,7 +40,7 @@
             "isVisualizationPropertyOfMapSection": true,
             "toShowInMicroplanPreview": true
           },
-          "targetpopulationDemo2": {
+          "targetPopulationAge12MTo59M": {
             "type": "number",
             "isRequired": true,
             "isLocationDataColumns": false,
@@ -49,7 +49,7 @@
             "isVisualizationPropertyOfMapSection": true,
             "toShowInMicroplanPreview": true
           },
-          "targetPopulationToReachPerCycleAgainstTheBoundaryInColumnHTotal": {
+          "totalTargetPopulation": {
             "type": "number",
             "isRequired": true,
             "isLocationDataColumns": false,

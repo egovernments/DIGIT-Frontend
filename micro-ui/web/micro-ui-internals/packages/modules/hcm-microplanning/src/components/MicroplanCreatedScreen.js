@@ -12,7 +12,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const downloadMicroplan = () => {
+  const downloadMicroplan = async () => {
     try {
       if (!microplanData?.microplanPreview) return;
       let data = _.cloneDeep(microplanData?.microplanPreview?.previewData);
@@ -21,7 +21,7 @@ const MicroplanCreatedScreen = memo(({ microplanData, ...props }) => {
         data[i] = data[i].map((item) => (item ? t(item) : t("NO_DATA")));
       }
 
-      const blob = convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data }, { skipHeader: true });
+      const blob = await convertJsonToXlsx({ [microplanData?.microplanDetails?.name]: data });
 
       if (!blob) {
         return;

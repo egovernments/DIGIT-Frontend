@@ -22,3 +22,6 @@ export const MapChoroplethGradientColors = [
 
 
 export const PRIMARY_THEME_COLOR = "#C84C0E"
+
+export const BOUNDARY_DATA_SHEET = "boundaryData"
+export const FACILITY_DATA_SHEET = "facilityData"

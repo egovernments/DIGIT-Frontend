@@ -535,7 +535,7 @@ const DataPreview = memo(
                         : {}),
                     }}
                   >
-                    {cellIndex == 0 &&
+                    {cellIndex === 0 &&
                       userEditedResources?.[rowData?.[conmmonColumnIndex]] &&
                       Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !== 0 && <div className="edited-row-marker"></div>}
 

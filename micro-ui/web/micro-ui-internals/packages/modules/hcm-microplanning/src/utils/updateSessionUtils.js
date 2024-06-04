@@ -1,6 +1,5 @@
 import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheetsForSessionUtil } from "../utils/exceltojson";
-import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";

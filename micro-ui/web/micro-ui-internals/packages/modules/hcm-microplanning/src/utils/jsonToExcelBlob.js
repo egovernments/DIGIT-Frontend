@@ -1,18 +1,35 @@
-import XLSX from 'xlsx';
+import ExcelJS from "exceljs";
 
-export const convertJsonToXlsx = (jsonData,options) => {
-  const workbook = XLSX.utils.book_new();
+export const convertJsonToXlsx = (jsonData) => {
+  // Create a new workbook
+  const workbook = new ExcelJS.Workbook();
 
+  // Iterate over each sheet in jsonData
   for (const [sheetName, data] of Object.entries(jsonData)) {
-    const worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+    // Create a new worksheet
+    const worksheet = workbook.addWorksheet(sheetName);
+
+    // Convert data to worksheet
+    data.forEach((row) => {
+      worksheet.addRow(row);
+    });
+
+    // Make the first row bold
+    if (worksheet.getRow(1)) {
+      worksheet.getRow(1).font = { bold: true };
+    }
+
+    // Set column widths
     const columnCount = data?.[0]?.length || 0;
     const wscols = Array(columnCount).fill({ width: 30 });
-    worksheet["!cols"] = wscols;
-    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-  };
+    wscols.forEach((col, colIndex) => {
+      worksheet.getColumn(colIndex + 1).width = col.width;
+    });
+  }
 
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', compression: true });
-  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  return blob;
-  
+  // Write the workbook to a buffer
+  return workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
+    // Create a Blob from the buffer
+    return new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  });
 };

@@ -37,10 +37,10 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
           // Calculate the offset from the top of the container
           const offset = parentRect.top - containerRect.top;
-
+          const SCROLL_OFFSET = 100
           // Scroll the container to the target position
           scrollContainer.scrollTo({
-            top: scrollContainer.scrollTop + offset - 100,
+            top: scrollContainer.scrollTop + offset - SCROLL_OFFSET,
             behavior: "smooth",
           });
         }

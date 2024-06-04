@@ -681,6 +681,12 @@ $border-color: rgba(214, 213, 212, 1);
       border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
       border-radius: 0.25rem;
 
+      .error-user-directions{
+        margin:0rem 0.5rem;
+        padding: 0;
+        color: $primary-theme-color;
+      }
+
       .sheet-wrapper {
         height: 76vh;
         overflow: auto;
@@ -710,6 +716,20 @@ $border-color: rgba(214, 213, 212, 1);
             height: 100%;
             outline-offset: -0.07rem;
             box-sizing: border-box;
+            position: relative;
+
+            .edited-row-marker {
+              width: 0.313rem;
+              position: absolute;
+              top: -0.045rem;
+              left: -0.313rem;
+              padding: 0;
+              margin: 0;
+              height: calc(100% + 0.09rem);
+              border-top-left-radius: 0.125rem;
+              border-bottom-left-radius: 0.125rem;
+              background-color: $primary-theme-color !important;
+            }
           }
 
           th {
@@ -1019,7 +1039,7 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .select-and-input-wrapper-first {
-      margin-top: 0.8rem;
+      margin-top: 0;
       width: 100%;
       display: flex;
       align-items: center;
@@ -1032,6 +1052,11 @@ $border-color: rgba(214, 213, 212, 1);
       display: flex;
       align-items: center;
       margin: 0;
+      position: sticky;
+      top: 0;
+      background-color: rgb(255, 255, 255);
+      z-index: 100;
+      padding-bottom: 0.8rem;
     }
 
     .invisible {
@@ -1274,6 +1299,10 @@ $border-color: rgba(214, 213, 212, 1);
       display: flex;
       align-items: center;
       margin: 0;
+      position: sticky;
+      top: 0;
+      background-color: rgb(255, 255, 255);
+      z-index: 100;
     }
 
     .invisible {
@@ -1364,7 +1393,6 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .create-microplan {
-
   .custom-action-bar,
   .custom-action-bar-no-first-button {
     height: 4rem;
@@ -1790,7 +1818,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: auto;
               }
 
-              input:checked~.inputIconClassname {
+              input:checked ~ .inputIconClassname {
                 border-color: $primary-theme-color;
               }
 
@@ -2170,11 +2198,11 @@ $border-color: rgba(214, 213, 212, 1);
               .edited-row-marker {
                 width: 0.313rem;
                 position: absolute;
-                top: 0;
+                top: -0.045rem;
                 left: -0.313rem;
                 padding: 0;
                 margin: 0;
-                height: 100%;
+                height: calc(100% + 0.09rem);
                 border-top-left-radius: 0.125rem;
                 border-bottom-left-radius: 0.125rem;
                 background-color: $primary-theme-color;

@@ -380,7 +380,7 @@ const InterractableSection = React.memo(
 
             // Scroll the container to the target position
             scrollContainer.scrollTo({
-              top: scrollContainer.scrollTop + offset - 10,
+              top: scrollContainer.scrollTop + offset - 100,
               behavior: "smooth",
             });
           }
@@ -649,7 +649,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
     if (!options) return;
     let filteredOptions = options.length ? options : [];
     let filteredOptionPlaceHolder = [];
-    if (item && item[toChange] && !filteredOptions.includes(item[toChange])) {
+    if (item?.[toChange] && !filteredOptions.includes(item[toChange])) {
       filteredOptionPlaceHolder = [item[toChange], ...filteredOptions];
     } else filteredOptionPlaceHolder = filteredOptions;
 
@@ -682,7 +682,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
           if (toChange === "output") {
             temp = temp.filter((item) => item !== selected?.code);
           }
-          if (Object.values(newDataSegment).every((item) => item != "")) temp = [...temp, newDataSegment.output];
+          if (Object.values(newDataSegment).every((item) => item !== "")) temp = [...temp, newDataSegment.output];
           return temp;
         });
       }
