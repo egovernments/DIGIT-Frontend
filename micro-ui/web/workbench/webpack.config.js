@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
   // mode: 'development',
@@ -20,6 +21,9 @@ module.exports = {
       }
     ],
   },
+  plugins: [
+    new NodePolyfillPlugin()
+  ],
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
@@ -41,4 +45,9 @@ module.exports = {
     // new BundleAnalyzerPlugin(),
     new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
   ],
+  resolve: {
+    fallback: {
+      "url": require.resolve("url/")  // Add other core modules as needed
+    }
+  }
 };
