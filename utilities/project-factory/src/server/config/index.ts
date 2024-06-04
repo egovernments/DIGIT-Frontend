@@ -29,6 +29,8 @@ const config = {
   user: {
     userTab: process.env.USER_TAB_NAME || "HCM_ADMIN_CONSOLE_USER_LIST",
     userSchemaMasterName: process.env.USER_SCHEMA_MASTER || "userSchema",
+    userDefaultPassword: process.env.USER_DEFAULT_PASSWORD || "eGov@123",
+    userPasswordAutoGenerate: process.env.USER_PASSWORD_AUTO_GENERATE || "true",
   },
   kafka: {
     // Kafka topics
@@ -80,7 +82,8 @@ const config = {
     userHost: process.env.EGOV_USER_HOST || "https://unified-dev.digit.org/",
     productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-dev.digit.org/",
     hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-dev.digit.org/",
-    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/"
+    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
+    healthIndividualHost: process.env.EGOV_HEALTH_INDIVIDUAL_HOST || "https://unified-dev.digit.org/",
   },
   // Paths for different services
   paths: {

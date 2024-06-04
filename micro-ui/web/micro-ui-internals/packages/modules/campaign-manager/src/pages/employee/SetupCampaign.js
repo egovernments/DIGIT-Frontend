@@ -254,6 +254,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
   // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
 
@@ -343,8 +344,8 @@ const SetupCampaign = ({ hierarchyType }) => {
       },
       HCM_CAMPAIGN_DATE: {
         campaignDates: {
-          startDate: draftData?.startDate ? new Date(draftData?.startDate)?.toISOString()?.split("T")?.[0] : null,
-          endDate: draftData?.endDate ? new Date(draftData?.endDate)?.toISOString()?.split("T")?.[0] : null,
+          startDate: draftData?.startDate ? new Date(draftData?.startDate)?.toISOString()?.split("T")?.[0] : "",
+          endDate: draftData?.endDate ? new Date(draftData?.endDate)?.toISOString()?.split("T")?.[0] : "",
         },
       },
       HCM_CAMPAIGN_CYCLE_CONFIGURE: {
@@ -354,6 +355,7 @@ const SetupCampaign = ({ hierarchyType }) => {
             : {
                 cycle: delivery?.map((obj) => obj?.cycleNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.cycleNumber)) : 1,
                 deliveries: delivery?.map((obj) => obj?.deliveryNumber)?.length > 0 ? Math.max(...delivery?.map((obj) => obj?.deliveryNumber)) : 1,
+                refetch: true,
               },
           cycleData: draftData?.additionalDetails?.cycleData?.cycleData
             ? draftData?.additionalDetails?.cycleData?.cycleData
@@ -384,7 +386,7 @@ const SetupCampaign = ({ hierarchyType }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setEnabled(fetchUpload || (fetchBoundary && currentKey > 6));
+      setEnabled(fetchUpload || (fetchBoundary && currentKey > 3));
     }, 3000);
   }, [fetchUpload, fetchBoundary, currentKey]);
 
@@ -1134,7 +1136,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   };
 
   const onStepClick = (step) => {
-    if ((currentKey === 4 || currentKey === 5) && step > 1) {
+    if ((currentKey === 5 || currentKey === 6) && step > 1) {
       return;
     }
     const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
@@ -1145,10 +1147,10 @@ const SetupCampaign = ({ hierarchyType }) => {
     if (step === 6 && Object.keys(totalFormData).includes("HCM_CAMPAIGN_UPLOAD_USER_DATA")) {
       setCurrentKey(10);
       setCurrentStep(7);
-    } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_DATE"]) {
-      setCurrentKey(4);
+    } else if (step === 1 && totalFormData["HCM_CAMPAIGN_NAME"] && totalFormData["HCM_CAMPAIGN_NAME"]) {
+      setCurrentKey(3);
       setCurrentStep(1);
-    } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_DATE"]) {
+    } else if (!totalFormData["HCM_CAMPAIGN_NAME"] || !totalFormData["HCM_CAMPAIGN_NAME"]) {
       // Do not set stepper and key
     } else if (Object.keys(totalFormData).includes(name)) {
       setCurrentKey(key);
@@ -1156,6 +1158,52 @@ const SetupCampaign = ({ hierarchyType }) => {
       // Do not set stepper and key
     }
   };
+
+  const filterNonEmptyValues = (obj) => {
+    const keys = [];
+    for (const key in obj) {
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        // Check if any nested value is non-null and non-empty
+        if (hasNonEmptyValue(obj[key])) {
+          keys.push(key);
+        }
+      } else if (obj[key] !== null && obj[key] !== "") {
+        keys.push(key);
+      }
+    }
+    return keys;
+  };
+
+  const hasNonEmptyValue = (obj) => {
+    for (const key in obj) {
+      if (obj[key] !== null && obj[key] !== "") {
+        if (typeof obj[key] === "object") {
+          if (hasNonEmptyValue(obj[key])) {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const findHighestStepCount = () => {
+    const totalFormDataKeys = Object.keys(totalFormData);
+
+    const nonNullFormDataKeys = filterNonEmptyValues(totalFormData);
+
+    const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
+
+    const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
+
+    setActive(highestStep);
+  };
+
+  useEffect(() => {
+    findHighestStepCount();
+  }, [totalFormData, campaignConfig]);
 
   const onSecondayActionClick = () => {
     if (currentKey > 1) {
@@ -1216,8 +1264,8 @@ const SetupCampaign = ({ hierarchyType }) => {
         <Stepper
           customSteps={[
             "HCM_CAMPAIGN_SETUP_DETAILS",
-            "HCM_DELIVERY_DETAILS",
             "HCM_BOUNDARY_DETAILS",
+            "HCM_DELIVERY_DETAILS",
             "HCM_TARGETS",
             "HCM_FACILITY_DETAILS",
             "HCM_USER_DETAILS",
@@ -1225,6 +1273,7 @@ const SetupCampaign = ({ hierarchyType }) => {
           ]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
+          activeSteps={active}
         />
       )}
       <FormComposerV2
@@ -1240,7 +1289,7 @@ const SetupCampaign = ({ hierarchyType }) => {
         actionClassName={"actionBarClass"}
         className="setup-campaign"
         cardClassName="setup-campaign-card"
-        noCardStyle={currentStep === 7 || currentStep === 0 ? false : true}
+        noCardStyle={currentKey ===4 || currentStep === 7 || currentStep === 0  ? false : true}
         onSecondayActionClick={onSecondayActionClick}
         label={noAction === "false" ? null : filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />

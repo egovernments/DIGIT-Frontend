@@ -10,7 +10,6 @@ import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryD
 import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
-import { getBoundaryTabName } from '../utils/boundaryUtils';
 const _ = require('lodash'); // Import lodash library
 
 // Function to retrieve workbook from Excel file URL and sheet name
@@ -391,15 +390,12 @@ const getCount: any = async (
 
 // Function to create Excel sheet and upload it
 async function createAndUploadFile(
-  updatedWorkbook: XLSX.WorkBook,
+  updatedWorkbook: any,
   request: any,
   tenantId?: any
 ) {
   // Write the updated workbook to a buffer
-  const buffer = XLSX.write(updatedWorkbook, {
-    bookType: "xlsx",
-    type: "buffer",
-  });
+  const buffer = await updatedWorkbook.xlsx.writeBuffer();
 
   // Create form data for file upload
   const formData = new FormData();
@@ -426,11 +422,8 @@ async function createAndUploadFile(
   // Extract response data
   const responseData = fileCreationResult?.files;
   if (!responseData) {
-    throwError(
-      "COMMON",
-      500,
-      "INTERNAL_SERVER_ERROR",
-      "Error while uploading excel file"
+    throw new Error(
+      "Error while uploading excel file: INTERNAL_SERVER_ERROR"
     );
   }
 
@@ -499,28 +492,9 @@ function traverseChildren(parent: any, parentMap: any, hierarchyList: any[]) {
 }
 
 // Function to create an Excel sheet
-async function createExcelSheet(
-  data: any,
-  headers: any,
-  sheetName: string = "Sheet1"
-) {
-  // Create a new Excel workbook
-  const workbook = XLSX.utils.book_new();
-
-  // Combine headers and data into sheet data
-  const sheetData = [headers, ...data];
-  const ws = XLSX.utils.aoa_to_sheet(sheetData);
-
-  // Define column widths (in pixels)
-  const columnWidths = headers.map(() => ({ width: 30 }));
-
-  // Apply column widths to the sheet
-  ws["!cols"] = columnWidths;
-
-  // Append sheet to the workbook
-  XLSX.utils.book_append_sheet(workbook, ws, sheetName);
-
-  return { wb: workbook, ws: ws, sheetName: sheetName }; // Return the workbook, worksheet, and sheet name
+async function createExcelSheet(data: any, headers: any) {
+  var rows = [headers, ...data];
+  return rows;
 }
 
 // Function to handle getting boundary codes
@@ -648,15 +622,14 @@ async function getBoundarySheetData(
       localizationMap
     );
     // create empty sheet if no boundary present in system
-    const localizedBoundaryTab = getLocalizedName(
-      getBoundaryTabName(),
-      localizationMap
-    );
+    // const localizedBoundaryTab = getLocalizedName(
+    //   getBoundaryTabName(),
+    //   localizationMap
+    // );
     logger.info(`generated a empty template for boundary`);
     return await createExcelSheet(
       boundaryData,
-      localizedHeaders,
-      localizedBoundaryTab
+      localizedHeaders
     );
   } else {
     // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
@@ -681,10 +654,8 @@ async function createStaff(resouceBody: any) {
   // Create staff
   const staffCreateUrl =
     `${config.host.projectHost}` + `${config.paths.staffCreate}`;
-  logger.info("Project Staff Creation url " + staffCreateUrl);
-  logger.debug(
-    "Project Staff Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+    logger.info("Project staff Creation : API :"+ config.paths.staffCreate);
+  
   const staffResponse = await httpRequest(
     staffCreateUrl,
     resouceBody,
@@ -709,10 +680,8 @@ async function createProjectResource(resouceBody: any) {
   // Create project resources
   const projectResourceCreateUrl =
     `${config.host.projectHost}` + `${config.paths.projectResourceCreate}`;
-  logger.info("Project Resource Creation url " + projectResourceCreateUrl);
-  logger.debug(
-    "Project Resource Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+  logger.info("Project Resource Creation : API : "+ config.paths.projectResourceCreate);
+  
   const projectResourceResponse = await httpRequest(
     projectResourceCreateUrl,
     resouceBody,
@@ -737,10 +706,8 @@ async function createProjectFacility(resouceBody: any) {
   // Create project facilities
   const projectFacilityCreateUrl =
     `${config.host.projectHost}` + `${config.paths.projectFacilityCreate}`;
-  logger.info("Project Facility Creation url " + projectFacilityCreateUrl);
-  logger.debug(
-    "Project Facility Creation body " + getFormattedStringForDebug(resouceBody)
-  );
+  logger.info("Project Facility Creation  : API :"+ config.paths.projectFacilityCreate);
+
   const projectFacilityResponse = await httpRequest(
     projectFacilityCreateUrl,
     resouceBody,
@@ -756,6 +723,48 @@ async function createProjectFacility(resouceBody: any) {
   );
   validateProjectFacilityResponse(projectFacilityResponse);
 }
+
+// Helper function to create staff
+const createStaffHelper = (resourceId: any, projectId: any, resouceBody: any, tenantId: any, startDate: any, endDate: any) => {
+  const ProjectStaff = {
+    tenantId: tenantId.split(".")?.[0],
+    projectId,
+    userId: resourceId,
+    startDate,
+    endDate,
+  };
+  const newResourceBody = { ...resouceBody, ProjectStaff };
+  return createStaff(newResourceBody);
+};
+
+// Helper function to create project resource
+const createProjectResourceHelper = (resourceId: any, projectId: any, resouceBody: any, tenantId: any, startDate: any, endDate: any) => {
+  const ProjectResource = {
+    tenantId: tenantId.split(".")?.[0],
+    projectId,
+    resource: {
+      productVariantId: resourceId,
+      type: "DRUG",
+      isBaseUnitVariant: false,
+    },
+    startDate,
+    endDate,
+  };
+  const newResourceBody = { ...resouceBody, ProjectResource };
+  return createProjectResource(newResourceBody);
+};
+
+// Helper function to create project facility
+const createProjectFacilityHelper = (resourceId: any, projectId: any, resouceBody: any, tenantId: any) => {
+  const ProjectFacility = {
+    tenantId: tenantId.split(".")?.[0],
+    projectId,
+    facilityId: resourceId,
+  };
+  const newResourceBody = { ...resouceBody, ProjectFacility };
+  return createProjectFacility(newResourceBody);
+};
+
 
 /**
  * Asynchronously creates related entities such as staff, resources, and facilities based on the provided resources, tenant ID, project ID, start date, end date, and resource body.
@@ -774,48 +783,27 @@ async function createRelatedEntity(
   endDate: any,
   resouceBody: any
 ) {
+  // Array to hold all promises
+  const promises = [];
+
   // Create related entities
   for (const resource of resources) {
     const type = resource?.type;
     for (const resourceId of resource?.resourceIds) {
-      if (type == "staff") {
-        const ProjectStaff = {
-          tenantId: tenantId.split(".")?.[0],
-          projectId,
-          userId: resourceId,
-          startDate,
-          endDate,
-        };
-        resouceBody.ProjectStaff = ProjectStaff;
-        await createStaff(resouceBody);
-      } else if (type == "resource") {
-        const ProjectResource = {
-          // FIXME : Tenant Id should not be splitted
-          tenantId: tenantId.split(".")?.[0],
-          projectId,
-          resource: {
-            productVariantId: resourceId,
-            type: "DRUG",
-            isBaseUnitVariant: false,
-          },
-          startDate,
-          endDate,
-        };
-        resouceBody.ProjectResource = ProjectResource;
-        await createProjectResource(resouceBody);
-      } else if (type == "facility") {
-        const ProjectFacility = {
-          // FIXME : Tenant Id should not be splitted
-          tenantId: tenantId.split(".")?.[0],
-          projectId,
-          facilityId: resourceId,
-        };
-        resouceBody.ProjectFacility = ProjectFacility;
-        await createProjectFacility(resouceBody);
+      logger.info(`creating project ${type} mapping for project : ${projectId} and resourceId ${resourceId}`);
+      if (type === "staff") {
+        promises.push(createStaffHelper(resourceId, projectId, resouceBody, tenantId, startDate, endDate));
+      } else if (type === "resource") {
+        promises.push(createProjectResourceHelper(resourceId, projectId, resouceBody, tenantId, startDate, endDate));
+      } else if (type === "facility") {
+        promises.push(createProjectFacilityHelper(resourceId, projectId, resouceBody, tenantId));
       }
     }
   }
+  // Wait for all promises to complete
+  await Promise.all(promises);
 }
+
 
 /**
  * Asynchronously creates related resources based on the provided request body.
@@ -984,8 +972,6 @@ async function createBoundaryRelationship(request: any, boundaryMap: Map<{ key: 
 
         flag = 0;
         requestBody.BoundaryRelationship = boundary;
-        // Introducing a delay of 1 second
-        // await new Promise(resolve => setTimeout(resolve, config.boundary.boundaryRelationShipDelay));
         await confirmBoundaryParentCreation(request, modifiedChildParentMap.get(boundaryCode) || null);
         try {
           const response = await httpRequest(`${config.host.boundaryHost}${config.paths.boundaryRelationshipCreate}`, requestBody, {}, 'POST', undefined, undefined, true);
@@ -1075,8 +1061,8 @@ async function callMdmsSchema(
 }
 
 async function getMDMSV1Data(request: any, moduleName: string, masterName: string, tenantId: string) {
-  const resp = await callMdmsData(request, moduleName, masterName, tenantId);
-  return resp;
+  const resp:any = await callMdmsData(request, moduleName, masterName, tenantId);
+  return resp?.["MdmsRes"]?.[moduleName]?.[masterName];
 }
 
 export {

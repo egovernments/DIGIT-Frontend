@@ -4,6 +4,7 @@ import { getFormattedStringForDebug, logger } from '../utils/logger'; // Importi
 import { producer } from './Producer'; // Importing producer from the Producer module
 import { processCampaignMapping } from '../utils/campaignMappingUtils';
 import { enrichAndPersistCampaignWithError } from '../utils/campaignUtils';
+import { throwError } from '../utils/genericUtils';
 
 
 
@@ -69,28 +70,33 @@ export function listener() {
  * @returns A promise that resolves when the messages are successfully produced.
  */
 async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
-    logger.info(`KAFKA :: PRODUCER :: a message sent to topic ${topic}`);
-    logger.debug(`KAFKA :: PRODUCER :: message ${getFormattedStringForDebug(modifiedMessages)}`);
-    return new Promise<void>((resolve, reject) => {
-        const payloads = [
-            {
-                topic: topic,
-                messages: JSON.stringify(modifiedMessages), // Convert modified messages to JSON string
-            },
-        ];
+    try {
+        logger.info(`KAFKA :: PRODUCER :: a message sent to topic ${topic}`);
+        logger.debug(`KAFKA :: PRODUCER :: message ${getFormattedStringForDebug(modifiedMessages)}`);
+        return new Promise<void>((resolve, reject) => {
+            const payloads = [
+                {
+                    topic: topic,
+                    messages: JSON.stringify(modifiedMessages), // Convert modified messages to JSON string
+                },
+            ];
 
-        // Send payloads to the Kafka producer
-        producer.send(payloads, (err) => {
-            if (err) {
-                logger.info('KAFKA :: PRODUCER :: Some Error Occurred '); // Log successful message production
-                logger.error(`KAFKA :: PRODUCER :: Error :  ${JSON.stringify(err)}`); // Log producer error
-                reject(err); // Reject promise if there's an error
-            } else {
-                logger.info('KAFKA :: PRODUCER :: message sent successfully '); // Log successful message production
-                resolve(); // Resolve promise if messages are successfully produced
-            }
+            // Send payloads to the Kafka producer
+            producer.send(payloads, (err) => {
+                if (err) {
+                    logger.info('KAFKA :: PRODUCER :: Some Error Occurred ');
+                    logger.error(`KAFKA :: PRODUCER :: Error :  ${JSON.stringify(err)}`);
+                    reject(err); // Reject promise if there's an error
+                } else {
+                    logger.info('KAFKA :: PRODUCER :: message sent successfully ');
+                    resolve(); // Resolve promise if messages are successfully produced
+                }
+            });
         });
-    });
+    } catch (error) {
+        logger.error(`KAFKA :: PRODUCER :: Exception caught: ${JSON.stringify(error)}`);
+        throwError("COMMON", 400, "KAKFA_ERROR", "Some error occured in kafka"); // Re-throw the error after logging it
+    }
 }
 
 export { produceModifiedMessages } // Export the produceModifiedMessages function for external use
