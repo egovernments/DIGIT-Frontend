@@ -2,7 +2,7 @@ name: project factory service docker Image CI
 
 on:
   push:
-    branches: [ "campaign-local" ]
+    branches: [ "campaign-local","new-c" ]
 
 jobs:
 
