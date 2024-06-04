@@ -27,7 +27,7 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/microplanning-ui
+ENV WORK_DIR=/var/web/microplan-ui
 
 RUN mkdir -p ${WORK_DIR}
 
