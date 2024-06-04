@@ -39,7 +39,7 @@
     "@cyntler/react-doc-viewer": "1.10.3"
   },
   "resolutions": {
-    "**/rollup": "1.32.1",
+    "**/rollup": "2.68.0",
 		"**/rollup-plugin-babel": "4.4.0",
 		"**/rollup-plugin-bundle-size": "1.0.1",
 		"**/rollup-plugin-es3": "1.1.0",
