@@ -1099,7 +1099,7 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
 };
 
 const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
-  if (!microplanPreviewAggregates) return <Loader />;
+  if (!microplanPreviewAggregates) return null;
   return (
     <div className="aggregates">
       {microplanPreviewAggregates.map((item, index) => (
