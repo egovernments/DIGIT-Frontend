@@ -1258,6 +1258,36 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
+
+function lockTargetFields(newSheet: any, targetColumnNumber: any, boundaryCodeColumnIndex: any) {
+    // Make every cell locked by default
+    newSheet.eachRow((row: any) => {
+        row.eachCell((cell: any) => {
+            cell.protection = { locked: true };
+        });
+    });
+
+    // Unlock cells in the target column
+    if (targetColumnNumber > -1) {
+        newSheet.eachRow((row: any) => {
+            const cell = row.getCell(targetColumnNumber); // Excel columns are 1-based
+            cell.protection = { locked: false };
+        });
+    }
+
+    // Hide the boundary code column
+    if (boundaryCodeColumnIndex !== -1) {
+        newSheet.getColumn(boundaryCodeColumnIndex + 1).hidden = true;
+    }
+
+    // Protect the sheet with a password (optional)
+    newSheet.protect('passwordhere', {
+        selectLockedCells: true,
+        selectUnlockedCells: true
+    });
+}
+
+
 async function appendSheetsToWorkbook(request: any, boundaryData: any[], differentTabsBasedOnLevel: any, localizationMap?: any) {
     try {
         logger.info("Received Boundary data for Processing file");
@@ -1268,7 +1298,8 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const localisedHeading = getLocalizedName(headingInSheet, localizationMap);
         await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const mainSheetData: any[] = [];
-        const headersForMainSheet = differentTabsBasedOnLevel ? Object.keys(boundaryData[0]).slice(0, Object.keys(boundaryData[0]).indexOf(differentTabsBasedOnLevel) + 1) : [];
+        const hierarchy: any[] = await getLocalizedHierarchy(request, localizationMap);
+        const headersForMainSheet = differentTabsBasedOnLevel ? hierarchy.slice(0, hierarchy.indexOf(differentTabsBasedOnLevel) + 1) : [];
         const localizedHeadersForMainSheet = getLocalizedHeaders(headersForMainSheet, localizationMap);
         const localizedBoundaryCode = getLocalizedName(getBoundaryColumnName(), localizationMap);
         localizedHeadersForMainSheet.push(localizedBoundaryCode);
@@ -1296,7 +1327,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         addDataToSheet(mainSheet, mainSheetData, 'F3842D', 30);
 
 
-        await appendDistricts(request, workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap);
+        appendDistricts(request,workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap);
         logger.info("File processed successfully");
         return workbook;
     } catch (error) {
@@ -1343,33 +1374,7 @@ function createNewSheet(workbook: any, newSheetData: any, uniqueData: any, local
 }
 
 
-function lockTargetFields(newSheet: any, targetColumnNumber: any, boundaryCodeColumnIndex: any) {
-    // Make every cell locked by default
-    newSheet.eachRow((row: any) => {
-        row.eachCell((cell: any) => {
-            cell.protection = { locked: true };
-        });
-    });
 
-    // Unlock cells in the target column
-    if (targetColumnNumber > -1) {
-        newSheet.eachRow((row: any) => {
-            const cell = row.getCell(targetColumnNumber); // Excel columns are 1-based
-            cell.protection = { locked: false };
-        });
-    }
-
-    // Hide the boundary code column
-    if (boundaryCodeColumnIndex !== -1) {
-        newSheet.getColumn(boundaryCodeColumnIndex + 1).hidden = true;
-    }
-
-    // Protect the sheet with a password (optional)
-    newSheet.protect('passwordhere', {
-        selectLockedCells: true,
-        selectUnlockedCells: true
-    });
-}
 
 
 function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, localizationMap?: any): any {
