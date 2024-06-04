@@ -15,12 +15,12 @@ import getStore from "./redux/store";
 const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
 
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
-  const reduxRsp = getStore(initData, moduleReducers(initData))
+  // const reduxRsp = getStore(initData, moduleReducers(initData))
   
   if (isLoading) {
     return <Loader page={true} />;
   }
-  const i18n = getI18n();
+  // const i18n = getI18n();
   return (
     <Provider store={getStore(initData, moduleReducers(initData))}>
       <Router>

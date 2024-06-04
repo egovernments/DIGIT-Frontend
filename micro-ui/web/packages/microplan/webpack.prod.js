@@ -7,15 +7,15 @@ module.exports = () => {
   const prodConfig = {
     mode: 'production',
     output: {
-      publicPath: '/microplanning-ui/',
+      publicPath: '/microplan-ui/',
       filename: '[name].[contenthash].js',
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: 'microplanning',
+        name: 'microplan',
         filename: 'remoteEntry.js',
         exposes: {
-          './MicroplanningModule': './src/SingleSpaEntry',
+          './MICROPLANModule': './src/SingleSpaEntry',
         },
         shared: {
           react: { singleton: true }, // React will be shared as a singleton

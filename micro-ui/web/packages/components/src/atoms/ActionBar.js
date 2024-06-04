@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ActionBar = (props) => {
-  console.log("in components");
   return (
     <div className={`digit-action-bar-wrap ${props?.className ? props?.className : ""}`} style={props?.style}>
       {props.children}

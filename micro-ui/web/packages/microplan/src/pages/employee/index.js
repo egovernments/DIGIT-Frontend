@@ -103,7 +103,7 @@ const App = ({ path }) => {
     Digit.Utils.microplan.destroySessionHelper(pathVar,["saved-microplans"],"SAVED_MICROPLAN_SESSION");
   }, [location])
 
-  if(isLoadingMdmsBaseData ){
+  if(isLoadingMdmsBaseData || isLoading ){
     return <Loader />
   }
   
