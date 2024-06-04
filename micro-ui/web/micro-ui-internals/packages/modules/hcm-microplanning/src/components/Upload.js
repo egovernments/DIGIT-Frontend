@@ -25,7 +25,7 @@ const commonColumn = "boundaryCode";
 
 const Upload = ({
   MicroplanName = "default",
-  campaignType = "SMC",
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
   microplanData,
   setMicroplanData,
   checkDataCompletion,
@@ -566,7 +566,7 @@ const Upload = ({
         case SHAPEFILE:
         case GEOJSON:
           if (fileData && fileData.data) {
-            const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.fileName);
+            const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section);
             if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
           }
           break;
@@ -1632,7 +1632,7 @@ const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, sel
 };
 
 const prepareExcelFileBlobWithErrors = (data, errors, t) => {
-  let tempData = {...data};
+  let tempData = { ...data };
   // Process each dataset within the data object
   const processedData = {};
   for (const key in tempData) {

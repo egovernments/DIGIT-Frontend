@@ -122,7 +122,7 @@ const SavedMicroplans = () => {
   const onClickRow = async (row) => {
     setShowLoader(true)
     try {
-
+      const campaignType = row?.original?.CampaignDetails?.projectType;
       const heirarchyData =  await Digit.CustomService.getResponse({
         url: "/boundary-service/boundary-hierarchy-definition/_search",
         useCache: false,
@@ -138,7 +138,7 @@ const SavedMicroplans = () => {
       const additionalProps = {
         heirarchyData:heirarchyData?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType),
         t,
-        campaignType: "ITIN"
+        campaignType
       }
       //here compute the sessionObject based on the row?.original data and then re-route
       const computedSession = await updateSessionUtils.computeSessionObject(row.original,state,additionalProps)

@@ -40,7 +40,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
           // Scroll the container to the target position
           scrollContainer.scrollTo({
-            top: scrollContainer.scrollTop + offset + 10,
+            top: scrollContainer.scrollTop + offset - 100,
             behavior: "smooth",
           });
         }

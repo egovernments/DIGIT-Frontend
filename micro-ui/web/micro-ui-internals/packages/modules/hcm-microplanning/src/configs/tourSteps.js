@@ -136,7 +136,7 @@ export const tourSteps = (t) => {
         },
         {
           content: t("HELP_MAPPING_BASE_MAP"),
-          target: ".base-map-selector",
+          target: ".base-map-selector .icon-first",
           disableBeacon: true,
           placement: "left-start",
           title: "",
@@ -145,7 +145,7 @@ export const tourSteps = (t) => {
         },
         {
           content: t("HELP_MAPPING_FILTER"),
-          target: ".filter-icon",
+          target: ".filter-icon p",
           disableBeacon: true,
           placement: "left-start",
           title: "",
@@ -154,7 +154,7 @@ export const tourSteps = (t) => {
         },
         {
           content: t("HELP_MAPPING_VIRTUALIZATION"),
-          target: ".virtualization-icon",
+          target: ".virtualization-icon p",
           disableBeacon: true,
           placement: "left-start",
           title: "",

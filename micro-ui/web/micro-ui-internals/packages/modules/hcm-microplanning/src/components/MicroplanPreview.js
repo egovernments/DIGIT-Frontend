@@ -12,7 +12,7 @@ import { timeLineOptions } from "../configs/timeLineOptions.json";
 const page = "microplanPreview";
 
 const MicroplanPreview = ({
-  campaignType = "SMC",
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
   microplanData,
   setMicroplanData,
   checkDataCompletion,
@@ -535,7 +535,9 @@ const DataPreview = memo(
                         : {}),
                     }}
                   >
-                    {cellIndex==0 && userEditedResources?.[rowData?.[conmmonColumnIndex]] && Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !==0 && <div className="edited-row-marker"></div>}
+                    {cellIndex == 0 &&
+                      userEditedResources?.[rowData?.[conmmonColumnIndex]] &&
+                      Object.keys(userEditedResources?.[rowData?.[conmmonColumnIndex]]).length !== 0 && <div className="edited-row-marker"></div>}
 
                     {rowData[cellIndex] || rowData[cellIndex] === 0 ? rowData[cellIndex] : t("NO_DATA")}
                   </td>
@@ -1105,7 +1107,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
       {microplanPreviewAggregates.map((item, index) => (
         <div key={index}>
           <p className="aggregate-value">{calculateAggregateValue(item, dataToShow)}</p>
-          <p className="aggregate-label">{t(item)}</p>
+          <p className="aggregate-label">{typeof item === "object" && item.name ? t(item.name) : t(item)}</p>
         </div>
       ))}
     </div>
@@ -1115,14 +1117,15 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
 const calculateAggregateValue = (aggregateName, dataToShow) => {
   if (!aggregateName || !dataToShow || dataToShow.length === 0) return;
   let aggregateNameList = aggregateName;
-  if (!Array.isArray(aggregateName)) aggregateNameList = [aggregateName];
+  if (typeof aggregateName !== "object") aggregateNameList = { name: aggregateName, entities: [aggregateName] };
   let aggregateData = 0;
-  aggregateNameList.forEach((item) => {
-    const columnIndex = dataToShow?.[0].indexOf(item);
-    dataToShow.slice(1).forEach((e) => {
-      if (e?.[columnIndex]) aggregateData = aggregateData + Number(e[columnIndex]);
-    });
-  });
+  if (aggregateNameList)
+    for (const item of aggregateNameList.entities) {
+      const columnIndex = dataToShow?.[0].indexOf(item);
+      dataToShow.slice(1).forEach((e) => {
+        if (e?.[columnIndex]) aggregateData = aggregateData + Number(e[columnIndex]);
+      });
+    }
   return aggregateData.toLocaleString();
 };
 

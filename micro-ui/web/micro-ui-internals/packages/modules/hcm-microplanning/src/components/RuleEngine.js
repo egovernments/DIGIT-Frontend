@@ -12,7 +12,15 @@ import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 const page = "ruleEngine";
 
-const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
+const RuleEngine = ({
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
+  microplanData,
+  setMicroplanData,
+  checkDataCompletion,
+  setCheckDataCompletion,
+  currentPage,
+  pages,
+}) => {
   const { t } = useTranslation();
 
   // States
@@ -183,7 +191,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     <>
       <div className={sectionClass}>
         <div className="rule-engine-body">
-        <div className="rule-engine-help" style={{ position: "absolute", top: "20rem", left: "40%", zIndex: "-100" }} />
+          <div className="rule-engine-help" style={{ position: "absolute", top: "20rem", left: "40%", zIndex: "-100" }} />
           {/* NonInterractable Section */}
           <NonInterractableSection t={t} />
           {/* Interractable Section that includes the example as well as the rules */}
@@ -203,7 +211,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             setOperators={setOperators}
             t={t}
           />
-          <div className="add-button-help"/>
+          <div className="add-button-help" />
           <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
             <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
             <p>{t("ADD_ROW")}</p>
@@ -632,7 +640,7 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   useEffect(() => {
     if (item) {
       if (outputs && outputs.some((e) => e === item?.input)) {
-        if (rules.filter(item => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
+        if (rules.filter((item) => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
       } else setSelected({ code: item[toChange] });
     }
   }, [item]);
@@ -690,16 +698,16 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
 
   return (
     <div title={selected?.code ? t(selected.code) : undefined}>
-    <Dropdown
-      variant="select-dropdown"
-      t={t}
-      isMandatory={false}
-      option={filteredOptions.map((item) => ({ code: item }))}
-      selected={selected}
-      select={selectChangeHandler}
-      optionKey="code"
-      placeholder={t("SELECT_OPTION")}
-    />
+      <Dropdown
+        variant="select-dropdown"
+        t={t}
+        isMandatory={false}
+        option={filteredOptions.map((item) => ({ code: item }))}
+        selected={selected}
+        select={selectChangeHandler}
+        optionKey="code"
+        placeholder={t("SELECT_OPTION")}
+      />
     </div>
   );
 });
@@ -709,7 +717,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
   let sortData = [];
   if (!schemas) return;
-  for (const value of microplanData?.upload?.filter((value) =>  value?.active && value?.error === null) || []) {
+  for (const value of microplanData?.upload?.filter((value) => value?.active && value?.error === null) || []) {
     sortData.push({ section: value?.section, fileType: value?.fileType });
   }
   const filteredSchemas =

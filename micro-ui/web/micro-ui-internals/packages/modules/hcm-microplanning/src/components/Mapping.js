@@ -46,7 +46,7 @@ function checkTruthyKeys(obj) {
 
 // Mapping component definition
 const Mapping = ({
-  campaignType = "SMC",
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
   microplanData,
   setMicroplanData,
   checkDataCompletion,
@@ -1106,7 +1106,7 @@ const extractGeoData = (
   setFilterSelections([...filterPropertiesCollector]);
   setFilterPropertyNames([...filterPropertieNameCollector]);
   let tempVirtualizationPropertiesCollectorArray = [...virtualizationPropertiesCollector];
-  if (tempVirtualizationPropertiesCollectorArray.length !== 0) setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...resources]);
+  if (tempVirtualizationPropertiesCollectorArray.length !== 0) setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...resources?resources:[]]);
 };
 
 //prepare geojson to show on the map
