@@ -165,6 +165,7 @@ $border-color: rgba(214, 213, 212, 1);
   cursor: pointer;
   overflow: visible;
 }
+
 .upload-section {
   font-family: Roboto;
 
@@ -355,6 +356,7 @@ $border-color: rgba(214, 213, 212, 1);
       font-weight: 600;
       color: rgba(80, 90, 95, 1);
     }
+
     .label:hover {
       color: $primary-theme-color;
     }
@@ -435,7 +437,7 @@ $border-color: rgba(214, 213, 212, 1);
     border: 0.063rem solid $border-color;
     min-height: 4.75rem;
     background-color: rgb(250, 250, 250);
-    display: flex ;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -466,7 +468,7 @@ $border-color: rgba(214, 213, 212, 1);
       display: flex !important;
       align-items: center;
       justify-items: end;
-      flex-wrap: wrap ;
+      flex-wrap: wrap;
 
       .button {
         display: flex !important;
@@ -587,7 +589,7 @@ $border-color: rgba(214, 213, 212, 1);
       background-color: rgb(0, 0, 0, 0) !important;
       width: 100%;
       border-collapse: collapse;
-      
+
       .select-dropdown {
         background-color: rgb(0, 0, 0, 0);
         font-family: Roboto;
@@ -599,21 +601,21 @@ $border-color: rgba(214, 213, 212, 1);
       thead {
         position: sticky !important;
         z-index: 100;
-        top:0;
+        top: 0;
         background-color: rgba(250, 250, 250);
         padding: 0;
       }
 
-      th{
+      th {
         width: 50%;
         font-weight: 700;
         font-size: 1rem;
         padding: 1.5rem;
         margin: 0;
         text-align: left;
-        border-bottom: 0.063rem solid rgba(214, 213, 212, 1) ;
+        border-bottom: 0.063rem solid rgba(214, 213, 212, 1);
       }
-      
+
       td {
         width: 50%;
         font-weight: 400;
@@ -621,7 +623,8 @@ $border-color: rgba(214, 213, 212, 1);
         padding: 1.5rem;
         margin: 0;
         border-top: 0 !important;
-        border-bottom: 0.063rem solid rgba(214, 213, 212, 1) ;
+        border-bottom: 0.063rem solid rgba(214, 213, 212, 1);
+
         p {
           max-width: 20.594rem;
           font-weight: 700;
@@ -988,9 +991,11 @@ $border-color: rgba(214, 213, 212, 1);
     .key {
       width: 22.75rem;
       position: relative;
+
       @media (max-width: 48rem) {
         width: 60%;
       }
+
       .select-dropdown {
         @include select-dropdown;
       }
@@ -1035,6 +1040,7 @@ $border-color: rgba(214, 213, 212, 1);
       padding: 0;
       margin: 0;
     }
+
     .input {
       appearance: none;
       -webkit-appearance: none;
@@ -1067,10 +1073,14 @@ $border-color: rgba(214, 213, 212, 1);
     }
   }
 
+  .add-button-help {
+    margin-top: 1.5rem;
+    max-width: 15.5rem;
+  }
+
   .add-button {
     max-width: 12.5rem;
     height: 2.5rem;
-    margin-top: 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1227,9 +1237,11 @@ $border-color: rgba(214, 213, 212, 1);
           margin-left: 1rem;
         }
       }
+
       .select-dropdown {
         @include select-dropdown;
       }
+
       .equal-to-icon {
         margin: 0 3%;
         font-family: Roboto Condensed;
@@ -1290,9 +1302,13 @@ $border-color: rgba(214, 213, 212, 1);
       }
     }
 
+    .add-button-help {
+      margin-top: 1.5rem;
+      max-width: 15.5rem;
+    }
+
     .add-button {
       max-width: 12.5rem;
-      margin-top: 1.5rem;
       height: 2.5rem;
       display: flex;
       align-items: center;
@@ -1348,6 +1364,7 @@ $border-color: rgba(214, 213, 212, 1);
 }
 
 .create-microplan {
+
   .custom-action-bar,
   .custom-action-bar-no-first-button {
     height: 4rem;
@@ -1773,7 +1790,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin-right: auto;
               }
 
-              input:checked ~ .inputIconClassname {
+              input:checked~.inputIconClassname {
                 border-color: $primary-theme-color;
               }
 
@@ -2136,7 +2153,7 @@ $border-color: rgba(214, 213, 212, 1);
               height: 100%;
               background-color: rgb(244, 119, 56, 0.12) !important;
             }
-            
+
             th,
             td {
               min-width: 7.578rem;
@@ -2150,7 +2167,7 @@ $border-color: rgba(214, 213, 212, 1);
               cursor: pointer;
               position: relative;
 
-              .edited-row-marker{
+              .edited-row-marker {
                 width: 0.313rem;
                 position: absolute;
                 top: 0;
@@ -2159,7 +2176,7 @@ $border-color: rgba(214, 213, 212, 1);
                 margin: 0;
                 height: 100%;
                 border-top-left-radius: 0.125rem;
-                border-bottom-left-radius: 0.125rem ;
+                border-bottom-left-radius: 0.125rem;
                 background-color: $primary-theme-color;
               }
             }
@@ -2359,4 +2376,3 @@ $border-color: rgba(214, 213, 212, 1);
     }
   }
 }
-

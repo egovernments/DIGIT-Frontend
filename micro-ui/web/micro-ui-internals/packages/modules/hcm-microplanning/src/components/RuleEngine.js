@@ -183,6 +183,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
     <>
       <div className={sectionClass}>
         <div className="rule-engine-body">
+        <div className="rule-engine-help" style={{ position: "absolute", top: "20rem", left: "40%", zIndex: "-100" }} />
           {/* NonInterractable Section */}
           <NonInterractableSection t={t} />
           {/* Interractable Section that includes the example as well as the rules */}
@@ -202,6 +203,7 @@ const RuleEngine = ({ campaignType = "SMC", microplanData, setMicroplanData, che
             setOperators={setOperators}
             t={t}
           />
+          <div className="add-button-help"/>
           <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
             <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
             <p>{t("ADD_ROW")}</p>
