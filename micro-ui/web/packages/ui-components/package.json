@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-react-components",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -44,7 +44,7 @@
     "dist"
   ],
   "dependencies": {
-    "@digit-ui/digit-ui-svg-components":"1.0.0",
+    "@digit-ui/digit-ui-svg-components":"1.0.1",
     "@googlemaps/js-api-loader": "1.13.10",
     "@hookform/resolvers": "1.3.7",
     "ajv": "^8.12.0",

@@ -21,6 +21,7 @@ module.exports = () => {
           workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
           dss : `dss@${domain}/dss-ui/remoteEntry.js`,
           engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
+          microplan : `microplan@${domain}/microplan-ui/remoteEntry.js`,
           // tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
         },
         shared: {

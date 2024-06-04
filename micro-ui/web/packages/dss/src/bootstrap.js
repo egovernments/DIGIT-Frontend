@@ -6,9 +6,9 @@ import { DigitUI } from "@digit-ui/digit-ui-module-core-base";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initDSSComponents } from "./Module";
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+initDigitUI();
+
 initDSSComponents();
 
 const mount = (el, { history, login }) => {

@@ -75,8 +75,7 @@ const initDigitUI = () => {
   // ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
 };
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+initDigitUI()
 
 export default App;

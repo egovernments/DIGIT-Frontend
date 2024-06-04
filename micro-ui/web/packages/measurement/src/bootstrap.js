@@ -7,9 +7,8 @@ import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initMeasurementComponents } from "./Module.js";
 
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+initDigitUI()
 initMeasurementComponents();
 
 const mount = (el, { history,login }) => {

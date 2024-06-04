@@ -5,9 +5,11 @@
     "packages/core",
     "packages/ui-libraries",
     "packages/ui-components",
-    "packages/workbench",
-    "packages/hrms",
+    "packages/components",
     "packages/svg-components",
+    "packages/microplan",
+    "packages/hrms",
+    "packages/workbench",
     "packages/pgr",
     "packages/dss",
     "packages/engagement"

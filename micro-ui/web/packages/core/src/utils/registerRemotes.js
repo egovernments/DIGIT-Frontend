@@ -43,6 +43,19 @@ export default (queryClient) => {
       userType,
     },
   });
+  
+  registerApplication({
+    name: 'Microplan',
+    app: () => import('microplan/MICROPLANModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/microplan`,
+    customProps: {
+      title: 'Microplan is running on host',
+      queryClient,
+      userType,
+    },
+  });
 
   registerApplication({
     name: 'HRMS',

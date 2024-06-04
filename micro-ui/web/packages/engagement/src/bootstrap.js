@@ -5,9 +5,9 @@ import { createBrowserHistory } from "history";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initEngagementComponents } from "./Module.js";
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+initDigitUI()
+
 initEngagementComponents();
 
 const mount = (el, { history,login }) => {

@@ -12,9 +12,8 @@ const AuthLazy = lazy(() => import("./modules/Auth"));
 const DashboardLazy = lazy(() => import("./modules/Dashboard"));
 
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+initDigitUI()
 
 const App = () => {
   const { login, history, isSignedIn$, logout } = useAuth();

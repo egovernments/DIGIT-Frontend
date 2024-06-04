@@ -5,9 +5,7 @@ import { createBrowserHistory } from "history";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initHRMSComponents } from "./Module.js";
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
 initHRMSComponents();
 
 const mount = (el, { history,login }) => {

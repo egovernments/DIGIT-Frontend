@@ -27,11 +27,8 @@ const initDigitUI = () => {
 
   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);
 };
-
-initLibraries().then(() => {
-  // initDigitUI();
-});
-
+initLibraries()
+initDigitUI()
 // initTQMComponents();
 
 const queryClient = new QueryClient({
