@@ -46,7 +46,7 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
-      "**/ajv": "8.12.0"
+      "**/ajv": "8.11.2"
   },
   "devDependencies": {
     "husky": "7.0.4",
