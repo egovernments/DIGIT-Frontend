@@ -38,7 +38,8 @@
     "node-polyfill-webpack-plugin":"3.0.0"
   },
   "resolutions": {
-    "**/@rollup/plugin-commonjs":"24.1.0",
+		"**/@rollup/plugin-commonjs": "11.0.2",
+    "**/rollup":"2.68.0",
     "**/type-fest":"3.13.1"
     },
   "devDependencies": {
