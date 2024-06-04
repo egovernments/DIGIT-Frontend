@@ -170,7 +170,7 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
           <img className="whoLogo"
             // style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"
             src="https://cdn.worldvectorlogo.com/logos/world-health-organization-logo-1.svg"
-            // src="https://s3-alpha-sig.figma.com/img/3a64/80de/a05cdb28bd51a75cfb6d81fdead072a5?Expires=1718582400&amp;Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&amp;Signature=WDUTW2wzMrFplbtHNWig6Rb6Ji0GQt3nYm4q83OmVrNoBAzWPlc4GkUieKzNoY9lsEteH~w73ZeqpDd~uZv6l~KArwzXwyEGKp6s77WzNfqYFQK3KbqYNk-y~yA8C2WNxrMb7zW9NmZYptk32JhukhQWnVujMfA8ceATpNwp3xJoCgiSzJoCWQayhu~StvCzGQ2kj0jsuImTiTYGcvIMwnND8UIqQ1h2~MxxmeNLmHfOyP69VIcCDiTQKRbj8t4--MKUk8nEaRPb0kT7LW4B7a0qi4qhj7ObuAIkD9sG233-ARsXbXE2oKeLP7MZjqbttkTDWiXkXyZ6tmFC41tmhQ__"
+            alt="WHO Logo"
             width="164"
             height="90"
           ></img>,
