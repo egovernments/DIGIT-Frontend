@@ -36,11 +36,6 @@ module.exports = {
       maxInitialRequests:30
     },
   },
-  resolve: {
-    fallback: {
-      "url": require.resolve("url/"),
-    },
-  },
   plugins: [
     new CleanWebpackPlugin(),
     // new BundleAnalyzerPlugin(),
