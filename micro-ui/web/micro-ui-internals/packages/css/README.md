@@ -42,6 +42,7 @@ frontend/micro-ui/web/public/index.html
 ### Changelog
 
 ```bash
+1.8.1-beta.12 Updated Logout Popup Styles
 1.8.1-beta.11 Updated styles for language selection dropdown options card
 1.8.1-beta.10 fixed login header alignment
 1.8.1-beta.8 Used a new Primary constant color "#c84c0e" ``Note use this version with component 1.8.1-beta.15 and core  1.8.1-beta.12``

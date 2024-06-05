@@ -14,3 +14,11 @@
 .digit-popup-close-icon {
   @apply flex justify-end;
 }
+
+.digit-logout-popup-wrapper{
+  width: 500px !important;
+
+  .logout-cancel-button{
+    height: 2.5rem;
+  }
+}
