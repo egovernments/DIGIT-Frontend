@@ -491,7 +491,7 @@ const Upload = ({
       setDataPresent(true);
       setLoader(false);
     } catch (error) {
-      console.error("File Upload error", error?.message);
+      console.error("File Upload error", error);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoader(false);
     }
