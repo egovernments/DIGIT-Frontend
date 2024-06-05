@@ -65,6 +65,7 @@ with
 ### Changelog
 
 ```bash
+1.8.2 build issue fix due to ajv library
 1.8.1 sidebar null check fixes
 1.8.0 workbench v1.0
 1.8.0-beta.5 fix for login screen alignments
