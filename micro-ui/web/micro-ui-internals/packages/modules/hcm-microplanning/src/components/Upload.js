@@ -329,7 +329,8 @@ const Upload = ({
       }
       let resourceMappingData = {};
       let boundaryDataAgainstBoundaryCode = {};
-      if (!schemaData?.doHierarchyCheckInUploadedData) {
+      debugger
+      if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
         try {
           const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
           const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
