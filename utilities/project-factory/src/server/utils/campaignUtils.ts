@@ -1243,7 +1243,6 @@ function lockTargetFields(newSheet: any, targetColumnNumber: any, boundaryCodeCo
             cell.protection = { locked: true };
         });
     });
-    console.log(targetColumnNumber, "ppppppppppppppppp")
     // Unlock cells in the target column
     if (targetColumnNumber > -1) {
         newSheet.eachRow((row: any) => {
