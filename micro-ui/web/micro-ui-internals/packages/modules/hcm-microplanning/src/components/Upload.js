@@ -18,7 +18,7 @@ import { ACCEPT_HEADERS, BOUNDARY_DATA_SHEET, EXCEL, GEOJSON, LOCALITY, PRIMARY_
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
-import { addBoundaryData, createTemplate, fetchBoundaryData } from "../utils/createTemplate";
+import { addBoundaryData, createTemplate, fetchBoundaryData, filterBoundaries } from "../utils/createTemplate";
 import XLSX from "xlsx";
 import ExcelJS from "exceljs";
 const page = "upload";
@@ -331,30 +331,42 @@ const Upload = ({
       let resourceMappingData = {};
       let boundaryDataAgainstBoundaryCode = {};
       if (!schemaData?.doHierarchyCheckInUploadedData) {
-        const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-        const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-        let boundaryData = sessionData.filterBoundaries;
-        let filteredBoundaries;
+        try {
+          const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+          const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+          let boundaryData = sessionData.filterBoundaries;
+          let filteredBoundaries;
+          if (!boundaryData) {
+            // Only fetch boundary data if not present in session storage
+            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
 
-        if (!boundaryData) {
-          // Only fetch boundary data if not present in session storage
-          boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-          filteredBoundaries = filteredBoundaries(boundaryData, boundaries);
-
-          // Update the session storage with the new filtered boundaries
-          Digit.SessionStorage.set("microplanHelperData", {
-            ...sessionData,
-            filteredBoundaries: filteredBoundaries,
+            // Update the session storage with the new filtered boundaries
+            Digit.SessionStorage.set("microplanHelperData", {
+              ...sessionData,
+              filteredBoundaries: filteredBoundaries,
+            });
+          } else {
+            filteredBoundaries = boundaryData;
+          }
+          const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+          xlsxData.forEach((item, i) => {
+            if (i === 0) return;
+            let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+            if (boundaryCodeIndex >= item.length) {
+              // If boundaryCodeIndex is out of bounds, return the item as is
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
+            } else {
+              // Otherwise, remove the element at boundaryCodeIndex
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+                .slice(0, boundaryCodeIndex)
+                .concat(item.slice(boundaryCodeIndex + 1))
+                .map(t);
+            }
           });
-        } else {
-          filteredBoundaries = boundaryData;
+        } catch (error) {
+          console.error(error?.message);
         }
-        const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-        xlsxData.forEach((item, i) => {
-          if (i === 0) return;
-          let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-          boundaryDataAgainstBoundaryCode[xlsxData[i][boundaryCodeIndex]] = xlsxData[i].slice(boundaryCodeIndex, boundaryCodeIndex + 1);
-        });
       }
       // Handling different filetypes
       switch (selectedFileType.id) {
@@ -496,7 +508,7 @@ const Upload = ({
       t
     );
     fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
-    delete tempFileDataToStore[t(BOUNDARY_DATA_SHEET)] 
+    delete tempFileDataToStore[t(BOUNDARY_DATA_SHEET)];
     // Converting the input file to json format
     let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
     if (result && result.error) {
@@ -552,10 +564,15 @@ const Upload = ({
     errors = response.errors;
     let check = response.valid;
     if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
-      for(const sheet in tempFileDataToStore){
-        const commonColumnIndex  = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn)
-        if(commonColumnIndex !== -1)
-          tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map(item=>[...boundaryDataAgainstBoundaryCode[item[commonColumnIndex]]?boundaryDataAgainstBoundaryCode[item[commonColumnIndex]]:[],...item])
+      debugger
+      for (const sheet in tempFileDataToStore) {
+        const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
+        if (commonColumnIndex !== -1)
+          tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
+            ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
+            ...item,
+          ]);
+        tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
       }
     }
     return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
@@ -599,19 +616,20 @@ const Upload = ({
   };
 
   // Function for creating blob out of data
-  const dataToBlob = () => {
+  const dataToBlob = async () => {
     try {
       let blob;
       switch (fileData.fileType) {
         case EXCEL:
-          if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
+          if (fileData?.errorLocationObject?.length !== 0)
+            blob = await prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, t);
           else blob = fileData.file;
           break;
         case SHAPEFILE:
         case GEOJSON:
           if (fileData && fileData.data) {
             const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section);
-            if (fileData?.errorLocationObject?.length !== 0) blob = prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
+            if (fileData?.errorLocationObject?.length !== 0) blob = await prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
           }
           break;
       }
@@ -625,8 +643,9 @@ const Upload = ({
   // Download the selected file
   const downloadFile = async () => {
     try {
-      let blob = dataToBlob();
+      let blob = await dataToBlob();
       if (blob) {
+        debugger;
         // Crating a url object for the blob
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -1534,9 +1553,9 @@ const downloadTemplate = async ({
       });
 
       // Add data to worksheet
-      data.forEach((row) => {
+      for (const row of data) {
         worksheet.addRow(row);
-      });
+      }
 
       // Set column widths
       const columnCount = data?.[0]?.length || 0;
@@ -1740,8 +1759,8 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
               .map(([key, value]) => {
                 return t(key) + ": " + value.map((item) => t(item)).join(", ");
               })
-              .join("; ");
-            row.push({ v: rowDataAddOn });
+              .join("\n");
+            row.push(rowDataAddOn);
           } else {
             row.push("");
           }
@@ -1750,8 +1769,15 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
       processedData[key] = dataset;
     }
   }
-  let errorColumn = "MICROPLAN_ERROR_COLUMN";
-  let xlsxBlob = await convertJsonToXlsx(processedData, errorColumn);
+  const errorColumn = "MICROPLAN_ERROR_COLUMN";
+  const style = {
+    font: { color: { argb: 'B91900' } },
+    border : { top: { style: 'thin', color: { argb: 'B91900' } },
+    left: { style: 'thin', color: { argb: 'B91900' } },
+    bottom: { style: 'thin', color: { argb: 'B91900' } },
+    right: { style: 'thin', color: { argb: 'B91900' } } }
+  };
+  let xlsxBlob = await convertJsonToXlsx(processedData, { errorColumn, style });
   return xlsxBlob;
 };
 

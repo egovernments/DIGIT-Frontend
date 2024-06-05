@@ -279,7 +279,7 @@ const devideXlsxDataHierarchyLevelWise = (xlsxData, hierarchyLevelName) => {
   return result || xlsxData;
 };
 
-function filterBoundaries(boundaryData, boundaryFilters) {
+export const filterBoundaries = (boundaryData, boundaryFilters) => {
   if (!boundaryFilters) return boundaryData;
   // Define a helper function to recursively filter boundaries
   function filterRecursive(boundary) {
@@ -368,6 +368,7 @@ const addFacilitySheet = (xlsxData, mapping, facilities) => {
   // Create data rows
   const dataRow = [];
   for (const facility of facilities) {
+    facility.isPermanent = facility.isPermanent?t("PERMAENENT"):t("TEMPORARY")
     dataRow.push(headers.map((header) => facility[mapping[header]]));
   }
   headers.push(commonColumn);

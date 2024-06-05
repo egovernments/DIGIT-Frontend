@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 
-export const convertJsonToXlsx = (jsonData) => {
+export const convertJsonToXlsx = (jsonData, columnWithStyle) => {
   // Create a new workbook
   const workbook = new ExcelJS.Workbook();
 
@@ -10,9 +10,19 @@ export const convertJsonToXlsx = (jsonData) => {
     const worksheet = workbook.addWorksheet(sheetName);
 
     // Convert data to worksheet
-    data.forEach((row) => {
-      worksheet.addRow(row);
-    });
+    for (const row of data) {
+      const newRow = worksheet.addRow(row);
+      // Apply red font color to the errorColumn if it exists
+      let errorColumnIndex = data[0].indexOf(columnWithStyle?.errorColumn);
+      if (columnWithStyle?.errorColumn && errorColumnIndex !== -1) {
+        const columnIndex = errorColumnIndex + 1; 
+        if (columnIndex > 0) {
+          const newCell = newRow.getCell(columnIndex);
+          if (columnWithStyle.style && newCell)
+            for (const key in columnWithStyle.style) newCell[key] = columnWithStyle.style[key];
+        }
+      }
+    }
 
     // Make the first row bold
     if (worksheet.getRow(1)) {
