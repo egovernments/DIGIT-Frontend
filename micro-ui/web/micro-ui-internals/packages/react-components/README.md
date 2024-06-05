@@ -134,50 +134,12 @@ To use the InboxSearchComposer component for managing multiple tabs, follow thes
       <InboxSearchComposer configs={config} showTab={true} tabData={tabData} onTabChange={onTabChange}></InboxSearchComposer>
 ```
 
-### Changelog
+## Changelog
 
-```bash
-1.8.1-beta.25 Add classname in LabelFieldPair, viewComposer
-1.8.1-beta.23 Enhance onformvaluechange in formcomposer
-1.8.1-beta.22 Fixed Tutorial
-1.8.1-beta.21 Added classname in Modal
-1.8.1-beta.20 changes in Tutorial, help for more customizability
-1.8.1-beta.19 increasing zIndex in Tutorial, so it appears on top of every thing
-1.8.1-beta.17 added error classname for fields in renderFormFields
-1.8.1-beta.16 added error classname for toast
-1.8.1-beta.15 Used a new Primary constant color "#c84c0e" ``Note use this version with css 1.8.1-beta.8 and core 1.8.1-beta.12 ``
-1.8.1-beta.14 Updated code for pagination in ResultsTable component
-1.8.1-beta.13 Updates to InboxSearchComposerV2 to support custom hook call and refetch option
-1.8.1-beta.12: Fixed Tab inbox missing code
-1.8.1-beta.10: Introduced `InboxSearchComposerV2` component with browser session integration, removable tags for search/inbox screens on mobile, and a unified configuration for both mobile and desktop screens.
-1.8.1-beta.9 Fixed Loader with gap
-1.8.1-beta.8 Added Close button and Loader
-1.8.1-beta.7 Viewcomposer enhancement for cardheader action
-1.8.1-beta.6 Added feature for Multi Tab in InboxSearchComposer
-1.8.1-beta.5 Added without labelfieldpair config for removing default card
-1.8.1-beta.4 Added Previous button in From Composer
-1.8.1-beta.3 Added XlsPreview component to preview Xls file.
-1.8.1-beta.2 Moved the sidebar footer outside of "drawer-list" to prevent overlapping issues.
-1.8.1-beta.1 Republished after merging with Master due to version issues.
-1.8.0-beta.5 added file type excel in multiUploadWrapper
-1.8.0-beta.4 republished 
-1.8.0-beta.3 republished due to some issues
-1.8.0-beta.2 Added Some icons for pqm dashboard
-1.8.0-beta.1 fixed some topbar issues
-1.8.0 workbench v1.0 release
-1.8.0-beta workbench base version beta release
-1.7.0 urban 2.9
-1.6.0 urban 2.8
-1.5.36 added classname for topbar options
-1.5.35 aligment issue in edit and logout
-1.5.34 updated login scss and alignment issues
-1.5.28 passing response data in case for custom component in inbox composer
-1.5.27 integrated with the svg library
-1.5.26 fixed shipping truck icon fill issue
-1.5.25 added new icon and fixed other issues
-1.5.24 added and updated the Readme file
-1.5.23 base version
-```
+### Summary for Version [1.8.2-beta.1] - 2024-06-05
+
+For a detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md) file.
+
 
 ### Contributors
 

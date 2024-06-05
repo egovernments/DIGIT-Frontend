@@ -52,15 +52,12 @@ const App = ({ deltaConfig, stateCode, cityCode, moduleCode }) => {
 export default App;
 ```
 
-### Changelog
+## Changelog
 
-```bash 
-1.8.1-beta.4: Enhanced to load screen even if mdms is failing
-1.8.1-beta.3: other fixes
-1.8.1-beta.2: Enhanced `useCustomMdms` hook to support version 2 of MDMS API calls.
-1.8.1-beta.1 Republished after merging with Master due to version issues.
-1.8.0 Released as part of workbench v1.0
-```
+### Summary for Version [1.8.2-beta.1] - 2024-06-05
+
+For a detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md) file.
+
 
 ### Published from DIGIT Frontend 
 DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/develop)
