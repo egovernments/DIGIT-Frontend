@@ -198,7 +198,7 @@ function deterMineLastColumnAndEnrichUserDetails(worksheet: any, errorDetailsCol
         });
 
         lastColumn = "J";
-        delete request.body.userNameAndPassword;
+        request.body.userNameAndPassword = undefined;
     }
 
     return lastColumn;
