@@ -782,6 +782,7 @@ import { Success } from "./svg/Success";
 import { TickMark } from "./svg/TickMark";
 import { Facilities } from "./svg/Facilities";
 import { WareHouses } from "./svg/WareHouses";
+import { Warehouse } from "./svg/Warehouse";
 import { BarChart } from "./svg/BarChart";
 import { TickMarkBackgroundFilled } from "./svg/TickMarkBackgroundFilled";
 import { Excel } from "./svg/Excel";
@@ -796,7 +797,6 @@ import { MapLayerIcon } from "./svg/MapLayerIcon"
 import { Church } from "./svg/Church"
 import { HealthFacility } from "./svg/HealthFacility"
 import { SchoolBuilding } from "./svg/SchoolBuilding"
-import { Warehouse } from "./svg/Warehouse"
 
 export {
   Success,

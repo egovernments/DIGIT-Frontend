@@ -22,7 +22,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-svg-components":"1.0.9",
+"@egovernments/digit-ui-svg-components":"1.0.10",
 ```
 
 then navigate to App.js
@@ -58,32 +58,13 @@ const { Accessibility } = SVG;
 <Accessibility />;
 ```
 
-### Changelog
+## Changelog
 
-```bash
-1.0.9 fixes for Church, HealthFacility, School Building, Warehouses icons
-1.0.8 adding Church, HealthFacility, School Building, Warehouses icons
-1.0.7 adding NorthArrow and MapLayerIcon icon
-1.0.6 Used a new Primary constant color "#c84c0e"
-1.0.5 Adding Pagination icons and Fixing Population and Facility icons
-1.0.4 fixed Excel icon
-1.0.3 fixed and added Microplanning module icons
-1.0.2 Added Trash Icon
-1.0.1 Added Icons from Microplanning module
-1.0.0 Released as part of workbench v1.0
-1.0.0-beta workbench base version beta release
-0.0.8 Added RoundedCheck Icon and DeleteBtn icon with stories
-0.0.7 Added Info banner icon
-0.0.6 Added TickMark, Success Svg and fixed publish related issue
-0.0.5 fixed publish related issue
-0.0.4 fixed some fill related issue
-0.0.3 Added NoResultsFoundicon,StarFilled , Star Empty and Fixed issue on  NoResultsFoundicon
-0.0.2 added the prototypes and playground stories for all svgs
-0.0.1 base version
-```
+### Summary for Version [1.0.10] - 2024-06-05
+
+For a detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md) file.
 
 ### Contributors
-
 
  [nabeelmd-egov](https://github.com/nabeelmd-egov)
  [anil-egov](https://github.com/anil-egov)
