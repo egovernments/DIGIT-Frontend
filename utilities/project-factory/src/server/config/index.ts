@@ -1,6 +1,8 @@
 // config.js
 // Importing necessary module
 import { getErrorCodes } from "./constants";
+const dotenv = require('dotenv');
+dotenv.config();
 // Defining the HOST variable
 const HOST = process.env.EGOV_HOST ||
   "https://unified-dev.digit.org/";

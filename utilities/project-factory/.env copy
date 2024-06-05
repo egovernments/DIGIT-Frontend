@@ -1,0 +1,15 @@
+KAFKA_BROKER_HOST=localhost:9092
+REACT_APP_STATE_LEVEL_TENANT_ID=mz
+AUTH_TOKEN=92002f7b-1bbd-4a56-bc8c-1409cb089d16
+EGOV_MDMS_HOST=https://unified-dev.digit.org/
+EGOV_IDGEN_HOST=https://unified-dev.digit.org/
+EGOV_FACILITY_HOST=https://unified-dev.digit.org/
+EGOV_BOUNDARY_HOST=https://unified-dev.digit.org/
+EGOV_PROJECT_HOST=https://unified-dev.digit.org/
+EGOV_USER_HOST=https://unified-dev.digit.org/
+EGOV_PRODUCT_HOST=https://unified-dev.digit.org/
+EGOV_HRMS_HOST=https://unified-dev.digit.org/
+EGOV_FILESTORE_SERVICE_HOST=https://unified-dev.digit.org/
+HOST=https://unified-dev.digit.org/
+port=8080
+
