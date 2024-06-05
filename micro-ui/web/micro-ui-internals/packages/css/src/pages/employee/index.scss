@@ -115,7 +115,7 @@
     height: 100%;
     color: theme(colors.white);
     margin-top: 83px;
-    z-index: 10000;
+    z-index: 999;
     transition: 0.3s ease all;
     white-space: nowrap;
     height: calc(100vh - 36px);

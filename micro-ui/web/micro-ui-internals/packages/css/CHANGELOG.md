@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.2]
+- Updated LogoutDialog Popup styles.
+
 ## [1.8.2-beta.1]
 - Formatted changelog file.
 
