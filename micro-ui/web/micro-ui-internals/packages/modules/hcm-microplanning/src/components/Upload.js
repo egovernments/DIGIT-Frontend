@@ -334,7 +334,7 @@ const Upload = ({
         try {
           const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
           const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-          let boundaryData = sessionData.filterBoundaries;
+          let boundaryData = sessionData.filteredBoundaries;
           let filteredBoundaries;
           if (!boundaryData) {
             // Only fetch boundary data if not present in session storage
@@ -497,7 +497,7 @@ const Upload = ({
     }
   };
 
-  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t = (e) => e) => {
+  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t) => {
     // Converting the file to preserve the sequence of columns so that it can be stored
     let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
     let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
