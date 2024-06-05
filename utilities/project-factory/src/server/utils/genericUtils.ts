@@ -365,7 +365,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
       logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
       const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-      const boundaryTypeOnWhichWeSplit = boundaryData.filter((data:any) => data[differentTabsBasedOnLevel]);
+      const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
       if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
         updatedResult = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
@@ -936,23 +936,20 @@ function calculateKeyIndex(obj: any, hierachy: any[], localizationMap?: any) {
   return hierachy.indexOf(keyBeforeBoundaryCode);
 }
 
-function modifyDataBasedOnDifferentTab(boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
+function modifyDataBasedOnDifferentTab(boundaryData: any, differentTabsBasedOnLevel: any, localizedHeadersForMainSheet: any, localizationMap?: any) {
   const newData: any = {};
-  let boundaryCode: string | undefined;
 
-  for (const key in boundaryData) {
-    newData[key] = boundaryData[key];
-    if (key === differentTabsBasedOnLevel) {
-      break;
-    }
+  for (const key of localizedHeadersForMainSheet) {
+    newData[key] = boundaryData[key] || '';
+    if (key === differentTabsBasedOnLevel) break;
   }
+
   const localizedBoundaryCode = getLocalizedName(getBoundaryColumnName(), localizationMap);
-  boundaryCode = boundaryData[localizedBoundaryCode];
-  if (boundaryCode !== undefined) {
-    newData[localizedBoundaryCode] = boundaryCode;
-  }
+  newData[localizedBoundaryCode] = boundaryData[localizedBoundaryCode] || '';
+
   return newData;
 }
+
 
 async function getLocalizedMessagesHandler(request: any, tenantId: any, module = config.localisation.localizationModule) {
   const localisationcontroller = Localisation.getInstance();
@@ -1013,17 +1010,14 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 }
 
 
-async function getHeadersForTargetSheet(request:any,boundaryData: any, differentTabsBasedOnLevel: any,localizationMap?:any) {
-  const districtIndex = Object.keys(boundaryData[0]).indexOf(differentTabsBasedOnLevel);
-  const headersUptoHierarchy = Object.keys(boundaryData[0]).slice(districtIndex);
-  let modifiedHeaders = [...headersUptoHierarchy];
+async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
+  const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
+  var headers = getLocalizedHeaders(hierarchy.slice(districtIndex),localizationMap);
+
   const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
-  if (localizedHeadersAfterHierarchy.indexOf(getLocalizedName(config.boundary.boundaryCode, localizationMap)) != -1) {
-    localizedHeadersAfterHierarchy.splice(localizedHeadersAfterHierarchy.indexOf(getLocalizedName(config.boundary.boundaryCode, localizationMap)), 1)
-    modifiedHeaders = [...headersUptoHierarchy, ...localizedHeadersAfterHierarchy];
-  }
-  return  getLocalizedHeaders(modifiedHeaders, localizationMap);
+  headers = [...headers,...localizedHeadersAfterHierarchy]
+  return getLocalizedHeaders(headers, localizationMap);
 }
 
 
@@ -1072,7 +1066,7 @@ export {
   getDifferentDistrictTabs,
   addDataToSheet,
   changeFirstRowColumnColour,
-  getHeadersForTargetSheet
+  getConfigurableColumnHeadersFromSchemaForTargetSheet
 };
 
 
