@@ -4,6 +4,7 @@ import { Loader } from "../../atoms/Loader";
 import { RenderDataSection, RenderDocumentsSection, RenderWfActions, RenderWfHistorySection } from "./renderUtils";
 import HorizontalNav from "../../atoms/HorizontalNav";
 import CardSubHeader from "../../atoms/CardSubHeader";
+import { SVG } from "../../atoms/SVG";
 
 // format of data expected by this component
 
@@ -106,7 +107,7 @@ import CardSubHeader from "../../atoms/CardSubHeader";
 //   additionalDetails:{}
 // }
 
-const renderCardSectionJSX = (section) => {
+const renderCardSectionJSX = (section, cardErrors) => {
   const { type } = section;
   switch (type) {
     case "DATA":
@@ -122,10 +123,18 @@ const renderCardSectionJSX = (section) => {
       return (
         <>
           <div className="view-composer-header-section">
-            {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
+            {section.cardHeader && (
+              <CardSubHeader
+                className={cardErrors?.filter((i) => i?.name === section?.name)?.length > 0 ? "error" : ""}
+                style={section?.cardHeader?.inlineStyles}
+              >
+                {section.cardHeader.value}
+                {cardErrors?.filter((i) => i?.name === section?.name)?.length > 0 ? <SVG.Info fill="#D4351C" /> : null}
+              </CardSubHeader>
+            )}
             {section.cardSecondaryAction ? section.cardSecondaryAction : null}
           </div>
-          <Component {...section.props} />
+          <Component {...section.props} cardErrors={cardErrors?.filter((i) => i?.name === section?.name)} />
         </>
       );
     default:
@@ -134,7 +143,7 @@ const renderCardSectionJSX = (section) => {
 };
 
 //data is the response of the hook call for View Screen
-const ViewComposer = ({ isLoading = false, data, ...props }) => {
+const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
   const { cards } = data;
   const [activeNav, setActiveNav] = useState(data?.horizontalNav?.activeByDefault);
   
@@ -149,9 +158,14 @@ const ViewComposer = ({ isLoading = false, data, ...props }) => {
         ?.map((card, cardIdx) => {
           const { sections } = card;
           return (
-            <Card style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}} className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""}`}>
+            <Card
+              style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}}
+              className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""} ${
+                cardErrors?.[card?.errorName ? card?.errorName : card?.name]?.filter((i) => i?.name === card?.name)?.length > 0 ? "card-error" : ""
+              }`}
+            >
               {sections?.map((section, sectionIdx) => {
-                return renderCardSectionJSX(section);
+                return renderCardSectionJSX(section, cardErrors?.[card?.errorName ? card?.errorName : card?.name]);
               })}
             </Card>
           );
