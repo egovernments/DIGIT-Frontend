@@ -80,6 +80,7 @@ const IFrameInterface = (props) => {
               console.log("typeof url", typeof url);
     
               if (typeof url === "string" && (url.includes("vector.maps.elastic.co") || url.includes("tiles.maps.elastic.co"))) {
+                const appendStr = url.includes("vector.maps.elastic.co") ? "layer" : "tiles"
                 const oldUrl = url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("interceptor fetch", pageObject);
@@ -87,7 +88,7 @@ const IFrameInterface = (props) => {
                 console.log("interceptor fetch", routePath);
     
                 // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}`;
+                const newUrl = `${document.location.origin}${routePath}/${appendStr}`;
                 console.log("interceptor fetch", newUrl);
     
                 // Set additional headers if needed
@@ -99,6 +100,7 @@ const IFrameInterface = (props) => {
               }
     
               if (typeof url === "object" && (url.url.includes("vector.maps.elastic.co") || url.url.includes("tiles.maps.elastic.co"))) {
+                const appendStr = url?.url?.includes("vector.maps.elastic.co") ? "layer" : "tiles"
                 const oldUrl = url.url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("object interceptor fetch", pageObject);
@@ -106,7 +108,7 @@ const IFrameInterface = (props) => {
                 console.log("object interceptor fetch", routePath);
     
                 // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}`;
+                const newUrl = `${document.location.origin}${routePath}/${appendStr}`;
                 console.log("object interceptor fetch", newUrl);
     
                 // Set additional headers if needed
