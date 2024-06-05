@@ -88,7 +88,7 @@ const IFrameInterface = (props) => {
                 // Parse the URL
                 // const urlObject = new URL(url);
                 // Replace the hostname
-                const newUrl = `${document.location.origin}/${routePath}`;  // Replace with your new hostname
+                const newUrl = `${document.location.origin}${routePath}`;  // Replace with your new hostname
                 console.log("interceptor fetch",newUrl);
                 // Convert the URL object back to a string
                 url = newUrl;
