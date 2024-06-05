@@ -97,6 +97,25 @@ const IFrameInterface = (props) => {
                 options.headers['mode'] = 'no-cors';
                 options.headers['replace-url'] = oldUrl;
               }
+              if (typeof url === "object" && (url?.url?.includes("vector.maps.elastic.co") ||url?.url?.includes("tiles.maps.elastic.co") )) {
+                const oldUrl = url?.url;
+                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {}
+                console.log("object interceptor fetch",pageObject);
+                const routePath = pageObject?.["routePath"] || ""
+                console.log("object interceptor fetch",routePath);
+
+                // Parse the URL
+                // const urlObject = new URL(url);
+                // Replace the hostname
+                const newUrl = `${document.location.origin}${routePath}`;  // Replace with your new hostname
+                console.log("object interceptor fetch",newUrl);
+                // Convert the URL object back to a string
+                url.url = newUrl;
+                
+                // Set additional headers if needed
+                options.headers['mode'] = 'no-cors';
+                options.headers['replace-url'] = oldUrl;
+              }
               options.headers['Authorization'] = `${accessToken}`;
             }
           }
