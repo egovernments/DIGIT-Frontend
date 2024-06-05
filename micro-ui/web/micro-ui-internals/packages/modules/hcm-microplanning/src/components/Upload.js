@@ -354,13 +354,13 @@ const Upload = ({
             let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
             if (boundaryCodeIndex >= item.length) {
               // If boundaryCodeIndex is out of bounds, return the item as is
-              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice()//.map(t);
             } else {
               // Otherwise, remove the element at boundaryCodeIndex
               boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
                 .slice(0, boundaryCodeIndex)
                 .concat(item.slice(boundaryCodeIndex + 1))
-                .map(t);
+                //.map(t);
             }
           });
         } catch (error) {
@@ -562,7 +562,7 @@ const Upload = ({
     errorMsg = response.message;
     errors = response.errors;
     let check = response.valid;
-    if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
+    if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
       for (const sheet in tempFileDataToStore) {
         const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
         if (commonColumnIndex !== -1)
