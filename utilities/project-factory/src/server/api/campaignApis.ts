@@ -5,14 +5,14 @@ import { getFormattedStringForDebug, logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, matchData, generateActivityMessage, throwError, translateSchema, replicateRequest } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../validators/campaignValidators';
-import { callMdmsSchema, getCampaignNumber, getWorkbook } from "./genericApis";
+import { callMdmsSchema, getCampaignNumber } from "./genericApis";
 import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getLocalizedName, reorderBoundariesOfDataAndValidate } from "../utils/campaignUtils";
 const _ = require('lodash');
-import * as XLSX from 'xlsx';
 import { produceModifiedMessages } from "../kafka/Listener";
 import { userRoles } from "../config/constants";
 import { createDataService } from "../service/dataManageService";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
+import { getExcelWorkbookFromFileURL } from "../utils/excelUtils";
 
 
 
@@ -443,6 +443,7 @@ async function processValidateAfterSchema(dataFromSheet: any, request: any, crea
     await reorderBoundariesOfDataAndValidate(request, localizationMap)
     await generateProcessedFileAndPersist(request, localizationMap);
   } catch (error) {
+    console.log(error)
     await handleResouceDetailsError(request, error);
   }
 }
@@ -666,6 +667,7 @@ async function processAfterValidation(dataFromSheet: any, createAndSearchConfig:
       await generateProcessedFileAndPersist(request, localizationMap);
     }
   } catch (error: any) {
+    console.log(error)
     await handleResouceDetailsError(request, error)
   }
 }
@@ -771,7 +773,7 @@ async function projectCreate(projectCreateBody: any, request: any) {
   const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
   logger.debug("Project creation response" + getFormattedStringForDebug(projectCreateResponse))
   if (projectCreateResponse?.Project[0]?.id) {
-    logger.info("Project created successfully with id " + JSON.stringify(projectCreateResponse?.Project[0]?.id))
+    logger.info("Project created successfully with name " + JSON.stringify(projectCreateResponse?.Project[0]?.name))
     logger.info(`for boundary type ${projectCreateResponse?.Project[0]?.address?.boundaryType} and code ${projectCreateResponse?.Project[0]?.address?.boundary}`)
     request.body.boundaryProjectMapping[projectCreateBody?.Projects?.[0]?.address?.boundary].projectId = projectCreateResponse?.Project[0]?.id
   }
@@ -820,34 +822,30 @@ const getHierarchy = async (request: any, tenantId: string, hierarchyType: strin
 };
 
 const getHeadersOfBoundarySheet = async (fileUrl: string, sheetName: string, getRow = false, localizationMap?: any) => {
-  const localizedBoundarySheetName = getLocalizedName(sheetName, localizationMap)
-  const workbook: any = await getWorkbook(fileUrl, localizedBoundarySheetName);
-  const columnsToValidate = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-    header: 1,
-  })[0] as (any)[];
+  const localizedBoundarySheetName = getLocalizedName(sheetName, localizationMap);
+  const workbook:any =await getExcelWorkbookFromFileURL(fileUrl,localizedBoundarySheetName);
+
+  const worksheet = workbook.getWorksheet(localizedBoundarySheetName);
+  const columnsToValidate = worksheet.getRow(1).values.map((header: any) => header ? header.toString().trim() : undefined);
 
   // Filter out empty items and return the result
-  for (let i = 0; i < columnsToValidate.length; i++) {
-    if (typeof columnsToValidate[i] !== 'string') {
-      columnsToValidate[i] = undefined;
-    }
-  }
-  return columnsToValidate;
+  return columnsToValidate.filter((header: any) => typeof header === 'string');
 }
-async function getFiltersFromCampaignSearchResponse(request: any) {
-  logger.info(`searching for campaign details to get the filters for boundary generation`);
-  const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
-  const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId, "ids": [request?.query?.campaignId] } }
-  const requestBody = { ...requestInfo, ...campaignDetails };
-  const req: any = replicateRequest(request, requestBody)
-  const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
-  const boundaries = projectTypeSearchResponse?.CampaignDetails?.[0]?.boundaries?.map((ele: any) => ({ ...ele, boundaryType: ele?.type }));
-  if (!boundaries) {
-    logger.info(`no boundaries found so considering the complete hierarchy`);
-    return { Filters: null };
+
+
+async function getCampaignSearchResponse(request: any) {
+  try {
+    logger.info(`searching for campaign details`);
+    const requestInfo = { "RequestInfo": request?.body?.RequestInfo };
+    const campaignDetails = { "CampaignDetails": { tenantId: request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, "ids": [request?.query?.campaignId || request?.body?.ResourceDetails?.campaignId] } }
+    const requestBody = { ...requestInfo, ...campaignDetails };
+    const req: any = replicateRequest(request, requestBody)
+    const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
+    return projectTypeSearchResponse;
+  } catch (error: any) {
+    logger.error(`Error while searching for campaign details: ${error.message}`);
+    throwError("COMMON", 400, "RESPONSE_NOT_FOUND_ERROR", error?.message)
   }
-  logger.info(`boundaries found for filtering`);
-  return { Filters: { boundaries: boundaries } };
 }
 
 export {
@@ -865,6 +863,6 @@ export {
   getHierarchy,
   getHeadersOfBoundarySheet,
   handleResouceDetailsError,
-  getFiltersFromCampaignSearchResponse,
+  getCampaignSearchResponse,
   confirmProjectParentCreation
 };
