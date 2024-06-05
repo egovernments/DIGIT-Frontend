@@ -11,26 +11,7 @@ const MDMSView = ({...props}) => {
   let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
   // const stateId = Digit.ULBService.getStateId();
   tenantId = Digit.ULBService.getCurrentTenantId();
-  const fetchActionItems = (data) => {
-    let actionItems = [{
-      action:"EDIT",
-      label:"Edit Master"
-    }]
-
-    const isActive = data?.isActive
-    if(isActive) actionItems.push({
-      action:"DISABLE",
-      label:"Disable Master"
-    })
-    else actionItems.push({
-      action:"ENABLE",
-      label:"Enable Master"
-    })
-
-    return actionItems
-  }
-
-  
+  const fetchActionItems = (data) => Digit?.Customizations?.['commonUiConfig']?.['ViewMdmsConfig']?.fetchActionItems(data);
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -50,6 +31,8 @@ const MDMSView = ({...props}) => {
       },
     },
   };
+
+
 
   const closeToast = () => {
     setTimeout(() => {
@@ -110,18 +93,16 @@ const MDMSView = ({...props}) => {
     );
   }
 
-  const onActionSelect = (action) => {
-    const {action:actionSelected} = action 
-    //action===EDIT go to edit screen 
-    if(actionSelected==="EDIT") {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
-    }
-    //action===DISABLE || ENABLE call update api and show toast respectively
-    else{
-      //call update mutation
-      handleEnableDisable(actionSelected)
-    }
+  console.log(data);
+  let propsToSend = {
+    moduleName,
+    masterName,
+    tenantId,
+    uniqueIdentifier,
+    history,
+    handleEnableDisable
   }
+  const onActionSelect = (action) => Digit?.Customizations?.['commonUiConfig']?.['ViewMdmsConfig']?.onActionSelect(action,propsToSend);
 
   if(isLoading) return <Loader />
 

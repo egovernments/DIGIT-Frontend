@@ -615,5 +615,51 @@ export const UICustomizations = {
       return defaultData
       
     }
+  },
+  ViewMdmsConfig : {
+    fetchActionItems : (data) => {
+      let contextPath = window.contextPath;
+      let actionItems = [{
+        action:"EDIT",
+        label:"Edit Master"
+      }]
+  
+      const isActive = data?.isActive
+      if(isActive) actionItems.push({
+        action:"DISABLE",
+        label:"Disable Master"
+      })
+      else actionItems.push({
+        action:"ENABLE",
+        label:"Enable Master"
+      })
+
+      switch(true)
+      {
+        case contextPath.includes("works-ui") : {
+          actionItems?.push({
+            action:"ADD_SOR_COMPOSITION",
+            label:"Add SOR Composition"
+          })
+        }
+      }
+      console.log(actionItems);
+      return actionItems;
+    },
+    onActionSelect : (action,props) => {
+      const {action:actionSelected} = action 
+      //action===EDIT go to edit screen 
+      if(actionSelected === "ADD_SOR_COMPOSITION")
+      props?.history.push(`/${window?.contextPath}/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`)
+      if(actionSelected==="EDIT") {
+      props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}`)
+      }
+      //action===DISABLE || ENABLE call update api and show toast respectively
+      else{
+        //call update mutation
+        props?.handleEnableDisable(actionSelected)
+      }
+    }
+
   }
 };
