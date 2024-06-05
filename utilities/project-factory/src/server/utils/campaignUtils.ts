@@ -218,8 +218,8 @@ async function updateStatusFile(request: any, localizationMap?: { [key: string]:
     const fileUrl = fileResponse?.fileStoreIds?.[0]?.url;
     const sheetName = createAndSearchConfig?.parseArrayConfig?.sheetName;
     const localizedSheetName = getLocalizedName(sheetName, localizationMap);
-    const workbook:any =await getExcelWorkbookFromFileURL(fileUrl,localizedSheetName);
-    const worksheet:any = workbook.getWorksheet(localizedSheetName);
+    const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, localizedSheetName);
+    const worksheet: any = workbook.getWorksheet(localizedSheetName);
     processErrorData(request, createAndSearchConfig, workbook, localizedSheetName, localizationMap);
 
     // Set column widths
@@ -251,8 +251,8 @@ async function updateStatusFileForTargets(request: any, localizationMap?: { [key
 
 
     const fileUrl = fileResponse?.fileStoreIds?.[0]?.url;
- 
-    const workbook:any =await getExcelWorkbookFromFileURL(fileUrl,"");
+
+    const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, "");
 
     const sheetNames = workbook.worksheets.map((worksheet: any) => worksheet.name);
     const localizedSheetNames = getLocalizedHeaders(sheetNames, localizationMap);
@@ -1243,7 +1243,7 @@ function lockTargetFields(newSheet: any, targetColumnNumber: any, boundaryCodeCo
             cell.protection = { locked: true };
         });
     });
-
+    console.log(targetColumnNumber, "ppppppppppppppppp")
     // Unlock cells in the target column
     if (targetColumnNumber > -1) {
         newSheet.eachRow((row: any) => {
@@ -1282,7 +1282,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
     try {
         logger.info("Received Boundary data for Processing file");
         const uniqueDistrictsForMainSheet: string[] = [];
-        const workbook=getNewExcelWorkbook();
+        const workbook = getNewExcelWorkbook();
         const type = request?.query?.type;
         const headingInSheet = headingMapping?.[type];
         const localisedHeading = getLocalizedName(headingInSheet, localizationMap);
@@ -1318,7 +1318,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
 
 
 
-        await appendDistricts(request, workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap,hierarchy);
+        await appendDistricts(request, workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap, hierarchy);
         logger.info("Sheet with different tabs generated successfully");
         return workbook;
     } catch (error) {
@@ -1328,8 +1328,8 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
 }
 
 
-async function appendDistricts(request: any, workbook: any, uniqueDistrictsForMainSheet: any, differentTabsBasedOnLevel: any, boundaryData: any, localizationMap: any, districtLevelRowBoundaryCodeMap: any, hierarchy:any) {
-    const configurableColumnHeadersFromSchemaForTargetSheet = await getConfigurableColumnHeadersFromSchemaForTargetSheet(request,hierarchy, boundaryData, differentTabsBasedOnLevel, localizationMap);
+async function appendDistricts(request: any, workbook: any, uniqueDistrictsForMainSheet: any, differentTabsBasedOnLevel: any, boundaryData: any, localizationMap: any, districtLevelRowBoundaryCodeMap: any, hierarchy: any) {
+    const configurableColumnHeadersFromSchemaForTargetSheet = await getConfigurableColumnHeadersFromSchemaForTargetSheet(request, hierarchy, boundaryData, differentTabsBasedOnLevel, localizationMap);
     for (const uniqueData of uniqueDistrictsForMainSheet) {
         const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
         const districtDataFiltered = boundaryData.filter((boundary: any) => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs);
@@ -1357,9 +1357,9 @@ function createNewSheet(workbook: any, newSheetData: any, uniqueData: any, local
     const boundaryCodeColumnIndex = localizedHeaders.findIndex((header: any) => header === getLocalizedName("HCM_ADMIN_CONSOLE_BOUNDARY_CODE", localizationMap));
     if (targetColumnNumber > -1) {
         // Change the target column background color
-        changeFirstRowColumnColour(newSheet, 'B6D7A8', targetColumnNumber);
+        changeFirstRowColumnColour(newSheet, 'B6D7A8', targetColumnNumber + 1);
     }
-    lockTargetFields(newSheet, targetColumnNumber, boundaryCodeColumnIndex);
+    lockTargetFields(newSheet, targetColumnNumber + 1, boundaryCodeColumnIndex);
 }
 
 
@@ -1530,7 +1530,7 @@ const autoGenerateBoundaryCodes = async (request: any, localizationMap?: any) =>
     const data = prepareDataForExcel(boundaryDataForSheet, hierarchy, boundaryMap);
     const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
     const boundarySheetData: any = await createExcelSheet(data, localizedHeaders);
-    const workbook=getNewExcelWorkbook();
+    const workbook = getNewExcelWorkbook();
     const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
     addDataToSheet(boundarySheet, boundarySheetData);
     const boundaryFileDetails: any = await createAndUploadFile(workbook, request);
