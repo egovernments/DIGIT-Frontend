@@ -65,57 +65,58 @@ const IFrameInterface = (props) => {
           console.error('Failed to access iframe content window.');
           return;
         }
-
+    
         const originalFetch = iframeWindow.fetch;
         iframeWindow.fetch = function (url, options = {}) {
           options.headers = options.headers || {};
           const oidcToken = window.localStorage.getItem(localStorageKey);
           if (oidcToken) {
             const accessToken = oidcToken;
-            
+    
             if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
-              console.log("url here",url)
-              console.log("typof url", typeof url);
-              if (typeof url === "string" && (url?.includes("vector.maps.elastic.co") ||url?.includes("tiles.maps.elastic.co") )) {
+              console.log("url here", url);
+              console.log("typeof url", typeof url);
+    
+              if (typeof url === "string" && (url.includes("vector.maps.elastic.co") || url.includes("tiles.maps.elastic.co"))) {
                 const oldUrl = url;
-                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {}
-                console.log("interceptor fetch",pageObject);
-                const routePath = pageObject?.["routePath"] || ""
-                console.log("interceptor fetch",routePath);
-
-                // Parse the URL
-                // const urlObject = new URL(url);
-                // Replace the hostname
-                const newUrl = `${document.location.origin}${routePath}`;  // Replace with your new hostname
-                console.log("interceptor fetch",newUrl);
-                // Convert the URL object back to a string
+                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
+                console.log("interceptor fetch", pageObject);
+                const routePath = pageObject?.["routePath"] || "";
+                console.log("interceptor fetch", routePath);
+    
+                // Construct the new URL
+                const newUrl = `${document.location.origin}${routePath}`;
+                console.log("interceptor fetch", newUrl);
+    
+                // Set additional headers if needed
+                options.headers['mode'] = 'no-cors';
+                options.headers['replace-url'] = oldUrl;
+    
+                // Update the URL to the new URL
                 url = newUrl;
-                
+              }
+    
+              if (typeof url === "object" && (url.url.includes("vector.maps.elastic.co") || url.url.includes("tiles.maps.elastic.co"))) {
+                const oldUrl = url.url;
+                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
+                console.log("object interceptor fetch", pageObject);
+                const routePath = pageObject?.["routePath"] || "";
+                console.log("object interceptor fetch", routePath);
+    
+                // Construct the new URL
+                const newUrl = `${document.location.origin}${routePath}`;
+                console.log("object interceptor fetch", newUrl);
+    
                 // Set additional headers if needed
                 options.headers['mode'] = 'no-cors';
                 options.headers['replace-url'] = oldUrl;
+    
+                // Update the URL object to the new URL
+                url = { ...url, url: newUrl };
               }
-              if (typeof url === "object" && (url?.url?.includes("vector.maps.elastic.co") ||url?.url?.includes("tiles.maps.elastic.co") )) {
-                const oldUrl = url?.url;
-                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {}
-                console.log("object interceptor fetch",pageObject);
-                const routePath = pageObject?.["routePath"] || ""
-                console.log("object interceptor fetch",routePath);
-
-                // Parse the URL
-                // const urlObject = new URL(url);
-                // Replace the hostname
-                const newUrl = `${document.location.origin}${routePath}`;  // Replace with your new hostname
-                console.log("object interceptor fetch",newUrl);
-                // Convert the URL object back to a string
-                url.url = newUrl;
-                
-                // Set additional headers if needed
-                options.headers['mode'] = 'no-cors';
-                options.headers['replace-url'] = oldUrl;
-              }
+    
               options.headers['Authorization'] = `${accessToken}`;
             }
           }
