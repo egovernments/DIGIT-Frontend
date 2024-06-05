@@ -25,12 +25,11 @@ import { useMyContext } from "../../utils/context";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { render } from "react-dom";
 
-// will be changed laters
-const campaignType = "ITIN";
+// // will be changed laters
+// const campaignType = "ITIN";
 
 // Main component for creating a microplan
 const CreateMicroplan = () => {
-
   // Fetching data using custom MDMS hook
   const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
@@ -59,6 +58,13 @@ const CreateMicroplan = () => {
       enabled: !!id,
     }
   );
+  // to save microplan helper data to ssn
+  useEffect(()=>{
+    if(campaignData)
+    Digit.SessionStorage.set("microplanHelperData", {...Digit.SessionStorage.get("microplanHelperData"),campaignData});
+  },[campaignData])
+
+  const campaignType = campaignData?.projectType;
 
   // request body for boundary hierarchy api
   const reqCriteria = {
@@ -121,13 +127,13 @@ const CreateMicroplan = () => {
       }
       setMicroplanData((previous) => ({
         ...previous,
-        status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid"},
+        status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" },
       }));
       // if (currentPage?.name !== "FORMULA_CONFIGURATION") {
       //   setCheckDataCompletion("perform-action");
       //   return;
       // }
-      
+
       // let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
       // if (Object.keys(checkStatusValues).length == 0) {
       //   setCheckDataCompletion("perform-action");
@@ -151,10 +157,17 @@ const CreateMicroplan = () => {
       //   return;
       // }
       setCheckDataCompletion("false");
-      let body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, microplanData?.microplanDetails?.name, campaignId, "DRAFT",microplanData?.planConfigurationId?"update":"create");
-      if(!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)){
+      let body = Digit.Utils.microplan.mapDataForApi(
+        microplanData,
+        operatorsObject,
+        microplanData?.microplanDetails?.name,
+        campaignId,
+        "DRAFT",
+        microplanData?.planConfigurationId ? "update" : "create"
+      );
+      if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
         setCheckDataCompletion("perform-action");
-        return
+        return;
       }
       setLoaderActivation(true);
       if (!microplanData?.planConfigurationId) {
@@ -269,7 +282,7 @@ const CreateMicroplan = () => {
 
   const completeNavigation = useCallback(() => {
     setToRender("success-screen");
-  },[setToRender]);
+  }, [setToRender]);
 
   return (
     <>
@@ -289,11 +302,11 @@ const CreateMicroplan = () => {
         {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
       </div>
       {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
-          <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
-        )}
-        {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
-          <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} type="error" />
-        )}
+        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
+      )}
+      {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
+        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} type="error" />
+      )}
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
     </>
   );

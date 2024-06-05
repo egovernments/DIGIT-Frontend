@@ -11,7 +11,15 @@ import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import { Modal } from "@egovernments/digit-ui-react-components";
 const page = "hypothesis";
 
-const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {
+const Hypothesis = ({
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
+  microplanData,
+  setMicroplanData,
+  checkDataCompletion,
+  setCheckDataCompletion,
+  currentPage,
+  pages,
+}) => {
   const { t } = useTranslation();
 
   // States
@@ -143,7 +151,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
   return (
     <>
       <div className={sectionClass}>
-        <div className="hypothesis-help" style={{ position: "absolute", top: "70%", left: "40%", zIndex: "-100" }} />
+        <div className="hypothesis-help" style={{ position: "absolute", top: "20rem", left: "40%", zIndex: "-100" }} />
         {/* NonInterractable Section */}
         <NonInterractableSection t={t} />
         {/* Interractable Section that includes the example as well as the assumptions */}
@@ -157,6 +165,7 @@ const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, che
           exampleOption={exampleOption}
           t={t}
         />
+        <div className="add-button-help" />
         <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
           <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
           <p>{t("ADD_ROW")}</p>

@@ -31,6 +31,7 @@ export const JsonPreviewInExcelForm = (props) => {
         />
       </div>
       <div className="excel-wrapper">
+        {props?.errorLocationObject?.[currentSheetName] && <p className="error-user-directions">{t("USER_DIRECTIONS_FOR_ERROR_MESSAGE")}</p>}
         {/* {Object.entries(sheetsData).map(([sheetName, sheetData], index) => ( */}
         <div key={sheetsData?.[currentSheetName]} className="sheet-wrapper">
           <table className="excel-table">
@@ -45,18 +46,28 @@ export const JsonPreviewInExcelForm = (props) => {
               {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
-                    const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex]
+                    const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex];
                     const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
+                    const rowHasError =
+                      typeof props?.errorLocationObject?.[currentSheetName]?.[rowIndex] === "object"
+                        ? Object.keys(props?.errorLocationObject?.[currentSheetName]?.[rowIndex]).length !== 0
+                        : undefined;
                     return (
                       <td
                         key={cellIndex}
                         style={{
-                          ...(rowData[cellIndex] || rowData[cellIndex] === 0 ? !isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex]) ? { textAlign: "end" } :{}: {}),
-                          ...( error? {backgroundColor:"rgb(250,148,148)"} : {}),
+                          ...(rowData[cellIndex] || rowData[cellIndex] === 0
+                            ? !isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex])
+                              ? { textAlign: "end" }
+                              : {}
+                            : {}),
+                          ...(error ? { backgroundColor: "rgb(250,148,148)" } : {}),
                         }}
-                        title={error? t(error):undefined}
+                        title={error ? t(error) : undefined}
                       >
-                        {rowData[cellIndex] || rowData[cellIndex] === 0 ?rowData[cellIndex] : ""}
+                        {cellIndex === 0 && rowHasError && <div className="edited-row-marker" />}
+
+                        {rowData[cellIndex] || rowData[cellIndex] === 0 ? rowData[cellIndex] : ""}
                       </td>
                     );
                   })}

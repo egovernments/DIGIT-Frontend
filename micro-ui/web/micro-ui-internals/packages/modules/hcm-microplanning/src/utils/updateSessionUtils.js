@@ -1,6 +1,5 @@
 import { Request } from "@egovernments/digit-ui-libraries";
 import { parseXlsxToJsonMultipleSheetsForSessionUtil } from "../utils/exceltojson";
-import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
 import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
@@ -169,7 +168,7 @@ export const updateSessionUtils = {
 
       const { inputFileType, templateIdentifier, filestoreId, id: fileId } = file || {};
       let uploadObject = createUploadObject(templateIdentifier, inputFileType, fileId, filestoreId, ".xlsx", active),
-        schema = findSchema(inputFileType, templateIdentifier, "ITIN");
+        schema = findSchema(inputFileType, templateIdentifier, additionalProps.campaignType);
       if (!schema) {
         console.error("Schema got undefined while handling excel at handleExcel");
         return [...upload, uploadObject];

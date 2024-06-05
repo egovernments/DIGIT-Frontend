@@ -4,7 +4,6 @@ import XLSX from "xlsx";
 export const parseXlsxToJsonMultipleSheets = (file, options) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = function (event) {
       try {
         const arrayBuffer = event.target.result;

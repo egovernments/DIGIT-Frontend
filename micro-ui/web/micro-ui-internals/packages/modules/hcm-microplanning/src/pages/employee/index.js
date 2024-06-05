@@ -79,7 +79,7 @@ const App = ({ path }) => {
     select:(data) => {
       dispatch({
         type:"SETINITDATA",
-        state:data?.['hcm-microplanning']
+        state:{...data?.['hcm-microplanning']}
       })
     }
   }

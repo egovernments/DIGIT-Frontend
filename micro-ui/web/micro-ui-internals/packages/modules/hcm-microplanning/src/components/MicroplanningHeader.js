@@ -18,7 +18,7 @@ const MicroplanningHeader = () => {
 
   return (
     <>
-      <Tutorial tutorial={tourState} updateTutorial={setTourState} theme={{zIndex:100}} />
+      <Tutorial tutorial={tourState} updateTutorial={setTourState} theme={{zIndex:500, primaryColor:PRIMARY_THEME_COLOR}} />
       <div className="wbh-header">
         <Help startTour={startTour} labelClassName="help-label"/>
       </div>

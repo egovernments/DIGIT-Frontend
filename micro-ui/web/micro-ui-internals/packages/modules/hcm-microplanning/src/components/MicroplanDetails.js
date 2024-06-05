@@ -21,7 +21,7 @@ const page = "microplanDetails";
 
 const MicroplanDetails = ({
   MicroplanName = "default",
-  campaignType = "SMC",
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
   microplanData,
   setMicroplanData,
   checkDataCompletion,
