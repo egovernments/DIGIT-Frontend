@@ -86,7 +86,7 @@ function makeColumns(worksheet: any, range: any, columns: any) {
         statusCell.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: '93C47D' } // Green color
+            fgColor: { argb: 'CCCC00' }
         };
         statusCell.font = { bold: true };
     }
@@ -99,7 +99,7 @@ function makeColumns(worksheet: any, range: any, columns: any) {
         errorDetailsCell.fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: '93C47D' } // Green color
+            fgColor: { argb: 'CCCC00' }
         };
         errorDetailsCell.font = { bold: true };
     }
