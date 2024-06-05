@@ -26,7 +26,6 @@ const commonColumn = "boundaryCode";
 
 const Upload = ({
   MicroplanName = "default",
-  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
   microplanData,
   setMicroplanData,
   checkDataCompletion,
@@ -35,7 +34,7 @@ const Upload = ({
   pages,
 }) => {
   const { t } = useTranslation();
-
+  const campaignType = "LLIN-mz"
   // States
   const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
