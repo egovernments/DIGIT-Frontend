@@ -360,7 +360,7 @@ async function getAllFacilities(tenantId) {
   return searchedFacilities;
 }
 
-const addFacilitySheet = (xlsxData, mapping, facilities) => {
+const addFacilitySheet = (xlsxData, mapping, facilities, t) => {
   if (!mapping) return xlsxData;
   // Create header row
   const headers = Object.keys(mapping);
@@ -399,6 +399,7 @@ export const createTemplate = async ({
   boundaries,
   tenantId,
   hierarchyType,
+  t
 }) => {
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
   const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
@@ -430,7 +431,7 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, t);
       else xlsxData = addSchemaData(xlsxData, schema);
     } else {
       // not adding facility sheet
@@ -442,7 +443,7 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, t);
       else {
         let facilitySheet = {
           sheetName: FACILITY_DATA_SHEET,

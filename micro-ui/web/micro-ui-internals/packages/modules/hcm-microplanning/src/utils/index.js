@@ -173,7 +173,6 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       files.push(data);
     });
     Object.values(data?.upload).forEach((item) => {
-      debugger
       if(reqType === "create" && item.resourceMapping &&item.resourceMapping.every((item) => item.active === false )) return
       if (
         !item ||

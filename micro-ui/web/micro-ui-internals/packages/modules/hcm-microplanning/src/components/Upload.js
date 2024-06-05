@@ -44,7 +44,7 @@ const Upload = ({
   const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
-  const [loaderActivation, setLoaderActivation] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [fileData, setFileData] = useState();
   const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
@@ -222,7 +222,7 @@ const Upload = ({
       state: "error",
       message: t("ERROR_UNKNOWN"),
     });
-    setLoaderActivation(false);
+    setLoader(false);
     return;
   };
 
@@ -266,7 +266,7 @@ const Upload = ({
       hierarchyType: campaignData?.hierarchyType,
       Schemas: validationSchemas,
       HierarchyConfigurations: state?.HierarchyConfigurations,
-      setLoaderActivation,
+      setLoader,
       t,
     };
     downloadTemplate(downloadParams);
@@ -302,7 +302,7 @@ const Upload = ({
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
     try {
       // setting loader
-      setLoaderActivation(true);
+      setLoader("FILE_UPLOADING");
       let check;
       let fileDataToStore;
       let errorMsg;
@@ -311,7 +311,7 @@ const Upload = ({
       let callMapping = false;
       // Checking if the file follows name convention rules
       if (!validateNamingConvention(file, selectedFileType["namingConvention"], setToast, t)) {
-        setLoaderActivation(false);
+        setLoader(false);
         return;
       }
 
@@ -324,7 +324,7 @@ const Upload = ({
             state: "error",
             message: t("ERROR_VALIDATION_SCHEMA_ABSENT"),
           });
-          setLoaderActivation(false);
+          setLoader(false);
           return;
         }
       }
@@ -388,7 +388,7 @@ const Upload = ({
               setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
             }
             if (response.interruptUpload) {
-              setLoaderActivation(false);
+              setLoader(false);
               return;
             }
           } catch (error) {
@@ -402,7 +402,7 @@ const Upload = ({
             response = await handleGeojsonFile(file, schemaData);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
-              setLoaderActivation(false);
+              setLoader(false);
               setToast(response.toast);
               return;
             }
@@ -435,7 +435,7 @@ const Upload = ({
             state: "error",
             message: t("ERROR_UNKNOWN_FILETYPE"),
           });
-          setLoaderActivation(false);
+          setLoader(false);
           return;
       }
       let filestoreId;
@@ -489,11 +489,11 @@ const Upload = ({
       setFileData(fileObject);
       if (errorMsg === undefined && callMapping) setModal("spatial-data-property-mapping");
       setDataPresent(true);
-      setLoaderActivation(false);
+      setLoader(false);
     } catch (error) {
       console.error("File Upload error", error?.message);
       setUploadedFileError("ERROR_UPLOADING_FILE");
-      setLoaderActivation(false);
+      setLoader(false);
     }
   };
 
@@ -564,7 +564,6 @@ const Upload = ({
     errors = response.errors;
     let check = response.valid;
     if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
-      debugger
       for (const sheet in tempFileDataToStore) {
         const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
         if (commonColumnIndex !== -1)
@@ -645,7 +644,6 @@ const Upload = ({
     try {
       let blob = await dataToBlob();
       if (blob) {
-        debugger;
         // Crating a url object for the blob
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -708,7 +706,7 @@ const Upload = ({
   // Function for handling the validations for geojson and shapefiles after mapping of properties
   const validationForMappingAndDataSaving = async () => {
     try {
-      setLoaderActivation(true);
+      setLoader("LOADING");
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
@@ -741,11 +739,11 @@ const Upload = ({
         return temp;
       });
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
-      setLoaderActivation(false);
+      setLoader(false);
     } catch (error) {
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-      setLoaderActivation(false);
+      setLoader(false);
       handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
     }
   };
@@ -792,19 +790,19 @@ const Upload = ({
     });
     setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
     if (error) setUploadedFileError(error);
-    setLoaderActivation(false);
+    setLoader(false);
   };
 
   const checkForSchemaData = (schemaData) => {
     if (resourceMapping?.length === 0) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoaderActivation(false);
+      setLoader(false);
       return false;
     }
 
     if (!schemaData || !schemaData.schema || !schemaData.schema["Properties"]) {
       setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
-      setLoaderActivation(false);
+      setLoader(false);
       return;
     }
 
@@ -820,7 +818,7 @@ const Upload = ({
     const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
     if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
-      setLoaderActivation(false);
+      setLoader(false);
       return false;
     }
     setModal("none");
@@ -1099,7 +1097,7 @@ const Upload = ({
             <UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />
           </Modal>
         )}
-        {loaderActivation && <LoaderWithGap text={"LOADING"} />}
+        {loader && <LoaderWithGap text={t(loader)} />}
         {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
         {toast && toast.state === "error" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
@@ -1510,11 +1508,11 @@ const downloadTemplate = async ({
   hierarchyType,
   Schemas,
   HierarchyConfigurations,
-  setLoaderActivation,
+  setLoader,
   t,
 }) => {
   try {
-    setLoaderActivation(true);
+    setLoader("LOADING");
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
@@ -1526,6 +1524,7 @@ const downloadTemplate = async ({
       boundaries: campaignData?.boundaries,
       tenantId: Digit.ULBService.getCurrentTenantId(),
       hierarchyType,
+      t,
     });
     const translatedTemplate = translateTemplate(template, t);
 
@@ -1587,10 +1586,11 @@ const downloadTemplate = async ({
       link.click();
       // Revoke the URL to release the Blob
       URL.revokeObjectURL(url);
-      setLoaderActivation(false);
+      setLoader(false);
     });
   } catch (error) {
-    setLoaderActivation(false);
+    setLoader(false);
+    console.error(error?.message);
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
 };
@@ -1617,7 +1617,7 @@ const translateTemplate = (template, t) => {
       // Transform each entity in the row using the transformFunction
       const transformedRow = row.map((entity, index) => {
         // Skip transformation for the boundaryCode column
-        if (index === boundaryCodeIndex && rowIndex !== 0) {
+        if ((index === boundaryCodeIndex && rowIndex !== 0) || typeof entity === "number") {
           return entity;
         } else {
           return t(entity);
@@ -1771,11 +1771,13 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
   }
   const errorColumn = "MICROPLAN_ERROR_COLUMN";
   const style = {
-    font: { color: { argb: 'B91900' } },
-    border : { top: { style: 'thin', color: { argb: 'B91900' } },
-    left: { style: 'thin', color: { argb: 'B91900' } },
-    bottom: { style: 'thin', color: { argb: 'B91900' } },
-    right: { style: 'thin', color: { argb: 'B91900' } } }
+    font: { color: { argb: "B91900" } },
+    border: {
+      top: { style: "thin", color: { argb: "B91900" } },
+      left: { style: "thin", color: { argb: "B91900" } },
+      bottom: { style: "thin", color: { argb: "B91900" } },
+      right: { style: "thin", color: { argb: "B91900" } },
+    },
   };
   let xlsxBlob = await convertJsonToXlsx(processedData, { errorColumn, style });
   return xlsxBlob;
