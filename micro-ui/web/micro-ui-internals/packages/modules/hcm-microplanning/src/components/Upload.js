@@ -334,7 +334,7 @@ const Upload = ({
         try {
           const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
           const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-          let boundaryData = sessionData.filterBoundaries;
+          let boundaryData = sessionData.filteredBoundaries;
           let filteredBoundaries;
           if (!boundaryData) {
             // Only fetch boundary data if not present in session storage
@@ -399,7 +399,7 @@ const Upload = ({
           break;
         case GEOJSON:
           try {
-            response = await handleGeojsonFile(file, schemaData);
+            response = await handleGeojsonFile(file, schemaData,boundaryDataAgainstBoundaryCode, t);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoader(false);
@@ -418,7 +418,7 @@ const Upload = ({
           break;
         case SHAPEFILE:
           try {
-            response = await handleShapefiles(file, schemaData);
+            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, boundaryDataAgainstBoundaryCode,t);
             file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
             errorMsg = response.error;
@@ -495,112 +495,6 @@ const Upload = ({
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoader(false);
     }
-  };
-
-  const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t = (e) => e) => {
-    // Converting the file to preserve the sequence of columns so that it can be stored
-    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
-    let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
-      schemaData,
-      hierarchy,
-      selectedFileType,
-      fileDataToStore,
-      t
-    );
-    fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
-    delete tempFileDataToStore[t(BOUNDARY_DATA_SHEET)];
-    // Converting the input file to json format
-    let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
-    if (result && result.error) {
-      return {
-        check: false,
-        interruptUpload: true,
-        error: result.error,
-        fileDataToStore: {},
-        toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") },
-      };
-    }
-    let extraColumns = [commonColumn];
-    // checking if the hierarchy and common column is present the  uploaded data
-    extraColumns = [...hierarchy, commonColumn];
-    let data = Object.values(tempFileDataToStore);
-    let errorMsg;
-    let errors; // object containing the location and type of error
-    let toast;
-    let hierarchyDataPresent = true;
-    let latLngColumns =
-      Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
-        if (value?.isLocationDataColumns) {
-          acc.push(key);
-        }
-        return acc;
-      }, []) || [];
-    data.forEach((item) => {
-      const keys = item[0];
-      if (keys?.length !== 0) {
-        if (!extraColumns?.every((e) => keys.includes(e))) {
-          if (!schemaData?.doHierarchyCheckInUploadedData) {
-            hierarchyDataPresent = false;
-          } else {
-            errorMsg = {
-              check: false,
-              interruptUpload: true,
-              error: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT"),
-              fileDataToStore: {},
-              toast: { state: "error", message: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT") },
-            };
-          }
-        }
-        if (!latLngColumns?.every((e) => keys.includes(e))) {
-          toast = { state: "warning", message: t("ERROR_UPLOAD_EXCEL_LOCATION_DATA_MISSING") };
-        }
-      }
-    });
-    if (errorMsg && !errorMsg?.check) return errorMsg;
-    // Running Validations for uploaded file
-    let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
-    if (!response.valid) setUploadedFileError(response.message);
-    errorMsg = response.message;
-    errors = response.errors;
-    let check = response.valid;
-    if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
-      for (const sheet in tempFileDataToStore) {
-        const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
-        if (commonColumnIndex !== -1)
-          tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
-            ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
-            ...item,
-          ]);
-        tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
-      }
-    }
-    return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
-  };
-  const handleGeojsonFile = async (file, schemaData) => {
-    // Reading and checking geojson data
-    const data = await readGeojson(file, t);
-    if (!data.valid) {
-      return { check: false, stopUpload: true, toast: data.toast };
-    }
-    // Running geojson validaiton on uploaded file
-    let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
-    if (!response.valid) setUploadedFileError(response.message);
-    let check = response.valid;
-    let error = response.message;
-    let fileDataToStore = data.geojsonData;
-    return { check, error, fileDataToStore };
-  };
-  const handleShapefiles = async (file, schemaData) => {
-    // Reading and validating the uploaded geojson file
-    let response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
-    if (!response.valid) {
-      setUploadedFileError(response.message);
-      setToast(response.toast);
-    }
-    let check = response.valid;
-    let error = response.message;
-    let fileDataToStore = response.data;
-    return { check, error, fileDataToStore };
   };
 
   // Reupload the selected file
@@ -1781,6 +1675,117 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
   };
   let xlsxBlob = await convertJsonToXlsx(processedData, { errorColumn, style });
   return xlsxBlob;
+};
+
+export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t = (e) => e) => {
+  // Converting the file to preserve the sequence of columns so that it can be stored
+  let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+  delete fileDataToStore[t(BOUNDARY_DATA_SHEET)];
+  let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
+    schemaData,
+    hierarchy,
+    selectedFileType,
+    fileDataToStore,
+    t
+  );
+  fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
+  // Converting the input file to json format
+  let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
+  if (result && result.error) {
+    return {
+      check: false,
+      interruptUpload: true,
+      error: result.error,
+      fileDataToStore: {},
+      toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") },
+    };
+  }
+  let extraColumns = [commonColumn];
+  // checking if the hierarchy and common column is present the  uploaded data
+  extraColumns = [...hierarchy, commonColumn];
+  let data = Object.values(tempFileDataToStore);
+  let errorMsg;
+  let errors; // object containing the location and type of error
+  let toast;
+  let hierarchyDataPresent = true;
+  let latLngColumns =
+    Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
+      if (value?.isLocationDataColumns) {
+        acc.push(key);
+      }
+      return acc;
+    }, []) || [];
+  data.forEach((item) => {
+    const keys = item[0];
+    if (keys?.length !== 0) {
+      if (!extraColumns?.every((e) => keys.includes(e))) {
+        if (!schemaData?.doHierarchyCheckInUploadedData) {
+          hierarchyDataPresent = false;
+        } else {
+          errorMsg = {
+            check: false,
+            interruptUpload: true,
+            error: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT"),
+            fileDataToStore: {},
+            toast: { state: "error", message: t("ERROR_BOUNDARY_DATA_COLUMNS_ABSENT") },
+          };
+        }
+      }
+      if (!latLngColumns?.every((e) => keys.includes(e))) {
+        toast = { state: "warning", message: t("ERROR_UPLOAD_EXCEL_LOCATION_DATA_MISSING") };
+      }
+    }
+  });
+  if (errorMsg && !errorMsg?.check) return errorMsg;
+  // Running Validations for uploaded file
+  let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
+  if (!response.valid) setUploadedFileError(response.message);
+  errorMsg = response.message;
+  errors = response.errors;
+  let check = response.valid;
+  if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
+    for (const sheet in tempFileDataToStore) {
+      const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
+      if (commonColumnIndex !== -1)
+        tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
+          ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
+          ...item,
+        ]);
+      tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
+    }
+  }
+  return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
+};
+
+const handleGeojsonFile = async (file, schemaData,boundaryDataAgainstBoundaryCode, t) => {
+  // Reading and checking geojson data
+  const data = await readGeojson(file, t);
+  if (!data.valid) {
+    return { check: false, stopUpload: true, toast: data.toast };
+  }
+  debugger
+  // data.geojsonData.features[].properties
+
+  // Running geojson validaiton on uploaded file
+  let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
+  if (!response.valid) setUploadedFileError(response.message);
+  let check = response.valid;
+  let error = response.message;
+  let fileDataToStore = data.geojsonData;
+  return { check, error, fileDataToStore };
+};
+
+const handleShapefiles = async (file, schemaData, setUploadedFileError, selectedFileType,boundaryDataAgainstBoundaryCode, t) => {
+  // Reading and validating the uploaded geojson file
+  let response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
+  if (!response.valid) {
+    setUploadedFileError(response.message);
+    setToast(response.toast);
+  }
+  let check = response.valid;
+  let error = response.message;
+  let fileDataToStore = response.data;
+  return { check, error, fileDataToStore };
 };
 
 export default Upload;

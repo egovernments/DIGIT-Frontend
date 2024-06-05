@@ -4,7 +4,9 @@ import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
-import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY, commonColumn } from "../configs/constants";
+import { handleExcelFile } from "../components/Upload";
+import { addBoundaryData, fetchBoundaryData, filterBoundaries } from "./createTemplate";
 
 function handleExcelArrayBuffer(arrayBuffer, file) {
   return new Promise((resolve, reject) => {
@@ -161,6 +163,7 @@ export const updateSessionUtils = {
     };
 
     const handleExcel = (file, result, upload, translatedData, active) => {
+      debugger
       if (!file) {
         console.error("Excel file is undefined");
         return upload;
@@ -173,16 +176,8 @@ export const updateSessionUtils = {
         console.error("Schema got undefined while handling excel at handleExcel");
         return [...upload, uploadObject];
       }
-
-      const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
-        schema,
-        additionalProps.heirarchyData,
-        { id: inputFileType },
-        result,
-        additionalProps.t,
-        translatedData
-      );
-      uploadObject.data = resultAfterMapping?.tempFileDataToStore;
+      
+      uploadObject.data = result//resultAfterMapping?.tempFileDataToStore;
       upload.push(uploadObject);
       return upload;
     };
@@ -240,6 +235,49 @@ export const updateSessionUtils = {
       }
     };
 
+    const fetchBoundaryDataWrapper = async (schemaData) => {
+      let boundaryDataAgainstBoundaryCode = {};
+      if (!schemaData?.doHierarchyCheckInUploadedData) {
+        try {
+          const rootBoundary = additionalProps.campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+          const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+          let boundaryData = sessionData.filteredBoundaries;
+          let filteredBoundaries;
+          if (!boundaryData) {
+            // Only fetch boundary data if not present in session storage
+            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+
+            // Update the session storage with the new filtered boundaries
+            Digit.SessionStorage.set("microplanHelperData", {
+              ...sessionData,
+              filteredBoundaries: filteredBoundaries,
+            });
+          } else {
+            filteredBoundaries = boundaryData;
+          }
+          const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+          xlsxData.forEach((item, i) => {
+            if (i === 0) return;
+            let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+            if (boundaryCodeIndex >= item.length) {
+              // If boundaryCodeIndex is out of bounds, return the item as is
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(additionalProps.t);
+            } else {
+              // Otherwise, remove the element at boundaryCodeIndex
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+                .slice(0, boundaryCodeIndex)
+                .concat(item.slice(boundaryCodeIndex + 1))
+                .map(additionalProps.t);
+            }
+          });
+          return boundaryDataAgainstBoundaryCode;
+        } catch (error) {
+          console.error(error?.message);
+        }
+      }
+    };
+
     const fetchFiles = async () => {
       const files = row?.files;
       if (!files || files.length === 0) {
@@ -250,6 +288,12 @@ export const updateSessionUtils = {
       let storedData = [];
       for (const { filestoreId, inputFileType, templateIdentifier, id, active } of files) {
         if (!active) continue;
+        const schemaData = findSchema(inputFileType, templateIdentifier, additionalProps?.campaignType);
+        if (!schemaData) {
+          console.error("Schema got undefined while handling geojson at handleGeoJson");
+          return [...upload, uploadObject];
+        }
+        const boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schemaData)) || {};
         let fileData = {
           filestoreId,
           inputFileType,
@@ -275,18 +319,39 @@ export const updateSessionUtils = {
             })
             .then(async (res) => {
               if (inputFileType === EXCEL) {
-                const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
-                const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
-                  file,
-                  { header: 1 },
-                  {
+                try {
+                  const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
+                  const response = await handleExcelFile(
+                    file,
+                    schemaData,
+                    additionalProps.heirarchyData,
+                    { id: inputFileType },
+                    boundaryDataAgainstBoundaryCode,
+                    additionalProps.t
+                  );
+                  console.log(response);
+
+                  // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
+                  //   file,
+                  //   { header: 1 },
+                  //   {
+                  //     filestoreId,
+                  //     inputFileType,
+                  //     templateIdentifier,
+                  //     id,
+                  //   }
+                  // );
+                  let fileData = {
                     filestoreId,
                     inputFileType,
                     templateIdentifier,
                     id,
-                  }
-                );
-                return { ...response, translatedData: true, active };
+                  };
+
+                  return { jsonData:response.fileDataToStore , file:fileData, translatedData: true, active };
+                } catch (error) {
+                  console.error(error);
+                }
               } else if (inputFileType === GEOJSON) {
                 let response = await parseGeoJSONResponse(res.data, {
                   filestoreId,
@@ -341,7 +406,7 @@ export const updateSessionUtils = {
     };
 
     try {
-      setCurrentPage();
+      setCurrentPage();debugger
       setMicroplanStatus();
       setMicroplanDetails();
       setMicroplanHypothesis();

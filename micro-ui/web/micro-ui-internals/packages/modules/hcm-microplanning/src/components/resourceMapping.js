@@ -132,6 +132,7 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
           optionKey="code"
           select={handleSelectChange}
           style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)" }}
+          showToolTip={true}
         />
       </div>
     );

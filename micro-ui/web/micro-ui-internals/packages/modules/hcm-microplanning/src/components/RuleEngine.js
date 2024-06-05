@@ -553,6 +553,7 @@ const Example = ({ exampleOption, t }) => {
             selected={null}
             optionKey="code"
             placeholder={t("SELECT_OPTION")}
+            showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
         </div>
@@ -574,6 +575,7 @@ const Example = ({ exampleOption, t }) => {
             selected={null}
             optionKey="code"
             placeholder={t("SELECT_OPTION")}
+            showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_INPUT_HELP_TEXT")}</p>
         </div>
@@ -587,6 +589,7 @@ const Example = ({ exampleOption, t }) => {
             selected={null}
             optionKey="code"
             placeholder={t("SELECT_OPTION")}
+            showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_OPERATOR_HELP_TEXT")}</p>
         </div>
@@ -600,6 +603,7 @@ const Example = ({ exampleOption, t }) => {
             selected={null}
             optionKey="code"
             placeholder={t("SELECT_OPTION")}
+            showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_KEY_HELP_TEXT")}</p>
         </div>
@@ -697,18 +701,17 @@ const Select = React.memo(({ item, rules, setRules, disabled = false, options, s
   );
 
   return (
-    <div title={selected?.code ? t(selected.code) : undefined}>
-      <Dropdown
-        variant="select-dropdown"
-        t={t}
-        isMandatory={false}
-        option={filteredOptions.map((item) => ({ code: item }))}
-        selected={selected}
-        select={selectChangeHandler}
-        optionKey="code"
-        placeholder={t("SELECT_OPTION")}
-      />
-    </div>
+    <Dropdown
+      variant="select-dropdown"
+      t={t}
+      isMandatory={false}
+      option={filteredOptions.map((item) => ({ code: item }))}
+      selected={selected}
+      select={selectChangeHandler}
+      optionKey="code"
+      placeholder={t("SELECT_OPTION")}
+      showToolTip={true}
+    />
   );
 });
 

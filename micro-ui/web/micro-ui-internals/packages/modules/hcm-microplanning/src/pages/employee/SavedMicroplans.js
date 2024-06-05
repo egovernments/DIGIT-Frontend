@@ -138,7 +138,8 @@ const SavedMicroplans = () => {
       const additionalProps = {
         heirarchyData:heirarchyData?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType),
         t,
-        campaignType
+        campaignType,
+        campaignData: row?.original?.CampaignDetails
       }
       //here compute the sessionObject based on the row?.original data and then re-route
       const computedSession = await updateSessionUtils.computeSessionObject(row.original,state,additionalProps)
