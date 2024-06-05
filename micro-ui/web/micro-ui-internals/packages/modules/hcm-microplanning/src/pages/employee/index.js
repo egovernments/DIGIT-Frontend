@@ -8,12 +8,6 @@ import CreateMicroplan from "./CreateMicroplan";
 import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
 import { useMyContext } from "../../utils/context";
-import { Schemas} from "./MDMSData/Schemas.json"
-import { HypothesisAssumptions} from "./MDMSData/HypothesisAssumptions.json"
-import { AutoFilledRuleConfigurations} from "./MDMSData/AutoFilledRuleConfigurations.json"
-import { RuleConfigureOutput} from "./MDMSData/RuleConfigureOutput.json"
-import { Resources} from "./MDMSData/Resources.json"
-import { MicroplanPreviewAggregates} from "./MDMSData/MicroplanPreviewAggregates.json"
 
 const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
   const { t } = useTranslation();
@@ -85,7 +79,7 @@ const App = ({ path }) => {
     select:(data) => {
       dispatch({
         type:"SETINITDATA",
-        state:{...data?.['hcm-microplanning'],Schemas,HypothesisAssumptions, AutoFilledRuleConfigurations, RuleConfigureOutput, Resources, MicroplanPreviewAggregates}
+        state:{...data?.['hcm-microplanning']}
       })
     }
   }
