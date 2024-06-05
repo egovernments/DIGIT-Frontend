@@ -14,8 +14,8 @@ import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from 
 import { getLocaleFromRequest, getLocalisationModuleName } from "./localisationUtils";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
+import { getNewExcelWorkbook } from "./excelUtils";
 const NodeCache = require("node-cache");
-const ExcelJS = require('exceljs');
 
 const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
 const createGeneratedResourceTopic = config?.kafka?.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -253,20 +253,22 @@ async function getResponseFromDb(request: any) {
       queryValues = [request.query.id, type, hierarchyType, tenantId];
     }
     else {
-      if (type == 'boundary' && request?.body?.Filters !== undefined) {
-        queryString += "type = $1 AND hierarchytype = $2 AND  tenantid = $3  AND status =$4 ";
-        if (request.body.Filters === null) {
-          queryString += " AND (additionaldetails->'Filters' IS NULL OR additionaldetails->'Filters' = 'null')";
-          queryValues = [type, hierarchyType, tenantId, status];
-        } else {
-          queryString += " AND additionaldetails->'Filters' @> $5::jsonb";
-          queryValues = [type, hierarchyType, tenantId, status, request.body.Filters];
-        }
-      }
-      else {
-        queryString += " type = $1 AND hierarchytype = $2 AND tenantid = $3 AND status = $4";
-        queryValues = [type, hierarchyType, tenantId, status];
-      }
+      // if (type == 'boundary') {
+
+      //   // if (request.body.Filters === null) {
+      //   //   queryString += " AND (additionaldetails->'Filters' IS NULL OR additionaldetails->'Filters' = 'null')";
+      //   //   queryValues = [type, hierarchyType, tenantId, status];
+      //   // } else {
+      //   //   queryString += " AND additionaldetails->'Filters' @> $5::jsonb";
+      //   //   queryValues = [type, hierarchyType, tenantId, status, request.body.Filters];
+      //   // }
+      // }
+      // else {
+      //   queryString += " type = $1 AND hierarchytype = $2 AND tenantid = $3 AND status = $4";
+      //   queryValues = [type, hierarchyType, tenantId, status];
+      // }
+      queryString += "type = $1 AND hierarchytype = $2 AND  tenantid = $3  AND status =$4 ";
+      queryValues = [type, hierarchyType, tenantId, status];
     }
     queryResult = await executeQuery(queryString, queryValues);
     return generatedResourceTransformer(queryResult?.rows);
@@ -594,7 +596,7 @@ function changeFirstRowColumnColour(facilitySheet: any, color: any, columnNumber
 
 
 async function createFacilityAndBoundaryFile(facilitySheetData: any, boundarySheetData: any, request: any, localizationMap?: any) {
-  const workbook = new ExcelJS.Workbook();
+  const workbook=getNewExcelWorkbook();
 
   // Add facility sheet to the workbook
   const localizedFacilityTab = getLocalizedName(config?.facility?.facilityTab, localizationMap);
@@ -649,7 +651,7 @@ function addDataToSheet(sheet: any, sheetData: any, firstRowColor: any = '93C47D
 
 
 async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: any, request: any, localizationMap?: { [key: string]: string }) {
-  const workbook = new ExcelJS.Workbook();
+  const workbook=getNewExcelWorkbook();
   const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
   const type = request?.query?.type;
   const headingInSheet = headingMapping?.[type]

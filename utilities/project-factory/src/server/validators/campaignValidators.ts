@@ -480,6 +480,7 @@ function validateTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeader
             const headersToValidate = worksheet.getRow(1).values
                 .filter((header: any) => header !== undefined && header !== null && header.toString().trim() !== '')
                 .map((header: any) => header.toString().trim());
+
             if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in Target sheet ${worksheet.name}`);
             }
