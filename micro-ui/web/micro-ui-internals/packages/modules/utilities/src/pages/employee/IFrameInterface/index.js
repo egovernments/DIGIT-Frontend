@@ -84,11 +84,11 @@ const IFrameInterface = (props) => {
                 const oldUrl = url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("interceptor fetch", pageObject);
-                const routePath = pageObject?.["routePath"] || "";
+                const routePath = pageObject?.["base-kibana-path"] || "";
                 console.log("interceptor fetch", routePath);
     
                 // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}/${appendStr}`;
+                const newUrl = `${document.location.origin}${routePath}${appendStr}`;
                 console.log("interceptor fetch", newUrl);
     
                 // Set additional headers if needed
@@ -104,11 +104,11 @@ const IFrameInterface = (props) => {
                 const oldUrl = url.url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("object interceptor fetch", pageObject);
-                const routePath = pageObject?.["routePath"] || "";
+                const routePath = pageObject?.["base-kibana-path"] || "";
                 console.log("object interceptor fetch", routePath);
     
                 // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}/${appendStr}`;
+                const newUrl = `${document.location.origin}${routePath}${appendStr}`;
                 console.log("object interceptor fetch", newUrl);
     
                 // Set additional headers if needed
