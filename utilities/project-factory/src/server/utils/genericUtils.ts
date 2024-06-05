@@ -387,7 +387,6 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       request.body.generatedResource = finalResponse;
     }
   } catch (error: any) {
-    console.log(error, "11111")
     handleGenerateError(newEntryResponse, generatedResource, error);
   }
 }

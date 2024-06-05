@@ -843,6 +843,7 @@ async function getCampaignSearchResponse(request: any) {
     const projectTypeSearchResponse: any = await searchProjectTypeCampaignService(req);
     return projectTypeSearchResponse;
   } catch (error: any) {
+    logger.error(`Error while searching for campaign details: ${error.message}`);
     throwError("COMMON", 400, "RESPONSE_NOT_FOUND_ERROR", error?.message)
   }
 }

@@ -997,7 +997,7 @@ async function callMdmsV2Data(
       MdmsCriteria: {
         tenantId: tenantId,
         filters,
-        schemaCode: moduleName + "." + "boundary",
+        schemaCode: moduleName + "." + config?.masterNameForSchemaOfColumnHeaders,
         limit: 10,
         offset: 0
       },

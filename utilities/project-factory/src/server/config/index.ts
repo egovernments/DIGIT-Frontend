@@ -11,6 +11,7 @@ if (!HOST) {
 }
 // Configuration object containing various environment variables
 const config = {
+  masterNameForSchemaOfColumnHeaders: "boundary",
   boundary: {
     boundaryCode: process.env.BOUNDARY_CODE_HEADER_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
     boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
