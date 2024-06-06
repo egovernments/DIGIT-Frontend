@@ -37,14 +37,10 @@ const Modal = ({
       document.body.style.overflowY = "auto";
     };
   }, []);
-  const popUpRef = useRef(null);
-  useEffect(()=>{
-  popUpRef.current.focus();
 
-  },[popUpRef])
   return (
     <PopUp>
-      <div className="popup-module" style={popupStyles} ref={popUpRef}>
+      <div className="popup-module" style={popupStyles}>
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}} />
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
