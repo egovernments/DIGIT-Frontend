@@ -297,6 +297,49 @@ const Upload = ({
   };
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
+  const boundaryDataGeneration = async (schemaData) => {
+    if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
+      try {
+        let boundaryDataAgainstBoundaryCode = {};
+        const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+        const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+        let boundaryData = sessionData.filteredBoundaries;
+        let filteredBoundaries;
+        if (!boundaryData) {
+          // Only fetch boundary data if not present in session storage
+          boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+          filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+
+          // Update the session storage with the new filtered boundaries
+          Digit.SessionStorage.set("microplanHelperData", {
+            ...sessionData,
+            filteredBoundaries: filteredBoundaries,
+          });
+        } else {
+          filteredBoundaries = boundaryData;
+        }
+        const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+        xlsxData.forEach((item, i) => {
+          if (i === 0) return;
+          let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+          if (boundaryCodeIndex >= item.length) {
+            // If boundaryCodeIndex is out of bounds, return the item as is
+            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
+          } else {
+            // Otherwise, remove the element at boundaryCodeIndex
+            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+              .slice(0, boundaryCodeIndex)
+              .concat(item.slice(boundaryCodeIndex + 1))
+              .map(t);
+          }
+        });
+        return boundaryDataAgainstBoundaryCode;
+      } catch (error) {
+        console.error(error?.message);
+      }
+    }
+  };
+
   // Function for handling upload file event
   const UploadFileToFileStorage = async (file) => {
     // const response =  await Digit.UploadServices.Filestorage("engagement", file, Digit.ULBService.getStateId());
@@ -328,46 +371,9 @@ const Upload = ({
           return;
         }
       }
-      let resourceMappingData = {};
-      let boundaryDataAgainstBoundaryCode = {};
-      if (!schemaData?.doHierarchyCheckInUploadedData) {
-        try {
-          const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-          const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-          let boundaryData = sessionData.filteredBoundaries;
-          let filteredBoundaries;
-          if (!boundaryData) {
-            // Only fetch boundary data if not present in session storage
-            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+      let resourceMappingData = [];
+      let boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData)) || {};
 
-            // Update the session storage with the new filtered boundaries
-            Digit.SessionStorage.set("microplanHelperData", {
-              ...sessionData,
-              filteredBoundaries: filteredBoundaries,
-            });
-          } else {
-            filteredBoundaries = boundaryData;
-          }
-          const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-          xlsxData.forEach((item, i) => {
-            if (i === 0) return;
-            let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-            if (boundaryCodeIndex >= item.length) {
-              // If boundaryCodeIndex is out of bounds, return the item as is
-              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
-            } else {
-              // Otherwise, remove the element at boundaryCodeIndex
-              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
-                .slice(0, boundaryCodeIndex)
-                .concat(item.slice(boundaryCodeIndex + 1))
-                .map(t);
-            }
-          });
-        } catch (error) {
-          console.error(error?.message);
-        }
-      }
       // Handling different filetypes
       switch (selectedFileType.id) {
         case EXCEL:
@@ -394,12 +400,12 @@ const Upload = ({
           } catch (error) {
             console.error("Excel parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
           }
           break;
         case GEOJSON:
           try {
-            response = await handleGeojsonFile(file, schemaData,boundaryDataAgainstBoundaryCode, t);
+            response = await handleGeojsonFile(file, schemaData, t);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoader(false);
@@ -413,12 +419,12 @@ const Upload = ({
           } catch (error) {
             console.error("Geojson parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
           }
           break;
         case SHAPEFILE:
           try {
-            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, boundaryDataAgainstBoundaryCode,t);
+            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, boundaryDataAgainstBoundaryCode, t);
             file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
             errorMsg = response.error;
@@ -427,7 +433,7 @@ const Upload = ({
           } catch (error) {
             console.error("Shapefile parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
           }
           break;
         default:
@@ -482,7 +488,7 @@ const Upload = ({
         let temp = _.cloneDeep(prevFileDataList);
         if (!temp) return temp;
         let index = prevFileDataList?.findIndex((item) => item.active && item.templateIdentifier === selectedSection.id);
-        if (index !== -1) temp[index] = { ...temp[index], active: false };
+        if (index !== -1) temp[index] = { ...temp[index], resourceMapping: temp[index]?.resourceMapping.map((e) => ({ active: false, ...e })), active: false };
         temp.push(fileObject);
         return temp;
       });
@@ -586,7 +592,7 @@ const Upload = ({
         return item.id === fileData.id;
       });
       if (index !== -1)
-        temp[index] = { ...temp[index], resourceMapping: temp[index].resourceMapping.map((e) => ({ active: false, ...e })), active: false };
+        temp[index] = { ...temp[index], resourceMapping: temp[index]?.resourceMapping.map((e) => ({ active: false, ...e })), active: false };
       return temp;
     });
     setFileData(undefined);
@@ -604,8 +610,8 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
-
       const { data, valid, errors } = computeMappedDataAndItsValidations(schemaData);
+      error = errors;
       if (!valid) return;
       let filestoreId;
       if (!error) {
@@ -613,14 +619,29 @@ const Upload = ({
       }
       let resourceMappingData;
       if (filestoreId) {
-        let toChange;
-        if (LOCALITY && hierarchy[hierarchy?.length - 1] !== LOCALITY) toChange = hierarchy[hierarchy?.length - 1];
         resourceMappingData = resourceMapping.map((item) => {
-          if (item?.mappedTo && item?.mappedTo === toChange) item.mappedTo = LOCALITY;
           return { ...item, filestoreId };
         });
       }
       setResourceMapping([]);
+
+      let boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData)) || {};
+      const mappedToList = resourceMappingData.map((item) => item.mappedTo);
+      if (hierarchy.every((item) => !mappedToList.includes(item))) {
+        data.features.forEach((feature) => {
+          const boundaryCode = feature.properties.boundaryCode;
+          let additionalDetails = {};
+          for (let i = 0; i < hierarchy.length; i++) {
+            if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
+              additionalDetails[hierarchy[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+            } else {
+              additionalDetails[hierarchy[i]] = "";
+            }
+          }
+          feature.properties = { ...additionalDetails, ...feature.properties };
+        });
+      }
+
       let fileObject = _.cloneDeep(fileData);
       fileObject = { ...fileData, data, resourceMapping: resourceMappingData, error: error ? error : null, filestoreId };
       setFileData(fileObject);
@@ -628,17 +649,18 @@ const Upload = ({
         let temp = _.cloneDeep(prevFileDataList);
         if (!temp) return temp;
         let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
-        if (index !== -1) temp[index] = { ...temp[index], active: false };
-        temp.push(fileObject);
+        if (index !== -1) temp[index] = fileObject;
+        // temp.push(fileObject);
         return temp;
       });
+
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoader(false);
     } catch (error) {
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
-      handleValidationErrorResponse(t("ERROR_UPLOADING_FILE"));
+      handleValidationErrorResponse([t("ERROR_UPLOADING_FILE")]);
     }
   };
   const saveFileToFileStore = async () => {
@@ -654,7 +676,7 @@ const Upload = ({
       }
     } catch (error) {
       error = t("ERROR_UPLOADING_FILE");
-      handleValidationErrorResponse(error);
+      handleValidationErrorResponse([error]);
       setResourceMapping([]);
       return;
     }
@@ -671,7 +693,7 @@ const Upload = ({
 
   const handleValidationErrorResponse = (error, errorLocationObject = {}) => {
     const fileObject = fileData;
-    fileObject.error = error;
+    fileObject.error = [error];
     if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
     setFileData((previous) => ({ ...previous, error, errorLocationObject }));
     setFileDataList((prevFileDataList) => {
@@ -700,15 +722,19 @@ const Upload = ({
       return;
     }
 
-    let columns = [
-      ...hierarchy,
+    let columns = [];
+    if (schemaData?.doHierarchyCheckInUploadedData) {
+      columns.push(...hierarchy);
+    }
+    columns.push(
       ...Object.entries(schemaData?.schema?.Properties || {}).reduce((acc, [key, value]) => {
         if (value?.isRequired) {
           acc.push(key);
         }
         return acc;
-      }, []),
-    ];
+      }, [])
+    );
+
     const resourceMappingLength = resourceMapping.filter((e) => !!e?.mappedFrom && columns.includes(e?.mappedTo)).length;
     if (resourceMappingLength !== columns?.length) {
       setToast({ state: "warning", message: t("WARNING_INCOMPLETE_MAPPING") });
@@ -1719,7 +1745,7 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
     const keys = item[0];
     if (keys?.length !== 0) {
       if (!extraColumns?.every((e) => keys.includes(e))) {
-        if (!schemaData?.doHierarchyCheckInUploadedData) {
+        if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
           hierarchyDataPresent = false;
         } else {
           errorMsg = {
@@ -1743,7 +1769,7 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
   errorMsg = response.message;
   errors = response.errors;
   let check = response.valid;
-  if (!schemaData?.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
+  if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
     for (const sheet in tempFileDataToStore) {
       const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
       if (commonColumnIndex !== -1)
@@ -1757,14 +1783,12 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
   return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
 };
 
-const handleGeojsonFile = async (file, schemaData,boundaryDataAgainstBoundaryCode, t) => {
+const handleGeojsonFile = async (file, schemaData, t) => {
   // Reading and checking geojson data
   const data = await readGeojson(file, t);
   if (!data.valid) {
     return { check: false, stopUpload: true, toast: data.toast };
   }
-  debugger
-  // data.geojsonData.features[].properties
 
   // Running geojson validaiton on uploaded file
   let response = geojsonValidations(data.geojsonData, schemaData.schema, t);
@@ -1775,7 +1799,7 @@ const handleGeojsonFile = async (file, schemaData,boundaryDataAgainstBoundaryCod
   return { check, error, fileDataToStore };
 };
 
-const handleShapefiles = async (file, schemaData, setUploadedFileError, selectedFileType,boundaryDataAgainstBoundaryCode, t) => {
+const handleShapefiles = async (file, schemaData, setUploadedFileError, selectedFileType, t) => {
   // Reading and validating the uploaded geojson file
   let response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
   if (!response.valid) {

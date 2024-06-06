@@ -163,7 +163,6 @@ export const updateSessionUtils = {
     };
 
     const handleExcel = (file, result, upload, translatedData, active) => {
-      debugger
       if (!file) {
         console.error("Excel file is undefined");
         return upload;
@@ -176,8 +175,8 @@ export const updateSessionUtils = {
         console.error("Schema got undefined while handling excel at handleExcel");
         return [...upload, uploadObject];
       }
-      
-      uploadObject.data = result//resultAfterMapping?.tempFileDataToStore;
+
+      uploadObject.data = result; //resultAfterMapping?.tempFileDataToStore;
       upload.push(uploadObject);
       return upload;
     };
@@ -204,34 +203,48 @@ export const updateSessionUtils = {
       );
     };
 
-    const handleGeoJsonSpecific = (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
+    const handleGeoJsonSpecific = async (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
       let schemaKeys;
       if (schema?.schema?.["Properties"]) {
         schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
       }
 
-      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
-      sortedSecondList = sortedSecondList.map((item) => {
-        if (item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1]) {
-          return { ...item, mappedTo: additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1] };
-        } else {
-          return item;
-        }
-      });
+      // sortedSecondList = sortedSecondList.map((item) => {
+      //   if (item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1]) {
+      //     return { ...item, mappedTo: additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1] };
+      //   } else {
+      //     return item;
+      //   }
+      // });
 
       upload.data = result;
-      if (translatedData) {
-        const newFeatures = result["features"].map((item) => {
-          let newProperties = {};
-          sortedSecondList
-            ?.filter((resourse) => resourse.filestoreId === filestoreId)
-            .forEach((e) => {
-              newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
-            });
-          item["properties"] = newProperties;
-          return item;
+      let boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schema)) || {};
+      const mappedToList = upload?.resourceMapping.map((item) => item.mappedTo);
+      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, upload?.resourceMapping);
+      const newFeatures = result["features"].map((item) => {
+        let newProperties = {};
+        sortedSecondList
+          ?.filter((resourse) => resourse.filestoreId === filestoreId)
+          .forEach((e) => {
+            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+          });
+        item["properties"] = newProperties;
+        return item;
+      });
+      upload.data.features = newFeatures;
+      if (additionalProps.heirarchyData.every((item) => !mappedToList.includes(item))) {
+        upload.data.features.forEach((feature) => {
+          const boundaryCode = feature.properties.boundaryCode;
+          let additionalDetails = {};
+          for (let i = 0; i < additionalProps.heirarchyData.length; i++) {
+            if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
+              additionalDetails[additionalProps.heirarchyData[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+            } else {
+              additionalDetails[additionalProps.heirarchyData[i]] = "";
+            }
+          }
+          feature.properties = { ...additionalDetails, ...feature.properties };
         });
-        upload.data.features = newFeatures;
       }
     };
 
@@ -329,7 +342,6 @@ export const updateSessionUtils = {
                     boundaryDataAgainstBoundaryCode,
                     additionalProps.t
                   );
-                  console.log(response);
 
                   // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
                   //   file,
@@ -348,7 +360,7 @@ export const updateSessionUtils = {
                     id,
                   };
 
-                  return { jsonData:response.fileDataToStore , file:fileData, translatedData: true, active };
+                  return { jsonData: response.fileDataToStore, file: fileData, translatedData: true, active };
                 } catch (error) {
                   console.error(error);
                 }
@@ -406,7 +418,7 @@ export const updateSessionUtils = {
     };
 
     try {
-      setCurrentPage();debugger
+      setCurrentPage();
       setMicroplanStatus();
       setMicroplanDetails();
       setMicroplanHypothesis();

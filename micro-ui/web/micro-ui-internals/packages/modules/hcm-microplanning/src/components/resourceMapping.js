@@ -80,7 +80,14 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
       return setToast({ state: "error", message: t("ERROR_VALIDATION_SCHEMA_ABSENT") });
 
     const columns = Object.keys(schema.schema["Properties"]);
-    if (columns) setTemplateColumns([...hierarchy, ...columns]);
+    if (columns) {
+      if(schema && !schema.doHierarchyCheckInUploadedData){
+        setTemplateColumns(columns);
+      }
+      else{
+      setTemplateColumns([...hierarchy, ...columns]);
+      }
+    }
   }, [schema]);
 
   // Update user columns when uploaded data changes
