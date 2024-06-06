@@ -171,19 +171,20 @@ const MicroplanDetails = ({
       <Card
         style={{
           margin: "1rem 0 1rem 0",
-          padding: "1 0 1rem 1.5rem",
+          padding: "1.5rem 1.5rem 1.5rem 1.5rem",
         }}
         className="microplan-campaign-detials"
       >
         <CardSectionHeader
           style={{
             margin: "0",
+            paddingLeft:"0"
           }}
         >
           {t("CAMPAIGN_DETAILS")}
         </CardSectionHeader>
 
-        <StatusTable>
+        <StatusTable style={{paddingLeft:"0"}}>
           {campaignData?.length > 0 &&
             campaignData?.map((row, idx) => {
               return (
@@ -191,7 +192,7 @@ const MicroplanDetails = ({
                   key={idx}
                   label={row?.label}
                   text={row?.value}
-                  rowContainerStyle={{ margin: "0",padding:"0", height: "2.5rem", justifyContent: "flex-start" }}
+                  rowContainerStyle={{ margin: "0",padding:"0", height: "2.4rem", justifyContent: "flex-start" }}
                   className="border-none"
                   last={idx === campaignData?.length - 1}
                 />
@@ -202,7 +203,7 @@ const MicroplanDetails = ({
       <Card
         style={{
           margin: "1rem 0 1rem 0",
-          padding: "rem 0 0 1.5rem",
+          padding: "1.5rem 1.5rem 1.5rem 1.5rem",
         }}
         className="microplan-name"
       >
