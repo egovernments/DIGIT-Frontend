@@ -306,7 +306,7 @@ export const updateSessionUtils = {
           console.error("Schema got undefined while handling geojson at handleGeoJson");
           return [...upload, uploadObject];
         }
-        const boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schemaData)) || {};
+        const boundaryDataAgainstBoundaryCode = {};
         let fileData = {
           filestoreId,
           inputFileType,
@@ -341,7 +341,8 @@ export const updateSessionUtils = {
                     { id: inputFileType },
                     boundaryDataAgainstBoundaryCode,
                     ()=>{},
-                    additionalProps.t
+                    additionalProps.t,
+                    additionalProps.campaignData
                   );
 
                   // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
