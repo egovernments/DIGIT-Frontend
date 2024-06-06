@@ -1,11 +1,11 @@
-import { Button, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useRef, useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { DownloadIcon, Card } from "@egovernments/digit-ui-react-components";
+import { Card, Modal, CardText } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { InfoCard, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, PopUp, Toast ,Button ,DownloadIcon } from "@egovernments/digit-ui-components";
 import { schemaConfig } from "../configs/schemaConfig";
 import { headerConfig } from "../configs/headerConfig";
 import { PRIMARY_COLOR } from "../utils";
@@ -50,8 +50,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
   const [enabled, setEnabled] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
-  
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -172,6 +172,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.isSuccess || null);
+        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
@@ -180,6 +181,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.isSuccess || null);
+        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile.length);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
@@ -188,6 +190,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
+        setShowPopUp(!props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -540,6 +543,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setIsSuccess(false);
     setIsValidation(false);
     setApiError(null);
+    setErrorsType({});
     // setShowToast(null);
   };
 
@@ -553,7 +557,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (!errorsType[type] && uploadedFile?.length > 0) {
-        setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
+        // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsValidation(true);
         setIsError(true);
 
@@ -812,10 +816,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           <Button
             label={t("WBH_DOWNLOAD_TEMPLATE")}
             variation="secondary"
-            icon={<DownloadIcon styles={{ height: "1.25rem", width: "1.25rem" }} fill={PRIMARY_COLOR} />}
+            icon ={"FileDownload"}
             type="button"
             className="campaign-download-template-btn"
-            onButtonClick={downloadTemplate}
+            onClick={downloadTemplate}
           />
         </div>
         {uploadedFile.length === 0 && (
@@ -870,6 +874,51 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         ))}
         label={"Info"}
       />
+      {showPopUp && (
+        <PopUp
+          type={"default"}
+          heading = {type === "boundary"
+          ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
+          : type === "facilityWithBoundary"
+          ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
+          : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")}
+          children={[
+            <div>
+              {type === "boundary"
+                ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
+                : type === "facilityWithBoundary"
+                ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
+                : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT ")}
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("HCM_CAMPAIGN_UPLOAD_CANCEL")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              icon={"FileDownload"}
+              label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+              onClick={() => {
+                downloadTemplate(), setShowPopUp(false);
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
       {showToast && (uploadedFile?.length > 0 || downloadError) && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

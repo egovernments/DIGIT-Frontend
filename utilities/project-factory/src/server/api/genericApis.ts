@@ -5,71 +5,19 @@ import { httpRequest } from "../utils/request"; // Import httpRequest function f
 import { getFormattedStringForDebug, logger } from "../utils/logger"; // Import logger for logging
 import { correctParentValues, findMapValue, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { validateProjectFacilityResponse, validateProjectResourceResponse, validateStaffResponse } from "../validators/genericValidator"; // Import validation functions
-import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
-import { getFiltersFromCampaignSearchResponse, getHierarchy } from './campaignApis';
+import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getConfigurableColumnHeadersBasedOnCampaignType, getFiltersFromCampaignSearchResponse, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
+import { getCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
 import { campaignStatuses } from '../config/constants';
 const _ = require('lodash'); // Import lodash library
-import ExcelJS from 'exceljs';
+import { getExcelWorkbookFromFileURL } from "../utils/excelUtils";
 
-// Function to retrieve workbook from Excel file URL and sheet name
-const getWorkbook = async (fileUrl: string, sheetName: string) => {
-  // Define headers for HTTP request
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "application/pdf",
-  };
-
-  // Make HTTP request to retrieve Excel file as arraybuffer
-  const responseFile = await httpRequest(
-    fileUrl,
-    null,
-    {},
-    "get",
-    "arraybuffer",
-    headers
-  );
-
-  // Create a new workbook instance
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(responseFile);
-
-  // Check if the specified sheet exists in the workbook
-  const worksheet = workbook.getWorksheet(sheetName);
-  if (!worksheet) {
-    throwError(
-      "FILE",
-      400,
-      "INVALID_SHEETNAME",
-      `Sheet with name "${sheetName}" is not present in the file.`
-    );
-  }
-
-  // Return the workbook
-  return workbook;
-};
 
 //Function to get Workbook with different tabs (for type target)
 const getTargetWorkbook = async (fileUrl: string, localizationMap?: any) => {
   // Define headers for HTTP request
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "application/pdf",
-  };
-
-  // Make HTTP request to retrieve Excel file as arraybuffer
-  const responseFile = await httpRequest(
-    fileUrl,
-    null,
-    {},
-    "get",
-    "arraybuffer",
-    headers
-  );
-
-  // Create a new workbook instance
-  const workbook: any = new ExcelJS.Workbook();
-  await workbook.xlsx.load(responseFile);
+ 
+  const workbook:any =await getExcelWorkbookFromFileURL(fileUrl,"");
 
   // Get the main sheet name (assuming it's the second sheet)
   const mainSheetName = workbook.getWorksheet(1).name;
@@ -154,7 +102,8 @@ const getSheetData = async (
 ) => {
   // Retrieve workbook using the getTargetWorkbook function
   const localizedSheetName = getLocalizedName(sheetName, localizationMap);
-  const workbook = await getWorkbook(fileUrl, localizedSheetName);
+  const workbook:any =await getExcelWorkbookFromFileURL(fileUrl,localizedSheetName);
+
   const worksheet: any = workbook.getWorksheet(localizedSheetName);
 
 
@@ -610,10 +559,12 @@ async function getBoundarySheetData(
     const modifiedHierarchy = hierarchy.map((ele) =>
       `${hierarchyType}_${ele}`.toUpperCase()
     );
-    const localizedHeaders = getLocalizedHeaders(
+    const localizedHeadersUptoHierarchy = getLocalizedHeaders(
       modifiedHierarchy,
       localizationMap
     );
+    const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request,localizationMap);
+    const headers = [...localizedHeadersUptoHierarchy,...headerColumnsAfterHierarchy];
     // create empty sheet if no boundary present in system
     // const localizedBoundaryTab = getLocalizedName(
     //   getBoundaryTabName(),
@@ -622,16 +573,17 @@ async function getBoundarySheetData(
     logger.info(`generated a empty template for boundary`);
     return await createExcelSheet(
       boundaryData,
-      localizedHeaders
+      headers
     );
   } else {
     // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
     const responseFromCampaignSearch =
-      await getFiltersFromCampaignSearchResponse(request);
-    if (responseFromCampaignSearch?.Filters != null) {
+      await getCampaignSearchResponse(request);
+    const FiltersFromCampaignId = getFiltersFromCampaignSearchResponse(responseFromCampaignSearch)
+    if (FiltersFromCampaignId?.Filters != null) {
       const filteredBoundaryData = await generateFilteredBoundaryData(
         request,
-        responseFromCampaignSearch
+        FiltersFromCampaignId
       );
       return await getDataSheetReady(
         filteredBoundaryData,
@@ -643,6 +595,7 @@ async function getBoundarySheetData(
     }
   }
 }
+
 async function createStaff(resouceBody: any) {
   // Create staff
   const staffCreateUrl =
@@ -1030,6 +983,33 @@ async function callMdmsData(
   return response;
 }
 
+
+
+async function callMdmsV2Data(
+  request: any,
+  moduleName: string,
+  masterName: string,
+  tenantId: string, filters: any) {
+  try {
+    const { RequestInfo = {} } = request?.body || {};
+    const requestBody = {
+      RequestInfo,
+      MdmsCriteria: {
+        tenantId: tenantId,
+        filters,
+        schemaCode: moduleName + "." + config?.masterNameForSchemaOfColumnHeaders,
+        limit: 10,
+        offset: 0
+      },
+    };
+    const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
+    const response = await httpRequest(url, requestBody, { tenantId: tenantId });
+    return response;
+  } catch (error: any) {
+    throwError("MDMS", 400, "MDMS_DATA_NOT_FOUND_ERROR", `Mdms Data not found for ${moduleName}"-"${masterName}`)
+  }
+}
+
 async function callMdmsSchema(
   request: any,
   moduleName: string,
@@ -1063,7 +1043,6 @@ export {
   getAutoGeneratedBoundaryCodesHandler,
   createBoundaryEntities,
   createBoundaryRelationship,
-  getWorkbook,
   getSheetData,
   searchMDMS,
   getCampaignNumber,
@@ -1080,5 +1059,6 @@ export {
   getTargetSheetData,
   callMdmsData,
   getMDMSV1Data,
-  callMdmsSchema
+  callMdmsSchema,
+  callMdmsV2Data
 }
