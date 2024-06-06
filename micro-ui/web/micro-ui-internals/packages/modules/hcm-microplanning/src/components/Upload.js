@@ -379,7 +379,7 @@ const Upload = ({
         case EXCEL:
           // let response = handleExcelFile(file,schemaData);
           try {
-            response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t);
+            response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode,setUploadedFileError, t);
             check = response.check;
             errorMsg = response.errorMsg;
             errorLocationObject = response.errors;
@@ -1704,7 +1704,7 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
   return xlsxBlob;
 };
 
-export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, t = (e) => e) => {
+export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode,setUploadedFileError, t ) => {
   // Converting the file to preserve the sequence of columns so that it can be stored
   let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
   delete fileDataToStore[t(BOUNDARY_DATA_SHEET)];

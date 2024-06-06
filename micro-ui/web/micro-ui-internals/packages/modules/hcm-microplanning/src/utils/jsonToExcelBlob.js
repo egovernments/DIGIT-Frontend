@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 
-export const convertJsonToXlsx = (jsonData, columnWithStyle) => {
+export const convertJsonToXlsx = async (jsonData, columnWithStyle) => {
   // Create a new workbook
   const workbook = new ExcelJS.Workbook();
 
@@ -38,7 +38,7 @@ export const convertJsonToXlsx = (jsonData, columnWithStyle) => {
   }
 
   // Write the workbook to a buffer
-  return workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
+  return await workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
     // Create a Blob from the buffer
     return new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   });
