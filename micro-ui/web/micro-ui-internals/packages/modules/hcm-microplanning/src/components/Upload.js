@@ -329,7 +329,6 @@ const Upload = ({
       }
       let resourceMappingData = {};
       let boundaryDataAgainstBoundaryCode = {};
-      debugger
       if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
         try {
           const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
@@ -539,7 +538,7 @@ const Upload = ({
       const keys = item[0];
       if (keys?.length !== 0) {
         if (!extraColumns?.every((e) => keys.includes(e))) {
-          if (!schemaData?.doHierarchyCheckInUploadedData) {
+          if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
             hierarchyDataPresent = false;
           } else {
             errorMsg = {
@@ -563,17 +562,7 @@ const Upload = ({
     errorMsg = response.message;
     errors = response.errors;
     let check = response.valid;
-    if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
-      for (const sheet in tempFileDataToStore) {
-        const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
-        if (commonColumnIndex !== -1)
-          tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
-            ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
-            ...item,
-          ]);
-        tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
-      }
-    }
+    
     return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
   };
   const handleGeojsonFile = async (file, schemaData) => {
