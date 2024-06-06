@@ -2,6 +2,7 @@ import { Dropdown } from "@egovernments/digit-ui-components";
 import { Table } from "@egovernments/digit-ui-react-components";
 import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@egovernments/digit-ui-svg-components";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+const SCROLL_OFFSET = 100;
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, close, t }) => {
   // If no data is uploaded, display a message
@@ -37,7 +38,6 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
           // Calculate the offset from the top of the container
           const offset = parentRect.top - containerRect.top;
-          const SCROLL_OFFSET = 100;
           // Scroll the container to the target position
           scrollContainer.scrollTo({
             top: scrollContainer.scrollTop + offset - SCROLL_OFFSET,
@@ -81,11 +81,8 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
 
     const columns = Object.keys(schema.schema["Properties"]);
     if (columns) {
-      if (schema && !schema.doHierarchyCheckInUploadedData) {
-        setTemplateColumns(columns);
-      } else {
-        setTemplateColumns([...hierarchy, ...columns]);
-      }
+      const newTemplateColumns = schema && !schema.doHierarchyCheckInUploadedData ? columns : [...hierarchy, ...columns];
+      setTemplateColumns(newTemplateColumns);
     }
   }, [schema]);
 
@@ -97,7 +94,6 @@ export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setR
     });
 
     //field level validations
-    debugger
     for(const item of userUploadedColumns){
       if (item.length < 2) {
        setToast({ state: "error", message: t("ERROR_FIELD_LENGTH") });
