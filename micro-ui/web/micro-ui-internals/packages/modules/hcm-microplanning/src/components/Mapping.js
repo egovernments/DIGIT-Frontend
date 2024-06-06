@@ -938,7 +938,7 @@ const extractGeoData = (
                 ? "false"
                 : "partial"; // Update data availability based on column check
               let dataWithResources = Object.values(fileData?.data);
-              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+              if (resources && formulaConfiguration && hypothesisAssumptionsList && schema?.showResourcesInMappingSection) {
                 dataWithResources = dataWithResources?.map((item) => {
                   return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
                     item,
@@ -1000,7 +1000,6 @@ const extractGeoData = (
                   });
                 }
               }
-
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
@@ -1308,7 +1307,10 @@ const addGeojsonToMap = (map, geojson, t) => {
         }
         popupContent += "</table></div>";
         layer.bindPopup(popupContent);
-
+        // Adjust map here when pop up closes
+        layer.on("popupclose", function () {
+          map.fitBounds(geojsonLayer.getBounds());
+        });
         layer.on({
           mouseover: function (e) {
             const layer = e.target;

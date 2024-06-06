@@ -1,0 +1,42 @@
+{
+    "tenantId": "mz",
+    "moduleName": "hcm-microplanning",
+    "RuleConfigureOutput": [
+        {
+            "campaignType": "LLIN-mz",
+            "data": [
+                "NO_OF_HOUSEHOLD",
+                "NO_OF_BEDNETS_REQUIRED",
+                "NO_OF_DISTRIBUTORS_PER_BOUNDARY",
+                "NO_OF_SUPERVISORS"
+            ]
+        },
+        {
+            "campaignType": "IRS",
+            "data": [
+                "NO_OF_HOUSEHOLD",
+                "NO_OF_STRUCTURES",
+                "NUMBER_OF_HOUSEHOLDS_TO_BE_COVERED",
+                "NUMBER_OF_POPULATION_TO_BE_COVERED",
+                "NUMBER_OF_SPRAY_TECHNICIANS_PER_BOUNDARY",
+                "QUANTITY_OF_INSECTICIDE_REQUIRED",
+                "TOTAL_QUANTITY_INCLUDING_BUFFER",
+                "NUMBER_OF_SPRAY_TECHNICIANS_PER_BOUNDARY",
+                "NO_OF_SUPERVISORS"
+            ]
+        },
+        {
+            "campaignType": "MR-DN",
+            "data": [
+                "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
+                "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2",
+                "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1_WITH_BUFFER",
+                "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2_WITH_BUFFER",
+                "NO_OF_DISTRIBUTORS",
+                "NO_OF_TEAMS_PER_BOUNDARY",
+                "NO_OF_SUPERVISORS_PER_BOUNDARY"
+            ]
+        }
+    ]
+    
+}

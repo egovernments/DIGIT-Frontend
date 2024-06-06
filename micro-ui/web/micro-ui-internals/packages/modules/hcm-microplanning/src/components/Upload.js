@@ -336,56 +336,6 @@ const Upload = ({
     setResourceMapping([]);
     setDataUpload(false);
   };
-  // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
-
-  const boundaryDataGeneration = async (schemaData) => {
-    let boundaryDataAgainstBoundaryCode = {};
-    console.log(1)
-    if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
-      try {
-        const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-        const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-        let boundaryData = sessionData.filteredBoundaries;
-    console.log(2)
-    let filteredBoundaries;
-        if (!boundaryData) {
-          // Only fetch boundary data if not present in session storage
-          boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-          filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
-          console.log(filteredBoundaries)
-
-          // Update the session storage with the new filtered boundaries
-          Digit.SessionStorage.set("microplanHelperData", {
-            ...sessionData,
-            filteredBoundaries: filteredBoundaries,
-          });
-        } else {
-          filteredBoundaries = boundaryData;
-        }
-        console.log("filteredBoundaries",filteredBoundaries)
-        const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-        console.log("xlsxData",xlsxData)
-        xlsxData.forEach((item, i) => {
-          if (i === 0) return;
-          let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-          if (boundaryCodeIndex >= item.length) {
-            // If boundaryCodeIndex is out of bounds, return the item as is
-            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
-          } else {
-            // Otherwise, remove the element at boundaryCodeIndex
-            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
-              .slice(0, boundaryCodeIndex)
-              .concat(item.slice(boundaryCodeIndex + 1))
-              .map(t);
-          }
-        });
-        console.log("xlsxData2",xlsxData)
-        return boundaryDataAgainstBoundaryCode;
-      } catch (error) {
-        console.error(error?.message);
-      }
-    }
-  };
 
   // Function for handling upload file event
   const UploadFileToFileStorage = async (file) => {
@@ -427,7 +377,6 @@ const Upload = ({
           // let response = handleExcelFile(file,schemaData);
           try {
             response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, {}, setUploadedFileError, t, campaignData);
-            console.log("excel mapping done");
             check = response.check;
             errorMsg = response.errorMsg;
             errorLocationObject = response.errors;
@@ -516,7 +465,6 @@ const Upload = ({
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
       let uuid = uuidv4();
-      console.log("uuid", uuid);
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: uuid,
@@ -674,7 +622,7 @@ const Upload = ({
       }
       setResourceMapping([]);
 
-      let boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData)) || {};
+      let boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData,campaignData,t)) || {};
       const mappedToList = resourceMappingData.map((item) => item.mappedTo);
       if (hierarchy.every((item) => !mappedToList.includes(item))) {
         data.features.forEach((feature) => {
@@ -1743,19 +1691,16 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
 
 const boundaryDataGeneration = async (schemaData, campaignData, t) => {
   let boundaryDataAgainstBoundaryCode = {};
-  console.log(1);
   if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
     try {
       const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
       const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
       let boundaryData = sessionData.filteredBoundaries;
-      console.log(2);
       let filteredBoundaries;
       if (!boundaryData) {
         // Only fetch boundary data if not present in session storage
         boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
         filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
-        console.log(filteredBoundaries);
 
         // Update the session storage with the new filtered boundaries
         Digit.SessionStorage.set("microplanHelperData", {
@@ -1765,9 +1710,7 @@ const boundaryDataGeneration = async (schemaData, campaignData, t) => {
       } else {
         filteredBoundaries = boundaryData;
       }
-      console.log("filteredBoundaries", filteredBoundaries);
       const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-      console.log("xlsxData", xlsxData);
       xlsxData.forEach((item, i) => {
         if (i === 0) return;
         let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
@@ -1782,7 +1725,6 @@ const boundaryDataGeneration = async (schemaData, campaignData, t) => {
             .map(t);
         }
       });
-      console.log("xlsxData2", xlsxData);
       return boundaryDataAgainstBoundaryCode;
     } catch (error) {
       console.error(error?.message);
@@ -1859,17 +1801,15 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
     errorMsg = response.message;
     errors = response.errors;
     let check = response.valid;
-    console.log("ds");
     if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent && boundaryDataAgainstBoundaryCode) {
       try{
-        console.log("trying boundary adding operaiton")
       let tempBoundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData,campaignData,t)) || {};
 
       for (const sheet in tempFileDataToStore) {
         const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
         if (commonColumnIndex !== -1)
           tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
-            ...(tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
+            ...(tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : new Array(hierarchy.length).fill("")),
             ...item,
           ]);
 
@@ -1882,7 +1822,7 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
 
     return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
   } catch (error) {
-    console.log(error);
+    console.error("Error in handling Excel file:",error.message);
   }
 };
 
