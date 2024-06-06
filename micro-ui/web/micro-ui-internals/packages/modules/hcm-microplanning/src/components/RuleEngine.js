@@ -290,7 +290,7 @@ const RuleEngineInformation = ({ t }) => {
     <InfoCard
       text={t("RULE_ENGINE_INFORMATION_DESCRIPTION")}
       className={"information-description"}
-      style={{ margin: "1rem 0 0 0" }}
+      style={{ margin: "1rem 0 0 0", width:"100%",maxWidth:"unset" }}
     />
   );
 };

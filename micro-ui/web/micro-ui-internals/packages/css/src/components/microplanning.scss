@@ -848,7 +848,7 @@ $border-color: rgba(214, 213, 212, 1);
   justify-content: start;
   width: 100%;
   background-color: rgb(255, 255, 255);
-  padding: 1.3rem;
+  padding: 1.5rem;
   margin-top: 1.3rem;
   height: 33.5rem;
   border-radius: 0.25rem;
@@ -861,7 +861,7 @@ $border-color: rgba(214, 213, 212, 1);
   }
 
   .heading {
-    padding: 0.5rem 0;
+    padding: 0  0 0.5rem 0;
     margin: 0;
     font-family: Roboto Condensed;
     font-size: 2.5rem;
@@ -1113,13 +1113,13 @@ $border-color: rgba(214, 213, 212, 1);
     justify-content: start;
     width: 100%;
     background-color: rgb(255, 255, 255);
-    padding: 1.3rem;
+    padding: 1.5rem;
     height: 33.5rem;
     box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.16);
     border-radius: 0.25rem;
 
     .heading {
-      padding: 0.5rem 0;
+      padding: 0 0 0.5rem 0;
       margin: 0;
       font-family: Roboto Condensed;
       font-size: 2.5rem;
