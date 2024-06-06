@@ -13,7 +13,7 @@ import { SpatialDataPropertyMapping } from "./resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
-import { Loader, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, Loader, Toast } from "@egovernments/digit-ui-components";
 import { ACCEPT_HEADERS, BOUNDARY_DATA_SHEET, EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
@@ -36,7 +36,7 @@ const Upload = ({
   navigationEvent,
 }) => {
   const { t } = useTranslation();
-  
+
   // States
   const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
@@ -129,8 +129,7 @@ const Upload = ({
           setSelectedFileType(null);
           setCheckDataCompletion("false");
           return;
-        }
-        else{
+        } else {
           if (navigationEvent?.name === "next") {
             if (currentSectionIndex < sections.length - 1) {
               setSelectedSection(sections[currentSectionIndex + 1]);
@@ -510,6 +509,7 @@ const Upload = ({
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
       let uuid = uuidv4();
+      console.log("uuid",uuid)
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: uuid,
@@ -1134,21 +1134,19 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
 
 const UploadInstructions = ({ setModal, t }) => {
   return (
-    <div className="information">
-      <div className="information-heading">
-        <CustomIcon Icon={Icons["Info"]} color={"rgba(52, 152, 219, 1)"} />
-        <p>{t("INFO")}</p>
-      </div>
-      <div className="information-description">
-        <p>{t("INFORMATION_DESCRIPTION")}</p>
+    <InfoCard
+      text={t("INFORMATION_DESCRIPTION")}
+      className={"information-description"}
+      style={{ margin: "1rem 0 0 0" }}
+      additionalElements={[
         <div className="link-wrapper">
-          {t("REFER")} &nbsp;
+          {t("REFER")}
           <div className="link" onClick={setModal}>
             {t("INFORMATION_DESCRIPTION_LINK")}
           </div>
-        </div>
-      </div>
-    </div>
+        </div>,
+      ]}
+    />
   );
 };
 

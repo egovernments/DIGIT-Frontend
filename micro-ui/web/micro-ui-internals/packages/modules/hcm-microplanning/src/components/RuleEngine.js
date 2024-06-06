@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalHeading } from "./CommonComponents";
 import { Modal } from "@egovernments/digit-ui-react-components";
-import { Dropdown } from "@egovernments/digit-ui-components";
+import { Dropdown, InfoCard } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -287,15 +287,11 @@ const RuleEngine = ({
 
 const RuleEngineInformation = ({ t }) => {
   return (
-    <div className="information">
-      <div className="information-heading">
-        <Info fill={"rgba(52, 152, 219, 1)"} />
-        <p>{t("INFO")}</p>
-      </div>
-      <div className="information-description">
-        <p>{t("RULE_ENGINE_INFORMATION_DESCRIPTION")}</p>
-      </div>
-    </div>
+    <InfoCard
+      text={t("RULE_ENGINE_INFORMATION_DESCRIPTION")}
+      className={"information-description"}
+      style={{ margin: "1rem 0 0 0" }}
+    />
   );
 };
 
