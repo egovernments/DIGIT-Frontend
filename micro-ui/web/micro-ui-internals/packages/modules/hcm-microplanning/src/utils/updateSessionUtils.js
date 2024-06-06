@@ -340,6 +340,7 @@ export const updateSessionUtils = {
                     additionalProps.heirarchyData,
                     { id: inputFileType },
                     boundaryDataAgainstBoundaryCode,
+                    ()=>{},
                     additionalProps.t
                   );
 
