@@ -360,7 +360,7 @@ async function getAllFacilities(tenantId) {
   return searchedFacilities;
 }
 
-const addFacilitySheet = (xlsxData, mapping, facilities, t) => {
+const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
   if (!mapping) return xlsxData;
   // Create header row
   const headers = Object.keys(mapping);
@@ -372,6 +372,16 @@ const addFacilitySheet = (xlsxData, mapping, facilities, t) => {
     dataRow.push(headers.map((header) => facility[mapping[header]]));
   }
   headers.push(commonColumn);
+  let additionalCols=[];
+  if(schema?.schema?.Properties){
+    const properties = Object.keys(schema.schema.Properties);
+  for(const col of properties){
+    if(!headers.includes(col)){
+      additionalCols.push(col)
+    }
+  }
+  }
+  headers.push(...additionalCols)
   // Combine headers and data rows
   const arrayOfArrays = [headers, ...dataRow];
 
@@ -431,7 +441,7 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, t);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema, t);
       else xlsxData = addSchemaData(xlsxData, schema);
     } else {
       // not adding facility sheet
@@ -443,7 +453,7 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, t);
+      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema,t);
       else {
         let facilitySheet = {
           sheetName: FACILITY_DATA_SHEET,

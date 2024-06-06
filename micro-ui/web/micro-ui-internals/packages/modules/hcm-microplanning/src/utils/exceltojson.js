@@ -31,6 +31,7 @@ export const parseXlsxToJsonMultipleSheets = (file, options) => {
     };
 
     reader.onerror = function (error) {
+      console.error(error)
       resolve({ error: true, details: error });
     };
 

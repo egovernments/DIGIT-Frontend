@@ -4,7 +4,9 @@ import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
-import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY, commonColumn } from "../configs/constants";
+import { handleExcelFile } from "../components/Upload";
+import { addBoundaryData, fetchBoundaryData, filterBoundaries } from "./createTemplate";
 
 function handleExcelArrayBuffer(arrayBuffer, file) {
   return new Promise((resolve, reject) => {
@@ -174,15 +176,7 @@ export const updateSessionUtils = {
         return [...upload, uploadObject];
       }
 
-      const resultAfterMapping = Digit.Utils.microplan.resourceMappingAndDataFilteringForExcelFiles(
-        schema,
-        additionalProps.heirarchyData,
-        { id: inputFileType },
-        result,
-        additionalProps.t,
-        translatedData
-      );
-      uploadObject.data = resultAfterMapping?.tempFileDataToStore;
+      uploadObject.data = result; //resultAfterMapping?.tempFileDataToStore;
       upload.push(uploadObject);
       return upload;
     };
@@ -209,34 +203,91 @@ export const updateSessionUtils = {
       );
     };
 
-    const handleGeoJsonSpecific = (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
+    const handleGeoJsonSpecific = async (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
       let schemaKeys;
       if (schema?.schema?.["Properties"]) {
         schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
       }
 
-      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, row?.resourceMapping);
-      sortedSecondList = sortedSecondList.map((item) => {
-        if (item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1]) {
-          return { ...item, mappedTo: additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1] };
-        } else {
-          return item;
-        }
-      });
+      // sortedSecondList = sortedSecondList.map((item) => {
+      //   if (item?.mappedTo === LOCALITY && additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1]) {
+      //     return { ...item, mappedTo: additionalProps.heirarchyData?.[additionalProps.heirarchyData?.length - 1] };
+      //   } else {
+      //     return item;
+      //   }
+      // });
 
       upload.data = result;
-      if (translatedData) {
-        const newFeatures = result["features"].map((item) => {
-          let newProperties = {};
-          sortedSecondList
-            ?.filter((resourse) => resourse.filestoreId === filestoreId)
-            .forEach((e) => {
-              newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
-            });
-          item["properties"] = newProperties;
-          return item;
+      let boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schema)) || {};
+      const mappedToList = upload?.resourceMapping.map((item) => item.mappedTo);
+      let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, upload?.resourceMapping);
+      const newFeatures = result["features"].map((item) => {
+        let newProperties = {};
+        sortedSecondList
+          ?.filter((resourse) => resourse.filestoreId === filestoreId)
+          .forEach((e) => {
+            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+          });
+        item["properties"] = newProperties;
+        return item;
+      });
+      upload.data.features = newFeatures;
+      if (additionalProps.heirarchyData.every((item) => !mappedToList.includes(item))) {
+        upload.data.features.forEach((feature) => {
+          const boundaryCode = feature.properties.boundaryCode;
+          let additionalDetails = {};
+          for (let i = 0; i < additionalProps.heirarchyData.length; i++) {
+            if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
+              additionalDetails[additionalProps.heirarchyData[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+            } else {
+              additionalDetails[additionalProps.heirarchyData[i]] = "";
+            }
+          }
+          feature.properties = { ...additionalDetails, ...feature.properties };
         });
-        upload.data.features = newFeatures;
+      }
+    };
+
+    const fetchBoundaryDataWrapper = async (schemaData) => {
+      let boundaryDataAgainstBoundaryCode = {};
+      if (!schemaData?.doHierarchyCheckInUploadedData) {
+        try {
+          const rootBoundary = additionalProps.campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+          const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+          let boundaryData = sessionData.filteredBoundaries;
+          let filteredBoundaries;
+          if (!boundaryData) {
+            // Only fetch boundary data if not present in session storage
+            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+
+            // Update the session storage with the new filtered boundaries
+            Digit.SessionStorage.set("microplanHelperData", {
+              ...sessionData,
+              filteredBoundaries: filteredBoundaries,
+            });
+          } else {
+            filteredBoundaries = boundaryData;
+          }
+          const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+          xlsxData.forEach((item, i) => {
+            if (i === 0) return;
+            let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+            if (boundaryCodeIndex >= item.length) {
+              // If boundaryCodeIndex is out of bounds, return the item as is
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(additionalProps.t);
+            } else {
+              // Otherwise, remove the element at boundaryCodeIndex
+              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+                .slice(0, boundaryCodeIndex)
+                .concat(item.slice(boundaryCodeIndex + 1))
+                .map(additionalProps.t);
+            }
+          });
+          return boundaryDataAgainstBoundaryCode;
+        } catch (error) {
+          console.error(error?.message);
+        }
       }
     };
 
@@ -250,6 +301,12 @@ export const updateSessionUtils = {
       let storedData = [];
       for (const { filestoreId, inputFileType, templateIdentifier, id, active } of files) {
         if (!active) continue;
+        const schemaData = findSchema(inputFileType, templateIdentifier, additionalProps?.campaignType);
+        if (!schemaData) {
+          console.error("Schema got undefined while handling geojson at handleGeoJson");
+          return [...upload, uploadObject];
+        }
+        const boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schemaData)) || {};
         let fileData = {
           filestoreId,
           inputFileType,
@@ -275,18 +332,38 @@ export const updateSessionUtils = {
             })
             .then(async (res) => {
               if (inputFileType === EXCEL) {
-                const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
-                const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
-                  file,
-                  { header: 1 },
-                  {
+                try {
+                  const file = new Blob([res.data], { type: ACCEPT_HEADERS[inputFileType] });
+                  const response = await handleExcelFile(
+                    file,
+                    schemaData,
+                    additionalProps.heirarchyData,
+                    { id: inputFileType },
+                    boundaryDataAgainstBoundaryCode,
+                    additionalProps.t
+                  );
+
+                  // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
+                  //   file,
+                  //   { header: 1 },
+                  //   {
+                  //     filestoreId,
+                  //     inputFileType,
+                  //     templateIdentifier,
+                  //     id,
+                  //   }
+                  // );
+                  let fileData = {
                     filestoreId,
                     inputFileType,
                     templateIdentifier,
                     id,
-                  }
-                );
-                return { ...response, translatedData: true, active };
+                  };
+
+                  return { jsonData: response.fileDataToStore, file: fileData, translatedData: true, active };
+                } catch (error) {
+                  console.error(error);
+                }
               } else if (inputFileType === GEOJSON) {
                 let response = await parseGeoJSONResponse(res.data, {
                   filestoreId,

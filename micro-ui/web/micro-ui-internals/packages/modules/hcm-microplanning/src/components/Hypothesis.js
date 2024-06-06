@@ -416,7 +416,16 @@ const Example = ({ exampleOption, t }) => {
       <div className="example-body">
         <div className="key">
           <p className="heading">{t("KEY")}</p>
-          <Dropdown variant="select-dropdown" t={t} isMandatory={false} option={[]} selected={null} optionKey="code" placeholder={t(exampleOption)} />
+          <Dropdown
+            variant="select-dropdown"
+            t={t}
+            isMandatory={false}
+            option={[]}
+            selected={null}
+            optionKey="code"
+            placeholder={t(exampleOption)}
+            showToolTip={true}
+          />
           <p className="heading">{t("HYPOTHESIS_KEY_HELP_TEXT")}</p>
         </div>
         <div className="value">
@@ -505,20 +514,19 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
   );
 
   return (
-    <div title={selected?.code ? t(selected.code) : undefined}>
-      <Dropdown
-        variant="select-dropdown"
-        t={t}
-        isMandatory={false}
-        option={filteredOptions?.map((item) => ({ code: item }))}
-        selected={selected}
-        optionKey="code"
-        select={selectChangeHandler}
-        // style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)", position:"sticky" }}
-        optionCardStyles={{ position: "absolute" }}
-        placeholder={t("SELECT_OPTION")}
-      />
-    </div>
+    <Dropdown
+      variant="select-dropdown"
+      t={t}
+      isMandatory={false}
+      option={filteredOptions?.map((item) => ({ code: item }))}
+      selected={selected}
+      optionKey="code"
+      select={selectChangeHandler}
+      // style={{ width: "100%", backgroundColor: "rgb(0,0,0,0)", position:"sticky" }}
+      optionCardStyles={{ position: "absolute" }}
+      placeholder={t("SELECT_OPTION")}
+      showToolTip={true}
+    />
   );
 });
 

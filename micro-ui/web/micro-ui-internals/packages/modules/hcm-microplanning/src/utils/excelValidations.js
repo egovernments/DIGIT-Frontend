@@ -72,7 +72,6 @@ export const excelValidations = (data, schemaData, t) => {
           missingColumnsList.add(missing);
           hasDataErrors = "missing_properties";
           break;
-
         case "maximum":
         case "minimum":
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
