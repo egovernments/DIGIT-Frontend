@@ -298,46 +298,46 @@ const Upload = ({
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
   const boundaryDataGeneration = async (schemaData) => {
-    // if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
-      try {
-        let boundaryDataAgainstBoundaryCode = {};
-        // const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-        // const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-        // let boundaryData = sessionData.filteredBoundaries;
-        // let filteredBoundaries;
-        // if (!boundaryData) {
-        //   // Only fetch boundary data if not present in session storage
-        //   boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-        //   filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+    let boundaryDataAgainstBoundaryCode = {};
+    if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
+      // try {
+      // const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+      // const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+      // let boundaryData = sessionData.filteredBoundaries;
+      // let filteredBoundaries;
+      // if (!boundaryData) {
+      //   // Only fetch boundary data if not present in session storage
+      //   boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+      //   filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
 
-        //   // Update the session storage with the new filtered boundaries
-        //   Digit.SessionStorage.set("microplanHelperData", {
-        //     ...sessionData,
-        //     filteredBoundaries: filteredBoundaries,
-        //   });
-        // } else {
-        //   filteredBoundaries = boundaryData;
-        // }
-        // const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-        // xlsxData.forEach((item, i) => {
-        //   if (i === 0) return;
-        //   let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-        //   if (boundaryCodeIndex >= item.length) {
-        //     // If boundaryCodeIndex is out of bounds, return the item as is
-        //     boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
-        //   } else {
-        //     // Otherwise, remove the element at boundaryCodeIndex
-        //     boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
-        //       .slice(0, boundaryCodeIndex)
-        //       .concat(item.slice(boundaryCodeIndex + 1))
-        //       .map(t);
-        //   }
-        // });
-        return boundaryDataAgainstBoundaryCode;
-      } catch (error) {
-        console.error(error?.message);
-      }
-    // }
+      //   // Update the session storage with the new filtered boundaries
+      //   Digit.SessionStorage.set("microplanHelperData", {
+      //     ...sessionData,
+      //     filteredBoundaries: filteredBoundaries,
+      //   });
+      // } else {
+      //   filteredBoundaries = boundaryData;
+      // }
+      // const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+      // xlsxData.forEach((item, i) => {
+      //   if (i === 0) return;
+      //   let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+      //   if (boundaryCodeIndex >= item.length) {
+      //     // If boundaryCodeIndex is out of bounds, return the item as is
+      //     boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
+      //   } else {
+      //     // Otherwise, remove the element at boundaryCodeIndex
+      //     boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+      //       .slice(0, boundaryCodeIndex)
+      //       .concat(item.slice(boundaryCodeIndex + 1))
+      //       .map(t);
+      //   }
+      // });
+      return boundaryDataAgainstBoundaryCode;
+      // } catch (error) {
+      //   console.error(error?.message);
+      // }
+    }
   };
 
   // Function for handling upload file event
@@ -379,7 +379,7 @@ const Upload = ({
         case EXCEL:
           // let response = handleExcelFile(file,schemaData);
           try {
-            response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode,setUploadedFileError, t);
+            response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, setUploadedFileError, t);
             check = response.check;
             errorMsg = response.errorMsg;
             errorLocationObject = response.errors;
@@ -488,7 +488,8 @@ const Upload = ({
         let temp = _.cloneDeep(prevFileDataList);
         if (!temp) return temp;
         let index = prevFileDataList?.findIndex((item) => item.active && item.templateIdentifier === selectedSection.id);
-        if (index !== -1) temp[index] = { ...temp[index], resourceMapping: temp[index]?.resourceMapping.map((e) => ({ active: false, ...e })), active: false };
+        if (index !== -1)
+          temp[index] = { ...temp[index], resourceMapping: temp[index]?.resourceMapping.map((e) => ({ active: false, ...e })), active: false };
         temp.push(fileObject);
         return temp;
       });
@@ -1704,7 +1705,7 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
   return xlsxBlob;
 };
 
-export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode,setUploadedFileError, t ) => {
+export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, setUploadedFileError, t) => {
   // Converting the file to preserve the sequence of columns so that it can be stored
   let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
   delete fileDataToStore[t(BOUNDARY_DATA_SHEET)];

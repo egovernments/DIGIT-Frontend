@@ -26,10 +26,6 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 
-.wbh-header-container {
-  margin: 0;
-}
-
 @mixin select-dropdown {
   background-color: rgb(0, 0, 0, 0);
   font-family: Roboto;
@@ -683,8 +679,8 @@ $border-color: rgba(214, 213, 212, 1);
       border: 0.063rem rgba(0, 0, 0, 0.16) solid !important;
       border-radius: 0.25rem;
 
-      .error-user-directions{
-        margin:0rem 0.5rem;
+      .error-user-directions {
+        margin: 0rem 0.5rem;
         padding: 0;
         color: $primary-theme-color;
       }

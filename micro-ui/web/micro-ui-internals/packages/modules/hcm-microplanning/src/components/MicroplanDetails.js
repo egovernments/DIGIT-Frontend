@@ -171,13 +171,13 @@ const MicroplanDetails = ({
       <Card
         style={{
           margin: "1rem 0 1rem 0",
-          padding: "2rem 0 1rem 1.5rem",
+          padding: "1 0 1rem 1.5rem",
         }}
         className="microplan-campaign-detials"
       >
         <CardSectionHeader
           style={{
-            margin: "0 0 1rem 0",
+            margin: "0",
           }}
         >
           {t("CAMPAIGN_DETAILS")}
@@ -191,7 +191,7 @@ const MicroplanDetails = ({
                   key={idx}
                   label={row?.label}
                   text={row?.value}
-                  rowContainerStyle={{ margin: "0", height: "3rem", justifyContent: "flex-start" }}
+                  rowContainerStyle={{ margin: "0",padding:"0", height: "2.5rem", justifyContent: "flex-start" }}
                   className="border-none"
                   last={idx === campaignData?.length - 1}
                 />
@@ -202,20 +202,20 @@ const MicroplanDetails = ({
       <Card
         style={{
           margin: "1rem 0 1rem 0",
-          padding: "2rem 0 0 1.5rem",
+          padding: "rem 0 0 1.5rem",
         }}
         className="microplan-name"
       >
-        <CardSubHeader>{t("NAME_YOUR_MP")}</CardSubHeader>
-        <p>{t("MP_FOOTER")}</p>
+        <CardSubHeader style={{marginBottom:"1.5rem"}}>{t("NAME_YOUR_MP")}</CardSubHeader>
+        <p style={{marginBottom:"1.5rem"}}>{t("MP_FOOTER")}</p>
         <LabelFieldPair>
-          <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center" }}>
-            {`${t("NAME_OF_MP")}  `} <p style={{ color: "red" }}> *</p>
+          <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center", margin:0 }}>
+            {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin:0 }}> *</p>
           </CardLabel>
-          <div style={{ width: "100%", maxWidth: "960px", marginTop: "1rem" }}>
+          <div style={{ width: "100%", maxWidth: "960px", height:"fit-content" }}>
             <TextInput
               t={t}
-              style={{ width: "100%" }}
+              style={{ width: "100%", margin:0 }}
               type={"text"}
               isMandatory={false}
               name="name"
