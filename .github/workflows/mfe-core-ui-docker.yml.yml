@@ -2,9 +2,10 @@ name: core ui service docker Image CI
 
 on:
   push:
-    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs" ]
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-build-test" ]
   pull_request:
-    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs" ]
+    branches: [ "develop-mfe", "develop-mfe-microplan-common-pkgs","develop-mfe-build-test" ]
+
 
 jobs:
 

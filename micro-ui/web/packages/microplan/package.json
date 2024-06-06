@@ -52,5 +52,13 @@
     "shpjs": "^4.0.4",
     "uuid": "^9.0.1",
     "xlsx": "0.17.5"
+  },
+  "resolutions":  {
+    "**/babel-loader": "8.2.2",
+    "**/@babel/core": "7.14.0",
+    "**/@babel/preset-env": "7.14.0",
+    "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
+    "**/polished":"4.2.2",
+    "fast-uri":"2.1.0"
   }
 }
