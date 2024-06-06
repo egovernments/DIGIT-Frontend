@@ -184,6 +184,7 @@ export const tourSteps = (t) => {
           placement: "top-end",
           title: "",
           disableOverlay :true,
+          disableScrolling: true,
         },
       ],
       tourActive: true,

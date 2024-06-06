@@ -123,10 +123,10 @@ const Navigator = memo((props) => {
         LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) ||
       currentPage?.id === props.config[props.config.length - 1].id
     ) {
-      setCheckDataCompletion("true");
       setNavigationEvent({ name: "previousStep" });
+      setCheckDataCompletion("true");
     } else previousStep();
-  }, [props.checkDataCompleteness, previousStep]);
+  }, [props.checkDataCompleteness, previousStep, setNavigationEvent]);
 
   // Function to handle next button click
   const nextbuttonClickHandler = useCallback(() => {
@@ -138,7 +138,7 @@ const Navigator = memo((props) => {
       setCheckDataCompletion("true");
       setNavigationEvent({ name: "next" });
     } else nextStep();
-  }, [props.checkDataCompleteness, nextStep]);
+  }, [props.checkDataCompleteness, nextStep, setNavigationEvent]);
 
   // Function to handle step click
   const stepClickHandler = useCallback(
