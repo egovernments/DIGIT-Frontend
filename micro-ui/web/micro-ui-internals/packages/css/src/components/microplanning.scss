@@ -1418,8 +1418,8 @@ $border-color: rgba(214, 213, 212, 1);
     }
 
     .custom-button-left-icon {
-      margin-left: 5.2rem;
-
+      margin-left: 5.3rem;
+      border-color: $primary-theme-color;
       .icon {
         margin: 0 1rem 0 0 !important;
       }

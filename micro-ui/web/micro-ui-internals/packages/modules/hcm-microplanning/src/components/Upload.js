@@ -297,10 +297,10 @@ const Upload = ({
   };
   // const mobileView = Digit.Utils.browser.isMobile() ? true : false;
 
-  // const boundaryDataGeneration = async (schemaData) => {
-  //   if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
-  //     try {
-  //       let boundaryDataAgainstBoundaryCode = {};
+  const boundaryDataGeneration = async (schemaData) => {
+    // if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
+      try {
+        let boundaryDataAgainstBoundaryCode = {};
         // const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
         // const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
         // let boundaryData = sessionData.filteredBoundaries;
@@ -333,12 +333,12 @@ const Upload = ({
         //       .map(t);
         //   }
         // });
-  //       return boundaryDataAgainstBoundaryCode;
-  //     } catch (error) {
-  //       console.error(error?.message);
-  //     }
-  //   }
-  // };
+        return boundaryDataAgainstBoundaryCode;
+      } catch (error) {
+        console.error(error?.message);
+      }
+    // }
+  };
 
   // Function for handling upload file event
   const UploadFileToFileStorage = async (file) => {
@@ -372,7 +372,7 @@ const Upload = ({
         }
       }
       let resourceMappingData = [];
-      let boundaryDataAgainstBoundaryCode =  {};
+      let boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData)) || {};
 
       // Handling different filetypes
       switch (selectedFileType.id) {
