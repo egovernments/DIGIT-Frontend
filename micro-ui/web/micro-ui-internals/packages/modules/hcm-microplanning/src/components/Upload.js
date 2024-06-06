@@ -421,6 +421,7 @@ const Upload = ({
           // let response = handleExcelFile(file,schemaData);
           try {
             response = await handleExcelFile(file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, setUploadedFileError, t);
+            console.log("excel mapping done")
             check = response.check;
             errorMsg = response.errorMsg;
             errorLocationObject = response.errors;
@@ -1735,6 +1736,7 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
 };
 
 export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileType, boundaryDataAgainstBoundaryCode, setUploadedFileError, t) => {
+  try{
   // Converting the file to preserve the sequence of columns so that it can be stored
   let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
   if (fileDataToStore[t(BOUNDARY_DATA_SHEET)]) delete fileDataToStore[t(BOUNDARY_DATA_SHEET)];
@@ -1800,20 +1802,24 @@ export const handleExcelFile = async (file, schemaData, hierarchy, selectedFileT
   errorMsg = response.message;
   errors = response.errors;
   let check = response.valid;
-  if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
-    for (const sheet in tempFileDataToStore) {
-      const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
-      if (commonColumnIndex !== -1)
-        tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
-          ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
-          ...item,
-        ]);
+  console.log("ds")
+  // if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent) {
+  //   for (const sheet in tempFileDataToStore) {
+  //     const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
+  //     if (commonColumnIndex !== -1)
+  //       tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
+  //         ...(boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] ? boundaryDataAgainstBoundaryCode[item[commonColumnIndex]] : []),
+  //         ...item,
+  //       ]);
 
-      tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
-    }
-  }
+  //     tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
+  //   }
+  // }
 
   return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
+}catch(error){
+  console.log(error)
+}
 };
 
 const handleGeojsonFile = async (file, schemaData, t) => {
