@@ -991,6 +991,7 @@ const Upload = ({
               schema={getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas)}
               setToast={setToast}
               hierarchy={hierarchy}
+              close={cancelUpload}
               t={t}
             />
           </Modal>
