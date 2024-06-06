@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.3] [06-06-2024]
+- added audit history styles
+
 ## [1.8.2-beta.2]
 - Updated LogoutDialog Popup styles.
 

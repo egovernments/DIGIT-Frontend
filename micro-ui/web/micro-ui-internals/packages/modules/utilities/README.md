@@ -125,6 +125,11 @@ _Bill Module
    ```bash
    works-ui/employee/utilities/doc-viewer?fileUrl=https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/logo-image.jpeg&fileName=logo-image.jpeg
    ```
+5. View Audit history 
+
+ ```bash
+   workbench-ui/employee/utilities/audit-log?id=dfeca4e2-4478-472d-939b-9dfe3ebaeb64&tenantId=mz
+   ```
 
 
 ## Coming Soon
@@ -133,28 +138,12 @@ _Bill Module
 2. View Screen
 
 
-### Changelog
+## Changelog
 
-```bash
-1.0.1-beta.5 added support to load external resources
-1.0.1-beta.4 fixed some styling and added toasts
-1.0.1-beta.3 Utilities updated for non iframe content
-1.0.1-beta.2 Utilities updated for iframe to support the Custom function logic
-1.0.1-beta.1 Republished after merging with Master due to version issues.
-1.0.0-beta.3 added new support to view any document
-1.0.0-beta.2 republished due to some iframe issue
-1.0.0-beta.1 republished due to some version issues
-1.0.0 Workbench v1.0 release
-1.0.0-beta workbench base version beta release
-0.0.8 fix response data for custom compnent in inbox composer
-0.0.7 updated the readme content
-0.0.6 fixed the module overriding issue
-0.0.5 fixed the instablility issue with previous version
-0.0.4 Updated the react-component library version
-0.0.3 corrected the directory and added the preprocess function at inbox
-0.0.2 added into the digit-core and integrated with core react components
-0.0.1 base version
-```
+### Summary for Version [1.0.2-beta.1] - 2024-06-05
+
+For a detailed changelog, see the [CHANGELOG.md](./CHANGELOG.md) file.
+
 
 ### Contributors
 

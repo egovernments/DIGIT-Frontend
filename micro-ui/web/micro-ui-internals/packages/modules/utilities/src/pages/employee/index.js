@@ -7,6 +7,7 @@ import IFrameInterface from "./IFrameInterface";
 import WorkflowCompTest from "./WorkflowComponentTest";
 import DocViewer from "./DocViewer.js";
 import NonIFrameInterface from "./IFrameInterface/RenderCustom";
+import AuditHistory from "./AuditHistory.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -44,6 +45,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </Route>
         <Route path={`${path}/doc-viewer`}>
           <DocViewer {...commonProps} />
+        </Route>
+        <Route path={`${path}/audit-log`}>
+          <AuditHistory {...commonProps} />
         </Route>
         <Route path={`${path}/workflow`} component={() => <WorkflowCompTest parentRoute={path} />} />
       </AppContainer>

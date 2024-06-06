@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -15,7 +15,7 @@ const businessServiceMap = {
 const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
-
+// eslint-disable-next-line
 export const UICustomizations = {
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
@@ -430,8 +430,10 @@ export const UICustomizations = {
       return false;
     },
     preProcess: (data) => {
+      // eslint-disable-next-line
       const location = useLocation();
       data.params = { ...data.params };
+      // eslint-disable-next-line
       const { masterName } = useParams();
 
       const searchParams = new URLSearchParams(location.search);

@@ -3,6 +3,7 @@ import MDMSAdd from './MDMSAddV2'
 import { Loader,Toast } from '@egovernments/digit-ui-react-components';
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Button } from '@egovernments/digit-ui-components';
 
 const MDMSView = ({...props}) => {
   const history = useHistory()
@@ -128,6 +129,9 @@ const MDMSView = ({...props}) => {
   return (
     <React.Fragment>
       <MDMSAdd defaultFormData = {data?.data} updatesToUISchema ={{"ui:readonly": true}} screenType={"view"} onViewActionsSelect={onActionSelect} viewActions={fetchActionItems(data)} />
+      <Button className={"mdms-view-audit"} label="view audit" variation="secondary" icon={"History"} onClick={()=>{
+        history.push(`../utilities/audit-log?id=${data?.id}&tenantId=${data?.tenantId}`)
+      }}></Button>
       {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
     </React.Fragment>
   )

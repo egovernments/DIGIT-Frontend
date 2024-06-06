@@ -994,3 +994,57 @@ button:hover {
   right: auto;
   border: none;
 }
+
+.mdms-view-audit{
+visibility: hidden;
+}
+.audit-history{
+.diff{
+  table-layout: fixed;
+border-collapse: collapse;
+width: 100%;
+}
+.diff-gutter-col {
+width: 7ch;
+}
+.diff-code-delete {
+background-color: #fdeff0;
+}
+.diff-line {
+line-height: 1.5;
+font-family: Consolas, Courier, monospace;
+}
+.diff-gutter-delete {
+background-color: #fadde0;
+}
+.diff-gutter, .diff-gutter>a {
+padding: 0 1ch;
+text-align: right;
+cursor: pointer;
+user-select: none;
+}
+.diff-code {
+white-space: pre-wrap;
+word-wrap: break-word;
+word-break: break-all;
+padding: 0;
+padding-left: .5em;
+}
+.diff td {
+vertical-align: top;
+padding-top: 0;
+padding-bottom: 0;
+}
+.diff-gutter-insert {
+background-color: #d6fedb;
+}
+.diff-gutter, .diff-gutter>a {
+padding: 0 1ch;
+text-align: right;
+cursor: pointer;
+user-select: none;
+}
+.diff-code-insert {
+background-color: #eaffee;
+}
+}
