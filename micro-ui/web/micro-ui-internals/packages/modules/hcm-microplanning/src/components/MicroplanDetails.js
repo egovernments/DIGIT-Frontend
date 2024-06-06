@@ -13,9 +13,10 @@ import {
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
-import { Modal } from "@egovernments/digit-ui-components";
+import { Modal, Toast } from "@egovernments/digit-ui-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
+import SearchPlanConfig from "../services/SearchPlanConfig";
 
 const page = "microplanDetails";
 
@@ -34,6 +35,7 @@ const MicroplanDetails = ({
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
   const { state, dispatch } = useMyContext();
   const [modal, setModal] = useState("none");
+  const [toast, setToast] = useState();
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -64,11 +66,11 @@ const MicroplanDetails = ({
           },
           {
             label: t("CAMPAIGN_DATE"),
-            value: data.startDate 
-                    ? data.endDate 
-                      ? `${Digit.DateUtils.ConvertEpochToDate(data.startDate)} - ${Digit.DateUtils.ConvertEpochToDate(data.endDate)}`
-                      : Digit.DateUtils.ConvertEpochToDate(data.startDate)
-                    : t("ES_COMMON_NA"),
+            value: data.startDate
+              ? data.endDate
+                ? `${Digit.DateUtils.ConvertEpochToDate(data.startDate)} - ${Digit.DateUtils.ConvertEpochToDate(data.endDate)}`
+                : Digit.DateUtils.ConvertEpochToDate(data.startDate)
+              : t("ES_COMMON_NA"),
           },
         ];
         return campaignCard;
@@ -87,14 +89,14 @@ const MicroplanDetails = ({
   }, []);
 
   // Save data to ssn of data change
-  useEffect(()=>{
+  useEffect(() => {
     setMicroplanData((previous) => ({
       ...previous,
       microplanDetails: {
         name: microplan,
       },
     }));
-  },[microplan])
+  }, [microplan]);
 
   useEffect(() => {
     if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
@@ -128,30 +130,55 @@ const MicroplanDetails = ({
       setModal("none");
     }
   };
-
-  // check if data has changed or not
-  const updateData = useCallback((check) => {
-    if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    if (check) {
-      setMicroplanData((previous) => ({
-        ...previous,
-        microplanDetails: {
-          name: microplan,
-        },
-      }));
-      if (!["", null, undefined].includes(microplan)) {
-        setCheckDataCompletion("valid");
-      } else {
-        setCheckDataCompletion("invalid");
-      }
-    } else {
-      if (!["", null, undefined].includes(microplanData?.microplanDetails?.name)) {
-        setCheckDataCompletion("valid");
-      } else {
-        setCheckDataCompletion("invalid");
+  const validateMicroplanName = async () => {
+    const body = {
+      PlanConfigurationSearchCriteria: {
+        name: microplan,
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+      },
+    };
+    const response = await SearchPlanConfig(body);
+    if (response?.PlanConfiguration?.length === 0) {
+      return true;
+    } else if (response?.PlanConfiguration?.length === 1) {
+      if (response?.PlanConfiguration[0].id === microplanData?.planConfigurationId) {
+        return true;
       }
     }
-  }, [checkDataCompletion, microplan, microplanData, setCheckDataCompletion, setMicroplanData]);
+    return false;
+  };
+  // check if data has changed or not
+  const updateData = useCallback(
+    async (check) => {
+      if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+      const valid = await validateMicroplanName();
+      if (!valid) {
+        setToast({ state: "error", message: t("ERROR_DUPLICATE_MICROPLAN_NAME") });
+        setCheckDataCompletion("false");
+        return;
+      }
+      if (check) {
+        setMicroplanData((previous) => ({
+          ...previous,
+          microplanDetails: {
+            name: microplan,
+          },
+        }));
+        if (!["", null, undefined].includes(microplan)) {
+          setCheckDataCompletion("valid");
+        } else {
+          setCheckDataCompletion("invalid");
+        }
+      } else {
+        if (!["", null, undefined].includes(microplanData?.microplanDetails?.name)) {
+          setCheckDataCompletion("valid");
+        } else {
+          setCheckDataCompletion("invalid");
+        }
+      }
+    },
+    [checkDataCompletion, microplan, microplanData, setCheckDataCompletion, setMicroplanData, validateMicroplanName]
+  );
 
   // const cancelUpdateData = useCallback(() => {
   //   setCheckDataCompletion(false);
@@ -178,13 +205,13 @@ const MicroplanDetails = ({
         <CardSectionHeader
           style={{
             margin: "0",
-            paddingLeft:"0"
+            paddingLeft: "0",
           }}
         >
           {t("CAMPAIGN_DETAILS")}
         </CardSectionHeader>
 
-        <StatusTable style={{paddingLeft:"0"}}>
+        <StatusTable style={{ paddingLeft: "0" }}>
           {campaignData?.length > 0 &&
             campaignData?.map((row, idx) => {
               return (
@@ -192,7 +219,7 @@ const MicroplanDetails = ({
                   key={idx}
                   label={row?.label}
                   text={row?.value}
-                  rowContainerStyle={{ margin: "0",padding:"0", height: "2.4rem", justifyContent: "flex-start" }}
+                  rowContainerStyle={{ margin: "0", padding: "0", height: "2.4rem", justifyContent: "flex-start" }}
                   className="border-none"
                   last={idx === campaignData?.length - 1}
                 />
@@ -207,16 +234,16 @@ const MicroplanDetails = ({
         }}
         className="microplan-name"
       >
-        <CardSubHeader style={{marginBottom:"1.5rem"}}>{t("NAME_YOUR_MP")}</CardSubHeader>
-        <p style={{marginBottom:"1.5rem"}}>{t("MP_FOOTER")}</p>
+        <CardSubHeader style={{ marginBottom: "1.5rem" }}>{t("NAME_YOUR_MP")}</CardSubHeader>
+        <p style={{ marginBottom: "1.5rem" }}>{t("MP_FOOTER")}</p>
         <LabelFieldPair>
-          <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center", margin:0 }}>
-            {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin:0 }}> *</p>
+          <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center", margin: 0 }}>
+            {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin: 0 }}> *</p>
           </CardLabel>
-          <div style={{ width: "100%", maxWidth: "960px", height:"fit-content" }}>
+          <div style={{ width: "100%", maxWidth: "960px", height: "fit-content" }}>
             <TextInput
               t={t}
-              style={{ width: "100%", margin:0 }}
+              style={{ width: "100%", margin: 0 }}
               type={"text"}
               isMandatory={false}
               name="name"
@@ -233,6 +260,9 @@ const MicroplanDetails = ({
           </div>
         </LabelFieldPair>
       </Card>
+      {toast && toast.state === "error" && (
+        <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
+      )}
       {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
