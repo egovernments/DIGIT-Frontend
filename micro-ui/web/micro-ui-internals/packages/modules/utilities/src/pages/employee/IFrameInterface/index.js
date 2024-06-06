@@ -79,8 +79,10 @@ const IFrameInterface = (props) => {
               console.log("url here", url);
               console.log("typeof url", typeof url);
     
+              const uniqueIdentifier = Date.now(); // Unique identifier based on the current timestamp
+    
               if (typeof url === "string" && (url.includes("vector.maps.elastic.co") || url.includes("tiles.maps.elastic.co"))) {
-                const appendStr = url.includes("vector.maps.elastic.co") ? "layer" : "tiles"
+                const appendStr = url.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
                 const oldUrl = url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("interceptor fetch", pageObject);
@@ -100,7 +102,7 @@ const IFrameInterface = (props) => {
               }
     
               if (typeof url === "object" && (url.url.includes("vector.maps.elastic.co") || url.url.includes("tiles.maps.elastic.co"))) {
-                const appendStr = url?.url?.includes("vector.maps.elastic.co") ? "layer" : "tiles"
+                const appendStr = url?.url?.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
                 const oldUrl = url.url;
                 const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
                 console.log("object interceptor fetch", pageObject);
@@ -136,6 +138,7 @@ const IFrameInterface = (props) => {
         console.error('Error injecting custom HTTP interceptor:', error);
       }
     };
+    
 
     const injectCustomHttpInterceptorDocumentApi = () => {
       try {
