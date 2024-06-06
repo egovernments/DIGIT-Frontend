@@ -340,51 +340,52 @@ const Upload = ({
 
   const boundaryDataGeneration = async (schemaData) => {
     let boundaryDataAgainstBoundaryCode = {};
+    return boundaryDataAgainstBoundaryCode;
     console.log(1)
-    if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
-      try {
-        const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-        const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-        let boundaryData = sessionData.filteredBoundaries;
-    console.log(2)
-    let filteredBoundaries;
-        if (!boundaryData) {
-          // Only fetch boundary data if not present in session storage
-          boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-          filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
-          console.log(filteredBoundaries)
+    // if (schemaData && !schemaData.doHierarchyCheckInUploadedData) {
+    //   try {
+    //     const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+    //     const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+    //     let boundaryData = sessionData.filteredBoundaries;
+    // console.log(2)
+    // let filteredBoundaries;
+    //     if (!boundaryData) {
+    //       // Only fetch boundary data if not present in session storage
+    //       boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+    //       filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+    //       console.log(filteredBoundaries)
 
-          // Update the session storage with the new filtered boundaries
-          Digit.SessionStorage.set("microplanHelperData", {
-            ...sessionData,
-            filteredBoundaries: filteredBoundaries,
-          });
-        } else {
-          filteredBoundaries = boundaryData;
-        }
-        console.log("filteredBoundaries",filteredBoundaries)
-        const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-        console.log("xlsxData",xlsxData)
-        xlsxData.forEach((item, i) => {
-          if (i === 0) return;
-          let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-          if (boundaryCodeIndex >= item.length) {
-            // If boundaryCodeIndex is out of bounds, return the item as is
-            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
-          } else {
-            // Otherwise, remove the element at boundaryCodeIndex
-            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
-              .slice(0, boundaryCodeIndex)
-              .concat(item.slice(boundaryCodeIndex + 1))
-              .map(t);
-          }
-        });
-        console.log("xlsxData2",xlsxData)
-        return boundaryDataAgainstBoundaryCode;
-      } catch (error) {
-        console.error(error?.message);
-      }
-    }
+    //       // Update the session storage with the new filtered boundaries
+    //       Digit.SessionStorage.set("microplanHelperData", {
+    //         ...sessionData,
+    //         filteredBoundaries: filteredBoundaries,
+    //       });
+    //     } else {
+    //       filteredBoundaries = boundaryData;
+    //     }
+    //     console.log("filteredBoundaries",filteredBoundaries)
+    //     const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+    //     console.log("xlsxData",xlsxData)
+    //     xlsxData.forEach((item, i) => {
+    //       if (i === 0) return;
+    //       let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+    //       if (boundaryCodeIndex >= item.length) {
+    //         // If boundaryCodeIndex is out of bounds, return the item as is
+    //         boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(t);
+    //       } else {
+    //         // Otherwise, remove the element at boundaryCodeIndex
+    //         boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+    //           .slice(0, boundaryCodeIndex)
+    //           .concat(item.slice(boundaryCodeIndex + 1))
+    //           .map(t);
+    //       }
+    //     });
+    //     console.log("xlsxData2",xlsxData)
+    //     return boundaryDataAgainstBoundaryCode;
+    //   } catch (error) {
+    //     console.error(error?.message);
+    //   }
+    // }
   };
 
   // Function for handling upload file event
