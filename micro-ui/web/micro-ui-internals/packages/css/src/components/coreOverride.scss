@@ -117,3 +117,20 @@ employee-select-wrap--elipses:hover {
 .digit-home-moduleCardWrapper{
   padding-left: 0;
 }
+
+.digit-label-field-pair > div{
+  width: 100% ;
+}
+
+
+.jk-digit-secondary-btn  {
+  box-shadow: inset 0 0 0 0 black;
+
+  &:hover {
+    box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
+  }
+}
+
+.employee-select-wrap .select:hover{
+ border-color:$primary-theme-color !important;
+}

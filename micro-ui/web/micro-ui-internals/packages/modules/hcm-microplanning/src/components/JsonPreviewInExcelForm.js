@@ -33,7 +33,7 @@ export const JsonPreviewInExcelForm = (props) => {
       <div className="excel-wrapper">
         {props?.errorLocationObject?.[currentSheetName] && <p className="error-user-directions">{t("USER_DIRECTIONS_FOR_ERROR_MESSAGE")}</p>}
         {/* {Object.entries(sheetsData).map(([sheetName, sheetData], index) => ( */}
-        <div key={sheetsData?.[currentSheetName]} className="sheet-wrapper">
+        <div key={sheetsData?.[currentSheetName]} className="sheet-wrapper" style={props?.errorLocationObject?.[currentSheetName]?{height:"72.5vh"}:{}}>
           <table className="excel-table">
             <thead>
               <tr>
@@ -86,8 +86,8 @@ export const JsonPreviewInExcelForm = (props) => {
                 setCurrentSheetName(sheetName);
               }}
               style={{
-                ...(props?.errorLocationObject?.[currentSheetName]
-                  ? { backgroundColor: "rgb(250,148,148)", color:"black", ...(sheetName === currentSheetName ? { border: "0.09rem solid black" } : {}) }
+                ...(props?.errorLocationObject?.[sheetName]
+                  ? { backgroundColor: "rgb(250,148,148)", color:"black" }
                   : {}),
               }}
             >

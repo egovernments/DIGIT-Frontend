@@ -14,7 +14,7 @@ import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
 import { InfoCard, Loader, Toast } from "@egovernments/digit-ui-components";
-import { ACCEPT_HEADERS, BOUNDARY_DATA_SHEET, EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE } from "../configs/constants";
+import { ACCEPT_HEADERS, BOUNDARY_DATA_SHEET, EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -22,8 +22,7 @@ import { addBoundaryData, createTemplate, fetchBoundaryData, filterBoundaries } 
 import XLSX from "xlsx";
 import ExcelJS from "exceljs";
 const page = "upload";
-const commonColumn = "boundaryCode";
-const _exit = true;
+
 const Upload = ({
   MicroplanName = "default",
   campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
@@ -189,7 +188,7 @@ const Upload = ({
         else setCheckDataCompletion("invalid");
       }
     },
-    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion, dataPresent, dataUpload, navigationEvent]
+    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion, dataPresent, dataUpload, navigationEvent,  sections, selectedSection.id]
   );
 
   // const cancelUpdateData = useCallback(() => {

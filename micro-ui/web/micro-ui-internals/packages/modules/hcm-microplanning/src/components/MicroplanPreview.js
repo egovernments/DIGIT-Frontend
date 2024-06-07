@@ -664,6 +664,12 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   return [...new Set(finalData)];
 };
 
+
+/**
+ * Combines two datasets based on a common column, duplicating rows from data1 for each matching row in data2. 
+ * The final dataset's columns and their order are determined by listOfColumnsNeededInFinalData. 
+ * If data2 is not provided, rows from data1 are included with null values for missing columns.
+ */
 const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFinalData) => {
   // Error handling: Check if data1 array is provided
   if (!Array.isArray(data1)) {
@@ -1099,7 +1105,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
         const aggregate = calculateAggregateValue(item, dataToShow);
         return (
           <div key={index}>
-            <p className="aggregate-value">{isNaN(parseInt(aggregate)) ? 0 : aggregate}</p>
+            <p className="aggregate-value">{isNaN(parseInt(aggregate)) ? 0 : t(parseInt(aggregate))}</p>
             <p className="aggregate-label">{typeof item === "object" && item.name ? t(item.name) : t(item)}</p>
           </div>
         );

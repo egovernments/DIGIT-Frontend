@@ -760,12 +760,12 @@ $border-color: rgba(214, 213, 212, 1);
           margin-right: 0.313rem;
           cursor: pointer;
           background-color: #f1f1f1;
-          border: 1px solid #ccc;
         }
 
         .tab.active {
           background-color: #007bff;
           color: white;
+          border: 0.25rem solid black;
         }
       }
     }
