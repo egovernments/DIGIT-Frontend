@@ -188,7 +188,7 @@ const Upload = ({
         else setCheckDataCompletion("invalid");
       }
     },
-    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion, dataPresent, dataUpload, navigationEvent,  sections, selectedSection.id]
+    [fileDataList, setMicroplanData, microplanData, setCheckDataCompletion, dataPresent, dataUpload, navigationEvent]
   );
 
   // const cancelUpdateData = useCallback(() => {
