@@ -73,7 +73,8 @@ const App = ({ path }) => {
     { name: "MicroplanPreviewAggregates" },
     { name: "AutoFilledRuleConfigurations" },
     { name: "MapFilters" },
-    { name: "HierarchyConfigurations" }
+    { name: "HierarchyConfigurations" },
+    { name: "NumberFormatMappingForTranslation" }
   ],
   {
     select:(data) => {
