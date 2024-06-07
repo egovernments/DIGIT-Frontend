@@ -134,23 +134,3 @@ const config = {
 // Exporting getErrorCodes function and config object
 export { getErrorCodes };
 export default config;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
