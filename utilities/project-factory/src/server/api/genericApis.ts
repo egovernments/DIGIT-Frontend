@@ -1002,6 +1002,7 @@ async function callMdmsV2Data(
         offset: 0
       },
     };
+    console.log(requestBody,"bodyyyyyyyyyyyy")
     const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
     const response = await httpRequest(url, requestBody, { tenantId: tenantId });
     return response;

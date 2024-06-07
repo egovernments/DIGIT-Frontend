@@ -467,7 +467,9 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
         if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+            console.log("aaaaaaaaaaaaaa")
             const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+            console.log(finalValidHeadersForTargetSheetAsPerCampaignType,"finalllllllllllll")
             validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
         }
     }
@@ -480,7 +482,7 @@ function validateTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeader
             const headersToValidate = worksheet.getRow(1).values
                 .filter((header: any) => header !== undefined && header !== null && header.toString().trim() !== '')
                 .map((header: any) => header.toString().trim());
-
+             console.log(headersToValidate,"hhhhhhhhhhhhhhhhhhh")
             if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in Target sheet ${worksheet.name}`);
             }
@@ -1106,19 +1108,27 @@ function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: 
 
 function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
     let tabsIndex = 2;
-    const tabsOfDistrict = getDifferentDistrictTabs(dataFromSheet[getLocalizedName(config?.boundary?.boundaryTab, localizationMap)], getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap));
+    logger.info("target sheet getting validated for different districts");
+    const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    const tabsOfDistrict = getDifferentDistrictTabs(dataFromSheet[getLocalizedName(config?.boundary?.boundaryTab, localizationMap)], differentTabsBasedOnLevel);
+    logger.info("found " + tabsOfDistrict?.length + " districts");
+    logger.debug("actual districts in boundary data sheet : " + getFormattedStringForDebug(tabsOfDistrict));
     const tabsFromTargetSheet = Object.keys(dataFromSheet);
-    for (let tab of tabsOfDistrict) {
-        if (tabsIndex >= tabsFromTargetSheet.length) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`);
+    logger.info("districts present in user filled sheet : " + (tabsFromTargetSheet?.length - tabsIndex));
+    logger.debug("districts present in user filled sheet : " + getFormattedStringForDebug(tabsFromTargetSheet));
+
+    if (tabsFromTargetSheet.length - tabsIndex !== tabsOfDistrict.length) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", `${differentTabsBasedOnLevel} tabs uplaoded by user is either less or more than the ${differentTabsBasedOnLevel} in the boundary system `)
+    } else {
+        for (let index = tabsIndex; index < tabsFromTargetSheet.length; index++) {
+            const tab = tabsFromTargetSheet[index]; // Get the current tab
+            if (!tabsOfDistrict.includes(tab)) {
+                throwError("COMMON", 400, "VALIDATION_ERROR", `${differentTabsBasedOnLevel} tab ${tab} not present in the Target Sheet Uploaded`);
+            }
         }
-        if (tabsFromTargetSheet[tabsIndex] === tab) {
-            tabsIndex++;
-        }
-        else {
-            throwError("COMMON", 400, "VALIDATION_ERROR", `District tab ${tab} not present in the Target Sheet Uploaded`)
-        }
+
     }
+
 }
 
 
