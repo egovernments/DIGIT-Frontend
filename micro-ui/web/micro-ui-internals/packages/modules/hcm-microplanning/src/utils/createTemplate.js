@@ -284,7 +284,7 @@ export const filterBoundaries = (boundaryData, boundaryFilters) => {
   // Define a helper function to recursively filter boundaries
   function filterRecursive(boundary) {
     // Find the filter that matches the current boundary
-    const filter = boundaryFilters?.find((f) => f.code === boundary.code && f.boundaryType === boundary.boundaryType);
+    const filter = boundaryFilters?.find((f) => f.code === boundary.code && f.type === boundary.boundaryType);
 
     // If no filter is found, return the boundary with its children filtered recursively
     if (!filter) {
@@ -313,7 +313,7 @@ export const filterBoundaries = (boundaryData, boundaryFilters) => {
 
     // Filter children based on the filters
     const filteredChildren = boundary.children
-      .filter((child) => boundaryFilters.some((f) => f.code === child.code && f.boundaryType === child.boundaryType))
+      .filter((child) => boundaryFilters.some((f) => f.code === child.code && f.type === child.boundaryType))
       .map(filterRecursive);
 
     // Return the boundary with filtered children
@@ -413,8 +413,9 @@ export const createTemplate = async ({
 }) => {
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
   const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-  let boundaryData = sessionData.filterBoundaries;
+  let boundaryData = sessionData.filteredBoundaries;
   let filteredBoundaries;
+  debugger
 
   if (!boundaryData) {
     // Only fetch boundary data if not present in session storage

@@ -23,16 +23,16 @@
         {
             "campaignType": "MR-DN",
             "data": [
-                "targetPopulationDemo1",
-                "targetpopulationDemo2",
+                "NO_OF_SPAQS_1_REQUIRED_FOR_AGE_3_TO_11_MONTHS",
+                "NO_OF_SPAQS_2_REQUIRED_FOR_AGE_12_TO_59_MONTHS",
                 {
                     "name": "TOTAL_SPAQA_REQUIRED_PER_CYCLE",
                     "entities": [
-                        "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
-                        "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2"
+                        "NO_OF_SPAQS_1_REQUIRED_FOR_AGE_3_TO_11_MONTHS",
+                        "NO_OF_SPAQS_2_REQUIRED_FOR_AGE_12_TO_59_MONTHS"
                     ]
                 },
-                "NO_OF_DISTRIBUTORS"
+                "NO_OF_TEAMS_PER_BOUNDARY"
             ]
         }
     ]

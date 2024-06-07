@@ -49,7 +49,7 @@ export const excelValidations = (data, schemaData, t) => {
     let hasDataErrors = "false"; // true, false, missing_properties, unknown
     let missingColumnsList = new Set();
     let errorMessages = {};
-
+console.log(validateExcel.errors)
     for (let i = 0; i < validateExcel.errors.length; i++) {
       let tempErrorStore = "";
       const instancePathType = validateExcel.errors[i].instancePath.split("/");

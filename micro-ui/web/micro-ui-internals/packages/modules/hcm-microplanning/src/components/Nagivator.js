@@ -19,7 +19,7 @@ const Navigator = memo((props) => {
   const [currentPage, setCurrentPage] = useState();
   const [toast, setToast] = useState();
   const [navigationEvent, setNavigationEvent] = useState();
-  const [activeSteps, setActiveSteps] = useState(Digit.SessionStorage.get("microplanHelperData").activeSteps || -1);
+  const [activeSteps, setActiveSteps] = useState(Digit.SessionStorage.get("microplanHelperData")?.activeSteps || -1);
   /**
    * checkDataCompletion
    * "true": check for data completeness
@@ -231,7 +231,7 @@ const Navigator = memo((props) => {
         {/* Next/Submit button */}
         <Button
           type="button"
-          className="custom-button"
+          className="custom-button custom-button-right-icon"
           label={currentPage?.id < props.config.length - 1 ? t("NEXT") : t("GENERATE_MICROPLAN")}
           onButtonClick={currentPage?.id < props.config.length - 1 ? nextbuttonClickHandler : completeNavigation}
           variation={"primary"}

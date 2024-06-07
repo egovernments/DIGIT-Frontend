@@ -423,7 +423,7 @@ const Upload = ({
           break;
         case SHAPEFILE:
           try {
-            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, boundaryDataAgainstBoundaryCode, t);
+            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, t);
             file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
             errorMsg = response.error;
@@ -1755,6 +1755,7 @@ export const handleExcelFile = async (
       fileDataToStore,
       t
     );
+    debugger;
     fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
     // Converting the input file to json format
     let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
@@ -1810,27 +1811,27 @@ export const handleExcelFile = async (
     errorMsg = response.message;
     errors = response.errors;
     let check = response.valid;
-    if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent && boundaryDataAgainstBoundaryCode) {
-      try {
+    try {
+      if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent && boundaryDataAgainstBoundaryCode) {
         let tempBoundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData, campaignData, t)) || {};
-
         for (const sheet in tempFileDataToStore) {
           const commonColumnIndex = tempFileDataToStore[sheet]?.[0]?.indexOf(commonColumn);
           if (commonColumnIndex !== -1)
-            tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item) => [
+            tempFileDataToStore[sheet] = tempFileDataToStore[sheet].map((item, index) => [
               ...(tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]]
                 ? tempBoundaryDataAgainstBoundaryCode[item[commonColumnIndex]]
-                : new Array(hierarchy.length).fill("")),
+                : index !== 0
+                ? new Array(hierarchy.length).fill("")
+                : []),
               ...item,
             ]);
 
           tempFileDataToStore[sheet][0] = [...hierarchy, ...tempFileDataToStore[sheet][0]];
         }
-      } catch (error) {
-        console.error("Error in boundary adding operaiton: ", error);
       }
+    } catch (error) {
+      console.error("Error in boundary adding operaiton: ", error);
     }
-
     return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
   } catch (error) {
     console.error("Error in handling Excel file:", error.message);

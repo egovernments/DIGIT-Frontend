@@ -18,10 +18,16 @@
                     "assumptionValue": "NO_OF_BEDNETS_PER_HOUSEHOLD"
                 },
                 {
-                    "output": "NO_OF_DISTRIBUTORS_PER_BOUNDARY",
+                    "output": "NUMBER_OF_DISTRIBUTORS_IF_CAMPAIGN_RUNS_FOR_1_DAY",
                     "input": "NO_OF_HOUSEHOLD",
                     "operator": "DEVIDED_BY",
                     "assumptionValue": "AVERAGE_NUMBER_OF_HOUSEHOLDS_COVERED_BY_ONE_DISTRIBUTOR"
+                },
+                {
+                    "output": "NO_OF_DISTRIBUTORS_PER_BOUNDARY",
+                    "input": "NUMBER_OF_DISTRIBUTORS_IF_CAMPAIGN_RUNS_FOR_1_DAY",
+                    "operator": "DEVIDED_BY",
+                    "assumptionValue": "NUMBER_OF_CAMPAIGN_DAYS"
                 },
                 {
                     "output": "NO_OF_SUPERVISORS",
@@ -88,46 +94,46 @@
             "campaignType": "MR-DN",
             "data": [
                 {
-                    "output": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
-                    "input": "targetPopulationDemo1",
+                    "output": "NO_OF_SPAQS_1_REQUIRED_FOR_AGE_3_TO_11_MONTHS",
+                    "input": "targetPopulationAge3To11",
                     "operator": "MULTIPLIED_BY",
                     "assumptionValue": "NO_OF_CYCLES"
                 },
                 {
-                    "output": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2",
-                    "input": "targetpopulationDemo2",
+                    "output": "NO_OF_SPAQS_2_REQUIRED_FOR_AGE_12_TO_59_MONTHS",
+                    "input": "targetpopulationAge12To59",
                     "operator": "MULTIPLIED_BY",
                     "assumptionValue": "NO_OF_CYCLES"
                 },
                 {
-                    "output": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1_WITH_BUFFER",
-                    "input": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_1",
+                    "output": "NO_OF_SPAQS_1_REQUIRED_FOR_AGE_3_TO_11_MONTHS_WITH_BUFFER",
+                    "input": "NO_OF_SPAQS_1_REQUIRED_FOR_AGE_3_TO_11_MONTHS",
                     "operator": "MULTIPLIED_BY",
                     "assumptionValue": "TOTAL_PROPORTION_WITH_BUFFER"
                 },
                 {
-                    "output": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2_WITH_BUFFER",
-                    "input": "NO_OF_SPAQS_REQUIRED_PER_CYCLE_FOR_DEMOGRAPHIC_2",
+                    "output": "NO_OF_SPAQS_2_REQUIRED_FOR_AGE_12_TO_59_MONTHS_WITH_BUFFER",
+                    "input": "NO_OF_SPAQS_2_REQUIRED_FOR_AGE_12_TO_59_MONTHS",
                     "operator": "MULTIPLIED_BY",
                     "assumptionValue": "TOTAL_PROPORTION_WITH_BUFFER"
                 },
                 {
-                    "output": "NO_OF_DISTRIBUTORS",
-                    "input": "NO_OF_MONITOR",
-                    "operator": "MULTIPLIED_BY",
-                    "assumptionValue": "NO_OF_DISTRIBUTORS_PER_MONITOR"
+                    "output": "NO_OF_TEAMS_PER_BOUNDARY_IF_CAMPAIGN_RUNS_FOR_1_DAY",
+                    "input": "totalTargetPopulation",
+                    "operator": "DEVIDED_BY",
+                    "assumptionValue": "AVERAGE_NUMBER_OF_CHILDREN_REACHED_BY_ONE_TEAM_PER_DAY"
                 },
                 {
                     "output": "NO_OF_TEAMS_PER_BOUNDARY",
-                    "input": "totalNumberOfChildren",
+                    "input": "NO_OF_TEAMS_PER_BOUNDARY_IF_CAMPAIGN_RUNS_FOR_1_DAY",
                     "operator": "DEVIDED_BY",
-                    "assumptionValue": "AVERAGE_NUMBER_OF_CHILDREN_REACHED_BY_ONE_TEAM_PER_DAY"
+                    "assumptionValue": "NUMBER_OF_CAMPAIGN_DAYS"
                 },
                 {
                     "output": "NO_OF_SUPERVISORS_PER_BOUNDARY",
                     "input": "NO_OF_TEAMS_PER_BOUNDARY",
                     "operator": "DEVIDED_BY",
-                    "assumptionValue": "AVERAGE_NUMBER_OF_CHILDREN_REACHED_BY_ONE_TEAM_PER_DAY"
+                    "assumptionValue": "NUMBER_OF_TEAMS_PER_SUPERVISOR"
                 }
             ]
         }

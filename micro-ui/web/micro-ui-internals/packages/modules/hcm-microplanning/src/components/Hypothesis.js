@@ -488,7 +488,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   const selectChangeHandler = useCallback(
     (e) => {
-      const existingEntry = assumptions.find((item) => item.key === e?.code);
+      const existingEntry = assumptions.find((item) => item.active && item.key === e?.code);
       if (existingEntry) return;
       const newDataSegment = {
         ...item,
@@ -506,7 +506,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
       setOptions((previous) => {
         let newOptions = previous.filter((item) => item?.active && item !== e?.code);
-        if (selected && !newOptions.includes(selected)) newOptions.unshift(selected);
+        if (selected && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
         return newOptions;
       });
     },

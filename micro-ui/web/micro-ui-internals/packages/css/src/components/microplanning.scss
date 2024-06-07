@@ -296,7 +296,9 @@ $border-color: rgba(214, 213, 212, 1);
         min-width: 13.5rem;
         height: 2.5rem;
         border: 0.063rem $primary-theme-color solid;
-
+        &:hover{
+          box-shadow: inset 0 -.125rem 0 0  $primary-theme-color;
+        }
         .icon {
           display: flex;
           align-items: center;
@@ -376,6 +378,10 @@ $border-color: rgba(214, 213, 212, 1);
       color: $primary-theme-color;
       font-size: 1rem;
       font-weight: 600;
+      
+      &:hover {
+        box-shadow: inset 0 -0.125rem 0 0 $primary-theme-color;
+      }
     }
 
     .selected-button {
@@ -478,6 +484,9 @@ $border-color: rgba(214, 213, 212, 1);
         border: 0.063rem $primary-theme-color solid;
         background-color: white;
         cursor: pointer;
+        &:hover{
+          box-shadow: inset 0 -.125rem 0 0  $primary-theme-color;
+        }
       }
 
       p {
@@ -511,7 +520,9 @@ $border-color: rgba(214, 213, 212, 1);
     justify-content: center;
     padding: 0;
     margin: 0;
-
+    &:hover{
+      box-shadow: inset 0 -.125rem 0 0  $primary-theme-color;
+    }
     .icon {
       display: flex;
       align-items: center;
@@ -1374,13 +1385,23 @@ $border-color: rgba(214, 213, 212, 1);
 
     .custom-button-left-icon {
       margin-left: 5.3rem;
-      padding-left: 0.8rem;
+      padding-left: 0.7rem !important;
       border-color: $primary-theme-color;
       &:hover{
         box-shadow: inset 0 -.125rem 0 0  $primary-theme-color;
       }
       .icon {
         margin: 0 1rem 0 0 !important;
+      }
+    }
+
+    .custom-button-right-icon{
+      box-shadow: inset 0 0 0 0  black;
+      padding-left: 0.39rem !important;
+      padding-right: 0.355rem !important;
+
+      &:hover{
+        box-shadow: inset 0 -.125rem 0 0  black;
       }
     }
   }

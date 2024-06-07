@@ -179,7 +179,8 @@ const CreateMicroplan = () => {
         setTimeout(() => {
           setLoaderActivation(false);
           setCheckDataCompletion("false");
-        }, 2000);
+        setCheckDataCompletion("perform-action");
+      }, 2000);
       },
     });
   };
@@ -213,7 +214,8 @@ const CreateMicroplan = () => {
         setTimeout(() => {
           setLoaderActivation(false);
           setCheckDataCompletion("false");
-        }, 2000);
+        setCheckDataCompletion("perform-action");
+      }, 2000);
       },
     });
   };

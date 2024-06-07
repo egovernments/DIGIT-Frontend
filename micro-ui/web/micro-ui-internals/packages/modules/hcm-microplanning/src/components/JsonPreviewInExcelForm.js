@@ -85,6 +85,11 @@ export const JsonPreviewInExcelForm = (props) => {
               onClick={() => {
                 setCurrentSheetName(sheetName);
               }}
+              style={{
+                ...(props?.errorLocationObject?.[currentSheetName]
+                  ? { backgroundColor: "rgb(250,148,148)", color:"black", ...(sheetName === currentSheetName ? { border: "0.09rem solid black" } : {}) }
+                  : {}),
+              }}
             >
               {sheetName}
             </button>

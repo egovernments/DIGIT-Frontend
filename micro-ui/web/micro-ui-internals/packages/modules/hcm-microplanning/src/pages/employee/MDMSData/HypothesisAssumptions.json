@@ -9,7 +9,8 @@
                 "NO_OF_BEDNETS_PER_HOUSEHOLD",
                 "NO_OF_DISTRIBUTORS_PER_MONITOR",
                 "AVERAGE_NUMBER_OF_HOUSEHOLDS_COVERED_BY_ONE_DISTRIBUTOR",
-                "NUMBER_OF_DISTRIBUTORES_PER_SUPERVISOR"
+                "NUMBER_OF_DISTRIBUTORES_PER_SUPERVISOR",
+                "NUMBER_OF_CAMPAIGN_DAYS"
             ]
         },
         {
@@ -32,6 +33,8 @@
                 "TOTAL_PROPORTION_WITH_BUFFER",
                 "NO_OF_DISTRIBUTORS_PER_MONITOR",
                 "AVERAGE_NUMBER_OF_CHILDREN_REACHED_BY_ONE_TEAM_PER_DAY",
+                "NUMBER_OF_TEAMS_PER_SUPERVISOR",
+                "NUMBER_OF_CAMPAIGN_DAYS",
                 "NUMBER_OF_TEAMS_PER_SUPERVISOR"
             ]
         }
