@@ -1367,7 +1367,6 @@ async function appendDistricts(request: any, workbook: any, uniqueDistrictsForMa
                 }
                 newSheetData.push(rowData);
             }
-            console.log(newSheetData,"newwwwwwwww")
             createNewSheet(workbook, newSheetData, uniqueData, localizationMap, districtLevelRowBoundaryCodeMap, configurableColumnHeadersFromSchemaForTargetSheet);
             logger.info(`${uniqueDataFromLevelForDifferentTabs} - ${differentTabsBasedOnLevel} boundary data generation completed`)
         }
@@ -1708,7 +1707,7 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
         const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
 
         const filters = {
-            "type": request?.query?.type || request?.body?.ResourceDetails?.type,
+            "title": request?.query?.type || request?.body?.ResourceDetails?.type,
             "campaignType": campaignType
         }
         // Call the MDMSV2 API to get data
@@ -1718,10 +1717,10 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
             throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);
         }
         // Extract columns from the response
-        const columnsForGivenCampaignId = mdmsResponse.mdms[0].data.fields;
+        const columnsForGivenCampaignId = mdmsResponse?.mdms[0]?.data?.properties?.stringProperties;
 
         // Sort the columns array based on the order number
-        columnsForGivenCampaignId?.sort((columnA: any, columnB: any) => columnA.orderNo - columnB.orderNo);
+        columnsForGivenCampaignId?.sort((columnA:any, columnB:any) => columnA.orderNumber - columnB.orderNumber);
 
         // Extract the names of columns and insert them into an array
         const sortedColumnNames = columnsForGivenCampaignId?.map((column: any) => column.name);
@@ -1756,12 +1755,9 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
-    console.log(boundaryData,"ffffffffffffffffff")
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-    console.group(isKeyOfThatTypePresent,";;;;;;;;;;;;;;;;;;")
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
-        console.log(isKeyOfThatTypePresent,"kkkkkkkkkkkkkkkk",boundaryTypeOnWhichWeSplit)
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }

@@ -467,9 +467,7 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
         if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-            console.log("aaaaaaaaaaaaaa")
             const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
-            console.log(finalValidHeadersForTargetSheetAsPerCampaignType,"finalllllllllllll")
             validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
         }
     }
@@ -482,7 +480,6 @@ function validateTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeader
             const headersToValidate = worksheet.getRow(1).values
                 .filter((header: any) => header !== undefined && header !== null && header.toString().trim() !== '')
                 .map((header: any) => header.toString().trim());
-             console.log(headersToValidate,"hhhhhhhhhhhhhhhhhhh")
             if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in Target sheet ${worksheet.name}`);
             }
