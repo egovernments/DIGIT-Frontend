@@ -1339,7 +1339,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const columnWidths = Array(12).fill(30);
         mainSheet.columns = columnWidths.map(width => ({ width }));
         // mainSheetData.forEach(row => mainSheet.addRow(row));
-        addDataToSheet(mainSheet, mainSheetData, 'F3842D', 30);
+        addDataToSheet(mainSheet, mainSheetData, 'F3842D', 30, false, true);
         logger.info("appending different districts tab in the sheet started")
         await appendDistricts(request, workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap, hierarchy);
         logger.info("Sheet with different tabs generated successfully");
