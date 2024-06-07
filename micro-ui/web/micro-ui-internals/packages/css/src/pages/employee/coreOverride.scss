@@ -138,8 +138,10 @@ header {
   background-color: theme(digitv2.lightTheme.primary) !important;
 }
 .digit-button-secondary{
-  .h2{
-    color: theme(digitv2.lightTheme.primary) !important;
+  .icon-label-container{
+    h2{
+      color: theme(digitv2.lightTheme.primary) !important;
+    }
   }
 }
 
@@ -161,3 +163,11 @@ header {
 .digit-popup-close-icon {
   @apply flex justify-end;
 }*/
+
+.employee{
+  .digit-employeeSidebar{
+    .sidebar{
+      z-index:999
+    }
+  }
+}
