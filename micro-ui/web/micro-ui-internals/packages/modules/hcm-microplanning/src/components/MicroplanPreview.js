@@ -8,6 +8,7 @@ import { Button, LoaderWithGap, Modal } from "@egovernments/digit-ui-react-compo
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { timeLineOptions } from "../configs/timeLineOptions.json";
+import { useNumberFormatter } from "../hooks/useNumberFormatter";
 
 const page = "microplanPreview";
 
@@ -312,7 +313,12 @@ const MicroplanPreview = ({
             />
           </div>
         </div>
-        <Aggregates microplanPreviewAggregates={microplanPreviewAggregates} dataToShow={dataToShow} t={t} />
+        <Aggregates
+          microplanPreviewAggregates={microplanPreviewAggregates}
+          dataToShow={dataToShow}
+          NumberFormatMappingForTranslation={state?.NumberFormatMappingForTranslation}
+          t={t}
+        />
         <div className="microplan-preview-body">
           <div className="hypothesis-container">
             <p className="hypothesis-heading">{t("MICROPLAN_PREVIEW_HYPOTHESIS_HEADING")}</p>
@@ -398,7 +404,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
   return (
     <div className="hypothesis-list-wrapper">
       <div className="hypothesis-list">
-        {tempHypothesisList
+        {tempHypothesisList.filter(item=>item?.active)
           ?.filter((item) => item.key !== "")
           .map((item, index) => (
             <div key={"hyopthesis_" + index} className="hypothesis-list-entity">
@@ -664,10 +670,9 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   return [...new Set(finalData)];
 };
 
-
 /**
- * Combines two datasets based on a common column, duplicating rows from data1 for each matching row in data2. 
- * The final dataset's columns and their order are determined by listOfColumnsNeededInFinalData. 
+ * Combines two datasets based on a common column, duplicating rows from data1 for each matching row in data2.
+ * The final dataset's columns and their order are determined by listOfColumnsNeededInFinalData.
  * If data2 is not provided, rows from data1 are included with null values for missing columns.
  */
 const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFinalData) => {
@@ -717,27 +722,32 @@ const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFin
   }
 
   // Determine the headers for the final combined dataset based on listOfColumnsNeededInFinalData
-  const combinedHeaders = listOfColumnsNeededInFinalData.filter((header) => data1[0].includes(header) || (data2 && data2[0].includes(header)));
+  const combinedHeaders = listOfColumnsNeededInFinalData.filter(header =>
+    data1[0].includes(header) || (data2 && data2[0].includes(header))
+  );
 
   // Combine rows
   const combinedData = [combinedHeaders];
   for (let i = 1; i < data1.length; i++) {
     const row1 = data1[i];
     const commonValue = row1[commonColumnIndex1];
-    const rows2 = data2 ? data2Map.get(commonValue) || [[null]] : [[null]]; // Handle missing common values with a placeholder array of null
+    const rows2 = data2 ? (data2Map.get(commonValue) || [[null]]) : [[null]]; // Handle missing common values with a placeholder array of null
 
     // Check if rows2 is the placeholder array
-    const isPlaceholderArray = rows2.length === 1 && rows2[0].every((value) => value === null);
+    const isPlaceholderArray = rows2.length === 1 && rows2[0].every(value => value === null);
 
+    // Create combined rows for each row in data2
     if (isPlaceholderArray) {
-      const combinedRow = combinedHeaders.map((header) => {
+      // If no corresponding row found in data2, use row from data1 with null values for missing columns
+      const combinedRow = combinedHeaders.map(header => {
         const index1 = data1[0].indexOf(header);
         return index1 !== -1 ? row1[index1] : null;
       });
       combinedData.push(combinedRow);
     } else {
-      rows2.forEach((row2) => {
-        const combinedRow = combinedHeaders.map((header) => {
+      // If corresponding rows found in data2, combine each row from data2 with row from data1
+      rows2.forEach(row2 => {
+        const combinedRow = combinedHeaders.map(header => {
           const index1 = data1[0].indexOf(header);
           const index2 = data2 ? data2[0].indexOf(header) : -1;
           return index1 !== -1 ? row1[index1] : index2 !== -1 ? row2[index2] : null;
@@ -1097,7 +1107,9 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
   );
 };
 
-const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
+const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, NumberFormatMappingForTranslation, t }) => {
+  const { formatNumber } = useNumberFormatter(NumberFormatMappingForTranslation?.reduce((acc, obj) => Object.assign(acc, obj), {}));
+
   if (!microplanPreviewAggregates) return null;
   return (
     <div className="aggregates">
@@ -1105,7 +1117,7 @@ const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
         const aggregate = calculateAggregateValue(item, dataToShow);
         return (
           <div key={index}>
-            <p className="aggregate-value">{isNaN(parseInt(aggregate)) ? 0 : t(parseInt(aggregate))}</p>
+            <p className="aggregate-value">{isNaN(parseInt(aggregate)) ? 0 : formatNumber(parseInt(aggregate))}</p>
             <p className="aggregate-label">{typeof item === "object" && item.name ? t(item.name) : t(item)}</p>
           </div>
         );
@@ -1126,7 +1138,7 @@ const calculateAggregateValue = (aggregateName, dataToShow) => {
         if (e?.[columnIndex]) aggregateData = aggregateData + Number(e[columnIndex]);
       });
     }
-  return aggregateData.toLocaleString();
+  return aggregateData;
 };
 
 export default MicroplanPreview;
