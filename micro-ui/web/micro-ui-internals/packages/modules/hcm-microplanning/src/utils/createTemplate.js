@@ -415,7 +415,6 @@ export const createTemplate = async ({
   const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
   let boundaryData = sessionData.filteredBoundaries;
   let filteredBoundaries;
-  debugger
 
   if (!boundaryData) {
     // Only fetch boundary data if not present in session storage

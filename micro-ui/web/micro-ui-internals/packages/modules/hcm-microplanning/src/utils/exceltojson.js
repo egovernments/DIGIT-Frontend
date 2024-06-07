@@ -6,7 +6,6 @@ export const parseXlsxToJsonMultipleSheets = async (file, options) => {
     const reader = new FileReader();
     reader.onload = function (event) {
       try {
-        debugger
         const arrayBuffer = event.target.result;
         const workbook = XLSX.read(arrayBuffer, { type: "arraybuffer" });
         const jsonData = {};

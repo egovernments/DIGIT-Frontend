@@ -1755,7 +1755,6 @@ export const handleExcelFile = async (
       fileDataToStore,
       t
     );
-    debugger;
     fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
     // Converting the input file to json format
     let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
