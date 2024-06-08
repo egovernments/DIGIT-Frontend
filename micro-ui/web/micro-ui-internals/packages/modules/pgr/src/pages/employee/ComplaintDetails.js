@@ -492,7 +492,7 @@ export const ComplaintDetails = (props) => {
       ) : null}
       {toast && <Toast label={t(assignResponse ? `CS_ACTION_${selectedAction}_TEXT` : "CS_ACTION_ASSIGN_FAILED")} onClose={closeToast} />}
       {!workflowDetails?.isLoading && workflowDetails?.data?.nextActions?.length > 0 && (
-        <ActionBar>
+        <ActionBar className="pgr-actionbar">
           {displayMenu && workflowDetails?.data?.nextActions ? (
             <Menu options={workflowDetails?.data?.nextActions.map((action) => action.action)} t={t} onSelect={onActionSelect} />
           ) : null}
