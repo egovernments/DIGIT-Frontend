@@ -1507,7 +1507,25 @@ export const MdmsService = {
     return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
-    return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);
+    const requestCriteria = {
+      url: "/mdms-v2/v1/_search",
+      body: {
+        "MdmsCriteria": {
+        "tenantId": tenantId,
+        "moduleDetails": [
+            {
+                "moduleName": "RAINMAKER-PGR",
+                "masterDetails": [
+                    {
+                        "name": "ServiceDefs"
+                    }
+                ]
+            }
+        ]
+      }
+      },
+    };
+    return Digit.CustomService.getResponse({ url: requestCriteria?.url, body: requestCriteria?.body });
   },
   getSanitationType: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getSanitationTypeCriteria(tenantId, moduleCode), moduleCode);
