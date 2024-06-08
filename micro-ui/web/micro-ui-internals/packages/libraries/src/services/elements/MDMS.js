@@ -1506,7 +1506,7 @@ export const MdmsService = {
     PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
-  getServiceDefs: (tenantId, moduleCode) => {
+  getServiceDefs:async (tenantId, moduleCode) => {
     const requestCriteria = {
       url: "/mdms-v2/v1/_search",
       body: {
@@ -1525,7 +1525,9 @@ export const MdmsService = {
       }
       },
     };
-    return Digit.CustomService.getResponse({ url: requestCriteria?.url, body: requestCriteria?.body });
+    const response =await  Digit.CustomService.getResponse({ url: requestCriteria?.url, body: requestCriteria?.body });
+    const serviceDefs=response?.MdmsRes?.[`RAINMAKER-PGR`]?.ServiceDefs?.filter((def) => def?.active);
+    return serviceDefs;
   },
   getSanitationType: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getSanitationTypeCriteria(tenantId, moduleCode), moduleCode);
