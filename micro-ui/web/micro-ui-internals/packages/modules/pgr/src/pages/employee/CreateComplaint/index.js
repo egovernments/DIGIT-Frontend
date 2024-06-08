@@ -251,6 +251,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   ];
   return (
     <FormComposer
+    className="pgr-create"
       heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
       config={config}
       onSubmit={wrapperSubmit}

@@ -73,7 +73,7 @@ export const FormComposer = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Card>
+      <Card className={props.className}>
         <CardSubHeader>{props.heading}</CardSubHeader>
         {formFields}
         {props.children}

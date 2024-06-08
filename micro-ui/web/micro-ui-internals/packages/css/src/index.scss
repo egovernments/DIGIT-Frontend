@@ -761,3 +761,15 @@ input[type="number"] {
   max-height: 120px;
   margin-top: 90px;
 }
+
+@media (min-width: 780px) {
+
+.pgr-create{
+  .label-field-pair{
+    .field{
+      width: 44%;
+    }
+  }
+
+}
+}
