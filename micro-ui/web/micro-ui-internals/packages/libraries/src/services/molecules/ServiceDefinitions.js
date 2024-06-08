@@ -20,7 +20,14 @@ export const GetServiceDefinitions = {
       },
     };
 
-    const serviceDefs = await MdmsService.getDataByCriteria(tenantId, criteria, "PGR");
+    const requestCriteria = {
+      url: "/mdms-v2/v1/_search",
+      body: {
+        "MdmsCriteria": criteria?.details
+      },
+    };
+    const response =await Digit.CustomService.getResponse({ url: requestCriteria?.url, body: requestCriteria?.body });
+    const serviceDefs=response?.MdmsRes?.[`RAINMAKER-PGR`]?.ServiceDefs?.filter((def) => def?.active);
     Storage.set("serviceDefinitions", serviceDefs);
     return serviceDefs;
   },

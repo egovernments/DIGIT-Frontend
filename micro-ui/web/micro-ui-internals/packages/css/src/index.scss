@@ -459,6 +459,7 @@ input[type="number"] {
 
 .text-input {
   @apply relative w-full;
+  max-width: 540px;
   input {
     &:hover {
       @apply border-2 border-solid border-primary-main;
