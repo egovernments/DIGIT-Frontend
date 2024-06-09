@@ -258,8 +258,12 @@ export const updateSessionUtils = {
           let filteredBoundaries;
           if (!boundaryData) {
             // Only fetch boundary data if not present in session storage
-            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+            boundaryData = await fetchBoundaryData(
+              Digit.ULBService.getCurrentTenantId(),
+              additionalProps.campaignData?.hierarchyType,
+              rootBoundary?.[0]?.code
+            );
+            filteredBoundaries = filterBoundaries(boundaryData, additionalProps.campaignData?.boundaries);
 
             // Update the session storage with the new filtered boundaries
             Digit.SessionStorage.set("microplanHelperData", {
@@ -340,7 +344,7 @@ export const updateSessionUtils = {
                     additionalProps.heirarchyData,
                     { id: inputFileType },
                     boundaryDataAgainstBoundaryCode,
-                    ()=>{},
+                    () => {},
                     additionalProps.t,
                     additionalProps.campaignData
                   );
