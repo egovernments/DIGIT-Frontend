@@ -232,15 +232,15 @@ export const updateSessionUtils = {
         return item;
       });
       upload.data.features = newFeatures;
-      if (additionalProps.heirarchyData.every((item) => !mappedToList.includes(item))) {
+      if (additionalProps.heirarchyData?.every((item) => !mappedToList.includes(item))) {
         upload.data.features.forEach((feature) => {
           const boundaryCode = feature.properties.boundaryCode;
           let additionalDetails = {};
-          for (let i = 0; i < additionalProps.heirarchyData.length; i++) {
+          for (let i = 0; i < additionalProps.heirarchyData?.length; i++) {
             if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
-              additionalDetails[additionalProps.heirarchyData[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+              additionalDetails[additionalProps.heirarchyData?.[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
             } else {
-              additionalDetails[additionalProps.heirarchyData[i]] = "";
+              additionalDetails[additionalProps.heirarchyData?.[i]] = "";
             }
           }
           feature.properties = { ...additionalDetails, ...feature.properties };

@@ -941,23 +941,27 @@ const getSchema = (campaignType, type, section, schemas) => {
 };
 
 const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
-  //Decide columns to take and their sequence
-  const getfilteredSchemaColumnsList = () => {
-    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
-    return filteredSchemaColumns;
-  };
-  let filteredSchemaColumns = getfilteredSchemaColumnsList();
-  const fetchedData = fetchMicroplanData(microplanData, campaignType, validationSchemas);
-  // Perform inner joins using reduce
-  const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
-    if (index === 0) {
-      return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
-    } else {
-      return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
-    }
-  }, null);
-  return dataAfterJoins;
+  try {
+    //Decide columns to take and their sequence
+    const getfilteredSchemaColumnsList = () => {
+      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+      if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
+      return filteredSchemaColumns;
+    };
+    let filteredSchemaColumns = getfilteredSchemaColumnsList();
+    const fetchedData = fetchMicroplanData(microplanData, campaignType, validationSchemas);
+    // Perform inner joins using reduce
+    const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
+      if (index === 0) {
+        return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
+      } else {
+        return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
+      }
+    }, null);
+    return dataAfterJoins;
+  } catch (error) {
+    console.log("Error in fetch microplan data: ", error.message);
+  }
 };
 
 const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
