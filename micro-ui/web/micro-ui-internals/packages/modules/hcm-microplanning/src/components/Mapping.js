@@ -222,10 +222,10 @@ const Mapping = ({
 
     let map_i = L.map(id, mapConfig);
     var verticalBounds = L.latLngBounds(L.latLng(-90, -180), L.latLng(85, 180));
-    map_i.on("drag", function () {
+    map_i.on("drag", () => {
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
-    map_i.on("zoom", function () {
+    map_i.on("zoom", () => {
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);

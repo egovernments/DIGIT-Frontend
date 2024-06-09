@@ -987,7 +987,6 @@ const Upload = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-end",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -1025,7 +1024,6 @@ const Upload = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-end",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
