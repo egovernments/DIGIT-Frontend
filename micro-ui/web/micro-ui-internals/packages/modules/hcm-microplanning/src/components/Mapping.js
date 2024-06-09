@@ -210,7 +210,7 @@ const Mapping = ({
   const init = (id, defaultBaseMap, Boundary) => {
     if (map !== null) return;
 
-    let bounds;
+    let bounds = findBounds(Boundary);
 
     let mapConfig = {
       center: [0, 0],
@@ -229,7 +229,7 @@ const Mapping = ({
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
-
+    if (bounds) map_i.fitBounds(bounds);
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
@@ -732,32 +732,34 @@ const BoundarySelection = memo(
             </div>
           )}
           {showConfirmationModal && (
-            <Modal
-              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-              popupModuleActionBarStyles={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                width: "100%",
-                padding: "1rem",
-              }}
-              popupModuleMianStyles={{ padding: 0, margin: 0 }}
-              style={{
-                flex: 1,
-                height: "2.5rem",
-                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              }}
-              headerBarMainStyle={{ padding: 0, margin: 0 }}
-              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
-              actionCancelLabel={t("YES")}
-              actionCancelOnSubmit={handleSubmitConfModal}
-              actionSaveLabel={t("NO")}
-              actionSaveOnSubmit={handleCancelConfModal}
-            >
-              <div className="modal-body">
-                <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
-              </div>
-            </Modal>
+            <div className="popup-wrap-focus">
+              <Modal
+                popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+                popupModuleActionBarStyles={{
+                  display: "flex",
+                  flex: 1,
+                  justifyContent: "space-between",
+                  width: "100%",
+                  padding: "1rem",
+                }}
+                popupModuleMianStyles={{ padding: 0, margin: 0 }}
+                style={{
+                  flex: 1,
+                  height: "2.5rem",
+                  border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+                }}
+                headerBarMainStyle={{ padding: 0, margin: 0 }}
+                headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
+                actionCancelLabel={t("YES")}
+                actionCancelOnSubmit={handleSubmitConfModal}
+                actionSaveLabel={t("NO")}
+                actionSaveOnSubmit={handleCancelConfModal}
+              >
+                <div className="modal-body">
+                  <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
+                </div>
+              </Modal>
+            </div>
           )}
         </Card>
       </div>
@@ -767,7 +769,6 @@ const BoundarySelection = memo(
 
 const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, basemapRef, t }) => {
   if (!baseMaps) return null;
-
   return (
     <div className="base-map-selector">
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
@@ -783,7 +784,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
                   <img
                     className="base-map-img"
                     key={index}
-                    src={generatePreviewUrl(baseMap?.metadata?.url, [-24.749434, 32.961285], 5)}
+                    src={generatePreviewUrl(baseMap?.metadata?.url, [0, 0], 0)}
                     alt={name}
                     onClick={() => handleBaseMapToggle(name)}
                   />
@@ -799,7 +800,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
 };
 
 const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
-  const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(2, zoom));
+  const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(0, zoom));
   const lat = Math.floor(
     ((1 - Math.log(Math.tan((center[0] * Math.PI) / 180) + 1 / Math.cos((center[0] * Math.PI) / 180)) / Math.PI) / 2) * Math.pow(2, zoom)
   );

@@ -114,16 +114,15 @@ employee-select-wrap--elipses:hover {
   }
 }
 
-.digit-home-moduleCardWrapper{
+.digit-home-moduleCardWrapper {
   padding-left: 0;
 }
 
-.digit-label-field-pair > div{
-  width: 100% ;
+.digit-label-field-pair > div {
+  width: 100%;
 }
 
-
-.jk-digit-secondary-btn  {
+.jk-digit-secondary-btn {
   box-shadow: inset 0 0 0 0 black;
 
   &:hover {
@@ -131,6 +130,6 @@ employee-select-wrap--elipses:hover {
   }
 }
 
-.employee-select-wrap .select:hover{
- border-color:$primary-theme-color !important;
+.employee-select-wrap .select:hover {
+  border-color: $primary-theme-color !important;
 }

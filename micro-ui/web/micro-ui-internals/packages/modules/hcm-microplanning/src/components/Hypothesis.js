@@ -51,7 +51,7 @@ const Hypothesis = ({
       else setEditable(true);
     }
     if (microplanData && microplanData.hypothesis) {
-      const temp = microplanData?.hypothesis.filter((item) => item.active);
+      const temp = microplanData?.hypothesis;
       setAssumptions(temp);
     }
 
@@ -171,41 +171,42 @@ const Hypothesis = ({
           <p>{t("ADD_ROW")}</p>
         </button>
         {/* delete conformation */}
-        {modal === "delete-conformation" && (
-          <Modal
-            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-            popupModuleActionBarStyles={{
-              display: "flex",
-              flex: 1,
-              justifyContent: "flex-start",
-              padding: 0,
-              width: "100%",
-              padding: "1rem",
-            }}
-            popupModuleMianStyles={{ padding: 0, margin: 0 }}
-            style={{
-              flex: 1,
-              height: "2.5rem",
-              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-            }}
-            headerBarMainStyle={{ padding: 0, margin: 0 }}
-            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-            actionCancelLabel={t("YES")}
-            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-            actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={closeModal}
-          >
-            <div className="modal-body">
-              <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
-            </div>
-          </Modal>
-        )}
+        <div className="popup-wrap-focus">
+          {modal === "delete-conformation" && (
+            <Modal
+              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+              popupModuleActionBarStyles={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "flex-start",
+                padding: 0,
+                width: "100%",
+                padding: "1rem",
+              }}
+              popupModuleMianStyles={{ padding: 0, margin: 0 }}
+              style={{
+                flex: 1,
+                height: "2.5rem",
+                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+              }}
+              headerBarMainStyle={{ padding: 0, margin: 0 }}
+              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+              actionCancelLabel={t("YES")}
+              actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+              actionSaveLabel={t("NO")}
+              actionSaveOnSubmit={closeModal}
+            >
+              <div className="modal-body">
+                <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+              </div>
+            </Modal>
+          )}
 
-        {toast && toast.state === "error" && (
-          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
-        )}
-      </div>
-      {/* might need it
+          {toast && toast.state === "error" && (
+            <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
+          )}
+        </div>
+        {/* might need it
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{  borderRadius: "0.25rem", width: "31.188rem" }}
@@ -237,6 +238,7 @@ const Hypothesis = ({
           </div>
         </Modal>
       )} */}
+      </div>
     </>
   );
 };
@@ -607,7 +609,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
 };
 
 const filterHypothesisList = (assumptions, hypothesisList) => {
-  let alreadySelectedHypothesis = assumptions.map((item) => item?.key) || [];
+  let alreadySelectedHypothesis = assumptions.filter((item) => item?.active).map((item) => item?.key) || [];
   return hypothesisList.filter((item) => !alreadySelectedHypothesis.includes(item));
 };
 

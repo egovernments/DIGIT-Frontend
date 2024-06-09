@@ -404,7 +404,8 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
   return (
     <div className="hypothesis-list-wrapper">
       <div className="hypothesis-list">
-        {tempHypothesisList.filter(item=>item?.active)
+        {tempHypothesisList
+          .filter((item) => item?.active)
           ?.filter((item) => item.key !== "")
           .map((item, index) => (
             <div key={"hyopthesis_" + index} className="hypothesis-list-entity">
@@ -567,43 +568,45 @@ const DataPreview = memo(
           </table>
         </div>
         {modal === "change-preview-data" && (
-          <Modal
-            popupStyles={{ width: "80%", maxHeight: "37.938rem", borderRadius: "0.25rem" }}
-            popupModuleActionBarStyles={{
-              display: "flex",
-              flex: 1,
-              justifyContent: "flex-end",
-              width: "100%",
-              padding: "1rem",
-            }}
-            style={{
-              backgroundColor: "white",
-              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              marginTop: "0.5rem",
-              marginBottom: "0.5rem",
-              marginRight: "1.4rem",
-              height: "2.5rem",
-              width: "12.5rem",
-            }}
-            headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
-            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("EDIT_ROW", { rowNumber: selectedRow })} />}
-            headerBarEnd={<CloseButton clickHandler={modalCloseHandler} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-            actionCancelLabel={t("CANCLE")}
-            actionCancelOnSubmit={modalCloseHandler}
-            actionSaveLabel={t("SAVE_CHANGES")}
-            actionSaveOnSubmit={finaliseRowDataChange}
-            formId="modal-action"
-          >
-            <EditResourceData
-              selectedRow={selectedRow}
-              previewData={previewData}
-              resources={resources}
-              tempResourceChanges={tempResourceChanges}
-              setTempResourceChanges={setTempResourceChanges}
-              data={data}
-              t={t}
-            />
-          </Modal>
+          <div className="popup-wrap-focus">
+            <Modal
+              popupStyles={{ width: "80%", maxHeight: "37.938rem", borderRadius: "0.25rem" }}
+              popupModuleActionBarStyles={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "flex-end",
+                width: "100%",
+                padding: "1rem",
+              }}
+              style={{
+                backgroundColor: "white",
+                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+                marginTop: "0.5rem",
+                marginBottom: "0.5rem",
+                marginRight: "1.4rem",
+                height: "2.5rem",
+                width: "12.5rem",
+              }}
+              headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
+              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("EDIT_ROW", { rowNumber: selectedRow })} />}
+              headerBarEnd={<CloseButton clickHandler={modalCloseHandler} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              actionCancelLabel={t("CANCLE")}
+              actionCancelOnSubmit={modalCloseHandler}
+              actionSaveLabel={t("SAVE_CHANGES")}
+              actionSaveOnSubmit={finaliseRowDataChange}
+              formId="modal-action"
+            >
+              <EditResourceData
+                selectedRow={selectedRow}
+                previewData={previewData}
+                resources={resources}
+                tempResourceChanges={tempResourceChanges}
+                setTempResourceChanges={setTempResourceChanges}
+                data={data}
+                t={t}
+              />
+            </Modal>
+          </div>
         )}
       </div>
     );
@@ -722,32 +725,30 @@ const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFin
   }
 
   // Determine the headers for the final combined dataset based on listOfColumnsNeededInFinalData
-  const combinedHeaders = listOfColumnsNeededInFinalData.filter(header =>
-    data1[0].includes(header) || (data2 && data2[0].includes(header))
-  );
+  const combinedHeaders = listOfColumnsNeededInFinalData.filter((header) => data1[0].includes(header) || (data2 && data2[0].includes(header)));
 
   // Combine rows
   const combinedData = [combinedHeaders];
   for (let i = 1; i < data1.length; i++) {
     const row1 = data1[i];
     const commonValue = row1[commonColumnIndex1];
-    const rows2 = data2 ? (data2Map.get(commonValue) || [[null]]) : [[null]]; // Handle missing common values with a placeholder array of null
+    const rows2 = data2 ? data2Map.get(commonValue) || [[null]] : [[null]]; // Handle missing common values with a placeholder array of null
 
     // Check if rows2 is the placeholder array
-    const isPlaceholderArray = rows2.length === 1 && rows2[0].every(value => value === null);
+    const isPlaceholderArray = rows2.length === 1 && rows2[0].every((value) => value === null);
 
     // Create combined rows for each row in data2
     if (isPlaceholderArray) {
       // If no corresponding row found in data2, use row from data1 with null values for missing columns
-      const combinedRow = combinedHeaders.map(header => {
+      const combinedRow = combinedHeaders.map((header) => {
         const index1 = data1[0].indexOf(header);
         return index1 !== -1 ? row1[index1] : null;
       });
       combinedData.push(combinedRow);
     } else {
       // If corresponding rows found in data2, combine each row from data2 with row from data1
-      rows2.forEach(row2 => {
-        const combinedRow = combinedHeaders.map(header => {
+      rows2.forEach((row2) => {
+        const combinedRow = combinedHeaders.map((header) => {
           const index1 = data1[0].indexOf(header);
           const index2 = data2 ? data2[0].indexOf(header) : -1;
           return index1 !== -1 ? row1[index1] : index2 !== -1 ? row2[index2] : null;
@@ -932,12 +933,11 @@ const updateHyothesisAPICall = async (
 
 // get schema for validation
 const getSchema = (campaignType, type, section, schemas) => {
-  return schemas.find((schema) => {
-    if (!schema.campaignType) {
-      return schema.type === type && schema.section === section;
-    }
-    return schema.campaignType === campaignType && schema.type === type && schema.section === section;
-  });
+  return schemas.find((schema) =>
+    schema.campaignType
+      ? schema.campaignType === campaignType && schema.type === type && schema.section === section
+      : schema.type === type && schema.section === section
+  );
 };
 
 const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
