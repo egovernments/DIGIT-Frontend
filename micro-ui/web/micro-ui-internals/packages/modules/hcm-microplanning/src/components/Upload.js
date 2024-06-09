@@ -14,7 +14,17 @@ import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
 import { InfoCard, Loader, Toast } from "@egovernments/digit-ui-components";
-import { ACCEPT_HEADERS, BOUNDARY_DATA_SHEET, EXCEL, GEOJSON, LOCALITY, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
+import {
+  ACCEPT_HEADERS,
+  BOUNDARY_DATA_SHEET,
+  EXCEL,
+  FILE_STORE,
+  GEOJSON,
+  LOCALITY,
+  PRIMARY_THEME_COLOR,
+  SHAPEFILE,
+  commonColumn,
+} from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -122,31 +132,59 @@ const Upload = ({
 
       // if user has selected a file type and wants to go back to file type selection he/she can click back buttom
       const currentSectionIndex = sections.findIndex((item) => item.id === selectedSection.id);
-      if (!dataPresent && navigationEvent?.name !== "step" && dataUpload) {
-        setDataUpload(false);
-        setSelectedFileType(null);
-        setCheckDataCompletion("false");
-        return;
-      }
-
-      const handleNavigation = () => {
-        if (navigationEvent?.name === "next" && currentSectionIndex < sections.length - 1) {
-          setSelectedSection(sections[currentSectionIndex + 1]);
-          setCheckDataCompletion("false");
-          return;
-        }
-
-        if (navigationEvent?.name === "previousStep" && currentSectionIndex > 0) {
-          setSelectedSection(sections[currentSectionIndex - 1]);
-          setCheckDataCompletion("false");
-          return;
+      const nextPreviousNavigationHandler = () => {
+        if (navigationEvent?.name === "next") {
+          if (currentSectionIndex < sections.length - 1) {
+            setSelectedSection(sections[currentSectionIndex + 1]);
+            setCheckDataCompletion("false");
+            return;
+          }
+        } else if (navigationEvent?.name === "previousStep") {
+          if (currentSectionIndex > 0) {
+            setSelectedSection(sections[currentSectionIndex - 1]);
+            setCheckDataCompletion("false");
+            return;
+          }
         }
       };
 
       if (!dataPresent) {
-        handleNavigation();
-      } else if (navigationEvent?.name === "next" || navigationEvent?.name === "previousStep") {
-        handleNavigation();
+        if (navigationEvent?.name !== "step") {
+          if (dataUpload) {
+            setDataUpload(false);
+            setSelectedFileType(null);
+            setCheckDataCompletion("false");
+            return;
+          } else {
+            if (navigationEvent?.name === "next") {
+              if (currentSectionIndex < sections.length - 1) {
+                setSelectedSection(sections[currentSectionIndex + 1]);
+                setCheckDataCompletion("false");
+                return;
+              }
+            } else if (navigationEvent?.name === "previousStep") {
+              if (currentSectionIndex > 0) {
+                setSelectedSection(sections[currentSectionIndex - 1]);
+                setCheckDataCompletion("false");
+                return;
+              }
+            }
+          }
+        }
+      } else {
+        if (navigationEvent?.name === "next") {
+          if (currentSectionIndex < sections.length - 1) {
+            setSelectedSection(sections[currentSectionIndex + 1]);
+            setCheckDataCompletion("false");
+            return;
+          }
+        } else if (navigationEvent?.name === "previousStep") {
+          if (currentSectionIndex > 0) {
+            setSelectedSection(sections[currentSectionIndex - 1]);
+            setCheckDataCompletion("false");
+            return;
+          }
+        }
       }
 
       if (check) {
@@ -432,7 +470,7 @@ const Upload = ({
       let filestoreId;
       if (!errorMsg && !callMapping) {
         try {
-          const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", file, Digit.ULBService.getCurrentTenantId());
+          const filestoreResponse = await Digit.UploadServices.Filestorage(FILE_STORE, file, Digit.ULBService.getCurrentTenantId());
           if (filestoreResponse?.data?.files?.length > 0) {
             filestoreId = filestoreResponse?.data?.files[0]?.fileStoreId;
           } else {
@@ -650,7 +688,7 @@ const Upload = ({
   };
   const saveFileToFileStore = async () => {
     try {
-      const filestoreResponse = await Digit.UploadServices.Filestorage("microplan", fileData.file, Digit.ULBService.getCurrentTenantId());
+      const filestoreResponse = await Digit.UploadServices.Filestorage(FILE_STORE, fileData.file, Digit.ULBService.getCurrentTenantId());
       if (filestoreResponse?.data?.files?.length > 0) {
         return filestoreResponse?.data?.files[0]?.fileStoreId;
       } else {
@@ -997,7 +1035,7 @@ const Upload = ({
               headerBarMain={
                 <ModalHeading style={{ fontSize: "2.5rem", lineHeight: "2.5rem", marginLeft: "1rem" }} label={t("HEADING_DATA_UPLOAD_GUIDELINES")} />
               }
-              headerBarEnd={<CloseButton clickHandler={closeModal} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              headerBarEnd={<CloseButton clickHandler={closeModal} style={{ margin: "0.4rem 0.8rem 0 0" }} />}
             >
               <UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />
             </Modal>

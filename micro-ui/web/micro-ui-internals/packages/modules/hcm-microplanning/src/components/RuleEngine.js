@@ -126,7 +126,7 @@ const RuleEngine = ({
     let AutoFilledRuleConfigurationsList = state?.AutoFilledRuleConfigurations;
     AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurationsList.find((item) => item.campaignType === campaignType)?.data;
     microplanData?.ruleEngine?.forEach((item) => {
-      if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
+      if (Object.values(item).every((e) => e !== "")) ruleConfigureInputs.push(item?.output);
     });
     if (schemas) setValidationSchemas(schemas);
 
@@ -134,7 +134,7 @@ const RuleEngine = ({
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
-    if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
@@ -238,7 +238,7 @@ const RuleEngine = ({
             t={t}
           />
           <div className="add-button-help" />
-          <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
+          <button type="button" className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
             <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
             <p>{t("ADD_ROW")}</p>
           </button>

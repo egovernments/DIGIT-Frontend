@@ -371,7 +371,7 @@ const Mapping = ({
             setIsboundarySelectionSelected={setIsboundarySelectionSelected}
             t={t}
           />
-          <div ref={(node) => (_mapNode = node)} className="map" id="map">
+          <div ref={set__mapNode} className="map" id="map">
             <div
               className="top-right-map-subcomponents"
               onScroll={handleMouseDownAndScroll}

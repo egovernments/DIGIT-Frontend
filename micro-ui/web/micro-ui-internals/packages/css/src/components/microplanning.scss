@@ -761,11 +761,14 @@ $border-color: rgba(214, 213, 212, 1);
           padding: 0.625rem;
           margin-right: 0.313rem;
           cursor: pointer;
+          outline: none !important;
           background-color: #f1f1f1;
         }
 
         .tab.active {
-          border: 0.25rem solid black;
+          outline: none !important;
+          border: 0.25rem solid;
+          border-color: #000000 !important;
         }
       }
     }
