@@ -232,15 +232,15 @@ export const updateSessionUtils = {
         return item;
       });
       upload.data.features = newFeatures;
-      if (additionalProps.heirarchyData.every((item) => !mappedToList.includes(item))) {
+      if (additionalProps.heirarchyData?.every((item) => !mappedToList.includes(item))) {
         upload.data.features.forEach((feature) => {
           const boundaryCode = feature.properties.boundaryCode;
           let additionalDetails = {};
-          for (let i = 0; i < additionalProps.heirarchyData.length; i++) {
+          for (let i = 0; i < additionalProps.heirarchyData?.length; i++) {
             if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
-              additionalDetails[additionalProps.heirarchyData[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+              additionalDetails[additionalProps.heirarchyData?.[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
             } else {
-              additionalDetails[additionalProps.heirarchyData[i]] = "";
+              additionalDetails[additionalProps.heirarchyData?.[i]] = "";
             }
           }
           feature.properties = { ...additionalDetails, ...feature.properties };
@@ -258,8 +258,12 @@ export const updateSessionUtils = {
           let filteredBoundaries;
           if (!boundaryData) {
             // Only fetch boundary data if not present in session storage
-            boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
-            filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+            boundaryData = await fetchBoundaryData(
+              Digit.ULBService.getCurrentTenantId(),
+              additionalProps.campaignData?.hierarchyType,
+              rootBoundary?.[0]?.code
+            );
+            filteredBoundaries = filterBoundaries(boundaryData, additionalProps.campaignData?.boundaries);
 
             // Update the session storage with the new filtered boundaries
             Digit.SessionStorage.set("microplanHelperData", {
@@ -306,7 +310,7 @@ export const updateSessionUtils = {
           console.error("Schema got undefined while handling geojson at handleGeoJson");
           return [...upload, uploadObject];
         }
-        const boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schemaData)) || {};
+        const boundaryDataAgainstBoundaryCode = {};
         let fileData = {
           filestoreId,
           inputFileType,
@@ -340,7 +344,9 @@ export const updateSessionUtils = {
                     additionalProps.heirarchyData,
                     { id: inputFileType },
                     boundaryDataAgainstBoundaryCode,
-                    additionalProps.t
+                    () => {},
+                    additionalProps.t,
+                    additionalProps.campaignData
                   );
 
                   // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(

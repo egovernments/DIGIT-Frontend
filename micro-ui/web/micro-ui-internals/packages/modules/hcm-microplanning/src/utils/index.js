@@ -18,7 +18,7 @@ const formatDates = (value, type) => {
 
 // get schema for validation
 const getSchema = (campaignType, type, section, schemas) => {
-  if(!campaignType || !type || !section || !schemas) return {}
+  if (!campaignType || !type || !section || !schemas) return {};
   return schemas.find((schema) => {
     if (!schema.campaignType) {
       return schema.type === type && schema.section === section;
@@ -29,6 +29,7 @@ const getSchema = (campaignType, type, section, schemas) => {
 
 // Sorting 2 lists, The first list is a list of string and second one is list of Objects
 const sortSecondListBasedOnFirstListOrder = (firstList, secondList) => {
+  if (!firstList) return [];
   // Create a map to store the indices of elements in the first list
   const indexMap = {};
   firstList.forEach((value, index) => {
@@ -156,13 +157,13 @@ const inputScrollPrevention = (e) => {
 };
 
 // Construct api request body
-const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqType="update") => {
+const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqType = "update") => {
   let files = [],
     resourceMapping = [];
   if (data && data.upload) {
     Object.values(data?.upload).forEach((item) => {
       if (!item || item.error || !item.filestoreId) return;
-      if (reqType==="create" && !item?.active) return;
+      if (reqType === "create" && !item?.active) return;
       const data = {
         active: item?.active,
         filestoreId: item?.filestoreId,
@@ -173,14 +174,14 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       files.push(data);
     });
     Object.values(data?.upload).forEach((item) => {
-      if(reqType === "create" && item.resourceMapping &&item.resourceMapping.every((item) => item.active === false )) return
+      if (reqType === "create" && item.resourceMapping && item.resourceMapping.every((item) => item.active === false)) return;
       if (
         !item ||
         !item.resourceMapping ||
         item.error ||
         !Array.isArray(item.resourceMapping) ||
         !item.resourceMapping.every((item) => item.mappedFrom) ||
-        !item.resourceMapping.every((item) => item.mappedTo) 
+        !item.resourceMapping.every((item) => item.mappedTo)
       )
         return;
       resourceMapping.push(item?.resourceMapping);
@@ -197,15 +198,15 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       executionPlanId: campaignId,
       files,
       assumptions: data?.hypothesis?.reduce((acc, item) => {
-      if (reqType==="create" && !item?.active) return acc;
-      if (item.key && item.value) {
+        if (reqType === "create" && !item?.active) return acc;
+        if (item.key && item.value) {
           acc.push(JSON.parse(JSON.stringify(item)));
         }
         return acc;
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
-          if (reqType==="create" && !item?.active) return acc;
-          if (item.operator && item.output && item.input && item.assumptionValue) {
+        if (reqType === "create" && !item?.active) return acc;
+        if (item.operator && item.output && item.input && item.assumptionValue) {
           const data = JSON.parse(JSON.stringify(item));
           const operator = Operators.find((e) => e.name === data.operator);
           if (operator && operator.code) data.operator = operator?.code;
@@ -356,7 +357,7 @@ const addResourcesToFilteredDataToShow = (previewData, resources, hypothesisAssu
 };
 
 const calculateResource = (resourceName, rowData, formulaConfiguration, headers, hypothesisAssumptionsList, t) => {
-  let formula = formulaConfiguration?.find((item) =>item?.active && item?.output  === resourceName);
+  let formula = formulaConfiguration?.find((item) => item?.active && item?.output === resourceName);
   if (!formula) return null;
 
   // Finding Input
@@ -411,7 +412,7 @@ const fetchData = (state, campaignType) => {
 };
 const hypothesisCheck = (hypothesis, validList) => {
   if (hypothesis && Array.isArray(hypothesis) && hypothesis.length !== 0 && validList && Array.isArray(validList) && validList.length !== 0) {
-    return hypothesis.filter(item=>item.active).every((item) => validList.includes(item.key));
+    return hypothesis.filter((item) => item.active).every((item) => validList.includes(item.key));
   }
   return false;
 };
@@ -424,13 +425,13 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
     Array.isArray(ruleOuputList) &&
     ruleOuputList.length !== 0
   ) {
-    return rules.filter(item=>item.active).every((item) => ruleOuputList.includes(item.output));
+    return rules.filter((item) => item.active).every((item) => ruleOuputList.includes(item.output));
   }
   return false;
 };
 const ruleHypothesisCheck = (rules, ruleHypothesis) => {
   if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {
-    return rules.filter(item=>item.active).every((item) => ruleHypothesis.includes(item.assumptionValue));
+    return rules.filter((item) => item.active).every((item) => ruleHypothesis.includes(item.assumptionValue));
   }
   return false;
 };
@@ -451,7 +452,7 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
     ruleOutputCheck(data?.PlanConfiguration?.operations, rulesOutputs) &&
     ruleHypothesisCheck(
       data?.PlanConfiguration?.operations,
-      data?.PlanConfiguration?.assumptions?.filter(item=>item.active)?.map((item) => item.key)
+      data?.PlanConfiguration?.assumptions?.filter((item) => item.active)?.map((item) => item.key)
     ) &&
     uploadCheck(data?.PlanConfiguration?.files, uploadList);
   return checks;

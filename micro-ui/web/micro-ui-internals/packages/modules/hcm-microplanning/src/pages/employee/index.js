@@ -73,7 +73,8 @@ const App = ({ path }) => {
     { name: "MicroplanPreviewAggregates" },
     { name: "AutoFilledRuleConfigurations" },
     { name: "MapFilters" },
-    { name: "HierarchyConfigurations" }
+    { name: "HierarchyConfigurations" },
+    { name: "NumberFormatMappingForTranslation" }
   ],
   {
     select:(data) => {
@@ -89,6 +90,7 @@ const App = ({ path }) => {
   useEffect(() => {
     const pathVar = location.pathname.replace(path + "/", "").split("?")?.[0];
     Digit.Utils.microplan.destroySessionHelper(pathVar,["create-microplan"],"microplanData");
+    Digit.Utils.microplan.destroySessionHelper(pathVar,["create-microplan"],"microplanHelperData");
     Digit.Utils.microplan.destroySessionHelper(pathVar,["select-campaign"],"SELECT_CAMPAIGN_SESSION");
     Digit.Utils.microplan.destroySessionHelper(pathVar,["saved-microplans"],"SAVED_MICROPLAN_SESSION");
   }, [location])

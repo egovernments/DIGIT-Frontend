@@ -8,6 +8,7 @@ import { Button, LoaderWithGap, Modal } from "@egovernments/digit-ui-react-compo
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { timeLineOptions } from "../configs/timeLineOptions.json";
+import { useNumberFormatter } from "../hooks/useNumberFormatter";
 
 const page = "microplanPreview";
 
@@ -312,7 +313,12 @@ const MicroplanPreview = ({
             />
           </div>
         </div>
-        <Aggregates microplanPreviewAggregates={microplanPreviewAggregates} dataToShow={dataToShow} t={t} />
+        <Aggregates
+          microplanPreviewAggregates={microplanPreviewAggregates}
+          dataToShow={dataToShow}
+          NumberFormatMappingForTranslation={state?.NumberFormatMappingForTranslation}
+          t={t}
+        />
         <div className="microplan-preview-body">
           <div className="hypothesis-container">
             <p className="hypothesis-heading">{t("MICROPLAN_PREVIEW_HYPOTHESIS_HEADING")}</p>
@@ -399,6 +405,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
     <div className="hypothesis-list-wrapper">
       <div className="hypothesis-list">
         {tempHypothesisList
+          .filter((item) => item?.active)
           ?.filter((item) => item.key !== "")
           .map((item, index) => (
             <div key={"hyopthesis_" + index} className="hypothesis-list-entity">
@@ -458,6 +465,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
             t={t}
             options={item?.dropDownOptions || []}
             optionsKey="name"
+            addSelectAllCheck={true}
             onSelect={(e) =>
               Digit.Utils.microplan.handleSelection(
                 e,
@@ -560,43 +568,45 @@ const DataPreview = memo(
           </table>
         </div>
         {modal === "change-preview-data" && (
-          <Modal
-            popupStyles={{ width: "80%", maxHeight: "37.938rem", borderRadius: "0.25rem" }}
-            popupModuleActionBarStyles={{
-              display: "flex",
-              flex: 1,
-              justifyContent: "flex-end",
-              width: "100%",
-              padding: "1rem",
-            }}
-            style={{
-              backgroundColor: "white",
-              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              marginTop: "0.5rem",
-              marginBottom: "0.5rem",
-              marginRight: "1.4rem",
-              height: "2.5rem",
-              width: "12.5rem",
-            }}
-            headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
-            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("EDIT_ROW", { rowNumber: selectedRow })} />}
-            headerBarEnd={<CloseButton clickHandler={modalCloseHandler} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
-            actionCancelLabel={t("CANCLE")}
-            actionCancelOnSubmit={modalCloseHandler}
-            actionSaveLabel={t("SAVE_CHANGES")}
-            actionSaveOnSubmit={finaliseRowDataChange}
-            formId="modal-action"
-          >
-            <EditResourceData
-              selectedRow={selectedRow}
-              previewData={previewData}
-              resources={resources}
-              tempResourceChanges={tempResourceChanges}
-              setTempResourceChanges={setTempResourceChanges}
-              data={data}
-              t={t}
-            />
-          </Modal>
+          <div className="popup-wrap-focus">
+            <Modal
+              popupStyles={{ width: "80%", maxHeight: "37.938rem", borderRadius: "0.25rem" }}
+              popupModuleActionBarStyles={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "flex-end",
+                width: "100%",
+                padding: "1rem",
+              }}
+              style={{
+                backgroundColor: "white",
+                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+                marginTop: "0.5rem",
+                marginBottom: "0.5rem",
+                marginRight: "1.4rem",
+                height: "2.5rem",
+                width: "12.5rem",
+              }}
+              headerBarMainStyle={{ padding: "0 0 0 0.5rem" }}
+              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("EDIT_ROW", { rowNumber: selectedRow })} />}
+              headerBarEnd={<CloseButton clickHandler={modalCloseHandler} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              actionCancelLabel={t("CANCLE")}
+              actionCancelOnSubmit={modalCloseHandler}
+              actionSaveLabel={t("SAVE_CHANGES")}
+              actionSaveOnSubmit={finaliseRowDataChange}
+              formId="modal-action"
+            >
+              <EditResourceData
+                selectedRow={selectedRow}
+                previewData={previewData}
+                resources={resources}
+                tempResourceChanges={tempResourceChanges}
+                setTempResourceChanges={setTempResourceChanges}
+                data={data}
+                t={t}
+              />
+            </Modal>
+          </div>
         )}
       </div>
     );
@@ -663,111 +673,92 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   return [...new Set(finalData)];
 };
 
-const innerJoinLists = (firstList, secondList, commonColumn, listOfColumnsNeededInFinalData) => {
-  // Check if commonColumn and listOfColumnsNeededInFinalData are provided
-  if (!commonColumn || !listOfColumnsNeededInFinalData) {
-    return;
+/**
+ * Combines two datasets based on a common column, duplicating rows from data1 for each matching row in data2.
+ * The final dataset's columns and their order are determined by listOfColumnsNeededInFinalData.
+ * If data2 is not provided, rows from data1 are included with null values for missing columns.
+ */
+const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFinalData) => {
+  // Error handling: Check if data1 array is provided
+  if (!Array.isArray(data1)) {
+    throw new Error("The first data input must be an array.");
   }
 
-  // Check if both lists are absent
-  if ((!firstList || firstList.length === 0) && (!secondList || secondList.length === 0)) {
-    return;
+  // Error handling: Check if common column name is provided
+  if (typeof commonColumnName !== "string") {
+    throw new Error("Common column name must be a string.");
   }
 
-  // Initialize the joined headers with the common column
-  const joinedHeaders = [];
-  // const joinedHeaders = [commonColumn];
-
-  // Add other columns needed in the final data if they exist in either list
-  listOfColumnsNeededInFinalData.forEach((column) => {
-    if (firstList && firstList[0]) {
-      if (firstList[0].includes(column)) {
-        joinedHeaders.push(column);
-      }
-    }
-    if (secondList && secondList[0]) {
-      if (secondList[0].includes(column) && !joinedHeaders.includes(column)) {
-        joinedHeaders.push(column);
-      }
-    }
-  });
-
-  // Initialize the joined list with the headers
-  const joinedList = [joinedHeaders];
-
-  // Create a mapping of column names to their indices in firstList
-  const firstListIndices = firstList && firstList[0] ? new Map(firstList[0].map((header, index) => [header, index])) : null;
-  // Create a mapping of column names to their indices in secondList
-  const secondListIndices = secondList && secondList[0] ? new Map(secondList[0].map((header, index) => [header, index])) : null;
-
-  // Find the index of the common column in firstList and secondList
-  const firstListCommonIndex = firstListIndices ? firstListIndices.get(commonColumn) : null;
-  const secondListCommonIndex = secondListIndices ? secondListIndices.get(commonColumn) : null;
-
-  // Perform the join operation based on the available lists
-  if (firstList && firstList.length > 0 && secondList && secondList.length > 0) {
-    // Iterate through the rows in firstList
-    for (let i = 1; i < firstList.length; i++) {
-      // Initialize an array to store the values for the joined row
-      const joinedRow = [];
-      // const joinedRow = [firstList[i][firstListCommonIndex]];
-      // Iterate through the columns in the joined headers (excluding the common column)
-      for (let j = 0; j < joinedHeaders.length; j++) {
-        const columnName = joinedHeaders[j];
-        const firstListIndex = firstListIndices.get(columnName);
-        const secondListIndex = secondListIndices.get(columnName);
-        let value;
-        if (firstListIndex !== undefined) {
-          // If the column is present in firstList
-          value = firstList?.[i]?.[firstListIndex];
-        } else if (secondListIndex !== undefined) {
-          // If the column is present in secondList but not in firstList
-          value = secondList?.[i]?.[secondListIndex];
-        }
-        // Push the value to the joined row
-        joinedRow.push(value);
-      }
-      // Push the joined row to the joined list
-      joinedList.push(joinedRow);
-    }
-  } else if (firstList && firstList.length > 0) {
-    // If only firstList is provided
-    firstList.forEach((row, rowIndex) => {
-      if (rowIndex !== 0) {
-        // const joinedRow = [row[firstListCommonIndex]];
-        const joinedRow = [];
-        for (let j = 0; j < joinedHeaders.length; j++) {
-          const columnName = joinedHeaders[j];
-          const firstListIndex = firstListIndices.get(columnName);
-          let value;
-          if (firstListIndex !== undefined) {
-            value = row[firstListIndex];
-          }
-          joinedRow.push(value);
-        }
-        joinedList.push(joinedRow);
-      }
-    });
-  } else if (secondList && secondList.length > 0) {
-    // If only secondList is provided
-    secondList.forEach((row, rowIndex) => {
-      if (rowIndex !== 0) {
-        const joinedRow = [];
-        for (let j = 0; j < joinedHeaders.length; j++) {
-          const columnName = joinedHeaders[j];
-          const secondListIndex = secondListIndices.get(columnName);
-          let value;
-          if (secondListIndex !== undefined) {
-            value = row[secondListIndex];
-          }
-          joinedRow.push(value);
-        }
-        joinedList.push(joinedRow);
-      }
-    });
+  // Error handling: Check if listOfColumnsNeededInFinalData is provided and is an array
+  if (!Array.isArray(listOfColumnsNeededInFinalData)) {
+    throw new Error("listOfColumnsNeededInFinalData must be an array.");
   }
 
-  return joinedList;
+  // Find the index of the common column in the first dataset
+  const commonColumnIndex1 = data1[0].indexOf(commonColumnName);
+
+  // Error handling: Check if common column exists in the first dataset
+  if (commonColumnIndex1 === -1) {
+    throw new Error(`Common column "${commonColumnName}" not found in the first dataset.`);
+  }
+
+  let commonColumnIndex2 = -1;
+  const data2Map = new Map();
+  if (data2) {
+    // Find the index of the common column in the second dataset
+    commonColumnIndex2 = data2[0].indexOf(commonColumnName);
+
+    // Error handling: Check if common column exists in the second dataset
+    if (commonColumnIndex2 === -1) {
+      throw new Error(`Common column "${commonColumnName}" not found in the second dataset.`);
+    }
+
+    // Create a map for the second dataset for quick lookup by the common column value
+    for (let i = 1; i < data2.length; i++) {
+      const row = data2[i];
+      const commonValue = row[commonColumnIndex2];
+      if (!data2Map.has(commonValue)) {
+        data2Map.set(commonValue, []);
+      }
+      data2Map.get(commonValue).push(row);
+    }
+  }
+
+  // Determine the headers for the final combined dataset based on listOfColumnsNeededInFinalData
+  const combinedHeaders = listOfColumnsNeededInFinalData.filter((header) => data1[0].includes(header) || (data2 && data2[0].includes(header)));
+
+  // Combine rows
+  const combinedData = [combinedHeaders];
+  for (let i = 1; i < data1.length; i++) {
+    const row1 = data1[i];
+    const commonValue = row1[commonColumnIndex1];
+    const rows2 = data2 ? data2Map.get(commonValue) || [[null]] : [[null]]; // Handle missing common values with a placeholder array of null
+
+    // Check if rows2 is the placeholder array
+    const isPlaceholderArray = rows2.length === 1 && rows2[0].every((value) => value === null);
+
+    // Create combined rows for each row in data2
+    if (isPlaceholderArray) {
+      // If no corresponding row found in data2, use row from data1 with null values for missing columns
+      const combinedRow = combinedHeaders.map((header) => {
+        const index1 = data1[0].indexOf(header);
+        return index1 !== -1 ? row1[index1] : null;
+      });
+      combinedData.push(combinedRow);
+    } else {
+      // If corresponding rows found in data2, combine each row from data2 with row from data1
+      rows2.forEach((row2) => {
+        const combinedRow = combinedHeaders.map((header) => {
+          const index1 = data1[0].indexOf(header);
+          const index2 = data2 ? data2[0].indexOf(header) : -1;
+          return index1 !== -1 ? row1[index1] : index2 !== -1 ? row2[index2] : null;
+        });
+        combinedData.push(combinedRow);
+      });
+    }
+  }
+
+  return combinedData;
 };
 
 // function to filter the microplan data with respect to the hierarchy selected by the user
@@ -940,27 +931,40 @@ const updateHyothesisAPICall = async (
   }
 };
 
-const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
-  //Decide columns to take and their sequence
-  const getfilteredSchemaColumnsList = () => {
-    let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-    if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
-    return filteredSchemaColumns;
-  };
-  let filteredSchemaColumns = getfilteredSchemaColumnsList();
-  const fetchedData = fetchMicroplanData(microplanData);
-  // Perform inner joins using reduce
-  const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
-    if (index === 0) {
-      return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
-    } else {
-      return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
-    }
-  }, null);
-  return dataAfterJoins;
+// get schema for validation
+const getSchema = (campaignType, type, section, schemas) => {
+  return schemas.find((schema) =>
+    schema.campaignType
+      ? schema.campaignType === campaignType && schema.type === type && schema.section === section
+      : schema.type === type && schema.section === section
+  );
 };
 
-const fetchMicroplanData = (microplanData) => {
+const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
+  try {
+    //Decide columns to take and their sequence
+    const getfilteredSchemaColumnsList = () => {
+      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+      if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
+      return filteredSchemaColumns;
+    };
+    let filteredSchemaColumns = getfilteredSchemaColumnsList();
+    const fetchedData = fetchMicroplanData(microplanData, campaignType, validationSchemas);
+    // Perform inner joins using reduce
+    const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
+      if (index === 0) {
+        return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
+      } else {
+        return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
+      }
+    }, null);
+    return dataAfterJoins;
+  } catch (error) {
+    console.log("Error in fetch microplan data: ", error.message);
+  }
+};
+
+const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
   if (!microplanData) return [];
 
   let combinesDataList = [];
@@ -970,8 +974,10 @@ const fetchMicroplanData = (microplanData) => {
     let files = microplanData?.upload;
     // Loop through each file in the microplan upload
     for (let fileData of files) {
+      const schema = getSchema(campaignType, fileData.fileType, fileData.templateIdentifier, validationSchemas);
+
       // Check if the file is not part of boundary or layer data origins
-      if (!fileData.fileType || !fileData?.section) continue; // Skip files with errors or missing properties
+      if (!fileData.active || !fileData.fileType || !fileData?.section) continue; // Skip files with errors or missing properties
 
       // Check if file contains latitude and longitude columns
       if (fileData?.data) {
@@ -979,12 +985,17 @@ const fetchMicroplanData = (microplanData) => {
         switch (fileData?.fileType) {
           case EXCEL: {
             // extract dada
-            const mergedData = Object.values(fileData?.data).flatMap((data) => data);
+            const mergedData = schema?.template?.hierarchyLevelWiseSheets
+              ? Object.values(fileData?.data).flatMap((data) => data)
+              : Object.values(fileData?.data)?.[0];
+
             let commonColumnIndex = mergedData?.[0]?.indexOf(commonColumn);
 
             let uniqueEntries;
             if (commonColumnIndex !== undefined)
-              uniqueEntries = Array.from(new Map(mergedData.map((entry) => [entry[commonColumnIndex], entry])).values());
+              uniqueEntries = schema?.template?.hierarchyLevelWiseSheets
+                ? Array.from(new Map(mergedData.map((entry) => [entry[commonColumnIndex], entry])).values())
+                : mergedData;
             if (uniqueEntries) combinesDataList.push(uniqueEntries);
             break;
           }
@@ -1100,16 +1111,21 @@ const EditResourceData = ({ previewData, selectedRow, resources, tempResourceCha
   );
 };
 
-const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, t }) => {
+const Aggregates = memo(({ microplanPreviewAggregates, dataToShow, NumberFormatMappingForTranslation, t }) => {
+  const { formatNumber } = useNumberFormatter(NumberFormatMappingForTranslation?.reduce((acc, obj) => Object.assign(acc, obj), {}));
+
   if (!microplanPreviewAggregates) return null;
   return (
     <div className="aggregates">
-      {microplanPreviewAggregates.map((item, index) => (
-        <div key={index}>
-          <p className="aggregate-value">{calculateAggregateValue(item, dataToShow)}</p>
-          <p className="aggregate-label">{typeof item === "object" && item.name ? t(item.name) : t(item)}</p>
-        </div>
-      ))}
+      {microplanPreviewAggregates.map((item, index) => {
+        const aggregate = calculateAggregateValue(item, dataToShow);
+        return (
+          <div key={index}>
+            <p className="aggregate-value">{isNaN(parseInt(aggregate)) ? 0 : formatNumber(parseInt(aggregate))}</p>
+            <p className="aggregate-label">{typeof item === "object" && item.name ? t(item.name) : t(item)}</p>
+          </div>
+        );
+      })}
     </div>
   );
 });
@@ -1126,7 +1142,7 @@ const calculateAggregateValue = (aggregateName, dataToShow) => {
         if (e?.[columnIndex]) aggregateData = aggregateData + Number(e[columnIndex]);
       });
     }
-  return aggregateData.toLocaleString();
+  return aggregateData;
 };
 
 export default MicroplanPreview;

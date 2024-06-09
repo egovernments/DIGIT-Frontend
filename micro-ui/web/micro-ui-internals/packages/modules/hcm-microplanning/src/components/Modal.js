@@ -30,7 +30,7 @@ const Modal = ({
   /**
    * TODO: It needs to be done from the desgin changes
    */
-  const mobileView = Digit.Utils.browser.isMobile() ? true : false;
+  const mobileView = Digit.Utils.browser.isMobile();
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -82,7 +82,6 @@ const moduleActionBarStyle = (isOBPSFlow, popupModuleActionBarStyles) => {
     : popupModuleActionBarStyles;
 };
 
-
 // Wrapper for modal
 export const ModalWrapper = ({
   closeModal,
@@ -97,13 +96,22 @@ export const ModalWrapper = ({
   headerBarMainStyle,
   popupModuleActionBarStyles,
   hideSubmit,
-  closeButton=false,
-  actionCancelLabel
+  closeButton = false,
+  actionCancelLabel,
 }) => {
   return (
     <Modal
       headerBarMain={header}
-      headerBarEnd={closeButton?<div className="microplan-close-button" onClick={closeModal}> <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"}/></div>:""}
+      headerBarEnd={
+        closeButton ? (
+          <button type="button" className="microplan-close-button" onClick={closeModal}>
+            {" "}
+            <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
+          </button>
+        ) : (
+          ""
+        )
+      }
       actionCancelOnSubmit={LeftButtonHandler}
       actionSaveOnSubmit={RightButtonHandler}
       formId="microplanning"

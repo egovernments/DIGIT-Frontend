@@ -69,6 +69,7 @@ export const processHierarchyAndData = (hierarchy, allData) => {
       }
     });
   } catch (error) {
+    console.error("Error in processing hierarchy and uploaded data: ", error.message);
     // Return empty objects in case of error
     return { hierarchyLists: {}, hierarchicalData: {} };
   }

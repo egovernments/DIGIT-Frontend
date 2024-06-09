@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalHeading } from "./CommonComponents";
 import { Modal } from "@egovernments/digit-ui-react-components";
-import { Dropdown } from "@egovernments/digit-ui-components";
+import { Dropdown, InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -36,6 +36,7 @@ const RuleEngine = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
+  const [toast, setToast] = useState();
 
   // Set TourSteps
   useEffect(() => {
@@ -125,7 +126,7 @@ const RuleEngine = ({
     let AutoFilledRuleConfigurationsList = state?.AutoFilledRuleConfigurations;
     AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurationsList.find((item) => item.campaignType === campaignType)?.data;
     microplanData?.ruleEngine?.forEach((item) => {
-      if (Object.values(item).every((e) => e != "")) ruleConfigureInputs.push(item?.output);
+      if (Object.values(item).every((e) => e !== "")) ruleConfigureInputs.push(item?.output);
     });
     if (schemas) setValidationSchemas(schemas);
 
@@ -133,11 +134,11 @@ const RuleEngine = ({
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
-    if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
-        data = data.filter((e) => e !== item?.output);
+        if (item.active) data = data.filter((e) => e !== item?.output);
       });
       outputs = data;
       setOutputs(data);
@@ -151,19 +152,43 @@ const RuleEngine = ({
       operator = temp;
       setOperators(temp);
     }
-    if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
-
+    // if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
     let filteredRules = [];
-    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
+    let response;
+    if (microplanData?.ruleEngine && microplanData?.hypothesis) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.active && item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
-        filteredRules = setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
+        response = filterRulesAsPerConstrains(
+          microplanData.ruleEngine,
+          [],
+          hypothesisAssumptions,
+          [
+            ...outputs,
+            ...microplanData?.ruleEngine?.reduce((acc, item) => {
+              if (item?.active && item?.output) acc.push(item?.output);
+              return acc;
+            }, []),
+          ],
+          operator,
+          getRuleConfigInputsFromSchema(campaignType, microplanData, schemas),
+          setInputs,
+          setOutputs,
+          false
+        );
+        filteredRules = response?.rules;
+
+        // setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
       }
     }
+    if (response?.rulesDeleted)
+      setToast({
+        state: "warning",
+        message: t("WARNING_RULES_DELETED_DUE_TO_PRIOR_SECTION_DATA_CHANGES"),
+      });
     if (!AutoFilledRuleConfigurationsList || !outputs || !hypothesisAssumptions || !schemas) return;
 
-    filteredRules = setAutoFillRules(
+    response = filterRulesAsPerConstrains(
       AutoFilledRuleConfigurationsList,
       filteredRules,
       hypothesisAssumptions,
@@ -171,9 +196,10 @@ const RuleEngine = ({
       operator,
       getRuleConfigInputsFromSchema(campaignType, microplanData, schemas),
       setInputs,
-      setOutputs
+      setOutputs,
+      true
     );
-    if (filteredRules) setRules(filteredRules);
+    if (response?.rules) setRules(response?.rules);
   }, []);
 
   const closeModal = useCallback(() => {
@@ -212,45 +238,48 @@ const RuleEngine = ({
             t={t}
           />
           <div className="add-button-help" />
-          <button className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
+          <button type="button" className="add-button" onClick={() => addRulesHandler(setRules)} aria-label="Add Rules" role="button">
             <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
             <p>{t("ADD_ROW")}</p>
           </button>
         </div>
         <RuleEngineInformation t={t} />
-        {/* delete conformation */}
-        {modal === "delete-conformation" && (
-          <Modal
-            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-            popupModuleActionBarStyles={{
-              display: "flex",
-              flex: 1,
-              justifyContent: "flex-start",
-              padding: 0,
-              width: "100%",
-              padding: "1rem",
-            }}
-            popupModuleMianStyles={{ padding: 0, margin: 0 }}
-            style={{
-              flex: 1,
-              backgroundColor: "white",
-              height: "2.5rem",
-              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-            }}
-            headerBarMainStyle={{ padding: 0, margin: 0 }}
-            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-            actionCancelLabel={t("YES")}
-            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-            actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={closeModal}
-          >
-            <div className="modal-body">
-              <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
-            </div>
-          </Modal>
+        {toast && toast.state === "warning" && (
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
         )}
-      </div>
-      {/* // uncomment to activate data change save check
+        {/* delete conformation */}
+        <div className="popup-wrap-focus">
+          {modal === "delete-conformation" && (
+            <Modal
+              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+              popupModuleActionBarStyles={{
+                display: "flex",
+                flex: 1,
+                justifyContent: "flex-start",
+                width: "100%",
+                padding: "1rem",
+              }}
+              popupModuleMianStyles={{ padding: 0, margin: 0 }}
+              style={{
+                flex: 1,
+                backgroundColor: "white",
+                height: "2.5rem",
+                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+              }}
+              headerBarMainStyle={{ padding: 0, margin: 0 }}
+              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+              actionCancelLabel={t("YES")}
+              actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+              actionSaveLabel={t("NO")}
+              actionSaveOnSubmit={closeModal}
+            >
+              <div className="modal-body">
+                <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+              </div>
+            </Modal>
+          )}
+        </div>
+        {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
           popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
@@ -281,21 +310,18 @@ const RuleEngine = ({
           </div>
         </Modal>
       )} */}
+      </div>
     </>
   );
 };
 
 const RuleEngineInformation = ({ t }) => {
   return (
-    <div className="information">
-      <div className="information-heading">
-        <Info fill={"rgba(52, 152, 219, 1)"} />
-        <p>{t("INFO")}</p>
-      </div>
-      <div className="information-description">
-        <p>{t("RULE_ENGINE_INFORMATION_DESCRIPTION")}</p>
-      </div>
-    </div>
+    <InfoCard
+      text={t("RULE_ENGINE_INFORMATION_DESCRIPTION")}
+      className={"information-description"}
+      style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
+    />
   );
 };
 
@@ -745,14 +771,16 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 };
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
-const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs) => {
-  if (rules && rules.filter((item) => item.active).length !== 0) return rules;
+const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autfill) => {
+  if (rules && rules.filter((item) => item.active).length !== 0) return { rules };
+  let wereRulesNotDeleted = true;
   let newRules = [];
   const ruleOuputList = rules ? rules.filter((item) => item.active).map((item) => item?.output) : [];
   let rulePlusInputs;
   if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
   else rulePlusInputs = inputs;
   for (const item of autofillData) {
+    let active = !(item && item.active === false);
     if (
       ruleOuputList?.includes(item?.output) ||
       (outputs && !outputs.includes(item?.output)) ||
@@ -763,16 +791,25 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
       !rulePlusInputs ||
       !operators ||
       !hypothesisAssumptionsList
-    )
-      continue;
+    ) {
+      if (autfill) continue;
+      else {
+        if (active) {
+          wereRulesNotDeleted = false;
+          active = false;
+        }
+      }
+    }
     if (!item["id"]) {
       let uuid = uuidv4();
       item["id"] = uuid;
     }
-    item.active = true;
+    item.active = active;
     newRules.push(item);
-    rulePlusInputs?.push(item?.output);
-    ruleOuputList?.push(item?.output);
+    if (active) {
+      rulePlusInputs?.push(item?.output);
+      ruleOuputList?.push(item?.output);
+    }
   }
   if (newRules.length !== 0) {
     let newOutputs = [];
@@ -784,31 +821,9 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
     setOutputs(newOutputs);
     setInputs(rulePlusInputs);
     // setRules((previous) => [...previous, ...newRules]);
-    return [...(rules ? rules : []), ...newRules];
   }
+
+  return { rules: [...(rules ? rules : []), ...newRules], rulesDeleted: !autfill && !wereRulesNotDeleted };
 };
 
-const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
-  if (rules && rules.length === 0) return [];
-  let newRules = [];
-  let outputs = [];
-  rules.forEach((item, index) => {
-    if (item.active && !hypothesisAssumptions?.includes(item?.assumptionValue)) {
-      item.active = false;
-    }
-    if (!item["id"]) {
-      let uuid = uuidv4();
-      item["id"] = uuid;
-    }
-    newRules.push(item);
-    outputs.push(item.output);
-  });
-  // let filteredRules = [];
-  // newRules.forEach((item) => {
-  //   // if (!outputs?.includes(item?.input)) return;
-  //   item["id"] = newRules.length;
-  //   filteredRules.push(item);
-  // });
-  return newRules || [];
-};
 export default RuleEngine;

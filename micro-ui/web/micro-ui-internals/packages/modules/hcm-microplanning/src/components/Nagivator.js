@@ -19,6 +19,7 @@ const Navigator = memo((props) => {
   const [currentPage, setCurrentPage] = useState();
   const [toast, setToast] = useState();
   const [navigationEvent, setNavigationEvent] = useState();
+  const [activeSteps, setActiveSteps] = useState(Digit.SessionStorage.get("microplanHelperData")?.activeSteps || -1);
   /**
    * checkDataCompletion
    * "true": check for data completeness
@@ -58,7 +59,10 @@ const Navigator = memo((props) => {
   // Effect to handle navigation events and transition between steps
   useEffect(() => {
     // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
-    if (checkDataCompletion === "valid" && ((navigationEvent.step && currentPage.id + 1 === navigationEvent.step || currentPage.id > navigationEvent.step) || !navigationEvent.step)) {
+    if (
+      checkDataCompletion === "valid" &&
+      ((navigationEvent.step && currentPage.id + 1 === navigationEvent.step) || currentPage.id > navigationEvent.step || !navigationEvent.step)
+    ) {
       if (typeof props.nextEventAddon === "function") {
         if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
           props.nextEventAddon(currentPage, checkDataCompletion, setCheckDataCompletion);
@@ -123,10 +127,10 @@ const Navigator = memo((props) => {
         LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null) ||
       currentPage?.id === props.config[props.config.length - 1].id
     ) {
-      setCheckDataCompletion("true");
       setNavigationEvent({ name: "previousStep" });
+      setCheckDataCompletion("true");
     } else previousStep();
-  }, [props.checkDataCompleteness, previousStep]);
+  }, [props.checkDataCompleteness, previousStep, setNavigationEvent]);
 
   // Function to handle next button click
   const nextbuttonClickHandler = useCallback(() => {
@@ -138,7 +142,7 @@ const Navigator = memo((props) => {
       setCheckDataCompletion("true");
       setNavigationEvent({ name: "next" });
     } else nextStep();
-  }, [props.checkDataCompleteness, nextStep]);
+  }, [props.checkDataCompleteness, nextStep, setNavigationEvent]);
 
   // Function to handle step click
   const stepClickHandler = useCallback(
@@ -172,6 +176,14 @@ const Navigator = memo((props) => {
     setCheckDataCompletion("true");
   };
 
+  // changing active state
+  useEffect(() => {
+    if (currentPage?.id > activeSteps) {
+      setActiveSteps(currentPage?.id);
+      Digit.SessionStorage.set("microplanHelperData", { ...(Digit.SessionStorage.get("microplanHelperData") || {}), activeSteps: currentPage?.id });
+    }
+  }, [currentPage]);
+
   return (
     <div className="create-microplan">
       {/* Stepper component */}
@@ -180,6 +192,7 @@ const Navigator = memo((props) => {
         currentStep={currentPage?.id + 1}
         customSteps={props.config.map((item) => t(item.name))}
         direction="horizontal"
+        activeSteps={activeSteps >= 0 ? activeSteps + 1 : null}
         onStepClick={stepClickHandler}
       />
 
@@ -218,10 +231,9 @@ const Navigator = memo((props) => {
         {/* Next/Submit button */}
         <Button
           type="button"
-          className="custom-button"
+          className="custom-button custom-button-right-icon"
           label={currentPage?.id < props.config.length - 1 ? t("NEXT") : t("GENERATE_MICROPLAN")}
           onButtonClick={currentPage?.id < props.config.length - 1 ? nextbuttonClickHandler : completeNavigation}
-          isSuffix={true}
           variation={"primary"}
           textStyles={{ padding: 0, margin: 0 }}
         >
@@ -230,7 +242,7 @@ const Navigator = memo((props) => {
       </ActionBar>
 
       {/* Toast notification */}
-      {toast && <Toast label={toast} type="error" onClose={() => setToast(undefined)} />}
+      {toast && <Toast label={toast} type="error" transitionTime={10000} onClose={() => setToast(undefined)} />}
     </div>
   );
 });

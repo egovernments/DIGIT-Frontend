@@ -210,7 +210,7 @@ const Mapping = ({
   const init = (id, defaultBaseMap, Boundary) => {
     if (map !== null) return;
 
-    let bounds;
+    let bounds = findBounds(Boundary);
 
     let mapConfig = {
       center: [0, 0],
@@ -222,14 +222,14 @@ const Mapping = ({
 
     let map_i = L.map(id, mapConfig);
     var verticalBounds = L.latLngBounds(L.latLng(-90, -180), L.latLng(85, 180));
-    map_i.on("drag", function () {
+    map_i.on("drag", () => {
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
-    map_i.on("zoom", function () {
+    map_i.on("zoom", () => {
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
-
+    if (bounds) map_i.fitBounds(bounds);
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
@@ -286,7 +286,7 @@ const Mapping = ({
     if (choroplethProperty) {
       if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
         setToast({
-          state: "error",
+          state: "warning",
           message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
         });
       }
@@ -339,6 +339,21 @@ const Mapping = ({
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
   Digit?.Hooks.useClickOutside(showFilterOptionRef, handleOutsideClickAndSubmitSimultaneously, showFilterOptions, { capture: true });
   Digit?.Hooks.useClickOutside(showChoroplethOptionRef, handleOutsideClickAndSubmitSimultaneously, showChoroplethOptions, { capture: true });
+
+  // function to stop mouse event propogation from custom comopents to leaflet map
+  const handleMouseDownAndScroll = (event) => {
+    event?.stopPropagation();
+    disableMapInteractions(map);
+  };
+
+  const handleMouseUpAndScroll = (event) => {
+    enableMapInteractions(map);
+  };
+  useEffect(() => {
+    if (isboundarySelectionSelected || showBaseMapSelector || showFilterOptions || showChoroplethOptions) handleMouseDownAndScroll();
+    else handleMouseUpAndScroll();
+  }, [isboundarySelectionSelected, showBaseMapSelector, showFilterOptions, showChoroplethOptions]);
+
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -356,8 +371,13 @@ const Mapping = ({
             setIsboundarySelectionSelected={setIsboundarySelectionSelected}
             t={t}
           />
-          <div ref={(node) => (_mapNode = node)} className="map" id="map">
-            <div className="top-right-map-subcomponents">
+          <div ref={set__mapNode} className="map" id="map">
+            <div
+              className="top-right-map-subcomponents"
+              onScroll={handleMouseDownAndScroll}
+              onMouseDown={handleMouseDownAndScroll}
+              onMouseUp={handleMouseUpAndScroll}
+            >
               <div className="icon-first">
                 <BaseMapSwitcher
                   baseMaps={baseMaps}
@@ -391,7 +411,7 @@ const Mapping = ({
               />
             </div>
 
-            <div className="bottom-left-map-subcomponents">
+            <div className="bottom-left-map-subcomponents" onMouseDown={handleMouseDownAndScroll} onMouseUp={handleMouseUpAndScroll}>
               <ZoomControl map={map} t={t} />
               <div className="north-arrow">
                 {DigitSvgs.NorthArrow && <DigitSvgs.NorthArrow width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
@@ -399,11 +419,11 @@ const Mapping = ({
               <CustomScaleControl map={map} />
             </div>
 
-            <div className="bottom-right-map-subcomponents">
+            <div className="bottom-right-map-subcomponents" onMouseDown={handleMouseDownAndScroll} onMouseUp={handleMouseUpAndScroll}>
               {filterSelections && filterSelections.length > 0 && (
                 <MapFilterIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
               )}
-              {choroplethProperty && <MapChoroplethIndex t={t} />}
+              {choroplethProperty && <MapChoroplethIndex t={t} choroplethProperty={choroplethProperty} />}
             </div>
           </div>
         </Card>
@@ -438,7 +458,7 @@ const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
 };
 
 // Function to create the gradient from the colors array for choropleth index
-const MapChoroplethIndex = ({ t }) => {
+const MapChoroplethIndex = ({ t, choroplethProperty }) => {
   const createGradientString = (colors) => {
     return colors.map((color) => `${color.color} ${color.percent}%`).join(", ");
   };
@@ -452,10 +472,10 @@ const MapChoroplethIndex = ({ t }) => {
     <div className="choropleth-index">
       <div className="gradient-wrapper">
         <p>0%</p>
-        <div className="gradient" style={gradientStyle}></div>
+        <div className="gradient" style={gradientStyle} />
         <p>100%</p>
       </div>
-      <p className="label">{t("CHOROPLETH_INDEX_COVERAGE")}</p>
+      <p className="label">{t(choroplethProperty)}</p>
     </div>
   );
 };
@@ -497,7 +517,12 @@ const ChoroplethSelection = memo(
       <div className="choropleth-section" ref={showChoroplethOptionRef}>
         <div className="icon-rest virtualization-icon">
           <p onClick={() => setShowChoroplethOptions((previous) => !previous)}>{t("VISUALIZATIONS")}</p>
-          <div className="icon" onClick={() => setShowChoroplethOptions((previous) => !previous)} onKeyUp={() => setShowChoroplethOptions((previous) => !previous)} tabIndex={0}>
+          <div
+            className="icon"
+            onClick={() => setShowChoroplethOptions((previous) => !previous)}
+            onKeyUp={() => setShowChoroplethOptions((previous) => !previous)}
+            tabIndex={0}
+          >
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
           </div>
         </div>
@@ -602,7 +627,7 @@ const BoundarySelection = memo(
     const itemRefs = useRef([]);
     const [expandedIndex, setExpandedIndex] = useState(null);
     const scrollContainerRef = useRef(null);
-    
+
     useEffect(() => {
       // Scroll to the expanded item's child element after the state has updated and the DOM has re-rendered
       if (expandedIndex !== null && itemRefs.current[expandedIndex]) {
@@ -616,24 +641,24 @@ const BoundarySelection = memo(
             const scrollContainer = scrollContainerRef.current;
             const childElementBound = childElement.getBoundingClientRect();
             const containerRect = scrollContainer.getBoundingClientRect();
-            
+
             // Calculate the offset from the top of the container
             const offset = childElementBound.top - containerRect.top;
-            
+
             // Scroll the container
             scrollContainer.scrollTo({
               top: scrollContainer.scrollTop + offset - 10,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
           }
         }, 0);
       }
     }, [expandedIndex]);
-    
+
     const toggleExpand = (index) => {
       setExpandedIndex(index === expandedIndex ? null : index);
     };
-    
+
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
@@ -675,9 +700,20 @@ const BoundarySelection = memo(
             <CardSectionHeader>{t("SELECT_A_BOUNDARY")}</CardSectionHeader>
             <InfoIconOutline width="1.8rem" fill="rgba(11, 12, 12, 1)" />
           </div>
-          <div className="hierarchy-selection-container" style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}} ref={scrollContainerRef}>
+          <div
+            className="hierarchy-selection-container"
+            style={checkTruthyKeys(boundarySelections) ? { maxHeight: "20rem" } : {}}
+            ref={scrollContainerRef}
+          >
             {processedHierarchy?.map((item, index) => (
-              <div key={index} className="hierarchy-selection-element" ref={el => { itemRefs.current[index] = el; }} onClick={()=>toggleExpand(index)}>
+              <div
+                key={index}
+                className="hierarchy-selection-element"
+                ref={(el) => {
+                  itemRefs.current[index] = el;
+                }}
+                onClick={() => toggleExpand(index)}
+              >
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
                 <MultiSelectDropdown
                   selected={boundarySelections?.[item?.boundaryType]}
@@ -686,8 +722,8 @@ const BoundarySelection = memo(
                   type={"multiselectdropdown"}
                   t={t}
                   options={item?.dropDownOptions || []}
-                  optionsKey="name" 
-                  onSelect={(e) =>                    
+                  optionsKey="name"
+                  onSelect={(e) =>
                     Digit.Utils.microplan.handleSelection(
                       e,
                       item?.boundaryType,
@@ -716,32 +752,34 @@ const BoundarySelection = memo(
             </div>
           )}
           {showConfirmationModal && (
-            <Modal
-              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem"  }}
-              popupModuleActionBarStyles={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "space-between",
-                width: "100%",
-                padding: "1rem",
-              }}
-              popupModuleMianStyles={{ padding: 0, margin: 0, }}
-              style={{
-                flex: 1,
-                height:"2.5rem",
-                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              }}
-              headerBarMainStyle={{ padding: 0, margin: 0 }}
-              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
-              actionCancelLabel={t("YES")}
-              actionCancelOnSubmit={handleSubmitConfModal}
-              actionSaveLabel={t("NO")}
-              actionSaveOnSubmit={handleCancelConfModal}
-            >
-              <div className="modal-body">
-                <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
-              </div>
-            </Modal>
+            <div className="popup-wrap-focus">
+              <Modal
+                popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+                popupModuleActionBarStyles={{
+                  display: "flex",
+                  flex: 1,
+                  justifyContent: "space-between",
+                  width: "100%",
+                  padding: "1rem",
+                }}
+                popupModuleMianStyles={{ padding: 0, margin: 0 }}
+                style={{
+                  flex: 1,
+                  height: "2.5rem",
+                  border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+                }}
+                headerBarMainStyle={{ padding: 0, margin: 0 }}
+                headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("CLEAR_ALL")} />}
+                actionCancelLabel={t("YES")}
+                actionCancelOnSubmit={handleSubmitConfModal}
+                actionSaveLabel={t("NO")}
+                actionSaveOnSubmit={handleCancelConfModal}
+              >
+                <div className="modal-body">
+                  <p className="modal-main-body-p">{t("CLEAR_ALL_CONFIRMATION_MSG")}</p>
+                </div>
+              </Modal>
+            </div>
           )}
         </Card>
       </div>
@@ -751,7 +789,6 @@ const BoundarySelection = memo(
 
 const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector, handleBaseMapToggle, selectedBaseMapName, basemapRef, t }) => {
   if (!baseMaps) return null;
-
   return (
     <div className="base-map-selector">
       <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
@@ -767,7 +804,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
                   <img
                     className="base-map-img"
                     key={index}
-                    src={generatePreviewUrl(baseMap?.metadata?.url, [-24.749434, 32.961285], 5)}
+                    src={generatePreviewUrl(baseMap?.metadata?.url, [0, 0], 0)}
                     alt={name}
                     onClick={() => handleBaseMapToggle(name)}
                   />
@@ -783,7 +820,7 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
 };
 
 const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
-  const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(2, zoom));
+  const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(0, zoom));
   const lat = Math.floor(
     ((1 - Math.log(Math.tan((center[0] * Math.PI) / 180) + 1 / Math.cos((center[0] * Math.PI) / 180)) / Math.PI) / 2) * Math.pow(2, zoom)
   );
@@ -850,8 +887,7 @@ const extractGeoData = (
     dataAvailabilityCheck = "initialStage"; // Initialize data availability check
     // Loop through each file in the microplan upload
     for (let fileData of files) {
-
-      if(!fileData.active) continue // if file is inactive skip it
+      if (!fileData.active) continue; // if file is inactive skip it
 
       // Check if the file is not part of boundary or layer data origins
       if (
@@ -884,7 +920,11 @@ const extractGeoData = (
           if (value?.isLocationDataColumns) {
             latLngColumns.push(t(key));
           }
-          if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section) && value?.isFilterPropertyOfMapSection) {
+          if (
+            filterDataOrigin?.layerDataOrigin &&
+            filterDataOrigin?.layerDataOrigin.includes(fileData?.section) &&
+            value?.isFilterPropertyOfMapSection
+          ) {
             filterProperty.push(key);
           }
           if (value?.isVisualizationPropertyOfMapSection) {
@@ -919,7 +959,7 @@ const extractGeoData = (
                 ? "false"
                 : "partial"; // Update data availability based on column check
               let dataWithResources = Object.values(fileData?.data);
-              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
+              if (resources && formulaConfiguration && hypothesisAssumptionsList && schema?.showResourcesInMappingSection) {
                 dataWithResources = dataWithResources?.map((item) => {
                   return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
                     item,
@@ -981,7 +1021,6 @@ const extractGeoData = (
                   });
                 }
               }
-
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
               if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
@@ -1106,7 +1145,8 @@ const extractGeoData = (
   setFilterSelections([...filterPropertiesCollector]);
   setFilterPropertyNames([...filterPropertieNameCollector]);
   let tempVirtualizationPropertiesCollectorArray = [...virtualizationPropertiesCollector];
-  if (tempVirtualizationPropertiesCollectorArray.length !== 0) setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...resources?resources:[]]);
+  if (tempVirtualizationPropertiesCollectorArray.length !== 0)
+    setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...(resources ? resources : [])]);
 };
 
 //prepare geojson to show on the map
@@ -1288,7 +1328,10 @@ const addGeojsonToMap = (map, geojson, t) => {
         }
         popupContent += "</table></div>";
         layer.bindPopup(popupContent);
-
+        // Adjust map here when pop up closes
+        layer.on("popupclose", function () {
+          map.fitBounds(geojsonLayer.getBounds());
+        });
         layer.on({
           mouseover: function (e) {
             const layer = e.target;
@@ -1508,6 +1551,26 @@ const DefaultMapMarker = (style = {}) => {
     html: IconCollection.DefaultMapMarkerSvg(style),
     iconAnchor: [25, 50],
   });
+};
+
+const disableMapInteractions = (map) => {
+  if (!map) return;
+  map.dragging.disable();
+  map.scrollWheelZoom.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.boxZoom.disable();
+  map.keyboard.disable();
+};
+
+const enableMapInteractions = (map) => {
+  if (!map) return;
+  map.dragging.enable();
+  map.scrollWheelZoom.enable();
+  map.touchZoom.enable();
+  map.doubleClickZoom.enable();
+  map.boxZoom.enable();
+  map.keyboard.enable();
 };
 
 // Exporting Mapping component

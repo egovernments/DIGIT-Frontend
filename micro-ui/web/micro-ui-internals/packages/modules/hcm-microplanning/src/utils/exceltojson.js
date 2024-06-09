@@ -1,7 +1,7 @@
 import XLSX from "xlsx";
 
 // input is a xlsx blob
-export const parseXlsxToJsonMultipleSheets = (file, options) => {
+export const parseXlsxToJsonMultipleSheets = async (file, options) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = function (event) {

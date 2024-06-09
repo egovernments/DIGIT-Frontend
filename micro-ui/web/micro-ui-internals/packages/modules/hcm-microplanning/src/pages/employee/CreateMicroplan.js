@@ -59,10 +59,9 @@ const CreateMicroplan = () => {
     }
   );
   // to save microplan helper data to ssn
-  useEffect(()=>{
-    if(campaignData)
-    Digit.SessionStorage.set("microplanHelperData", {...Digit.SessionStorage.get("microplanHelperData"),campaignData});
-  },[campaignData])
+  useEffect(() => {
+    if (campaignData) Digit.SessionStorage.set("microplanHelperData", { ...Digit.SessionStorage.get("microplanHelperData"), campaignData });
+  }, [campaignData]);
 
   const campaignType = campaignData?.projectType;
 
@@ -129,33 +128,7 @@ const CreateMicroplan = () => {
         ...previous,
         status: { ...previous?.status, [currentPage?.name]: checkDataCompletion === "valid" },
       }));
-      // if (currentPage?.name !== "FORMULA_CONFIGURATION") {
-      //   setCheckDataCompletion("perform-action");
-      //   return;
-      // }
 
-      // let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
-      // if (Object.keys(checkStatusValues).length == 0) {
-      //   setCheckDataCompletion("perform-action");
-      //   return;
-      // }
-      // checkStatusValues[currentPage?.name] = checkDataCompletion === "valid" ? true : false;
-      // let check = true;
-      // for (let data of checkForCompleteness) {
-      //   check = check && checkStatusValues && checkStatusValues[data];
-      //   // if (data === currentPage?.name) break;
-      // }
-      // if (!check) {
-      //   setToastCreateMicroplan({
-      //     message: t("ERROR_DATA_NOT_SAVED"),
-      //     state: "error",
-      //   });
-      //   setLoaderActivation(true);
-      //   setLoaderActivation(false);
-      //   // setToastCreateMicroplan(undefined);
-      //   setCheckDataCompletion("perform-action");
-      //   return;
-      // }
       setCheckDataCompletion("false");
       let body = Digit.Utils.microplan.mapDataForApi(
         microplanData,
@@ -182,11 +155,6 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
-        // setMicroplanData((previous) => ({
-        //   ...previous,
-        //   planConfigurationId: data?.PlanConfiguration[0]?.id,
-        //   auditDetails: data?.PlanConfiguration[0]?.auditDetails,
-        // }));
         const additionalProps = {
           heirarchyData: heirarchyData,
           t,
@@ -199,23 +167,19 @@ const CreateMicroplan = () => {
         } else {
           console.error("Failed to compute session data.");
         }
-        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-        setTimeout(() => {
-          // setToastCreateMicroplan(undefined);
-          setLoaderActivation(false);
-          setCheckDataCompletion("perform-action");
-        }, 500);
+        setLoaderActivation(false);
+        setCheckDataCompletion("perform-action");
       },
       onError: (error, variables) => {
         setToastCreateMicroplan({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
+          transitionTime:10000
         });
         setTimeout(() => {
           setLoaderActivation(false);
-          // setToastCreateMicroplan(undefined);
           setCheckDataCompletion("false");
-        }, 2000);
+      }, 2000);
       },
     });
   };
@@ -237,23 +201,19 @@ const CreateMicroplan = () => {
         } else {
           console.error("Failed to compute session data.");
         }
-        setToastCreateMicroplan({ state: "success", message: t("SUCCESS_DATA_SAVED") });
-        setTimeout(() => {
-          // setToastCreateMicroplan(undefined);
-          setLoaderActivation(false);
-          setCheckDataCompletion("perform-action");
-        }, 500);
+        setLoaderActivation(false);
+        setCheckDataCompletion("perform-action");
       },
       onError: (error, variables) => {
         setToastCreateMicroplan({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
+          transitionTime:10000
         });
         setTimeout(() => {
-          // setToastCreateMicroplan(undefined);
           setLoaderActivation(false);
           setCheckDataCompletion("false");
-        }, 2000);
+      }, 2000);
       },
     });
   };
@@ -302,10 +262,10 @@ const CreateMicroplan = () => {
         {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
       </div>
       {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
-        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} />
+        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} transitionTime={toastCreateMicroplan?.transitionTime} onClose={() => setToastCreateMicroplan(undefined)} />
       )}
       {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
-        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} onClose={() => setToastCreateMicroplan(undefined)} type="error" />
+        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} transitionTime={toastCreateMicroplan?.transitionTime} onClose={() => setToastCreateMicroplan(undefined)} type="error" />
       )}
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
     </>
