@@ -32,7 +32,7 @@ export const ModalHeading = (props) => {
 
 export const CloseButton = ({ clickHandler, style = {} }) => {
   return (
-    <button className="microplan-close-button" onClick={clickHandler} style={style}>
+    <button type="button" className="microplan-close-button" onClick={clickHandler} style={style}>
       {" "}
       <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
     </button>
