@@ -452,7 +452,7 @@ const MapChoroplethIndex = ({ t, choroplethProperty }) => {
     <div className="choropleth-index">
       <div className="gradient-wrapper">
         <p>0%</p>
-        <div className="gradient" style={gradientStyle}></div>
+        <div className="gradient" style={gradientStyle} />
         <p>100%</p>
       </div>
       <p className="label">{t(choroplethProperty)}</p>

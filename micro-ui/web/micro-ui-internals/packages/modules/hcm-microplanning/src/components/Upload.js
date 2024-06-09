@@ -370,7 +370,6 @@ const Upload = ({
         }
       }
       let resourceMappingData = [];
-      // let boundaryDataAgainstBoundaryCode = {};
 
       // Handling different filetypes
       switch (selectedFileType.id) {
@@ -906,7 +905,6 @@ const Upload = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-start",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -935,7 +933,6 @@ const Upload = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-start",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -997,7 +994,7 @@ const Upload = ({
           )}
           {modal === "upload-guidelines" && (
             <Modal
-              popupStyles={{ width: "fit-content", borderRadius: "0.25rem", width: "90%" }}
+              popupStyles={{ borderRadius: "0.25rem", width: "90%" }}
               popupModuleActionBarStyles={{
                 display: "flex",
                 flex: 1,

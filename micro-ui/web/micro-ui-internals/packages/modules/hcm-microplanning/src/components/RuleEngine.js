@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Info, Trash } from "@egovernments/digit-ui-svg-components";
 import { ModalHeading } from "./CommonComponents";
 import { Modal } from "@egovernments/digit-ui-react-components";
-import { Dropdown, InfoCard } from "@egovernments/digit-ui-components";
+import { Dropdown, InfoCard, Toast } from "@egovernments/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";
@@ -36,6 +36,7 @@ const RuleEngine = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
+  const [toast, setToast] = useState();
 
   // Set TourSteps
   useEffect(() => {
@@ -133,7 +134,7 @@ const RuleEngine = ({
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
-    if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
@@ -153,11 +154,12 @@ const RuleEngine = ({
     }
     // if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
     let filteredRules = [];
+    let response;
     if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.active && item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
-        filteredRules = setAutoFillRules(
+        response = filterRulesAsPerConstrains(
           microplanData.ruleEngine,
           [],
           hypothesisAssumptions,
@@ -174,12 +176,19 @@ const RuleEngine = ({
           setOutputs,
           false
         );
+        filteredRules = response?.rules;
+
         // setRuleEngineDataFromSsn(microplanData.ruleEngine, hypothesisAssumptions, setRules);
       }
     }
+    if (response?.rulesDeleted)
+      setToast({
+        state: "warning",
+        message: t("WARNING_RULES_DELETED_DUE_TO_PRIOR_SECTION_DATA_CHANGES"),
+      });
     if (!AutoFilledRuleConfigurationsList || !outputs || !hypothesisAssumptions || !schemas) return;
 
-    filteredRules = setAutoFillRules(
+    response = filterRulesAsPerConstrains(
       AutoFilledRuleConfigurationsList,
       filteredRules,
       hypothesisAssumptions,
@@ -190,7 +199,7 @@ const RuleEngine = ({
       setOutputs,
       true
     );
-    if (filteredRules) setRules(filteredRules);
+    if (response?.rules) setRules(response?.rules);
   }, []);
 
   const closeModal = useCallback(() => {
@@ -235,6 +244,9 @@ const RuleEngine = ({
           </button>
         </div>
         <RuleEngineInformation t={t} />
+        {toast && toast.state === "warning" && (
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
+        )}
         {/* delete conformation */}
         <div className="popup-wrap-focus">
           {modal === "delete-conformation" && (
@@ -244,7 +256,6 @@ const RuleEngine = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-start",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -760,15 +771,16 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 };
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
-const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autfill = true) => {
+const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autfill) => {
   if (rules && rules.filter((item) => item.active).length !== 0) return rules;
+  let wereRulesNotDeleted = true;
   let newRules = [];
   const ruleOuputList = rules ? rules.filter((item) => item.active).map((item) => item?.output) : [];
   let rulePlusInputs;
   if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
   else rulePlusInputs = inputs;
   for (const item of autofillData) {
-    let active = item?.active === false ? false : true;
+    let active = item && item.active === false ? false : true;
     if (
       ruleOuputList?.includes(item?.output) ||
       (outputs && !outputs.includes(item?.output)) ||
@@ -781,7 +793,12 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
       !hypothesisAssumptionsList
     ) {
       if (autfill) continue;
-      else active = false;
+      else {
+        if (active) {
+          wereRulesNotDeleted = false;
+          active = false;
+        }
+      }
     }
     if (!item["id"]) {
       let uuid = uuidv4();
@@ -805,30 +822,8 @@ const setAutoFillRules = (autofillData, rules, hypothesisAssumptionsList, output
     setInputs(rulePlusInputs);
     // setRules((previous) => [...previous, ...newRules]);
   }
-  return [...(rules ? rules : []), ...newRules];
+
+  return { rules: [...(rules ? rules : []), ...newRules], rulesDeleted: !autfill && !wereRulesNotDeleted };
 };
 
-const setRuleEngineDataFromSsn = (rules, hypothesisAssumptions) => {
-  if (rules && rules.length === 0) return [];
-  let newRules = [];
-  let outputs = [];
-  rules.forEach((item, index) => {
-    if (item.active && !hypothesisAssumptions?.includes(item?.assumptionValue)) {
-      item.active = false;
-    }
-    if (!item["id"]) {
-      let uuid = uuidv4();
-      item["id"] = uuid;
-    }
-    newRules.push(item);
-    outputs.push(item.output);
-  });
-  // let filteredRules = [];
-  // newRules.forEach((item) => {
-  //   // if (!outputs?.includes(item?.input)) return;
-  //   item["id"] = newRules.length;
-  //   filteredRules.push(item);
-  // });
-  return newRules || [];
-};
 export default RuleEngine;

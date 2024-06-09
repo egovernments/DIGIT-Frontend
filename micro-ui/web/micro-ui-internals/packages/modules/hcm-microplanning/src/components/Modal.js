@@ -30,7 +30,7 @@ const Modal = ({
   /**
    * TODO: It needs to be done from the desgin changes
    */
-  const mobileView = Digit.Utils.browser.isMobile() ? true : false;
+  const mobileView = Digit.Utils.browser.isMobile();
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -104,10 +104,10 @@ export const ModalWrapper = ({
       headerBarMain={header}
       headerBarEnd={
         closeButton ? (
-          <div className="microplan-close-button" onClick={closeModal}>
+          <button className="microplan-close-button" onClick={closeModal}>
             {" "}
             <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
-          </div>
+          </button>
         ) : (
           ""
         )

@@ -179,7 +179,6 @@ const Hypothesis = ({
                 display: "flex",
                 flex: 1,
                 justifyContent: "flex-start",
-                padding: 0,
                 width: "100%",
                 padding: "1rem",
               }}
@@ -490,7 +489,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   const selectChangeHandler = useCallback(
     (e) => {
-      const existingEntry = assumptions.find((item) => item.active && item.key === e?.code);
+      const existingEntry = assumptions.find((item) => item?.active && item.key === e?.code);
       if (existingEntry) return;
       const newDataSegment = {
         ...item,
