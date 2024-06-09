@@ -122,43 +122,31 @@ const Upload = ({
 
       // if user has selected a file type and wants to go back to file type selection he/she can click back buttom
       const currentSectionIndex = sections.findIndex((item) => item.id === selectedSection.id);
+      if (!dataPresent && navigationEvent?.name !== "step" && dataUpload) {
+        setDataUpload(false);
+        setSelectedFileType(null);
+        setCheckDataCompletion("false");
+        return;
+      }
+
+      const handleNavigation = () => {
+        if (navigationEvent?.name === "next" && currentSectionIndex < sections.length - 1) {
+          setSelectedSection(sections[currentSectionIndex + 1]);
+          setCheckDataCompletion("false");
+          return;
+        }
+
+        if (navigationEvent?.name === "previousStep" && currentSectionIndex > 0) {
+          setSelectedSection(sections[currentSectionIndex - 1]);
+          setCheckDataCompletion("false");
+          return;
+        }
+      };
+
       if (!dataPresent) {
-        if (navigationEvent?.name !== "step") {
-          if (dataUpload) {
-            setDataUpload(false);
-            setSelectedFileType(null);
-            setCheckDataCompletion("false");
-            return;
-          } else {
-            if (navigationEvent?.name === "next") {
-              if (currentSectionIndex < sections.length - 1) {
-                setSelectedSection(sections[currentSectionIndex + 1]);
-                setCheckDataCompletion("false");
-                return;
-              }
-            } else if (navigationEvent?.name === "previousStep") {
-              if (currentSectionIndex > 0) {
-                setSelectedSection(sections[currentSectionIndex - 1]);
-                setCheckDataCompletion("false");
-                return;
-              }
-            }
-          }
-        }
-      } else {
-        if (navigationEvent?.name === "next") {
-          if (currentSectionIndex < sections.length - 1) {
-            setSelectedSection(sections[currentSectionIndex + 1]);
-            setCheckDataCompletion("false");
-            return;
-          }
-        } else if (navigationEvent?.name === "previousStep") {
-          if (currentSectionIndex > 0) {
-            setSelectedSection(sections[currentSectionIndex - 1]);
-            setCheckDataCompletion("false");
-            return;
-          }
-        }
+        handleNavigation();
+      } else if (navigationEvent?.name === "next" || navigationEvent?.name === "previousStep") {
+        handleNavigation();
       }
 
       if (check) {

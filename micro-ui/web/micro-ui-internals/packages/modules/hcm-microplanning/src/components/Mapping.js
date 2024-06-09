@@ -286,7 +286,7 @@ const Mapping = ({
     if (choroplethProperty) {
       if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
         setToast({
-          state: "error",
+          state: "warning",
           message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
         });
       }
@@ -339,6 +339,21 @@ const Mapping = ({
   Digit?.Hooks.useClickOutside(basemapRef, handleOutsideClickAndSubmitSimultaneously, showBaseMapSelector, { capture: true });
   Digit?.Hooks.useClickOutside(showFilterOptionRef, handleOutsideClickAndSubmitSimultaneously, showFilterOptions, { capture: true });
   Digit?.Hooks.useClickOutside(showChoroplethOptionRef, handleOutsideClickAndSubmitSimultaneously, showChoroplethOptions, { capture: true });
+
+  // function to stop mouse event propogation from custom comopents to leaflet map
+  const handleMouseDownAndScroll = (event) => {
+    event?.stopPropagation();
+    disableMapInteractions(map);
+  };
+
+  const handleMouseUpAndScroll = (event) => {
+    enableMapInteractions(map);
+  };
+  useEffect(() => {
+    if (isboundarySelectionSelected || showBaseMapSelector || showFilterOptions || showChoroplethOptions) handleMouseDownAndScroll();
+    else handleMouseUpAndScroll();
+  }, [isboundarySelectionSelected, showBaseMapSelector, showFilterOptions, showChoroplethOptions]);
+
   // Rendering component
   return (
     <div className={`jk-header-btn-wrapper mapping-section ${editable ? "" : "non-editable-component"}`}>
@@ -357,7 +372,12 @@ const Mapping = ({
             t={t}
           />
           <div ref={(node) => (_mapNode = node)} className="map" id="map">
-            <div className="top-right-map-subcomponents">
+            <div
+              className="top-right-map-subcomponents"
+              onScroll={handleMouseDownAndScroll}
+              onMouseDown={handleMouseDownAndScroll}
+              onMouseUp={handleMouseUpAndScroll}
+            >
               <div className="icon-first">
                 <BaseMapSwitcher
                   baseMaps={baseMaps}
@@ -391,7 +411,7 @@ const Mapping = ({
               />
             </div>
 
-            <div className="bottom-left-map-subcomponents">
+            <div className="bottom-left-map-subcomponents" onMouseDown={handleMouseDownAndScroll} onMouseUp={handleMouseUpAndScroll}>
               <ZoomControl map={map} t={t} />
               <div className="north-arrow">
                 {DigitSvgs.NorthArrow && <DigitSvgs.NorthArrow width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
@@ -399,7 +419,7 @@ const Mapping = ({
               <CustomScaleControl map={map} />
             </div>
 
-            <div className="bottom-right-map-subcomponents">
+            <div className="bottom-right-map-subcomponents" onMouseDown={handleMouseDownAndScroll} onMouseUp={handleMouseUpAndScroll}>
               {filterSelections && filterSelections.length > 0 && (
                 <MapFilterIndex filterSelections={filterSelections} MapFilters={state?.MapFilters} t={t} />
               )}
@@ -1531,6 +1551,26 @@ const DefaultMapMarker = (style = {}) => {
     html: IconCollection.DefaultMapMarkerSvg(style),
     iconAnchor: [25, 50],
   });
+};
+
+const disableMapInteractions = (map) => {
+  if (!map) return;
+  map.dragging.disable();
+  map.scrollWheelZoom.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.boxZoom.disable();
+  map.keyboard.disable();
+};
+
+const enableMapInteractions = (map) => {
+  if (!map) return;
+  map.dragging.enable();
+  map.scrollWheelZoom.enable();
+  map.touchZoom.enable();
+  map.doubleClickZoom.enable();
+  map.boxZoom.enable();
+  map.keyboard.enable();
 };
 
 // Exporting Mapping component

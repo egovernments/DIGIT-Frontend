@@ -166,7 +166,7 @@ const Hypothesis = ({
           t={t}
         />
         <div className="add-button-help" />
-        <button className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
+        <button type="button" className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
           <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
           <p>{t("ADD_ROW")}</p>
         </button>
@@ -489,7 +489,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
 
   const selectChangeHandler = useCallback(
     (e) => {
-      const existingEntry = assumptions.find((item) => item?.active && item.key === e?.code);
+      const existingEntry = assumptions.find((item) => item?.active && item?.key === e?.code);
       if (existingEntry) return;
       const newDataSegment = {
         ...item,
@@ -506,7 +506,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
       });
 
       setOptions((previous) => {
-        let newOptions = previous.filter((item) => item?.active && item !== e?.code);
+        let newOptions = previous.filter((item) => item !== e?.code);
         if (selected && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
         return newOptions;
       });

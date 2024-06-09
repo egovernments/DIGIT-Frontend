@@ -134,7 +134,7 @@ const RuleEngine = ({
     setHypothesisAssumptionsList(hypothesisAssumptions);
     setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
-    if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
+    if (ruleConfigureOutput) temp = ruleConfigureOutput.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
@@ -155,7 +155,7 @@ const RuleEngine = ({
     // if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
     let filteredRules = [];
     let response;
-    if (microplanData && microplanData.ruleEngine && microplanData?.hypothesis) {
+    if (microplanData?.ruleEngine && microplanData?.hypothesis) {
       const hypothesisAssumptions = microplanData?.hypothesis?.filter((item) => item.active && item.key !== "").map((item) => item.key) || [];
       if (hypothesisAssumptions.length !== 0) {
         setHypothesisAssumptionsList(hypothesisAssumptions);
@@ -772,7 +772,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
 const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autfill) => {
-  if (rules && rules.filter((item) => item.active).length !== 0) return rules;
+  if (rules && rules.filter((item) => item.active).length !== 0) return { rules };
   let wereRulesNotDeleted = true;
   let newRules = [];
   const ruleOuputList = rules ? rules.filter((item) => item.active).map((item) => item?.output) : [];
@@ -780,7 +780,7 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
   if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
   else rulePlusInputs = inputs;
   for (const item of autofillData) {
-    let active = item && item.active === false ? false : true;
+    let active = !(item && item.active === false);
     if (
       ruleOuputList?.includes(item?.output) ||
       (outputs && !outputs.includes(item?.output)) ||

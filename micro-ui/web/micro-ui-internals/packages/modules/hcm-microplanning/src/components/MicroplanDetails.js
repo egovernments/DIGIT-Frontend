@@ -151,6 +151,10 @@ const MicroplanDetails = ({
   const updateData = useCallback(
     async (check) => {
       if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+      if (!validateName(microplan)) {
+        setCheckDataCompletion("false");
+        return setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
+      }
       const valid = await validateMicroplanName();
       if (!valid) {
         setToast({ state: "error", message: t("ERROR_DUPLICATE_MICROPLAN_NAME") });
@@ -184,7 +188,10 @@ const MicroplanDetails = ({
   //   setCheckDataCompletion(false);
   //   setModal('none');
   // }, [setCheckDataCompletion, setModal]);
-
+  function validateName(name) {
+    const namePattern = /^(?![\d\s+\-()]+$)[A-Za-z\d\s+\-()]*$/;
+    return namePattern.test(name);
+  }
   const onChangeMicroplanName = (e) => {
     setMicroplan(e.target.value);
   };

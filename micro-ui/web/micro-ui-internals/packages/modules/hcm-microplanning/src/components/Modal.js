@@ -104,7 +104,7 @@ export const ModalWrapper = ({
       headerBarMain={header}
       headerBarEnd={
         closeButton ? (
-          <button className="microplan-close-button" onClick={closeModal}>
+          <button type="button" className="microplan-close-button" onClick={closeModal}>
             {" "}
             <Close width={"1.5rem"} height={"1.5rem"} fill={"#000000"} />
           </button>
