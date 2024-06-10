@@ -45,6 +45,19 @@ export default (queryClient) => {
   // });
   
   registerApplication({
+    name: 'Campaign',
+    app: () => import('campaign/CAMPAIGNModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/campaign`,
+    customProps: {
+      title: 'Campaign is running on host',
+      queryClient,
+      userType,
+    },
+  });
+
+  registerApplication({
     name: 'Microplan',
     app: () => import('microplan/MICROPLANModule'),
     activeWhen: `/${

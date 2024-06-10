@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import {AddIcon,Button,Card,CardText,Header,TextInput,Dropdown} from "@digit-ui/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 // import { LabelFieldPair } from "@digit-ui/digit-ui-react-components";
-import {LabelFieldPair} from "digit-ui/digit-ui-react-components";
+import {LabelFieldPair} from "@digit-ui/digit-ui-react-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
 // import { productType } from "../configs/productType";
 import { PRIMARY_COLOR } from "../utils";
