@@ -49,6 +49,7 @@ module.exports = () => {
           microplan:"microplan@https://localhost:8099/remoteEntry.js",
           // tqm: "tqm@https://localhost:8089/remoteEntry.js",
           // app1: "app1@https://localhost:8001/remoteEntry.js",
+          campaign:"campaign@https://localhost:8005/remoteEntry.js"
 
         },
         shared: {
