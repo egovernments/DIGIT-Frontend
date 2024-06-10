@@ -14,11 +14,11 @@
     },
     {
       "name": "microplanNamingRegx",
-      "microplanNamingRegx": "^(?![\\d\\s+\\-()]+$)[A-Za-z\\d\\s+\\-()]*$"
+      "microplanNamingRegx": "^(?![\\d\\s+\\-_()]+$)(?=.*[A-Za-z].*[A-Za-z])[A-Za-z\\d\\s+\\-_()]*$"
     },
     {
       "name": "microplanNamingConstraints",
-      "microplanNamingConstraints": ["MICROPLAN_NAMING_CONSTRAINT_1", "MICROPLAN_NAMING_CONSTRAINT_2"]
+      "microplanNamingConstraints": ["MICROPLAN_NAMING_CONSTRAINT_1", "MICROPLAN_NAMING_CONSTRAINT_2", "MICROPLAN_NAMING_CONSTRAINT_3"]
     },
     {
       "name": "ruleConfigure",

@@ -990,7 +990,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
     }, null);
     return dataAfterJoins;
   } catch (error) {
-    console.log("Error in fetch microplan data: ", error.message);
+    console.error("Error in fetch microplan data: ", error.message);
   }
 };
 

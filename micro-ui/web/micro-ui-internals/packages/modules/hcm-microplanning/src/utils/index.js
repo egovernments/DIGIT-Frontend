@@ -430,7 +430,7 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
   return false;
 };
 const emptyRuleCheck = (rules) => {
-  return rules.filter((item) => item.active && Object.values(rules)?.filter((e) => e === "").length === 0);
+  return !rules || rules.filter((item) => item.active && Object.values(rules)?.filter((e) => e === "").length === 0);
 };
 const ruleHypothesisCheck = (rules, ruleHypothesis) => {
   if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {

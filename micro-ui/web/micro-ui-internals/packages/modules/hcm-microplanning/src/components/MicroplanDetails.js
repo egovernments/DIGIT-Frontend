@@ -13,7 +13,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
-import { Modal, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, Modal, Toast } from "@egovernments/digit-ui-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import SearchPlanConfig from "../services/SearchPlanConfig";
@@ -269,31 +269,25 @@ const MicroplanDetails = ({
             />
           </div>
         </LabelFieldPair>
-        {showNamingConventions && (
-          <LabelFieldPair>
-            <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center", margin: 0, opacity: 0 }}>
-              {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin: 0 }}> *</p>
-            </CardLabel>
-            <div style={{ width: "100%", maxWidth: "960px", height: "fit-content" }}>
-              <div className="microplan-naming-conventions">
-                <p className="microplan-naming-conventions-heading">{t("MICROPLAN_NAMING_CONSTRAINTS")}</p>
-                {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map(
-                  (item, index) => (
-                    <div className="microplan-naming-convention-instruction-list-container">
-                      <p key={index} className="microplan-naming-convention-instruction-list number">
-                        {t(index + 1)}.
-                      </p>
-                      <p key={index} className="microplan-naming-convention-instruction-list text">
-                        {t(item)}
-                      </p>
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </LabelFieldPair>
-        )}
       </Card>
+      <InfoCard
+        label={t("MICROPLAN_NAMING_CONSTRAINTS")}
+        style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
+        additionalElements={[
+          <div className="microplan-naming-conventions">
+            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map((item, index) => (
+              <div className="microplan-naming-convention-instruction-list-container">
+                <p key={index} className="microplan-naming-convention-instruction-list number">
+                  {t(index + 1)}.
+                </p>
+                <p key={index} className="microplan-naming-convention-instruction-list text">
+                  {t(item)}
+                </p>
+              </div>
+            ))}
+          </div>,
+        ]}
+      />
       {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
       )}

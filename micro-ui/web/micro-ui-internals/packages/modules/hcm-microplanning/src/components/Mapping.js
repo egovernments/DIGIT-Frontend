@@ -210,7 +210,7 @@ const Mapping = ({
   const init = (id, defaultBaseMap, Boundary) => {
     if (map !== null) return;
 
-    let bounds = findBounds(Boundary);
+    // let bounds = findBounds(Boundary);
 
     let mapConfig = {
       center: [0, 0],
@@ -229,7 +229,7 @@ const Mapping = ({
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
     const defaultBaseLayer = defaultBaseMap?.layer.addTo(map_i);
-    if (bounds) map_i.fitBounds(bounds);
+    // if (bounds) map_i.fitBounds(bounds);
     setSelectedBaseMap(defaultBaseLayer);
     setMap(map_i);
   };
