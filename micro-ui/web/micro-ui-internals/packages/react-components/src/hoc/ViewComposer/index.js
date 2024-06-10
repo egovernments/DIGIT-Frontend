@@ -129,7 +129,7 @@ const renderCardSectionJSX = (section, cardErrors) => {
                 style={section?.cardHeader?.inlineStyles}
               >
                 {section.cardHeader.value}
-                {cardErrors?.filter((i) => i?.name === section?.name)?.length > 0 ? <SVG.Info fill="#D4351C" /> : null}
+                {cardErrors?.filter((i) => i?.name === section?.name)?.length > 0 ? <SVG.Error fill="#D4351C" /> : null}
               </CardSubHeader>
             )}
             {section.cardSecondaryAction ? section.cardSecondaryAction : null}
