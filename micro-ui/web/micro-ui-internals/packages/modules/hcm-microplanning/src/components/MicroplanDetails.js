@@ -36,6 +36,7 @@ const MicroplanDetails = ({
   const { state, dispatch } = useMyContext();
   const [modal, setModal] = useState("none");
   const [toast, setToast] = useState();
+  const [showNamingConventions, setShowNamingConventions] = useState(false);
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -153,6 +154,7 @@ const MicroplanDetails = ({
       if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
       if (!validateName(microplan)) {
         setCheckDataCompletion("false");
+        setShowNamingConventions(true);
         return setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
       }
       const valid = await validateMicroplanName();
@@ -189,7 +191,8 @@ const MicroplanDetails = ({
   //   setModal('none');
   // }, [setCheckDataCompletion, setModal]);
   function validateName(name) {
-    const namePattern = /^(?![\d\s+\-()]+$)[A-Za-z\d\s+\-()]*$/;
+    const microplanNamingRegxString = state?.UIConfiguration?.find((item) => item.name === "microplanNamingRegx")?.microplanNamingRegx;
+    const namePattern = new RegExp(microplanNamingRegxString);
     return namePattern.test(name);
   }
   const onChangeMicroplanName = (e) => {
@@ -266,6 +269,30 @@ const MicroplanDetails = ({
             />
           </div>
         </LabelFieldPair>
+        {showNamingConventions && (
+          <LabelFieldPair>
+            <CardLabel style={{ fontWeight: "500", display: "flex", alignItems: "center", margin: 0, opacity: 0 }}>
+              {`${t("NAME_OF_MP")}  `} <p style={{ color: "red", margin: 0 }}> *</p>
+            </CardLabel>
+            <div style={{ width: "100%", maxWidth: "960px", height: "fit-content" }}>
+              <div className="microplan-naming-conventions">
+                <p className="microplan-naming-conventions-heading">{t("MICROPLAN_NAMING_CONSTRAINTS")}</p>
+                {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map(
+                  (item, index) => (
+                    <div className="microplan-naming-convention-instruction-list-container">
+                      <p key={index} className="microplan-naming-convention-instruction-list number">
+                        {t(index + 1)}.
+                      </p>
+                      <p key={index} className="microplan-naming-convention-instruction-list text">
+                        {t(item)}
+                      </p>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </LabelFieldPair>
+        )}
       </Card>
       {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />

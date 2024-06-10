@@ -163,6 +163,36 @@ $border-color: rgba(214, 213, 212, 1);
   background-color: #00000000;
 }
 
+.microplan-naming-conventions {
+  color: $primary-theme-color;
+  .microplan-naming-convention-instruction-list-container {
+    margin-left: 0.3rem;
+    display: flex;
+    align-items: flex-start;
+
+    .number {
+      min-width: 1.2rem !important;
+    }
+  }
+  .microplan-naming-convention-instruction-list {
+    font-family: Roboto;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5rem;
+  }
+  .microplan-naming-conventions-heading {
+    font-family: Roboto;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: left;
+    padding: 0;
+    margin: 1rem 0 0 0;
+  }
+}
+
 .upload-section {
   font-family: Roboto;
 
@@ -2029,7 +2059,7 @@ $border-color: rgba(214, 213, 212, 1);
     margin-top: 1.2rem;
 
     .hypothesis-container {
-      padding: 1.5rem;
+      padding: 1.5rem 0 1.5rem 0;
       box-shadow: 0px 0.063rem 0.125rem 0px rgba(0, 0, 0, 0.16);
       background: rgba(255, 255, 255, 1);
       max-width: 17.5rem;
@@ -2052,13 +2082,13 @@ $border-color: rgba(214, 213, 212, 1);
         font-size: 1.5rem;
         font-weight: 700;
         padding: 0;
-        margin: 0;
         overflow: hidden;
         text-wrap: wrap;
+        margin: 0 1.5rem 0 1.5rem;
       }
 
       .instructions {
-        margin: 1.5rem 0;
+        margin: 1.5rem;
       }
 
       .hypothesis-list-entity {
@@ -2078,13 +2108,18 @@ $border-color: rgba(214, 213, 212, 1);
         overflow-y: auto;
         max-height: 17rem;
         @include custom-scrollbar;
-        padding-right: 0.3rem;
-
+        padding-right: 0.4rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         h3 {
           background-color: #f4f4f4;
           padding: 0.625rem;
           margin: 0;
         }
+      }
+      .scrollable {
+        padding-right: 0.8rem;
+        margin-right: 0.2rem;
       }
 
       .hypothesis-controllers {
@@ -2092,7 +2127,6 @@ $border-color: rgba(214, 213, 212, 1);
         justify-content: space-between;
         padding: 1rem 0 0 0;
         width: 100%;
-        margin-top: 0.5rem;
 
         .button-primary {
           font-family: Roboto;
@@ -2104,6 +2138,7 @@ $border-color: rgba(214, 213, 212, 1);
           display: flex;
           align-items: center;
           justify-content: center;
+          margin: 0.5rem 1.5rem 0 1.5rem;
         }
       }
     }

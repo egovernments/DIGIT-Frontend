@@ -206,12 +206,12 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
         if (reqType === "create" && !item?.active) return acc;
-        if (item.operator && item.output && item.input && item.assumptionValue) {
-          const data = JSON.parse(JSON.stringify(item));
-          const operator = Operators.find((e) => e.name === data.operator);
-          if (operator && operator.code) data.operator = operator?.code;
-          acc.push(data);
-        }
+        // if (item.operator && item.output && item.input && item.assumptionValue) {
+        const data = JSON.parse(JSON.stringify(item));
+        const operator = Operators.find((e) => e.name === data.operator);
+        if (operator && operator.code) data.operator = operator?.code;
+        acc.push(data);
+        // }
         return acc;
       }, []),
       resourceMapping,
@@ -429,6 +429,9 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
   }
   return false;
 };
+const emptyRuleCheck = (rules) => {
+  return rules.filter((item) => item.active && Object.values(rules)?.filter((e) => e === "").length === 0);
+};
 const ruleHypothesisCheck = (rules, ruleHypothesis) => {
   if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {
     return rules.filter((item) => item.active).every((item) => ruleHypothesis.includes(item.assumptionValue));
@@ -449,6 +452,7 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
     // microplan name check
     (!data || !data.name) &&
     hypothesisCheck(data?.PlanConfiguration?.assumptions, hypothesisList) &&
+    emptyRuleCheck(data?.PlanConfiguration?.operations) &&
     ruleOutputCheck(data?.PlanConfiguration?.operations, rulesOutputs) &&
     ruleHypothesisCheck(
       data?.PlanConfiguration?.operations,

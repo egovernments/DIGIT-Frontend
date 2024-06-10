@@ -1,5 +1,5 @@
 import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
-import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
@@ -394,16 +394,45 @@ const MicroplanPreview = ({
 const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList || []);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
+  const contentRef = useRef(null);
+  const [isScrollable, setIsScrollable] = useState(false);
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
   };
+  const checkScrollbar = () => {
+    if (contentRef.current) {
+      setIsScrollable(contentRef.current.scrollHeight > contentRef.current.clientHeight);
+    }
+  };
+
+  useEffect(() => {
+    // Initial check
+    checkScrollbar();
+
+    // Check on resize
+    window.addEventListener("resize", checkScrollbar);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("resize", checkScrollbar);
+    };
+  }, []);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    content.addEventListener("scroll", checkScrollbar);
+
+    return () => {
+      content.removeEventListener("scroll", checkScrollbar);
+    };
+  }, [contentRef]);
 
   return (
     <div className="hypothesis-list-wrapper">
-      <div className="hypothesis-list">
+      <div className={`hypothesis-list ${isScrollable ? "scrollable" : ""}`} ref={contentRef}>
         {tempHypothesisList
           .filter((item) => item?.active)
           ?.filter((item) => item.key !== "")
@@ -415,6 +444,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
                 <TextInput
                   name={"hyopthesis_" + index}
                   type={"text"}
+                  className="text-input"
                   value={item?.value}
                   t={t}
                   config={{}}
