@@ -18,31 +18,31 @@ export default (queryClient) => {
   //   },
   // });
 
-  registerApplication({
-    name: 'PGR',
-    app: () => import('pgr/PGRModule'),
-    activeWhen: `/${
-      window.contextPath ? window.contextPath : 'core-digit-ui'
-    }/${userType}/pgr`,
-    customProps: {
-      title: 'PGR is running on host',
-      queryClient,
-      userType,
-    },
-  });
+  // registerApplication({
+  //   name: 'PGR',
+  //   app: () => import('pgr/PGRModule'),
+  //   activeWhen: `/${
+  //     window.contextPath ? window.contextPath : 'core-digit-ui'
+  //   }/${userType}/pgr`,
+  //   customProps: {
+  //     title: 'PGR is running on host',
+  //     queryClient,
+  //     userType,
+  //   },
+  // });
 
-  registerApplication({
-    name: 'Workbench',
-    app: () => import('workbench/WorkbenchModule'),
-    activeWhen: `/${
-      window.contextPath ? window.contextPath : 'core-digit-ui'
-    }/employee/workbench`,
-    customProps: {
-      title: 'Workbench is running on host',
-      queryClient,
-      userType,
-    },
-  });
+  // registerApplication({
+  //   name: 'Workbench',
+  //   app: () => import('workbench/WorkbenchModule'),
+  //   activeWhen: `/${
+  //     window.contextPath ? window.contextPath : 'core-digit-ui'
+  //   }/employee/workbench`,
+  //   customProps: {
+  //     title: 'Workbench is running on host',
+  //     queryClient,
+  //     userType,
+  //   },
+  // });
   
   registerApplication({
     name: 'Microplan',
@@ -57,18 +57,18 @@ export default (queryClient) => {
     },
   });
 
-  registerApplication({
-    name: 'HRMS',
-    app: () => import('hrms/HRMSModule'),
-    activeWhen: `/${
-      window.contextPath ? window.contextPath : 'core-digit-ui'
-    }/employee/hrms`,
-    customProps: {
-      title: 'HRMS is running on host',
-      queryClient,
-      userType,
-    },
-  });
+  // registerApplication({
+  //   name: 'HRMS',
+  //   app: () => import('hrms/HRMSModule'),
+  //   activeWhen: `/${
+  //     window.contextPath ? window.contextPath : 'core-digit-ui'
+  //   }/employee/hrms`,
+  //   customProps: {
+  //     title: 'HRMS is running on host',
+  //     queryClient,
+  //     userType,
+  //   },
+  // });
 
   // registerApplication({
   //   name: "Common",
@@ -81,16 +81,16 @@ export default (queryClient) => {
   //   },
   // });
 
-   registerApplication({
-    name: "Dss",
-    app: () => import("dss/DSSModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
-    customProps: {
-      title: "DSS is running on host",
-      queryClient,
-      userType
-    },
-  });
+  //  registerApplication({
+  //   name: "Dss",
+  //   app: () => import("dss/DSSModule"),
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/dss`,
+  //   customProps: {
+  //     title: "DSS is running on host",
+  //     queryClient,
+  //     userType
+  //   },
+  // });
 
   // registerApplication({
   //   name: "TQM",
@@ -103,17 +103,29 @@ export default (queryClient) => {
   //   },
   // });
 
+  // registerApplication({
+  //   name: "Engagement",
+  //   app: () => import("engagement/EngagementModule"),
+  //   activeWhen: [
+  //     `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`,
+  //     `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`
+  //   ],
+  //   customProps: {
+  //     title: "Engagement is running on host",
+  //     queryClient,
+  //     userType
+  //   },
+  // });
   registerApplication({
-    name: "Engagement",
-    app: () => import("engagement/EngagementModule"),
-    activeWhen: [
-      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`,
-      `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/engagement`
-    ],
+    name: 'Campaign',
+    app: () => import('campaign/CAMPAIGNModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/campaign`,
     customProps: {
-      title: "Engagement is running on host",
+      title: 'Campaign is running on host',
       queryClient,
-      userType
+      userType,
     },
   });
 
