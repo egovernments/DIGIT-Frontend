@@ -1073,7 +1073,7 @@ async function callMdmsV2Data(
   }
 }
 
-function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed:any) {
+function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed: any) {
 
   // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
   columns.sort((a: any, b: any) => {
@@ -1083,12 +1083,21 @@ function enrichSchema(data: any, properties: any, required: any, columns: any, u
     return a.orderNumber - b.orderNumber;
   });
 
+  required.sort((a: any, b: any) => {
+    if (a.orderNumber === b.orderNumber) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.orderNumber - b.orderNumber;
+  });
+
+  const sortedRequiredColumns = required.map((column:any)=>column.name);
+
   // Extract sorted property names
   const sortedPropertyNames = columns.map((column: any) => column.name);
 
   // Update data with new properties and required fields
   data.properties = properties;
-  data.required = required;
+  data.required = sortedRequiredColumns;
   data.columns = sortedPropertyNames;
   data.unique = unique;
   data.columnsNotToBeFreezed = columnsNotToBeFreezed;
@@ -1099,7 +1108,7 @@ function convertIntoSchema(data: any) {
   const required: any[] = [];
   const columns: any[] = [];
   const unique: any[] = [];
-  const columnsNotToBeFreezed : any[] = [];
+  const columnsNotToBeFreezed: any[] = [];
 
   for (const propType of ['enumProperties', 'numberProperties', 'stringProperties']) {
     if (data.properties[propType] && Array.isArray(data.properties[propType]) && data.properties[propType]?.length > 0) {
@@ -1110,12 +1119,12 @@ function convertIntoSchema(data: any) {
         };
 
         if (property?.isRequired && required.indexOf(property?.name) === -1) {
-          required.push(property?.name);
+          required.push({ name: property?.name, orderNumber: property?.orderNumber });
         }
         if (property?.isUnique && unique.indexOf(property?.name) === -1) {
           unique.push(property?.name);
         }
-        if(!property?.freezeColumn || property?.freezeColumn == false){
+        if (!property?.freezeColumn || property?.freezeColumn == false) {
           columnsNotToBeFreezed.push(property?.name);
         }
 
@@ -1124,7 +1133,7 @@ function convertIntoSchema(data: any) {
       }
     }
   }
-  enrichSchema(data, properties, required, columns, unique,columnsNotToBeFreezed);
+  enrichSchema(data, properties, required, columns, unique, columnsNotToBeFreezed);
   return data;
 }
 
