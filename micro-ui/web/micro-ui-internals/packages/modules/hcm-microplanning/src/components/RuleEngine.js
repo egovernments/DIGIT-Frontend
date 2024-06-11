@@ -25,7 +25,7 @@ const RuleEngine = ({
 
   // States
   const [editable, setEditable] = useState(true);
-  const [modal, setModal] = useState("none");
+  const [modal, setModalState] = useState("none");
   const [rules, setRules] = useState([]);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
@@ -47,6 +47,14 @@ const RuleEngine = ({
       state: { tourStateData: tourData },
     });
   }, []);
+
+  const setModal = (modalString) => {
+    const elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    elements.forEach((element) => {
+      element.classList.toggle("popup-wrap-rest-unfocus-active");
+    });
+    setModalState(modalString);
+  };
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -132,7 +140,6 @@ const RuleEngine = ({
 
     let temp;
     setHypothesisAssumptionsList(hypothesisAssumptions);
-    setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
     if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
@@ -156,6 +163,19 @@ const RuleEngine = ({
     // Pure inputs - output not there
     const pureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas);
     setPureInputList(pureInputs);
+
+    const ssnRuleOutputs = microplanData?.ruleEngine?.reduce((acc, item) => {
+      if (item?.active && item?.output) acc.push(item?.output);
+      return acc;
+    }, []);
+    const tempOutput = [...outputs, ...(ssnRuleOutputs ? ssnRuleOutputs : [])];
+    setExampleOption({
+      output: tempOutput.length ? tempOutput[0] : "",
+      input: pureInputs.length ? pureInputs[0] : "",
+      operator: operator.length ? operator[0] : "",
+      assumptionValue: hypothesisAssumptions.length ? hypothesisAssumptions[0] : "",
+    });
+
     let filteredRules = [];
     let response;
     if (microplanData?.ruleEngine && microplanData?.hypothesis) {
@@ -166,13 +186,7 @@ const RuleEngine = ({
           microplanData.ruleEngine,
           [],
           hypothesisAssumptions,
-          [
-            ...outputs,
-            ...microplanData?.ruleEngine?.reduce((acc, item) => {
-              if (item?.active && item?.output) acc.push(item?.output);
-              return acc;
-            }, []),
-          ],
+          tempOutput,
           operator,
           pureInputs,
           setInputs,
@@ -202,6 +216,7 @@ const RuleEngine = ({
       setOutputs,
       true
     );
+
     if (response?.rules) setRules(response?.rules);
   }, []);
 
@@ -215,7 +230,7 @@ const RuleEngine = ({
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal, pureInputList]);
 
-  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
+  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"} popup-wrap-rest-unfocus`;
   return (
     <>
       <div className={sectionClass}>
@@ -251,38 +266,7 @@ const RuleEngine = ({
         {toast && toast.state === "warning" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
         )}
-        {/* delete conformation */}
-        <div className="popup-wrap-focus">
-          {modal === "delete-conformation" && (
-            <Modal
-              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-              popupModuleActionBarStyles={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "flex-start",
-                width: "100%",
-                padding: "1rem",
-              }}
-              popupModuleMianStyles={{ padding: 0, margin: 0 }}
-              style={{
-                flex: 1,
-                backgroundColor: "white",
-                height: "2.5rem",
-                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              }}
-              headerBarMainStyle={{ padding: 0, margin: 0 }}
-              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-              actionCancelLabel={t("YES")}
-              actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-              actionSaveLabel={t("NO")}
-              actionSaveOnSubmit={closeModal}
-            >
-              <div className="modal-body">
-                <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
-              </div>
-            </Modal>
-          )}
-        </div>
+
         {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
@@ -314,6 +298,38 @@ const RuleEngine = ({
           </div>
         </Modal>
       )} */}
+      </div>
+      {/* delete conformation */}
+      <div className="popup-wrap-focus">
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              height: "2.5rem",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
       </div>
     </>
   );
@@ -587,7 +603,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.output ? exampleOption?.output : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
@@ -609,7 +625,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.input ? exampleOption?.input : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_INPUT_HELP_TEXT")}</p>
@@ -623,7 +639,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.operator ? exampleOption?.operator : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_OPERATOR_HELP_TEXT")}</p>
@@ -637,7 +653,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.assumptionValue ? exampleOption?.assumptionValue : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_KEY_HELP_TEXT")}</p>
@@ -685,7 +701,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs,
     }
     setItemForDeletion();
   } catch (error) {
-    console.error("Error while delete a rule: ", error.message);
+    console.error("Error while deleting a rule: ", error.message);
   }
 };
 

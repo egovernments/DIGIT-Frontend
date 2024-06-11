@@ -50,7 +50,7 @@ const Upload = ({
   const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
-  const [modal, setModal] = useState("none");
+  const [modal, setModalState] = useState("none");
   const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
@@ -110,6 +110,14 @@ const Upload = ({
     });
   }, [t]);
 
+  const setModal = (modalString) => {
+    const elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    elements.forEach((element) => {
+      element.classList.toggle("popup-wrap-rest-unfocus-active");
+    });
+    setModalState(modalString);
+  };
+
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!fileDataList || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
@@ -132,21 +140,6 @@ const Upload = ({
 
       // if user has selected a file type and wants to go back to file type selection he/she can click back buttom
       const currentSectionIndex = sections.findIndex((item) => item.id === selectedSection.id);
-      const nextPreviousNavigationHandler = () => {
-        if (navigationEvent?.name === "next") {
-          if (currentSectionIndex < sections.length - 1) {
-            setSelectedSection(sections[currentSectionIndex + 1]);
-            setCheckDataCompletion("false");
-            return;
-          }
-        } else if (navigationEvent?.name === "previousStep") {
-          if (currentSectionIndex > 0) {
-            setSelectedSection(sections[currentSectionIndex - 1]);
-            setCheckDataCompletion("false");
-            return;
-          }
-        }
-      };
 
       if (!dataPresent) {
         if (navigationEvent?.name !== "step") {
@@ -522,7 +515,9 @@ const Upload = ({
         return temp;
       });
       setFileData(fileObject);
-      if (errorMsg === undefined && callMapping) setModal("spatial-data-property-mapping");
+      if (errorMsg === undefined && callMapping) {
+        setModal("spatial-data-property-mapping");
+      }
       setDataPresent(true);
       setLoader(false);
     } catch (error) {
@@ -859,8 +854,8 @@ const Upload = ({
 
   return (
     <>
-      <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""}`}>
-        <div className="upload">
+      <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""} `}>
+        <div className={`upload popup-wrap-rest-unfocus`}>
           <div className="upload-component-wrapper">
             {!dataPresent ? (
               dataUpload ? (
@@ -884,9 +879,13 @@ const Upload = ({
                     selectedSection={selectedSection}
                     selectedFileType={selectedFileType}
                     file={fileData}
-                    ReuplaodFile={() => setModal("reupload-conformation")}
+                    ReuplaodFile={() => {
+                      setModal("reupload-conformation");
+                    }}
                     DownloadFile={downloadFile}
-                    DeleteFile={() => setModal("delete-conformation")}
+                    DeleteFile={() => {
+                      setModal("delete-conformation");
+                    }}
                     error={uploadedFileError}
                     openDataPreview={openDataPreview}
                     downloadTemplateHandler={downloadTemplateHandler}
@@ -894,7 +893,14 @@ const Upload = ({
                 )}
               </div>
             )}
-            {!dataPresent && dataUpload && <UploadInstructions setModal={() => setModal("upload-guidelines")} t={t} />}
+            {!dataPresent && dataUpload && (
+              <UploadInstructions
+                setModal={() => {
+                  setModal("upload-guidelines");
+                }}
+                t={t}
+              />
+            )}
           </div>
 
           <div className="upload-section-option">{sectionOptions}</div>
@@ -1119,7 +1125,7 @@ const UploadSection = ({ item, selected, setSelectedSection, uploadDone }) => {
       <p>{t(item.code)}</p>
       {uploadDone && (
         <div className="icon end">
-          <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} width="26m" color={PRIMARY_THEME_COLOR} />
+          <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} width="26" color={PRIMARY_THEME_COLOR} />
         </div>
       )}
     </div>
@@ -1316,7 +1322,7 @@ const UploadedFile = ({
 // Function for checking the uploaded file for nameing conventions
 const validateNamingConvention = (file, namingConvention, setToast, t) => {
   try {
-    let processedConvention = namingConvention.replace("$", ".*$");
+    let processedConvention = namingConvention.replace("$", ".[^.]*$");
     const regx = new RegExp(processedConvention);
 
     if (regx && !regx.test(file.name)) {

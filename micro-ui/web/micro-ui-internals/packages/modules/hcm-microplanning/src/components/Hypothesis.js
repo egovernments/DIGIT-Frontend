@@ -24,7 +24,7 @@ const Hypothesis = ({
 
   // States
   const [editable, setEditable] = useState(true);
-  const [modal, setModal] = useState("none");
+  const [modal, setModalState] = useState("none");
   const [assumptions, setAssumptions] = useState([]);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
@@ -42,6 +42,14 @@ const Hypothesis = ({
       state: { tourStateData: tourData },
     });
   }, []);
+
+  const setModal = (modalString) => {
+    const elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    elements.forEach((element) => {
+      element.classList.toggle("popup-wrap-rest-unfocus-active");
+    });
+    setModalState(modalString);
+  };
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -147,7 +155,7 @@ const Hypothesis = ({
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setAssumptions, setHypothesisAssumptionsList, closeModal, setToast, t]);
 
-  const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"}`;
+  const sectionClass = `jk-header-btn-wrapper hypothesis-section ${editable ? "" : "non-editable-component"} popup-wrap-rest-unfocus `;
   return (
     <>
       <div className={sectionClass}>
@@ -171,40 +179,7 @@ const Hypothesis = ({
           <p>{t("ADD_ROW")}</p>
         </button>
         {/* delete conformation */}
-        <div className="popup-wrap-focus">
-          {modal === "delete-conformation" && (
-            <Modal
-              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-              popupModuleActionBarStyles={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "flex-start",
-                width: "100%",
-                padding: "1rem",
-              }}
-              popupModuleMianStyles={{ padding: 0, margin: 0 }}
-              style={{
-                flex: 1,
-                height: "2.5rem",
-                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              }}
-              headerBarMainStyle={{ padding: 0, margin: 0 }}
-              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-              actionCancelLabel={t("YES")}
-              actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-              actionSaveLabel={t("NO")}
-              actionSaveOnSubmit={closeModal}
-            >
-              <div className="modal-body">
-                <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
-              </div>
-            </Modal>
-          )}
 
-          {toast && toast.state === "error" && (
-            <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
-          )}
-        </div>
         {/* might need it
       {modal === "data-change-check" && (
         <Modal
@@ -237,6 +212,40 @@ const Hypothesis = ({
           </div>
         </Modal>
       )} */}
+      </div>
+      <div className="popup-wrap-focus">
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
+            style={{
+              flex: 1,
+              height: "2.5rem",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("HYPOTHESIS_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
+
+        {toast && toast.state === "error" && (
+          <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
+        )}
       </div>
     </>
   );

@@ -239,7 +239,7 @@ const MicroplanDetails = ({
       </Card>
       <Card
         style={{
-          margin: "1rem 0 1rem 0",
+          margin: "1.5rem 0 1rem 0",
           padding: "1.5rem 1.5rem 1.5rem 1.5rem",
         }}
         className="microplan-name"
@@ -272,7 +272,7 @@ const MicroplanDetails = ({
       </Card>
       <InfoCard
         label={t("MICROPLAN_NAMING_CONSTRAINTS")}
-        style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
+        style={{ margin: "1.5rem 0 0 0", width: "100%", maxWidth: "unset" }}
         additionalElements={[
           <div className="microplan-naming-conventions">
             {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map((item, index) => (

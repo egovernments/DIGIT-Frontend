@@ -215,13 +215,13 @@ const Mapping = ({
     let mapConfig = {
       center: [0, 0],
       zoomControl: false,
-      zoom: 2,
+      zoom: 3,
       scrollwheel: true,
-      minZoom: 2,
+      minZoom: 3,
     };
 
     let map_i = L.map(id, mapConfig);
-    var verticalBounds = L.latLngBounds(L.latLng(-90, -180), L.latLng(85, 180));
+    var verticalBounds = L.latLngBounds(L.latLng(-90, -170), L.latLng(85, 190));
     map_i.on("drag", () => {
       map_i.panInsideBounds(verticalBounds, { animate: true });
     });
@@ -543,7 +543,7 @@ const ChoroplethSelection = memo(
               className="button-primary"
               style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
               icon={"AutoRenew"}
-              label={t("CLEAR_FILTERS")}
+              label={t("CLEAR_FILTER")}
               onClick={() => setChoroplethProperty()}
             />
           </div>
