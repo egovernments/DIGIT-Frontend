@@ -13,6 +13,7 @@ const SubmitBar = forwardRef((props, ref) => {
       {... props.form ? {form: props.form} : {}}
     >
       <header style={{...props?.headerStyle}}>{props.label}</header>
+      {props?.submitIcon}
     </button>
   );
 });
@@ -34,6 +35,10 @@ SubmitBar.propTypes = {
    * Optional click handler
    */
   onSubmit: PropTypes.func,
+  /**
+   * Submit icon
+   */
+  submitIcon: PropTypes.node,
 };
 
 SubmitBar.defaultProps = {};
