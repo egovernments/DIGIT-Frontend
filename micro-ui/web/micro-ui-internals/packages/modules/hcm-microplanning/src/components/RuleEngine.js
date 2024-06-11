@@ -148,7 +148,6 @@ const RuleEngine = ({
 
     let temp;
     setHypothesisAssumptionsList(hypothesisAssumptions);
-    setExampleOption(hypothesisAssumptions.length ? hypothesisAssumptions[0] : "");
     let outputs;
     if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp && temp.data) {
@@ -172,6 +171,19 @@ const RuleEngine = ({
     // Pure inputs - output not there
     const pureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas);
     setPureInputList(pureInputs);
+
+    const ssnRuleOutputs = microplanData?.ruleEngine?.reduce((acc, item) => {
+      if (item?.active && item?.output) acc.push(item?.output);
+      return acc;
+    }, []);
+    const tempOutput = [...outputs, ...(ssnRuleOutputs ? ssnRuleOutputs : [])];
+    setExampleOption({
+      output: tempOutput.length ? tempOutput[0] : "",
+      input: pureInputs.length ? pureInputs[0] : "",
+      operator: operator.length ? operator[0] : "",
+      assumptionValue: hypothesisAssumptions.length ? hypothesisAssumptions[0] : "",
+    });
+
     let filteredRules = [];
     let response;
     if (microplanData?.ruleEngine && microplanData?.hypothesis) {
@@ -182,13 +194,7 @@ const RuleEngine = ({
           microplanData.ruleEngine,
           [],
           hypothesisAssumptions,
-          [
-            ...outputs,
-            ...microplanData?.ruleEngine?.reduce((acc, item) => {
-              if (item?.active && item?.output) acc.push(item?.output);
-              return acc;
-            }, []),
-          ],
+          tempOutput,
           operator,
           pureInputs,
           setInputs,
@@ -218,6 +224,7 @@ const RuleEngine = ({
       setOutputs,
       true
     );
+
     if (response?.rules) setRules(response?.rules);
   }, []);
 
@@ -604,7 +611,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.output ? exampleOption?.output : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_VALUE_HELP_TEXT")}</p>
@@ -626,7 +633,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.input ? exampleOption?.input : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_INPUT_HELP_TEXT")}</p>
@@ -640,7 +647,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.operator ? exampleOption?.operator : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_OPERATOR_HELP_TEXT")}</p>
@@ -654,7 +661,7 @@ const Example = ({ exampleOption, t }) => {
             option={[]}
             selected={null}
             optionKey="code"
-            placeholder={t("SELECT_OPTION")}
+            placeholder={t(exampleOption?.assumptionValue ? exampleOption?.assumptionValue : "SELECT_OPTION")}
             showToolTip={true}
           />
           <p className="heading">{t("RULE_ENGINE_KEY_HELP_TEXT")}</p>
