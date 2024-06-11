@@ -40,6 +40,7 @@ const RenderFormFields = ({data,...props}) => {
                             onChange={onChange}
                             inputRef={ref}
                             errorStyle={errors?.[populators.name]}
+                            min={populators.min}
                             max={populators.max}
                             disable={disable}
                             style={type === "date" ? { paddingRight: "3px" } : populators?.style ? {...populators?.style} : {}}
