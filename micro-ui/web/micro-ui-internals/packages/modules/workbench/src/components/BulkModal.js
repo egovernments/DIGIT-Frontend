@@ -172,7 +172,7 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
         };
 
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+        const count=5;
         for (let i = 0; i < dataArray.length; i++) {
             const data = dataArray[i];
             const bodyCopy = _.cloneDeep(body); // Create a deep copy of the body to avoid modifying the original
@@ -195,7 +195,9 @@ export const BulkModal = ({ showBulkUploadModal, setShowBulkUploadModal, moduleN
             }
 
             // Introduce a delay of 1 second before the next iteration
-            await delay(1000);
+            if(i%count===0){
+                await delay(600);
+            }
         }
     };
     if (noSchema) {

@@ -110,6 +110,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.2-beta.3 updated the bulkupload time for MDMS data create
 1.0.2-beta.2 added audit history feature
 1.0.2-beta.1 fix after build issue of ajv package
 1.0.1-beta.14 added direct boundary bulk upload screen
