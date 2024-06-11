@@ -101,34 +101,29 @@ const convertGeojsonToExcelSingleSheet = (InputData, fileName) => {
   return { [fileName]: [keys, ...values] };
 };
 
-const computeDifferences = (data1, data2, filterList) => {
+const areObjectsEqual = (obj1, obj2) => {
+  return obj1.name === obj2.name && obj1.code === obj2.code;
+};
+
+const computeDifferences = (data1, data2) => {
   const removed = {};
   const added = {};
 
-  // Iterate through keys in data1 and compare with data2
   for (const key in data1) {
     if (data2.hasOwnProperty(key)) {
-      // Find elements in data1[key] but not in data2[key]
-      removed[key] = data1[key].filter((item) => !data2[key].includes(item));
-      // Find elements in data2[key] but not in data1[key]
-      added[key] = data2[key].filter((item) => !data1[key].includes(item));
+      removed[key] = data1[key].filter(item1 => !data2[key].some(item2 => areObjectsEqual(item1, item2)));
+      added[key] = data2[key].filter(item2 => !data1[key].some(item1 => areObjectsEqual(item1, item2)));
     } else {
       removed[key] = data1[key];
       added[key] = [];
     }
   }
 
-  // Handle keys that are only in data2
   for (const key in data2) {
     if (!data1.hasOwnProperty(key)) {
       added[key] = data2[key];
       removed[key] = [];
     }
-  }
-
-  // Remove items in the filterList from the removed object
-  for (const key in removed) {
-    removed[key] = removed[key].filter((item) => !filterList.includes(item));
   }
 
   return { removed, added };
@@ -228,7 +223,7 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
         if (reqType === "create" && !item?.active) return acc;
-        // if (item.operator && item.output && item.input && item.assumptionValue) {
+        if (!item.active && !item.operator && !item.output && !item.input && !item.assumptionValue) return acc
         const data = JSON.parse(JSON.stringify(item));
         const operator = Operators.find((e) => e.name === data.operator);
         if (operator && operator.code) data.operator = operator?.code;

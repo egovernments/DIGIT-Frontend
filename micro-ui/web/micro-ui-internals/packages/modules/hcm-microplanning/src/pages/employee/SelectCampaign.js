@@ -104,7 +104,6 @@ const configs = {
                 marginBottom: "0px",
               },
               error: "DATE_VALIDATION_MSG",
-              max: "currentDate",
             },
           },
           {
@@ -119,7 +118,7 @@ const configs = {
             populators: {
               name: "endDate",
               error: "DATE_VALIDATION_MSG",
-              max: "currentDate",
+              min: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0,10),
               style: {
                 marginBottom: "0px",
               },

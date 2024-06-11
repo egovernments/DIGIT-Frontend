@@ -2263,6 +2263,14 @@ $border-color: rgba(214, 213, 212, 1);
             width: 100% !important;
             background: rgb(255, 255, 255);
 
+            thead {
+              position: sticky !important;
+              z-index: 100;
+              top: 0;
+              background-color: rgba(250, 250, 250);
+              padding: 0;
+            }
+
             th,
             td {
               p {
@@ -2284,9 +2292,12 @@ $border-color: rgba(214, 213, 212, 1);
 
               background: rgb(255, 255, 255);
             }
+            th{
+              padding: 0 0 0.4rem 0 !important;
+            }
 
             td {
-              padding: 1.2rem 1.9rem 0 0;
+              padding: 0.8rem 1.9rem 0.4rem 0;
             }
 
             .old-value {
@@ -2443,6 +2454,12 @@ $border-color: rgba(214, 213, 212, 1);
   button:focus {
     outline: 0.125rem solid #000000 !important;
     border-color: rgba(255, 255, 255, 0) !important;
+    outline-offset: -0.125rem !important;
+  }
+}
+.popup-wrap-rest-unfocus {
+  button:focus {
+    outline:none !important;
     outline-offset: -0.125rem !important;
   }
 }

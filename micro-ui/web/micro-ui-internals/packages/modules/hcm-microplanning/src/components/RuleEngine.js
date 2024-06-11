@@ -685,7 +685,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs,
     }
     setItemForDeletion();
   } catch (error) {
-    console.error("Error while delete a rule: ", error.message);
+    console.error("Error while deleting a rule: ", error.message);
   }
 };
 
