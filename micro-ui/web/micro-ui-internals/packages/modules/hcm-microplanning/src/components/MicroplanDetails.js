@@ -13,7 +13,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
-import { Modal, Toast } from "@egovernments/digit-ui-components";
+import { InfoCard, Modal, Toast } from "@egovernments/digit-ui-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import SearchPlanConfig from "../services/SearchPlanConfig";
@@ -36,6 +36,7 @@ const MicroplanDetails = ({
   const { state, dispatch } = useMyContext();
   const [modal, setModal] = useState("none");
   const [toast, setToast] = useState();
+  const [showNamingConventions, setShowNamingConventions] = useState(false);
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -153,6 +154,7 @@ const MicroplanDetails = ({
       if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
       if (!validateName(microplan)) {
         setCheckDataCompletion("false");
+        setShowNamingConventions(true);
         return setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
       }
       const valid = await validateMicroplanName();
@@ -189,7 +191,8 @@ const MicroplanDetails = ({
   //   setModal('none');
   // }, [setCheckDataCompletion, setModal]);
   function validateName(name) {
-    const namePattern = /^(?![\d\s+\-()]+$)[A-Za-z\d\s+\-()]*$/;
+    const microplanNamingRegxString = state?.UIConfiguration?.find((item) => item.name === "microplanNamingRegx")?.microplanNamingRegx;
+    const namePattern = new RegExp(microplanNamingRegxString);
     return namePattern.test(name);
   }
   const onChangeMicroplanName = (e) => {
@@ -267,6 +270,24 @@ const MicroplanDetails = ({
           </div>
         </LabelFieldPair>
       </Card>
+      <InfoCard
+        label={t("MICROPLAN_NAMING_CONSTRAINTS")}
+        style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
+        additionalElements={[
+          <div className="microplan-naming-conventions">
+            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map((item, index) => (
+              <div className="microplan-naming-convention-instruction-list-container">
+                <p key={index} className="microplan-naming-convention-instruction-list number">
+                  {t(index + 1)}.
+                </p>
+                <p key={index} className="microplan-naming-convention-instruction-list text">
+                  {t(item)}
+                </p>
+              </div>
+            ))}
+          </div>,
+        ]}
+      />
       {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
       )}

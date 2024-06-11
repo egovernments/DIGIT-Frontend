@@ -37,7 +37,7 @@ const RuleEngine = ({
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
   const [toast, setToast] = useState();
-
+  const [pureInputList, setPureInputList] = useState([]);
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
@@ -153,6 +153,9 @@ const RuleEngine = ({
       setOperators(temp);
     }
     // if (AutoFilledRuleConfigurationsList) setAutoFillData(AutoFilledRuleConfigurationsList);
+    // Pure inputs - output not there
+    const pureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas);
+    setPureInputList(pureInputs);
     let filteredRules = [];
     let response;
     if (microplanData?.ruleEngine && microplanData?.hypothesis) {
@@ -171,7 +174,7 @@ const RuleEngine = ({
             }, []),
           ],
           operator,
-          getRuleConfigInputsFromSchema(campaignType, microplanData, schemas),
+          pureInputs,
           setInputs,
           setOutputs,
           false
@@ -194,7 +197,7 @@ const RuleEngine = ({
       hypothesisAssumptions,
       outputs,
       operator,
-      getRuleConfigInputsFromSchema(campaignType, microplanData, schemas),
+      pureInputs,
       setInputs,
       setOutputs,
       true
@@ -208,9 +211,9 @@ const RuleEngine = ({
 
   // Function to Delete an assumption
   const deleteAssumptionHandlerCallback = useCallback(() => {
-    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setRules, setOutputs, setInputs);
+    deleteAssumptionHandler(itemForDeletion, setItemForDeletion, setRules, setOutputs, setInputs, pureInputList);
     closeModal();
-  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal]);
+  }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal, pureInputList]);
 
   const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
   return (
@@ -235,6 +238,7 @@ const RuleEngine = ({
             setOutputs={setOutputs}
             operators={operators}
             setOperators={setOperators}
+            pureInputList={pureInputList}
             t={t}
           />
           <div className="add-button-help" />
@@ -368,6 +372,7 @@ const InterractableSection = React.memo(
     setInputs,
     setOutputs,
     setOperators,
+    pureInputList,
     t,
   }) => {
     // References to the items in the list
@@ -499,6 +504,7 @@ const InterractableSection = React.memo(
                     toChange={"output"}
                     unique={true}
                     setInputs={setInputs}
+                    pureInputList={pureInputList}
                     t={t}
                   />
                 </div>
@@ -517,6 +523,7 @@ const InterractableSection = React.memo(
                     unique={false}
                     setInputs={setInputs}
                     outputs={outputs}
+                    pureInputList={pureInputList}
                     t={t}
                   />
                 </div>
@@ -531,6 +538,7 @@ const InterractableSection = React.memo(
                     toChange={"operator"}
                     unique={false}
                     setInputs={setInputs}
+                    pureInputList={pureInputList}
                     t={t}
                   />
                 </div>
@@ -545,6 +553,7 @@ const InterractableSection = React.memo(
                     toChange={"assumptionValue"}
                     unique={false}
                     setInputs={setInputs}
+                    pureInputList={pureInputList}
                     t={t}
                   />
                 </div>
@@ -638,108 +647,152 @@ const Example = ({ exampleOption, t }) => {
   );
 };
 
-const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs) => {
-  setRules((previous) => {
-    if (!previous.length) return [];
-    // const filteredData = previous.filter((data) => data.id !== item.id);
-    previous = previous.map((e) => {
-      if (e.input === item.output) {
-        return { ...e, input: "" };
-      }
-      return e;
+const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs, pureInputList) => {
+  try {
+    let outputToRemove = [];
+    setRules((previous) => {
+      if (!previous.length) return [];
+      const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
+      const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
+      let newRules = filteredData.reduce((acc, dataItem, index) => {
+        if (dataItem.active) {
+          let possibleOutputs = acc.reduce((reducedData, element, index) => {
+            if (element.active && !Object.values(element).some((e) => e === "")) reducedData.push(element?.output);
+            return reducedData;
+          }, []);
+          possibleOutputs.push(...pureInputList);
+          if (!possibleOutputs.includes(dataItem?.input)) {
+            if (dataItem?.output !== "") outputToRemove.push(dataItem.output);
+            acc.push({ ...dataItem, input: "" });
+          } else {
+            acc.push(dataItem);
+          }
+        } else {
+          acc.push(dataItem);
+        }
+        return acc;
+      }, []);
+
+      return newRules || [];
     });
-    const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
-    const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
-    return filteredData || [];
-  });
-  if (item && item.output) {
-    setOutputs((previous) => {
-      if (!previous.includes(item.output)) return [...previous, item.output];
-    });
-    setInputs((previous) => {
-      return previous.filter((e) => e !== item.output);
-    });
+    if (item && item.output) {
+      setOutputs((previous) => {
+        if (!previous?.includes(item.output)) return previous ? [...previous, item.output] : [item.output];
+      });
+      setInputs((previous) => {
+        return previous?.filter((e) => e !== item.output && !outputToRemove.includes(e));
+      });
+    }
+    setItemForDeletion();
+  } catch (error) {
+    console.error("Error while delete a rule: ", error.message);
   }
-  setItemForDeletion();
 };
 
-const Select = React.memo(({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, setInputs, outputs, t }) => {
-  const [selected, setSelected] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState([]);
+const Select = React.memo(
+  ({ item, rules, setRules, disabled = false, options, setOptions, toChange, unique, setInputs, outputs, pureInputList, t }) => {
+    const [selected, setSelected] = useState("");
+    const [filteredOptions, setFilteredOptions] = useState([]);
 
-  useEffect(() => {
-    if (item) {
-      if (outputs && outputs.some((e) => e === item?.input)) {
-        if (rules.filter((item) => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
-      } else setSelected({ code: item[toChange] });
-    }
-  }, [item]);
-
-  useEffect(() => {
-    if (!options) return;
-    let filteredOptions = options.length ? options : [];
-    let filteredOptionPlaceHolder = [];
-    if (item?.[toChange] && !filteredOptions.includes(item[toChange])) {
-      filteredOptionPlaceHolder = [item[toChange], ...filteredOptions];
-    } else filteredOptionPlaceHolder = filteredOptions;
-
-    if (toChange === "input") {
-      filteredOptionPlaceHolder = filteredOptionPlaceHolder.filter((data) => data !== item.output);
-    }
-    setFilteredOptions(filteredOptionPlaceHolder);
-  }, [options]);
-
-  const selectChangeHandler = useCallback(
-    (e) => {
-      if (e.code === "SELECT_OPTION") return;
-      const existingEntry = rules.find((item) => item.active && item[toChange] === e.code);
-      if (existingEntry && unique) {
-        console.error("Attempted to add a duplicate entry where uniqueness is required.");
-        return;
+    useEffect(() => {
+      if (item) {
+        if (outputs && outputs.some((e) => e === item.input)) {
+          if (rules.filter((item) => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
+        } else setSelected({ code: item[toChange] });
       }
-      const newDataSegment = { ...item };
-      newDataSegment[toChange] = e.code;
-      setRules((previous) => {
-        let filteredAssumptionsList = previous.map((data) => {
-          if (data.id === item.id) return newDataSegment;
-          return data;
-        });
-        return filteredAssumptionsList;
-      });
-      if (typeof setInputs === "function") {
-        setInputs((previous) => {
-          let temp = _.cloneDeep(previous);
-          if (toChange === "output") {
-            temp = temp.filter((item) => item !== selected?.code);
+    }, [item]);
+
+    useEffect(() => {
+      if (!options) return;
+      let filteredOptions = options.length ? options : [];
+      let filteredOptionPlaceHolder = [];
+      if (item?.[toChange] && !filteredOptions.includes(item[toChange])) {
+        filteredOptionPlaceHolder = [item[toChange], ...filteredOptions];
+      } else filteredOptionPlaceHolder = filteredOptions;
+
+      if (toChange === "input") {
+        const currentRuleIndex = rules.findIndex((e) => e?.id === item?.id);
+        filteredOptionPlaceHolder = filteredOptionPlaceHolder.filter((data) => {
+          let priorOutputs = [];
+          if (currentRuleIndex !== -1) {
+            priorOutputs = rules.reduce((acc, item, index) => {
+              if (item.active && index < currentRuleIndex) acc.push(item?.output);
+              return acc;
+            }, []);
           }
-          if (Object.values(newDataSegment).every((item) => item !== "")) temp = [...temp, newDataSegment.output];
-          return temp;
+          priorOutputs.push(...pureInputList);
+          return data !== item.output && priorOutputs.includes(data);
         });
       }
-      if (unique)
-        setOptions((previous) => {
-          let newOptions = previous.filter((item) => item !== e.code);
-          if (selected?.code && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
-          return newOptions;
-        });
-    },
-    [rules, item, selected, setRules, setOptions, setInputs]
-  );
+      setFilteredOptions(filteredOptionPlaceHolder);
+    }, [options]);
 
-  return (
-    <Dropdown
-      variant="select-dropdown"
-      t={t}
-      isMandatory={false}
-      option={filteredOptions.map((item) => ({ code: item }))}
-      selected={selected}
-      select={selectChangeHandler}
-      optionKey="code"
-      placeholder={t("SELECT_OPTION")}
-      showToolTip={true}
-    />
-  );
-});
+    const selectChangeHandler = useCallback(
+      (e) => {
+        if (e.code === "SELECT_OPTION") return;
+        const existingEntry = rules.find((item) => item.active && item[toChange] === e.code);
+        if (existingEntry && unique) {
+          console.error("Attempted to add a duplicate entry where uniqueness is required.");
+          return;
+        }
+        const newDataSegment = { ...item };
+        newDataSegment[toChange] = e.code;
+        setRules((previous) => {
+          let filteredAssumptionsList = previous.map((data) => {
+            if (data.id === item.id) return newDataSegment;
+            return data;
+          });
+          return filteredAssumptionsList;
+        });
+        if (typeof setInputs === "function") {
+          setInputs((previous) => {
+            let temp = _.cloneDeep(previous);
+            if (toChange === "output") {
+              temp = temp.filter((item) => item !== selected?.code);
+            }
+            if (!temp.includes(newDataSegment.output) && Object.values(newDataSegment).every((item) => item !== ""))
+              temp = [...temp, newDataSegment.output];
+
+            const currentRuleIndex = rules.findIndex((e) => e?.id === item?.id);
+            temp = temp.filter((data) => {
+              let priorOutputs = [];
+              if (currentRuleIndex !== -1) {
+                priorOutputs = rules.reduce((acc, item, index) => {
+                  if (index < currentRuleIndex) acc.push(item?.output);
+                  return acc;
+                }, []);
+              }
+              priorOutputs.push(...pureInputList);
+              return data !== item.output && priorOutputs.includes(data);
+            });
+            return temp;
+          });
+        }
+        if (unique)
+          setOptions((previous) => {
+            let newOptions = previous.filter((item) => item !== e.code);
+            if (selected?.code && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
+            return newOptions;
+          });
+      },
+      [rules, item, selected, setRules, setOptions, setInputs]
+    );
+
+    return (
+      <Dropdown
+        variant="select-dropdown"
+        t={t}
+        isMandatory={false}
+        option={filteredOptions.map((item) => ({ code: item }))}
+        selected={selected}
+        select={selectChangeHandler}
+        optionKey="code"
+        placeholder={t("SELECT_OPTION")}
+        showToolTip={true}
+      />
+    );
+  }
+);
 
 // get schema for validation
 const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
@@ -771,7 +824,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
 };
 
 // This function adding the rules configures in MDMS with respect to the canpaign when rule section is empty
-const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autfill) => {
+const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsList, outputs, operators, inputs, setInputs, setOutputs, autofill) => {
   if (rules && rules.filter((item) => item.active).length !== 0) return { rules };
   let wereRulesNotDeleted = true;
   let newRules = [];
@@ -781,19 +834,22 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
   else rulePlusInputs = inputs;
   for (const item of autofillData) {
     let active = !(item && item.active === false);
+    const ruleNotCompleteCheck = (!autofill && item && Object.values(item).filter((e) => e === "").length === 0) || autofill;
     if (
-      ruleOuputList?.includes(item?.output) ||
-      (outputs && !outputs.includes(item?.output)) ||
-      (rulePlusInputs && !rulePlusInputs.includes(item?.input)) ||
-      (operators && !operators.includes(item?.operator)) ||
-      (hypothesisAssumptionsList && !hypothesisAssumptionsList.includes(item?.assumptionValue)) ||
-      !outputs ||
-      !rulePlusInputs ||
-      !operators ||
-      !hypothesisAssumptionsList
+      (ruleOuputList?.includes(item?.output) ||
+        (outputs && !outputs.includes(item?.output)) ||
+        (rulePlusInputs && !rulePlusInputs.includes(item?.input)) ||
+        (operators && !operators.includes(item?.operator)) ||
+        (hypothesisAssumptionsList && !hypothesisAssumptionsList.includes(item?.assumptionValue)) ||
+        !outputs ||
+        !rulePlusInputs ||
+        !operators ||
+        !hypothesisAssumptionsList) &&
+      ruleNotCompleteCheck
     ) {
-      if (autfill) continue;
-      else {
+      if (autofill) {
+        continue;
+      } else {
         if (active) {
           wereRulesNotDeleted = false;
           active = false;
@@ -806,7 +862,7 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
     }
     item.active = active;
     newRules.push(item);
-    if (active) {
+    if (active && ruleNotCompleteCheck) {
       rulePlusInputs?.push(item?.output);
       ruleOuputList?.push(item?.output);
     }
@@ -823,7 +879,7 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
     // setRules((previous) => [...previous, ...newRules]);
   }
 
-  return { rules: [...(rules ? rules : []), ...newRules], rulesDeleted: !autfill && !wereRulesNotDeleted };
+  return { rules: [...(rules ? rules : []), ...newRules], rulesDeleted: !autofill && !wereRulesNotDeleted };
 };
 
 export default RuleEngine;

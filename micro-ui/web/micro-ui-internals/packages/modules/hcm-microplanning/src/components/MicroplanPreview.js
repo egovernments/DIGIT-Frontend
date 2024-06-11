@@ -1,5 +1,5 @@
 import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@egovernments/digit-ui-components";
-import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
@@ -159,6 +159,16 @@ const MicroplanPreview = ({
     setCheckDataCompletion("perform-action");
     setModal("none");
   }, [setCheckDataCompletion, setModal]);
+
+  useEffect(() => {
+    if (boundarySelections && Object.values(boundarySelections).every((item) => item.length === 0) && hierarchy) {
+      let tempBoundarySelection = {};
+      for (const item of hierarchy) {
+        tempBoundarySelection[item] = [];
+      }
+      setBoundarySelections(tempBoundarySelection);
+    }
+  }, [hierarchy]);
 
   // UseEffect to add a event listener for keyboard
   useEffect(() => {
@@ -394,16 +404,45 @@ const MicroplanPreview = ({
 const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, setHypothesisAssumptionsList, setToast, setModal, t }) => {
   const [tempHypothesisList, setTempHypothesisList] = useState(hypothesisAssumptionsList || []);
   const { valueChangeHandler } = useHypothesis(tempHypothesisList, hypothesisAssumptionsList);
+  const contentRef = useRef(null);
+  const [isScrollable, setIsScrollable] = useState(false);
 
   const applyNewHypothesis = () => {
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
   };
+  const checkScrollbar = () => {
+    if (contentRef.current) {
+      setIsScrollable(contentRef.current.scrollHeight > contentRef.current.clientHeight);
+    }
+  };
+
+  useEffect(() => {
+    // Initial check
+    checkScrollbar();
+
+    // Check on resize
+    window.addEventListener("resize", checkScrollbar);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener("resize", checkScrollbar);
+    };
+  }, []);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    content.addEventListener("scroll", checkScrollbar);
+
+    return () => {
+      content.removeEventListener("scroll", checkScrollbar);
+    };
+  }, [contentRef]);
 
   return (
     <div className="hypothesis-list-wrapper">
-      <div className="hypothesis-list">
+      <div className={`hypothesis-list ${isScrollable ? "scrollable" : ""}`} ref={contentRef}>
         {tempHypothesisList
           .filter((item) => item?.active)
           ?.filter((item) => item.key !== "")
@@ -415,6 +454,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
                 <TextInput
                   name={"hyopthesis_" + index}
                   type={"text"}
+                  className="text-input"
                   value={item?.value}
                   t={t}
                   config={{}}
@@ -437,6 +477,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
 const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, boundaryData, hierarchy, t }) => {
   const [processedHierarchy, setProcessedHierarchy] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [changedBoundaryType, setChangedBoundaryType] = useState("");
 
   // Filtering out dropdown values
   useEffect(() => {
@@ -444,7 +485,8 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
     let processedHierarchyTemp = fetchDropdownValues(
       boundaryData,
       processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
-      boundarySelections
+      boundarySelections,
+      changedBoundaryType
     );
     setProcessedHierarchy(processedHierarchyTemp);
     setIsLoading(false);
@@ -456,28 +498,56 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
       {processedHierarchy?.map((item, index) => (
         <div key={index} className="hierarchy-selection-element">
           <CardLabel className="header">{t(item?.boundaryType)}</CardLabel>
-          <MultiSelectDropdown
-            defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
-            selected={boundarySelections?.[item?.boundaryType]}
-            style={{ maxWidth: "23.75rem", margin: 0 }}
-            ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
-            type={"multiselectdropdown"}
-            t={t}
-            options={item?.dropDownOptions || []}
-            optionsKey="name"
-            addSelectAllCheck={true}
-            onSelect={(e) =>
-              Digit.Utils.microplan.handleSelection(
-                e,
-                item?.boundaryType,
-                boundarySelections,
-                hierarchy,
-                setBoundarySelections,
-                boundaryData,
-                setIsLoading
-              )
-            }
-          />
+          {item?.parentBoundaryType === null ? (
+            <MultiSelectDropdown
+              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+              selected={boundarySelections?.[item?.boundaryType]}
+              style={{ maxWidth: "23.75rem", margin: 0 }}
+              ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
+              type={"multiselectdropdown"}
+              t={t}
+              options={item?.dropDownOptions || []}
+              optionsKey="name"
+              addSelectAllCheck={true}
+              onSelect={(e) => {
+                setChangedBoundaryType(item?.boundaryType);
+                Digit.Utils.microplan.handleSelection(
+                  e,
+                  item?.boundaryType,
+                  boundarySelections,
+                  hierarchy,
+                  setBoundarySelections,
+                  boundaryData,
+                  setIsLoading
+                );
+              }}
+            />
+          ) : (
+            <MultiSelectDropdown
+              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+              selected={boundarySelections?.[item?.boundaryType]}
+              style={{ maxWidth: "23.75rem", margin: 0 }}
+              ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
+              type={"multiselectdropdown"}
+              t={t}
+              options={Digit.Utils.microplan.processDropdownForNestedMultiSelect(item?.dropDownOptions) || []}
+              optionsKey="name"
+              addSelectAllCheck={true}
+              onSelect={(e) => {
+                setChangedBoundaryType(item?.boundaryType);
+                Digit.Utils.microplan.handleSelection(
+                  e,
+                  item?.boundaryType,
+                  boundarySelections,
+                  hierarchy,
+                  setBoundarySelections,
+                  boundaryData,
+                  setIsLoading
+                );
+              }}
+              variant="nestedmultiselect"
+            />
+          )}
         </div>
       ))}
     </div>
@@ -960,7 +1030,7 @@ const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchema
     }, null);
     return dataAfterJoins;
   } catch (error) {
-    console.log("Error in fetch microplan data: ", error.message);
+    console.error("Error in fetch microplan data: ", error.message);
   }
 };
 

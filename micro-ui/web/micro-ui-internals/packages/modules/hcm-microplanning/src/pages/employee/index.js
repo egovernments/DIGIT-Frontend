@@ -9,12 +9,12 @@ import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
 import { useMyContext } from "../../utils/context";
 
-const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
+import { UIConfiguration } from "./UIConfiguration.json";
+
+const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
-  const pathVar=location.pathname.replace(defaultPath+'/',"").split("?")?.[0];
-  const {masterName,moduleName,uniqueIdentifier} = Digit.Hooks.useQueryParams()
-
-
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
 
   const crumbs = [
     {
@@ -35,68 +35,69 @@ const MicroplanningBreadCrumb = ({ location ,defaultPath}) => {
     //   show: pathVar.includes("rule-engine")?true: false,
     // },
     {
-      content:  t(`CREATE_MICROPLAN`) ,
-      show: pathVar.includes("create-microplan")?true: false,
+      content: t(`CREATE_MICROPLAN`),
+      show: pathVar.includes("create-microplan"),
     },
     {
-      content:  t(`SAVED_MICROPLANS_TEXT`) ,
-      show: pathVar.includes("saved-microplan")?true: false,
+      content: t(`SAVED_MICROPLANS_TEXT`),
+      show: pathVar.includes("saved-microplan"),
     },
     {
-      content:  t(`CREATE_MICROPLAN`) ,
-      show: pathVar.includes("select-campaign")?true: false,
+      content: t(`CREATE_MICROPLAN`),
+      show: pathVar.includes("select-campaign"),
     },
-    
-    
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
 
 const App = ({ path }) => {
-  const {dispatch} = useMyContext()
+  const { dispatch } = useMyContext();
 
   const location = useLocation();
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
-  
+
   const MDMSViewSession = Digit.Hooks.useSessionStorage("MDMS_view", {});
-  const [sessionFormDataView,setSessionFormDataView,clearSessionFormDataView] = MDMSViewSession
+  const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
 
-  const { isLoading:isLoadingMdmsBaseData, data } = Digit.Hooks.useCustomMDMS("mz", "hcm-microplanning", [
-    { name: "UploadConfiguration" },
-    { name: "UIConfiguration" },
-    { name: "Schemas" },
-    { name: "RuleConfigureOutput" },
-    { name: "Resources" },
-    { name: "HypothesisAssumptions" },
-    { name: "BaseMapLayers" },
-    { name: "MicroplanPreviewAggregates" },
-    { name: "AutoFilledRuleConfigurations" },
-    { name: "MapFilters" },
-    { name: "HierarchyConfigurations" },
-    { name: "NumberFormatMappingForTranslation" }
-  ],
-  {
-    select:(data) => {
-      dispatch({
-        type:"SETINITDATA",
-        state:{...data?.['hcm-microplanning']}
-      })
+  const { isLoading: isLoadingMdmsBaseData, data } = Digit.Hooks.useCustomMDMS(
+    "mz",
+    "hcm-microplanning",
+    [
+      { name: "UploadConfiguration" },
+      { name: "UIConfiguration" },
+      { name: "Schemas" },
+      { name: "RuleConfigureOutput" },
+      { name: "Resources" },
+      { name: "HypothesisAssumptions" },
+      { name: "BaseMapLayers" },
+      { name: "MicroplanPreviewAggregates" },
+      { name: "AutoFilledRuleConfigurations" },
+      { name: "MapFilters" },
+      { name: "HierarchyConfigurations" },
+      { name: "NumberFormatMappingForTranslation" },
+    ],
+    {
+      select: (data) => {
+        dispatch({
+          type: "SETINITDATA",
+          state: { ...data?.["hcm-microplanning"], UIConfiguration },
+        });
+      },
     }
-  }
-);
+  );
 
-//destroying session 
+  //destroying session
   useEffect(() => {
     const pathVar = location.pathname.replace(path + "/", "").split("?")?.[0];
-    Digit.Utils.microplan.destroySessionHelper(pathVar,["create-microplan"],"microplanData");
-    Digit.Utils.microplan.destroySessionHelper(pathVar,["create-microplan"],"microplanHelperData");
-    Digit.Utils.microplan.destroySessionHelper(pathVar,["select-campaign"],"SELECT_CAMPAIGN_SESSION");
-    Digit.Utils.microplan.destroySessionHelper(pathVar,["saved-microplans"],"SAVED_MICROPLAN_SESSION");
-  }, [location])
+    Digit.Utils.microplan.destroySessionHelper(pathVar, ["create-microplan"], "microplanData");
+    Digit.Utils.microplan.destroySessionHelper(pathVar, ["create-microplan"], "microplanHelperData");
+    Digit.Utils.microplan.destroySessionHelper(pathVar, ["select-campaign"], "SELECT_CAMPAIGN_SESSION");
+    Digit.Utils.microplan.destroySessionHelper(pathVar, ["saved-microplans"], "SAVED_MICROPLAN_SESSION");
+  }, [location]);
 
-  if(isLoadingMdmsBaseData){
-    return <Loader />
+  if (isLoadingMdmsBaseData) {
+    return <Loader />;
   }
 
   return (
@@ -110,11 +111,11 @@ const App = ({ path }) => {
           {/* <PrivateRoute path={`${path}/upload`} component={() => <Upload parentRoute={path}/>} />
           <PrivateRoute path={`${path}/hypothesis`} component={() => <Hypothesis parentRoute={path}/>} />
           <PrivateRoute path={`${path}/rule-engine`} component={() => <RuleEngine parentRoute={path}/>} /> */}
-          <PrivateRoute path={`${path}/help-guidelines`} component={() => <Guidelines parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/help-guidelines`} component={() => <Guidelines parentRoute={path} />} />
 
-          <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path}/>} />
-          <PrivateRoute path={`${path}/saved-microplans`} component={() => <SavedMicroplans parentRoute={path}/>} />
-          <PrivateRoute path={`${path}/select-campaign`} component={() => <SelectCampaign parentRoute={path}/>} />
+          <PrivateRoute path={`${path}/create-microplan`} component={() => <CreateMicroplan parentRoute={path} />} />
+          <PrivateRoute path={`${path}/saved-microplans`} component={() => <SavedMicroplans parentRoute={path} />} />
+          <PrivateRoute path={`${path}/select-campaign`} component={() => <SelectCampaign parentRoute={path} />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

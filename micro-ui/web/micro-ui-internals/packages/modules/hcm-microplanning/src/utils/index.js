@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { findParent } from "../utils/processHierarchyAndData";
+import { findChildren, findParent } from "../utils/processHierarchyAndData";
 import { EXCEL, LOCALITY, commonColumn } from "../configs/constants";
 
 const formatDates = (value, type) => {
@@ -101,48 +101,70 @@ const convertGeojsonToExcelSingleSheet = (InputData, fileName) => {
   return { [fileName]: [keys, ...values] };
 };
 
+const computeDifferences = (data1, data2, filterList) => {
+  const removed = {};
+  const added = {};
+
+  // Iterate through keys in data1 and compare with data2
+  for (const key in data1) {
+    if (data2.hasOwnProperty(key)) {
+      // Find elements in data1[key] but not in data2[key]
+      removed[key] = data1[key].filter((item) => !data2[key].includes(item));
+      // Find elements in data2[key] but not in data1[key]
+      added[key] = data2[key].filter((item) => !data1[key].includes(item));
+    } else {
+      removed[key] = data1[key];
+      added[key] = [];
+    }
+  }
+
+  // Handle keys that are only in data2
+  for (const key in data2) {
+    if (!data1.hasOwnProperty(key)) {
+      added[key] = data2[key];
+      removed[key] = [];
+    }
+  }
+
+  // Remove items in the filterList from the removed object
+  for (const key in removed) {
+    removed[key] = removed[key].filter((item) => !filterList.includes(item));
+  }
+
+  return { removed, added };
+};
+
+const extractNames = (data) => {
+  let names = [];
+
+  for (let key in data) {
+    if (Array.isArray(data[key])) {
+      data[key].forEach((item) => {
+        if (item.name) {
+          names.push(item.name);
+        }
+      });
+    }
+  }
+
+  return names;
+};
 // function that handles dropdown selection. used in: mapping and microplan preview
 const handleSelection = (e, boundaryType, boundarySelections, hierarchy, setBoundarySelections, boundaryData, setIsLoading) => {
   setIsLoading(true);
   if (!e || !boundaryType) return;
-  let oldSelections = boundarySelections;
-  let selections = e.map((item) => item?.[1]?.name);
-
-  // filtering current option. if something is selected and its parent is not selected it will be discarded
-  if (hierarchy && Object.keys(oldSelections))
-    for (let id = 0; id < hierarchy.length; id++) {
-      if (id - 1 >= 0) {
-        if (
-          Array.isArray(oldSelections?.[hierarchy[id]?.boundaryType]) &&
-          hierarchy[id - 1].boundaryType &&
-          oldSelections[hierarchy[id - 1].boundaryType]
-        ) {
-          oldSelections?.[hierarchy[id - 1]]?.map((e) => e.name);
-          let tempCheckList = [];
-          Object.entries(oldSelections)?.forEach(([key, value]) => {
-            if (key !== boundaryType) tempCheckList = [...tempCheckList, ...value.map((e) => e.name)];
-          });
-          oldSelections[hierarchy[id].boundaryType] = oldSelections[hierarchy[id]?.boundaryType].filter((e) => {
-            let parent = findParent(e?.name, Object.values(boundaryData)?.[0]?.hierarchicalData);
-            return (
-              (parent.some((e) => tempCheckList.includes(e.name)) && tempCheckList.includes(e?.name)) ||
-              (e?.parentBoundaryType === undefined && selections?.length !== 0)
-            );
-          });
-        }
-      }
+  let selections = e.map((item) => item?.[1]);
+  let newComputedSelection = { ...boundarySelections, [boundaryType]: selections };
+  const { removed, added } = computeDifferences(boundarySelections, newComputedSelection);
+  // for(const item in removed){
+  if (removed && Object.keys(removed).length !== 0 && Object.values(removed)?.flatMap((item) => item).length !== 0) {
+    let filteredRemoved = extractNames(removed);
+    let children = Object.values(findChildren(filteredRemoved, Object.values(boundaryData)?.[0]?.hierarchicalData))?.map((item) => item?.name);
+    for (const key in newComputedSelection) {
+      newComputedSelection[key] = newComputedSelection[key].filter((item) => !children.includes(item?.name));
     }
-
-  let tempData = {};
-  e.forEach((item) => {
-    // insert new data into tempData
-    if (tempData[boundaryType]) tempData[boundaryType] = [...tempData[boundaryType], item?.[1]];
-    else tempData[boundaryType] = [item?.[1]];
-  });
-  if (e.length === 0) {
-    tempData[boundaryType] = [];
   }
-  setBoundarySelections({ ...oldSelections, ...tempData });
+  setBoundarySelections(newComputedSelection);
 };
 
 // Preventing default action when we scroll on input[number] is that it increments or decrements the number
@@ -206,12 +228,12 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
         if (reqType === "create" && !item?.active) return acc;
-        if (item.operator && item.output && item.input && item.assumptionValue) {
-          const data = JSON.parse(JSON.stringify(item));
-          const operator = Operators.find((e) => e.name === data.operator);
-          if (operator && operator.code) data.operator = operator?.code;
-          acc.push(data);
-        }
+        // if (item.operator && item.output && item.input && item.assumptionValue) {
+        const data = JSON.parse(JSON.stringify(item));
+        const operator = Operators.find((e) => e.name === data.operator);
+        if (operator && operator.code) data.operator = operator?.code;
+        acc.push(data);
+        // }
         return acc;
       }, []),
       resourceMapping,
@@ -429,6 +451,9 @@ const ruleOutputCheck = (rules, ruleOuputList) => {
   }
   return false;
 };
+const emptyRuleCheck = (rules) => {
+  return !rules || rules.filter((item) => item.active && Object.values(item)?.filter((e) => e === "").length === 0);
+};
 const ruleHypothesisCheck = (rules, ruleHypothesis) => {
   if (rules && Array.isArray(rules) && rules.length !== 0 && ruleHypothesis && Array.isArray(ruleHypothesis) && ruleHypothesis.length !== 0) {
     return rules.filter((item) => item.active).every((item) => ruleHypothesis.includes(item.assumptionValue));
@@ -449,6 +474,7 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
     // microplan name check
     (!data || !data.name) &&
     hypothesisCheck(data?.PlanConfiguration?.assumptions, hypothesisList) &&
+    emptyRuleCheck(data?.PlanConfiguration?.operations) &&
     ruleOutputCheck(data?.PlanConfiguration?.operations, rulesOutputs) &&
     ruleHypothesisCheck(
       data?.PlanConfiguration?.operations,
@@ -457,6 +483,28 @@ const planConfigRequestBodyValidator = (data, state, campaignType) => {
     uploadCheck(data?.PlanConfiguration?.files, uploadList);
   return checks;
   // if()
+};
+
+const processDropdownForNestedMultiSelect = (dropDownOptions) => {
+  if (!dropDownOptions) return dropDownOptions;
+  const result = dropDownOptions.reduce((acc, item) => {
+    const { parent, ...rest } = item;
+
+    // Find the group by parentBoundaryType
+    let group = acc.find((g) => g.name === parent?.name);
+
+    // If not found, create a new group
+    if (!group) {
+      group = { name: parent?.name, options: [] };
+      acc.push(group);
+    }
+
+    // Add the item to the options of the found/created group
+    group.options.push(rest);
+
+    return acc;
+  }, []);
+  return result;
 };
 
 export default {
@@ -473,4 +521,5 @@ export default {
   calculateResource,
   planConfigRequestBodyValidator,
   getSchema,
+  processDropdownForNestedMultiSelect,
 };

@@ -275,9 +275,15 @@ const Upload = ({
   const sectionOptions = useMemo(() => {
     if (!sections) return [];
     return sections.map((item) => (
-      <UploadSection key={item.id} item={item} selected={selectedSection.id === item.id} setSelectedSection={setSelectedSection} />
+      <UploadSection
+        key={item.id}
+        item={item}
+        selected={selectedSection.id === item.id}
+        setSelectedSection={setSelectedSection}
+        uploadDone={fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id && !e.error)?.length !== 0}
+      />
     ));
-  }, [sections, selectedSection]);
+  }, [sections, selectedSection, fileDataList]);
 
   // Handler for when a file type is selected for uplaod
   const selectFileTypeHandler = (e) => {
@@ -1031,9 +1037,13 @@ const Upload = ({
               popupModuleMianStyles={{ padding: 0, margin: 0 }}
               headerBarMainStyle={{ padding: 0, margin: 0 }}
               headerBarMain={
-                <ModalHeading style={{ fontSize: "2.5rem", lineHeight: "2.5rem", marginLeft: "1rem" }} label={t("HEADING_DATA_UPLOAD_GUIDELINES")} />
+                <ModalHeading
+                  style={{ fontSize: "2.5rem", marginLeft: "1rem", marginTop: "1.5rem" }}
+                  className="guide-line-heading"
+                  label={t("HEADING_DATA_UPLOAD_GUIDELINES")}
+                />
               }
-              headerBarEnd={<CloseButton clickHandler={closeModal} style={{ margin: "0.4rem 0.8rem 0 0" }} />}
+              headerBarEnd={<CloseButton clickHandler={closeModal} style={{ margin: "0.8rem 0.8rem 0 0" }} />}
             >
               <UploadGuideLines uploadGuideLines={uploadGuideLines} t={t} />
             </Modal>
@@ -1094,7 +1104,7 @@ const Upload = ({
 };
 
 // Component for rendering individual section option
-const UploadSection = ({ item, selected, setSelectedSection }) => {
+const UploadSection = ({ item, selected, setSelectedSection, uploadDone }) => {
   const { t } = useTranslation();
   // Handle click on section option
   const handleClick = () => {
@@ -1107,6 +1117,11 @@ const UploadSection = ({ item, selected, setSelectedSection }) => {
         <CustomIcon Icon={Icons[item?.iconName]} height="26" color={selected ? PRIMARY_THEME_COLOR : "rgba(214, 213, 212, 1)"} />
       </div>
       <p>{t(item.code)}</p>
+      {uploadDone && (
+        <div className="icon end">
+          <CustomIcon Icon={Icons["TickMarkBackgroundFilled"]} width="26m" color={PRIMARY_THEME_COLOR} />
+        </div>
+      )}
     </div>
   );
 };
@@ -1116,7 +1131,7 @@ const UploadInstructions = ({ setModal, t }) => {
     <InfoCard
       text={t("INFORMATION_DESCRIPTION")}
       className={"information-description"}
-      style={{ margin: "1rem 0 0 0" }}
+      style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
       additionalElements={[
         <div className="link-wrapper">
           {t("REFER")}

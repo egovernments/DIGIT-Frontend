@@ -46,12 +46,12 @@ const configs = {
                 marginBottom: "0px",
               },
               error: "ERR_MIN_LENGTH_CAMPAIGN_NAME",
-              validationErrorStyles:{
-                marginTop:"0.3rem"
+              validationErrorStyles: {
+                marginTop: "0.3rem",
               },
-              validation:{
-                minLength:2
-              }
+              validation: {
+                minLength: 2,
+              },
             },
           },
           // {
@@ -73,21 +73,21 @@ const configs = {
           //   },
           // },
           {
-            "label": "CAMPAIGN_TYPE",
-            "type": "apidropdown",
-            "isMandatory": false,
-            "disable": false,
-            "populators": {
+            label: "CAMPAIGN_TYPE",
+            type: "apidropdown",
+            isMandatory: false,
+            disable: false,
+            populators: {
               name: "projectType",
               optionsKey: "i18nKey",
               optionsCustomStyle: {
                 top: "2.3rem",
               },
-              "allowMultiSelect": false,
-              "masterName": "commonUiConfig",
-              "moduleName": "SearchCampaign",
-              "customfn": "populateProjectType"
-            }
+              allowMultiSelect: false,
+              masterName: "commonUiConfig",
+              moduleName: "SearchCampaign",
+              customfn: "populateProjectType",
+            },
           },
           {
             label: "CAMPAIGN_START_DATE",
