@@ -3,7 +3,7 @@
 import { getErrorCodes } from "./constants";
 // Defining the HOST variable
 const HOST = process.env.EGOV_HOST ||
-  "https://unified-qa.digit.org/";
+  "https://unified-uat.digit.org/";
 // Checking if HOST is set, if not, exiting the process
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -65,24 +65,28 @@ const config = {
     boundaryPrefix: "rainmaker-boundary",
     localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
   },
+  targetColumnsForSpecificCampaigns: {
+    bedNetCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET"],
+    smcCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11", "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59"]
+  },
   // Host configuration
   host: {
     serverHost: HOST,
     // Kafka broker host
     KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092",
-    mdms: process.env.EGOV_MDMS_HOST || "https://unified-qa.digit.org/",
-    mdmsV2: process.env.EGOV_MDMS_V2_HOST || "https://unified-qa.digit.org/",
-    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-qa.digit.org/",
+    mdms: process.env.EGOV_MDMS_HOST || "https://unified-uat.digit.org/",
+    mdmsV2: process.env.EGOV_MDMS_V2_HOST || "https://unified-uat.digit.org/",
+    filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
     projectFactoryBff: "http://localhost:8080/",
-    idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-qa.digit.org/",
-    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-qa.digit.org/",
-    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-qa.digit.org/",
-    projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-qa.digit.org/",
-    userHost: process.env.EGOV_USER_HOST || "https://unified-qa.digit.org/",
-    productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-qa.digit.org/",
-    hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-qa.digit.org/",
-    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-qa.digit.org/",
-    healthIndividualHost: process.env.EGOV_HEALTH_INDIVIDUAL_HOST || "https://unified-qa.digit.org/",
+    idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-uat.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-uat.digit.org/",
+    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-uat.digit.org/",
+    projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-uat.digit.org/",
+    userHost: process.env.EGOV_USER_HOST || "https://unified-uat.digit.org/",
+    productHost: process.env.EGOV_PRODUCT_HOST || "https://unified-uat.digit.org/",
+    hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-uat.digit.org/",
+    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-uat.digit.org/",
+    healthIndividualHost: process.env.EGOV_HEALTH_INDIVIDUAL_HOST || "https://unified-uat.digit.org/",
   },
   // Paths for different services
   paths: {
