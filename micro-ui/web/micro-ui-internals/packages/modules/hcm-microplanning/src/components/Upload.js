@@ -429,7 +429,7 @@ const Upload = ({
           try {
             response = await handleGeojsonFile(file, schemaData, setUploadedFileError, t);
             file = new File([file], file.name, { type: "application/geo+json" });
-            if (response.check == false && response.stopUpload) {
+            if (response.check === false && response.stopUpload) {
               setLoader(false);
               setToast(response.toast);
               return;
