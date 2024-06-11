@@ -111,18 +111,10 @@ const Upload = ({
   }, [t]);
 
   const setModal = (modalString) => {
-    var elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
-    if (modalString === "none") {
-      elements.forEach(function (element) {
-        // Toggle the presence of the 'no-outline' class
-        element.classList.toggle("popup-wrap-rest-unfocus-active");
-      });
-    } else {
-      elements.forEach(function (element) {
-        // Toggle the presence of the 'no-outline' class
-        element.classList.toggle("popup-wrap-rest-unfocus-active");
-      });
-    }
+    const elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    elements.forEach((element) => {
+      element.classList.toggle("popup-wrap-rest-unfocus-active");
+    });
     setModalState(modalString);
   };
 

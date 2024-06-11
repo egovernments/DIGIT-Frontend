@@ -110,9 +110,9 @@ const computeDifferences = (data1, data2) => {
   const added = {};
 
   for (const key in data1) {
-    if (data2.hasOwnProperty(key)) {
-      removed[key] = data1[key].filter(item1 => !data2[key].some(item2 => areObjectsEqual(item1, item2)));
-      added[key] = data2[key].filter(item2 => !data1[key].some(item1 => areObjectsEqual(item1, item2)));
+    if (Object.hasOwn(data2, key)) {
+      removed[key] = data1[key].filter((item1) => !data2[key].some((item2) => areObjectsEqual(item1, item2)));
+      added[key] = data2[key].filter((item2) => !data1[key].some((item1) => areObjectsEqual(item1, item2)));
     } else {
       removed[key] = data1[key];
       added[key] = [];
@@ -223,7 +223,7 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
       }, []),
       operations: data?.ruleEngine?.reduce((acc, item) => {
         if (reqType === "create" && !item?.active) return acc;
-        if (!item.active && !item.operator && !item.output && !item.input && !item.assumptionValue) return acc
+        if (!item.active && !item.operator && !item.output && !item.input && !item.assumptionValue) return acc;
         const data = JSON.parse(JSON.stringify(item));
         const operator = Operators.find((e) => e.name === data.operator);
         if (operator && operator.code) data.operator = operator?.code;

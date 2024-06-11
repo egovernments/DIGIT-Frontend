@@ -49,18 +49,10 @@ const RuleEngine = ({
   }, []);
 
   const setModal = (modalString) => {
-    var elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
-    if (modalString === "none") {
-      elements.forEach(function (element) {
-        // Toggle the presence of the 'no-outline' class
-        element.classList.toggle("popup-wrap-rest-unfocus-active");
-      });
-    } else {
-      elements.forEach(function (element) {
-        // Toggle the presence of the 'no-outline' class
-        element.classList.toggle("popup-wrap-rest-unfocus-active");
-      });
-    }
+    const elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    elements.forEach((element) => {
+      element.classList.toggle("popup-wrap-rest-unfocus-active");
+    });
     setModalState(modalString);
   };
 
@@ -238,7 +230,7 @@ const RuleEngine = ({
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal, pureInputList]);
 
-  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"} popup-wrap-rest-unfocu`;
+  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"} popup-wrap-rest-unfocus`;
   return (
     <>
       <div className={sectionClass}>
