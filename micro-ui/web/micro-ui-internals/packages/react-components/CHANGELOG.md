@@ -3,6 +3,9 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.2-beta.5]
+- fix: Added submitIcon props for SubmitBar and labelChildren for FormComposerV2.
+
 ## [1.8.2-beta.3]
 - fix: Adding the passing of the min field to the TextInput in RenderFormFields.
 
