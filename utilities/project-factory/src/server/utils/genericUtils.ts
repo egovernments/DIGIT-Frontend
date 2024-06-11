@@ -14,7 +14,7 @@ import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from 
 import { getLocaleFromRequest, getLocalisationModuleName } from "./localisationUtils";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
-import { addDataToSheet, formatWorksheet, getNewExcelWorkbook } from "./excelUtils";
+import { addDataToSheet, formatWorksheet, getNewExcelWorkbook, updateFontNameToRoboto } from "./excelUtils";
 import createAndSearch from "../config/createAndSearch";
 const NodeCache = require("node-cache");
 
@@ -351,7 +351,6 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       // get boundary sheet data after being generated
       logger.info("generating different tabs logic ")
       const boundaryDataSheetGeneratedAfterDifferentTabSeparation = await getDifferentTabGeneratedBasedOnConfig(request, boundaryDataSheetGeneratedBeforeDifferentTabSeparation, localizationMap)
-      console.log(boundaryDataSheetGeneratedAfterDifferentTabSeparation,"afffffffffffff")
       logger.info(`Different tabs based on level configured generated, ${JSON.stringify(boundaryDataSheetGeneratedAfterDifferentTabSeparation)}`)
       const finalResponse = await getFinalUpdatedResponse(boundaryDataSheetGeneratedAfterDifferentTabSeparation, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
@@ -487,6 +486,8 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any, l
 
   formatWorksheet(worksheet, datas, headerSet);
 
+  updateFontNameToRoboto(worksheet);
+
   return worksheet;
 }
 
@@ -556,6 +557,7 @@ async function getReadMeConfig(request: any) {
     return {};
   }
 }
+
 
 function changeFirstRowColumnColour(facilitySheet: any, color: any, columnNumber = 1) {
   // Color the first column header of the facility sheet orange
