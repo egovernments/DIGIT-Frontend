@@ -48,8 +48,8 @@ const config = {
   DB_CONFIG: {
     DB_USER: process.env.DB_USER || "postgres",
     DB_HOST: process.env.DB_HOST?.split(':')[0] || "localhost",
-    DB_NAME: process.env.DB_NAME || "postgres2",
-    DB_PASSWORD: process.env.DB_PASSWORD || "1234",
+    DB_NAME: process.env.DB_NAME || "postgres",
+    DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
     DB_PORT: process.env.DB_PORT || "5432",
   },
   // Application configuration
@@ -65,15 +65,15 @@ const config = {
     boundaryPrefix: "rainmaker-boundary",
     localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
   },
-  targetColumnsForSpecificCampaigns: {
-    bedNetCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET"],
-    smcCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11", "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59"]
-  },
+  // targetColumnsForSpecificCampaigns: {
+  //   bedNetCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET"],
+  //   smcCampaignColumns: ["HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_3_TO_11", "HCM_ADMIN_CONSOLE_TARGET_SMC_AGE_12_TO_59"]
+  // },
   // Host configuration
   host: {
     serverHost: HOST,
     // Kafka broker host
-    KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092",
+    KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
     mdms: process.env.EGOV_MDMS_HOST || "https://unified-uat.digit.org/",
     mdmsV2: process.env.EGOV_MDMS_V2_HOST || "https://unified-uat.digit.org/",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
