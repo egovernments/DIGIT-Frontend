@@ -215,7 +215,7 @@ const Navigator = memo((props) => {
       )}
 
       {/* Action bar */}
-      <ActionBar className={`${currentPage?.id === 0 ? "custom-action-bar-no-first-button" : "custom-action-bar"}`}>
+      <ActionBar className={`${currentPage?.id === 0 ? "custom-action-bar-no-first-button" : "custom-action-bar"} popup-wrap-rest-unfocus`}>
         {/* Back button */}
         {currentPage?.id > 0 && (
           <Button

@@ -25,7 +25,7 @@ const RuleEngine = ({
 
   // States
   const [editable, setEditable] = useState(true);
-  const [modal, setModal] = useState("none");
+  const [modal, setModalState] = useState("none");
   const [rules, setRules] = useState([]);
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
@@ -47,6 +47,22 @@ const RuleEngine = ({
       state: { tourStateData: tourData },
     });
   }, []);
+
+  const setModal = (modalString) => {
+    var elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    if (modalString === "none") {
+      elements.forEach(function (element) {
+        // Toggle the presence of the 'no-outline' class
+        element.classList.toggle("popup-wrap-rest-unfocus-active");
+      });
+    } else {
+      elements.forEach(function (element) {
+        // Toggle the presence of the 'no-outline' class
+        element.classList.toggle("popup-wrap-rest-unfocus-active");
+      });
+    }
+    setModalState(modalString);
+  };
 
   // UseEffect to extract data on first render
   useEffect(() => {
@@ -215,7 +231,7 @@ const RuleEngine = ({
     closeModal();
   }, [itemForDeletion, deleteAssumptionHandler, setItemForDeletion, setRules, setOutputs, setInputs, closeModal, pureInputList]);
 
-  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"}`;
+  const sectionClass = `jk-header-btn-wrapper rule-engine-section ${editable ? "" : "non-editable-component"} popup-wrap-rest-unfocu`;
   return (
     <>
       <div className={sectionClass}>
@@ -251,38 +267,7 @@ const RuleEngine = ({
         {toast && toast.state === "warning" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
         )}
-        {/* delete conformation */}
-        <div className="popup-wrap-focus">
-          {modal === "delete-conformation" && (
-            <Modal
-              popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
-              popupModuleActionBarStyles={{
-                display: "flex",
-                flex: 1,
-                justifyContent: "flex-start",
-                width: "100%",
-                padding: "1rem",
-              }}
-              popupModuleMianStyles={{ padding: 0, margin: 0 }}
-              style={{
-                flex: 1,
-                backgroundColor: "white",
-                height: "2.5rem",
-                border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
-              }}
-              headerBarMainStyle={{ padding: 0, margin: 0 }}
-              headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
-              actionCancelLabel={t("YES")}
-              actionCancelOnSubmit={deleteAssumptionHandlerCallback}
-              actionSaveLabel={t("NO")}
-              actionSaveOnSubmit={closeModal}
-            >
-              <div className="modal-body">
-                <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
-              </div>
-            </Modal>
-          )}
-        </div>
+
         {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal
@@ -314,6 +299,38 @@ const RuleEngine = ({
           </div>
         </Modal>
       )} */}
+      </div>
+      {/* delete conformation */}
+      <div className="popup-wrap-focus">
+        {modal === "delete-conformation" && (
+          <Modal
+            popupStyles={{ borderRadius: "0.25rem", width: "31.188rem" }}
+            popupModuleActionBarStyles={{
+              display: "flex",
+              flex: 1,
+              justifyContent: "flex-start",
+              width: "100%",
+              padding: "1rem",
+            }}
+            popupModuleMianStyles={{ padding: 0, margin: 0 }}
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              height: "2.5rem",
+              border: `0.063rem solid ${PRIMARY_THEME_COLOR}`,
+            }}
+            headerBarMainStyle={{ padding: 0, margin: 0 }}
+            headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_DELETE_FILE_CONFIRMATION")} />}
+            actionCancelLabel={t("YES")}
+            actionCancelOnSubmit={deleteAssumptionHandlerCallback}
+            actionSaveLabel={t("NO")}
+            actionSaveOnSubmit={closeModal}
+          >
+            <div className="modal-body">
+              <p className="modal-main-body-p">{t("RULE_ENGINE_INSTRUCTIONS_DELETE_ENTRY_CONFIRMATION")}</p>
+            </div>
+          </Modal>
+        )}
       </div>
     </>
   );

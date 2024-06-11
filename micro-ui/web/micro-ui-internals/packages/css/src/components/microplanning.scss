@@ -2292,7 +2292,7 @@ $border-color: rgba(214, 213, 212, 1);
 
               background: rgb(255, 255, 255);
             }
-            th{
+            th {
               padding: 0 0 0.4rem 0 !important;
             }
 
@@ -2458,8 +2458,10 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 .popup-wrap-rest-unfocus {
+}
+.popup-wrap-rest-unfocus-active {
   button:focus {
-    outline:none !important;
+    outline: none !important;
     outline-offset: -0.125rem !important;
   }
 }

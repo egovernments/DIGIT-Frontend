@@ -50,7 +50,7 @@ const Upload = ({
   const [editable, setEditable] = useState(true);
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState(null);
-  const [modal, setModal] = useState("none");
+  const [modal, setModalState] = useState("none");
   const [selectedFileType, setSelectedFileType] = useState(null);
   const [dataPresent, setDataPresent] = useState(false);
   const [dataUpload, setDataUpload] = useState(false);
@@ -109,6 +109,22 @@ const Upload = ({
       state: { tourStateData: tourData },
     });
   }, [t]);
+
+  const setModal = (modalString) => {
+    var elements = document.querySelectorAll(".popup-wrap-rest-unfocus");
+    if (modalString === "none") {
+      elements.forEach(function (element) {
+        // Toggle the presence of the 'no-outline' class
+        element.classList.toggle("popup-wrap-rest-unfocus-active");
+      });
+    } else {
+      elements.forEach(function (element) {
+        // Toggle the presence of the 'no-outline' class
+        element.classList.toggle("popup-wrap-rest-unfocus-active");
+      });
+    }
+    setModalState(modalString);
+  };
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
@@ -233,10 +249,6 @@ const Upload = ({
       // Perform the desired action when "x" or "esc" is pressed
       if (modal === "upload-guidelines") {
         setModal("none");
-        dispatch({
-          type: "SETINITDATA",
-          state: { modalActive: false },
-        });
       }
       if (previewUploadedData) setPreviewUploadedData(undefined);
     }
@@ -279,10 +291,6 @@ const Upload = ({
     if (selectedSection && selectedSection.UploadFileTypes) {
       setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
       setModal("upload-modal");
-      dispatch({
-        type: "SETINITDATA",
-        state: { modalActive: true },
-      });
       return;
     }
     setToast({
@@ -312,10 +320,6 @@ const Upload = ({
   const closeModal = () => {
     setResourceMapping([]);
     setModal("none");
-    dispatch({
-      type: "SETINITDATA",
-      state: { modalActive: false },
-    });
   };
 
   // handler for show file upload screen
@@ -324,10 +328,6 @@ const Upload = ({
       downloadTemplateHandler();
     }
     setModal("none");
-    dispatch({
-      type: "SETINITDATA",
-      state: { modalActive: false },
-    });
     setDataUpload(true);
   };
 
@@ -525,10 +525,6 @@ const Upload = ({
       setFileData(fileObject);
       if (errorMsg === undefined && callMapping) {
         setModal("spatial-data-property-mapping");
-        dispatch({
-          type: "SETINITDATA",
-          state: { modalActive: true },
-        });
       }
       setDataPresent(true);
       setLoader(false);
@@ -778,10 +774,6 @@ const Upload = ({
       return false;
     }
     setModal("none");
-    dispatch({
-      type: "SETINITDATA",
-      state: { modalActive: false },
-    });
     return true;
   };
 
@@ -871,7 +863,7 @@ const Upload = ({
   return (
     <>
       <div className={`jk-header-btn-wrapper upload-section${!editable ? " non-editable-component" : ""} `}>
-        <div className={`upload ${modal ? " popup-wrap-rest-unfocus " : ""}`}>
+        <div className={`upload popup-wrap-rest-unfocus`}>
           <div className="upload-component-wrapper">
             {!dataPresent ? (
               dataUpload ? (
@@ -897,18 +889,10 @@ const Upload = ({
                     file={fileData}
                     ReuplaodFile={() => {
                       setModal("reupload-conformation");
-                      dispatch({
-                        type: "SETINITDATA",
-                        state: { modalActive: true },
-                      });
                     }}
                     DownloadFile={downloadFile}
                     DeleteFile={() => {
                       setModal("delete-conformation");
-                      dispatch({
-                        type: "SETINITDATA",
-                        state: { modalActive: true },
-                      });
                     }}
                     error={uploadedFileError}
                     openDataPreview={openDataPreview}
@@ -921,10 +905,6 @@ const Upload = ({
               <UploadInstructions
                 setModal={() => {
                   setModal("upload-guidelines");
-                  dispatch({
-                    type: "SETINITDATA",
-                    state: { modalActive: true },
-                  });
                 }}
                 t={t}
               />
