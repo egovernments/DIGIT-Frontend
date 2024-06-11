@@ -1,5 +1,5 @@
 import * as ExcelJS from "exceljs";
-import {  throwError } from "./genericUtils";
+import { throwError } from "./genericUtils";
 import { httpRequest } from "./request";
 import { logger } from "./logger";
 import config from "../config";
@@ -102,7 +102,7 @@ function performUnfreezeCells(sheet: any) {
   for (let row = 1; row <= parseInt(config.values.unfrozeTillRow); row++) {
     for (let col = 1; col <= lastFilledColumn; col++) {
       const cell = sheet.getCell(row, col);
-      if (!cell.value) {
+      if (!cell.value && cell.value !== 0) {
         cell.protection = { locked: false };
       }
     }
@@ -189,10 +189,10 @@ function addDataToSheet(sheet: any, sheetData: any, firstRowColor: any = '93C47D
 // }
 
 
-function lockTargetFields(newSheet:any, columnsNotToBeFreezed:any, boundaryCodeColumnIndex:any) {
+function lockTargetFields(newSheet: any, columnsNotToBeFreezed: any, boundaryCodeColumnIndex: any) {
   // Make every cell locked by default
-  newSheet.eachRow((row:any) => {
-    row.eachCell((cell:any) => {
+  newSheet.eachRow((row: any) => {
+    row.eachCell((cell: any) => {
       cell.protection = { locked: true };
     });
   });
