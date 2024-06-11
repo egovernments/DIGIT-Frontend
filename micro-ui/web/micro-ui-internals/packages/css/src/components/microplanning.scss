@@ -1594,6 +1594,12 @@ $border-color: rgba(214, 213, 212, 1);
           position: relative;
           overflow: visible;
 
+          .digit-multiselectdropdown-label {
+            p {
+              color: rgba(177, 180, 182, 1);
+            }
+          }
+
           .header-section {
             display: flex !important;
             align-items: center;

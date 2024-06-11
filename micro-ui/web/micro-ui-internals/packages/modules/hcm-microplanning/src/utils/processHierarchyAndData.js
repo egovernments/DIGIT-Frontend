@@ -157,7 +157,7 @@ export const findChildren = (parents, hierarchy) => {
 };
 
 // Fetched data from tree
-export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections) => {
+export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections, changedBoundaryType) => {
   if (
     !hierarchy ||
     !boundaryData ||
@@ -168,7 +168,7 @@ export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections)
   )
     return [];
   let TempHierarchy = _.cloneDeep(hierarchy);
-  if (!boundarySelections || Object.values(boundarySelections)?.every((item) => item?.length == 0)) {
+  if (!boundarySelections || Object.values(boundarySelections)?.every((item) => item?.length === 0)) {
     for (let i in TempHierarchy) {
       if (i === "0") {
         TempHierarchy[0].dropDownOptions = findByBoundaryType(
@@ -186,7 +186,8 @@ export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections)
     const currentHierarchy = findCurrentFilteredHierarchy(Object.values(boundaryData)?.[0]?.hierarchicalData, boundarySelections, TempHierarchy);
     let currentDropdownIndex = 0;
     hierarchy.forEach((e, index) => {
-      if (e && e.boundaryType && boundarySelections && boundarySelections[e.boundaryType] && boundarySelections[e.boundaryType].length !== 0) {
+      if (e && e?.boundaryType == changedBoundaryType) {
+        // && boundarySelections && boundarySelections[e.boundaryType] && boundarySelections[e.boundaryType].length !== 0) {
         currentDropdownIndex = index;
       }
     });
@@ -196,17 +197,17 @@ export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections)
       let childIndex = hierarchy.findIndex((e) => e?.parentBoundaryType === key);
       if (childIndex == -1) return;
       if (TempHierarchy?.[childIndex]) {
-        let newDropDownValuesForChild = Object.values(
-          findChildren(
-            value.map((item) => item.name),
-            currentHierarchy
-          )
-        ).map((value) => ({
-          name: value?.name,
-          code: value?.name,
-          boundaryType: TempHierarchy[childIndex]?.boundaryType,
-          parentBoundaryType: TempHierarchy[childIndex]?.parentBoundaryType,
-        }));
+        let newDropDownValuesForChild = [];
+        for (const element of value) {
+          let tempStore = Object.values(findChildren([element.name], currentHierarchy)).map((value) => ({
+            name: value?.name,
+            code: value?.name,
+            parent: element,
+            boundaryType: TempHierarchy[childIndex]?.boundaryType,
+            parentBoundaryType: TempHierarchy[childIndex]?.parentBoundaryType,
+          }));
+          if (tempStore) newDropDownValuesForChild.push(...tempStore);
+        }
         // if (TempHierarchy[childIndex].dropDownOptions)
         //   TempHierarchy[childIndex].dropDownOptions = [...TempHierarchy[childIndex].dropDownOptions, ...newDropDownValuesForChild];
         TempHierarchy[childIndex].dropDownOptions = newDropDownValuesForChild;

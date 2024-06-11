@@ -677,7 +677,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs,
     });
     if (item && item.output) {
       setOutputs((previous) => {
-        if (!previous?.includes(item.output)) return [...previous, item.output];
+        if (!previous?.includes(item.output)) return previous ? [...previous, item.output] : [item.output];
       });
       setInputs((previous) => {
         return previous?.filter((e) => e !== item.output && !outputToRemove.includes(e));
@@ -696,7 +696,7 @@ const Select = React.memo(
 
     useEffect(() => {
       if (item) {
-        if (outputs && outputs.some((e) => e === item?.input)) {
+        if (outputs && outputs.some((e) => e === item.input)) {
           if (rules.filter((item) => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
         } else setSelected({ code: item[toChange] });
       }
@@ -847,8 +847,9 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
         !hypothesisAssumptionsList) &&
       ruleNotCompleteCheck
     ) {
-      if (autofill) continue;
-      else {
+      if (autofill) {
+        continue;
+      } else {
         if (active) {
           wereRulesNotDeleted = false;
           active = false;

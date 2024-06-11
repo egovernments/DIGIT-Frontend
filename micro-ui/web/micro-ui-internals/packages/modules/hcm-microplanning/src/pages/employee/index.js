@@ -36,15 +36,15 @@ const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
     // },
     {
       content: t(`CREATE_MICROPLAN`),
-      show: pathVar.includes("create-microplan") ? true : false,
+      show: pathVar.includes("create-microplan"),
     },
     {
       content: t(`SAVED_MICROPLANS_TEXT`),
-      show: pathVar.includes("saved-microplan") ? true : false,
+      show: pathVar.includes("saved-microplan"),
     },
     {
       content: t(`CREATE_MICROPLAN`),
-      show: pathVar.includes("select-campaign") ? true : false,
+      show: pathVar.includes("select-campaign"),
     },
   ];
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;

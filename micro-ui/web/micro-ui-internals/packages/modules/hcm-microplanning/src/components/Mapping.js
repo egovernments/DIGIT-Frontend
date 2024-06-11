@@ -543,7 +543,7 @@ const ChoroplethSelection = memo(
               className="button-primary"
               style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
               icon={"AutoRenew"}
-              label={t("CLEAR_ALL_FILTERS")}
+              label={t("CLEAR_FILTERS")}
               onClick={() => setChoroplethProperty()}
             />
           </div>
@@ -627,6 +627,7 @@ const BoundarySelection = memo(
     const itemRefs = useRef([]);
     const [expandedIndex, setExpandedIndex] = useState(null);
     const scrollContainerRef = useRef(null);
+    const [changedBoundaryType, setChangedBoundaryType] = useState("");
 
     useEffect(() => {
       // Scroll to the expanded item's child element after the state has updated and the DOM has re-rendered
@@ -665,7 +666,8 @@ const BoundarySelection = memo(
       let processedHierarchyTemp = fetchDropdownValues(
         boundaryData,
         processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
-        boundarySelections
+        boundarySelections,
+        changedBoundaryType
       );
       setProcessedHierarchy(processedHierarchyTemp);
       setIsLoading(false);
@@ -715,26 +717,56 @@ const BoundarySelection = memo(
                 onClick={() => toggleExpand(index)}
               >
                 <CardLabel style={{ padding: 0, margin: 0 }}>{t(item?.boundaryType)}</CardLabel>
-                <MultiSelectDropdown
-                  selected={boundarySelections?.[item?.boundaryType]}
-                  style={{ maxWidth: "23.75rem", margin: 0 }}
-                  ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
-                  type={"multiselectdropdown"}
-                  t={t}
-                  options={item?.dropDownOptions || []}
-                  optionsKey="name"
-                  onSelect={(e) =>
-                    Digit.Utils.microplan.handleSelection(
-                      e,
-                      item?.boundaryType,
-                      boundarySelections,
-                      hierarchy,
-                      setBoundarySelections,
-                      boundaryData,
-                      setIsLoading
-                    )
-                  }
-                />
+                {item?.parentBoundaryType === null ? (
+                  <MultiSelectDropdown
+                    defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+                    selected={boundarySelections?.[item?.boundaryType]}
+                    style={{ maxWidth: "23.75rem", margin: 0 }}
+                    ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
+                    type={"multiselectdropdown"}
+                    t={t}
+                    options={item?.dropDownOptions || []}
+                    optionsKey="name"
+                    addSelectAllCheck={true}
+                    onSelect={(e) => {
+                      setChangedBoundaryType(item?.boundaryType);
+                      Digit.Utils.microplan.handleSelection(
+                        e,
+                        item?.boundaryType,
+                        boundarySelections,
+                        hierarchy,
+                        setBoundarySelections,
+                        boundaryData,
+                        setIsLoading
+                      );
+                    }}
+                  />
+                ) : (
+                  <MultiSelectDropdown
+                    defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+                    selected={boundarySelections?.[item?.boundaryType]}
+                    style={{ maxWidth: "23.75rem", margin: 0 }}
+                    ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
+                    type={"multiselectdropdown"}
+                    t={t}
+                    options={Digit.Utils.microplan.processDropdownForNestedMultiSelect(item?.dropDownOptions) || []}
+                    optionsKey="name"
+                    addSelectAllCheck={true}
+                    onSelect={(e) => {
+                      setChangedBoundaryType(item?.boundaryType);
+                      Digit.Utils.microplan.handleSelection(
+                        e,
+                        item?.boundaryType,
+                        boundarySelections,
+                        hierarchy,
+                        setBoundarySelections,
+                        boundaryData,
+                        setIsLoading
+                      );
+                    }}
+                    variant="nestedmultiselect"
+                  />
+                )}
               </div>
             ))}
           </div>
