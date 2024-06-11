@@ -45,7 +45,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   //   { name: "Boundary" },
   // ]);
 
-  const { data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
+  const { data: Schemas,isLoading:isThisLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
+
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
   const [sheetHeaders, setSheetHeaders] = useState({});
@@ -54,6 +55,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
+  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -111,7 +114,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   function enrichSchema(data, properties, required, columns) {
-
     // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
     columns.sort((a, b) => {
       if (a?.orderNumber === b?.orderNumber) {
@@ -126,7 +128,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     // Update data with new properties and required fields
     data.properties = properties;
     data.required = required;
-    delete data.campaignType;
+    // delete data.campaignType;
     // data.columns = sortedPropertyNames;
   }
 
@@ -153,13 +155,16 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       }
     }
     enrichSchema(data, properties, required, columns);
-    return data;
+    const newData=JSON.parse(JSON.stringify(data))
+    delete newData.campaignType;
+    return newData;
   }
 
   useEffect(async () => {
     if (Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
       const facility = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility")?.[0]);
-      const boundary = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "boundaryWithTarget")?.[0]);
+      const boundary = await convertIntoSchema(
+        Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "boundaryWithTarget"  && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code)?.[0] );
       const user = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "user")?.[0]);
       const newFacilitySchema = await translateSchema(facility);
       const newBoundarySchema = await translateSchema(boundary);
@@ -180,7 +185,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setTranslatedSchema(schema);
     }
   }, [Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema, type]);
-
 
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
@@ -371,7 +375,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       const sheet = workbook?.Sheets[sheetName];
 
-      // Convert the sheet to JSON to extract headers
+      // Convert the sheet to JSON to extract headers 
       const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
       })[0];
@@ -438,7 +442,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         isValid = false;
         break;
       }
+      if (!validateData(jsonData, sheetName)) {
+        setShowInfoCard(true);
+      }
     }
+
 
     return isValid;
   };
@@ -464,6 +472,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
+
+          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]], { blankrows: true });
+          var jsonData = sheetData.map((row, index) => {
+            const rowData = {};
+            if (Object.keys(row).length > 0) {
+              Object.keys(row).forEach((key) => {
+                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
+              });
+              rowData["!row#number!"] = index + 1; // Adding row number
+              return rowData;
+            }
+          });
+
+          jsonData = jsonData.filter((element) => element !== undefined);
           if (type === "boundary") {
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
@@ -475,6 +497,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else if (type === "facilityWithBoundary") {
+            if (type === "facilityWithBoundary") {
+              const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
+              const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
+              if (activeColumnName && uniqueIdentifierColumnName) {
+                jsonData = jsonData.filter((item) => item[activeColumnName] === "Active" || !item[uniqueIdentifierColumnName]);
+              }
+            }
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
@@ -513,20 +542,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]], { blankrows: true });
-          var jsonData = sheetData.map((row, index) => {
-            const rowData = {};
-            if (Object.keys(row).length > 0) {
-              Object.keys(row).forEach((key) => {
-                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
-              });
-              rowData["!row#number!"] = index + 1; // Adding row number
-              return rowData;
-            }
-          });
-
-          jsonData = jsonData.filter((element) => element !== undefined);
-
           if (type === "boundary" && workbook?.SheetNames.length == 1) {
             if (!validateTarget(jsonData, headersToValidate)) {
               return;
@@ -542,12 +557,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setIsError(true);
             return;
           }
-
+          if(type!=="boundary"){
           if (validateData(jsonData, SheetNames)) {
             resolve(true);
           } else {
             setShowInfoCard(true);
-          }
+          }}
         } catch (error) {
           console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
