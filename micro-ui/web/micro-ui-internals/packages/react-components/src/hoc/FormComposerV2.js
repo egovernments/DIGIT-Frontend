@@ -740,6 +740,7 @@ export const FormComposer = (props) => {
                     {t(field.label)}
                     {field?.appendColon ? ' : ' : null}
                     {field.isMandatory ? <span className="mandatory-span">*</span> : null}
+                    {field.labelChildren && field.labelChildren}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
@@ -877,7 +878,7 @@ export const FormComposer = (props) => {
       {!props.submitInForm && props.label && (
         <ActionBar className={props.actionClassName}>
           
-          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
+          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} submitIcon={props?.submitIcon}/>
           {props.secondaryLabel && props.showSecondaryLabel && (
             <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
           )}
