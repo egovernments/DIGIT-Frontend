@@ -142,7 +142,7 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload, translatedData, active, shapefileOrigin = false) => {
+    const handleGeoJson = (file, result, upload, translatedData, active, processedData, shapefileOrigin = false) => {
       if (!file) {
         console.error(`${shapefileOrigin ? "Shapefile" : "Geojson"} file is undefined`);
         return upload;
@@ -157,7 +157,7 @@ export const updateSessionUtils = {
         return [...upload, uploadObject];
       }
 
-      handleGeoJsonSpecific(schema, uploadObject, templateIdentifier, result, translatedData, filestoreId);
+      handleGeoJsonSpecific(schema, uploadObject, templateIdentifier, result, translatedData, filestoreId, processedData);
       upload.push(uploadObject);
       return upload;
     };
@@ -203,7 +203,7 @@ export const updateSessionUtils = {
       );
     };
 
-    const handleGeoJsonSpecific = async (schema, upload, templateIdentifier, result, translatedData, filestoreId) => {
+    const handleGeoJsonSpecific = async (schema, upload, templateIdentifier, result, translatedData, filestoreId, processedData) => {
       let schemaKeys;
       if (schema?.schema?.["Properties"]) {
         schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
@@ -218,6 +218,7 @@ export const updateSessionUtils = {
       // });
 
       upload.data = result;
+      if (processedData) return;
       let boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schema)) || {};
       const mappedToList = upload?.resourceMapping.map((item) => item.mappedTo);
       let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, upload?.resourceMapping);
@@ -319,7 +320,7 @@ export const updateSessionUtils = {
         };
         let dataInSsn = Digit.SessionStorage.get("microplanData")?.upload?.find((item) => item.active && item.id === id);
         if (dataInSsn && dataInSsn.filestoreId === filestoreId) {
-          storedData.push({ file: fileData, jsonData: dataInSsn?.data, translatedData: false, active });
+          storedData.push({ file: fileData, jsonData: dataInSsn?.data, processedData: true, translatedData: false, active });
         } else {
           const promiseToAttach = axios
             .get("/filestore/v1/files/id", {
@@ -348,17 +349,6 @@ export const updateSessionUtils = {
                     additionalProps.t,
                     additionalProps.campaignData
                   );
-
-                  // const response = await parseXlsxToJsonMultipleSheetsForSessionUtil(
-                  //   file,
-                  //   { header: 1 },
-                  //   {
-                  //     filestoreId,
-                  //     inputFileType,
-                  //     templateIdentifier,
-                  //     id,
-                  //   }
-                  // );
                   let fileData = {
                     filestoreId,
                     inputFileType,
@@ -405,16 +395,16 @@ export const updateSessionUtils = {
       //populate this object based on the files and return
       let upload = [];
 
-      filesResponse.forEach(({ jsonData, file, translatedData, active }, idx) => {
+      filesResponse.forEach(({ jsonData, file, translatedData, active, processedData }, idx) => {
         switch (file?.inputFileType) {
           case "Shapefile":
-            upload = handleGeoJson(file, jsonData, upload, translatedData, active, true);
+            upload = handleGeoJson(file, jsonData, upload, translatedData, active, processedData, true);
             break;
           case "Excel":
             upload = handleExcel(file, jsonData, upload, translatedData, active);
             break;
           case "GeoJSON":
-            upload = handleGeoJson(file, jsonData, upload, translatedData, active);
+            upload = handleGeoJson(file, jsonData, upload, translatedData, active, processedData);
           default:
             break;
         }

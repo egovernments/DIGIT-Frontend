@@ -2472,3 +2472,12 @@ $border-color: rgba(214, 213, 212, 1);
   font-weight: 700;
   text-align: left;
 }
+
+.map-pop-up {
+  @include custom-scrollbar();
+  background-color: white;
+  margin: 1rem 0;
+  width: 28rem;
+  max-height: 23rem;
+  overflow: auto;
+}

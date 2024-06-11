@@ -28,7 +28,7 @@ export const geojsonValidations = (data, schemaData, t) => {
   } else if (valid.message) {
     return { valid: false, message: valid.message };
   } else {
-    return { valid: false, message: "ERROR_INVALID_GEOJSON" };
+    return { valid: false, message: ["ERROR_INVALID_GEOJSON"] };
   }
 };
 
@@ -41,14 +41,14 @@ export const geojsonStructureValidation = (data) => {
     valid = valid && check;
     const errors = gjv.isFeature(data["features"][i], true);
     // check if the location coordinates are according to the provided guidlines
-    if (errors.some((str) => str.includes("Location Coordinates Error:"))) return { valid: false, message: "ERROR_INCORRECT_LOCATION_COORDINATES" };
+    if (errors.some((str) => str.includes("Location Coordinates Error:"))) return { valid: false, message: ["ERROR_INCORRECT_LOCATION_COORDINATES"] };
     if (!check) trace[i] = [errors];
-    let error;
-    Object.keys(data["features"][i]["properties"]).forEach((j) => {
-      if (j.length > 10) error = { valid: false, trace, message: "ERROR_FIELD_NAME" };
-      return j;
-    });
-    if (error) return error;
+    // let error;
+    // Object.keys(data["features"][i]["properties"]).forEach((j) => {
+    //   if (j.length > 10) error = { valid: false, trace, message: ["ERROR_FIELD_NAME"] };
+    //   return j;
+    // });
+    // if (error) return error;
   }
   return { valid, trace };
 };
@@ -134,7 +134,7 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
           hasDataErrors = "true";
           break;
         case "required":
-          missingColumnsList.add(validateGeojson.errors[i].params.missingProperty); 
+          missingColumnsList.add(validateGeojson.errors[i].params.missingProperty);
           hasDataErrors = "missing_properties";
           break;
         case "pattern":
@@ -152,30 +152,31 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
             ...(errors?.[name]?.[instancePathType[2]] ? errors?.[name]?.[instancePathType[2]] : {}),
             [instancePathType[4]]: [
               ...new Set(
-                ...(errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]]
-                  ? errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]]
-                  : [])
+                ...(errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]] ? errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]] : [])
               ),
               tempErrorStore,
             ],
           },
         };
 
-        switch (hasDataErrors) {
-          case "true":
-            errorMessages = { ...errorMessages, dataError: t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") };
-            break;
-          case "unknown":
-            errorMessages = { ...errorMessages, unkown: t("ERROR_UNKNOWN") };
-            break;
-          case "missing_properties":
-            errorMessages = {...errorMessages, missingProperty: t("ERROR_MISSING_PROPERTY", { properties: [...missingColumnsList].map((item) => t(item)).join(", ") }) };
-            break;
-          case "false":
-            break;
-        }
+      switch (hasDataErrors) {
+        case "true":
+          errorMessages = { ...errorMessages, dataError: t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") };
+          break;
+        case "unknown":
+          errorMessages = { ...errorMessages, unkown: t("ERROR_UNKNOWN") };
+          break;
+        case "missing_properties":
+          errorMessages = {
+            ...errorMessages,
+            missingProperty: t("ERROR_MISSING_PROPERTY", { properties: [...missingColumnsList].map((item) => t(item)).join(", ") }),
+          };
+          break;
+        case "false":
+          break;
+      }
     }
-    
+
     ajv.removeSchema();
     return {
       valid: !hasDataErrors,

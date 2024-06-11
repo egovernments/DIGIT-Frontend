@@ -427,7 +427,7 @@ const Upload = ({
           break;
         case GEOJSON:
           try {
-            response = await handleGeojsonFile(file, schemaData, t);
+            response = await handleGeojsonFile(file, schemaData, setUploadedFileError, t);
             file = new File([file], file.name, { type: "application/geo+json" });
             if (response.check == false && response.stopUpload) {
               setLoader(false);
@@ -684,7 +684,7 @@ const Upload = ({
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
-      handleValidationErrorResponse([t("ERROR_UPLOADING_FILE")]);
+      handleValidationErrorResponset("ERROR_UPLOADING_FILE");
     }
   };
   const saveFileToFileStore = async () => {
@@ -1012,7 +1012,7 @@ const Upload = ({
               headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} />}
               actionSaveOnSubmit={validationForMappingAndDataSaving}
               actionSaveLabel={t("COMPLETE_MAPPING")}
-              headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ margin: "0.4rem 0.8rem 0 0" }} />}
             >
               <div className="modal-body">
                 <p className="modal-main-body-p">{t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}</p>
@@ -1880,7 +1880,7 @@ export const handleExcelFile = async (
   }
 };
 
-const handleGeojsonFile = async (file, schemaData, t) => {
+const handleGeojsonFile = async (file, schemaData, setUploadedFileError, t) => {
   // Reading and checking geojson data
   const data = await readGeojson(file, t);
   if (!data.valid) {

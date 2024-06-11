@@ -1341,7 +1341,7 @@ const addGeojsonToMap = (map, geojson, t) => {
       },
       onEachFeature: function (feature, layer) {
         let popupContent;
-        popupContent = "<div style='background-color: white; padding: 0rem;'>";
+        popupContent = "<div class='map-pop-up'>";
         popupContent += "<table style='border-collapse: collapse;'>";
         popupContent +=
           "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
@@ -1351,7 +1351,7 @@ const addGeojsonToMap = (map, geojson, t) => {
           if (prop !== "name" && prop !== "addOn" && prop !== "feature") {
             let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
             popupContent +=
-              "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
+              "<tr style='padding-top:0.5rem;'><td style='padding-top:0.5rem; font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
               t(prop) +
               "</td><td>" +
               data +
@@ -1359,7 +1359,10 @@ const addGeojsonToMap = (map, geojson, t) => {
           }
         }
         popupContent += "</table></div>";
-        layer.bindPopup(popupContent);
+        layer.bindPopup(popupContent, {
+          minWidth: "28rem",
+          padding: "0",
+        });
         // Adjust map here when pop up closes
         layer.on("popupclose", function () {
           map.fitBounds(geojsonLayer.getBounds());
