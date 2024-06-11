@@ -1761,7 +1761,6 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     console.log(boundaryData,"ffffffffffffffffff")
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-    console.group(isKeyOfThatTypePresent, ";;;;;;;;;;;;;;;;;;")
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
         console.log(isKeyOfThatTypePresent,"kkkkkkkkkkkkkkkk",boundaryTypeOnWhichWeSplit)
