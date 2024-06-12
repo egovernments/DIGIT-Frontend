@@ -1357,7 +1357,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
 async function appendDistricts(request: any, workbook: any, uniqueDistrictsForMainSheet: any, differentTabsBasedOnLevel: any, boundaryData: any, localizationMap: any, districtLevelRowBoundaryCodeMap: any, hierarchy: any) {
     const configurableColumnHeadersFromSchemaForTargetSheet = await getConfigurableColumnHeadersFromSchemaForTargetSheet(request, hierarchy, boundaryData, differentTabsBasedOnLevel, localizationMap);
     for (const uniqueData of uniqueDistrictsForMainSheet) {
-        const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
+        const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('#') + 1);
         logger.info(`generating the boundary data for ${uniqueDataFromLevelForDifferentTabs} - ${differentTabsBasedOnLevel}`)
         const districtDataFiltered = boundaryData.filter((boundary: any) => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs && boundary[hierarchy[hierarchy.length - 1]]);
         const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
@@ -1746,11 +1746,9 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
-    console.log(boundaryData,"ffffffffffffffffff")
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
-        console.log(isKeyOfThatTypePresent,"kkkkkkkkkkkkkkkk",boundaryTypeOnWhichWeSplit)
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }
