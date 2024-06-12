@@ -5,7 +5,7 @@ import { httpRequest } from "../utils/request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import {  getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler,  replicateRequest, throwError } from "../utils/genericUtils";
+import { getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, replicateRequest, throwError } from "../utils/genericUtils";
 import { createBoundaryMap, generateProcessedFileAndPersist, getFinalValidHeadersForTargetSheetAsPerCampaignType, getLocalizedName } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
@@ -323,52 +323,57 @@ async function validateViaSchema(data: any, schema: any, request: any, localizat
         const ajv = new Ajv();
         const validate = ajv.compile(schema);
         const validationErrors: any[] = [];
-        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap)
+        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap);
         const activeColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName, localizationMap) : null;
         if (request?.body?.ResourceDetails?.type == "user") {
-            validatePhoneNumber(data)
+            validatePhoneNumber(data);
         }
         if (data?.length > 0) {
             data.forEach((item: any) => {
                 if (activeColumnName) {
                     if (!item?.[activeColumnName]) {
-                        throwError("COMMON", 400, "VALIDATION_ERROR", `Data at row ${item?.["!row#number!"]} have missing value in ${activeColumnName}`);
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ dataPath: `'${activeColumnName}'`, message: `is missing` }] });
                     }
-                    if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
-                        {
-                            throwError("COMMON", 400, "VALIDATION_ERROR", `Data at row ${item?.["!row#number!"]} have invalid value in ${activeColumnName}, Allowed values are Active or Inactive`);
-                        }
+                    else if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ dataPath: `'${activeColumnName}'`, message: `should be equal to one of the allowed values. Allowed values are Active, Inactive` }] });
                     }
                 }
                 const active = activeColumnName ? item[activeColumnName] : "Active";
-                if (active == "Active" || !item?.[uniqueIdentifierColumnName])
+                if (active == "Active" || !item?.[uniqueIdentifierColumnName]) {
                     if (!validate(item)) {
                         validationErrors.push({ index: item?.["!row#number!"], errors: validate.errors });
                     }
+                }
             });
-            await validateUnique(schema, data, request)
+            await validateUnique(schema, data, request);
             if (validationErrors.length > 0) {
-                const errorMessage = validationErrors.map(({ index, errors }) => {
-                    const formattedErrors = errors.map((error: any) => {
-                        let formattedError = `${error.dataPath}: ${error.message}`;
+                const errorMessage = validationErrors.map(({ index, message, errors }) => {
+                    const formattedErrors = errors ? errors.map((error: any) => {
+                        let dataPath = error.dataPath || ''; // Assign an empty string if dataPath is not available
+                        if (dataPath.startsWith('[') && dataPath.endsWith(']')) {
+                            dataPath = dataPath.slice(1, -1);
+                        }
+                        if (error.keyword === 'required') {
+                            const missingProperty = error.params?.missingProperty || '';
+                            return `in column '${missingProperty}' is missing`;
+                        }
+                        let formattedError = `in column ${dataPath} ${error.message}`;
                         if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
                             formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
                         }
                         return formattedError;
-                    }).join(', ');
-                    return `Data at row ${index}: ${formattedErrors}`;
+                    }).join(', ') : message;
+                    return `Data at row ${index} ${formattedErrors}`;
                 }).join(' , ');
                 throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
             } else {
                 logger.info("All Data rows are valid.");
             }
-        }
-        else {
+        } else {
             throwError("FILE", 400, "INVALID_FILE_ERROR", "Data rows cannot be empty");
         }
-    }
-    else {
-        logger.info("skipping schema validation")
+    } else {
+        logger.info("Skipping schema validation");
     }
 }
 
@@ -494,7 +499,7 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
             // const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
             const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
-            console.log(finalValidHeadersForTargetSheetAsPerCampaignType,"finalllllllllllll")
+            logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
             // validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
         }
     }

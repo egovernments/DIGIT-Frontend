@@ -240,11 +240,6 @@ async function validateCampaignRequest(requestBody: any) {
         if (!requestBody?.Campaign?.tenantId) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "Enter TenantId");
         }
-        // validateBoundaries(requestBody);
-        // const { projectType } = requestBody?.Campaign;
-        // if (!projectType) {
-        //     throwError("COMMON", 400, "VALIDATION_ERROR", "Enter ProjectType");
-        // }
         await validateCampaign(requestBody);
     }
     else {
@@ -310,7 +305,7 @@ async function validateHierarchyType(request: any, hierarchyType: any, tenantId:
 
 // Function to validate the generation request
 async function validateGenerateRequest(request: express.Request) {
-    const { tenantId,  hierarchyType, forceUpdate } = request.query;
+    const { tenantId, hierarchyType, forceUpdate } = request.query;
     validateBodyViaSchema(generateRequestSchema, request.query);
     if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId in userInfo and query should be the same");

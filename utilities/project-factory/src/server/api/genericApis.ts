@@ -48,7 +48,7 @@ function getJsonData(sheetData: any, getRow = false, getSheetName = false, sheet
       for (let j = 0; j < headers.length; j++) {
         const key = headers[j];
         const value = row[j] === undefined || row[j] === "" ? "" : row[j];
-        if (value) {
+        if (value || value === 0) {
           rowData[key] = value;
         }
       }
@@ -1072,7 +1072,7 @@ async function callMdmsV2Data(
   }
 }
 
-function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed:any) {
+function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed: any, errorMessage: any) {
 
   // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
   columns.sort((a: any, b: any) => {
@@ -1090,15 +1090,17 @@ function enrichSchema(data: any, properties: any, required: any, columns: any, u
   data.required = required;
   data.columns = sortedPropertyNames;
   data.unique = unique;
+  data.errorMessage = errorMessage;
   data.columnsNotToBeFreezed = columnsNotToBeFreezed;
 }
 
 function convertIntoSchema(data: any) {
   const properties: any = {};
+  const errorMessage: any = {};
   const required: any[] = [];
   const columns: any[] = [];
   const unique: any[] = [];
-  const columnsNotToBeFreezed : any[] = [];
+  const columnsNotToBeFreezed: any[] = [];
 
   for (const propType of ['enumProperties', 'numberProperties', 'stringProperties']) {
     if (data.properties[propType] && Array.isArray(data.properties[propType]) && data.properties[propType]?.length > 0) {
@@ -1107,6 +1109,8 @@ function convertIntoSchema(data: any) {
           ...property,
           type: propType === 'stringProperties' ? 'string' : propType === 'numberProperties' ? 'number' : undefined
         };
+        if (property?.errorMessage)
+          errorMessage[property?.name] = property?.errorMessage;
 
         if (property?.isRequired && required.indexOf(property?.name) === -1) {
           required.push(property?.name);
@@ -1114,7 +1118,7 @@ function convertIntoSchema(data: any) {
         if (property?.isUnique && unique.indexOf(property?.name) === -1) {
           unique.push(property?.name);
         }
-        if(!property?.freezeColumn || property?.freezeColumn == false){
+        if (!property?.freezeColumn || property?.freezeColumn == false) {
           columnsNotToBeFreezed.push(property?.name);
         }
 
@@ -1123,7 +1127,7 @@ function convertIntoSchema(data: any) {
       }
     }
   }
-  enrichSchema(data, properties, required, columns, unique,columnsNotToBeFreezed);
+  enrichSchema(data, properties, required, columns, unique, columnsNotToBeFreezed, errorMessage);
   return data;
 }
 
