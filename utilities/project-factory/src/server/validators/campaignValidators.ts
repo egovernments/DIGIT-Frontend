@@ -505,7 +505,7 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
             const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
             logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
-            // validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
+            validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
         }
     }
 }
