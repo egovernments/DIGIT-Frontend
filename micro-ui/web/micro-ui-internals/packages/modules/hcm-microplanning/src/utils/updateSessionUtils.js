@@ -405,6 +405,7 @@ export const updateSessionUtils = {
             break;
           case "GeoJSON":
             upload = await handleGeoJson(file, jsonData, upload, translatedData, active, processedData);
+            break;
           default:
             break;
         }

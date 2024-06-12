@@ -268,7 +268,7 @@ const Mapping = ({
         color: "rgba(176, 176, 176, 1)",
         fillOpacity: 0,
         fill: "rgb(4,136,219,1)",
-        child: !childrenList || childrenList.length === 0 ? true : false, // so that this layer also has mounse in and mouse out events
+        child: !childrenList || childrenList.length === 0, // so that this layer also has mounse in and mouse out events
       };
       let geojsonsBase = prepareGeojson(boundaryData, "ALL", addOn);
       if (geojsonsBase) {
