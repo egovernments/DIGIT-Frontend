@@ -9,7 +9,7 @@ import { validateFilters } from "./campaignValidators";
 import { generateRequestSchema } from "../config/models/generateRequestSchema";
 
 // Function to validate data against a JSON schema
-function validateDataWithSchema(data: any, schema: any): { isValid: boolean; error: Ajv.ErrorObject[] | null | undefined } {
+function validateDataWithSchema(data: any, schema: any): { isValid: boolean; error: any | null | undefined } {
     const ajv = new Ajv();
     const validate = ajv.compile(schema);
     const isValid: any = validate(data);

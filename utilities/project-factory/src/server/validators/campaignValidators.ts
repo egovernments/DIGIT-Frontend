@@ -19,6 +19,7 @@ import { searchDataService } from "../service/dataManageService";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { campaignStatuses, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
+import addAjvErrors from "ajv-errors";
 
 
 
@@ -323,10 +324,25 @@ function validatePhoneNumber(datas: any[]) {
     }
 }
 
+async function changeSchemaErrorMessage(schema: any, localizationMap?: any) {
+    if (schema?.errorMessage) {
+        for (const key in schema.errorMessage) {
+            const value = schema.errorMessage[key];
+            delete schema.errorMessage[key];
+            schema.errorMessage[getLocalizedName(key, localizationMap)] = value;
+        }
+    }
+    return schema; // Return unmodified schema if no error message
+}
+
+
+
 async function validateViaSchema(data: any, schema: any, request: any, localizationMap?: any) {
     if (schema) {
-        const ajv = new Ajv();
-        const validate = ajv.compile(schema);
+        const newSchema: any = await changeSchemaErrorMessage(schema, localizationMap)
+        const ajv = new Ajv({ allErrors: true, strict: false }); // enable allErrors to get all validation errors
+        addAjvErrors(ajv);
+        const validate = ajv.compile(newSchema);
         const validationErrors: any[] = [];
         const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap);
         const activeColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName, localizationMap) : null;
@@ -337,39 +353,40 @@ async function validateViaSchema(data: any, schema: any, request: any, localizat
             data.forEach((item: any) => {
                 if (activeColumnName) {
                     if (!item?.[activeColumnName]) {
-                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ dataPath: `'${activeColumnName}'`, message: `is missing` }] });
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should not be empty` }] });
                     }
                     else if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
-                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ dataPath: `'${activeColumnName}'`, message: `should be equal to one of the allowed values. Allowed values are Active, Inactive` }] });
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should be equal to one of the allowed values. Allowed values are Active, Inactive` }] });
                     }
                 }
                 const active = activeColumnName ? item[activeColumnName] : "Active";
                 if (active == "Active" || !item?.[uniqueIdentifierColumnName]) {
-                    if (!validate(item)) {
+                    const validationResult = validate(item);
+                    if (!validationResult) {
                         validationErrors.push({ index: item?.["!row#number!"], errors: validate.errors });
                     }
                 }
             });
-            await validateUnique(schema, data, request);
+            await validateUnique(newSchema, data, request);
             if (validationErrors.length > 0) {
                 const errorMessage = validationErrors.map(({ index, message, errors }) => {
                     const formattedErrors = errors ? errors.map((error: any) => {
-                        let dataPath = error.dataPath || ''; // Assign an empty string if dataPath is not available
-                        if (dataPath.startsWith('[') && dataPath.endsWith(']')) {
-                            dataPath = dataPath.slice(1, -1);
+                        let instancePath = error.instancePath || ''; // Assign an empty string if dataPath is not available
+                        if (instancePath.startsWith('/')) {
+                            instancePath = instancePath.slice(1);
                         }
                         if (error.keyword === 'required') {
                             const missingProperty = error.params?.missingProperty || '';
-                            return `in column '${missingProperty}' is missing`;
+                            return `Data at row ${index} in column '${missingProperty}' should not be empty`;
                         }
-                        let formattedError = `in column ${dataPath} ${error.message}`;
+                        let formattedError = `in column '${instancePath}' ${getLocalizedName(error.message, localizationMap)}`;
                         if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
                             formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
                         }
-                        return formattedError;
-                    }).join(', ') : message;
-                    return `Data at row ${index} ${formattedErrors}`;
-                }).join(' , ');
+                        return `Data at row ${index} ${formattedError}`
+                    }).join(' ; ') : message;
+                    return formattedErrors;
+                }).join(' ; ');
                 throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
             } else {
                 logger.info("All Data rows are valid.");
