@@ -799,6 +799,7 @@ const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFin
 
   // Combine rows
   const combinedData = [combinedHeaders];
+  const addedCommonValues = new Set();
   for (let i = 1; i < data1.length; i++) {
     const row1 = data1[i];
     const commonValue = row1[commonColumnIndex1];
@@ -825,6 +826,22 @@ const innerJoinLists = (data1, data2, commonColumnName, listOfColumnsNeededInFin
         });
         combinedData.push(combinedRow);
       });
+    }
+    addedCommonValues.add(commonValue);
+  }
+  // Add rows from data2 that do not have a matching row in data1
+  if (data2) {
+    for (let i = 1; i < data2.length; i++) {
+      const row2 = data2[i];
+      const commonValue = row2[commonColumnIndex2];
+      if (!addedCommonValues.has(commonValue)) {
+        const combinedRow = combinedHeaders.map((header) => {
+          // const index1 = data1[0].indexOf(header);
+          const index2 = data2[0].indexOf(header);
+          return index2 !== -1 ? row2[index2] : null;
+        });
+        combinedData.push(combinedRow);
+      }
     }
   }
 
@@ -1038,7 +1055,6 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
   if (!microplanData) return [];
 
   let combinesDataList = [];
-
   // Check if microplanData and its upload property exist
   if (microplanData && microplanData?.upload) {
     let files = microplanData?.upload;
@@ -1078,9 +1094,9 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
             const values = fileData?.data?.features.map((feature) => {
               // list with features added to it
               const temp = keys.map((key) => {
-                if (feature.properties[key] === "") {
-                  return null;
-                }
+                // if (feature.properties[key] === "") {
+                //   return null;
+                // }
                 return feature.properties[key];
               });
               return temp;

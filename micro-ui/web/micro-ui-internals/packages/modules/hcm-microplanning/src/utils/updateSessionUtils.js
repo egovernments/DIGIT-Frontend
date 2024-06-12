@@ -142,7 +142,54 @@ export const updateSessionUtils = {
       sessionObj.auditDetails = row.auditDetails;
     };
 
-    const handleGeoJson = (file, result, upload, translatedData, active, processedData, shapefileOrigin = false) => {
+    const fetchBoundaryDataWrapper = async (schemaData) => {
+      let boundaryDataAgainstBoundaryCode = {};
+      // if (!schemaData?.doHierarchyCheckInUploadedData) {
+      try {
+        const rootBoundary = additionalProps.campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+        const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+        let boundaryData = sessionData.filteredBoundaries;
+        let filteredBoundaries;
+        if (!boundaryData) {
+          // Only fetch boundary data if not present in session storage
+          boundaryData = await fetchBoundaryData(
+            await Digit.ULBService.getCurrentTenantId(),
+            additionalProps.campaignData?.hierarchyType,
+            rootBoundary?.[0]?.code
+          );
+          filteredBoundaries = await filterBoundaries(boundaryData, additionalProps.campaignData?.boundaries);
+
+          // Update the session storage with the new filtered boundaries
+          Digit.SessionStorage.set("microplanHelperData", {
+            ...sessionData,
+            filteredBoundaries: filteredBoundaries,
+          });
+        } else {
+          filteredBoundaries = boundaryData;
+        }
+        const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
+        xlsxData.forEach((item, i) => {
+          if (i === 0) return;
+          let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
+          if (boundaryCodeIndex >= item.length) {
+            // If boundaryCodeIndex is out of bounds, return the item as is
+            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(additionalProps.t);
+          } else {
+            // Otherwise, remove the element at boundaryCodeIndex
+            boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
+              .slice(0, boundaryCodeIndex)
+              .concat(item.slice(boundaryCodeIndex + 1))
+              .map(additionalProps.t);
+          }
+        });
+      } catch (error) {
+        console.error(error?.message);
+      }
+      // }
+      return boundaryDataAgainstBoundaryCode;
+    };
+
+    const handleGeoJson = async (file, result, upload, translatedData, active, processedData, shapefileOrigin = false) => {
       if (!file) {
         console.error(`${shapefileOrigin ? "Shapefile" : "Geojson"} file is undefined`);
         return upload;
@@ -157,7 +204,7 @@ export const updateSessionUtils = {
         return [...upload, uploadObject];
       }
 
-      handleGeoJsonSpecific(schema, uploadObject, templateIdentifier, result, translatedData, filestoreId, processedData);
+      await handleGeoJsonSpecific(schema, uploadObject, templateIdentifier, result, translatedData, filestoreId, processedData);
       upload.push(uploadObject);
       return upload;
     };
@@ -219,7 +266,6 @@ export const updateSessionUtils = {
 
       upload.data = result;
       if (processedData) return;
-      let boundaryDataAgainstBoundaryCode = (await fetchBoundaryDataWrapper(schema)) || {};
       const mappedToList = upload?.resourceMapping.map((item) => item.mappedTo);
       let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, upload?.resourceMapping);
       const newFeatures = result["features"].map((item) => {
@@ -234,6 +280,7 @@ export const updateSessionUtils = {
       });
       upload.data.features = newFeatures;
       if (additionalProps.heirarchyData?.every((item) => !mappedToList.includes(item))) {
+        let boundaryDataAgainstBoundaryCode = await fetchBoundaryDataWrapper(schema);
         upload.data.features.forEach((feature) => {
           const boundaryCode = feature.properties.boundaryCode;
           let additionalDetails = {};
@@ -246,53 +293,6 @@ export const updateSessionUtils = {
           }
           feature.properties = { ...additionalDetails, ...feature.properties };
         });
-      }
-    };
-
-    const fetchBoundaryDataWrapper = async (schemaData) => {
-      let boundaryDataAgainstBoundaryCode = {};
-      if (!schemaData?.doHierarchyCheckInUploadedData) {
-        try {
-          const rootBoundary = additionalProps.campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
-          const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
-          let boundaryData = sessionData.filteredBoundaries;
-          let filteredBoundaries;
-          if (!boundaryData) {
-            // Only fetch boundary data if not present in session storage
-            boundaryData = await fetchBoundaryData(
-              Digit.ULBService.getCurrentTenantId(),
-              additionalProps.campaignData?.hierarchyType,
-              rootBoundary?.[0]?.code
-            );
-            filteredBoundaries = filterBoundaries(boundaryData, additionalProps.campaignData?.boundaries);
-
-            // Update the session storage with the new filtered boundaries
-            Digit.SessionStorage.set("microplanHelperData", {
-              ...sessionData,
-              filteredBoundaries: filteredBoundaries,
-            });
-          } else {
-            filteredBoundaries = boundaryData;
-          }
-          const xlsxData = addBoundaryData([], filteredBoundaries)?.[0]?.data;
-          xlsxData.forEach((item, i) => {
-            if (i === 0) return;
-            let boundaryCodeIndex = xlsxData?.[0]?.indexOf(commonColumn);
-            if (boundaryCodeIndex >= item.length) {
-              // If boundaryCodeIndex is out of bounds, return the item as is
-              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item.slice().map(additionalProps.t);
-            } else {
-              // Otherwise, remove the element at boundaryCodeIndex
-              boundaryDataAgainstBoundaryCode[item[boundaryCodeIndex]] = item
-                .slice(0, boundaryCodeIndex)
-                .concat(item.slice(boundaryCodeIndex + 1))
-                .map(additionalProps.t);
-            }
-          });
-          return boundaryDataAgainstBoundaryCode;
-        } catch (error) {
-          console.error(error?.message);
-        }
       }
     };
 
@@ -395,16 +395,16 @@ export const updateSessionUtils = {
       //populate this object based on the files and return
       let upload = [];
 
-      filesResponse.forEach(({ jsonData, file, translatedData, active, processedData }, idx) => {
+      await filesResponse.forEach(async ({ jsonData, file, translatedData, active, processedData }, idx) => {
         switch (file?.inputFileType) {
           case "Shapefile":
-            upload = handleGeoJson(file, jsonData, upload, translatedData, active, processedData, true);
+            upload = await handleGeoJson(file, jsonData, upload, translatedData, active, processedData, true);
             break;
           case "Excel":
             upload = handleExcel(file, jsonData, upload, translatedData, active);
             break;
           case "GeoJSON":
-            upload = handleGeoJson(file, jsonData, upload, translatedData, active, processedData);
+            upload = await handleGeoJson(file, jsonData, upload, translatedData, active, processedData);
           default:
             break;
         }
@@ -420,8 +420,10 @@ export const updateSessionUtils = {
       setMicroplanHypothesis();
       setMicroplanRuleEngine();
       setDraftValues();
+      // calling fucntion to cache filtered boundary data
+      await fetchBoundaryDataWrapper({});
       const filesResponse = await fetchFiles();
-      const upload = await setMicroplanUpload(filesResponse); //should return upload object
+      const upload = await setMicroplanUpload(filesResponse);
       sessionObj.upload = upload;
       return sessionObj;
     } catch (error) {

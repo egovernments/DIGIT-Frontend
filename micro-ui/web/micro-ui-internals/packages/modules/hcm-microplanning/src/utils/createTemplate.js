@@ -11,7 +11,7 @@ export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
   try {
     response = (await Digit.CustomService.getResponse(reqCriteria))?.TenantBoundary?.[0]?.boundary || {};
   } catch (error) {
-    throw new Error(error);
+    console.error("Error in fetching boundary Data: ", error.message);
   }
   return response;
 };
@@ -326,7 +326,7 @@ export const filterBoundaries = (boundaryData, boundaryFilters) => {
   // Map through the boundary data and apply the recursive filter function to each boundary
   const filteredData = boundaryData.map(filterRecursive);
   return filteredData;
-}
+};
 
 /**
  * Retrieves all facilities for a given tenant ID.
@@ -368,20 +368,20 @@ const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
   // Create data rows
   const dataRow = [];
   for (const facility of facilities) {
-    facility.isPermanent = facility.isPermanent?t("PERMAENENT"):t("TEMPORARY")
+    facility.isPermanent = facility.isPermanent ? t("PERMAENENT") : t("TEMPORARY");
     dataRow.push(headers.map((header) => facility[mapping[header]]));
   }
   headers.push(commonColumn);
-  let additionalCols=[];
-  if(schema?.schema?.Properties){
+  let additionalCols = [];
+  if (schema?.schema?.Properties) {
     const properties = Object.keys(schema.schema.Properties);
-  for(const col of properties){
-    if(!headers.includes(col)){
-      additionalCols.push(col)
+    for (const col of properties) {
+      if (!headers.includes(col)) {
+        additionalCols.push(col);
+      }
     }
   }
-  }
-  headers.push(...additionalCols)
+  headers.push(...additionalCols);
   // Combine headers and data rows
   const arrayOfArrays = [headers, ...dataRow];
 
@@ -409,7 +409,7 @@ export const createTemplate = async ({
   boundaries,
   tenantId,
   hierarchyType,
-  t
+  t,
 }) => {
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
   const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
@@ -419,7 +419,7 @@ export const createTemplate = async ({
   if (!boundaryData) {
     // Only fetch boundary data if not present in session storage
     boundaryData = await fetchBoundaryData(tenantId, hierarchyType, rootBoundary?.[0]?.code);
-    filteredBoundaries = filterBoundaries(boundaryData, boundaries);
+    filteredBoundaries = await filterBoundaries(boundaryData, boundaries);
 
     // Update the session storage with the new filtered boundaries
     Digit.SessionStorage.set("microplanHelperData", {
@@ -441,7 +441,8 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema, t);
+      if (schema?.template?.facilitySchemaApiMapping)
+        xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema, t);
       else xlsxData = addSchemaData(xlsxData, schema);
     } else {
       // not adding facility sheet
@@ -453,7 +454,8 @@ export const createTemplate = async ({
     if (addFacilityData) {
       // adding facility sheet
       const facilities = await getAllFacilities(tenantId);
-      if (schema?.template?.facilitySchemaApiMapping) xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema,t);
+      if (schema?.template?.facilitySchemaApiMapping)
+        xlsxData = addFacilitySheet(xlsxData, schema?.template?.facilitySchemaApiMapping, facilities, schema, t);
       else {
         let facilitySheet = {
           sheetName: FACILITY_DATA_SHEET,
