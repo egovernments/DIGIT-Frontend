@@ -168,8 +168,8 @@ function enrichErrors(errorData: any, worksheet: any, statusColumn: any, errorDe
 }
 
 function enrichActiveColumn(worksheet: any, createAndSearchConfig: any, request: any) {
-    if (createAndSearchConfig?.activeColumn) {
-        const dataToCreate = request?.body?.dataToCreate;
+    if (createAndSearchConfig?.activeColumn && request?.body?.dataToCreate) {
+        const dataToCreate = request.body.dataToCreate;
         for (const data of dataToCreate) {
             const rowNumber = data['!row#number!'];
             const activeCell = worksheet.getCell(`${createAndSearchConfig?.activeColumn}${rowNumber}`);
