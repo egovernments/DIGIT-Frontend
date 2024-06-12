@@ -1315,7 +1315,7 @@ const UploadedFile = ({
           </div>
           <div className="body">
             {error.map((item) => (
-              <p>{item}</p>
+              <p>{t(item)}</p>
             ))}
           </div>
         </div>
