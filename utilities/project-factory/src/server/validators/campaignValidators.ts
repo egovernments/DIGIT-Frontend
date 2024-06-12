@@ -256,12 +256,6 @@ async function validateTargets(request: any, data: any[], errors: any[], localiz
     }
 }
 
-
-
-
-
-
-
 async function validateUnique(schema: any, data: any[], request: any) {
     const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.ResourceDetails?.tenantId);
     if (schema?.unique) {
