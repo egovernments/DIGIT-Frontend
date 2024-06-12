@@ -687,7 +687,7 @@ const Upload = ({
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
-      handleValidationErrorResponset("ERROR_UPLOADING_FILE");
+      handleValidationErrorResponse("ERROR_UPLOADING_FILE");
     }
   };
   const saveFileToFileStore = async () => {
@@ -1315,7 +1315,7 @@ const UploadedFile = ({
           </div>
           <div className="body">
             {error.map((item) => (
-              <p>{item}</p>
+              <p>{t(item)}</p>
             ))}
           </div>
         </div>
@@ -1433,15 +1433,15 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
       else if (!allFilesMatchRegex)
         resolve({
           valid: false,
-          message: "ERROR_CONTENT_NAMING_CONVENSION",
+          message: ["ERROR_CONTENT_NAMING_CONVENSION"],
           toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMING_CONVENSION") },
         });
       else if (!shpFile)
-        resolve({ valid: false, message: "ERROR_SHP_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
+        resolve({ valid: false, message: ["ERROR_SHP_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
       else if (!dbfFile)
-        resolve({ valid: false, message: "ERROR_DBF_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
+        resolve({ valid: false, message: ["ERROR_DBF_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
       else if (!shxFile)
-        resolve({ valid: false, message: "ERROR_SHX_MISSING", toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
+        resolve({ valid: false, message: ["ERROR_SHX_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
     } catch (error) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
