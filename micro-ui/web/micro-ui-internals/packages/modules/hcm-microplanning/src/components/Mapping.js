@@ -132,6 +132,7 @@ const Mapping = ({
   const filterBoundaryRef = useRef();
   const showChoroplethOptionRef = useRef();
   const showFilterOptionRef = useRef();
+  const [loader, setLoader] = useState(false);
 
   // Set TourSteps
   useEffect(() => {
@@ -184,6 +185,7 @@ const Mapping = ({
 
   useEffect(() => {
     if (map && filterDataOrigin && Object.keys(filterDataOrigin).length !== 0) {
+      setLoader("LOADING");
       // Check if all the data is present or not, if it is then extract it in a format that can be used for mapping and other mapping related operations
       extractGeoData(
         campaignType,
@@ -203,6 +205,7 @@ const Mapping = ({
         setDataCompleteness,
         t
       );
+      setLoader(false);
     }
   }, [filterDataOrigin, hierarchy]);
 
@@ -253,71 +256,77 @@ const Mapping = ({
   // showing selected boundary data
   useEffect(() => {
     if (!boundarySelections && !choroplethProperty && !filterSelections) return;
-    removeAllLayers(map, layers);
-    const { filteredSelection, childrenList } = filterBoundarySelection(boundaryData, boundarySelections);
-    let newLayer = [];
-    let addOn = {
-      fillColor: "rgba(255, 107, 43, 0)",
-      weight: 3.5,
-      opacity: 1,
-      color: "rgba(176, 176, 176, 1)",
-      fillOpacity: 0,
-      fill: "rgb(4,136,219,1)",
-      child: !childrenList || childrenList.length === 0 ? true : false, // so that this layer also has mounse in and mouse out events
-    };
-    let geojsonsBase = prepareGeojson(boundaryData, "ALL", addOn);
-    if (geojsonsBase) {
-      let baseLayer = addGeojsonToMap(map, geojsonsBase, t);
-      if (baseLayer) newLayer.push(baseLayer);
-      let bounds = findBounds(geojsonsBase);
-      if (bounds) map.fitBounds(bounds);
-    }
-
-    addOn = {
-      fillColor: "rgba(255, 107, 43, 1)",
-      weight: 2.5,
-      opacity: 1,
-      color: "rgba(255, 255, 255, 1)",
-      fillOpacity: 0.22,
-      fill: "rgb(4,136,219)",
-    };
-
-    let geojsonLayer;
-    if (choroplethProperty) {
-      if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
-        setToast({
-          state: "warning",
-          message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
-        });
+    setLoader("LOADING");
+    try {
+      removeAllLayers(map, layers);
+      const { filteredSelection, childrenList } = filterBoundarySelection(boundaryData, boundarySelections);
+      let newLayer = [];
+      let addOn = {
+        fillColor: "rgba(255, 107, 43, 0)",
+        weight: 3.5,
+        opacity: 1,
+        color: "rgba(176, 176, 176, 1)",
+        fillOpacity: 0,
+        fill: "rgb(4,136,219,1)",
+        child: !childrenList || childrenList.length === 0, // so that this layer also has mounse in and mouse out events
+      };
+      let geojsonsBase = prepareGeojson(boundaryData, "ALL", addOn);
+      if (geojsonsBase) {
+        let baseLayer = addGeojsonToMap(map, geojsonsBase, t);
+        if (baseLayer) newLayer.push(baseLayer);
+        let bounds = findBounds(geojsonsBase);
+        if (bounds) map.fitBounds(bounds);
       }
-      let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor: "rgb(0,0,0,0)" }) || [];
-      if (choroplethGeojson && choroplethGeojson.length !== 0)
-        choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
-      geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
-      if (geojsonLayer) {
+
+      addOn = {
+        fillColor: "rgba(255, 107, 43, 1)",
+        weight: 2.5,
+        opacity: 1,
+        color: "rgba(255, 255, 255, 1)",
+        fillOpacity: 0.22,
+        fill: "rgb(4,136,219)",
+      };
+
+      let geojsonLayer;
+      if (choroplethProperty) {
+        if (dataCompleteness === "partial" || dataCompleteness === "false" || dataCompleteness === undefined) {
+          setToast({
+            state: "warning",
+            message: t("DISPLAYING_DATA_ONLY_FOR_UPLOADED_BOUNDARIES"),
+          });
+        }
+        let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor: "rgb(0,0,0,0)" }) || [];
+        if (choroplethGeojson && choroplethGeojson.length !== 0)
+          choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
+        geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
+        if (geojsonLayer) {
+          newLayer.push(geojsonLayer);
+        }
+      }
+      geojsonLayer = null;
+      const geojsons = prepareGeojson(boundaryData, filteredSelection, addOn);
+      if (geojsons && geojsons.length > 0) {
+        geojsonLayer = addGeojsonToMap(map, geojsons, t);
         newLayer.push(geojsonLayer);
+        let bounds = findBounds(geojsons);
+        if (bounds) map.fitBounds(bounds);
       }
+
+      const childrenGeojson = prepareGeojson(boundaryData, childrenList, { ...addOn, opacity: 0, fillOpacity: 0, child: true });
+      let childrenGeojsonLayer = addGeojsonToMap(map, childrenGeojson, t);
+      if (childrenGeojsonLayer) newLayer.push(childrenGeojsonLayer);
+
+      //filters
+      const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", addOn);
+      const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, state?.MapFilters);
+      let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t);
+      if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
+
+      setLayer(newLayer);
+    } catch (error) {
+      console.error("Error while adding geojson to map: ", error.message);
     }
-    geojsonLayer = null;
-    const geojsons = prepareGeojson(boundaryData, filteredSelection, addOn);
-    if (geojsons && geojsons.length > 0) {
-      geojsonLayer = addGeojsonToMap(map, geojsons, t);
-      newLayer.push(geojsonLayer);
-      let bounds = findBounds(geojsons);
-      if (bounds) map.fitBounds(bounds);
-    }
-
-    const childrenGeojson = prepareGeojson(boundaryData, childrenList, { ...addOn, opacity: 0, fillOpacity: 0, child: true });
-    let childrenGeojsonLayer = addGeojsonToMap(map, childrenGeojson, t);
-    if (childrenGeojsonLayer) newLayer.push(childrenGeojsonLayer);
-
-    //filters
-    const filterGeojsons = prepareGeojson(filterData, filteredSelection && filteredSelection.length !== 0 ? filteredSelection : "ALL", addOn);
-    const filterGeojsonWithProperties = addFilterProperties(filterGeojsons, filterSelections, filterPropertyNames, state?.MapFilters);
-    let filterGeojsonLayer = addGeojsonToMap(map, filterGeojsonWithProperties, t);
-    if (filterGeojsonLayer) newLayer.push(filterGeojsonLayer);
-
-    setLayer(newLayer);
+    setLoader(false);
   }, [boundarySelections, choroplethProperty, filterSelections]);
 
   const handleOutsideClickAndSubmitSimultaneously = useCallback(() => {
@@ -434,6 +443,7 @@ const Mapping = ({
       {toast && toast.state === "warning" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"warning"} />
       )}
+      {loader && <LoaderWithGap text={t(loader)} />}
     </div>
   );
 };
@@ -1341,7 +1351,7 @@ const addGeojsonToMap = (map, geojson, t) => {
       },
       onEachFeature: function (feature, layer) {
         let popupContent;
-        popupContent = "<div style='background-color: white; padding: 0rem;'>";
+        popupContent = "<div class='map-pop-up'>";
         popupContent += "<table style='border-collapse: collapse;'>";
         popupContent +=
           "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
@@ -1351,7 +1361,7 @@ const addGeojsonToMap = (map, geojson, t) => {
           if (prop !== "name" && prop !== "addOn" && prop !== "feature") {
             let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
             popupContent +=
-              "<tr><td style='font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
+              "<tr style='padding-top:0.5rem;'><td style='padding-top:0.5rem; font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
               t(prop) +
               "</td><td>" +
               data +
@@ -1359,7 +1369,10 @@ const addGeojsonToMap = (map, geojson, t) => {
           }
         }
         popupContent += "</table></div>";
-        layer.bindPopup(popupContent);
+        layer.bindPopup(popupContent, {
+          minWidth: "28rem",
+          padding: "0",
+        });
         // Adjust map here when pop up closes
         layer.on("popupclose", function () {
           map.fitBounds(geojsonLayer.getBounds());

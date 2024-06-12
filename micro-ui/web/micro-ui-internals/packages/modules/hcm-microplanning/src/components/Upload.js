@@ -422,14 +422,15 @@ const Upload = ({
           } catch (error) {
             console.error("Excel parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            return;
           }
           break;
         case GEOJSON:
           try {
-            response = await handleGeojsonFile(file, schemaData, t);
+            response = await handleGeojsonFile(file, schemaData, setUploadedFileError, t);
             file = new File([file], file.name, { type: "application/geo+json" });
-            if (response.check == false && response.stopUpload) {
+            if (response.check === false && response.stopUpload) {
               setLoader(false);
               setToast(response.toast);
               return;
@@ -439,14 +440,15 @@ const Upload = ({
             fileDataToStore = response.fileDataToStore;
             callMapping = true;
           } catch (error) {
-            console.error("Geojson parsing error", error.message);
+            // console.error("Geojson parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            return;
           }
           break;
         case SHAPEFILE:
           try {
-            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, t);
+            response = await handleShapefiles(file, schemaData, setUploadedFileError, selectedFileType, setToast, t);
             file = new File([file], file.name, { type: "application/octet-stream" });
             check = response.check;
             errorMsg = response.error;
@@ -455,7 +457,8 @@ const Upload = ({
           } catch (error) {
             console.error("Shapefile parsing error", error.message);
             setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-            handleValidationErrorResponse([t("ERROR_UPLOADED_FILE")]);
+            handleValidationErrorResponse(t("ERROR_UPLOADED_FILE"));
+            return;
           }
           break;
         default:
@@ -684,7 +687,7 @@ const Upload = ({
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
-      handleValidationErrorResponse([t("ERROR_UPLOADING_FILE")]);
+      handleValidationErrorResponset("ERROR_UPLOADING_FILE");
     }
   };
   const saveFileToFileStore = async () => {
@@ -700,7 +703,7 @@ const Upload = ({
       }
     } catch (error) {
       error = t("ERROR_UPLOADING_FILE");
-      handleValidationErrorResponse([error]);
+      handleValidationErrorResponse(error);
       setResourceMapping([]);
       return;
     }
@@ -717,19 +720,21 @@ const Upload = ({
 
   const handleValidationErrorResponse = (error, errorLocationObject = {}) => {
     const fileObject = fileData;
-    fileObject.error = [error];
-    if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
-    setFileData((previous) => ({ ...previous, error, errorLocationObject }));
-    setFileDataList((prevFileDataList) => {
-      let temp = _.cloneDeep(prevFileDataList);
-      if (!temp) return temp;
-      let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
-      if (index !== -1) temp[index] = { ...temp[index], active: false };
-      temp.push(fileObject);
-      return temp;
-    });
-    setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
-    if (error) setUploadedFileError(error);
+    if (fileObject) {
+      fileObject.error = [error];
+      if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
+      setFileData((previous) => ({ ...previous, error, errorLocationObject }));
+      setFileDataList((prevFileDataList) => {
+        let temp = _.cloneDeep(prevFileDataList);
+        if (!temp) return temp;
+        let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
+        if (index !== -1) temp[index] = { ...temp[index], active: false };
+        temp.push(fileObject);
+        return temp;
+      });
+      setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
+      if (error) setUploadedFileError(error);
+    }
     setLoader(false);
   };
 
@@ -1012,7 +1017,7 @@ const Upload = ({
               headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_SPATIAL_DATA_PROPERTY_MAPPING")} />}
               actionSaveOnSubmit={validationForMappingAndDataSaving}
               actionSaveLabel={t("COMPLETE_MAPPING")}
-              headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ padding: "0.4rem 0.8rem 0 0" }} />}
+              headerBarEnd={<CloseButton clickHandler={cancelUpload} style={{ margin: "0.4rem 0.8rem 0 0" }} />}
             >
               <div className="modal-body">
                 <p className="modal-main-body-p">{t("INSTRUCTION_SPATIAL_DATA_PROPERTY_MAPPING")}</p>
@@ -1608,7 +1613,7 @@ const getSchema = (campaignType, type, section, schemas) => {
 const UploadGuideLines = ({ uploadGuideLines, t }) => {
   return (
     <div className="guidelines">
-      <p className="sub-heading">{t("PREREQUISITES")}</p>
+      {/* <p className="sub-heading">{t("PREREQUISITES")}</p>
       <div className="instruction-list">
         {t("INSTRUCTION_PREREQUISITES_1")}&nbsp;
         <a className="link" href="https://help.sap.com/docs/SAP_BW4HANA/107a6e8a38b74ede94c833ca3b7b6f51/ff09575df3614f3da5738ea14e72b703.html">
@@ -1616,7 +1621,8 @@ const UploadGuideLines = ({ uploadGuideLines, t }) => {
         </a>
       </div>
       <p className="instruction-list ">{t("INSTRUCTION_PREREQUISITES_2")}</p>
-      <p className="sub-heading padtop">{t("PROCEDURE")}</p>
+      <p className="sub-heading padtop">{t("PROCEDURE")}</p> */}
+      <p className="sub-heading">{t("PROCEDURE")}</p>
       {uploadGuideLines.map((item, index) => (
         <div className="instruction-list-container">
           <p key={index} className="instruction-list number">
@@ -1880,7 +1886,7 @@ export const handleExcelFile = async (
   }
 };
 
-const handleGeojsonFile = async (file, schemaData, t) => {
+const handleGeojsonFile = async (file, schemaData, setUploadedFileError, t) => {
   // Reading and checking geojson data
   const data = await readGeojson(file, t);
   if (!data.valid) {
@@ -1896,7 +1902,7 @@ const handleGeojsonFile = async (file, schemaData, t) => {
   return { check, error, fileDataToStore };
 };
 
-const handleShapefiles = async (file, schemaData, setUploadedFileError, selectedFileType, t) => {
+const handleShapefiles = async (file, schemaData, setUploadedFileError, selectedFileType, setToast, t) => {
   // Reading and validating the uploaded geojson file
   let response = await readAndValidateShapeFiles(file, t, selectedFileType["namingConvention"]);
   if (!response.valid) {

@@ -9,6 +9,7 @@ import {
   LabelFieldPair,
   CardLabel,
   TextInput,
+  LoaderWithGap,
 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
@@ -37,6 +38,7 @@ const MicroplanDetails = ({
   const [modal, setModal] = useState("none");
   const [toast, setToast] = useState();
   const [showNamingConventions, setShowNamingConventions] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   //fetch campaign data
   const { id = "" } = Digit.Hooks.useQueryParams();
@@ -132,21 +134,30 @@ const MicroplanDetails = ({
     }
   };
   const validateMicroplanName = async () => {
-    const body = {
-      PlanConfigurationSearchCriteria: {
-        name: microplan,
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-      },
-    };
-    const response = await SearchPlanConfig(body);
-    if (response?.PlanConfiguration?.length === 0) {
-      return true;
-    } else if (response?.PlanConfiguration?.length === 1) {
-      if (response?.PlanConfiguration[0].id === microplanData?.planConfigurationId) {
+    try {
+      setLoader("LOADING");
+      const body = {
+        PlanConfigurationSearchCriteria: {
+          name: microplan,
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+        },
+      };
+      const response = await SearchPlanConfig(body);
+      if (response?.PlanConfiguration?.length === 0) {
         return true;
+      } else if (response?.PlanConfiguration?.length === 1) {
+        if (response?.PlanConfiguration[0].id === microplanData?.planConfigurationId) {
+          setLoader();
+          return true;
+        }
       }
+      setLoader();
+      return false;
+    } catch (error) {
+      console.error("Error while checking microplan name duplication: ", error.message);
+      setLoader();
+      return false;
     }
-    return false;
   };
   // check if data has changed or not
   const updateData = useCallback(
@@ -205,6 +216,7 @@ const MicroplanDetails = ({
 
   return (
     <>
+      {loader && <LoaderWithGap text={t(loader)} />}
       <Card
         style={{
           margin: "1rem 0 1rem 0",
