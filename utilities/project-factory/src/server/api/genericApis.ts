@@ -1082,12 +1082,21 @@ function enrichSchema(data: any, properties: any, required: any, columns: any, u
     return a.orderNumber - b.orderNumber;
   });
 
+  required.sort((a: any, b: any) => {
+    if (a.orderNumber === b.orderNumber) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.orderNumber - b.orderNumber;
+  });
+
+  const sortedRequiredColumns = required.map((column: any) => column.name);
+
   // Extract sorted property names
   const sortedPropertyNames = columns.map((column: any) => column.name);
 
   // Update data with new properties and required fields
   data.properties = properties;
-  data.required = required;
+  data.required = sortedRequiredColumns;
   data.columns = sortedPropertyNames;
   data.unique = unique;
   data.errorMessage = errorMessage;
@@ -1113,7 +1122,7 @@ function convertIntoSchema(data: any) {
           errorMessage[property?.name] = property?.errorMessage;
 
         if (property?.isRequired && required.indexOf(property?.name) === -1) {
-          required.push(property?.name);
+          required.push({ name: property?.name, orderNumber: property?.orderNumber });
         }
         if (property?.isUnique && unique.indexOf(property?.name) === -1) {
           unique.push(property?.name);
