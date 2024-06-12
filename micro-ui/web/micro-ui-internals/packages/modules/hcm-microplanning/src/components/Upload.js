@@ -687,7 +687,7 @@ const Upload = ({
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
-      handleValidationErrorResponset("ERROR_UPLOADING_FILE");
+      handleValidationErrorResponse("ERROR_UPLOADING_FILE");
     }
   };
   const saveFileToFileStore = async () => {
