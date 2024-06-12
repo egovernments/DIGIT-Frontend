@@ -44,6 +44,14 @@ const SampleCard = () => {
         label: t("Sample Components"),
         link: `/${window?.contextPath}/employee/sample/sample-components`,
       },
+      {
+        label: t("Individual Tab Search"),
+        link: `/${window?.contextPath}/employee/sample/tab-search-individual`,
+      },
+      {
+        label: t("Individual View Details"),
+        link: `/${window?.contextPath}/employee/sample/individual-details-view`,
+      },
       
     ],
   };

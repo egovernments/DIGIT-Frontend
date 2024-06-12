@@ -11,8 +11,10 @@ import IndividualSearch from "./IndividualSearch";
 import ViewIndividual from "../../configs/ViewIndividual";
 import Create from "./SampleCreate";
 import View from "./SampleView";
-import SampleComponents from  "./SampleComponents";
+import SampleComponents from "./SampleComponents";
 import PanelCardResponse from "./PanelCardResponse";
+import TabIndividualSearch from "./TabIndividualSearch";
+import IndividualViewDetails from "./IndividualViewDetails";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -49,6 +51,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/sample-view`} component={() => <View />} />
         <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />
         <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
+        <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
+        <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
       </AppContainer>
     </Switch>
   );
