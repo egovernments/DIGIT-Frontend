@@ -140,8 +140,6 @@ const Upload = ({
 
       // if user has selected a file type and wants to go back to file type selection he/she can click back buttom
       const currentSectionIndex = sections.findIndex((item) => item.id === selectedSection.id);
-
-      debugger;
       if (!dataPresent) {
         if (navigationEvent?.name !== "step") {
           if (navigationEvent?.name === "next") {
