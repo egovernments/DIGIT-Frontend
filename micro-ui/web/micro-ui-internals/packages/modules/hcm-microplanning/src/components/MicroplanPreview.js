@@ -408,7 +408,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
   const [isScrollable, setIsScrollable] = useState(false);
 
   const applyNewHypothesis = () => {
-    if (tempHypothesisList.some((item) => parseFloat(item.value) === 0)) {
+    if (tempHypothesisList.some((item) => item.active && parseFloat(item.value) === 0)) {
       setToast({ state: "error", message: t("ERROR_HYPOTHESIS_VALUE_SHOULD_NOT_BE_ZERO") });
       return;
     }
