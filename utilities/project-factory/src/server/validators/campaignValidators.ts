@@ -19,6 +19,7 @@ import { searchDataService } from "../service/dataManageService";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { campaignStatuses, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
+import addAjvErrors from "ajv-errors";
 
 
 
@@ -328,57 +329,78 @@ function validatePhoneNumber(datas: any[]) {
     }
 }
 
+async function changeSchemaErrorMessage(schema: any, localizationMap?: any) {
+    if (schema?.errorMessage) {
+        for (const key in schema.errorMessage) {
+            const value = schema.errorMessage[key];
+            delete schema.errorMessage[key];
+            schema.errorMessage[getLocalizedName(key, localizationMap)] = value;
+        }
+    }
+    return schema; // Return unmodified schema if no error message
+}
+
+
+
 async function validateViaSchema(data: any, schema: any, request: any, localizationMap?: any) {
     if (schema) {
-        const ajv = new Ajv();
-        const validate = ajv.compile(schema);
+        const newSchema: any = await changeSchemaErrorMessage(schema, localizationMap)
+        const ajv = new Ajv({ allErrors: true, strict: false }); // enable allErrors to get all validation errors
+        addAjvErrors(ajv);
+        const validate = ajv.compile(newSchema);
         const validationErrors: any[] = [];
-        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap)
+        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap);
         const activeColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName, localizationMap) : null;
         if (request?.body?.ResourceDetails?.type == "user") {
-            validatePhoneNumber(data)
+            validatePhoneNumber(data);
         }
         if (data?.length > 0) {
             data.forEach((item: any) => {
                 if (activeColumnName) {
                     if (!item?.[activeColumnName]) {
-                        throwError("COMMON", 400, "VALIDATION_ERROR", `Data at row ${item?.["!row#number!"]} have missing value in ${activeColumnName}`);
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should not be empty` }] });
                     }
-                    if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
-                        {
-                            throwError("COMMON", 400, "VALIDATION_ERROR", `Data at row ${item?.["!row#number!"]} have invalid value in ${activeColumnName}, Allowed values are Active or Inactive`);
-                        }
+                    else if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should be equal to one of the allowed values. Allowed values are Active, Inactive` }] });
                     }
                 }
                 const active = activeColumnName ? item[activeColumnName] : "Active";
-                if (active == "Active" || !item?.[uniqueIdentifierColumnName])
-                    if (!validate(item)) {
+                if (active == "Active" || !item?.[uniqueIdentifierColumnName]) {
+                    const validationResult = validate(item);
+                    if (!validationResult) {
                         validationErrors.push({ index: item?.["!row#number!"], errors: validate.errors });
                     }
+                }
             });
-            await validateUnique(schema, data, request)
+            await validateUnique(newSchema, data, request);
             if (validationErrors.length > 0) {
-                const errorMessage = validationErrors.map(({ index, errors }) => {
-                    const formattedErrors = errors.map((error: any) => {
-                        let formattedError = `${error.dataPath}: ${error.message}`;
+                const errorMessage = validationErrors.map(({ index, message, errors }) => {
+                    const formattedErrors = errors ? errors.map((error: any) => {
+                        let instancePath = error.instancePath || ''; // Assign an empty string if dataPath is not available
+                        if (instancePath.startsWith('/')) {
+                            instancePath = instancePath.slice(1);
+                        }
+                        if (error.keyword === 'required') {
+                            const missingProperty = error.params?.missingProperty || '';
+                            return `Data at row ${index} in column '${missingProperty}' should not be empty`;
+                        }
+                        let formattedError = `in column '${instancePath}' ${getLocalizedName(error.message, localizationMap)}`;
                         if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
                             formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
                         }
-                        return formattedError;
-                    }).join(', ');
-                    return `Data at row ${index}: ${formattedErrors}`;
-                }).join(' , ');
+                        return `Data at row ${index} ${formattedError}`
+                    }).join(' ; ') : message;
+                    return formattedErrors;
+                }).join(' ; ');
                 throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
             } else {
                 logger.info("All Data rows are valid.");
             }
-        }
-        else {
+        } else {
             throwError("FILE", 400, "INVALID_FILE_ERROR", "Data rows cannot be empty");
         }
-    }
-    else {
-        logger.info("skipping schema validation")
+    } else {
+        logger.info("Skipping schema validation");
     }
 }
 
@@ -504,6 +526,7 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
             const targetWorkbook: any = await getTargetWorkbook(fileUrl);
             const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
             const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+            logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
             validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
         }
     }
@@ -917,7 +940,7 @@ async function validateProjectType(request: any, projectType: any, tenantId: any
 }
 
 function isObjectOrArray(value: any) {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
+    return typeof value === 'object' || Array.isArray(value);
 }
 
 async function validateChangeDatesRequest(request: any) {
@@ -936,15 +959,12 @@ async function validateChangeDatesRequest(request: any) {
         }
     }
     const today: any = Date.now();
-    if (exsistingStartDate >= today) {
-        logger.info("Existing start date is greater than or equal to current date");
-        logger.info("Now only endDate can be updated")
+    if (exsistingStartDate <= today) {
         if (exsistingStartDate != newStartDate) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "StartDate cannot be updated as campaign is started or completed.");
+            throwError("COMMON", 400, "VALIDATION_ERROR", "StartDate cannot be updated for ongoing or completed campaign.");
         }
     }
-    if (exsistingEndDate > today) {
-        logger.info("Existing end date is greater than or equal to current date");
+    if (exsistingEndDate < today) {
         if (exsistingEndDate != newEndDate) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "EndDate cannot be updated as campaign is completed.");
         }
