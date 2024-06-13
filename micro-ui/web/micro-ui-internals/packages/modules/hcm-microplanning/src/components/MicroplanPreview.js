@@ -408,6 +408,10 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
   const [isScrollable, setIsScrollable] = useState(false);
 
   const applyNewHypothesis = () => {
+    if (tempHypothesisList.some((item) => item.active && parseFloat(item.value) === 0)) {
+      setToast({ state: "error", message: t("ERROR_HYPOTHESIS_VALUE_SHOULD_NOT_BE_ZERO") });
+      return;
+    }
     if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
@@ -928,7 +932,7 @@ const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => {
 
     // validating user input
     if (e?.newValue.includes("+") || e?.newValue.includes("e")) return;
-    if ((e?.newValue <= 0 || e.newValue > 10000000000) && e?.newValue !== "") return;
+    if ((e?.newValue < 0 || e.newValue > 10000000000) && e?.newValue !== "") return;
     let value;
     const decimalIndex = e.newValue.indexOf(".");
     if (decimalIndex !== -1) {

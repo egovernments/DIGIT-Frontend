@@ -190,7 +190,7 @@ const Upload = ({
           sectionCheckList.every((item) => {
             let filteredList = fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id);
             if (filteredList?.length === 0) return false;
-            return filteredList?.every((element) => element?.error === null);
+            return filteredList?.every((element) => element?.error === null) && fileDataList && !fileDataList.some((e) => e?.active && e?.error);
           })
         )
           setCheckDataCompletion("valid");

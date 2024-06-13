@@ -121,7 +121,20 @@ const Hypothesis = ({
     (check) => {
       if (!assumptions || !setMicroplanData) return;
       if (check) {
-        setMicroplanData((previous) => ({ ...previous, hypothesis: assumptions }));
+        if (assumptions.some((item) => item.active && parseFloat(item.value) === 0)) {
+          setToast({ state: "error", message: t("ERROR_HYPOTHESIS_VALUE_SHOULD_NOT_BE_ZERO") });
+          setCheckDataCompletion("false");
+          return;
+        }
+        let newAssumptions = assumptions.map((item) => {
+          if (parseFloat(item.value) === 0) {
+            return { ...item, value: 0.01 };
+          } else {
+            return item;
+          }
+        });
+        setMicroplanData((previous) => ({ ...previous, hypothesis: newAssumptions }));
+        setAssumptions(newAssumptions);
         let checkValid = validateAssumptions(assumptions);
         checkValid = checkValid && assumptions.filter((subItem) => subItem?.active).length !== 0;
         if (checkValid) setCheckDataCompletion("valid");
@@ -550,7 +563,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
   const inputChangeHandler = useCallback(
     (e) => {
       if (e.target.value.includes("+") || e.target.value.includes("e")) return;
-      if ((e.target.value <= 0 || e.target.value > 10000000000) && e.target.value !== "") return;
+      if ((e.target.value < 0 || e.target.value > 10000000000) && e.target.value !== "") return;
       let value;
       const decimalIndex = e.target.value.indexOf(".");
       if (decimalIndex !== -1) {
