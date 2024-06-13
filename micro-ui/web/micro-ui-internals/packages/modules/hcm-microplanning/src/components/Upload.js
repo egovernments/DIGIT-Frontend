@@ -140,27 +140,25 @@ const Upload = ({
 
       // if user has selected a file type and wants to go back to file type selection he/she can click back buttom
       const currentSectionIndex = sections.findIndex((item) => item.id === selectedSection.id);
-
       if (!dataPresent) {
         if (navigationEvent?.name !== "step") {
-          if (dataUpload) {
-            setDataUpload(false);
-            setSelectedFileType(null);
-            setCheckDataCompletion("false");
-            return;
-          } else {
-            if (navigationEvent?.name === "next") {
-              if (currentSectionIndex < sections.length - 1) {
-                setSelectedSection(sections[currentSectionIndex + 1]);
-                setCheckDataCompletion("false");
-                return;
-              }
-            } else if (navigationEvent?.name === "previousStep") {
-              if (currentSectionIndex > 0) {
-                setSelectedSection(sections[currentSectionIndex - 1]);
-                setCheckDataCompletion("false");
-                return;
-              }
+          if (navigationEvent?.name === "next") {
+            if (currentSectionIndex < sections.length - 1) {
+              setSelectedSection(sections[currentSectionIndex + 1]);
+              setCheckDataCompletion("false");
+              return;
+            }
+          } else if (navigationEvent?.name === "previousStep") {
+            if (dataUpload) {
+              setDataUpload(false);
+              setSelectedFileType(null);
+              setCheckDataCompletion("false");
+              return;
+            }
+            if (currentSectionIndex > 0) {
+              setSelectedSection(sections[currentSectionIndex - 1]);
+              setCheckDataCompletion("false");
+              return;
             }
           }
         }
