@@ -30,6 +30,12 @@ const HearingsCard = () => {
         link: `/${window?.contextPath}/employee/hearings/hearings-response`,
 
       },
+
+      {
+        label: t("Home"),
+        link: `/${window?.contextPath}/employee/hearings/home`,
+
+      },
       
     ],
   };
