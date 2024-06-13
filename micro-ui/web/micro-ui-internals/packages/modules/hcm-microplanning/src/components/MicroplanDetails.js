@@ -163,7 +163,7 @@ const MicroplanDetails = ({
   const updateData = useCallback(
     async (check) => {
       if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-      if (!validateName(microplan)) {
+      if (!microplan || !validateName(microplan)) {
         setCheckDataCompletion("false");
         setShowNamingConventions(true);
         return setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
