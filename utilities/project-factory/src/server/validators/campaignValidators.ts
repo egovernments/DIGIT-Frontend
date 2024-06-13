@@ -417,6 +417,7 @@ async function validateSheetData(data: any, request: any, schema: any, boundaryV
 async function validateTargetSheetData(data: any, request: any, boundaryValidation: any, localizationMap?: any) {
     try {
         const errors: any[] = [];
+        await validateHeadersOfTargetSheet(request, localizationMap);
         if (boundaryValidation) {
             // const localizedBoundaryValidationColumn = getLocalizedName(boundaryValidation?.column, localizationMap)
             // await validateTargetBoundaryData(data, request, localizedBoundaryValidationColumn, errors, localizationMap);
@@ -427,12 +428,26 @@ async function validateTargetSheetData(data: any, request: any, boundaryValidati
             request.body.ResourceDetails.status = resourceDataStatuses.invalid;
         }
         await generateProcessedFileAndPersist(request, localizationMap);
+        logger.info("target sheet data validation completed");
     }
     catch (error) {
         console.log(error)
         await handleResouceDetailsError(request, error);
     }
 }
+
+
+async function validateHeadersOfTargetSheet(request: any, localizationMap?: any) {
+    const fileUrl = await validateFile(request);
+    const targetWorkbook: any = await getTargetWorkbook(fileUrl);
+    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+    logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
+    logger.info("validating headers of target sheet started")
+    validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
+    logger.info("validation of target sheet headers completed")
+}
+
 
 function validateBooleanField(obj: any, fieldName: any, index: any) {
     if (!obj.hasOwnProperty(fieldName)) {
@@ -522,17 +537,17 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
         if (request.body.ResourceDetails.type == 'boundary') {
             await validateBoundarySheetData(request, fileUrl, localizationMap);
         }
-        if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
-            const targetWorkbook: any = await getTargetWorkbook(fileUrl);
-            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-            const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
-            logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
-            validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
-        }
+        // if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
+        //     const targetWorkbook: any = await getTargetWorkbook(fileUrl);
+        //     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+        //     const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+        //     logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
+        //     validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
+        // }
     }
 }
 
-function validateTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeadersForTargetSheet: any) {
+function validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeadersForTargetSheet: any) {
     targetWorkbook.eachSheet((worksheet: any, sheetId: any) => {
         if (sheetId > 2) { // Starting from the second sheet
             // Convert the sheet to an array of headers
@@ -1140,8 +1155,10 @@ async function validateDownloadRequest(request: any) {
     await validateHierarchyType(request, hierarchyType, tenantId);
 }
 
-function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+async function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+    logger.info("validating all district tabs present started")
     validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
+    logger.info("validation of all district tabs present completed")
     for (const key in dataFromSheet) {
         if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
             if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {
