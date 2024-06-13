@@ -19,6 +19,7 @@ const Hypothesis = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  setToast,
 }) => {
   const { t } = useTranslation();
 
@@ -29,7 +30,7 @@ const Hypothesis = ({
   const [hypothesisAssumptionsList, setHypothesisAssumptionsList] = useState([]);
   const [itemForDeletion, setItemForDeletion] = useState();
   const [exampleOption, setExampleOption] = useState("");
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [autofillHypothesis, setAutofillHypothesis] = useState([]);
   const { state, dispatch } = useMyContext();
 
@@ -256,9 +257,9 @@ const Hypothesis = ({
           </Modal>
         )}
 
-        {toast && toast.state === "error" && (
+        {/* {toast && toast.state === "error" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
-        )}
+        )} */}
       </div>
     </>
   );
@@ -475,7 +476,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setAssumptions, setHy
   let add = true;
   setAssumptions((previous) => {
     if (!previous.length) return [];
-    if (previous?.length <= 1) {
+    if (previous.filter((item) => item.active)?.length <= 1) {
       setToast({ state: "error", message: t("ERROR_CANNOT_DELETE_LAST_HYPOTHESIS") });
       add = false;
       return previous;

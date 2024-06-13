@@ -30,13 +30,14 @@ const MicroplanDetails = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  setToast,
   ...props
 }) => {
   const { t } = useTranslation();
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
   const { state, dispatch } = useMyContext();
   const [modal, setModal] = useState("none");
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [showNamingConventions, setShowNamingConventions] = useState(false);
   const [loader, setLoader] = useState(false);
 
@@ -300,9 +301,9 @@ const MicroplanDetails = ({
           </div>,
         ]}
       />
-      {toast && toast.state === "error" && (
+      {/* {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
-      )}
+      )} */}
       {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal

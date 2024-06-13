@@ -43,6 +43,7 @@ const Upload = ({
   currentPage,
   pages,
   navigationEvent,
+  setToast,
 }) => {
   const { t } = useTranslation();
 
@@ -56,7 +57,7 @@ const Upload = ({
   const [dataUpload, setDataUpload] = useState(false);
   const [loader, setLoader] = useState(false);
   const [fileData, setFileData] = useState();
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
   const [fileDataList, setFileDataList] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
@@ -1058,13 +1059,13 @@ const Upload = ({
             </Modal>
           )}
           {loader && <LoaderWithGap text={t(loader)} />}
-          {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
+          {/* {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
           {toast && toast.state === "error" && (
             <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
           )}
           {toast && toast.state === "warning" && (
             <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
-          )}
+          )} */}
           {previewUploadedData && (
             <div className="popup-wrap">
               <JsonPreviewInExcelForm
