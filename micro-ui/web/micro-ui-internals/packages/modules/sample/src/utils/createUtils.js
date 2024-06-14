@@ -33,6 +33,7 @@ export const transformCreateData = (data)=>{
           "photograph": null,
           additionalFields: {
               "fields": [
+                  ...data?.additionalDetails,
                   {
                       "key": "EMPLOYER",
                       "value": "ULB"

@@ -5,6 +5,7 @@ import { default as EmployeeApp } from "./pages/employee";
 import SampleCard from "./components/SampleCard";
 import ViewEstimateComponent from "./components/ViewEstimateComponent";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import AdditionalComponentWrapper from "./components/AdditionalComponent";
 
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -27,6 +28,7 @@ const componentsToRegister = {
   SampleModule,
   SampleCard,
   ViewEstimatePage: ViewEstimateComponent,
+  SampleAdditionalComponent: AdditionalComponentWrapper,
 };
 
 export const initSampleComponents = () => {
