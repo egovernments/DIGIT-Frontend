@@ -291,10 +291,10 @@ const MicroplanDetails = ({
           <div className="microplan-naming-conventions">
             {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConvention")?.microplanNamingConvention?.map((item, index) => (
               <div className="microplan-naming-convention-instruction-list-container">
-                <p key={index} className="microplan-naming-convention-instruction-list number">
+                <p key={`number-${index}`} className="microplan-naming-convention-instruction-list number">
                   {t(index + 1)}.
                 </p>
-                <p key={index} className="microplan-naming-convention-instruction-list text">
+                <p key={`text-${index}`} className="microplan-naming-convention-instruction-list text">
                   {t(item)}
                 </p>
               </div>
