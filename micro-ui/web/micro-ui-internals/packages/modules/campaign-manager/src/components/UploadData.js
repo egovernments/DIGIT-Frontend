@@ -632,7 +632,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
               const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
               if (activeColumnName && uniqueIdentifierColumnName) {
-                jsonData = jsonData.filter((item) => item[activeColumnName] === "Active" || !item[uniqueIdentifierColumnName]);
+                console.log("json" , jsonData);
+                jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
               if (jsonData.length == 0) {
                 const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
@@ -1025,6 +1026,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setShowToast(null);
   }, [currentKey]);
 
+  console.log("errors" , errorsType[type]);
+
   return (
     <>
       {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
@@ -1060,7 +1063,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <React.Fragment key={type}>
                 {errorsType[type] && (
                   <React.Fragment>
-                    {errorsType[type].split(",").map((error, index) => (
+                    {errorsType[type].split(",").slice(0,50).map((error, index) => (
                       <React.Fragment key={index}>
                         {index > 0 && <br />}
                         {error.trim()}
