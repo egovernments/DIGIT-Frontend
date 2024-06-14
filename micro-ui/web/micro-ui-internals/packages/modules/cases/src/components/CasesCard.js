@@ -30,6 +30,11 @@ const CasesCard = () => {
         link: `/${window?.contextPath}/employee/cases/cases-response`,
 
       },
+      {
+        label: t("Join Case"),
+        link: `/${window?.contextPath}/employee/cases/join-case`,
+
+      },
       
     ],
   };
