@@ -33,7 +33,11 @@ export const JsonPreviewInExcelForm = (props) => {
       <div className="excel-wrapper">
         {props?.errorLocationObject?.[currentSheetName] && <p className="error-user-directions">{t("USER_DIRECTIONS_FOR_ERROR_MESSAGE")}</p>}
         {/* {Object.entries(sheetsData).map(([sheetName, sheetData], index) => ( */}
-        <div key={sheetsData?.[currentSheetName]} className="sheet-wrapper" style={props?.errorLocationObject?.[currentSheetName]?{height:"72.5vh"}:{}}>
+        <div
+          key={sheetsData?.[currentSheetName]}
+          className="sheet-wrapper"
+          style={props?.errorLocationObject?.[currentSheetName] ? { height: "72.5vh" } : {}}
+        >
           <table className="excel-table">
             <thead>
               <tr>
@@ -48,6 +52,13 @@ export const JsonPreviewInExcelForm = (props) => {
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
                     const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex];
                     const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
+                    let convertedError;
+                    if (typeof error === "object") {
+                      let { actualError, ...otherProperties } = error;
+                      convertedError = t(actualError, otherProperties);
+                    } else {
+                      convertedError = t(error);
+                    }
                     const rowHasError =
                       typeof props?.errorLocationObject?.[currentSheetName]?.[rowIndex] === "object"
                         ? Object.keys(props?.errorLocationObject?.[currentSheetName]?.[rowIndex]).length !== 0
@@ -61,9 +72,9 @@ export const JsonPreviewInExcelForm = (props) => {
                               ? { textAlign: "end" }
                               : {}
                             : {}),
-                          ...(error ? { backgroundColor: "rgb(250,148,148)" } : {}),
+                          ...(convertedError ? { backgroundColor: "rgb(250,148,148)" } : {}),
                         }}
-                        title={error ? t(error) : undefined}
+                        title={convertedError ? t(convertedError) : undefined}
                       >
                         {cellIndex === 0 && rowHasError && <div className="edited-row-marker" />}
 
@@ -86,9 +97,7 @@ export const JsonPreviewInExcelForm = (props) => {
                 setCurrentSheetName(sheetName);
               }}
               style={{
-                ...(props?.errorLocationObject?.[sheetName]
-                  ? { backgroundColor: "rgb(250,148,148)", color:"black" }
-                  : {}),
+                ...(props?.errorLocationObject?.[sheetName] ? { backgroundColor: "rgb(250,148,148)", color: "black" } : {}),
               }}
             >
               {sheetName}

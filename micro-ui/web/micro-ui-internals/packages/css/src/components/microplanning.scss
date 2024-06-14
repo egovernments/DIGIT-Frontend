@@ -299,7 +299,7 @@ $border-color: rgba(214, 213, 212, 1);
       font-weight: 500;
     }
 
-    h2 {
+    .h2-class {
       margin: 0;
       padding: 0;
       width: 90% !important;
@@ -577,40 +577,24 @@ $border-color: rgba(214, 213, 212, 1);
   }
 
   .file-upload-error-container {
-    border: 0.063rem solid $border-color;
-    min-height: 4.75rem;
-    display: flex !important;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: start;
-    margin-top: 0.625rem;
-    padding: 0.625rem 0.625rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    background-color: rgba(255, 225, 221, 1);
-    color: rgba(212, 53, 28, 1);
-
-    .heading {
+    .link-wrapper {
+      padding-top: 1rem;
       display: flex;
       flex-direction: row;
-      align-items: center;
+      margin: 0;
+      padding: 0;
 
-      p {
-        font-size: 1.125rem;
-        font-weight: 700;
-        padding: 0;
-        margin: 0;
-        padding-left: 0.625rem;
+      .link {
+        color: $primary-theme-color !important;
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
-
-    .body {
-      color: rgba(212, 53, 28, 1);
-
-      p {
-        padding: 0;
-        margin: 0;
-      }
+    p {
+      padding: 0;
+      margin: 0;
     }
   }
 

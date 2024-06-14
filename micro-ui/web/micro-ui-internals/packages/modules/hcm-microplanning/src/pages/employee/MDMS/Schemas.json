@@ -23,15 +23,6 @@
             "isVisualizationPropertyOfMapSection": false,
             "toShowInMicroplanPreview": false
           },
-          "terrain": {
-            "type": "string",
-            "isRequired": false,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": false,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": false,
-            "toShowInMicroplanPreview": true
-          },
           "targetPopulationAge3To11": {
             "type": "number",
             "isRequired": true,
@@ -106,15 +97,6 @@
             "toShowInMicroplanPreview": false
           },
           "targetPopulation": {
-            "type": "number",
-            "isRequired": true,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": true,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": true,
-            "toShowInMicroplanPreview": true
-          },
-          "targetHouseholds": {
             "type": "number",
             "isRequired": true,
             "isLocationDataColumns": false,
@@ -211,12 +193,12 @@
       "template": {
         "includeFacilityData": true,
         "hierarchyLevelWiseSheets": false,
-        "facilitySchemaApiMapping":{
-          "facilityCode":"id",
-          "facilityName":"name",
-          "facilityType":"usage",
-          "facilityStatus":"isPermanent",
-          "capacity":"storageCapacity"
+        "facilitySchemaApiMapping": {
+          "facilityCode": "id",
+          "facilityName": "name",
+          "facilityType": "usage",
+          "facilityStatus": "isPermanent",
+          "capacity": "storageCapacity"
         }
       },
       "schema": {
@@ -250,7 +232,7 @@
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "enum": ["Warehouse", "Health Facility", "Monitor Local"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,
@@ -260,7 +242,7 @@
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)",
+            "enum": ["Temporary", "Permanent"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,
@@ -323,15 +305,6 @@
             "isVisualizationPropertyOfMapSection": false,
             "toShowInMicroplanPreview": false
           },
-          "terrain": {
-            "type": "string",
-            "isRequired": false,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": false,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": false,
-            "toShowInMicroplanPreview": false
-          },
           "targetPopulationAge3To11": {
             "type": "number",
             "isRequired": true,
@@ -384,15 +357,6 @@
             "toShowInMicroplanPreview": false
           },
           "targetPopulation": {
-            "type": "number",
-            "isRequired": true,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": true,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": true,
-            "toShowInMicroplanPreview": true
-          },
-          "targetHouseholds": {
             "type": "number",
             "isRequired": true,
             "isLocationDataColumns": false,
@@ -445,12 +409,12 @@
       "template": {
         "includeFacilityData": true,
         "hierarchyLevelWiseSheets": false,
-        "facilitySchemaApiMapping":{
-          "facilityCode":"id",
-          "facilityName":"name",
-          "facilityType":"usage",
-          "facilityStatus":"isPermanent",
-          "capacity":"storageCapacity"
+        "facilitySchemaApiMapping": {
+          "facilityCode": "id",
+          "facilityName": "name",
+          "facilityType": "usage",
+          "facilityStatus": "isPermanent",
+          "capacity": "storageCapacity"
         }
       },
       "schema": {
@@ -487,7 +451,7 @@
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "enum": ["Warehouse", "Health Facility", "Monitor Local"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,
@@ -497,7 +461,7 @@
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)",
+            "enum": ["Temporary", "Permanent"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,
@@ -537,15 +501,6 @@
             "isFilterPropertyOfMapSection": false,
             "isVisualizationPropertyOfMapSection": false,
             "toShowInMicroplanPreview": false
-          },
-          "terrain": {
-            "type": "string",
-            "isRequired": false,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": false,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": false,
-            "toShowInMicroplanPreview": true
           },
           "targetPopulationAge3To11": {
             "type": "number",
@@ -606,15 +561,6 @@
             "isFilterPropertyOfMapSection": false,
             "isVisualizationPropertyOfMapSection": true,
             "toShowInMicroplanPreview": true
-          },
-          "targetHouseholds": {
-            "type": "number",
-            "isRequired": true,
-            "isLocationDataColumns": false,
-            "isRuleConfigureInputs": true,
-            "isFilterPropertyOfMapSection": false,
-            "isVisualizationPropertyOfMapSection": true,
-            "toShowInMicroplanPreview": true
           }
         }
       }
@@ -660,12 +606,12 @@
       "template": {
         "includeFacilityData": true,
         "hierarchyLevelWiseSheets": false,
-        "facilitySchemaApiMapping":{
-          "facilityCode":"id",
-          "facilityName":"name",
-          "facilityType":"usage",
-          "facilityStatus":"isPermanent",
-          "capacity":"storageCapacity"
+        "facilitySchemaApiMapping": {
+          "facilityCode": "id",
+          "facilityName": "name",
+          "facilityType": "usage",
+          "facilityStatus": "isPermanent",
+          "capacity": "storageCapacity"
         }
       },
       "schema": {
@@ -699,7 +645,7 @@
           },
           "facilityType": {
             "type": "string",
-            "pattern": "(Warehouse)|(Health Facility)|(Monitor Local)",
+            "enum": ["Warehouse", "Health Facility", "Monitor Local"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,
@@ -709,7 +655,7 @@
           },
           "facilityStatus": {
             "type": "string",
-            "pattern": "(Temporary)|(Permanent)",
+            "enum": ["Temporary", "Permanent"],
             "isRequired": true,
             "isLocationDataColumns": false,
             "isRuleConfigureInputs": false,

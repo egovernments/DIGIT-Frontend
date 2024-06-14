@@ -272,6 +272,7 @@ const MicroplanDetails = ({
               name="name"
               value={microplan}
               onChange={onChangeMicroplanName}
+              placeholder={t("MICROPLAN_NAME_INPUT_PLACEHOLDER")}
               // {...(validation = {
               //   isRequired: true,
               //   pattern: "^[a-zA-Z-.`' ]*$",
@@ -284,11 +285,11 @@ const MicroplanDetails = ({
         </LabelFieldPair>
       </Card>
       <InfoCard
-        label={t("MICROPLAN_NAMING_CONSTRAINTS")}
+        label={t("MICROPLAN_NAMING_CONVENTION")}
         style={{ margin: "1.5rem 0 0 0", width: "100%", maxWidth: "unset" }}
         additionalElements={[
           <div className="microplan-naming-conventions">
-            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map((item, index) => (
+            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConvention")?.microplanNamingConvention?.map((item, index) => (
               <div className="microplan-naming-convention-instruction-list-container">
                 <p key={index} className="microplan-naming-convention-instruction-list number">
                   {t(index + 1)}.

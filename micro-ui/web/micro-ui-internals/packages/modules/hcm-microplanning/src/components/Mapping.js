@@ -297,8 +297,8 @@ const Mapping = ({
           });
         }
         let choroplethGeojson = prepareGeojson(boundaryData, "ALL", { ...addOn, child: true, fillColor: "rgb(0,0,0,0)" }) || [];
-        if (choroplethGeojson && choroplethGeojson.length !== 0)
-          choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
+        if (choroplethGeojson && choroplethGeojson.length !== 0) debugger;
+        choroplethGeojson = addChoroplethProperties(choroplethGeojson, choroplethProperty, filteredSelection);
         geojsonLayer = addGeojsonToMap(map, choroplethGeojson, t);
         if (geojsonLayer) {
           newLayer.push(geojsonLayer);
@@ -1431,8 +1431,9 @@ function interpolateColor(value, minValue, maxValue, colors) {
   const percent = ((value - minValue) / (maxValue - minValue)) * 100;
   // Find the two colors to interpolate between
   let lowerColor, upperColor;
+  debugger;
   for (let i = 0; i < colors.length - 1; i++) {
-    if (percent >= colors[i].percent && percent <= colors[i + 1].percent) {
+    if (!isNaN(percent) && percent >= colors[i].percent && percent <= colors[i + 1].percent) {
       lowerColor = colors[i];
       upperColor = colors[i + 1];
       break;
