@@ -24,12 +24,15 @@ const OrdersCard = () => {
         link: `/${window?.contextPath}/employee/orders/orders-create`,
 
       },
-    
       {
         label: t("Orders Response"),
         link: `/${window?.contextPath}/employee/orders/orders-response`,
 
       },
+      {
+        label: t("Orders Home"),
+        link: `/${window?.contextPath}/employee/orders/orders-home`,
+      }
       
     ],
   };
