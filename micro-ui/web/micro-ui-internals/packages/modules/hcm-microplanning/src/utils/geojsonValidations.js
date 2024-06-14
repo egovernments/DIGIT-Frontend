@@ -119,7 +119,7 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
   if (!valid) {
     for (let i = 0; i < validateGeojson.errors.length; i++) {
       let tempErrorStore = "";
-      const instancePathType = validateGeojson.errors[i].instancePath.split("/");
+      let instancePathTypeGlobal = validateGeojson.errors[i].instancePath.split("/");
       switch (validateGeojson.errors[i].keyword) {
         case "additionalProperties":
           tempErrorStore = "ERROR_ADDITIONAL_PROPERTIES";
@@ -141,6 +141,20 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
           tempErrorStore = "ERROR_VALUE_NOT_ALLOWED";
           hasDataErrors = "true";
           break;
+        case "minProperties": {
+          hasDataErrors = "minProperties";
+          break;
+        }
+        case "enum": {
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          instancePathTypeGlobal = instancePathType;
+          tempErrorStore = {
+            error: "ERROR_UPLOAD_DATA_ENUM",
+            values: { allowedValues: validateExcel.errors[i]?.params?.allowedValues?.map((item) => t(item)).join(", ") },
+          };
+          hasDataErrors = "true";
+          break;
+        }
         default:
           hasDataErrors = "unknown";
           break;
@@ -148,11 +162,13 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
       if (tempErrorStore)
         errors[name] = {
           ...(errors[name] ? errors[name] : {}),
-          [instancePathType[2]]: {
-            ...(errors?.[name]?.[instancePathType[2]] ? errors?.[name]?.[instancePathType[2]] : {}),
-            [instancePathType[4]]: [
+          [instancePathTypeGlobal[2]]: {
+            ...(errors?.[name]?.[instancePathTypeGlobal[2]] ? errors?.[name]?.[instancePathTypeGlobal[2]] : {}),
+            [instancePathTypeGlobal[4]]: [
               ...new Set(
-                ...(errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]] ? errors?.[name]?.[instancePathType[2]]?.[instancePathType[4]] : [])
+                ...(errors?.[name]?.[instancePathTypeGlobal[2]]?.[instancePathTypeGlobal[4]]
+                  ? errors?.[name]?.[instancePathTypeGlobal[2]]?.[instancePathTypeGlobal[4]]
+                  : [])
               ),
               tempErrorStore,
             ],

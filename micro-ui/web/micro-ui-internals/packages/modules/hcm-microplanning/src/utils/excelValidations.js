@@ -85,7 +85,7 @@ export const excelValidations = (data, schemaData, t) => {
         case "maximum":
         case "minimum": {
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          instancePathTypeGlobal = instancePathType;
+          instancePathTypeGlobal = instancePathMinMax;
           tempErrorStore = locationDataColumns.includes(instancePathMinMax[instancePathTypeGlobal.length - 1])
             ? "ERROR_INCORRECT_LOCATION_COORDINATES"
             : "ERROR_DATA_EXCEEDS_LIMIT_CONSTRAINTS";
@@ -102,6 +102,8 @@ export const excelValidations = (data, schemaData, t) => {
           break;
         }
         case "enum": {
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          instancePathTypeGlobal = instancePathType;
           tempErrorStore = {
             error: "ERROR_UPLOAD_DATA_ENUM",
             values: { allowedValues: validateExcel.errors[i]?.params?.allowedValues?.map((item) => t(item)).join(", ") },
@@ -113,7 +115,7 @@ export const excelValidations = (data, schemaData, t) => {
           hasDataErrors = "unknown";
         }
       }
-      if (tempErrorStore)
+      if (tempErrorStore && instancePathTypeGlobal)
         errors[instancePathTypeGlobal[1]] = {
           ...(errors[instancePathTypeGlobal[1]] ? errors[instancePathTypeGlobal[1]] : {}),
           [instancePathTypeGlobal[2]]: {

@@ -1287,8 +1287,8 @@ const UploadedFile = ({
             for (const error of errors) {
               let convertedError;
               if (typeof error === "object") {
-                let { actualError, ...otherProperties } = error;
-                convertedError = t(actualError, otherProperties);
+                let { error: actualError, ...otherProperties } = error;
+                convertedError = t(actualError, otherProperties?.values);
               } else {
                 convertedError = t(error);
               }
@@ -1296,7 +1296,7 @@ const UploadedFile = ({
                 t("ERROR_UPLOAD_DATA_LOCATION_AND_MESSAGE", {
                   rowNumber: row,
                   columnName: t(column),
-                  error: error,
+                  error: convertedError,
                   sheetName: sheetName,
                 })
               );

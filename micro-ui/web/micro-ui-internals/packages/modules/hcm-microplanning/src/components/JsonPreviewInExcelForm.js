@@ -53,9 +53,9 @@ export const JsonPreviewInExcelForm = (props) => {
                     const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex];
                     const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
                     let convertedError;
-                    if (typeof error === "object") {
-                      let { actualError, ...otherProperties } = error;
-                      convertedError = t(actualError, otherProperties);
+                    if (typeof error?.[0] === "object") {
+                      let { error: actualError, ...otherProperties } = error[0];
+                      convertedError = t(actualError, otherProperties?.values);
                     } else {
                       convertedError = t(error);
                     }
