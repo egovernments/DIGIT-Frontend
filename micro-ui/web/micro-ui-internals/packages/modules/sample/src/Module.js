@@ -6,6 +6,7 @@ import SampleCard from "./components/SampleCard";
 import ViewEstimateComponent from "./components/ViewEstimateComponent";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import AdditionalComponentWrapper from "./components/AdditionalComponent";
+import SampleMultiComponent from "./components/SampleMultiComponent";
 
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -29,6 +30,7 @@ const componentsToRegister = {
   SampleCard,
   ViewEstimatePage: ViewEstimateComponent,
   SampleAdditionalComponent: AdditionalComponentWrapper,
+  SampleMultiComponent: SampleMultiComponent,
 };
 
 export const initSampleComponents = () => {

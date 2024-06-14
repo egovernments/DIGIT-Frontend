@@ -20,7 +20,6 @@ export const newConfig = [
         disable: false,
         populators: { name: "dob", error: "Required" },
       },
-
       {
         isMandatory: true,
         key: "genders",
@@ -256,6 +255,25 @@ export const newConfig = [
         type: "text",
         disable: false,
         populators: { name: "landmark", error: " Required", validation: { pattern: /^[A-Za-z]+$/i } },
+      },
+    ],
+  },
+  {
+    head: "Sample Details",
+    key: "sampleDetails",
+    body: [
+      {
+        isMandatory: false,
+        key: "sampleDetails",
+        type: "component", // for custom component
+        component: "SampleMultiComponent", // name of the component as per component registry
+        withoutLabel: true,
+        disable: false,
+        customProps: {},
+        populators: {
+          name: "sampleDetails",
+          required: true,
+        },
       },
     ],
   },
