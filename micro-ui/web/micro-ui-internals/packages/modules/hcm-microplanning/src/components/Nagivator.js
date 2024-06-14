@@ -209,7 +209,7 @@ const Navigator = memo((props) => {
             }
           />
         ) : (
-          <div className="navigator-componet-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
+          <div className="navigator-component-not-found">{t("COMMON_DATA_NOT_PRESENT")}</div>
         )
       ) : (
         ""

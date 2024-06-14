@@ -3,7 +3,7 @@ const createProxy = createProxyMiddleware({
   target: process.env.REACT_APP_PROXY_URL,
   changeOrigin: true,
 });
-module.exports = function (app) {
+module.exports = (app) => {
   [
     "/egov-mdms-service",
     "/egov-location",
@@ -23,8 +23,6 @@ module.exports = function (app) {
     "/vendor",
     "/property-services",
     "/fsm-calculator/v1/billingSlab/_search",
-    "/muster-roll"
-  ].forEach((location) =>
-    app.use(location, createProxy)
-  );
+    "/muster-roll",
+  ].forEach((location) => app.use(location, createProxy));
 };

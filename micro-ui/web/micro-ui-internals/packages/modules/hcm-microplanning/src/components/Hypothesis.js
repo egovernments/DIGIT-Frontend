@@ -59,7 +59,7 @@ const Hypothesis = ({
       if (previouspage?.checkForCompleteness && !microplanData?.status?.[previouspage?.name]) setEditable(false);
       else setEditable(true);
     }
-    if (microplanData && microplanData.hypothesis) {
+    if (microplanData?.hypothesis) {
       const temp = microplanData?.hypothesis;
       setAssumptions(temp);
     }
@@ -71,7 +71,7 @@ const Hypothesis = ({
     let hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    if (!(temp && temp.assumptions)) return;
+    if (!temp?.assumptions) return;
     const hypothesisAssumptionsList = temp.assumptions;
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
 
@@ -188,7 +188,7 @@ const Hypothesis = ({
           t={t}
         />
         <div className="add-button-help" />
-        <button type="button" className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)}>
+        <button type="button" className="add-button" onClick={() => addAssumptionsHandler(setAssumptions)} aria-label={t("ADD_ROW")}>
           <PlusWithSurroundingCircle fill={PRIMARY_THEME_COLOR} width="1.05rem" height="1.05rem" />
           <p>{t("ADD_ROW")}</p>
         </button>
@@ -376,7 +376,7 @@ const InterractableSection = React.memo(
               <p className="heading">{t("VALUE")}</p>
             </div>
             <div className="invisible">
-              <button className="delete-button invisible" onClick={() => deleteHandler(item)}>
+              <button type="button" className="delete-button invisible" onClick={() => deleteHandler(item)}>
                 <div>
                   {" "}
                   <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
@@ -417,7 +417,7 @@ const InterractableSection = React.memo(
                   <Input key={item.id} item={item} t={t} assumptions={assumptions} setAssumptions={setAssumptions} />
                 </div>
                 <div>
-                  <button className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
+                  <button type="button" className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
                     <div>
                       {" "}
                       <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
@@ -499,13 +499,13 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
   const [filteredOptions, setFilteredOptions] = useState([]);
 
   useEffect(() => {
-    if (item && item.key) setSelected({ code: item.key });
+    if (item?.key) setSelected({ code: item.key });
   }, [item]);
 
   useEffect(() => {
     if (!options) return;
     const filteredOptions = options.length ? options : [];
-    if (item && item.key && !filteredOptions.includes(item.key)) {
+    if (item?.key && !filteredOptions.includes(item.key)) {
       setFilteredOptions([item.key, ...filteredOptions]);
     } else setFilteredOptions(filteredOptions);
   }, [options]);
@@ -577,12 +577,12 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
         }
       } else value = parseFloat(e.target.value);
 
-      setInputValue(!isNaN(value) ? value : "");
+      setInputValue(!Number.isNaN(value) ? value : "");
       const newDataSegment = {
         ...item,
         id: item.id,
         key: item.key,
-        value: !isNaN(value) ? value : "",
+        value: !Number.isNaN(value) ? value : "",
       };
       setAssumptions((previous) => {
         let filteredAssumptionsList = previous.map((data) => {

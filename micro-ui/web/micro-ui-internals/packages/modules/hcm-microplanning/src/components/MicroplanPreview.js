@@ -127,7 +127,7 @@ const MicroplanPreview = ({
     }
     let temp;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (temp && temp.ruleConfigureOperators) {
+    if (temp?.ruleConfigureOperators) {
       setOperatorsObject(temp.ruleConfigureOperators);
     }
     if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
@@ -371,7 +371,6 @@ const MicroplanPreview = ({
               display: "flex",
               flex: 1,
               justifyContent: "flex-start",
-              padding: 0,
               width: "100%",
               padding: "1rem",
             }}
@@ -703,9 +702,8 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
     schemas?.filter((schema) => {
       if (schema.campaignType) {
         return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
-      } else {
-        return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       }
+      return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
     }) || [];
 
   let finalData = [];
@@ -731,7 +729,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
         return acc;
       }, [])
     )
-    .flatMap((item) => item)
+    .flat()
     .filter((item) => !!item);
   finalData = [...finalData, ...tempdata];
 
@@ -742,7 +740,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
         return acc;
       }, [])
     )
-    .flatMap((item) => item)
+    .flat()
     .filter((item) => !!item);
   finalData = [...finalData, ...tempdata];
   return [...new Set(finalData)];
@@ -1061,7 +1059,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
 
   let combinesDataList = [];
   // Check if microplanData and its upload property exist
-  if (microplanData && microplanData?.upload) {
+  if (microplanData?.upload) {
     let files = microplanData?.upload;
     // Loop through each file in the microplan upload
     for (let fileData of files) {

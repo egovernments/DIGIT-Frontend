@@ -35,7 +35,7 @@ const page = "mapping";
 
 function checkTruthyKeys(obj) {
   for (let key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.hasOwn(obj, key)) {
       if (obj[key] && !(Array.isArray(obj[key]) && obj[key].length === 0)) {
         return true;
       }
@@ -426,7 +426,7 @@ const Mapping = ({
               <div className="north-arrow">
                 {DigitSvgs.NorthArrow && <DigitSvgs.NorthArrow width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
               </div>
-              <CustomScaleControl map={map} />
+              <CustomScaleControl map={map} t={t} />
             </div>
 
             <div className="bottom-right-map-subcomponents" onMouseDown={handleMouseDownAndScroll} onMouseUp={handleMouseUpAndScroll}>
@@ -526,14 +526,14 @@ const ChoroplethSelection = memo(
 
     return (
       <div className="choropleth-section" ref={showChoroplethOptionRef}>
-        <div className="icon-rest virtualization-icon">
-          <p onClick={() => setShowChoroplethOptions((previous) => !previous)}>{t("VISUALIZATIONS")}</p>
-          <div
-            className="icon"
-            onClick={() => setShowChoroplethOptions((previous) => !previous)}
-            onKeyUp={() => setShowChoroplethOptions((previous) => !previous)}
-            tabIndex={0}
-          >
+        <div
+          className="icon-rest virtualization-icon"
+          onClick={() => setShowChoroplethOptions((previous) => !previous)}
+          onKeyUp={() => setShowChoroplethOptions((previous) => !previous)}
+          tabIndex={0}
+        >
+          <p>{t("VISUALIZATIONS")}</p>
+          <div className="icon">
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
           </div>
         </div>
@@ -579,9 +579,14 @@ const FilterSection = memo(
 
     return (
       <div className="filter-section" ref={showFilterOptionRef}>
-        <div className="icon-rest filter-icon">
-          <p onClick={() => setShowFilterOptions((previous) => !previous)}>{t("FILTERS")}</p>
-          <div className="icon" onClick={() => setShowFilterOptions((previous) => !previous)}>
+        <div
+          className="icon-rest filter-icon"
+          onClick={() => setShowFilterOptions((previous) => !previous)}
+          onKeyUp={() => setShowFilterOptions((previous) => !previous)}
+          tabIndex={0}
+        >
+          <p>{t("FILTERS")}</p>
+          <div className="icon">
             {DigitSvgs.FilterAlt && <DigitSvgs.FilterAlt width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}
           </div>
         </div>
@@ -834,7 +839,12 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
   if (!baseMaps) return null;
   return (
     <div className="base-map-selector">
-      <div className="icon-first" onClick={() => setShowBaseMapSelector((previous) => !previous)}>
+      <div
+        className="icon-first"
+        onClick={() => setShowBaseMapSelector((previous) => !previous)}
+        onKeyUp={() => setShowBaseMapSelector((previous) => !previous)}
+        tabIndex={0}
+      >
         <p>{t("LAYERS")}</p>
         <div className="icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}</div>
       </div>
@@ -925,7 +935,7 @@ const extractGeoData = (
   let formulaConfiguration = microplanData?.ruleEngine;
   // Check if microplanData and its upload property exist
   let dataAvailabilityCheck; // Initialize data availability check
-  if (microplanData && microplanData?.upload) {
+  if (microplanData?.upload) {
     let files = _.cloneDeep(microplanData?.upload);
     dataAvailabilityCheck = "initialStage"; // Initialize data availability check
     // Loop through each file in the microplan upload
@@ -1066,9 +1076,9 @@ const extractGeoData = (
               }
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
-              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
+              if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
                 setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
+              else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
                 setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
               break;
             }
@@ -1132,9 +1142,9 @@ const extractGeoData = (
 
               // extract dada
               var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
-              if (filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section))
+              if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
                 setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
+              else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
                 setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
           }
         }

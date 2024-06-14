@@ -115,7 +115,7 @@ const MicroplanDetails = ({
     //   )
     // )
     //   setModal("data-change-check");
-    else updateData(true);
+    updateData(true);
   }, [checkDataCompletion]);
 
   // UseEffect to add a event listener for keyboard

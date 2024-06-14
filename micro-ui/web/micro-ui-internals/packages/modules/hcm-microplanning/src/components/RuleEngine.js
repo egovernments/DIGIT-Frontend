@@ -143,7 +143,7 @@ const RuleEngine = ({
     setHypothesisAssumptionsList(hypothesisAssumptions);
     let outputs;
     if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
-    if (temp && temp.data) {
+    if (temp?.data) {
       let data = temp.data;
       microplanData?.ruleEngine?.forEach((item) => {
         if (item.active) data = data.filter((e) => e !== item?.output);
@@ -155,7 +155,7 @@ const RuleEngine = ({
     if (ruleConfigureInputs) setInputs(ruleConfigureInputs);
     let operator;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (temp && temp.ruleConfigureOperators) {
+    if (temp?.ruleConfigureOperators) {
       temp = temp.ruleConfigureOperators.map((item) => item.name);
       operator = temp;
       setOperators(temp);
@@ -491,7 +491,7 @@ const InterractableSection = React.memo(
               <p className="heading">{t("KEY")}</p>
             </div>
             <div className="invisible">
-              <button className="delete-button invisible" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
+              <button className="delete-button invisible" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button" type="button">
                 <div>
                   <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                 </div>
@@ -575,7 +575,7 @@ const InterractableSection = React.memo(
                   />
                 </div>
                 <div>
-                  <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button">
+                  <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button" type="button">
                     <div>
                       <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />
                     </div>
@@ -692,7 +692,7 @@ const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs,
 
       return newRules || [];
     });
-    if (item && item.output) {
+    if (item?.output) {
       setOutputs((previous) => {
         if (!previous?.includes(item.output)) return previous ? [...previous, item.output] : [item.output];
       });
@@ -713,7 +713,7 @@ const Select = React.memo(
 
     useEffect(() => {
       if (item) {
-        if (outputs && outputs.some((e) => e === item.input)) {
+        if (outputs?.some((e) => e === item.input)) {
           if (rules.filter((item) => item.active).some((e) => e?.output === item?.input)) setSelected({ code: item?.[toChange] });
         } else setSelected({ code: item[toChange] });
       }
@@ -835,7 +835,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
         return acc;
       }, [])
     )
-    .flatMap((item) => item)
+    .flat()
     .filter((item) => !!item);
   return [...new Set(finalData)];
 };

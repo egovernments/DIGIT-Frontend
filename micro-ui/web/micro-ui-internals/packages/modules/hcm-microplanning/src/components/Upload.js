@@ -1331,15 +1331,15 @@ const UploadedFile = ({
             <p>{file.fileName}</p>
           </div>
           <div className="uploaded-file-operations">
-            <button className="button" onClick={ReuplaodFile} tabIndex="0">
+            <button className="button" onClick={ReuplaodFile} tabIndex="0" type="button">
               <CustomIcon Icon={Icons.FileUpload} width={"1.5rem"} height={"1.5rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("Reupload")}</p>
             </button>
-            <button className="button" onClick={DownloadFile} tabIndex="0">
+            <button className="button" onClick={DownloadFile} tabIndex="0" type="button">
               <CustomIcon Icon={Icons.FileDownload} width={"1.5rem"} height={"1.5rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("Download")}</p>
             </button>
-            <button className="delete-button" onClick={DeleteFile} tabIndex="0">
+            <button className="delete-button" onClick={DeleteFile} tabIndex="0" type="button">
               <CustomIcon Icon={Icons.Trash} width={"0.8rem"} height={"1rem"} color={PRIMARY_THEME_COLOR} />
               <p>{t("DELETE")}</p>
             </button>
