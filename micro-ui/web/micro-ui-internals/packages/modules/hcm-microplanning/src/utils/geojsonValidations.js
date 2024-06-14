@@ -121,22 +121,35 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
       let tempErrorStore = "";
       let instancePathTypeGlobal = validateGeojson.errors[i].instancePath.split("/");
       switch (validateGeojson.errors[i].keyword) {
-        case "additionalProperties":
+        case "additionalProperties": {
           tempErrorStore = "ERROR_ADDITIONAL_PROPERTIES";
           hasDataErrors = "true";
           break;
+        }
         case "type":
-          tempErrorStore = "ERROR_DATA_TYPE";
-          hasDataErrors = "true";
+          {
+            const instancePathType = validateGeojson.errors[i].instancePath.split("/");
+            const neededType = validateGeojson.errors[i].params?.type;
+            instancePathTypeGlobal = instancePathType;
+            tempErrorStore = neededType === "number" ? "ERROR_MUST_BE_A_NUMBER" : "ERROR_MUST_BE_A_STRING";
+            hasDataErrors = "true";
+          }
           break;
-        case "const":
+        case "const": {
           if (validateGeojson.errors[i].params.allowedValue === "FeatureCollection") tempErrorStore = "ERROR_FEATURECOLLECTION";
           hasDataErrors = "true";
           break;
-        case "required":
-          missingColumnsList.add(validateGeojson.errors[i].params.missingProperty);
-          hasDataErrors = "missing_properties";
+        }
+        case "required": {
+          const missing = validateGeojson.errors[i].params.missingProperty;
+          const instancePathType = validateGeojson.errors[i].instancePath.split("/");
+          instancePathTypeGlobal = [...instancePathType, missing];
+          tempErrorStore = "ERROR_MANDATORY_FIELDS_CANT_BE_EMPTY";
+          missingColumnsList.add(missing);
+          // hasDataErrors = "missing_properties";
+          hasDataErrors = "true";
           break;
+        }
         case "pattern":
           tempErrorStore = "ERROR_VALUE_NOT_ALLOWED";
           hasDataErrors = "true";
