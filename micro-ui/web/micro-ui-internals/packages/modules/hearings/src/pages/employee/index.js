@@ -15,6 +15,15 @@ import Orders from "./Orders";
 import Submission from "./Submission";
 import CaseHistory from "./CaseHistory";
 import Parties from "./Parties";
+import HomeViewHearing from "./HomeViewHearing";
+import ViewHearing from "./ViewHearing";
+import RescheduleHearing from "./ReSchedulHearing";
+import ViewTranscript from "./ViewTranscript";
+import ViewWitnessDeposition from "./ViewWitnessDeposition";
+import ViewPendingTask from "./ViewPendingTask";
+import HearingPopup from "./HearingPopUp";
+import InsideHearing from "./InsideHearing";
+import ViewCase from "./ViewCase";
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -52,8 +61,16 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/orders`} component={() => <Orders />} />
         <PrivateRoute path={`${path}/parties`} component={() => <Parties />} />
         <PrivateRoute path={`${path}/case-history`} component={() => <CaseHistory />} />
-
-
+        <PrivateRoute path={`${path}/home`} component={() => <HomeViewHearing></HomeViewHearing>} />
+        <PrivateRoute path={`${path}/view-hearing`} component={() => <ViewHearing></ViewHearing>} />
+        <PrivateRoute path={`${path}/hearing-popup`} component={() => <HearingPopup></HearingPopup>} />
+        <PrivateRoute path={`${path}/inside-hearings`} component={() => <InsideHearing></InsideHearing>} />
+        <PrivateRoute path={`${path}/view-case`} component={() => <ViewCase></ViewCase>} />
+        <PrivateRoute path={`${path}/reschedule-hearing`} component={() => <RescheduleHearing></RescheduleHearing>} />
+        <PrivateRoute path={`${path}/view-transcript`} component={() => <ViewTranscript></ViewTranscript>} />
+        <PrivateRoute path={`${path}/view-witness-deposition`} component={() => <ViewWitnessDeposition></ViewWitnessDeposition>} />
+        <PrivateRoute path={`${path}/view-pending-task`} component={() => <ViewPendingTask></ViewPendingTask>} />
+        <PrivateRoute path={`${path}/submission`} component={() => <Submission></Submission>} />
       </AppContainer>
     </Switch>
   );
