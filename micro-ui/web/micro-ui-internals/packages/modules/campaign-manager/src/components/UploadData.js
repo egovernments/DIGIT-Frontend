@@ -632,7 +632,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
               const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
               if (activeColumnName && uniqueIdentifierColumnName) {
-                console.log("json" , jsonData);
                 jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
               if (jsonData.length == 0) {
@@ -1025,8 +1024,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   useEffect(() => {
     setShowToast(null);
   }, [currentKey]);
-
-  console.log("errors" , errorsType[type]);
 
   return (
     <>
