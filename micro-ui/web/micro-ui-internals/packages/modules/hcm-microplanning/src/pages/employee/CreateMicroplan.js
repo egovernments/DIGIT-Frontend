@@ -40,7 +40,7 @@ const CreateMicroplan = () => {
   // States
   const [microplanData, setMicroplanData] = useState();
   const [operatorsObject, setOperatorsObject] = useState([]);
-  const [toastCreateMicroplan, setToastCreateMicroplan] = useState();
+  const [toast, setToast] = useState();
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
   const [loaderActivation, setLoaderActivation] = useState(false);
   const { state } = useMyContext();
@@ -171,15 +171,15 @@ const CreateMicroplan = () => {
         setCheckDataCompletion("perform-action");
       },
       onError: (error, variables) => {
-        setToastCreateMicroplan({
+        setToast({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
-          transitionTime:10000
+          transitionTime: 10000,
         });
         setTimeout(() => {
           setLoaderActivation(false);
           setCheckDataCompletion("false");
-      }, 2000);
+        }, 2000);
       },
     });
   };
@@ -205,15 +205,15 @@ const CreateMicroplan = () => {
         setCheckDataCompletion("perform-action");
       },
       onError: (error, variables) => {
-        setToastCreateMicroplan({
+        setToast({
           message: t("ERROR_DATA_NOT_SAVED"),
           state: "error",
-          transitionTime:10000
+          transitionTime: 10000,
         });
         setTimeout(() => {
           setLoaderActivation(false);
           setCheckDataCompletion("false");
-      }, 2000);
+        }, 2000);
       },
     });
   };
@@ -253,20 +253,43 @@ const CreateMicroplan = () => {
             checkDataCompleteness={true}
             stepNavigationActive={true}
             components={components}
-            childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name }}
+            childProps={{ microplanData, setMicroplanData, campaignType, MicroplanName: microplanData?.microplanDetails?.name, setToast }}
             nextEventAddon={nextEventAddon}
             setCurrentPageExternally={setCurrentPageExternally}
             completeNavigation={completeNavigation}
+            setToast={setToast}
           />
         )}
         {toRender === "success-screen" && <MicroplanCreatedScreen microplanData={microplanData} />}
       </div>
-      {toastCreateMicroplan && toastCreateMicroplan.state === "success" && (
-        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} transitionTime={toastCreateMicroplan?.transitionTime} onClose={() => setToastCreateMicroplan(undefined)} />
+      {toast && (
+        <Toast
+          style={{ zIndex: "999991" }}
+          label={toast.message}
+          type={toast.state}
+          transitionTime={toast?.transitionTime}
+          onClose={() => setToast(undefined)}
+        />
       )}
-      {toastCreateMicroplan && toastCreateMicroplan.state === "error" && (
-        <Toast style={{ zIndex: "999991" }} label={toastCreateMicroplan.message} transitionTime={toastCreateMicroplan?.transitionTime} onClose={() => setToastCreateMicroplan(undefined)} type="error" />
+      {/* {toast && toast.state === "error" && (
+        <Toast
+          style={{ zIndex: "999991" }}
+          label={toast.message}
+          transitionTime={toast?.transitionTime}
+          onClose={() => setToast(undefined)}
+          type="error"
+        />
       )}
+      {toast && toast.state === "warning" && (
+        <Toast
+          style={{ zIndex: "9999999" }}
+          label={toast.message}
+          transitionTime={toast?.transitionTime}
+          isDleteBtn
+          onClose={() => setToast(null)}
+          type="warning"
+        />
+      )} */}
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
     </>
   );

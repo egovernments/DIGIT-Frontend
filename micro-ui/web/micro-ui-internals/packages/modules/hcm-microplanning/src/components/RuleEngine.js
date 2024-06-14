@@ -20,6 +20,7 @@ const RuleEngine = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  setToast,
 }) => {
   const { t } = useTranslation();
 
@@ -36,7 +37,7 @@ const RuleEngine = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [pureInputList, setPureInputList] = useState([]);
   // Set TourSteps
   useEffect(() => {
@@ -263,9 +264,9 @@ const RuleEngine = ({
           </button>
         </div>
         <RuleEngineInformation t={t} />
-        {toast && toast.state === "warning" && (
+        {/* {toast && toast.state === "warning" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
-        )}
+        )} */}
 
         {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (

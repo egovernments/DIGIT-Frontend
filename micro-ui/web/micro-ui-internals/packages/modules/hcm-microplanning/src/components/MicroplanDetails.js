@@ -30,13 +30,14 @@ const MicroplanDetails = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  setToast,
   ...props
 }) => {
   const { t } = useTranslation();
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
   const { state, dispatch } = useMyContext();
   const [modal, setModal] = useState("none");
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [showNamingConventions, setShowNamingConventions] = useState(false);
   const [loader, setLoader] = useState(false);
 
@@ -271,6 +272,7 @@ const MicroplanDetails = ({
               name="name"
               value={microplan}
               onChange={onChangeMicroplanName}
+              placeholder={t("MICROPLAN_NAME_INPUT_PLACEHOLDER")}
               // {...(validation = {
               //   isRequired: true,
               //   pattern: "^[a-zA-Z-.`' ]*$",
@@ -283,16 +285,16 @@ const MicroplanDetails = ({
         </LabelFieldPair>
       </Card>
       <InfoCard
-        label={t("MICROPLAN_NAMING_CONSTRAINTS")}
+        label={t("MICROPLAN_NAMING_CONVENTION")}
         style={{ margin: "1.5rem 0 0 0", width: "100%", maxWidth: "unset" }}
         additionalElements={[
           <div className="microplan-naming-conventions">
-            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConstraints")?.microplanNamingConstraints?.map((item, index) => (
+            {state?.UIConfiguration?.find((item) => item.name === "microplanNamingConvention")?.microplanNamingConvention?.map((item, index) => (
               <div className="microplan-naming-convention-instruction-list-container">
-                <p key={index} className="microplan-naming-convention-instruction-list number">
+                <p key={`number-${index}`} className="microplan-naming-convention-instruction-list number">
                   {t(index + 1)}.
                 </p>
-                <p key={index} className="microplan-naming-convention-instruction-list text">
+                <p key={`text-${index}`} className="microplan-naming-convention-instruction-list text">
                   {t(item)}
                 </p>
               </div>
@@ -300,9 +302,9 @@ const MicroplanDetails = ({
           </div>,
         ]}
       />
-      {toast && toast.state === "error" && (
+      {/* {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
-      )}
+      )} */}
       {/* // uncomment to activate data change save check
       {modal === "data-change-check" && (
         <Modal

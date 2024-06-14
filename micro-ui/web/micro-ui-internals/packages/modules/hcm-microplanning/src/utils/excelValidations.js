@@ -34,7 +34,8 @@ export const excelValidations = (data, schemaData, t) => {
         },
       },
     },
-    additionalProperties: true,
+    minProperties: 1,
+    additionalProperties: false,
   };
   const validateExcel = ajv.compile(schema);
   const valid = validateExcel(data);
@@ -51,50 +52,80 @@ export const excelValidations = (data, schemaData, t) => {
     let errorMessages = {};
     for (let i = 0; i < validateExcel.errors.length; i++) {
       let tempErrorStore = "";
-      const instancePathType = validateExcel.errors[i].instancePath.split("/");
+      let instancePathTypeGlobal; // = validateExcel.errors[i].instancePath.split("/");
       switch (validateExcel.errors[i].keyword) {
-        case "additionalProperties":
+        case "additionalProperties": {
           tempErrorStore = "ERROR_ADDITIONAL_PROPERTIES";
           hasDataErrors = "true";
           break;
+        }
         case "type":
           {
             const instancePathType = validateExcel.errors[i].instancePath.split("/");
+            const neededType = validateExcel.errors[i].params?.type;
+            instancePathTypeGlobal = instancePathType;
             tempErrorStore = locationDataColumns.includes(instancePathType[instancePathType.length - 1])
               ? "ERROR_INCORRECT_LOCATION_COORDINATES"
-              : "ERROR_DATA_TYPE";
+              : neededType === "number"
+              ? "ERROR_MUST_BE_A_NUMBER"
+              : "ERROR_MUST_BE_A_STRING";
             hasDataErrors = "true";
           }
           break;
-        case "required":
+        case "required": {
           const missing = validateExcel.errors[i].params.missingProperty;
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          instancePathTypeGlobal = [...instancePathType, missing];
+          tempErrorStore = "ERROR_MANDATORY_FIELDS_CANT_BE_EMPTY";
           missingColumnsList.add(missing);
-          hasDataErrors = "missing_properties";
+          // hasDataErrors = "missing_properties";
+          hasDataErrors = "true";
           break;
+        }
         case "maximum":
-        case "minimum":
+        case "minimum": {
           const instancePathMinMax = validateExcel.errors[i].instancePath.split("/");
-          tempErrorStore = locationDataColumns.includes(instancePathMinMax[instancePathType.length - 1])
+          instancePathTypeGlobal = instancePathMinMax;
+          tempErrorStore = locationDataColumns.includes(instancePathMinMax[instancePathTypeGlobal.length - 1])
             ? "ERROR_INCORRECT_LOCATION_COORDINATES"
             : "ERROR_DATA_EXCEEDS_LIMIT_CONSTRAINTS";
           hasDataErrors = "true";
           break;
-        case "pattern":
+        }
+        case "pattern": {
           tempErrorStore = "ERROR_VALUE_NOT_ALLOWED";
           hasDataErrors = "true";
           break;
-        default:
+        }
+        case "minProperties": {
+          hasDataErrors = "minProperties";
+          break;
+        }
+        case "enum": {
+          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          instancePathTypeGlobal = instancePathType;
+          tempErrorStore = {
+            error: "ERROR_UPLOAD_DATA_ENUM",
+            values: { allowedValues: validateExcel.errors[i]?.params?.allowedValues?.map((item) => t(item)).join(", ") },
+          };
+          hasDataErrors = "true";
+          break;
+        }
+        default: {
           hasDataErrors = "unknown";
+        }
       }
-      if (tempErrorStore)
-        errors[instancePathType[1]] = {
-          ...(errors[instancePathType[1]] ? errors[instancePathType[1]] : {}),
-          [instancePathType[2]]: {
-            ...(errors?.[instancePathType[1]]?.[instancePathType[2]] ? errors?.[instancePathType[1]]?.[instancePathType[2]] : {}),
-            [instancePathType[3]]: [
+      if (tempErrorStore && instancePathTypeGlobal)
+        errors[instancePathTypeGlobal[1]] = {
+          ...(errors[instancePathTypeGlobal[1]] ? errors[instancePathTypeGlobal[1]] : {}),
+          [instancePathTypeGlobal[2]]: {
+            ...(errors?.[instancePathTypeGlobal[1]]?.[instancePathTypeGlobal[2]]
+              ? errors?.[instancePathTypeGlobal[1]]?.[instancePathTypeGlobal[2]]
+              : {}),
+            [instancePathTypeGlobal[3]]: [
               ...new Set(
-                ...(errors?.[instancePathType[1]]?.[instancePathType[2]]?.[instancePathType[3]]
-                  ? errors?.[instancePathType[1]]?.[instancePathType[2]]?.[instancePathType[3]]
+                ...(errors?.[instancePathTypeGlobal[1]]?.[instancePathTypeGlobal[2]]?.[instancePathTypeGlobal[3]]
+                  ? errors?.[instancePathTypeGlobal[1]]?.[instancePathTypeGlobal[2]]?.[instancePathTypeGlobal[3]]
                   : [])
               ),
               tempErrorStore,
@@ -104,13 +135,13 @@ export const excelValidations = (data, schemaData, t) => {
 
       switch (hasDataErrors) {
         case "true":
-          errorMessages = { dataError: t("ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") };
+          errorMessages = { dataError: "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS" };
+          break;
+        case "minProperties":
+          errorMessages = { minProperties: "ERROR_UPLOADED_DATA_IS_EMPTY" };
           break;
         case "unknown":
-          errorMessages = { unkown: t("ERROR_UNKNOWN") };
-          break;
-        case "missing_properties":
-          errorMessages = { missingProperty: t("ERROR_MISSING_PROPERTY", { properties: [...missingColumnsList].map((item) => t(item)).join(", ") }) };
+          errorMessages = { unkown: "ERROR_UNKNOWN" };
           break;
         case "false":
           break;
@@ -124,6 +155,7 @@ export const excelValidations = (data, schemaData, t) => {
       message: errorMessages ? [...new Set(Object.values(errorMessages))] : [],
       errors,
       validationError: validateExcel.errors,
+      missingColumnsList,
     };
   }
   ajv.removeSchema();
@@ -140,9 +172,11 @@ export const checkForErrorInUploadedFileExcel = async (fileInJson, schemaData, t
         valid: false,
         message: valid.message,
         errors: valid.errors,
+        missingProperties: valid.missingColumnsList,
       };
     }
   } catch (error) {
-    return { valid: false, message: "ERROR_PARSING_FILE" };
+    console.error("Error in excel validations: ", error?.message);
+    return { valid: false, message: ["ERROR_PARSING_FILE"] };
   }
 };

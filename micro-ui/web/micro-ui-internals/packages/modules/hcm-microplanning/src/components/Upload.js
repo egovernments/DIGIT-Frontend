@@ -43,6 +43,7 @@ const Upload = ({
   currentPage,
   pages,
   navigationEvent,
+  setToast,
 }) => {
   const { t } = useTranslation();
 
@@ -56,7 +57,7 @@ const Upload = ({
   const [dataUpload, setDataUpload] = useState(false);
   const [loader, setLoader] = useState(false);
   const [fileData, setFileData] = useState();
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [uploadedFileError, setUploadedFileError] = useState();
   const [fileDataList, setFileDataList] = useState([]);
   const [validationSchemas, setValidationSchemas] = useState([]);
@@ -844,6 +845,13 @@ const Upload = ({
         data = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section);
         break;
     }
+    if (!data || Object.keys(data).length === 0) {
+      setToast({
+        state: "error",
+        message: t("ERROR_DATA_NOT_PRESENT"),
+      });
+      return;
+    }
     setPreviewUploadedData(data);
   };
 
@@ -1058,13 +1066,13 @@ const Upload = ({
             </Modal>
           )}
           {loader && <LoaderWithGap text={t(loader)} />}
-          {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
+          {/* {toast && toast.state === "success" && <Toast style={{ zIndex: "9999999" }} label={toast.message} onClose={() => setToast(null)} />}
           {toast && toast.state === "error" && (
             <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="error" />
           )}
           {toast && toast.state === "warning" && (
             <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type="warning" />
-          )}
+          )} */}
           {previewUploadedData && (
             <div className="popup-wrap">
               <JsonPreviewInExcelForm
@@ -1138,7 +1146,7 @@ const UploadSection = ({ item, selected, setSelectedSection, uploadDone }) => {
 const UploadInstructions = ({ setModal, t }) => {
   return (
     <InfoCard
-      text={t("INFORMATION_DESCRIPTION")}
+      text={t("UPLOAD_GUIDELINE_INFO_CARD_INSTRUCTION")}
       className={"information-description"}
       style={{ margin: "1rem 0 0 0", width: "100%", maxWidth: "unset" }}
       additionalElements={[
@@ -1206,7 +1214,7 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
     <div key={item.id} className={`${selected ? "upload-component-active" : "upload-component-inactive"}`}>
       <div>
         <div className="heading">
-          <h2>{t(`HEADING_UPLOAD_DATA_${title}`)}</h2>
+          <h2 className="h2-class">{t(`HEADING_UPLOAD_DATA_${title}`)}</h2>
         </div>
 
         <p>{t(`INSTRUCTIONS_DATA_UPLOAD_OPTIONS_${title}`)}</p>
@@ -1233,7 +1241,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
     <div key={selectedSection.id} className="upload-component-active">
       <div>
         <div className="heading">
-          <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
+          <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
           <button className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
@@ -1266,13 +1274,46 @@ const UploadedFile = ({
   error,
   openDataPreview,
   downloadTemplateHandler,
+  showPreview,
 }) => {
   const { t } = useTranslation();
+  const [errorList, setErrorList] = useState([]);
+  useEffect(() => {
+    let tempErrorList = [];
+    if (file?.errorLocationObject) {
+      for (const [sheetName, values] of Object.entries(file?.errorLocationObject)) {
+        for (const [row, columns] of Object.entries(values)) {
+          for (const [column, errors] of Object.entries(columns)) {
+            for (const error of errors) {
+              let convertedError;
+              if (typeof error === "object") {
+                let { error: actualError, ...otherProperties } = error;
+                convertedError = t(actualError, otherProperties?.values);
+              } else {
+                convertedError = t(error);
+              }
+              tempErrorList.push(
+                t("ERROR_UPLOAD_DATA_LOCATION_AND_MESSAGE", {
+                  rowNumber: row,
+                  columnName: t(column),
+                  error: convertedError,
+                  sheetName: sheetName,
+                })
+              );
+            }
+          }
+        }
+      }
+    }
+    if (tempErrorList.length !== 0) {
+      setErrorList(tempErrorList);
+    }
+  }, [file]);
   return (
     <div key={selectedSection.id} className="upload-component-active">
       <div>
         <div className="heading">
-          <h2>{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
+          <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
           <button className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
@@ -1306,17 +1347,29 @@ const UploadedFile = ({
         </div>
       </div>
       {error && (
-        <div className="file-upload-error-container">
-          <div className="heading">
-            <CustomIcon Icon={Icons.Error} width={"24"} height={"24"} color="rgba(212, 53, 28, 1)" />
-            <p>{t("ERROR_UPLOADED_FILE")}</p>
-          </div>
-          <div className="body">
-            {error.map((item) => (
-              <p>{t(item)}</p>
-            ))}
-          </div>
-        </div>
+        <InfoCard
+          variant="error"
+          style={{ margin: "0" }}
+          label={t("ERROR_UPLOADED_FILE")}
+          additionalElements={[
+            <div className="file-upload-error-container">
+              {error.map((item) => {
+                if (item === "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {
+                  return (
+                    <div className="link-wrapper">
+                      {t(item)}
+                      <div className="link" onClick={openDataPreview}>
+                        {t("CLICK_HERE")}
+                      </div>
+                    </div>
+                  );
+                }
+                return <p>{t(item)}</p>;
+              })}
+              {errorList.length !== 0 && errorList.map((item) => <p>{item}</p>)}
+            </div>,
+          ]}
+        />
       )}
     </div>
   );
@@ -1401,13 +1454,13 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
 
     // Check if file size is within limit
     if (fileSizeInBytes > maxSizeInBytes)
-      resolve({ valid: false, message: "ERROR_FILE_SIZE", toast: { state: "error", message: t("ERROR_FILE_SIZE") } });
+      resolve({ valid: false, message: t("ERROR_FILE_SIZE"), toast: { state: "error", message: t("ERROR_FILE_SIZE") } });
 
     try {
       const zip = await JSZip.loadAsync(file);
       const isEPSG4326 = await checkProjection(zip);
       if (!isEPSG4326) {
-        resolve({ valid: false, message: "ERROR_WRONG_PRJ", toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
+        resolve({ valid: false, message: t("ERROR_WRONG_PRJ"), toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
       }
       const files = Object.keys(zip.files);
       const allFilesMatchRegex = files.every((fl) => {
@@ -1431,15 +1484,15 @@ const readAndValidateShapeFiles = async (file, t, namingConvention) => {
       else if (!allFilesMatchRegex)
         resolve({
           valid: false,
-          message: ["ERROR_CONTENT_NAMING_CONVENSION"],
+          message: [t("ERROR_CONTENT_NAMING_CONVENSION")],
           toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMING_CONVENSION") },
         });
       else if (!shpFile)
-        resolve({ valid: false, message: ["ERROR_SHP_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
+        resolve({ valid: false, message: [t("ERROR_SHP_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
       else if (!dbfFile)
-        resolve({ valid: false, message: ["ERROR_DBF_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
+        resolve({ valid: false, message: [t("ERROR_DBF_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
       else if (!shxFile)
-        resolve({ valid: false, message: ["ERROR_SHX_MISSING"], toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
+        resolve({ valid: false, message: [t("ERROR_SHX_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
     } catch (error) {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
     }
@@ -1793,7 +1846,7 @@ export const handleExcelFile = async (
 ) => {
   try {
     // Converting the file to preserve the sequence of columns so that it can be stored
-    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 1 });
+    let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 0 });
     if (fileDataToStore[t(BOUNDARY_DATA_SHEET)]) delete fileDataToStore[t(BOUNDARY_DATA_SHEET)];
     let { tempResourceMappingData, tempFileDataToStore } = resourceMappingAndDataFilteringForExcelFiles(
       schemaData,
@@ -1804,7 +1857,7 @@ export const handleExcelFile = async (
     );
     fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
     // Converting the input file to json format
-    let result = await parseXlsxToJsonMultipleSheets(fileDataToStore);
+    let result = await parseXlsxToJsonMultipleSheets(fileDataToStore, { header: 1 });
     if (result && result.error) {
       return {
         check: false,
@@ -1856,6 +1909,7 @@ export const handleExcelFile = async (
     if (!response.valid) setUploadedFileError(response.message);
     errorMsg = response.message;
     errors = response.errors;
+    const missingProperties = response.missingProperties;
     let check = response.valid;
     try {
       if (schemaData && !schemaData.doHierarchyCheckInUploadedData && !hierarchyDataPresent && boundaryDataAgainstBoundaryCode) {
@@ -1878,10 +1932,27 @@ export const handleExcelFile = async (
     } catch (error) {
       console.error("Error in boundary adding operaiton: ", error);
     }
+    tempFileDataToStore = addMissingPropertiesToFileData(tempFileDataToStore, missingProperties);
     return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast };
   } catch (error) {
     console.error("Error in handling Excel file:", error.message);
   }
+};
+const addMissingPropertiesToFileData = (data, missingProperties) => {
+  if (!data || !missingProperties) return data;
+  let tempData = {};
+  Object.entries(data).forEach(([key, value], index) => {
+    const filteredMissingProperties = [...missingProperties]?.reduce((acc, item) => {
+      if (!value?.[0]?.includes(item)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+    const newTempHeaders = value?.[0].length !== 0 ? [...value[0], ...filteredMissingProperties] : [...filteredMissingProperties];
+    console.log(newTempHeaders);
+    tempData[key] = [newTempHeaders, ...value.slice(1)];
+  });
+  return tempData;
 };
 
 const handleGeojsonFile = async (file, schemaData, setUploadedFileError, t) => {

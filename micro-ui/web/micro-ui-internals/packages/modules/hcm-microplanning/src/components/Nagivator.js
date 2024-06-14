@@ -17,7 +17,7 @@ import { memo } from "react";
 const Navigator = memo((props) => {
   // States
   const [currentPage, setCurrentPage] = useState();
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [navigationEvent, setNavigationEvent] = useState();
   const [activeSteps, setActiveSteps] = useState(Digit.SessionStorage.get("microplanHelperData")?.activeSteps || -1);
   /**
@@ -47,9 +47,10 @@ const Navigator = memo((props) => {
   useEffect(() => {
     if (checkDataCompletion === "invalid") {
       if (navigationEvent && navigationEvent.name === "next") {
-        setToast(t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS"));
+        props?.setToast({ state: "error", message: t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS") });
       } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step != undefined) {
-        if (navigationEvent.step > currentPage.id) setToast(t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS"));
+        if (navigationEvent.step > currentPage.id)
+          props?.setToast({ state: "error", message: t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS") });
         else onStepClick(navigationEvent.step);
       } else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
       setCheckDataCompletion("false");
@@ -242,7 +243,7 @@ const Navigator = memo((props) => {
       </ActionBar>
 
       {/* Toast notification */}
-      {toast && <Toast label={toast} type="error" transitionTime={10000} onClose={() => setToast(undefined)} />}
+      {/* {toast && <Toast label={toast} type="error" transitionTime={10000} onClose={() => setToast(undefined)} />} */}
     </div>
   );
 });

@@ -53,6 +53,7 @@ const Mapping = ({
   setCheckDataCompletion,
   currentPage,
   pages,
+  setToast,
   ...props
 }) => {
   //fetch campaign data
@@ -110,7 +111,7 @@ const Mapping = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [filterDataOrigin, setFilterDataOrigin] = useState({});
   const [dataAvailability, setDataAvailability] = useState("true");
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [baseMaps, setBaseMaps] = useState({});
   const [selectedBaseMap, setSelectedBaseMap] = useState({});
   const [selectedBaseMapName, setSelectedBaseMapName] = useState("");
@@ -437,12 +438,12 @@ const Mapping = ({
           </div>
         </Card>
       </Card>
-      {toast && toast.state === "error" && (
+      {/* {toast && toast.state === "error" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
       )}
       {toast && toast.state === "warning" && (
         <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"warning"} />
-      )}
+      )} */}
       {loader && <LoaderWithGap text={t(loader)} />}
     </div>
   );
@@ -1431,7 +1432,7 @@ function interpolateColor(value, minValue, maxValue, colors) {
   // Find the two colors to interpolate between
   let lowerColor, upperColor;
   for (let i = 0; i < colors.length - 1; i++) {
-    if (percent >= colors[i].percent && percent <= colors[i + 1].percent) {
+    if (!isNaN(percent) && percent >= colors[i].percent && percent <= colors[i + 1].percent) {
       lowerColor = colors[i];
       upperColor = colors[i + 1];
       break;

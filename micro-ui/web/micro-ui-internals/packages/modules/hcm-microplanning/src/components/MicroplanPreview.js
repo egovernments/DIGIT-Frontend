@@ -21,6 +21,7 @@ const MicroplanPreview = ({
   currentPage,
   pages,
   navigationEvent,
+  setToast,
   ...props
 }) => {
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
@@ -36,7 +37,7 @@ const MicroplanPreview = ({
   const [formulaConfiguration, setFormulaConfiguration] = useState([]);
   const [boundarySelections, setBoundarySelections] = useState({}); // state for hierarchy from the data available from uploaded data
   const [boundaryData, setBoundaryData] = useState({}); // State for boundary data
-  const [toast, setToast] = useState();
+  // const [toast, setToast] = useState();
   const [modal, setModal] = useState("none");
   const [operatorsObject, setOperatorsObject] = useState([]);
 
@@ -392,9 +393,9 @@ const MicroplanPreview = ({
             <AppplyChangedHypothesisConfirmation newhypothesisList={hypothesisAssumptionsList} hypothesisList={microplanData?.hypothesis} t={t} />
           </Modal>
         )}
-        {toast && toast.state === "error" && (
+        {/* {toast && toast.state === "error" && (
           <Toast style={{ zIndex: "9999999" }} label={toast.message} isDleteBtn onClose={() => setToast(null)} type={"error"} />
-        )}
+        )} */}
       </div>
       {loaderActivation && <LoaderWithGap text={"LOADING"} />}
     </>
