@@ -15,10 +15,6 @@ const InsideHearingMainPage = () => {
     history.push(`/${contextPath}${path}`);
   };
 
-  const handleClick =()=>{
-    console.log("clicked")
-  }
-
   return (
     <div>
        <br></br>
@@ -27,7 +23,7 @@ const InsideHearingMainPage = () => {
       <br></br>
 
       <button
-        onClick={() => handleNavigate('/employee/hearings/generate-orders')}
+        onClick={() => handleNavigate('/employee/orders/generate-orders')}
         style={{
           backgroundColor: 'blue',
           color: 'white',
@@ -116,7 +112,7 @@ const InsideHearingMainPage = () => {
       <br></br>
 
       <button
-        onClick={() => handleNavigate('/employee/hearings/orders')}
+        onClick={() => handleNavigate('/employee/orders/orders-home')}
         style={{
           backgroundColor: 'blue',
           color: 'white',
