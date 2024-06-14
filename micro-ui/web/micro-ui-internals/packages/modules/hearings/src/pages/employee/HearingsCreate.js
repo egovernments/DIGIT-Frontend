@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
+import {  Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-components";
 import { configs } from "../../configs/hearingsCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 
@@ -52,6 +53,7 @@ const HearingsCreate = () => {
         }}
         onSubmit={(data,) => onSubmit(data, )}
         fieldStyle={fieldStyle}
+        noBreakLine={true}
       />
        
     </div>

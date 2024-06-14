@@ -7,3 +7,51 @@ $primaryColor :theme(colors.primary.main);
 
     }
 
+    .digit-toast-success {
+      gap: 0.5rem;
+      height: 3rem;
+      padding: 0.75rem 0.5rem 0.75rem 0.75rem !important;
+      background-color: theme(digitv2.alert.success);
+      transition: bottom 0.5s ease;
+      grid-gap: 0.5rem;
+      &.error {
+        background-color: theme(digitv2.alert.error) !important;
+      }
+    
+      &.warning {
+        background-color: #f19100;
+    
+        &.warning-buttons {
+          @apply block;
+        }
+      }
+    
+      h2 {
+        @apply text-left overflow-hidden whitespace-no-wrap flex-grow flex items-center h-6;
+        letter-spacing: 0rem;
+        color: theme(digitv2.lightTheme.paper);
+        margin: 0rem;
+        text-overflow: ellipsis;
+        font-family: Roboto;
+        font-weight: 500;
+        font-size: 1.25rem;
+        font-style: normal;
+      }
+      svg {
+        @apply flex-shrink-0;
+      }
+    }
+    
+    @keyframes slideInFromBottom {
+      from {
+        bottom: -3rem;
+      }
+      to {
+        bottom: 4rem;
+      }
+    }
+    
+    .digit-toast-success.animate {
+      animation: slideInFromBottom 0.5s ease forwards;
+    }
+    
