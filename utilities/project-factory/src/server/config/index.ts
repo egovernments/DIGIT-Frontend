@@ -42,6 +42,8 @@ const config = {
     KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC: process.env.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC || "create-resource-activity",
     KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC: process.env.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC || "update-generated-resource-details",
     KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC: process.env.KAFKA_CREATE_GENERATED_RESOURCE_DETAILS_TOPIC || "create-generated-resource-details",
+    KAFKA_SAVE_PROCESS_TRACK_TOPIC: process.env.KAFKA_SAVE_PROCESS_TRACK_TOPIC || "save-process-track",
+    KAFKA_UPDATE_PROCESS_TRACK_TOPIC: process.env.KAFKA_UPDATE_PROCESS_TRACK_TOPIC || "update-process-track",
   },
 
   // Database configuration
@@ -51,6 +53,10 @@ const config = {
     DB_NAME: process.env.DB_NAME || "postgres",
     DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
     DB_PORT: process.env.DB_PORT || "5432",
+    DB_CAMPAIGN_DETAILS_TABLE_NAME : "health.eg_cm_campaign_details",
+    DB_CAMPAIGN_PROCESS_TABLE_NAME :  "health.eg_cm_campaign_process",
+    DB_GENERATED_RESOURCE_DETAILS_TABLE_NAME : "health.eg_cm_generated_resource_details",
+    DB_RESOURCE_DETAILS_TABLE_NAME : "health.eg_cm_resource_details"
   },
   // Application configuration
   app: {
@@ -124,7 +130,7 @@ const config = {
     unfrozeTillRow: process.env.UNFROZE_TILL_ROW || "10000",
     unfrozeTillColumn: process.env.UNFROZE_TILL_COLUMN || "50",
     moduleName: process.env.MODULE_NAME || "HCM-ADMIN-CONSOLE",
-    readMeTab: "Read Me",
+    readMeTab: "HCM_README_SHEETNAME",
     userMainBoundary: "mz",
     userMainBoundaryType: "Country",
     idgen: {

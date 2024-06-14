@@ -247,7 +247,7 @@ async function searchGeneratedResources(request: any) {
     let queryString: string;
     let queryValues: any[] = [];
 
-    queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE ";
+    queryString = `SELECT * FROM ${config?.DB_CONFIG.DB_GENERATED_RESOURCE_DETAILS_TABLE_NAME} WHERE `;
     // query for download with id
     if (request?.query?.id) {
       queryString += "id = $1 AND type = $2 AND hierarchytype = $3 AND tenantid = $4 ";
@@ -509,9 +509,9 @@ function createBoundaryDataMainSheet(request: any, boundaryData: any, differentT
       mainSheetData.push(rowData);
     } else {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
-      if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
-        uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
-        districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('_'), data[getLocalizedName(getBoundaryColumnName(), localizationMap)]);
+      if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('#'))) {
+        uniqueDistrictsForMainSheet.push(districtLevelRow.join('#'));
+        districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('#'), data[getLocalizedName(getBoundaryColumnName(), localizationMap)]);
         mainSheetData.push(rowData);
       }
     }

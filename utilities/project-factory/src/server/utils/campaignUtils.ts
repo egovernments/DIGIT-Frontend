@@ -167,6 +167,17 @@ function enrichErrors(errorData: any, worksheet: any, statusColumn: any, errorDe
     }
 }
 
+function enrichActiveColumn(worksheet: any, createAndSearchConfig: any, request: any) {
+    if (createAndSearchConfig?.activeColumn && request?.body?.dataToCreate) {
+        const dataToCreate = request.body.dataToCreate;
+        for (const data of dataToCreate) {
+            const rowNumber = data['!row#number!'];
+            const activeCell = worksheet.getCell(`${createAndSearchConfig?.activeColumn}${rowNumber}`);
+            activeCell.value = "Active";
+        }
+    }
+}
+
 function deterMineLastColumnAndEnrichUserDetails(worksheet: any, errorDetailsColumn: any, userNameAndPassword: any, request: any, createAndSearchConfig: any) {
     let lastColumn = errorDetailsColumn;
     if (createAndSearchConfig?.uniqueIdentifierColumn !== undefined) {
@@ -235,6 +246,7 @@ function processErrorData(request: any, createAndSearchConfig: any, workbook: an
     const additionalDetailsErrors: any[] = [];
 
     enrichErrors(errorData, worksheet, statusColumn, errorDetailsColumn, additionalDetailsErrors, createAndSearchConfig, localizationMap);
+    enrichActiveColumn(worksheet, createAndSearchConfig, request);
 
     request.body.additionalDetailsErrors = additionalDetailsErrors;
 
@@ -570,7 +582,7 @@ async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boo
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
     request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber
     request.body.CampaignDetails.campaignDetails = updatedInnerCampaignDetails
-    request.body.CampaignDetails.status = action == "create" ? campaignStatuses.started : campaignStatuses.drafted;
+    request.body.CampaignDetails.status = action == "changeDates" ? request.body.CampaignDetails.status : (action == "create" ? campaignStatuses.started : campaignStatuses.drafted);
     const boundaryCode = !(request?.body?.CampaignDetails?.projectId) ? getRootBoundaryCode(request.body.CampaignDetails.boundaries) : (request?.body?.CampaignDetails?.boundaryCode || ExistingCampaignDetails?.boundaryCode)
     request.body.CampaignDetails.boundaryCode = boundaryCode
     request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate || ExistingCampaignDetails?.startDate || null
@@ -797,7 +809,7 @@ async function getTotalCount(request: any) {
 
     let query = `
         SELECT count(*)
-        FROM health.eg_cm_campaign_details
+        FROM ${config?.DB_CONFIG.DB_CAMPAIGN_DETAILS_TABLE_NAME}
         WHERE tenantId = $1
     `;
 
@@ -886,7 +898,7 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
 
     let query = `
         SELECT *
-        FROM health.eg_cm_campaign_details
+        FROM ${config?.DB_CONFIG.DB_CAMPAIGN_DETAILS_TABLE_NAME}
         WHERE tenantId = $1
     `;
 
@@ -978,7 +990,7 @@ function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; va
     return {
         query: `
     SELECT *
-    FROM health.eg_cm_resource_details
+    FROM ${config?.DB_CONFIG.DB_RESOURCE_DETAILS_TABLE_NAME}
     ${whereClause};`, values
     };
 }
@@ -1357,7 +1369,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
 async function appendDistricts(request: any, workbook: any, uniqueDistrictsForMainSheet: any, differentTabsBasedOnLevel: any, boundaryData: any, localizationMap: any, districtLevelRowBoundaryCodeMap: any, hierarchy: any) {
     const configurableColumnHeadersFromSchemaForTargetSheet = await getConfigurableColumnHeadersFromSchemaForTargetSheet(request, hierarchy, boundaryData, differentTabsBasedOnLevel, localizationMap);
     for (const uniqueData of uniqueDistrictsForMainSheet) {
-        const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('_') + 1);
+        const uniqueDataFromLevelForDifferentTabs = uniqueData.slice(uniqueData.lastIndexOf('#') + 1);
         logger.info(`generating the boundary data for ${uniqueDataFromLevelForDifferentTabs} - ${differentTabsBasedOnLevel}`)
         const districtDataFiltered = boundaryData.filter((boundary: any) => boundary[differentTabsBasedOnLevel] === uniqueDataFromLevelForDifferentTabs && boundary[hierarchy[hierarchy.length - 1]]);
         const modifiedFilteredData = modifyFilteredData(districtDataFiltered, districtLevelRowBoundaryCodeMap.get(uniqueData), localizationMap);
