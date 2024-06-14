@@ -73,19 +73,29 @@ export const searchconfig = () =>
         uiConfig: {
           columns: [
             {
-              label: "IndividualID",
+              label: "Case Name",
               jsonPath: "individualId",
             },
             
             {
-              label: "Name",
+              label: "states",
               jsonPath: "name.givenName",
               
             },
             {
-              label: "Address",
+              label: "Case Type",
               jsonPath: "address.locality.code",
             },
+            // {
+            //   label: "pending tasks",
+            //   jsonPath: "name.givenName",
+              
+            // },
+            // {
+            //   label: "Actions",
+            //   jsonPath: "name.givenName",
+              
+            // },
           ],
 
           enableColumnSort: true,
