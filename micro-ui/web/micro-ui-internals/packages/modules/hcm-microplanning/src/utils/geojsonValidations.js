@@ -146,11 +146,11 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
           break;
         }
         case "enum": {
-          const instancePathType = validateExcel.errors[i].instancePath.split("/");
+          const instancePathType = validateGeojson.errors[i].instancePath.split("/");
           instancePathTypeGlobal = instancePathType;
           tempErrorStore = {
             error: "ERROR_UPLOAD_DATA_ENUM",
-            values: { allowedValues: validateExcel.errors[i]?.params?.allowedValues?.map((item) => t(item)).join(", ") },
+            values: { allowedValues: validateGeojson.errors[i]?.params?.allowedValues?.map((item) => t(item)).join(", ") },
           };
           hasDataErrors = "true";
           break;

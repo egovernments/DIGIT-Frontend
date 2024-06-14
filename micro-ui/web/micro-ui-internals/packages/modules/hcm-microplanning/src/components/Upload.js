@@ -481,6 +481,7 @@ const Upload = ({
             setUploadedFileError(errorMsg);
           }
         } catch (errorData) {
+          console.log(errorData.message);
           errorMsg = t("ERROR_UPLOADING_FILE");
           setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
           setUploadedFileError(errorMsg);
@@ -523,6 +524,7 @@ const Upload = ({
       setDataPresent(true);
       setLoader(false);
     } catch (error) {
+      console.log(error.message);
       console.error("File Upload error", error?.message);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoader(false);
@@ -683,6 +685,7 @@ const Upload = ({
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoader(false);
     } catch (error) {
+      console.log(error.message);
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
@@ -701,6 +704,7 @@ const Upload = ({
         setUploadedFileError(error);
       }
     } catch (error) {
+      console.log(error.message);
       error = t("ERROR_UPLOADING_FILE");
       handleValidationErrorResponse(error);
       setResourceMapping([]);
@@ -1274,7 +1278,6 @@ const UploadedFile = ({
   error,
   openDataPreview,
   downloadTemplateHandler,
-  showPreview,
 }) => {
   const { t } = useTranslation();
   const [errorList, setErrorList] = useState([]);
@@ -1346,14 +1349,14 @@ const UploadedFile = ({
           </div>
         </div>
       </div>
-      {error && (
+      {error && Array.isArray(error) && (
         <InfoCard
           variant="error"
           style={{ margin: "0" }}
           label={t("ERROR_UPLOADED_FILE")}
           additionalElements={[
             <div className="file-upload-error-container">
-              {error.map((item) => {
+              {error?.map((item) => {
                 if (item === "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {
                   return (
                     <div className="link-wrapper">
