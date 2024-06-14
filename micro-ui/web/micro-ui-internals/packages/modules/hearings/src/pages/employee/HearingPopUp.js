@@ -1,6 +1,7 @@
 
 
 
+import { PopUp } from '@egovernments/digit-ui-components';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -22,7 +23,8 @@ const HearingPopup = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <PopUp type="default">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
       <button
         style={{ marginBottom: '10px', padding: '10px 20px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white', border: 'none' }}
         onClick={() => handleNavigate('/employee/hearings/inside-hearing')}
@@ -34,7 +36,7 @@ const HearingPopup = () => {
           style={{ padding: '10px 20px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white', border: 'none' }}
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
-          Kebab
+          START
         </button>
         {isDropdownOpen && (
           <ul style={{ position: 'absolute', top: '100%', left: 0, backgroundColor: 'white', border: '1px solid #ccc', listStyle: 'none', padding: 0, margin: 0, width: '200px' }}>
@@ -54,6 +56,7 @@ const HearingPopup = () => {
         )}
       </div>
     </div>
+    </PopUp>
   );
 };
 

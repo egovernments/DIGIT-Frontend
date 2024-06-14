@@ -32,6 +32,7 @@
 
 // export default ViewHearing;
 
+import { PopUp } from '@egovernments/digit-ui-components';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -45,7 +46,7 @@ const ViewHearing = () => {
 
   return (
     <button className="redirect-button" onClick={handleNavigate}>
-      Hearing pop up
+      Admissions hearing popup
     </button>
   );
 };
