@@ -88,7 +88,7 @@ export const myCampaignConfig = {
               {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
-                additionalCustomization: true,
+                // additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
@@ -219,7 +219,7 @@ export const myCampaignConfig = {
               {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
-                additionalCustomization: true,
+                // additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
@@ -350,7 +350,7 @@ export const myCampaignConfig = {
               {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
-                additionalCustomization: true,
+                // additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
@@ -481,7 +481,7 @@ export const myCampaignConfig = {
               {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
-                additionalCustomization: true,
+                // additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
@@ -612,7 +612,7 @@ export const myCampaignConfig = {
               {
                 label: "CAMPAIGN_NAME",
                 jsonPath: "campaignName",
-                additionalCustomization: true,
+                // additionalCustomization: true,
               },
               {
                 label: "CAMPAIGN_TYPE",
