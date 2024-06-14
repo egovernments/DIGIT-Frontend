@@ -14,7 +14,8 @@ const defaultSearchValues = {
     IndividualID: "",
   };
 
-const OrdersHome = () => {    const { t } = useTranslation();
+const OrdersHome = () => {    
+    const { t } = useTranslation();
 const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
 const [config, setConfig] = useState(TabSearchconfig?.TabSearchconfig?.[0]); // initially setting first index config as default from jsonarray
 const [tabData, setTabData] = useState(

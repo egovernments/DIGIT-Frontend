@@ -4,8 +4,6 @@ import { useHistory } from "react-router-dom";
 import { Header, InboxSearchComposer ,FormComposerV2} from "@egovernments/digit-ui-react-components";
 import { TabSearchconfig } from "../../../../orders/src/configs/GenerateOrdersConfig";
 import { configs } from "../../configs/ordersCreateConfig";
-import { transformCreateData } from "../../utils/createUtils";
-
 
 
 const fieldStyle={ marginRight: 0 };
