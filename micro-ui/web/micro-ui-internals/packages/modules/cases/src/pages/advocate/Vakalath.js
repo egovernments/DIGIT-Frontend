@@ -12,7 +12,6 @@ const Vakalath = () => {
   };
 
   const selectedCase = window.Digit.SessionStorage.get("PUCAR_CASE_DATA");
-  console.log(selectedCase, " selectedCase")
 
   const reqCreate = {
     url: `/case/case/v1/_update`,
@@ -29,7 +28,7 @@ const Vakalath = () => {
   function transformCreateData(data) {
     data.workflow.action = "SAVE_DRAFT";
     return {
-      ...data
+      cases:data
     };
   }
 

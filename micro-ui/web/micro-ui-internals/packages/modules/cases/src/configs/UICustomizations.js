@@ -166,7 +166,7 @@ export const UICustomizations = {
       //     }, {});
 
       //   data.body.Individual = { ...Individual };
-      console.log(data, "data");
+      
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
