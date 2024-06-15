@@ -27,7 +27,7 @@ const Vakalath = () => {
   function transformCreateData(data) {
     data.workflow.action = "SAVE_DRAFT";
     return {
-      cases:data
+      cases: data,
     };
   }
 
@@ -43,11 +43,11 @@ const Vakalath = () => {
       },
       {
         onSuccess: async (result) => {
-          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
+          history.push(`/${window?.contextPath}/employee/cases/advocate-join-case`);
         },
         onError: (result) => {
           setShowToast({ key: "error", label: t("ERROR_WHILE_SUBMITING") });
-          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
+          history.push(`/${window?.contextPath}/employee/cases/advocate-join-case`);
         },
       }
     );
