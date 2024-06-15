@@ -22,7 +22,6 @@ const Vakalath = () => {
     },
   };
 
-
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   function transformCreateData(data) {
@@ -52,17 +51,13 @@ const Vakalath = () => {
         },
       }
     );
-
   };
-
-
 
   return (
     <div>
       Vakalath Display Page
       <button
         onClick={() => onSubmit(selectedCase?.caseData)}
-
         style={{
           backgroundColor: "blue",
           color: "white",
