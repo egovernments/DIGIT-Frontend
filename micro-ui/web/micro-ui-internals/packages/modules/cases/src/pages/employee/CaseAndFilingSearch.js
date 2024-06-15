@@ -7,8 +7,9 @@ import { useTranslation } from "react-i18next";
 import { caseAndFilingSearchConfig } from "../../configs/caseAndFilingSearchConfig";
 
 const defaultSearchValues = {
-    filingNumber: "",
+    filingNumber: "CASE-FILING-NO-2024-06-15-001711",
     caseNumber: ""
+    
 };
 
 

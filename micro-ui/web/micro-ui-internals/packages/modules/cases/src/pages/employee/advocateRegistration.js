@@ -1,22 +1,25 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  Header } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 // import { configs } from "../../configs/pucarCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 import { advocateRegistrationConfig } from "../../configs/advocateRegistrationConfig";
 import { InfoCard } from "@egovernments/digit-ui-components";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
-const fieldStyle={ marginRight: 0 };
+const fieldStyle = { marginRight: 0 };
 
 const AdvocateRegistration = () => {
-  const defaultValue={};
+  const defaultValue = {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
+  const location = useLocation();
+  const propData = location.state || {};
   const reqCreate = {
-    url: `/case/case/v1/_create`,
+    url: `/case/case/v1/_update`,
     params: {},
     body: {},
     config: {
@@ -26,23 +29,23 @@ const AdvocateRegistration = () => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
-  const onSubmit = async(data) => {
-    console.log(data, "data");
+  const onSubmit = async (data) => {
     await mutation.mutate(
       {
-        url: `/case/case/v1/_create`,
+        url: `/case/case/v1/_update`,
         params: { tenantId },
-        body: transformCreateData(data),
+        body: transformCreateData(propData),
         config: {
           enable: true,
         },
       },
       {
         onSuccess: async (result) => {
-          console.log("result", result)
+          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
         },
         onError: (result) => {
           setShowToast({ key: "error", label: t("ERROR_WHILE_SUBMITING") });
+          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
         },
       }
     );
@@ -72,14 +75,14 @@ const AdvocateRegistration = () => {
           };
         })}
         defaultValues={defaultValue}
-        onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+        onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
           console.log(formData, "formData");
         }}
-        onSubmit={(data,) => onSubmit(data, )}
+        onSubmit={(data,) => onSubmit(data,)}
         fieldStyle={fieldStyle}
         noBreakLine={true}
       />
-       
+
     </div>
   );
 }

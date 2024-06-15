@@ -7,7 +7,7 @@ import CasesCreate from "./CasesCreate";
 import CasesSearch from "./CasesSearch";
 import JoinCaseHome from "./JoinCaseHome";
 import AdvocateRegistration from "./advocateRegistration";
-const bredCrumbStyle={ maxWidth: "min-content" };
+const bredCrumbStyle = { maxWidth: "min-content" };
 import SearchCase from "./SearchCase";
 import AdvocateMain from "../advocate/AdvocateMain";
 import Vakalath from "../advocate/Vakalath";
@@ -16,6 +16,7 @@ import AdvocatePayment from "../advocate/AdovactePayment";
 import AdvocateJoinCase from "../advocate/AdvocateJoinCase";
 import AdvocateJoinSucess from "../advocate/AdvocateJoinSucess";
 import CaseAndFilingSearch from "./CaseAndFilingSearch";
+import LitigantSucess from "./LitigantSuccess";
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
@@ -44,7 +45,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/cases-create`} component={() => <CasesCreate />} />
         <PrivateRoute path={`${path}/cases-search`} component={() => <CasesSearch></CasesSearch>} />
         <PrivateRoute path={`${path}/join-case`} component={() => <JoinCaseHome />} />
-        <PrivateRoute path={`${path}/advocate-registration`} component={() => <AdvocateRegistration></AdvocateRegistration>} />
+        <PrivateRoute path={`${path}/join-case-litigant`} component={() => <AdvocateRegistration></AdvocateRegistration>} />
         <PrivateRoute path={`${path}/search-case`} component={() => <SearchCase />} />
         <PrivateRoute path={`${path}/join-case-advocate`} component={() => <AdvocateMain />} />
         <PrivateRoute path={`${path}/advocate-vakalath`} component={() => <Vakalath />} />
@@ -53,6 +54,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/advocate-join-case`} component={() => <AdvocateJoinCase />} />
         <PrivateRoute path={`${path}/advocate-join-success`} component={() => <AdvocateJoinSucess />} />
         <PrivateRoute path={`${path}/case-filing-search`} component={() => <CaseAndFilingSearch></CaseAndFilingSearch>} />
+        <PrivateRoute path={`${path}/litigant-success`} component={() => <LitigantSucess></LitigantSucess>} />
       </AppContainer >
     </Switch >
   );
