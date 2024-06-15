@@ -13,7 +13,8 @@ import AdvocateEsign from "../advocate/AdvocateEsign";
 import AdvocatePayment from "../advocate/AdovactePayment";
 import AdvocateJoinCase from "../advocate/AdvocateJoinCase";
 import AdvocateJoinSucess from "../advocate/AdvocateJoinSucess";
-const bredCrumbStyle={ maxWidth: "min-content" };
+const bredCrumbStyle = { maxWidth: "min-content" };
+import CaseAndFilingSearch from "./CaseAndFilingSearch";
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
@@ -49,8 +50,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/advocate-payment`} component={() => <AdvocatePayment />} />
         <PrivateRoute path={`${path}/advocate-join-case`} component={() => <AdvocateJoinCase />} />
         <PrivateRoute path={`${path}/advocate-join-success`} component={() => <AdvocateJoinSucess />} />
-      </AppContainer>
-    </Switch>
+        <PrivateRoute path={`${path}/case-filing-search`} component={() => <CaseAndFilingSearch></CaseAndFilingSearch>} />
+      </AppContainer >
+    </Switch >
   );
 };
 
