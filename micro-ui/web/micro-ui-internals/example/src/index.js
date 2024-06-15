@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
-import "@egovernments/digit-ui-sample-css/example/index.css";
+import "@egovernments/digit-ui-pucar-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
@@ -14,6 +14,8 @@ import {initPucarComponents} from "@egovernments/digit-ui-module-pucar";
 import {initHearingsComponents} from "@egovernments/digit-ui-module-hearings";
 import {initOrdersComponents} from "@egovernments/digit-ui-module-orders";
 import {initCasesComponents} from "@egovernments/digit-ui-module-cases";
+
+import {initSubmissionsComponents} from "@egovernments/digit-ui-module-submissions";
 
 var Digit = window.Digit || {};
 
@@ -29,7 +31,9 @@ const enabledModules = [
   "Orders",
   "Cases",
   // "Pucar",
-  "Hearings"
+  "Hearings",
+  "Submissions"
+
   //added to check fsm
   // "FSM"
 ];
@@ -78,6 +82,7 @@ const initDigitUI = () => {
   initHearingsComponents();
   initOrdersComponents();
   initCasesComponents();
+  initSubmissionsComponents();
   const moduleReducers = (initData) => initData;
 
 
