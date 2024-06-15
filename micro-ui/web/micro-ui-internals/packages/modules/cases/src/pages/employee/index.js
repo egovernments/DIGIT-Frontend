@@ -6,6 +6,7 @@ import CasesResponse from "./CasesResponse";
 import CasesCreate from "./CasesCreate";
 import CasesSearch from "./CasesSearch";
 import JoinCaseHome from "./JoinCaseHome";
+import AdvocateRegistration from "./advocateRegistration";
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -35,6 +36,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/cases-create`} component={() => <CasesCreate />} />
         <PrivateRoute path={`${path}/cases-search`} component={() => <CasesSearch></CasesSearch>} />
         <PrivateRoute path={`${path}/join-case`} component={() => <JoinCaseHome />} />
+        <PrivateRoute path={`${path}/advocate-registration`} component={() => <AdvocateRegistration></AdvocateRegistration>} />
+
       </AppContainer>
     </Switch>
   );
