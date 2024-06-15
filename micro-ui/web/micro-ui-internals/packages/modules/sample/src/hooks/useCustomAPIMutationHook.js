@@ -44,7 +44,7 @@ const useCustomAPIMutationHook = ({ url, params, body, config = {}, plainAccessR
   const client = useQueryClient();
 
   const { isLoading, data, isFetching, ...rest } = useMutation(
-    (data) => CustomService.getResponse({ url, params: { ...params, ...data?.params }, body: { ...body, ...data?.body }, plainAccessRequest }),
+    (data) => Digit.CustomService.getResponse({ url, params: { ...params, ...data?.params }, body: { ...body, ...data?.body }, plainAccessRequest }),
     {
       cacheTime: 0,
       ...config,

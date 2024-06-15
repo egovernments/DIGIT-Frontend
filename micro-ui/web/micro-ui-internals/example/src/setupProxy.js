@@ -17,8 +17,15 @@ const mdmsProxy = createProxyMiddleware({
   changeOrigin: true,
   secure: false,
 });
+
+const programProxy = createProxyMiddleware({
+  target: process.env.REACT_APP_PROXY_ASSETS || "http://localhost:8082",
+  changeOrigin: true,
+  secure: false,
+});
 module.exports = function (app) {
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
+  ["/mukta/program-service/v1/program/_create"].forEach((location) => app.use(location, programProxy));
   [
     "/access/v1/actions/mdms",
     "/egov-mdms-service",

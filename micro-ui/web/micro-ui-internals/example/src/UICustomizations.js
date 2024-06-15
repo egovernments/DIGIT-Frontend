@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useLocation, useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
+// import organizationSearchConfig from "../../packages/modules/sample/src/configs/OrganizationSearchConfig";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -326,6 +327,7 @@ export const UICustomizations = {
   },
   SearchWageSeekerConfig: {
     customValidationCheck: (data) => {
+      console.log("aaaaarrraddhya");
       //checking both to and from date are present
       const { createdFrom, createdTo } = data;
       if ((createdFrom === "" && createdTo !== "") || (createdFrom !== "" && createdTo === ""))
@@ -334,6 +336,7 @@ export const UICustomizations = {
       return false;
     },
     preProcess: (data) => {
+      console.log('auhahhjjka');
       data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
 
       let requestBody = { ...data.body.Individual };
@@ -423,6 +426,45 @@ export const UICustomizations = {
     additionalValidations: (type, data, keys) => {
       if (type === "date") {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
+      }
+    },
+  },
+  organizationSearchConfig: {
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      //here we can add multiple conditions
+      //like if a cell is link then we return link
+      //first we can identify which column it belongs to then we can return relevant result
+      switch (key) {
+        case "ORG_NUMBER":
+          return (
+            <span className="link">
+              <Link to={`/${window.contextPath}/employee/sample/organization-view?tenantId=${row?.tenantId}&orgId=${value}`}>
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+              </Link>
+            </span>
+          );
+
+        // case "MASTERS_SOCIAL_CATEGORY":
+        //   return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(`MASTERS_${value}`))}</span> : t("ES_COMMON_NA");
+
+        // case "CORE_COMMON_PROFILE_CITY":
+        //   return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getCityLocale(value)))}</span> : t("ES_COMMON_NA");
+
+        // case "MASTERS_WARD":
+        //   return value ? (
+        //     <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+        //   ) : (
+        //     t("ES_COMMON_NA")
+        //   );
+
+        // case "MASTERS_LOCALITY":
+        //   return value ? (
+        //     <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+        //   ) : (
+        //     t("ES_COMMON_NA")
+        //   );
+        default:
+          return t("ES_COMMON_NA");
       }
     },
   },

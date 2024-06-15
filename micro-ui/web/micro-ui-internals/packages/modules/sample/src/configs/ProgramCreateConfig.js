@@ -1,0 +1,117 @@
+ export const newConfig = [
+    {
+   head: "Create Program",   
+    body: [
+        {
+          inline: true,
+          label: "Name",
+          isMandatory: false,
+          key: "name",
+          type: "text",
+          disable: false,
+          populators: { name: "name", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        {
+          inline: true,
+          label: "Description",
+          isMandatory: false,
+          key: "description",
+          type: "text",
+          disable: false,
+          populators: { name: "description", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        {
+          inline: true,
+          label: "start date",
+          isMandatory: false,
+          key: "start_date",
+          type: "date",
+          disable: false,
+          populators: { name: "start_date", error: "Required " },
+        },
+        {
+          inline: true,
+          label: "end date",
+          isMandatory: false,
+          key: "end_date",
+          type: "date",
+          disable: false,
+          populators: { name: "end_date", error: "Required " },
+        },
+        {
+          inline: true,
+          label: "Objective",
+          isMandatory: false,
+          key: "objective",
+          type: "text",
+          disable: false,
+          populators: { name: "objective", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        {
+          inline: true,
+          label: "Criteria",
+          isMandatory: false,
+          key: "criteria",
+          type: "text",
+          disable: false,
+          populators: { name: "criteria", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        {
+          inline: true,
+          label: "Status Code",
+          isMandatory: false,
+          key: "status_code",
+          type: "text",
+          disable: false,
+          populators: { name: "status_code", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        },
+        // {
+        //   inline: true,
+        //   label: "Receiver Id",
+        //   isMandatory: false,
+        //   key: "receiver_id",
+        //   type: "text",
+        //   disable: false,
+        //   populators: { name: "receiver_id", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+        // },
+
+        // {
+        //   isMandatory: true,
+        //   key: "receiver_id",
+        //   type: "dropdown",
+        //   label: "Receiver Id",
+        //   disable: false,
+        //   populators: {
+        //     name: "receiver_id",
+        //     optionsKey: "name",
+        //     error: "required ",
+        //     mdmsConfig: {
+        //       masterName: "ExchangeServers",
+        //       moduleName: "exchange",
+        //       localePrefix: "",
+        //     },
+        //   },
+        // },
+
+
+        // {
+        //   isMandatory: true,
+        //   key: "genders",
+        //   type: "dropdown",
+        //   label: "Enter Gender",
+        //   disable: false,
+        //   populators: {
+        //     name: "genders",
+        //     optionsKey: "name",
+        //     error: "required ",
+        //     mdmsConfig: {
+        //       masterName: "GenderType",
+        //       moduleName: "common-masters",
+        //       localePrefix: "COMMON_GENDER",
+        //     },
+        //   },
+        // },
+
+      ],
+    },
+  ];
