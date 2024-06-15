@@ -9,16 +9,19 @@ const SearchCase = () => {
   const propData = location.state || {}; // Access the passed prop object
 
 
-  const handleNavigate = (path) => {
+  const handleNavigate = (path,caseData) => {
     const contextPath = window?.contextPath || "";
-    history.push(`/${contextPath}${path}`);
+    history.push({
+      pathname: `/${contextPath}${path}`,
+      state: caseData
+    });
   };
 
   return (
     <div>
       Case search screen
       <button
-        onClick={() => handleNavigate("/employee/cases/join-case-advocate")}
+        onClick={() => handleNavigate("/employee/cases/join-case-advocate" , propData)}
         style={{
           backgroundColor: "blue",
           color: "white",
@@ -32,7 +35,7 @@ const SearchCase = () => {
         Proceed as advocate
       </button>
       <button
-        onClick={() => handleNavigate("/employee/cases/join-case-litigant")}
+        onClick={() => handleNavigate("/employee/cases/join-case-litigant" , propData)}
         style={{
           backgroundColor: "blue",
           color: "white",
