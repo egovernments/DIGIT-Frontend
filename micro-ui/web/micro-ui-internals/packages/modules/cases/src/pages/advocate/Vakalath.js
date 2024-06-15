@@ -12,7 +12,7 @@ const Vakalath = () => {
   };
 
   const selectedCase = window.Digit.SessionStorage.get("PUCAR_CASE_DATA");
-  console.log(selectedCase, " selectedCase")
+  console.log(selectedCase, " selectedCase");
 
   const reqCreate = {
     url: `/case/case/v1/_update`,
@@ -23,14 +23,12 @@ const Vakalath = () => {
     },
   };
 
-
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   function transformCreateData(data) {
     data.workflow.action = "SAVE_DRAFT";
-    return {
-      ...data
-    };
+    const cases = [data];
+    return { cases: cases };
   }
 
   const onSubmit = async (data) => {
@@ -53,17 +51,13 @@ const Vakalath = () => {
         },
       }
     );
-
   };
-
-
 
   return (
     <div>
       Vakalath Display Page
       <button
         onClick={() => onSubmit(selectedCase?.caseData)}
-
         style={{
           backgroundColor: "blue",
           color: "white",
