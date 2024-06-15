@@ -6,6 +6,8 @@ import CasesResponse from "./CasesResponse";
 import CasesCreate from "./CasesCreate";
 import CasesSearch from "./CasesSearch";
 import JoinCaseHome from "./JoinCaseHome";
+import AdvocateRegistration from "./advocateRegistration";
+const bredCrumbStyle={ maxWidth: "min-content" };
 import SearchCase from "./SearchCase";
 import AdvocateMain from "../advocate/AdvocateMain";
 import Vakalath from "../advocate/Vakalath";
@@ -13,7 +15,6 @@ import AdvocateEsign from "../advocate/AdvocateEsign";
 import AdvocatePayment from "../advocate/AdovactePayment";
 import AdvocateJoinCase from "../advocate/AdvocateJoinCase";
 import AdvocateJoinSucess from "../advocate/AdvocateJoinSucess";
-const bredCrumbStyle = { maxWidth: "min-content" };
 import CaseAndFilingSearch from "./CaseAndFilingSearch";
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/cases-create`} component={() => <CasesCreate />} />
         <PrivateRoute path={`${path}/cases-search`} component={() => <CasesSearch></CasesSearch>} />
         <PrivateRoute path={`${path}/join-case`} component={() => <JoinCaseHome />} />
+        <PrivateRoute path={`${path}/advocate-registration`} component={() => <AdvocateRegistration></AdvocateRegistration>} />
         <PrivateRoute path={`${path}/search-case`} component={() => <SearchCase />} />
         <PrivateRoute path={`${path}/join-case-advocate`} component={() => <AdvocateMain />} />
         <PrivateRoute path={`${path}/advocate-vakalath`} component={() => <Vakalath />} />

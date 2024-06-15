@@ -48,5 +48,4 @@ const SearchCase = () => {
     </div>
   );
 };
-
 export default SearchCase;
