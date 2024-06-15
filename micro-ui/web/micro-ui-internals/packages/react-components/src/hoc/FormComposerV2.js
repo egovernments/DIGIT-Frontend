@@ -444,6 +444,7 @@ export const FormComposer = (props) => {
           <UploadFileComposer
             module={config?.module}
             config={config}
+            mdmsModuleName={config?.mdmsModuleName}
             Controller={Controller}
             register={register}
             formData={formData}
