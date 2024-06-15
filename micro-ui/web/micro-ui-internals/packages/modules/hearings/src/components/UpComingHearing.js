@@ -1,11 +1,18 @@
 import React from 'react';
-import {Button} from "@egovernments/digit-ui-components";
+import { Button } from "@egovernments/digit-ui-components";
 
 const UpcomingHearings = (props) => {
   const userName = Digit.SessionStorage.get("User");
-  const date = 'May 14';
-  const day = 'Tue';
-  const time = '9:30am-12:00pm';
+
+  // Get the current date
+  const today = new Date();
+
+  // Format the date
+  const dateOptions = { month: 'short', day: 'numeric' };
+  const dayOptions = { weekday: 'short' };
+  const date = today.toLocaleDateString('en-US', dateOptions); // e.g., "Jun 15"
+  const day = today.toLocaleDateString('en-US', dayOptions); // e.g., "Tue"
+  const time = '9:30am-12:00pm'; // Static time for demonstration purposes
   const hearingType = 'Admission Hearings';
   const hearingCount = 4;
   const pendingTasks = 4;
@@ -32,11 +39,11 @@ const UpcomingHearings = (props) => {
             </div>
           </div>
         </div>
-        <Button 
-  label={"View Hearing"} 
-  variation={"primary"} 
-  onClick={props.handleNavigate}
-/>
+        <Button
+          label={"View Hearing"}
+          variation={"primary"}
+          onClick={props.handleNavigate}
+        />
       </div>
       <div className="pendingTasks">
         You have <strong>{pendingTasks} pending tasks</strong> for {upcomingHearings} upcoming hearings.
