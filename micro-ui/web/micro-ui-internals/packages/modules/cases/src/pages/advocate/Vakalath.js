@@ -11,11 +11,59 @@ const Vakalath = () => {
     history.push(`/${contextPath}${path}`);
   };
 
+  const selectedCase = window.Digit.SessionStorage.get("PUCAR_CASE_DATA");
+  console.log(selectedCase, " selectedCase")
+
+  const reqCreate = {
+    url: `/case/case/v1/_update`,
+    params: {},
+    body: {},
+    config: {
+      enable: false,
+    },
+  };
+
+
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+
+  function transformCreateData(data) {
+    data.workflow.action = "SAVE_DRAFT";
+    return {
+      ...data
+    };
+  }
+
+  const onSubmit = async (data) => {
+    await mutation.mutate(
+      {
+        url: `/case/case/v1/_update`,
+        params: { tenantId: "pg" },
+        body: transformCreateData(data),
+        config: {
+          enable: true,
+        },
+      },
+      {
+        onSuccess: async (result) => {
+          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
+        },
+        onError: (result) => {
+          setShowToast({ key: "error", label: t("ERROR_WHILE_SUBMITING") });
+          history.push(`/${window?.contextPath}/employee/cases/litigant-success`);
+        },
+      }
+    );
+
+  };
+
+
+
   return (
     <div>
       Vakalath Display Page
       <button
-        onClick={() => handleNavigate("/employee/cases/advocate-esign")}
+        onClick={() => onSubmit(selectedCase?.caseData)}
+
         style={{
           backgroundColor: "blue",
           color: "white",
