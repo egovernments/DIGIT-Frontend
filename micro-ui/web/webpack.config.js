@@ -21,7 +21,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
           },
         ],
       },
@@ -34,13 +34,13 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
-      minSize:20000,
-      maxSize:50000,
-      enforceSizeThreshold:50000,
-      minChunks:1,
-      maxAsyncRequests:30,
-      maxInitialRequests:30
+      chunks: "all",
+      minSize: 20000,
+      maxSize: 50000,
+      enforceSizeThreshold: 50000,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
     },
   },
   plugins: [
