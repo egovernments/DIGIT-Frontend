@@ -27,7 +27,7 @@ const OrdersCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async(data) => {
-    console.log(data, "data");
+   
     await mutation.mutate(
       {
         url: `/individual/v1/_create`,
@@ -69,7 +69,7 @@ const OrdersCreate = () => {
   if(!configs){
     return <Loader />
   }
-  console.log(configs);
+  
   return (
     <div>
       <Header> {t("CREATE_INDIVIDUAL")}</Header>
