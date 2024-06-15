@@ -20,7 +20,8 @@ import { UICustomizations } from "./UICustomizations";
 var Digit = window.Digit || {};
 
 const enabledModules = [
-  "OpenPayment"
+  "OpenPayment",
+  "HRMS"
 ];
 
 const initTokens = (stateCode) => {

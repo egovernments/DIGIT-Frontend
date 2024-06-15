@@ -112,6 +112,10 @@
 @import "./components//sidebar.scss";
 @import "./components/loaderWithGap.scss";
 
+#logo-img-container {
+  display: none;
+}
+
 .wbh-header-container {
   display: flex !important;
   align-items: center;

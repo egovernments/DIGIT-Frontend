@@ -30,7 +30,8 @@ const OpenPaymentModule = ({ stateCode, userType, tenants }) => {
 };
 
 const componentsToRegister = {
-  OpenPaymentModule
+  HRMSModule:OpenPaymentModule,
+  // DSSCard:OpenPaymentModule
 };
 
 const overrideHooks = () => {
