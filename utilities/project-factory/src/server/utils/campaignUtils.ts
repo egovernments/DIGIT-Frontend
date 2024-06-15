@@ -1758,15 +1758,48 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
-    console.log(boundaryData,"ffffffffffffffffff")
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
-        console.log(isKeyOfThatTypePresent,"kkkkkkkkkkkkkkkk",boundaryTypeOnWhichWeSplit)
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }
     return boundaryDataGeneratedAfterDifferentTabSeparation;
+}
+
+
+async function checkCampaignObjectSame(request: any, campaignIdFromDb: any, auditIdFromDb: any) {
+    const campaignObjectFromRequest = await getCampaignSearchResponse(request);
+    const boundariesFromRequestCampaignObject = campaignObjectFromRequest?.[0]?.boundaries;
+    const campaignObjectFromDb = await searchAuditWithCamapignId(request, campaignIdFromDb, auditIdFromDb);
+    const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.CampaignDetails?.value;
+    const valuesInJsonFormat: { [key: string]: any } = JSON.parse(values);
+    const boundariesFromDbCampaignObject = valuesInJsonFormat?.boundaries;
+     return _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject);
+}
+
+
+async function searchAuditWithCamapignId(request: any, campaignId: any, auditId?: any) {
+    console.log(campaignId,"cccccccccccccccccccccccccccc")
+    const { RequestInfo = {} } = request?.body || {};
+    const requestBody = {
+        RequestInfo
+    };
+    const params:any =
+    {
+        "offset": 0,
+        "limit": 10,
+        "tenantId": request?.query?.tenantId,
+        "objectId": campaignId
+    }
+    if (auditId) {
+        params.id = auditId;
+    }
+    console.log(params,"jjjjjjjjjjjjj")
+    const url = config.host.auditHost + config.paths.auditSearch;
+    const auditResponse = await httpRequest(url, requestBody, params);
+    return auditResponse
+
 }
 
 
@@ -1801,5 +1834,7 @@ export {
     getFiltersFromCampaignSearchResponse,
     getConfigurableColumnHeadersBasedOnCampaignType,
     getFinalValidHeadersForTargetSheetAsPerCampaignType,
-    getDifferentTabGeneratedBasedOnConfig
+    getDifferentTabGeneratedBasedOnConfig,
+    checkCampaignObjectSame,
+    searchAuditWithCamapignId
 }

@@ -6,7 +6,7 @@ import { produceModifiedMessages } from "../kafka/Listener";
 import { generateHierarchyList, getAllFacilities, getCampaignSearchResponse, getHierarchy } from "../api/campaignApis";
 import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsTypeSchema } from "../api/genericApis";
 import { logger } from "./logger";
-import { getConfigurableColumnHeadersBasedOnCampaignType, getDifferentTabGeneratedBasedOnConfig, getLocalizedName } from "./campaignUtils";
+import { checkCampaignObjectSame, getConfigurableColumnHeadersBasedOnCampaignType, getDifferentTabGeneratedBasedOnConfig, getLocalizedName, searchAuditWithCamapignId } from "./campaignUtils";
 import Localisation from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
@@ -300,7 +300,8 @@ async function generateNewRequestObject(request: any) {
       lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
     },
     additionalDetails: additionalDetails,
-    count: null
+    count: null,
+    campaignId: request?.query?.campaignId
   };
   return [newEntry];
 }
@@ -339,6 +340,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
     generatedResource = { generatedResource: newEntryResponse }
     // send message to create toppic
     logger.info(`processing the generate request for type ${type}`)
+    console.log(generatedResource, "88888888888")
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
     const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
     const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
@@ -667,6 +669,12 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 }
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
+  logger.info(`generation of new Resource of type ${request?.query?.type} started`)
+  console.log(request?.query?.campaignId, "cammmmmmmmmmm")
+  const auditResponse = await searchAuditWithCamapignId(request, request?.query?.campaignId)
+  const auditId = auditResponse?.AuditLogs?.[0]?.id;
+  console.log(auditResponse, "auuuuuuuuuuuuu")
+  newEntryResponse.auditId = auditId;
   request.body.generatedResource = newEntryResponse;
   fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
   return request.body.generatedResource;
@@ -689,6 +697,7 @@ function handleGenerateError(newEntryResponse: any, generatedResource: any, erro
 }
 
 async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any) {
+  console.log(responseData, "kkkkkkkkkkkkkk")
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
   let generatedResource: any;
@@ -699,10 +708,20 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    processGenerateForNew(request, generatedResource, newEntryResponse)
+    await processGenerateForNew(request, generatedResource, newEntryResponse)
   }
-  else {
-    request.body.generatedResource = responseData
+  if (!forceUpdateBool) {
+    const isSameCampaign: boolean = await checkCampaignObjectSame(request, responseData?.campaignid, responseData?.auditid)
+    if (isSameCampaign) {
+      request.body.generatedResource = responseData
+    }
+    else {
+      generatedResource = { generatedResource: oldEntryResponse };
+      // send message to update topic 
+      produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+      request.body.generatedResource = oldEntryResponse;
+      processGenerateForNew(request, generatedResource, newEntryResponse)
+    }
   }
 }
 /* 
@@ -711,6 +730,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 async function processGenerate(request: any) {
   // fetch the data from db  to check any request already exists
   const responseData = await searchGeneratedResources(request);
+  console.log(responseData, "1111111111111111111")
   // modify response from db 
   const modifiedResponse = await enrichAuditDetails(responseData);
   // generate new random id and make filestore id null
