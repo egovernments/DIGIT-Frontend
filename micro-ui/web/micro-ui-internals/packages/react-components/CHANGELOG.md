@@ -2,6 +2,8 @@ Here's the `CHANGELOG` file for the specified versions:
 
 ```markdown
 # Changelog
+## [1.8.2-beta.8]
+- fix: Added placeholder prop for Text Field in Inbox Composerv2.
 
 ## [1.8.2-beta.7]
 - fix: Fixed prop for the document upload.
