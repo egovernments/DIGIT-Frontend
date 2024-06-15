@@ -8,9 +8,12 @@ const SearchCase = () => {
   const propData = location.state || {}; // Access the passed prop object
 
 
-  const handleNavigate = (path) => {
+  const handleNavigate = (path,caseData) => {
     const contextPath = window?.contextPath || "";
-    history.push(`/${contextPath}${path}`);
+    history.push({
+      pathname: `/${contextPath}${path}`,
+      state: caseData
+    });
   };
 
   return (
