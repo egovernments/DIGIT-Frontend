@@ -133,22 +133,19 @@ export const TabSearchconfig = {
       label: "Ongoing",
       type: "search",
       apiDetails: {
-        serviceName: "/individual/v1/_search",
+        serviceName: "/pgr-services/mock/inbox/cases",
         requestParam: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
         },
         requestBody: {
           apiOperation: "SEARCH",
-          Individual: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
         },
         masterName: "commonUiConfig",
-        moduleName: "SearchIndividualConfig",
+        moduleName: "homeHearingUIConfig",
         minParametersForSearchForm: 0,
         tableFormJsonPath: "requestParam",
-        filterFormJsonPath: "requestBody.Individual",
-        searchFormJsonPath: "requestBody.Individual",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
       },
       sections: {
         search: {
@@ -222,22 +219,29 @@ export const TabSearchconfig = {
             columns: [
               {
                 label: "Case Name",
-                jsonPath: "name.givenName",
+                jsonPath: "caseTitle",
               },
+              {
+                label: "Stage",
+                jsonPath: "caseStage",
+              },
+
               {
                 label: "Case ID",
-                jsonPath: "individualId",
+                jsonPath: "cnrNumber",
               },
-
               {
-                label: "Address",
-                jsonPath: "address.locality.code",
+                label: "Case Type",
+                jsonPath: "statutes[0]",
               },
-
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
+              },
             ],
 
             enableColumnSort: true,
-            resultsJsonPath: "Individual",
+            resultsJsonPath: "cases",
           },
           show: true,
         },
@@ -247,22 +251,19 @@ export const TabSearchconfig = {
       label: "Registered",
       type: "search",
       apiDetails: {
-        serviceName: "/individual/v1/_search",
+        serviceName: "/pgr-services/mock/inbox/cases",
         requestParam: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
         },
         requestBody: {
           apiOperation: "SEARCH",
-          Individual: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
         },
         masterName: "commonUiConfig",
-        moduleName: "SearchIndividualConfig",
+        moduleName: "homeHearingUIConfig",
         minParametersForSearchForm: 0,
         tableFormJsonPath: "requestParam",
-        filterFormJsonPath: "requestBody.Individual",
-        searchFormJsonPath: "requestBody.Individual",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
       },
       sections: {
         search: {
@@ -337,21 +338,29 @@ export const TabSearchconfig = {
             columns: [
               {
                 label: "Case Name",
-                jsonPath: "name.givenName",
+                jsonPath: "caseTitle",
               },
               {
-                label: "Case ID",
-                jsonPath: "individualId",
+                label: "Stage",
+                jsonPath: "caseStage",
               },
 
               {
-                label: "Address",
-                jsonPath: "address.locality.code",
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
               },
             ],
 
             enableColumnSort: true,
-            resultsJsonPath: "Individual",
+            resultsJsonPath: "cases",
           },
           show: true,
         },
@@ -361,22 +370,19 @@ export const TabSearchconfig = {
       label: "Closed",
       type: "search",
       apiDetails: {
-        serviceName: "/individual/v1/_search",
+        serviceName: "/pgr-services/mock/inbox/cases",
         requestParam: {
           tenantId: Digit.ULBService.getCurrentTenantId(),
         },
         requestBody: {
           apiOperation: "SEARCH",
-          Individual: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
         },
         masterName: "commonUiConfig",
-        moduleName: "SearchIndividualConfig",
+        moduleName: "homeHearingUIConfig",
         minParametersForSearchForm: 0,
         tableFormJsonPath: "requestParam",
-        filterFormJsonPath: "requestBody.Individual",
-        searchFormJsonPath: "requestBody.Individual",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
       },
       sections: {
         search: {
@@ -450,21 +456,29 @@ export const TabSearchconfig = {
             columns: [
               {
                 label: "Case Name",
-                jsonPath: "name.givenName",
+                jsonPath: "caseTitle",
               },
               {
-                label: "Case ID",
-                jsonPath: "individualId",
+                label: "Stage",
+                jsonPath: "caseStage",
               },
 
               {
-                label: "Address",
-                jsonPath: "address.locality.code",
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
               },
             ],
 
             enableColumnSort: true,
-            resultsJsonPath: "Individual",
+            resultsJsonPath: "cases",
           },
           show: true,
         },
