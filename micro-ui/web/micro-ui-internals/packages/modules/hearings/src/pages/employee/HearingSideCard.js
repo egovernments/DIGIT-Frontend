@@ -1,7 +1,17 @@
 import { Button, SVG } from "@egovernments/digit-ui-components";
 import React from "react";
+import { useHistory } from "react-router-dom";
+
 
 const HearingSideCard = () => {
+
+  const history = useHistory();
+  
+  const handleNavigate = (path) => {
+    const contextPath = window?.contextPath || "";
+    history.push(`/${contextPath}${path}`);
+  };
+
   return (
     <div className="hearing-side-card">
       <div className="hearing-warning-card">
