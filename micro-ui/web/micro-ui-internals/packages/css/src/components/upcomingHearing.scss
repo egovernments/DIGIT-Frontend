@@ -1,0 +1,95 @@
+$primary-color: #333;
+$secondary-color: #555;
+$highlight-color: #1B7F79;
+$background-color: #fff;
+$border-color: #E0E0E0;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$button-background: blue;
+$button-color: white;
+
+.container {
+  font-family: Arial, sans-serif;
+  color: $primary-color;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background-color: $background-color;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+
+  .userName {
+    color: $secondary-color;
+  }
+}
+
+.hearingCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #F9F9F9;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px $shadow-color;
+
+  .hearingDate {
+    text-align: center;
+    margin-right: 16px;
+    background-color: $background-color;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px $shadow-color;
+
+    .dateText {
+      font-size: 14px;
+      color: $secondary-color;
+    }
+
+    .dateNumber {
+      font-size: 24px;
+      font-weight: bold;
+      color: $primary-color;
+    }
+
+    .dayText {
+      font-size: 14px;
+      color: $secondary-color;
+    }
+  }
+
+  .timeText {
+    font-size: 18px;
+    font-weight: bold;
+    color: $primary-color;
+  }
+
+  .hearingType {
+    font-size: 16px;
+    color: $highlight-color;
+    text-decoration: underline;
+  }
+
+  .redirect-button {
+    background-color: $button-background;
+    color: $button-color;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 2px;
+  }
+}
+
+.pendingTasks {
+  margin-top: 16px;
+  padding: 8px;
+  background-color: $background-color;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px $shadow-color;
+}

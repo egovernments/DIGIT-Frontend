@@ -39,7 +39,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/orders-home`} component={() => <OrdersHome />} />
         <PrivateRoute path={`${path}/generate-orders`} component={() => <GenerateOrders />} />
         <PrivateRoute path={`${path}/generate-orders`} component={() => <MakeSubmission />} />
-
+        
 
       </AppContainer>
     </Switch>
