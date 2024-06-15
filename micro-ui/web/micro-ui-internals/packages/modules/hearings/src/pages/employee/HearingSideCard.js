@@ -43,7 +43,7 @@ const HearingSideCard = () => {
             style={{ width: "100%", justifyContent: "center" }}
             icon={""}
             iconFill={"#1C1B1F"}
-            onClick={() => handleNavigate("/employee/hearings/submission")}
+            onClick={() => handleNavigate("/employee/submissions/submissions-create")}
           />
           <Button
             label={"Case History"}
