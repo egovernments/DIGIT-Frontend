@@ -1,6 +1,7 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 
 const SearchCase = () => {
@@ -13,7 +14,7 @@ const SearchCase = () => {
     setDataParams({ caseData: propData })
   }, [propData]);
 
-  const handleNavigate = (path) => {
+  const handleNavigate = (path,caseData) => {
     const contextPath = window?.contextPath || "";
     history.push({
       pathname: `/${contextPath}${path}`,
@@ -23,37 +24,24 @@ const SearchCase = () => {
 
   return (
     <div>
+      <p style={{margin : "5px"}} >
       Case search screen
-      <button
-        onClick={() => handleNavigate("/employee/cases/join-case-advocate")}
-        style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          margin: "2px",
-        }}
+      </p>
+      <div style={{display : "flex", flexDirection : "row", padding : "10px"}}>
+      <Button
+      style={{margin : "5px"}}
+      label={"Proceed as advocate"}
+      onButtonClick={() => handleNavigate("/employee/cases/join-case-advocate")}
       >
-        Proceed as advocate
-      </button>
-      <button
-        onClick={() => handleNavigate("/employee/cases/join-case-litigant")}
-        style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          margin: "2px",
-        }}
+      </Button>
+      <Button
+      style={{margin : "5px"}}
+      label={"Proceed as litigant"}
+      onButtonClick={() => handleNavigate("/employee/cases/join-case-litigant")}
       >
-        Proceed as litigant
-      </button>
+      </Button>
+      </div>
     </div>
   );
 };
-
 export default SearchCase;

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Header, InboxSearchComposer ,FormComposerV2} from "@egovernments/digit-ui-react-components";
 import { TabSearchconfig } from "../../configs/HearingsHomeConfig"; 
+import UpcomingHearings from "../../components/UpComingHearing";
 
 const fieldStyle={ marginRight: 0 };
 
@@ -40,20 +41,8 @@ const HomeViewHearing = () => {
 
   return (
     <div>
-    <button className="redirect-button" onClick={handleNavigate} 
-            style={{
-              backgroundColor: 'blue',
-              color: 'white',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              border: 'none',
-              cursor: 'pointer',
-              margin:'2px'
-    
-          }}>
-      
-      View Hearing
-    </button>
+  
+    <UpcomingHearings handleNavigate={handleNavigate}></UpcomingHearings>
     <React.Fragment>
     <Header styles={{ fontSize: "32px" }}>{t(config?.label)}</Header>
     <div className="inbox-search-wrapper">
