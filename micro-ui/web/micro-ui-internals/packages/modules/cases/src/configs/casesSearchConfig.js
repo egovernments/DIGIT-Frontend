@@ -1,17 +1,16 @@
 const defaultSearchValues = {
-    individualName: "",
-    mobileNumber: "",
-    IndividualID: ""
-  };
-export const searchconfig = () => 
-{
+  individualName: "",
+  mobileNumber: "",
+  IndividualID: ""
+};
+export const searchconfig = () => {
   return {
     label: "Individual Search",
     type: "search",
     apiDetails: {
       serviceName: "/individual/v1/_search",
       requestParam: {
-          "tenantId":Digit.ULBService.getCurrentTenantId()
+        "tenantId": Digit.ULBService.getCurrentTenantId()
       },
       requestBody: {
         apiOperation: "SEARCH",
@@ -19,7 +18,7 @@ export const searchconfig = () =>
           "tenantId": Digit.ULBService.getCurrentTenantId(),
         },
       },
-     masterName: "commonUiConfig",
+      masterName: "commonUiConfig",
       moduleName: "SearchCasesConfig",
       minParametersForSearchForm: 0,
       tableFormJsonPath: "requestParam",
@@ -40,10 +39,10 @@ export const searchconfig = () =>
               isMandatory: false,
               key: "individualName",
               type: "text",
-              populators: { 
-                name: "individualName", 
-                error: "Required", 
-                validation: { pattern: /^[A-Za-z]+$/i } 
+              populators: {
+                name: "individualName",
+                error: "Required",
+                validation: { pattern: /^[A-Za-z]+$/i }
               },
             },
             {
@@ -52,14 +51,14 @@ export const searchconfig = () =>
               key: "Phone number",
               type: "number",
               disable: false,
-              populators: { name: "mobileNumber", error: "Cases error message", validation: { min: 0, max: 999999999} },
+              populators: { name: "mobileNumber", error: "Cases error message", validation: { min: 0, max: 999999999 } },
             },
             {
               label: "Individual Id ",
               isMandatory: false,
               type: "text",
               disable: false,
-              populators: { 
+              populators: {
                 name: "individualId",
               },
             },
@@ -76,11 +75,11 @@ export const searchconfig = () =>
               label: "IndividualID",
               jsonPath: "individualId",
             },
-            
+
             {
               label: "Name",
               jsonPath: "name.givenName",
-              
+
             },
             {
               label: "Address",

@@ -4,16 +4,18 @@ import ReactDOM from "react-dom";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
-import "@egovernments/digit-ui-sample-css/example/index.css";
+import "@egovernments/digit-ui-pucar-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import {initSampleComponents} from "@egovernments/digit-ui-module-sample";
-import {initPucarComponents} from "@egovernments/digit-ui-module-pucar";
-import {initHearingsComponents} from "@egovernments/digit-ui-module-hearings";
-import {initOrdersComponents} from "@egovernments/digit-ui-module-orders";
-import {initCasesComponents} from "@egovernments/digit-ui-module-cases";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+import { initPucarComponents } from "@egovernments/digit-ui-module-pucar";
+import { initHearingsComponents } from "@egovernments/digit-ui-module-hearings";
+import { initOrdersComponents } from "@egovernments/digit-ui-module-orders";
+import { initCasesComponents } from "@egovernments/digit-ui-module-cases";
+
+import { initSubmissionsComponents } from "@egovernments/digit-ui-module-submissions";
 
 var Digit = window.Digit || {};
 
@@ -29,7 +31,9 @@ const enabledModules = [
   "Orders",
   "Cases",
   // "Pucar",
-  "Hearings"
+  "Hearings",
+  "Submissions"
+
   //added to check fsm
   // "FSM"
 ];
@@ -78,13 +82,14 @@ const initDigitUI = () => {
   initHearingsComponents();
   initOrdersComponents();
   initCasesComponents();
+  initSubmissionsComponents();
   const moduleReducers = (initData) => initData;
 
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
 
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules} defaultLanding="employee" moduleReducers={moduleReducers} />, document.getElementById("root"));
 };
 
 initLibraries().then(() => {

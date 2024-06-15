@@ -1,284 +1,490 @@
 // default values of search input component
 const defaultSearchValues = {
-    individualName: "",
-    mobileNumber: "",
-    IndividualID: "",
-  };
-  
-  //config for tab search sceeen
-  export const TabSearchconfig = {
-    tenantId: "mz",
-    moduleName: "commonCampaignUiConfig",
-    showTab: true, // setting true will enable tab screen
-    TabSearchconfig: [ // all tab config should be added in json array
-      {
-        label: "All",
-        type: "search",
-        apiDetails: {
-          serviceName: "/individual/v1/_search",
-          requestParam: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
-          requestBody: {
-            apiOperation: "SEARCH",
-            Individual: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-            },
-          },
-          masterName: "commonUiConfig",
-          moduleName: "SearchIndividualConfig",
-          minParametersForSearchForm: 0,
-          tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.Individual",
-          searchFormJsonPath: "requestBody.Individual",
+  individualName: "",
+  mobileNumber: "",
+  IndividualID: "",
+};
+
+//config for tab search sceeen
+export const TabSearchconfig = {
+  tenantId: "pg",
+  moduleName: "homeHearingUIConfig",
+  showTab: true, // setting true will enable tab screen
+  TabSearchconfig: [ // all tab config should be added in json array
+    {
+      label: "Your Cases",
+      type: "search",
+      apiDetails: {
+        serviceName: "/pgr-services/mock/inbox/cases",
+        requestParam: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
         },
-        sections: {
-          search: {
-            uiConfig: {
-              formClassName: "custom-both-clear-search",
-              primaryLabel: "ES_COMMON_SEARCH",
-              secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-              minReqFields: 0,
-              defaultValues: defaultSearchValues, // Set default values for search fields
-              fields: [
-                {
-                  label: "Applicant name ",
-                  isMandatory: false,
-                  key: "individualName",
-                  type: "text",
-                  populators: {
-                    name: "individualName",
-                    error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
-                  },
+        requestBody: {
+          apiOperation: "SEARCH",
+        },
+        masterName: "commonUiConfig",
+        moduleName: "homeHearingUIConfig",
+        minParametersForSearchForm: 0,
+        tableFormJsonPath: "requestParam",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
+      },
+      sections: {
+        search: {
+          uiConfig: {
+            formClassName: "custom-both-clear-search",
+            primaryLabel: "ES_COMMON_SEARCH",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: defaultSearchValues, // Set default values for search fields
+            fields: [
+              {
+                label: "Pending Task",
+                isMandatory: false,
+                key: "pendingTask",
+                type: "dropdown",
+                populators: {
+                  name: "individualName",
+                  error: "Required",
+                  validation: { pattern: /^[A-Za-z]+$/i },
                 },
-                {
-                  label: "Phone number",
-                  isMandatory: false,
-                  key: "Phone number",
-                  type: "number",
-                  disable: false,
-                  populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Case Type",
+                isMandatory: false,
+                key: "caseType",
+                type: "dropdown",
+                disable: false,
+                populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
                 },
-                {
-                  label: "Individual Id ",
-                  isMandatory: false,
-                  type: "text",
-                  disable: false,
-                  populators: {
-                    name: "individualId",
-                  },
+              },
+              {
+                label: "Case ID",
+                isMandatory: false,
+                type: "text",
+                key: "caseId",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
                 },
-              ],
-            },
-  
-            show: true,
+              },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+            ],
           },
-          searchResult: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-            uiConfig: {
-              columns: [
-                {
-                  label: "IndividualID",
-                  jsonPath: "individualId",
-                },
-  
-                {
-                  label: "Name",
-                  jsonPath: "name.givenName",
-                },
-                {
-                  label: "Address",
-                  jsonPath: "address.locality.code",
-                },
-              ],
-  
-              enableColumnSort: true,
-              resultsJsonPath: "Individual",
-            },
-            show: true,
+
+          show: true,
+        },
+        searchResult: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          uiConfig: {
+            columns: [
+              {
+                label: "Case Name",
+                jsonPath: "caseTitle",
+              },
+              {
+                label: "Stage",
+                jsonPath: "caseStage",
+              },
+
+              {
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
+              },
+            ],
+
+            enableColumnSort: true,
+            resultsJsonPath: "cases",
           },
+          show: true,
         },
       },
-      {
-        label: "Registered",
-        type: "search",
-        apiDetails: {
-          serviceName: "/individual/v1/_search",
-          requestParam: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
-          requestBody: {
-            apiOperation: "SEARCH",
-            Individual: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-            },
-          },
-          masterName: "commonUiConfig",
-          moduleName: "SearchIndividualConfig",
-          minParametersForSearchForm: 0,
-          tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.Individual",
-          searchFormJsonPath: "requestBody.Individual",
+    },
+    {
+      label: "Ongoing",
+      type: "search",
+      apiDetails: {
+        serviceName: "/pgr-services/mock/inbox/cases",
+        requestParam: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
         },
-        sections: {
-          search: {
-            uiConfig: {
-              formClassName: "custom-both-clear-search",
-              primaryLabel: "ES_COMMON_SEARCH",
-              secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-              minReqFields: 0,
-              defaultValues: defaultSearchValues, // Set default values for search fields
-              fields: [
-                {
-                  label: "Applicant name ",
-                  isMandatory: false,
-                  key: "individualName",
-                  type: "text",
-                  populators: {
-                    name: "individualName",
-                    error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
-                  },
+        requestBody: {
+          apiOperation: "SEARCH",
+        },
+        masterName: "commonUiConfig",
+        moduleName: "homeHearingUIConfig",
+        minParametersForSearchForm: 0,
+        tableFormJsonPath: "requestParam",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
+      },
+      sections: {
+        search: {
+          uiConfig: {
+            formClassName: "custom-both-clear-search",
+            primaryLabel: "ES_COMMON_SEARCH",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: defaultSearchValues, // Set default values for search fields
+            fields: [
+              {
+                label: "Pending Task",
+                isMandatory: false,
+                key: "pendingTask",
+                type: "dropdown",
+                populators: {
+                  name: "individualName",
+                  error: "Required",
+                  validation: { pattern: /^[A-Za-z]+$/i },
                 },
-                {
-                  label: "Phone number",
-                  isMandatory: false,
-                  key: "Phone number",
-                  type: "number",
-                  disable: false,
-                  populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Case Type",
+                isMandatory: false,
+                key: "caseType",
+                type: "dropdown",
+                disable: false,
+                populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
                 },
-                {
-                  label: "Individual Id ",
-                  isMandatory: false,
-                  type: "text",
-                  disable: false,
-                  populators: {
-                    name: "individualId",
-                  },
+              },
+              {
+                label: "Case ID",
+                isMandatory: false,
+                type: "text",
+                key: "caseId",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
                 },
-              ],
-            },
-  
-            show: true,
+              },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+            ],
           },
-          searchResult: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-            uiConfig: {
-              columns: [
-                {
-                  label: "IndividualID",
-                  jsonPath: "individualId",
-                },
-  
-                {
-                  label: "Name",
-                  jsonPath: "name.givenName",
-                },
-                {
-                  label: "Address",
-                  jsonPath: "address.locality.code",
-                },
-              ],
-  
-              enableColumnSort: true,
-              resultsJsonPath: "Individual",
-            },
-            show: true,
+
+          show: true,
+        },
+        searchResult: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          uiConfig: {
+            columns: [
+              {
+                label: "Case Name",
+                jsonPath: "caseTitle",
+              },
+              {
+                label: "Stage",
+                jsonPath: "caseStage",
+              },
+
+              {
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
+              },
+            ],
+
+            enableColumnSort: true,
+            resultsJsonPath: "cases",
           },
+          show: true,
         },
       },
-      {
-        label: "Closed",
-        type: "search",
-        apiDetails: {
-          serviceName: "/individual/v1/_search",
-          requestParam: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-          },
-          requestBody: {
-            apiOperation: "SEARCH",
-            Individual: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
-            },
-          },
-          masterName: "commonUiConfig",
-          moduleName: "SearchIndividualConfig",
-          minParametersForSearchForm: 0,
-          tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.Individual",
-          searchFormJsonPath: "requestBody.Individual",
+    },
+    {
+      label: "Registered",
+      type: "search",
+      apiDetails: {
+        serviceName: "/pgr-services/mock/inbox/cases",
+        requestParam: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
         },
-        sections: {
-          search: {
-            uiConfig: {
-              formClassName: "custom-both-clear-search",
-              primaryLabel: "ES_COMMON_SEARCH",
-              secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-              minReqFields: 0,
-              defaultValues: defaultSearchValues, // Set default values for search fields
-              fields: [
-                {
-                  label: "Applicant name ",
-                  isMandatory: false,
-                  key: "individualName",
-                  type: "text",
-                  populators: {
-                    name: "individualName",
-                    error: "Required",
-                    validation: { pattern: /^[A-Za-z]+$/i },
-                  },
+        requestBody: {
+          apiOperation: "SEARCH",
+        },
+        masterName: "commonUiConfig",
+        moduleName: "homeHearingUIConfig",
+        minParametersForSearchForm: 0,
+        tableFormJsonPath: "requestParam",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
+      },
+      sections: {
+        search: {
+          uiConfig: {
+            formClassName: "custom-both-clear-search",
+            primaryLabel: "ES_COMMON_SEARCH",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: defaultSearchValues, // Set default values for search fields
+            fields: [
+              {
+                label: "Pending Task",
+                isMandatory: false,
+                key: "pendingTask",
+                type: "dropdown",
+                populators: {
+                  name: "individualName",
+                  error: "Required",
+                  validation: { pattern: /^[A-Za-z]+$/i },
                 },
-                {
-                  label: "Phone number",
-                  isMandatory: false,
-                  key: "Phone number",
-                  type: "number",
-                  disable: false,
-                  populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Case Type",
+                isMandatory: false,
+                key: "caseType",
+                type: "dropdown",
+                disable: false,
+                populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
                 },
-                {
-                  label: "Individual Id ",
-                  isMandatory: false,
-                  type: "text",
-                  disable: false,
-                  populators: {
-                    name: "individualId",
-                  },
+              },
+              {
+                label: "Case ID",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseId",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
                 },
-              ],
-            },
-  
-            show: true,
+              },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+            ],
           },
-          searchResult: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
-            uiConfig: {
-              columns: [
-                {
-                  label: "IndividualID",
-                  jsonPath: "individualId",
-                },
-  
-                {
-                  label: "Name",
-                  jsonPath: "name.givenName",
-                },
-                {
-                  label: "Address",
-                  jsonPath: "address.locality.code",
-                },
-              ],
-  
-              enableColumnSort: true,
-              resultsJsonPath: "Individual",
-            },
-            show: true,
+
+          show: true,
+        },
+        searchResult: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          uiConfig: {
+            columns: [
+              {
+                label: "Case Name",
+                jsonPath: "caseTitle",
+              },
+              {
+                label: "Stage",
+                jsonPath: "caseStage",
+              },
+
+              {
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
+              },
+            ],
+
+            enableColumnSort: true,
+            resultsJsonPath: "cases",
           },
+          show: true,
         },
       },
-    ],
-    
-  };
-  
+    },
+    {
+      label: "Closed",
+      type: "search",
+      apiDetails: {
+        serviceName: "/pgr-services/mock/inbox/cases",
+        requestParam: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+        },
+        requestBody: {
+          apiOperation: "SEARCH",
+        },
+        masterName: "commonUiConfig",
+        moduleName: "homeHearingUIConfig",
+        minParametersForSearchForm: 0,
+        tableFormJsonPath: "requestParam",
+        filterFormJsonPath: "requestBody",
+        searchFormJsonPath: "requestBody",
+      },
+      sections: {
+        search: {
+          uiConfig: {
+            formClassName: "custom-both-clear-search",
+            primaryLabel: "ES_COMMON_SEARCH",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: defaultSearchValues, // Set default values for search fields
+            fields: [
+              {
+                label: "Pending Task",
+                isMandatory: false,
+                key: "pendingTask",
+                type: "dropdown",
+                populators: {
+                  name: "individualName",
+                  error: "Required",
+                  validation: { pattern: /^[A-Za-z]+$/i },
+                },
+              },
+              {
+                label: "Case Type",
+                isMandatory: false,
+                key: "caseType",
+                type: "dropdown",
+                disable: false,
+                populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
+                },
+              },
+              {
+                label: "Case ID",
+                isMandatory: false,
+                type: "text",
+                key: "caseId",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+            ],
+          },
+
+          show: true,
+        },
+        searchResult: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          uiConfig: {
+            columns: [
+              {
+                label: "Case Name",
+                jsonPath: "caseTitle",
+              },
+              {
+                label: "Stage",
+                jsonPath: "caseStage",
+              },
+
+              {
+                label: "Case ID",
+                jsonPath: "cnrNumber",
+              },
+              {
+                label: "Case Type",
+                jsonPath: "statutes[0]",
+              },
+              {
+                label: "Info",
+                jsonPath: "numTasksDue",
+              },
+            ],
+
+            enableColumnSort: true,
+            resultsJsonPath: "cases",
+          },
+          show: true,
+        },
+      },
+    },
+  ],
+
+};
+

@@ -1,14 +1,16 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {  Header } from "@egovernments/digit-ui-react-components";
+import {  Header,Loader } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-components";
-import { configs } from "../../configs/ordersCreateConfig";
+import { configsCreateOrderSchedule,configsCreateOrderWarrant,configsCreateOrderSummon } from "../../configs/ordersCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 
 const fieldStyle={ marginRight: 0 };
 
 const OrdersCreate = () => {
+  const {ordertype:OrderType} = Digit.Hooks.useQueryParams()
+  const [configs,setConfigs] = useState(null)
   const defaultValue={};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -25,7 +27,7 @@ const OrdersCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async(data) => {
-    console.log(data, "data");
+   
     await mutation.mutate(
       {
         url: `/individual/v1/_create`,
@@ -37,9 +39,40 @@ const OrdersCreate = () => {
       },
     );
   };
+
+  const updateConfigsBasedOnOrderType = () => {
+    switch (OrderType) {
+      case "WARRANT":
+        setConfigs(()=> configsCreateOrderWarrant)
+        break;
+      case "SCHEDULE":
+        setConfigs(()=> configsCreateOrderSchedule)
+        break;
+      case "SUMMON":
+        setConfigs(()=> configsCreateOrderSummon)
+        break;
+      default:
+        setConfigs(()=> configsCreateOrderSchedule)
+        break;
+    }
+  }
+
+  useEffect(() => {
+    updateConfigsBasedOnOrderType()
+  }, [OrderType])
+  
+  const onFormUpdate = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+    console.log(formData, "formData");
+    
+  }
+
+  if(!configs){
+    return <Loader />
+  }
+  
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("CREATE_ORDER")}</Header>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={configs.map((config) => {
@@ -47,10 +80,8 @@ const OrdersCreate = () => {
             ...config,
           };
         })}
-        defaultValues={defaultValue}
-        onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData");
-        }}
+        defaultValues={configs?.[0]?.defaultValues}
+        onFormValueChange ={onFormUpdate}
         onSubmit={(data,) => onSubmit(data, )}
         fieldStyle={fieldStyle}
         noBreakLine={true}

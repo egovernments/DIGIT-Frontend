@@ -1,20 +1,17 @@
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Header, InboxSearchComposer ,FormComposerV2} from "@egovernments/digit-ui-react-components";
-import { TabSearchconfig } from "../../configs/HearingsHomeConfig"; 
-
-const fieldStyle={ marginRight: 0 };
-
-
+import { Header, InboxSearchComposer, FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { TabSearchconfig } from "../../configs/HearingsHomeConfig";
+import UpcomingHearings from "../../components/UpComingHearing";
+import TasksComponent from "../../components/TaskComponent";
+const fieldStyle = { marginRight: 0 };
 const defaultSearchValues = {
-    individualName: "",
-    mobileNumber: "",
-    IndividualID: "",
-  };
-
+  individualName: "",
+  mobileNumber: "",
+  IndividualID: "",
+};
 const HomeViewHearing = () => {
-
   const history = useHistory();
   const { t } = useTranslation();
   const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
@@ -26,51 +23,35 @@ const HomeViewHearing = () => {
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
   }, []);
-  
   const onTabChange = (n) => {
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
     setConfig(TabSearchconfig?.TabSearchconfig?.[n]);// as per tab number filtering the config
   };
-  
-
   const handleNavigate = () => {
     const contextPath = window?.contextPath || ''; // Adjust as per your context path logic
     history.push(`/${contextPath}/employee/hearings/view-hearing`);
   };
-
   return (
-    <div>
-    <button className="redirect-button" onClick={handleNavigate} 
-            style={{
-              backgroundColor: 'blue',
-              color: 'white',
-              padding: '10px 20px',
-              borderRadius: '5px',
-              border: 'none',
-              cursor: 'pointer',
-              margin:'2px'
-    
-          }}>
-      
-      View Hearing
-    </button>
-    <React.Fragment>
-    <Header styles={{ fontSize: "32px" }}>{t(config?.label)}</Header>
-    <div className="inbox-search-wrapper">
-      {/* Pass defaultValues as props to InboxSearchComposer */}
-      <InboxSearchComposer
-        configs={config}
-        defaultValues={defaultValues}
-        showTab={true}
-        tabData={tabData}
-        onTabChange={onTabChange}
-      ></InboxSearchComposer>
-    </div>
-  </React.Fragment>
-
-
+    <div className="home-view-hearing-container">
+      <div className="left-side">
+        <UpcomingHearings handleNavigate={handleNavigate} />
+        <div className="content-wrapper">
+          <Header styles={{ fontSize: "32px", paddingTop: "16px" }}>{t(config?.label)}</Header>
+          <div className="inbox-search-wrapper pucar-hearing-home">
+            <InboxSearchComposer
+              configs={config}
+              defaultValues={defaultValues}
+              showTab={true}
+              tabData={tabData}
+              onTabChange={onTabChange}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="right-side">
+        <TasksComponent />
+      </div>
     </div>
   );
 };
-
 export default HomeViewHearing;
