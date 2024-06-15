@@ -17,6 +17,7 @@ const UpcomingHearings = (props) => {
   const hearingCount = 4;
   const pendingTasks = 4;
   const upcomingHearings = 2;
+  // [TODO: Time, Hearing Type, Pending Tasks, upcoming hearings need to be integrated with actual data]
 
   return (
     <div className="container">

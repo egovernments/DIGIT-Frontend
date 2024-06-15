@@ -12,7 +12,7 @@ const OverlayDropdown = () => {
     { label: 'View witness deposition', path: '/employee/hearings/view-witness-deposition' },
     { label: 'View pending task', path: '/employee/hearings/view-pending-task' },
   ];
-
+//[TODO: Dropdown values need to be referred from MDMS data]
   const handleNavigate = (path) => {
     const contextPath = window?.contextPath || ''; // Adjust as per your context path logic
     window.location.href = `/${contextPath}${path}`;
@@ -21,7 +21,7 @@ const OverlayDropdown = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
+ // [TODO: Inline css to be moved to css file , Component need to be referred from @egovernments/digit-ui-components]
   return (
     <div style={{ position: 'relative' }}>
       {/* Three dots or any other trigger */}

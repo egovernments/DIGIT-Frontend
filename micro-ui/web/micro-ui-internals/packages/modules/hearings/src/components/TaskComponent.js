@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dropdown, Button } from "@egovernments/digit-ui-components";
 import { CardLabel, LabelFieldPair, PropertyHouse } from "@egovernments/digit-ui-react-components";
+//[TODO: Static values need to be removed and integrated with API data]
 const TasksComponent = () => {
     return (
         <div className="tasks-component">
