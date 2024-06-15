@@ -9,7 +9,7 @@ const buttonStyle = {
   linkLabel: { display: "flex", marginRight: "3rem" },
   arrow: { marginRight: "8px", marginTop: "3px" },
 };
-
+// to do info is not integrated yet
 const LitigantSuccess = () => {
   const { t } = useTranslation();
   const history = useHistory();

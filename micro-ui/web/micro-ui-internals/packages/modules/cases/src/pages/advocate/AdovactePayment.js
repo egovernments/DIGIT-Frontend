@@ -1,4 +1,4 @@
-import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { Button, Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { searchconfig } from "../../configs/casesSearchConfig";
@@ -11,10 +11,17 @@ const AdvocatePayment = () => {
     history.push(`/${contextPath}${path}`);
   };
 
+  //TODO: not integerated with any api, placeholder screen
+
   return (
     <div>
       Payment Description Page
-      <button
+      <Button
+      label={"Make payment"}
+      onButtonClick={() => handleNavigate("/employee/cases/advocate-join-case")}
+      >
+      </Button>
+      {/* <button
         onClick={() => handleNavigate("/employee/cases/advocate-join-case")}
         style={{
           backgroundColor: "blue",
@@ -27,7 +34,7 @@ const AdvocatePayment = () => {
         }}
       >
         Make payment
-      </button>
+      </button> */}
     </div>
   );
 };

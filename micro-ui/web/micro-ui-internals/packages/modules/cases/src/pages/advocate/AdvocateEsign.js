@@ -14,10 +14,11 @@ const AdvocateEsign = () => {
   return (
     <div>
       E-sign Page
+      {/* //TODO: use digit button */}
       <button
         onClick={() => handleNavigate("/employee/cases/advocate-payment")}
         style={{
-          backgroundColor: "blue",
+          backgroundColor: "#007e7e",
           color: "white",
           padding: "10px 20px",
           borderRadius: "5px",

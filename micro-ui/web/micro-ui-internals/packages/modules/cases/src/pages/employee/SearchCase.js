@@ -9,8 +9,9 @@ const SearchCase = () => {
   const location = useLocation();
   const propData = location.state || {}; // Access the passed prop object
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("PUCAR_CASE_DATA", {});
-
+ // TODO: will be converted to popup 
   useEffect(() => {
+    //TODO: we have used session storage, check for alternate logic
     setDataParams({ caseData: propData })
   }, [propData]);
 
@@ -25,18 +26,19 @@ const SearchCase = () => {
   return (
     <div>
       <p style={{ margin: "5px" }} >
-        Case search screen
+      {/* // TODO: TO REMOVE */}
+        Case search screen 
       </p>
       <div style={{ display: "flex", flexDirection: "row", padding: "10px" }}>
         <Button
           style={{ margin: "5px" }}
-          label={"Proceed as advocate"}
+          label={"Proceed as advocate"} // TODO: LOCALISATION 
           onButtonClick={() => handleNavigate("/employee/cases/join-case-advocate")}
         >
         </Button>
         <Button
           style={{ margin: "5px" }}
-          label={"Proceed as litigant"}
+          label={"Proceed as litigant"} // TODO: LOCALISATION
           onButtonClick={() => handleNavigate("/employee/cases/join-case-litigant")}
         >
         </Button>

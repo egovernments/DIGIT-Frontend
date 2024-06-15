@@ -19,7 +19,6 @@ const AdvocateMain = () => {
   const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
   const indConfigs = advocateSearchconfig();
 
-  console.log(caseData, " rrrrrrrrrrrrrrrrrrrrrrrrrr")
 
   useEffect(() => {
     // Set default values when component mounts

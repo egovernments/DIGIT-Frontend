@@ -59,7 +59,7 @@ const Vakalath = () => {
       <button
         onClick={() => onSubmit(selectedCase?.caseData)}
         style={{
-          backgroundColor: "blue",
+          backgroundColor: "#007e7e",
           color: "white",
           padding: "10px 20px",
           borderRadius: "5px",

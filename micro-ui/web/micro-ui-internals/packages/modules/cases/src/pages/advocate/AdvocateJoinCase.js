@@ -1,4 +1,5 @@
-import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer, TextInput } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { searchconfig } from "../../configs/casesSearchConfig";
@@ -13,21 +14,14 @@ const AdvocateJoinCase = () => {
 
   return (
     <div>
+      {/* //TODO: enrich the code entered in text field */}
       Enter 6 digit code to join case
-      <button
-        onClick={() => handleNavigate("/employee/cases/advocate-join-success")}
-        style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          margin: "2px",
-        }}
-      >
-        Proceed
-      </button>
+      <TextInput></TextInput>
+      <Button
+                label={"Proceed"}
+                onButtonClick={() => handleNavigate("/employee/cases/advocate-join-success")}
+            >
+            </Button>
     </div>
   );
 };
