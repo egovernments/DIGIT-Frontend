@@ -6,7 +6,8 @@ import CasesResponse from "./CasesResponse";
 import CasesCreate from "./CasesCreate";
 import CasesSearch from "./CasesSearch";
 import JoinCaseHome from "./JoinCaseHome";
-const bredCrumbStyle={ maxWidth: "min-content" };
+import CaseAndFilingSearch from "./CaseAndFilingSearch";
+const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const crumbs = [
@@ -35,6 +36,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/cases-create`} component={() => <CasesCreate />} />
         <PrivateRoute path={`${path}/cases-search`} component={() => <CasesSearch></CasesSearch>} />
         <PrivateRoute path={`${path}/join-case`} component={() => <JoinCaseHome />} />
+        <PrivateRoute path={`${path}/case-filing-search`} component={() => <CaseAndFilingSearch></CaseAndFilingSearch>} />
       </AppContainer>
     </Switch>
   );
