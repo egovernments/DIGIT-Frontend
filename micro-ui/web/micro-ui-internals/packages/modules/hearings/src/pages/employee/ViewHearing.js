@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { searchconfig } from "../../configs/ViewHearingConfig";
 import { useHistory } from 'react-router-dom';
+import { downloadHearingsAsPDF } from "../../hooks/services/downloadHearingPDF";
 
 const defaultSearchValues = {
   individualName: "",
@@ -39,6 +40,22 @@ const ViewHearing = () => {
     { label: 'View pending task', path: '/employee/hearings/view-pending-task' },
   ];
 
+  const downloadHearing = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const epochFromDateTime = today.getTime();
+    today.setHours(23, 59, 59, 999);
+    const epochToDateTime = today.getTime();
+    // TODO: Prepare query list
+    let params = {
+      'tenantId': Digit.ULBService.getCurrentTenantId(),
+      'judgeId': '87f0c966-e42c-490d-8edb-bfwe9a9da5b60', // TODO: Remove hardcoded judgeId
+      'fromDate': epochFromDateTime,
+      'toDate': epochToDateTime
+    }
+    downloadHearingsAsPDF({t, params})
+  }
+
   useEffect(() => {
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
@@ -52,6 +69,7 @@ const ViewHearing = () => {
         {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer configs={indConfigs} defaultValues={defaultValues}></InboxSearchComposer>
       </div>
+      // TODO: Create a button and call downloadHearing()
     </React.Fragment>
   // </div>
   
