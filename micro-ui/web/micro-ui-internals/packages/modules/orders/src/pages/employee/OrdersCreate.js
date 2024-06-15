@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  Header,Loader } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-components";
+//TODO: Some dropdown data is static, pls update these configs once data comes from previous flows
 import { configsCreateOrderSchedule,configsCreateOrderWarrant,configsCreateOrderSummon } from "../../configs/ordersCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 
@@ -27,7 +28,7 @@ const OrdersCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async(data) => {
-   
+   //TODO: API Integration code will come in this function
     await mutation.mutate(
       {
         url: `/individual/v1/_create`,
