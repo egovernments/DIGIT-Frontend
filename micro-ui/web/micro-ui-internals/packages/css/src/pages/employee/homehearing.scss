@@ -1,0 +1,19 @@
+.home-view-hearing-container {
+    display: flex;
+    gap: 16px;
+    /* Adjust the gap between left-side and right-side if needed */
+}
+.left-side {
+    flex: 3;
+    /* Adjust flex ratio as needed */
+}
+.right-side {
+    flex: 1;
+    /* Adjust flex ratio as needed */
+    background-color: #F0F0F0;
+    margin-left: 16px;
+}
+.header-wrapper {
+    padding-top: 16px;
+    /* Adjust the padding as needed */
+}

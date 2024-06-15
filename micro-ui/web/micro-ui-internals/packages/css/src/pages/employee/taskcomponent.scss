@@ -1,0 +1,68 @@
+.tasks-component {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    .filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        .filter-select {
+            width: 50%;
+        }
+    }
+    .task-section {
+        margin-bottom: 20px;
+        .task-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            &.due-today {
+                border-left: 4px solid #D32F2F;
+            }
+            &.completed {
+                background-color: #F0F0F0;
+                .task-title {
+                    text-decoration: line-through;
+                }
+            }
+            input {
+                margin-right: 10px;
+            }
+            .task-details {
+                .task-title {
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+                .task-info {
+                    font-size: 14px;
+                    color: #888;
+                }
+            }
+        }
+        .new-tasks {
+            background-color: #FF5722;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 14px;
+            &:hover {
+                background-color: #E64A19;
+            }
+        }
+    }
+}
