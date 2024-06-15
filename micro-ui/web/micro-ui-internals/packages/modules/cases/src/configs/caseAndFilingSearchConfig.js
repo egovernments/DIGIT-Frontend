@@ -20,7 +20,7 @@ export const caseAndFilingSearchConfig = () => {
                 ]
             },
             masterName: "commonUiConfig",
-            moduleName: "SearchCasesConfig",
+            moduleName: "joinCaseSearchCasesConfig",
             minParametersForSearchForm: 1,
             tableFormJsonPath: "requestParam",
             filterFormJsonPath: "requestBody.criteria.[0]",
@@ -91,10 +91,14 @@ export const caseAndFilingSearchConfig = () => {
                         {
                             label: "Case Description",
                             jsonPath: "caseDescription",
+                        },
+                        {
+                            additionalCustomization: true,
+                            label: "action"
                         }
                     ],
                     enableColumnSort: true,
-                    resultsJsonPath: "criteria.[0].responseList"
+                    resultsJsonPath: "criteria.[0].responseList",
                 },
                 show: true,
             },
