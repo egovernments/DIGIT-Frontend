@@ -42,9 +42,9 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Panding Task",
+                label: "Pending Task",
                 isMandatory: false,
-                key: "pandingTask",
+                key: "pendingTask",
                 type: "dropdown",
                 populators: {
                   name: "individualName",
@@ -81,6 +81,18 @@ export const TabSearchconfig = {
                   name: "individualId",
                 },
               },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
             ],
           },
 
@@ -91,14 +103,14 @@ export const TabSearchconfig = {
           uiConfig: {
             columns: [
               {
-                label: "IndividualID",
+                label: "Case Name",
+                jsonPath: "name.givenName",
+              },
+              {
+                label: "Case ID",
                 jsonPath: "individualId",
               },
 
-              {
-                label: "Name",
-                jsonPath: "name.givenName",
-              },
               {
                 label: "Address",
                 jsonPath: "address.locality.code",
@@ -144,9 +156,9 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Panding Task",
+                label: "Pending Task",
                 isMandatory: false,
-                key: "pandingTask",
+                key: "pendingTask",
                 type: "dropdown",
                 populators: {
                   name: "individualName",
@@ -183,6 +195,18 @@ export const TabSearchconfig = {
                   name: "individualId",
                 },
               },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
             ],
           },
 
@@ -193,14 +217,14 @@ export const TabSearchconfig = {
           uiConfig: {
             columns: [
               {
-                label: "IndividualID",
+                label: "Case Name",
+                jsonPath: "name.givenName",
+              },
+              {
+                label: "Case ID",
                 jsonPath: "individualId",
               },
 
-              {
-                label: "Name",
-                jsonPath: "name.givenName",
-              },
               {
                 label: "Address",
                 jsonPath: "address.locality.code",
@@ -246,9 +270,9 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Panding Task",
+                label: "Pending Task",
                 isMandatory: false,
-                key: "pandingTask",
+                key: "pendingTask",
                 type: "dropdown",
                 populators: {
                   name: "individualName",
@@ -286,6 +310,18 @@ export const TabSearchconfig = {
                   name: "individualId",
                 },
               },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
             ],
           },
 
@@ -296,14 +332,14 @@ export const TabSearchconfig = {
           uiConfig: {
             columns: [
               {
-                label: "IndividualID",
+                label: "Case Name",
+                jsonPath: "name.givenName",
+              },
+              {
+                label: "Case ID",
                 jsonPath: "individualId",
               },
 
-              {
-                label: "Name",
-                jsonPath: "name.givenName",
-              },
               {
                 label: "Address",
                 jsonPath: "address.locality.code",
@@ -348,9 +384,9 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Panding Task",
+                label: "Pending Task",
                 isMandatory: false,
-                key: "pandingTask",
+                key: "pendingTask",
                 type: "dropdown",
                 populators: {
                   name: "individualName",
@@ -387,6 +423,18 @@ export const TabSearchconfig = {
                   name: "individualId",
                 },
               },
+              {
+                label: "Case Name",
+                isMandatory: false,
+                type: "text",
+                placeholder: "placeholder",
+                key: "caseName",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
             ],
           },
 
@@ -397,14 +445,14 @@ export const TabSearchconfig = {
           uiConfig: {
             columns: [
               {
-                label: "IndividualID",
+                label: "Case Name",
+                jsonPath: "name.givenName",
+              },
+              {
+                label: "Case ID",
                 jsonPath: "individualId",
               },
 
-              {
-                label: "Name",
-                jsonPath: "name.givenName",
-              },
               {
                 label: "Address",
                 jsonPath: "address.locality.code",
