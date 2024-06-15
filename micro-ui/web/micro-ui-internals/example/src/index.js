@@ -9,13 +9,13 @@ import "@egovernments/digit-ui-pucar-css/example/index.css";
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import {initSampleComponents} from "@egovernments/digit-ui-module-sample";
-import {initPucarComponents} from "@egovernments/digit-ui-module-pucar";
-import {initHearingsComponents} from "@egovernments/digit-ui-module-hearings";
-import {initOrdersComponents} from "@egovernments/digit-ui-module-orders";
-import {initCasesComponents} from "@egovernments/digit-ui-module-cases";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+import { initPucarComponents } from "@egovernments/digit-ui-module-pucar";
+import { initHearingsComponents } from "@egovernments/digit-ui-module-hearings";
+import { initOrdersComponents } from "@egovernments/digit-ui-module-orders";
+import { initCasesComponents } from "@egovernments/digit-ui-module-cases";
 
-import {initSubmissionsComponents} from "@egovernments/digit-ui-module-submissions";
+import { initSubmissionsComponents } from "@egovernments/digit-ui-module-submissions";
 
 var Digit = window.Digit || {};
 
@@ -89,7 +89,7 @@ const initDigitUI = () => {
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
 
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules} defaultLanding="employee" moduleReducers={moduleReducers} />, document.getElementById("root"));
 };
 
 initLibraries().then(() => {

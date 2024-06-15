@@ -1,271 +1,93 @@
  export const configs = [
     {
-   head: "Create Individual",   
+   head: "CREATE_SUBMISSION",   
     body: [
         {
           inline: true,
-          label: "Applicant Name",
+          label: "SUBMISSION_ID",
           isMandatory: false,
-          key: "applicantname",
+          key: "filingNumber",
           type: "text",
-          disable: false,
-          populators: { name: "applicantname", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+          disable: true,
+          populators: { name: "filingNumber"},
         },
-        {
-          inline: true,
-          label: "date of birth",
-          isMandatory: false,
-          key: "dob",
-          type: "date",
-          disable: false,
-          populators: { name: "dob", error: "Required"},
-        },
-
-
         {
           isMandatory: true,
-          key: "genders",
+          key: "submissionType",
           type: "dropdown",
-          label: "Enter Gender",
+          label: "SUBMISSION_TYPE",
           disable: false,
           populators: {
-            name: "genders",
-            optionsKey: "name",
+            name: "submissionType",
+            optionsKey: "type",
             error: "required ",
-            mdmsConfig: {
-              masterName: "GenderType",
-              moduleName: "common-masters",
-              localePrefix: "COMMON_GENDER",
+            mdmsConfig: { //Used application type for timebeing since Submission type MDMS data is not defined
+              masterName: "ApplicationType",
+              moduleName: "Application",
+              localePrefix: "SUBMISSION_TYPE",
             },
           },
         },
-
         {
-          label: "Phone number",
           isMandatory: true,
-          key: "phno",
-          type: "number",
-          disable: false,
-          populators: { name: "phno", error: "Required", validation: { min: 0, max: 9999999999 } },
-        },
-      ],
-    },
-    {
-      head: "Residential Details",
-      body: [
-        {
-          inline: true,
-          label: "Pincode",
-          isMandatory: true,
-          key: "pincode",
-          type: "number",
-          disable: false,
-          populators: { name: "pincode", error: "Required " },
-        },
-        {
-          inline: true,
-          label: "City",
-          isMandatory: true,
-          key: "city",
-          type: "text",
-          disable: false,
-          populators: { name: "city", error: " Required ", validation: { pattern: /^[A-Za-z]+$/i } },
-        },
-        {
-          isMandatory: false,
-          key: "locality",
+          key: "applicationType",
           type: "dropdown",
-          label: "Enter locality",
+          label: "APPLICATION_TYPE",
           disable: false,
           populators: {
-            name: "locality",
-            optionsKey: "name",
-            error: " Required",
-            required: true,
-
-            options: [
-              {
-                  "code": "SUN01",
-                  "name": "Ajit Nagar - Area1",
-                  "label": "Locality",
-                  "latitude": "31.63089",
-                  "longitude": "74.871552",
-                  "area": "Area1",
-                  "pincode": [
-                      143001
-                  ],
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN02",
-                  "name": "Back Side 33 KVA Grid Patiala Road",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area1",
-                  "pincode": [
-                      143001
-                  ],
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN03",
-                  "name": "Bharath Colony",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area1",
-                  "pincode": [
-                      143001
-                  ],
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN10",
-                  "name": "Backside Brijbala Hospital - Area3",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area3",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN11",
-                  "name": "Bigharwal Chowk to Railway Station - Area2",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area2",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN12",
-                  "name": "Chandar Colony Biggarwal Road - Area2",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area2",
-                  "pincode": [
-                      143001
-                  ],
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN20",
-                  "name": "Aggarsain Chowk to Mal Godown - Both Sides - Area3",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area3",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN21",
-                  "name": "ATAR SINGH COLONY - Area2",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area2",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN22",
-                  "name": "Back Side Naina Devi Mandir - Area2",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area2",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN30",
-                  "name": "Bakhtaur Nagar - Area1",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area1",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN31",
-                  "name": "Bhai Mool Chand Sahib Colony - Area1",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area1",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN32",
-                  "name": "College Road (Southern side) - Area2",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area2",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              },
-              {
-                  "code": "SUN33",
-                  "name": "Ekta Colony (Southern Side) - Area1",
-                  "label": "Locality",
-                  "latitude": null,
-                  "longitude": null,
-                  "area": "Area1",
-                  "pincode": null,
-                  "boundaryNum": 1,
-                  "children": []
-              }
-          ],
+            name: "applicationType",
+            optionsKey: "type",
+            error: "required ",
+            mdmsConfig: {
+              masterName: "ApplicationType",
+              moduleName: "Application",
+              localePrefix: "APPLICATION_TYPE",
+            },
           },
         },
-
         {
-          inline: true,
-          label: "Street",
           isMandatory: false,
-          key: "street",
-          type: "text",
+          key: "referenceId",
+          type: "dropdown",
+          label: "ORDER",
           disable: false,
-          populators: { name: "street", error: "Required ", validation: { pattern: /^[A-Za-z]+$/i } },
+          populators: {
+            name: "ORDER",
+            optionsKey: "type",
+            error: "required ",
+          },
         },
         {
           inline: true,
-          label: "Door Number",
+          label: "DATE_PARTY_AVAILABLE",
           isMandatory: true,
-          key: "doorno",
-          type: "number",
+          key: "datePartyAvailable",
+          type: "date",
           disable: false,
-          populators: { name: "doorno", error: " Required ", validation: { min: 0, max: 9999999999 } },
+          populators: { name: "datePartyAvailable", error: "Required"},
         },
         {
           inline: true,
-          label: "Landmark",
-          isMandatory: false,
-          key: "landmark",
-          type: "text",
+          label: "DELAY_REASON",
+          isMandatory: true,
+          key: "delayReason",
+          type: "textarea",
           disable: false,
-          populators: { name: "landmark", error: " Required", validation: { pattern: /^[A-Za-z]+$/i } },
+          populators: { name: "delayReason", error: " Required ", validation: { pattern: /^[A-Za-z]+$/i } },
         },
-      ],
-    },
+         {
+          inline: true,
+          label: "SUPPORTING_DOCUMENTS_OPTIONAL",
+          isMandatory: false,
+          name: "documentUpload",
+          type: "documentUpload",
+          disable: false,
+          module:"SUBMISSION",
+          mdmsModuleName :"pucar-ui",
+          localePrefix: "SUBMISSION",
+          populators: { name: "documentUpload", error: "Required", 
+          validation: { pattern: /^[A-Za-z]+$/i } },
+        }
+      ]
+    }
   ];
