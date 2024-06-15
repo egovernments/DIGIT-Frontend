@@ -27,7 +27,7 @@ const UploadFileComposer = ({module, config, Controller, control, register, form
 
 
 
-  const docConfig = data?.works?.DocumentConfig?.[0]
+  const docConfig = data?.[mdmsModuleName]?.DocumentConfig?.[0]
 
   let documentFileTypeMappings = {
     docx : "vnd.openxmlformats-officedocument.wordprocessingml.document",
