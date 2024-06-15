@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {  Header } from "@egovernments/digit-ui-react-components";
-import { FormComposerV2 } from "@egovernments/digit-ui-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 // import { configs } from "../../configs/pucarCreateConfig";
 import { transformCreateData } from "../../utils/createUtils";
 import { advocateRegistrationConfig } from "../../configs/advocateRegistrationConfig";

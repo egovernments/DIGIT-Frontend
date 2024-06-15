@@ -29,14 +29,40 @@ export const advocateRegistrationConfig = [
             disable: false,
             populators: { name: "lastName", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
           },
+          
+            // {
+            //   "type": "component",
+            //   "component" : "DocumentUploadPUCAR",
+            //   "withoutLabel": true,
+            //   // "module": "Project",
+            //   //   mdmsModuleName :"pucar-ui",
+
+            //   // "error": "WORKS_REQUIRED_ERR",
+            //   "name": "noSubProject_docs",
+            //   "customClass": "",
+            //   validation: { },
+            //   populators: { name: "lastName", error: "Required", validation: { } },
+            //   customProps: {
+            //     module: "Campaign",
+            //   },
+            //   key: "addProduct",
+
+            //   // "localePrefix": "PROJECT"
+            // },
+          
           {
+            
             inline: true,
             label: "PUCAR_UPLOADER",
             isMandatory: false,
-            key: "documentUpload",
-            type: "uploader",
+            name: "documentUpload",
+            type: "documentUpload",
             disable: false,
-            populators: { name: "documentUpload", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
+            module:"Project",
+            mdmsModuleName :"pucar-ui",
+            localePrefix: "PROJECT",
+            populators: { name: "documentUpload", error: "Required", module:"cases-advocate",
+              mdmsModuleName :"pucar-ui",validation: { pattern: /^[A-Za-z]+$/i } },
           },
           {
             inline: true,

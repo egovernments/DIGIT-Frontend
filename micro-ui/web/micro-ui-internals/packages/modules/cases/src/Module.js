@@ -4,6 +4,7 @@ import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import CasesCard from "./components/CasesCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import DocumentUploadPUCAR from "./components/DocumentUpload";
 
 export const CasesModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -25,6 +26,7 @@ export const CasesModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   CasesModule,
   CasesCard,
+  DocumentUploadPUCAR
 };
 
 export const initCasesComponents = () => {

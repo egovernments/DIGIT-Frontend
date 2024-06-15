@@ -35,7 +35,12 @@ const CasesCard = () => {
         link: `/${window?.contextPath}/employee/cases/join-case`,
 
       },
-      
+      {
+        label: t("Join advocate Case"),
+        link: `/${window?.contextPath}/employee/cases/advocate-registration
+`,
+
+      },
     ],
   };
 
