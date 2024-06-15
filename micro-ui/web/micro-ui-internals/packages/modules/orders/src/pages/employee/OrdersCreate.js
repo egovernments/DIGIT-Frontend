@@ -72,7 +72,7 @@ const OrdersCreate = () => {
   
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("CREATE_ORDER")}</Header>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={configs.map((config) => {
