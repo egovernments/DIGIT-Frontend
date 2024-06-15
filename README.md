@@ -10,7 +10,7 @@ DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India'
 
 DIGIT platform is microservices based API platform enabling quick rebundling of services as per specific needs. This is a repo that lays down the core platform on top of which other mission services depend.
 
-# DIGIT UI
+## DIGIT UI
 
 This repository contains source code for web implementation of the new Digit UI modules with dependencies and libraries.
 

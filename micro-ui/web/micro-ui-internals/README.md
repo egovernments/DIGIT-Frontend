@@ -2,7 +2,7 @@
 
 A React App built on top of DIGIT UI Core.
 
-# DIGIT UI
+## DIGIT UI
 
 DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. Visit [DIGIT](https://www.digit.org) for more details.
 
