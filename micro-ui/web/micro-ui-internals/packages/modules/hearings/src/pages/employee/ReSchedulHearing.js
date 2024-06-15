@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import {
   FormComposerV2,
@@ -15,12 +15,12 @@ import { CardLabel } from '@egovernments/digit-ui-react-components';
 
 const RescheduleHearing = () => {
   const history = useHistory();
-  let a= "FSM-2018-22-3-001";
-  let b ="John vs Doe";
+  let a = "FSM-2018-22-3-001";
+  let b = "John vs Doe";
   let c = "NIA S";
   const [showpopup, setShowpopup] = useState(true);
 
-    const handleNavigate = (path) => {
+  const handleNavigate = (path) => {
     const contextPath = window?.contextPath || ''; // Adjust as per your context path logic
     history.push(`/${contextPath}${path}`);
   };
@@ -30,14 +30,14 @@ const RescheduleHearing = () => {
     <div>Case Number:{a}</div>,
     <div>Case Name:{b}</div>,
     <div>Case Type:{c}</div>,
-                <CardLabel style={{ width: "16rem" , marginBottom : "0px"}}>Purpose Of Hearing</CardLabel>,
-                <Dropdown
-                    style={{ width: "100%" }}
-                    option={[]}
-                    optionKey={"code"}
-                    select={(value) => {
-                    }}
-                />
+    <CardLabel style={{ width: "16rem", marginBottom: "0px" }}>Purpose Of Hearing</CardLabel>,
+    <Dropdown
+      style={{ width: "100%" }}
+      option={[]}
+      optionKey={"code"}
+      select={(value) => {
+      }}
+    />
   ];
 
   const footerChildren = [
@@ -53,24 +53,24 @@ const RescheduleHearing = () => {
       size={"large"}
       variation={"primary"}
       label="Generate Order"
-      onClick={() => console.log("Clicked Button 2")}
+      onClick={() => handleNavigate('/employee/orders/orders-create?orderType=SCHEDULE')}
     />,
   ];
 
 
   return (
 
-      <PopUp
-        type="default"
-        onClose={() => setShowpopup(false)}
-        onOverlayClick={() => setShowpopup(false)}
-        heading="RESCHEDULE HEARING"
-        // subheading="Subheading"
-        // description="description of the popup"
-        showIcon={true}
-        children={children}
-        footerChildren={footerChildren}
-      ></PopUp>
+    <PopUp
+      type="default"
+      onClose={() => setShowpopup(false)}
+      onOverlayClick={() => setShowpopup(false)}
+      heading="RESCHEDULE HEARING"
+      // subheading="Subheading"
+      // description="description of the popup"
+      showIcon={true}
+      children={children}
+      footerChildren={footerChildren}
+    ></PopUp>
   );
 };
 

@@ -2,13 +2,23 @@ import { Button, SVG } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { Header, Menu } from "@egovernments/digit-ui-react-components";
 import { VideoIcon } from "./CustomSVGs";
+import { useHistory } from "react-router-dom";
 
 const EvidenceHearingHeader = () => {
   const [activeTab, setActiveTab] = useState("Transcript/Summary");
   const [showMenu, setShowMenu] = useState(false);
+  const history = useHistory();
 
   const handleTakeAction = () => {
     setShowMenu(!showMenu);
+  };
+
+  const handleSelect = (option) => {
+
+    if (option == "Generate Order(s)") {
+      const contextPath = window?.contextPath || '';
+      history.push(`/${contextPath}/employee/orders/orders-create?orderType=SCHEDULE`);
+    }
   };
 
   return (
@@ -27,7 +37,7 @@ const EvidenceHearingHeader = () => {
         <div className="evidence-actions">
           <Button variation={"teritiary"} label={"Share"} icon={"Share"} iconFill={"#007E7E"}></Button>
           <Button variation={"primary"} label={"Take Action"} icon={showMenu ? "ExpandLess" : "ExpandMore"} isSuffix={true} onClick={handleTakeAction}></Button>
-          {showMenu && <Menu options={["Generate Order(s)","Add Party"]}></Menu>}
+          {showMenu && <Menu options={["Generate Order(s)", "Add Party"]} onSelect={(option) => handleSelect(option)}></Menu>}
         </div>
       </div>
       <div className="join-video-conference">

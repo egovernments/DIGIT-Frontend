@@ -17,7 +17,7 @@ const InsideHearingMainPage = () => {
   };
 
   return (
-    <div style={{display:"flex"}}>
+    <div style={{ display: "flex" }}>
       <Card>
         <EvidenceHearingHeader></EvidenceHearingHeader>
         <div style={{ padding: "20px 40px", minWidth: "940px", minHeight: "453px" }}>
@@ -81,7 +81,7 @@ const InsideHearingMainPage = () => {
             <Button
               label={"End Hearing"}
               variation={"primary"}
-              onClick={() => handleNavigate("/employee/hearings/end-hearing")}
+              onClick={() => handleNavigate("/employee/orders/orders-create?orderType=SUMMON")}
               style={{ width: "100%" }}
             />
           </div>
