@@ -40,22 +40,6 @@ const AdvocateMain = () => {
         {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer configs={indConfigs} defaultValues={defaultValues}></InboxSearchComposer>
       </div>
-      Advocate Main Page
-      Bar registration  search screen
-      <button
-        onClick={() => handleNavigate("/employee/cases/advocate-vakalath")}
-        style={{
-          backgroundColor: "blue",
-          color: "white",
-          padding: "10px 20px",
-          borderRadius: "5px",
-          border: "none",
-          cursor: "pointer",
-          margin: "2px",
-        }}
-      >
-        Proceed
-      </button>
     </div>
   );
 };
