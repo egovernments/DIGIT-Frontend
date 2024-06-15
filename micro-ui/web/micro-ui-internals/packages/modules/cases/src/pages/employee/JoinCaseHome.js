@@ -11,26 +11,12 @@ const JoinCaseHome = () => {
     };
     return (
         <div>
-            <button
-                onClick={() => handleNavigate("/employee/cases/search-case")}
-                style={{
-                    backgroundColor: "blue",
-                    color: "white",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    border: "none",
-                    cursor: "pointer",
-                    margin: "2px",
-                }}
-            >
-                Join a case
-            </button>
-            <div>
-                <p>Join a case here</p>
-                <Link to="/pucar-ui/employee/cases/case-filing-search">
-                    <button>Join a Case</button>
-                </Link>
-            </div>
+            <p>Join a case here</p>
+                <Button
+                label={"Join a Case"}
+                onButtonClick={() => handleNavigate("/employee/cases/case-filing-search")}
+                >
+                </Button>
         </div>
     );
 };
