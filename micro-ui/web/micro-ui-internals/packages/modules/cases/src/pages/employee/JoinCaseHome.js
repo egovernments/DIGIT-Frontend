@@ -12,11 +12,11 @@ const JoinCaseHome = () => {
     return (
         <div>
             <p>Join a case here</p>
-                <Button
+            <Button
                 label={"Join a Case"}
                 onButtonClick={() => handleNavigate("/employee/cases/case-filing-search")}
-                >
-                </Button>
+            >
+            </Button>
         </div>
     );
 };

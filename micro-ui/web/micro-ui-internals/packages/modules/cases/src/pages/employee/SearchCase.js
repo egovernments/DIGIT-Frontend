@@ -14,7 +14,7 @@ const SearchCase = () => {
     setDataParams({ caseData: propData })
   }, [propData]);
 
-  const handleNavigate = (path,caseData) => {
+  const handleNavigate = (path, caseData) => {
     const contextPath = window?.contextPath || "";
     history.push({
       pathname: `/${contextPath}${path}`,
@@ -24,22 +24,22 @@ const SearchCase = () => {
 
   return (
     <div>
-      <p style={{margin : "5px"}} >
-      Case search screen
+      <p style={{ margin: "5px" }} >
+        Case search screen
       </p>
-      <div style={{display : "flex", flexDirection : "row", padding : "10px"}}>
-      <Button
-      style={{margin : "5px"}}
-      label={"Proceed as advocate"}
-      onButtonClick={() => handleNavigate("/employee/cases/join-case-advocate")}
-      >
-      </Button>
-      <Button
-      style={{margin : "5px"}}
-      label={"Proceed as litigant"}
-      onButtonClick={() => handleNavigate("/employee/cases/join-case-litigant")}
-      >
-      </Button>
+      <div style={{ display: "flex", flexDirection: "row", padding: "10px" }}>
+        <Button
+          style={{ margin: "5px" }}
+          label={"Proceed as advocate"}
+          onButtonClick={() => handleNavigate("/employee/cases/join-case-advocate")}
+        >
+        </Button>
+        <Button
+          style={{ margin: "5px" }}
+          label={"Proceed as litigant"}
+          onButtonClick={() => handleNavigate("/employee/cases/join-case-litigant")}
+        >
+        </Button>
       </div>
     </div>
   );

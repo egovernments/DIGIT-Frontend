@@ -20,10 +20,26 @@ const OrdersCard = () => {
 
       },
       {
-        label: t("Orders  Create"),
-        link: `/${window?.contextPath}/employee/orders/orders-create`,
+        label: t("Create Scheduling of Hearing"),
+        link: `/${window?.contextPath}/employee/orders/orders-create?orderType=SCHEDULE`,
 
       },
+      {
+        label: t("Create Warrant"),
+        link: `/${window?.contextPath}/employee/orders/orders-create?orderType=WARRANT`,
+
+      },
+      {
+        label: t("Create Summon"),
+        link: `/${window?.contextPath}/employee/orders/orders-create?orderType=SUMMON`,
+
+      },
+      {
+        label: t("Create Re-issue Summon"),
+        link: `/${window?.contextPath}/employee/orders/orders-create?orderType=SUMMON`,
+
+      },
+
       {
         label: t("Orders Response"),
         link: `/${window?.contextPath}/employee/orders/orders-response`,

@@ -7,7 +7,7 @@ import CasesCreate from "./CasesCreate";
 import CasesSearch from "./CasesSearch";
 import JoinCaseHome from "./JoinCaseHome";
 import AdvocateRegistration from "./advocateRegistration";
-const bredCrumbStyle={ maxWidth: "min-content" };
+const bredCrumbStyle = { maxWidth: "min-content" };
 import SearchCase from "./SearchCase";
 import AdvocateMain from "../advocate/AdvocateMain";
 import Vakalath from "../advocate/Vakalath";
