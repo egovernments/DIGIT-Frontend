@@ -15,7 +15,7 @@ const header = require("postcss-header");
 
 const clean = require("gulp-clean");
 const postcss = require("gulp-postcss");
-const sass = require('gulp-sass');
+const sass = require("gulp-sass");
 
 const postcssPresetEnv = require("postcss-preset-env");
 const cleanCSS = require("gulp-clean-css");
@@ -32,7 +32,7 @@ function cleanStyles() {
 }
 
 function styles() {
-  const plugins = [
+  const getPostCssPlugins = () => [
     require("postcss-import"),
     require("tailwindcss"),
     postcssPresetEnv({ stage: 2, autoprefixer: { cascade: false }, features: { "custom-properties": true } }),
@@ -40,6 +40,7 @@ function styles() {
     require("cssnano"),
     header({ header: headerString }),
   ];
+  const plugins = getPostCssPlugins();
   return src("src/index.scss").pipe(postcss(plugins)).pipe(sass()).pipe(dest(output));
 }
 

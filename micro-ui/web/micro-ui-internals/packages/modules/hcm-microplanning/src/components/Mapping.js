@@ -569,9 +569,11 @@ const FilterSection = memo(
     const handleChange = useCallback(
       (e, item) => {
         let tempFilterSelections = [...filterSelections]; // Clone the array to avoid mutating state directly
-        filterSelections.includes(item)
-          ? (tempFilterSelections = tempFilterSelections.filter((element) => element !== item))
-          : tempFilterSelections.push(item);
+        if (filterSelections.includes(item)) {
+          tempFilterSelections = tempFilterSelections.filter((element) => element !== item);
+        } else {
+          tempFilterSelections.push(item);
+        }
         setFilterSelections(tempFilterSelections);
       },
       [filterSelections]
@@ -943,10 +945,7 @@ const extractGeoData = (
       if (!fileData.active) continue; // if file is inactive skip it
 
       // Check if the file is not part of boundary or layer data origins
-      if (
-        !(filterDataOrigin?.boundriesDataOrigin && filterDataOrigin?.boundriesDataOrigin.includes(fileData?.section)) &&
-        !(filterDataOrigin?.layerDataOrigin && filterDataOrigin?.layerDataOrigin.includes(fileData?.section))
-      ) {
+      if (!filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section) && !filterDataOrigin?.layerDataOrigin?.includes(fileData?.section)) {
         dataAvailabilityCheck = "false"; // Set data availability to false if file not found in data origins
       }
 
@@ -1083,7 +1082,7 @@ const extractGeoData = (
               break;
             }
             case GEOJSON:
-            case SHAPEFILE:
+            case SHAPEFILE: {
               dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
               // Extract keys from the first feature's properties
               var keys = Object.keys(fileData?.data.features[0].properties);
@@ -1146,6 +1145,7 @@ const extractGeoData = (
                 setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
                 setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
+            }
           }
         }
       }
@@ -1160,7 +1160,9 @@ const extractGeoData = (
     // Section wise check
     if (dataAvailabilityCheck == "true") {
       let sectionWiseCheck = true;
-      combineList.forEach((item) => (sectionWiseCheck = Object.keys(files).includes(item) && sectionWiseCheck));
+      combineList.forEach((item) => {
+        sectionWiseCheck = Object.keys(files).includes(item) && sectionWiseCheck;
+      });
       if (!sectionWiseCheck) dataAvailabilityCheck = "partial"; // Update data availability if section-wise check fails
     }
 
@@ -1244,9 +1246,8 @@ const fetchFeatures = (data, parameter = "ALL", outputList = [], addOn = {}) => 
         feature.properties["addOn"] = addOn;
         if (entityValue?.children) tempStorage = [...tempStorage, feature, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
         else tempStorage = [...tempStorage, feature];
-      } else {
-        if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
       }
+      if (entityValue?.children) tempStorage = [...tempStorage, ...fetchFeatures(entityValue?.children, parameter, outputList, addOn)];
     }
     return tempStorage;
   }

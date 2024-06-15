@@ -6,7 +6,7 @@ A React App built on top of DIGIT UI Core.
 
 DIGIT eGovernance Platform Services
 
-DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. Visit https://core.digit.org/ for more details.
+DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. Visit <https://core.digit.org/> for more details.
 
 DIGIT platform is microservices based API platform enabling quick rebundling of services as per specific needs. This is a repo that lays down the core platform on top of which other mission services depend.
 
@@ -94,7 +94,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Support
 
-For support, add the issues in https://github.com/egovernments/DIGIT-core/issues.
+For support, add the issues in [GitHub Issues](https://github.com/egovernments/DIGIT-core/issues).
 
 ## Modules
 

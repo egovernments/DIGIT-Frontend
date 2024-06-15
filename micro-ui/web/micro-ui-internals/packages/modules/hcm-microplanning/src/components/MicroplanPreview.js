@@ -862,7 +862,7 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
   const levelFilteredData = data.filter((item, index) => {
     if (index === 0) return true;
     if (item?.[columnDataIndexForHierarchyLevel] && filteredHirarchyLevelList.includes(item?.[columnDataIndexForHierarchyLevel])) return true;
-    else return false;
+    return false;
   });
   return filterMicroplanDataToShowWithHierarchySelection(levelFilteredData, selections, hierarchy, hierarchyIndex + 1);
 };
@@ -1089,7 +1089,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
             break;
           }
           case GEOJSON:
-          case SHAPEFILE:
+          case SHAPEFILE: {
             // Extract keys from the first feature's properties
             var keys = Object.keys(fileData?.data.features[0].properties);
 
@@ -1107,6 +1107,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
 
             let data = [keys, ...values];
             combinesDataList.push(data);
+          }
         }
       }
     }

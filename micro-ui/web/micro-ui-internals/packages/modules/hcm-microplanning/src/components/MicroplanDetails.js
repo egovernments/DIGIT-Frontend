@@ -146,7 +146,8 @@ const MicroplanDetails = ({
       const response = await SearchPlanConfig(body);
       if (response?.PlanConfiguration?.length === 0) {
         return true;
-      } else if (response?.PlanConfiguration?.length === 1) {
+      }
+      if (response?.PlanConfiguration?.length === 1) {
         if (response?.PlanConfiguration[0].id === microplanData?.planConfigurationId) {
           setLoader();
           return true;

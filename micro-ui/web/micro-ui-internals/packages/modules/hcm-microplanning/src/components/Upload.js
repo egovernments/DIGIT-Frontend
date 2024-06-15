@@ -216,7 +216,7 @@ const Upload = ({
 
   // UseEffect to extract data on first render
   useEffect(() => {
-    if (microplanData && microplanData.upload) {
+    if (microplanData?.upload) {
       setFileDataList(microplanData.upload);
     }
 
@@ -279,7 +279,7 @@ const Upload = ({
 
   // Handler for when a file type is selected for uplaod
   const selectFileTypeHandler = (e) => {
-    if (selectedSection && selectedSection.UploadFileTypes) {
+    if (selectedSection?.UploadFileTypes) {
       setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
       setModal("upload-modal");
       return;
@@ -552,7 +552,7 @@ const Upload = ({
           break;
         case SHAPEFILE:
         case GEOJSON:
-          if (fileData && fileData.data) {
+          if (fileData?.data) {
             const result = Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section);
             if (fileData?.errorLocationObject?.length !== 0) blob = await prepareExcelFileBlobWithErrors(result, fileData.errorLocationObject, t);
           }
@@ -694,14 +694,14 @@ const Upload = ({
       const filestoreResponse = await Digit.UploadServices.Filestorage(FILE_STORE, fileData.file, Digit.ULBService.getCurrentTenantId());
       if (filestoreResponse?.data?.files?.length > 0) {
         return filestoreResponse?.data?.files[0]?.fileStoreId;
-      } else {
-        error = t("ERROR_UPLOADING_FILE");
-        setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
-        setResourceMapping([]);
-        setUploadedFileError(error);
       }
-    } catch (error) {
       error = t("ERROR_UPLOADING_FILE");
+      setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
+      setResourceMapping([]);
+      setUploadedFileError(error);
+    } catch (errorData) {
+      console.error("Error while uploading file to filestore: ", errorData?.message);
+      let error = t("ERROR_UPLOADING_FILE");
       handleValidationErrorResponse(error);
       setResourceMapping([]);
       return;
@@ -1242,7 +1242,7 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
       <div>
         <div className="heading">
           <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <button className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
+          <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -1314,7 +1314,7 @@ const UploadedFile = ({
       <div>
         <div className="heading">
           <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <button className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
+          <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
             <div className="icon">
               <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
             </div>
@@ -1413,7 +1413,7 @@ const readGeojson = async (file, t) => {
         resolve({ valid: false, toast: { state: "error", message: t("ERROR_INCORRECT_FORMAT") } });
       }
     };
-    reader.onerror = function (error) {
+    reader.onerror = (error) => {
       resolve({ valid: false, toast: { state: "error", message: t("ERROR_CORRUPTED_FILE") } });
     };
 
@@ -1433,7 +1433,7 @@ const trimJSON = (jsonObject) => {
 
   const trimmedObject = {};
   for (const key in jsonObject) {
-    if (jsonObject.hasOwnProperty(key)) {
+    if (Object.hasOwn(jsonObject, key)) {
       const value = jsonObject[key];
       // Trim string values, recursively trim objects
       trimmedObject[key.trim()] = typeof value === "string" ? value.trim() : typeof value === "object" ? trimJSON(value) : value;
@@ -1510,9 +1510,8 @@ const checkProjection = async (zip) => {
 
   if (prjText.includes("GEOGCS") && prjText.includes("WGS_1984") && prjText.includes("DATUM") && prjText.includes("D_WGS_1984")) {
     return "EPSG:4326";
-  } else {
-    return false;
   }
+  return false;
 };
 
 // Function to handle the template download
@@ -1636,9 +1635,8 @@ const translateTemplate = (template, t) => {
         // Skip transformation for the boundaryCode column
         if ((index === boundaryCodeIndex && rowIndex !== 0) || typeof entity === "number") {
           return entity;
-        } else {
-          return t(entity);
         }
+        return t(entity);
       });
       transformedSheet.data.push(transformedRow);
     }
@@ -1749,7 +1747,7 @@ const prepareExcelFileBlobWithErrors = async (data, errors, t) => {
   // Process each dataset within the data object
   const processedData = {};
   for (const key in tempData) {
-    if (tempData.hasOwnProperty(key)) {
+    if (Object.hasOwn(tempData, key)) {
       const dataset = [...tempData[key]];
 
       // Add the 'error' column to the header
@@ -1858,7 +1856,7 @@ export const handleExcelFile = async (
     fileDataToStore = await convertJsonToXlsx(tempFileDataToStore);
     // Converting the input file to json format
     let result = await parseXlsxToJsonMultipleSheets(fileDataToStore, { header: 1 });
-    if (result && result.error) {
+    if (result?.error) {
       return {
         check: false,
         interruptUpload: true,
