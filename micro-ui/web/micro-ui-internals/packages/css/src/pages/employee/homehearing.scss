@@ -1,0 +1,28 @@
+.home-view-hearing-container {
+    display: flex;
+    gap: 16px;
+    /* Adjust the gap between left-side and right-side if needed */
+}
+
+.left-side {
+    flex: 5;
+    /* Adjust flex ratio as needed */
+}
+
+.right-side {
+    flex: 1;
+    /* Adjust flex ratio as needed */
+    background-color: #F0F0F0;
+    margin-left: 16px;
+}
+
+.header-wrapper {
+    padding-top: 16px;
+    /* Adjust the padding as needed */
+}
+
+.search-tabs-container .search-tab-head-selected {
+    color: theme(digitv2.lightTheme.primary) !important;
+    border: solid theme(digitv2.lightTheme.primary) !important;
+    border-width: 1px 1px 4px !important;
+}
