@@ -73,9 +73,112 @@ export const TabSearchconfig = {
               {
                 label: "Case ID",
                 isMandatory: false,
-                type: "dropdown",
+                type: "text",
                 key: "caseId",
                 disable: false,
+                placeholder: "Search Case ID or Case Name",
+                populators: {
+                  name: "individualId",
+                },
+              },
+            ],
+          },
+
+          show: true,
+        },
+        searchResult: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+          uiConfig: {
+            columns: [
+              {
+                label: "IndividualID",
+                jsonPath: "individualId",
+              },
+
+              {
+                label: "Name",
+                jsonPath: "name.givenName",
+              },
+              {
+                label: "Address",
+                jsonPath: "address.locality.code",
+              },
+
+            ],
+
+            enableColumnSort: true,
+            resultsJsonPath: "Individual",
+          },
+          show: true,
+        },
+      },
+    },
+    {
+      label: "Ongoing",
+      type: "search",
+      apiDetails: {
+        serviceName: "/individual/v1/_search",
+        requestParam: {
+          tenantId: Digit.ULBService.getCurrentTenantId(),
+        },
+        requestBody: {
+          apiOperation: "SEARCH",
+          Individual: {
+            tenantId: Digit.ULBService.getCurrentTenantId(),
+          },
+        },
+        masterName: "commonUiConfig",
+        moduleName: "SearchIndividualConfig",
+        minParametersForSearchForm: 0,
+        tableFormJsonPath: "requestParam",
+        filterFormJsonPath: "requestBody.Individual",
+        searchFormJsonPath: "requestBody.Individual",
+      },
+      sections: {
+        search: {
+          uiConfig: {
+            formClassName: "custom-both-clear-search",
+            primaryLabel: "ES_COMMON_SEARCH",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: defaultSearchValues, // Set default values for search fields
+            fields: [
+              {
+                label: "Panding Task",
+                isMandatory: false,
+                key: "pandingTask",
+                type: "dropdown",
+                populators: {
+                  name: "individualName",
+                  error: "Required",
+                  validation: { pattern: /^[A-Za-z]+$/i },
+                },
+              },
+              {
+                label: "Case Type",
+                isMandatory: false,
+                key: "caseType",
+                type: "dropdown",
+                disable: false,
+                populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+              },
+              {
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
+                },
+              },
+              {
+                label: "Case ID",
+                isMandatory: false,
+                type: "text",
+                key: "caseId",
+                disable: false,
+                placeholder: "Search Case ID or Case Name",
                 populators: {
                   name: "individualId",
                 },
@@ -143,10 +246,10 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Applicant name ",
+                label: "Panding Task",
                 isMandatory: false,
-                key: "individualName",
-                type: "text",
+                key: "pandingTask",
+                type: "dropdown",
                 populators: {
                   name: "individualName",
                   error: "Required",
@@ -154,18 +257,31 @@ export const TabSearchconfig = {
                 },
               },
               {
-                label: "Phone number",
+                label: "Case Type",
                 isMandatory: false,
-                key: "Phone number",
-                type: "number",
+                key: "caseType",
+                type: "dropdown",
                 disable: false,
                 populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
               },
               {
-                label: "Individual Id ",
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
+                },
+              },
+              {
+                label: "Case ID",
                 isMandatory: false,
                 type: "text",
+                placeholder: "placeholder",
+                key: "caseId",
                 disable: false,
+                placeholder: "Search Case ID or Case Name",
                 populators: {
                   name: "individualId",
                 },
@@ -232,10 +348,10 @@ export const TabSearchconfig = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Applicant name ",
+                label: "Panding Task",
                 isMandatory: false,
-                key: "individualName",
-                type: "text",
+                key: "pandingTask",
+                type: "dropdown",
                 populators: {
                   name: "individualName",
                   error: "Required",
@@ -243,18 +359,30 @@ export const TabSearchconfig = {
                 },
               },
               {
-                label: "Phone number",
+                label: "Case Type",
                 isMandatory: false,
-                key: "Phone number",
-                type: "number",
+                key: "caseType",
+                type: "dropdown",
                 disable: false,
                 populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
               },
               {
-                label: "Individual Id ",
+                label: "Stage",
+                isMandatory: false,
+                type: "dropdown",
+                key: "stage",
+                disable: false,
+                populators: {
+                  name: "individualId",
+                },
+              },
+              {
+                label: "Case ID",
                 isMandatory: false,
                 type: "text",
+                key: "caseId",
                 disable: false,
+                placeholder: "Search Case ID or Case Name",
                 populators: {
                   name: "individualId",
                 },
