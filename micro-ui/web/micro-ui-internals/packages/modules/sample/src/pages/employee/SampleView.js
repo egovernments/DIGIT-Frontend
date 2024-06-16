@@ -1,9 +1,8 @@
 //not working todo
 import React from 'react'
-import ViewEstimateComponent from '../../components/ViewEstimateComponent';
 const View = () => {
   return (
-    <ViewEstimate />
+<div>test</div>
   )
 }
 

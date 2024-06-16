@@ -3,7 +3,6 @@ import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import SampleCard from "./components/SampleCard";
-import ViewEstimateComponent from "./components/ViewEstimateComponent";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import AdditionalComponentWrapper from "./components/AdditionalComponent";
 import SampleMultiComponent from "./components/SampleMultiComponent";
@@ -28,7 +27,6 @@ export const SampleModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   SampleModule,
   SampleCard,
-  ViewEstimatePage: ViewEstimateComponent,
   SampleAdditionalComponent: AdditionalComponentWrapper,
   SampleMultiComponent: SampleMultiComponent,
 };
