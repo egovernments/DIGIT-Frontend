@@ -383,7 +383,14 @@ const InterractableSection = React.memo(
                   <Input key={item.id} item={item} t={t} assumptions={assumptions} setAssumptions={setAssumptions} />
                 </div>
                 <div>
-                  <button type="button" className="delete-button delete-button-help-locator" onClick={() => deleteHandler(item)}>
+                  <button
+                    type="button"
+                    className="delete-button delete-button-help-locator"
+                    onClick={() => deleteHandler(item)}
+                    onKeyDown={(e) => e.key === "Enter" && deleteHandler(item)}
+                    aria-label={t("DELETE")}
+                    role="button"
+                  >
                     <div> {Trash && <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />}</div>
                     <p>{t("DELETE")}</p>
                   </button>

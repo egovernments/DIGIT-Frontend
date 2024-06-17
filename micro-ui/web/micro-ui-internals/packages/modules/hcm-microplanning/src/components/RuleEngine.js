@@ -540,7 +540,7 @@ const InterractableSection = React.memo(
                   <button
                     className="delete-button"
                     onClick={() => deleteHandler(item)}
-                    onKeyPress={(e) => e.key === "Enter" && deleteHandler(item)}
+                    onKeyDown={(e) => e.key === "Enter" && deleteHandler(item)}
                     aria-label={t("DELETE")}
                     role="button"
                     type="button"
