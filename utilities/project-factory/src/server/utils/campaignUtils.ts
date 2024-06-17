@@ -1768,7 +1768,7 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 }
 
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
-    var boundaryDataGeneratedAfterDifferentTabSeparation: any;
+    var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
@@ -1784,9 +1784,9 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
 
 async function checkCampaignObjectSame(request: any, campaignIdFromDb: any, auditIdFromDb: any) {
     const campaignObjectFromRequest = await getCampaignSearchResponse(request);
-    const boundariesFromRequestCampaignObject = campaignObjectFromRequest?.[0]?.boundaries;
+    const boundariesFromRequestCampaignObject = campaignObjectFromRequest?.CampaignDetails?.[0]?.boundaries;
     const campaignObjectFromDb = await searchAuditWithCamapignId(request, campaignIdFromDb, auditIdFromDb);
-    const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.CampaignDetails?.value;
+    const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.campaignDetails?.value;
     const valuesInJsonFormat: { [key: string]: any } = JSON.parse(values);
     const boundariesFromDbCampaignObject = valuesInJsonFormat?.boundaries;
      return _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject);
@@ -1801,7 +1801,7 @@ async function searchAuditWithCamapignId(request: any, campaignId: any, auditId?
     const params:any =
     {
         "offset": 0,
-        "limit": 10,
+        "limit": 1,
         "tenantId": request?.query?.tenantId,
         "objectId": campaignId
     }

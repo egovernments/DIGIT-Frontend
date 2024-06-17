@@ -671,7 +671,7 @@ async function processGenerateForNew(request: any, generatedResource: any, newEn
   logger.info(`generation of new Resource of type ${request?.query?.type} started`)
   const auditResponse = await searchAuditWithCamapignId(request, request?.query?.campaignId)
   const auditId = auditResponse?.AuditLogs?.[0]?.id;
-  newEntryResponse.auditId = auditId;
+  newEntryResponse[0] = { ...newEntryResponse[0], auditId: auditId };
   request.body.generatedResource = newEntryResponse;
   fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
   return request.body.generatedResource;
@@ -706,8 +706,8 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
   if (responseData.length === 0 || forceUpdateBool) {
     await processGenerateForNew(request, generatedResource, newEntryResponse)
   }
-  if (!forceUpdateBool) {
-    const isSameCampaign: boolean = await checkCampaignObjectSame(request, responseData?.campaignid, responseData?.auditid)
+  if (!forceUpdateBool && responseData.length > 0) {
+    const isSameCampaign: boolean = await checkCampaignObjectSame(request, responseData?.[0]?.campaignid, responseData?.[0]?.auditid)
     if (isSameCampaign) {
       request.body.generatedResource = responseData
     }
@@ -716,7 +716,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
       // send message to update topic 
       produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
       request.body.generatedResource = oldEntryResponse;
-      processGenerateForNew(request, generatedResource, newEntryResponse)
+      await processGenerateForNew(request, generatedResource, newEntryResponse)
     }
   }
 }
