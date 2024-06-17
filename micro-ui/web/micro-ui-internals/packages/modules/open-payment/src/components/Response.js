@@ -27,6 +27,7 @@ export const convertEpochToDate = (dateEpoch) => {
   }
 };
  const WrapPaymentComponent = (props) => {
+  debugger
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { eg_pg_txnid: egId, workflow: workflw, propertyId } = Digit.Hooks.useQueryParams();
@@ -703,6 +704,7 @@ export const convertEpochToDate = (dateEpoch) => {
 };
 
 export const FailedPayment = (props) => {
+  debugger
   // const { addParams, clearParams } = props;
   const { t } = useTranslation();
   // const { consumerCode } = useParams();

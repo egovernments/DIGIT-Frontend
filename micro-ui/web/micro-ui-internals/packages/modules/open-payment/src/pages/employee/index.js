@@ -6,6 +6,7 @@ import OpenSearch from "../../components/OpenSearch";
 import OpenView from "../../components/OpenView";
 import { SuccessfulPayment,FailedPayment } from "../../components/Response";
 
+
 const OpenPaymentBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
@@ -45,10 +46,10 @@ const CitizenApp = ({ path }) => {
           <PrivateRoute path={`${path}/sample`} component={() => <div> In Open Payment Module</div> } />
           <Route path={`${path}/open-search`} render={()=><OpenSearch />} />
           <Route path={`${path}/open-view`} render={()=><OpenView />} />
-          <Route path={`${currentPath}/success`}>
+          <Route path={`${path}/success`}>
             <SuccessfulPayment {...commonProps} />
           </Route>
-          <Route path={`${currentPath}/failure`}>
+          <Route path={`${path}/failure`}>
             <FailedPayment {...commonProps} />
           </Route>
         </AppContainer>
