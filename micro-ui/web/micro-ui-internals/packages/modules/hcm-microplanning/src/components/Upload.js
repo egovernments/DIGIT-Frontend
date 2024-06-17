@@ -13,7 +13,7 @@ import { SpatialDataPropertyMapping } from "./resourceMapping";
 import shp from "shpjs";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
-import { InfoCard, Loader, Toast } from "@egovernments/digit-ui-components";
+import { InfoButton, InfoCard, Loader, Toast } from "@egovernments/digit-ui-components";
 import {
   ACCEPT_HEADERS,
   BOUNDARY_DATA_SHEET,
@@ -481,6 +481,7 @@ const Upload = ({
             setUploadedFileError(errorMsg);
           }
         } catch (errorData) {
+          console.log(errorData.message);
           errorMsg = t("ERROR_UPLOADING_FILE");
           setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
           setUploadedFileError(errorMsg);
@@ -523,6 +524,7 @@ const Upload = ({
       setDataPresent(true);
       setLoader(false);
     } catch (error) {
+      console.log(error.message);
       console.error("File Upload error", error?.message);
       setUploadedFileError("ERROR_UPLOADING_FILE");
       setLoader(false);
@@ -683,6 +685,7 @@ const Upload = ({
       setToast({ state: "success", message: t("FILE_UPLOADED_SUCCESSFULLY") });
       setLoader(false);
     } catch (error) {
+      console.log(error.message);
       setUploadedFileError(t("ERROR_UPLOADING_FILE"));
       setToast({ state: "error", message: t("ERROR_UPLOADING_FILE") });
       setLoader(false);
@@ -727,8 +730,7 @@ const Upload = ({
         let temp = _.cloneDeep(prevFileDataList);
         if (!temp) return temp;
         let index = prevFileDataList?.findIndex((item) => item.id === fileData.id);
-        if (index !== -1) temp[index] = { ...temp[index], active: false };
-        temp.push(fileObject);
+        temp[index] = fileObject;
         return temp;
       });
       setToast({ state: "error", message: t("ERROR_UPLOADED_FILE") });
@@ -1274,7 +1276,6 @@ const UploadedFile = ({
   error,
   openDataPreview,
   downloadTemplateHandler,
-  showPreview,
 }) => {
   const { t } = useTranslation();
   const [errorList, setErrorList] = useState([]);
@@ -1346,25 +1347,19 @@ const UploadedFile = ({
           </div>
         </div>
       </div>
-      {error && (
+      {error && Array.isArray(error) && (
         <InfoCard
           variant="error"
           style={{ margin: "0" }}
           label={t("ERROR_UPLOADED_FILE")}
           additionalElements={[
+            <InfoButton infobuttontype="error" label={"ERROR_VIEW_DETAIL_ERRORS"} onClick={openDataPreview} />,
             <div className="file-upload-error-container">
-              {error.map((item) => {
-                if (item === "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {
-                  return (
-                    <div className="link-wrapper">
-                      {t(item)}
-                      <div className="link" onClick={openDataPreview}>
-                        {t("CLICK_HERE")}
-                      </div>
-                    </div>
-                  );
+              {error?.map((item) => {
+                if (item !== "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {
+                  return <p>{t(item)}</p>;
                 }
-                return <p>{t(item)}</p>;
+                return null;
               })}
               {errorList.length !== 0 && errorList.map((item) => <p>{item}</p>)}
             </div>,
