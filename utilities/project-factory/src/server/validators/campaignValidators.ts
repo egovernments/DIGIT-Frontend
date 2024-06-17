@@ -5,8 +5,8 @@ import { httpRequest } from "../utils/request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import { calculateKeyIndex, getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
-import { createBoundaryMap, generateProcessedFileAndPersist, getFinalValidHeadersForTargetSheetAsPerCampaignType, getLocalizedName, getTargetBoundariesRelatedToCampaignId } from "../utils/campaignUtils";
+import { getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, getMdmsDataBasedOnCampaignType, replicateRequest, throwError } from "../utils/genericUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getFinalValidHeadersForTargetSheetAsPerCampaignType, getLocalizedName } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../config/models/searchCampaignDetails";
@@ -19,6 +19,7 @@ import { searchDataService } from "../service/dataManageService";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { campaignStatuses, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
+import addAjvErrors from "ajv-errors";
 
 
 
@@ -105,10 +106,24 @@ async function validateUniqueBoundaries(uniqueBoundaries: any[], request: any) {
 
 
 
-async function validateBoundaryData(data: any[], request: any, boundaryColumn: any) {
+async function validateBoundaryData(data: any[], request: any, boundaryColumn: any, localizationMap: any) {
     const boundarySet = new Set(); // Create a Set to store unique boundaries
     logger.info("validating for the boundary data")
-    data.forEach((element, index) => {
+    const activeColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName, localizationMap) : null;
+    const uniqueIdentifierColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap) : null;
+    if (activeColumnName && uniqueIdentifierColumnName) {
+        data = data.filter((item: any) => item[activeColumnName] === "Active" || !item[uniqueIdentifierColumnName]);
+        data.forEach((item: any) => item[activeColumnName] = "Active");
+    }
+    if (data.length == 0) {
+        if (request?.body?.ResourceDetails?.type == "facility") {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "All facilities are set to Inactive for this campaign. Please set at least one facility to Active for this campaign or add a new facility for this campaign");
+        }
+        else {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "Data is empty for this campaign, add atleast one data row");
+        }
+    }
+    data.forEach((element) => {
         const boundaries = element[boundaryColumn];
         if (!boundaries) {
             throwError("COMMON", 400, "VALIDATION_ERROR", `Boundary Code is required for element in rowNumber ${element['!row#number!']}`);
@@ -130,77 +145,82 @@ async function validateBoundaryData(data: any[], request: any, boundaryColumn: a
     await validateUniqueBoundaries(uniqueBoundaries, request);
 }
 
-async function validateTargetBoundaryData(data: any[], request: any, boundaryColumn: any, errors: any[], localizationMap?: any) {
-    // const responseBoundaries = await fetchBoundariesInChunks(request);
-    const responseBoundaries = await getTargetBoundariesRelatedToCampaignId(request, localizationMap);
-    const responseBoundaryCodes = responseBoundaries.map((boundary: any) => boundary.code);
-    // Iterate through each array of objects
-    for (const key in data) {
-        const isNotBoundaryOrReadMeTab = key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap);
-        if (isNotBoundaryOrReadMeTab) {
-            if (Array.isArray(data[key])) {
-                const boundaryData = data[key];
-                const boundarySet = new Set(); // Create a Set to store unique boundaries for given sheet 
-                boundaryData.forEach((element: any, index: number) => {
-                    const boundaries = element?.[boundaryColumn]; // Access "Boundary Code" property directly
-                    if (!boundaries) {
-                        errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is required for element at row ${element["!row#number!"]} for sheet ${key}`, sheetName: key })
-                    } else {
-                        if (typeof boundaries !== 'string') {
-                            errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is not of type string at row ${element["!row#number!"]} in boundary sheet ${key}`, sheetName: key });
-                        } else {
-                            const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
-                            if (boundaryList.length === 0 || boundaryList.includes('')) {
-                                errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"]} in boundary sheet ${key}`, sheetName: key })
-                            }
-                            if (boundaryList.length > 1) {
-                                errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"]} of sheet ${key}`, sheetName: key })
-                            }
-                            if (boundaryList.length === 1) {
-                                const boundaryCode = boundaryList[0];
-                                if (boundarySet.has(boundaryCode)) {
-                                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"]} of sheet ${key}`, sheetName: key })
-                                }
-                                if (!responseBoundaryCodes.includes(boundaryCode)) {
-                                    errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"]}  of sheet ${key} is not present in the selected boundaries`, sheetName: key })
-                                }
-                                boundarySet.add(boundaryCode);
-                            }
-                        }
-                    }
-                });
-            }
-        }
-    }
-}
+// async function validateTargetBoundaryData(data: any[], request: any, boundaryColumn: any, errors: any[], localizationMap?: any) {
+//     // const responseBoundaries = await fetchBoundariesInChunks(request);
+//     const responseBoundaries = await getTargetBoundariesRelatedToCampaignId(request, localizationMap);
+//     const responseBoundaryCodes = responseBoundaries.map((boundary: any) => boundary.code);
+//     // Iterate through each array of objects
+//     for (const key in data) {
+//         const isNotBoundaryOrReadMeTab = key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap);
+//         if (isNotBoundaryOrReadMeTab) {
+//             if (Array.isArray(data[key])) {
+//                 const boundaryData = data[key];
+//                 const boundarySet = new Set(); // Create a Set to store unique boundaries for given sheet 
+//                 boundaryData.forEach((element: any, index: number) => {
+//                     const boundaries = element?.[boundaryColumn]; // Access "Boundary Code" property directly
+//                     if (!boundaries) {
+//                         errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is required for element at row ${element["!row#number!"]} for sheet ${key}`, sheetName: key })
+//                     } else {
+//                         if (typeof boundaries !== 'string') {
+//                             errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code is not of type string at row ${element["!row#number!"]} in boundary sheet ${key}`, sheetName: key });
+//                         } else {
+//                             const boundaryList = boundaries.split(",").map((boundary: any) => boundary.trim());
+//                             if (boundaryList.length === 0 || boundaryList.includes('')) {
+//                                 errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `No boundary code found for row ${element["!row#number!"]} in boundary sheet ${key}`, sheetName: key })
+//                             }
+//                             if (boundaryList.length > 1) {
+//                                 errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `More than one Boundary Code found at row ${element["!row#number!"]} of sheet ${key}`, sheetName: key })
+//                             }
+//                             if (boundaryList.length === 1) {
+//                                 const boundaryCode = boundaryList[0];
+//                                 if (boundarySet.has(boundaryCode)) {
+//                                     errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Duplicacy of boundary Code at row ${element["!row#number!"]} of sheet ${key}`, sheetName: key })
+//                                 }
+//                                 if (!responseBoundaryCodes.includes(boundaryCode)) {
+//                                     errors.push({ status: "INVALID", rowNumber: element["!row#number!"], errorDetails: `Boundary Code at row ${element["!row#number!"]}  of sheet ${key} is not present in the selected boundaries`, sheetName: key })
+//                                 }
+//                                 boundarySet.add(boundaryCode);
+//                             }
+//                         }
+//                     }
+//                 });
+//             }
+//         }
+//     }
+// }
 
 
 
-async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[], localizationMap?: any) {
-    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-    const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
-    const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
-    const dataToBeValidated = modifyTargetData(data);
-    let maxKeyIndex = -1;
-    dataToBeValidated.forEach(obj => {
-        const keyIndex = calculateKeyIndex(obj, localizedHierarchy, localizationMap);
-        if (keyIndex > maxKeyIndex) {
-            maxKeyIndex = keyIndex;
-        }
-    })
-    const lowestLevelHierarchy = localizedHierarchy[maxKeyIndex];
-    validateTargets(data, lowestLevelHierarchy, errors, localizationMap);
-}
-//
-function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], localizationMap?: any) {
+// async function validateTargetsAtLowestLevelPresentOrNot(data: any[], request: any, errors: any[], localizationMap?: any) {
+//     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+//     const modifiedHierarchy = hierarchy.map(ele => `${request?.body?.ResourceDetails?.hierarchyType}_${ele}`.toUpperCase())
+//     const localizedHierarchy = getLocalizedHeaders(modifiedHierarchy, localizationMap);
+//     const dataToBeValidated = modifyTargetData(data);
+//     let maxKeyIndex = -1;
+//     dataToBeValidated.forEach(obj => {
+//         const keyIndex = calculateKeyIndex(obj, localizedHierarchy, localizationMap);
+//         if (keyIndex > maxKeyIndex) {
+//             maxKeyIndex = keyIndex;
+//         }
+//     })
+//     const lowestLevelHierarchy = localizedHierarchy[maxKeyIndex];
+//     await validateTargets(request, data, lowestLevelHierarchy, errors, localizationMap);
+// }
+
+
+async function validateTargets(request: any, data: any[], errors: any[], localizationMap?: any) {
+    const mdmsResponse = await getMdmsDataBasedOnCampaignType(request);
+    const columnsNotToBeFreezed = mdmsResponse?.columnsNotToBeFreezed;
+    const requiredColumns = mdmsResponse?.required;
+    const columnsToValidate = columnsNotToBeFreezed.filter((element: any) => requiredColumns.includes(element));
+    const localizedTargetColumnNames = getLocalizedHeaders(columnsToValidate, localizationMap);
     for (const key in data) {
         if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
             if (Array.isArray(data[key])) {
                 const boundaryData = data[key];
                 boundaryData.forEach((obj: any, index: number) => {
-                    if (obj.hasOwnProperty(lowestLevelHierarchy) && obj[lowestLevelHierarchy]) {
-                        const localizedTargetColumnName = getLocalizedName("ADMIN_CONSOLE_TARGET", localizationMap);
-                        const target = obj[localizedTargetColumnName];
+                    for (const targetColumn of localizedTargetColumnNames) {
+                        const target = obj[targetColumn];
                         if (!target) {
                             errors.push({
                                 status: "INVALID",
@@ -230,7 +250,6 @@ function validateTargets(data: any[], lowestLevelHierarchy: any, errors: any[], 
                                 sheetName: key
                             });
                         }
-
                     }
                 });
             }
@@ -271,12 +290,13 @@ async function validateUnique(schema: any, data: any[], request: any) {
     }
 }
 
-function validatePhoneNumber(datas: any[]) {
+function validatePhoneNumber(datas: any[], localizationMap: any) {
     var digitErrorRows = [];
     var missingNumberRows = [];
     for (const data of datas) {
-        if (data["Phone Number (Mandatory)"]) {
-            var phoneNumber = data["Phone Number (Mandatory)"];
+        const phoneColumn = getLocalizedName("HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER", localizationMap);
+        if (data[phoneColumn]) {
+            var phoneNumber = data[phoneColumn];
             phoneNumber = phoneNumber.toString().replace(/^0+/, '');
             if (phoneNumber.length != 10) {
                 digitErrorRows.push(data["!row#number!"]);
@@ -304,45 +324,78 @@ function validatePhoneNumber(datas: any[]) {
     }
 }
 
+async function changeSchemaErrorMessage(schema: any, localizationMap?: any) {
+    if (schema?.errorMessage) {
+        for (const key in schema.errorMessage) {
+            const value = schema.errorMessage[key];
+            delete schema.errorMessage[key];
+            schema.errorMessage[getLocalizedName(key, localizationMap)] = value;
+        }
+    }
+    return schema; // Return unmodified schema if no error message
+}
+
+
+
 async function validateViaSchema(data: any, schema: any, request: any, localizationMap?: any) {
     if (schema) {
-        const ajv = new Ajv();
-        const validate = ajv.compile(schema);
+        const newSchema: any = await changeSchemaErrorMessage(schema, localizationMap)
+        const ajv = new Ajv({ allErrors: true, strict: false }); // enable allErrors to get all validation errors
+        addAjvErrors(ajv);
+        const validate = ajv.compile(newSchema);
         const validationErrors: any[] = [];
-        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap)
+        const uniqueIdentifierColumnName = getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.uniqueIdentifierColumnName, localizationMap);
+        const activeColumnName = createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName ? getLocalizedName(createAndSearch?.[request?.body?.ResourceDetails?.type]?.activeColumnName, localizationMap) : null;
         if (request?.body?.ResourceDetails?.type == "user") {
-            validatePhoneNumber(data)
+            validatePhoneNumber(data, localizationMap);
         }
         if (data?.length > 0) {
             data.forEach((item: any) => {
-                if (!item?.[uniqueIdentifierColumnName])
-                    if (!validate(item)) {
+                if (activeColumnName) {
+                    if (!item?.[activeColumnName]) {
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should not be empty` }] });
+                    }
+                    else if (item?.[activeColumnName] != "Active" && item?.[activeColumnName] != "Inactive") {
+                        validationErrors.push({ index: item?.["!row#number!"], errors: [{ instancePath: `${activeColumnName}`, message: `should be equal to one of the allowed values. Allowed values are Active, Inactive` }] });
+                    }
+                }
+                const active = activeColumnName ? item[activeColumnName] : "Active";
+                if (active == "Active" || !item?.[uniqueIdentifierColumnName]) {
+                    const validationResult = validate(item);
+                    if (!validationResult) {
                         validationErrors.push({ index: item?.["!row#number!"], errors: validate.errors });
                     }
+                }
             });
-            await validateUnique(schema, data, request)
+            await validateUnique(newSchema, data, request);
             if (validationErrors.length > 0) {
-                const errorMessage = validationErrors.map(({ index, errors }) => {
-                    const formattedErrors = errors.map((error: any) => {
-                        let formattedError = `${error.dataPath}: ${error.message}`;
+                const errorMessage = validationErrors.map(({ index, message, errors }) => {
+                    const formattedErrors = errors ? errors.map((error: any) => {
+                        let instancePath = error.instancePath || ''; // Assign an empty string if dataPath is not available
+                        if (instancePath.startsWith('/')) {
+                            instancePath = instancePath.slice(1);
+                        }
+                        if (error.keyword === 'required') {
+                            const missingProperty = error.params?.missingProperty || '';
+                            return `Data at row ${index} in column '${missingProperty}' should not be empty`;
+                        }
+                        let formattedError = `in column '${instancePath}' ${getLocalizedName(error.message, localizationMap)}`;
                         if (error.keyword === 'enum' && error.params && error.params.allowedValues) {
                             formattedError += `. Allowed values are: ${error.params.allowedValues.join(', ')}`;
                         }
-                        return formattedError;
-                    }).join(', ');
-                    return `Data at row ${index}: ${formattedErrors}`;
-                }).join(' , ');
+                        return `Data at row ${index} ${formattedError}`
+                    }).join(' ; ') : message;
+                    return formattedErrors;
+                }).join(' ; ');
                 throwError("COMMON", 400, "VALIDATION_ERROR", errorMessage);
             } else {
                 logger.info("All Data rows are valid.");
             }
-        }
-        else {
+        } else {
             throwError("FILE", 400, "INVALID_FILE_ERROR", "Data rows cannot be empty");
         }
-    }
-    else {
-        logger.info("skipping schema validation")
+    } else {
+        logger.info("Skipping schema validation");
     }
 }
 
@@ -352,29 +405,44 @@ async function validateSheetData(data: any, request: any, schema: any, boundaryV
     await validateViaSchema(data, schema, request, localizationMap);
     if (boundaryValidation) {
         const localisedBoundaryCode = getLocalizedName(boundaryValidation?.column, localizationMap)
-        await validateBoundaryData(data, request, localisedBoundaryCode);
+        await validateBoundaryData(data, request, localisedBoundaryCode, localizationMap);
     }
 }
 
 async function validateTargetSheetData(data: any, request: any, boundaryValidation: any, localizationMap?: any) {
     try {
         const errors: any[] = [];
+        await validateHeadersOfTargetSheet(request, localizationMap);
         if (boundaryValidation) {
-            const localizedBoundaryValidationColumn = getLocalizedName(boundaryValidation?.column, localizationMap)
-            await validateTargetBoundaryData(data, request, localizedBoundaryValidationColumn, errors, localizationMap);
-            await validateTargetsAtLowestLevelPresentOrNot(data, request, errors, localizationMap);
+            // const localizedBoundaryValidationColumn = getLocalizedName(boundaryValidation?.column, localizationMap)
+            // await validateTargetBoundaryData(data, request, localizedBoundaryValidationColumn, errors, localizationMap);
+            await validateTargets(request, data, errors, localizationMap);
         }
         request.body.sheetErrorDetails = request?.body?.sheetErrorDetails ? [...request?.body?.sheetErrorDetails, ...errors] : errors;
         if (request?.body?.sheetErrorDetails && Array.isArray(request?.body?.sheetErrorDetails) && request?.body?.sheetErrorDetails?.length > 0) {
             request.body.ResourceDetails.status = resourceDataStatuses.invalid;
         }
         await generateProcessedFileAndPersist(request, localizationMap);
+        logger.info("target sheet data validation completed");
     }
     catch (error) {
         console.log(error)
         await handleResouceDetailsError(request, error);
     }
 }
+
+
+async function validateHeadersOfTargetSheet(request: any, localizationMap?: any) {
+    const fileUrl = await validateFile(request);
+    const targetWorkbook: any = await getTargetWorkbook(fileUrl);
+    const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+    const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+    logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
+    logger.info("validating headers of target sheet started")
+    validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
+    logger.info("validation of target sheet headers completed")
+}
+
 
 function validateBooleanField(obj: any, fieldName: any, index: any) {
     if (!obj.hasOwnProperty(fieldName)) {
@@ -464,16 +532,17 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
         if (request.body.ResourceDetails.type == 'boundary') {
             await validateBoundarySheetData(request, fileUrl, localizationMap);
         }
-        if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
-            const targetWorkbook: any = await getTargetWorkbook(fileUrl);
-            const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
-            const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
-            validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
-        }
+        // if (request?.body?.ResourceDetails?.type == 'boundaryWithTarget') {
+        //     const targetWorkbook: any = await getTargetWorkbook(fileUrl);
+        //     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
+        //     const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+        //     logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
+        //     validateTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
+        // }
     }
 }
 
-function validateTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeadersForTargetSheet: any) {
+function validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeadersForTargetSheet: any) {
     targetWorkbook.eachSheet((worksheet: any, sheetId: any) => {
         if (sheetId > 2) { // Starting from the second sheet
             // Convert the sheet to an array of headers
@@ -633,9 +702,16 @@ async function validateBoundariesForTabs(CampaignDetails: any, resource: any, re
 
     // Initialize resource boundary codes as a set for uniqueness
     const resourceBoundaryCodesArray: any[] = [];
+    var activeColumnName: any = null;
+    if (createAndSearch?.[resource.type]?.activeColumn && createAndSearch?.[resource.type]?.activeColumnName) {
+        activeColumnName = getLocalizedName(createAndSearch?.[resource.type]?.activeColumn, localizationMap);
+    }
     datas.forEach((data: any) => {
         const codes = data?.[boundaryColumn]?.split(',').map((code: string) => code.trim()) || [];
-        resourceBoundaryCodesArray.push({ boundaryCodes: codes, rowNumber: data?.['!row#number!'] })
+        var active = activeColumnName ? data?.[activeColumnName] : "Active";
+        if (active == "Active") {
+            resourceBoundaryCodesArray.push({ boundaryCodes: codes, rowNumber: data?.['!row#number!'] })
+        }
     });
 
     // Convert sets to arrays for comparison
@@ -874,7 +950,7 @@ async function validateProjectType(request: any, projectType: any, tenantId: any
 }
 
 function isObjectOrArray(value: any) {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
+    return typeof value === 'object' || Array.isArray(value);
 }
 
 async function validateChangeDatesRequest(request: any) {
@@ -893,20 +969,18 @@ async function validateChangeDatesRequest(request: any) {
         }
     }
     const today: any = Date.now();
-    if (exsistingStartDate >= today) {
-        logger.info("Existing start date is greater than or equal to current date");
-        logger.info("Now only endDate can be updated")
+    if (exsistingStartDate <= today) {
         if (exsistingStartDate != newStartDate) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "StartDate cannot be updated as campaign is started or completed.");
+            throwError("COMMON", 400, "VALIDATION_ERROR", "StartDate cannot be updated for ongoing or completed campaign.");
         }
     }
-    if (exsistingEndDate > today) {
-        logger.info("Existing end date is greater than or equal to current date");
+    if (exsistingEndDate < today) {
         if (exsistingEndDate != newEndDate) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "EndDate cannot be updated as campaign is completed.");
         }
     }
     request.body.CampaignDetails = ExistingCampaignDetails;
+    request.body.CampaignDetails.action = "changeDates";
     request.body.CampaignDetails.startDate = newStartDate;
     request.body.CampaignDetails.endDate = newEndDate;
 }
@@ -1077,8 +1151,10 @@ async function validateDownloadRequest(request: any) {
     await validateHierarchyType(request, hierarchyType, tenantId);
 }
 
-function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+async function immediateValidationForTargetSheet(dataFromSheet: any, localizationMap: any) {
+    logger.info("validating all district tabs present started")
     validateAllDistrictTabsPresentOrNot(dataFromSheet, localizationMap);
+    logger.info("validation of all district tabs present completed")
     for (const key in dataFromSheet) {
         if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
             if (Object.prototype.hasOwnProperty.call(dataFromSheet, key)) {

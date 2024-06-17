@@ -48,7 +48,7 @@ function getJsonData(sheetData: any, getRow = false, getSheetName = false, sheet
       for (let j = 0; j < headers.length; j++) {
         const key = headers[j];
         const value = row[j] === undefined || row[j] === "" ? "" : row[j];
-        if (value) {
+        if (value || value === 0) {
           rowData[key] = value;
         }
       }
@@ -137,6 +137,68 @@ const getTargetSheetData = async (
   }
   return workbookData;
 };
+
+const getTargetSheetDataAfterCode = async (
+  fileUrl: string,
+  getRow = false,
+  getSheetName = false,
+  codeColumnName = "Boundary Code",
+  localizationMap?: any
+) => {
+  const workbook = await getTargetWorkbook(fileUrl, localizationMap);
+  const sheetNames: string[] = [];
+  workbook.eachSheet((worksheet: any) => {
+    sheetNames.push(worksheet.name);
+  });
+  const localizedSheetNames = getLocalizedHeaders(sheetNames, localizationMap);
+
+  const workbookData: { [key: string]: any[] } = {}; // Object to store data from each sheet
+
+  for (const sheetName of localizedSheetNames) {
+    const worksheet = workbook.getWorksheet(sheetName);
+    const sheetData = worksheet.getSheetValues({ includeEmpty: true });
+
+    // Find the target column index where the first row value matches codeColumnName
+    const firstRow = sheetData[1];
+    let targetColumnIndex = -1;
+    for (let colIndex = 1; colIndex < firstRow.length; colIndex++) {
+      if (firstRow[colIndex] === codeColumnName) {
+        targetColumnIndex = colIndex;
+        break;
+      }
+    }
+
+    if (targetColumnIndex === -1) {
+      console.warn(`Column "${codeColumnName}" not found in sheet "${sheetName}".`);
+      continue;
+    }
+
+    // Process data from sheet
+    const processedData = sheetData.map((row: any, rowIndex: any) => {
+      if (rowIndex <= 1) return null; // Skip header row
+
+      let rowData: any = { [codeColumnName]: row[targetColumnIndex] };
+
+      // Add integer values in the target column for the current row
+      let sum = 0;
+      for (let colIndex = targetColumnIndex + 1; colIndex < row.length; colIndex++) {
+        const value = row[colIndex];
+        if (typeof value === 'number' && Number.isInteger(value)) {
+          sum += value;
+        }
+      }
+
+      // Add the sum to the row data
+      rowData['Target at the Selected Boundary level'] = sum;
+      return rowData;
+    }).filter(Boolean); // Remove null entries
+
+    workbookData[sheetName] = processedData;
+  }
+
+  return workbookData;
+};
+
 
 // Function to search MDMS for specific unique identifiers
 const searchMDMS: any = async (
@@ -1010,7 +1072,7 @@ async function callMdmsV2Data(
   }
 }
 
-function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any) {
+function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed: any, errorMessage: any) {
 
   // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
   columns.sort((a: any, b: any) => {
@@ -1020,21 +1082,34 @@ function enrichSchema(data: any, properties: any, required: any, columns: any, u
     return a.orderNumber - b.orderNumber;
   });
 
+  required.sort((a: any, b: any) => {
+    if (a.orderNumber === b.orderNumber) {
+      return a.name.localeCompare(b.name);
+    }
+    return a.orderNumber - b.orderNumber;
+  });
+
+  const sortedRequiredColumns = required.map((column: any) => column.name);
+
   // Extract sorted property names
   const sortedPropertyNames = columns.map((column: any) => column.name);
 
   // Update data with new properties and required fields
   data.properties = properties;
-  data.required = required;
+  data.required = sortedRequiredColumns;
   data.columns = sortedPropertyNames;
   data.unique = unique;
+  data.errorMessage = errorMessage;
+  data.columnsNotToBeFreezed = columnsNotToBeFreezed;
 }
 
 function convertIntoSchema(data: any) {
   const properties: any = {};
+  const errorMessage: any = {};
   const required: any[] = [];
   const columns: any[] = [];
   const unique: any[] = [];
+  const columnsNotToBeFreezed: any[] = [];
 
   for (const propType of ['enumProperties', 'numberProperties', 'stringProperties']) {
     if (data.properties[propType] && Array.isArray(data.properties[propType]) && data.properties[propType]?.length > 0) {
@@ -1043,12 +1118,17 @@ function convertIntoSchema(data: any) {
           ...property,
           type: propType === 'stringProperties' ? 'string' : propType === 'numberProperties' ? 'number' : undefined
         };
+        if (property?.errorMessage)
+          errorMessage[property?.name] = property?.errorMessage;
 
         if (property?.isRequired && required.indexOf(property?.name) === -1) {
-          required.push(property?.name);
+          required.push({ name: property?.name, orderNumber: property?.orderNumber });
         }
         if (property?.isUnique && unique.indexOf(property?.name) === -1) {
           unique.push(property?.name);
+        }
+        if (!property?.freezeColumn || property?.freezeColumn == false) {
+          columnsNotToBeFreezed.push(property?.name);
         }
 
         // If orderNumber is missing, default to a very high number
@@ -1056,7 +1136,7 @@ function convertIntoSchema(data: any) {
       }
     }
   }
-  enrichSchema(data, properties, required, columns, unique);
+  enrichSchema(data, properties, required, columns, unique, columnsNotToBeFreezed, errorMessage);
   return data;
 }
 
@@ -1111,6 +1191,7 @@ export {
   generateHierarchyList,
   getTargetWorkbook,
   getTargetSheetData,
+  getTargetSheetDataAfterCode,
   callMdmsData,
   getMDMSV1Data,
   callMdmsV2Data,

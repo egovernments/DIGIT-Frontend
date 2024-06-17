@@ -1,5 +1,5 @@
 import * as ExcelJS from "exceljs";
-import { throwError } from "./genericUtils";
+import { changeFirstRowColumnColour, throwError } from "./genericUtils";
 import { httpRequest } from "./request";
 import { logger } from "./logger";
 import config from "../config";
@@ -54,6 +54,21 @@ const getExcelWorkbookFromFileURL = async (
   return workbook;
 };
 
+function updateFontNameToRoboto(worksheet: ExcelJS.Worksheet) {
+  worksheet.eachRow({ includeEmpty: true }, (row) => {
+    row.eachCell({ includeEmpty: true }, (cell) => {
+      // Preserve existing font properties
+      const existingFont = cell.font || {};
+
+      // Update only the font name to Roboto
+      cell.font = {
+        ...existingFont, // Spread existing properties
+        name: 'Roboto'   // Update the font name
+      };
+    });
+  });
+}
+
 function formatWorksheet(worksheet: any, datas: any, headerSet: any) {
   // Add empty rows after the main header
   worksheet.addRow([]);
@@ -102,7 +117,7 @@ function performUnfreezeCells(sheet: any) {
   for (let row = 1; row <= parseInt(config.values.unfrozeTillRow); row++) {
     for (let col = 1; col <= lastFilledColumn; col++) {
       const cell = sheet.getCell(row, col);
-      if (!cell.value) {
+      if (!cell.value && cell.value !== 0) {
         cell.protection = { locked: false };
       }
     }
@@ -127,28 +142,37 @@ function addDataToSheet(sheet: any, sheetData: any, firstRowColor: any = '93C47D
 
     // Apply fill color to each cell in the first row and make cells bold
     if (index === 0) {
-      worksheetRow.eachCell((cell: any) => {
+      worksheetRow.eachCell((cell: any, colNumber: number) => {
+        // Set cell fill color
         cell.fill = {
           type: 'pattern',
           pattern: 'solid',
           fgColor: { argb: firstRowColor } // Green color
         };
+
+        // Set font to bold
         cell.font = { bold: true };
+
+        // Enable text wrapping
+        cell.alignment = { wrapText: true };
+
+        // Optionally lock the cell
         if (frozeCells) {
           cell.protection = { locked: true };
         }
+
+        // Update column width based on the length of the cell's text
+        const currentWidth = sheet.getColumn(colNumber).width || columnWidth; // Default width or current width
+        const newWidth = Math.max(currentWidth, cell.value.toString().length + 2); // Add padding
+        sheet.getColumn(colNumber).width = newWidth;
       });
+
     }
     worksheetRow.eachCell((cell: any) => {
       if (frozeCells) {
         cell.protection = { locked: true };
       }
     });
-  });
-
-  // Set column widths
-  sheet.columns.forEach((column: any) => {
-    column.width = columnWidth;
   });
 
   // Protect the entire sheet to enable cell protection settings
@@ -158,33 +182,53 @@ function addDataToSheet(sheet: any, sheetData: any, firstRowColor: any = '93C47D
   if (frozeWholeSheet) {
     performFreezeWholeSheet(sheet);
   }
+  updateFontNameToRoboto(sheet);
 }
 
-function lockTargetFields(newSheet: any, targetColumnNumber: any, boundaryCodeColumnIndex: any) {
+
+function lockTargetFields(newSheet: any, columnsNotToBeFreezed: any, boundaryCodeColumnIndex: any) {
   // Make every cell locked by default
   newSheet.eachRow((row: any) => {
     row.eachCell((cell: any) => {
       cell.protection = { locked: true };
     });
   });
-  // Unlock cells in the target column
-  if (targetColumnNumber > -1) {
-    newSheet.eachRow((row: any) => {
-      const cell = row.getCell(targetColumnNumber); // Excel columns are 1-based
-      cell.protection = { locked: false };
+
+  // // Get headers in the first row and filter out empty items
+  const headers = newSheet.getRow(1).values.filter((header: any) => header);
+  logger.info(`Filtered Headers in the first row : ${headers}`);
+
+  // Unlock cells in the target columns
+  if (Array.isArray(columnsNotToBeFreezed) && columnsNotToBeFreezed.length > 0) {
+    columnsNotToBeFreezed.forEach((header) => {
+      const targetColumnNumber = headers.indexOf(header) + 1; // Excel columns are 1-based
+      logger.info(`Header: ${header}, Target Column Index: ${targetColumnNumber}`);
+      if (targetColumnNumber > -1) {
+        newSheet.eachRow((row: any, rowNumber: number) => {
+          changeFirstRowColumnColour(newSheet, 'B6D7A8', targetColumnNumber);
+          if (rowNumber === 1) return;
+
+          const cell = row.getCell(targetColumnNumber);
+          cell.protection = { locked: false };
+        });
+
+      } else {
+        console.error(`Header "${header}" not found in the first row`);
+      }
     });
   }
 
   // Hide the boundary code column
   if (boundaryCodeColumnIndex !== -1) {
-    newSheet.getColumn(boundaryCodeColumnIndex + 1).hidden = true;
+    newSheet.getColumn(boundaryCodeColumnIndex + 1).hidden = true; // Excel columns are 1-based
   }
 
   // Protect the sheet with a password (optional)
   newSheet.protect('passwordhere', {
     selectLockedCells: true,
-    selectUnlockedCells: true
+    selectUnlockedCells: true,
   });
 }
 
-export { getNewExcelWorkbook, getExcelWorkbookFromFileURL, formatWorksheet, addDataToSheet, lockTargetFields };
+
+export { getNewExcelWorkbook, getExcelWorkbookFromFileURL, formatWorksheet, addDataToSheet, lockTargetFields, updateFontNameToRoboto };

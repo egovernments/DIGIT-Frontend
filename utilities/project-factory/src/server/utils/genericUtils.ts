@@ -3,7 +3,7 @@ import { httpRequest } from "./request";
 import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from "../kafka/Listener";
-import { generateHierarchyList, getAllFacilities, getHierarchy } from "../api/campaignApis";
+import { generateHierarchyList, getAllFacilities, getCampaignSearchResponse, getHierarchy } from "../api/campaignApis";
 import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsTypeSchema } from "../api/genericApis";
 import { logger } from "./logger";
 import { getConfigurableColumnHeadersBasedOnCampaignType, getDifferentTabGeneratedBasedOnConfig, getLocalizedName } from "./campaignUtils";
@@ -14,7 +14,8 @@ import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from 
 import { getLocaleFromRequest, getLocalisationModuleName } from "./localisationUtils";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
-import { addDataToSheet, formatWorksheet, getNewExcelWorkbook } from "./excelUtils";
+import { addDataToSheet, formatWorksheet, getNewExcelWorkbook, updateFontNameToRoboto } from "./excelUtils";
+import createAndSearch from "../config/createAndSearch";
 const NodeCache = require("node-cache");
 
 const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -246,7 +247,7 @@ async function searchGeneratedResources(request: any) {
     let queryString: string;
     let queryValues: any[] = [];
 
-    queryString = "SELECT * FROM health.eg_cm_generated_resource_details WHERE ";
+    queryString = `SELECT * FROM ${config?.DB_CONFIG.DB_GENERATED_RESOURCE_DETAILS_TABLE_NAME} WHERE `;
     // query for download with id
     if (request?.query?.id) {
       queryString += "id = $1 AND type = $2 AND hierarchytype = $3 AND tenantid = $4 ";
@@ -485,6 +486,8 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any, l
 
   formatWorksheet(worksheet, datas, headerSet);
 
+  updateFontNameToRoboto(worksheet);
+
   return worksheet;
 }
 
@@ -506,9 +509,9 @@ function createBoundaryDataMainSheet(request: any, boundaryData: any, differentT
       mainSheetData.push(rowData);
     } else {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
-      if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('_'))) {
-        uniqueDistrictsForMainSheet.push(districtLevelRow.join('_'));
-        districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('_'), data[getLocalizedName(getBoundaryColumnName(), localizationMap)]);
+      if (!uniqueDistrictsForMainSheet.includes(districtLevelRow.join('#'))) {
+        uniqueDistrictsForMainSheet.push(districtLevelRow.join('#'));
+        districtLevelRowBoundaryCodeMap.set(districtLevelRow.join('#'), data[getLocalizedName(getBoundaryColumnName(), localizationMap)]);
         mainSheetData.push(rowData);
       }
     }
@@ -555,6 +558,7 @@ async function getReadMeConfig(request: any) {
   }
 }
 
+
 function changeFirstRowColumnColour(facilitySheet: any, color: any, columnNumber = 1) {
   // Color the first column header of the facility sheet orange
   const headerRow = facilitySheet.getRow(1); // Assuming the first row is the header
@@ -562,8 +566,14 @@ function changeFirstRowColumnColour(facilitySheet: any, color: any, columnNumber
   firstHeaderCell.fill = {
     type: 'pattern',
     pattern: 'solid',
-    fgColor: { argb: color } // Orange color
+    fgColor: { argb: color }
   };
+}
+
+function hideUniqueIdentifierColumn(sheet: any, column: any) {
+  if (column) {
+    sheet.getColumn(column).hidden = true
+  }
 }
 
 
@@ -582,6 +592,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   // Add facility sheet data
   const facilitySheet = workbook.addWorksheet(localizedFacilityTab);
   addDataToSheet(facilitySheet, facilitySheetData, undefined, undefined, true);
+  hideUniqueIdentifierColumn(facilitySheet, createAndSearch?.["facility"]?.uniqueIdentifierColumn);
   changeFirstRowColumnColour(facilitySheet, 'E06666');
 
   // Add boundary sheet to the workbook
@@ -728,7 +739,8 @@ async function enrichResourceDetails(request: any) {
     lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid,
     lastModifiedTime: Date.now()
   }
-  produceModifiedMessages(request?.body, config?.kafka?.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
+  const persistMessage: any = { ResourceDetails: request.body.ResourceDetails };
+  produceModifiedMessages(persistMessage, config?.kafka?.KAFKA_CREATE_RESOURCE_DETAILS_TOPIC);
 }
 
 function getFacilityIds(data: any) {
@@ -978,6 +990,14 @@ async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any
 }
 
 
+async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: any) {
+  const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+  const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
+  const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
+  return mdmsResponse;
+}
+
+
 
 
 export {
@@ -1024,7 +1044,7 @@ export {
   changeFirstRowColumnColour,
   getConfigurableColumnHeadersFromSchemaForTargetSheet,
   createBoundaryDataMainSheet,
-
+  getMdmsDataBasedOnCampaignType
 };
 
 

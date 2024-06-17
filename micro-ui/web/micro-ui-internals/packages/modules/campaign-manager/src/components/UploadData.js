@@ -45,15 +45,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   //   { name: "Boundary" },
   // ]);
 
-  const { data: Schemas } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
+  const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
   const [enabled, setEnabled] = useState(false);
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
+  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const [convertedSchema, setConvertedSchema] = useState({});
+  const [loader, setLoader] = useState(false);
+
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -79,11 +84,18 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var newSchema = { ...schema };
     var newProp = {};
 
-    Object.keys(schema?.properties)
-      .map((e) => ({ key: e, value: t(e) }))
-      .map((e) => {
-        newProp[e.value] = schema?.properties[e.key];
-      });
+    // Object.keys(schema?.properties)
+    //   .map((e) => ({ key: e, value: t(e) }))
+    //   .map((e) => {
+    //     newProp[e.value] = schema?.properties[e.key];
+    //   });
+
+    // Translate properties keys and their 'name' fields
+    Object.keys(schema?.properties).forEach((key) => {
+      const translatedKey = t(key);
+      const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
+      newProp[translatedKey] = translatedProperty;
+    });
     const newRequired = schema?.required.map((e) => t(e));
 
     newSchema.properties = newProp;
@@ -111,7 +123,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
 
   function enrichSchema(data, properties, required, columns) {
-
     // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
     columns.sort((a, b) => {
       if (a?.orderNumber === b?.orderNumber) {
@@ -126,18 +137,19 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     // Update data with new properties and required fields
     data.properties = properties;
     data.required = required;
-    delete data.campaignType;
+    // delete data.campaignType;
     // data.columns = sortedPropertyNames;
   }
 
   function convertIntoSchema(data) {
-    const properties = {};
-    const required = [];
-    const columns = [];
+    var convertData = { ...data };
+    var properties = {};
+    var required = [];
+    var columns = [];
 
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (data?.properties[propType] && Array.isArray(data?.properties[propType]) && data?.properties[propType]?.length > 0) {
-        for (const property of data?.properties[propType]) {
+      if (convertData?.properties[propType] && Array.isArray(convertData?.properties[propType]) && convertData?.properties[propType]?.length > 0) {
+        for (const property of convertData?.properties[propType]) {
           properties[property?.name] = {
             ...property,
             type: propType === "stringProperties" ? "string" : propType === "numberProperties" ? "number" : undefined,
@@ -152,18 +164,42 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         }
       }
     }
-    enrichSchema(data, properties, required, columns);
-    return data;
+    enrichSchema(convertData, properties, required, columns);
+    const newData = JSON.parse(JSON.stringify(convertData));
+    delete newData.campaignType;
+    return newData;
   }
+
+  useEffect(() => {
+    if (uploadedFile.length == 0) {
+      setErrorsType({});
+    }
+  }, [uploadedFile]);
 
   useEffect(async () => {
     if (Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
       const facility = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility")?.[0]);
-      const boundary = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "boundaryWithTarget")?.[0]);
+      const boundary = await convertIntoSchema(
+        Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
+          (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+        )?.[0]
+      );
       const user = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "user")?.[0]);
-      const newFacilitySchema = await translateSchema(facility);
-      const newBoundarySchema = await translateSchema(boundary);
-      const newUserSchema = await translateSchema(user);
+      const schema = {
+        boundary: boundary,
+        facilityWithBoundary: facility,
+        userWithBoundary: user,
+      };
+
+      setConvertedSchema(schema);
+    }
+  }, [Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema, type]);
+
+  useEffect(async () => {
+    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
       const headers = {
         boundary: Object?.keys(newBoundarySchema?.properties),
         facilityWithBoundary: Object?.keys(newFacilitySchema?.properties),
@@ -179,8 +215,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setSheetHeaders(headers);
       setTranslatedSchema(schema);
     }
-  }, [Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema, type]);
-
+  }, [convertedSchema]);
 
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
@@ -210,7 +245,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       } else if (type === "facilityWithBoundary") {
         uploadType = "uploadFacility";
       }
-      onSelect(uploadType, { uploadedFile });
+      onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
       setExecutionCount((prevCount) => prevCount + 1);
     }
   });
@@ -262,7 +297,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
     data.forEach((item, index) => {
       if (!validate(item)) {
-        errors.push({ index: item?.["!row#number!"] + 1, errors: validate.errors });
+        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
       }
     });
 
@@ -271,16 +306,27 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-              let formattedError = `${error.instancePath}: ${error.message}`;
-              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-                formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
+              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
+              if (instancePath.startsWith("/")) {
+                instancePath = instancePath.slice(1);
               }
-              return formattedError;
+              if (error.keyword === "required") {
+                const missingProperty = error.params?.missingProperty || "";
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+              }
+              if(error.keyword === "type" && error.message === "must be string"){
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}` 
+              }
+              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join(", ")}`;
+              }
+              return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError}`;
             })
             .join(", ");
-          return `Data at row ${index}: ${formattedErrors}`;
+          return formattedErrors;
         })
-        .join(" , ");
+        .join(", ");
 
       setErrorsType((prevErrors) => ({
         ...prevErrors,
@@ -334,6 +380,75 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return true;
   };
 
+  const validateTargetData = (data, sheetName, targetError) => {
+    const ajv = new Ajv({ strict: false }); // Initialize Ajv
+    let validate = ajv.compile(translatedSchema[type]);
+    const errors = []; // Array to hold validation errors
+
+
+    data.forEach((item, index) => {
+      if (!validate(item)) {
+        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
+      }
+    });
+
+    // if (errors.length > 0) {
+    //   const errorMessage = errors
+    //     .map(({ index, errors }) => {
+    //       const formattedErrors = errors.map((error) => {
+            
+    //           let formattedError = `${error.instancePath}: ${error.message}`;
+    //           if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+    //             formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
+    //           }
+    //           return formattedError;
+    //         })
+    //         .join(", ");
+    //       return `Data at row ${index}: ${formattedErrors} at ${sheetName}`;
+    //     })
+    //     .join(" , ");
+    //   setIsError(true);
+    //   targetError.push(errorMessage);
+    //   return false;
+    // } else {
+    //   return true;
+    // }
+
+    if (errors.length > 0) {
+      const errorMessage = errors
+        .map(({ index, errors }) => {
+          const formattedErrors = errors
+            .map((error) => {
+              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
+              if (instancePath.startsWith("/")) {
+                instancePath = instancePath.slice(1);
+              }
+              if (error.keyword === "required") {
+                const missingProperty = error.params?.missingProperty || "";
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")} at ${sheetName}`;
+              }
+              if(error.keyword === "type" && error.message === "must be string"){
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}` 
+              }
+              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join(", ")}`;
+              }
+              return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError} at ${sheetName}`;
+            })
+            .join(", ");
+          return formattedErrors;
+        })
+        .join(", ");
+
+
+        setIsError(true);
+          targetError.push(errorMessage);
+          return false;
+    }else{
+      return true;
+    }
+  };
   // Function to compare arrays for equality
   const arraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
@@ -351,8 +466,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       header: 1,
     })[0];
 
+
     for (const header of mdmsHeaders) {
-      if (!expectedHeaders.includes(header)) {
+      if (!expectedHeaders.includes(t(header))) {
         const errorMessage = t("HCM_MISSING_HEADERS");
         setErrorsType((prevErrors) => ({
           ...prevErrors,
@@ -390,6 +506,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
 
     if (!isValid) return isValid;
+    const targetError = [];
 
     // Iterate over each sheet in the workbook, starting from the second sheet
     for (let i = 2; i < workbook.SheetNames.length; i++) {
@@ -404,42 +521,64 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
 
-      const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
-      const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
+      //   const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+      //   const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
 
-      const columnBeforeBoundaryCode = jsonData.map((row) => row[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]);
+      //   const columnBeforeBoundaryCode = jsonData.map((row) => row[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]);
 
-      // Getting the length of data in the column before the boundary code
-      const lengthOfColumnBeforeBoundaryCode = columnBeforeBoundaryCode.filter((value) => value !== undefined && value !== "").length;
+      //   // Getting the length of data in the column before the boundary code
+      //   const lengthOfColumnBeforeBoundaryCode = columnBeforeBoundaryCode.filter((value) => value !== undefined && value !== "").length;
 
-      const filteredData = jsonData
-        .filter((e) => e[headersBeforeBoundaryCode[headersBeforeBoundaryCode?.length - 1]])
-        .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
-      if (filteredData?.length == 0 || filteredData?.length != lengthOfColumnBeforeBoundaryCode) {
-        const errorMessage = t("HCM_MISSING_TARGET");
-        setErrorsType((prevErrors) => ({
-          ...prevErrors,
-          [type]: errorMessage,
-        }));
-        setIsError(true);
-        isValid = false;
-        break;
-      }
+      //   const filteredData = jsonData
+      //     .filter((e) => e[headersBeforeBoundaryCode[headersBeforeBoundaryCode?.length - 1]])
+      //     .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
+      //   if (filteredData?.length == 0 || filteredData?.length != lengthOfColumnBeforeBoundaryCode) {
+      //     const errorMessage = t("HCM_MISSING_TARGET");
+      //     setErrorsType((prevErrors) => ({
+      //       ...prevErrors,
+      //       [type]: errorMessage,
+      //     }));
+      //     setIsError(true);
+      //     isValid = false;
+      //     break;
+      //   }
 
-      const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
+      //   const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
 
-      if (targetValue <= 0 || targetValue >= 100000000) {
-        const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
-        setErrorsType((prevErrors) => ({
-          ...prevErrors,
-          [type]: errorMessage,
-        }));
-        setIsError(true);
-        isValid = false;
-        break;
+      //   if (targetValue <= 0 || targetValue >= 100000000) {
+      //     const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
+      //     setErrorsType((prevErrors) => ({
+      //       ...prevErrors,
+      //       [type]: errorMessage,
+      //     }));
+      //     setIsError(true);
+      //     isValid = false;
+      //     break;
+      //   }
+      // }
+
+      if (!validateTargetData(jsonData, sheetName, targetError)) {
+        // setShowInfoCard(true);
+        // isValid = false;
+        // break;
       }
     }
-
+    if (targetError.length > 0) {
+      const errorMessage = targetError.join(", ");
+      setErrorsType((prevErrors) => ({
+        ...prevErrors,
+        [type]: errorMessage,
+      }));
+      setShowInfoCard(true);
+      isValid = false;
+    } else {
+      setErrorsType((prevErrors) => ({
+        ...prevErrors,
+        [type]: "", // Clear the error message
+      }));
+      setShowInfoCard(false);
+      isValid = true;
+    }
     return isValid;
   };
 
@@ -464,6 +603,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
+
+          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]], { blankrows: true });
+          var jsonData = sheetData.map((row, index) => {
+            const rowData = {};
+            if (Object.keys(row).length > 0) {
+              Object.keys(row).forEach((key) => {
+                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
+              });
+              rowData["!row#number!"] = index + 1; // Adding row number
+              return rowData;
+            }
+          });
+
+          jsonData = jsonData.filter((element) => element !== undefined);
           if (type === "boundary") {
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
@@ -475,6 +628,22 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else if (type === "facilityWithBoundary") {
+            if (type === "facilityWithBoundary") {
+              const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
+              const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
+              if (activeColumnName && uniqueIdentifierColumnName) {
+                jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
+              }
+              if (jsonData.length == 0) {
+                const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+                setErrorsType((prevErrors) => ({
+                  ...prevErrors,
+                  [type]: errorMessage,
+                }));
+                setIsError(true);
+                return;
+              }
+            }
             if (SheetNames !== t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
@@ -513,20 +682,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
 
-          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[1]], { blankrows: true });
-          var jsonData = sheetData.map((row, index) => {
-            const rowData = {};
-            if (Object.keys(row).length > 0) {
-              Object.keys(row).forEach((key) => {
-                rowData[key] = row[key] === undefined || row[key] === "" ? "" : row[key];
-              });
-              rowData["!row#number!"] = index + 1; // Adding row number
-              return rowData;
-            }
-          });
-
-          jsonData = jsonData.filter((element) => element !== undefined);
-
           if (type === "boundary" && workbook?.SheetNames.length == 1) {
             if (!validateTarget(jsonData, headersToValidate)) {
               return;
@@ -542,11 +697,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             setIsError(true);
             return;
           }
-
-          if (validateData(jsonData, SheetNames)) {
-            resolve(true);
-          } else {
-            setShowInfoCard(true);
+          if (type !== "boundary") {
+            if (validateData(jsonData, SheetNames)) {
+              resolve(true);
+            } else {
+              setShowInfoCard(true);
+            }
           }
         } catch (error) {
           console.log("error", error);
@@ -596,7 +752,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setApiError(null);
     setErrorsType({});
-    // setShowToast(null);
+    setShowToast(null);
   };
 
   const onFileDownload = (file) => {
@@ -608,22 +764,33 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      if (!errorsType[type] && uploadedFile?.length > 0) {
+      if (!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) {
         // setShowToast({ key: "info", label: t("HCM_VALIDATION_IN_PROGRESS") });
         setIsValidation(true);
         setIsError(true);
+        setLoader(true);
 
         try {
-          const temp = await Digit.Hooks.campaign.useResourceData(uploadedFile, params?.hierarchyType, type, tenantId, id);
+          const temp = await Digit.Hooks.campaign.useResourceData(
+            uploadedFile,
+            params?.hierarchyType,
+            type,
+            tenantId,
+            id,
+            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
+          );
           if (temp?.isError) {
+            setLoader(false);
+            setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
             setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
-            setIsValidation(false);
+
             return;
           }
           if (temp?.status === "completed") {
+            setLoader(false);
             setIsValidation(false);
             if (temp?.additionalDetails?.sheetErrors.length === 0) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
@@ -644,7 +811,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 // setIsValidation(true);
                 return;
               } else {
-                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
                 const fileData = fileUrl
                   .map((i) => {
@@ -668,20 +834,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     };
                   })
                   .map(({ id, ...rest }) => rest);
-                onFileDelete(uploadedFile);
+                // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
+                setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 setIsError(true);
               }
             }
           } else {
+            setLoader(false);
             setIsValidation(false);
-            setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
+            // setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
             const processedFileStore = temp?.processedFilestoreId;
             if (!processedFileStore) {
               setShowToast({ key: "error", label: t("HCM_VALIDATION_FAILED"), transitionTime: 5000000 });
               return;
             } else {
-              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
               const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch([processedFileStore], tenantId);
               const fileData = fileUrl
@@ -705,8 +872,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                   };
                 })
                 .map(({ id, ...rest }) => rest);
-              onFileDelete(uploadedFile);
+              // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
+              setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
             }
           }
@@ -859,7 +1027,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
   return (
     <>
-      {isValidation && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
+      {loader && <LoaderWithGap text={"CAMPAIGN_VALIDATION_INPROGRESS"} />}
       <Card>
         <div className="campaign-bulk-upload">
           <Header className="digit-form-composer-sub-header">
@@ -892,7 +1060,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <React.Fragment key={type}>
                 {errorsType[type] && (
                   <React.Fragment>
-                    {errorsType[type].split(",").map((error, index) => (
+                    {errorsType[type].split(",").slice(0,50).map((error, index) => (
                       <React.Fragment key={index}>
                         {index > 0 && <br />}
                         {error.trim()}
