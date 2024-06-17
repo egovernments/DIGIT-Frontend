@@ -31,4 +31,6 @@ export const SHEET_PASSWORD = "eGov_sheet_password";
 
 export const SHEET_COLUMN_WIDTH = 40;
 
-export const SCHEMA_PROPERTIES_PREFIX = "SCHEMA_DISPLAY";
+export const SCHEMA_PROPERTIES_PREFIX = "DISPLAY";
+
+export const UNPROTECT_TILL_ROW = "10000";

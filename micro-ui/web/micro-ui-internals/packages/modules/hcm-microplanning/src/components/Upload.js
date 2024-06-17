@@ -35,7 +35,7 @@ import { v4 as uuidv4 } from "uuid";
 import { addBoundaryData, createTemplate, fetchBoundaryData, filterBoundaries } from "../utils/createTemplate";
 import XLSX from "xlsx";
 import ExcelJS from "exceljs";
-import { updateFontNameToRoboto } from "../utils/excelUtils";
+import { freezeCellsWithData, freezeSheetValues, freezeWorkbookValues, performUnfreezeCells, unfreezeColumnsByHeader, updateFontNameToRoboto } from "../utils/excelUtils";
 const page = "upload";
 
 const Upload = ({
@@ -1512,10 +1512,20 @@ const downloadTemplate = async ({
     colorHeaders(
       workbook,
       [...hierarchy.map((item) => t(item)), t(commonColumn)],
-      schema?.schema?.Properties ? Object.keys(schema.schema.Properties).map((item) => t(item)) : []
+      schema?.schema?.Properties ? Object.keys(schema.schema.Properties).map((item) => t(generateLocalisationKeyForSchemaProperties(item))) : []
     );
-    // freezeData
-    // protectData(workbook);
+    // protextData
+    await protectData({
+      workbook,
+      hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
+      hierarchyLevelName,
+      addFacilityData: schema?.template?.includeFacilityData,
+      schema,
+      boundaries: campaignData?.boundaries,
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      hierarchyType,
+      t,
+    });
 
     // Write the workbook to a buffer
     workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
@@ -1539,9 +1549,48 @@ const downloadTemplate = async ({
   }
 };
 
-// const protectData=(workbook)=>{
-
-// }
+const protectData = async ({
+  workbook,
+  hierarchyLevelWiseSheets = true,
+  hierarchyLevelName,
+  addFacilityData = false,
+  schema,
+  boundaries,
+  tenantId,
+  hierarchyType,
+  t,
+}) => {
+  if (hierarchyLevelWiseSheets) {
+    if (addFacilityData) {
+      await freezeSheetValues(workbook, t(BOUNDARY_DATA_SHEET));
+      await performUnfreezeCells(workbook, t(FACILITY_DATA_SHEET));
+      if (schema?.template?.facilitySchemaApiMapping) {
+      } else {
+      }
+    } else {
+      await freezeWorkbookValues(workbook);
+      await unfreezeColumnsByHeader(
+        workbook,
+        schema?.schema?.Properties ? Object.keys(schema.schema.Properties).map((item) => t(generateLocalisationKeyForSchemaProperties(item))) : []
+      );
+    }
+  } else {
+    // total boundary Data in one sheet
+    if (addFacilityData) {
+      await freezeSheetValues(workbook, t(BOUNDARY_DATA_SHEET));
+      await performUnfreezeCells(workbook, t(FACILITY_DATA_SHEET));
+      if (schema?.template?.facilitySchemaApiMapping) {
+      } else {
+      }
+    } else {
+      await freezeWorkbookValues(workbook);
+      await unfreezeColumnsByHeader(
+        workbook,
+        schema?.schema?.Properties ? Object.keys(schema.schema.Properties).map((item) => t(generateLocalisationKeyForSchemaProperties(item))) : []
+      );
+    }
+  }
+};
 
 const colorHeaders = async (workbook, headerList1, headerList2) => {
   try {

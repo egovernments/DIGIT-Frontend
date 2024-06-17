@@ -137,7 +137,10 @@ const fillDataWithBlanks = (data, tillRow) => {
   const maxLength = Math.max(...data.map((row) => row.length));
   return data.map((row) => [...row, ...new Array(maxLength - row.length).fill("")]);
 };
-
+const generateLocalisationKeyForSchemaProperties = (code) => {
+  if (!code) return code;
+  return SCHEMA_PROPERTIES_PREFIX + "_" + code;
+};
 /**
  *
  * @param {array} xlsxData , xlsx data
@@ -151,10 +154,7 @@ const addSchemaData = (xlsxData, schema, extraColumnsToAdd) => {
   let columnSchema = schema.schema?.Properties || {};
   let newXlsxData = [];
   let columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
-  const generateLocalisationKeyForSchemaProperties = (code) => {
-    if (!code) return code;
-    return SCHEMA_PROPERTIES_PREFIX + "_" + code;
-  };
+
   for (const [key, value] of Object.entries(columnSchema)) {
     if (key === commonColumn) continue;
 
@@ -388,7 +388,7 @@ const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
   }
   headers.push(...additionalCols);
   // Combine headers and data rows
-  const arrayOfArrays = [headers, ...dataRow];
+  const arrayOfArrays = [headers.map((item) => generateLocalisationKeyForSchemaProperties(item)), ...dataRow];
 
   let facilitySheet = {
     sheetName: FACILITY_DATA_SHEET,

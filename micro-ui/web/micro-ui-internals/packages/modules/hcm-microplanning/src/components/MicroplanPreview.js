@@ -151,24 +151,28 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(() => {
     if (!setMicroplanData) return;
-    let tempData = filterMicroplanDataToShowWithHierarchySelection(data, {}, hierarchy);
-    // Adding resources to the data we need to show
-    tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
-      tempData,
-      resources,
-      hypothesisAssumptionsList,
-      formulaConfiguration,
-      userEditedResources,
-      t
-    );
-    setMicroplanData((previous) => ({
-      ...previous,
-      microplanPreview: {
-        previewData: tempData,
+    try {
+      let tempData = filterMicroplanDataToShowWithHierarchySelection(data, {}, hierarchy);
+      // Adding resources to the data we need to show
+      tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+        tempData,
+        resources,
+        hypothesisAssumptionsList,
+        formulaConfiguration,
         userEditedResources,
-      },
-    }));
-    setCheckDataCompletion("perform-action");
+        t
+      );
+      setMicroplanData((previous) => ({
+        ...previous,
+        microplanPreview: {
+          previewData: tempData,
+          userEditedResources,
+        },
+      }));
+      setCheckDataCompletion("perform-action");
+    } catch (error) {
+      console.error("Failed to update data:", error);
+    }
   }, [
     resources,
     boundarySelections,

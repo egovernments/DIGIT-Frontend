@@ -73,8 +73,8 @@ const Hypothesis = ({
     if (!hypothesisAssumptions) return;
     let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!temp?.assumptions) return;
-    const hypothesisAssumptionsList = temp.assumptions;
-    if (hypothesisAssumptionsList) setOrignalHypothesisCount(hypothesisAssumptionsList.length);
+    const hypothesisAssumptionsList = Array.isArray(temp.assumptions) ? temp.assumptions : [];
+    setOrignalHypothesisCount(hypothesisAssumptionsList.length);
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
 
     let newAssumptions = setAutofillHypothesisData(

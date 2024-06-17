@@ -37,7 +37,7 @@ const RuleEngine = ({
   const [validationSchemas, setValidationSchemas] = useState([]);
   const [autofillData, setAutoFillData] = useState([]);
   const { state, dispatch } = useMyContext();
-  const [orignalRuleOutputCount, setOrignalRuleOutputCount] = useState(0);
+  const [originalRuleOutputCount, setOriginalRuleOutputCount] = useState(0);
   // const [toast, setToast] = useState();
   const [pureInputList, setPureInputList] = useState([]);
   // Set TourSteps
@@ -146,9 +146,12 @@ const RuleEngine = ({
     if (ruleConfigureOutput) temp = ruleConfigureOutput?.find((item) => item.campaignType === campaignType);
     if (temp?.data) {
       let data = temp.data;
-      setOrignalRuleOutputCount(data.length);
+      setOriginalRuleOutputCount(data.length);
       microplanData?.ruleEngine?.forEach((item) => {
-        if (item.active) data = data.filter((e) => e !== item?.output);
+        if (item.active) {
+          let filteredData = data.filter((e) => e !== item?.output);
+          data = filteredData;
+        }
       });
       outputs = data;
       setOutputs(data);
@@ -267,7 +270,7 @@ const RuleEngine = ({
             className="add-button"
             onButtonClick={() => addRulesHandler(setRules)}
             label={t("ADD_ROW")}
-            isDisabled={rules?.filter((item) => item.active)?.length === orignalRuleOutputCount ? true : false}
+            isDisabled={rules?.filter((item) => item.active)?.length === originalRuleOutputCount}
           />
         </div>
       </div>

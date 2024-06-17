@@ -503,9 +503,7 @@ const processDropdownForNestedMultiSelect = (dropDownOptions) => {
 };
 
 const transformIntoLocalisationCode = (code) => {
-  if (!code) return code;
-  const localizedString = code.toUpperCase();
-  return localizedString;
+  return code?.toUpperCase();
 };
 
 export default {
