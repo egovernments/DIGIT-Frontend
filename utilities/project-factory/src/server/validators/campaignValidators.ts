@@ -17,9 +17,10 @@ import { getSheetData, getTargetWorkbook } from "../api/genericApis";
 const _ = require('lodash');
 import { searchDataService } from "../service/dataManageService";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
-import { campaignStatuses, resourceDataStatuses } from "../config/constants";
+import { campaignStatuses, processTracks, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
 import addAjvErrors from "ajv-errors";
+import { persistTrack } from "../utils/processTrackUtils";
 
 
 
@@ -1015,6 +1016,9 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     if (actionInUrl == "update") {
         if (!id) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "id is required for update");
+        }
+        else {
+            persistTrack(id, processTracks.validation.type, processTracks.validation.status);
         }
     }
     if (!CampaignDetails) {

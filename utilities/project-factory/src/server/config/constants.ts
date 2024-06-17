@@ -9,7 +9,7 @@ export const CONSTANTS: any = {
             INTERNAL_SERVER_ERROR: "Internal server error",
             INVALID_PAGINATION: "Invalid pagination",
             KAFKA_ERROR: "Some error occured in kafka",
-            SCHEMA_ERROR : " Schema related error",
+            SCHEMA_ERROR: " Schema related error",
             RESPONSE_NOT_FOUND_ERROR: "Response not found"
         },
         FILE: {
@@ -115,6 +115,14 @@ export const generatedResourceStatuses: any = {
     failed: "failed",
     completed: "completed",
     expired: "expired"
+}
+
+export const processTracks: any = {
+    validation: {
+        type: "HCM_PROCESS_TRACKS_TYPE_VALIDATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_VALIDATION",
+    },
+
 }
 
 

@@ -7,6 +7,17 @@ async function getProcessDetails(id: any): Promise<any> {
     const query = `SELECT * FROM ${config?.DB_CONFIG.DB_CAMPAIGN_PROCESS_TABLE_NAME} WHERE id = $1`;
     const values = [id];
     const queryResponse = await executeQuery(query, values);
+    if (queryResponse.rows.length === 0) {
+        return {
+            id: uuidv4(),
+            campaignId: id,
+            details: {},
+            additionalDetails: {},
+            createdTime: Date.now(),
+            lastModifiedTime: Date.now(),
+            isNew: true
+        }
+    }
     return queryResponse.rows[0]; // Assuming only one row is expected
 }
 
@@ -15,20 +26,20 @@ async function persistTrack(
     type: any,
     status: any,
     details?: any,
-    additionalDetails?: any,
-    id?: any
+    additionalDetails?: any
 ): Promise<void> {
     let processDetails: any;
 
-    if (id) {
-        processDetails = await getProcessDetails(id);
-        details = { ...processDetails?.details, ...details };
-        additionalDetails = { ...processDetails?.additionalDetails, ...additionalDetails };
+    if (campaignId) {
+        processDetails = await getProcessDetails(campaignId);
+        details = { ...processDetails?.details, ...details } || {};
+        additionalDetails = { ...processDetails?.additionalDetails, ...additionalDetails } || {};
     }
 
-    const processId = id || uuidv4();
-    const createdTime = Date.now();
+    const processId = processDetails?.id ? processDetails?.id : uuidv4();
+    const createdTime = processDetails?.createdTime ? processDetails?.createdTime : Date.now();
     const lastModifiedTime = Date.now();
+    processDetails.lastModifiedTime = processDetails.isNew ? processDetails.lastModifiedTime : lastModifiedTime;
 
     processDetails = {
         id: processId,
@@ -45,7 +56,7 @@ async function persistTrack(
         processDetails
     };
 
-    const topic = id ? config?.kafka?.KAFKA_UPDATE_PROCESS_TRACK_TOPIC : config?.kafka?.KAFKA_SAVE_PROCESS_TRACK_TOPIC;
+    const topic = processDetails.isNew ? config?.kafka?.KAFKA_SAVE_PROCESS_TRACK_TOPIC : config?.kafka?.KAFKA_UPDATE_PROCESS_TRACK_TOPIC;
     produceModifiedMessages(produceObject, topic);
 }
 
