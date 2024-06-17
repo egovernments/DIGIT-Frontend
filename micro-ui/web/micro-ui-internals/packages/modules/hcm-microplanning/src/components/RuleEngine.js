@@ -537,7 +537,14 @@ const InterractableSection = React.memo(
                   />
                 </div>
                 <div>
-                  <button className="delete-button" onClick={() => deleteHandler(item)} aria-label={t("DELETE")} role="button" type="button">
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteHandler(item)}
+                    onKeyPress={(e) => e.key === "Enter" && deleteHandler(item)}
+                    aria-label={t("DELETE")}
+                    role="button"
+                    type="button"
+                  >
                     <div>{Trash && <Trash width={"0.8rem"} height={"1rem"} fill={PRIMARY_THEME_COLOR} />}</div>
                     <p>{t("DELETE")}</p>
                   </button>

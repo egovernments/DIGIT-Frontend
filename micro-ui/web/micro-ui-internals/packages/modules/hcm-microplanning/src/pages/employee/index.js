@@ -9,14 +9,6 @@ import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
 import { useMyContext } from "../../utils/context";
 
-import { UIConfiguration } from "./MDMS/UIConfiguration.json";
-import { Schemas } from "./MDMS/Schemas.json";
-import { AutoFilledRuleConfigurations } from "./MDMS/AutoFilledRuleConfigurations.json";
-import { Resources } from "./MDMS/Resources.json";
-import { RuleConfigureOutput } from "./MDMS/RuleConfigureOutput.json";
-import { MicroplanPreviewAggregates } from "./MDMS/MicroplanPreviewAggregates.json";
-import { HierarchyConfigurations } from "./MDMS/HierarchyConfigurations.json";
-
 const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
@@ -89,13 +81,6 @@ const App = ({ path }) => {
           type: "SETINITDATA",
           state: {
             ...data?.["hcm-microplanning"],
-            UIConfiguration,
-            Schemas,
-            AutoFilledRuleConfigurations,
-            Resources,
-            RuleConfigureOutput,
-            MicroplanPreviewAggregates,
-            HierarchyConfigurations,
           },
         });
       },

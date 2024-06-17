@@ -181,7 +181,6 @@ const MicroplanPreview = ({
     formulaConfiguration,
     userEditedResources,
     setMicroplanData,
-    userEditedResources,
     setCheckDataCompletion,
   ]);
 

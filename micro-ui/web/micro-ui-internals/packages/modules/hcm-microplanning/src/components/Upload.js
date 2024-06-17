@@ -35,7 +35,7 @@ import { v4 as uuidv4 } from "uuid";
 import { addBoundaryData, createTemplate, fetchBoundaryData, filterBoundaries } from "../utils/createTemplate";
 import XLSX from "xlsx";
 import ExcelJS from "exceljs";
-import { freezeCellsWithData, freezeSheetValues, freezeWorkbookValues, performUnfreezeCells, unfreezeColumnsByHeader, updateFontNameToRoboto } from "../utils/excelUtils";
+import { freezeSheetValues, freezeWorkbookValues, performUnfreezeCells, unfreezeColumnsByHeader, updateFontNameToRoboto } from "../utils/excelUtils";
 const page = "upload";
 
 const Upload = ({
