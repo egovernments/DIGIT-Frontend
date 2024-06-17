@@ -991,11 +991,7 @@ const extractGeoData = (
           if (value?.isLocationDataColumns) {
             latLngColumns.push(t(key));
           }
-          if (
-            filterDataOrigin?.layerDataOrigin &&
-            filterDataOrigin?.layerDataOrigin.includes(fileData?.section) &&
-            value?.isFilterPropertyOfMapSection
-          ) {
+          if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section) && value?.isFilterPropertyOfMapSection) {
             filterProperty.push(key);
           }
           if (value?.isVisualizationPropertyOfMapSection) {
