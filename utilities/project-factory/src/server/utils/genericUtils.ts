@@ -340,7 +340,6 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
     generatedResource = { generatedResource: newEntryResponse }
     // send message to create toppic
     logger.info(`processing the generate request for type ${type}`)
-    console.log(generatedResource, "88888888888")
     produceModifiedMessages(generatedResource, createGeneratedResourceTopic);
     const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
     const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
@@ -670,10 +669,8 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
   logger.info(`generation of new Resource of type ${request?.query?.type} started`)
-  console.log(request?.query?.campaignId, "cammmmmmmmmmm")
   const auditResponse = await searchAuditWithCamapignId(request, request?.query?.campaignId)
   const auditId = auditResponse?.AuditLogs?.[0]?.id;
-  console.log(auditResponse, "auuuuuuuuuuuuu")
   newEntryResponse.auditId = auditId;
   request.body.generatedResource = newEntryResponse;
   fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
@@ -697,7 +694,6 @@ function handleGenerateError(newEntryResponse: any, generatedResource: any, erro
 }
 
 async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any) {
-  console.log(responseData, "kkkkkkkkkkkkkk")
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
   let generatedResource: any;
@@ -730,7 +726,6 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 async function processGenerate(request: any) {
   // fetch the data from db  to check any request already exists
   const responseData = await searchGeneratedResources(request);
-  console.log(responseData, "1111111111111111111")
   // modify response from db 
   const modifiedResponse = await enrichAuditDetails(responseData);
   // generate new random id and make filestore id null

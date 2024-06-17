@@ -1794,7 +1794,6 @@ async function checkCampaignObjectSame(request: any, campaignIdFromDb: any, audi
 
 
 async function searchAuditWithCamapignId(request: any, campaignId: any, auditId?: any) {
-    console.log(campaignId,"cccccccccccccccccccccccccccc")
     const { RequestInfo = {} } = request?.body || {};
     const requestBody = {
         RequestInfo
@@ -1809,7 +1808,6 @@ async function searchAuditWithCamapignId(request: any, campaignId: any, auditId?
     if (auditId) {
         params.id = auditId;
     }
-    console.log(params,"jjjjjjjjjjjjj")
     const url = config.host.auditHost + config.paths.auditSearch;
     const auditResponse = await httpRequest(url, requestBody, params);
     return auditResponse
