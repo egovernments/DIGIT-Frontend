@@ -48,7 +48,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
-  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeOut" }]);
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
   const [sheetHeaders, setSheetHeaders] = useState({});
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
@@ -306,16 +306,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-              //       let formattedError = `${error.instancePath}: ${error.message}`;
-              //       if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-              //         formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
-              //       }
-              //       return formattedError;
-              //     })
-              //     .join(", ");
-              //   return `Data at row ${index}: ${formattedErrors}`;
-              // })
-              // .join(" , ");
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (instancePath.startsWith("/")) {
                 instancePath = instancePath.slice(1);
@@ -395,6 +385,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
+
     data.forEach((item, index) => {
       if (!validate(item)) {
         errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
@@ -423,22 +414,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     //   return true;
     // }
 
-    console.log("error" , errors);
     if (errors.length > 0) {
       const errorMessage = errors
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-              //       let formattedError = `${error.instancePath}: ${error.message}`;
-              //       if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-              //         formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
-              //       }
-              //       return formattedError;
-              //     })
-              //     .join(", ");
-              //   return `Data at row ${index}: ${formattedErrors}`;
-              // })
-              // .join(" , ");
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (instancePath.startsWith("/")) {
                 instancePath = instancePath.slice(1);
@@ -460,6 +440,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           return formattedErrors;
         })
         .join(", ");
+
 
         setIsError(true);
           targetError.push(errorMessage);
@@ -651,7 +632,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
               const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
               if (activeColumnName && uniqueIdentifierColumnName) {
-                jsonData = jsonData.filter((item) => item[activeColumnName] === "Active" || !item[uniqueIdentifierColumnName]);
+                jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
               }
               if (jsonData.length == 0) {
                 const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
@@ -796,7 +777,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             type,
             tenantId,
             id,
-            baseTimeOut?.["HCM-ADMIN-CONSOLE"]?.baseTimeOut?.[0]?.baseTimeOut
+            baseTimeOut?.["HCM-ADMIN-CONSOLE"]
           );
           if (temp?.isError) {
             setLoader(false);
@@ -853,7 +834,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     };
                   })
                   .map(({ id, ...rest }) => rest);
-                onFileDelete(uploadedFile);
+                // onFileDelete(uploadedFile);
                 setUploadedFile(fileData);
                 setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN") });
                 setIsError(true);
@@ -891,7 +872,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                   };
                 })
                 .map(({ id, ...rest }) => rest);
-              onFileDelete(uploadedFile);
+              // onFileDelete(uploadedFile);
               setUploadedFile(fileData);
               setShowToast({ key: "warning", label: t("HCM_CHECK_FILE_AGAIN"), transitionTime: 5000000 });
               setIsError(true);
@@ -1079,7 +1060,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <React.Fragment key={type}>
                 {errorsType[type] && (
                   <React.Fragment>
-                    {errorsType[type].split(",").map((error, index) => (
+                    {errorsType[type].split(",").slice(0,50).map((error, index) => (
                       <React.Fragment key={index}>
                         {index > 0 && <br />}
                         {error.trim()}

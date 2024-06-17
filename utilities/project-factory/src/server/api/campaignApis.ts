@@ -635,36 +635,21 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
         RequestInfo: request?.body?.RequestInfo,
       }
       _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
-      var gotFailed = true, retryCount = 7;
-      while (gotFailed && retryCount > 0) {
-        try {
-          creationTime = Date.now();
-          retryCount = retryCount - 1;
-          gotFailed = false;
-          if (type == "facility") {
-            for (const facility of newRequestBody.Facilities) {
-              facility.address = {}
-            }
-            var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
-          }
-          else if (type == "user") {
-            var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
-            if (responsePayload?.Employees && responsePayload?.Employees?.length > 0) {
-              enrichDataToCreateForUser(dataToCreate, responsePayload);
-            }
-            else {
-              throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Some internal server error occured during user creation.");
-            }
-          }
-        } catch (error) {
-          var e = error;
-          gotFailed = true;
-          logger.info("Creation got failed, Waiting for 30 seconds to retry.. retryCounts left : " + retryCount)
-          await new Promise(resolve => setTimeout(resolve, 30000));
+      creationTime = Date.now();
+      if (type == "facility") {
+        for (const facility of newRequestBody.Facilities) {
+          facility.address = {}
         }
+        var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
       }
-      if (gotFailed) {
-        throw e;
+      else if (type == "user") {
+        var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+        if (responsePayload?.Employees && responsePayload?.Employees?.length > 0) {
+          enrichDataToCreateForUser(dataToCreate, responsePayload);
+        }
+        else {
+          throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Some internal server error occured during user creation.");
+        }
       }
       var activity = await generateActivityMessage(request?.body?.ResourceDetails?.tenantId, request.body, newRequestBody, responsePayload, type, createAndSearchConfig?.createBulkDetails?.url, responsePayload?.statusCode)
       logger.info(`Activity : ${createAndSearchConfig?.createBulkDetails?.url} status:  ${responsePayload?.statusCode}`);
@@ -704,7 +689,11 @@ async function handleResouceDetailsError(request: any, error: any) {
         message: error.message || ''
       })
     };
-    produceModifiedMessages(request?.body, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
+    const persistMessage: any = { ResourceDetails: request.body.ResourceDetails }
+    if (request?.body?.ResourceDetails?.action == "create") {
+      persistMessage.ResourceDetails.additionalDetails = {}
+    }
+    produceModifiedMessages(persistMessage, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
   }
   if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
     logger.info("Waiting for 2 seconds");

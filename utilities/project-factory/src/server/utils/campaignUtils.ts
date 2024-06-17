@@ -471,7 +471,11 @@ async function generateProcessedFileAndPersist(request: any, localizationMap?: {
         },
         additionalDetails: { ...request?.body?.ResourceDetails?.additionalDetails, sheetErrors: request?.body?.additionalDetailsErrors } || {}
     };
-    produceModifiedMessages(request?.body, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
+    const persistMessage: any = { ResourceDetails: request.body.ResourceDetails }
+    if (request?.body?.ResourceDetails?.action == "create") {
+        persistMessage.ResourceDetails.additionalDetails = {}
+    }
+    produceModifiedMessages(persistMessage, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
     logger.info(`ResourceDetails to persist : ${request.body.ResourceDetails.type}`);
     if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
         logger.info("Activities to persist : ")
@@ -650,6 +654,16 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
 function removeBoundariesFromRequest(request: any) {
     if (request?.body?.CampaignDetails?.boundaries && Array.isArray(request?.body?.CampaignDetails?.boundaries) && request?.body?.CampaignDetails?.boundaries?.length > 0) {
         request.body.CampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries?.filter((boundary: any) => !boundary?.insertedAfter)
+    }
+}
+
+async function enrichAndPersistProjectCampaignForFirst(request: any, actionInUrl: any, firstPersist: boolean = false, localizationMap?: any) {
+    removeBoundariesFromRequest(request);
+    if (actionInUrl == "create") {
+        await enrichAndPersistCampaignForCreate(request, firstPersist)
+    }
+    else if (actionInUrl == "update") {
+        await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
 }
 
@@ -1322,7 +1336,7 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     if (actionInUrl == "create") {
         request.body.CampaignDetails.id = uuidv4()
     }
-    await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
+    await enrichAndPersistProjectCampaignForFirst(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
 
