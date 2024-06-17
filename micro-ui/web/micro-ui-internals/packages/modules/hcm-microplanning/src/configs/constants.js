@@ -26,3 +26,5 @@ export const BOUNDARY_DATA_SHEET = "boundaryData";
 export const FACILITY_DATA_SHEET = "facilityData";
 
 export const FILE_STORE = "microplan";
+
+export const SHEET_PASSWORD = "eGov_sheet_password";

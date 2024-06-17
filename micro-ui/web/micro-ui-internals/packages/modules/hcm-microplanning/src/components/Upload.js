@@ -18,6 +18,7 @@ import {
   ACCEPT_HEADERS,
   BOUNDARY_DATA_SHEET,
   EXCEL,
+  FACILITY_DATA_SHEET,
   FILE_STORE,
   GEOJSON,
   LOCALITY,
@@ -333,6 +334,7 @@ const Upload = ({
       Schemas: validationSchemas,
       HierarchyConfigurations: state?.HierarchyConfigurations,
       setLoader,
+      hierarchy,
       t,
     };
     downloadTemplate(downloadParams);
@@ -1520,6 +1522,7 @@ const downloadTemplate = async ({
   Schemas,
   HierarchyConfigurations,
   setLoader,
+  hierarchy,
   t,
 }) => {
   try {
@@ -1553,36 +1556,7 @@ const downloadTemplate = async ({
     // Create a new workbook
     const workbook = new ExcelJS.Workbook();
 
-    translatedTemplate.forEach(({ sheetName, data }) => {
-      // Create a new worksheet with properties
-      const worksheet = workbook.addWorksheet(sheetName, {
-        properties: {
-          outlineLevelCol: 1,
-          defaultRowHeight: 15,
-        },
-      });
-
-      // Add data to worksheet
-      for (const row of data) {
-        worksheet.addRow(row);
-      }
-
-      // Set column widths
-      const columnCount = data?.[0]?.length || 0;
-      const wscols = Array(columnCount).fill({ width: 30 });
-      wscols.forEach((col, colIndex) => {
-        worksheet.getColumn(colIndex + 1).width = col.width;
-      });
-
-      // Make the first row bold
-      if (worksheet.getRow(1)) {
-        worksheet.getRow(1).font = { bold: true };
-      }
-
-      // Adjust properties afterwards if needed (not supported by worksheet-writer)
-      worksheet.properties.outlineLevelCol = 2;
-      worksheet.properties.defaultRowHeight = 20; // Adjusted row height
-    });
+    formatTemplate(translatedTemplate, workbook);
 
     // Write the workbook to a buffer
     workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
@@ -1604,6 +1578,39 @@ const downloadTemplate = async ({
     console.error(error?.message);
     setToast({ state: "error", message: t("ERROR_DOWNLOADING_TEMPLATE") });
   }
+};
+
+const formatTemplate = (translatedTemplate, workbook) => {
+  translatedTemplate.forEach(({ sheetName, data }) => {
+    // Create a new worksheet with properties
+    const worksheet = workbook.addWorksheet(sheetName, {
+      properties: {
+        outlineLevelCol: 1,
+        defaultRowHeight: 15,
+      },
+    });
+
+    // Add data to worksheet
+    for (const row of data) {
+      worksheet.addRow(row);
+    }
+
+    // Set column widths
+    const columnCount = data?.[0]?.length || 0;
+    const wscols = Array(columnCount).fill({ width: 30 });
+    wscols.forEach((col, colIndex) => {
+      worksheet.getColumn(colIndex + 1).width = col.width;
+    });
+
+    // Make the first row bold
+    if (worksheet.getRow(1)) {
+      worksheet.getRow(1).font = { bold: true };
+    }
+
+    // Adjust properties afterwards if needed (not supported by worksheet-writer)
+    worksheet.properties.outlineLevelCol = 2;
+    worksheet.properties.defaultRowHeight = 20; // Adjusted row height
+  });
 };
 
 const translateTemplate = (template, t) => {

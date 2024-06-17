@@ -550,9 +550,18 @@ const ChoroplethSelection = memo(
             </div>
             <Button
               variation="secondary"
-              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "400" }}
+              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "600", display: "flex", alignItems: "center" }}
               className="button-primary"
-              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                border: 0,
+                padding: "0 0.7rem 0 0.7rem",
+                height: "2rem",
+                maxHeight: "2rem",
+              }}
               icon={"AutoRenew"}
               label={t("CLEAR_FILTER")}
               onClick={() => setChoroplethProperty()}
@@ -614,9 +623,18 @@ const FilterSection = memo(
             </div>
             <Button
               variation="secondary"
-              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "400" }}
+              textStyles={{ width: "fit-content", fontSize: "0.875rem", fontWeight: "600", display: "flex", alignItems: "center" }}
               className="button-primary"
-              style={{ width: "100%", display: "flex", alignItem: "center", justifyContent: "flex-start", border: 0, padding: "0 0.7rem 0 0.7rem" }}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                border: 0,
+                padding: "0 0.7rem 0 0.7rem",
+                height: "2rem",
+                maxHeight: "2rem",
+              }}
               icon={"AutoRenew"}
               label={t("CLEAR_ALL_FILTERS")}
               onClick={() => setFilterSelections([])}
@@ -711,7 +729,8 @@ const BoundarySelection = memo(
           icon="FilterAlt"
           variation="secondary"
           className="button-primary"
-          textStyles={{ width: "fit-content" }}
+          style={{ height: "2.5rem", maxHeight: "2.5rem" }}
+          textStyles={{ width: "fit-content", display: "flex", alignItems: "center", fontWeight: "600" }}
           label={t("BUTTON_FILTER_BY_BOUNDARY")}
           onClick={() => setIsboundarySelectionSelected((previous) => !previous)}
         />
@@ -793,8 +812,8 @@ const BoundarySelection = memo(
               <Button
                 variation="secondary"
                 className="button-primary"
-                textStyles={{ width: "fit-content" }}
-                style={{ marginTop: "0.7rem", width: "14rem", display: "flex", alignItem: "start" }}
+                textStyles={{ width: "fit-content", display: "flex", alignItems: "center" }}
+                style={{ marginTop: "0.7rem", width: "14rem", display: "flex", alignItems: "center", height: "2rem", maxHeight: "2rem" }}
                 icon={"AutoRenew"}
                 label={t("CLEAR_ALL_FILTERS")}
                 onClick={handleClearAll}
