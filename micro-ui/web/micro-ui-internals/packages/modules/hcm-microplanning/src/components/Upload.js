@@ -1316,7 +1316,7 @@ const UploadedFile = ({
           style={{ margin: "0" }}
           label={t("ERROR_UPLOADED_FILE")}
           additionalElements={[
-            <InfoButton infobuttontype="error" label={"ERROR_VIEW_DETAIL_ERRORS"} onClick={openDataPreview} />,
+            <InfoButton infobuttontype="error" label={t("ERROR_VIEW_DETAIL_ERRORS")} onClick={openDataPreview} />,
             <div className="file-upload-error-container">
               {error?.map((item) => {
                 if (item !== "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {

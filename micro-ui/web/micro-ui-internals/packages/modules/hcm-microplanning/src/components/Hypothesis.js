@@ -197,7 +197,7 @@ const Hypothesis = ({
           className="add-button"
           onButtonClick={() => addAssumptionsHandler(setAssumptions)}
           label={t("ADD_ROW")}
-          isDisabled={assumptions?.filter((item) => item.active)?.length === orignalHypothesisCount ? true : false}
+          isDisabled={assumptions?.filter((item) => item.active)?.length === orignalHypothesisCount}
         />
       </div>
       <div className="popup-wrap-focus">
