@@ -14,6 +14,56 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
+
+const epochTimeForTomorrow12 = () => {
+  const now = new Date();
+
+  // Create a new Date object for tomorrow at 12:00 PM
+  const tomorrowNoon = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 12, 0, 0, 0);
+
+  // Format the date as "YYYY-MM-DD"
+  const year = tomorrowNoon.getFullYear();
+  const month = String(tomorrowNoon.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const day = String(tomorrowNoon.getDate()).padStart(2, "0");
+
+  return Digit.Utils.date.convertDateToEpoch(`${year}-${month}-${day}`);
+};
+
+function cleanObject(obj) {
+  for (const key in obj) {
+    if (Object.hasOwn(obj, key)) {
+      if (Array.isArray(obj[key])) {
+        if (obj[key].length === 0) {
+          delete obj[key];
+        }
+      } else if (
+        obj[key] === undefined ||
+        obj[key] === null ||
+        obj[key] === false ||
+        obj[key] === "" || // Check for empty string
+        (typeof obj[key] === "object" && Object.keys(obj[key]).length === 0)
+      ) {
+        delete obj[key];
+      }
+    }
+  }
+  return obj;
+}
+
 export const UICustomizations = {
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
@@ -173,6 +223,67 @@ export const UICustomizations = {
       return inboxModuleNameMap;
     }
   },
+  SearchCampaign: {
+    preProcess: (data, additionalDetails) => {
+      const { campaignName = "", endDate = "", projectType = "", startDate = "" } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {};
+      data.body.CampaignDetails.pagination = data?.state?.tableForm;
+      data.body.CampaignDetails.tenantId = Digit.ULBService.getCurrentTenantId();
+      // data.body.CampaignDetails.boundaryCode = boundaryCode;
+      data.body.CampaignDetails.createdBy = Digit.UserService.getUser().info.uuid;
+      data.body.CampaignDetails.campaignName = campaignName;
+      data.body.CampaignDetails.status = ["drafted"];
+      if (startDate) {
+        data.body.CampaignDetails.startDate = Digit.Utils.date.convertDateToEpoch(startDate);
+      } else {
+        data.body.CampaignDetails.startDate = epochTimeForTomorrow12();
+      }
+      if (endDate) {
+        data.body.CampaignDetails.endDate = Digit.Utils.date.convertDateToEpoch(endDate);
+      }
+      data.body.CampaignDetails.projectType = projectType?.[0]?.code;
+
+      cleanObject(data.body.CampaignDetails);
+
+      return data;
+    },
+    populateProjectType: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+
+      return {
+        url: "/egov-mdms-service/v1/_search",
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "projectType",
+        config: {
+          enabled: true,
+          select: (data) => {
+            const dropdownData = filterUniqueByKey(data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes, "code").map((row) => {
+              return {
+                ...row,
+                i18nKey: Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`),
+              };
+            });
+            return dropdownData;
+          },
+        },
+      };
+    },
+  },
 
   AttendanceInboxConfig: {
     preProcess: (data) => {
@@ -313,6 +424,44 @@ export const UICustomizations = {
           },
         },
       };
+    },
+    customValidationCheck: (data) => {
+      //checking if both to and from date are present then they should be startDate<=endDate
+      const { startDate, endDate } = data;
+      const startDateEpoch = Digit.Utils.date.convertDateToEpoch(startDate);
+      const endDateEpoch = Digit.Utils.date.convertDateToEpoch(endDate);
+
+      if (startDate && endDate && startDateEpoch > endDateEpoch) {
+        return { warning: true, label: "ES_COMMON_ENTER_DATE_RANGE" };
+      }
+      return false;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      if (key === "CAMPAIGN_DATE") {
+        return Digit.DateUtils.ConvertEpochToDate(value);
+      }
+    },
+  },
+  SearchMicroplan: {
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
+
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      if (key === "CAMPAIGN_DATE") {
+        return Digit.DateUtils.ConvertEpochToDate(value);
+      }
     },
   },
   SearchWageSeekerConfig: {

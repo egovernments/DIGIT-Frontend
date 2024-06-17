@@ -1,5 +1,6 @@
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+
 import {
   paymentConfigs,
   PaymentLinks,
@@ -12,6 +13,7 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
 import {
   initPGRComponents,
   PGRReducers,
@@ -26,12 +28,13 @@ const enabledModules = [
   "HRMS",
   "Engagement",
   "Workbench",
-  "PGR"
-
+  "PGR",
+  "Microplanning",
 ];
 
 const moduleReducers = (initData) => ({
-  initData, pgr: PGRReducers(initData),
+  initData,
+  pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -47,6 +50,7 @@ const initDigitUI = () => {
   initEngagementComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
+  initMicroplanningComponents();
 
   window.Digit.Customizations = {
     PGR: {},

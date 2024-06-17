@@ -36,9 +36,9 @@ frontend/micro-ui/web/public/index.html
 ```jsx
 /** add this import **/
 
-  <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.5.22/dist/index.css" />
-
+<link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.5.22/dist/index.css" />
 ```
+
 ### Changelog
 
 ```bash
@@ -67,11 +67,13 @@ frontend/micro-ui/web/public/index.html
 1.5.24 added the readme file
 1.5.23 base version
 ```
+
 ## Contributors
 
-[jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
+[jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov]
 
-### Published from DIGIT Frontend 
+### Published from DIGIT Frontend
+
 DIGIT Frontend Repo (https://github.com/egovernments/Digit-Frontend/tree/master)
 
 ## License

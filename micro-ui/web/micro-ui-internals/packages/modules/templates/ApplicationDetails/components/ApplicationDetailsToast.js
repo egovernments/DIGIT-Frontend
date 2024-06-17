@@ -29,18 +29,23 @@ function ApplicationDetailsToast({ t, showToast, closeToast, businessService }) 
       default:
         label = showToast?.key === "error" ? showToast?.error?.message : t(`ES_${businessService}_${showToast?.action?.action}_UPDATE_SUCCESS`);
     }
-    return <React.Fragment>{showToast && <Toast error={showToast.key === "error"} label={label} onClose={closeToast} />}</React.Fragment>;
+    return (
+      <React.Fragment>{showToast && <Toast type={showToast.key === "error" ? "error" : ""} label={label} onClose={closeToast} />}</React.Fragment>
+    );
   } else if (businessService?.includes("BPA") || businessService?.includes("BPA_LOW") || businessService?.includes("BPA_OC")) {
     const getMessage = (messages = []) => {
       let returnValue = messages[0];
-      if(messages?.length == 2) returnValue = businessService?.includes("BPA_OC") ? t(messages[1]) : t(messages [0]);
+      if (messages?.length == 2) returnValue = businessService?.includes("BPA_OC") ? t(messages[1]) : t(messages[0]);
       else returnValue = t(messages[0]);
       return returnValue;
-    }
+    };
     let label = "";
     switch (showToast?.action?.action) {
       case "REVOCATE":
-        label = showToast?.key === "error" ? showToast?.error?.message : getMessage(["BPA_APPROVAL_REVOCATED_MESSAGE_HEAD", "BPA_APPROVAL_OC_REVOCATED_MESSAGE_HEAD"]);
+        label =
+          showToast?.key === "error"
+            ? showToast?.error?.message
+            : getMessage(["BPA_APPROVAL_REVOCATED_MESSAGE_HEAD", "BPA_APPROVAL_OC_REVOCATED_MESSAGE_HEAD"]);
         break;
       case "VERIFY_AND_FORWARD":
         label = showToast?.key === "error" ? showToast?.error?.message : getMessage(["BPA_FORWARD_SUCCESS_MESSAGE_MAIN"]);
@@ -52,7 +57,10 @@ function ApplicationDetailsToast({ t, showToast, closeToast, businessService }) 
         label = showToast?.key === "error" ? showToast?.error?.message : getMessage(["BPA_APPROVAL_CHECKLIST_MESSAGE_HEAD"]);
         break;
       case "REJECT":
-        label = showToast?.key === "error" ? showToast?.error?.message : getMessage(["BPA_APPROVAL_REJECTED_MESSAGE_HEAD", "BPA_OC_APPROVAL_REJECTED_MESSAGE_HEAD"]);
+        label =
+          showToast?.key === "error"
+            ? showToast?.error?.message
+            : getMessage(["BPA_APPROVAL_REJECTED_MESSAGE_HEAD", "BPA_OC_APPROVAL_REJECTED_MESSAGE_HEAD"]);
         break;
       case "FORWARD":
         label = showToast?.key === "error" ? showToast?.error?.message : getMessage(["BPA_FORWARD_SUCCESS_MESSAGE_MAIN"]);
@@ -64,10 +72,14 @@ function ApplicationDetailsToast({ t, showToast, closeToast, businessService }) 
       default:
         label = showToast?.key === "error" ? showToast?.error?.message : t(`ES_${businessService}_${showToast?.action?.action}_UPDATE_SUCCESS`);
     }
-    return <React.Fragment>{showToast && <Toast error={showToast.key === "error"} label={label} onClose={closeToast} />}</React.Fragment>;
+    return (
+      <React.Fragment>{showToast && <Toast type={showToast.key === "error" ? "error" : ""} label={label} onClose={closeToast} />}</React.Fragment>
+    );
   } else {
     const label = showToast?.key === "error" ? showToast?.error?.message : `ES_${businessService}_${showToast?.action?.action}_UPDATE_SUCCESS`;
-    return <React.Fragment>{showToast && <Toast error={showToast.key === "error"} label={t(label)} onClose={closeToast} />}</React.Fragment>;
+    return (
+      <React.Fragment>{showToast && <Toast type={showToast.key === "error" ? "error" : ""} label={t(label)} onClose={closeToast} />}</React.Fragment>
+    );
   }
 }
 
