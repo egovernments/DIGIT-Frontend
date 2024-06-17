@@ -4,7 +4,7 @@
   "HierarchyConfigurations": [
     {
       "name": "devideBoundaryDataBy",
-      "value" : "Distrito"
+      "value": "ADMIN_DISTRITO"
     }
   ]
 }

@@ -74,7 +74,13 @@ const MicroplanPreview = ({
     config: {
       enabled: !!campaignData?.hierarchyType,
       select: (data) => {
-        return data?.BoundaryHierarchy?.[0]?.boundaryHierarchy || {};
+        return (
+          data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => ({
+            ...item,
+            parentBoundaryType: `${campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item?.parentBoundaryType)}`,
+            boundaryType: `${campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item?.boundaryType)}`,
+          })) || {}
+        );
       },
     },
   };
@@ -82,7 +88,6 @@ const MicroplanPreview = ({
   const hierarchy = useMemo(() => {
     return hierarchyRawData?.map((item) => item?.boundaryType);
   }, [hierarchyRawData]);
-
   // Set TourSteps
   useEffect(() => {
     const tourData = tourSteps(t)?.[page] || {};
@@ -127,7 +132,7 @@ const MicroplanPreview = ({
     }
     let temp;
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
-    if (temp && temp.ruleConfigureOperators) {
+    if (temp?.ruleConfigureOperators) {
       setOperatorsObject(temp.ruleConfigureOperators);
     }
     if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
@@ -145,16 +150,36 @@ const MicroplanPreview = ({
 
   // check if data has changed or not
   const updateData = useCallback(() => {
-    if (!dataToShow || !setMicroplanData) return;
+    if (!setMicroplanData) return;
+    let tempData = filterMicroplanDataToShowWithHierarchySelection(data, {}, hierarchy);
+    // Adding resources to the data we need to show
+    tempData = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+      tempData,
+      resources,
+      hypothesisAssumptionsList,
+      formulaConfiguration,
+      userEditedResources,
+      t
+    );
     setMicroplanData((previous) => ({
       ...previous,
       microplanPreview: {
-        previewData: dataToShow,
+        previewData: tempData,
         userEditedResources,
       },
     }));
     setCheckDataCompletion("perform-action");
-  }, [dataToShow, setMicroplanData, userEditedResources, setCheckDataCompletion]);
+  }, [
+    resources,
+    boundarySelections,
+    hierarchy,
+    hypothesisAssumptionsList,
+    formulaConfiguration,
+    userEditedResources,
+    setMicroplanData,
+    userEditedResources,
+    setCheckDataCompletion,
+  ]);
 
   const cancelUpdateData = useCallback(() => {
     setCheckDataCompletion("perform-action");
@@ -195,30 +220,6 @@ const MicroplanPreview = ({
   const createMicroplan = useCallback(() => {
     if (!hypothesisAssumptionsList || !setMicroplanData) return;
     const microData = updateMicroplanData(hypothesisAssumptionsList);
-    // let toCheckCompletenesData = [];
-    // let checkStatusValues = _.cloneDeep(microplanData?.status) || {};
-    // timeLineOptions.forEach((item) => {
-    //   if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
-    // });
-    // let check = true;
-    // for (let data of toCheckCompletenesData) {
-    //   check = check && checkStatusValues && checkStatusValues[data];
-    //   if (data === currentPage?.name) break;
-    // }
-    // if (!check) {
-    //   setToast({
-    //     message: t("ERROR_DATA_NOT_SAVED"),
-    //     state: "error",
-    //   });
-    //   setLoaderActivation(true);
-    //   setTimeout(() => {
-    //     setLoaderActivation(false);
-    //     setToast(undefined);
-    //     if (navigationEvent.name === "next") setCheckDataCompletion("false");
-    //     else setCheckDataCompletion("perform-action");
-    //   }, 1000);
-    //   return;
-    // }
     setLoaderActivation(true);
     updateHyothesisAPICall(
       microData,
@@ -371,7 +372,6 @@ const MicroplanPreview = ({
               display: "flex",
               flex: 1,
               justifyContent: "flex-start",
-              padding: 0,
               width: "100%",
               padding: "1rem",
             }}
@@ -473,7 +473,7 @@ const HypothesisValues = memo(({ boundarySelections, hypothesisAssumptionsList, 
           ))}
       </div>
       <div className="hypothesis-controllers">
-        <Button className={"button-primary"} style={{ width: "100%" }} onButtonClick={applyNewHypothesis} label={t("APPLY")} />
+        <Button className={"button-primary"} style={{ width: "100%" }} onButtonClick={applyNewHypothesis} label={t("MICROPLAN_PREVIEW_APPLY")} />
       </div>
     </div>
   );
@@ -487,6 +487,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
   // Filtering out dropdown values
   useEffect(() => {
     if (!boundaryData || !hierarchy) return;
+
     let processedHierarchyTemp = fetchDropdownValues(
       boundaryData,
       processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
@@ -505,7 +506,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
           <CardLabel className="header">{t(item?.boundaryType)}</CardLabel>
           {item?.parentBoundaryType === null ? (
             <MultiSelectDropdown
-              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: t(item?.boundaryType) })}
               selected={boundarySelections?.[item?.boundaryType]}
               style={{ maxWidth: "23.75rem", margin: 0 }}
               ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
@@ -529,7 +530,7 @@ const BoundarySelection = memo(({ boundarySelections, setBoundarySelections, bou
             />
           ) : (
             <MultiSelectDropdown
-              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: item?.boundaryType })}
+              defaultLabel={t("SELECT_HIERARCHY", { heirarchy: t(item?.boundaryType) })}
               selected={boundarySelections?.[item?.boundaryType]}
               style={{ maxWidth: "23.75rem", margin: 0 }}
               ServerStyle={(item?.dropDownOptions || []).length > 5 ? { height: "13.75rem" } : {}}
@@ -703,9 +704,8 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
     schemas?.filter((schema) => {
       if (schema.campaignType) {
         return schema.campaignType === campaignType && sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
-      } else {
-        return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
       }
+      return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
     }) || [];
 
   let finalData = [];
@@ -731,7 +731,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
         return acc;
       }, [])
     )
-    .flatMap((item) => item)
+    .flat()
     .filter((item) => !!item);
   finalData = [...finalData, ...tempdata];
 
@@ -742,7 +742,7 @@ const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
         return acc;
       }, [])
     )
-    .flatMap((item) => item)
+    .flat()
     .filter((item) => !!item);
   finalData = [...finalData, ...tempdata];
   return [...new Set(finalData)];
@@ -864,7 +864,7 @@ const filterMicroplanDataToShowWithHierarchySelection = (data, selections, hiera
   const levelFilteredData = data.filter((item, index) => {
     if (index === 0) return true;
     if (item?.[columnDataIndexForHierarchyLevel] && filteredHirarchyLevelList.includes(item?.[columnDataIndexForHierarchyLevel])) return true;
-    else return false;
+    return false;
   });
   return filterMicroplanDataToShowWithHierarchySelection(levelFilteredData, selections, hierarchy, hierarchyIndex + 1);
 };
@@ -1061,7 +1061,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
 
   let combinesDataList = [];
   // Check if microplanData and its upload property exist
-  if (microplanData && microplanData?.upload) {
+  if (microplanData?.upload) {
     let files = microplanData?.upload;
     // Loop through each file in the microplan upload
     for (let fileData of files) {
@@ -1091,7 +1091,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
             break;
           }
           case GEOJSON:
-          case SHAPEFILE:
+          case SHAPEFILE: {
             // Extract keys from the first feature's properties
             var keys = Object.keys(fileData?.data.features[0].properties);
 
@@ -1109,6 +1109,7 @@ const fetchMicroplanData = (microplanData, campaignType, validationSchemas) => {
 
             let data = [keys, ...values];
             combinesDataList.push(data);
+          }
         }
       }
     }
