@@ -44,18 +44,7 @@ export default (queryClient) => {
   //   },
   // });
   
-  registerApplication({
-    name: 'Campaign',
-    app: () => import('campaign/CAMPAIGNModule'),
-    activeWhen: `/${
-      window.contextPath ? window.contextPath : 'core-digit-ui'
-    }/employee/campaign`,
-    customProps: {
-      title: 'Campaign is running on host',
-      queryClient,
-      userType,
-    },
-  });
+  
 
   registerApplication({
     name: 'Microplan',
@@ -65,6 +54,19 @@ export default (queryClient) => {
     }/employee/microplan`,
     customProps: {
       title: 'Microplan is running on host',
+      queryClient,
+      userType,
+    },
+  });
+
+  registerApplication({
+    name: 'Campaign',
+    app: () => import('campaign/CAMPAIGNModule'),
+    activeWhen: `/${
+      window.contextPath ? window.contextPath : 'core-digit-ui'
+    }/employee/campaign`,
+    customProps: {
+      title: 'Campaign is running on host',
       queryClient,
       userType,
     },
