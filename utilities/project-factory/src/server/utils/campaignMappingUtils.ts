@@ -45,28 +45,33 @@ async function enrichBoundaryCodes(resources: any[], messageObject: any, boundar
             for (const data of dataFromSheet) {
                 const uniqueCodeColumn = getLocalizedName(createAndSearch?.[resource?.type]?.uniqueIdentifierColumnName, localizationMap)
                 const code = data[uniqueCodeColumn];
-                // Extract boundary codes
-                const boundaryCode = data[getLocalizedName(createAndSearch?.[resource?.type]?.boundaryValidation?.column, localizationMap)];
-                var active: any = "Active";
-                if (createAndSearch?.[resource?.type]?.activeColumn && createAndSearch?.[resource?.type]?.activeColumnName) {
-                    var activeColumn = getLocalizedName(createAndSearch?.[resource?.type]?.activeColumnName, localizationMap);
-                    active = data[activeColumn];
+                if (code) {
+                    // Extract boundary codes
+                    const boundaryCode = data[getLocalizedName(createAndSearch?.[resource?.type]?.boundaryValidation?.column, localizationMap)];
+                    var active: any = "Active";
+                    if (createAndSearch?.[resource?.type]?.activeColumn && createAndSearch?.[resource?.type]?.activeColumnName) {
+                        var activeColumn = getLocalizedName(createAndSearch?.[resource?.type]?.activeColumnName, localizationMap);
+                        active = data[activeColumn];
+                    }
+                    if (boundaryCode && active == "Active") {
+                        // Split boundary codes if they have comma separated values
+                        const boundaryCodesArray = boundaryCode.split(',');
+                        boundaryCodesArray.forEach((bc: string) => {
+                            // Trim any leading or trailing spaces
+                            const trimmedBC = bc.trim();
+                            if (!boundaryCodes[resource?.type]) {
+                                boundaryCodes[resource?.type] = {};
+                            }
+                            if (!boundaryCodes[resource?.type][trimmedBC]) {
+                                boundaryCodes[resource?.type][trimmedBC] = [];
+                            }
+                            boundaryCodes[resource?.type][trimmedBC].push(code);
+                            logger.info(`Boundary code ${trimmedBC} mapped to resource ${resource?.type} with code ${code}`)
+                        });
+                    }
                 }
-                if (boundaryCode && active == "Active") {
-                    // Split boundary codes if they have comma separated values
-                    const boundaryCodesArray = boundaryCode.split(',');
-                    boundaryCodesArray.forEach((bc: string) => {
-                        // Trim any leading or trailing spaces
-                        const trimmedBC = bc.trim();
-                        if (!boundaryCodes[resource?.type]) {
-                            boundaryCodes[resource?.type] = {};
-                        }
-                        if (!boundaryCodes[resource?.type][trimmedBC]) {
-                            boundaryCodes[resource?.type][trimmedBC] = [];
-                        }
-                        boundaryCodes[resource?.type][trimmedBC].push(code);
-                        logger.info(`Boundary code ${trimmedBC} mapped to resource ${resource?.type} with code ${code}`)
-                    });
+                else {
+                    logger.info(`Code ${code} is somehow null or empty for resource ${resource?.type} for uniqueCodeColumn ${uniqueCodeColumn}`)
                 }
             }
         }
@@ -107,14 +112,14 @@ async function getProjectMappingBody(messageObject: any, boundaryWithProject: an
         if (boundaryWithProject[key]) {
             const resources: any[] = [];
             const pvarIds = getPvarIds(messageObject);
-            if (pvarIds) {
+            if (pvarIds && Array.isArray(pvarIds) && pvarIds.length > 0) {
                 resources.push({
                     type: "resource",
                     resourceIds: pvarIds
                 })
             }
             for (const type of Object.keys(boundaryCodes)) {
-                if (boundaryCodes[type][key]) {
+                if (boundaryCodes[type][key] && Array.isArray(boundaryCodes[type][key]) && boundaryCodes[type][key].length > 0) {
                     resources.push({
                         type: type == "user" ? "staff" : type,
                         resourceIds: [...boundaryCodes[type][key]]
@@ -143,9 +148,12 @@ async function fetchAndMap(resources: any[], messageObject: any) {
     const boundaryCodes: any = {};
 
     await enrichBoundaryCodes(resources, messageObject, boundaryCodes, sheetName);
+    logger.info("boundaryCodes : " + JSON.stringify(boundaryCodes));
     var boundaryWithProject: any = {};
     await enrichBoundaryWithProject(messageObject, boundaryWithProject, boundaryCodes);
+    logger.info("boundaryWithProject : " + JSON.stringify(boundaryWithProject));
     const projectMappingBody = await getProjectMappingBody(messageObject, boundaryWithProject, boundaryCodes);
+    logger.info("projectMappingBody : " + JSON.stringify(projectMappingBody));
     logger.info("projectMapping started ");
     const projectMappingResponse: any = await createCampaignService(projectMappingBody);
     logger.info("Project Mapping Response received");
