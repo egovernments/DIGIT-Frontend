@@ -122,7 +122,10 @@ export const processTracks: any = {
         type: "HCM_PROCESS_TRACKS_TYPE_VALIDATION",
         status: "HCM_PROCESS_TRACKS_STATUS_VALIDATION",
     },
-
+    uuidAssigned: {
+        type: "HCM_PROCESS_TRACKS_TYPE_UUID_ASSIGNMENT",
+        status: "HCM_PROCESS_TRACKS_STATUS_UUID_ASSIGNMENT",
+    }
 }
 
 
