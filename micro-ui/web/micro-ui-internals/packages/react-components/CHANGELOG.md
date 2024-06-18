@@ -2,6 +2,16 @@ Here's the `CHANGELOG` file for the specified versions:
 
 ```markdown
 # Changelog
+## [1.8.2-beta.9]
+- fix: Fixed uploader issue
+## [1.8.2-beta.8]
+- fix: Added placeholder prop for Text Field in Inbox Composerv2.
+
+## [1.8.2-beta.7]
+- fix: Fixed prop for the document upload.
+
+## [1.8.2-beta.5]
+- fix: Added submitIcon props for SubmitBar and labelChildren for FormComposerV2.
 
 ## [1.8.2-beta.3]
 - fix: Adding the passing of the min field to the TextInput in RenderFormFields.

@@ -79,47 +79,48 @@ const IFrameInterface = (props) => {
               console.log("url here", url);
               console.log("typeof url", typeof url);
     
-              const uniqueIdentifier = Date.now(); // Unique identifier based on the current timestamp
+              // const uniqueIdentifier = Date.now(); // Unique identifier based on the current timestamp
     
-              if (typeof url === "string" && (url.includes("vector.maps.elastic.co") || url.includes("tiles.maps.elastic.co"))) {
-                const appendStr = url.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
-                const oldUrl = url;
-                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
-                console.log("interceptor fetch", pageObject);
-                const routePath = pageObject?.["base-kibana-path"] || "";
-                console.log("interceptor fetch", routePath);
+              // Removing replace-url logic
+              // if (typeof url === "string" && (url.includes("vector.maps.elastic.co") || url.includes("tiles.maps.elastic.co"))) {
+              //   const appendStr = url.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
+              //   const oldUrl = url;
+              //   const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
+              //   console.log("interceptor fetch", pageObject);
+              //   const routePath = pageObject?.["base-kibana-path"] || "";
+              //   console.log("interceptor fetch", routePath);
     
-                // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}${appendStr}`;
-                console.log("interceptor fetch", newUrl);
+              //   // Construct the new URL
+              //   const newUrl = `${document.location.origin}${routePath}${appendStr}`;
+              //   console.log("interceptor fetch", newUrl);
     
-                // Set additional headers if needed
-                options.headers['mode'] = 'no-cors';
-                options.headers['replace-url'] = oldUrl;
+              //   // Set additional headers if needed
+              //   options.headers['mode'] = 'no-cors';
+              //   options.headers['replace-url'] = oldUrl;
     
-                // Update the URL to the new URL
-                url = newUrl;
-              }
+              //   // Update the URL to the new URL
+              //   url = newUrl;
+              // }
     
-              if (typeof url === "object" && (url.url.includes("vector.maps.elastic.co") || url.url.includes("tiles.maps.elastic.co"))) {
-                const appendStr = url?.url?.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
-                const oldUrl = url.url;
-                const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
-                console.log("object interceptor fetch", pageObject);
-                const routePath = pageObject?.["base-kibana-path"] || "";
-                console.log("object interceptor fetch", routePath);
+              // if (typeof url === "object" && (url.url.includes("vector.maps.elastic.co") || url.url.includes("tiles.maps.elastic.co"))) {
+              //   const appendStr = url?.url?.includes("vector.maps.elastic.co") ? `layer-${uniqueIdentifier}` : `tiles-${uniqueIdentifier}`;
+              //   const oldUrl = url.url;
+              //   const pageObject = data?.[moduleName]?.["iframe-routes"]?.[pageName] || {};
+              //   console.log("object interceptor fetch", pageObject);
+              //   const routePath = pageObject?.["base-kibana-path"] || "";
+              //   console.log("object interceptor fetch", routePath);
     
-                // Construct the new URL
-                const newUrl = `${document.location.origin}${routePath}${appendStr}`;
-                console.log("object interceptor fetch", newUrl);
+              //   // Construct the new URL
+              //   const newUrl = `${document.location.origin}${routePath}${appendStr}`;
+              //   console.log("object interceptor fetch", newUrl);
     
-                // Set additional headers if needed
-                options.headers['mode'] = 'no-cors';
-                options.headers['replace-url'] = oldUrl;
+              //   // Set additional headers if needed
+              //   options.headers['mode'] = 'no-cors';
+              //   options.headers['replace-url'] = oldUrl;
     
-                // Update the URL object to the new URL
-                url = { ...url, url: newUrl };
-              }
+              //   // Update the URL object to the new URL
+              //   url = { ...url, url: newUrl };
+              // }
     
               options.headers['Authorization'] = `${accessToken}`;
             }
