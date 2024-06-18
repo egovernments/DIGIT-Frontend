@@ -5,9 +5,8 @@ import { createBrowserHistory } from "history";
 import { initLibraries } from "@digit-ui/digit-ui-libraries-mfe";
 import { initCampaignComponents } from "./Module";
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+initLibraries()
+  
 initCampaignComponents();
 
 const mount = (el, { history,login }) => {
@@ -16,7 +15,7 @@ const mount = (el, { history,login }) => {
   };
   const enabledModules=["Campaign"]
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
   ReactDOM.render(
     // <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
     <div> CAMPAIGN MODULE</div>,
@@ -51,7 +50,7 @@ const initDigitUI = () => {
 
   const moduleReducers = (initData) => initData;
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
   // initTokens(stateCode);
 
   // return (<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />);

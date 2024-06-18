@@ -11,7 +11,7 @@ const CitizenApp = ({
   handleUserDropdownSelection,
   logoUrl,
   DSO,
-  stateCode="pg",
+  stateCode="mz",
   modules,
   appTenants,
   sourceUrl,

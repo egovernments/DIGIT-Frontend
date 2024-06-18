@@ -34,7 +34,7 @@ export const BOUNDARY_HIERARCHY_TYPE="ADMIN";
  */
 export const CampaignModule = ({ stateCode, userType, tenants }) => {
 
-  const moduleCode = ["campaign", "workbench", "mdms", "schema","hcm-admin-schemas",`boundary-${BOUNDARY_HIERARCHY_TYPE}`];
+  const moduleCode = "campaign";
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

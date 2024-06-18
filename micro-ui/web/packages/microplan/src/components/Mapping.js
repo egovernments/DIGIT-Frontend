@@ -1,6 +1,18 @@
 // Importing necessary modules
-import {
-  Card,
+// import {
+//   Card,
+//   CardLabel,
+//   CustomDropdown,
+//   Dropdown,
+//   Header,
+//   MultiSelectDropdown,
+//   Toast,
+//   TreeSelect,
+//   Button,
+//   CheckBox,
+//   RadioButtons,
+// } from "@digit-ui/digit-ui-components";
+import {Card,
   CardLabel,
   CustomDropdown,
   Dropdown,
@@ -10,8 +22,7 @@ import {
   TreeSelect,
   Button,
   CheckBox,
-  RadioButtons,
-} from "@digit-ui/digit-ui-components";
+  RadioButtons} from "@digit-ui/digit-ui-components";
 import L, { map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState, Fragment } from "react";
@@ -19,7 +30,8 @@ import { useTranslation } from "react-i18next";
 import ZoomControl from "./ZoomControl";
 import CustomScaleControl from "./CustomScaleControl";
 import * as DigitSvgs from "@digit-ui/digit-ui-svg-components";
-import { CardSectionHeader, InfoIconOutline, LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
+import {CardSectionHeader, InfoIconOutline, LoaderWithGap, Modal} from "@digit-ui/digit-ui-react-components";
+//import { CardSectionHeader, InfoIconOutline, LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
 import { processHierarchyAndData, findParent, fetchDropdownValues, findChildren, calculateAggregateForTree } from "../utils/processHierarchyAndData";
 import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors, PRIMARY_THEME_COLOR } from "../configs/constants";
 import { tourSteps } from "../configs/tourSteps";

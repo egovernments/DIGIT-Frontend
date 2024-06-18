@@ -1,6 +1,16 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
-import {
-  Card,
+// import {
+//   Card,
+//   CardSubHeader,
+//   CardSectionHeader,
+//   StatusTable,
+//   Row,
+//   Loader,
+//   LabelFieldPair,
+//   CardLabel,
+//   TextInput,
+// } from "@digit-ui/digit-ui-react-components";
+import {Card,
   CardSubHeader,
   CardSectionHeader,
   StatusTable,
@@ -8,12 +18,12 @@ import {
   Loader,
   LabelFieldPair,
   CardLabel,
-  TextInput,
-} from "@digit-ui/digit-ui-react-components";
+  TextInput} from "@digit-ui/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
-import { Modal } from "@digit-ui/digit-ui-components";
+//import { Modal } from "@digit-ui/digit-ui-components";
+import {Modal}from "@digit-ui/digit-ui-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 

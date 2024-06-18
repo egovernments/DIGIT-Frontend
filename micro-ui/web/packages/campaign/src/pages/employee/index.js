@@ -18,7 +18,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
+console.log("pathVar",pathVar);
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -39,6 +39,8 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
+// console.log("contextpath", window?.contextPath);
+
 
 /**
  * The `App` function in JavaScript defines a component that handles different routes and renders

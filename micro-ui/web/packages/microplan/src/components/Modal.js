@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import { PopUp, HeaderBar, Toast, CloseButton, ButtonSelector } from "@digit-ui/digit-ui-react-components";
-import { Close } from "@digit-ui/digit-ui-svg-components";
+//import { PopUp, HeaderBar, Toast, CloseButton, ButtonSelector } from "@digit-ui/digit-ui-react-components";
+import {PopUp,HeaderBar,Toast,CloseButton,ButtonSelector} from "@digit-ui/digit-ui-react-components";
+//import { Close } from "@digit-ui/digit-ui-svg-components";
+import {Close} from "@digit-ui/digit-ui-svg-components";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 
 const Modal = ({

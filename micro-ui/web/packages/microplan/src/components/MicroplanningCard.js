@@ -1,4 +1,5 @@
-import { EmployeeModuleCard, WorksMgmtIcon } from "@digit-ui/digit-ui-react-components";
+//import { EmployeeModuleCard, WorksMgmtIcon } from "@digit-ui/digit-ui-react-components";
+import {EmployeeModuleCard,WorksMgmtIcon} from "@digit-ui/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

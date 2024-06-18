@@ -12,7 +12,7 @@ import getStore from "./redux/store";
 //here add react-query dev tools
 // import { ReactQueryDevtools } from 'react-query/devtools';
 
-const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
+const DigitUIWrapper = ({ stateCode="mz", enabledModules, moduleReducers,defaultLanding,queryClient }) => {
 
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   // const reduxRsp = getStore(initData, moduleReducers(initData))
@@ -40,7 +40,7 @@ const DigitUIWrapper = ({ stateCode="pg", enabledModules, moduleReducers,default
   );
 };
 
-export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
+export const DigitUI = ({stateCode="mz", registry, enabledModules, moduleReducers ,defaultLanding,queryClient}) => {
   
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const ComponentProvider = Digit.Contexts.ComponentProvider;
@@ -87,7 +87,7 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
               }}
             >
 
-              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient} />
+              <DigitUIWrapper stateCode={"mz"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient} />
               {/* <div>Core Module Dummy</div> */}
 
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}

@@ -1,6 +1,8 @@
+console.log("mmmm")
 import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, InboxSearchComposerV2, Loader } from "@digit-ui/digit-ui-react-components";
+//import { Header, InboxSearchComposer, InboxSearchComposerV2, Loader } from "@digit-ui/digit-ui-react-components";
+import {Header,InboxSearchComposer,InboxSearchComposerV2,Loader} from "@digit-ui/digit-ui-react-components";
 import { useHistory, useParams } from "react-router-dom";
 
 const configs = {

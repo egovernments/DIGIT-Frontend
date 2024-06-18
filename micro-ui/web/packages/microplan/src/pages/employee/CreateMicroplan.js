@@ -1,3 +1,4 @@
+console.log("rendering createmicroplan page")
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { timeLineOptions } from "../../configs/timeLineOptions";
@@ -6,7 +7,8 @@ import Hypothesis from "../../components/Hypothesis";
 import RuleEngine from "../../components/RuleEngine";
 import Mapping from "../../components/Mapping";
 import Navigator from "../../components/Nagivator";
-import { Toast } from "@digit-ui/digit-ui-components";
+//import { Toast } from "@digit-ui/digit-ui-components";
+import {Toast} from "@digit-ui/digit-ui-components";
 import MicroplanPreview from "../../components/MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
 
@@ -24,19 +26,22 @@ import { LoaderWithGap, Tutorial } from "@digit-ui/digit-ui-react-components";
 import { useMyContext } from "../../utils/context";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { render } from "react-dom";
-
+debugger;
 // will be changed laters
 const campaignType = "ITIN";
-
 // Main component for creating a microplan
 const CreateMicroplan = () => {
+  //console.log("tenantId",tenantId);
+  console.log("ids",ids);
 
   // Fetching data using custom MDMS hook
-  const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
+  //const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
   const [toRender, setToRender] = useState("navigator");
   const { t } = useTranslation();
+  //console.log("id",id);
+  
 
   // States
   const [microplanData, setMicroplanData] = useState();
@@ -45,9 +50,14 @@ const CreateMicroplan = () => {
   const [checkForCompleteness, setCheckForCompletion] = useState([]);
   const [loaderActivation, setLoaderActivation] = useState(false);
   const { state } = useMyContext();
-
+  console.log("2");
   //fetch campaign data
-  const { id = "" } = Digit.Hooks.useQueryParams();
+ const { id = "" } = Digit.Hooks.useQueryParams();
+  console.log("ID",id);
+  debugger;
+  console.log('Query Parameter ID:', id);
+  console.log("tenantId",tenantId);
+  console.log("ids",ids);
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
     {
       CampaignDetails: {
@@ -55,10 +65,16 @@ const CreateMicroplan = () => {
         ids: [id],
       },
     },
+
     {
+      
       enabled: !!id,
     }
   );
+  console.log("1w")
+  console.log("isLoading",isLoading);
+   console.log("tenantId",tenantId);
+  console.log("ids",ids);
 
   // request body for boundary hierarchy api
   const reqCriteria = {
@@ -77,7 +93,11 @@ const CreateMicroplan = () => {
       },
     },
   };
+  console.log("reqCriteria",reqCriteria);
+ 
   const { isLoading: ishierarchyLoading, data: heirarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  console.log("reqCriteria",reqCriteria);
+ 
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -273,6 +293,7 @@ const CreateMicroplan = () => {
 
   return (
     <>
+    <p> create </p>
       <div className="create-microplan">
         {toRender === "navigator" && (
           <Navigator

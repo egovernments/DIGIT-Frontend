@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Info, Trash } from "@digit-ui/digit-ui-svg-components";
+//import { Info, Trash } from "@digit-ui/digit-ui-svg-components";
+import {Info, Trash} from "@digit-ui/digit-ui-svg-components";
 import { ModalWrapper } from "./Modal";
 import { ButtonType1, CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown, Modal } from "@digit-ui/digit-ui-components";
+//import { Dropdown, Modal } from "@digit-ui/digit-ui-components";
+import {Dropdown,Modal} from "@digit-ui/digit-ui-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 import { v4 as uuidv4 } from "uuid";

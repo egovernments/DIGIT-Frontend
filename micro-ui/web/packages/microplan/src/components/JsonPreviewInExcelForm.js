@@ -1,4 +1,6 @@
-import { Button, DownloadIcon, SVG } from "@digit-ui/digit-ui-react-components";
+//import { Button, DownloadIcon, SVG } from "@digit-ui/digit-ui-react-components";
+import {Button,DownloadIcon,SVG} from "@digit-ui/digit-ui-react-components";
+
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
