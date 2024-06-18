@@ -19,7 +19,7 @@ const CitizenApp = ({ path }) => {
           <PrivateRoute path={`${path}/sample`} component={() => <div> In Open Payment Module</div> } />
           <Route path={`${path}/open-search`} render={()=><OpenSearch />} />
           <Route path={`${path}/open-view`} render={()=><OpenView />} />
-          <Route path={`${path}/success`}>
+          <Route path={`${path}/success/:businessService/:consumerCode/:tenantId`}>
             <SuccessfulPayment {...commonProps} />
           </Route>
           <Route path={`${path}/failure`}>

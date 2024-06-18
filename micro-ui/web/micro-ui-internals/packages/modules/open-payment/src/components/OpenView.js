@@ -53,7 +53,8 @@ const OpenView = () => {
           emailId: "sriranjan.srivastava@owc.com"
         },
         // success
-        callbackUrl: `${window.location.protocol}//${window.location.host}/${window.contextPath}/citizen/openpayment/success?consumerCode=${queryParams.consumerCode}&tenantId=${queryParams.tenantId}&businessService=${queryParams.businessService}`,
+        // callbackUrl: `${window.location.protocol}//${window.location.host}/${window.contextPath}/citizen/openpayment/success?consumerCode=${queryParams.consumerCode}&tenantId=${queryParams.tenantId}&businessService=${queryParams.businessService}`,
+        callbackUrl: `${window.location.protocol}//${window.location.host}/${window.contextPath}/citizen/openpayment/success/${queryParams.businessService}/${queryParams.consumerCode}/${queryParams.tenantId}`,
         additionalDetails: {
           isWhatsapp: false,
         },
@@ -129,7 +130,6 @@ const OpenView = () => {
       const redirectUrl = data?.Transaction?.redirectUrl;
         // paygov
         try {
-          debugger
           const gatewayParam = redirectUrl
             ?.split("?")
             ?.slice(1)
@@ -188,7 +188,6 @@ const OpenView = () => {
           }
           $(document.body).append(newForm);
           newForm.submit();
-debugger
           makePayment(gatewayParam.txURL,newForm);
 
         } catch (e) {
@@ -206,7 +205,6 @@ debugger
       setShowToast({ key: true, label: t(messageToShow) });
     }
 
-    debugger
   }
 
   if(isLoading){
