@@ -1783,34 +1783,47 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
 
 
 async function checkCampaignObjectSame(request: any, campaignIdFromDb: any, auditIdFromDb: any) {
-    const campaignObjectFromRequest = await getCampaignSearchResponse(request);
-    const boundariesFromRequestCampaignObject = campaignObjectFromRequest?.CampaignDetails?.[0]?.boundaries;
-    const campaignObjectFromDb = await searchAuditWithCamapignId(request, campaignIdFromDb, auditIdFromDb);
-    const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.campaignDetails?.value;
-    const valuesInJsonFormat: { [key: string]: any } = JSON.parse(values);
-    const boundariesFromDbCampaignObject = valuesInJsonFormat?.boundaries;
-     return _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject);
+    try {
+        const campaignObjectFromRequest = await getCampaignSearchResponse(request);
+        const boundariesFromRequestCampaignObject = campaignObjectFromRequest?.CampaignDetails?.[0]?.boundaries;
+        const campaignObjectFromDb = await searchAuditWithCamapignId(request, campaignIdFromDb, auditIdFromDb);
+        if (campaignObjectFromDb?.AuditLogs.length === 0) {
+            return false;
+        }
+        const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.campaignDetails?.value;
+        const valuesInJsonFormat: { [key: string]: any } = JSON.parse(values);
+        const boundariesFromDbCampaignObject = valuesInJsonFormat?.boundaries;
+        return _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject);
+    }
+    catch (error) {
+        return false;
+    }
 }
 
 
 async function searchAuditWithCamapignId(request: any, campaignId: any, auditId?: any) {
-    const { RequestInfo = {} } = request?.body || {};
-    const requestBody = {
-        RequestInfo
-    };
-    const params:any =
-    {
-        "offset": 0,
-        "limit": 1,
-        "tenantId": request?.query?.tenantId,
-        "objectId": campaignId
+    try {
+        const { RequestInfo = {} } = request?.body || {};
+        const requestBody = {
+            RequestInfo
+        };
+        const params: any =
+        {
+            "offset": 0,
+            "limit": 1,
+            "tenantId": request?.query?.tenantId,
+            "objectId": campaignId
+        }
+        if (auditId) {
+            params.id = auditId;
+        }
+        const url = config.host.auditHost + config.paths.auditSearch;
+        const auditResponse = await httpRequest(url, requestBody, params);
+        return auditResponse
     }
-    if (auditId) {
-        params.id = auditId;
+    catch (error: any) {
+        throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "Error while calling search Audit api")
     }
-    const url = config.host.auditHost + config.paths.auditSearch;
-    const auditResponse = await httpRequest(url, requestBody, params);
-    return auditResponse
 
 }
 
