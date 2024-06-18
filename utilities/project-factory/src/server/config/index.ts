@@ -11,8 +11,8 @@ if (!HOST) {
 }
 
 
-const getDBSchemaName = (dbSchema="")=>{
-  return dbSchema ? (dbSchema=="egov"?"public":dbSchema) :"public";
+const getDBSchemaName = (dbSchema = "") => {
+  return dbSchema ? (dbSchema == "egov" ? "public" : dbSchema) : "public";
 }
 // Configuration object containing various environment variables
 const config = {
@@ -129,6 +129,7 @@ const config = {
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
     mdmsV2SchemaSearch: "mdms-v2/schema/v1/_search",
     mdms_v2_search: "mdms-v2/v2/_search",
+    healthIndividualSearch: process.env.EGOV_HEALTH_INDIVIDUAL_SEARCH || "health-individual/v1/_search",
     auditSearch: "audit-service/log/v1/_search"
   },
   // Values configuration
@@ -145,7 +146,8 @@ const config = {
       idName: process.env.CMP_IDGEN_IDNAME || "campaign.number"
     },
     matchFacilityData: false,
-    retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3"
+    retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3",
+    notCreateUserIfAlreadyThere: process.env.NOT_CREATE_USER_IF_ALREADY_THERE || false,
   }
 };
 // Exporting getErrorCodes function and config object
