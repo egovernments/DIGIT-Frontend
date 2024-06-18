@@ -142,7 +142,7 @@ const config = {
     matchFacilityData: false,
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3",
     notCreateUserIfAlreadyThere: process.env.NOT_CREATE_USER_IF_ALREADY_THERE || false,
-    maxHttpRetries: process.env.MAX_HTTP_RETRIES || "3",
+    maxHttpRetries: process.env.MAX_HTTP_RETRIES || "4",
   }
 };
 // Exporting getErrorCodes function and config object
