@@ -565,7 +565,6 @@ const Upload = ({
       const schema = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       switch (fileData.fileType) {
         case EXCEL:
-          debugger;
           if (fileData?.errorLocationObject?.length !== 0)
             blob = await prepareExcelFileBlobWithErrors(fileData.data, fileData.errorLocationObject, schema, hierarchy, t);
           else blob = fileData.file;
