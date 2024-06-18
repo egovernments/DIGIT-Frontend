@@ -138,7 +138,7 @@ const httpRequest = async (
         ": error response :" +
         (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message))
       logger.error(":: ERROR STACK :: " + error?.stack || error);
-      logger.warn(`Error occurred while making request to ${getServiceName(_url)}: returning error response ${JSON.stringify(errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] })}`);
+      logger.warn(`Error occurred while making request to ${getServiceName(_url)}: with error response ${JSON.stringify(errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] })}`);
       if (retry) {
         attempt++; // Increment the attempt count
         if (attempt >= maxAttempts) {
