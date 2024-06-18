@@ -87,7 +87,9 @@ const Mapping = ({
         return (
           data?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => ({
             ...item,
-            parentBoundaryType: `${campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item?.parentBoundaryType)}`,
+            parentBoundaryType: item?.parentBoundaryType
+              ? `${campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item?.parentBoundaryType)}`
+              : null,
             boundaryType: `${campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item?.boundaryType)}`,
           })) || {}
         );
