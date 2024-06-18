@@ -1793,7 +1793,7 @@ async function checkCampaignObjectSame(request: any, campaignIdFromDb: any, audi
         const values = campaignObjectFromDb?.AuditLogs?.[0]?.keyValueMap?.campaignDetails?.value;
         const valuesInJsonFormat: { [key: string]: any } = JSON.parse(values);
         const boundariesFromDbCampaignObject = valuesInJsonFormat?.boundaries;
-        return _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject);
+        return (_.isEqual(campaignIdFromDb, request?.query?.campaignId) && _.isEqual(boundariesFromDbCampaignObject, boundariesFromRequestCampaignObject));
     }
     catch (error) {
         return false;
