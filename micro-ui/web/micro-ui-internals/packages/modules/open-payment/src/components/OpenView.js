@@ -12,6 +12,10 @@ const OpenView = () => {
     url:"/billing-service/bill/v2/_fetchbill",
     params:queryParams,
     body:{},
+    options:{
+      userService:false,
+      auth:false
+    },
     config: {
         enabled: !!queryParams.consumerCode && !!queryParams.tenantId && !!queryParams.businessService,
         select:(data) => {
@@ -49,7 +53,7 @@ const OpenView = () => {
           emailId: "sriranjan.srivastava@owc.com"
         },
         // success
-        callbackUrl: `${window.location.protocol}//${window.location.host}/${window.contextPath}/employee/hrms/success?consumerCode=${queryParams.consumerCode}&tenantId=${queryParams.tenantId}&businessService=${queryParams.businessService}`,
+        callbackUrl: `${window.location.protocol}//${window.location.host}/${window.contextPath}/citizen/openpayment/success?consumerCode=${queryParams.consumerCode}&tenantId=${queryParams.tenantId}&businessService=${queryParams.businessService}`,
         additionalDetails: {
           isWhatsapp: false,
         },
@@ -210,9 +214,9 @@ debugger
   }
   return (
     <>
-    <Card className={"employeeCard-override"} style={{marginTop:"2rem"}}>
+    <Card>
       <Header className="works-header-search">{t("OP_PAYMENT_DETAILS")}</Header>
-      <StatusTable style={{ paddingTop: "2rem" }}>
+      <StatusTable>
           <Row label={t("OP_CONSUMER_NAME")}  text={bill?.payerName || t("ES_COMMON_NA")} />
           <Row label={t("OP_CONSUMER_EMAIL")}  text={bill?.payerEmail || t("ES_COMMON_NA")} />
           <Row label={t("OP_CONSUMER_ADDRESS")}  text={bill?.payerAddress || t("ES_COMMON_NA")} />

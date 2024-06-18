@@ -1,12 +1,13 @@
 import { Loader, TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
-import EmployeeApp from "./pages/employee";
+import CitizenApp from "./pages/citizen";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import {ErrorBoundary} from "@egovernments/digit-ui-components"
 
 const OpenPaymentModule = ({ stateCode, userType, tenants }) => {
+  
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleCode = ["openpayment", "common-masters", tenantId];
@@ -23,14 +24,15 @@ const OpenPaymentModule = ({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="OPENPAYMENT">
       <TourProvider>
-        <EmployeeApp path={path} stateCode={stateCode} url={url} userType={userType} />
+        <CitizenApp path={path} stateCode={stateCode} url={url} userType={userType} />
       </TourProvider>
     </ErrorBoundary>
   )
 };
 
 const componentsToRegister = {
-  HRMSModule:OpenPaymentModule,
+  // HRMSModule:OpenPaymentModule,
+  OpenPaymentModule
   // DSSCard:OpenPaymentModule
 };
 
