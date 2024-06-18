@@ -894,7 +894,7 @@ async function confirmProjectParentCreation(request: any, projectId: any) {
 }
 
 async function projectCreate(projectCreateBody: any, request: any) {
-  logger.info("Project creation url " + config.host.projectHost + config.paths.projectCreate)
+  logger.info("Project creation API started")
   logger.debug("Project creation body " + getFormattedStringForDebug(projectCreateBody))
   const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
   logger.debug("Project creation response" + getFormattedStringForDebug(projectCreateResponse))
