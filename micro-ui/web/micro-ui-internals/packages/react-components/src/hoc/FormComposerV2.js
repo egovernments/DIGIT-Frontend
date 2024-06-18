@@ -883,7 +883,7 @@ export const FormComposer = (props) => {
           {props.secondaryLabel && props.showSecondaryLabel && (
             <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
           )}
-          {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
+          {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={props.skiplabel} onClick={props.onSkip} />}
         </ActionBar>
       )}
       {showErrorToast && <Toast error={true} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
