@@ -1,9 +1,12 @@
-import { ActionBar, Stepper, Toast } from "@digit-ui/digit-ui-components";
+//import { ActionBar, Stepper, Toast } from "@digit-ui/digit-ui-components";
+import {ActionBar,Stepper,Toast} from "@digit-ui/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@digit-ui/digit-ui-react-components";
-import { ArrowBack, ArrowForward } from "@digit-ui/digit-ui-svg-components";
+//import { Button } from "@digit-ui/digit-ui-react-components";
+import {Button} from "@digit-ui/digit-ui-react-components";
+// import { ArrowBack, ArrowForward } from "@digit-ui/digit-ui-svg-components";
+import {ArrowBack,ArrowForward} from "@digit-ui/digit-ui-svg-components";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import { memo } from "react";
 

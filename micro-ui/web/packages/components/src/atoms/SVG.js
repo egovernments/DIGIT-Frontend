@@ -779,8 +779,8 @@ import {
   TickMark,
   NoResultsFoundIcon,
   StarFilled,
-  StarEmpty,
-} from "@digit-ui/digit-ui-svg-components";
+  StarEmpty} from "@digit-ui/digit-ui-svg-components";
+//} from "@digit-ui/digit-ui-svg-components";
 import PropTypes from "prop-types";
 
 export const SVG = {

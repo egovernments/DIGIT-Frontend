@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
+//import { LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
+import {LoaderWithGap,Modal} from "@digit-ui/digit-ui-react-components";
+//import * as Icons from "@digit-ui/digit-ui-svg-components";
 import * as Icons from "@digit-ui/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";

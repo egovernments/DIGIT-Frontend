@@ -1,6 +1,9 @@
+//import { Dropdown } from "@digit-ui/digit-ui-components";
 import { Dropdown } from "@digit-ui/digit-ui-components";
+//import { Table } from "@digit-ui/digit-ui-react-components";
 import { Table } from "@digit-ui/digit-ui-react-components";
-import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@digit-ui/digit-ui-svg-components";
+//import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrevious } from "@digit-ui/digit-ui-svg-components";
+//import { PaginationFirst,PaginationLast,PaginationNext,PaginationPrevious } from "@digit-ui/digit-ui-svg-components";
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 
 export const SpatialDataPropertyMapping = ({ uploadedData, resourceMapping, setResourceMapping, schema, setToast, hierarchy, t }) => {

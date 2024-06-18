@@ -23,7 +23,7 @@ module.exports = () => {
           //engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
           microplan : `microplan@${domain}/microplan-mfe/remoteEntry.js`,
           // tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
-          //campaign : `campaign@${domain}/campaign-mfe/remoteEntry.js`
+          campaign : `campaign@${domain}/campaign-mfe/remoteEntry.js`
         },
         shared: {
           ...packageJson.dependencies,

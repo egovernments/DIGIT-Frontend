@@ -3,6 +3,7 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const commonConfig = require('./webpack.common');
 const packageJson = require('./package.json');
+const path = require('path'); // Import path module
 
 module.exports = () => {
   
@@ -36,6 +37,15 @@ module.exports = () => {
       },
       server: 'https', //Enable HTTPS
     },
+    // resolve: {
+    //   alias: {
+    //     // Add alias for React components
+    //     '@ui-components': path.resolve(__dirname, '../packages/ui-components'),
+    //   },
+    // },
+    resolve: {
+      symlinks: true,
+    },
     plugins: [
       new ModuleFederationPlugin({
         name: 'campaign',
@@ -48,8 +58,8 @@ module.exports = () => {
           react: { singleton: true }, // React will be shared as a singleton
           'react-dom': { singleton: true }, // ReactDOM will be shared as a singleton
           'react-query': { singleton: true },
-          },
-        }),
+        },
+      }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
       }),

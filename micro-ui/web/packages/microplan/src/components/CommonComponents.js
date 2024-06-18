@@ -1,4 +1,5 @@
-import { AutoRenew, Close, FileDownload } from "@digit-ui/digit-ui-svg-components";
+//import { AutoRenew, Close, FileDownload } from "@digit-ui/digit-ui-svg-components";
+import {AutoRenew,Close,FileDownload} from "@digit-ui/digit-ui-svg-components";
 import React, { useCallback } from "react";
 
 export const ButtonType1 = (props) => {

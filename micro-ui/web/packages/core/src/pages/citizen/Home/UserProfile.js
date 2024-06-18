@@ -40,7 +40,7 @@ import {
     "XZOvia7VujatUwVTrIt+Q/Csc7Tuhe+BOakT10b4TuoiiJjvgU9emTO42PwEfBa+cuodKkuf42DXr1D3JpXz73Hnn0j10evHKe+nufgfUm+7B84sX9FfdEzXux2DBpWuKokkCqN/5pa/8pmvn" +
     "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
   
-  const UserProfile = ({ stateCode="pg", userType, cityDetails }) => {
+  const UserProfile = ({ stateCode="mz", userType, cityDetails }) => {
     
     const history = useHistory();
     const { t } = useTranslation();

@@ -1,10 +1,12 @@
-import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@digit-ui/digit-ui-components";
+//import { CardLabel, Header, Loader, MultiSelectDropdown, TextInput, Toast } from "@digit-ui/digit-ui-components";
+import {CardLabel,Header,Loader,MultiSelectDropdown,TextInput,Toast} from "@digit-ui/digit-ui-components";
 import React, { memo, useCallback, useEffect, useMemo, useState, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { processHierarchyAndData, findParent, fetchDropdownValues } from "../utils/processHierarchyAndData";
 import { CloseButton, ModalHeading } from "./CommonComponents";
 import { EXCEL, GEOJSON, PRIMARY_THEME_COLOR, SHAPEFILE, commonColumn } from "../configs/constants";
-import { Button, LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
+//import { Button, LoaderWithGap, Modal } from "@digit-ui/digit-ui-react-components";
+import {Button,LoaderWithGap,Modal} from "@digit-ui/digit-ui-react-components";
 import { tourSteps } from "../configs/tourSteps";
 import { useMyContext } from "../utils/context";
 // import { timeLineOptions } from "../configs/timeLineOptions.json";

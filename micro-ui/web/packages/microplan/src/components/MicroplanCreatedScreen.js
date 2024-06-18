@@ -1,9 +1,12 @@
 import React, { memo } from "react";
-import { ActionBar, ArrowForward, Banner } from "@digit-ui/digit-ui-components";
+//import { ActionBar, ArrowForward, Banner } from "@digit-ui/digit-ui-components";
+import {ActionBar,Banner} from "@digit-ui/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { ArrowBack, FileDownload } from "@digit-ui/digit-ui-svg-components";
+//import { ArrowBack, FileDownload } from "@digit-ui/digit-ui-svg-components";
+import {ArrowBack,FileDownload} from "@digit-ui/digit-ui-svg-components";
 import { convertJsonToXlsx } from "../utils/jsonToExcelBlob";
-import { Button } from "@digit-ui/digit-ui-react-components";
+//import { Button } from "@digit-ui/digit-ui-react-components";
+import {Button } from "@digit-ui/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";

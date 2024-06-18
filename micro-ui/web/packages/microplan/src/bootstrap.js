@@ -33,9 +33,9 @@ const mount = (el, { history,login }) => {
   
   const moduleReducers = (initData) => {
   };
-  const enabledModules=["PT","HRMS"]
+  const enabledModules=["PT","HRMS" ,"MICROPLAN"]
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
   ReactDOM.render(
     // <DigitUI stateCode={stateCode} enabledModules={enabledModules}  defaultLanding="employee"  moduleReducers={moduleReducers} />,
     <QueryClientProvider client={queryClient}>

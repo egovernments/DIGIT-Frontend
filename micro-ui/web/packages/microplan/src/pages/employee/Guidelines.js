@@ -2,10 +2,11 @@ import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ArrowForward } from "@digit-ui/digit-ui-svg-components";
-import { Button } from "@digit-ui/digit-ui-react-components";
+//import { Button } from "@digit-ui/digit-ui-react-components";
+import {Button} from "@digit-ui/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
-import { ActionBar } from "@digit-ui/digit-ui-components";
-
+//import { ActionBar } from "@digit-ui/digit-ui-components";
+import {ActionBar} from "@digit-ui/digit-ui-components";
 const Guidelines = ({ path }) => {
   const { t } = useTranslation();
   const history = useHistory()

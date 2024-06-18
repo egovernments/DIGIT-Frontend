@@ -1,15 +1,21 @@
 import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { Switch, useLocation, BrowserRouter as Router } from 'react-router-dom';
-import { initCampaignComponents, CampaignModule } from './Module';
-
+import { initCampaignComponents } from './Module';
+//import EmployeeApp from './pages/employee/index';
+import EmployeeApp from './pages/employee/index';
 const App = ({ queryClient }) => {
     initCampaignComponents();
+    console.log("Context Path:", window.contextPath);
+
 
     return (
         <QueryClientProvider client={queryClient}>
           <Router>
-            <CampaignModule path={`/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/engagement`} userType={userType} stateCode={"pg"} tenants={["pg.citya","pg.cityb","pg.cityc"]} />
+            <EmployeeApp path={`/${
+                window.contextPath ? window.contextPath : 'core-digit-ui'
+              }/employee/campaign`}
+            />
           </Router>
         </QueryClientProvider>
       );

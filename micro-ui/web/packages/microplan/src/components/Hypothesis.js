@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback, Fragment, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Trash } from "@digit-ui/digit-ui-svg-components";
+//import { Trash } from "@digit-ui/digit-ui-svg-components";
+import {Trash} from "@digit-ui/digit-ui-svg-components";
 import { CloseButton, ModalHeading } from "./CommonComponents";
-import { Dropdown, TextInput, Toast } from "@digit-ui/digit-ui-components";
+//import { Dropdown, TextInput, Toast } from "@digit-ui/digit-ui-components";
+import {Dropdown,TextInput,Toast} from "@digit-ui/digit-ui-components";
 import { useMyContext } from "../utils/context";
 import { tourSteps } from "../configs/tourSteps";
 import { v4 as uuidv4 } from "uuid";
 import { PlusWithSurroundingCircle } from "../icons/Svg";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
-import { Modal } from "@digit-ui/digit-ui-react-components";
+//import { Modal } from "@digit-ui/digit-ui-react-components";
+import {Modal} from "@digit-ui/digit-ui-react-components";
 const page = "hypothesis";
 
 const Hypothesis = ({ campaignType = "SMC", microplanData, setMicroplanData, checkDataCompletion, setCheckDataCompletion, currentPage, pages }) => {

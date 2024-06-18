@@ -3,11 +3,11 @@ import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-d
 import CitizenApp from "./citizen";
 import EmployeeApp from "./employee";
 
-export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initData ,defaultLanding="employee",queryClient}) => {
+export const DigitApp = ({ stateCode="mz", modules, appTenants, logoUrl, initData ,defaultLanding="employee",queryClient}) => {
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
-  const cityDetails ="pg" || Digit.ULBService.getCurrentUlb();
+  const cityDetails ="mz" || Digit.ULBService.getCurrentUlb();
   const userDetails = Digit.UserService.getUser();
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb, Loader } from "@digit-ui/digit-ui-react-components";
+//import { PrivateRoute, AppContainer, BreadCrumb, Loader } from "@digit-ui/digit-ui-react-components";
+import {PrivateRoute,AppContainer,BreadCrumb,Loader} from "@digit-ui/digit-ui-react-components";
 import MicroplanningHeader from "../../components/MicroplanningHeader";
 import Guidelines from "./Guidelines";
 import CreateMicroplan from "./CreateMicroplan";
@@ -63,8 +64,8 @@ const App = ({ path }) => {
     i18n,
   })
   
-  const {dispatch} = useMyContext()
-
+const {dispatch} = useMyContext()
+console.log("dispatch",dispatch)
   const location = useLocation();
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
