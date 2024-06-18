@@ -17,6 +17,9 @@ cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --access public
 # msg "Building and publishing Utilities module"
 cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
+# msg "Building and publishing OpenPayment module"
+cd "$BASEDIR/packages/modules/open-payment" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+
 
 # msg "Building and publishing Utilities module"
 cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
