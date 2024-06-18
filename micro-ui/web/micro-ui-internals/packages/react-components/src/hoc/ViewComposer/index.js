@@ -5,6 +5,7 @@ import { RenderDataSection, RenderDocumentsSection, RenderWfActions, RenderWfHis
 import HorizontalNav from "../../atoms/HorizontalNav";
 import CardSubHeader from "../../atoms/CardSubHeader";
 import { SVG } from "../../atoms/SVG";
+import { useRef } from "react";
 
 // format of data expected by this component
 
@@ -146,7 +147,14 @@ const renderCardSectionJSX = (section, cardErrors) => {
 const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
   const { cards } = data;
   const [activeNav, setActiveNav] = useState(data?.horizontalNav?.activeByDefault);
-  
+  const cardRefs = useRef([]);
+
+  const scrollToCard = (index) => {
+    if (cardRefs.current[index]) {
+      const cardTopPosition = cardRefs.current[index].offsetTop;
+      window.scrollTo({ top: cardTopPosition, behavior: "smooth" });
+    }
+  };
 
   if (isLoading) return <Loader />;
 
@@ -157,13 +165,15 @@ const ViewComposer = ({ isLoading = false, data, cardErrors, ...props }) => {
         ?.filter((card) => !card?.navigationKey && card?.sections)
         ?.map((card, cardIdx) => {
           const { sections } = card;
+          const hasErrors = cardErrors?.[card?.errorName]?.filter((i) => i?.name === card?.name)?.length > 0;
           return (
             <Card
               style={activeNav && card.navigationKey ? (activeNav !== card.navigationKey ? { display: "none" } : {}) : {}}
-              className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""} ${
-                cardErrors?.[card?.errorName ? card?.errorName : card?.name]?.filter((i) => i?.name === card?.name)?.length > 0 ? "card-error" : ""
-              }`}
-            >
+              className={`employeeCard-override ${card?.cardStyle ? card?.cardStyle : ""} ${hasErrors ? "card-error" : ""}`}
+              ReactRef={hasErrors ? (el) => (cardRefs.current[cardIdx] = el) : null}
+
+>
+              {hasErrors && scrollToCard(cardIdx)}
               {sections?.map((section, sectionIdx) => {
                 return renderCardSectionJSX(section, cardErrors?.[card?.errorName ? card?.errorName : card?.name]);
               })}
