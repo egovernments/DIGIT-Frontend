@@ -282,7 +282,7 @@ const createBatchRequest = async (request: any, batch: any[], mobileNumberRowNum
     includeDeleted: true
   };
   logger.info("Individual search to validate the mobile no initiated");
-  const response = await httpRequest(config.host.healthIndividualHost + config.paths.healthIndividualSearch, searchBody, params);
+  const response = await httpRequest(config.host.healthIndividualHost + config.paths.healthIndividualSearch, searchBody, params, undefined, undefined, undefined, undefined, true);
 
   if (!response) {
     throwError("COMMON", 400, "INTERNAL_SERVER_ERROR", "Error occurred during user search while validating mobile number.");
@@ -465,7 +465,7 @@ async function getEmployeesBasedOnUuids(dataToCreate: any[], request: any) {
     };
 
     try {
-      const response = await httpRequest(searchUrl, searchBody, params);
+      const response = await httpRequest(searchUrl, searchBody, params, undefined, undefined, undefined, undefined, true);
       if (response && response.Employees) {
         employeesSearched = employeesSearched.concat(response.Employees);
       } else {
@@ -672,7 +672,7 @@ async function handleUserProcess(request: any, createAndSearchConfig: any, param
     newRequestBody.Employees = Employees
   }
   if (newRequestBody.Employees.length > 0) {
-    var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true);
+    var responsePayload = await httpRequest(createAndSearchConfig?.createBulkDetails?.url, newRequestBody, params, "post", undefined, undefined, true, true);
     if (responsePayload?.Employees && responsePayload?.Employees?.length > 0) {
       enrichDataToCreateForUser(dataToCreate, responsePayload, request);
     }
@@ -745,17 +745,29 @@ async function processGenericRequest(request: any, localizationMap?: { [key: str
 }
 
 async function handleResouceDetailsError(request: any, error: any) {
+  var stringifiedError: any;
+  if (error?.description || error?.message) {
+    stringifiedError = JSON.stringify({
+      status: error.status || '',
+      code: error.code || '',
+      description: error.description || '',
+      message: error.message || ''
+    });
+  }
+  else {
+    if (typeof error == "object")
+      stringifiedError = JSON.stringify(error);
+    else {
+      stringifiedError = error
+    }
+  }
+
   logger.error("Error while processing after validation : " + error)
   if (request?.body?.ResourceDetails) {
     request.body.ResourceDetails.status = "failed";
     request.body.ResourceDetails.additionalDetails = {
       ...request?.body?.ResourceDetails?.additionalDetails,
-      error: JSON.stringify({
-        status: error.status || '',
-        code: error.code || '',
-        description: error.description || '',
-        message: error.message || ''
-      })
+      error: stringifiedError
     };
     const persistMessage: any = { ResourceDetails: request.body.ResourceDetails }
     if (request?.body?.ResourceDetails?.action == "create") {
@@ -896,7 +908,7 @@ async function confirmProjectParentCreation(request: any, projectId: any) {
 async function projectCreate(projectCreateBody: any, request: any) {
   logger.info("Project creation API started")
   logger.debug("Project creation body " + getFormattedStringForDebug(projectCreateBody))
-  const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody);
+  const projectCreateResponse = await httpRequest(config.host.projectHost + config.paths.projectCreate, projectCreateBody, undefined, undefined, undefined, undefined, undefined, true);
   logger.debug("Project creation response" + getFormattedStringForDebug(projectCreateResponse))
   if (projectCreateResponse?.Project[0]?.id) {
     logger.info("Project created successfully with name " + JSON.stringify(projectCreateResponse?.Project[0]?.name))
