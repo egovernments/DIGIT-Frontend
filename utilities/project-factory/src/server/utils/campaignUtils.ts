@@ -12,12 +12,12 @@ import { enrichProjectDetailsFromCampaignDetails } from "./transforms/projectTyp
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
-import { campaignStatuses, headingMapping, processTracks, resourceDataStatuses } from "../config/constants";
+import { campaignStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
-import { persistTrack } from "./processTrackUtils";
+// import { persistTrack } from "./processTrackUtils";
 const _ = require('lodash');
 
 
@@ -544,7 +544,7 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
 }
 
 async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boolean = false) {
-    persistTrack(request.body.CampaignDetails.id, processTracks.validation.type, processTracks.validation.status);
+    // persistTrack(request.body.CampaignDetails.id, processTracks.validation.type, processTracks.validation.status);
     const action = request?.body?.CampaignDetails?.action;
     if (firstPersist) {
         request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
@@ -1337,7 +1337,7 @@ async function processAfterPersist(request: any, actionInUrl: any) {
 async function processBasedOnAction(request: any, actionInUrl: any) {
     if (actionInUrl == "create") {
         request.body.CampaignDetails.id = uuidv4()
-        persistTrack(request.body.CampaignDetails.id, processTracks.validation.uuidAssigned, processTracks.validation.uuidAssigned);
+        // persistTrack(request.body.CampaignDetails.id, processTracks.validation.uuidAssigned, processTracks.validation.uuidAssigned);
     }
     await enrichAndPersistProjectCampaignForFirst(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)

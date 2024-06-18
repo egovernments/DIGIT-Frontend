@@ -86,7 +86,7 @@ const config = {
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-uat.digit.org/",
     projectFactoryBff: "http://localhost:8080/",
     idGenHost: process.env.EGOV_IDGEN_HOST || "https://unified-uat.digit.org/",
-    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-uat.digit.org/",
+    facilityHost: process.env.EGOV_FACILITY_HOST || "https://unified-ua.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-uat.digit.org/",
     projectHost: process.env.EGOV_PROJECT_HOST || "https://unified-uat.digit.org/",
     userHost: process.env.EGOV_USER_HOST || "https://unified-uat.digit.org/",
@@ -142,6 +142,7 @@ const config = {
     matchFacilityData: false,
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3",
     notCreateUserIfAlreadyThere: process.env.NOT_CREATE_USER_IF_ALREADY_THERE || false,
+    maxHttpRetries: process.env.MAX_HTTP_RETRIES || "3",
   }
 };
 // Exporting getErrorCodes function and config object
