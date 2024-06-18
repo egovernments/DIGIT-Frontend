@@ -10,6 +10,7 @@ import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
+import {initOpenPaymentComponents} from "@egovernments/digit-ui-module-open-payment";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -18,12 +19,14 @@ import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
 
-const enabledModules = [ "DSS", "HRMS",
+const enabledModules = [
+  "DSS", "HRMS",
 "Workbench",
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities","PGR"
+  "Utilities","PGR",
 //added to check fsm
 // "FSM"
+"OpenPayment"
 ];
 
 const initTokens = (stateCode) => {
@@ -71,6 +74,7 @@ const initDigitUI = () => {
   initUtilitiesComponents();
   initWorkbenchComponents();
   initPGRComponents();
+  initOpenPaymentComponents();
 
   const moduleReducers = (initData) =>  ({
     pgr: PGRReducers(initData),

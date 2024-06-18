@@ -33,6 +33,8 @@
     "devD:utilities": "cd packages/modules/utilities && yarn start",
     "dev:workbench": "cd packages/modules/workbench && yarn start",
     "dev:pgr": "cd packages/modules/pgr && yarn start",
+    "dev:openpayment": "cd packages/modules/open-payment && yarn start",
+    "devD:openpayment": "cd packages/modules/open-payment && yarn start",
     "devD:engagement": "cd packages/modules/engagement && yarn start",
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
@@ -46,6 +48,7 @@
     "build:engagement": "cd packages/modules/engagement && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
     "build:pgr": "cd packages/modules/pgr && yarn build",
+    "build:openpayment": "cd packages/modules/open-payment && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
