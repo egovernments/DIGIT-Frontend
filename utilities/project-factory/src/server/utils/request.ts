@@ -66,8 +66,8 @@ const httpRequest = async (
   responseType: string = "",
   headers: any = defaultheader,
   sendStatusCode: any = false,
-  dontThrowError: any = false,
-  retry: any = false
+  retry: any = false,
+  dontThrowError: any = false
 ): Promise<any> => {
   let attempt = 0; // Track the number of attempts
   const maxAttempts = parseInt(config.values.maxHttpRetries) || 4; // Maximum number of retry attempts
@@ -138,33 +138,42 @@ const httpRequest = async (
         ": error response :" +
         (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message))
       logger.error(":: ERROR STACK :: " + error?.stack || error);
-      if (!dontThrowError) {
-        // Throw error response via request if error response contains errors
-        if (errorResponse?.data?.Errors?.[0]) {
-          errorResponse.data.Errors[0].status = errorResponse?.data?.Errors?.[0]?.status || errorResponse?.status
-          throwErrorViaRequest(errorResponse?.data?.Errors?.[0]);
-        } else {
-          // Throw error message via request
-          throwErrorViaRequest(
-            "error occurred while making request to " +
-            getServiceName(_url) +
-            ": error response :" +
-            (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message)
-          );
-        }
-      } else if (dontThrowError && retry) {
+      if (retry) {
         attempt++; // Increment the attempt count
         if (attempt >= maxAttempts) {
-          return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] }; // Return the error response or error details
+          if (dontThrowError) {
+            return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] };
+          }
+          else {
+            throwTheHttpError(errorResponse, error, _url);
+          }
         }
         // Wait for a short period before retrying
         logger.info(`Waiting for 20 seconds before retrying httprequest with url ${_url}`);
         await new Promise(resolve => setTimeout(resolve, 20000));
+      } else if (dontThrowError) {
+        return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] };
       } else {
-        return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] }; // Return the error response or error details
+        throwTheHttpError(errorResponse, error, _url);
       }
     }
   }
 };
+
+function throwTheHttpError(errorResponse?: any, error?: any, _url?: string) {
+  // Throw error response via request if error response contains errors
+  if (errorResponse?.data?.Errors?.[0]) {
+    errorResponse.data.Errors[0].status = errorResponse?.data?.Errors?.[0]?.status || errorResponse?.status
+    throwErrorViaRequest(errorResponse?.data?.Errors?.[0]);
+  } else {
+    // Throw error message via request
+    throwErrorViaRequest(
+      "error occurred while making request to " +
+      getServiceName(_url) +
+      ": error response :" +
+      (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message)
+    );
+  }
+}
 
 export { httpRequest }; // Exporting the httpRequest function for use in other modules
