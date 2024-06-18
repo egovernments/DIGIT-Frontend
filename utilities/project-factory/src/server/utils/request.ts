@@ -138,10 +138,12 @@ const httpRequest = async (
         ": error response :" +
         (errorResponse ? parseInt(errorResponse?.status, 10) : error?.message))
       logger.error(":: ERROR STACK :: " + error?.stack || error);
+      logger.warn(`Error occurred while making request to ${getServiceName(_url)}: returning error response ${JSON.stringify(errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] })}`);
       if (retry) {
         attempt++; // Increment the attempt count
         if (attempt >= maxAttempts) {
           if (dontThrowError) {
+            logger.warn(`Maximum retry attempts reached for httprequest with url ${_url}`);
             return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] };
           }
           else {
@@ -149,9 +151,10 @@ const httpRequest = async (
           }
         }
         // Wait for a short period before retrying
-        logger.info(`Waiting for 20 seconds before retrying httprequest with url ${_url}`);
+        logger.warn(`Waiting for 20 seconds before retrying httprequest with url ${_url}`);
         await new Promise(resolve => setTimeout(resolve, 20000));
       } else if (dontThrowError) {
+        logger.warn(`Error occurred while making request to ${getServiceName(_url)}: returning error response ${JSON.stringify(errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] })}`);
         return errorResponse?.data || { Errors: [{ code: error.message, description: error.stack }] };
       } else {
         throwTheHttpError(errorResponse, error, _url);
