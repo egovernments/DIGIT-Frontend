@@ -1741,7 +1741,6 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
         const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
 
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
-        // const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, request?.query?.type || request?.body?.ResourceDetails?.type, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, filters);
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
             logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
             throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);

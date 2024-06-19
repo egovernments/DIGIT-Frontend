@@ -1061,33 +1061,6 @@ async function callMdmsData(
   return response;
 }
 
-
-
-async function callMdmsV2Data(
-  request: any,
-  moduleName: string,
-  masterName: string,
-  tenantId: string, filters: any) {
-  try {
-    const { RequestInfo = {} } = request?.body || {};
-    const requestBody = {
-      RequestInfo,
-      MdmsCriteria: {
-        tenantId: tenantId,
-        filters,
-        schemaCode: moduleName + "." + config?.masterNameForSchemaOfColumnHeaders,
-        limit: 10,
-        offset: 0
-      },
-    };
-    const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
-    const response = await httpRequest(url, requestBody, { tenantId: tenantId });
-    return response;
-  } catch (error: any) {
-    throwError("MDMS", 400, "MDMS_DATA_NOT_FOUND_ERROR", `Mdms Data not found for ${moduleName}"-"${masterName}`)
-  }
-}
-
 function enrichSchema(data: any, properties: any, required: any, columns: any, unique: any, columnsNotToBeFreezed: any, errorMessage: any) {
 
   // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
@@ -1176,7 +1149,11 @@ async function callMdmsTypeSchema(
     }
   };
   const url = config.host.mdmsV2 + config.paths.mdms_v2_search;
-  const response = await httpRequest(url, requestBody);
+  const header = {
+    ...defaultheader,
+    cachekey: `mdmsv2Seacrh${requestBody?.MdmsCriteria?.tenantId}${campaignType}${type}.${campaignType}${requestBody?.MdmsCriteria?.schemaCode}`
+  }
+  const response = await httpRequest(url, requestBody, undefined, undefined, undefined, header);
   if (!response?.mdms?.[0]?.data) {
     throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "Error occured during schema search");
   }
@@ -1210,6 +1187,5 @@ export {
   getTargetSheetDataAfterCode,
   callMdmsData,
   getMDMSV1Data,
-  callMdmsV2Data,
   callMdmsTypeSchema
 }

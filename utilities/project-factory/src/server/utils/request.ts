@@ -2,7 +2,7 @@ import { Response } from "express"; // Importing necessary module Response from 
 import { getFormattedStringForDebug, logger } from "./logger"; // Importing logger from logger module
 import { throwErrorViaRequest } from "./genericUtils"; // Importing necessary functions from genericUtils module
 import config from "../config";
-import { redis } from "./redisUtils";
+import { redis, checkRedisConnection } from "./redisUtils"; // Importing checkRedisConnection function
 
 var Axios = require("axios").default; // Importing axios library
 var get = require("lodash/get"); // Importing get function from lodash library
@@ -48,8 +48,6 @@ const cacheEnabled = config.cacheValues.cacheEnabled; // Variable to indicate wh
 /**
  * Used to Make API call through axios library
  * 
- * @author jagankumar-egov
- * 
  * @param {string} _url - The URL to make the HTTP request to
  * @param {Object} _requestBody - The request body
  * @param {Object} _params - The request parameters
@@ -77,7 +75,8 @@ const httpRequest = async (
 
   while (attempt < maxAttempts) {
     try {
-      if (cacheKey && cacheEnabled) {
+      const isRedisConnected = await checkRedisConnection();
+      if (cacheKey && cacheEnabled && isRedisConnected) {
         const cachedData = await redis.get(cacheKey); // Get cached data
         if (cachedData) {
           logger.info("CACHE HIT :: " + cacheKey);
@@ -120,7 +119,7 @@ const httpRequest = async (
       logger.debug("INTER-SERVICE :: RESPONSEBODY :: " + getFormattedStringForDebug(response.data));
 
       if ([200, 201, 202].includes(responseStatus)) {
-        if (cacheKey) {
+        if (cacheKey && isRedisConnected) {
           await redis.set(cacheKey, JSON.stringify(response.data), "EX", cacheTTL); // Cache the response data with TTL
         }
         return sendStatusCode ? { ...response.data, statusCode: responseStatus } : response.data;
@@ -178,7 +177,7 @@ const httpRequest = async (
 function throwTheHttpError(errorResponse?: any, error?: any, _url?: string) {
   // Throw error response via request if error response contains errors
   if (errorResponse?.data?.Errors?.[0]) {
-    errorResponse.data.Errors[0].status = errorResponse?.data?.Errors?.[0]?.status || errorResponse?.status
+    errorResponse.data.Errors[0].status = errorResponse?.data?.Errors?.[0]?.status || errorResponse?.status;
     throwErrorViaRequest(errorResponse?.data?.Errors?.[0]);
   } else {
     // Throw error message via request
