@@ -667,6 +667,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 }
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
+  console.log(request.body,"boddddddddddddddddddddd")
   request.body.generatedResource = newEntryResponse;
   fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
   return request.body.generatedResource;
@@ -711,6 +712,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 async function processGenerate(request: any) {
   // fetch the data from db  to check any request already exists
   const responseData = await searchGeneratedResources(request);
+  console.log(responseData,"11111111111")
   // modify response from db 
   const modifiedResponse = await enrichAuditDetails(responseData);
   // generate new random id and make filestore id null
