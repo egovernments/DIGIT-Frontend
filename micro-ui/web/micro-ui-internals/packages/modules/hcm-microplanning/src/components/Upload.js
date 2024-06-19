@@ -76,7 +76,6 @@ const Upload = ({
   const [template, setTemplate] = useState([]);
   const [resourceMapping, setResourceMapping] = useState([]);
   const [previewUploadedData, setPreviewUploadedData] = useState();
-  const [uploadGuideLines, setUploadGuideLines] = useState();
   const { state, dispatch } = useMyContext();
 
   //fetch campaign data
@@ -261,10 +260,6 @@ const Upload = ({
       let uploadSections = state?.UploadConfiguration;
       let schemas = state?.Schemas;
       let UIConfiguration = state?.UIConfiguration;
-      if (UIConfiguration) {
-        const uploadGuideLinesList = UIConfiguration.find((item) => item.name === "uploadGuideLines").UploadGuideLineInstructions;
-        setUploadGuideLines(uploadGuideLinesList);
-      }
       if (schemas) setValidationSchemas(schemas);
       if (uploadSections) {
         setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
@@ -287,16 +282,21 @@ const Upload = ({
     ));
   }, [sections, selectedSection, fileDataList]);
 
+  const showDownloadTemplate = () => {
+    if (selectedSection?.UploadFileTypes) {
+      const schema = getSchema(campaignType, selectedFileType?.id, selectedSection.id, validationSchemas);
+      if (schema?.template?.showTemplateDownload) return true;
+    }
+    return false;
+  };
+
   // Handler for when a file type is selected for uplaod
   const selectFileTypeHandler = (e) => {
     if (selectedSection?.UploadFileTypes) {
       const schema = getSchema(campaignType, e.target.name, selectedSection.id, validationSchemas);
       setSelectedFileType(selectedSection.UploadFileTypes.find((item) => item.id === e.target.name));
-      if (schema?.template?.showTemplateDownload) {
-        setModal("upload-modal");
-        return;
-      }
-      UploadFileClickHandler(false);
+      if (schema?.template?.showTemplateDownload) setModal("upload-modal");
+      else UploadFileClickHandler(false);
       return;
     }
     setToast({
@@ -896,6 +896,7 @@ const Upload = ({
                     UploadFileToFileStorage={UploadFileToFileStorage}
                     onTypeError={onTypeErrorWhileFileUpload}
                     downloadTemplateHandler={downloadTemplateHandler}
+                    showDownloadTemplate={showDownloadTemplate}
                   />
                 </div>
               ) : (
@@ -918,6 +919,7 @@ const Upload = ({
                     error={uploadedFileError}
                     openDataPreview={openDataPreview}
                     downloadTemplateHandler={downloadTemplateHandler}
+                    showDownloadTemplate={showDownloadTemplate}
                   />
                 )}
               </div>
@@ -1223,7 +1225,15 @@ const UploadComponents = ({ item, selected, uploadOptions, selectedFileType, sel
 };
 
 // Component for uploading file
-const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFileStorage, section, onTypeError, downloadTemplateHandler }) => {
+const FileUploadComponent = ({
+  selectedSection,
+  selectedFileType,
+  UploadFileToFileStorage,
+  section,
+  onTypeError,
+  downloadTemplateHandler,
+  showDownloadTemplate,
+}) => {
   if (!selectedSection || !selectedFileType) return <div></div>;
   const { t } = useTranslation();
   let types;
@@ -1235,12 +1245,14 @@ const FileUploadComponent = ({ selectedSection, selectedFileType, UploadFileToFi
       <div>
         <div className="heading">
           <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
-            <div className="icon">
-              <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
-            </div>
-            <p>{t("DOWNLOAD_TEMPLATE")}</p>
-          </button>
+          {showDownloadTemplate() && (
+            <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
+              <div className="icon">
+                <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
+              </div>
+              <p>{t("DOWNLOAD_TEMPLATE")}</p>
+            </button>
+          )}
         </div>
         <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
         <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} onTypeError={onTypeError} multiple={false} name="file" types={types}>
@@ -1267,6 +1279,7 @@ const UploadedFile = ({
   error,
   openDataPreview,
   downloadTemplateHandler,
+  showDownloadTemplate,
 }) => {
   const { t } = useTranslation();
   const [errorList, setErrorList] = useState([]);
@@ -1306,12 +1319,14 @@ const UploadedFile = ({
       <div>
         <div className="heading">
           <h2 className="h2-class">{t(`HEADING_FILE_UPLOAD_${selectedSection.code}_${selectedFileType.code}`)}</h2>
-          <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
-            <div className="icon">
-              <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
-            </div>
-            <p>{t("DOWNLOAD_TEMPLATE")}</p>
-          </button>
+          {showDownloadTemplate() && (
+            <button type="button" className="download-template-button" onClick={downloadTemplateHandler} tabIndex="0">
+              <div className="icon">
+                <CustomIcon color={PRIMARY_THEME_COLOR} height={"24"} width={"24"} Icon={Icons.FileDownload} />
+              </div>
+              <p>{t("DOWNLOAD_TEMPLATE")}</p>
+            </button>
+          )}
         </div>
         <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
 

@@ -1052,7 +1052,7 @@ const updateHyothesisAPICall = async (
       onSuccess: async (data) => {
         updateData();
         setLoaderActivation(false);
-        setMicroplanData((previous) => ({ ...previous, microplanStatus: "GENERATED" }));
+        setMicroplanData((previous) => ({ ...previous, microplanStatus: status }));
       },
       onError: (error, variables) => {
         setLoaderActivation(false);
