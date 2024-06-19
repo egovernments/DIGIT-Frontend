@@ -1,5 +1,5 @@
 
-import { httpRequest } from "./request";
+import { defaultheader, httpRequest } from "./request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../kafka/Listener'
@@ -1085,7 +1085,11 @@ async function addBoundariesForData(request: any, CampaignDetails: any) {
             hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
             includeChildren: true
         }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+        const header = {
+            ...defaultheader,
+            cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+        }
+        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
         if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
             var boundaryChildren = boundaries.reduce((acc: any, boundary: any) => {
                 acc[boundary.code] = boundary?.includeAllChildren;
@@ -1160,7 +1164,11 @@ async function reorderBoundaries(request: any, localizationMap?: any) {
             hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
             includeChildren: true
         }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+        const header = {
+            ...defaultheader,
+            cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+        }
+        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
         if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
             const codesTargetMapping = await getCodesTarget(request, localizationMap)
             mapTargets(boundaryResponse?.TenantBoundary?.[0]?.boundary, codesTargetMapping)
