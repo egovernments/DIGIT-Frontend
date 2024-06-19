@@ -49,6 +49,15 @@
     "react": "17.0.2",
     "react-i18next": "11.16.2",
     "i18next-browser-languagedetector": "^7.2.1",
-    "i18next-http-backend": "^2.5.1"
+    "i18next-http-backend": "^2.5.1",
+    "node-sass": "^6.0.0"
+  },
+  "resolutions":  {
+    "**/babel-loader": "8.2.2",
+    "**/@babel/core": "7.14.0",
+    "**/@babel/preset-env": "7.14.0",
+    "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
+    "**/polished":"4.2.2",
+    "fast-uri":"2.1.0"
   }
 }
