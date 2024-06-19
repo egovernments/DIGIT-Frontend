@@ -154,6 +154,8 @@ const MicroplanPreview = ({
   // check if data has changed or not
   const updateData = useCallback(
     (doPerform) => {
+      // Update the microplan data with selected hierarchy and resources
+      // This function also handles setting the completion check based on the action to be performed
       if (!setMicroplanData) return;
       try {
         let tempData = filterMicroplanDataToShowWithHierarchySelection(data, {}, hierarchy);
