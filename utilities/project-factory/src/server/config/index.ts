@@ -98,6 +98,7 @@ const config = {
     hrmsHost: process.env.EGOV_HRMS_HOST || "https://unified-dev.digit.org/",
     localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
     healthIndividualHost: process.env.EGOV_HEALTH_INDIVIDUAL_HOST || "https://unified-dev.digit.org/",
+    auditHost: process.env.EGOV_AUDIT_HOST || "https://unified-dev.digit.org/"
   },
   // Paths for different services
   paths: {
@@ -129,6 +130,7 @@ const config = {
     mdmsV2SchemaSearch: "mdms-v2/schema/v1/_search",
     mdms_v2_search: "mdms-v2/v2/_search",
     healthIndividualSearch: process.env.EGOV_HEALTH_INDIVIDUAL_SEARCH || "health-individual/v1/_search",
+    auditSearch: "audit-service/log/v1/_search"
   },
   // Values configuration
   values: {

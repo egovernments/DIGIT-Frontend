@@ -6,7 +6,7 @@ import { produceModifiedMessages } from "../kafka/Listener";
 import { generateHierarchyList, getAllFacilities, getCampaignSearchResponse, getHierarchy } from "../api/campaignApis";
 import { getBoundarySheetData, getSheetData, createAndUploadFile, createExcelSheet, getTargetSheetData, callMdmsData, callMdmsTypeSchema } from "../api/genericApis";
 import { logger } from "./logger";
-import { getConfigurableColumnHeadersBasedOnCampaignType, getDifferentTabGeneratedBasedOnConfig, getLocalizedName } from "./campaignUtils";
+import { checkCampaignObjectSame, getConfigurableColumnHeadersBasedOnCampaignType, getDifferentTabGeneratedBasedOnConfig, getLocalizedName, searchAuditWithCamapignId } from "./campaignUtils";
 import Localisation from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
@@ -300,7 +300,8 @@ async function generateNewRequestObject(request: any) {
       lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
     },
     additionalDetails: additionalDetails,
-    count: null
+    count: null,
+    campaignId: request?.query?.campaignId
   };
   return [newEntry];
 }
@@ -667,6 +668,10 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 }
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
+  logger.info(`generation of new Resource of type ${request?.query?.type} started`)
+  const auditResponse = await searchAuditWithCamapignId(request, request?.query?.campaignId)
+  const auditId = auditResponse?.AuditLogs?.[0]?.id;
+  newEntryResponse[0] = { ...newEntryResponse[0], auditId: auditId };
   request.body.generatedResource = newEntryResponse;
   fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
   return request.body.generatedResource;
@@ -699,10 +704,20 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    processGenerateForNew(request, generatedResource, newEntryResponse)
+    await processGenerateForNew(request, generatedResource, newEntryResponse)
   }
-  else {
-    request.body.generatedResource = responseData
+  if (!forceUpdateBool && responseData.length > 0) {
+    const isSameCampaign: boolean = await checkCampaignObjectSame(request, responseData?.[0]?.campaignid, responseData?.[0]?.auditid)
+    if (isSameCampaign) {
+      request.body.generatedResource = responseData
+    }
+    else {
+      generatedResource = { generatedResource: oldEntryResponse };
+      // send message to update topic 
+      produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
+      request.body.generatedResource = oldEntryResponse;
+      await processGenerateForNew(request, generatedResource, newEntryResponse)
+    }
   }
 }
 /* 
@@ -965,7 +980,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
     if (districtIndex != -1) {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
-      const districtKey = districtLevelRow.join('_');
+      const districtKey = districtLevelRow.join('#');
 
       if (!uniqueDistrictsForMainSheet.includes(districtKey)) {
         uniqueDistrictsForMainSheet.push(districtKey);
@@ -973,7 +988,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
     }
   }
   for (const uniqueData of uniqueDistrictsForMainSheet) {
-    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('_') + 1));
+    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('#') + 1));
   }
   return differentDistrictTabs;
 }
