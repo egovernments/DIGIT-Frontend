@@ -181,6 +181,7 @@ function groupByType(data) {
   };
 }
 
+
 function groupByTypeRemap(data) {
   if (!data) return null;
 
@@ -189,23 +190,32 @@ function groupByTypeRemap(data) {
   data.forEach((item) => {
     const type = item?.type;
     const boundaryType = item?.type;
-    const parentCode = item?.parent;
-    const obj = {
-      parentCode,
-      boundaryTypeData: {
-        TenantBoundary: [
-          {
-            boundary: [{ ...item, boundaryType }],
-          },
-        ],
-      },
-    };
-
-    if (result[type]) {
-      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
-    } else {
-      result[type] = [obj];
+    const parentCode = item?.parent !== undefined ? item.parent : null;
+    
+    if (!result[type]) {
+      result[type] = {};
     }
+    
+    if (!result[type][parentCode]) {
+      result[type][parentCode] = {
+        parentCode,
+        boundaryTypeData: {
+          TenantBoundary: [
+            {
+              boundary: [],
+            },
+          ],
+        },
+      };
+    }
+
+    const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
+    targetBoundaryArray.push({ ...item, boundaryType });
+  });
+
+  // Convert the grouped data from objects to arrays
+  Object.keys(result).forEach(type => {
+    result[type] = Object.values(result[type]);
   });
 
   return result;
@@ -556,6 +566,43 @@ const SetupCampaign = ({ hierarchyType }) => {
     return restructuredData;
   }
 
+  function restructureBoundaryData(selectedData, boundaryData, lowestHierarchyLevel , isAllChildrenPresent) {
+    const nowLowest = boundaryData[lowestHierarchyLevel];
+  
+    if (!lowestHierarchyLevel || !isAllChildrenPresent) return selectedData;
+  
+    for (let i = 0; i < nowLowest?.length; i++) {
+        // const isParentProcessed = false;
+        const parent = nowLowest?.[i]?.parentCode;
+        const number = nowLowest?.[i]?.boundaryTypeData?.TenantBoundary?.[0]?.boundary?.length;
+  
+        const childrenWithParent = selectedData?.filter(item => item?.parent === parent);
+        const y = childrenWithParent?.length;
+        if (y === number) {
+          childrenWithParent.forEach(child => {
+              const index = selectedData.findIndex(item => item.code === child.parent);
+              if (index !== -1) {
+                  selectedData[index].includeAllChildren = true;
+              }
+          });
+          selectedData = selectedData.filter(item => item?.parent !== parent);
+          // const nextLowestLevel = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(i => i.boundaryType === lowestHierarchyLevel);
+          // if (nextLowestLevel) {
+          //     return restructureBoundaryData(selectedData, boundaryData, nextLowestLevel?.parentBoundaryType);
+          // }
+      }
+      else{
+        isAllChildrenPresent = false;
+      }
+    }
+  
+    const parentBoundaryType = boundaryData[lowestHierarchyLevel]?.parentCode; 
+    const nextLowestLevel = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(i => i.boundaryType === lowestHierarchyLevel);
+    if (nextLowestLevel) {
+        return restructureBoundaryData(selectedData, boundaryData, nextLowestLevel?.parentBoundaryType , isAllChildrenPresent);
+    }
+  }
+
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
@@ -589,7 +636,10 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.action = "create";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowestHierarchy , isAllChildrenPresent)
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -667,7 +717,10 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowestHierarchy , isAllChildrenPresent)
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -724,7 +777,10 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowestHierarchy , isAllChildrenPresent)
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -1084,7 +1140,6 @@ const SetupCampaign = ({ hierarchyType }) => {
             formData?.boundaryType?.selectedData,
             totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
           );
-          console.log("HSHSHS", checkEqual);
           setFetchUpload(true);
           setRefetchGenerate(checkEqual === false ? true : false);
           return true;

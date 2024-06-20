@@ -46,7 +46,135 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === lowestHierarchy)?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);
+  const draftBoundary = searchParams.get("draftBoundary");
   const isDraft = searchParams.get("draft");
+
+  function updateUrlParams(params) {
+    const url = new URL(window.location.href);
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+    window.history.replaceState({}, "", url);
+  }
+
+  async function fetchLowerSelectedBoundaries(boundaryTypeData) {
+    const boundary = boundaryTypeData?.[0]?.boundaryType;
+    if (boundary === lowestHierarchy) return;
+    const newData = [];
+    for (const item of boundaryTypeData) {
+      const code = item?.code;
+      const parent = item?.parent;
+      const boundary = item?.boundaryType;
+      const childBoundary = props?.props?.dataParams?.hierarchy?.boundaryHierarchy.filter((item) => item.parentBoundaryType === boundary)?.[0]?.boundaryType;
+      const reqCriteriaBoundaryTypeSearch = await Digit.CustomService.getResponse({
+        url: "/boundary-service/boundary-relationships/_search",
+        params: {
+          tenantId: tenantId,
+          hierarchyType:props?.props?.dataParams?.hierarchyType,
+          boundaryType: childBoundary,
+          parent: code,
+        },
+        body: {},
+      });
+      const boundaryTypeData2 = reqCriteriaBoundaryTypeSearch;
+
+      setBoundaryData((prevBoundaryData) => {
+        const existingData = prevBoundaryData[childBoundary] || [];
+
+        // Check if the entry already exists
+        const updatedData = {
+          ...prevBoundaryData,
+          [childBoundary]: [...existingData.filter((entry) => entry.parentCode !== code), { parentCode: code, boundaryTypeData: boundaryTypeData2 }],
+        };
+        return updatedData;
+      });
+      const desiredOutput = boundaryTypeData2?.TenantBoundary.flatMap((tenant) =>
+        tenant.boundary.map((boundary) => ({
+          code: boundary.code,
+          type: boundary.boundaryType,
+          isRoot: boundary?.boundaryType === parentBoundaryTypeRoot,
+          includeAllChildren: item.type === lowestHierarchy || item.boundaryType === lowestHierarchy,
+          parent: code,
+        }))
+      );
+
+      setSelectedData((prevData) => [...prevData, ...desiredOutput]);
+      await fetchLowerSelectedBoundaries(boundaryTypeData2?.TenantBoundary?.[0]?.boundary);
+    }
+  }
+
+  const fetchOptions = async () => {
+    const draftSelected = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+    const newData = [];
+    setLoaderEnabled(true);
+    for (const item of draftSelected) {
+      const code = item?.code;
+      const includeAllChildren = item?.includeAllChildren;
+      const parent = item?.parent;
+      const boundary = item?.type;
+      // if(boundary == lowestHierarchy) continue;
+
+      const childBoundary = props?.props?.dataParams?.hierarchy?.boundaryHierarchy.filter((item) => item.parentBoundaryType === boundary)?.[0]
+        ?.boundaryType;
+      const reqCriteriaBoundaryTypeSearch = await Digit.CustomService.getResponse({
+        url: "/boundary-service/boundary-relationships/_search",
+        params: {
+          tenantId: tenantId,
+          hierarchyType: props?.props?.dataParams?.hierarchyType,
+          boundaryType: childBoundary,
+          parent: code,
+        },
+        body: {},
+      });
+      const boundaryTypeData = reqCriteriaBoundaryTypeSearch;
+
+      setBoundaryData((prevBoundaryData) => {
+        const existingData = prevBoundaryData[childBoundary] || [];
+
+        // Check if the entry already exists
+        const updatedData = {
+          ...prevBoundaryData,
+          [childBoundary]: [...existingData.filter((entry) => entry.parentCode !== code), { parentCode: code, boundaryTypeData }],
+        };
+        return updatedData;
+      });
+      if (includeAllChildren) {
+        if (boundary != lowestHierarchy) {
+          const desiredOutput = boundaryTypeData?.TenantBoundary.flatMap((tenant) =>
+            tenant.boundary.map((boundary) => ({
+              code: boundary.code,
+              type: boundary.boundaryType,
+              isRoot: boundary?.boundaryType === parentBoundaryTypeRoot,
+              includeAllChildren: item.type === lowestHierarchy || item.boundaryType === lowestHierarchy,
+              parent: code,
+            }))
+          );
+
+          setSelectedData((prevData) => [...prevData, ...desiredOutput]);
+          await fetchLowerSelectedBoundaries(boundaryTypeData?.TenantBoundary?.[0]?.boundary);
+        }
+      }
+    }
+    setLoaderEnabled(false);
+    updateUrlParams({ draftBoundary: false });
+    // setBoundaryTypeDataresult(newData);
+  };
+
+  useEffect(() => {
+    if (
+      isDraft === "true" &&
+      props?.props?.dataParams?.hierarchy &&
+      draftBoundary === "true" &&
+      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0
+    ) {
+      fetchOptions();
+    }
+  }, [
+    isDraft,
+    draftBoundary,
+    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+    props?.props?.dataParams?.hierarchy,
+  ]);
 
   useEffect(() => {
     if (!updateBoundary) {
@@ -91,6 +219,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
         : {}
     );
+
     setSelectedData(
       props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
         ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
@@ -108,7 +237,10 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       hierarchyTypeDataresult?.boundaryHierarchy?.forEach((boundary) => {
         boundaryDataObj[boundary?.boundaryType] = [];
       });
-      if (!props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || Object.keys(boundaryData).length === 0) {
+      if (
+        (!isDraft && !props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData) ||
+        Object.keys(boundaryData).length === 0
+      ) {
         setBoundaryData(boundaryDataObj);
       }
       const boundaryWithTypeNullParent = hierarchyTypeDataresult?.boundaryHierarchy?.find((boundary) => boundary?.parentBoundaryType === null);
@@ -211,11 +343,12 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   };
 
   useEffect(() => {
+    if(!isDraft)
     fetchBoundaryTypeData();
   }, [boundaryType, parentArray, selectedData]);
 
   useEffect(() => {
-    if (boundaryTypeDataresult) {
+    if (boundaryTypeDataresult && !isDraft) {
       if (boundaryType !== undefined) {
         const updatedBoundaryData = {
           ...boundaryData,
@@ -274,7 +407,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
         if (!_.isEqual(selectedData, updatedSelectedData)) {
           setSelectedData(updatedSelectedData);
         }
-        setBoundaryData(updatedBoundaryData);
+        if (!isDraft) setBoundaryData(updatedBoundaryData);
       }
       return;
     }
