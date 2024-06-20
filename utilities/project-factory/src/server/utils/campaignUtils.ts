@@ -582,11 +582,8 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
 
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
-    console.log(request?.body, "booooooooooo")
     callGenerateIfBoundariesDiffer(request);
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
-    console.log(request?.body.ExistingCampaignDetails, "existttttttttttttttt")
-    console.log(request?.body?.CampaignDetails, "currrrrrrrrrrrrrr")
     var updatedInnerCampaignDetails = {}
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
     request.body.CampaignDetails.campaignNumber = ExistingCampaignDetails?.campaignNumber

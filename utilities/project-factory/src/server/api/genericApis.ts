@@ -3,7 +3,7 @@ import config from "../config"; // Import configuration settings
 import FormData from "form-data"; // Import FormData for handling multipart/form-data requests
 import { defaultheader, httpRequest } from "../utils/request"; // Import httpRequest function for making HTTP requests
 import { getFormattedStringForDebug, logger } from "../utils/logger"; // Import logger for logging
-import { correctParentValues, findMapValue, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, processGenerate, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
+import { correctParentValues, findMapValue, generateActivityMessage, getBoundaryRelationshipData, getDataSheetReady, getLocalizedHeaders, processGenerate, replicateRequest, sortCampaignDetails, throwError } from "../utils/genericUtils"; // Import utility functions
 import { extractCodesFromBoundaryRelationshipResponse, generateFilteredBoundaryData, getConfigurableColumnHeadersBasedOnCampaignType, getFiltersFromCampaignSearchResponse, getLocalizedName } from '../utils/campaignUtils'; // Import utility functions
 import { getCampaignSearchResponse, getHierarchy } from './campaignApis';
 import { validateMappingId } from '../utils/campaignMappingUtils';
@@ -1169,13 +1169,13 @@ async function callGenerateIfBoundariesDiffer(request: any) {
   const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails
   if (ExistingCampaignDetails) {
     if (!_.isEqual(ExistingCampaignDetails?.boundaries, request?.body?.CampaignDetails?.boundaries)) {
-      // interface RequestBody {
-      //   RequestInfo: any;
-      //   query?: any;
-      // }
-      // const { RequestInfo } = request;
+      const newRequestBody = {
+        RequestInfo: request?.body?.RequestInfo,
+        Filters: {
+          boundaries: request?.body?.CampaignDetails?.boundaries
+        }
+      };
       const { query } = request;
-      // const requestbody: RequestBody = { RequestInfo };
       const paramsForBoundary =
       {
         "tenantId": request?.body?.CampaignDetails?.tenantId,
@@ -1184,8 +1184,22 @@ async function callGenerateIfBoundariesDiffer(request: any) {
         "hierarchyType": request?.body?.CampaignDetails?.hierarchyType,
         "campaignId": request?.body?.CampaignDetails?.id
       }
-      request.query = { ...query, ...paramsForBoundary };
-      await processGenerate(request);
+      request.query = { ...query, ...paramsForBoundary,type:"" };
+      const newRequest = replicateRequest(request, newRequestBody, paramsForBoundary);
+      this.geenare(user)
+      this.geenare(user)
+
+      this.geenare(user)
+
+      console.log('calling generate api for type boundary')
+      await processGenerate(newRequest);
+      newRequest?.query?.type === "facility"
+      console.log(newRequest?.query,"qqqqqqqqqqqqqqqqqq")
+      // console.log('calling generate api for type facility')
+      // await processGenerate(newRequest);
+      // newRequest?.query?.type == "user"
+      // logger.info('calling generate api for type user')
+      // await processGenerate(newRequest);
     }
   }
 }
