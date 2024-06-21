@@ -1,6 +1,6 @@
 {
   "name": "@digit-ui/digit-ui-components",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
