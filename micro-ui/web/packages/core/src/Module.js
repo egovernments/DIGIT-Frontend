@@ -87,7 +87,7 @@ export const DigitUI = ({stateCode="pg", registry, enabledModules, moduleReducer
               }}
             >
 
-              <DigitUIWrapper stateCode={"pg"} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient} />
+              <DigitUIWrapper stateCode={Digit.ULBService.getStateId()} enabledModules={enabledModules} moduleReducers={moduleReducers} defaultLanding={defaultLanding} queryClient={queryClient} />
               {/* <div>Core Module Dummy</div> */}
 
               {/* <ReactQueryDevtools initialIsOpen={false} /> */}

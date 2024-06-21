@@ -7,7 +7,7 @@ export const DigitApp = ({ stateCode="pg", modules, appTenants, logoUrl, initDat
   const history = useHistory();
   const { pathname } = useLocation();
   const innerWidth = window.innerWidth;
-  const cityDetails ="pg" || Digit.ULBService.getCurrentUlb();
+  const cityDetails = Digit.ULBService.getStateId()
   const userDetails = Digit.UserService.getUser();
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
