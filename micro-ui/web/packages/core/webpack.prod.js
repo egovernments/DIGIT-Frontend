@@ -15,12 +15,12 @@ module.exports = () => {
       new ModuleFederationPlugin({
         name: "core-digit-ui",
         remotes: {
-         // hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
-          // common: `common@${domain}/common-ui/remoteEntry.js`,
-          //pgr: `pgr@${domain}/pgr-ui/remoteEntry.js`,
-          //workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
-          //dss : `dss@${domain}/dss-ui/remoteEntry.js`,
-          //engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
+         hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
+          common: `common@${domain}/common-ui/remoteEntry.js`,
+          pgr: `pgr@${domain}/pgr-ui/remoteEntry.js`,
+          workbench : `workbench@${domain}/workbench-mfe/remoteEntry.js`,
+          dss : `dss@${domain}/dss-ui/remoteEntry.js`,
+          engagement : `engagement@${domain}/engagement-ui/remoteEntry.js`,
           microplan : `microplan@${domain}/microplan-mfe/remoteEntry.js`,
           // tqm : `tqm@${domain}/tqm-ui/remoteEntry.js`,
           campaign : `campaign@${domain}/campaign-mfe/remoteEntry.js`

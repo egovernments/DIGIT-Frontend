@@ -32,25 +32,25 @@ export const BOUNDARY_HIERARCHY_TYPE="ADMIN";
  * @returns The CampaignModule component returns either a Loader component if data is still loading, or
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
-export const CampaignModule = ({ stateCode, userType, tenants }) => {
+export const CampaignModule = ({ stateCode, userType,path }) => {
 
   const moduleCode = ["campaign", "workbench", "mdms", "schema","hcm-admin-schemas",`boundary-${BOUNDARY_HIERARCHY_TYPE}`];
-  const { path, url } = useRouteMatch();
-  const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({
-    stateCode,
-    moduleCode,
-    language,
-  });
+  // const { path, url } = useRouteMatch();
+  // const language = Digit.StoreData.getCurrentLanguage();
+  // const { isLoading, data: store } = Digit.Services.useStore({
+  //   stateCode,
+  //   moduleCode,
+  //   language,
+  // });
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
 
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp path={path} stateCode={stateCode} url={url} userType={userType} />
+        <EmployeeApp path={path} stateCode={stateCode} userType={userType} />
       </TourProvider>
     </ErrorBoundary>
   );

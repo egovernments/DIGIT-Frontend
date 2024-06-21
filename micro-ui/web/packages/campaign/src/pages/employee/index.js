@@ -3,7 +3,7 @@ import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 //import { PrivateRoute, AppContainer, BreadCrumb } from "@digit-ui/digit-ui-react-components";
 // import CampaignHeader from "../../components/CampaignHeader";
-import {PrivateRoute,AppContainer,BreadCrumb} from "@digit-ui/digit-ui-react-components";
+import {PrivateRoute,AppContainer,BreadCrumb,Loader} from "@digit-ui/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
 import SelectingBoundaries from "../../components/SelectingBoundaries";
 
@@ -58,6 +58,17 @@ const App = ({ path }) => {
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
 
+  const {t,i18n} = useTranslation()
+  const { isLoading } = Digit.Hooks.core.useLocalization({
+    params:{
+      tenantId: Digit.ULBService.getStateId(),
+      module: 'rainmaker-campaign,rainmaker-campaign,rainmaker-workbench,rainmaker-mdms,rainmaker-schema,rainmaker-hcm-admin-schemas,ranmaker-boundary-ADMIN',
+      locale:i18n.language,
+    },
+    i18n,
+  })
+
+
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -74,6 +85,10 @@ const App = ({ path }) => {
       }
     };
   }, []);
+
+  if(isLoading){
+    return <Loader />
+  }
   return (
     <React.Fragment>
       <div className="wbh-header-container">
