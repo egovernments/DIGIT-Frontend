@@ -30,7 +30,7 @@
     "webpack-merge": "5.7.3"
   },
   "dependencies": {
-    "@digit-ui/digit-ui-components": "1.0.1",
+    "@digit-ui/digit-ui-components": "1.0.2",
     "@digit-ui/digit-ui-libraries-mfe": "1.0.17",
     "@digit-ui/digit-ui-react-components": "1.0.1",
     "@digit-ui/digit-ui-svg-components": "1.0.1",
