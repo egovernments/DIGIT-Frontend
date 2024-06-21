@@ -132,9 +132,8 @@ const Hypothesis = ({
         let newAssumptions = assumptions.map((item) => {
           if (parseFloat(item.value) === 0) {
             return { ...item, value: 0.01 };
-          } else {
-            return item;
           }
+          return item;
         });
         setMicroplanData((previous) => ({ ...previous, hypothesis: newAssumptions }));
         setAssumptions(newAssumptions);
@@ -236,7 +235,7 @@ const Hypothesis = ({
 
 // Function to add a new assumption
 const addAssumptionsHandler = (setAssumptions) => {
-  let uuid = uuidv4();
+  const uuid = uuidv4();
   setAssumptions((previous) => [
     ...previous,
     {
@@ -355,7 +354,7 @@ const InterractableSection = React.memo(
             ?.filter((item) => item.active)
             ?.map((item, index) => (
               <div
-                key={index}
+                key={item?.id || index}
                 className={`${index === 0 ? "select-and-input-wrapper-first" : "select-and-input-wrapper"} ${
                   index === assumptions?.filter((item) => item.active)?.length - 1 ? "last-container" : ""
                 } `}
@@ -491,7 +490,7 @@ const Select = React.memo(({ item, assumptions, setAssumptions, disabled = false
         value: item.value,
       };
       setAssumptions((previous) => {
-        let filteredAssumptionsList = previous.map((data) => {
+        const filteredAssumptionsList = previous.map((data) => {
           if (data.id === item.id) return newDataSegment;
           return data;
         });
@@ -545,7 +544,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
         } else if (numDecimals > 2) {
           value = value.substring(0, decimalIndex + 3);
         }
-      } else value = parseFloat(e.target.value);
+      } else value = Number.parseFloat(e.target.value);
 
       setInputValue(!Number.isNaN(value) ? value : "");
       const newDataSegment = {
@@ -555,7 +554,7 @@ const Input = React.memo(({ item, setAssumptions, t, disabled = false }) => {
         value: !Number.isNaN(value) ? value : "",
       };
       setAssumptions((previous) => {
-        let filteredAssumptionsList = previous.map((data) => {
+        const filteredAssumptionsList = previous.map((data) => {
           if (data.id === item.id) {
             return newDataSegment;
           }
@@ -588,7 +587,7 @@ const setAutofillHypothesisData = (autofillHypothesis, assumptions, setAssumptio
   if (assumptions?.length !== 0) return [];
   let newAssumptions = [];
   for (let i in autofillHypothesis) {
-    let uuid = uuidv4();
+    const uuid = uuidv4();
     newAssumptions.push({
       id: uuid,
       key: autofillHypothesis[Number(i)],

@@ -183,6 +183,7 @@ export const downloadTemplate = async ({
 }) => {
   try {
     setLoader("LOADING");
+    await delay(100);
     // Find the template based on the provided parameters
     const schema = getSchema(campaignType, type, section, Schemas);
     const hierarchyLevelName = HierarchyConfigurations?.find((item) => item.name === "devideBoundaryDataBy")?.value;
@@ -375,12 +376,7 @@ export const colorHeaders = async (workbook, headerList1, headerList2, headerLis
 export const formatTemplate = (template, workbook) => {
   template.forEach(({ sheetName, data }) => {
     // Create a new worksheet with properties
-    const worksheet = workbook.addWorksheet(sheetName, {
-      // properties: {
-      //   outlineLevelCol: 1,
-      //   defaultRowHeight: 15,
-      // },
-    });
+    const worksheet = workbook.addWorksheet(sheetName);
     data?.forEach((row, index) => {
       const worksheetRow = worksheet.addRow(row);
 
@@ -392,7 +388,6 @@ export const formatTemplate = (template, workbook) => {
 
           // Enable text wrapping
           cell.alignment = { wrapText: true };
-
           // Update column width based on the length of the cell's text
           const currentWidth = worksheet.getColumn(colNumber).width || SHEET_COLUMN_WIDTH; // Default width or current width
           const newWidth = Math.max(currentWidth, cell.value.toString().length + 2); // Add padding
@@ -453,9 +448,8 @@ export const getSchema = (campaignType, type, section, schemas) => {
 
 // Performs resource mapping and data filtering for Excel files based on provided schema data, hierarchy, and file data.
 export const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarchy, selectedFileType, fileDataToStore, t) => {
-  let resourceMappingData = [];
-  let newFileData = {};
-  let toAddInResourceMapping;
+  const resourceMappingData = [];
+  const newFileData = {};
   if (selectedFileType.id === EXCEL && fileDataToStore) {
     // Extract all unique column names from fileDataToStore and then doing thir resource mapping
     const columnForMapping = new Set(Object.values(fileDataToStore).flatMap((value) => value?.[0] || []));
@@ -475,9 +469,9 @@ export const resourceMappingAndDataFilteringForExcelFiles = (schemaData, hierarc
 
     // Filtering the columns with respect to the resource mapping and removing the columns that are not needed
     Object.entries(fileDataToStore).forEach(([key, value]) => {
-      let data = [];
-      let headers = [];
-      let toRemove = [];
+      const data = [];
+      const headers = [];
+      const toRemove = [];
       if (value && value.length > 0) {
         value[0].forEach((item, index) => {
           const mappedTo = resourceMappingData.find((e) => e.mappedFrom === item)?.mappedTo;
@@ -878,3 +872,6 @@ export const findGuideLine = (campaignType, type, section, guidelineArray) => {
       guideline.fileType === type && guideline.templateIdentifier === section && (!guideline.campaignType || guideline.campaignType === campaignType)
   )?.guidelines;
 };
+
+// Utility function to introduce a delay
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

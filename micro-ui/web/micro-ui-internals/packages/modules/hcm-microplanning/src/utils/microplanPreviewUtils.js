@@ -161,6 +161,49 @@ export const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => 
   };
 };
 
+const validateRequestBody = (body, state, campaignType, setLoaderActivation, setToast, setCheckDataCompletion, navigationEvent, t) => {
+  if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
+    setLoaderActivation(false);
+    if (navigationEvent.name === "next") {
+      setToast({
+        message: t("ERROR_DATA_NOT_SAVED"),
+        state: "error",
+      });
+      setCheckDataCompletion("false");
+    } else {
+      setCheckDataCompletion("perform-action");
+    }
+    return false;
+  }
+  return true;
+};
+
+const handleApiSuccess = (data, updateData, setLoaderActivation, setMicroplanData, status) => {
+  updateData();
+  setLoaderActivation(false);
+  setMicroplanData((previous) => ({ ...previous, microplanStatus: status }));
+};
+
+const handleApiError = (error, variables, setLoaderActivation, setToast, status, cancleNavigation, updateData, t) => {
+  setLoaderActivation(false);
+  setToast({
+    message: t("ERROR_DATA_NOT_SAVED"),
+    state: "error",
+  });
+  if (status === "GENERATED") {
+    cancleNavigation();
+  } else {
+    updateData();
+  }
+};
+
+const constructRequestBody = (microplanData, operatorsObject, MicroplanName, campaignId, status) => {
+  const body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
+  body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
+  body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
+  return body;
+};
+
 export const updateHyothesisAPICall = async (
   microplanData,
   setMicroplanData,
@@ -180,35 +223,13 @@ export const updateHyothesisAPICall = async (
   t
 ) => {
   try {
-    const body = Digit.Utils.microplan.mapDataForApi(microplanData, operatorsObject, MicroplanName, campaignId, status);
-    body.PlanConfiguration["id"] = microplanData?.planConfigurationId;
-    body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
-    if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
-      setLoaderActivation(false);
-      if (navigationEvent.name === "next") {
-        setToast({
-          message: t("ERROR_DATA_NOT_SAVED"),
-          state: "error",
-        });
-        setCheckDataCompletion("false");
-      } else setCheckDataCompletion("perform-action");
-      return;
-    }
+    const body = constructRequestBody(microplanData, operatorsObject, MicroplanName, campaignId, status);
+    const isValid = validateRequestBody(body, state, campaignType, setLoaderActivation, setToast, setCheckDataCompletion, navigationEvent, t);
+    if (!isValid) return;
+
     await UpdateMutate(body, {
-      onSuccess: async (data) => {
-        updateData();
-        setLoaderActivation(false);
-        setMicroplanData((previous) => ({ ...previous, microplanStatus: status }));
-      },
-      onError: (error, variables) => {
-        setLoaderActivation(false);
-        setToast({
-          message: t("ERROR_DATA_NOT_SAVED"),
-          state: "error",
-        });
-        if (status === "GENERATED") cancleNavigation();
-        else updateData();
-      },
+      onSuccess: (data) => handleApiSuccess(data, updateData, setLoaderActivation, setMicroplanData, status),
+      onError: (error, variables) => handleApiError(error, variables, setLoaderActivation, setToast, status, cancleNavigation, updateData, t),
     });
   } catch (error) {
     setLoaderActivation(false);
@@ -222,7 +243,7 @@ export const updateHyothesisAPICall = async (
 // get schema for validation
 export const getRequiredColumnsFromSchema = (campaignType, microplanData, schemas) => {
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
-  let sortData = [];
+  const sortData = [];
   if (microplanData?.upload) {
     for (const value of microplanData.upload) {
       if (value.active && value?.error === null) {

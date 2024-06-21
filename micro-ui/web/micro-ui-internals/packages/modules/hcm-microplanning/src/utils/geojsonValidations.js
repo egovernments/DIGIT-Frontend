@@ -112,9 +112,9 @@ export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
   };
   const validateGeojson = ajv.compile(schema);
   const valid = validateGeojson(data);
-  let errors = {};
+  const errors = {};
   let hasDataErrors = "false"; // true, false, missing_properties, unknown
-  let missingColumnsList = new Set();
+  const missingColumnsList = new Set();
   let errorMessages = [];
   if (!valid) {
     for (let i = 0; i < validateGeojson.errors.length; i++) {

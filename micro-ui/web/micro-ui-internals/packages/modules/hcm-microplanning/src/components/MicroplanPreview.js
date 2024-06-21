@@ -131,8 +131,8 @@ const MicroplanPreview = ({
   // Fetch and assign MDMS data
   useEffect(() => {
     if (!state) return;
-    let UIConfiguration = state?.UIConfiguration;
-    let schemas = state?.Schemas;
+    const UIConfiguration = state?.UIConfiguration;
+    const schemas = state?.Schemas;
     let resourcelist = state?.Resources;
     let microplanPreviewAggregatesList = state?.MicroplanPreviewAggregates;
     microplanPreviewAggregatesList = microplanPreviewAggregatesList.find((item) => item.campaignType === campaignType)?.data;
@@ -154,7 +154,7 @@ const MicroplanPreview = ({
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {
     if (!dataToShow || checkDataCompletion !== "true" || !setCheckDataCompletion) return;
-    let check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis);
+    const check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis);
     if (check.length === 0) {
       if (navigationEvent?.name === "next") return setModal("confirm-microplan-generation");
       return createMicroplan(false);
@@ -208,12 +208,13 @@ const MicroplanPreview = ({
 
   const cancelUpdateData = useCallback(() => {
     setUpdateHypothesis(false);
-    setModal("confirm-microplan-generation");
+    if (navigationEvent?.name === "next") setModal("confirm-microplan-generation");
+    else createMicroplan(false);
   }, [setCheckDataCompletion, setModal]);
 
   useEffect(() => {
     if (boundarySelections && Object.values(boundarySelections).every((item) => item.length === 0) && hierarchy) {
-      let tempBoundarySelection = {};
+      const tempBoundarySelection = {};
       for (const item of hierarchy) {
         tempBoundarySelection[item] = [];
       }
@@ -244,6 +245,7 @@ const MicroplanPreview = ({
 
   const createMicroplan = useCallback(
     (doCreation) => {
+      debugger;
       if (!hypothesisAssumptionsList || !setMicroplanData) return;
       const updateDataWrapper = () => {
         if (doCreation || navigationEvent?.name !== "next") {
@@ -278,6 +280,7 @@ const MicroplanPreview = ({
         t
       );
 
+      setUpdateHypothesis(false);
       setModal("none");
     },
     [
@@ -290,6 +293,7 @@ const MicroplanPreview = ({
       updateData,
       setLoaderActivation,
       navigationEvent,
+      updateHypothesis,
       t,
     ]
   );
@@ -310,10 +314,10 @@ const MicroplanPreview = ({
   useEffect(() => {
     if (data?.length !== 0 || !hierarchyRawData || !hierarchy || validationSchemas?.length === 0) return;
 
-    let combinedData = fetchMicroplanPreviewData(campaignType, microplanData, validationSchemas, hierarchy);
+    const combinedData = fetchMicroplanPreviewData(campaignType, microplanData, validationSchemas, hierarchy);
     // process and form hierarchy
     if (combinedData && hierarchy) {
-      var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchyRawData, [combinedData]);
+      const { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchyRawData, [combinedData]);
       setBoundaryData({ Microplan: { hierarchyLists, hierarchicalData } });
     }
     if (combinedData) {
@@ -427,7 +431,8 @@ const MicroplanPreview = ({
             actionCancelLabel={t("YES")}
             actionCancelOnSubmit={() => {
               setUpdateHypothesis(true);
-              setModal("confirm-microplan-generation");
+              if (navigationEvent?.name === "next") setModal("confirm-microplan-generation");
+              else createMicroplan(false);
             }}
             actionSaveLabel={t("NO")}
             actionSaveOnSubmit={cancelUpdateData}

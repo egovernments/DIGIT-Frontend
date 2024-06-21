@@ -23,6 +23,7 @@ import {
   handleShapefiles,
   connvetToSheetArray,
   findGuideLine,
+  delay,
 } from "../utils/uploadUtils";
 import { UploadGuideLines, UploadedFile, FileUploadComponent, UploadComponents, UploadInstructions, UploadSection } from "./UploadHelperComponents";
 
@@ -180,7 +181,7 @@ const Upload = ({
         if (
           valueList.length !== 0 &&
           sectionCheckList.every((item) => {
-            let filteredList = fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id);
+            const filteredList = fileDataList?.filter((e) => e.active && e.templateIdentifier === item.id);
             if (filteredList?.length === 0) return false;
             return filteredList?.every((element) => element?.error === null) && fileDataList && !fileDataList.some((e) => e?.active && e?.error);
           })
@@ -236,9 +237,8 @@ const Upload = ({
   // Effect to update sections and selected section when data changes
   useEffect(() => {
     if (state) {
-      let uploadSections = state?.UploadConfiguration;
-      let schemas = state?.Schemas;
-      let UIConfiguration = state?.UIConfiguration;
+      const uploadSections = state?.UploadConfiguration;
+      const schemas = state?.Schemas;
       if (schemas) setValidationSchemas(schemas);
       if (uploadSections) {
         setSelectedSection(uploadSections.length > 0 ? uploadSections[0] : null);
@@ -501,7 +501,7 @@ const Upload = ({
       if (selectedFileType.id === EXCEL) {
         resourceMappingData = resourceMappingData.map((item) => ({ ...item, filestoreId }));
       }
-      let uuid = uuidv4();
+      const uuid = uuidv4();
       // creating a fileObject to save all the data collectively
       let fileObject = {
         id: uuid,
@@ -611,9 +611,6 @@ const Upload = ({
       return;
     }
   };
-
-  // Utility function to introduce a delay
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   // Download the selected file
   const downloadFile = async () => {

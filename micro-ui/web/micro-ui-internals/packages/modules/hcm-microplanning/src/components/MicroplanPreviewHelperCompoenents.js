@@ -57,7 +57,7 @@ export const HypothesisValues = memo(({ boundarySelections, hypothesisAssumption
           .filter((item) => item?.active)
           ?.filter((item) => item.key !== "")
           .map((item, index) => (
-            <div key={`hyopthesis_${index}`} className="hypothesis-list-entity">
+            <div key={`hyopthesis_${item?.id ? item.id : index}`} className="hypothesis-list-entity">
               <p>{t(item?.key)}</p>
               <div className="input">
                 {/* Dropdown for boundaries */}
@@ -93,7 +93,7 @@ export const BoundarySelection = memo(({ boundarySelections, setBoundarySelectio
   useEffect(() => {
     if (!boundaryData || !hierarchy) return;
 
-    let processedHierarchyTemp = fetchDropdownValues(
+    const processedHierarchyTemp = fetchDropdownValues(
       boundaryData,
       processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
       boundarySelections,

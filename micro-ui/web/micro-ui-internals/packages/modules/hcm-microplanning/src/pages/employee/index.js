@@ -16,7 +16,7 @@ import { CommonConstants } from "./CommonConstants.json";
 
 const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
-  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const pathVar = location.pathname.replace(`${defaultPath}/`, "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
 
   const crumbs = [
@@ -101,7 +101,7 @@ const App = ({ path }) => {
 
   //destroying session
   useEffect(() => {
-    const pathVar = location.pathname.replace(path + "/", "").split("?")?.[0];
+    const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
     Digit.Utils.microplan.destroySessionHelper(pathVar, ["create-microplan"], "microplanData");
     Digit.Utils.microplan.destroySessionHelper(pathVar, ["create-microplan"], "microplanHelperData");
     Digit.Utils.microplan.destroySessionHelper(pathVar, ["select-campaign"], "SELECT_CAMPAIGN_SESSION");

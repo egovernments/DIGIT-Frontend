@@ -145,13 +145,13 @@ const Mapping = ({
   // Effect to initialize map when data is fetched
   useEffect(() => {
     if (!state || !Boundary) return;
-    let UIConfiguration = state?.UIConfiguration;
+    const UIConfiguration = state?.UIConfiguration;
     if (UIConfiguration) {
       const filterDataOriginList = UIConfiguration.find((item) => item.name === "mapping");
       setFilterDataOrigin(filterDataOriginList);
     }
     const BaseMapLayers = state?.BaseMapLayers;
-    let schemas = state?.Schemas;
+    const schemas = state?.Schemas;
     if (schemas) setValidationSchemas(schemas);
     if (!BaseMapLayers || (BaseMapLayers && BaseMapLayers.length === 0)) return;
     let baseMaps = {};

@@ -225,7 +225,7 @@ const CreateMicroplan = () => {
         case "set": {
           let currentPage;
           const data = Digit.SessionStorage.get("microplanData");
-          if (data && data?.currentPage) currentPage = data.currentPage;
+          if (data?.currentPage) currentPage = data.currentPage;
           if (currentPage && props && props?.setCurrentPage && timeLineOptions.find((item) => item.id === currentPage?.id)) {
             props.setCurrentPage(currentPage);
             return true;

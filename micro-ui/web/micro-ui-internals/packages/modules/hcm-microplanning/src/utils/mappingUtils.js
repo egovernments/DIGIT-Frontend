@@ -4,6 +4,10 @@ import { processHierarchyAndData, findChildren, calculateAggregateForTree } from
 import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors } from "../configs/constants";
 import { PopulationSvg } from "../icons/Svg";
 import chroma from "chroma-js";
+import * as MicroplanIconCollection from "../icons/Svg";
+import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
+
+const IconCollection = { ...MicroplanIconCollection, ...DigitSvgs };
 
 export const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
   const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(0, zoom));
@@ -201,7 +205,7 @@ export const extractGeoData = (
                 }
               }
               // extract dada
-              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
+              const { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
               if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
                 setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
@@ -267,7 +271,7 @@ export const extractGeoData = (
               }
 
               // extract dada
-              var { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
+              const { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
               if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
                 setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
               else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
@@ -335,7 +339,7 @@ export const extractGeoData = (
 export const prepareGeojson = (boundaryData, selection, style = {}) => {
   if (!boundaryData || Object.keys(boundaryData).length === 0) return [];
   let geojsonRawFeatures = [];
-  if (selection == "ALL") {
+  if (selection === "ALL") {
     for (let data of Object.values(boundaryData)) {
       const templist = fetchFeatures(data?.hierarchicalData, selection, [], style);
       if (templist?.length !== 0) geojsonRawFeatures = [...geojsonRawFeatures, ...templist];
@@ -462,20 +466,19 @@ export const addGeojsonToMap = (map, geojson, t) => {
   try {
     if (!map || !geojson) return false;
     const geojsonLayer = L.geoJSON(geojson, {
-      style: function (feature) {
+      style: (feature) => {
         if (Object.keys(feature.properties.addOn).length !== 0) {
           return feature.properties.addOn;
-        } else {
-          return {
-            weight: 2,
-            opacity: 1,
-            color: "rgba(176, 176, 176, 1)",
-            fillColor: "rgb(0,0,0,0)",
-            // fillColor: choroplethProperty ? color : "rgb(0,0,0,0)",
-            fillOpacity: 0,
-            // fillOpacity: choroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
-          };
         }
+        return {
+          weight: 2,
+          opacity: 1,
+          color: "rgba(176, 176, 176, 1)",
+          fillColor: "rgb(0,0,0,0)",
+          // fillColor: choroplethProperty ? color : "rgb(0,0,0,0)",
+          fillOpacity: 0,
+          // fillOpacity: choroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
+        };
       },
       pointToLayer: function (feature, latlng) {
         if (feature.properties.addOn.icon) {
@@ -494,10 +497,7 @@ export const addGeojsonToMap = (map, geojson, t) => {
         let popupContent;
         popupContent = "<div class='map-pop-up'>";
         popupContent += "<table style='border-collapse: collapse;'>";
-        popupContent +=
-          "<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>" +
-          feature.properties["name"] +
-          "</div>";
+        popupContent += `<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>${feature.properties["name"]}</div>`;
         for (let prop in feature.properties) {
           if (prop !== "name" && prop !== "addOn" && prop !== "feature") {
             let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");

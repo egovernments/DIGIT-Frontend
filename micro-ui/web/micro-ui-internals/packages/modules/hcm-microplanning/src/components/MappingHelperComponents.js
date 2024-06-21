@@ -277,7 +277,7 @@ export const BoundarySelection = memo(
     // Filtering out dropdown values
     useEffect(() => {
       if (!boundaryData || !hierarchy) return;
-      let processedHierarchyTemp = fetchDropdownValues(
+      const processedHierarchyTemp = fetchDropdownValues(
         boundaryData,
         processedHierarchy.length !== 0 ? processedHierarchy : hierarchy,
         boundarySelections,
