@@ -1,0 +1,112 @@
+{
+  "tenantId": "mz",
+  "moduleName": "hcm-microplanning",
+  "ReadMeData": [
+    {
+      "templateIdentifier": "Population",
+      "fileType": "Excel",
+      "campaignType": "LLIN-mz",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER_1",
+          "points": ["LLIN_MZ_POPULATION_EXCEL_README_POINTS_1", "LLIN_MZ_POPULATION_EXCEL_README_POINTS_2"]
+        },
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER_2",
+          "points": ["LLIN_MZ_POPULATION_EXCEL_README_POINTS_3", "LLIN_MZ_POPULATION_EXCEL_README_POINTS_4"]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Population",
+      "fileType": "GeoJSON",
+      "campaignType": "LLIN-mz",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": [
+            "LLIN_MZ_POPULATION_GEOJSON_README_POINTS_1",
+            "LLIN_MZ_POPULATION_GEOJSON_README_POINTS_2",
+            "LLIN_MZ_POPULATION_GEOJSON_README_POINTS_3"
+          ]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Population",
+      "fileType": "Shapefile",
+      "campaignType": "LLIN-mz",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": [
+            "LLIN_MZ_POPULATION_SHAPEFILE_README_POINTS_1",
+            "LLIN_MZ_POPULATION_SHAPEFILE_README_POINTS_2",
+            "LLIN_MZ_POPULATION_SHAPEFILE_README_POINTS_3"
+          ]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Population",
+      "fileType": "Excel",
+      "campaignType": "MR-DN",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": ["MR_DN_POPULATION_EXCEL_README_POINTS_1", "MR_DN_POPULATION_EXCEL_README_POINTS_2"]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Population",
+      "fileType": "GeoJSON",
+      "campaignType": "MR-DN",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": [
+            "MR_DN_POPULATION_GEOJSON_README_POINTS_1",
+            "MR_DN_POPULATION_GEOJSON_README_POINTS_2",
+            "MR_DN_POPULATION_GEOJSON_README_POINTS_3"
+          ]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Population",
+      "fileType": "Shapefile",
+      "campaignType": "MR-DN",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": [
+            "MR_DN_POPULATION_SHAPEFILE_README_POINTS_1",
+            "MR_DN_POPULATION_SHAPEFILE_README_POINTS_2",
+            "MR_DN_POPULATION_SHAPEFILE_README_POINTS_3"
+          ]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Facilities",
+      "fileType": "Excel",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": ["FACILITIES_EXCEL_README_POINTS_1", "FACILITIES_EXCEL_README_POINTS_2"]
+        }
+      ]
+    },
+    {
+      "templateIdentifier": "Facilities",
+      "fileType": "Shapefile",
+      "data": [
+        {
+          "header": "LLIN_MZ_POPULATION_EXCEL_HEADER",
+          "points": ["FACILITIES_SHAPEFILE_README_POINTS_1", "FACILITIES_SHAPEFILE_README_POINTS_2", "FACILITIES_SHAPEFILE_README_POINTS_3"]
+        }
+      ]
+    }
+  ]
+}

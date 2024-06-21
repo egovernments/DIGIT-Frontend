@@ -5,8 +5,8 @@ import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
 import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY, commonColumn } from "../configs/constants";
-import { handleExcelFile } from "../components/Upload";
 import { addBoundaryData, fetchBoundaryData, filterBoundaries } from "./createTemplate";
+import { handleExcelFile } from "./uploadUtils";
 
 function handleExcelArrayBuffer(arrayBuffer, file) {
   return new Promise((resolve, reject) => {
@@ -398,7 +398,8 @@ export const updateSessionUtils = {
                     boundaryDataAgainstBoundaryCode,
                     () => {},
                     additionalProps.t,
-                    additionalProps.campaignData
+                    additionalProps.campaignData,
+                    additionalProps.readMeSheetName
                   );
                   let fileData = {
                     filestoreId,

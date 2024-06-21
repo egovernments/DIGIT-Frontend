@@ -39,7 +39,32 @@ export const parseXlsxToJsonMultipleSheets = async (file, options = {}) => {
             }
           });
 
-          if (jsonSheetData.length !== 0 && jsonSheetData?.[0].length !== 0) jsonData[worksheet.name] = jsonSheetData;
+          // Function to remove trailing empty rows
+          const removeTrailingEmptyRows = (data) => {
+            while (data.length > 0) {
+              const lastRow = data[data.length - 1];
+              let isEmptyRow;
+
+              if (Array.isArray(lastRow)) {
+                isEmptyRow = lastRow.filter((item) => item !== "").length === 0;
+              } else if (typeof lastRow === "object" && lastRow !== null) {
+                isEmptyRow = Object.values(lastRow).filter((item) => item !== "").length === 0;
+              }
+
+              if (isEmptyRow) {
+                data.pop();
+              } else {
+                break;
+              }
+            }
+          };
+
+          // Remove trailing empty rows from jsonSheetData
+          removeTrailingEmptyRows(jsonSheetData);
+
+          if (jsonSheetData.length !== 0 && jsonSheetData?.[0].length !== 0) {
+            jsonData[worksheet.name] = jsonSheetData;
+          }
         });
         resolve(jsonData);
       } catch (error) {

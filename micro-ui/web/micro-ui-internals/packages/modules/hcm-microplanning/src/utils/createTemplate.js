@@ -28,14 +28,14 @@ export const getFacilities = async (params, body) => {
     response = (await Digit.CustomService.getResponse(reqCriteria))?.Facilities || {};
   } catch (error) {
     if (error.response) {
-      throw new Error("Failed to fetch facility data: " + error.response.data.message);
-    } else if (error.request) {
+      throw new Error(`Failed to fetch facility data: ${error.response.data.message}`);
+    }
+    if (error.request) {
       // Network error
       throw new Error("Network error while fetching facility data");
-    } else {
-      // Other errors
-      throw new Error("Error while fetching facility data: " + error.message);
     }
+    // Other errors
+    throw new Error("Error while fetching facility data: " + error.message);
   }
   return response;
 };
@@ -63,7 +63,7 @@ export const addBoundaryData = (xlsxData, boundaryData, hierarchyType) => {
     if (!boundaryData || !Array.isArray(boundaryData)) return;
 
     // Clone the current boundary predecessor to avoid modifying the original data
-    let rowData = [...currentBoundaryPredecessor];
+    const rowData = [...currentBoundaryPredecessor];
     // Clone the data accumulator to preserve the accumulated data
     let tempDataAccumulator = [...dataAccumulator];
     // Use a set to accumulate unique hierarchy levels
@@ -73,7 +73,7 @@ export const addBoundaryData = (xlsxData, boundaryData, hierarchyType) => {
     for (const item of boundaryData) {
       if (item?.code) {
         // Create a new row with the current item's code
-        let tempRow = [...rowData, item?.code];
+        const tempRow = [...rowData, item?.code];
         let response;
         // Add the current item's boundary type to the hierarchy
         tempHierarchyAccumulator.add(item.boundaryType);
@@ -110,7 +110,7 @@ export const addBoundaryData = (xlsxData, boundaryData, hierarchyType) => {
       if (!item) {
         item = [];
       }
-      let itemLength = item.length;
+      const itemLength = item.length;
       while (item.length <= topIndex) {
         item.push("");
       }
@@ -139,7 +139,7 @@ const fillDataWithBlanks = (data, tillRow) => {
 };
 const generateLocalisationKeyForSchemaProperties = (code) => {
   if (!code) return code;
-  return SCHEMA_PROPERTIES_PREFIX + "_" + code;
+  return `${SCHEMA_PROPERTIES_PREFIX}_${code}`;
 };
 /**
  *
@@ -152,8 +152,8 @@ const generateLocalisationKeyForSchemaProperties = (code) => {
 const addSchemaData = (xlsxData, schema, extraColumnsToAdd) => {
   if (!schema) return xlsxData;
   let columnSchema = schema.schema?.Properties || {};
-  let newXlsxData = [];
-  let columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
+  const newXlsxData = [];
+  const columnList = [[], [], [], []]; // Initialize columnList with four empty arrays
 
   for (const [key, value] of Object.entries(columnSchema)) {
     if (key === commonColumn) continue;
@@ -377,7 +377,7 @@ const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
     dataRow.push(headers.map((header) => facility[mapping[header]]));
   }
   headers.push(commonColumn);
-  let additionalCols = [];
+  const additionalCols = [];
   if (schema?.schema?.Properties) {
     const properties = Object.keys(schema.schema.Properties);
     for (const col of properties) {
@@ -390,11 +390,28 @@ const addFacilitySheet = (xlsxData, mapping, facilities, schema, t) => {
   // Combine headers and data rows
   const arrayOfArrays = [headers.map((item) => generateLocalisationKeyForSchemaProperties(item)), ...dataRow];
 
-  let facilitySheet = {
+  const facilitySheet = {
     sheetName: FACILITY_DATA_SHEET,
     data: arrayOfArrays,
   };
   xlsxData = [facilitySheet, ...xlsxData];
+  return xlsxData;
+};
+
+const addReadMeSheet = (xlsxData, readMeData, readMeSheetName) => {
+  if (!readMeSheetName) return xlsxData;
+  const data = readMeData.reduce((acc, item) => {
+    if (item?.header) {
+      acc.push([item.header], ...(item.points || []).map((item) => [item]), [], [], [], []);
+    }
+    return acc;
+  }, []);
+
+  const readMeSheet = {
+    sheetName: readMeSheetName,
+    data: [["MICROPLAN_TEMPLATE_README_MAIN_HEADER"], [], [], [], ...data],
+  };
+  xlsxData.unshift(readMeSheet);
   return xlsxData;
 };
 
@@ -414,6 +431,8 @@ export const createTemplate = async ({
   boundaries,
   tenantId,
   hierarchyType,
+  readMeData,
+  readMeSheetName,
   t,
 }) => {
   const rootBoundary = boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
@@ -476,5 +495,6 @@ export const createTemplate = async ({
       xlsxData = addSchemaData(xlsxData, schema);
     }
   }
+  xlsxData = addReadMeSheet(xlsxData, readMeData, readMeSheetName);
   return xlsxData;
 };

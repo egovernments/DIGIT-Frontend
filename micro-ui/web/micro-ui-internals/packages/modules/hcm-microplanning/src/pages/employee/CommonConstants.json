@@ -1,0 +1,10 @@
+{
+  "tenantId": "mz",
+  "moduleName": "hcm-microplanning",
+  "CommonConstants": [
+    {
+      "name": "readMeSheetName",
+      "value": "MICROPLAN_READ_ME_SHEET"
+    }
+  ]
+}

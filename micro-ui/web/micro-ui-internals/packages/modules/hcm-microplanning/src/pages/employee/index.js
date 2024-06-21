@@ -9,6 +9,11 @@ import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
 import { useMyContext } from "../../utils/context";
 
+import { ReadMeData } from "./ReadMeData.json";
+import { Schemas } from "./Schemas.json";
+import { MicroplanPreviewAggregates } from "./MicroplanPreviewAggregates.json";
+import { CommonConstants } from "./CommonConstants.json";
+
 const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
@@ -59,7 +64,7 @@ const App = ({ path }) => {
   const [sessionFormDataView, setSessionFormDataView, clearSessionFormDataView] = MDMSViewSession;
 
   const { isLoading: isLoadingMdmsBaseData, data } = Digit.Hooks.useCustomMDMS(
-    "mz",
+    Digit.ULBService.getCurrentTenantId(),
     "hcm-microplanning",
     [
       { name: "UploadConfiguration" },
@@ -75,6 +80,8 @@ const App = ({ path }) => {
       { name: "HierarchyConfigurations" },
       { name: "NumberFormatMappingForTranslation" },
       { name: "UploadGuidelines" },
+      { name: "ReadMeData" },
+      { name: "CommonConstants" },
     ],
     {
       select: (data) => {
@@ -82,6 +89,10 @@ const App = ({ path }) => {
           type: "SETINITDATA",
           state: {
             ...data?.["hcm-microplanning"],
+            ReadMeData,
+            Schemas,
+            MicroplanPreviewAggregates,
+            CommonConstants,
           },
         });
       },
