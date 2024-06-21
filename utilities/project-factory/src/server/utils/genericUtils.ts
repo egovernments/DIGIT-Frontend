@@ -990,7 +990,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
     if (districtIndex != -1) {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
-      const districtKey = districtLevelRow.join('_');
+      const districtKey = districtLevelRow.join('#');
 
       if (!uniqueDistrictsForMainSheet.includes(districtKey)) {
         uniqueDistrictsForMainSheet.push(districtKey);
@@ -998,7 +998,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
     }
   }
   for (const uniqueData of uniqueDistrictsForMainSheet) {
-    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('_') + 1));
+    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('#') + 1));
   }
   return differentDistrictTabs;
 }
