@@ -5,7 +5,7 @@ FROM node:16 AS build
 WORKDIR /app
 
 # Copy package.json and yarn.lock (if exists)
-COPY package.json ./
+COPY package.json yarn.lock ./
 
 # Install necessary build tools for node-sass
 RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
