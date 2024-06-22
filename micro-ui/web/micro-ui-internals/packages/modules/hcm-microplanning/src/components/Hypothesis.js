@@ -69,9 +69,9 @@ const Hypothesis = ({
   }, []);
 
   const fetchDataAndUpdateState = useCallback(() => {
-    const hypothesisAssumptions = state?.HypothesisAssumptions;
+    const hypothesisAssumptions = state?.HypothesisAssumptions || [];
     const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
-    if (!hypothesisAssumptions || !temp?.assumptions) return;
+    if (!temp?.assumptions) return;
 
     const hypothesisAssumptionsList = Array.isArray(temp.assumptions) ? temp.assumptions : [];
     setOrignalHypothesisCount(hypothesisAssumptionsList.length);

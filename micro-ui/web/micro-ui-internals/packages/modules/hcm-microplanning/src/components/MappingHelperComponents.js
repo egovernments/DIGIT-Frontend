@@ -181,7 +181,7 @@ export const FilterSection = memo(
           <div className="filter-section-option-wrapper">
             <div className="custom-box-wrapper">
               {filterProperties.map((item) => (
-                <div id={item} className="custom-box">
+                <div id={item} key={item} className="custom-box">
                   <CheckBox
                     onChange={(e) => handleChange(e, item)}
                     label={t(item)}

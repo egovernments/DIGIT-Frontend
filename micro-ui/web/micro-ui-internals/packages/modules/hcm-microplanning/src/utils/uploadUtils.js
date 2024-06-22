@@ -84,60 +84,62 @@ export const trimJSON = (jsonObject) => {
 };
 // Function for reading and validating shape file data
 export const readAndValidateShapeFiles = async (file, t, namingConvention) => {
-  return new Promise(async (resolve, reject) => {
-    if (!file) {
-      resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
-    }
-    const fileRegex = new RegExp(namingConvention.replace("$", ".*$"));
-    // File Size Check
-    const fileSizeInBytes = file.size;
-    const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
-
-    // Check if file size is within limit
-    if (fileSizeInBytes > maxSizeInBytes)
-      resolve({ valid: false, message: t("ERROR_FILE_SIZE"), toast: { state: "error", message: t("ERROR_FILE_SIZE") } });
-
-    try {
-      const zip = await JSZip.loadAsync(file);
-      const isEPSG4326 = await checkProjection(zip);
-      if (!isEPSG4326) {
-        resolve({ valid: false, message: t("ERROR_WRONG_PRJ"), toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
+  return new Promise((resolve, reject) => {
+    async () => {
+      if (!file) {
+        resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
       }
-      const files = Object.keys(zip.files);
-      const allFilesMatchRegex = files.every((fl) => {
-        return fileRegex.test(fl);
-      });
-      let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));
-      const shpFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvention.replace("$", "\\.shx$"));
-      const shxFile = zip.file(regx)[0];
-      regx = new RegExp(namingConvention.replace("$", "\\.dbf$"));
-      const dbfFile = zip.file(regx)[0];
+      const fileRegex = new RegExp(namingConvention.replace("$", ".*$"));
+      // File Size Check
+      const fileSizeInBytes = file.size;
+      const maxSizeInBytes = 2 * 1024 * 1024 * 1024; // 2 GB
 
-      let geojson;
-      if (shpFile && dbfFile) {
-        const shpArrayBuffer = await shpFile.async("arraybuffer");
-        const dbfArrayBuffer = await dbfFile.async("arraybuffer");
+      // Check if file size is within limit
+      if (fileSizeInBytes > maxSizeInBytes)
+        resolve({ valid: false, message: t("ERROR_FILE_SIZE"), toast: { state: "error", message: t("ERROR_FILE_SIZE") } });
 
-        geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
-      }
-      if (shpFile && dbfFile && shxFile && allFilesMatchRegex) resolve({ valid: true, data: geojson });
-      else if (!allFilesMatchRegex)
-        resolve({
-          valid: false,
-          message: [t("ERROR_CONTENT_NAMING_CONVENSION")],
-          toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMING_CONVENSION") },
+      try {
+        const zip = await JSZip.loadAsync(file);
+        const isEPSG4326 = await checkProjection(zip);
+        if (!isEPSG4326) {
+          resolve({ valid: false, message: t("ERROR_WRONG_PRJ"), toast: { state: "error", message: t("ERROR_WRONG_PRJ") } });
+        }
+        const files = Object.keys(zip.files);
+        const allFilesMatchRegex = files.every((fl) => {
+          return fileRegex.test(fl);
         });
-      else if (!shpFile)
-        resolve({ valid: false, message: [t("ERROR_SHP_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
-      else if (!dbfFile)
-        resolve({ valid: false, message: [t("ERROR_DBF_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
-      else if (!shxFile)
-        resolve({ valid: false, message: [t("ERROR_SHX_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
-    } catch (error) {
-      resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
-    }
-  });
+        let regx = new RegExp(namingConvention.replace("$", "\\.shp$"));
+        const shpFile = zip.file(regx)[0];
+        regx = new RegExp(namingConvention.replace("$", "\\.shx$"));
+        const shxFile = zip.file(regx)[0];
+        regx = new RegExp(namingConvention.replace("$", "\\.dbf$"));
+        const dbfFile = zip.file(regx)[0];
+
+        let geojson;
+        if (shpFile && dbfFile) {
+          const shpArrayBuffer = await shpFile.async("arraybuffer");
+          const dbfArrayBuffer = await dbfFile.async("arraybuffer");
+
+          geojson = shp.combine([shp.parseShp(shpArrayBuffer), shp.parseDbf(dbfArrayBuffer)]);
+        }
+        if (shpFile && dbfFile && shxFile && allFilesMatchRegex) resolve({ valid: true, data: geojson });
+        else if (!allFilesMatchRegex)
+          resolve({
+            valid: false,
+            message: [t("ERROR_CONTENT_NAMING_CONVENSION")],
+            toast: { state: "error", data: geojson, message: t("ERROR_CONTENT_NAMING_CONVENSION") },
+          });
+        else if (!shpFile)
+          resolve({ valid: false, message: [t("ERROR_SHP_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHP_MISSING") } });
+        else if (!dbfFile)
+          resolve({ valid: false, message: [t("ERROR_DBF_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_DBF_MISSING") } });
+        else if (!shxFile)
+          resolve({ valid: false, message: [t("ERROR_SHX_MISSING")], toast: { state: "error", data: geojson, message: t("ERROR_SHX_MISSING") } });
+      } catch (error) {
+        resolve({ valid: false, toast: { state: "error", message: t("ERROR_PARSING_FILE") } });
+      }
+    };
+  })();
 };
 
 // Function for projections check in case of shapefile data
@@ -855,7 +857,7 @@ export const handleShapefiles = async (file, schemaData, setUploadedFileError, s
   return { check, error, fileDataToStore };
 };
 
-export const connvetToSheetArray = (data) => {
+export const convertToSheetArray = (data) => {
   if (!data) return [];
   const convertedSheetData = [];
   for (const [key, value] of Object.entries(data)) {

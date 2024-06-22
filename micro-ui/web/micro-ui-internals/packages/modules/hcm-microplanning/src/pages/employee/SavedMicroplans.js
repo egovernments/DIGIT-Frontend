@@ -134,9 +134,8 @@ const SavedMicroplans = () => {
     });
     if (response?.BoundaryHierarchy?.length) {
       return response.BoundaryHierarchy[0].boundaryHierarchy.map((item) => item.boundaryType);
-    } else {
-      console.error("Invalid response structure");
     }
+    console.error("Invalid response structure");
   };
 
   const computeAdditionalProps = (row, state, t, hierarchyData) => {

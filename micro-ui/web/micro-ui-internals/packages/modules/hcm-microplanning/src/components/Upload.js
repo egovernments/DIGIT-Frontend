@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, Fragment, useCallback } from "reac
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap, Modal } from "@egovernments/digit-ui-react-components";
 import { ModalWrapper } from "./Modal";
-import { geojsonPropetiesValidation } from "../utils/geojsonValidations";
+import { geojsonPropertiesValidation } from "../utils/geojsonValidations";
 import { SpatialDataPropertyMapping } from "./resourceMapping";
 import { JsonPreviewInExcelForm } from "./JsonPreviewInExcelForm";
 import { ButtonType1, ButtonType2, CloseButton, ModalHeading } from "./CommonComponents";
@@ -21,7 +21,7 @@ import {
   boundaryDataGeneration,
   handleGeojsonFile,
   handleShapefiles,
-  connvetToSheetArray,
+  convertToSheetArray,
   findGuideLine,
   delay,
 } from "../utils/uploadUtils";
@@ -590,7 +590,7 @@ const Upload = ({
         case SHAPEFILE:
         case GEOJSON:
           if (fileData?.data) {
-            const result = connvetToSheetArray(Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section));
+            const result = convertToSheetArray(Digit.Utils.microplan.convertGeojsonToExcelSingleSheet(fileData?.data?.features, fileData?.section));
 
             if (fileData?.errorLocationObject?.length !== 0)
               blob = await prepareExcelFileBlobWithErrors(
@@ -760,7 +760,7 @@ const Upload = ({
   };
   const computeMappedDataAndItsValidations = (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
-    const response = geojsonPropetiesValidation(data, schemaData.schema, fileData?.section, t);
+    const response = geojsonPropertiesValidation(data, schemaData.schema, fileData?.section, t);
     if (!response.valid) {
       handleValidationErrorResponse(response.message, response.errors);
       return { data: data, errors: response.errors, valid: response.valid };

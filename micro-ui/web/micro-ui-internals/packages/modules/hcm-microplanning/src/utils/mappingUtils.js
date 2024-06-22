@@ -494,7 +494,7 @@ export const addGeojsonToMap = (map, geojson, t) => {
           icon: MapMarker(feature.properties.addOn),
         });
       },
-      onEachFeature: function (feature, layer) {
+      onEachFeature: (feature, layer) => {
         let popupContent;
         popupContent = "<div class='map-pop-up'>";
         popupContent += "<table style='border-collapse: collapse;'>";
@@ -699,9 +699,8 @@ export const filterBoundarySelection = (boundaryData, boundarySelections) => {
       const nonePresent = childrenKeyList.every((item) => !set1.has(item));
       const allPresent = childrenKeyList.every((item) => set1.has(item));
       return nonePresent ? true : allPresent ? true : false;
-    } else {
-      return true;
     }
+    return true;
   });
   return { filteredSelection: selectionList, childrenList };
 };

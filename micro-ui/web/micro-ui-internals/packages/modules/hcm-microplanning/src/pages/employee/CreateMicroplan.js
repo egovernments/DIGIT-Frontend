@@ -85,7 +85,7 @@ const CreateMicroplan = () => {
   useEffect(() => {
     let temp;
     if (!state || !state.UIConfiguration) return;
-    const UIConfiguration = state.UIConfiguration;
+    const UIConfiguration = state?.UIConfiguration || {};
     if (UIConfiguration) temp = UIConfiguration.find((item) => item.name === "ruleConfigure");
     if (!temp?.ruleConfigureOperators) return;
     setOperatorsObject(temp.ruleConfigureOperators);
@@ -140,10 +140,14 @@ const CreateMicroplan = () => {
         return;
       }
       setLoaderActivation(true);
-      if (!microplanData?.planConfigurationId) {
-        await createPlanConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
-      } else if (microplanData?.planConfigurationId) {
-        await updatePlanConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
+      try {
+        if (!microplanData?.planConfigurationId) {
+          await createPlanConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
+        } else if (microplanData?.planConfigurationId) {
+          await updatePlanConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
+        }
+      } catch (error) {
+        console.error("Failed to create/update plan configuration:", error);
       }
     },
     [microplanData, UpdateMutate, CreateMutate]
@@ -228,7 +232,7 @@ const CreateMicroplan = () => {
           let currentPage;
           const data = Digit.SessionStorage.get("microplanData");
           if (data?.currentPage) currentPage = data.currentPage;
-          if (currentPage && props && props?.setCurrentPage && timeLineOptions.find((item) => item.id === currentPage?.id)) {
+          if (currentPage && props?.setCurrentPage && timeLineOptions.find((item) => item.id === currentPage?.id)) {
             props.setCurrentPage(currentPage);
             return true;
           }
