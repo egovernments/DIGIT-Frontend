@@ -28,9 +28,9 @@ export const MapFilterIndex = ({ filterSelections, MapFilters, t }) => {
     <div className="filter-index">
       {filterSelections && filterSelections.length > 0 ? (
         <>
-          {filterSelections.map((item) => (
+          {filterSelections.map((item, index) => (
             // <div className="filter-row">
-            <FilterItemBuilder item={item} MapFilters={MapFilters} t={t} />
+            <FilterItemBuilder key={item?.id || index} item={item} MapFilters={MapFilters} t={t} />
             //   <p>{t(item)}</p>
             // </div>
           ))}

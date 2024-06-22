@@ -132,7 +132,11 @@ const SavedMicroplans = () => {
         },
       },
     });
-    return response?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.map((item) => item?.boundaryType);
+    if (response?.BoundaryHierarchy?.length) {
+      return response.BoundaryHierarchy[0].boundaryHierarchy.map((item) => item.boundaryType);
+    } else {
+      console.error("Invalid response structure");
+    }
   };
 
   const computeAdditionalProps = (row, state, t, hierarchyData) => {
@@ -162,7 +166,7 @@ const SavedMicroplans = () => {
         setShowLoader(false);
         history.push(`/${window.contextPath}/employee/microplanning/create-microplan?id=${row?.original?.executionPlanId}`);
       } catch (error) {
-        console.error(error.message);
+        console.error(`Failed to process the request: ${error.message}`);
         setShowLoader(false);
       }
     };

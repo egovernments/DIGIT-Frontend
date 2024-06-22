@@ -105,10 +105,9 @@ export const UploadComponents = ({ item, selected, uploadOptions, selectedFileTy
         <p>{t(`INSTRUCTIONS_DATA_UPLOAD_OPTIONS_${title}`)}</p>
       </div>
       <div className={selectedFileType.id === item.id ? " upload-option-container-selected" : "upload-option-container"}>
-        {uploadOptions &&
-          uploadOptions.map((item) => (
-            <UploadOptionContainer key={item.id} item={item} selectedFileType={selectedFileType} selectFileTypeHandler={selectFileTypeHandler} />
-          ))}
+        {uploadOptions?.map((item) => (
+          <UploadOptionContainer key={item.id} item={item} selectedFileType={selectedFileType} selectFileTypeHandler={selectFileTypeHandler} />
+        ))}
       </div>
     </div>
   );

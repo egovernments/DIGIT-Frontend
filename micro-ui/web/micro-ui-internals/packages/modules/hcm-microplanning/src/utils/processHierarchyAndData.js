@@ -232,7 +232,7 @@ export const fetchDropdownValues = (boundaryData, hierarchy, boundarySelections,
 const findByBoundaryType = (boundaryType, hierarchy) => {
   for (let [key, value] of Object.entries(hierarchy)) {
     if (value?.boundaryType === boundaryType) return Object.keys(hierarchy).filter(Boolean);
-    else if (value?.children) return findByBoundaryType(boundaryType, value?.children);
+    if (value?.children) return findByBoundaryType(boundaryType, value?.children);
     return [];
   }
   return [];

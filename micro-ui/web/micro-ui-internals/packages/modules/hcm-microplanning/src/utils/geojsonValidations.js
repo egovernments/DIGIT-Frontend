@@ -23,13 +23,7 @@ gjv.define("Position", (position) => {
 // Main functino for geojson validation that includes structural and property validations
 export const geojsonValidations = (data, schemaData, t) => {
   const valid = geojsonStructureValidation(data);
-  if (valid.valid) {
-    return { valid: true };
-  }
-  if (valid.message) {
-    return { valid: false, message: valid.message };
-  }
-  return { valid: false, message: ["ERROR_INVALID_GEOJSON"] };
+  return valid.valid ? { valid: true } : { valid: false, message: valid.message || ["ERROR_INVALID_GEOJSON"] };
 };
 
 // Funciton responsible for structural verification of geojson data
@@ -74,14 +68,12 @@ const geometryValidation = (data) => {
 // Function responsible for property verification of geojson data
 export const geojsonPropetiesValidation = (data, schemaData, name, t) => {
   const translate = () => {
-    const required = Object.entries(schemaData?.Properties || {})
-      .reduce((acc, [key, value]) => {
-        if (value?.isRequired) {
-          acc.push(key);
-        }
-        return acc;
-      }, [])
-      .map((item) => item);
+    const required = Object.entries(schemaData?.Properties || {}).reduce((acc, [key, value]) => {
+      if (value?.isRequired) {
+        acc.push(key);
+      }
+      return acc;
+    }, []);
 
     // const properties = prepareProperties(schemaData.Properties, t);
     return { required, properties: schemaData.Properties };

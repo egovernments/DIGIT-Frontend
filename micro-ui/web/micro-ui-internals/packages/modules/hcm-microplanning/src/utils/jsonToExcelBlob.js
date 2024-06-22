@@ -23,6 +23,15 @@ const populateWorksheet = (worksheet, data, columnWithStyle) => {
   setColumnWidths(worksheet, data[0].length);
 };
 
+/**
+ * Applies a specified style to a column in a given row of a spreadsheet.
+ *
+ * @param {Object} newRow - The row object where the style will be applied.
+ * @param {Array} headerRow - The header row array containing column names.
+ * @param {Object} columnWithStyle - An object containing the column name and the style to be applied.
+ * @param {string} columnWithStyle.errorColumn - The name of the column where the style should be applied.
+ * @param {Object} columnWithStyle.style - The style properties to be applied to the cell.
+ */
 const applyStyleToColumn = (newRow, headerRow, columnWithStyle) => {
   const errorColumnIndex = headerRow.indexOf(columnWithStyle.errorColumn);
   if (errorColumnIndex !== -1) {

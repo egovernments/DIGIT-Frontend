@@ -315,7 +315,7 @@ const Upload = ({
     setModal("none");
     setDataUpload(true);
   };
-
+  const readMeConstant = state?.CommonConstants?.find((item) => item?.name === "readMeSheetName");
   const downloadTemplateHandler = () => {
     const downloadParams = {
       campaignType,
@@ -329,7 +329,7 @@ const Upload = ({
       setLoader,
       hierarchy,
       readMeData: state?.ReadMeData,
-      readMeSheetName: state?.CommonConstants?.find((item) => item?.name === "readMeSheetName")?.value,
+      readMeSheetName: readMeConstant ? readMeConstant.value : undefined,
       t,
     };
     downloadTemplate(downloadParams);
@@ -391,7 +391,7 @@ const Upload = ({
         }
       }
       let resourceMappingData = [];
-      let additionalSheets;
+      let additionalSheets = [];
       // Handling different filetypes
       switch (selectedFileType.id) {
         case EXCEL:
@@ -412,7 +412,7 @@ const Upload = ({
             errorMsg = response.errorMsg;
             errorLocationObject = response.errors;
             fileDataToStore = response.fileDataToStore;
-            resourceMappingData = response?.tempResourceMappingData;
+            resourceMappingData = response?.tempResourceMappingData || [];
             additionalSheets = response?.additionalSheets;
             if (check === true) {
               if (response?.toast) setToast(response.toast);
@@ -552,7 +552,7 @@ const Upload = ({
     closeModal();
   };
 
-  const convertAndConbineFileData = () => {
+  const convertAndCombineFileData = () => {
     let combinedData = fileData?.data ? Object.entries(fileData.data)?.map(([key, value]) => ({ sheetName: key, data: value })) : [];
     if (fileData?.additionalSheets) {
       for (const sheet of fileData.additionalSheets) {
@@ -571,7 +571,7 @@ const Upload = ({
       let blob;
       const schema = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       const filteredReadMeData = findReadMe(state?.ReadMeData, campaignType, selectedFileType.id, selectedSection.id);
-      let combinedData = convertAndConbineFileData();
+      let combinedData = convertAndCombineFileData();
       const readMeSheetName = state?.CommonConstants?.find((item) => item?.name === "readMeSheetName")?.value;
       switch (fileData.fileType) {
         case EXCEL:

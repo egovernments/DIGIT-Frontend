@@ -481,7 +481,7 @@ export const addGeojsonToMap = (map, geojson, t) => {
           // fillOpacity: choroplethProperty ? (feature?.properties?.style?.fillOpacity ? feature.properties.style.fillOpacity : 0.7) : 0,
         };
       },
-      pointToLayer: function (feature, latlng) {
+      pointToLayer: (feature, latlng) => {
         if (feature.properties.addOn.icon) {
           let icon = feature.properties.addOn.icon;
           if (icon) {
@@ -501,7 +501,7 @@ export const addGeojsonToMap = (map, geojson, t) => {
         popupContent += `<div style='font-family: Roboto;font-size: 1.3rem;font-weight: 700;text-align: left; color:rgba(11, 12, 12, 1);'>${feature.properties["name"]}</div>`;
         for (let prop in feature.properties) {
           if (prop !== "name" && prop !== "addOn" && prop !== "feature") {
-            let data = !!feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
+            let data = feature.properties[prop] ? feature.properties[prop] : t("NO_DATA");
             popupContent +=
               "<tr style='padding-top:0.5rem;'><td style='padding-top:0.5rem; font-family: Roboto;font-size: 0.8rem;font-weight: 700;text-align: left; color:rgba(80, 90, 95, 1);padding-right:1rem'>" +
               t(prop) +
@@ -516,11 +516,11 @@ export const addGeojsonToMap = (map, geojson, t) => {
           padding: "0",
         });
         // Adjust map here when pop up closes
-        layer.on("popupclose", function () {
+        layer.on("popupclose", () => {
           map.fitBounds(geojsonLayer.getBounds());
         });
         layer.on({
-          mouseover: function (e) {
+          mouseover: (e) => {
             const layer = e.target;
             if (layer.feature.properties.addOn && !layer.feature.properties.addOn.child) {
               return;
@@ -533,7 +533,7 @@ export const addGeojsonToMap = (map, geojson, t) => {
               });
             // layer.openPopup();
           },
-          mouseout: function (e) {
+          mouseout: (e) => {
             const layer = e.target;
             if (layer.feature.properties.addOn && !layer.feature.properties.addOn.child) {
               return;

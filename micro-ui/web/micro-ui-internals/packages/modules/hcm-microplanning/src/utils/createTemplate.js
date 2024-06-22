@@ -466,9 +466,8 @@ const fetchFilteredBoundaries = async (boundaries, tenantId, hierarchyType) => {
       filteredBoundaries: filteredBoundaries,
     });
     return filteredBoundaries;
-  } else {
-    return boundaryData;
   }
+  return boundaryData;
 };
 
 // Function to add facility data to sheets
@@ -476,12 +475,11 @@ const addFacilityDataToSheets = async (xlsxData, schema, tenantId, t) => {
   const facilities = await getAllFacilities(tenantId);
   if (schema?.template?.facilitySchemaApiMapping) {
     return addFacilitySheet(xlsxData, schema.template.facilitySchemaApiMapping, facilities, schema, t);
-  } else {
-    // If no specific facility schema mapping, add default facility data
-    const facilitySheet = {
-      sheetName: FACILITY_DATA_SHEET,
-      data: [],
-    };
-    return addSchemaData([facilitySheet], schema);
   }
+  // If no specific facility schema mapping, add default facility data
+  const facilitySheet = {
+    sheetName: FACILITY_DATA_SHEET,
+    data: [],
+  };
+  return addSchemaData([facilitySheet], schema);
 };

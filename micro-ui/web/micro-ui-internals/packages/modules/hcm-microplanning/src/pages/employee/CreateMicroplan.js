@@ -152,12 +152,13 @@ const CreateMicroplan = () => {
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation, state) => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
+        const readMeConstant = state?.CommonConstants?.find((item) => item?.name === "readMeSheetName");
         const additionalProps = {
           hierarchyData: hierarchyData,
           t,
           campaignType,
           campaignData,
-          readMeSheetName: state?.CommonConstants?.find((item) => item?.name === "readMeSheetName")?.value,
+          readMeSheetName: readMeConstant ? readMeConstant.value : undefined,
         };
         const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
         if (computedSession) {
@@ -188,12 +189,13 @@ const CreateMicroplan = () => {
     body.PlanConfiguration["auditDetails"] = microplanData?.auditDetails;
     await UpdateMutate(body, {
       onSuccess: async (data) => {
+        const readMeConstant = state?.CommonConstants?.find((item) => item?.name === "readMeSheetName");
         const additionalProps = {
           hierarchyData: hierarchyData,
           t,
           campaignType,
           campaignData,
-          readMeSheetName: state?.CommonConstants?.find((item) => item?.name === "readMeSheetName")?.value,
+          readMeSheetName: readMeConstant ? readMeConstant.value : undefined,
         };
         const computedSession = await updateSessionUtils.computeSessionObject(data?.PlanConfiguration[0], state, additionalProps);
         if (computedSession) {

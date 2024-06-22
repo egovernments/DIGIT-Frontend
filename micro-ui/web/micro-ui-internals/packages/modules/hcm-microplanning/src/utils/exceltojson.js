@@ -91,7 +91,8 @@ const removeTrailingEmptyRows = (data) => {
 const checkIfRowIsEmpty = (row) => {
   if (Array.isArray(row)) {
     return row.filter((item) => item !== "").length === 0;
-  } else if (typeof row === "object" && row !== null) {
+  }
+  if (typeof row === "object" && row !== null) {
     return Object.values(row).filter((item) => item !== "").length === 0;
   }
   return false;

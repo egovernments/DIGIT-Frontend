@@ -9,14 +9,12 @@ ajv.addKeyword("toShowInMicroplanPreview");
 
 // Function responsible for excel data validation with respect to the template/schema provided
 const translateSchema = (schemaData) => {
-  const required = Object.entries(schemaData?.Properties || {})
-    .reduce((acc, [key, value]) => {
-      if (value?.isRequired) {
-        acc.push(key);
-      }
-      return acc;
-    }, [])
-    .map((item) => item);
+  const required = Object.entries(schemaData?.Properties || {}).reduce((acc, [key, value]) => {
+    if (value?.isRequired) {
+      acc.push(key);
+    }
+    return acc;
+  }, []);
 
   return { required, properties: schemaData.Properties };
 };

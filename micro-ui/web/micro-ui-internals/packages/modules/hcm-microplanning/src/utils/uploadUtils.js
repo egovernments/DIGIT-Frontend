@@ -601,7 +601,7 @@ export const convertToWorkBook = async (jsonData, columnWithStyle) => {
       const newRow = worksheet.addRow(row);
       const rowHasData = row?.filter((item) => item !== "").length !== 0;
       // Apply red font color to the errorColumn if it exists
-      if (rowHasData) {
+      if (rowHasData && columnWithStyle?.errorColumns) {
         for (const errorColumn of columnWithStyle?.errorColumns) {
           const errorColumnIndex = data[0].indexOf(errorColumn);
           if (errorColumnIndex !== -1) {
