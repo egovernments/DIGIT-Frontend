@@ -245,7 +245,6 @@ const MicroplanPreview = ({
 
   const createMicroplan = useCallback(
     (doCreation, updateHypothesis) => {
-      debugger;
       if (!hypothesisAssumptionsList || !setMicroplanData) return;
       const updateDataWrapper = () => {
         if (doCreation || navigationEvent?.name !== "next") {
