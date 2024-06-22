@@ -79,7 +79,7 @@ const CreateMicroplan = () => {
       },
     },
   };
-  const { isLoading: ishierarchyLoading, data: heirarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading: ishierarchyLoading, data: hierarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // useEffect to initialise the data from MDMS
   useEffect(() => {
@@ -153,7 +153,7 @@ const CreateMicroplan = () => {
     await CreateMutate(body, {
       onSuccess: async (data) => {
         const additionalProps = {
-          heirarchyData: heirarchyData,
+          hierarchyData: hierarchyData,
           t,
           campaignType,
           campaignData,
@@ -189,7 +189,7 @@ const CreateMicroplan = () => {
     await UpdateMutate(body, {
       onSuccess: async (data) => {
         const additionalProps = {
-          heirarchyData: heirarchyData,
+          hierarchyData: hierarchyData,
           t,
           campaignType,
           campaignData,

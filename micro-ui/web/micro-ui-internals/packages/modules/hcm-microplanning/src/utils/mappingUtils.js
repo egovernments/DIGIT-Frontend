@@ -62,277 +62,278 @@ export const extractGeoData = (
 ) => {
   if (!hierarchy) return;
 
+  const initializeDataAvailability = (microplanData) => (microplanData?.upload ? "initialStage" : undefined);
+
+  const checkFileActivity = (fileData) => fileData.active;
+
+  const checkFileSection = (fileData, filterDataOrigin) =>
+    filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section) || filterDataOrigin?.layerDataOrigin?.includes(fileData?.section);
+
+  const getFileValidationSchema = (campaignType, fileData, validationSchemas) =>
+    getSchema(campaignType, fileData?.fileType, fileData?.section, validationSchemas);
+
+  const updateDataAvailabilityCheck = (dataAvailabilityCheck, condition, partialState) =>
+    condition ? partialState : dataAvailabilityCheck === "initialStage" ? "false" : partialState;
+
+  const handleFileDataError = (dataAvailabilityCheck, fileData) =>
+    fileData?.error ? updateDataAvailabilityCheck(dataAvailabilityCheck, true, "partial") : dataAvailabilityCheck;
+
+  const addResourcesToFilteredData = (data, resources, hypothesisAssumptionsList, formulaConfiguration, microplanData, t) =>
+    Digit.Utils.microplan.addResourcesToFilteredDataToShow(
+      data,
+      resources,
+      hypothesisAssumptionsList,
+      formulaConfiguration,
+      microplanData?.microplanPreview?.userEditedResources || [],
+      t
+    );
+
+  const processFileData = (
+    fileData,
+    schema,
+    filterDataOrigin,
+    virtualizationPropertiesCollector,
+    filterPropertiesCollector,
+    filterPropertieNameCollector,
+    resources,
+    hypothesisAssumptionsList,
+    formulaConfiguration,
+    t
+  ) => {
+    const properties = Object.entries(schema?.schema?.Properties || {});
+    const latLngColumns = [];
+    const filterProperty = [];
+
+    for (const [key, value] of properties) {
+      if (value?.isLocationDataColumns) latLngColumns.push(t(key));
+      if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section) && value?.isFilterPropertyOfMapSection) filterProperty.push(key);
+      if (value?.isVisualizationPropertyOfMapSection && filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
+        virtualizationPropertiesCollector.add(key);
+    }
+
+    filterProperty.forEach((property) => filterPropertieNameCollector.add(property));
+
+    return { latLngColumns, filterProperty };
+  };
+
+  const processExcelFile = (fileData, latLngColumns, resources, formulaConfiguration, hypothesisAssumptionsList, schema, t) => {
+    let dataAvailabilityCheck = "true";
+    const columnList = Object.values(fileData?.data)?.[0]?.[0];
+    const check = latLngColumns.every((colName) => columnList.includes(t(colName)));
+
+    if (!check) dataAvailabilityCheck = "partial";
+
+    let dataWithResources = Object.values(fileData?.data);
+    if (resources && formulaConfiguration && hypothesisAssumptionsList && schema?.showResourcesInMappingSection) {
+      dataWithResources = dataWithResources.map((item) =>
+        addResourcesToFilteredData(item, resources, hypothesisAssumptionsList, formulaConfiguration, microplanData, t)
+      );
+    }
+
+    const hasLocationData = dataWithResources.some((item) => item.some((row) => row.includes("lat") && row.includes("long")));
+
+    const convertedData = dataWithResources.map((item) =>
+      item.map((row, rowIndex) => {
+        if (rowIndex === 0) {
+          if (row.indexOf("features") === -1) row.push("feature");
+          return row;
+        }
+        const latIndex = item[0].findIndex((cell) => cell === "lat");
+        const lonIndex = item[0].findIndex((cell) => cell === "long");
+        const properties = item[0].reduce((acc, cell, index) => ({ ...acc, [cell]: row[index] }), {});
+        const feature =
+          latIndex !== -1 && lonIndex !== -1
+            ? {
+                type: "Feature",
+                properties,
+                geometry: {
+                  type: "Point",
+                  coordinates: [row[lonIndex], row[latIndex]],
+                },
+              }
+            : null;
+        row.push(feature);
+        return row;
+      })
+    );
+
+    return { dataAvailabilityCheck, hasLocationData, convertedData };
+  };
+
+  const processGeoJsonFile = (fileData, filterProperty, resources, formulaConfiguration, hypothesisAssumptionsList, t) => {
+    const dataAvailabilityCheck = "true";
+    const keys = [...Object.keys(fileData?.data.features[0].properties), "feature"];
+    const values = fileData?.data.features.map((feature) => keys.map((key) => (key === "feature" ? feature : feature.properties[key] || null)));
+
+    const dataWithResources = [[...keys, ...resources], ...values];
+    const processedDataWithResources = dataWithResources.map((item, index) => {
+      if (index === 0) return item;
+      const newProperties = keys.reduce((acc, key, i) => (key !== "feature" ? { ...acc, [key]: item[i] } : acc), {});
+      item[item.length - 1] = { ...item[item.length - 1], properties: newProperties };
+      return item;
+    });
+
+    return { dataAvailabilityCheck, dataWithResources: processedDataWithResources };
+  };
+
+  const updateFilterPropertiesCollector = (fileData, filterProperty, filterPropertiesCollector) => {
+    filterProperty.forEach((item) => {
+      Object.values(fileData?.data).forEach((data) => {
+        const filterPropertyIndex = data[0].indexOf(item);
+        if (filterPropertyIndex !== -1) data.slice(1).forEach((e) => filterPropertiesCollector.add(e[filterPropertyIndex]));
+      });
+    });
+  };
+
+  const setAvailabilityAndToastMessages = (dataAvailabilityCheck, combineList, files, setToast, t) => {
+    if (dataAvailabilityCheck === "true") {
+      const sectionWiseCheck = combineList.every((item) => Object.keys(files).includes(item));
+      if (!sectionWiseCheck) dataAvailabilityCheck = "partial";
+    }
+
+    if (dataAvailabilityCheck === "initialStage" && (combineList.length === 0 || Object.keys(files).length === 0)) dataAvailabilityCheck = "false";
+
+    const toastMessages = {
+      false: { state: "warning", message: t("MAPPING_NO_DATA_TO_SHOW") },
+      partial: { state: "warning", message: t("MAPPING_PARTIAL_DATA_TO_SHOW") },
+      undefined: { state: "error", message: t("MAPPING_NO_DATA_TO_SHOW") },
+    };
+
+    setToast(toastMessages[dataAvailabilityCheck]);
+    return dataAvailabilityCheck;
+  };
+
+  const setFinalDataAndProperties = (
+    dataAvailabilityCheck,
+    setBoundary,
+    setFilter,
+    setBoundaryData,
+    setFilterData,
+    setFilterProperties,
+    setFilterSelections,
+    setFilterPropertyNames,
+    filterPropertiesCollector,
+    filterPropertieNameCollector,
+    virtualizationPropertiesCollector,
+    setChoroplethProperties,
+    resources
+  ) => {
+    setDataCompleteness(dataAvailabilityCheck);
+    setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
+    setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
+    setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
+    setFilterData((previous) => ({ ...previous, ...setFilter }));
+    setFilterProperties([...filterPropertiesCollector]);
+    setFilterSelections([...filterPropertiesCollector]);
+    setFilterPropertyNames([...filterPropertieNameCollector]);
+    const tempVirtualizationPropertiesCollectorArray = [...virtualizationPropertiesCollector];
+    if (tempVirtualizationPropertiesCollectorArray.length !== 0)
+      setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...(resources || [])]);
+  };
+
   let setBoundary = {};
   let setFilter = {};
-  let virtualizationPropertiesCollector = new Set();
-  let filterPropertiesCollector = new Set();
-  let filterPropertieNameCollector = new Set();
-  let resources = state?.Resources?.find((item) => item.campaignType === campaignType)?.data;
-  let hypothesisAssumptionsList = microplanData?.hypothesis;
-  let formulaConfiguration = microplanData?.ruleEngine;
-  // Check if microplanData and its upload property exist
-  let dataAvailabilityCheck; // Initialize data availability check
-  if (microplanData?.upload) {
-    let files = _.cloneDeep(microplanData?.upload);
-    dataAvailabilityCheck = "initialStage"; // Initialize data availability check
-    // Loop through each file in the microplan upload
-    for (let fileData of files) {
-      if (!fileData.active) continue; // if file is inactive skip it
+  const virtualizationPropertiesCollector = new Set();
+  const filterPropertiesCollector = new Set();
+  const filterPropertieNameCollector = new Set();
+  const resources = state?.Resources?.find((item) => item.campaignType === campaignType)?.data;
+  const hypothesisAssumptionsList = microplanData?.hypothesis;
+  const formulaConfiguration = microplanData?.ruleEngine;
 
-      // Check if the file is not part of boundary or layer data origins
-      if (!filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section) && !filterDataOrigin?.layerDataOrigin?.includes(fileData?.section)) {
-        dataAvailabilityCheck = "false"; // Set data availability to false if file not found in data origins
-      }
+  let dataAvailabilityCheck = initializeDataAvailability(microplanData);
+  if (!dataAvailabilityCheck) return setToast({ state: "error", message: t("MAPPING_NO_DATA_TO_SHOW") });
 
-      // If data availability is not false, proceed with further checks
-      if (dataAvailabilityCheck !== false) {
-        if (fileData?.error) {
-          dataAvailabilityCheck =
-            dataAvailabilityCheck === "partial"
-              ? "partial"
-              : dataAvailabilityCheck === "false" || dataAvailabilityCheck === "initialStage"
-              ? "false"
-              : "partial";
-          continue;
-        }
-        if (!fileData?.fileType || !fileData?.section) continue; // Skip files with errors or missing properties
+  const files = _.cloneDeep(microplanData.upload);
+  for (const fileData of files) {
+    if (!checkFileActivity(fileData) || !checkFileSection(fileData, filterDataOrigin)) {
+      dataAvailabilityCheck = "false";
+      continue;
+    }
 
-        // Get validation schema for the file
-        let schema = getSchema(campaignType, fileData?.fileType, fileData?.section, validationSchemas);
-        const properties = Object.entries(schema?.schema?.Properties || {});
-        const latLngColumns = [];
-        let filterProperty = [];
+    if (!fileData?.fileType || !fileData?.section) continue;
 
-        for (const [key, value] of properties) {
-          if (value?.isLocationDataColumns) {
-            latLngColumns.push(t(key));
-          }
-          if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section) && value?.isFilterPropertyOfMapSection) {
-            filterProperty.push(key);
-          }
-          if (value?.isVisualizationPropertyOfMapSection && filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section)) {
-            virtualizationPropertiesCollector.add(key);
-          }
-        }
+    const schema = getFileValidationSchema(campaignType, fileData, validationSchemas);
+    dataAvailabilityCheck = handleFileDataError(dataAvailabilityCheck, fileData);
 
-        filterProperty.forEach((property) => filterPropertieNameCollector.add(property));
+    const { latLngColumns, filterProperty } = processFileData(
+      fileData,
+      schema,
+      filterDataOrigin,
+      virtualizationPropertiesCollector,
+      filterPropertiesCollector,
+      filterPropertieNameCollector,
+      resources,
+      hypothesisAssumptionsList,
+      formulaConfiguration,
+      t
+    );
 
-        // Check if file contains latitude and longitude columns
-        if (fileData?.data && Object.keys(fileData?.data).length > 0) {
-          if (dataAvailabilityCheck == "initialStage") dataAvailabilityCheck = "true";
-          // Check file type and update data availability accordingly
-          switch (fileData?.fileType) {
-            case EXCEL: {
-              let columnList = Object.values(fileData?.data)?.[0]?.[0];
-              let check = true;
-              if (latLngColumns) {
-                for (let colName of latLngColumns) {
-                  check = check && columnList.includes(t(colName)); // Check if columns exist in the file
-                }
-              }
-              dataAvailabilityCheck = check
-                ? dataAvailabilityCheck === "partial"
-                  ? "partial"
-                  : dataAvailabilityCheck === "false"
-                  ? "partial"
-                  : "true"
-                : dataAvailabilityCheck === "partial"
-                ? "partial"
-                : dataAvailabilityCheck === "false"
-                ? "false"
-                : "partial"; // Update data availability based on column check
-              let dataWithResources = Object.values(fileData?.data);
-              if (resources && formulaConfiguration && hypothesisAssumptionsList && schema?.showResourcesInMappingSection) {
-                dataWithResources = dataWithResources?.map((item) => {
-                  return Digit.Utils.microplan.addResourcesToFilteredDataToShow(
-                    item,
-                    resources,
-                    hypothesisAssumptionsList,
-                    formulaConfiguration,
-                    microplanData?.microplanPreview?.userEditedResources ? microplanData?.microplanPreview?.userEditedResources : [],
-                    t
-                  );
-                });
-              }
-
-              let hasLocationData = false;
-              // has lat lon a points
-              const convertedData = dataWithResources?.map((item) =>
-                item?.map((row, rowIndex) => {
-                  if (rowIndex === 0) {
-                    if (row.indexOf("features") === -1) {
-                      row.push("feature");
-                    }
-                    return row;
-                  }
-                  const latIndex = item?.[0].findIndex((cell) => cell === "lat");
-                  const lonIndex = item?.[0].findIndex((cell) => cell === "long");
-                  let properties = {};
-                  row.map((e, index) => {
-                    properties[item?.[0]?.[index]] = e;
-                  });
-                  if (latIndex !== -1 && lonIndex !== -1) {
-                    if (!hasLocationData) hasLocationData = true;
-                    const lat = row[latIndex];
-                    const lon = row[lonIndex];
-                    const feature = {
-                      type: "Feature",
-                      properties: properties,
-                      geometry: {
-                        type: "Point",
-                        coordinates: [lon, lat],
-                      },
-                    };
-                    row.push(feature);
-                  } else {
-                    row.push(null);
-                  }
-                  return row;
-                })
-              );
-
-              if (hasLocationData) {
-                if (Object.values(fileData?.data).length > 0 && filterProperty) {
-                  filterProperty?.forEach((item) => {
-                    Object.values(fileData?.data).forEach((data) => {
-                      let filterPropertyIndex = data?.[0].indexOf(item);
-                      if (filterPropertyIndex && filterPropertyIndex !== -1)
-                        data.slice(1).forEach((e) => {
-                          return filterPropertiesCollector.add(e[filterPropertyIndex]);
-                        });
-                    });
-                  });
-                }
-              }
-              // extract dada
-              const { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
-              if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
-                setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
-                setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
-              break;
-            }
-            case GEOJSON:
-            case SHAPEFILE: {
-              dataAvailabilityCheck = dataAvailabilityCheck === "partial" ? "partial" : dataAvailabilityCheck === "false" ? "partial" : "true"; // Update data availability for GeoJSON or Shapefile
-              // Extract keys from the first feature's properties
-              let keys = Object.keys(fileData?.data.features[0].properties);
-              keys.push("feature");
-
-              // Extract corresponding values for each feature
-              const values = fileData?.data?.features.map((feature) => {
-                // list with features added to it
-                const temp = keys.map((key) => {
-                  if (feature.properties[key] === "") {
-                    return null;
-                  }
-                  if (key === "feature") return feature;
-                  return feature.properties[key];
-                });
-                return temp;
-              });
-
-              if (fileData?.data?.features && filterProperty) {
-                filterProperty?.forEach((item) => {
-                  if (Object.values(fileData?.data).length > 0) {
-                    fileData?.data?.features.forEach((e) => {
-                      if (e?.properties?.[item]) filterPropertiesCollector.add(e?.properties?.[item]);
-                    });
-                  }
-                });
-              }
-
-              // Group keys and values into the desired format
-              // Adding resource data
-              let dataWithResources = [keys, ...values];
-              if (resources && formulaConfiguration && hypothesisAssumptionsList) {
-                dataWithResources = Digit.Utils.microplan.addResourcesToFilteredDataToShow(
-                  dataWithResources,
-                  resources,
-                  hypothesisAssumptionsList,
-                  formulaConfiguration,
-                  microplanData?.microplanPreview?.userEditedResources ? microplanData?.microplanPreview?.userEditedResources : [],
-                  t
-                );
-                let indexOfFeatureInDataWithResources = dataWithResources?.[0]?.indexOf("feature");
-                keys.push(...resources);
-                dataWithResources = dataWithResources.map((item, index) => {
-                  if (index === 0) return item;
-                  let newProperties = {};
-                  for (const e of keys) {
-                    if (e === "feature") continue;
-                    let index = dataWithResources?.[0]?.indexOf(e);
-                    newProperties[e] = item[index];
-                  }
-                  let newRow = _.cloneDeep(item);
-                  newRow[indexOfFeatureInDataWithResources] = { ...item[indexOfFeatureInDataWithResources], properties: newProperties };
-                  return newRow;
-                });
-              }
-
-              // extract dada
-              const { hierarchyLists, hierarchicalData } = processHierarchyAndData(hierarchy, [dataWithResources]);
-              if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData?.section))
-                setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists, hierarchicalData } };
-              else if (filterDataOrigin?.layerDataOrigin?.includes(fileData?.section))
-                setFilter = { ...setFilter, [fileData.section]: { hierarchyLists, hierarchicalData } };
-            }
-          }
-        }
+    if (fileData?.data && Object.keys(fileData?.data).length > 0) {
+      switch (fileData?.fileType) {
+        case EXCEL:
+          const { dataAvailabilityCheck: excelDataAvailabilityCheck, hasLocationData, convertedData } = processExcelFile(
+            fileData,
+            latLngColumns,
+            resources,
+            formulaConfiguration,
+            hypothesisAssumptionsList,
+            schema,
+            t
+          );
+          dataAvailabilityCheck = excelDataAvailabilityCheck;
+          if (hasLocationData) updateFilterPropertiesCollector(fileData, filterProperty, filterPropertiesCollector);
+          const { hierarchyLists: excelHierarchyLists, hierarchicalData: excelHierarchicalData } = processHierarchyAndData(hierarchy, convertedData);
+          if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData.section))
+            setBoundary = { ...setBoundary, [fileData.section]: { hierarchyLists: excelHierarchyLists, hierarchicalData: excelHierarchicalData } };
+          else if (filterDataOrigin?.layerDataOrigin?.includes(fileData.section))
+            setFilter = { ...setFilter, [fileData.section]: { hierarchyLists: excelHierarchyLists, hierarchicalData: excelHierarchicalData } };
+          break;
+        case GEOJSON:
+        case SHAPEFILE:
+          const { dataAvailabilityCheck: geoJsonDataAvailabilityCheck, dataWithResources } = processGeoJsonFile(
+            fileData,
+            filterProperty,
+            resources,
+            formulaConfiguration,
+            hypothesisAssumptionsList,
+            t
+          );
+          dataAvailabilityCheck = geoJsonDataAvailabilityCheck;
+          const { hierarchyLists: geoJsonHierarchyLists, hierarchicalData: geoJsonHierarchicalData } = processHierarchyAndData(hierarchy, [
+            dataWithResources,
+          ]);
+          if (filterDataOrigin?.boundriesDataOrigin?.includes(fileData.section))
+            setBoundary = {
+              ...setBoundary,
+              [fileData.section]: { hierarchyLists: geoJsonHierarchyLists, hierarchicalData: geoJsonHierarchicalData },
+            };
+          else if (filterDataOrigin?.layerDataOrigin?.includes(fileData.section))
+            setFilter = { ...setFilter, [fileData.section]: { hierarchyLists: geoJsonHierarchyLists, hierarchicalData: geoJsonHierarchicalData } };
+          break;
+        default:
+          break;
       }
     }
-
-    // Set overall data availability
-    setDataAvailability(dataAvailabilityCheck);
-
-    // Combine boundary and layer data origins
-    const combineList = [...(filterDataOrigin?.boundriesDataOrigin || []), ...(filterDataOrigin?.layerDataOrigin || [])];
-
-    // Section wise check
-    if (dataAvailabilityCheck === "true") {
-      let sectionWiseCheck = true;
-      combineList.forEach((item) => {
-        sectionWiseCheck = Object.keys(files).includes(item) && sectionWiseCheck;
-      });
-      if (!sectionWiseCheck) dataAvailabilityCheck = "partial"; // Update data availability if section-wise check fails
-    }
-
-    // Update data availability based on conditions
-    if (dataAvailabilityCheck === "initialStage" && (combineList.length === 0 || Object.keys(files).length === 0)) dataAvailabilityCheck = "false";
-    switch (dataAvailabilityCheck) {
-      case "false":
-      case undefined:
-        // Set warning toast message for no data to show
-        setToast({
-          state: "warning",
-          message: t("MAPPING_NO_DATA_TO_SHOW"),
-        });
-        break;
-      case "partial":
-        // Set warning toast message for partial data to show
-        setToast({
-          state: "warning",
-          message: t("MAPPING_PARTIAL_DATA_TO_SHOW"),
-        });
-        break;
-    }
-  } else {
-    setToast({
-      state: "error",
-      message: t("MAPPING_NO_DATA_TO_SHOW"),
-    });
   }
-  setDataCompleteness(dataAvailabilityCheck);
-  setBoundary = calculateAggregateForTreeMicroplanWrapper(setBoundary);
-  setFilter = calculateAggregateForTreeMicroplanWrapper(setFilter);
-  setBoundaryData((previous) => ({ ...previous, ...setBoundary }));
-  setFilterData((previous) => ({ ...previous, ...setFilter }));
-  setFilterProperties([...filterPropertiesCollector]);
-  setFilterSelections([...filterPropertiesCollector]);
-  setFilterPropertyNames([...filterPropertieNameCollector]);
-  let tempVirtualizationPropertiesCollectorArray = [...virtualizationPropertiesCollector];
-  if (tempVirtualizationPropertiesCollectorArray.length !== 0)
-    setChoroplethProperties([...tempVirtualizationPropertiesCollectorArray, ...(resources ? resources : [])]);
+
+  const combineList = [...(filterDataOrigin?.boundriesDataOrigin || []), ...(filterDataOrigin?.layerDataOrigin || [])];
+  dataAvailabilityCheck = setAvailabilityAndToastMessages(dataAvailabilityCheck, combineList, files, setToast, t);
+
+  setFinalDataAndProperties(
+    dataAvailabilityCheck,
+    setBoundary,
+    setFilter,
+    setBoundaryData,
+    setFilterData,
+    setFilterProperties,
+    setFilterSelections,
+    setFilterPropertyNames,
+    filterPropertiesCollector,
+    filterPropertieNameCollector,
+    virtualizationPropertiesCollector,
+    setChoroplethProperties,
+    resources
+  );
 };
 
 //prepare geojson to show on the map

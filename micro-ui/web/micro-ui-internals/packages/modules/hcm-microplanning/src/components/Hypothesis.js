@@ -69,23 +69,25 @@ const Hypothesis = ({
   }, []);
 
   const fetchDataAndUpdateState = useCallback(() => {
-    let hypothesisAssumptions = state?.HypothesisAssumptions;
+    const hypothesisAssumptions = state?.HypothesisAssumptions;
     if (!hypothesisAssumptions) return;
-    let temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
+
+    const temp = hypothesisAssumptions.find((item) => item.campaignType === campaignType);
     if (!temp?.assumptions) return;
+
     const hypothesisAssumptionsList = Array.isArray(temp.assumptions) ? temp.assumptions : [];
     setOrignalHypothesisCount(hypothesisAssumptionsList.length);
     setExampleOption(hypothesisAssumptionsList.length !== 0 ? hypothesisAssumptionsList[0] : "");
 
-    let newAssumptions = setAutofillHypothesisData(
-      hypothesisAssumptionsList,
-      microplanData?.hypothesis ? microplanData?.hypothesis : assumptions,
-      setAssumptions
-    );
+    const currentHypothesis = microplanData?.hypothesis || assumptions;
+    const newAssumptions = setAutofillHypothesisData(hypothesisAssumptionsList, currentHypothesis, setAssumptions);
 
-    let newHypothesislist = filterHypothesisList(newAssumptions.length !== 0 ? newAssumptions : microplanData.hypothesis, hypothesisAssumptionsList);
+    const newHypothesislist = filterHypothesisList(
+      newAssumptions.length !== 0 ? newAssumptions : microplanData.hypothesis,
+      hypothesisAssumptionsList
+    );
     setHypothesisAssumptionsList(newHypothesislist);
-  }, [campaignType, microplanData, setAutofillHypothesisData, filterHypothesisList, assumptions, setAssumptions]);
+  }, [campaignType, microplanData, state, assumptions, setAssumptions]);
 
   // UseEffect for checking completeness of data before moveing to next section
   useEffect(() => {

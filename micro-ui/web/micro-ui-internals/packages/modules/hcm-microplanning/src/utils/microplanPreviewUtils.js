@@ -85,25 +85,30 @@ export const getSchema = (campaignType, type, section, schemas) => {
 
 export const fetchMicroplanPreviewData = (campaignType, microplanData, validationSchemas, hierarchy) => {
   try {
-    //Decide columns to take and their sequence
-    const getfilteredSchemaColumnsList = () => {
-      let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
-      if (hierarchy) filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
-      return filteredSchemaColumns;
-    };
-    let filteredSchemaColumns = getfilteredSchemaColumnsList();
+    const filteredSchemaColumns = getFilteredSchemaColumnsList(campaignType, microplanData, validationSchemas, hierarchy);
     const fetchedData = fetchMicroplanData(microplanData, campaignType, validationSchemas);
-    // Perform inner joins using reduce
-    const dataAfterJoins = fetchedData.reduce((accumulator, currentData, index) => {
-      if (index === 0) {
-        return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
-      }
-      return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
-    }, null);
+    const dataAfterJoins = performDataJoins(fetchedData, filteredSchemaColumns);
     return dataAfterJoins;
   } catch (error) {
     console.error("Error in fetch microplan data: ", error.message);
   }
+};
+
+const getFilteredSchemaColumnsList = (campaignType, microplanData, validationSchemas, hierarchy) => {
+  let filteredSchemaColumns = getRequiredColumnsFromSchema(campaignType, microplanData, validationSchemas) || [];
+  if (hierarchy) {
+    filteredSchemaColumns = [...hierarchy, commonColumn, ...filteredSchemaColumns.filter((e) => e !== commonColumn)];
+  }
+  return filteredSchemaColumns;
+};
+
+const performDataJoins = (fetchedData, filteredSchemaColumns) => {
+  return fetchedData.reduce((accumulator, currentData, index) => {
+    if (index === 0) {
+      return innerJoinLists(currentData, null, commonColumn, filteredSchemaColumns);
+    }
+    return innerJoinLists(accumulator, currentData, commonColumn, filteredSchemaColumns);
+  }, null);
 };
 
 export const filterObjects = (arr1, arr2) => {

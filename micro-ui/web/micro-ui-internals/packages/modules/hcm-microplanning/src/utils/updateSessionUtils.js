@@ -306,7 +306,7 @@ export const updateSessionUtils = {
     const handleGeoJsonSpecific = async (schema, upload, templateIdentifier, result, translatedData, filestoreId, processedData) => {
       let schemaKeys;
       if (schema?.schema?.["Properties"]) {
-        schemaKeys = additionalProps.heirarchyData?.concat(Object.keys(schema.schema["Properties"]));
+        schemaKeys = additionalProps.hierarchyData?.concat(Object.keys(schema.schema["Properties"]));
       }
       upload.data = result;
       if (processedData) return;
@@ -324,7 +324,7 @@ export const updateSessionUtils = {
       });
       upload.data.features = newFeatures;
       if (
-        additionalProps.heirarchyData?.every(
+        additionalProps.hierarchyData?.every(
           (item) =>
             !mappedToList.includes(`${additionalProps.campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item)}`)
         )
@@ -333,11 +333,11 @@ export const updateSessionUtils = {
         upload.data.features.forEach((feature) => {
           const boundaryCode = feature.properties.boundaryCode;
           let additionalDetails = {};
-          for (let i = 0; i < additionalProps.heirarchyData?.length; i++) {
+          for (let i = 0; i < additionalProps.hierarchyData?.length; i++) {
             if (boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] || boundaryDataAgainstBoundaryCode[boundaryCode]?.[i] === "") {
-              additionalDetails[additionalProps.heirarchyData?.[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
+              additionalDetails[additionalProps.hierarchyData?.[i]] = boundaryDataAgainstBoundaryCode[boundaryCode][i];
             } else {
-              additionalDetails[additionalProps.heirarchyData?.[i]] = "";
+              additionalDetails[additionalProps.hierarchyData?.[i]] = "";
             }
           }
           feature.properties = { ...additionalDetails, ...feature.properties };
@@ -391,7 +391,7 @@ export const updateSessionUtils = {
                   const response = await handleExcelFile(
                     file,
                     schemaData,
-                    additionalProps.heirarchyData.map(
+                    additionalProps.hierarchyData.map(
                       (item) => `${additionalProps.campaignData?.hierarchyType}_${Digit.Utils.microplan.transformIntoLocalisationCode(item)}`
                     ),
                     { id: inputFileType },

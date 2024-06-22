@@ -157,7 +157,7 @@ const MicroplanPreview = ({
     const check = filterObjects(hypothesisAssumptionsList, microplanData?.hypothesis);
     if (check.length === 0) {
       if (navigationEvent?.name === "next") return setModal("confirm-microplan-generation");
-      return createMicroplan(false);
+      return createMicroplan(false, false);
     }
     setModal("confirm-apply-changed-hypothesis");
   }, [checkDataCompletion]);
@@ -209,7 +209,7 @@ const MicroplanPreview = ({
   const cancelUpdateData = useCallback(() => {
     setUpdateHypothesis(false);
     if (navigationEvent?.name === "next") setModal("confirm-microplan-generation");
-    else createMicroplan(false);
+    else createMicroplan(false, false);
   }, [setCheckDataCompletion, setModal]);
 
   useEffect(() => {
@@ -244,7 +244,7 @@ const MicroplanPreview = ({
   };
 
   const createMicroplan = useCallback(
-    (doCreation) => {
+    (doCreation, updateHypothesis) => {
       debugger;
       if (!hypothesisAssumptionsList || !setMicroplanData) return;
       const updateDataWrapper = () => {
@@ -293,7 +293,6 @@ const MicroplanPreview = ({
       updateData,
       setLoaderActivation,
       navigationEvent,
-      updateHypothesis,
       t,
     ]
   );
@@ -432,7 +431,7 @@ const MicroplanPreview = ({
             actionCancelOnSubmit={() => {
               setUpdateHypothesis(true);
               if (navigationEvent?.name === "next") setModal("confirm-microplan-generation");
-              else createMicroplan(false);
+              else createMicroplan(false, true);
             }}
             actionSaveLabel={t("NO")}
             actionSaveOnSubmit={cancelUpdateData}
@@ -461,9 +460,9 @@ const MicroplanPreview = ({
             headerBarMainStyle={{ padding: 0, margin: 0 }}
             headerBarMain={<ModalHeading style={{ fontSize: "1.5rem" }} label={t("HEADING_MICROPLAN_GENERATION_CONFIRMATION")} />}
             actionCancelLabel={t("YES")}
-            actionCancelOnSubmit={() => createMicroplan(true)}
+            actionCancelOnSubmit={() => createMicroplan(true, updateHypothesis)}
             actionSaveLabel={t("NO")}
-            actionSaveOnSubmit={() => createMicroplan(false)}
+            actionSaveOnSubmit={() => createMicroplan(false, updateHypothesis)}
             formId="modal-action"
           >
             <div className="modal-body">
