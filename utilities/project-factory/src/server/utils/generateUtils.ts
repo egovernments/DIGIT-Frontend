@@ -44,18 +44,18 @@ async function callGenerateIfBoundariesDiffer(request: any) {
 
                 const newParamsBoundary = { ...query, ...params, type: "boundary" };
                 const newRequestBoundary = replicateRequest(request, newRequestBody, newParamsBoundary);
-                console.log(newRequestBoundary?.query, "111111111")
+                console.log(newRequestBoundary?.body, "111111111")
                 await callGenerate(newRequestBoundary, "boundary");
 
-                // const newParamsFacilityWithBoundary = { ...query, ...params, type: "facilityWithBoundary" };
-                // const newRequestFacilityWithBoundary = replicateRequest(request, newRequestBody, newParamsFacilityWithBoundary);
-                // console.log(newRequestFacilityWithBoundary?.body,"2222222")
-                // await callGenerate(newRequestFacilityWithBoundary, "facilityWithBoundary");
+                const newParamsFacilityWithBoundary = { ...query, ...params, type: "facilityWithBoundary" };
+                const newRequestFacilityWithBoundary = replicateRequest(request, newRequestBody, newParamsFacilityWithBoundary);
+                console.log(newRequestFacilityWithBoundary?.body,"2222222")
+                await callGenerate(newRequestFacilityWithBoundary, "facilityWithBoundary");
 
-                // const newParamsUserWithBoundary = { ...query, ...params, type: "userWithBoundary" };
-                // const newRequestUserWithBoundary = replicateRequest(request, newRequestBody, newParamsUserWithBoundary);
-                // console.log(newRequestUserWithBoundary?.body,"3333333")
-                // await callGenerate(newRequestUserWithBoundary, "userWithBoundary");
+                const newParamsUserWithBoundary = { ...query, ...params, type: "userWithBoundary" };
+                const newRequestUserWithBoundary = replicateRequest(request, newRequestBody, newParamsUserWithBoundary);
+                console.log(newRequestUserWithBoundary?.body,"3333333")
+                await callGenerate(newRequestUserWithBoundary, "userWithBoundary");
             }
         }
     } catch (error: any) {

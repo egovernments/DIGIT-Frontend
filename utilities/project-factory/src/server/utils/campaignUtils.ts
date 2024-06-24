@@ -1782,11 +1782,13 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 }
 
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
-    var boundaryDataGeneratedAfterDifferentTabSeparation: any;
+    var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    console.log(differentTabsBasedOnLevel,"difffffffff")
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
+    console.log(isKeyOfThatTypePresent,"trrrrrrrrr")
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)
