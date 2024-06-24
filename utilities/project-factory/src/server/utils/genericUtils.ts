@@ -333,7 +333,7 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
 
 
 
-async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResource: any, request: any) {
+async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResource: any, request: any, filteredBoundary?: any) {
   try {
     const { type, hierarchyType } = request?.query;
     generatedResource = { generatedResource: newEntryResponse }
@@ -359,7 +359,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       request.body.generatedResource = finalResponse;
     }
     else if (type == "facilityWithBoundary" || type == 'userWithBoundary') {
-      await processGenerateRequest(request, localizationMap);
+      await processGenerateRequest(request, localizationMap, filteredBoundary);
       const finalResponse = await getFinalUpdatedResponse(request?.body?.fileDetails, newEntryResponse, request);
       const generatedResourceNew: any = { generatedResource: finalResponse }
       produceModifiedMessages(generatedResourceNew, updateGeneratedResourceTopic);
@@ -629,11 +629,12 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
   addDataToSheet(boundarySheet, boundarySheetData, 'F3842D', 30, false, true);
 
   const fileDetails = await createAndUploadFile(workbook, request)
+  console.log(fileDetails,"detttttttttttttttttt")
   request.body.fileDetails = fileDetails;
 }
 
 
-async function generateFacilityAndBoundarySheet(tenantId: string, request: any, localizationMap?: { [key: string]: string }) {
+async function generateFacilityAndBoundarySheet(tenantId: string, request: any, localizationMap?: { [key: string]: string }, filteredBoundary?: any) {
   // Get facility and boundary data
   logger.info("Generating facilities started");
   const allFacilities = await getAllFacilities(tenantId, request.body);
@@ -641,10 +642,15 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any, 
   logger.info(`Facilities generation completed and found ${allFacilities?.length} facilities`);
   const facilitySheetData: any = await createFacilitySheet(request, allFacilities, localizationMap);
   // request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
-  const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
-  await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request, localizationMap);
+  if (filteredBoundary) {
+    await createFacilityAndBoundaryFile(facilitySheetData, filteredBoundary, request, localizationMap);
+  }
+  else {
+    const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
+    await createFacilityAndBoundaryFile(facilitySheetData, boundarySheetData, request, localizationMap);
+  }
 }
-async function generateUserAndBoundarySheet(request: any, localizationMap?: { [key: string]: string }) {
+async function generateUserAndBoundarySheet(request: any, localizationMap?: { [key: string]: string }, filteredBoundary?: any) {
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
   const schema = await callMdmsTypeSchema(request, tenantId, "user");
@@ -653,22 +659,28 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   // const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
   logger.info("Generated an empty user template");
   const userSheetData = await createExcelSheet(userData, localizedHeaders);
-  const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
-  await createUserAndBoundaryFile(userSheetData, boundarySheetData, request, localizationMap);
+  if (filteredBoundary) {
+    console.log("mmmmmmmmmmmmmm")
+    await createUserAndBoundaryFile(userSheetData, filteredBoundary, request, localizationMap);
+  }
+  else {
+    const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
+    await createUserAndBoundaryFile(userSheetData, boundarySheetData, request, localizationMap);
+  }
 }
-async function processGenerateRequest(request: any, localizationMap?: { [key: string]: string }) {
+async function processGenerateRequest(request: any, localizationMap?: { [key: string]: string }, filteredBoundary?: any) {
   const { type, tenantId } = request.query
   if (type == "facilityWithBoundary") {
-    await generateFacilityAndBoundarySheet(String(tenantId), request, localizationMap);
+    await generateFacilityAndBoundarySheet(String(tenantId), request, localizationMap, filteredBoundary);
   }
   if (type == "userWithBoundary") {
-    await generateUserAndBoundarySheet(request, localizationMap);
+    await generateUserAndBoundarySheet(request, localizationMap,filteredBoundary);
   }
 }
 
-async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any) {
+async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, filteredBoundary?: any) {
   request.body.generatedResource = newEntryResponse;
-  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request);
+  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
   return request.body.generatedResource;
 }
 
@@ -688,7 +700,7 @@ function handleGenerateError(newEntryResponse: any, generatedResource: any, erro
   produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
 }
 
-async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any) {
+async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, filteredBoundary?: any) {
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
   let generatedResource: any;
@@ -699,7 +711,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    processGenerateForNew(request, generatedResource, newEntryResponse)
+    processGenerateForNew(request, generatedResource, newEntryResponse, filteredBoundary)
   }
   else {
     request.body.generatedResource = responseData
@@ -708,7 +720,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 /* 
 
 */
-async function processGenerate(request: any) {
+async function processGenerate(request: any, filteredBoundary?: any) {
   // fetch the data from db  to check any request already exists
   const responseData = await searchGeneratedResources(request);
   // modify response from db 
@@ -718,7 +730,7 @@ async function processGenerate(request: any) {
   // make old data status as expired
   const oldEntryResponse = await updateExistingResourceExpired(modifiedResponse, request);
   // generate data 
-  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request);
+  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, filteredBoundary);
 }
 /*
 TODO add comments @nitish-egov
@@ -845,6 +857,7 @@ async function getBoundaryRelationshipData(request: any, params: any) {
 }
 
 async function getDataSheetReady(boundaryData: any, request: any, localizationMap?: { [key: string]: string }) {
+  console.log(boundaryData,"d3333333333333333333")
   const type = request?.query?.type;
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)
