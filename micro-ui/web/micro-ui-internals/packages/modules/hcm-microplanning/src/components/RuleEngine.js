@@ -127,12 +127,12 @@ const RuleEngine = ({
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!state) return;
-    let schemas = state?.Schemas;
-    let hypothesisAssumptions = [];
+    const schemas = state?.Schemas;
+    const hypothesisAssumptions = [];
     microplanData?.hypothesis?.filter((item) => item.active).forEach((item) => (item.key !== "" ? hypothesisAssumptions.push(item.key) : null));
-    let ruleConfigureOutput = state?.RuleConfigureOutput;
-    let UIConfiguration = state?.UIConfiguration;
-    let ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
+    const ruleConfigureOutput = state?.RuleConfigureOutput;
+    const UIConfiguration = state?.UIConfiguration;
+    const ruleConfigureInputs = getRuleConfigInputsFromSchema(campaignType, microplanData, schemas) || [];
     let AutoFilledRuleConfigurationsList = state?.AutoFilledRuleConfigurations;
     AutoFilledRuleConfigurationsList = AutoFilledRuleConfigurationsList.find((item) => item.campaignType === campaignType)?.data;
     microplanData?.ruleEngine?.forEach((item) => {
@@ -149,7 +149,7 @@ const RuleEngine = ({
       setOriginalRuleOutputCount(data.length);
       microplanData?.ruleEngine?.forEach((item) => {
         if (item.active) {
-          let filteredData = data.filter((e) => e !== item?.output);
+          const filteredData = data.filter((e) => e !== item?.output);
           data = filteredData;
         }
       });
@@ -312,7 +312,7 @@ const RuleEngine = ({
 
 // Function to add a new assumption
 const addRulesHandler = (setRules) => {
-  let uuid = uuidv4();
+  const uuid = uuidv4();
   setRules((previous) => [
     ...previous,
     {
@@ -641,21 +641,21 @@ const Example = ({ exampleOption, t }) => {
 
 const deleteAssumptionHandler = (item, setItemForDeletion, setRules, setOutputs, setInputs, pureInputList) => {
   try {
-    let outputToRemove = [];
+    const outputToRemove = [];
     setRules((previous) => {
       if (!previous.length) return [];
       const deletionElementIndex = previous.findIndex((data) => data.id === item.id);
       const filteredData = previous.map((data, index) => (index === deletionElementIndex ? { ...data, active: false } : data));
-      let newRules = filteredData.reduce((acc, dataItem, index) => {
+      const newRules = filteredData.reduce((acc, dataItem, index) => {
         if (dataItem.active) {
-          let possibleOutputs = acc.reduce((reducedData, element, index) => {
+          const possibleOutputs = acc.reduce((reducedData, element, index) => {
             if (element.active && !Object.values(element).some((e) => e === "")) reducedData.push(element?.output);
             return reducedData;
           }, []);
           possibleOutputs.push(...pureInputList);
           if (!possibleOutputs.includes(dataItem?.input)) {
             if (dataItem?.output !== "") outputToRemove.push(dataItem.output);
-            acc.push({ ...dataItem, input: "" });
+            acc.push({ ...dataItem, input: "", oldInput: dataItem?.input ? dataItem?.input : dataItem?.oldInput });
           } else {
             acc.push(dataItem);
           }
@@ -696,7 +696,7 @@ const Select = React.memo(
 
     useEffect(() => {
       if (!options) return;
-      let filteredOptions = options.length ? options : [];
+      const filteredOptions = options.length ? options : [];
       let filteredOptionPlaceHolder = [];
       if (item?.[toChange] && !filteredOptions.includes(item[toChange])) {
         filteredOptionPlaceHolder = [item[toChange], ...filteredOptions];
@@ -730,7 +730,7 @@ const Select = React.memo(
         const newDataSegment = { ...item };
         newDataSegment[toChange] = e.code;
         setRules((previous) => {
-          let filteredAssumptionsList = previous.map((data) => {
+          const filteredAssumptionsList = previous.map((data) => {
             if (data.id === item.id) return newDataSegment;
             return data;
           });
@@ -762,7 +762,7 @@ const Select = React.memo(
         }
         if (unique)
           setOptions((previous) => {
-            let newOptions = previous.filter((item) => item !== e.code);
+            const newOptions = previous.filter((item) => item !== e.code);
             if (selected?.code && !newOptions.includes(selected?.code)) newOptions.unshift(selected?.code);
             return newOptions;
           });
@@ -789,7 +789,7 @@ const Select = React.memo(
 // get schema for validation
 const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => {
   if (!schemas || !microplanData || !microplanData?.upload || !campaignType) return [];
-  let sortData = [];
+  const sortData = [];
   if (!schemas) return;
   for (const value of microplanData?.upload?.filter((value) => value?.active && value?.error === null) || []) {
     sortData.push({ section: value?.section, fileType: value?.fileType });
@@ -802,7 +802,7 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
       return sortData.some((entry) => entry.section === schema.section && entry.fileType === schema.type);
     }) || [];
   const finalData = filteredSchemas
-    ?.map((item) =>
+    ?.flatMap((item) =>
       Object.entries(item?.schema?.Properties || {}).reduce((acc, [key, value]) => {
         if (value?.isRuleConfigureInputs) {
           acc.push(key);
@@ -810,7 +810,6 @@ const getRuleConfigInputsFromSchema = (campaignType, microplanData, schemas) => 
         return acc;
       }, [])
     )
-    .flat()
     .filter((item) => !!item);
   return [...new Set(finalData)];
 };
@@ -820,7 +819,7 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
   if (rules && rules.filter((item) => item.active).length !== 0) return { rules };
 
   let wereRulesNotDeleted = true;
-  let newRules = [];
+  const newRules = [];
   const ruleOuputList = rules ? rules.filter((item) => item.active).map((item) => item?.output) : [];
   let rulePlusInputs;
   if (ruleOuputList) rulePlusInputs = [...inputs, ...ruleOuputList];
@@ -842,15 +841,14 @@ const filterRulesAsPerConstrains = (autofillData, rules, hypothesisAssumptionsLi
     ) {
       if (autofill) {
         continue;
-      } else {
-        if (active) {
-          wereRulesNotDeleted = false;
-          active = false;
-        }
+      }
+      if (active) {
+        wereRulesNotDeleted = false;
+        active = false;
       }
     }
     if (!item["id"]) {
-      let uuid = uuidv4();
+      const uuid = uuidv4();
       item["id"] = uuid;
     }
     item.active = active;

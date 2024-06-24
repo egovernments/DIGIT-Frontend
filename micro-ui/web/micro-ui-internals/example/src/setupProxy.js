@@ -93,7 +93,7 @@ module.exports = function (app) {
     "/health-hrms",
     "/plan-service",
     "/project-factory",
-    "/boundary-service"
+    "/boundary-service",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
