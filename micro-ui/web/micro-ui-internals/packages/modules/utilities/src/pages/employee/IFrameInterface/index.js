@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useLocation } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
+import axios from "axios";
 
 const IFrameInterface = (props) => {
   const { stateCode } = props;
