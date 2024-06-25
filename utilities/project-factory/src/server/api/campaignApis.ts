@@ -258,8 +258,18 @@ async function getUuidsError(request: any, response: any, mobileNumberRowNumberM
       errors.push({ status: "INVALID", rowNumber: mobileNumberRowNumberMapping[user?.mobileNumber], errorDetails: `User with mobileNumber ${user?.mobileNumber} doesn't have username` })
       count++;
     }
+    else if (!user?.userDetails?.password) {
+      logger.info(`User with mobileNumber ${user?.mobileNumber} doesn't have password`)
+      errors.push({ status: "INVALID", rowNumber: mobileNumberRowNumberMapping[user?.mobileNumber], errorDetails: `User with mobileNumber ${user?.mobileNumber} doesn't have password` })
+      count++;
+    }
+    else if (!user?.userUuid) {
+      logger.info(`User with mobileNumber ${user?.mobileNumber} doesn't have userServiceUuid`)
+      errors.push({ status: "INVALID", rowNumber: mobileNumberRowNumberMapping[user?.mobileNumber], errorDetails: `User with mobileNumber ${user?.mobileNumber} doesn't have userServiceUuid` })
+      count++;
+    }
     else {
-      request.body.mobileNumberUuidsMapping[user?.mobileNumber] = { userUuid: user?.id, code: user?.userDetails?.username, rowNumber: mobileNumberRowNumberMapping[user?.mobileNumber] }
+      request.body.mobileNumberUuidsMapping[user?.mobileNumber] = { userUuid: user?.id, code: user?.userDetails?.username, rowNumber: mobileNumberRowNumberMapping[user?.mobileNumber], password: user?.userDetails?.password, userServiceUuid: user?.userUuid }
     }
   }
   if (count > 0) {
@@ -519,7 +529,7 @@ async function processValidate(request: any, localizationMap?: { [key: string]: 
   const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, null, localizationMap)
   if (type == 'boundaryWithTarget') {
     logger.info("target sheet format validation started");
-    immediateValidationForTargetSheet(dataFromSheet, localizationMap);
+    await immediateValidationForTargetSheet(dataFromSheet, localizationMap);
     logger.info("target sheet format validation completed and starts with data validation");
     validateTargetSheetData(dataFromSheet, request, createAndSearchConfig?.boundaryValidation, localizationMap);
   }
@@ -692,7 +702,8 @@ async function enrichAlreadyExsistingUser(request: any) {
         employee.uuid = request?.body?.mobileNumberUuidsMapping[employee?.user?.mobileNumber].userUuid;
         employee.code = request?.body?.mobileNumberUuidsMapping[employee?.user?.mobileNumber].code;
         employee.user.userName = request?.body?.mobileNumberUuidsMapping[employee?.user?.mobileNumber].code;
-        employee.user.password = config.user.userDefaultPassword;
+        employee.user.password = request?.body?.mobileNumberUuidsMapping[employee?.user?.mobileNumber].password;
+        employee.user.userServiceUuid = request?.body?.mobileNumberUuidsMapping[employee?.user?.mobileNumber].userServiceUuid;
       }
     }
   }
