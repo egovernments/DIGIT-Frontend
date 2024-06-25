@@ -712,7 +712,7 @@ async function generateFacilityAndBoundarySheet(tenantId: string, request: any, 
   logger.info(`Facilities generation completed and found ${allFacilities?.length} facilities`);
   const facilitySheetData: any = await createFacilitySheet(request, allFacilities, localizationMap);
   // request.body.Filters = { tenantId: tenantId, hierarchyType: request?.query?.hierarchyType, includeChildren: true }
-  if (filteredBoundary) {
+  if (filteredBoundary && filteredBoundary.length > 0) {
     await createFacilityAndBoundaryFile(facilitySheetData, filteredBoundary, request, localizationMap);
   }
   else {
@@ -730,7 +730,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   // const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
   logger.info("Generated an empty user template");
   const userSheetData = await createExcelSheet(userData, localizedHeaders);
-  if (filteredBoundary) {
+  if (filteredBoundary && filteredBoundary.length > 0) {
     await createUserAndBoundaryFile(userSheetData, filteredBoundary, request, localizationMap);
   }
   else {
