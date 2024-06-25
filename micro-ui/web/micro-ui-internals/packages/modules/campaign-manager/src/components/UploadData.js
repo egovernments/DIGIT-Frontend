@@ -419,7 +419,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-              console.log("error" , error);
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (instancePath.startsWith("/")) {
                 instancePath = instancePath.slice(1);
