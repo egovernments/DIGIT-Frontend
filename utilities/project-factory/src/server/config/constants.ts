@@ -86,15 +86,6 @@ const getMessage = (key: any) => {
     return unknownError;
 }
 
-export const userRoles: any = {
-    "Registrar": "REGISTRAR",
-    "Distributor": "DISTRIBUTOR",
-    "Supervisor": "SUPERVISOR",
-    "Help Desk": "HELPDESK_USER",
-    "Monitor Local": "MONITOR_LOCAL",
-    "Logistical officer": "LOGISTICAL_OFFICER",
-}
-
 export const campaignStatuses: any = {
     drafted: "drafted",
     started: "creating",

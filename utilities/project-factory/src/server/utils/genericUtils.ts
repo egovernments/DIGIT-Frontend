@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { httpRequest } from "./request";
+import { httpRequest, defaultheader } from "./request";
 import config, { getErrorCodes } from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from "../kafka/Listener";
@@ -240,27 +240,47 @@ async function generateActivityMessage(tenantId: any, requestBody: any, requestP
 /* Fetches data from the database */
 async function searchGeneratedResources(request: any) {
   try {
-    const { type } = request.query;
-    const { tenantId, hierarchyType } = request.query;
-    const status = generatedResourceStatuses.completed;
-    let queryResult: any;
-    let queryString: string;
+    const { type, tenantId, hierarchyType, id, status } = request.query;
+    let queryString = `SELECT * FROM ${config?.DB_CONFIG.DB_GENERATED_RESOURCE_DETAILS_TABLE_NAME} WHERE `;
+    let queryConditions: string[] = [];
     let queryValues: any[] = [];
 
-    queryString = `SELECT * FROM ${config?.DB_CONFIG.DB_GENERATED_RESOURCE_DETAILS_TABLE_NAME} WHERE `;
-    // query for download with id
-    if (request?.query?.id) {
-      queryString += "id = $1 AND type = $2 AND hierarchytype = $3 AND tenantid = $4 ";
-      queryValues = [request.query.id, type, hierarchyType, tenantId];
+    if (id) {
+      queryConditions.push(`id = $${queryValues.length + 1}`);
+      queryValues.push(id);
     }
-    else {
-      queryString += "type = $1 AND hierarchytype = $2 AND  tenantid = $3  AND status =$4 ";
-      queryValues = [type, hierarchyType, tenantId, status];
+
+    if (type) {
+      queryConditions.push(`type = $${queryValues.length + 1}`);
+      queryValues.push(type);
     }
-    queryResult = await executeQuery(queryString, queryValues);
+
+    if (hierarchyType) {
+      queryConditions.push(`hierarchyType = $${queryValues.length + 1}`);
+      queryValues.push(hierarchyType);
+    }
+
+    if (tenantId) {
+      queryConditions.push(`tenantId = $${queryValues.length + 1}`);
+      queryValues.push(tenantId);
+    }
+
+    if (status) {
+      const statusArray = status.split(',').map((s: any) => s.trim());
+      const statusConditions = statusArray.map((_: any, index: any) => `status = $${queryValues.length + index + 1}`);
+      queryConditions.push(`(${statusConditions.join(' OR ')})`);
+      queryValues.push(...statusArray);
+    }
+
+    queryString += queryConditions.join(" AND ");
+
+    // Add sorting and limiting
+    queryString += " ORDER BY createdTime DESC OFFSET 0 LIMIT 1";
+
+    const queryResult = await executeQuery(queryString, queryValues);
     return generatedResourceTransformer(queryResult?.rows);
-  }
-  catch (error: any) {
+  } catch (error: any) {
+    console.log(error)
     logger.error(`Error fetching data from the database: ${error.message}`);
     throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", error?.message);
     return null; // Return null in case of an error
@@ -366,6 +386,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
       request.body.generatedResource = finalResponse;
     }
   } catch (error: any) {
+    console.log(error)
     handleGenerateError(newEntryResponse, generatedResource, error);
   }
 }
@@ -420,10 +441,24 @@ function correctParentValues(campaignDetails: any) {
   return campaignDetails;
 }
 
+function setDropdownFromSchema(request: any, schema: any, localizationMap?: { [key: string]: string }) {
+  const dropdowns = Object.entries(schema.properties)
+    .filter(([key, value]: any) => Array.isArray(value.enum) && value.enum.length > 0)
+    .reduce((result: any, [key, value]: any) => {
+      // Transform the key using localisedValue function
+      const newKey: any = getLocalizedName(key, localizationMap);
+      result[newKey] = value.enum;
+      return result;
+    }, {});
+  logger.info(`dropdowns to set ${JSON.stringify(dropdowns)}`)
+  request.body.dropdowns = dropdowns;
+}
+
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const schema = await callMdmsTypeSchema(request, tenantId, "facility");
   const keys = schema?.columns;
+  setDropdownFromSchema(request, schema, localizationMap);
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
 
@@ -594,6 +629,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   addDataToSheet(facilitySheet, facilitySheetData, undefined, undefined, true);
   hideUniqueIdentifierColumn(facilitySheet, createAndSearch?.["facility"]?.uniqueIdentifierColumn);
   changeFirstRowColumnColour(facilitySheet, 'E06666');
+  handledropdownthings(facilitySheet, request.body?.dropdowns);
 
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
@@ -605,8 +641,41 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   request.body.fileDetails = fileDetails;
 }
 
+async function handledropdownthings(facilitySheet: any, dropdowns: any) {
+  let dropdownColumnIndex = -1;
+  if (dropdowns) {
+    for (const key of Object.keys(dropdowns)) {
+      if (dropdowns[key]) {
+        // Iterate through each row to find the column index of "Boundary Code (Mandatory)"
+        await facilitySheet.eachRow({ includeEmpty: true }, (row: any) => {
+          row.eachCell({ includeEmpty: true }, (cell: any, colNumber: any) => {
+            if (cell.value === key) {
+              dropdownColumnIndex = colNumber;
+            }
+          });
+        });
 
-// Helper function to add data to a sheet
+        // If dropdown column index is found, set multi-select dropdown for subsequent rows
+        if (dropdownColumnIndex !== -1) {
+          facilitySheet.getColumn(dropdownColumnIndex).eachCell({ includeEmpty: true }, (cell: any, rowNumber: any) => {
+            if (rowNumber > 1) {
+              // Set dropdown list with no typing allowed
+              cell.dataValidation = {
+                type: 'list',
+                formulae: [`"${dropdowns[key].join(',')}"`],
+                showDropDown: true, // Ensures dropdown is visible
+                error: 'Please select a value from the dropdown list.',
+                errorStyle: 'stop', // Prevents any input not in the list
+                showErrorMessage: true, // Ensures error message is shown
+                errorTitle: 'Invalid Entry'
+              };
+            }
+          });
+        }
+      }
+    }
+  }
+}
 
 
 
@@ -623,6 +692,7 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
 
   const userSheet = workbook.addWorksheet(localizedUserTab);
   addDataToSheet(userSheet, userSheetData, undefined, undefined, true);
+  handledropdownthings(userSheet, request.body?.dropdowns);
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap)
   const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
@@ -648,6 +718,7 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   const userData: any[] = [];
   const tenantId = request?.query?.tenantId;
   const schema = await callMdmsTypeSchema(request, tenantId, "user");
+  setDropdownFromSchema(request, schema, localizationMap);
   const headers = schema?.columns;
   const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
   // const localizedUserTab = getLocalizedName(config?.user?.userTab, localizationMap);
@@ -835,7 +906,11 @@ async function getDataFromSheet(request: any, fileStoreId: any, tenantId: any, c
 async function getBoundaryRelationshipData(request: any, params: any) {
   logger.info("Boundary relationship search initiated")
   const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
-  const boundaryRelationshipResponse = await httpRequest(url, request.body, params);
+  const header = {
+    ...defaultheader,
+    cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+  }
+  const boundaryRelationshipResponse = await httpRequest(url, request.body, params, undefined, undefined, header);
   logger.info("Boundary relationship search response received")
   return boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
 }
@@ -965,7 +1040,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
     if (districtIndex != -1) {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
-      const districtKey = districtLevelRow.join('_');
+      const districtKey = districtLevelRow.join('#');
 
       if (!uniqueDistrictsForMainSheet.includes(districtKey)) {
         uniqueDistrictsForMainSheet.push(districtKey);
@@ -973,7 +1048,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
     }
   }
   for (const uniqueData of uniqueDistrictsForMainSheet) {
-    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('_') + 1));
+    differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('#') + 1));
   }
   return differentDistrictTabs;
 }

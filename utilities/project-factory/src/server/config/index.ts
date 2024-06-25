@@ -32,6 +32,11 @@ const config = {
     userDefaultPassword: process.env.USER_DEFAULT_PASSWORD || "eGov@123",
     userPasswordAutoGenerate: process.env.USER_PASSWORD_AUTO_GENERATE || "true",
   },
+  cacheValues: {
+    cacheEnabled: process.env.CACHE_ENABLED,
+    resetCache: process.env.RESET_CACHE,
+    redisPort: process.env.REDIS_PORT || "6379",
+  },
   kafka: {
     // Kafka topics
     KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC: process.env.KAFKA_SAVE_PROJECT_CAMPAIGN_DETAILS_TOPIC || "save-project-campaign-details",
