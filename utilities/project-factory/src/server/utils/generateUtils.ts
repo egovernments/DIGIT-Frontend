@@ -14,7 +14,7 @@ function extractProperties(obj: any) {
 }
 
 function areBoundariesSame(existingBoundaries: any, currentBoundaries: any) {
-    if (existingBoundaries.length !== existingBoundaries.length) return false;
+    if (existingBoundaries.length !== currentBoundaries.length) return false;
     const existingSetOfBoundaries = new Set(existingBoundaries.map((exboundary: any) => JSON.stringify(extractProperties(exboundary))));
     const currentSetOfBoundaries = new Set(currentBoundaries.map((currboundary: any) => JSON.stringify(extractProperties(currboundary))));
     return _.isEqual(existingSetOfBoundaries, currentSetOfBoundaries);
@@ -57,7 +57,7 @@ async function callGenerateIfBoundariesDiffer(request: any) {
         }
     } catch (error: any) {
         logger.error(error);
-        throwError("COMMON", 400, "GENERATE_ERROR", "Error while generating user/facility/boundary");
+        throwError("COMMON", 400, "GENERATE_ERROR", `Error while generating user/facility/boundary: ${error.message}`);
     }
 }
 
