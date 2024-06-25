@@ -419,6 +419,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
+              console.log("error" , error);
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (instancePath.startsWith("/")) {
                 instancePath = instancePath.slice(1);
@@ -429,6 +430,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               }
               if(error.keyword === "type" && error.message === "must be string"){
                 return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}` 
+              }
+              if(error.keyword === "maximum"){
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}` 
               }
               let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
@@ -1137,7 +1141,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               onClick={() => {
                 downloadTemplate(), setShowPopUp(false);
               }}
-              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
             />,
           ]}
           sortFooterChildren={true}
