@@ -87,8 +87,9 @@ const CreateMicroplan = () => {
     const temp = state?.RuleConfigureOperators;
     if (temp) {
       setOperatorsObject(temp);
+    } else {
+      return;
     }
-    if (!temp) return;
     setOperatorsObject(temp);
   }, []);
 

@@ -137,9 +137,8 @@ const MicroplanPreview = ({
     if (schemas) setValidationSchemas(schemas);
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
     if (resourcelist) setResources(resourcelist);
-    const temp = state?.RuleConfigureOperators;
-    if (temp) {
-      setOperatorsObject(temp);
+    if (state?.RuleConfigureOperators) {
+      setOperatorsObject(state.RuleConfigureOperators);
     }
     if (microplanPreviewAggregatesList) setMicroplaPreviewAggregates(microplanPreviewAggregatesList);
   }, []);
