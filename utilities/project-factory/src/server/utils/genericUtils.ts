@@ -300,7 +300,8 @@ async function generateNewRequestObject(request: any) {
       lastModifiedBy: request?.body?.RequestInfo?.userInfo.uuid,
     },
     additionalDetails: additionalDetails,
-    count: null
+    count: null,
+    campaignId: request?.query?.campaignId
   };
   return [newEntry];
 }
@@ -629,7 +630,7 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
   addDataToSheet(boundarySheet, boundarySheetData, 'F3842D', 30, false, true);
 
   const fileDetails = await createAndUploadFile(workbook, request)
-  console.log(fileDetails,"detttttttttttttttttt")
+  console.log(fileDetails, "detttttttttttttttttt")
   request.body.fileDetails = fileDetails;
 }
 
@@ -674,7 +675,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
     await generateFacilityAndBoundarySheet(String(tenantId), request, localizationMap, filteredBoundary);
   }
   if (type == "userWithBoundary") {
-    await generateUserAndBoundarySheet(request, localizationMap,filteredBoundary);
+    await generateUserAndBoundarySheet(request, localizationMap, filteredBoundary);
   }
 }
 
@@ -857,7 +858,7 @@ async function getBoundaryRelationshipData(request: any, params: any) {
 }
 
 async function getDataSheetReady(boundaryData: any, request: any, localizationMap?: { [key: string]: string }) {
-  console.log(boundaryData,"d3333333333333333333")
+  console.log(boundaryData, "d3333333333333333333")
   const type = request?.query?.type;
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)
