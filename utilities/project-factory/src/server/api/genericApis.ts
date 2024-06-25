@@ -637,9 +637,8 @@ async function getBoundarySheetData(
       headers
     );
   } else {
-    console.log(request.body,"ppppppppppppp")
     let Filters :any= {};
-    if (request?.body?.Filters) {
+    if (request?.body?.Filters && request?.body?.Filters.boundaries && Array.isArray(request?.body?.Filters.boundaries) && request?.body?.Filters.boundaries.length > 0) {
       Filters = {
           Filters: {
               boundaries: request.body.Filters.boundaries.map((boundary:any) => ({
@@ -648,22 +647,18 @@ async function getBoundarySheetData(
               }))
           }
       };
-      console.log(Filters.Filters.boundaries, "fiiiiiiiiiiiiiiiiii")
   }
     else {
       // logger.info("boundaryData for sheet " + JSON.stringify(boundaryData))
       const responseFromCampaignSearch =
         await getCampaignSearchResponse(request);
       Filters = getFiltersFromCampaignSearchResponse(responseFromCampaignSearch)
-      console.log(Filters,"oooooooooooooooo")
     }
     if (Filters?.Filters  && Filters.Filters.boundaries && Array.isArray(Filters.Filters.boundaries) && Filters.Filters.boundaries.length > 0) {
-      console.log(Filters,"uuuuuuuuuuu")
       const filteredBoundaryData = await generateFilteredBoundaryData(
         request,
         Filters
       );
-      console.log(filteredBoundaryData[0].children,"yyyyyyyyyyyy")
       return await getDataSheetReady(
         filteredBoundaryData,
         request,

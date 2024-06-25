@@ -1446,9 +1446,7 @@ function modifyFilteredData(districtDataFiltered: any, targetBoundaryCode: any, 
 }
 
 async function generateFilteredBoundaryData(request: any, FiltersFromCampaignId: any) {
-    console.log(FiltersFromCampaignId.Filters.boundaries,"gggggggggggggggggg")
     const rootBoundary: any = (FiltersFromCampaignId?.Filters?.boundaries).filter((boundary: any) => boundary.isRoot);
-    console.log(rootBoundary,"roootttttttt")
     const params = {
         ...request?.query,
         includeChildren: true,
@@ -1457,13 +1455,11 @@ async function generateFilteredBoundaryData(request: any, FiltersFromCampaignId:
     const boundaryDataFromRootOnwards = await getBoundaryRelationshipData(request, params);
     logger.info(`filtering the boundaries`);
     const filteredBoundaryList = filterBoundaries(boundaryDataFromRootOnwards, FiltersFromCampaignId?.Filters)
-    console.log(filteredBoundaryList[0].children,"nnnnnnnnnnnnnnnnnnnn")
     logger.info(`filtered the boundaries based on given criteria`)
     return filteredBoundaryList;
 }
 
 function filterBoundaries(boundaryData: any[], filters: any): any {
-    console.log(filters.boundaries,"YYYYYYYYYYYYYY")
     function filterRecursive(boundary: any): any {
         const boundaryFilters = filters && filters.boundaries; // Accessing boundaries array from filters object
         const filter = boundaryFilters?.find((f: any) => f.code === boundary.code && f.boundaryType === boundary.boundaryType);
@@ -1785,10 +1781,8 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
     var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
-    console.log(differentTabsBasedOnLevel,"difffffffff")
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
-    console.log(isKeyOfThatTypePresent,"trrrrrrrrr")
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
     if (isKeyOfThatTypePresent && boundaryTypeOnWhichWeSplit.length >= parseInt(config?.boundary?.numberOfBoundaryDataOnWhichWeSplit)) {
         logger.info(`sinces the conditions are matched boundaries are getting splitted into different tabs`)

@@ -700,7 +700,6 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
   addDataToSheet(boundarySheet, boundarySheetData, 'F3842D', 30, false, true);
 
   const fileDetails = await createAndUploadFile(workbook, request)
-  console.log(fileDetails, "detttttttttttttttttt")
   request.body.fileDetails = fileDetails;
 }
 
@@ -732,7 +731,6 @@ async function generateUserAndBoundarySheet(request: any, localizationMap?: { [k
   logger.info("Generated an empty user template");
   const userSheetData = await createExcelSheet(userData, localizedHeaders);
   if (filteredBoundary) {
-    console.log("mmmmmmmmmmmmmm")
     await createUserAndBoundaryFile(userSheetData, filteredBoundary, request, localizationMap);
   }
   else {
@@ -929,7 +927,6 @@ async function getBoundaryRelationshipData(request: any, params: any) {
 }
 
 async function getDataSheetReady(boundaryData: any, request: any, localizationMap?: { [key: string]: string }) {
-  console.log(boundaryData, "d3333333333333333333")
   const type = request?.query?.type;
   const boundaryType = boundaryData?.[0].boundaryType;
   const boundaryList = generateHierarchyList(boundaryData)

@@ -25,7 +25,7 @@ async function callGenerateIfBoundariesDiffer(request: any) {
         const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
         if (ExistingCampaignDetails) {
             if (!areBoundariesSame(ExistingCampaignDetails?.boundaries, request?.body?.CampaignDetails?.boundaries)) {
-                console.log("Boundaries differ, generating new resources");
+                logger.info("Boundaries differ, generating new resources");
 
                 const newRequestBody = {
                     RequestInfo: request?.body?.RequestInfo,
@@ -44,17 +44,14 @@ async function callGenerateIfBoundariesDiffer(request: any) {
 
                 const newParamsBoundary = { ...query, ...params, type: "boundary" };
                 const newRequestBoundary = replicateRequest(request, newRequestBody, newParamsBoundary);
-                console.log(newRequestBoundary?.body, "111111111")
                 await callGenerate(newRequestBoundary, "boundary");
 
                 const newParamsFacilityWithBoundary = { ...query, ...params, type: "facilityWithBoundary" };
                 const newRequestFacilityWithBoundary = replicateRequest(request, newRequestBody, newParamsFacilityWithBoundary);
-                console.log(newRequestFacilityWithBoundary?.body,"2222222")
                 await callGenerate(newRequestFacilityWithBoundary, "facilityWithBoundary");
 
                 const newParamsUserWithBoundary = { ...query, ...params, type: "userWithBoundary" };
                 const newRequestUserWithBoundary = replicateRequest(request, newRequestBody, newParamsUserWithBoundary);
-                console.log(newRequestUserWithBoundary?.body,"3333333")
                 await callGenerate(newRequestUserWithBoundary, "userWithBoundary");
             }
         }
@@ -65,7 +62,7 @@ async function callGenerateIfBoundariesDiffer(request: any) {
 }
 
 async function callGenerate(request: any, type: any) {
-    console.log(`calling generate api for type ${type}`);
+    logger.info(`calling generate api for type ${type}`);
     if (type === "facilityWithBoundary" || type == "userWithBoundary") {
         const { hierarchyType } = request.query;
         const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(
@@ -75,11 +72,9 @@ async function callGenerate(request: any, type: any) {
         );
         const localizationMapModule = await getLocalizedMessagesHandler(request, request.query.tenantId);
         const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
-        console.log(request?.body, "rrrrrrrrrrrrrrr")
         const filteredBoundary = await getBoundarySheetData(request, localizationMap);
         await processGenerate(request, filteredBoundary);
     } else {
-        console.log(request?.body?.Filters?.boundaries, "wwwwwwwwwwww")
         await processGenerate(request);
     }
 }
