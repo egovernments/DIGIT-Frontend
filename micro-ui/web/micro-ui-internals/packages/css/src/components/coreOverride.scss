@@ -148,12 +148,12 @@ employee-select-wrap--elipses:hover {
 }
 
 .employee .main {
-  padding-top: 5.5rem;
+  padding-top: 5.5rem !important;
 }
 
 .main.digit-home-main .employee-app-wrapper.digit-home-app-wrapper {
-  margin-left: 0rem;
-  margin-right: 0rem;
+  margin-left: 0rem !important;
+  margin-right: 0rem !important;
 }
 
 .digit-home-ground {
@@ -161,5 +161,9 @@ employee-select-wrap--elipses:hover {
 }
 
 .employee .main {
-  padding-top: 5.2rem;
+  padding-top: 5.2rem !important;
+}
+
+.main.digit-home-main {
+  margin-left: 4.5rem !important;
 }
