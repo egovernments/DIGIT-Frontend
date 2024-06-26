@@ -6,6 +6,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initMicroplanningComponents } from "@egovernments/digit-ui-module-hcmmicroplanning";
 
+
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
 const enabledModules = [
@@ -15,7 +16,7 @@ const enabledModules = [
   "HRMS",
   "Engagement",
   "Workbench",
-  "Microplanning",
+  "Microplanning"
 ];
 
 const moduleReducers = (initData) => ({
@@ -23,9 +24,12 @@ const moduleReducers = (initData) => ({
 });
 
 const initDigitUI = () => {
-  window.Digit.ComponentRegistryService.setupRegistry({});
+  window.Digit.ComponentRegistryService.setupRegistry({
+    
+  });
 
-  initMicroplanningComponents();
+
+  initMicroplanningComponents()
   window.Digit.Customizations = {
     PGR: {},
     commonUiConfig: UICustomizations,
