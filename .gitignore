@@ -2,4 +2,6 @@
 accelerators/frontend/micro-ui-internals/node_modules/*
 .idea
 index.lock
+utilities/project-factory/node_modules/*
+utilities/egov-bff/node_modules/*
 utilities/
