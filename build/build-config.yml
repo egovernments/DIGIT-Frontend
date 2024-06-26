@@ -55,9 +55,35 @@ config:
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
 
-  - name: "builds/Digit-Frontend/utilities/egov-bff"
+  - name: builds/Digit-Frontend/utilities/egov-bff
     build:
-      - work-dir: "utilities/project-factory"
-        image-name: "project-factory"
-      - work-dir: "utilities/project-factory/migration"
-        image-name: "project-factory-db"
+      - work-dir: utilities/egov-bff
+        image-name: egov-bff
+
+
+  #micro frontends
+  - name: builds/Digit-Frontend/modules/core-digit-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: core-digit-ui
+  
+  - name: builds/Digit-Frontend/modules/dss-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: dss-ui
+
+  
+  - name: builds/Digit-Frontend/modules/workbench-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: workbench-ui
+
+  
+  - name: builds/Digit-Frontend/modules/hrms-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: hrms-ui
