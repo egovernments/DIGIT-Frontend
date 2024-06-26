@@ -4,7 +4,7 @@ on:
     branches:
       - campaign
     paths:
-      - 'micro-ui/web/micro-ui-internals/**'
+      - 'health/micro-ui/web/micro-ui-internals/**'
   pull_request:
     branches:
       - campaign
@@ -32,7 +32,7 @@ jobs:
           run_job_digit_ui=false
           while IFS= read -r file
           do
-            if [[ $file == micro-ui/* ]]; then
+            if [[ $file == health/micro-ui/* ]]; then
               echo "This modified file is under the 'digit_ui' folder."
               run_job_digit_ui=true
             fi
