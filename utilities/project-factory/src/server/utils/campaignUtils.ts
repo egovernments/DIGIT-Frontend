@@ -18,6 +18,7 @@ import { searchProjectTypeCampaignService } from "../service/campaignManageServi
 import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
 // import { persistTrack } from "./processTrackUtils";
+import { callGenerateIfBoundariesDiffer } from "./generateUtils";
 const _ = require('lodash');
 
 
@@ -581,8 +582,10 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
     updatedInnerCampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries || []
 }
 
+
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
+    callGenerateIfBoundariesDiffer(request);
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
     var updatedInnerCampaignDetails = {}
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
@@ -1778,7 +1781,7 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 }
 
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
-    var boundaryDataGeneratedAfterDifferentTabSeparation: any;
+    var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
