@@ -1138,6 +1138,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               variation={"primary"}
               icon={"FileDownload"}
               label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
               onClick={() => {
                 downloadTemplate(), setShowPopUp(false);
               }}
