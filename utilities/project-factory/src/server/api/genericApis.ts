@@ -599,9 +599,9 @@ function generateElementCode(sequence: any, parentElement: any, parentBoundaryCo
     if (grandParentElement != null && grandParentElement != undefined) {
       const lastUnderscoreIndex = parentBoundaryCode ? parentBoundaryCode.lastIndexOf('_') : -1;
       const parentBoundaryCodeTrimmed = lastUnderscoreIndex !== -1 ? parentBoundaryCode.substring(0, lastUnderscoreIndex) : parentBoundaryCode;
-      code = `${parentBoundaryCodeTrimmed.toUpperCase()}_${paddedSequence}_${element.toUpperCase()}`;
+      code = `${parentBoundaryCodeTrimmed.toUpperCase()}_${paddedSequence}_${element.toString().toUpperCase()}`;
     } else {
-      code = `${parentBoundaryCode.toUpperCase()}_${paddedSequence}_${element.toUpperCase()}`;
+      code = `${parentBoundaryCode.toUpperCase()}_${paddedSequence}_${element.toString().toUpperCase()}`;
     }
   }
 
