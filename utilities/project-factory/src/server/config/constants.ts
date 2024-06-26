@@ -11,7 +11,7 @@ export const CONSTANTS: any = {
             KAFKA_ERROR: "Some error occured in kafka",
             SCHEMA_ERROR: " Schema related error",
             RESPONSE_NOT_FOUND_ERROR: "Response not found",
-            GENERATE_ERROR : "Error while generating user/facility/boundary"
+            GENERATE_ERROR: "Error while generating user/facility/boundary"
         },
         FILE: {
             INVALID_FILE: "No download URL returned for the given fileStoreId",
@@ -109,7 +109,7 @@ export const generatedResourceStatuses: any = {
     expired: "expired"
 }
 
-export const processTracks: any = {
+export const processTracks = {
     validation: {
         type: "HCM_PROCESS_TRACKS_TYPE_VALIDATION",
         status: "HCM_PROCESS_TRACKS_STATUS_VALIDATION",
@@ -117,6 +117,14 @@ export const processTracks: any = {
     uuidAssigned: {
         type: "HCM_PROCESS_TRACKS_TYPE_UUID_ASSIGNMENT",
         status: "HCM_PROCESS_TRACKS_STATUS_UUID_ASSIGNMENT",
+    },
+    projectCreationStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION",
+    },
+    projectCreationDone: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION"
     }
 }
 

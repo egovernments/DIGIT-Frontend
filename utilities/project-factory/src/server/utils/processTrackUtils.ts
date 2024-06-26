@@ -7,14 +7,15 @@ async function getProcessDetails(id: any): Promise<any> {
     const query = `SELECT * FROM ${config?.DB_CONFIG.DB_CAMPAIGN_PROCESS_TABLE_NAME} WHERE campaignid = $1`;
     const values = [id];
     const queryResponse = await executeQuery(query, values);
+    const currentTime = Date.now()
     if (queryResponse.rows.length === 0) {
         return {
             id: uuidv4(),
             campaignId: id,
             details: {},
             additionalDetails: {},
-            createdTime: Date.now(),
-            lastModifiedTime: Date.now(),
+            createdTime: currentTime,
+            lastModifiedTime: currentTime,
             isNew: true
         }
     }
@@ -38,7 +39,9 @@ async function persistTrack(
     processDetails.lastModifiedTime = processDetails.isNew ? processDetails.lastModifiedTime : lastModifiedTime;
     processDetails.details = { ...processDetails?.details, ...details } || {};
     processDetails.additionalDetails = { ...processDetails?.additionalDetails, ...additionalDetails } || {};
-
+    processDetails.type = type;
+    processDetails.status = status;
+    console.log(processDetails, " ppppppppppppppppp")
     const produceObject: any = {
         processDetails
     };

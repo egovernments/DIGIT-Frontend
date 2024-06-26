@@ -12,13 +12,13 @@ import { enrichProjectDetailsFromCampaignDetails } from "./transforms/projectTyp
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
-import { campaignStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
+import { campaignStatuses, headingMapping, processTracks, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
-// import { persistTrack } from "./processTrackUtils";
 import { callGenerateIfBoundariesDiffer } from "./generateUtils";
+import { persistTrack } from "./processTrackUtils";
 const _ = require('lodash');
 
 
@@ -545,7 +545,6 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
 }
 
 async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boolean = false) {
-    // persistTrack(request.body.CampaignDetails.id, processTracks.validation.type, processTracks.validation.status);
     const action = request?.body?.CampaignDetails?.action;
     if (firstPersist) {
         request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
@@ -1294,6 +1293,7 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
     logger.info("Create Projects started for the given Campaign")
     var { tenantId, boundaries, projectType, projectId } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
+        persistTrack(request.body.CampaignDetails.id, processTracks.projectCreationStarted.type, processTracks.projectCreationStarted.status);
         const projectTypeResponse = await getMDMSV1Data({}, 'HCM-PROJECT-TYPES', "projectTypes", tenantId);
         var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails, projectTypeResponse?.filter((types: any) => types?.code == projectType)?.[0]);
         const projectCreateBody = {
@@ -1322,12 +1322,16 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
             ]
             await projectCreate(projectCreateBody, request)
         }
+        persistTrack(request.body.CampaignDetails.id, processTracks.projectCreationDone.type, processTracks.projectCreationDone.status);
     }
 }
 
 
 async function processAfterPersist(request: any, actionInUrl: any) {
     try {
+        logger.info("Waiting for 2 second to persist process tracks...")
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        persistTrack(request.body.CampaignDetails.id, processTracks.uuidAssigned.type, processTracks.uuidAssigned.status);
         const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
             await createProjectCampaignResourcData(request);
@@ -1348,7 +1352,6 @@ async function processAfterPersist(request: any, actionInUrl: any) {
 async function processBasedOnAction(request: any, actionInUrl: any) {
     if (actionInUrl == "create") {
         request.body.CampaignDetails.id = uuidv4()
-        // persistTrack(request.body.CampaignDetails.id, processTracks.validation.uuidAssigned, processTracks.validation.uuidAssigned);
     }
     await enrichAndPersistProjectCampaignForFirst(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
