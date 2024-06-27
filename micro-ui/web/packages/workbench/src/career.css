@@ -1,3 +1,5 @@
 .careerTitle {
   @apply text-3xl mb-6 text-center font-bold sm:text-5xl;
+
+  
 }

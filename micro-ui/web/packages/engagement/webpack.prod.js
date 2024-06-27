@@ -3,6 +3,9 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const commonConfig = require('./webpack.common');
 const packageJson = require('./package.json');
 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const ExternalRemotesPlugin = require('external-remotes-plugin');
 module.exports = () => {
   const prodConfig = {
     mode: 'production',
@@ -11,7 +14,8 @@ module.exports = () => {
       filename: '[name].[contenthash].js',
     },
     plugins: [
-      new ModuleFederationPlugin({
+      new ModuleFederationPlugin
+      ({
         name: 'engagement',
         filename: 'remoteEntry.js',
         exposes: {
@@ -26,7 +30,20 @@ module.exports = () => {
           ...packageJson.dependencies
         },
       }),
-    ],
+      new MiniCssExtractPlugin(
+        false
+          ? {
+              filename: 'static/css/[name].[contenthash].css',
+              chunkFilename: 'static/css/[name].[contenthash].css',
+            }
+          : {}
+      ),
+    ].filter(Boolean),
+    optimization: {
+      minimize: true, //true if prod
+      minimizer: ['...', new CssMinimizerPlugin()],
+    },
+    
   };
 
   return merge(commonConfig, prodConfig);

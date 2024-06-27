@@ -8,6 +8,7 @@ import EditMessage from "./EditMessage"
 import MessageDetails from "./MessageDetails"
 import DocumentDetails from "../../../components/Messages/DocumentDetails"
 
+
 const Messages = ({match:{path} = {}, tenants, parentRoute}) => {
     return <Switch>
         <PrivateRoute path={`${path}/create`} component={props => <NewMessage {...props} />} />

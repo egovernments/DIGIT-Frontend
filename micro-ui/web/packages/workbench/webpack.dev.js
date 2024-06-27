@@ -41,7 +41,8 @@ module.exports = () => {
       },
       server:"https", //Enable HTTPS
     },
-    plugins: [
+    plugins: 
+    [
       new ExternalRemotesPlugin(),
       new ModuleFederationPlugin({
         name: "workbench",

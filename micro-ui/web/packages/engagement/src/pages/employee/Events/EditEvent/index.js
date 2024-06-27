@@ -84,7 +84,7 @@ const EditEvents = () => {
 
   return (
     <Fragment>
-      <Header>{t("ES_TITLE_EDIT_EVENTS")}</Header>
+      <Header>{t("ES_TITLE_EDIT_EVENTS ")}</Header>
       <FormComposer
         defaultValues={defaultValues}
         config={config}

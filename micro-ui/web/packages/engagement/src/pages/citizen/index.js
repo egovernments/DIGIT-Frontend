@@ -16,7 +16,7 @@ const CitizenApp = ({ path, url, userType, tenants }) => {
   const SurveyList = Digit.ComponentRegistryService.getComponent("SurveyList");
   const FillSurvey = Digit.ComponentRegistryService.getComponent("FillSurvey");
   const ShowSurvey = Digit.ComponentRegistryService.getComponent("ShowSurvey");
-  return (
+        return (
     <React.Fragment>
       <div className="engagement-citizen-wrapper">
         {!location.pathname.includes("response") && <BackButton>{t("CS_COMMON_BACK")}</BackButton>}

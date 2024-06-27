@@ -10,6 +10,10 @@ import { ComplaintsList } from "./ComplaintsList";
 import ComplaintDetailsPage from "./ComplaintDetails";
 import Response from "./Response";
 import { useTranslation } from "react-i18next";
+import '../../career.css';
+import '../../styles.tw.css';
+import { prefixClasses as cx } from "../../../../engagement/src/lib/prefix-classes";
+
 
 const App = () => {
   const { t } = useTranslation();

@@ -4,8 +4,9 @@ import { format, isValid } from "date-fns";
 import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../../../components/Events/DesktopInbox";
 import MobileInbox from "../../../../components/Events/MobileInbox";
-
-
+import '../../../../career.css';
+import '../../../../styles.tw.css';
+import {prefixClasses as cx} from './../../../../lib/prefix-classes';
 
 const Inbox = ({ tenants, parentRoute }) => {
   const { t } = useTranslation()

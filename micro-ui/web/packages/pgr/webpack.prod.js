@@ -2,7 +2,9 @@ const { merge } = require("webpack-merge");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const commonConfig = require("./webpack.common");
 const packageJson = require("./package.json");
-
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const ExternalRemotesPlugin = require('external-remotes-plugin');
 module.exports = () => {
   const prodConfig = {
     mode: "production",
@@ -17,6 +19,7 @@ module.exports = () => {
         exposes: {
           "./PGRModule": "./src/SingleSpaEntry",
         },
+
         // shared: packageJson.dependencies,
         shared:  {
           ...packageJson.dependencies,
@@ -25,7 +28,20 @@ module.exports = () => {
           'react-query': { singleton: true },
         },
       }),
-    ],
+      new MiniCssExtractPlugin(
+        false
+          ? {
+              filename: 'static/css/[name].[contenthash].css',
+              chunkFilename: 'static/css/[name].[contenthash].css',
+            }
+          : {}
+      ),
+    ].filter(Boolean),
+    optimization: {
+      minimize: true, //true if prod
+      minimizer: ['...', new CssMinimizerPlugin()],
+    },
+  
   };
 
   return merge(commonConfig, prodConfig);
