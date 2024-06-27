@@ -136,7 +136,7 @@ export const useHypothesis = (tempHypothesisList, hypothesisAssumptionsList) => 
   // Handles the change in hypothesis value
   const valueChangeHandler = (e, setTempHypothesisList, boundarySelections, setToast, t) => {
     // Checks it the boundary filters at at root level ( given constraints )
-    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
+    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.some((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
 
     // validating user input
