@@ -384,10 +384,21 @@ export const colorHeaders = async (workbook, headerList1, headerList2, headerLis
   }
 };
 
+const addUniqueWorksheet = (workbook, sheetName) => {
+  let uniqueSheetName = sheetName;
+  let counter = 1;
+  while (workbook.getWorksheet(uniqueSheetName)) {
+    uniqueSheetName = `${sheetName} (${counter})`;
+    counter++;
+  }
+  return workbook.addWorksheet(uniqueSheetName);
+};
+
 export const formatTemplate = (template, workbook, t) => {
   template.forEach(({ sheetName, data }) => {
-    // Create a new worksheet with properties
-    const worksheet = workbook.addWorksheet(sheetName);
+    // Create a new worksheet with properties and unique name
+    const worksheet = addUniqueWorksheet(workbook, sheetName);
+
     let commonColumnIndex = -1;
     data?.forEach((row, index) => {
       const worksheetRow = worksheet.addRow(row);
