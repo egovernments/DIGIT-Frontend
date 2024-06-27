@@ -167,7 +167,7 @@ const SavedMicroplans = () => {
         const computedSession = await updateSessionUtils.computeSessionObject(row.original, state, additionalProps);
         Digit.SessionStorage.set("microplanData", computedSession);
         Digit.SessionStorage.set("microplanHelperData", {
-          ...Digit.SessionStorage.set("microplanHelperData"),
+          ...Digit.SessionStorage.get("microplanHelperData"),
           activeSteps: timeLineOptions.length - 1,
         });
 
