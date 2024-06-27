@@ -103,7 +103,7 @@ module.exports = {
     extend: {},
     digitv2: {
       lightTheme: {
-        primary: "#C84C0E",
+        primary: "#F47738",
         "text-color-primary": "#0B0C0C",
         "text-color-secondary": "#505A5F",
         "text-color-disabled": "#B1B4B6",
@@ -114,11 +114,9 @@ module.exports = {
         "header-sidenav": "#0B4B66",
         "input-border": "#505A5F",
         "primary-bg": "#FEEFE7",
-        "text-primary": "#363636",
-        "error-v2": "#D4351C",
       },
       alert: {
-        error: "#b91900",
+        error: "#D4351C",
         "error-bg": "#EFC7C1",
         success: "#00703C",
         "success-bg": "#BAD6C9",
