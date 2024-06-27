@@ -707,7 +707,7 @@ const Upload = ({
 
       const boundaryDataAgainstBoundaryCode = (await boundaryDataGeneration(schemaData, campaignData, t)) || {};
       const mappedToList = resourceMappingData.map((item) => item.mappedTo);
-      if (!schemaData.doHierarchyCheckInUploadedData && hierarchy.every((item) => !mappedToList.includes(t(item)))) {
+      if (!schemaData.doHierarchyCheckInUploadedData && hierarchy.some((item) => !mappedToList.includes(t(item)))) {
         data.features.forEach((feature) => {
           const boundaryCode = feature?.properties?.boundaryCode;
           const additionalDetails = {};
