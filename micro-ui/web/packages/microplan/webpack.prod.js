@@ -5,6 +5,9 @@ const packageJson = require('./package.json');
 
 module.exports = () => {
   const prodConfig = {
+    fallback: {
+      buffer: require.resolve('buffer/')
+    },
     mode: 'production',
     output: {
       publicPath: '/microplan-mfe/',
