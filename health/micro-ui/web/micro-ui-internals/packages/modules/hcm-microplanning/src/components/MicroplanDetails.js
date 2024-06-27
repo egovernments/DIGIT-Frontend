@@ -97,7 +97,7 @@ const MicroplanDetails = ({
     setMicroplanData((previous) => ({
       ...previous,
       microplanDetails: {
-        name: microplan,
+        name: microplan?.trim(),
       },
     }));
   }, [microplan]);
@@ -129,7 +129,7 @@ const MicroplanDetails = ({
       setLoader("LOADING");
       const body = {
         PlanConfigurationSearchCriteria: {
-          name: microplan,
+          name: microplan?.trim(),
           tenantId: Digit.ULBService.getCurrentTenantId(),
         },
       };
@@ -171,7 +171,7 @@ const MicroplanDetails = ({
         setMicroplanData((previous) => ({
           ...previous,
           microplanDetails: {
-            name: microplan,
+            name: microplan?.trim(),
           },
         }));
         if (!["", null, undefined].includes(microplan)) {

@@ -4,6 +4,7 @@ import { Header, InboxSearchComposerV2, Loader } from "@egovernments/digit-ui-re
 import { useHistory } from "react-router-dom";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { useMyContext } from "../../utils/context";
+import { timeLineOptions } from "../../configs/timeLineOptions.json";
 
 const configs = {
   label: "SAVED_MICROPLANS",
@@ -165,6 +166,10 @@ const SavedMicroplans = () => {
         // Compute the session object based on the row?.original data and then re-route
         const computedSession = await updateSessionUtils.computeSessionObject(row.original, state, additionalProps);
         Digit.SessionStorage.set("microplanData", computedSession);
+        Digit.SessionStorage.set("microplanHelperData", {
+          ...Digit.SessionStorage.set("microplanHelperData"),
+          activeSteps: timeLineOptions.length - 1,
+        });
 
         setShowLoader(false);
         history.push(`/${window.contextPath}/employee/microplanning/edit-saved-microplan?id=${row?.original?.executionPlanId}`);
