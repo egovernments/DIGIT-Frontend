@@ -106,6 +106,7 @@ export const updateSessionUtils = {
         MICROPLAN_DETAILS: true,
         UPLOAD_DATA: true,
         HYPOTHESIS: true,
+        MAPPING: true,
         FORMULA_CONFIGURATION: true,
       };
     };
