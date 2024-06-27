@@ -9,7 +9,7 @@ module.exports = {
   modules: [path.resolve(__dirname, "src"), "node_modules"],
     alias: {
       'react-i18next': require.resolve('react-i18next'),
-      '@digit-ui/digit-ui-components': path.resolve(__dirname, '../components/'),
+      // '@digit-ui/digit-ui-components': path.resolve(__dirname, '../components/'),
     },
   },
   module: {
