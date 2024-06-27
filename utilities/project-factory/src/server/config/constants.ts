@@ -125,6 +125,34 @@ export const processTracks = {
     projectCreationDone: {
         type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
         status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION"
+    },
+    projectResourceCreationStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_RESOURCE_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_RESOURCE_CREATION"
+    },
+    sentForProjectMapping: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_MAPPING",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_MAPPING"
+    },
+    confirmingResourceCreation: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_CREATION_CONFIRMATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_CREATION_CONFIRMATION"
+    },
+    allResourceCreationConfirmed: {
+        type: "HCM_PROCESS_TRACKS_TYPE_ALL_RESOURCE_CREATION_CONFIRMED",
+        status: "HCM_PROCESS_TRACKS_STATUS_ALL_RESOURCE_CREATION_CONFIRMED"
+    },
+    resourceMappingStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_STARTED",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_STARTED"
+    },
+    resourceMappingDone: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_DONE",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_DONE"
+    },
+    error: {
+        type: "HCM_PROCESS_TRACKS_TYPE_ERROR",
+        status: "HCM_PROCESS_TRACKS_STATUS_ERROR"
     }
 }
 

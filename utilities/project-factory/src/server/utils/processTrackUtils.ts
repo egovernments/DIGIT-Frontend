@@ -3,21 +3,24 @@ import { produceModifiedMessages } from '../kafka/Listener';
 import { v4 as uuidv4 } from 'uuid';
 import { executeQuery } from './db';
 
-async function getProcessDetails(id: any): Promise<any> {
+async function getProcessDetails(id: any, getNew: any = false): Promise<any> {
     const query = `SELECT * FROM ${config?.DB_CONFIG.DB_CAMPAIGN_PROCESS_TABLE_NAME} WHERE campaignid = $1`;
     const values = [id];
     const queryResponse = await executeQuery(query, values);
     const currentTime = Date.now()
-    if (queryResponse.rows.length === 0) {
-        return {
-            id: uuidv4(),
-            campaignId: id,
-            details: {},
-            additionalDetails: {},
-            createdTime: currentTime,
-            lastModifiedTime: currentTime,
-            isNew: true
+    if (queryResponse.rows.length === 0 && getNew) {
+        if (getNew) {
+            return {
+                id: uuidv4(),
+                campaignId: id,
+                details: {},
+                additionalDetails: {},
+                createdTime: currentTime,
+                lastModifiedTime: currentTime,
+                isNew: true
+            }
         }
+        else return {};
     }
     return queryResponse.rows[0]; // Assuming only one row is expected
 }
@@ -32,7 +35,7 @@ async function persistTrack(
     let processDetails: any;
 
     if (campaignId) {
-        processDetails = await getProcessDetails(campaignId);
+        processDetails = await getProcessDetails(campaignId, true);
     }
 
     const lastModifiedTime = Date.now();
@@ -41,7 +44,6 @@ async function persistTrack(
     processDetails.additionalDetails = { ...processDetails?.additionalDetails, ...additionalDetails } || {};
     processDetails.type = type;
     processDetails.status = status;
-    console.log(processDetails, " ppppppppppppppppp")
     const produceObject: any = {
         processDetails
     };
@@ -50,4 +52,4 @@ async function persistTrack(
     produceModifiedMessages(produceObject, topic);
 }
 
-export { persistTrack };
+export { persistTrack, getProcessDetails };

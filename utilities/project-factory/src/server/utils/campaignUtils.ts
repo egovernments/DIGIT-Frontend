@@ -541,6 +541,7 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     }
     const topic = config?.kafka?.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
     produceModifiedMessages(requestBody, topic);
+    persistTrack(requestBody?.CampaignDetails?.id, processTracks.error.type, String((error?.message + " : " + error?.description) || error), { error: String((error?.message + " : " + error?.description) || error) });
     delete requestBody.CampaignDetails.campaignDetails
 }
 
@@ -626,6 +627,7 @@ function getCreateResourceIds(resources: any[]) {
 }
 
 async function persistForCampaignProjectMapping(request: any, createResourceDetailsIds: any, localizationMap?: any) {
+    persistTrack(request.body.CampaignDetails.id, processTracks.sentForProjectMapping.type, processTracks.sentForProjectMapping.status);
     if (createResourceDetailsIds && request?.body?.CampaignDetails?.projectId) {
         var requestBody: any = {
             RequestInfo: request?.body?.RequestInfo,
