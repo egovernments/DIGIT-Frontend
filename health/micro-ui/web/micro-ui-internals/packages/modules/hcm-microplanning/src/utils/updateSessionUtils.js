@@ -4,7 +4,7 @@ import JSZip from "jszip";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import shp from "shpjs";
-import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY, commonColumn } from "../configs/constants";
+import { EXCEL, GEOJSON, SHAPEFILE, ACCEPT_HEADERS, LOCALITY, commonColumn, UPLOADED_DATA_ACTIVE_STATUS } from "../configs/constants";
 import { addBoundaryData, fetchBoundaryData, filterBoundaries } from "./createTemplate";
 import { handleExcelFile } from "./uploadUtils";
 
@@ -313,17 +313,29 @@ export const updateSessionUtils = {
       if (processedData) return;
       const mappedToList = upload?.resourceMapping.map((item) => item.mappedTo);
       let sortedSecondList = Digit.Utils.microplan.sortSecondListBasedOnFirstListOrder(schemaKeys, upload?.resourceMapping);
-      const newFeatures = result["features"].map((item) => {
+      const newFeatures = [];
+      for (const item of result["features"]) {
         let newProperties = {};
-        sortedSecondList
-          ?.filter((resourse) => resourse.filestoreId === filestoreId)
-          .forEach((e) => {
-            newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
-          });
+
+        sortedSecondList.forEach((e) => {
+          newProperties[e["mappedTo"]] = item["properties"][e["mappedFrom"]];
+        });
         item["properties"] = newProperties;
-        return item;
-      });
-      upload.data.features = newFeatures;
+        newFeatures.push(item);
+      }
+      let filteredFeature = [];
+      for (const item of newFeatures) {
+        if (
+          schema?.activeInactiveField &&
+          schema?.schema?.Properties &&
+          Object.keys(schema.schema.Properties).includes(schema.activeInactiveField) &&
+          item?.properties?.[schema.activeInactiveField] !== additionalProps.t(UPLOADED_DATA_ACTIVE_STATUS)
+        ) {
+          continue;
+        }
+        filteredFeature.push(item);
+      }
+      upload.data.features = filteredFeature;
       if (
         additionalProps.hierarchyData?.every(
           (item) =>
