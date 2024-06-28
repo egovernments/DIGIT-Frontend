@@ -8,7 +8,8 @@ import CreateMicroplan from "./CreateMicroplan";
 import SavedMicroplans from "./SavedMicroplans";
 import SelectCampaign from "./SelectCampaign";
 import { useMyContext } from "../../utils/context";
-
+import { Schemas as Schema } from "./Schemas";
+import { UploadConfiguration } from "./UploadConfiguration";
 const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const pathVar = location.pathname.replace(`${defaultPath}/`, "").split("?")?.[0];
@@ -51,6 +52,41 @@ const MicroplanningBreadCrumb = ({ location, defaultPath }) => {
   return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
 
+const orderByOrderKey = (objects) => {
+  if (!objects) return objects;
+  // Use sort with a comparator function
+  objects.sort((a, b) => {
+    // Compare the order property
+    return a?.order - b?.order;
+  });
+
+  return objects;
+};
+
+const preprocessMDMSData = (data) => {
+  const rawSchema = Schema;
+  // Schema
+  const convertedProperties = (properties) => {
+    return Array.isArray(properties)
+      ? orderByOrderKey(
+          properties.reduce((acc, prop) => {
+            const { name, order, ...rest } = prop;
+            acc[name] = rest;
+            return acc;
+          }, {})
+        )
+      : properties;
+  };
+  const Schemas = rawSchema?.map((item) => {
+    return { ...item, schema: { Properties: convertedProperties(item?.schema?.Properties) } };
+  });
+
+  // upload Configuration
+  const convertedUploadConfiguration = orderByOrderKey(UploadConfiguration);
+
+  return { Schemas, UploadConfiguration: convertedUploadConfiguration };
+};
+
 const App = ({ path }) => {
   const { dispatch } = useMyContext();
 
@@ -86,10 +122,14 @@ const App = ({ path }) => {
     ],
     {
       select: (data) => {
+        const { Schemas, UploadConfiguration } = preprocessMDMSData(data);
+        console.log(Schema);
         dispatch({
           type: "SETINITDATA",
           state: {
             ...data?.["hcm-microplanning"],
+            Schemas,
+            UploadConfiguration,
           },
         });
       },

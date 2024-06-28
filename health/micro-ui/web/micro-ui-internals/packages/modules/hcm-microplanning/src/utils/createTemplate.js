@@ -19,7 +19,7 @@ export const fetchBoundaryData = async (tenantId, hierarchyType, codes) => {
 export const getFacilities = async (params, body) => {
   // request for boundary relation api
   const reqCriteria = {
-    url: "/facility/v1/_search",
+    url: "/facility/v1/_search", //TODO should not be directly set in UI
     params: params,
     body: body,
   };

@@ -42,6 +42,9 @@ export const calculateAggregateForTreeMicroplanWrapper = (entity) => {
   return newObject;
 };
 
+// fetching all the data previously uploaded ->
+// checking is the data that was previously uploaded is complete or not
+
 export const extractGeoData = (
   campaignType,
   microplanData,
@@ -169,10 +172,12 @@ export const extractGeoData = (
     if (resources && formulaConfiguration && hypothesisAssumptionsList) {
       dataWithResources = addResourcesToFilteredData(dataWithResources, resources, hypothesisAssumptionsList, formulaConfiguration, microplanData, t);
     }
+
     const processedDataWithResources = dataWithResources.map((item, index) => {
       if (index === 0) return item;
-      const newProperties = keys.reduce((acc, key, i) => (key !== "feature" ? { ...acc, [key]: item[i] } : acc), {});
-      item[item.length - 1] = { ...item[item.length - 1], properties: newProperties };
+      const featureIndex = keys.length - 1;
+      const newProperties = keys.concat(resources).reduce((acc, key, i) => (key !== "feature" ? { ...acc, [key]: item[i] } : acc), {});
+      item[featureIndex] = { ...item[featureIndex], properties: newProperties };
       return item;
     });
 
