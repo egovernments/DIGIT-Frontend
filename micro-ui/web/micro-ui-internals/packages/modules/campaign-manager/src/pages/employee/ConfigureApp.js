@@ -1,10 +1,8 @@
-import { Loader, FormComposerV2, Header, MultiUploadWrapper, Button, Close, LogoutIcon } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
-import { CampaignConfig } from "../../configs/CampaignConfig";
-import { QueryClient, useQueryClient } from "react-query";
-import { Stepper, Toast } from "@egovernments/digit-ui-components";
+import { Toast } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { ConfigureAppConfig } from "../../configs/ConfigureAppConfig";
 
@@ -113,7 +111,7 @@ const ConfigureApp = ({ hierarchyType }) => {
           };
         })}
         onSubmit={onSubmit}
-        showSecondaryLabel={currentKey > 1 ? true : false}
+        showSecondaryLabel={currentKey > 1}
         secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"

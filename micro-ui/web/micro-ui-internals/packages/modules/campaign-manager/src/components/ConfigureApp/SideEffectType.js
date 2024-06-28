@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header } from "@egovernments/digit-ui-react-components";
+import { Header ,LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp } from "@egovernments/digit-ui-components";
+import { Dropdown, ErrorMessage } from "@egovernments/digit-ui-components";
 
 const SideEffectType = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
