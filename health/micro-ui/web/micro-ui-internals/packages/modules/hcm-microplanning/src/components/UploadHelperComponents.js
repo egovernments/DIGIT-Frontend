@@ -170,10 +170,12 @@ export const UploadedFile = ({
   downloadTemplateHandler,
   showDownloadTemplate,
 }) => {
+  debugger;
   const { t } = useTranslation();
   const [errorList, setErrorList] = useState([]);
   useEffect(() => {
     let tempErrorList = [];
+
     if (file?.errorLocationObject) {
       for (const [sheetName, values] of Object.entries(file?.errorLocationObject)) {
         for (const [row, columns] of Object.entries(values)) {
@@ -251,10 +253,13 @@ export const UploadedFile = ({
             <InfoButton infobuttontype="error" label={t("ERROR_VIEW_DETAIL_ERRORS")} onClick={openDataPreview} />,
             <div className="file-upload-error-container">
               {error?.map((item) => {
-                if (item !== "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS") {
-                  return <p>{t(item)}</p>;
+                if (
+                  item === "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS" ||
+                  (Array.isArray(item) && item?.[0] === "ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS")
+                ) {
+                  return null;
                 }
-                return null;
+                return <p>{t(item)}</p>;
               })}
               {errorList.length !== 0 && errorList.map((item) => <p>{item}</p>)}
             </div>,

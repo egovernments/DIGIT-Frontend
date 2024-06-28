@@ -24,6 +24,7 @@ import {
   convertToSheetArray,
   findGuideLine,
   delay,
+  boundaryCodeValidations,
 } from "../utils/uploadUtils";
 import { UploadGuideLines, UploadedFile, FileUploadComponent, UploadComponents, UploadInstructions, UploadSection } from "./UploadHelperComponents";
 
@@ -690,9 +691,12 @@ const Upload = ({
       let error;
       if (!checkForSchemaData(schemaData)) return;
 
-      const { data, valid, errors } = computeMappedDataAndItsValidations(schemaData);
+      const { data, valid, errors } = await computeMappedDataAndItsValidations(schemaData);
       error = errors;
-      if (!valid) return;
+      if (!valid) {
+        setLoader();
+        return;
+      }
       let filestoreId;
       if (!error) {
         filestoreId = await saveFileToFileStore();
@@ -762,21 +766,24 @@ const Upload = ({
       return;
     }
   };
-  const computeMappedDataAndItsValidations = (schemaData) => {
+  const computeMappedDataAndItsValidations = async (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
+    // const boundar
+    const errorObject = { [selectedSection.id]: await boundaryCodeValidations(data, campaignData, GEOJSON) }; // geojson and shapefile have same handler as their format is same
+    console.log(errorObject);
     const response = geojsonPropertiesValidation(data, schemaData.schema, fileData?.section, t);
     if (!response.valid) {
-      handleValidationErrorResponse(response.message, response.errors);
+      handleValidationErrorResponse(response.message, response.errors ? response.errors : {}, errorObject ? errorObject : {});
       return { data: data, errors: response.errors, valid: response.valid };
     }
-    return { data: data, valid: response.valid };
+    return { data: data, valid: response.valid, errorObject };
   };
 
-  const handleValidationErrorResponse = (error, errorLocationObject = {}) => {
+  const handleValidationErrorResponse = (error, errorLocationObject = {}, errorObject = {}) => {
     const fileObject = fileData;
     if (fileObject) {
       fileObject.error = [error];
-      if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
+      if (errorLocationObject) fileObject.errorLocationObject = Digit.Utils.microplan.mergeDeep(errorLocationObject, errorObject);
       setFileData((previous) => ({ ...previous, error, errorLocationObject }));
       setFileDataList((prevFileDataList) => {
         let temp = _.cloneDeep(prevFileDataList);
