@@ -18,7 +18,7 @@ export const HypothesisValues = memo(({ boundarySelections, hypothesisAssumption
       setToast({ state: "error", message: t("ERROR_HYPOTHESIS_VALUE_SHOULD_NOT_BE_ZERO") });
       return;
     }
-    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.every((item) => item?.length !== 0))
+    if (Object.keys(boundarySelections).length !== 0 && Object.values(boundarySelections)?.some((item) => item?.length !== 0))
       return setToast({ state: "error", message: t("HYPOTHESIS_CAN_BE_ONLY_APPLIED_ON_ADMIN_LEVEL_ZORO") });
     setHypothesisAssumptionsList(tempHypothesisList);
   };
