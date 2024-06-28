@@ -2,12 +2,12 @@ name: Digit Admin Console Build workflow
 on:
   push:
     branches:
-      - campaign
+      - sand
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
   pull_request:
     branches:
-      - campaign
+      - sand
   workflow_dispatch:
 jobs:
   docker_image-build:
