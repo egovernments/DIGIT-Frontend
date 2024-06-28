@@ -7,7 +7,9 @@ import { useQueryClient } from "react-query";
 
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
-
+import '../../../career.css';
+import '../../../styles.tw.css';
+import { prefixClasses as cx } from "../../../../../engagement/src/lib/prefix-classes";
 export const CreateComplaint = ({ parentUrl }) => {
   
   const cities = [
