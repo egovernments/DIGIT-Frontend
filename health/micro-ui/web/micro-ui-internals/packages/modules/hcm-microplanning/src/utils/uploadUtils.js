@@ -233,14 +233,14 @@ export const downloadTemplate = async ({
     );
 
     // protextData
-    await protectData({
-      workbook,
-      hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
-      addFacilityData: schema?.template?.includeFacilityData,
-      schema,
-      readMeSheetName: t(readMeSheetName),
-      t,
-    });
+    // await protectData({
+    //   workbook,
+    //   hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
+    //   addFacilityData: schema?.template?.includeFacilityData,
+    //   schema,
+    //   readMeSheetName: t(readMeSheetName),
+    //   t,
+    // });
 
     // Write the workbook to a buffer
     workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
@@ -660,7 +660,7 @@ export const prepareExcelFileBlobWithErrors = async (dataInput, errors, schema, 
     t(readMeSheetName)
   );
 
-  await protectWorkbookData(workbook, schema, t);
+  // await protectWorkbookData(workbook, schema, t);
 
   return await workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
     return new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
