@@ -133,7 +133,7 @@ const MicroplanPreview = ({
     const schemas = state?.Schemas;
     let resourcelist = state?.Resources;
     let microplanPreviewAggregatesList = state?.MicroplanPreviewAggregates;
-    microplanPreviewAggregatesList = microplanPreviewAggregatesList.find((item) => item.campaignType === campaignType)?.data;
+    microplanPreviewAggregatesList = microplanPreviewAggregatesList?.find((item) => item.campaignType === campaignType)?.data;
     if (schemas) setValidationSchemas(schemas);
     resourcelist = resourcelist.find((item) => item.campaignType === campaignType)?.data;
     if (resourcelist) setResources(resourcelist);
