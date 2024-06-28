@@ -1802,7 +1802,9 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
 
 async function getBoundaryOnWhichWeSplit(request: any) {
     const mdmsResponse = await getMDMSV1Data(request, config?.values?.moduleName, config?.masterNameForSplitBoundariesOn, request?.query?.tenantId);
-    return mdmsResponse.filter((item: any) => item.isActive).map((item: any) => item.splitBoundariesOn);
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    const hierarchyTypeFromCampaignResponseObject = responseFromCampaignSearch?.CampaignDetails?.[0].hierarchyType;
+    return mdmsResponse.filter((item: any) => item.hierarchy== hierarchyTypeFromCampaignResponseObject).map((item: any) => item.splitBoundariesOn);
 }
 
 
