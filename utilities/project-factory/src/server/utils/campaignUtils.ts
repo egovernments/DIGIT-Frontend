@@ -1788,7 +1788,8 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
     var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
-    const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    let differentTabsBasedOnLevel = await getBoundaryOnWhichWeSplit(request);
+    differentTabsBasedOnLevel = getLocalizedName(`${request?.query?.hierarchyType}_${differentTabsBasedOnLevel}`.toUpperCase(), localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
@@ -1797,6 +1798,11 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }
     return boundaryDataGeneratedAfterDifferentTabSeparation;
+}
+
+async function getBoundaryOnWhichWeSplit(request: any) {
+    const mdmsResponse = await getMDMSV1Data(request, config?.values?.moduleName, config?.masterNameForSplitBoundariesOn, request?.query?.tenantId);
+    return mdmsResponse.filter((item: any) => item.isActive).map((item: any) => item.splitBoundariesOn);
 }
 
 
