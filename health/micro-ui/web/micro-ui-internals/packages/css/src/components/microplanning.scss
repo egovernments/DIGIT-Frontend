@@ -616,6 +616,11 @@ $border-color: rgba(214, 213, 212, 1);
 
     @include select-dropdown;
 
+    .table{
+      border-left-width:0 !important;
+      border-right-width:0 !important;
+    }
+
     table {
       background-color: rgb(0, 0, 0, 0) !important;
       width: 100%;
