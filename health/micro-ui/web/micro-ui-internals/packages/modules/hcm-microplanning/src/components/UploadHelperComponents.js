@@ -170,7 +170,6 @@ export const UploadedFile = ({
   downloadTemplateHandler,
   showDownloadTemplate,
 }) => {
-  debugger;
   const { t } = useTranslation();
   const [errorList, setErrorList] = useState([]);
   useEffect(() => {

@@ -769,12 +769,17 @@ const Upload = ({
   const computeMappedDataAndItsValidations = async (schemaData) => {
     const data = computeGeojsonWithMappedProperties();
     // const boundar
-    const errorObject = { [selectedSection.id]: await boundaryCodeValidations(data, campaignData, GEOJSON) }; // geojson and shapefile have same handler as their format is same
-    console.log(errorObject);
+    const boundaryCheckResponse = await boundaryCodeValidations(data, campaignData, GEOJSON);
+    const errorObject =
+      boundaryCheckResponse && Object.keys(boundaryCheckResponse).length !== 0 ? { [selectedSection.id]: boundaryCheckResponse } : undefined; // geojson and shapefile have same handler as their format is same
     const response = geojsonPropertiesValidation(data, schemaData.schema, fileData?.section, t);
-    if (!response.valid) {
-      handleValidationErrorResponse(response.message, response.errors ? response.errors : {}, errorObject ? errorObject : {});
-      return { data: data, errors: response.errors, valid: response.valid };
+    if (!response.valid || errorObject) {
+      handleValidationErrorResponse(
+        response.message ? response.message : errorObject ? ["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"] : undefined,
+        response.errors ? response.errors : {},
+        errorObject ? errorObject : {}
+      );
+      return { data: data, errors: Digit.Utils.microplan.mergeDeep(response.errors, errorObject), valid: response.valid && !errorObject };
     }
     return { data: data, valid: response.valid, errorObject };
   };

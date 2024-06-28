@@ -968,13 +968,12 @@ export const handleExcelFile = async (
       console.error("Error in boundary adding operaiton: ", error);
     }
     tempFileDataToStore = addMissingPropertiesToFileData(tempFileDataToStore, missingProperties);
-    debugger;
 
-    // const boundar
+    // checking boundary codes
     const errorObject = await boundaryCodeValidations(tempFileDataToStore, campaignData, EXCEL);
-    console.log(errorObject);
-    console.log(Digit.Utils.microplan.mergeDeep(errors, errorObject));
-    const combinedErrors = (errors || errorObject) && Digit.Utils.microplan.mergeDeep(errors, errorObject);
+    const combinedErrors =
+      !errors && errorObject && Object.keys(errorObject).length === 0 ? false : Digit.Utils.microplan.mergeDeep(errors, errorObject);
+    if (check && combinedErrors) setUploadedFileError(["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"]);
     return {
       check: check && !combinedErrors,
       errors: combinedErrors,
@@ -1103,14 +1102,14 @@ const checkBoundaryExcel = (boundaryCodeList, data) => {
     if (Array.isArray(value)) {
       for (let i = 0; i < value?.length; i++) {
         if (i === 0) {
-          console.log(value?.[i]);
           boundaryCodeIndex = value?.[i]?.indexOf(commonColumn);
+          continue;
         }
         if (boundaryCodeIndex === -1) continue;
         if (!boundaryCodeList.includes(value?.[i]?.[boundaryCodeIndex])) {
           errorObject = {
             ...errorObject,
-            [key]: { ...(errorObject?.[key] ? errorObject[key] : {}), [i]: { [commonColumn]: ["ERROR_BOUNDARY_CODE_INVALID"] } },
+            [key]: { ...(errorObject?.[key] ? errorObject[key] : {}), [i - 1]: { [commonColumn]: ["ERROR_BOUNDARY_CODE_INVALID"] } },
           };
         }
       }
@@ -1133,7 +1132,6 @@ const checkBoundaryGeojsonShapefile = (boundaryCodeList, data) => {
   if (data && !data.features) return {};
   let errorObject = {};
   for (const [key, value] of Object.entries(data?.features)) {
-    console.log(value?.properties?.[commonColumn]);
     if (!boundaryCodeList.includes(value?.properties?.[commonColumn])) {
       errorObject = { ...errorObject, [key]: { [commonColumn]: ["ERROR_BOUNDARY_CODE_INVALID"] } };
     }
@@ -1144,7 +1142,6 @@ const checkBoundaryGeojsonShapefile = (boundaryCodeList, data) => {
 export const boundaryCodeValidations = async (data, campaignData, fileType) => {
   const boundaryData = await fetchBoundary(campaignData);
   const boundaryCodeList = [...new Set(fetchBoundaryDataCodeList(boundaryData))];
-  console.log(boundaryData, boundaryCodeList);
   if (fileType === EXCEL) {
     return checkBoundaryExcel(boundaryCodeList, data);
   }
