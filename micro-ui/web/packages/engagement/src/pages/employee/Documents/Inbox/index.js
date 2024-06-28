@@ -4,7 +4,9 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../../../components/Documents/DesktopInbox";
 import MobileInbox from "../../../../components/Documents/MobileInbox";
 
-
+import '../../../../career.css';
+import '../../../../styles.tw.css';
+import { prefixClasses as cx } from "../../../../lib/prefix-classes";
 
 const Inbox = ({ tenants }) => {
     const { t } = useTranslation()
@@ -111,7 +113,7 @@ const Inbox = ({ tenants }) => {
                 totalRecords={response?.totalCount}
                 title={"DOCUMENTS_DOCUMENT_HEADER"}
                 iconName={"document"}
-                links={links}
+                
                 currentPage={parseInt(searchParams.offset / searchParams.limit)}
                 onNextPage={fetchNextPage}
                 onPrevPage={fetchPrevPage}
