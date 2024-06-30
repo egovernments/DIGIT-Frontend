@@ -103,7 +103,6 @@ const CreateMicroplan = () => {
     try {
       Digit.SessionStorage.set("microplanData", microplanData);
     } catch (error) {
-      console.log(microplanData);
       console.error("Error while seting ssn storage for microplanning :", error.message);
     }
   }, [microplanData]);

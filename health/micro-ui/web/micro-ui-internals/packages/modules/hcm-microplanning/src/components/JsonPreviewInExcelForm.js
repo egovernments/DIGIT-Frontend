@@ -52,37 +52,41 @@ export const JsonPreviewInExcelForm = (props) => {
               {sheetsData?.[currentSheetName]?.slice(1).map((rowData, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.values(sheetsData?.[currentSheetName]?.[0])?.map((_, cellIndex) => {
-                    const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex];
-                    const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
-                    let convertedError;
-                    if (typeof error?.[0] === "object") {
-                      let { error: actualError, ...otherProperties } = error[0];
-                      convertedError = t(actualError, otherProperties?.values);
-                    } else {
-                      convertedError = t(error);
-                    }
-                    const rowHasError =
-                      typeof props?.errorLocationObject?.[currentSheetName]?.[rowIndex] === "object"
-                        ? Object.keys(props?.errorLocationObject?.[currentSheetName]?.[rowIndex]).length !== 0
-                        : undefined;
-                    return (
-                      <td
-                        key={cellIndex}
-                        style={{
-                          ...(rowData[cellIndex] || rowData[cellIndex] === 0
-                            ? !isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex])
-                              ? { textAlign: "end" }
-                              : {}
-                            : {}),
-                          ...(convertedError ? { backgroundColor: "rgb(250,148,148)" } : {}),
-                        }}
-                        title={convertedError ? convertedError : undefined}
-                      >
-                        {cellIndex === 0 && rowHasError && <div className="edited-row-marker" />}
+                    try {
+                      const headerName = sheetsData?.[currentSheetName]?.[0]?.[cellIndex];
+                      const error = headerName ? props?.errorLocationObject?.[currentSheetName]?.[rowIndex]?.[headerName] : undefined;
+                      let convertedError;
+                      if (typeof error?.[0] === "object") {
+                        let { error: actualError, ...otherProperties } = error[0];
+                        convertedError = t(actualError, otherProperties?.values);
+                      } else {
+                        convertedError = !!error?.[0] && t(error?.[0]);
+                      }
+                      const rowHasError =
+                        typeof props?.errorLocationObject?.[currentSheetName]?.[rowIndex] === "object"
+                          ? Object.keys(props?.errorLocationObject?.[currentSheetName]?.[rowIndex]).length !== 0
+                          : undefined;
+                      return (
+                        <td
+                          key={cellIndex}
+                          style={{
+                            ...(rowData[cellIndex] || rowData[cellIndex] === 0
+                              ? !isNaN(rowData[cellIndex]) && isFinite(rowData[cellIndex])
+                                ? { textAlign: "end" }
+                                : {}
+                              : {}),
+                            ...(convertedError ? { backgroundColor: "rgb(250,148,148)" } : {}),
+                          }}
+                          title={convertedError ? convertedError : undefined}
+                        >
+                          {cellIndex === 0 && rowHasError && <div className="edited-row-marker" />}
 
-                        {rowData[cellIndex] || rowData[cellIndex] === 0 ? (typeof rowData[cellIndex] !== "object" ? rowData[cellIndex] : "") : ""}
-                      </td>
-                    );
+                          {rowData[cellIndex] || rowData[cellIndex] === 0 ? (typeof rowData[cellIndex] !== "object" ? rowData[cellIndex] : "") : ""}
+                        </td>
+                      );
+                    } catch (error) {
+                      console.error("Error while showing data upload previwe", error.message);
+                    }
                   })}
                 </tr>
               ))}

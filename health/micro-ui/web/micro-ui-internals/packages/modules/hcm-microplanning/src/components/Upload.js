@@ -690,10 +690,12 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
-
-      const { data, valid, errors } = await computeMappedDataAndItsValidations(schemaData);
+      const { data, valid, errors, doDeleteFile } = await computeMappedDataAndItsValidations(schemaData);
       error = errors;
       if (!valid) {
+        if (doDeleteFile) {
+          deleteFile();
+        }
         setLoader();
         return;
       }
@@ -767,9 +769,10 @@ const Upload = ({
     }
   };
   const computeMappedDataAndItsValidations = async (schemaData) => {
-    const data = computeGeojsonWithMappedProperties();
+    const { data, doDeleteFile } = computeGeojsonWithMappedProperties();
+    if (!data) return { data: {}, valid: false, doDeleteFile };
     // const boundar
-    const boundaryCheckResponse = await boundaryCodeValidations(data, campaignData, GEOJSON);
+    const boundaryCheckResponse = await boundaryCodeValidations(data, campaignData, GEOJSON, t);
     const errorObject =
       boundaryCheckResponse && Object.keys(boundaryCheckResponse).length !== 0 ? { [selectedSection.id]: boundaryCheckResponse } : undefined; // geojson and shapefile have same handler as their format is same
     const response = geojsonPropertiesValidation(data, schemaData.schema, fileData?.section, t);
@@ -856,6 +859,20 @@ const Upload = ({
       item["properties"] = newProperties;
       newFeatures.push(item);
     }
+
+    if (
+      schemaData?.schema?.Properties &&
+      Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField) &&
+      schemaData.schema.Properties?.[schemaData.activeInactiveField]?.isRequired
+    ) {
+      const hasColumn = newFeatures.reduce((acc, feature) => {
+        return acc && !!feature?.properties?.[schemaData.activeInactiveField];
+      }, true);
+      if (!hasColumn) {
+        setToast({ state: "error", message: t("ERROR_ACTIVE_INACTIVE_COLUMN_MISSING", { columnName: t(schemaData.activeInactiveField) }) });
+        return { doDeleteFile: true };
+      }
+    }
     let filteredFeature = [];
     for (const item of newFeatures) {
       if (
@@ -868,9 +885,14 @@ const Upload = ({
       }
       filteredFeature.push(item);
     }
+
+    if (filteredFeature.length === 0) {
+      setToast({ state: "error", message: t("ERROR_ACTIVE_DATA_MISSING") });
+      return { doDeleteFile: true };
+    }
     let data = fileData.data;
     data["features"] = filteredFeature;
-    return data;
+    return { data };
   };
 
   // Handler for checing file extension and showing errors in case it is wrong
@@ -961,7 +983,7 @@ const Upload = ({
               )
             ) : (
               <div className="upload-component">
-                {selectedSection != null && fileData !== null && (
+                {selectedSection != null && fileData !== null && fileData !== undefined && (
                   <UploadedFile
                     selectedSection={selectedSection}
                     selectedFileType={selectedFileType}

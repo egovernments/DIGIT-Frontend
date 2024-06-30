@@ -911,12 +911,42 @@ export const handleExcelFile = async (
     });
     if (errorMsg && !errorMsg?.check) return errorMsg;
     if (
+      schemaData?.schema?.Properties &&
+      Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField) &&
+      schemaData.schema.Properties?.[schemaData.activeInactiveField]?.isRequired
+    ) {
+      const hasColumn = Object.values(tempFileDataToStore).reduce((acc, item) => {
+        return acc && item?.[0]?.includes(schemaData.activeInactiveField);
+      }, true);
+      if (!hasColumn) {
+        return {
+          check: false,
+          errors: [],
+          interruptUpload: true,
+          fileDataToStore: {},
+          toast: { state: "error", message: t("ERROR_ACTIVE_INACTIVE_COLUMN_MISSING", { columnName: t(schemaData.activeInactiveField) }) },
+        };
+      }
+    }
+    if (
       schemaData?.activeInactiveField &&
       schemaData?.schema?.Properties &&
       Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField)
     ) {
       result = filterDataWithActiveInactiveStatus(result, schemaData.activeInactiveField, true, t);
       tempFileDataToStore = filterDataWithActiveInactiveStatus(tempFileDataToStore, schemaData.activeInactiveField, false, t);
+      const hasActiveData = Object.values(tempFileDataToStore).reduce((acc, item) => {
+        return acc && item?.length > 1;
+      }, true);
+      if (!hasActiveData) {
+        return {
+          check: false,
+          errors: [],
+          interruptUpload: true,
+          fileDataToStore: {},
+          toast: { state: "error", message: t("ERROR_ACTIVE_DATA_MISSING") },
+        };
+      }
     }
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
@@ -970,7 +1000,7 @@ export const handleExcelFile = async (
     tempFileDataToStore = addMissingPropertiesToFileData(tempFileDataToStore, missingProperties);
 
     // checking boundary codes
-    const errorObject = await boundaryCodeValidations(tempFileDataToStore, campaignData, EXCEL);
+    const errorObject = await boundaryCodeValidations(tempFileDataToStore, campaignData, EXCEL, t);
     const combinedErrors =
       !errors && errorObject && Object.keys(errorObject).length === 0 ? false : Digit.Utils.microplan.mergeDeep(errors, errorObject);
     if (check && combinedErrors) setUploadedFileError(["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"]);
@@ -1095,7 +1125,7 @@ const fetchBoundaryDataCodeList = (boundaryData, accumulator = []) => {
   return tempAccumulator;
 };
 
-const checkBoundaryExcel = (boundaryCodeList, data) => {
+const checkBoundaryExcel = (boundaryCodeList, data, t) => {
   let errorObject = {};
   for (const [key, value] of Object.entries(data)) {
     let boundaryCodeIndex = -1;
@@ -1109,7 +1139,14 @@ const checkBoundaryExcel = (boundaryCodeList, data) => {
         if (!boundaryCodeList.includes(value?.[i]?.[boundaryCodeIndex])) {
           errorObject = {
             ...errorObject,
-            [key]: { ...(errorObject?.[key] ? errorObject[key] : {}), [i - 1]: { [commonColumn]: ["ERROR_BOUNDARY_CODE_INVALID"] } },
+            [key]: {
+              ...(errorObject?.[key] ? errorObject[key] : {}),
+              [i - 1]: {
+                [commonColumn]: [
+                  { error: "ERROR_BOUNDARY_CODE_INVALID", values: { boundaryCode: value?.[i]?.[boundaryCodeIndex] || t(commonColumn) } },
+                ],
+              },
+            },
           };
         }
       }
@@ -1128,25 +1165,30 @@ const checkBoundaryExcel = (boundaryCodeList, data) => {
 //   }
 // }
 
-const checkBoundaryGeojsonShapefile = (boundaryCodeList, data) => {
+const checkBoundaryGeojsonShapefile = (boundaryCodeList, data, t) => {
   if (data && !data.features) return {};
   let errorObject = {};
   for (const [key, value] of Object.entries(data?.features)) {
     if (!boundaryCodeList.includes(value?.properties?.[commonColumn])) {
-      errorObject = { ...errorObject, [key]: { [commonColumn]: ["ERROR_BOUNDARY_CODE_INVALID"] } };
+      errorObject = {
+        ...errorObject,
+        [key]: {
+          [commonColumn]: [{ error: "ERROR_BOUNDARY_CODE_INVALID", values: { boundaryCode: value?.properties?.[commonColumn] || t(commonColumn) } }],
+        },
+      };
     }
   }
   return errorObject;
 };
 
-export const boundaryCodeValidations = async (data, campaignData, fileType) => {
+export const boundaryCodeValidations = async (data, campaignData, fileType, t) => {
   const boundaryData = await fetchBoundary(campaignData);
   const boundaryCodeList = [...new Set(fetchBoundaryDataCodeList(boundaryData))];
   if (fileType === EXCEL) {
-    return checkBoundaryExcel(boundaryCodeList, data);
+    return checkBoundaryExcel(boundaryCodeList, data, t);
   }
   if (fileType === GEOJSON || fileType === SHAPEFILE) {
-    return checkBoundaryGeojsonShapefile(boundaryCodeList, data);
+    return checkBoundaryGeojsonShapefile(boundaryCodeList, data, t);
   }
   return;
 };

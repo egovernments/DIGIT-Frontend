@@ -460,7 +460,7 @@ const transformIntoLocalisationCode = (code) => {
   return code?.toUpperCase();
 };
 
-function mergeDeep(target, source) {
+const mergeDeep = (target, source) => {
   if (!source) {
     return target;
   }
@@ -479,9 +479,15 @@ function mergeDeep(target, source) {
       if (!target[key]) {
         target[key] = [];
       }
-      source[key].forEach((item) => {
-        if (!target[key].includes(item)) {
-          target[key].push(item);
+      source[key].forEach((sourceItem) => {
+        let isDuplicate = false;
+        target[key].forEach((targetItem) => {
+          if (JSON.stringify(sourceItem) === JSON.stringify(targetItem)) {
+            isDuplicate = true;
+          }
+        });
+        if (!isDuplicate) {
+          target[key].push(sourceItem);
         }
       });
     } else {
@@ -489,7 +495,7 @@ function mergeDeep(target, source) {
     }
   }
   return target;
-}
+};
 
 export default {
   formatDates,

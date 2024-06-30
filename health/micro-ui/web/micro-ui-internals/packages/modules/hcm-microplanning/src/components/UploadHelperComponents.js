@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import * as Icons from "@egovernments/digit-ui-svg-components";
 import { FileUploader } from "react-drag-drop-files";
@@ -143,7 +143,7 @@ export const FileUploadComponent = ({
             </button>
           )}
         </div>
-        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}`)}</p>
+        <p>{t(`INSTRUCTIONS_FILE_UPLOAD_FROM_TEMPLATE_${selectedSection.code}_${selectedFileType.code}`)}</p>
         <FileUploader handleChange={UploadFileToFileStorage} label={"idk"} onTypeError={onTypeError} multiple={false} name="file" types={types}>
           <div className="upload-file">
             <CustomIcon Icon={Icons.FileUpload} width={"2.5rem"} height={"3rem"} color={"rgba(177, 180, 182, 1)"} />
@@ -174,7 +174,6 @@ export const UploadedFile = ({
   const [errorList, setErrorList] = useState([]);
   useEffect(() => {
     let tempErrorList = [];
-
     if (file?.errorLocationObject) {
       for (const [sheetName, values] of Object.entries(file?.errorLocationObject)) {
         for (const [row, columns] of Object.entries(values)) {
@@ -271,30 +270,34 @@ export const UploadedFile = ({
 
 // Uplaod GuideLines
 export const UploadGuideLines = ({ uploadGuideLines, t }) => {
-  const formMsgFromObject = (item) => {
-    if (!item?.hasLink) {
-      return t(item?.name);
-    }
+  try {
+    const formMsgFromObject = (item) => {
+      if (!item?.hasLink) {
+        return t(item?.name);
+      }
+      return (
+        <>
+          {t(item?.name)} <a href={item?.linkEndPoint}>{t(item?.linkName)}</a>{" "}
+        </>
+      );
+    };
     return (
-      <>
-        {t(item?.name)} <a href={item?.linkEndPoint}>{t(item?.linkName)}</a>{" "}
-      </>
-    );
-  };
-  return (
-    <div className="guidelines">
-      {uploadGuideLines?.map((item, index) => (
-        <div className="instruction-list-container">
-          <p key={index} className="instruction-list number">
-            {t(index + 1)}.
-          </p>
-          <div key={index} className="instruction-list text">
-            {formMsgFromObject(item)}
+      <div className="guidelines">
+        {uploadGuideLines?.map((item, index) => (
+          <div className="instruction-list-container">
+            <p key={index} className="instruction-list number">
+              {t(index + 1)}.
+            </p>
+            <div key={index} className="instruction-list text">
+              {formMsgFromObject(item)}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    );
+  } catch (error) {
+    console.error("Error opening guidelines: ", error);
+  }
 };
 
 export const CustomIcon = (props) => {
