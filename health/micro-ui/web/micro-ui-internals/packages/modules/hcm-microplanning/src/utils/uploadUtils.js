@@ -916,7 +916,9 @@ export const handleExcelFile = async (
       schemaData.schema.Properties?.[schemaData.activeInactiveField]?.isRequired
     ) {
       const hasColumn = Object.values(tempFileDataToStore).reduce((acc, item) => {
-        return acc && item?.[0]?.includes(schemaData.activeInactiveField);
+        const activeFieldIndex = item?.[0]?.indexOf(schemaData.activeInactiveField);
+        const hasColumnData = activeFieldIndex !== -1 ? item.slice().every((e) => !!e?.[activeFieldIndex]) : undefined;
+        return acc && activeFieldIndex !== -1 && hasColumnData;
       }, true);
       if (!hasColumn) {
         return {
@@ -1155,16 +1157,6 @@ const checkBoundaryExcel = (boundaryCodeList, data, t) => {
   return errorObject;
 };
 
-// {
-//   "Population": {
-//       "0": {
-//           "targetPopulation": [
-//               "ERROR_MUST_BE_A_NUMBER"
-//           ]
-//       }
-//   }
-// }
-
 const checkBoundaryGeojsonShapefile = (boundaryCodeList, data, t) => {
   if (data && !data.features) return {};
   let errorObject = {};
@@ -1192,13 +1184,3 @@ export const boundaryCodeValidations = async (data, campaignData, fileType, t) =
   }
   return;
 };
-
-// {
-//   "Yarnee": {
-//       "9": {
-//           "targetPopulation": [
-//               "ERROR_MUST_BE_A_NUMBER"
-//           ]
-//       }
-//   }
-// }
