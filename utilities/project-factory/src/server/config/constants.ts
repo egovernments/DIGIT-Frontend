@@ -9,8 +9,9 @@ export const CONSTANTS: any = {
             INTERNAL_SERVER_ERROR: "Internal server error",
             INVALID_PAGINATION: "Invalid pagination",
             KAFKA_ERROR: "Some error occured in kafka",
-            SCHEMA_ERROR : " Schema related error",
-            RESPONSE_NOT_FOUND_ERROR: "Response not found"
+            SCHEMA_ERROR: " Schema related error",
+            RESPONSE_NOT_FOUND_ERROR: "Response not found",
+            GENERATE_ERROR: "Error while generating user/facility/boundary"
         },
         FILE: {
             INVALID_FILE: "No download URL returned for the given fileStoreId",
@@ -86,15 +87,6 @@ const getMessage = (key: any) => {
     return unknownError;
 }
 
-export const userRoles: any = {
-    "Registrar": "REGISTRAR",
-    "Distributor": "DISTRIBUTOR",
-    "Supervisor": "SUPERVISOR",
-    "Help Desk": "HELPDESK_USER",
-    "Monitor Local": "MONITOR_LOCAL",
-    "Logistical officer": "LOGISTICAL_OFFICER",
-}
-
 export const campaignStatuses: any = {
     drafted: "drafted",
     started: "creating",
@@ -115,6 +107,53 @@ export const generatedResourceStatuses: any = {
     failed: "failed",
     completed: "completed",
     expired: "expired"
+}
+
+export const processTracks = {
+    validation: {
+        type: "HCM_PROCESS_TRACKS_TYPE_VALIDATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_VALIDATION",
+    },
+    uuidAssigned: {
+        type: "HCM_PROCESS_TRACKS_TYPE_UUID_ASSIGNMENT",
+        status: "HCM_PROCESS_TRACKS_STATUS_UUID_ASSIGNMENT",
+    },
+    projectCreationStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION",
+    },
+    projectCreationDone: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION"
+    },
+    projectResourceCreationStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_RESOURCE_CREATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_RESOURCE_CREATION"
+    },
+    sentForProjectMapping: {
+        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_MAPPING",
+        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_MAPPING"
+    },
+    confirmingResourceCreation: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_CREATION_CONFIRMATION",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_CREATION_CONFIRMATION"
+    },
+    allResourceCreationConfirmed: {
+        type: "HCM_PROCESS_TRACKS_TYPE_ALL_RESOURCE_CREATION_CONFIRMED",
+        status: "HCM_PROCESS_TRACKS_STATUS_ALL_RESOURCE_CREATION_CONFIRMED"
+    },
+    resourceMappingStarted: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_STARTED",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_STARTED"
+    },
+    resourceMappingDone: {
+        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_DONE",
+        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_DONE"
+    },
+    error: {
+        type: "HCM_PROCESS_TRACKS_TYPE_ERROR",
+        status: "HCM_PROCESS_TRACKS_STATUS_ERROR"
+    }
 }
 
 

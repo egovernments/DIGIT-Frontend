@@ -74,8 +74,8 @@ function cycleDataRemap(data) {
   return uniqueCycleObjects.map((i, n) => {
     return {
       key: i.cycleNumber,
-      fromDate: i?.startDate ? new Date(i?.startDate)?.toISOString()?.split("T")?.[0] : null,
-      toDate: i?.endDate ? new Date(i?.endDate)?.toISOString()?.split("T")?.[0] : null,
+      fromDate: i?.startDate ? Digit.DateUtils.ConvertEpochToDate(i?.startDate)?.split("/")?.reverse()?.join("-") : null,
+      toDate: i?.endDate ? Digit.DateUtils.ConvertEpochToDate(i?.endDate)?.split("/")?.reverse()?.join("-") : null,
     };
   });
 }
@@ -189,28 +189,29 @@ function groupByTypeRemap(data) {
   data.forEach((item) => {
     const type = item?.type;
     const boundaryType = item?.type;
-    const parentCode = item?.parent;
-    const obj = {
-      parentCode,
-      boundaryTypeData: {
-        TenantBoundary: [
-          {
-            boundary: [{ ...item, boundaryType }],
-          },
-        ],
-      },
-    };
+    const parentCode = item?.parent !== undefined ? item.parent : null;
 
-    if (result[type]) {
-      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
-    } else {
-      result[type] = [obj];
+    if (!result[type]) {
+      result[type] = {};
     }
+
+    if (!result[type][parentCode]) {
+      result[type][parentCode] = {
+        parentCode,
+        boundaryTypeData: {
+          TenantBoundary: [
+            {
+              boundary: [],
+            },
+          ],
+        },
+      };
+    }
+
+    const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
+    targetBoundaryArray.push({ ...item, boundaryType });
   });
-
-  return result;
 }
-
 // Example usage:
 // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
 function updateUrlParams(params) {
@@ -243,6 +244,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
+  const keyParam = searchParams.get("key");
   const isChangeDates = searchParams.get("changeDates");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const filteredBoundaryData = params?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
@@ -257,12 +259,18 @@ const SetupCampaign = ({ hierarchyType }) => {
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  const [targetEnabled, setTargetEnabled] = useState(false);
+  const [facilityEnabled, setFacilityEnabled] = useState(false);
+  const [userEnabled, setUserEnabled] = useState(false);
   const [active, setActive] = useState(0);
   const { data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
+  // const [refetchGenerate, setRefetchGenerate] = useState(null);
   // const hierarchyType = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.hierarchy;
 
   // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
-  const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
+  const lowestHierarchy = useMemo(() => {
+    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.lowestHierarchy;
+  }, [hierarchyConfig]);
 
   const reqCriteria = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
@@ -347,8 +355,8 @@ const SetupCampaign = ({ hierarchyType }) => {
       },
       HCM_CAMPAIGN_DATE: {
         campaignDates: {
-          startDate: draftData?.startDate ? new Date(draftData?.startDate)?.toISOString()?.split("T")?.[0] : "",
-          endDate: draftData?.endDate ? new Date(draftData?.endDate)?.toISOString()?.split("T")?.[0] : "",
+          startDate: draftData?.startDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.startDate)?.split("/")?.reverse()?.join("-") : "",
+          endDate: draftData?.endDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.endDate)?.split("/")?.reverse()?.join("-") : "",
         },
       },
       HCM_CAMPAIGN_CYCLE_CONFIGURE: {
@@ -375,76 +383,97 @@ const SetupCampaign = ({ hierarchyType }) => {
         },
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
-        uploadBoundary: { uploadedFile: draftData?.resources?.filter((i) => i?.type === "boundaryWithTarget") },
+        uploadBoundary: {
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "boundaryWithTarget").length > 0,
+        },
       },
       HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
-        uploadFacility: { uploadedFile: draftData?.resources?.filter((i) => i?.type === "facility") },
+        uploadFacility: {
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "facility"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "facility").length > 0,
+        },
       },
       HCM_CAMPAIGN_UPLOAD_USER_DATA: {
-        uploadUser: { uploadedFile: draftData?.resources?.filter((i) => i?.type === "user") },
+        uploadUser: {
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "user"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "user").length > 0,
+        },
       },
     };
     setParams({ ...restructureFormData });
   }, [params, draftData, isLoading, projectType]);
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setEnabled(fetchUpload || (fetchBoundary && currentKey > 3));
+  //     setFacilityEnabled(refetchGenerate || (!dataParams?.boundaryId && (fetchUpload || (fetchBoundary && currentKey > 3))));
+  //     setTargetEnabled(refetchGenerate || (!dataParams?.facilityId && (fetchUpload || (fetchBoundary && currentKey > 3))));
+  //     setUserEnabled(refetchGenerate || (!dataParams?.userId && (fetchUpload || (fetchBoundary && currentKey > 3))));
+  //   }, 3000);
+  //   if (refetchGenerate === true) {
+  //     setRefetchGenerate(false);
+  //   }
+  // }, [fetchUpload, fetchBoundary, currentKey, dataParams, refetchGenerate]);
+
+  // const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  //   type: "facilityWithBoundary",
+  //   hierarchyType: hierarchyType,
+  //   campaignId: id,
+  //   // config: {
+  //   //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
+  //   // },
+  //   config: {
+  //     enabled: facilityEnabled,
+  //   },
+  // });
+
+  // const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  //   type: "boundary",
+  //   hierarchyType: hierarchyType,
+  //   campaignId: id,
+  //   // config: {
+  //   //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+  //   // },
+  //   config: {
+  //     enabled: targetEnabled,
+  //   },
+  // });
+
+  // const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
+  //   type: "userWithBoundary",
+  //   hierarchyType: hierarchyType,
+  //   campaignId: id,
+  //   // config: {
+  //   //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+  //   // },
+  //   config: {
+  //     enabled: userEnabled,
+  //   },
+  // });
+
   useEffect(() => {
-    setTimeout(() => {
-      setEnabled(fetchUpload || (fetchBoundary && currentKey > 3));
-    }, 3000);
-  }, [fetchUpload, fetchBoundary, currentKey]);
-
-  const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "facilityWithBoundary",
-    hierarchyType: hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
-
-  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "boundary",
-    hierarchyType: hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
-
-  const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "userWithBoundary",
-    hierarchyType: hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
+    if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
+      setDataParams({
+        ...dataParams,
+        boundaryId: draftData?.additionalDetails?.targetId,
+        facilityId: draftData?.additionalDetails?.facilityId,
+        userId: draftData?.additionalDetails?.userId,
+        hierarchyType: hierarchyType,
+        hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
+      });
+    }
+  }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]); // Only run if dataParams changes
 
   useEffect(() => {
     if (hierarchyDefinition?.BoundaryHierarchy?.[0]) {
       setDataParams({
         ...dataParams,
-        facilityId: facilityId,
-        boundaryId: boundaryId,
-        userId: userId,
         hierarchyType: hierarchyType,
         hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
-        isBoundaryLoading,
-        isFacilityLoading,
-        isUserLoading,
       });
     }
-  }, [isBoundaryLoading, isFacilityLoading, isUserLoading, facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
-
+  }, [hierarchyDefinition?.BoundaryHierarchy?.[0], draftData]);
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData, dataParams, isSubmitting, summaryErrors));
   }, [totalFormData, dataParams, isSubmitting, summaryErrors]);
@@ -453,7 +482,7 @@ const SetupCampaign = ({ hierarchyType }) => {
     setIsSubmitting(false);
     if (currentKey === 10 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else {
+    } else if (currentKey !== 10 && isSummary === "true") {
       updateUrlParams({ key: currentKey, summary: false });
       setSummaryErrors(null);
     }
@@ -467,8 +496,8 @@ const SetupCampaign = ({ hierarchyType }) => {
       cycle.deliveries.forEach((delivery, index) => {
         delivery.deliveryRules.forEach((rule) => {
           const restructuredRule = {
-            startDate: Digit.Utils.date.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate), // Hardcoded for now
-            endDate: Digit.Utils.date.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
+            startDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i.key == cycle.cycleIndex)?.fromDate, "daystart"), // Hardcoded for now
+            endDate: Digit.Utils.pt.convertDateToEpoch(dateData?.find((i) => i?.key == cycle?.cycleIndex)?.toDate), // Hardcoded for now
             cycleNumber: parseInt(cycle.cycleIndex),
             deliveryNumber: parseInt(delivery.deliveryIndex),
             deliveryType: rule?.deliveryType,
@@ -485,7 +514,7 @@ const SetupCampaign = ({ hierarchyType }) => {
                   : typeof attribute?.attribute === "string"
                   ? attribute?.attribute
                   : null,
-                operator: "LESS_THAN",
+                operator: "LESS_THAN_EQUAL_TO",
                 value: attribute.fromValue ? Number(attribute.fromValue) : null,
               });
 
@@ -495,7 +524,7 @@ const SetupCampaign = ({ hierarchyType }) => {
                   : typeof attribute?.attribute === "string"
                   ? attribute?.attribute
                   : null,
-                operator: "GREATER_THAN",
+                operator: "GREATER_THAN_EQUAL_TO",
                 value: attribute.toValue ? Number(attribute.toValue) : null,
               });
             } else {
@@ -615,10 +644,10 @@ const SetupCampaign = ({ hierarchyType }) => {
           let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
           payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-            ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
+            ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
             : null;
           payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-            ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+            ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
             : null;
           payloadData.tenantId = tenantId;
           payloadData.action = "create";
@@ -636,6 +665,9 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
+            targetId: dataParams?.boundaryId,
+            facilityId: dataParams?.facilityId,
+            userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -687,12 +719,12 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.hierarchyType = hierarchyType;
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate) {
             payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-              ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
+              ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
               : null;
           }
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate) {
             payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-              ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+              ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
               : null;
           }
           payloadData.tenantId = tenantId;
@@ -711,6 +743,9 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
+            targetId: dataParams?.boundaryId,
+            facilityId: dataParams?.facilityId,
+            userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
             const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -741,12 +776,12 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.hierarchyType = hierarchyType;
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate) {
             payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-              ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)
+              ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
               : null;
           }
           if (totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate) {
             payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-              ? Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+              ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
               : null;
           }
           payloadData.tenantId = tenantId;
@@ -765,6 +800,9 @@ const SetupCampaign = ({ hierarchyType }) => {
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
+            targetId: dataParams?.boundaryId,
+            facilityId: dataParams?.facilityId,
+            userId: dataParams?.userId,
           };
           if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
             payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
@@ -1106,7 +1144,12 @@ const SetupCampaign = ({ hierarchyType }) => {
             return false;
           }
           setShowToast(null);
+          const checkEqual = _.isEqual(
+            formData?.boundaryType?.selectedData,
+            totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
+          );
           setFetchUpload(true);
+          // setRefetchGenerate(checkEqual === false ? true : false);
           return true;
         } else {
           setShowToast({ key: "error", label: `${t("HCM_SELECT_BOUNDARY")}` });
@@ -1223,8 +1266,8 @@ const SetupCampaign = ({ hierarchyType }) => {
               };
             }),
             true);
-        if (isCycleError?.error === true) {
-          setShowToast({ key: "error", label: isCycleError?.message });
+        if (isCycleError?.length > 0) {
+          setShowToast({ key: "error", label: "DELIVERY_CYCLE_MISMATCH_LENGTH_ERROR" });
           return false;
         }
         if (isDeliveryError === false) {
@@ -1383,8 +1426,14 @@ const SetupCampaign = ({ hierarchyType }) => {
     const relatedSteps = campaignConfig?.[0]?.form.filter((step) => nonNullFormDataKeys.includes(step.name));
 
     const highestStep = relatedSteps.reduce((max, step) => Math.max(max, parseInt(step.stepCount)), 0);
+    if (isDraft == "true") {
+      const filteredSteps = campaignConfig?.[0]?.form.find((item) => item.key === keyParam)?.stepCount;
+      setActive(filteredSteps);
+    } else {
+      setActive(highestStep);
+    }
 
-    setActive(highestStep);
+    // setActive(highestStep);
   };
 
   useEffect(() => {

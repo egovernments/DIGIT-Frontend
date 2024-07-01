@@ -1,7 +1,7 @@
 import createAndSearch from "../config/createAndSearch";
 import config from "../config";
 import { getFormattedStringForDebug, logger } from "../utils/logger";
-import { httpRequest } from "../utils/request";
+import { defaultheader, httpRequest } from "../utils/request";
 import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
@@ -37,11 +37,15 @@ function processBoundary(responseBoundaries: any[], request: any, boundaryItems:
 }
 async function fetchBoundariesInChunks(request: any) {
     const { tenantId, hierarchyType } = request.body.ResourceDetails;
-    const boundaryEntitySearchParams: any = {
+    const params: any = {
         tenantId, hierarchyType, includeChildren: true
     };
     const responseBoundaries: any[] = [];
-    var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, boundaryEntitySearchParams);
+    const header = {
+        ...defaultheader,
+        cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+    }
+    var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
     const TenantBoundary = response.TenantBoundary;
     TenantBoundary.forEach((tenantBoundary: any) => {
         const { boundary } = tenantBoundary;
@@ -62,11 +66,15 @@ function processBoundaryfromCampaignDetails(responseBoundaries: any[], request: 
 
 async function fetchBoundariesFromCampaignDetails(request: any) {
     const { tenantId, hierarchyType } = request.body.CampaignDetails;
-    const boundaryEntitySearchParams: any = {
+    const params: any = {
         tenantId, hierarchyType, includeChildren: true
     };
+    const header = {
+        ...defaultheader,
+        cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+    }
     const responseBoundaries: any[] = [];
-    var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, boundaryEntitySearchParams);
+    var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
     const TenantBoundary = response.TenantBoundary;
     TenantBoundary.forEach((tenantBoundary: any) => {
         const { boundary } = tenantBoundary;
@@ -225,28 +233,28 @@ async function validateTargets(request: any, data: any[], errors: any[], localiz
                             errors.push({
                                 status: "INVALID",
                                 rowNumber: obj["!row#number!"],
-                                errorDetails: `Target value is missing at row ${obj['!row#number!']} in sheet ${key}. Please provide a numeric integer between 1 and 100000.`,
+                                errorDetails: `Target value is missing at row ${obj['!row#number!']} in sheet ${key}.(Targets values can only be positive numbers less than 1 Million)`,
                                 sheetName: key
                             });
                         } else if (typeof target !== 'number') {
                             errors.push({
                                 status: "INVALID",
                                 rowNumber: obj["!row#number!"],
-                                errorDetails: `Target value at row ${obj['!row#number!']} in sheet ${key} is not a number. Target values must be numeric integers between 1 and 100000.`,
+                                errorDetails: `Target value at row ${obj['!row#number!']} in sheet ${key} is not a number.(Targets values can only be positive numbers less than 1 Million)`,
                                 sheetName: key
                             });
-                        } else if (target <= 0 || target > 100000) {
+                        } else if (target <= 0 || target > 1000000) {
                             errors.push({
                                 status: "INVALID",
                                 rowNumber: obj["!row#number!"],
-                                errorDetails: `Target value ${target} at row ${obj['!row#number!']} in sheet ${key} is out of range. Target values must be numeric integers between 1 and 100000.`,
+                                errorDetails: `Target value at row ${obj['!row#number!']} in sheet ${key} is out of range.(Targets values can only be positive numbers less than 1 Million)`,
                                 sheetName: key
                             });
                         } else if (!Number.isInteger(target)) {
                             errors.push({
                                 status: "INVALID",
                                 rowNumber: obj["!row#number!"],
-                                errorDetails: `Target value ${target} at row ${obj['!row#number!']} in sheet ${key} is not an integer. Target values must be whole numbers between 1 and 100000.`,
+                                errorDetails: `Target value at row ${obj['!row#number!']} in sheet ${key} is not an integer.(Targets values can only be positive numbers less than 1 Million)`,
                                 sheetName: key
                             });
                         }
@@ -1188,7 +1196,7 @@ function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap
     logger.debug("actual districts in boundary data sheet : " + getFormattedStringForDebug(tabsOfDistrict));
     const tabsFromTargetSheet = Object.keys(dataFromSheet);
     logger.info("districts present in user filled sheet : " + (tabsFromTargetSheet?.length - tabsIndex));
-    logger.debug("districts present in user filled sheet : " + getFormattedStringForDebug(tabsFromTargetSheet));
+    logger.debug("districts present in user filled sheet (exclude first two tabs): " + getFormattedStringForDebug(tabsFromTargetSheet));
 
     if (tabsFromTargetSheet.length - tabsIndex !== tabsOfDistrict.length) {
         throwError("COMMON", 400, "VALIDATION_ERROR", `${differentTabsBasedOnLevel} tabs uplaoded by user is either less or more than the ${differentTabsBasedOnLevel} in the boundary system `)
@@ -1199,9 +1207,14 @@ function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap
                 throwError("COMMON", 400, "VALIDATION_ERROR", `${differentTabsBasedOnLevel} tab ${tab} not present in the Target Sheet Uploaded`);
             }
         }
-
     }
 
+}
+
+function validateSearchProcessTracksRequest(request: any) {
+    if (!request?.query?.campaignId) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "CampaignId is required in params");
+    }
 }
 
 
@@ -1219,5 +1232,6 @@ export {
     validateDownloadRequest,
     validateTargetSheetData,
     immediateValidationForTargetSheet,
-    validateBoundaryOfResouces
+    validateBoundaryOfResouces,
+    validateSearchProcessTracksRequest
 }

@@ -1,5 +1,5 @@
 
-import { httpRequest } from "./request";
+import { defaultheader, httpRequest } from "./request";
 import config from "../config/index";
 import { v4 as uuidv4 } from 'uuid';
 import { produceModifiedMessages } from '../kafka/Listener'
@@ -12,11 +12,13 @@ import { enrichProjectDetailsFromCampaignDetails } from "./transforms/projectTyp
 import { executeQuery } from "./db";
 import { campaignDetailsTransformer, genericResourceTransformer } from "./transforms/searchResponseConstructor";
 import { transformAndCreateLocalisation } from "./transforms/localisationMessageConstructor";
-import { campaignStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
+import { campaignStatuses, headingMapping, processTracks, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
+import { callGenerateIfBoundariesDiffer } from "./generateUtils";
+import { persistTrack } from "./processTrackUtils";
 const _ = require('lodash');
 
 
@@ -471,14 +473,18 @@ async function generateProcessedFileAndPersist(request: any, localizationMap?: {
         },
         additionalDetails: { ...request?.body?.ResourceDetails?.additionalDetails, sheetErrors: request?.body?.additionalDetailsErrors } || {}
     };
-    produceModifiedMessages(request?.body, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
+    const persistMessage: any = { ResourceDetails: request.body.ResourceDetails }
+    if (request?.body?.ResourceDetails?.action == "create") {
+        persistMessage.ResourceDetails.additionalDetails = {}
+    }
+    produceModifiedMessages(persistMessage, config?.kafka?.KAFKA_UPDATE_RESOURCE_DETAILS_TOPIC);
     logger.info(`ResourceDetails to persist : ${request.body.ResourceDetails.type}`);
-    if (request?.body?.Activities && Array.isArray(request?.body?.Activities && request?.body?.Activities.length > 0)) {
+    if (request?.body?.Activities && Array.isArray(request?.body?.Activities) && request?.body?.Activities.length > 0) {
         logger.info("Activities to persist : ")
         logger.debug(getFormattedStringForDebug(request?.body?.Activities));
         logger.info(`Waiting for 2 seconds`);
         await new Promise(resolve => setTimeout(resolve, 2000));
-        produceModifiedMessages(request?.body, config?.kafka?.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
+        produceModifiedMessages(request?.body, config.kafka.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
     }
 }
 
@@ -535,6 +541,7 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     }
     const topic = config?.kafka?.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
     produceModifiedMessages(requestBody, topic);
+    persistTrack(requestBody?.CampaignDetails?.id, processTracks.error.type, String((error?.message + " : " + error?.description) || error), { error: String((error?.message + " : " + error?.description) || error) });
     delete requestBody.CampaignDetails.campaignDetails
 }
 
@@ -575,8 +582,10 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
     updatedInnerCampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries || []
 }
 
+
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
+    callGenerateIfBoundariesDiffer(request);
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
     var updatedInnerCampaignDetails = {}
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
@@ -618,6 +627,7 @@ function getCreateResourceIds(resources: any[]) {
 }
 
 async function persistForCampaignProjectMapping(request: any, createResourceDetailsIds: any, localizationMap?: any) {
+    persistTrack(request.body.CampaignDetails.id, processTracks.sentForProjectMapping.type, processTracks.sentForProjectMapping.status);
     if (createResourceDetailsIds && request?.body?.CampaignDetails?.projectId) {
         var requestBody: any = {
             RequestInfo: request?.body?.RequestInfo,
@@ -650,6 +660,16 @@ async function persistForCampaignProjectMapping(request: any, createResourceDeta
 function removeBoundariesFromRequest(request: any) {
     if (request?.body?.CampaignDetails?.boundaries && Array.isArray(request?.body?.CampaignDetails?.boundaries) && request?.body?.CampaignDetails?.boundaries?.length > 0) {
         request.body.CampaignDetails.boundaries = request?.body?.CampaignDetails?.boundaries?.filter((boundary: any) => !boundary?.insertedAfter)
+    }
+}
+
+async function enrichAndPersistProjectCampaignForFirst(request: any, actionInUrl: any, firstPersist: boolean = false, localizationMap?: any) {
+    removeBoundariesFromRequest(request);
+    if (actionInUrl == "create") {
+        await enrichAndPersistCampaignForCreate(request, firstPersist)
+    }
+    else if (actionInUrl == "update") {
+        await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
 }
 
@@ -809,7 +829,7 @@ async function getTotalCount(request: any) {
 
     let query = `
         SELECT count(*)
-        FROM health.eg_cm_campaign_details
+        FROM ${config?.DB_CONFIG.DB_CAMPAIGN_DETAILS_TABLE_NAME}
         WHERE tenantId = $1
     `;
 
@@ -898,7 +918,7 @@ function buildSearchQuery(tenantId: string, pagination: any, ids: string[], sear
 
     let query = `
         SELECT *
-        FROM health.eg_cm_campaign_details
+        FROM ${config?.DB_CONFIG.DB_CAMPAIGN_DETAILS_TABLE_NAME}
         WHERE tenantId = $1
     `;
 
@@ -990,7 +1010,7 @@ function buildWhereClauseForDataSearch(SearchCriteria: any): { query: string; va
     return {
         query: `
     SELECT *
-    FROM health.eg_cm_resource_details
+    FROM ${config?.DB_CONFIG.DB_RESOURCE_DETAILS_TABLE_NAME}
     ${whereClause};`, values
     };
 }
@@ -1071,7 +1091,11 @@ async function addBoundariesForData(request: any, CampaignDetails: any) {
             hierarchyType: request?.body?.ResourceDetails?.hierarchyType,
             includeChildren: true
         }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+        const header = {
+            ...defaultheader,
+            cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+        }
+        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
         if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
             var boundaryChildren = boundaries.reduce((acc: any, boundary: any) => {
                 acc[boundary.code] = boundary?.includeAllChildren;
@@ -1146,7 +1170,11 @@ async function reorderBoundaries(request: any, localizationMap?: any) {
             hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
             includeChildren: true
         }
-        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params);
+        const header = {
+            ...defaultheader,
+            cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+        }
+        const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, params, undefined, undefined, header);
         if (boundaryResponse?.TenantBoundary?.[0]?.boundary?.[0]) {
             const codesTargetMapping = await getCodesTarget(request, localizationMap)
             mapTargets(boundaryResponse?.TenantBoundary?.[0]?.boundary, codesTargetMapping)
@@ -1259,7 +1287,7 @@ async function getCodesTarget(request: any, localizationMap?: any) {
             }
         });
     }
-    logger.info("Boundary target mapping " + JSON.stringify(boundaryTargetMapping));
+    logger.info("Boundary target mapping count" + Object.keys(boundaryTargetMapping)?.length);
     return boundaryTargetMapping;
 }
 
@@ -1267,6 +1295,7 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
     logger.info("Create Projects started for the given Campaign")
     var { tenantId, boundaries, projectType, projectId } = request?.body?.CampaignDetails;
     if (boundaries && projectType && !projectId) {
+        persistTrack(request.body.CampaignDetails.id, processTracks.projectCreationStarted.type, processTracks.projectCreationStarted.status);
         const projectTypeResponse = await getMDMSV1Data({}, 'HCM-PROJECT-TYPES', "projectTypes", tenantId);
         var Projects: any = enrichProjectDetailsFromCampaignDetails(request?.body?.CampaignDetails, projectTypeResponse?.filter((types: any) => types?.code == projectType)?.[0]);
         const projectCreateBody = {
@@ -1295,12 +1324,18 @@ async function createProject(request: any, actionUrl: any, localizationMap?: any
             ]
             await projectCreate(projectCreateBody, request)
         }
+        persistTrack(request.body.CampaignDetails.id, processTracks.projectCreationDone.type, processTracks.projectCreationDone.status);
     }
 }
 
 
 async function processAfterPersist(request: any, actionInUrl: any) {
     try {
+        logger.info("Waiting for 2 second to persist process tracks...")
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        if (actionInUrl == "create") {
+            persistTrack(request.body.CampaignDetails.id, processTracks.uuidAssigned.type, processTracks.uuidAssigned.status);
+        }
         const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
             await createProjectCampaignResourcData(request);
@@ -1322,7 +1357,7 @@ async function processBasedOnAction(request: any, actionInUrl: any) {
     if (actionInUrl == "create") {
         request.body.CampaignDetails.id = uuidv4()
     }
-    await enrichAndPersistProjectCampaignRequest(request, actionInUrl, true)
+    await enrichAndPersistProjectCampaignForFirst(request, actionInUrl, true)
     processAfterPersist(request, actionInUrl)
 }
 
@@ -1719,7 +1754,6 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
         const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
 
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
-        // const mdmsResponse = await callMdmsV2Data(request, config?.values?.moduleName, request?.query?.type || request?.body?.ResourceDetails?.type, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, filters);
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
             logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
             throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);
@@ -1754,9 +1788,10 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 }
 
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
-    var boundaryDataGeneratedAfterDifferentTabSeparation: any;
+    var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
-    const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    let differentTabsBasedOnLevel = await getBoundaryOnWhichWeSplit(request);
+    differentTabsBasedOnLevel = getLocalizedName(`${request?.query?.hierarchyType}_${differentTabsBasedOnLevel}`.toUpperCase(), localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
@@ -1765,6 +1800,13 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }
     return boundaryDataGeneratedAfterDifferentTabSeparation;
+}
+
+async function getBoundaryOnWhichWeSplit(request: any) {
+    const mdmsResponse = await getMDMSV1Data(request, config?.values?.moduleName, config?.masterNameForSplitBoundariesOn, request?.query?.tenantId);
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    const hierarchyTypeFromCampaignResponseObject = responseFromCampaignSearch?.CampaignDetails?.[0].hierarchyType;
+    return mdmsResponse.filter((item: any) => item.hierarchy == hierarchyTypeFromCampaignResponseObject).map((item: any) => item.splitBoundariesOn);
 }
 
 
