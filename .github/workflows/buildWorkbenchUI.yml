@@ -58,7 +58,7 @@ jobs:
       - name: Build and Push Docker image for digit-ui
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
-          docker build -t workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f web/workbench/Dockerfile .
-          docker tag workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker push egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t sandbox-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f web/workbench/Dockerfile .
+          docker tag sandbox-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/sandbox-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker push egovio/sandbox-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         working-directory: micro-ui

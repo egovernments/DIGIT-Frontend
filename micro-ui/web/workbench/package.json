@@ -10,7 +10,7 @@
   "workspaces": [
     "micro-ui-internals/packages/modules/*"
   ],
-  "homepage": "/workbench-ui",
+  "homepage": "/sandbox-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.2-beta.1",
     "@egovernments/digit-ui-module-workbench": "1.0.2-beta.3",

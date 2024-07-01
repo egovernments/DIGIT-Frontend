@@ -52,7 +52,7 @@ initLibraries().then(() => {
 });
 
 function App() {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+  window.contextPath = 'sandbox-ui';
   const stateCode =
     window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
     process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
