@@ -1333,7 +1333,9 @@ async function processAfterPersist(request: any, actionInUrl: any) {
     try {
         logger.info("Waiting for 2 second to persist process tracks...")
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        persistTrack(request.body.CampaignDetails.id, processTracks.uuidAssigned.type, processTracks.uuidAssigned.status);
+        if (actionInUrl == "create") {
+            persistTrack(request.body.CampaignDetails.id, processTracks.uuidAssigned.type, processTracks.uuidAssigned.status);
+        }
         const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
             await createProjectCampaignResourcData(request);
@@ -1788,7 +1790,8 @@ async function getFinalValidHeadersForTargetSheetAsPerCampaignType(request: any,
 async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataGeneratedBeforeDifferentTabSeparation: any, localizationMap?: any) {
     var boundaryDataGeneratedAfterDifferentTabSeparation: any = boundaryDataGeneratedBeforeDifferentTabSeparation;
     const boundaryData = await getBoundaryDataAfterGeneration(boundaryDataGeneratedBeforeDifferentTabSeparation, request, localizationMap);
-    const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    let differentTabsBasedOnLevel = await getBoundaryOnWhichWeSplit(request);
+    differentTabsBasedOnLevel = getLocalizedName(`${request?.query?.hierarchyType}_${differentTabsBasedOnLevel}`.toUpperCase(), localizationMap);
     logger.info(`Boundaries are seperated based on hierarchy type ${differentTabsBasedOnLevel}`)
     const isKeyOfThatTypePresent = boundaryData.some((data: any) => data.hasOwnProperty(differentTabsBasedOnLevel));
     const boundaryTypeOnWhichWeSplit = boundaryData.filter((data: any) => data[differentTabsBasedOnLevel]);
@@ -1797,6 +1800,13 @@ async function getDifferentTabGeneratedBasedOnConfig(request: any, boundaryDataG
         boundaryDataGeneratedAfterDifferentTabSeparation = await convertSheetToDifferentTabs(request, boundaryData, differentTabsBasedOnLevel, localizationMap);
     }
     return boundaryDataGeneratedAfterDifferentTabSeparation;
+}
+
+async function getBoundaryOnWhichWeSplit(request: any) {
+    const mdmsResponse = await getMDMSV1Data(request, config?.values?.moduleName, config?.masterNameForSplitBoundariesOn, request?.query?.tenantId);
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    const hierarchyTypeFromCampaignResponseObject = responseFromCampaignSearch?.CampaignDetails?.[0].hierarchyType;
+    return mdmsResponse.filter((item: any) => item.hierarchy == hierarchyTypeFromCampaignResponseObject).map((item: any) => item.splitBoundariesOn);
 }
 
 
