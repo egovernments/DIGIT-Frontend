@@ -228,7 +228,10 @@ const CampaignSummary = (props) => {
                   cardHeader: { value: t("CAMPAIGN_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction:
                     isChangeDates === "true" ? (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(4)}>
+                      <div
+                        className="campaign-preview-edit-container"
+                        onClick={() => history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`)}
+                      >
                         <span>{t(`CAMPAIGN_UPDATE_DATES`)}</span>
                         <EditIcon />
                       </div>

@@ -24,6 +24,8 @@ import AddProductField from "./components/AddProductField";
 import CycleDataPreview from "./components/CycleDataPreview";
 import { ErrorBoundary } from "@egovernments/digit-ui-components";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
+import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
+import DateWithBoundary from "./components/DateWithBoundary";
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
@@ -82,6 +84,8 @@ const componentsToRegister = {
   AddProductField,
   CycleDataPreview,
   CampaignResourceDocuments,
+  UpdateDatesWithBoundaries,
+  DateWithBoundary,
 };
 
 const overrideHooks = () => {
