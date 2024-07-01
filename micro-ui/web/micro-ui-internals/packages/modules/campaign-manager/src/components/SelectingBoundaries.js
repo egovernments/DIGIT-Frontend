@@ -43,11 +43,16 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const { isLoading, data: hierarchyConfig } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }]);
 
   // const lowestHierarchy = hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy;
-  const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
+  // const lowestHierarchy = useMemo(() => hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.[0]?.lowestHierarchy, [hierarchyConfig]);
+  const lowestHierarchy = useMemo(() => {
+    return hierarchyConfig?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find(item => item.isActive)?.lowestHierarchy;
+  }, [hierarchyConfig]);
   const lowestChild = hierarchyTypeDataresult?.boundaryHierarchy.filter((item) => item.parentBoundaryType === lowestHierarchy)?.[0]?.boundaryType;
   const searchParams = new URLSearchParams(location.search);
   const isDraft = searchParams.get("draft");
   const draftBoundary = searchParams.get("draftBoundary");
+
+  console.log("lowest," , lowestHierarchy)
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
