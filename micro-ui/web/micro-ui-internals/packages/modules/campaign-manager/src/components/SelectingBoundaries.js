@@ -52,8 +52,6 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   const isDraft = searchParams.get("draft");
   const draftBoundary = searchParams.get("draftBoundary");
 
-  console.log("lowest," , lowestHierarchy)
-
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
