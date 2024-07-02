@@ -1,4 +1,4 @@
-# Use Node.js base image with version 16
+# Stage 1: Fetch locales and build the app
 FROM node:20 AS build
 
 # Set working directory
@@ -17,11 +17,11 @@ ENV COMMIT_ID=$COMMIT_ID
 # Copy package.json and yarn.lock (if exists)
 COPY package.json ./
 
+# Clean up node_modules and yarn.lock
 RUN rm -rf node_modules/
-
 RUN rm -rf yarn.lock
 
-# clear cache
+# Clear yarn cache
 RUN yarn cache clean
 
 # Install dependencies
@@ -33,15 +33,24 @@ LABEL commit_id=$COMMIT_ID
 # Copy the rest of the application
 COPY . .
 
-# Build the React app with Webpack
+# Fetch locales before building the app
+COPY fetch-locales.js .
+RUN node fetch-locales.js
+
+# Build the React app with Vite
 RUN yarn build
 
+# Stage 2: Serve the built app using nginx
 FROM nginx:mainline-alpine
 
+# Define the work directory for nginx
 ENV WORK_DIR=/var/web/sample-ui
 
+# Create the work directory
 RUN mkdir -p ${WORK_DIR}
 
-
+# Copy the build files from the previous stage
 COPY --from=build /app/dist ${WORK_DIR}/
+
+# Copy the nginx configuration file
 COPY --from=build /app/docker/nginx.conf /etc/nginx/conf.d/default.conf
