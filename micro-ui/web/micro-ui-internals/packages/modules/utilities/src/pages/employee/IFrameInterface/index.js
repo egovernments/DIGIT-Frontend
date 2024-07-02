@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useLocation } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
+import axios from "axios";
 
 const IFrameInterface = (props) => {
   const { stateCode } = props;
@@ -10,7 +11,7 @@ const IFrameInterface = (props) => {
   const location = useLocation();
   const iframeRef = useRef(null);
   const localStorageKey = 'Employee.token';
-
+  const [isAxiosLoading,setIsAxiosLoading] = useState(true)
   const { t } = useTranslation();
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ const IFrameInterface = (props) => {
   });
 
   const injectCustomHttpInterceptors = (iframeWindow) => {
-    console.log("iframeInInterceptor",iframeWindow)
+    // console.log("iframeInInterceptor",iframeWindow)
     const injectCustomHttpInterceptor = () => {
       try {
         if (!iframeWindow) {
@@ -76,8 +77,8 @@ const IFrameInterface = (props) => {
             if (sendAuth === "invalid") {
               options.headers['Authorization'] = `Bearer authToken`;
             } else {
-              console.log("url here", url);
-              console.log("typeof url", typeof url);
+              // console.log("url here", url);
+              // console.log("typeof url", typeof url);
     
               // const uniqueIdentifier = Date.now(); // Unique identifier based on the current timestamp
     
@@ -190,8 +191,8 @@ const IFrameInterface = (props) => {
 
   useEffect(() => {
     const iframeWindow = iframeRef?.current?.contentWindow || iframeRef?.current?.contentDocument;
-    console.log("myIframe window",iframeWindow);
-    console.log("sendAuth in effect",sendAuth);
+    // console.log("myIframe window",iframeWindow);
+    // console.log("sendAuth in effect",sendAuth);
     if (iframeRef.current) {
       injectCustomHttpInterceptors(iframeWindow);
     }
@@ -228,7 +229,56 @@ const IFrameInterface = (props) => {
     setTitle(title);
   }, [data, moduleName, pageName, location]);
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(`${window.location.origin}/kibana-security/internal/security/login`, {
+          providerType: "anonymous",
+          providerName: "anonymous1",
+          currentURL: `${window.location.origin}/kibana-security/login`
+        }, {
+          headers: {
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/json',
+            'DNT': '1',
+            'Origin': window.location.origin,
+            'Pragma': 'no-cache',
+            'Referer': `${window.location.origin}/kibana-security/login?next=%2Fkibana-security%2F`,
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+            'kbn-build-number': '68312',
+            'kbn-version': '8.11.3',
+            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'x-elastic-internal-origin': 'Kibana',
+            'x-kbn-context': '{"type":"application","name":"security_login","url":"/kibana-security/login"}'
+          }
+        });
+        console.log("response from axios",response);
+        console.log('Response headers axios:', response.headers);
+        const setCookie = response.headers['set-cookie'];
+        if (setCookie) {
+          console.log("axios cookie set",setCookie);
+          document.cookie = setCookie;
+        }
+      } catch (error) {
+        console.log("axios resp err",error.message);
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsAxiosLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  if (isLoading || isAxiosLoading) {
     return <Loader />;
   }
 
