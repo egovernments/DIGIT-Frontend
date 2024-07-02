@@ -8,7 +8,7 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/*"
+    "micro-ui-internals/packages/modules/campaign-manager"
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
