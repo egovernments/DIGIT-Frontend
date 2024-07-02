@@ -147,14 +147,7 @@ const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors }) => {
     const CustomWidget = customWidgets[uiWidget];
     const { theme, toggleTheme } = use(ThemeContext);
-    console.log(
-      name,
-      property,
-      uiWidget,
-      control,
-      errors,
-      "RenderIndividualField : name, property, uiWidget, control, errors"
-    );
+ 
     return (
       <div key={name} style={{ display: "inline-block", marginRight: "20px" }}>
         <label className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -209,16 +202,7 @@ const RenderArrayField = React.memo(
     });
     const { theme } = use(ThemeContext);
     if (property?.type == "array" && property?.items?.type == "string") {
-      console.log(
-        name,
-        property,
-        uiSchema,
-        control,
-        errors,
-        watch,
-        fields,
-        "name, property, uiSchema, control, errors, watch,fields"
-      );
+    
     }
     return (
       <div key={name}>
@@ -271,7 +255,6 @@ const RenderDependentField = ({
   errors,
   dependencies,
 }) => {
-  console.log(name, property, control, watch, errors, dependencies);
   const dependentValue = watch(dependencies.dependentField);
 
   if (dependentValue === dependencies.expectedValue) {
@@ -294,10 +277,8 @@ const RenderField = React.memo(
     const uiWidget = uiSchema && uiSchema["ui:widget"];
     const dependencies = uiSchema && uiSchema["ui:dependencies"];
     const { theme, toggleTheme } = use(ThemeContext);
-    console.log(name, "name",property);
 
     if (dependencies) {
-      console.log(dependencies, "dependencies");
       return (
         <RenderDependentField
           name={name}
