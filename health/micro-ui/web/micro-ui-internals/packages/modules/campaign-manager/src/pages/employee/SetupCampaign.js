@@ -189,26 +189,28 @@ function groupByTypeRemap(data) {
   data.forEach((item) => {
     const type = item?.type;
     const boundaryType = item?.type;
-    const parentCode = item?.parent;
-    const obj = {
-      parentCode,
-      boundaryTypeData: {
-        TenantBoundary: [
-          {
-            boundary: [{ ...item, boundaryType }],
-          },
-        ],
-      },
-    };
+    const parentCode = item?.parent !== undefined ? item.parent : null;
 
-    if (result[type]) {
-      result[type][0].boundaryTypeData.TenantBoundary[0].boundary.push(item);
-    } else {
-      result[type] = [obj];
+    if (!result[type]) {
+      result[type] = {};
     }
-  });
 
-  return result;
+    if (!result[type][parentCode]) {
+      result[type][parentCode] = {
+        parentCode,
+        boundaryTypeData: {
+          TenantBoundary: [
+            {
+              boundary: [],
+            },
+          ],
+        },
+      };
+    }
+
+    const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
+    targetBoundaryArray.push({ ...item, boundaryType });
+  });
 }
 
 // Example usage:
