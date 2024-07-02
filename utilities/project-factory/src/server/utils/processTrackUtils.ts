@@ -24,17 +24,20 @@ async function getProcessDetails(id: any, type?: any): Promise<any> {
         return [];
     }
 
-    return queryResponse.rows.map((result: any) => ({
-        id: result.id,
-        campaignId: result.campaignid,
-        type: result.type,
-        status: result.status,
-        details: result.details,
-        additionalDetails: result.additionaldetails,
-        createdTime: parseInt(result.createdtime, 10),
-        lastModifiedTime: parseInt(result.lastmodifiedtime, 10)
-    }));
+    return queryResponse.rows
+        .filter((result: any) => !(result.type == processTrackTypes.error && result.status == processTrackStatuses.toBeCompleted))  // Filter out rows where type is 'error' and status is not 'failed'
+        .map((result: any) => ({
+            id: result.id,
+            campaignId: result.campaignid,
+            type: result.type,
+            status: result.status,
+            details: result.details,
+            additionalDetails: result.additionaldetails,
+            createdTime: parseInt(result.createdtime, 10),
+            lastModifiedTime: parseInt(result.lastmodifiedtime, 10)
+        }));
 }
+
 
 
 async function persistTrack(
@@ -59,7 +62,6 @@ async function persistTrack(
                 processDetails
             };
             const topic = config?.kafka?.KAFKA_UPDATE_PROCESS_TRACK_TOPIC;
-            console.log(produceObject, " ppppppppppppppppppp")
             produceModifiedMessages(produceObject, topic);
         }
     }
@@ -71,9 +73,7 @@ function createProcessTracks(
     var processDetailsArray = []
     const currentTime = Date.now();
     const processTrackTypesAny: any = processTrackTypes
-    console.log(processTrackTypesAny, " kkkkkkkkkkkkkkkkk11111111111111")
     for (const key of Object.keys(processTrackTypes)) {
-        console.log(key, " kkkkkkkkkkkkkkkkk")
         var processDetail: any = {}
         processDetail.id = uuidv4();
         processDetail.campaignId = campaignId;
@@ -87,7 +87,6 @@ function createProcessTracks(
     }
     const processDetails: any = { processDetails: processDetailsArray }
     const topic = config?.kafka?.KAFKA_SAVE_PROCESS_TRACK_TOPIC;
-    console.log(processDetails, " ppppppppppppppppppp")
     produceModifiedMessages(processDetails, topic);
 };
 
