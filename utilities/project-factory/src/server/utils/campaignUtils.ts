@@ -537,11 +537,11 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     }
     requestBody.CampaignDetails.additionalDetails = {
         ...requestBody?.CampaignDetails?.additionalDetails,
-        error: String((error?.message + " : " + error?.description) || error)
+        error: String((error?.message + (error?.description ? ` : ${error?.description}` : '')) || error)
     }
     const topic = config?.kafka?.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
     produceModifiedMessages(requestBody, topic);
-    await persistTrack(requestBody?.CampaignDetails?.id, processTrackTypes.error, processTrackStatuses.failed, { error: String((error?.message + " : " + error?.description) || error) });
+    await persistTrack(requestBody?.CampaignDetails?.id, processTrackTypes.error, processTrackStatuses.failed, { error: String((error?.message + (error?.description ? ` : ${error?.description}` : '')) || error) });
     delete requestBody.CampaignDetails.campaignDetails
 }
 
@@ -670,7 +670,9 @@ async function enrichAndPersistProjectCampaignForFirst(request: any, actionInUrl
     else if (actionInUrl == "update") {
         await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
-    createProcessTracks(request.body.CampaignDetails.id)
+    if (request?.body?.CampaignDetails?.action == "create") {
+        createProcessTracks(request.body.CampaignDetails.id)
+    }
 }
 
 
@@ -1333,9 +1335,9 @@ async function processAfterPersist(request: any, actionInUrl: any) {
     try {
         logger.info("Waiting for 2 second to persist process tracks...")
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        await persistTrack(request.body.CampaignDetails.id, processTrackTypes.validation, processTrackStatuses.completed);
         const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
+            await persistTrack(request.body.CampaignDetails.id, processTrackTypes.validation, processTrackStatuses.completed);
             await createProjectCampaignResourcData(request);
             await createProject(request, actionInUrl, localizationMap)
             await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
@@ -1347,7 +1349,7 @@ async function processAfterPersist(request: any, actionInUrl: any) {
     } catch (error: any) {
         console.log(error)
         logger.error(error)
-        enrichAndPersistCampaignWithError(request?.body, error)
+        await enrichAndPersistCampaignWithError(request?.body, error)
     }
 }
 
