@@ -1385,7 +1385,8 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const localisedHeading = getLocalizedName(headingInSheet, localizationMap);
         await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const [mainSheetData, uniqueDistrictsForMainSheet, districtLevelRowBoundaryCodeMap] = createBoundaryDataMainSheet(request, boundaryData, differentTabsBasedOnLevel, hierarchy, localizationMap)
-        const isSourceMicroplan = await checkIfSourceIsMicroplan(request);
+        const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch);
         if (!(isSourceMicroplan)) {
             const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
             const columnWidths = Array(12).fill(30);
@@ -1757,7 +1758,7 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
     try {
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
         let campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
-        const isSourceMicroplan = await checkIfSourceIsMicroplan(request);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch);
         campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
@@ -1816,8 +1817,7 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
-async function checkIfSourceIsMicroplan(request: any) {
-    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+function checkIfSourceIsMicroplan(responseFromCampaignSearch: any): boolean {
     return responseFromCampaignSearch?.CampaignDetails[0]?.additionalDetails?.source === 'microplan';
 }
 
