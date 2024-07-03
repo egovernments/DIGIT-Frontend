@@ -1385,8 +1385,8 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const localisedHeading = getLocalizedName(headingInSheet, localizationMap);
         await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const [mainSheetData, uniqueDistrictsForMainSheet, districtLevelRowBoundaryCodeMap] = createBoundaryDataMainSheet(request, boundaryData, differentTabsBasedOnLevel, hierarchy, localizationMap)
-        const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-        if (!(responseFromCampaignSearch?.CampaignDetails[0].additionalDetails.source === 'microplan')) {
+        const isSourceMicroplan = await checkIfSourceIsMicroplan(request);
+        if (!(isSourceMicroplan)) {
             const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
             const columnWidths = Array(12).fill(30);
             mainSheet.columns = columnWidths.map(width => ({ width }));
@@ -1757,9 +1757,8 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
     try {
         let type = request?.query?.type || request?.body?.ResourceDetails?.type;
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-        const campaignDetails = responseFromCampaignSearch?.CampaignDetails?.[0];
-        let campaignType = campaignDetails?.projectType;
-        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignDetails);
+        let campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
+        const isSourceMicroplan = await checkIfSourceIsMicroplan(request);
         campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
@@ -1818,8 +1817,9 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
-function checkIfSourceIsMicroplan(campaignDetails: any): boolean {
-    return campaignDetails?.additionalDetails?.source === 'microplan';
+async function checkIfSourceIsMicroplan(request: any) {
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    return responseFromCampaignSearch?.CampaignDetails[0]?.additionalDetails?.source === 'microplan';
 }
 
 
