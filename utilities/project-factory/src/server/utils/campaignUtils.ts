@@ -1755,12 +1755,11 @@ function getFiltersFromCampaignSearchResponse(responseFromCampaignSearch: any) {
 
 const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, localizationMap?: any) => {
     try {
-        let type = request?.query?.type || request?.body?.ResourceDetails?.type;
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
         let campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
         const isSourceMicroplan = await checkIfSourceIsMicroplan(request);
         campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
-        const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, type, campaignType)
+        const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
             logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
             throwError("COMMON", 400, "SCHEMA_ERROR", `Campaign Type ${campaignType} has not any columns configured in schema`);
