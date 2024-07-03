@@ -53,7 +53,7 @@ function getJsonData(sheetData: any, getRow = false, getSheetName = false, sheet
         }
       }
       if (Object.keys(rowData).length > 0) {
-        if (getRow) rowData["!row#number!"] = i;
+        if (getRow) rowData["!row#number!"] = i + 1;
         if (getSheetName) rowData["!sheet#name!"] = sheetName;
         jsonData.push(rowData);
       }
