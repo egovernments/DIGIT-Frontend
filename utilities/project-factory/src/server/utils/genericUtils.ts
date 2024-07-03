@@ -1080,9 +1080,20 @@ async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any
 
 
 async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: any) {
+  let type = request?.query?.type || request?.body?.ResourceDetails?.type;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-  const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-  const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
+  const campaignDetails = responseFromCampaignSearch?.CampaignDetails[0];
+  let campaignType = campaignDetails?.projectType;
+  const source = campaignDetails?.additionalDetails?.source;
+  campaignType = (source === 'microplan') ? `MP-${campaignType}` : campaignType;
+  if (source === 'microplan') {
+    if (type === 'boundary') {
+      type = 'boundaryWithTarget';
+    } else if (type === 'facilityWithBoundary') {
+      type = 'facility';
+    }
+  }
+  const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, type, campaignType)
   return mdmsResponse;
 }
 
