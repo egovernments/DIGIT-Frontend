@@ -1,23 +1,18 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-
-// __filename and __dirname are not available in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const locales = [
-  { lang: 'en', url: 'https://api.example.com/locales/en' },
-  { lang: 'fr', url: 'https://api.example.com/locales/fr' },
-  { lang: 'de', url: 'https://api.example.com/locales/de' }
+  { lang: 'en', url: process.env.LOCALE_API_URL_EN },
+  { lang: 'fr', url: process.env.LOCALE_API_URL_FR },
+  { lang: 'de', url: process.env.LOCALE_API_URL_DE }
 ];
 
 const fetchLocales = async () => {
   for (const locale of locales) {
     try {
       const response = await axios.get(locale.url);
-      const dir = path.join(__dirname, 'public', 'locales', locale.lang);
+      const dir = path.join('/locales', locale.lang);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
