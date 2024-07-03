@@ -3,6 +3,7 @@
 import { getErrorCodes } from "./constants";
 // Defining the HOST variable
 const HOST = process.env.EGOV_HOST ||
+  "http://localhost:8080/" ||
   "https://unified-dev.digit.org/";
 // Checking if HOST is set, if not, exiting the process
 if (!HOST) {
@@ -12,6 +13,7 @@ if (!HOST) {
 
 
 const getDBSchemaName = (dbSchema = "") => {
+  return "health"
   return dbSchema ? (dbSchema == "egov" ? "public" : dbSchema) : "public";
 }
 // Configuration object containing various environment variables
@@ -25,7 +27,7 @@ const config = {
     boundaryCode: process.env.BOUNDARY_CODE_HEADER_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
     boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
     // Default criteria for generating different tabs
-    generateDifferentTabsOnBasisOf: process.env.SPLIT_BOUNDARIES_ON || "ADMIN_DISTRITO",
+    generateDifferentTabsOnBasisOf: process.env.SPLIT_BOUNDARIES_ON || "WORKBENCH_DISTRICT",
     // default configurable number of data of boundary type on which generate different tabs
     numberOfBoundaryDataOnWhichWeSplit: process.env.SPLIT_BOUNDARIES_ON_LENGTH || "2",
     boundaryRelationShipDelay: 3500
@@ -39,7 +41,7 @@ const config = {
     userSchemaMasterName: process.env.USER_SCHEMA_MASTER || "userSchema",
     userDefaultPassword: process.env.USER_DEFAULT_PASSWORD || "eGov@123",
     userPasswordAutoGenerate: process.env.USER_PASSWORD_AUTO_GENERATE || "true",
-    mapUserViaCommonParent: process.env.MAP_USER_VIA_COMMON_PARENT || false,
+    mapUserViaCommonParent: process.env.MAP_USER_VIA_COMMON_PARENT || "true",
   },
   cacheValues: {
     cacheEnabled: process.env.CACHE_ENABLED,
@@ -94,7 +96,7 @@ const config = {
   host: {
     serverHost: HOST,
     // Kafka broker host
-    KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
+    KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "localhost:9092" || "kafka-v2.kafka-cluster:9092",
     redisHost: process.env.REDIS_HOST || "localhost",
     mdms: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
     mdmsV2: process.env.EGOV_MDMS_V2_HOST || "https://unified-dev.digit.org/",
@@ -156,7 +158,7 @@ const config = {
     },
     matchFacilityData: false,
     retryCount: process.env.CREATE_RESOURCE_RETRY_COUNT || "3",
-    notCreateUserIfAlreadyThere: process.env.NOT_CREATE_USER_IF_ALREADY_THERE || false,
+    notCreateUserIfAlreadyThere: process.env.NOT_CREATE_USER_IF_ALREADY_THERE || true,
     maxHttpRetries: process.env.MAX_HTTP_RETRIES || "4"
   }
 };
