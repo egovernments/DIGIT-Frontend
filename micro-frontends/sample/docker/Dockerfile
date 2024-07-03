@@ -33,9 +33,9 @@ LABEL commit_id=$COMMIT_ID
 # Copy the rest of the application
 COPY . .
 
-# Fetch locales before building the app
-COPY fetch-locales.js .
-RUN node fetch-locales.js
+# # Fetch locales before building the app
+# COPY fetch-locales.js .
+# RUN node fetch-locales.js
 
 # Build the React app with Vite
 RUN yarn build
