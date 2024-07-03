@@ -5,6 +5,8 @@ import { Button, Dropdown, ErrorMessage, FieldV1, TextInput } from "@egovernment
 
 const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS);
