@@ -4,8 +4,8 @@ FROM node:20 AS fetch-locales
 # Set working directory
 WORKDIR /fetcher
 
-# Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+# Copy package.json 
+COPY package.json ./
 
 # Install dependencies
 RUN npm install
