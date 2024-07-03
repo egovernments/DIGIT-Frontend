@@ -1085,14 +1085,7 @@ async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: an
   const campaignDetails = responseFromCampaignSearch?.CampaignDetails[0];
   let campaignType = campaignDetails?.projectType;
   const source = campaignDetails?.additionalDetails?.source;
-  campaignType = (source === 'microplan') ? `MP-${campaignType}` : campaignType;
-  if (source === 'microplan') {
-    if (type === 'boundary') {
-      type = 'boundaryWithTarget';
-    } else if (type === 'facilityWithBoundary') {
-      type = 'facility';
-    }
-  }
+  campaignType = (source === 'microplan') ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
   const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, type, campaignType)
   return mdmsResponse;
 }
