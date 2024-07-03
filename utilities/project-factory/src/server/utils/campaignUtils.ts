@@ -537,11 +537,11 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
     }
     requestBody.CampaignDetails.additionalDetails = {
         ...requestBody?.CampaignDetails?.additionalDetails,
-        error: String((error?.message + " : " + error?.description) || error)
+        error: String((error?.message + (error?.description ? ` : ${error?.description}` : '')) || error)
     }
     const topic = config?.kafka?.KAFKA_UPDATE_PROJECT_CAMPAIGN_DETAILS_TOPIC
     produceModifiedMessages(requestBody, topic);
-    await persistTrack(requestBody?.CampaignDetails?.id, processTrackTypes.error, processTrackStatuses.failed, { error: String((error?.message + " : " + error?.description) || error) });
+    await persistTrack(requestBody?.CampaignDetails?.id, processTrackTypes.error, processTrackStatuses.failed, { error: String((error?.message + (error?.description ? ` : ${error?.description}` : '')) || error) });
     delete requestBody.CampaignDetails.campaignDetails
 }
 
@@ -670,7 +670,9 @@ async function enrichAndPersistProjectCampaignForFirst(request: any, actionInUrl
     else if (actionInUrl == "update") {
         await enrichAndPersistCampaignForUpdate(request, firstPersist)
     }
-    createProcessTracks(request.body.CampaignDetails.id)
+    if (request?.body?.CampaignDetails?.action == "create") {
+        createProcessTracks(request.body.CampaignDetails.id)
+    }
 }
 
 
@@ -1333,9 +1335,9 @@ async function processAfterPersist(request: any, actionInUrl: any) {
     try {
         logger.info("Waiting for 2 second to persist process tracks...")
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        await persistTrack(request.body.CampaignDetails.id, processTrackTypes.validation, processTrackStatuses.completed);
         const localizationMap = await getLocalizedMessagesHandler(request, request?.body?.CampaignDetails?.tenantId);
         if (request?.body?.CampaignDetails?.action == "create") {
+            await persistTrack(request.body.CampaignDetails.id, processTrackTypes.validation, processTrackStatuses.completed);
             await createProjectCampaignResourcData(request);
             await createProject(request, actionInUrl, localizationMap)
             await enrichAndPersistProjectCampaignRequest(request, actionInUrl, false, localizationMap)
@@ -1347,7 +1349,7 @@ async function processAfterPersist(request: any, actionInUrl: any) {
     } catch (error: any) {
         console.log(error)
         logger.error(error)
-        enrichAndPersistCampaignWithError(request?.body, error)
+        await enrichAndPersistCampaignWithError(request?.body, error)
     }
 }
 
@@ -1383,11 +1385,15 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const localisedHeading = getLocalizedName(headingInSheet, localizationMap);
         await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const [mainSheetData, uniqueDistrictsForMainSheet, districtLevelRowBoundaryCodeMap] = createBoundaryDataMainSheet(request, boundaryData, differentTabsBasedOnLevel, hierarchy, localizationMap)
-        const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
-        const columnWidths = Array(12).fill(30);
-        mainSheet.columns = columnWidths.map(width => ({ width }));
-        // mainSheetData.forEach(row => mainSheet.addRow(row));
-        addDataToSheet(mainSheet, mainSheetData, 'F3842D', 30, false, true);
+        const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
+        if (!(isSourceMicroplan)) {
+            const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
+            const columnWidths = Array(12).fill(30);
+            mainSheet.columns = columnWidths.map(width => ({ width }));
+            // mainSheetData.forEach(row => mainSheet.addRow(row));
+            addDataToSheet(mainSheet, mainSheetData, 'F3842D', 30, false, true);
+        }
         logger.info("appending different districts tab in the sheet started")
         await appendDistricts(request, workbook, uniqueDistrictsForMainSheet, differentTabsBasedOnLevel, boundaryData, localizationMap, districtLevelRowBoundaryCodeMap, hierarchy);
         logger.info("Sheet with different tabs generated successfully");
@@ -1751,8 +1757,10 @@ function getFiltersFromCampaignSearchResponse(responseFromCampaignSearch: any) {
 const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, localizationMap?: any) => {
     try {
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-        const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-
+        const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
+        let campaignType = campaignObject?.projectType;
+        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
+        campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
             logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
@@ -1810,6 +1818,12 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
+function checkIfSourceIsMicroplan(campaignObject: any): boolean {
+    return campaignObject?.additionalDetails?.source === 'microplan';
+}
+
+
+
 
 
 
@@ -1841,5 +1855,6 @@ export {
     getFiltersFromCampaignSearchResponse,
     getConfigurableColumnHeadersBasedOnCampaignType,
     getFinalValidHeadersForTargetSheetAsPerCampaignType,
-    getDifferentTabGeneratedBasedOnConfig
+    getDifferentTabGeneratedBasedOnConfig,
+    checkIfSourceIsMicroplan
 }
