@@ -1,13 +1,23 @@
-import { createContext, useState, use } from 'react';
+import { createContext, useState, use,useEffect } from 'react';
 
 export const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme(theme === 'light' ? 'dark' : 'light');
   };
+
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -29,18 +39,15 @@ const Card = ({ children }) => {
 
   return (
     <div
-      className={`max-w-l mx-auto rounded-lg p-6 ${
-        theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'
-      }`}
+      className={`max-w-l mx-auto rounded-lg p-6
+       bg-white dark:bg-gray-800`}
     >
       <h1
-        className={`text-2xl my-3 ${
-          theme === 'light' ? 'text-gray-800' : 'text-white'
-        }`}
+        className={`text-2xl my-3  text-black dark:text-white`}
       >
         Theme Card
       </h1>
-      <p className={theme === 'light' ? 'text-gray-800' : 'text-white'}>
+      <p className={ 'text-black dark:text-white'}>
        Hello!! use() hook
       </p>
       {children}

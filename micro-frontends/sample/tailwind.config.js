@@ -2,6 +2,8 @@
 const themeSwapper = require('tailwindcss-theme-swapper')
 
 export default {
+  darkMode: 'class', // Enable dark mode based on a class
+
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
