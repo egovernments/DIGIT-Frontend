@@ -43,7 +43,7 @@ const RadioButtons = (props) => {
                   value={option}
                   checked={selected?.code === option.code ? 1 : 0}
                   onChange={() => selectOption(option)}
-                  disabled={props?.disable}
+                  disabled={props?.disabled}
                   name={props.name}
                   ref={props.inputRef}
                 />
