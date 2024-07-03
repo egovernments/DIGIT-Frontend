@@ -1,4 +1,4 @@
-import { EmployeeModuleCard, ModuleCardFullWidth, DSSIcon } from "@egovernments/digit-ui-react-components";
+import { EmployeeModuleCard, ModuleCardFullWidth, SVG } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -108,11 +108,12 @@ const DynamicDSSCard = () => {
   const projectTypes = Digit.SessionStorage.get("projectTypes");
   const campaignData = Digit.SessionStorage.get("campaigns-info");
 
-  if(!isCommunitySupervisor && !isHealthFacilitySupervisor){
-    if (!campaignData || !projectTypes) {
-      return null;
-    }
-  }
+  // if (!isCommunitySupervisor && !isHealthFacilitySupervisor) {
+  //   if (!campaignData || !projectTypes) {
+  //     return null;
+  //   }
+  // }
+
   const generateLinks = (location, code) => {
     let links = [];
     Object.keys(campaignData)?.map((key) => {
@@ -198,7 +199,7 @@ const DynamicDSSCard = () => {
   // }
 
   const propsForModuleCard = {
-    Icon: <DSSIcon />,
+    Icon: <SVG.Dashboard fill="#fff" />,
     moduleName: t("DSS_CARD_HEADER_DASHBOARD"),
     links: [...links],
   };
