@@ -1,13 +1,9 @@
 name: Digit Admin Console Build workflow
 on:
   push:
-    branches:
-      - campaign
+    branches: [ 'develop','campaign' ,'microplan','master']
     paths:
       - 'health/micro-ui/web/micro-ui-internals/**'
-  pull_request:
-    branches:
-      - campaign
   workflow_dispatch:
 jobs:
   docker_image-build:
@@ -61,4 +57,4 @@ jobs:
           docker build -t workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f web/workbench/Dockerfile .
           docker tag workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
           docker push egovio/workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-        working-directory: micro-ui
+        working-directory: health/micro-ui
