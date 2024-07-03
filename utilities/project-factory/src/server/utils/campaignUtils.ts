@@ -1759,8 +1759,8 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
         const campaignDetails = responseFromCampaignSearch?.CampaignDetails?.[0];
         let campaignType = campaignDetails?.projectType;
-        const source = campaignDetails?.additionalDetails?.source;
-        campaignType = (source === 'microplan') ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
+        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignDetails);
+        campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
             logger.error(`Campaign Type ${campaignType} has not any columns configured in schema`)
@@ -1818,6 +1818,12 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
+function checkIfSourceIsMicroplan(campaignDetails: any): boolean {
+    return campaignDetails?.additionalDetails?.source === 'microplan';
+}
+
+
+
 
 
 
@@ -1849,5 +1855,6 @@ export {
     getFiltersFromCampaignSearchResponse,
     getConfigurableColumnHeadersBasedOnCampaignType,
     getFinalValidHeadersForTargetSheetAsPerCampaignType,
-    getDifferentTabGeneratedBasedOnConfig
+    getDifferentTabGeneratedBasedOnConfig,
+    checkIfSourceIsMicroplan
 }
