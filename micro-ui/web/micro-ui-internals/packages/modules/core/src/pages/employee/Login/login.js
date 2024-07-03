@@ -1,4 +1,4 @@
-import { BackButton, Loader, FormComposerV2 ,Toast} from "@egovernments/digit-ui-components";
+import { BackButton, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -98,7 +98,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
   };
 
-  let config = [{body : propsConfig?.inputs}];
+  let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
   if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
@@ -106,6 +106,12 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
+
+  const onFormValueChange = (setValue, formData, formState) => {
+    setDisable(false);
+    if (!formData?.check) setDisable(true);
+  };
+
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
@@ -113,7 +119,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       <div className="employeeBackbuttonAlign">
         <BackButton variant="white" style={{ borderBottom: "none" }} />
       </div>
-
       <FormComposerV2
         onSubmit={onLogin}
         isDisabled={isDisabled || disable}
@@ -124,6 +129,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         label={propsConfig.texts.submitButtonLabel}
         secondaryActionLabel={propsConfig.texts.secondaryButtonLabel}
         onSecondayActionClick={onForgotPassword}
+        onFormValueChange={onFormValueChange}
         heading={propsConfig.texts.header}
         className="loginFormStyleEmployee"
         cardSubHeaderClassName="loginCardSubHeaderClassName"
