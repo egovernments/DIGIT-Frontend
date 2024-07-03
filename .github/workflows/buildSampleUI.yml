@@ -33,14 +33,14 @@ jobs:
         echo "::set-output name=image_name::$IMAGE_TAG"
 
     - name: Build the locale migration Docker image
-        id: docker_db_build
-        working-directory: ./micro-frontends/sample/fetch-locales
-        run: |
-          IMAGE_TAG=egovio/sample-ui-db:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker build . \
-            --file Dockerfile \
-            --tag $IMAGE_TAG
-          echo "::set-output name=db_image_name::$IMAGE_TAG"
+      id: docker_db_build
+      working-directory: ./micro-frontends/sample/fetch-locales
+      run: |
+        IMAGE_TAG=egovio/sample-ui-db:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        docker build . \
+          --file Dockerfile \
+          --tag $IMAGE_TAG
+        echo "::set-output name=db_image_name::$IMAGE_TAG"
 
     - name: Login to Docker Hub and Push Docker Image
       working-directory: ./micro-frontends/sample
