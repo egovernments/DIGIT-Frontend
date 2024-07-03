@@ -1386,7 +1386,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         await createReadMeSheet(request, workbook, localisedHeading, localizationMap);
         const [mainSheetData, uniqueDistrictsForMainSheet, districtLevelRowBoundaryCodeMap] = createBoundaryDataMainSheet(request, boundaryData, differentTabsBasedOnLevel, hierarchy, localizationMap)
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
         if (!(isSourceMicroplan)) {
             const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
             const columnWidths = Array(12).fill(30);
@@ -1757,8 +1757,9 @@ function getFiltersFromCampaignSearchResponse(responseFromCampaignSearch: any) {
 const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, localizationMap?: any) => {
     try {
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-        let campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
-        const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch);
+        const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
+        let campaignType = campaignObject?.projectType;
+        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
         campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
@@ -1817,8 +1818,8 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
-function checkIfSourceIsMicroplan(responseFromCampaignSearch: any): boolean {
-    return responseFromCampaignSearch?.CampaignDetails[0]?.additionalDetails?.source === 'microplan';
+function checkIfSourceIsMicroplan(campaignObject: any): boolean {
+    return campaignObject?.additionalDetails?.source === 'microplan';
 }
 
 
