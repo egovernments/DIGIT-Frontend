@@ -27,6 +27,7 @@ import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
 import SideEffects from "./components/ConfigureApp/SideEffect";
 import SideEffectType from "./components/ConfigureApp/SideEffectType";
+import { DSSCard } from "./components/DSSCard";
 import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
 import DateWithBoundary from "./components/DateWithBoundary";
 
@@ -90,6 +91,7 @@ const componentsToRegister = {
   ConfigureApp,
   SideEffects,
   SideEffectType,
+  DSSCard,
   UpdateDatesWithBoundaries,
   DateWithBoundary,
 };
