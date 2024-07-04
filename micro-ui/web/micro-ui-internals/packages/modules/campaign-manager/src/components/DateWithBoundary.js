@@ -1,142 +1,155 @@
 import React, { useState, useEffect } from "react";
-import { DatePicker, LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { Button, Dropdown, ErrorMessage, FieldV1, TextInput } from "@egovernments/digit-ui-components";
+import { useLocation } from "react-router-dom";
+import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
+import { Button, Card, Dropdown, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
 const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
-  const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
-  const today = Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS);
-  const [dates, setDates] = useState({
-    startDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || today,
-    endDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || today,
-  });
-  const [startDate, setStartDate] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate); // Set default start date to today
-  const [endDate, setEndDate] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate); // Default end date
-  const [executionCount, setExecutionCount] = useState(0);
-  const [error, setError] = useState(null);
-  const [startValidation, setStartValidation] = useState(null);
-
-  const { isLoading, data, refetch } = Digit.Hooks.campaign.useSearchCampaign({
-    tenantId: tenantId,
-    filter: {
-      ids: [id],
-    },
-    config: {
-      select: (data) => {
-        return data?.[0];
-      },
-      enabled: id ? true : false,
-      staleTime: 0,
-      cacheTime: 0,
-    },
-  });
-
+  const { state } = useLocation();
+  const [selectedBoundaries, setSelectedBoundaries] = useState(null);
   const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "hierarchyConfig" }], {
     select: (data) => {
       return data?.["HCM-ADMIN-CONSOLE"]?.hierarchyConfig?.find((item) => item.isActive)?.hierarchy;
     },
   });
+  const [hierarchyTypeDataresult, setHierarchyTypeDataresult] = useState([]);
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [filteredBoundaries, setFilteredBoundaries] = useState([]);
+  const [targetBoundary, setTargetBoundary] = useState([]);
+  const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      },
+    },
+    config: {
+      enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0];
+      },
+    },
+  };
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  //hierarchy level
   useEffect(() => {
-    setDates({
-      startDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
-      endDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
+    if (hierarchyDefinition) {
+      const sortHierarchy = (hierarchy) => {
+        const boundaryMap = new Map();
+        hierarchy.forEach((item) => {
+          boundaryMap.set(item.boundaryType, item);
+        });
+
+        const sortedHierarchy = [];
+        let currentType = null;
+
+        while (sortedHierarchy.length < hierarchy.length) {
+          for (let i = 0; i < hierarchy.length; i++) {
+            if (hierarchy[i].parentBoundaryType === currentType) {
+              sortedHierarchy.push(hierarchy[i]);
+              currentType = hierarchy[i].boundaryType;
+              break;
+            }
+          }
+        }
+
+        return sortedHierarchy;
+      };
+
+      const sortedHierarchy = sortHierarchy(hierarchyDefinition.boundaryHierarchy);
+      const sortedHierarchyWithLocale = sortedHierarchy.map((i) => {
+        return {
+          ...i,
+          i18nKey: BOUNDARY_HIERARCHY_TYPE + "_" + i?.boundaryType,
+        };
+      });
+      console.log("sortedHierarchy", sortedHierarchyWithLocale);
+      setHierarchyTypeDataresult(sortedHierarchyWithLocale);
+    }
+  }, [hierarchyDefinition]);
+
+  useEffect(() => {
+    if (state?.data) {
+      setSelectedBoundaries(state?.data?.boundaries);
+    }
+  }, [state?.data]);
+
+  useEffect(() => {
+    if (selectedLevel) {
+      setFilteredBoundaries(selectedBoundaries?.filter((i) => i.type === selectedLevel?.boundaryType));
+    }
+  }, [selectedLevel]);
+
+  const handleBoundaryChange = (data) => {
+    let res = [];
+    data.map((arg) => {
+      res.push(arg[1]);
     });
-    setStartDate(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate);
-    setEndDate(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates]);
+    setTargetBoundary(res);
+  };
 
-  useEffect(() => {
-    if (props?.props?.isSubmitting && !endDate && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY", endDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (props?.props?.isSubmitting && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (props?.props?.isSubmitting && !endDate) {
-      setError({ endDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (!props?.props?.isSubmitting) {
-      setError(null);
-    }
-  }, [props?.props?.isSubmitting]);
-  useEffect(() => {
-    if (!startDate && startValidation) {
-      setError({ startDate: "CAMPAIGN_START_DATE_ERROR" });
-    } else if (!endDate && startValidation) {
-      setError({ endDate: "CAMPAIGN_END_DATE_ERROR" });
-    } else if (new Date(endDate).getTime() < new Date(startDate).getTime() && startValidation) {
-      setError({ endDate: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
-      onSelect("campaignDates", { startDate: startDate, endDate: endDate });
-    } else if (startValidation && new Date(endDate).getTime() === new Date(startDate).getTime()) {
-      setError({ endDate: "CAMPAIGN_END_DATE_SAME_ERROR" });
-      onSelect("campaignDates", { startDate: startDate, endDate: endDate });
-    } else if (startDate || endDate) {
-      setError(null);
-      onSelect("campaignDates", { startDate: startDate, endDate: endDate });
-    }
-  }, [startDate, endDate]);
+  const selectBoundary = async () => {
+    const temp = await Digit.Hooks.campaign.useProjectSearchWithBoundary({
+      name: state.name,
+      tenantId: tenantId,
+      boundaries: targetBoundary,
+    });
+  };
 
-  useEffect(() => {
-    if (executionCount < 5) {
-      onSelect("campaignDates", { startDate: startDate, endDate: endDate });
-      setExecutionCount((prevCount) => prevCount + 1);
-    }
-  });
-
-  function setStart(value) {
-    setStartDate(value);
-  }
-
-  function setEnd(date) {
-    setEndDate(date);
-  }
-
-  const selectBoundary = () => {};
   return (
-    <React.Fragment>
-      <Header>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
-      <div style={{ border: "1px solid #d6d5d4", borderRadius: "4px", padding: "1rem", backgroundColor: "#FAFAFA" }}>
-        <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
-        <div style={{ display: "grid", gridTemplateColumns: "20rem 20rem 20rem", gap: "2rem" }}>
-          <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "1fr", alignItems: "start" }}>
-            <div className="campaign-dates">
-              <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY`)}</p>
+    <Card className={"campaign-update-container"}>
+      <Header className="header">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
+      <Card className={"search-field-container"}>
+        <p className="field-description">{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+        <div className="label-field-grid">
+          <LabelFieldPair className="update-date-labelField">
+            <div className="update-label">
+              <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY_LEVEL`)}</p>
               <span className="mandatory-date">*</span>
             </div>
-            <div className="date-field-container">
+            <div className="update-field">
               <Dropdown
-                style={{ paddingBottom: "1rem" }}
-                variant={error ? "error" : ""}
+                style={{ width: "20rem" }}
+                variant={""}
                 t={t}
-                option={[]}
-                optionKey={"code"}
-                selected={null}
-                select={(value) => {}}
+                option={hierarchyTypeDataresult}
+                optionKey={"i18nKey"}
+                selected={selectedLevel}
+                select={(value) => {
+                  setSelectedLevel(value);
+                  setTargetBoundary([]);
+                }}
               />
             </div>
           </LabelFieldPair>
-          <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "1fr", alignItems: "start" }}>
-            <div className="campaign-dates">
-              <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_HIERARCHY`)}</p>
+          <LabelFieldPair className="update-date-labelField" style={{ display: "grid", gridTemplateColumns: "1fr", alignItems: "start" }}>
+            <div className="update-label">
+              <p>{t(`HCM_CAMPAIGN_SELECT_BOUNDARY_DATA_LABEL`)}</p>
               <span className="mandatory-date">*</span>
             </div>
-            <div className="date-field-container">
-              <Dropdown
-                style={{ paddingBottom: "1rem" }}
-                variant={error ? "error" : ""}
+            <div className="update-field">
+              <MultiSelectDropdown
+                props={{ className: "select-boundaries-target" }}
                 t={t}
-                option={[]}
-                optionKey={"code"}
-                selected={null}
-                select={(value) => {}}
+                options={filteredBoundaries || []}
+                optionsKey={"code"}
+                selected={targetBoundary || []}
+                onSelect={(value) => handleBoundaryChange(value)}
               />
             </div>
           </LabelFieldPair>
-          <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onButtonClick={selectBoundary} />
+          <Button variation="primary" label={t(`CAMPAIGN_SELECT_BOUNDARY_BUTTON`)} onClick={() => selectBoundary()} />
         </div>
-      </div>
-    </React.Fragment>
+      </Card>
+    </Card>
   );
 };
 

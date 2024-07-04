@@ -5,6 +5,7 @@ export const dateChangeBoundaryConfig = [
         type: "component",
         component: "DateWithBoundary",
         withoutLabel: true,
+        withoutLabelFieldPair: true,
         key: "dateWithBoundary",
         validation: {},
         populators: {
@@ -14,6 +15,19 @@ export const dateChangeBoundaryConfig = [
           module: "Campaign",
         },
       },
+      // {
+      //   type: "component",
+      //   component: "UpdateCampaignDates",
+      //   withoutLabel: true,
+      //   key: "campaignDates",
+      //   validation: {},
+      //   populators: {
+      //     validation: {},
+      //   },
+      //   customProps: {
+      //     module: "Campaign",
+      //   },
+      // },
     ],
   },
 ];

@@ -230,7 +230,12 @@ const CampaignSummary = (props) => {
                     isChangeDates === "true" ? (
                       <div
                         className="campaign-preview-edit-container"
-                        onClick={() => history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`)}
+                        onClick={() =>
+                          history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`, {
+                            name: data?.[0]?.campaignName,
+                            data: data?.[0],
+                          })
+                        }
                       >
                         <span>{t(`CAMPAIGN_UPDATE_DATES`)}</span>
                         <EditIcon />

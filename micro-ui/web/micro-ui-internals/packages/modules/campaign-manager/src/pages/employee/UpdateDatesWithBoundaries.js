@@ -127,8 +127,7 @@ function UpdateDatesWithBoundaries() {
   return (
     <div>
       <FormComposerV2
-        showMultipleCardsWithoutNavs={true}
-        label={t("ES_CAMPAIGN_ADD_PRODUCT_BUTTON")}
+        label={t("CAMPAIGN_UPDATE_DATE_SUBMIT")}
         config={dateChangeBoundaryConfig?.map((config) => {
           return {
             ...config,
@@ -137,10 +136,11 @@ function UpdateDatesWithBoundaries() {
         onSubmit={onSubmit}
         fieldStyle={{ marginRight: 0 }}
         noBreakLine={true}
-        cardClassName={"page-padding-fix"}
+        className="date-update"
+        cardClassName={"date-update-card"}
         onFormValueChange={onFormValueChange}
-        actionClassName={"addProductActionClass"}
-        showSecondaryLabel={true}
+        actionClassName={"dateUpdateAction"}
+        noCardStyle={true}
       />
 
       {showToast && (
