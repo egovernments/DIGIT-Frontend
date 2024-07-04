@@ -5,8 +5,10 @@ import { LinkButton } from "@egovernments/digit-ui-react-components";
 
 const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isChecked, setIsChecked] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
+  const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, "commonUiConfig", [{ name: "PrivacyPolicy" }]);
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -31,18 +33,13 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           type={"default"}
           className={"popUpClass"}
           footerclassName={"popUpFooter"}
-          heading={t("ES_PRIVACY_NOTICE")}
+          heading={t(privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.header)}
           children={[
-            <div>
-              <div className="privacy-popup-header">{"ES_PREREQUISITES"}</div>
-              <div>{"ES_PREREQUISITES_CONTENT1"}</div>
-              <div>{"ES_PREREQUISITES_CONTENT2"}</div>
-            </div>,
-            <div>
-              <div className="privacy-popup-header">{"ES_PROCEDURE"}</div>
-              <div>{"ES_PROCEDURE_CONTENT1"}</div>
-              <div>{"ES_PROCEDURE_CONTENT2"}</div>
-            </div>,
+            privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
+              <div key={index} style={{ fontWeight: desc.isBold ? 700 : 400 }}>
+                {t(desc.text)}
+              </div>
+            ))
           ]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -62,7 +59,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
               size={"large"}
               variation={"primary"}
               label={t("DIGIT_I_ACCEPT")}
-              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+              style={{width : "11.886rem"}}
               onClick={() => {
                 setIsChecked(true),setShowPopUp(false);
               }}
