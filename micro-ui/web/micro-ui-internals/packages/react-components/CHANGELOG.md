@@ -2,6 +2,9 @@ Here's the `CHANGELOG` file for the specified versions:
 
 ```markdown
 # Changelog
+## [1.8.2-beta.11]
+- fix: Sending disabled in radiobuttons from customdropdown. Added skiplabel prop for skiplabel in formComposerV2
+
 ## [1.8.2-beta.9]
 - fix: Fixed uploader issue
 ## [1.8.2-beta.8]
