@@ -8,7 +8,9 @@ const Urls = {
     wards: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=ADMIN&boundaryType=Ward`,
     revenue_localities: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=REVENUE&boundaryType=Locality`,
   },
-
+  mdms_v2:{
+    search: `/mdms-v2/v2/_search`
+  },
   pgr_search: `/pgr-services/v2/request/_search`,
   pgr_update: `/pgr-services/v2/request/_update`,
   filter_data: `https://run.mocky.io/v3/597a50a0-90e5-4a45-b82e-8a2186b760bd`,
