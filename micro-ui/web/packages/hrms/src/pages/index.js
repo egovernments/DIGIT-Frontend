@@ -39,6 +39,12 @@ const EmployeeApp = ({ path, url, userType }) => {
     clearSessionFormData();
     }
 },[location]);
+useEffect(() => {
+  const spaDiv = document.getElementById('single-spa-application:HRMS');
+  if (spaDiv) {
+    spaDiv.style.display = 'none';
+  }
+}, []);
 
   if(isLoading){
     return <Loader />

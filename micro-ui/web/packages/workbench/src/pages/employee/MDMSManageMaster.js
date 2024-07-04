@@ -5,7 +5,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
 
-
+import '../../styles.tw.css';
+import '../../career.css';
+import { prefixClasses as cx } from "../../lib/prefix-classes";
 
 function sortByKey(arr, key) {
   return arr.slice().sort((a, b) => {
