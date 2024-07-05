@@ -2,11 +2,11 @@ name: project factory service docker Image CI
 
 on:
   push:
-    branches: [ "campaign" ]
+    branches: [ "campaign","ashish-campaign-changes" ]
     paths:
       - 'utilities/project-factory/**'
   pull_request:
-    branches: [ "campaign" ]
+    branches: [ "campaign","ashish-campaign-changes" ]
 
 jobs:
 
