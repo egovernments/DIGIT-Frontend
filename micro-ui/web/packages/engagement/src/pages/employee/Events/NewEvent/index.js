@@ -3,9 +3,7 @@ import React, { Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { config } from "../../../../config/NewEventConfig";
-import '../../../../career.css';
-import '../../../../styles.tw.css';
-import { prefixClasses as cx } from "../../../../lib/prefix-classes";
+
 const NewEvents = () => {
   const { t } = useTranslation();
   const history = useHistory();

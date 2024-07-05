@@ -4,9 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Header, Card, CardSectionHeader, PDFSvg, Loader, StatusTable, Menu, ActionBar, SubmitBar, Modal, CardText } from "@egovernments/digit-ui-react-components";
 //import ApplicationDetailsTemplate from "../../../../../templates/ApplicationDetails";
 import { format } from "date-fns";
-import '../../../career.css';
-import '../../../styles.tw.css';
-import { prefixClasses as cx } from "../../../lib/prefix-classes";
 const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
 };

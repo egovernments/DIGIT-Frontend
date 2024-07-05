@@ -11,6 +11,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import getStore from './redux/store';
 
+import './pgr.css';
+import './styles.tw.css';
 const App = ({ userType, queryClient, ...props }) => {
   return (
     <QueryClientProvider client={queryClient}>

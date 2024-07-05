@@ -9,9 +9,7 @@ import DeleteResponse from "./responses/delete"
 //import EditSurvey from "./EditSurvey"
 import SurveyDetails from "./SurveyDetails"
 import SurveyResults from "./SurveyResults"
-import '../../../career.css';
-import '../../../styles.tw.css';
-import { prefixClasses as cx } from "../../../lib/prefix-classes"
+
 const Surveys = ({match:{path} = {}, tenants, parentRoute}) => {
     return <Switch>
         <PrivateRoute path={`${path}/inbox/create`} component={props => <NewSurvey {...props} />} />

@@ -2,7 +2,8 @@ import React from 'react';
 import { QueryClientProvider } from 'react-query';
 import { Switch, useLocation, BrowserRouter as Router } from 'react-router-dom';
 import { initEngagementComponents,EngagementModule } from './Module';
-
+import './engagement.css';
+import './styles.tw.css';
 const App = ({ queryClient, title,userType }) => {
   initEngagementComponents();
 

@@ -54,7 +54,7 @@ const EmployeeApp = ({
               cityDetails={cityDetails}
               mobileView={mobileView}
               handleUserDropdownSelection={handleUserDropdownSelection}
-              logoUrl={logoUrl}
+            logoUrl={logoUrl}
               showSidebar={isUserProfile ? true : false}
               showLanguageChange={!showLanguageChange}
             />
@@ -110,11 +110,11 @@ const EmployeeApp = ({
             modules={modules}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-           
+          <div className="employee-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
-            
+            </div>
             
           </div>
         </Route>
