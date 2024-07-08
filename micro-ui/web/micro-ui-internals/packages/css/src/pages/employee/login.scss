@@ -241,6 +241,10 @@
     margin: auto !important;
     min-width: 408px !important;
 
+    .privacy-popUpClass{
+      height: 32.875rem;
+    }
+
     header.employee-card-sub-header {
       text-align: center;
       margin-top: 10px;
@@ -273,4 +277,15 @@
   .employee-select-wrap .options-card {
     max-height: 150px !important;
   }
+}
+.digit-privacy-checkbox{
+  display: flex;
+  margin-bottom: -2.5rem;
+  margin-top: -1.5rem;
+  gap: 0.12rem;
+  align-items: center;
+
+}
+.privacy-popup-header{
+  font-weight: 700;
 }

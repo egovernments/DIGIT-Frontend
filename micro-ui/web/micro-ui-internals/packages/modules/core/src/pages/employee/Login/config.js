@@ -41,6 +41,20 @@ export const loginConfig = [
           },
         },
       },
+      {
+        isMandatory: false,
+        key: "check",
+        type: "component",
+        component: "PrivacyComponent",
+        withoutLabel: true,
+        disable: false,
+        customProps: {
+          module: "HCM",
+        },
+        populators: {
+          name: "check",
+        },
+      },
     ],
   },
 ];

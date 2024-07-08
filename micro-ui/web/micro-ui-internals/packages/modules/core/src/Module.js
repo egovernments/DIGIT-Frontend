@@ -12,6 +12,7 @@ import ChangeLanguage from "./components/ChangeLanguage";
 import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
+import PrivacyComponent from "./components/PrivacyComponent";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -113,7 +114,8 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
 const componentsToRegister = {
   SelectOtp,
   ChangeCity,
-  ChangeLanguage
+  ChangeLanguage,
+  PrivacyComponent
 };
 
 export const initCoreComponents = () => {
