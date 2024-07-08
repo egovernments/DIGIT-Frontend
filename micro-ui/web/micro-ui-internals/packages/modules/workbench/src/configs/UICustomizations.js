@@ -636,7 +636,7 @@ export const UICustomizations = {
 
       switch(true)
       {
-        case contextPath.includes("works-ui") : {
+        case contextPath.includes("mukta-uat") : {
           if(isActive) actionItems?.push({
             action:"ADD_SOR_COMPOSITION",
             label:"Add SOR Composition"
