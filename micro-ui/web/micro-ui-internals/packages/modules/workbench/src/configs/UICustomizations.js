@@ -618,7 +618,7 @@ export const UICustomizations = {
   },
   ViewMdmsConfig : {
     fetchActionItems : (data) => {
-      let contextPath = window.contextPath;
+      let hostname = window.location.hostname;
       let actionItems = [{
         action:"EDIT",
         label:"Edit Master"
@@ -636,7 +636,7 @@ export const UICustomizations = {
 
       switch(true)
       {
-        case contextPath.includes("mukta-uat") : {
+        case hostname.includes("mukta-uat") : {
           if(isActive) actionItems?.push({
             action:"ADD_SOR_COMPOSITION",
             label:"Add SOR Composition"
