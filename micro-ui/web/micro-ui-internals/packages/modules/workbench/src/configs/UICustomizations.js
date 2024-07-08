@@ -653,10 +653,10 @@ export const UICustomizations = {
       const {action:actionSelected} = action 
       //to ADD SOR Composition
       if(actionSelected === "ADD_SOR_COMPOSITION")
-      props?.history.push(`/${window?.contextPath}/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`)
+      props?.history.push(`/works-ui/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`)
 
       if(actionSelected === "VIEW_RATE_ANALYSIS")
-      props?.history.push(`/${window?.contextPath}/employee/rateanalysis/view-rate-analysis?sorId=${props?.uniqueIdentifier}&fromeffective=${Date.now()}`)
+      props?.history.push(`/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${props?.uniqueIdentifier}&fromeffective=${Date.now()}`)
       //action===EDIT go to edit screen 
       if(actionSelected==="EDIT") {
       props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}`)
