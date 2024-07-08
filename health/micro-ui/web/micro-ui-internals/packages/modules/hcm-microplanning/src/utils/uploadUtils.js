@@ -12,7 +12,9 @@ import {
   BOUNDARY_DATA_SHEET,
   EXCEL,
   FACILITY_DATA_SHEET,
+  GEOJSON,
   SCHEMA_PROPERTIES_PREFIX,
+  SHAPEFILE,
   SHEET_COLUMN_WIDTH,
   UPLOADED_DATA_ACTIVE_STATUS,
   commonColumn,
@@ -233,14 +235,14 @@ export const downloadTemplate = async ({
     );
 
     // protextData
-    await protectData({
-      workbook,
-      hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
-      addFacilityData: schema?.template?.includeFacilityData,
-      schema,
-      readMeSheetName: t(readMeSheetName),
-      t,
-    });
+    // await protectData({
+    //   workbook,
+    //   hierarchyLevelWiseSheets: schema?.template?.hierarchyLevelWiseSheets,
+    //   addFacilityData: schema?.template?.includeFacilityData,
+    //   schema,
+    //   readMeSheetName: t(readMeSheetName),
+    //   t,
+    // });
 
     // Write the workbook to a buffer
     workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
@@ -660,7 +662,7 @@ export const prepareExcelFileBlobWithErrors = async (dataInput, errors, schema, 
     t(readMeSheetName)
   );
 
-  await protectWorkbookData(workbook, schema, t);
+  // await protectWorkbookData(workbook, schema, t);
 
   return await workbook.xlsx.writeBuffer({ compression: true }).then((buffer) => {
     return new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -825,6 +827,7 @@ export const handleExcelFile = async (
   try {
     // Converting the file to preserve the sequence of columns so that it can be stored
     let fileDataToStore = await parseXlsxToJsonMultipleSheets(file, { header: 0 });
+
     const additionalSheets = [];
     if (fileDataToStore[t(BOUNDARY_DATA_SHEET)]) {
       additionalSheets.push({ sheetName: t(BOUNDARY_DATA_SHEET), data: fileDataToStore[t(BOUNDARY_DATA_SHEET)], position: -1 });
@@ -908,12 +911,44 @@ export const handleExcelFile = async (
     });
     if (errorMsg && !errorMsg?.check) return errorMsg;
     if (
+      schemaData?.schema?.Properties &&
+      Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField) &&
+      schemaData.schema.Properties?.[schemaData.activeInactiveField]?.isRequired
+    ) {
+      const hasColumn = Object.values(tempFileDataToStore).reduce((acc, item) => {
+        const activeFieldIndex = item?.[0]?.indexOf(schemaData.activeInactiveField);
+        const hasColumnData = activeFieldIndex !== -1 ? item.slice().every((e) => !!e?.[activeFieldIndex]) : undefined;
+        return acc && activeFieldIndex !== -1 && hasColumnData;
+      }, true);
+      if (!hasColumn) {
+        return {
+          check: false,
+          errors: [],
+          interruptUpload: true,
+          fileDataToStore: {},
+          toast: { state: "error", message: t("ERROR_ACTIVE_INACTIVE_COLUMN_MISSING", { columnName: t(schemaData.activeInactiveField) }) },
+        };
+      }
+    }
+    if (
       schemaData?.activeInactiveField &&
       schemaData?.schema?.Properties &&
       Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField)
     ) {
       result = filterDataWithActiveInactiveStatus(result, schemaData.activeInactiveField, true, t);
       tempFileDataToStore = filterDataWithActiveInactiveStatus(tempFileDataToStore, schemaData.activeInactiveField, false, t);
+      const hasActiveData = Object.values(tempFileDataToStore).reduce((acc, item) => {
+        return acc && item?.length > 1;
+      }, true);
+      if (!hasActiveData) {
+        return {
+          check: false,
+          errors: [],
+          interruptUpload: true,
+          fileDataToStore: {},
+          toast: { state: "error", message: t("ERROR_ACTIVE_DATA_MISSING") },
+        };
+      }
     }
     // Running Validations for uploaded file
     let response = await checkForErrorInUploadedFileExcel(result, schemaData.schema, t);
@@ -965,11 +1000,26 @@ export const handleExcelFile = async (
       console.error("Error in boundary adding operaiton: ", error);
     }
     tempFileDataToStore = addMissingPropertiesToFileData(tempFileDataToStore, missingProperties);
-    return { check, errors, errorMsg, fileDataToStore: tempFileDataToStore, tempResourceMappingData, toast, additionalSheets };
+
+    // checking boundary codes
+    const errorObject = await boundaryCodeValidations(tempFileDataToStore, campaignData, EXCEL, t);
+    const combinedErrors =
+      !errors && errorObject && Object.keys(errorObject).length === 0 ? false : Digit.Utils.microplan.mergeDeep(errors, errorObject);
+    if (check && combinedErrors) setUploadedFileError(["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"]);
+    return {
+      check: check && !combinedErrors,
+      errors: combinedErrors,
+      errorMsg: errorMsg ? errorMsg : combinedErrors ? ["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"] : undefined,
+      fileDataToStore: tempFileDataToStore,
+      tempResourceMappingData,
+      toast,
+      additionalSheets,
+    };
   } catch (error) {
     console.error("Error in handling Excel file:", error.message);
   }
 };
+
 export const addMissingPropertiesToFileData = (data, missingProperties) => {
   if (!data || !missingProperties) return data;
   let tempData = {};
@@ -1039,3 +1089,98 @@ export const findGuideLine = (campaignType, type, section, guidelineArray) => {
 
 // Utility function to introduce a delay
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchBoundary = async (campaignData) => {
+  const rootBoundary = campaignData?.boundaries?.filter((boundary) => boundary.isRoot); // Retrieve session storage data once and store it in a variable
+  const sessionData = Digit.SessionStorage.get("microplanHelperData") || {};
+  let boundaryData = sessionData.filteredBoundaries;
+  let filteredBoundaries;
+  if (!boundaryData) {
+    // Only fetch boundary data if not present in session storage
+    boundaryData = await fetchBoundaryData(Digit.ULBService.getCurrentTenantId(), campaignData?.hierarchyType, rootBoundary?.[0]?.code);
+    filteredBoundaries = filterBoundaries(boundaryData, campaignData?.boundaries);
+
+    // Update the session storage with the new filtered boundaries
+    Digit.SessionStorage.set("microplanHelperData", {
+      ...sessionData,
+      filteredBoundaries: filteredBoundaries,
+    });
+  } else {
+    filteredBoundaries = boundaryData;
+  }
+
+  return filteredBoundaries;
+};
+
+const fetchBoundaryDataCodeList = (boundaryData, accumulator = []) => {
+  let tempAccumulator = [...accumulator];
+
+  for (const item of boundaryData) {
+    if (item?.code && !tempAccumulator.includes(item.code)) {
+      tempAccumulator.push(item.code);
+    }
+    if (item?.children?.length) {
+      tempAccumulator = fetchBoundaryDataCodeList(item.children, tempAccumulator);
+    }
+  }
+
+  return tempAccumulator;
+};
+
+const checkBoundaryExcel = (boundaryCodeList, data, t) => {
+  let errorObject = {};
+  for (const [key, value] of Object.entries(data)) {
+    let boundaryCodeIndex = -1;
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value?.length; i++) {
+        if (i === 0) {
+          boundaryCodeIndex = value?.[i]?.indexOf(commonColumn);
+          continue;
+        }
+        if (boundaryCodeIndex === -1) continue;
+        if (!boundaryCodeList.includes(value?.[i]?.[boundaryCodeIndex])) {
+          errorObject = {
+            ...errorObject,
+            [key]: {
+              ...(errorObject?.[key] ? errorObject[key] : {}),
+              [i - 1]: {
+                [commonColumn]: [
+                  { error: "ERROR_BOUNDARY_CODE_INVALID", values: { boundaryCode: value?.[i]?.[boundaryCodeIndex] || t(commonColumn) } },
+                ],
+              },
+            },
+          };
+        }
+      }
+    }
+  }
+  return errorObject;
+};
+
+const checkBoundaryGeojsonShapefile = (boundaryCodeList, data, t) => {
+  if (data && !data.features) return {};
+  let errorObject = {};
+  for (const [key, value] of Object.entries(data?.features)) {
+    if (!boundaryCodeList.includes(value?.properties?.[commonColumn])) {
+      errorObject = {
+        ...errorObject,
+        [key]: {
+          [commonColumn]: [{ error: "ERROR_BOUNDARY_CODE_INVALID", values: { boundaryCode: value?.properties?.[commonColumn] || t(commonColumn) } }],
+        },
+      };
+    }
+  }
+  return errorObject;
+};
+
+export const boundaryCodeValidations = async (data, campaignData, fileType, t) => {
+  const boundaryData = await fetchBoundary(campaignData);
+  const boundaryCodeList = [...new Set(fetchBoundaryDataCodeList(boundaryData))];
+  if (fileType === EXCEL) {
+    return checkBoundaryExcel(boundaryCodeList, data, t);
+  }
+  if (fileType === GEOJSON || fileType === SHAPEFILE) {
+    return checkBoundaryGeojsonShapefile(boundaryCodeList, data, t);
+  }
+  return;
+};

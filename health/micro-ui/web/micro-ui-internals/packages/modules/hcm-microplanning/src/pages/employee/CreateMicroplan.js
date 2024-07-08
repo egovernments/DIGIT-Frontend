@@ -100,7 +100,11 @@ const CreateMicroplan = () => {
   // useEffect to store data in session storage
   useEffect(() => {
     if (!microplanData) return;
-    Digit.SessionStorage.set("microplanData", microplanData);
+    try {
+      Digit.SessionStorage.set("microplanData", microplanData);
+    } catch (error) {
+      console.error("Error while seting ssn storage for microplanning :", error.message);
+    }
   }, [microplanData]);
 
   // useEffect to store data in session storage
