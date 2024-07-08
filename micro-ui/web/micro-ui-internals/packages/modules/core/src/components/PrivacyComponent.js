@@ -22,25 +22,22 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
     <React.Fragment>
         <div className="digit-privacy-checkbox">
       <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange}></CheckBox>
-      <LinkButton
-        label={t(`ES_PRIVACY_POLICY`)}
-        onClick={onButtonClick}
-        style = {{textDecoration : "underline"}}
-      />
+      <Button
+              label= {t(`ES_PRIVACY_POLICY`)}
+              variation={"link"}
+              size={"medium"}
+              onClick={onButtonClick}
+              // isSuffix={true}
+              style={{ marginBottom: "1.18rem" , paddingLeft : "unset"}}
+            ></Button>
       </div>
       {showPopUp && (
         <PopUp
           type={"default"}
-          className={"popUpClass"}
+          className={"privacy-popUpClass"}
           footerclassName={"popUpFooter"}
           heading={t(privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.header)}
-          children={[
-            privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
-              <div key={index} style={{ fontWeight: desc.isBold ? 700 : 400 }}>
-                {t(desc.text)}
-              </div>
-            ))
-          ]}
+          
           onOverlayClick={() => {
             setShowPopUp(false);
           }}
@@ -69,7 +66,14 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           onClose={() => {
             setShowPopUp(false);
           }}
-        ></PopUp>
+        >
+                  {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
+            <div key={index} style={{ fontWeight: desc.isBold ? 700 : 400 }}>
+              {t(desc.text)}
+            </div>
+          ))}
+
+        </PopUp>
       )}
     </React.Fragment>
   );
