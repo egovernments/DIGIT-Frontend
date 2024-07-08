@@ -460,6 +460,43 @@ const transformIntoLocalisationCode = (code) => {
   return code?.toUpperCase();
 };
 
+const mergeDeep = (target, source) => {
+  if (!source) {
+    return target;
+  }
+
+  if (!target) {
+    target = {};
+  }
+
+  for (let key in source) {
+    if (source[key] instanceof Object && !Array.isArray(source[key])) {
+      if (!target[key]) {
+        Object.assign(target, { [key]: {} });
+      }
+      mergeDeep(target[key], source[key]);
+    } else if (Array.isArray(source[key])) {
+      if (!target[key]) {
+        target[key] = [];
+      }
+      source[key].forEach((sourceItem) => {
+        let isDuplicate = false;
+        target[key].forEach((targetItem) => {
+          if (JSON.stringify(sourceItem) === JSON.stringify(targetItem)) {
+            isDuplicate = true;
+          }
+        });
+        if (!isDuplicate) {
+          target[key].push(sourceItem);
+        }
+      });
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+  return target;
+};
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -475,4 +512,5 @@ export default {
   getSchema,
   processDropdownForNestedMultiSelect,
   transformIntoLocalisationCode,
+  mergeDeep,
 };
