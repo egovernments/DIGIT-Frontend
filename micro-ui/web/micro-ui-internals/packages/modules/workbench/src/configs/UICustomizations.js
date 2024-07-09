@@ -652,13 +652,15 @@ export const UICustomizations = {
     onActionSelect : (action,props) => {
       const {action:actionSelected} = action 
       //to ADD SOR Composition
-      if(actionSelected === "ADD_SOR_COMPOSITION")
-      props?.history.push(`/works-ui/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`)
+      if(actionSelected === "ADD_SOR_COMPOSITION"){
+        window.location.href = `/works-ui/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`
+      }
 
-      if(actionSelected === "VIEW_RATE_ANALYSIS")
-      props?.history.push(`/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${props?.uniqueIdentifier}&fromeffective=${Date.now()}`)
+      else if(actionSelected === "VIEW_RATE_ANALYSIS"){
+      window.location.href = `/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${props?.uniqueIdentifier}&fromeffective=${Date.now()}`
+      }
       //action===EDIT go to edit screen 
-      if(actionSelected==="EDIT") {
+      else if(actionSelected==="EDIT") {
       props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}`)
       }
       //action===DISABLE || ENABLE call update api and show toast respectively
