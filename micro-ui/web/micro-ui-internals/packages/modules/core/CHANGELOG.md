@@ -1,6 +1,6 @@
 # Changelog 
 
-## 1.8.2-beta.3
+## 1.8.2-beta.4
 - Added Privacy Component 
 
 ## 1.8.2-beta.2
