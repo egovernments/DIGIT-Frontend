@@ -232,10 +232,11 @@ const IFrameInterface = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(`${window.location.origin}/kibana-security/internal/security/login`, {
+        const basePath = data?.[moduleName]?.["iframe-routes"]?.[pageName]?.["base-kibana-path"] || "kibana"
+        const response = await axios.post(`${window.location.origin}${basePath}internal/security/login`, {
           providerType: "anonymous",
           providerName: "anonymous1",
-          currentURL: `${window.location.origin}/kibana-security/login`
+          currentURL: `${window.location.origin}${basePath}login`
         }, {
           headers: {
             'Accept': '*/*',
@@ -246,7 +247,7 @@ const IFrameInterface = (props) => {
             'DNT': '1',
             'Origin': window.location.origin,
             'Pragma': 'no-cache',
-            'Referer': `${window.location.origin}/kibana-security/login?next=%2Fkibana-security%2F`,
+            'Referer': `${window.location.origin}${basePath}login?next=%2Fkibana%2F`,
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
@@ -257,7 +258,7 @@ const IFrameInterface = (props) => {
             'sec-ch-ua-mobile': '?0',
             'sec-ch-ua-platform': '"Windows"',
             'x-elastic-internal-origin': 'Kibana',
-            'x-kbn-context': '{"type":"application","name":"security_login","url":"/kibana-security/login"}'
+            'x-kbn-context': `{"type":"application","name":"security_login","url":"${basePath}login"}`
           }
         });
         console.log("response from axios",response);
