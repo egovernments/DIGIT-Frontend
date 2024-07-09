@@ -102,7 +102,7 @@ const CreateEmployee = () => {
     for (let i = 0; i < formData?.Assignments?.length; i++) {
       let key = formData?.Assignments[i];
       if (
-        !(key.department && key.designation && key.fromDate && (formData?.Assignments[i].toDate || formData?.Assignments[i]?.isCurrentAssignment))
+        !(key.department && key.designation && key.courtroom && key.fromDate && (formData?.Assignments[i].toDate || formData?.Assignments[i]?.isCurrentAssignment))
       ) {
         setassigncheck = false;
         break;
@@ -114,13 +114,13 @@ const CreateEmployee = () => {
       }
     }
     if (
-      formData?.SelectDateofEmployment?.dateOfAppointment &&
+      // formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
-      formData?.SelectEmployeeGender?.gender.code &&
+      // formData?.SelectEmployeeGender?.gender.code &&
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
-      checkfield &&
+      // checkfield &&
       setassigncheck &&
       phonecheck &&
       checkMailNameNum(formData)
@@ -137,12 +137,11 @@ const CreateEmployee = () => {
 
   
 
-
   const onSubmit = (data) => {
-    if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
-      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-      return;
-    }
+    // if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
+    //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+    //   return;
+    // }
     if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
       if (sum && sum?.tenantId) {
         acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
@@ -152,6 +151,14 @@ const CreateEmployee = () => {
       setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
       return;
     }
+    data.Jurisdictions = data.Jurisdictions.map(juris => {
+      return {
+        ...juris,
+        hierarchy: "COURT_DISTRICT_HIERARCHY",
+        boundaryType: "state",
+        boundary: tenantId
+      };
+    });
     let roles = data?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
         item["tenantId"] = ele.boundary;
@@ -166,7 +173,7 @@ const CreateEmployee = () => {
         employeeStatus: "EMPLOYED",
         assignments: data?.Assignments,
         code: data?.SelectEmployeeId?.code ? data?.SelectEmployeeId?.code : undefined,
-        dateOfAppointment: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
+        // dateOfAppointment: new Date(data?.SelectDateofEmployment?.dateOfAppointment).getTime(),
         employeeType: data?.SelectEmployeeType?.code,
         jurisdictions: data?.Jurisdictions,
         user: {
@@ -174,7 +181,7 @@ const CreateEmployee = () => {
           name: data?.SelectEmployeeName?.employeeName,
           correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress,
           emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : undefined,
-          gender: data?.SelectEmployeeGender?.gender.code,
+          // gender: data?.SelectEmployeeGender?.gender.code,
           dob: new Date(data?.SelectDateofBirthEmployment?.dob).getTime(),
           roles: mappedroles,
           tenantId: tenantId,

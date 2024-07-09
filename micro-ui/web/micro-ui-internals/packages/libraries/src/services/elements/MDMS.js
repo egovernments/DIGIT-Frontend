@@ -50,7 +50,7 @@ const initRequestBody = (tenantId) => ({
     moduleDetails: [
       {
         moduleName: "common-masters",
-        masterDetails: [{ name: "Department" }, { name: "Designation" }, { name: "StateInfo" }, { name: "wfSlaConfig" }, { name: "uiHomePage" }],
+        masterDetails: [{ name: "Department" }, { name: "Court_Rooms" },{ name: "Designation" }, { name: "StateInfo" }, { name: "wfSlaConfig" }, { name: "uiHomePage" }],
       },
       {
         moduleName: "tenant",
@@ -728,6 +728,7 @@ const getHrmsEmployeeRolesandDesignations = () => ({
       masterDetails: [
         { name: "Department", filter: "[?(@.active == true)]" },
         { name: "Designation", filter: "[?(@.active == true)]" },
+        { name: "Court_Rooms", filter: "[?(@.active == true)]" },
       ],
     },
     {
@@ -1406,7 +1407,7 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
 };
 
 const getCacheSetting = (moduleName) => {
-  return ApiCacheService.getSettingByServiceUrl(Urls.MDMS, moduleName);
+  return ApiCacheService.getSettingByServiceUrl(Urls.MDMS_V2, moduleName);
 };
 
 const mergedData = {};
@@ -1474,7 +1475,7 @@ export const MdmsService = {
   init: (stateCode) =>
     ServiceRequest({
       serviceName: "mdmsInit",
-      url: Urls.MDMS,
+      url: Urls.MDMS_V2,
       data: initRequestBody(stateCode),
       useCache: true,
       params: { tenantId: stateCode },
@@ -1484,7 +1485,7 @@ export const MdmsService = {
       debouncedCall(
         {
           serviceName: "mdmsCall",
-          url: Urls.MDMS,
+          url: Urls.MDMS_V2,
           data: getCriteria(tenantId, details),
           useCache: true,
           params: { tenantId },
@@ -1496,14 +1497,14 @@ export const MdmsService = {
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
     const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
-    const inStoreValue = PersistantStorage.get(key);
-    if (inStoreValue) {
-      return inStoreValue;
-    }
+    // const inStoreValue = PersistantStorage.get(key);
+    // if (inStoreValue) {
+    //   return inStoreValue;
+    // }
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
     const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
-    const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
-    PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
+    // const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
+    // PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {

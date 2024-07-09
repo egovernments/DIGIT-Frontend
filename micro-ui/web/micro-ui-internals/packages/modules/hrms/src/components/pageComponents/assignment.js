@@ -18,6 +18,10 @@ const makeDefaultValues = (sessionFormData) => {
         code: ele?.department,
         i18key:ele.department ? "COMMON_MASTERS_DEPARTMENT_" + ele.department : null,
       },
+      courtroom: {
+        code: ele?.courtroom,
+        i18key:ele.department ? "COMMON_MASTERS_COURT_ROOM_" + ele.courtroom : null,
+      },
     }
   })
 }
@@ -40,6 +44,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         isCurrentAssignment: false,
         department: null,
         designation: null,
+        courtroom: null,
       },
     ])
   );
@@ -57,6 +62,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         isCurrentAssignment: false,
         department: null,
         designation: null,
+        courtroom: null,
       },
     ]);
   };
@@ -83,6 +89,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           isCurrentAssignment: assignment?.isCurrentAssignment,
           department: assignment?.department?.code,
           designation: assignment?.designation?.code,
+          courtroom: assignment?.courtroom?.code,
         })
         : [];
     });
@@ -103,6 +110,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
 
   let department = [];
   let designation = [];
+  let courtroom = [];
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function getdepartmentdata() {
@@ -114,6 +122,12 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
   function getdesignationdata() {
     return data?.MdmsRes?.["common-masters"]?.Designation.map((ele) => {
       ele["i18key"] = t("COMMON_MASTERS_DESIGNATION_" + ele.code);
+      return ele;
+    });
+  }
+  function getcourtroomdata() {
+    return data?.MdmsRes?.["common-masters"]?.Court_Rooms.map((ele) => {
+      ele["i18key"] = t("COMMON_MASTERS_COURT_R00M_" + ele.code);
       return ele;
     });
   }
@@ -136,7 +150,9 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           getdepartmentdata={getdepartmentdata}
           department={department}
           designation={designation}
+          courtroom={courtroom}
           getdesignationdata={getdesignationdata}
+          getcourtroomdata={getcourtroomdata}
           assignments={assignments}
           handleRemoveUnit={handleRemoveUnit}
           setCurrentAssiginmentDate={setCurrentAssiginmentDate}
@@ -162,7 +178,9 @@ function Assignment({
   formData,
   handleRemoveUnit,
   designation,
+  courtroom,
   getdesignationdata,
+  getcourtroomdata,
   setCurrentAssiginmentDate,
   currentassignemtDate,
 }) {
@@ -171,6 +189,9 @@ function Assignment({
   };
   const selectDesignation = (value) => {
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, designation: value } : item)));
+  };
+  const selectCourtroom = (value) => {
+    setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, courtroom: value } : item)));
   };
 
   const onAssignmentChange = (value) => {
@@ -294,6 +315,20 @@ function Assignment({
             disable={assignment?.id ? true : false}
             option={getdesignationdata(designation) || []}
             select={selectDesignation}
+            optionCardStyles={{maxHeight:"250px"}}
+            optionKey={"i18key"}
+            t={t}
+          />
+        </LabelFieldPair>
+
+        <LabelFieldPair>
+          <CardLabel className={assignment?.id ? "card-label-smaller" : "card-label-smaller"}>{`${t("HR_COURTRROOM_LABEL")} * `}</CardLabel>
+          <Dropdown
+            className="form-field"
+            selected={assignment?.courtroom}
+            disable={assignment?.id ? true : false}
+            option={getcourtroomdata(courtroom) || []}
+            select={selectCourtroom}
             optionCardStyles={{maxHeight:"250px"}}
             optionKey={"i18key"}
             t={t}

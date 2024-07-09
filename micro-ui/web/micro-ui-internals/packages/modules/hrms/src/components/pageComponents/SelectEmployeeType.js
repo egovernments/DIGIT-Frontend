@@ -32,7 +32,6 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
   if (isLoading) {
     return <Loader />;
   }
-
   return inputs?.map((input, index) => {
     return (
       <LabelFieldPair key={index}>

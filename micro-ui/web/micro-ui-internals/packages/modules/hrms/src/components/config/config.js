@@ -14,12 +14,12 @@ export const newConfig = [
         key: "SelectEmployeePhoneNumber",
         withoutLabel: true,
       },
-      {
-        type: "component",
-        component: "SelectEmployeeGender",
-        key: "SelectEmployeeGender",
-        withoutLabel: true,
-      },
+      // {
+      //   type: "component",
+      //   component: "SelectEmployeeGender",
+      //   key: "SelectEmployeeGender",
+      //   withoutLabel: true,
+      // },
       {
         type: "component",
         component: "SelectDateofBirthEmployment",
@@ -49,12 +49,12 @@ export const newConfig = [
         key: "SelectEmployeeType",
         withoutLabel: true,
       },
-      {
-        type: "component",
-        component: "SelectDateofEmployment",
-        key: "SelectDateofEmployment",
-        withoutLabel: true,
-      },
+      // {
+      //   type: "component",
+      //   component: "SelectDateofEmployment",
+      //   key: "SelectDateofEmployment",
+      //   withoutLabel: true,
+      // },
       {
         type: "component",
         component: "SelectEmployeeId",
