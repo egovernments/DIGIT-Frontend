@@ -4,7 +4,11 @@ import { QueryClientProvider } from 'react-query';
 import EmployeeApp from './pages/employee';
 import { Switch, useLocation, BrowserRouter as Router } from 'react-router-dom';
 import { Loader } from '@digit-ui/digit-ui-react-components';
+// import './engagement.css';
+// import './styles.tw.css';
 
+import './workbench.css';
+import './styles.tw.css';
 const App = ({ queryClient }) => {
   initWorkbenchComponents();
   //make way to do this job in container while registering remotes
