@@ -30,7 +30,7 @@ module.exports = () => {
         },
       }),
       new MiniCssExtractPlugin(
-    true
+    false
           ? {
               filename: 'static/css/[name].[contenthash].css',
               chunkFilename: 'static/css/[name].[contenthash].css',
