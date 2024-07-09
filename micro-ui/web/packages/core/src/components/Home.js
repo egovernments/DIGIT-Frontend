@@ -129,7 +129,7 @@ import {
   const EmployeeHome = ({ modules }) => {
     return (
       <div className="employee-app-container">
-        <div className="ground-container moduleCardWrapper gridModuleWrapper">
+         <div className="ground-container moduleCardWrapper gridModuleWrapper">
           {modules.map(({ code }, index) => {
             const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
             return <Card key={index} />;

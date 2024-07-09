@@ -4,8 +4,6 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../../../components/Documents/DesktopInbox";
 import MobileInbox from "../../../../components/Documents/MobileInbox";
 
-
-
 const Inbox = ({ tenants }) => {
     const { t } = useTranslation()
     Digit.SessionStorage.set("ENGAGEMENT_TENANTS", tenants);
@@ -111,7 +109,7 @@ const Inbox = ({ tenants }) => {
                 totalRecords={response?.totalCount}
                 title={"DOCUMENTS_DOCUMENT_HEADER"}
                 iconName={"document"}
-                links={links}
+                
                 currentPage={parseInt(searchParams.offset / searchParams.limit)}
                 onNextPage={fetchNextPage}
                 onPrevPage={fetchPrevPage}

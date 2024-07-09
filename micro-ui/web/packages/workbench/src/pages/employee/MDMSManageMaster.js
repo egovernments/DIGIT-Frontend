@@ -6,7 +6,6 @@ import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
 
 
-
 function sortByKey(arr, key) {
   return arr.slice().sort((a, b) => {
     const valueA = a[key];

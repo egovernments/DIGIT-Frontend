@@ -85,16 +85,16 @@ export default (queryClient) => {
     },
   });
 
-  registerApplication({
-    name: "Common",
-    app: () => import("common/CommonModule"),
-    activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/payment`, //change to userType here
-    customProps: {
-      title: "Common Module is running on host",
-      queryClient,
-      userType
-    },
-  });
+  // registerApplication({
+  //   name: "Common",
+  //   app: () => import("common/CommonModule"),
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/${userType}/payment`, //change to userType here
+  //   customProps: {
+  //     title: "Common Module is running on host",
+  //     queryClient,
+  //     userType
+  //   },
+  // });
 
    registerApplication({
     name: "Dss",

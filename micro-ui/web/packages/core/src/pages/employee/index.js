@@ -54,7 +54,7 @@ const EmployeeApp = ({
               cityDetails={cityDetails}
               mobileView={mobileView}
               handleUserDropdownSelection={handleUserDropdownSelection}
-              logoUrl={logoUrl}
+            logoUrl={logoUrl}
               showSidebar={isUserProfile ? true : false}
               showLanguageChange={!showLanguageChange}
             />
@@ -110,21 +110,12 @@ const EmployeeApp = ({
             modules={modules}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div className="employee-app-wrapper">
+          <div className="employee-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
             </div>
-            <div className="employee-home-footer">
-              <img
-                alt="Powered by DIGIT"
-                src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
-                style={{ height: "1.1em", cursor: "pointer" }}
-                onClick={() => {
-                  window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-                }}
-              />
-            </div>
+            
           </div>
         </Route>
         <Route>

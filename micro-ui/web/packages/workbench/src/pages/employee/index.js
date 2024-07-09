@@ -62,7 +62,8 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
     },
 
   ];
-  return <BreadCrumb className="workbench-bredcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
+
+return  <BreadCrumb className="workbench-bredcrumb " crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
 };
 
 const App = ({ path }) => {
@@ -113,6 +114,14 @@ const App = ({ path }) => {
       clearSessionFormDataView();
     }
   }, [location]);
+  useEffect(() => {
+    const spaDiv = document.getElementById('single-spa-application:Workbench');
+    if (spaDiv) {
+      spaDiv.style.display = 'none';
+    }
+  }, []);
+  
+  
 
   if(isLoading){
     return <Loader />

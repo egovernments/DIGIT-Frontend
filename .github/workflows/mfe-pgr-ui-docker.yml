@@ -2,9 +2,9 @@ name: pgr ui service docker Image CI
 
 on:
   push:
-    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan" ]
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan","mfe-css"]
   pull_request:
-    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan" ]
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan","mfe-css" ]
     
 jobs:
 
