@@ -862,7 +862,8 @@ const createProjectFacilityHelper = (resourceId: any, projectId: any, resouceBod
  */
 async function createRelatedEntity(
   createRelatedEntityArray: any[],
-  CampaignDetails: any
+  CampaignDetails: any,
+  requestBody: any
 ) {
   const mappingArray = []
   for (const entity of createRelatedEntityArray) {
@@ -883,7 +884,7 @@ async function createRelatedEntity(
       mappingArray.push(mappingObject)
     }
   }
-  const produceMessage: any = { mappingArray: mappingArray, CampaignDetails: CampaignDetails }
+  const produceMessage: any = { mappingArray: mappingArray, CampaignDetails: CampaignDetails, RequestInfo: requestBody?.RequestInfo }
   produceModifiedMessages(produceMessage, config.kafka.KAFKA_PROCESS_CAMPAIGN_MAPPING_TOPIC)
 }
 
@@ -919,7 +920,8 @@ async function createRelatedResouce(requestBody: any) {
   }
   await createRelatedEntity(
     createRelatedEntityArray,
-    requestBody?.CampaignDetails
+    requestBody?.CampaignDetails,
+    requestBody
   );
 }
 
