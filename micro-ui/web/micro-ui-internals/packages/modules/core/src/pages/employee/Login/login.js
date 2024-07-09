@@ -1,4 +1,4 @@
-import { BackButton, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -117,7 +117,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackButton variant="white" style={{ borderBottom: "none" }} />
+        <BackLink />
       </div>
       <FormComposerV2
         onSubmit={onLogin}
@@ -126,11 +126,11 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         inline
         submitInForm
         config={config}
-        label={propsConfig.texts.submitButtonLabel}
-        secondaryActionLabel={propsConfig.texts.secondaryButtonLabel}
+        label={propsConfig?.texts?.submitButtonLabel}
+        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
         onSecondayActionClick={onForgotPassword}
         onFormValueChange={onFormValueChange}
-        heading={propsConfig.texts.header}
+        heading={propsConfig?.texts?.header}
         className="loginFormStyleEmployee"
         cardSubHeaderClassName="loginCardSubHeaderClassName"
         cardClassName="loginCardClassName"
