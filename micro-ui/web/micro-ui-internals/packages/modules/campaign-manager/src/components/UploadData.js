@@ -707,7 +707,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };

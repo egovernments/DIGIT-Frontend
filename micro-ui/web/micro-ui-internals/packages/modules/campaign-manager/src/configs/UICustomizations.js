@@ -18,6 +18,7 @@ const onActionSelect = (value, row) => {
         {
           name: row?.campaignName,
           data: row,
+          projectId: row?.projectId,
         },
         "",
         `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`

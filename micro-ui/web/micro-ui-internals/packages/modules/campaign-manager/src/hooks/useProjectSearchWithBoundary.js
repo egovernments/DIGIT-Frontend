@@ -19,7 +19,7 @@ const useProjectSearchWithBoundary = async ({ name, tenantId, boundaries }) => {
         ],
       },
     }).then((res) => {
-      return res?.Project;
+      return res?.Project?.[0];
     });
   });
   const newData = await Promise.all(requests);

@@ -233,6 +233,7 @@ const CampaignSummary = (props) => {
                         onClick={() =>
                           history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}`, {
                             name: data?.[0]?.campaignName,
+                            projectId: data?.[0]?.projectId,
                             data: data?.[0],
                           })
                         }
