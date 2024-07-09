@@ -232,7 +232,7 @@ const IFrameInterface = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const basePath = data?.[moduleName]?.["iframe-routes"]?.[pageName]?.["base-kibana-path"] || "kibana"
+        const basePath = data?.[moduleName]?.["iframe-routes"]?.[pageName]?.["base-kibana-path"] || "/kibana/"
         const response = await axios.post(`${window.location.origin}${basePath}internal/security/login`, {
           providerType: "anonymous",
           providerName: "anonymous1",
