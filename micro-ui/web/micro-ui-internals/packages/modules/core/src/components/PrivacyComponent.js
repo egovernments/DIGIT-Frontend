@@ -18,6 +18,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
   const onButtonClick = () => {
     setShowPopUp(true);
   };
+
   return (
     <React.Fragment>
         <div className="digit-privacy-checkbox">
