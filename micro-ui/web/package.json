@@ -26,7 +26,12 @@
     "packages/components",
     "packages/svg-components",
     "packages/microplan",
-    "packages/campaign"
+    "packages/campaign",
+    "packages/hrms",
+    "packages/workbench",
+    "packages/pgr",
+    "packages/engagement",
+    "packages/dss"
   ],
   "scripts": {
     "build": "yarn lerna run build",
