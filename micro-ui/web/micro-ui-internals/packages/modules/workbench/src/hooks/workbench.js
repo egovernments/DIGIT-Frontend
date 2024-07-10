@@ -72,7 +72,7 @@ const getMDMSContextPath = () => {
 };
 
 const isSchemaCodeInMDMSAction = () => {
-  return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION") || "true";
+  return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION")===false?false : true;
 };
 
 export { UICreateConfigGenerator, getMDMSContextPath,isSchemaCodeInMDMSAction };
