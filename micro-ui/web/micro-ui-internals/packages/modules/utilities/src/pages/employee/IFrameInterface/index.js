@@ -242,12 +242,12 @@ const IFrameInterface = (props) => {
   return (
     <React.Fragment key={location.pathname}>
       <Header>{t(title)}</Header>
-      <div className="app-iframe-wrapper">
+      <div className={`app-iframe-wrapper ${props?.wrapperClassName ? props?.wrapperClassName : ""}`}>
         <iframe 
           ref={iframeRef}
           src={url} 
           title={title} 
-          className="app-iframe"   
+          className={`app-iframe ${props?.className ? props?.className : ""}`}   
           onLoad={(e) => {
             setIframeLoaded(true);
           }} 
