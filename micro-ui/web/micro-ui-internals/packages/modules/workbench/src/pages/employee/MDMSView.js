@@ -11,7 +11,11 @@ const MDMSView = ({...props}) => {
   let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
   // const stateId = Digit.ULBService.getStateId();
   tenantId = Digit.ULBService.getCurrentTenantId();
-  const fetchActionItems = (data) => Digit?.Customizations?.['commonUiConfig']?.['ViewMdmsConfig']?.fetchActionItems(data);
+  let propsToSendButtons = {
+    moduleName,
+    masterName
+  }
+  const fetchActionItems = (data) => Digit?.Customizations?.['commonUiConfig']?.['ViewMdmsConfig']?.fetchActionItems(data,propsToSendButtons);
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,

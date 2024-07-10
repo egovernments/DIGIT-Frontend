@@ -617,8 +617,25 @@ export const UICustomizations = {
     }
   },
   ViewMdmsConfig : {
-    fetchActionItems : (data) => {
+    fetchActionItems : (data, props) => {
       let hostname = window.location.hostname;
+
+      let roleActions = {
+          "ADD_SOR_COMPOSITION" : ["MDMS_STATE_ADMIN"],
+          "VIEW_RATE_ANALYSIS"  : ["MDMS_STATE_ADMIN", "MDMS_CITY_ADMIN"]
+        }
+        const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+
+        const roles = getUserRoles?.map((role) => {
+            return role.code;
+          });
+        console.log(roles);
+
+        const hasRoleAccess = (action) => {
+          const allowedRoles = roleActions[action] || [];
+          return roles.some((role) => allowedRoles.includes(role));
+        };
+
       let actionItems = [{
         action:"EDIT",
         label:"Edit Master"
@@ -636,15 +653,23 @@ export const UICustomizations = {
 
       switch(true)
       {
-        case hostname.includes("mukta-uat") : {
-          if(isActive) actionItems?.push({
+        case hostname.includes("mukta-uat") || hostname.includes("localhost") : {
+          if(data?.data?.sorType?.includes("W")){
+          if(isActive && hasRoleAccess("ADD_SOR_COMPOSITION")) actionItems?.push({
             action:"ADD_SOR_COMPOSITION",
             label:"Add SOR Composition"
           })
-          actionItems?.push({
-            action:"VIEW_RATE_ANALYSIS",
-            label:"View Rate Analysis"
-          })
+          if (hasRoleAccess("VIEW_RATE_ANALYSIS")) {
+            actionItems.push({
+              action: "VIEW_RATE_ANALYSIS",
+              label: "View Rate Analysis"
+            });
+          }
+        }
+        if(props?.masterName === "Rates")
+        {
+          actionItems = actionItems.filter((ac) => ac?.action !== "DISABLE" && ac?.action !== "EDIT")
+        }
         }
       }
       return actionItems;
