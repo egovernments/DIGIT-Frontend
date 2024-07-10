@@ -103,6 +103,7 @@ const MDMSView = ({...props}) => {
     masterName,
     tenantId,
     uniqueIdentifier,
+    data,
     history,
     handleEnableDisable
   }
