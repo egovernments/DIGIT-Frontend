@@ -3,11 +3,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";
 import DynamicSearchComponent from "./DynamicSearchComponent";
-import IFrameInterface from "./IFrameInterface";
 import WorkflowCompTest from "./WorkflowComponentTest";
 import DocViewer from "./DocViewer.js";
 import NonIFrameInterface from "./IFrameInterface/RenderCustom";
 import AuditHistory from "./AuditHistory.js";
+import KibanaChart from "./KibanaChart.js";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <Route path={`${path}/search/:moduleName/:masterName`} component={() => <DynamicSearchComponent parentRoute={path} />} />
         <Route path={`${path}/create/:moduleName/:masterName`} component={() => <DynamicCreateComponent parentRoute={path} />} />
         <Route path={`${path}/iframe/:moduleName/:pageName`}>
-          <IFrameInterface {...commonProps} />
+          <KibanaChart {...commonProps} />
         </Route>
         <Route path={`${path}/non-iframe/:moduleName/:pageName`}>
           <NonIFrameInterface {...commonProps} />
