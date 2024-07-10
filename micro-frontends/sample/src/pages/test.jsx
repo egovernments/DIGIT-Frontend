@@ -1,8 +1,9 @@
 // src/components/JsonSchemaForm.js
-import React, { useMemo, useCallback, use } from "react";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import React, { useMemo, useCallback, use ,useEffect} from "react";
+import { useForm, Controller, useFieldArray ,useWatch} from "react-hook-form";
 import CustomDatePicker from "./CustomCheck"; // Import the custom component
 import { ThemeContext } from "../examples/Theme";
+import useLastUpdatedField from "../hooks/useLastUpdatedField";
 
 const schema = {
   title: "Complex Form",
@@ -246,6 +247,23 @@ const RenderArrayField = React.memo(
     );
   }
 );
+function findUIDependencies(obj, path = '') {
+  const result = [];
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const newPath = path ? `${path}.${key}` : key;
+      
+      if (key === 'ui:dependencies') {
+        result.push({ path: newPath, object: obj[key] });
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        result.push(...findUIDependencies(obj[key], newPath));
+      }
+    }
+  }
+
+  return result;
+}
 
 const RenderDependentField = ({
   name,
@@ -255,9 +273,7 @@ const RenderDependentField = ({
   errors,
   dependencies,
 }) => {
-  const dependentValue = watch(dependencies.dependentField);
 
-  if (dependentValue === dependencies.expectedValue) {
     return (
       <RenderField
         name={name}
@@ -268,17 +284,16 @@ const RenderDependentField = ({
         watch={watch}
       />
     );
-  }
-
-  return null;
 };
-const RenderField = React.memo(
-  ({ name, property, uiSchema, control, errors, watch }) => {
+const RenderField = ({ name, property, uiSchema, control, errors, watch }) => {
     const uiWidget = uiSchema && uiSchema["ui:widget"];
     const dependencies = uiSchema && uiSchema["ui:dependencies"];
     const { theme, toggleTheme } = use(ThemeContext);
 
     if (dependencies) {
+      const dependentValue = watch(dependencies.dependentField);
+      if (dependentValue === dependencies.expectedValue) {
+
       return (
         <RenderDependentField
           name={name}
@@ -290,6 +305,8 @@ const RenderField = React.memo(
         />
       );
     }
+    return null;
+  }
 
     if (property.type === "array") {
       return (
@@ -336,13 +353,13 @@ const RenderField = React.memo(
       />
     );
   }
-);
 
 const JsonSchemaForm = ({ schema, uiSchema }) => {
   const {
     control,
     handleSubmit,
     watch,
+    reset, trigger, getValues,
     formState: { errors },
   } = useForm({
     defaultValues: useMemo(
@@ -358,6 +375,71 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
       [schema]
     ),
   });
+
+  const dependencies=findUIDependencies(uiSchema);
+
+//   // Extracting unique dependent fields from dependencies
+//   const dependentFields = useMemo(() => {
+//     return [...new Set(dependencies.map(dep => dep.object.dependentField))];
+//   }, []);
+// console.log(dependentFields,'dependentFields');
+//   // Watch only the fields that have dependencies
+//   const watchedDependentValues = useWatch({
+//     control,
+//     name: dependentFields,
+//   });
+
+//   useEffect(() => {
+//     dependentFields.forEach((field, index) => {
+//       const expectedValue = dependencies.find(dep => dep.object.dependentField === field)?.object.expectedValue;
+//       const fieldValue = watchedDependentValues[index];
+
+//       if (fieldValue === expectedValue) {
+//         trigger(field); // Trigger validation
+//       } else {
+//         reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
+//       }
+//       console.log(fieldValue,'fieldValue');
+//     });
+//     console.log(dependentFields,"dependencies inside useefect");
+
+//   }, [watchedDependentValues, reset, trigger, getValues, dependentFields]);
+
+
+
+    // Extracting unique dependent fields from dependencies
+    // Extracting unique dependent fields from dependencies
+  const dependentFields = useMemo(() => {
+    const fields = [];
+    dependencies.forEach(dep => {
+      if (!fields.includes(dep.object.dependentField)) {
+        fields.push(dep.object.dependentField);
+      }
+    });
+    return fields;
+  }, [dependencies]);
+
+  const lastUpdatedField = useLastUpdatedField(control, dependentFields);
+
+
+  useEffect(() => {
+    if (!lastUpdatedField) return;
+
+    dependencies.forEach(dep => {
+      const { dependentField, expectedValue } = dep.object;
+
+      if (dependentField === lastUpdatedField) {
+        const fieldValue = getValues(dependentField);
+
+        if (fieldValue === expectedValue) {
+          // trigger(dep.path.replace('.ui:dependencies', '')); // Trigger validation for the specific path
+        } else {
+          console.log(fieldValue, 'fieldValue else');
+          // reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
+        }
+      }
+    });
+  }, [lastUpdatedField, reset, trigger, getValues, dependencies]);
 
   const onSubmit = useCallback((data) => {
     console.log("Form Data:", data);
