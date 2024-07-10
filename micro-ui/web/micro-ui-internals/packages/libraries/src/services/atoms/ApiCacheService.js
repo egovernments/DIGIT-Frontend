@@ -24,6 +24,17 @@ const defaultApiCachingSettings = [
       },
     ],
   },
+  {
+    serviceName: "mdms-v2",
+    cacheTimeInSecs: 3600,
+    debounceTimeInMS: 100,
+    moduleSettings: [
+      {
+        moduleName: "FSM",
+        cacheTimeInSecs: 7200,
+      },
+    ],
+  },
 ];
 
 const storageKey = "cachingService";
@@ -35,40 +46,25 @@ const getCachedSetting = () => {
   Digit.ApiCacheSetting = setting;
   return setting;
 };
-
 const getSetting = (serviceName, moduleName) => {
   const setting = getCachedSetting();
   const serviceSetting = setting.find((item) => item.serviceName === serviceName);
-
-  // If the service setting is not found, return default values
-  if (!serviceSetting) {
-    return {
-      cacheTimeInSecs: 0,
-      debounceTimeInMS: 100,
-    };
-  }
-
   const responseSetting = {
     cacheTimeInSecs: serviceSetting.cacheTimeInSecs,
     debounceTimeInMS: serviceSetting.debounceTimeInMS || 100,
   };
-
   if (!moduleName) {
     return responseSetting;
   }
-
   const moduleSettings = serviceSetting?.moduleSettings?.find((item) => item.moduleName === moduleName);
-
   if (!moduleSettings) {
     return responseSetting;
   }
-
   return {
     cacheTimeInSecs: moduleSettings.cacheTimeInSecs || responseSetting.cacheTimeInSecs,
     debounceTimeInMS: moduleSettings.debounceTimeInMS || responseSetting.debounceTimeInMS,
   };
 };
-
 export const ApiCacheService = {
   saveSetting: (setting) => {
     PersistantStorage.set(storageKey, setting || defaultApiCachingSettings);
