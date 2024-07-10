@@ -22,6 +22,9 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
   const data=getStore(initData, moduleReducers(initData)) || {};
 
   const i18n = getI18n();
+  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
+    Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
+  }
   return (
     <Provider store={data}>
       <Router>

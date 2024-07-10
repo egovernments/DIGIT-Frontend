@@ -289,3 +289,15 @@
 .privacy-popup-header{
   font-weight: 700;
 }
+
+@media (min-width: 47.8rem) {
+  .privacy-popUpClass{
+    .digit-popup-footer-buttons{
+    flex-wrap: nowrap !important;
+    }
+  .accept-class{
+    width: 11.886rem;
+    
+  }
+}
+}

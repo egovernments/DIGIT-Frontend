@@ -57,7 +57,8 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
               size={"large"}
               variation={"primary"}
               label={t("DIGIT_I_ACCEPT")}
-              style={{width : "11.886rem"}}
+              className={"accept-class"}
+              // style={{width : "11.886rem"}}
               onClick={() => {
                 setIsChecked(true),setShowPopUp(false);
               }}
