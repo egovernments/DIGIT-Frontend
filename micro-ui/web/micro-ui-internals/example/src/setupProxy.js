@@ -73,6 +73,7 @@ module.exports = function (app) {
     "/egov-searcher",
     "/report",
     "/inbox/v1/dss/_search",
+    "/semantic-indexer/_search",
     "/loi-service",
     "/project/v1/",
     "/estimate-service",

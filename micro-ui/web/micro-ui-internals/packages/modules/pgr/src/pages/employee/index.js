@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 // import Inbox from "./Inbox";
 import { Employee } from "../../constants/Routes";
 // import Response from "./Response";
+import AdvanceInbox from "./AdvanceSearch";
+import ViewPgr from "./AdvanceView";
 
 const Complaint = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
@@ -65,6 +67,10 @@ const Complaint = () => {
               path={match.url + Employee.Inbox}
               component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.inbox]}></BreadCrumb>}
             />
+            {/* <Route
+              path={match.url + Employee.AdvanceSearch}
+              component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.inbox]}></BreadCrumb>}
+            /> */}
             <Route
               path={match.url + Employee.Response}
               component={<BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.response]}></BreadCrumb>}
@@ -75,6 +81,8 @@ const Complaint = () => {
           <Route path={match.url + Employee.CreateComplaint} component={() => <CreateComplaint parentUrl={match.url} />} />
           <Route path={match.url + Employee.ComplaintDetails + ":id*"} component={() => <ComplaintDetails />} />
           <Route path={match.url + Employee.Inbox} component={Inbox} />
+          <Route path={match.url + Employee.AdvanceSearch} component={AdvanceInbox} />
+          <Route path={match.url + Employee.PgrView} component={ViewPgr} />
           <Route path={match.url + Employee.Response} component={Response} />
         </Switch>
       </div>

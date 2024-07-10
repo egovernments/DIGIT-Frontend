@@ -28,6 +28,8 @@ export const PgrRoutes = {
 
 export const Employee = {
   Inbox: "/inbox",
+  AdvanceSearch: "/advance-search",
+  PgrView: "/pgr-view",
   ComplaintDetails: PGR_EMPLOYEE_COMPLAINT_DETAILS,
   CreateComplaint: PGR_EMPLOYEE_CREATE_COMPLAINT,
   Response: "/response",

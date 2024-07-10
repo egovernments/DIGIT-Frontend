@@ -796,7 +796,7 @@ import { MapLayerIcon } from "./svg/MapLayerIcon"
 import { Church } from "./svg/Church"
 import { HealthFacility } from "./svg/HealthFacility"
 import { SchoolBuilding } from "./svg/SchoolBuilding"
-import { Warehouse } from "./svg/Warehouse "
+// import { Warehouse } from "./svg/Warehouse "
 
 export {
   Success,
@@ -1597,5 +1597,5 @@ export {
   Church,
   HealthFacility,
   SchoolBuilding,
-  Warehouse
+  // Warehouse
 };

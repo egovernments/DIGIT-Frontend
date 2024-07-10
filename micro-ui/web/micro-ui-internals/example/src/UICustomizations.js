@@ -645,5 +645,44 @@ export const UICustomizations = {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
       }
     },
-  }
+  },
+  advanceSearchConfig: {
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      //here we can add multiple conditions
+      //like if a cell is link then we return link
+      //first we can identify which column it belongs to then we can return relevant result
+      switch (key) {
+        case "SERVICE_REQUESTER_ID":
+          return (
+            <span className="link">
+              <Link to={`/${window.contextPath}/employee/pgr/pgr-view?pgrId=${value}`}>
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+              </Link>
+            </span>
+          );
+
+        // case "MASTERS_SOCIAL_CATEGORY":
+        //   return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(`MASTERS_${value}`))}</span> : t("ES_COMMON_NA");
+
+        // case "CORE_COMMON_PROFILE_CITY":
+        //   return value ? <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getCityLocale(value)))}</span> : t("ES_COMMON_NA");
+
+        // case "MASTERS_WARD":
+        //   return value ? (
+        //     <span style={{ whiteSpace: "nowrap" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+        //   ) : (
+        //     t("ES_COMMON_NA")
+        //   );
+
+        // case "MASTERS_LOCALITY":
+        //   return value ? (
+        //     <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+        //   ) : (
+        //     t("ES_COMMON_NA")
+        //   );
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+  },
 };
