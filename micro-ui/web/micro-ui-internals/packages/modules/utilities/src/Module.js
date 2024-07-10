@@ -2,6 +2,7 @@ import { Loader, InboxSearchComposer, FormComposerV2 } from "@egovernments/digit
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
+import IFrameInterface from "./pages/employee/IFrameInterface";
 
 export const UtilitiesModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -21,7 +22,8 @@ export const UtilitiesModule = ({ stateCode, userType, tenants }) => {
 };
 
 const componentsToRegister = {
-  UtilitiesModule
+  UtilitiesModule,
+  IFrameInterface,
 };
 
 export const initUtilitiesComponents = () => {
@@ -30,4 +32,4 @@ export const initUtilitiesComponents = () => {
   });
 };
 
-export { InboxSearchComposer, FormComposerV2 };
+export { InboxSearchComposer, FormComposerV2, IFrameInterface };
