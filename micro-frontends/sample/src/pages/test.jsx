@@ -1,9 +1,10 @@
 // src/components/JsonSchemaForm.js
-import React, { useMemo, useCallback, use ,useEffect} from "react";
-import { useForm, Controller, useFieldArray ,useWatch} from "react-hook-form";
+import React, { useMemo, useCallback, use, useEffect } from "react";
+import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import CustomDatePicker from "./CustomCheck"; // Import the custom component
 import { ThemeContext } from "../examples/Theme";
 import useLastUpdatedField from "../hooks/useLastUpdatedField";
+import { useUserState } from "../state/useUserState";
 
 const schema = {
   title: "Complex Form",
@@ -148,7 +149,7 @@ const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors }) => {
     const CustomWidget = customWidgets[uiWidget];
     const { theme, toggleTheme } = use(ThemeContext);
- 
+
     return (
       <div key={name} style={{ display: "inline-block", marginRight: "20px" }}>
         <label className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -203,7 +204,6 @@ const RenderArrayField = React.memo(
     });
     const { theme } = use(ThemeContext);
     if (property?.type == "array" && property?.items?.type == "string") {
-    
     }
     return (
       <div key={name}>
@@ -247,16 +247,16 @@ const RenderArrayField = React.memo(
     );
   }
 );
-function findUIDependencies(obj, path = '') {
+function findUIDependencies(obj, path = "") {
   const result = [];
 
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       const newPath = path ? `${path}.${key}` : key;
-      
-      if (key === 'ui:dependencies') {
+
+      if (key === "ui:dependencies") {
         result.push({ path: newPath, object: obj[key] });
-      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      } else if (typeof obj[key] === "object" && obj[key] !== null) {
         result.push(...findUIDependencies(obj[key], newPath));
       }
     }
@@ -273,27 +273,25 @@ const RenderDependentField = ({
   errors,
   dependencies,
 }) => {
-
-    return (
-      <RenderField
-        name={name}
-        property={property}
-        uiSchema={dependencies?.uiWidget}
-        control={control}
-        errors={errors}
-        watch={watch}
-      />
-    );
+  return (
+    <RenderField
+      name={name}
+      property={property}
+      uiSchema={dependencies?.uiWidget}
+      control={control}
+      errors={errors}
+      watch={watch}
+    />
+  );
 };
 const RenderField = ({ name, property, uiSchema, control, errors, watch }) => {
-    const uiWidget = uiSchema && uiSchema["ui:widget"];
-    const dependencies = uiSchema && uiSchema["ui:dependencies"];
-    const { theme, toggleTheme } = use(ThemeContext);
+  const uiWidget = uiSchema && uiSchema["ui:widget"];
+  const dependencies = uiSchema && uiSchema["ui:dependencies"];
+  const { theme, toggleTheme } = use(ThemeContext);
 
-    if (dependencies) {
-      const dependentValue = watch(dependencies.dependentField);
-      if (dependentValue === dependencies.expectedValue) {
-
+  if (dependencies) {
+    const dependentValue = watch(dependencies.dependentField);
+    if (dependentValue === dependencies.expectedValue) {
       return (
         <RenderDependentField
           name={name}
@@ -308,58 +306,60 @@ const RenderField = ({ name, property, uiSchema, control, errors, watch }) => {
     return null;
   }
 
-    if (property.type === "array") {
-      return (
-        <RenderArrayField
-          name={name}
-          property={property}
-          uiSchema={uiSchema}
-          control={control}
-          errors={errors}
-          watch={watch}
-        />
-      );
-    }
-
-    if (property.type === "object") {
-      return (
-        <Card key={name}>
-          <label className={theme === "light" ? "text-gray-800" : "text-white"}>
-            {property.title}
-          </label>
-          {Object.keys(property?.properties).map((subKey) => (
-            <RenderField
-              key={`${name}.${subKey}`}
-              name={`${name}.${subKey}`}
-              property={property.properties?.[subKey]}
-              uiSchema={uiSchema?.[subKey]}
-              control={control}
-              errors={errors}
-              watch={watch}
-            />
-          ))}
-        </Card>
-      );
-    }
-
+  if (property.type === "array") {
     return (
-      <RenderIndividualField
-        key={name}
+      <RenderArrayField
         name={name}
         property={property}
-        uiWidget={uiWidget}
+        uiSchema={uiSchema}
         control={control}
         errors={errors}
+        watch={watch}
       />
     );
   }
+
+  if (property.type === "object") {
+    return (
+      <Card key={name}>
+        <label className={theme === "light" ? "text-gray-800" : "text-white"}>
+          {property.title}
+        </label>
+        {Object.keys(property?.properties).map((subKey) => (
+          <RenderField
+            key={`${name}.${subKey}`}
+            name={`${name}.${subKey}`}
+            property={property.properties?.[subKey]}
+            uiSchema={uiSchema?.[subKey]}
+            control={control}
+            errors={errors}
+            watch={watch}
+          />
+        ))}
+      </Card>
+    );
+  }
+
+  return (
+    <RenderIndividualField
+      key={name}
+      name={name}
+      property={property}
+      uiWidget={uiWidget}
+      control={control}
+      errors={errors}
+    />
+  );
+};
 
 const JsonSchemaForm = ({ schema, uiSchema }) => {
   const {
     control,
     handleSubmit,
     watch,
-    reset, trigger, getValues,
+    reset,
+    trigger,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: useMemo(
@@ -376,42 +376,40 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
     ),
   });
 
-  const dependencies=findUIDependencies(uiSchema);
+  const dependencies = findUIDependencies(uiSchema);
 
-//   // Extracting unique dependent fields from dependencies
-//   const dependentFields = useMemo(() => {
-//     return [...new Set(dependencies.map(dep => dep.object.dependentField))];
-//   }, []);
-// console.log(dependentFields,'dependentFields');
-//   // Watch only the fields that have dependencies
-//   const watchedDependentValues = useWatch({
-//     control,
-//     name: dependentFields,
-//   });
+  //   // Extracting unique dependent fields from dependencies
+  //   const dependentFields = useMemo(() => {
+  //     return [...new Set(dependencies.map(dep => dep.object.dependentField))];
+  //   }, []);
+  // console.log(dependentFields,'dependentFields');
+  //   // Watch only the fields that have dependencies
+  //   const watchedDependentValues = useWatch({
+  //     control,
+  //     name: dependentFields,
+  //   });
 
-//   useEffect(() => {
-//     dependentFields.forEach((field, index) => {
-//       const expectedValue = dependencies.find(dep => dep.object.dependentField === field)?.object.expectedValue;
-//       const fieldValue = watchedDependentValues[index];
+  //   useEffect(() => {
+  //     dependentFields.forEach((field, index) => {
+  //       const expectedValue = dependencies.find(dep => dep.object.dependentField === field)?.object.expectedValue;
+  //       const fieldValue = watchedDependentValues[index];
 
-//       if (fieldValue === expectedValue) {
-//         trigger(field); // Trigger validation
-//       } else {
-//         reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
-//       }
-//       console.log(fieldValue,'fieldValue');
-//     });
-//     console.log(dependentFields,"dependencies inside useefect");
+  //       if (fieldValue === expectedValue) {
+  //         trigger(field); // Trigger validation
+  //       } else {
+  //         reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
+  //       }
+  //       console.log(fieldValue,'fieldValue');
+  //     });
+  //     console.log(dependentFields,"dependencies inside useefect");
 
-//   }, [watchedDependentValues, reset, trigger, getValues, dependentFields]);
+  //   }, [watchedDependentValues, reset, trigger, getValues, dependentFields]);
 
-
-
-    // Extracting unique dependent fields from dependencies
-    // Extracting unique dependent fields from dependencies
+  // Extracting unique dependent fields from dependencies
+  // Extracting unique dependent fields from dependencies
   const dependentFields = useMemo(() => {
     const fields = [];
-    dependencies.forEach(dep => {
+    dependencies.forEach((dep) => {
       if (!fields.includes(dep.object.dependentField)) {
         fields.push(dep.object.dependentField);
       }
@@ -421,11 +419,10 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
 
   const lastUpdatedField = useLastUpdatedField(control, dependentFields);
 
-
   useEffect(() => {
     if (!lastUpdatedField) return;
 
-    dependencies.forEach(dep => {
+    dependencies.forEach((dep) => {
       const { dependentField, expectedValue } = dep.object;
 
       if (dependentField === lastUpdatedField) {
@@ -434,7 +431,7 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
         if (fieldValue === expectedValue) {
           // trigger(dep.path.replace('.ui:dependencies', '')); // Trigger validation for the specific path
         } else {
-          console.log(fieldValue, 'fieldValue else');
+          console.log(fieldValue, "fieldValue else");
           // reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
         }
       }
@@ -494,16 +491,18 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
   );
 };
 const Card = ({ key, children }) => {
- return (<div
-    key={key}
-    style={{
-      border: "1px solid #ccc",
-      padding: "10px",
-      margin: "10px 0",
-    }}
-  >
-   { children }
-  </div>)
+  return (
+    <div
+      key={key}
+      style={{
+        border: "1px solid #ccc",
+        padding: "10px",
+        margin: "10px 0",
+      }}
+    >
+      {children}
+    </div>
+  );
 };
 
 // const Header = ({ className, children }) => {
@@ -513,9 +512,17 @@ const Card = ({ key, children }) => {
 //       { children }
 //      </h1>)
 //    };
-   
 
 const Test = () => {
-  return <JsonSchemaForm schema={schema} uiSchema={uiSchema}></JsonSchemaForm>;
+  const { setData, resetData, data } = useUserState();
+  console.log(data, "data");
+  return (
+    <>
+      <h1>Hi {data?.name}</h1>
+      <input onChange={(e) => setData({ ...data, name: e.target.value })} />
+
+      <JsonSchemaForm schema={schema} uiSchema={uiSchema}></JsonSchemaForm>
+    </>
+  );
 };
 export default Test;

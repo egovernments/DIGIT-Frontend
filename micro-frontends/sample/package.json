@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "5.50.1",
+    "axios": "1.7.2",
     "i18next": "23.11.5",
-    "axios":"1.7.2",
     "i18next-http-backend": "2.5.2",
     "idb": "8.0.0",
+    "localforage": "^1.10.0",
     "react": "19.0.0-beta-26f2496093-20240514",
     "react-dom": "19.0.0-beta-26f2496093-20240514",
     "react-hook-form": "7.52.0",
