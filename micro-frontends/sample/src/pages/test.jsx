@@ -1,10 +1,13 @@
 // src/components/JsonSchemaForm.js
-import React, { useMemo, useCallback, use, useEffect } from "react";
+import React, { useMemo, useCallback, use, useEffect ,useState} from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import CustomDatePicker from "./CustomCheck"; // Import the custom component
 import { ThemeContext } from "../examples/Theme";
 import useLastUpdatedField from "../hooks/useLastUpdatedField";
 import { useUserState } from "../state/useUserState";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import { getUpdatedUISchema } from "./utils/formTabUtils";
 
 const schema = {
   title: "Complex Form",
@@ -352,7 +355,22 @@ const RenderField = ({ name, property, uiSchema, control, errors, watch }) => {
   );
 };
 
-const JsonSchemaForm = ({ schema, uiSchema }) => {
+const tabs = [
+  { label: "Personal Info", fields: ["personalInfo"] },
+  { label: "Address", fields: ["address"] },
+  { label: "Phones", fields: ["phones"] },
+  { label: "Preferences", fields: ["preferences"] },
+];
+
+const conditionalTabs = {
+  3: {
+    fields: ["preferences.newsletter"],
+    rule: (values) => values["preferences.newsletter"],
+  },
+};
+const JsonSchemaForm = ({ schema, uiSchema,tabs, conditionalTabs  }) => {
+  const [currentTab, setCurrentTab] = useState(0);
+
   const {
     control,
     handleSubmit,
@@ -378,33 +396,7 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
 
   const dependencies = findUIDependencies(uiSchema);
 
-  //   // Extracting unique dependent fields from dependencies
-  //   const dependentFields = useMemo(() => {
-  //     return [...new Set(dependencies.map(dep => dep.object.dependentField))];
-  //   }, []);
-  // console.log(dependentFields,'dependentFields');
-  //   // Watch only the fields that have dependencies
-  //   const watchedDependentValues = useWatch({
-  //     control,
-  //     name: dependentFields,
-  //   });
-
-  //   useEffect(() => {
-  //     dependentFields.forEach((field, index) => {
-  //       const expectedValue = dependencies.find(dep => dep.object.dependentField === field)?.object.expectedValue;
-  //       const fieldValue = watchedDependentValues[index];
-
-  //       if (fieldValue === expectedValue) {
-  //         trigger(field); // Trigger validation
-  //       } else {
-  //         reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
-  //       }
-  //       console.log(fieldValue,'fieldValue');
-  //     });
-  //     console.log(dependentFields,"dependencies inside useefect");
-
-  //   }, [watchedDependentValues, reset, trigger, getValues, dependentFields]);
-
+ 
   // Extracting unique dependent fields from dependencies
   // Extracting unique dependent fields from dependencies
   const dependentFields = useMemo(() => {
@@ -460,6 +452,12 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
     },
     [schema, uiSchema, control, errors, watch]
   );
+  const isTabVisible = (tab) => {
+    if (!conditionalTabs[tab]) return true;
+    const condition = conditionalTabs[tab];
+    const watchValues = watch(condition.fields);
+    return condition.rule(watchValues);
+  };
 
   const renderGroups = useCallback(
     (groups, schema, uiSchema, control, errors) => {
@@ -485,8 +483,51 @@ const JsonSchemaForm = ({ schema, uiSchema }) => {
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
         {schema.title}
       </h1>
-      {renderGroups(uiSchema?.["ui:groups"], schema, uiSchema, control, errors)}
-      <button type="submit">Submit</button>
+     {tabs&&tabs?.length>0? <Tabs
+        selectedIndex={currentTab}
+        onSelect={(index) => setCurrentTab(index)}
+      >
+        <TabList>
+          {tabs.map(
+            (tab, index) =>
+              isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
+          )}
+        </TabList>
+
+        {tabs.map(
+          (tab, index) =>{
+           const updatedUiSchema=React.useMemo(()=>getUpdatedUISchema(index,uiSchema,tabs),[index,uiSchema,tabs]);
+           return isTabVisible(index) && (
+              <TabPanel key={index}>
+                <h2>{tab.label}</h2>            
+                {renderGroups(updatedUiSchema?.["ui:groups"], schema, updatedUiSchema, control, errors)}
+
+                {currentTab > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentTab((prev) => prev - 1)}
+                  >
+                    Previous
+                  </button>
+                )}
+                {currentTab < tabs.length - 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentTab((prev) => prev + 1)}
+                  >
+                    Next
+                  </button>
+                )}
+                {currentTab === tabs.length - 1 && (
+                  <button type="submit">Submit</button>
+                )}
+              </TabPanel>
+            )
+          }
+        )}
+      </Tabs>:<>
+            {renderGroups(uiSchema?.["ui:groups"], schema, uiSchema, control, errors)}
+      <button type="submit">Submit</button></>}
     </form>
   );
 };
@@ -521,7 +562,9 @@ const Test = () => {
       <h1>Hi {data?.name}</h1>
       <input onChange={(e) => setData({ ...data, name: e.target.value })} />
 
-      <JsonSchemaForm schema={schema} uiSchema={uiSchema}></JsonSchemaForm>
+      <JsonSchemaForm schema={schema} uiSchema={uiSchema} 
+      tabs={tabs} conditionalTabs={conditionalTabs}
+      ></JsonSchemaForm>
     </>
   );
 };
