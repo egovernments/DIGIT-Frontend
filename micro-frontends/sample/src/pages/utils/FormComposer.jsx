@@ -1,17 +1,15 @@
 // src/components/JsonSchemaForm.js
-import React, { useMemo, useCallback, use, useEffect ,useState} from "react";
+import React, { useMemo, useCallback, use, useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { ThemeContext } from "../../examples/Theme";
-import useLastUpdatedField from "../../hooks/useLastUpdatedField"
+import useLastUpdatedField from "../../hooks/useLastUpdatedField";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { getUpdatedUISchema } from "./formTabUtils";
-
-
-
+import Stepper from 'react-stepper-horizontal';
 
 const RenderIndividualField = React.memo(
-  ({ name, property, uiWidget, control, errors ,            customWidgets  }) => {
+  ({ name, property, uiWidget, control, errors, customWidgets }) => {
     const CustomWidget = customWidgets[uiWidget];
     const { theme, toggleTheme } = use(ThemeContext);
 
@@ -62,7 +60,7 @@ const RenderIndividualField = React.memo(
 );
 
 const RenderArrayField = React.memo(
-  ({ name, property, uiSchema, control, errors, watch  ,            customWidgets}) => {
+  ({ name, property, uiSchema, control, errors, watch, customWidgets }) => {
     const { fields, append, remove } = useFieldArray({
       control,
       name,
@@ -139,6 +137,7 @@ const RenderDependentField = ({
   watch,
   errors,
   dependencies,
+  customWidgets
 }) => {
   return (
     <RenderField
@@ -152,7 +151,15 @@ const RenderDependentField = ({
     />
   );
 };
-const RenderField = ({ name, property, uiSchema, control, errors, watch,            customWidgets={}}) => {
+const RenderField = ({
+  name,
+  property,
+  uiSchema,
+  control,
+  errors,
+  watch,
+  customWidgets = {},
+}) => {
   const uiWidget = uiSchema && uiSchema["ui:widget"];
   const dependencies = uiSchema && uiSchema["ui:dependencies"];
   const { theme, toggleTheme } = use(ThemeContext);
@@ -169,7 +176,6 @@ const RenderField = ({ name, property, uiSchema, control, errors, watch,        
           errors={errors}
           dependencies={dependencies}
           customWidgets={customWidgets}
-
         />
       );
     }
@@ -186,7 +192,6 @@ const RenderField = ({ name, property, uiSchema, control, errors, watch,        
         errors={errors}
         watch={watch}
         customWidgets={customWidgets}
-
       />
     );
   }
@@ -222,12 +227,15 @@ const RenderField = ({ name, property, uiSchema, control, errors, watch,        
       control={control}
       errors={errors}
       customWidgets={customWidgets}
-
     />
   );
 };
 
-const FormComposer = ({ schema, uiSchema,tabs, conditionalTabs, customWidgets }) => {
+const FormComposer = ({
+  schema,
+  uiSchema,
+  customWidgets,
+}) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const {
@@ -255,7 +263,6 @@ const FormComposer = ({ schema, uiSchema,tabs, conditionalTabs, customWidgets })
 
   const dependencies = findUIDependencies(uiSchema);
 
- 
   // Extracting unique dependent fields from dependencies
   // Extracting unique dependent fields from dependencies
   const dependentFields = useMemo(() => {
@@ -307,15 +314,15 @@ const FormComposer = ({ schema, uiSchema,tabs, conditionalTabs, customWidgets })
           errors={errors}
           watch={watch}
           customWidgets={customWidgets}
-
         />
       ));
     },
     [schema, uiSchema, control, errors, watch]
   );
+  const uiLayout=uiSchema?.["ui:layout"]
   const isTabVisible = (tab) => {
-    if (!conditionalTabs[tab]) return true;
-    const condition = conditionalTabs[tab];
+    if (!uiLayout?.conditionalLayout?.[tab]) return true;
+    const condition = uiLayout?.conditionalLayout?.[tab];
     const watchValues = watch(condition.fields);
     return condition.rule(watchValues);
   };
@@ -344,51 +351,115 @@ const FormComposer = ({ schema, uiSchema,tabs, conditionalTabs, customWidgets })
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
         {schema.title}
       </h1>
-     {tabs&&tabs?.length>0? <Tabs
-        selectedIndex={currentTab}
-        onSelect={(index) => setCurrentTab(index)}
-      >
-        <TabList>
-          {tabs.map(
-            (tab, index) =>
-              isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
+      {uiLayout &&uiLayout?.layouts&& uiLayout?.layouts?.length > 0 ? (uiLayout?.type=="TAB"?(<>  <Stepper steps={uiLayout?.layouts.map(step => ({ title: step.label }))} activeStep={currentTab} />
+           
+               {uiLayout?.layouts.map((tab, index) => {
+            const updatedUiSchema = React.useMemo(
+              () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
+              [index, uiSchema, uiLayout?.layouts]
+            );
+            return (
+              isTabVisible(index) && (
+                <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
+                <h2>{tab.label}</h2>
+                  {renderGroups(
+                    updatedUiSchema?.["ui:groups"],
+                    schema,
+                    updatedUiSchema,
+                    control,
+                    errors
+                  )}
+
+                  {currentTab > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setCurrentTab((prev) => prev - 1)}
+                    >
+                      Previous
+                    </button>
+                  )}
+                  {currentTab < uiLayout?.layouts.length - 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setCurrentTab((prev) => prev + 1)}
+                    >
+                      Next
+                    </button>
+                  )}
+                  {currentTab === uiLayout?.layouts.length - 1 && (
+                    <button type="submit">Submit</button>
+                  )}
+                </div>
+              )
+            );
+          })}
+             </>) :(
+  
+        <Tabs
+          selectedIndex={currentTab}
+          onSelect={(index) => setCurrentTab(index)}
+        >
+        <>
+          <TabList>
+            {uiLayout?.layouts.map(
+              (tab, index) =>
+                isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
+            )}
+          </TabList>
+
+          {uiLayout?.layouts.map((tab, index) => {
+            const updatedUiSchema = React.useMemo(
+              () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
+              [index, uiSchema, uiLayout?.layouts]
+            );
+            return (
+              isTabVisible(index) && (
+                <TabPanel key={index}>
+                  <h2>{tab.label}</h2>
+                  {renderGroups(
+                    updatedUiSchema?.["ui:groups"],
+                    schema,
+                    updatedUiSchema,
+                    control,
+                    errors
+                  )}
+
+                  {currentTab > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setCurrentTab((prev) => prev - 1)}
+                    >
+                      Previous
+                    </button>
+                  )}
+                  {currentTab < uiLayout?.layouts.length - 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setCurrentTab((prev) => prev + 1)}
+                    >
+                      Next
+                    </button>
+                  )}
+                  {currentTab === uiLayout?.layouts.length - 1 && (
+                    <button type="submit">Submit</button>
+                  )}
+                </TabPanel>
+              )
+            );
+          })}
+          </>
+         </Tabs>)) : (
+        <>
+          {renderGroups(
+            uiSchema?.["ui:groups"],
+            schema,
+            uiSchema,
+            control,
+            errors
           )}
-        </TabList>
-
-        {tabs.map(
-          (tab, index) =>{
-           const updatedUiSchema=React.useMemo(()=>getUpdatedUISchema(index,uiSchema,tabs),[index,uiSchema,tabs]);
-           return isTabVisible(index) && (
-              <TabPanel key={index}>
-                <h2>{tab.label}</h2>            
-                {renderGroups(updatedUiSchema?.["ui:groups"], schema, updatedUiSchema, control, errors)}
-
-                {currentTab > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setCurrentTab((prev) => prev - 1)}
-                  >
-                    Previous
-                  </button>
-                )}
-                {currentTab < tabs.length - 1 && (
-                  <button
-                    type="button"
-                    onClick={() => setCurrentTab((prev) => prev + 1)}
-                  >
-                    Next
-                  </button>
-                )}
-                {currentTab === tabs.length - 1 && (
-                  <button type="submit">Submit</button>
-                )}
-              </TabPanel>
-            )
-          }
-        )}
-      </Tabs>:<>
-            {renderGroups(uiSchema?.["ui:groups"], schema, uiSchema, control, errors)}
-      <button type="submit">Submit</button></>}
+          <button type="submit">Submit</button>
+        </>
+      )}
     </form>
   );
 };
@@ -406,6 +477,5 @@ const Card = ({ key, children }) => {
     </div>
   );
 };
-
 
 export default FormComposer;
