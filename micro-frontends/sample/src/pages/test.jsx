@@ -96,22 +96,6 @@ const uiSchema = {
       "ui:order": ["newsletter", "subscriptionFrequency"],
     },
   },
-  "ui:layout":{
-    layouts: [
-      { label: "Personal Info", fields: ["personalInfo"] },
-      { label: "Address", fields: ["address"] },
-      { label: "Phones", fields: ["phones"] },
-      { label: "Preferences", fields: ["preferences"] },
-    ],
-    
-     conditionalLayout:{
-      3: {
-        fields: ["preferences.newsletter"],
-        rule: (values) => values["preferences.newsletter"],
-      },
-    },
-    type:"TAB" //"TAB||STEPPER"
-  },
   personalInfo: {
     firstName: { "ui:widget": "text" },
     lastName: { "ui:widget": "text" },
@@ -158,18 +142,11 @@ const customWidgets = {
   date: CustomDatePicker,
 };
 
-
-
 const Test = () => {
   const { setData, resetData, data } = useUserState();
-  console.log(data, "data");
   return (
     <>
       <h1>Hi {data?.name}</h1>
-      <input onChange={(e) => setData({ ...data, name: e.target.value })} />
-      <button onClick={(e) => setData({ ...data, clicked: !data?.clicked })}>
-        toggle tab
-      </button>
       <FormComposer
         schema={schema}
         uiSchema={uiSchema}

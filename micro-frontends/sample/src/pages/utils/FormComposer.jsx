@@ -6,7 +6,7 @@ import useLastUpdatedField from "../../hooks/useLastUpdatedField";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { getUpdatedUISchema } from "./formTabUtils";
-import Stepper from 'react-stepper-horizontal';
+import Stepper from "react-stepper-horizontal";
 
 const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors, customWidgets }) => {
@@ -137,7 +137,7 @@ const RenderDependentField = ({
   watch,
   errors,
   dependencies,
-  customWidgets
+  customWidgets,
 }) => {
   return (
     <RenderField
@@ -231,11 +231,7 @@ const RenderField = ({
   );
 };
 
-const FormComposer = ({
-  schema,
-  uiSchema,
-  customWidgets,
-}) => {
+const FormComposer = ({ schema, uiSchema, customWidgets }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const {
@@ -319,7 +315,7 @@ const FormComposer = ({
     },
     [schema, uiSchema, control, errors, watch]
   );
-  const uiLayout=uiSchema?.["ui:layout"]
+  const uiLayout = uiSchema?.["ui:layout"];
   const isTabVisible = (tab) => {
     if (!uiLayout?.conditionalLayout?.[tab]) return true;
     const condition = uiLayout?.conditionalLayout?.[tab];
@@ -351,104 +347,117 @@ const FormComposer = ({
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
         {schema.title}
       </h1>
-      {uiLayout &&uiLayout?.layouts&& uiLayout?.layouts?.length > 0 ? (uiLayout?.type=="TAB"?(<>  <Stepper steps={uiLayout?.layouts.map(step => ({ title: step.label }))} activeStep={currentTab} />
-           
-               {uiLayout?.layouts.map((tab, index) => {
-            const updatedUiSchema = React.useMemo(
-              () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
-              [index, uiSchema, uiLayout?.layouts]
-            );
-            return (
-              isTabVisible(index) && (
-                <div key={index} style={{ display: 'flex', flexDirection: 'column' }}>
-                <h2>{tab.label}</h2>
-                  {renderGroups(
-                    updatedUiSchema?.["ui:groups"],
-                    schema,
-                    updatedUiSchema,
-                    control,
-                    errors
-                  )}
+      {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 0 ? (
+        uiLayout?.type !== "TAB" ? (
+          <>
+            {" "}
+            <Stepper
+              steps={uiLayout?.layouts.map((step) => ({ title: step.label }))}
+              activeStep={currentTab}
+            />
+            {uiLayout?.layouts.map((tab, index) => {
+              const updatedUiSchema = React.useMemo(
+                () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
+                [index, uiSchema, uiLayout?.layouts]
+              );
+              return (
+                isTabVisible(index) &&
+                index == currentTab && (
+                  <div
+                    key={index}
+                    style={{ display: "flex", flexDirection: "column" }}
+                  >
+                    <h2>{tab.label}</h2>
+                    {renderGroups(
+                      updatedUiSchema?.["ui:groups"],
+                      schema,
+                      updatedUiSchema,
+                      control,
+                      errors
+                    )}
 
-                  {currentTab > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentTab((prev) => prev - 1)}
-                    >
-                      Previous
-                    </button>
-                  )}
-                  {currentTab < uiLayout?.layouts.length - 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentTab((prev) => prev + 1)}
-                    >
-                      Next
-                    </button>
-                  )}
-                  {currentTab === uiLayout?.layouts.length - 1 && (
-                    <button type="submit">Submit</button>
-                  )}
-                </div>
-              )
-            );
-          })}
-             </>) :(
-  
-        <Tabs
-          selectedIndex={currentTab}
-          onSelect={(index) => setCurrentTab(index)}
-        >
-        <>
-          <TabList>
-            {uiLayout?.layouts.map(
-              (tab, index) =>
-                isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
-            )}
-          </TabList>
-
-          {uiLayout?.layouts.map((tab, index) => {
-            const updatedUiSchema = React.useMemo(
-              () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
-              [index, uiSchema, uiLayout?.layouts]
-            );
-            return (
-              isTabVisible(index) && (
-                <TabPanel key={index}>
-                  <h2>{tab.label}</h2>
-                  {renderGroups(
-                    updatedUiSchema?.["ui:groups"],
-                    schema,
-                    updatedUiSchema,
-                    control,
-                    errors
-                  )}
-
-                  {currentTab > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentTab((prev) => prev - 1)}
-                    >
-                      Previous
-                    </button>
-                  )}
-                  {currentTab < uiLayout?.layouts.length - 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setCurrentTab((prev) => prev + 1)}
-                    >
-                      Next
-                    </button>
-                  )}
-                  {currentTab === uiLayout?.layouts.length - 1 && (
-                    <button type="submit">Submit</button>
-                  )}
-                </TabPanel>
-              )
-            );
-          })}
+                    {currentTab > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab((prev) => prev - 1)}
+                      >
+                        Previous
+                      </button>
+                    )}
+                    {currentTab < uiLayout?.layouts.length - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab((prev) => prev + 1)}
+                      >
+                        Next
+                      </button>
+                    )}
+                    {currentTab === uiLayout?.layouts.length - 1 && (
+                      <button type="submit">Submit</button>
+                    )}
+                  </div>
+                )
+              );
+            })}
           </>
-         </Tabs>)) : (
+        ) : (
+          <Tabs
+            selectedIndex={currentTab}
+            onSelect={(index) => setCurrentTab(index)}
+          >
+            <>
+              <TabList>
+                {uiLayout?.layouts.map(
+                  (tab, index) =>
+                    isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
+                )}
+              </TabList>
+
+              {uiLayout?.layouts.map((tab, index) => {
+                const updatedUiSchema = React.useMemo(
+                  () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
+                  [index, uiSchema, uiLayout?.layouts]
+                );
+
+                return (
+                  isTabVisible(index) && (
+                    <TabPanel key={index}>
+                      <h2>{tab.label}</h2>
+                      {renderGroups(
+                        updatedUiSchema?.["ui:groups"],
+                        schema,
+                        updatedUiSchema,
+                        control,
+                        errors
+                      )}
+
+                      {currentTab > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setCurrentTab((prev) => prev - 1)}
+                        >
+                          Previous
+                        </button>
+                      )}
+                      {currentTab < uiLayout?.layouts.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setCurrentTab((prev) => prev + 1)}
+                        >
+                          Next
+                        </button>
+                      )}
+                      {currentTab === uiLayout?.layouts.length - 1 && (
+                        <button type="submit">Submit</button>
+                      )}
+                    </TabPanel>
+                  )
+                );
+              })}
+            </>
+          </Tabs>
+        )
+      ) : (
         <>
           {renderGroups(
             uiSchema?.["ui:groups"],
