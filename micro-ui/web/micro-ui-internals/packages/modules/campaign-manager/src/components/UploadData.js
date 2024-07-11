@@ -603,6 +603,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             header: 1,
           })[0];
 
+
           const SheetNames = workbook.SheetNames[1];
           const expectedHeaders = sheetHeaders[type];
 
@@ -620,7 +621,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
           jsonData = jsonData.filter((element) => element !== undefined);
           if (type === "boundary") {
-            if (SheetNames !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+            if (workbook.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length === 0) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -646,7 +647,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 return;
               }
             }
-            if (SheetNames !== t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")) {
+            if (workbook.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length === 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -656,7 +657,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               return;
             }
           } else {
-            if (SheetNames !== t("HCM_ADMIN_CONSOLE_USER_LIST")) {
+            if (workbook.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_USER_LIST")).length === 0) {
               const errorMessage = t("HCM_INVALID_USER_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
