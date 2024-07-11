@@ -33,7 +33,8 @@ export const CONSTANTS: any = {
             CAMPAIGN_NOT_FOUND: "Campaign not found",
             GENERATION_REQUIRE: "First generate then download",
             RESOURCE_CREATION_ERROR: "Some error occured during resource creation",
-            CAMPAIGN_NAME_ERROR: "Campaign name already exists"
+            CAMPAIGN_NAME_ERROR: "Campaign name already exists",
+            CAMPAIGN_ALREADY_MAPPED: "Campaign is already mapped",
         },
         BOUNDARY: {
             BOUNDARY_DATA_NOT_FOUND: "No boundary data found in the system.",
@@ -109,51 +110,27 @@ export const generatedResourceStatuses: any = {
     expired: "expired"
 }
 
-export const processTracks = {
-    validation: {
-        type: "HCM_PROCESS_TRACKS_TYPE_VALIDATION",
-        status: "HCM_PROCESS_TRACKS_STATUS_VALIDATION",
-    },
-    uuidAssigned: {
-        type: "HCM_PROCESS_TRACKS_TYPE_UUID_ASSIGNMENT",
-        status: "HCM_PROCESS_TRACKS_STATUS_UUID_ASSIGNMENT",
-    },
-    projectCreationStarted: {
-        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
-        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION",
-    },
-    projectCreationDone: {
-        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_CREATION",
-        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_CREATION"
-    },
-    projectResourceCreationStarted: {
-        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_RESOURCE_CREATION",
-        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_RESOURCE_CREATION"
-    },
-    sentForProjectMapping: {
-        type: "HCM_PROCESS_TRACKS_TYPE_PROJECT_MAPPING",
-        status: "HCM_PROCESS_TRACKS_STATUS_PROJECT_MAPPING"
-    },
-    confirmingResourceCreation: {
-        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_CREATION_CONFIRMATION",
-        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_CREATION_CONFIRMATION"
-    },
-    allResourceCreationConfirmed: {
-        type: "HCM_PROCESS_TRACKS_TYPE_ALL_RESOURCE_CREATION_CONFIRMED",
-        status: "HCM_PROCESS_TRACKS_STATUS_ALL_RESOURCE_CREATION_CONFIRMED"
-    },
-    resourceMappingStarted: {
-        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_STARTED",
-        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_STARTED"
-    },
-    resourceMappingDone: {
-        type: "HCM_PROCESS_TRACKS_TYPE_RESOURCE_MAPPING_DONE",
-        status: "HCM_PROCESS_TRACKS_STATUS_RESOURCE_MAPPING_DONE"
-    },
-    error: {
-        type: "HCM_PROCESS_TRACKS_TYPE_ERROR",
-        status: "HCM_PROCESS_TRACKS_STATUS_ERROR"
-    }
+export const processTrackTypes = {
+    validation: "validation",
+    triggerResourceCreation: "triggerResourceCreation",
+    facilityCreation: "facilityCreation",
+    staffCreation: "staffCreation",
+    targetAndDeliveryRulesCreation: "targetAndDeliveryRulesCreation",
+    confirmingResouceCreation: "confirmingResouceCreation",
+    prepareResourceForMapping: "prepareResourceForMapping",
+    validateMappingResource: "validateMappingResource",
+    staffMapping: "staffMapping",
+    resourceMapping: "resourceMapping",
+    facilityMapping: "facilityMapping",
+    campaignCreation: "campaignCreation",
+    error: "error"
+}
+
+export const processTrackStatuses = {
+    inprogress: "inprogress",
+    completed: "completed",
+    toBeCompleted: "toBeCompleted",
+    failed: "failed",
 }
 
 
