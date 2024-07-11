@@ -45,7 +45,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   //   { name: "Boundary" },
   // ]);
 
-  const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }]);
+  const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "adminSchema" }] , {} ,{schemaCode: "HCM-ADMIN-CONSOLE.adminSchema"});
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "ReadMeConfig" }]);
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeout" }]);
@@ -58,7 +58,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const [convertedSchema, setConvertedSchema] = useState({});
   const [loader, setLoader] = useState(false);
-
 
   useEffect(() => {
     if (type === "facilityWithBoundary") {
@@ -115,6 +114,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           return {
             text: t(desc.text),
             isStepRequired: desc.isStepRequired,
+            isBold: desc.isBold,
           };
         }),
       };
@@ -177,14 +177,14 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [uploadedFile]);
 
   useEffect(async () => {
-    if (Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema) {
-      const facility = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "facility")?.[0]);
+    if (Schemas) {
+      const facility = await convertIntoSchema(Schemas?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]);
       const boundary = await convertIntoSchema(
-        Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter(
+        Schemas?.filter(
           (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
         )?.[0]
       );
-      const user = await convertIntoSchema(Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((item) => item.title === "user")?.[0]);
+      const user = await convertIntoSchema(Schemas?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]);
       const schema = {
         boundary: boundary,
         facilityWithBoundary: facility,
@@ -193,7 +193,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setConvertedSchema(schema);
     }
-  }, [Schemas?.["HCM-ADMIN-CONSOLE"]?.adminSchema, type]);
+  }, [Schemas, type]);
+
 
   useEffect(async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
@@ -314,8 +315,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 const missingProperty = error.params?.missingProperty || "";
                 return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
               }
-              if(error.keyword === "type" && error.message === "must be string"){
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}` 
+              if (error.keyword === "type" && error.message === "must be string") {
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
               }
               let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
@@ -385,7 +386,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
-
     data.forEach((item, index) => {
       if (!validate(item)) {
         errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
@@ -396,7 +396,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     //   const errorMessage = errors
     //     .map(({ index, errors }) => {
     //       const formattedErrors = errors.map((error) => {
-            
+
     //           let formattedError = `${error.instancePath}: ${error.message}`;
     //           if (error.keyword === "enum" && error.params && error.params.allowedValues) {
     //             formattedError += `. Allowed values are: ${error.params.allowedValues.join("/ ")}`;
@@ -425,10 +425,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               }
               if (error.keyword === "required") {
                 const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")} at ${sheetName}`;
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t(
+                  "HCM_DATA_SHOULD_NOT_BE_EMPTY"
+                )} at ${sheetName}`;
               }
-              if(error.keyword === "type" && error.message === "must be string"){
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}` 
+              if (error.keyword === "type" && error.message === "must be string") {
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}`;
+              }
+              if (error.keyword === "maximum") {
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}`;
               }
               let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
@@ -441,11 +446,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         })
         .join(", ");
 
-
-        setIsError(true);
-          targetError.push(errorMessage);
-          return false;
-    }else{
+      setIsError(true);
+      targetError.push(errorMessage);
+      return false;
+    } else {
       return true;
     }
   };
@@ -465,7 +469,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
       header: 1,
     })[0];
-
 
     for (const header of mdmsHeaders) {
       if (!expectedHeaders.includes(t(header))) {
@@ -705,7 +708,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -885,42 +887,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     fetchData();
   }, [errorsType]);
 
-  const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "facilityWithBoundary",
-    hierarchyType: params?.hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: setTimeout(fetchUpload || (fetchBoundary && currentKey > 6)),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
-
-  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "boundary",
-    hierarchyType: params?.hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
-
-  const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
-    type: "userWithBoundary",
-    hierarchyType: params?.hierarchyType,
-    campaignId: id,
-    // config: {
-    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-    // },
-    config: {
-      enabled: enabled,
-    },
-  });
-
   const Template = {
     url: "/project-factory/v1/data/_download",
     params: {
@@ -933,35 +899,35 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
-    if (type === "boundary" && params?.isBoundaryLoading) {
-      setDownloadError(true);
-      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-      return;
-    }
-    if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
-      setDownloadError(true);
-      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-      return;
-    }
-    if (type === "userWithBoundary" && params?.isUserLoading) {
-      setDownloadError(true);
-      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-      return;
-    }
-    if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
-      setEnabled(true);
+    // if (type === "boundary" && params?.isBoundaryLoading) {
+    //   setDownloadError(true);
+    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+    //   return;
+    // }
+    // if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
+    //   setDownloadError(true);
+    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+    //   return;
+    // }
+    // if (type === "userWithBoundary" && params?.isUserLoading) {
+    //   setDownloadError(true);
+    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+    //   return;
+    // }
+    // if (!params?.boundaryId || !params?.facilityId || !params?.userId) {
+    //   setEnabled(true);
 
-      setDownloadError(true);
-      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-      return;
-    }
+    //   setDownloadError(true);
+    //   setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+    //   return;
+    // }
     await mutation.mutate(
       {
         params: {
           tenantId: tenantId,
           type: type,
           hierarchyType: params?.hierarchyType,
-          id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
+          campaignId: id,
         },
       },
       {
@@ -969,6 +935,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (result?.GeneratedResource?.[0]?.status === "failed") {
             setDownloadError(true);
             setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            return;
+          }
+          if (result?.GeneratedResource?.[0]?.status === "inprogress") {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
             return;
           }
           if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
@@ -1060,12 +1031,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <React.Fragment key={type}>
                 {errorsType[type] && (
                   <React.Fragment>
-                    {errorsType[type].split(",").slice(0,50).map((error, index) => (
-                      <React.Fragment key={index}>
-                        {index > 0 && <br />}
-                        {error.trim()}
-                      </React.Fragment>
-                    ))}
+                    {errorsType[type]
+                      .split(",")
+                      .slice(0, 50)
+                      .map((error, index) => (
+                        <React.Fragment key={index}>
+                          {index > 0 && <br />}
+                          {error.trim()}
+                        </React.Fragment>
+                      ))}
                   </React.Fragment>
                 )}
               </React.Fragment>,
@@ -1085,8 +1059,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             <ul style={{ paddingLeft: 0 }}>
               {info?.descriptions.map((desc, i) => (
                 <li key={i} className="info-points">
-                  <p>{i + 1}. </p>
-                  <p>{desc.text}</p>
+                  {desc.isBold ? <h2>{desc.text}</h2> : <p>{desc.text}</p>}
                 </li>
               ))}
             </ul>
@@ -1134,6 +1107,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               variation={"primary"}
               icon={"FileDownload"}
               label={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
+              title={t("HCM_CAMPAIGN_DOWNLOAD_TEMPLATE")}
               onClick={() => {
                 downloadTemplate(), setShowPopUp(false);
               }}
