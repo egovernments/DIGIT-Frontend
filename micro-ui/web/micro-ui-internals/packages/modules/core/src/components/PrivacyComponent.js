@@ -49,7 +49,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
               variation={"secondary"}
               label={t("DIGIT_I_DO_NOT_ACCEPT")}
               onClick={() => {
-                setShowPopUp(false);
+                setIsChecked(false),setShowPopUp(false);
               }}
             />,
             <Button
