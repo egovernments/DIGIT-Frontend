@@ -765,4 +765,84 @@ export const UICustomizations = {
       }
     }
   },
+  ViewMdmsConfig : {
+    fetchActionItems : (data, props) => {
+      let hostname = window.location.hostname;
+
+      let roleActions = {
+          "ADD_SOR_COMPOSITION" : ["MDMS_STATE_ADMIN"],
+          "VIEW_RATE_ANALYSIS"  : ["MDMS_STATE_ADMIN", "MDMS_CITY_ADMIN"]
+        }
+        const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+
+        const roles = getUserRoles?.map((role) => {
+            return role.code;
+          });
+        console.log(roles);
+
+        const hasRoleAccess = (action) => {
+          const allowedRoles = roleActions[action] || [];
+          return roles.some((role) => allowedRoles.includes(role));
+        };
+
+      let actionItems = [{
+        action:"EDIT",
+        label:"Edit Master"
+      }]
+  
+      const isActive = data?.isActive
+      if(isActive) actionItems.push({
+        action:"DISABLE",
+        label:"Disable Master"
+      })
+      else actionItems.push({
+        action:"ENABLE",
+        label:"Enable Master"
+      })
+
+      switch(true)
+      {
+        case hostname.includes("mukta-uat") || hostname.includes("localhost") : {
+          if(data?.data?.sorType?.includes("W")){
+          if(isActive && hasRoleAccess("ADD_SOR_COMPOSITION")) actionItems?.push({
+            action:"ADD_SOR_COMPOSITION",
+            label:"Add SOR Composition"
+          })
+          if (hasRoleAccess("VIEW_RATE_ANALYSIS")) {
+            actionItems.push({
+              action: "VIEW_RATE_ANALYSIS",
+              label: "View Rate Analysis"
+            });
+          }
+        }
+        if(props?.masterName === "Rates")
+        {
+          actionItems = actionItems.filter((ac) => ac?.action !== "DISABLE" && ac?.action !== "EDIT")
+        }
+        }
+      }
+      return actionItems;
+    },
+    onActionSelect : (action,props) => {
+      const {action:actionSelected} = action 
+      //to ADD SOR Composition
+      if(actionSelected === "ADD_SOR_COMPOSITION"){
+        window.location.href = `/works-ui/employee/rateanalysis/create-rate-analysis?sorid=${props?.uniqueIdentifier}`
+      }
+
+      else if(actionSelected === "VIEW_RATE_ANALYSIS"){
+      window.location.href = `/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${props?.masterName === "Composition" ? props?.data?.data?.sorId : props?.uniqueIdentifier}&fromeffective=${Date.now()}`
+      }
+      //action===EDIT go to edit screen 
+      else if(actionSelected==="EDIT") {
+      props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}`)
+      }
+      //action===DISABLE || ENABLE call update api and show toast respectively
+      else{
+        //call update mutation
+        props?.handleEnableDisable(actionSelected)
+      }
+    }
+
+  }
 };

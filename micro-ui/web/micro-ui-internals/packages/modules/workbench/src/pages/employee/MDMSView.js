@@ -11,26 +11,11 @@ const MDMSView = ({...props}) => {
   let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
   // const stateId = Digit.ULBService.getStateId();
   tenantId = Digit.ULBService.getCurrentTenantId();
-  const fetchActionItems = (data) => {
-    let actionItems = [{
-      action:"EDIT",
-      label:"Edit Master"
-    }]
-
-    const isActive = data?.isActive
-    if(isActive) actionItems.push({
-      action:"DISABLE",
-      label:"Disable Master"
-    })
-    else actionItems.push({
-      action:"ENABLE",
-      label:"Enable Master"
-    })
-
-    return actionItems
-  }
-
-  
+  let propsToSendButtons = {
+    moduleName,
+    masterName,
+  };
+  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -45,7 +30,7 @@ const MDMSView = ({...props}) => {
     config: {
       enabled: moduleName && masterName && true,
       select: (data) => {
-        
+
         return data?.mdms?.[0]
       },
     },
@@ -60,23 +45,20 @@ const MDMSView = ({...props}) => {
   const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqCriteriaUpdate = {
-    url: Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"update"),
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
     params: {},
     body: {
-      
     },
     config: {
       enabled: true,
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
-  
-  const handleEnableDisable = async (action) => {
 
+  const handleEnableDisable = async (action) => {
     const onSuccess = (resp) => {
-      
       setShowToast({
-        label:`${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive?"ENA":"DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
+        label:`${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
       });
       closeToast()
       refetch()
@@ -86,15 +68,14 @@ const MDMSView = ({...props}) => {
         label:`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
         isError:true
       });
-      
+
       closeToast()
       refetch()
     };
 
-
     mutation.mutate(
       {
-        url:reqCriteriaUpdate?.url,
+        url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
         params: {},
         body: {
           Mdms:{
@@ -108,29 +89,33 @@ const MDMSView = ({...props}) => {
         onSuccess,
       }
     );
-  }
+  };
 
-  const onActionSelect = (action) => {
-    const {action:actionSelected} = action 
-    //action===EDIT go to edit screen 
-    if(actionSelected==="EDIT") {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
-    }
-    //action===DISABLE || ENABLE call update api and show toast respectively
-    else{
-      //call update mutation
-      handleEnableDisable(actionSelected)
-    }
-  }
+  let propsToSend = {
+    moduleName,
+    masterName,
+    tenantId,
+    uniqueIdentifier,
+    data,
+    history,
+    handleEnableDisable,
+  };
+  const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
 
-  if(isLoading) return <Loader />
+  if (isLoading) return <Loader />;
 
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {data?.data} updatesToUISchema ={{"ui:readonly": true}} screenType={"view"} onViewActionsSelect={onActionSelect} viewActions={fetchActionItems(data)} />
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
+      <MDMSAdd
+        defaultFormData={data?.data}
+        updatesToUISchema={{ "ui:readonly": true }}
+        screenType={"view"}
+        onViewActionsSelect={onActionSelect}
+        viewActions={fetchActionItems(data)}
+      />
+      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default MDMSView
+export default MDMSView;
