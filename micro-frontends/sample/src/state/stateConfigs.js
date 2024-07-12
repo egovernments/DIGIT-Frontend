@@ -24,7 +24,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       cacheTime,
-      staleTime: 0,
+      staleTime: 111110,
       refetchInterval: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

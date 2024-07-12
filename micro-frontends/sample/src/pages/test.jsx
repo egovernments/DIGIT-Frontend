@@ -144,9 +144,12 @@ const customWidgets = {
 
 const Test = () => {
   const { setData, resetData, data } = useUserState();
+
+
   return (
     <>
       <h1>Hi {data?.name}</h1>
+      <input onChange={(e)=>setData({...data,name:e.target.value})}></input>
       <FormComposer
         schema={schema}
         uiSchema={uiSchema}

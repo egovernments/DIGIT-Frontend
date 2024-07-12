@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import withAuth from "./hoc/withAuth";
+const basePath = import.meta.env.BASE_URL;
 
 const routes = [
   {
@@ -91,7 +92,7 @@ function App() {
                   <ul>
                     {routes?.map((route) => (
                       <li>
-                        <Link to={route?.url}>{route?.url}</Link>
+                        <Link to={`${basePath}${route?.url}`}>{route?.url}</Link>
                       </li>
                     ))}
                   </ul>
@@ -104,7 +105,7 @@ function App() {
                         ? withAuth(route?.component)
                         : route?.component;
                       return (
-                        <Route path={route?.url} element={<Component />} />
+                        <Route path={`${basePath}${route?.url}`} element={<Component />} />
                       );
                     })}
                   </Routes>
