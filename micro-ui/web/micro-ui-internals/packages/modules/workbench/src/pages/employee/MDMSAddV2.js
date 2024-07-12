@@ -88,7 +88,16 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const validation = await Digit?.Customizations?.['commonUiConfig']?.['AddMdmsConfig']?.validateForm(data,{tenantId:tenantId});
+
+    if (validation && !(validation?.isValid)) {
+      setShowToast(t(validation.message));
+      setShowErrorToast(true);
+      toggleSpinner(false);
+      return;
+    }
+
     toggleSpinner(true);
     const onSuccess = (resp) => {
       toggleSpinner(false);

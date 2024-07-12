@@ -1,6 +1,7 @@
 import { Link,useHistory } from "react-router-dom";
 import _ from "lodash";
 import React from 'react';
+import axios from "axios";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -668,7 +669,11 @@ export const UICustomizations = {
         }
         if(props?.masterName === "Rates")
         {
-          actionItems = actionItems.filter((ac) => ac?.action !== "DISABLE" && ac?.action !== "EDIT")
+          actionItems = actionItems.filter((ac) => ac?.action !== "DISABLE")
+        }
+        if(props?.masterName === "Rates" && props?.sorData?.data?.sorType === "W")
+        {
+          actionItems = actionItems.filter((ac) => ac?.action !== "EDIT")
         }
         }
       }
@@ -695,5 +700,22 @@ export const UICustomizations = {
       }
     }
 
-  }
-};
+  },
+  AddMdmsConfig : {
+    validateForm: async (data, props) => {
+        const response = await axios.post("/mdms-v2/v2/_search", {
+          MdmsCriteria: {
+            tenantId: props?.tenantId?.split(".")[0],
+            uniqueIdentifiers: [data.sorId],
+            schemaCode: "WORKS-SOR.SOR"
+          }
+        });
+        if (response?.data?.mdms?.[0]?.data?.sorType !== "W") {
+          // Perform your validation logic here using the response data
+          return { isValid: true };
+        } else {
+          return { isValid: false, message: "RATE_NOT_ALLOWED_FOR_W_TYPE" };
+        }
+      }
+    }
+  };
