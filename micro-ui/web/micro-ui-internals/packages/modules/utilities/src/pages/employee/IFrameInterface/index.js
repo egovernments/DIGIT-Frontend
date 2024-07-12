@@ -168,7 +168,7 @@ const IFrameInterface = (props) => {
     //checking if overwrite time is true then update the url as per filter time else return the url
     const contextPath = pageObject?.["routePath"] 
       ? (pageObject?.["overwriteTimeFilter"] && filters?.range?.startDate && filters?.range?.endDate 
-        ? pageObject["routePath"].replace("from:now-15m", `from:'${filters?.range?.startDate}'`).replace("to:now", `to:'${filters?.range?.endDate}'`)
+        ? pageObject["routePath"].replace("from:now-15m", `from:'${new Date(filters?.range?.startDate).toISOString()}'`).replace("to:now", `to:'${new Date(filters?.range?.endDate).toISOString()}'`)
         : pageObject["routePath"]) 
       : "";
     const title = pageObject?.["title"] || "";
@@ -184,7 +184,7 @@ const IFrameInterface = (props) => {
     }
     setUrl(url);
     setTitle(title);
-  }, [data, moduleName, pageName, location]);
+  }, [data, moduleName, pageName, location, filters]);
 
   useEffect(() => {
     const fetchData = async () => {
