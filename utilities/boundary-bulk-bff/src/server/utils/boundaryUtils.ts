@@ -329,10 +329,13 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<any, any>) 
   }
 
   for (const chunk of boundaryCodeChunks) {
-    const string = chunk.join(', ');
-    const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryEntitySearch, request.body, { tenantId: request?.query?.tenantId, codes: string });
-    const boundaryCodesFromResponse = boundaryEntityResponse.Boundary.flatMap((boundary: any) => boundary.code.toString());
-    codesFromResponse.push(...boundaryCodesFromResponse);
+    const boundaryCodeString = chunk.join(', ');
+    if (chunk.length > 0 && boundaryCodeString) {
+      logger.info(`Creating boundary entities for codes: ${boundaryCodeString}`);
+      const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryEntitySearch, request.body, { tenantId: request?.query?.tenantId, codes: boundaryCodeString });
+      const boundaryCodesFromResponse = boundaryEntityResponse.Boundary.flatMap((boundary: any) => boundary.code.toString());
+      codesFromResponse.push(...boundaryCodesFromResponse);
+    }
   }
 
   const codeSet = new Set(codesFromResponse);// Creating a set and filling it with the codes from the response
