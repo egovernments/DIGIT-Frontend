@@ -333,8 +333,8 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<any, any>) 
     if (chunk.length > 0 && boundaryCodeString) {
       logger.info(`Creating boundary entities for codes: ${boundaryCodeString}`);
       const boundaryEntityResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryEntitySearch, request.body, { tenantId: request?.query?.tenantId, codes: boundaryCodeString });
-      const boundaryCodesFromResponse = boundaryEntityResponse.Boundary.flatMap((boundary: any) => boundary.code.toString());
-      codesFromResponse.push(...boundaryCodesFromResponse);
+      const boundaryCodesFromResponse = await boundaryEntityResponse.Boundary.flatMap((boundary: any) => boundary.code.toString());
+      await codesFromResponse.push(...boundaryCodesFromResponse);
     }
   }
 
