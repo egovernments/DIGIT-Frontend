@@ -273,6 +273,15 @@ const postProcessData = (data = {}, schema = {}) => {
   return { ...data };
 };
 
+
+const getMDMSActionURL = (moduleName, masterName, action) => {
+  let url = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_${action}`;
+  if (Digit.Hooks.workbench.isSchemaCodeInMDMSAction()) {
+    url += `/${moduleName}.${masterName}`;
+  }
+  return url;
+}
+
 const getValueByPath = (obj, path) => {
   const result = [];
 
@@ -492,4 +501,4 @@ export default { getConfig, getMDMSLabel, getFormattedData, getUpdatedPath, upda
   getParent,
   generateDynamicParentType,
   getParentType,
-  transformBoundary, };
+  transformBoundary,getMDMSActionURL };
