@@ -61,7 +61,7 @@ const MDMSView = ({...props}) => {
   const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqCriteriaUpdate = {
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
+    url: Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"update"),
     params: {},
     body: {
       
@@ -95,7 +95,7 @@ const MDMSView = ({...props}) => {
 
     mutation.mutate(
       {
-        url:`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
+        url:reqCriteriaUpdate?.url,
         params: {},
         body: {
           Mdms:{

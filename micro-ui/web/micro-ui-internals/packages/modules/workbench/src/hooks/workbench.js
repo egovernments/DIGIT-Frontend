@@ -74,6 +74,10 @@ const getMDMSContextPath = () => {
   return window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
 };
 
+const isSchemaCodeInMDMSAction = () => {
+  return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION")===false?false : true;
+};
+
 
 
 
@@ -184,4 +188,4 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
   return { isLoading: uiSchemaLoading || schemaLoading, error: schemaError || error, data: finalResponse };
 };
 
-export { UICreateConfigGenerator, getMDMSContextPath, getMDMSSchema };
+export { UICreateConfigGenerator, getMDMSContextPath, getMDMSSchema, isSchemaCodeInMDMSAction };

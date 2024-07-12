@@ -31,7 +31,7 @@ const useCustomMDMS = (tenantId, moduleName, masterDetails = [], config = {},mdm
   if(mdmsv2) {
     //here call the mdmsv2 api and return the options array 
     return useCustomAPIHook({
-      url: Urls.mdms_v2.search,
+      url: Urls.MDMS_V2,
       params:{},
       changeQueryName:`mdms-v2-dropdowns${mdmsv2?.schemaCode}`,
       body:{
