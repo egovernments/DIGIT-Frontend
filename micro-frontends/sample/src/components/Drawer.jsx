@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useDrawerState } from '../state/useDrawerState';
+// import ClickableScreen from './ClickableScreen';
 
 const Drawer = ({ onClose }) => {
     const { data,resetData } = useDrawerState();
@@ -17,8 +18,7 @@ const Drawer = ({ onClose }) => {
           <div className="relative w-screen max-w-md">
             <div className="h-full flex flex-col py-6 bg-white shadow-xl overflow-y-scroll">
               <div className="px-4 sm:px-6">
-                <h2>Clicked from : ${data?.clickedFrom}</h2>
-                <h6>content : ${data?.content}</h6>
+               
 
                 <div className="flex items-start justify-between">
                   <h2 className="text-lg font-medium text-gray-900">Drawer Content</h2>
@@ -46,16 +46,21 @@ const Drawer = ({ onClose }) => {
                     </button>
                   </div>
                 </div>
+                <h4 className="text-lg font-light text-gray-900">Clicked from :</h4>
+                <h2 className="text-lg font-medium text-orange-800">{data?.clickedFrom}</h2>
+                <h4 className="text-lg font-light text-gray-900">Content :</h4>
+                <h2 className="text-lg font-medium text-orange-800">{data?.content}</h2>
               </div>
-              <div className="mt-6 relative flex-1 px-4 sm:px-6">
-                {/* Replace with your content */}
+              {/* <ClickableScreen></ClickableScreen> */}
+              {/* <div className="mt-6 relative flex-1 px-4 sm:px-6">
+               
                 <div className="h-full border-2 border-dashed border-gray-200">
-                  {/* Your content here */}
+                  {/* Your content here 
                   <p className="text-sm text-gray-500">
                     Replace with your drawer content.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>

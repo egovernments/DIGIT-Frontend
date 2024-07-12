@@ -8,6 +8,7 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import withAuth from "./hoc/withAuth";
 import Drawer from "./components/Drawer";
+import ClickableScreen from "./components/ClickableScreen";
 const basePath = import.meta.env.BASE_URL;
 
 const routes = [
@@ -60,9 +61,9 @@ export const TodoComponent = () => {
 };
 
 function App() {
-  console.log(basePath,'basePath');
   return (
     <>
+    <ClickableScreen>
       <div>
         <TodoComponent></TodoComponent>
         <Drawer></Drawer>
@@ -109,6 +110,7 @@ function App() {
           <StatusBar></StatusBar>
         </Suspense>
       </div>
+      </ClickableScreen>
     </>
   );
 }
