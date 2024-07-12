@@ -57,7 +57,7 @@ config:
 
   - name: "builds/Digit-Frontend/utilities/egov-bff"
     build:
-      - work-dir: "utilities/project-factory"
-        image-name: "project-factory"
-      - work-dir: "utilities/project-factory/migration"
-        image-name: "project-factory-db"
+      - work-dir: "utilities/boundary-bulk-bff"
+        image-name: "boundary-bulk-bff"
+      - work-dir: "utilities/boundary-bulk-bff/migration"
+        image-name: "boundary-bulk-bff-db"
