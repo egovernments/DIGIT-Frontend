@@ -1,4 +1,4 @@
-name: project factory service docker Image CI
+name: boundary bulk bff service docker Image CI
 
 on:
   push:
