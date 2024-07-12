@@ -38,26 +38,20 @@ const useCustomMDMS = (tenantId, moduleName, masterDetails = [], config = {},mdm
         MdmsCriteria:{
           // tenantId, //changing here to send user's tenantId always whether stateId or city
           tenantId:Digit.ULBService.getCurrentTenantId(),
-          schemaCode:mdmsv2?.schemaCode,
-          isActive:true,
-          limit: 100,
+          moduleDetails: [
+            {
+              "moduleName": moduleName,
+              "masterDetails":  masterDetails,
+            }       
+          ]
         }
       },
       config:{
         enabled:mdmsv2 ? true : false ,
         select: (response) => {
            //mdms will be an array of master data
-          const {mdms} = response
-          //first filter with isActive
-          //then make a data array with actual data 
-          //refer the "code" key in data(for now) and set options array , also set i18nKey in each object to show in UI
-          const options = mdms?.filter(row => row?.isActive)?.map(row => {
-            return {
-              i18nKey:Digit.Utils.locale.getTransformedLocale(`${row?.schemaCode}_${row?.data?.code}`),
-              ...row.data,
-            }
-          })
-          return options;
+          
+          return response;
         }
       }
 
