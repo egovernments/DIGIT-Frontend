@@ -2,7 +2,7 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import config from './config';
 import { requestMiddleware } from './utils/middlewares';
-import { errorLogger, errorResponder, invalidPathHandler } from './utils/genericUtils';
+import { errorLogger, invalidPathHandler } from './utils/genericUtils';
 import { tracingMiddleware } from './tracing';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
