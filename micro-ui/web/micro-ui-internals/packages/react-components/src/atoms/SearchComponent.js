@@ -75,8 +75,8 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
     clearSearch()
   }, [activeLink])
   
-  const onSubmit = (data) => {
-    
+  const onSubmit = (data,e) => {
+    e?.preventDefault?.();
     //here -> added a custom validator function, if required add in UICustomizations
     const isAnyError = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.customValidationCheck ? Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.customValidationCheck(data) : false 
     if(isAnyError) {
@@ -243,7 +243,11 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
               />  
               <div className={`search-button-wrapper ${screenType} ${uiConfig?.type} ${uiConfig?.searchWrapperClassName}`} style={uiConfig?.searchWrapperStyles} >
                 { uiConfig?.secondaryLabel && <LinkLabel style={{marginBottom: 0, whiteSpace: 'nowrap'}} onClick={clearSearch}>{t(uiConfig?.secondaryLabel)}</LinkLabel> }
-                { uiConfig?.primaryLabel && <SubmitBar label={t(uiConfig?.primaryLabel)} submit="submit" disabled={false}/> }
+                {uiConfig?.isPopUp && uiConfig?.primaryLabel && <SubmitBar label={t(uiConfig?.primaryLabel)} onSubmit={(e) => {
+                  handleSubmit(onSubmit)(e);
+                  // onSubmit(formData, e)
+                }} disabled={false} />}
+                {!uiConfig?.isPopUp && uiConfig?.primaryLabel && <SubmitBar label={t(uiConfig?.primaryLabel)} submit="submit" disabled={false} />}
               </div>
             </div>
           </div> 
