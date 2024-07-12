@@ -46,13 +46,18 @@ export function createGlobalState(queryKey, initialData = null,cacheEnabled=true
       [queryKey]
     );
 
-    const resetData = useCallback(() => {
+    const resetData = useCallback(async() => {
+      await localforage.setItem(queryKey, {
+        data: initialData,
+        updatedAt: Date.now(),
+      });
       queryClient.invalidateQueries({
         queryKey: [queryKey],
       });
       queryClient.refetchQueries({
         queryKey: [queryKey],
       });
+      
     }, [queryKey]);
 
     return { data, setData, resetData };

@@ -14,7 +14,6 @@ const cacheTime = 1000 * 60 * 60 * 24; // 24 hours
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onSuccess: async (data, query) => {
-      console.log(data, "querydata");
       await localforage.setItem(query.queryKey, {
         data,
         updatedAt: Date.now(),
@@ -37,14 +36,12 @@ export const queryClient = new QueryClient({
 const hydrateQuery = async (queryKey) => {
   const cachedData = await localforage.getItem(queryKey);
   if (cachedData && Date.now() - cachedData.updatedAt < cacheTime) {
-    console.log(queryKey, cachedData.data, "queryKey, cachedData.data");
     queryClient.setQueryData(queryKey, cachedData.data);
   }
 };
 
 export const hydrateAllQueries = async () => {
   const keys = await localforage.keys();
-  console.log(keys, "keys");
   await Promise.all(keys.map((key) => hydrateQuery(key)));
 };
 

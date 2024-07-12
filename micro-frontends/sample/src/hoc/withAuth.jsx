@@ -7,12 +7,12 @@ const withAuth = (WrappedComponent) => {
   return (props) => {
     useLayoutEffect(() => {
       if (data?.isSignedIn) {
-        console.log("user is signed in");
+        console.debug("user is signed in");
       } else {
-        console.log("user is not signedin");
+        console.debug("user is not signedin");
       }
       return () => {
-        console.log("Component unmounted");
+        console.debug("Component unmounted");
       };
     }, []);
     const WrappedComp = withNavigator(WrappedComponent);

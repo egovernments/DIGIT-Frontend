@@ -285,7 +285,6 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
         if (fieldValue === expectedValue) {
           // trigger(dep.path.replace('.ui:dependencies', '')); // Trigger validation for the specific path
         } else {
-          console.log(fieldValue, "fieldValue else");
           // reset(getValues(), { keepValues: true, keepErrors: true, keepDirty: true });
         }
       }

@@ -3,7 +3,6 @@ import { useFormState} from 'react-dom';
 const FormState = () => {
     const submitForm = (prevState, queryData) => {
         const name =  queryData.get("username");
-        console.log(prevState); // previous form state
         if(name === 'john'){
             return {
                 success: true,

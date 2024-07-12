@@ -3,6 +3,7 @@ import React from "react";
 import { useUserState } from "../state/useUserState";
 import FormComposer from "./utils/FormComposer";
 import CustomDatePicker from "./CustomCheck"; // Import the custom component
+import { useDrawerState } from "../state/useDrawerState";
 
 const schema = {
   title: "Complex Form",
@@ -162,9 +163,12 @@ const customWidgets = {
 
 const StepperForm = () => {
   const { setData, resetData, data } = useUserState();
+  const { setData:setDrawer,data:drawerData } = useDrawerState();
+
   return (
     <>
       <h1>Hi {data?.name}</h1>
+      <button onClick={()=>setDrawer({...drawerData,isOpen:!drawerData?.isOpen,fromScreen:"Stepper" ,content:"Hii"})}>open</button>
       <FormComposer
         schema={schema}
         uiSchema={uiSchema}

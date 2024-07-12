@@ -33,7 +33,6 @@ import { genericService } from "./genericService";
 
 const useCustomAPIHook = ({ url, params, body, config = {}, changeQueryName="Random" ,options}) => {
   const client = queryClient;
-  console.log(url,body,'url,body');
 
   const { isLoading, data, isFetching,refetch } = useQuery({
     queryKey: [url,changeQueryName].filter((e) => e),

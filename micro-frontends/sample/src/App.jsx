@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import withAuth from "./hoc/withAuth";
+import Drawer from "./components/Drawer";
 const basePath = import.meta.env.BASE_URL;
 
 const routes = [
@@ -64,6 +65,7 @@ function App() {
     <>
       <div>
         <TodoComponent></TodoComponent>
+        <Drawer></Drawer>
         <Suspense
           fallback={
             <h1 className="text-2xl text-center font-bold mt-5">Loading...</h1>
