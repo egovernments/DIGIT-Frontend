@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "./stateConfigs";
+import { getStoredValue, queryClient } from "./stateConfigs";
 import localforage from "localforage";
 import { useEffect, useState, useCallback } from "react";
 
 const cacheTime = 1000 * 60 * 60 * 24; // 24 hours
 
 async function getCachedData(queryKey, initialData) {
-  const cachedData = await localforage.getItem(queryKey);
+  const cachedData = await getStoredValue(queryKey);
   if (cachedData && Date.now() - cachedData.updatedAt < cacheTime) {
     return cachedData.data;
   }

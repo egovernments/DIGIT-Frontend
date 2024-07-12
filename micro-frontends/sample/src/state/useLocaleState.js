@@ -1,6 +1,6 @@
 import { createGlobalState } from "./createState";
 
-export const useLocalisationState = createGlobalState("localisation", {
+export const useLocaleState = createGlobalState("locale", {
   tenantId: null,
   locale: "en_IN",
   availableLocales: [],

@@ -47,3 +47,9 @@ export const hydrateAllQueries = async () => {
   console.log(keys, "keys");
   await Promise.all(keys.map((key) => hydrateQuery(key)));
 };
+
+
+export const getStoredValue =async(key)=>{
+  const data=await localforage.getItem(key);
+  return data;
+}

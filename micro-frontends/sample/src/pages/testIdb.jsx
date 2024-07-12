@@ -1,57 +1,45 @@
-
-
-
-
-import React, { useState, useEffect } from 'react';
-import { get, set } from '../idb/idb';
-import { isOnline, onNetworkChange } from '../idb/networkStatus';
+import React, { useState, useEffect } from "react";
+import { isOnline, onNetworkChange } from "../idb/networkStatus";
+import useCustomAPIHook from "../hooks/useCustomAPIHook";
 // import { get, set } from './idb';
 // import { isOnline, onNetworkChange } from './networkStatus';
 
-
 function TestIdb() {
-  const [data, setData] = useState(null);
+  const reqCriteriaResource = {
+    url: `/egov-mdms-service/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: "mz",
+        moduleDetails: [
+          {
+            moduleName: "common-masters",
+            masterDetails: [
+              {
+                name: "uiCommonConstants",
+              },
+              {
+                name: "StateInfo",
+              },
+            ],
+          },
+        ],
+      },
+    },
+    config: {
+      enabled: true,
+      select: (data) => {
+        return data?.MdmsRes;
+      },
+    },
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const cachedData = await get('data');
-      if (cachedData) {
-        setData(cachedData);
-      } else {
-        const fetchedData = await fetch('https://catfact.ninja/fact').then(res => res.json());
-        setData(fetchedData);
-        set('data', fetchedData);
-      }
-    };
-
-    fetchData();
-  }, []);
-  useEffect(() => {
-    const syncData = async () => {
-      if (isOnline()) {
-        const localData = await get('data');
-        if (localData) {
-          await fetch('https://catfact.ninja/fact', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(localData),
-          });
-          await del('data');
-        }
-      }
-    };
-  
-    syncData();
-  
-    onNetworkChange(syncData);
-  }, []);
+  const { isLoading, data, isFetching } = useCustomAPIHook(reqCriteriaResource);
+  // if(isLoading){
+  //   return  <div>Loading...</div>
+  // }
   return (
     <div className="App">
-      {data ? (
-        <div>Data: {JSON.stringify(data)}</div>
-      ) : (
-        <div>Loading...</div>
-      )}
+      {data ? <div>Data: {JSON.stringify(data)}</div> : <div>Loading...</div>}
     </div>
   );
 }

@@ -59,6 +59,7 @@ export const TodoComponent = () => {
 };
 
 function App() {
+  console.log(basePath,'basePath');
   return (
     <>
       <div>
@@ -68,11 +69,6 @@ function App() {
             <h1 className="text-2xl text-center font-bold mt-5">Loading...</h1>
           }
         >
-          {/* <Action />
-          <FormState />
-         <FormStatus />
-           <Optimistic /> */}
-          {/* <Users /> */}
           <Theme>
             <Router>
               <div>
