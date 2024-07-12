@@ -62,7 +62,7 @@ const config = {
     KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
     redisHost: process.env.REDIS_HOST || "localhost",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
-    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "http://localhost:8088/",
+    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
     localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
   },
   values: {
