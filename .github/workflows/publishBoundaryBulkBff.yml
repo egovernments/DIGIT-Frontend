@@ -2,11 +2,11 @@ name: project factory service docker Image CI
 
 on:
   push:
-    branches: [ "campaign" ]
+    branches: [ "boundary-bulk-bff" ]
     paths:
       - 'utilities/boundary-bulk-bff/**'
   pull_request:
-    branches: [ "campaign" ]
+    branches: [ "boundary-bulk-bff" ]
 
 jobs:
 
