@@ -1,20 +1,8 @@
 import "./App.css";
-import Users from "./examples/Users";
 import Theme from "./examples/Theme";
-import Action from "./examples/Action";
-import Optimistic from "./examples/Optimistic";
-import FormStatus from "./examples/FormStatus";
-import FormState from "./examples/FormState";
-// import Test from "./pages/test";
 import StatusBar from "./components/statusBar";
-import { isOnline, onNetworkChange } from "./idb/networkStatus";
-// import TestIdb from "./pages/testIdb";
-// import TabForm from "./pages/TabForm";
-// import StepperFormScreen from "./pages/StepperForm";
 import LanguageSwitcher from "./components/LanguageSelector";
 import MyComponent from "./components/SampleComponent";
-// import TestIdb from "./pages/TestIdb.jsx";
-// import { isOnline, onNetworkChange } from './networkStatus';
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
@@ -92,7 +80,9 @@ function App() {
                   <ul>
                     {routes?.map((route) => (
                       <li>
-                        <Link to={`${basePath}${route?.url}`}>{route?.url}</Link>
+                        <Link to={`${basePath}${route?.url}`}>
+                          {route?.url}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -105,28 +95,19 @@ function App() {
                         ? withAuth(route?.component)
                         : route?.component;
                       return (
-                        <Route path={`${basePath}${route?.url}`} element={<Component />} />
+                        <Route
+                          path={`${basePath}${route?.url}`}
+                          element={<Component />}
+                        />
                       );
                     })}
                   </Routes>
                 </Suspense>
               </div>
             </Router>
-
-            {/* <Sample></Sample>
-          <Test></Test>
-       <TestIdb></TestIdb>
           </Theme>
-          <Theme >
-<TabForm></TabForm>
-</Theme>
-<Theme >
-<StepperFormScreen></StepperFormScreen> */}
-          </Theme>
-
           <LanguageSwitcher />
           <MyComponent />
-
           <StatusBar></StatusBar>
         </Suspense>
       </div>
