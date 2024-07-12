@@ -23,7 +23,7 @@ config:
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/workbench/Dockerfile
-        image-name: workbench-ui
+        image-name: mukta-workbench-ui
 
   - name: builds/Digit-Frontend/workbench-ui
     build:
