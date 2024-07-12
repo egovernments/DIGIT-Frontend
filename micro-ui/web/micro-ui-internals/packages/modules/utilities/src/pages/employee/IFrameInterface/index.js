@@ -7,7 +7,7 @@ import axios from "axios";
 
 // moduleName, pageName will be passed as props as defined in the uiCommonConstants to fetch URL.
 const IFrameInterface = (props) => {
-  const { stateCode, moduleName, pageName, filterValue } = props;
+  const { stateCode, moduleName, pageName, filters } = props;
   const location = useLocation();
   const iframeRef = useRef(null);
   const localStorageKey = 'Employee.token';
@@ -167,8 +167,8 @@ const IFrameInterface = (props) => {
     const domain = isOrign ? (process.env.NODE_ENV === "development" ? "https://unified-dev.digit.org" : document.location.origin) : pageObject?.["domain"];
     //checking if overwrite time is true then update the url as per filter time else return the url
     const contextPath = pageObject?.["routePath"] 
-      ? (pageObject?.["overwriteTimeFilter"] && filterValue?.range?.startDate && filterValue?.range?.endDate 
-        ? pageObject["routePath"].replace("from:now-15m", `from:'${filterValue?.range?.startDate}'`).replace("to:now", `to:'${filterValue?.range?.endDate}'`)
+      ? (pageObject?.["overwriteTimeFilter"] && filters?.range?.startDate && filters?.range?.endDate 
+        ? pageObject["routePath"].replace("from:now-15m", `from:'${filters?.range?.startDate}'`).replace("to:now", `to:'${filters?.range?.endDate}'`)
         : pageObject["routePath"]) 
       : "";
     const title = pageObject?.["title"] || "";
