@@ -40,7 +40,7 @@ const getServiceName = (url = "") => url && url.slice && url.slice(url.lastIndex
 
 const cacheEnabled = config.cacheValues.cacheEnabled;
 
-const httpRequest = async (
+async function httpRequest(
   _url: string,
   _requestBody: any,
   _params: any = {},
@@ -50,7 +50,7 @@ const httpRequest = async (
   sendStatusCode: any = false,
   retry: any = false,
   dontThrowError: any = false
-): Promise<any> => {
+) {
   let attempt = 0;
   const maxAttempts = parseInt(config.values.maxHttpRetries) || 4;
   const cacheKey = headers && headers.cachekey ? `cache:${headers.cachekey}` : null;
@@ -79,7 +79,7 @@ const httpRequest = async (
         JSON.stringify(_params)
       );
       logger.debug("INTER-SERVICE :: REQUESTBODY :: " + getFormattedStringForDebug(_requestBody));
-      delete headers.cachekey;
+      // delete headers.cachekey;
 
       // Add debug log before axios request
       logger.debug(`Attempting HTTP request to ${_url}, attempt ${attempt + 1}`);
