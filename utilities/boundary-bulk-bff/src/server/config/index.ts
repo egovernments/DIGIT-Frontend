@@ -76,7 +76,7 @@ const config = {
     boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH || "boundary-service/boundary-relationships/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH || "boundary-service/boundary-hierarchy-definition/_search",
     boundaryEntitySearch: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH || "boundary-service/boundary/_search",
-    boundaryEntityCreate: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH || "boundary-service/boundary/_create",
+    boundaryEntityCreate: process.env.EGOV_BOUNDARY_ENTITY_CREATEPATH || "boundary-service/boundary/_create",
     localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
     localizationCreate: "localization/messages/v1/_upsert",
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
