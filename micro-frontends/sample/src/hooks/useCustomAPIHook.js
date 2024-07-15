@@ -30,19 +30,25 @@ import { genericService } from "./genericService";
  * @returns {Object} Returns the object which contains data and isLoading flag
  */
 
-
-const useCustomAPIHook = ({ url, params, body, config = {}, changeQueryName="Random" ,options}) => {
+const useCustomAPIHook = ({
+  url,
+  params,
+  body,
+  config = {},
+  changeQueryName = "Random",
+  options,
+}) => {
   const client = queryClient;
 
-  const { isLoading, data, isFetching,refetch } = useQuery({
-    queryKey: [url,changeQueryName].filter((e) => e),
-    queryFn:() => genericService({ url, params, body, options }),
-    
-    //   cacheTime:0,
-    //   ...config,
-    
-}
-  );
+  const { isLoading, data, isFetching, refetch } = useQuery({
+    queryKey: [url, JSON.stringify(params), JSON.stringify(body)].filter(
+      (e) => e
+    ),
+    queryFn: () => genericService({ url, params, body, options }),
+
+    cacheTime: 0,
+    ...config,
+  });
 
   return {
     isLoading,

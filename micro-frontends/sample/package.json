@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "5.50.1",
+    "@tanstack/react-query-devtools": "^5.51.1",
     "axios": "1.7.2",
     "i18next": "23.11.5",
     "i18next-http-backend": "2.5.2",

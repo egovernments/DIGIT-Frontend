@@ -16,10 +16,9 @@ const ClickableScreen = ({ onTextClick,children }) => {
     const clickedText = clickedElement.textContent.trim();
 
     // Call the callback with the clicked text
-    console.log(clickedText,'clickedText');
-    state&& setDrawer({...drawerData,isOpen:!drawerData?.isOpen,clickedFrom:data?.currentScreen ,content:clickedText})
-    onTextClick?.(clickedText);
-    setState(false);
+    enabled&& state&& setDrawer({...drawerData,isOpen:!drawerData?.isOpen,clickedFrom:data?.currentScreen ,content:clickedText})
+    enabled&&  onTextClick?.(clickedText);
+    enabled&&  setState(false);
   };
   return (
     <div

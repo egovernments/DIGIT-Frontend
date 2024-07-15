@@ -1,17 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStoredValue, queryClient } from "./stateConfigs";
+import { getCachedData, getStoredValue, queryClient, setCache } from "./stateConfigs";
 import localforage from "localforage";
 import { useEffect, useState, useCallback } from "react";
 
-const cacheTime = 1000 * 60 * 60 * 24; // 24 hours
 
-async function getCachedData(queryKey, initialData) {
-  const cachedData = await getStoredValue(queryKey);
-  if (cachedData && Date.now() - cachedData.updatedAt < cacheTime) {
-    return cachedData.data;
-  }
-  return initialData;
-}
 
 export function createGlobalState(queryKey, initialData = null,cacheEnabled=true) {
   return function useGlobalState() {
@@ -38,19 +30,13 @@ export function createGlobalState(queryKey, initialData = null,cacheEnabled=true
     const setData = useCallback(
       async (newData) => {
         cacheEnabled&&queryClient.setQueryData([queryKey], newData);
-        await localforage.setItem(queryKey, {
-          data: newData,
-          updatedAt: Date.now(),
-        });
+        await setCache(queryKey,newData)
       },
       [queryKey]
     );
 
     const resetData = useCallback(async() => {
-      await localforage.setItem(queryKey, {
-        data: initialData,
-        updatedAt: Date.now(),
-      });
+      await  setCache(queryKey,initialData)
       queryClient.invalidateQueries({
         queryKey: [queryKey],
       });

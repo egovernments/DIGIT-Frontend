@@ -4,12 +4,14 @@ import StatusBar from "./components/statusBar";
 import LanguageSwitcher from "./components/LanguageSelector";
 import MyComponent from "./components/SampleComponent";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import withAuth from "./hoc/withAuth";
 import Drawer from "./components/Drawer";
 import ClickableScreen from "./components/ClickableScreen";
+import { clearAllStorages } from "./state/useClearAll";
 const basePath = import.meta.env.BASE_URL;
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const routes = [
   {
@@ -61,6 +63,7 @@ export const TodoComponent = () => {
 };
 
 function App() {
+  const [state,setState]=useState(false);
   return (
     <>
     <ClickableScreen>
@@ -110,9 +113,16 @@ function App() {
           <StatusBar></StatusBar>
         </Suspense>
       </div>
+      <button onClick={()=>clearAllStorages()}>claer</button>
+      <button onClick={()=>setState(!state)}>debug query</button>
+        <ReactQueryDevtools initialIsOpen={state} />
+
       </ClickableScreen>
     </>
   );
 }
+
+
+
 
 export default App;

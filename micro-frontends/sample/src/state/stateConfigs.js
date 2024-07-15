@@ -5,7 +5,7 @@ localforage.config({
   driver: localforage.INDEXEDDB, // Force IndexedDB; same as using setDriver()
   name: "DIGIT",
   version: 1.0,
-  storeName: "keyvaluepairs", // Should be alphanumeric, with underscores.
+  storeName: "states", // Should be alphanumeric, with underscores.
   description: "Sandbox",
 });
 
@@ -14,10 +14,7 @@ const cacheTime = 1000 * 60 * 60 * 24; // 24 hours
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onSuccess: async (data, query) => {
-      await localforage.setItem(query.queryKey, {
-        data,
-        updatedAt: Date.now(),
-      });
+      await setCache(query.queryKey,data)
     },
   }),
   defaultOptions: {
@@ -50,3 +47,21 @@ export const getStoredValue =async(key)=>{
   const data=await localforage.getItem(key);
   return data;
 }
+
+
+export const setCache = async (key, data) => {
+  const item = {
+    data,
+    updatedAt: Date.now(),
+  };
+  await localforage.setItem(key, item);
+};
+
+
+export const getCachedData = async (key,initialData) => {
+  const cachedData = await getStoredValue(key);
+  if (cachedData && Date.now() - cachedData.updatedAt < cacheTime) {
+    return cachedData.data;
+  }
+  return initialData;
+};

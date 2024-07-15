@@ -92,6 +92,7 @@ export const Request = async ({
   multipartData = {},
   reqTimestamp = false,
 }) => {
+  console.log(url, data, useCache, "url,  data,useCache");
   const ts = new Date().getTime();
   const token = await getToken();
   if (method.toUpperCase() === "POST") {
@@ -137,11 +138,18 @@ export const Request = async ({
 
   let key = "";
   if (useCache) {
-    // key = `${method.toUpperCase()}.${url}.${btoa(escape(JSON.stringify(params, null, 0)))}.${btoa(escape(JSON.stringify(data, null, 0)))}`;
-    // const value = window.Digit.RequestCache[key];
-    // if (value) {
-    //   return value;
-    // }
+    /* The commented code block you provided is attempting to generate a unique key based on the HTTP
+   method, URL, params, and data of a request. This key is then used to check if the response data
+   for that specific request is already cached in `window.Digit.RequestCache`. */
+    key = `${method.toUpperCase()}.${url}.${btoa(
+      escape(JSON.stringify(params, null, 0))
+    )}.${btoa(escape(JSON.stringify(data, null, 0)))}`;
+    window.Digit = { ...window?.Digit };
+    window.Digit.RequestCache = { ...window?.Digit?.RequestCache };
+    const value = window.Digit.RequestCache[key];
+    if (value) {
+      return value;
+    }
   } else if (setTimeParam) {
     params._ = Date.now();
   }
@@ -182,6 +190,21 @@ export const Request = async ({
   //   if (!params["tenantId"] && window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
   //     params["tenantId"] = tenantInfo;
   //   }
+
+  const preHookName = `${serviceName}Pre`;
+  const postHookName = `${serviceName}Post`;
+
+  //   let reqParams = params;
+  //   let reqData = data;
+  /* The code block you provided is checking if a function named `preHookName` exists on the `window`
+object and if it is a function. If the function exists and is indeed a function, it is then being
+called with an object containing `params` and `data` as arguments. The result of this function call
+is then used to update the `reqParams` and `reqData` variables. */
+  if (window[preHookName] && typeof window[preHookName] === "function") {
+    let preHookRes = await window[preHookName]({ params, data });
+    reqParams = preHookRes.params;
+    reqData = preHookRes.data;
+  }
   const res = userDownload
     ? await Axios({
         method,
@@ -197,49 +220,12 @@ export const Request = async ({
 
   const returnData = res?.data || res?.response?.data || {};
   if (useCache && res?.data && Object.keys(returnData).length !== 0) {
-    // window.Digit.RequestCache[key] = returnData;
+    window.Digit = { ...window?.Digit };
+    window.Digit.RequestCache = { ...window?.Digit?.RequestCache };
+    window.Digit.RequestCache[key] = returnData;
+  }
+  if (window[postHookName] && typeof window[postHookName] === "function") {
+    return await window[postHookName](resData);
   }
   return returnData;
 };
-
-// /**
-//  *
-//  * @param {*} serviceName
-//  *
-//  * preHook:
-//  * ({params, data}) => ({params, data})
-//  *
-//  * postHook:
-//  * ({resData}) => ({resData})
-//  *
-//  */
-
-// export const ServiceRequest = async ({
-//   serviceName,
-//   method = "POST",
-//   url,
-//   data = {},
-//   headers = {},
-//   useCache = false,
-//   params = {},
-//   auth,
-//   reqTimestamp,
-//   userService,
-// }) => {
-//   const preHookName = `${serviceName}Pre`;
-//   const postHookName = `${serviceName}Post`;
-
-//   let reqParams = params;
-//   let reqData = data;
-//   if (window[preHookName] && typeof window[preHookName] === "function") {
-//     let preHookRes = await window[preHookName]({ params, data });
-//     reqParams = preHookRes.params;
-//     reqData = preHookRes.data;
-//   }
-//   const resData = await Request({ method, url, data: reqData, headers, useCache, params: reqParams, auth, userService,reqTimestamp });
-
-//   if (window[postHookName] && typeof window[postHookName] === "function") {
-//     return await window[postHookName](resData);
-//   }
-//   return resData;
-// };
