@@ -1083,7 +1083,15 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
-  var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+  let headers:any;
+  const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
+  if (isSourceMicroplan) {
+     console.log(`Source is Microplan.`);
+     headers = getLocalizedHeaders(hierarchy, localizationMap);
+  }else{
+     headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+  }
 
   const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
