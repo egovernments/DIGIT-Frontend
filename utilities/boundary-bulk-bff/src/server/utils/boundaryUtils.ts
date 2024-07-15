@@ -607,7 +607,7 @@ export async function getBoundaryDetails(request: any) {
 }
 
 async function getBoundaryDetailsViaDb(searchBody: any) {
-  const { hierarchyType, tenantId, id } = searchBody || {};
+  const { hierarchyType, tenantId, id, status } = searchBody || {};
 
   let query = `SELECT * FROM ${config.DB_CONFIG.DB_BOUNDARY_DETAILS_TABLE_NAME} WHERE 1=1`;
   const values: any[] = [];
@@ -623,6 +623,10 @@ async function getBoundaryDetailsViaDb(searchBody: any) {
   if (id) {
     query += ' AND id = $' + (values.length + 1);
     values.push(id);
+  }
+  if (status) {
+    query += ' AND status = $' + (values.length + 1);
+    values.push(status);
   }
 
   try {
