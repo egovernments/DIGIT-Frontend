@@ -254,7 +254,7 @@ function generateElementCode(sequence: any, parentElement: any, parentBoundaryCo
 
 function modifyElementCodesMap(elementCodesMap: any) {
   const set = new Set<string>();
-  const specialCharsRegex = /[^\w\s]/g; // Regular expression to match any character that is not a word character or space
+  const specialCharsRegex = /[^\w]/g; // Regular expression to match any character that is not a word character
 
   // Iterate over each [key, value] pair in elementCodesMap using forEach
   elementCodesMap.forEach((value: any, key: any) => {
