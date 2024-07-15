@@ -1,5 +1,5 @@
 import * as express from "express";
-import { } from "../../service/boundaryManageService";
+import { searchBoundaryDetailService } from "../../service/boundaryManageService";
 import { logger } from "../../utils/logger";
 import { errorResponder, sendResponse } from "../../utils/genericUtils";
 import { createBoundariesService } from "../../service/boundaryManageService";
@@ -21,6 +21,7 @@ class boundaryManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/create`, this.createBoundaries);
+        this.router.post(`${this.path}/search`, this.searchBoundaryDetails);
     }
     /**
  * Handles the creation of a project type campaign.
@@ -34,6 +35,22 @@ class boundaryManageController {
         try {
             logger.info("RECEIVED A BULK BOUNDARY CREATE REQUEST");
             await createBoundariesService(request, response);
+            return sendResponse(response, { boundaryDetails: request.body.boundaryDetails }, request);
+        } catch (e: any) {
+            console.log(e)
+            logger.error(String(e))
+            // Handle errors and send error response
+            return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
+        }
+    };
+
+    searchBoundaryDetails = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            logger.info("RECEIVED A BOUNDARY DETAILS SEARCH REQUEST");
+            await searchBoundaryDetailService(request);
             return sendResponse(response, { boundaryDetails: request.body.boundaryDetails }, request);
         } catch (e: any) {
             console.log(e)

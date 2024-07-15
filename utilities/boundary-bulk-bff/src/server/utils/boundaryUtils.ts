@@ -1,4 +1,5 @@
 import config from "../config";
+import { executeQuery } from "./db";
 import { throwError } from "./errorUtils";
 import { addDataToSheet, createAndUploadFile, createExcelSheet, getExcelWorkbookFromFileURL, getNewExcelWorkbook, getSheetData, prepareDataForExcel } from "./excelUtils";
 import { getLocalizedHeaders, getLocalizedName, transformAndCreateLocalisation } from "./localisationUtils";
@@ -597,5 +598,39 @@ export async function boundaryBulkUpload(request: any, localizationMap?: any) {
   catch (error: any) {
     console.log(error)
     persistError(error, request);
+  }
+}
+
+export async function getBoundaryDetails(request: any) {
+  const boundaryDetails = await getBoundaryDetailsViaDb(request?.query);
+  request.body.boundaryDetails = boundaryDetails;
+}
+
+async function getBoundaryDetailsViaDb(searchBody: any) {
+  const { hierarchyType, tenantId, id } = searchBody || {};
+
+  let query = `SELECT * FROM ${config.DB_CONFIG.DB_BOUNDARY_DETAILS_TABLE_NAME} WHERE 1=1`;
+  const values: any[] = [];
+
+  if (tenantId) {
+    query += ' AND tenantId = $' + (values.length + 1);
+    values.push(tenantId);
+  }
+  if (hierarchyType) {
+    query += ' AND hierarchyType = $' + (values.length + 1);
+    values.push(hierarchyType);
+  }
+  if (id) {
+    query += ' AND id = $' + (values.length + 1);
+    values.push(id);
+  }
+
+  try {
+    const result = await executeQuery(query, values);
+    return result.rows;
+  } catch (error: any) {
+    console.log(error)
+    logger.error(`Error fetching boundary details: ${error.message}`);
+    throw error;
   }
 }
