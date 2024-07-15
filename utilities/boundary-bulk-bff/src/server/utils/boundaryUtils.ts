@@ -334,7 +334,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<any, any>) 
 
   for (const chunk of boundaryCodeChunks) {
     const boundaryCodeString = chunk.join(', ');
-    if (chunk.length > 0 && boundaryCodeString) {
+    if (chunk.length > 0 && boundaryCodeString && boundaryCodeString.length > 2) {
       logger.info(`Creating boundary entities for codes: ${boundaryCodeString}`);
 
       try {
