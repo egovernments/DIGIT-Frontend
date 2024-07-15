@@ -428,17 +428,17 @@ const SetupCampaign = ({ hierarchyType }) => {
   //   },
   // });
 
-  // const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
-  //   type: "boundary",
-  //   hierarchyType: hierarchyType,
-  //   campaignId: id,
-  //   // config: {
-  //   //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
-  //   // },
-  //   config: {
-  //     enabled: targetEnabled,
-  //   },
-  // });
+  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
+    type: "boundary",
+    hierarchyType: hierarchyType,
+    campaignId: id,
+    // config: {
+    //   enabled: fetchUpload || (fetchBoundary && currentKey > 6),
+    // },
+    config: {
+      enabled: false,
+    },
+  });
 
   // const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
   //   type: "userWithBoundary",
@@ -482,7 +482,7 @@ const SetupCampaign = ({ hierarchyType }) => {
     setIsSubmitting(false);
     if (currentKey === 10 && isSummary !== "true") {
       updateUrlParams({ key: currentKey, summary: true });
-    } else if (currentKey !== 10 ) {
+    } else if (currentKey !== 10) {
       updateUrlParams({ key: currentKey, summary: false });
       setSummaryErrors(null);
     }
@@ -1302,6 +1302,15 @@ const SetupCampaign = ({ hierarchyType }) => {
   const onSubmit = (formData, cc) => {
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
+    console.log("totalFORMDATA", totalFormData, "formData", formData);
+    if (
+      totalFormData?.["HCM_CAMPAIGN_DELIVERY_DATA"]?.deliveryRule?.length > 0 &&
+      formData?.deliveryRule?.length > 0 &&
+      !_.isEqual(totalFormData?.["HCM_CAMPAIGN_DELIVERY_DATA"]?.deliveryRule, formData?.deliveryRule)
+    ) {
+      console.log("KYA RE SALA");
+      refetchBoundary();
+    }
     if (checkValid === false) {
       return;
     }
