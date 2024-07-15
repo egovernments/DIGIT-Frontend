@@ -61,7 +61,6 @@ function TestIdb() {
       ],
     },
   ]})
-console.log((mdms1,mdms2,mdms0,',mmm'));
   const { isLoading, data, isFetching } = useCustomAPIHook(reqCriteriaResource);
   // if(isLoading){
   //   return  <div>Loading...</div>
