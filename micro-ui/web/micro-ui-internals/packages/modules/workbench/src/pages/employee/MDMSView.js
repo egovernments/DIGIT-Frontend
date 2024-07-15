@@ -1,54 +1,84 @@
-import React,{useState} from 'react'
-import MDMSAdd from './MDMSAddV2'
-import { Loader,Toast } from '@egovernments/digit-ui-react-components';
+import React, { useState } from "react";
+import MDMSAdd from "./MDMSAddV2";
+import { Loader, Toast } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const MDMSView = ({...props}) => {
-  const history = useHistory()
-  const { t } = useTranslation()
+const MDMSView = ({ ...props }) => {
+  const history = useHistory();
+  const { t } = useTranslation();
   const [showToast, setShowToast] = useState(false);
-  let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
+  let { moduleName, masterName, tenantId, uniqueIdentifier } = Digit.Hooks.useQueryParams();
   // const stateId = Digit.ULBService.getStateId();
-  tenantId = Digit.ULBService.getCurrentTenantId();
-  let propsToSendButtons = {
-    moduleName,
-    masterName,
-  };
-  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: tenantId ,
-        uniqueIdentifiers:[uniqueIdentifier],
-        schemaCode:`${moduleName}.${masterName}`
+        tenantId: tenantId,
+        uniqueIdentifiers: [uniqueIdentifier],
+        schemaCode: `${moduleName}.${masterName}`,
       },
     },
     config: {
       enabled: moduleName && masterName && true,
       select: (data) => {
-
-        return data?.mdms?.[0]
+        return data?.mdms?.[0];
       },
     },
   };
 
   const closeToast = () => {
     setTimeout(() => {
-      setShowToast(null)
+      setShowToast(null);
     }, 5000);
-  }
+  };
 
-  const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading, data, isFetching, refetch, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const reqCriteriaSorSearch = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+
+    params: {},
+
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId?.split(".")[0],
+
+        uniqueIdentifiers: [uniqueIdentifier?.split(".")[0]],
+
+        schemaCode: `${moduleName}.${"SOR"}`,
+      },
+    },
+
+    config: {
+      enabled: data?.data?.sorId ? true : false,
+
+      select: (response) => {
+        return response?.mdms?.[0];
+      },
+    },
+
+    changeQueryName: uniqueIdentifier?.split(".")[0],
+  };
+
+  const { isLoading: isSORLoading, data: sorData } = Digit.Hooks.useCustomAPIHook(reqCriteriaSorSearch);
+
+  let propsToSendButtons = {
+    moduleName,
+
+    masterName,
+
+    sorData,
+  };
+
+  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
   const reqCriteriaUpdate = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
     params: {},
-    body: {
-    },
+    body: {},
     config: {
       enabled: true,
     },
@@ -58,19 +88,19 @@ const MDMSView = ({...props}) => {
   const handleEnableDisable = async (action) => {
     const onSuccess = (resp) => {
       setShowToast({
-        label:`${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
+        label: `${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`,
       });
-      closeToast()
-      refetch()
+      closeToast();
+      refetch();
     };
     const onError = (resp) => {
       setShowToast({
-        label:`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        isError:true
+        label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
+        isError: true,
       });
 
-      closeToast()
-      refetch()
+      closeToast();
+      refetch();
     };
 
     mutation.mutate(
@@ -78,9 +108,9 @@ const MDMSView = ({...props}) => {
         url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${moduleName}.${masterName}`,
         params: {},
         body: {
-          Mdms:{
+          Mdms: {
             ...data,
-            isActive:action==="ENABLE" ? true : false
+            isActive: action === "ENABLE" ? true : false,
           },
         },
       },
@@ -102,7 +132,7 @@ const MDMSView = ({...props}) => {
   };
   const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isSORLoading) return <Loader />;
 
   return (
     <React.Fragment>

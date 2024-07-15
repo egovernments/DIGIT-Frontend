@@ -76,7 +76,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
         },
       };
   const reqCriteriaAdd = {
-    url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"create"),
+    url: api ? api?.url : `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${moduleName}.${masterName}`,
     params: {},
     body: { ...body },
     config: {
@@ -88,7 +88,19 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaAdd);
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.validateForm(data, { tenantId: tenantId });
+
+    if (validation && !validation?.isValid) {
+      setShowToast(t(validation.message));
+
+      setShowErrorToast(true);
+
+      toggleSpinner(false);
+
+      return;
+    }
+
     toggleSpinner(true);
     const onSuccess = (resp) => {
       toggleSpinner(false);
