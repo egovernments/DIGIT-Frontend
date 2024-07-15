@@ -3,6 +3,7 @@ import MDMSAdd from "./MDMSAddV2";
 import { Loader, Toast } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { transform } from "lodash";
 
 const MDMSView = ({ ...props }) => {
   const history = useHistory();
@@ -10,7 +11,7 @@ const MDMSView = ({ ...props }) => {
   const [showToast, setShowToast] = useState(false);
   let { moduleName, masterName, tenantId, uniqueIdentifier } = Digit.Hooks.useQueryParams();
   // const stateId = Digit.ULBService.getStateId();
-
+  tenantId = Digit.ULBService.getCurrentTenantId();
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
