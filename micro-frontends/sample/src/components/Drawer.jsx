@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useDrawerState } from '../state/useDrawerState';
-// import ClickableScreen from './ClickableScreen';
 
 const Drawer = ({ onClose }) => {
     const { data,resetData } = useDrawerState();
@@ -51,16 +50,6 @@ const Drawer = ({ onClose }) => {
                 <h4 className="text-lg font-light text-gray-900">Content :</h4>
                 <h2 className="text-lg font-medium text-orange-800">{data?.content}</h2>
               </div>
-              {/* <ClickableScreen></ClickableScreen> */}
-              {/* <div className="mt-6 relative flex-1 px-4 sm:px-6">
-               
-                <div className="h-full border-2 border-dashed border-gray-200">
-                  {/* Your content here 
-                  <p className="text-sm text-gray-500">
-                    Replace with your drawer content.
-                  </p>
-                </div>
-              </div> */}
             </div>
           </div>
         </section>

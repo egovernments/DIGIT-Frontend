@@ -1,5 +1,3 @@
-// ClickableScreen.js
-
 import React from 'react';
 import ToggleButton from './ToggleButton';
 import { useDrawerState } from '../state/useDrawerState';
@@ -40,14 +38,7 @@ const ClickableScreen = ({ onTextClick,children }) => {
         }}
         // onClick={()=>setDrawer({...drawerData,isOpen:!drawerData?.isOpen,fromScreen:data?.currentScreen ,content:"Hii"})}
         ></ToggleButton>}
-        
-        {/* <p className="mt-2 text-sm text-gray-600">Identify the text you clicked on.</p>
-        <button
-          className="mt-4 bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600"
-          onClick={handleClick}
-        >
-          Click Me
-        </button> */}
+      
         {children}
       </div>
     </div>
