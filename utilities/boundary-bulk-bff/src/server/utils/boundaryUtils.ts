@@ -4,7 +4,7 @@ import { addDataToSheet, createAndUploadFile, createExcelSheet, getExcelWorkbook
 import { getLocalizedHeaders, getLocalizedName, transformAndCreateLocalisation } from "./localisationUtils";
 import { getFormattedStringForDebug, logger } from "./logger";
 import { persistEntityCreate, persistError, persistRelationship, processAndPersist } from "./persistUtils";
-import { defaultheader, httpRequest } from "./request";
+import { httpRequest } from "./request";
 const _ = require('lodash');
 
 
@@ -338,6 +338,7 @@ async function createBoundaryEntities(request: any, boundaryMap: Map<any, any>) 
     }
   }
 
+
   const codeSet = new Set(codesFromResponse);// Creating a set and filling it with the codes from the response
   for (const { key: boundaryName, value: boundaryCode } of updatedBoundaryMap) {
     if (!codeSet.has(boundaryCode.toString())) {
@@ -405,12 +406,12 @@ async function confirmBoundaryParentCreation(request: any, code: any) {
     }
     var retry = 6;
     var boundaryFound = false;
-    const header = {
-      ...defaultheader,
-      cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
-    }
+    // const header = {
+    //   ...defaultheader,
+    //   cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+    // }
     while (!boundaryFound && retry >= 0) {
-      const response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, searchBody, params, undefined, undefined, header);
+      const response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, searchBody, params, undefined, undefined);
       if (response?.TenantBoundary?.[0].boundary?.[0]) {
         boundaryFound = true;
       }
@@ -449,12 +450,12 @@ async function createBoundaryRelationship(request: any, boundaryMap: Map<{ key: 
     "includeChildren": true,
     "hierarchyType": request?.query?.hierarchyType
   };
-  const header = {
-    ...defaultheader,
-    cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
-  }
+  // const header = {
+  //   ...defaultheader,
+  //   cachekey: `boundaryRelationShipSearch${params?.hierarchyType}${params?.tenantId}${params.codes || ''}${params?.includeChildren || ''}`,
+  // }
 
-  const boundaryRelationshipResponse = await httpRequest(url, request.body, params, undefined, undefined, header);
+  const boundaryRelationshipResponse = await httpRequest(url, request.body, params, undefined, undefined);
   const boundaryData = boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
   const allCodes = extractCodesFromBoundaryRelationshipResponse(boundaryData);
   const alreadyPresentBoundaryCodes = []
