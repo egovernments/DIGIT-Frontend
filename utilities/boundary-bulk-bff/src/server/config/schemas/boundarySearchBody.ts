@@ -16,6 +16,11 @@ export const boundarySearchBodySchema = {
             "type": "string",
             "minLength": 1,
             "maxLength": 128
+        },
+        "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
         }
     },
     "required": ["tenantId", "hierarchyType"]
