@@ -25,6 +25,7 @@
     "packages/ui-components",
     "packages/components",
     "packages/svg-components",
+
     "packages/hrms",
     "packages/ui"
   ],

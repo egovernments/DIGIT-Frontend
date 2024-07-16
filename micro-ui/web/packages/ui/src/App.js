@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Loader } from "@digit-ui/digit-ui-react-components";
 
 const initDigitUI = () => {
-  // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "ui";
+  // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
   window.contextPath =  "ui";
 
   window.Digit.Customizations = {

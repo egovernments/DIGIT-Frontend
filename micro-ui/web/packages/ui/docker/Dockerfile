@@ -38,7 +38,10 @@ RUN yarn build
 
 FROM nginx:mainline-alpine
 
-ENV WORK_DIR=/var/web/ui
+
+
+ENV WORK_DIR=/var/web/ui-core-mfe
+
 
 RUN mkdir -p ${WORK_DIR}
 

@@ -1,0 +1,49 @@
+name:  ui service docker Image CI
+
+on:
+  push:
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan" ]
+  pull_request:
+    branches: [ "develop-mfe","develop-mfe-microplan-common-pkgs","develop-mfe-campaign-microplan","build-fix-develop-mfe-campaign-microplan" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for tags and branches
+
+    - name: Set up environment variables
+      id: env
+      run: |
+        echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+        echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
+
+    - name: Build the Docker image
+      id: docker_build
+      working-directory: ./micro-ui/web/packages/core
+      run: |
+        IMAGE_TAG=egovio/ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        docker build . \
+          --file docker/Dockerfile \
+          --tag $IMAGE_TAG
+        echo "::set-output name=image_name::$IMAGE_TAG"
+
+    - name: Login to Docker Hub and Push Docker Image
+      working-directory: ./micro-ui/web/packages/core
+      env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          IMAGE_NAME: ${{ steps.docker_build.outputs.image_name }}
+      run: |      
+          # Authenticate with Docker Hub
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          
+          # Push the image to Docker Hub
+          docker push $IMAGE_NAME
+          echo "Docker image pushed: $IMAGE_NAME"
