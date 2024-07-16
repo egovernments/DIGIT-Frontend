@@ -35,7 +35,7 @@ jobs:
         echo "::set-output name=image_name::$IMAGE_TAG"
 
     - name: Login to Docker Hub and Push Docker Image
-      working-directory: ./micro-ui/web/packages/core
+      working-directory: ./micro-ui/web/packages/ui
       env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
