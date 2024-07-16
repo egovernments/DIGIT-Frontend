@@ -4,6 +4,7 @@ import TopBar from "./TopBar";
 import { useHistory } from "react-router-dom";
 import SideBar from "./SideBar";
 import LogoutDialog from "../Dialog/LogoutDialog";
+
 const TopBarSideBar = ({
   t,
   stateInfo,
@@ -41,7 +42,7 @@ const TopBarSideBar = ({
   ];
   return (
     <React.Fragment>
-     <TopBar
+      {/* <TopBar
         t={t}
         stateInfo={stateInfo}
         toggleSidebar={toggleSidebar}
@@ -55,11 +56,11 @@ const TopBarSideBar = ({
         handleUserDropdownSelection={handleUserDropdownSelection}
         logoUrl={logoUrl}
         showLanguageChange={showLanguageChange}
-      />
+      /> */}
       {showDialog && (
         <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
       )}
-      {showSidebar && (
+      {/* {showSidebar && (
         <SideBar
           t={t}
           CITIZEN={CITIZEN}
@@ -71,7 +72,7 @@ const TopBarSideBar = ({
           linkData={linkData}
           islinkDataLoading={islinkDataLoading}
         />
-      )}
+      )} */}
     </React.Fragment>
   );
 };

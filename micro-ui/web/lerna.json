@@ -8,7 +8,9 @@
     "packages/components",
     "packages/svg-components",
     "packages/microplan",
-    "packages/campaign"
+    "packages/campaign",
+    "packages/hrms",
+    "packages/ui"
   ],
   "command": {
     "run": {
