@@ -9,11 +9,11 @@ module.exports = () => {
   const prodConfig = {
     mode: "production",
     output: {
-      publicPath: "/ui-core-mfe/"
+      publicPath: "/ui/"
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: "ui-core-mfe",
+        name: "ui",
         remotes: {
         hrms: `hrms@${domain}/hrms-ui/remoteEntry.js`,
         //   common: `common@${domain}/common-ui/remoteEntry.js`,

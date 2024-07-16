@@ -9,7 +9,7 @@ import { Loader } from "@digit-ui/digit-ui-react-components";
 
 const initDigitUI = () => {
   // window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "core-digit-ui";
-  window.contextPath =  "ui-core-mfe";
+  window.contextPath =  "ui";
 
   window.Digit.Customizations = {
 

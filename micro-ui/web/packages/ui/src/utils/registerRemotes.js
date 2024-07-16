@@ -22,7 +22,7 @@ export default (queryClient) => {
   //   name: 'PGR',
   //   app: () => import('pgr/PGRModule'),
   //   activeWhen: `/${
-  //     window.contextPath ? window.contextPath : 'ui-core-mfe'
+  //     window.contextPath ? window.contextPath : 'ui'
   //   }/${userType}/pgr`,
   //   customProps: {
   //     title: 'PGR is running on host',
@@ -35,7 +35,7 @@ export default (queryClient) => {
   //   name: 'Workbench',
   //   app: () => import('workbench/WorkbenchModule'),
   //   activeWhen: `/${
-  //     window.contextPath ? window.contextPath : 'ui-core-mfe'
+  //     window.contextPath ? window.contextPath : 'ui'
   //   }/employee/workbench`,
   //   customProps: {
   //     title: 'Workbench is running on host',
@@ -50,7 +50,7 @@ export default (queryClient) => {
   //   name: 'Microplan',
   //   app: () => import('microplan/MICROPLANModule'),
   //   activeWhen: `/${
-  //     window.contextPath ? window.contextPath : 'ui-core-mfe'
+  //     window.contextPath ? window.contextPath : 'ui'
   //   }/employee/microplan`,
   //   customProps: {
   //     title: 'Microplan is running on host',
@@ -63,7 +63,7 @@ export default (queryClient) => {
   //   name: 'Campaign',
   //   app: () => import('campaign/CAMPAIGNModule'),
   //   activeWhen: `/${
-  //     window.contextPath ? window.contextPath : 'ui-core-mfe'
+  //     window.contextPath ? window.contextPath : 'ui'
   //   }/employee/campaign`,
   //   customProps: {
   //     title: 'Campaign is running on host',
@@ -76,7 +76,7 @@ export default (queryClient) => {
     name: 'HRMS',
     app: () => import('hrms/HRMSModule'),
     activeWhen: `/${
-      window.contextPath ? window.contextPath : 'ui-core-mfe'
+      window.contextPath ? window.contextPath : 'ui'
     }/employee/hrms`,
     customProps: {
       title: 'HRMS is running on host',
@@ -88,7 +88,7 @@ export default (queryClient) => {
   // registerApplication({
   //   name: "Common",
   //   app: () => import("common/CommonModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "ui-core-mfe"}/${userType}/payment`, //change to userType here
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "ui"}/${userType}/payment`, //change to userType here
   //   customProps: {
   //     title: "Common Module is running on host",
   //     queryClient,
@@ -99,7 +99,7 @@ export default (queryClient) => {
   //  registerApplication({
   //   name: "Dss",
   //   app: () => import("dss/DSSModule"),
-  //   activeWhen: `/${window.contextPath ? window.contextPath : "ui-core-mfe"}/employee/dss`,
+  //   activeWhen: `/${window.contextPath ? window.contextPath : "ui"}/employee/dss`,
   //   customProps: {
   //     title: "DSS is running on host",
   //     queryClient,
@@ -110,7 +110,7 @@ export default (queryClient) => {
   // // registerApplication({
   // //   name: "TQM",
   // //   app: () => import("tqm/TQMModule"),
-  // //   activeWhen: `/${window.contextPath ? window.contextPath : "core-digit-ui"}/employee/tqm`,
+  // //   activeWhen: `/${window.contextPath ? window.contextPath : "ui"}/employee/tqm`,
   // //   customProps: {
   // //     title: "TQM is running on host",
   // //     queryClient,
@@ -122,8 +122,8 @@ export default (queryClient) => {
   //   name: "Engagement",
   //   app: () => import("engagement/EngagementModule"),
   //   activeWhen: [
-  //     `/${window.contextPath ? window.contextPath : "ui-core-mfe"}/${userType}/engagement`,
-  //     `/${window.contextPath ? window.contextPath : "ui-core-mfe"}/${userType}/engagement`
+  //     `/${window.contextPath ? window.contextPath : "ui"}/${userType}/engagement`,
+  //     `/${window.contextPath ? window.contextPath : "ui"}/${userType}/engagement`
   //   ],
   //   customProps: {
   //     title: "Engagement is running on host",
