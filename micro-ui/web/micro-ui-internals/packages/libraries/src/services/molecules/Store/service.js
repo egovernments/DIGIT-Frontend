@@ -19,7 +19,7 @@ const addLogo = (id, url, fallbackUrl = "") => {
   if (!containerDiv) {
     containerDiv = document.createElement("div");
     containerDiv.id = containerDivId;
-    containerDiv.style = "position: absolute; top: 0; left: -9999px;";
+    containerDiv.style = "position: absolute; top: 0; left: -29999px;";
     document.body.appendChild(containerDiv);
   }
   const img = document.createElement("img");
