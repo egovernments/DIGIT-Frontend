@@ -56,6 +56,7 @@ const config = {
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
     localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
+    mdmsHost: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
   },
   // Paths for different services
   paths: {
@@ -67,6 +68,7 @@ const config = {
     localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
     localizationCreate: "localization/messages/v1/_upsert",
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
+    mdmsSchemaSearch: "mdms-v2/schema/v1/_search",
   },
   values: {
     maxHttpRetries: "4"

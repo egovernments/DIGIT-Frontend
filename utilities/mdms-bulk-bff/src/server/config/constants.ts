@@ -33,7 +33,8 @@ export const CONSTANTS = {
         },
         MDMS: {
             INVALID_README_CONFIG: "Invalid readme config",
-            MDMS_DATA_NOT_FOUND_ERROR: "Mdms Data not present"
+            MDMS_DATA_NOT_FOUND_ERROR: "Mdms Data not present",
+            INVALID_MDMS_SCHEMA: "Invalid mdms schema"
         }
     }
 }
