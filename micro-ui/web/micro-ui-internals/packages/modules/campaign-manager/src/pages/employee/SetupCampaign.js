@@ -1302,7 +1302,6 @@ const SetupCampaign = ({ hierarchyType }) => {
   const onSubmit = (formData, cc) => {
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
-    console.log("totalFORMDATA", totalFormData, "formData", formData);
     if (
       totalFormData?.["HCM_CAMPAIGN_DELIVERY_DATA"]?.deliveryRule?.length > 0 &&
       formData?.deliveryRule?.length > 0 &&
