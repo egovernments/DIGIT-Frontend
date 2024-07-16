@@ -15,13 +15,16 @@ const getImgUrl = (url, fallbackUrl) => {
 };
 const addLogo = (id, url, fallbackUrl = "") => {
   const containerDivId = "logo-img-container";
+  console.log(containerDivId,"containerdivId")
   let containerDiv = document.getElementById(containerDivId);
+  console.log(containerDiv,"containerdiv")
   if (!containerDiv) {
     containerDiv = document.createElement("div");
     containerDiv.id = containerDivId;
     containerDiv.style = "position: absolute; top: 0; left: -29999px;";
     document.body.appendChild(containerDiv);
   }
+  console.log(containerDiv,"finalcontainerdiv");
   const img = document.createElement("img");
   img.src = getImgUrl(url, fallbackUrl);
   img.id = `logo-${id}`;
@@ -89,14 +92,14 @@ export const StoreService = {
       // .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
       // .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
 
-    await LocalizationService.getLocale({
-      modules: [
-        `rainmaker-common`,
-        `rainmaker-${stateCode.toLowerCase()}`
-      ],
-      locale: initData.selectedLanguage,
-      tenantId: stateCode,
-    });
+    // await LocalizationService.getLocale({
+    //   modules: [
+    //     `rainmaker-common`,
+    //     `rainmaker-${stateCode.toLowerCase()}`
+    //   ],
+    //   locale: initData.selectedLanguage,
+    //   tenantId: stateCode,
+    // });
     Storage.set("initData", initData);
     initData.revenue_localities = revenue_localities;
     initData.localities = localities;
