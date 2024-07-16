@@ -41,37 +41,7 @@ const TopBarSideBar = ({
   ];
   return (
     <React.Fragment>
-      <TopBar
-        t={t}
-        stateInfo={stateInfo}
-        toggleSidebar={toggleSidebar}
-        isSidebarOpen={isSidebarOpen}
-        handleLogout={handleLogout}
-        userDetails={userDetails}
-        CITIZEN={CITIZEN}
-        cityDetails={cityDetails}
-        mobileView={mobileView}
-        userOptions={userOptions}
-        handleUserDropdownSelection={handleUserDropdownSelection}
-        logoUrl={logoUrl}
-        showLanguageChange={showLanguageChange}
-      />
-      {showDialog && (
-        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
-      )}
-      {showSidebar && (
-        <SideBar
-          t={t}
-          CITIZEN={CITIZEN}
-          isSidebarOpen={isSidebarOpen}
-          toggleSidebar={toggleSidebar}
-          handleLogout={handleLogout}
-          mobileView={mobileView}
-          userDetails={userDetails}
-          linkData={linkData}
-          islinkDataLoading={islinkDataLoading}
-        />
-      )}
+     
     </React.Fragment>
   );
 };
