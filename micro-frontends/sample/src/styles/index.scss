@@ -1,0 +1,10 @@
+/* src/styles/tailwind.scss */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@import "./global";
+@import "./elements";
+@import "./themes";
+@import "./components";

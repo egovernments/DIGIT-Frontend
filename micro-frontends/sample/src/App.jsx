@@ -1,4 +1,3 @@
-import "./App.css";
 import Theme from "./examples/Theme";
 import StatusBar from "./components/statusBar";
 import LanguageSwitcher from "./components/LanguageSelector";
