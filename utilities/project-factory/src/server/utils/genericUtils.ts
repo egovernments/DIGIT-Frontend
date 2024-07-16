@@ -1084,29 +1084,28 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
-  let headers:any;
+  let headers: any;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
   const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
-  const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
   if (isSourceMicroplan) {
-     console.log(`Source is Microplan.`);
-     headers = getLocalizedHeaders(hierarchy, localizationMap);
+    console.log(`Source is Microplan.`);
+    headers = getLocalizedHeaders(hierarchy, localizationMap);
   }
   else {
-     headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
-     let headerColumnsAfterHierarchy: any;
-     if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
-        // fetching unique delivery conditions from deliveryRules
-        const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
-        // generating target columns base on delivery conditions
-        headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
-      }
-      else {
-        headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
-      }
-     const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
-     headers = [...headers, ...localizedHeadersAfterHierarchy]
-  }  
+    headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+    let headerColumnsAfterHierarchy: any;
+    if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
+      // fetching unique delivery conditions from deliveryRules
+      const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
+      // generating target columns base on delivery conditions
+      headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
+    }
+    else {
+      headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+    }
+    const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
+    headers = [...headers, ...localizedHeadersAfterHierarchy]
+  }
   return getLocalizedHeaders(headers, localizationMap);
 }
 
