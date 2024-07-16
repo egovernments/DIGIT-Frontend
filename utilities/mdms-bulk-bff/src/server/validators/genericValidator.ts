@@ -34,22 +34,3 @@ export function validateBodyViaSchema(schema: any, objectData: any) {
         throwError("COMMON", 400, "VALIDATION_ERROR", formattedError);
     }
 }
-
-export async function validateHierarchyType(request: any, hierarchyType: any, tenantId: any) {
-    const searchBody = {
-        RequestInfo: request?.body?.RequestInfo,
-        BoundaryTypeHierarchySearchCriteria: {
-            "tenantId": tenantId,
-            "limit": 5,
-            "offset": 0,
-            "hierarchyType": hierarchyType
-        }
-    }
-    const response = await httpRequest(config.host.boundaryHost + config.paths.boundaryHierarchy, searchBody);
-    if (response?.BoundaryHierarchy && Array.isArray(response?.BoundaryHierarchy) && response?.BoundaryHierarchy?.length > 0) {
-        logger.info(`hierarchyType : ${hierarchyType} :: got validated`);
-    }
-    else {
-        throwError(`CAMPAIGN`, 400, "VALIDATION_ERROR", `hierarchyType ${hierarchyType} not found`);
-    }
-}

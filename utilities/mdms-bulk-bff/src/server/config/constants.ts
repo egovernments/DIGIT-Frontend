@@ -1,7 +1,7 @@
 import Error from "./error.interface"
 
 
-export const boundaryStatus = {
+export const mdmsProcessStatus = {
     inprogress: "inprogress",
     failed: "failed",
     completed: "completed"
@@ -30,36 +30,6 @@ export const CONSTANTS = {
             INVALID_FILE_FORMAT: "The uploaded file is not a valid excel file (xlsx or xls).",
             INVALID_COLUMNS: "Columns are invalid",
             FETCHING_COLUMN_ERROR: "Error fetching Column Headers From Schema"
-        },
-        FACILITY: {
-            FACILITY_SEARCH_FAILED: "Search failed for facility. Check logs",
-        },
-        CAMPAIGN: {
-            CAMPAIGN_SEARCH_ERROR: "Error in campaign search",
-            CAMPAIGNNAME_MISMATCH: "CampaignName is not matching",
-            CAMPAIGN_NOT_FOUND: "Campaign not found",
-            GENERATION_REQUIRE: "First generate then download",
-            RESOURCE_CREATION_ERROR: "Some error occured during resource creation",
-            CAMPAIGN_NAME_ERROR: "Campaign name already exists",
-            CAMPAIGN_ALREADY_MAPPED: "Campaign is already mapped",
-        },
-        BOUNDARY: {
-            BOUNDARY_DATA_NOT_FOUND: "No boundary data found in the system.",
-            BOUNDARY_HIERARCHY_INSERT_ERROR: "Insert boundary hierarchy level wise",
-            BOUNDARY_SEARCH_ERROR: "Error in boundary search. Check boundary codes",
-            BOUNDARY_NOT_FOUND: "Boundary not found",
-            BOUNDARY_SHEET_HEADER_ERROR: "Boundary sheet header error",
-            BOUNDARY_ENTITY_CREATE_ERROR: "Some error occured during boundary entity creation",
-            BOUNDARY_RELATIONSHIP_CREATE_ERROR: "Some error occured during boundary relationship creation",
-            BOUNDARY_TARGET_ERROR: "Target either not present or invalid value",
-            BOUNDARY_CONFIRMATION_FAILED: "Error in boundary creation and persistence"
-        },
-        PROJECT: {
-            PROJECT_CREATION_FAILED: "Error occured in project creation",
-            PROJECT_SEARCH_ERROR: "Error occured during project search , check projectId",
-            PROJECT_UPDATE_ERROR: "Error occured during project update , check projectId",
-            PROJECT_CREATION_ERROR: "Some error occured during project creation",
-            PROJECT_CONFIRMATION_FAILED: "Error occured in project creation and peristence",
         },
         MDMS: {
             INVALID_README_CONFIG: "Invalid readme config",

@@ -1,13 +1,13 @@
 import * as express from "express";
-import { searchBoundaryDetailService } from "../../service/boundaryManageService";
+import { searchBoundaryDetailService } from "../../service/mdmsBulkManageService";
 import { logger } from "../../utils/logger";
 import { errorResponder, sendResponse } from "../../utils/genericUtils";
-import { createBoundariesService } from "../../service/boundaryManageService";
+import { createBoundariesService } from "../../service/mdmsBulkManageService";
 
 
 
 // Define the MeasurementController class
-class boundaryManageController {
+class mdmsBulkManageController {
     // Define class properties
     public path = "/v1/boundary";
     public router = express.Router();
@@ -20,21 +20,21 @@ class boundaryManageController {
 
     // Initialize routes for MeasurementController
     public intializeRoutes() {
-        this.router.post(`${this.path}/create`, this.createBoundaries);
-        this.router.post(`${this.path}/search`, this.searchBoundaryDetails);
+        this.router.post(`${this.path}/create`, this.createMdmsDatas);
+        this.router.post(`${this.path}/search`, this.searchMdmsDatas);
     }
     /**
  * Handles the creation of a project type campaign.
  * @param request The Express request object.
  * @param response The Express response object.
  */
-    createBoundaries = async (
+    createMdmsDatas = async (
         request: express.Request,
         response: express.Response
     ) => {
         try {
-            logger.info("RECEIVED A BULK BOUNDARY CREATE REQUEST");
-            await createBoundariesService(request, response);
+            logger.info("RECEIVED A BULK MDMS CREATE REQUEST");
+            await createMdmsDatasService(request);
             return sendResponse(response, { boundaryDetails: request.body.boundaryDetails }, request);
         } catch (e: any) {
             console.log(e)
@@ -44,7 +44,7 @@ class boundaryManageController {
         }
     };
 
-    searchBoundaryDetails = async (
+    searchMdmsDatas = async (
         request: express.Request,
         response: express.Response
     ) => {
@@ -61,7 +61,7 @@ class boundaryManageController {
     };
 
 };
-export default boundaryManageController;
+export default mdmsBulkManageController;
 
 
 

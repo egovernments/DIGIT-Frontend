@@ -1,8 +1,8 @@
-export const boundarySearchBodySchema = {
+export const mdmsSearchBodySchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "hierarchyType": {
+        "schemaName": {
             "type": "string",
             "maxLength": 128,
             "minLength": 1
@@ -23,5 +23,5 @@ export const boundarySearchBodySchema = {
             "maxLength": 128
         }
     },
-    "required": ["tenantId", "hierarchyType"]
+    "required": ["tenantId", "schemaName"]
 };

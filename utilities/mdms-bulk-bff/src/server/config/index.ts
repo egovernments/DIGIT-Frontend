@@ -49,11 +49,6 @@ const config = {
     logLevel: process.env.APP_LOG_LEVEL || "debug",
     debugLogCharLimit: process.env.APP_MAX_DEBUG_CHAR ? Number(process.env.APP_MAX_DEBUG_CHAR) : 1000
   },
-  localisation: {
-    defaultLocale: process.env.LOCALE || "en_MZ",
-    boundaryPrefix: "rainmaker-boundary",
-    localizationModule: process.env.LOCALIZATION_MODULE || "rainmaker-hcm-admin-schemas",
-  },
   host: {
     serverHost: HOST,
     KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
@@ -61,11 +56,6 @@ const config = {
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
     boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
     localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
-  },
-  values: {
-    maxHttpRetries: "4",
-    unfrozeTillRow: process.env.UNFROZE_TILL_ROW || "10000",
-    unfrozeTillColumn: process.env.UNFROZE_TILL_COLUMN || "50",
   },
   // Paths for different services
   paths: {
@@ -77,6 +67,9 @@ const config = {
     localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
     localizationCreate: "localization/messages/v1/_upsert",
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
+  },
+  values: {
+    maxHttpRetries: "4"
   }
 };
 // Exporting getErrorCodes function and config object

@@ -79,7 +79,7 @@ async function httpRequest(
         JSON.stringify(_params)
       );
       logger.debug("INTER-SERVICE :: REQUESTBODY :: " + getFormattedStringForDebug(_requestBody));
-      // delete headers.cachekey;
+      delete headers.cachekey;
 
       // Add debug log before axios request
       logger.debug(`Attempting HTTP request to ${_url}, attempt ${attempt + 1}`);

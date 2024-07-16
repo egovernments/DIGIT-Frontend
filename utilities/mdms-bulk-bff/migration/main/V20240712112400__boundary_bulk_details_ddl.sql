@@ -1,7 +1,7 @@
-CREATE TABLE eg_boundary_bulk_details (
+CREATE TABLE eg_mdms_bulk_details (
     id varchar(128) PRIMARY KEY,
     tenantId VARCHAR(128) NOT NULL,
-    hierarchyType VARCHAR(256) NOT NULL,
+    schemaName VARCHAR(256) NOT NULL,
     fileStoreId VARCHAR(128) NOT NULL,
     "status" VARCHAR(128) NOT NULL,
     processedFileStoreId VARCHAR(128),
