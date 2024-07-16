@@ -92,7 +92,34 @@ const authHeaders = (token) => ({
 // Function to fetch user service data
 const userServiceData = async () => ({ userInfo: await getUser() });
 
-// Main request function
+/**
+ * Custom Request to make all API calls.
+ * Handles request preparation, headers, caching, and response processing.
+ *
+ * @author jagankumar-egov
+ *
+ * @param {Object} options - The options object.
+ * @param {string} [options.method='POST'] - The HTTP method to use for the request.
+ * @param {string} options.url - The URL to send the request to.
+ * @param {Object} [options.data={}] - The data to send with the request.
+ * @param {Object} [options.headers={}] - The headers to send with the request.
+ * @param {boolean} [options.useCache=false] - Whether to use caching for the request.
+ * @param {Object} [options.params={}] - The URL parameters to send with the request.
+ * @param {boolean} [options.auth=false] - Whether to include authentication token.
+ * @param {Object} [options.urlParams={}] - The URL parameters to replace in the URL.
+ * @param {boolean} [options.userService=false] - Whether to include user service data.
+ * @param {boolean} [options.locale=true] - Whether to include locale information.
+ * @param {boolean} [options.authHeader=false] - Whether to include authentication headers.
+ * @param {boolean} [options.setTimeParam=true] - Whether to include a timestamp parameter to avoid caching.
+ * @param {boolean} [options.userDownload=false] - Whether the request is for downloading a file.
+ * @param {boolean} [options.noRequestInfo=false] - Whether to exclude request info from the payload.
+ * @param {boolean} [options.multipartFormData=false] - Whether to send the request as multipart/form-data.
+ * @param {Object} [options.multipartData={}] - The multipart data to send with the request.
+ * @param {boolean} [options.reqTimestamp=false] - Whether to include a timestamp in the request info.
+ *
+ * @returns {Promise<Object>} - The response data.
+ */
+
 export const Request = async ({
   method = "POST",
   url,
@@ -247,6 +274,7 @@ const handleCacheOrTimestamp = (
 ) => {
   let finalParams = { ...params };
   if (useCache) {
+    /* Window level cache has been implemented we can also have session or localstorage level cache if needed */
     const key = `${method.toUpperCase()}.${url}.${btoa(
       escape(JSON.stringify(params, null, 0))
     )}.${btoa(escape(JSON.stringify(data, null, 0)))}`;
