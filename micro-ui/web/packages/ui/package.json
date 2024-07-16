@@ -1,0 +1,64 @@
+{
+  "name": "ui-core-mfe",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d dist"
+  },
+  "homepage": "http://design-egov.github.io/core",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "7.12.10",
+    "@babel/preset-env": "7.23.9",
+    "@babel/preset-react": "7.12.10",
+    "autoprefixer": "^10.4.13",
+    "babel-loader": "8.2.2",
+    "babel-plugin-react-html-attrs": "^3.0.5",
+    
+    
+    "react-query-devtools": "^2.6.3",
+    "regex-escape": "^3.4.10",
+    
+    
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-merge": "5.7.3"
+  },
+  "dependencies": {
+    "@digit-ui/digit-ui-components": "1.0.3",
+    "@digit-ui/digit-ui-libraries-mfe": "1.0.17",
+    "@digit-ui/digit-ui-react-components": "1.0.1",
+    
+    "@rjsf/core": "5.10.0",
+    "@rjsf/utils": "5.10.0",
+    "@rjsf/validator-ajv8": "5.10.0",
+    
+    "i18next": "19.9.2",
+    "i18next-browser-languagedetector": "^7.2.1",
+    "i18next-http-backend": "^2.5.1",
+    "i18next-react-postprocessor": "3.0.7",
+    "lodash.merge": "^4.6.2",
+    "pdfmake": "0.1.72",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-i18next": "11.16.2",
+    "react-query": "3.6.1",
+    "react-redux": "7.2.8",
+    "react-router-dom": "5.3.0",
+    "react-tooltip": "^5.21.1",
+    "redux": "4.1.2",
+    "redux-thunk": "^2.4.2",
+    "rxjs": "6.6.3",
+    "single-spa": "^5.9.3",
+    "single-spa-react": "^4.6.1"
+  }
+}
