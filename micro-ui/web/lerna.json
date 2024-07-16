@@ -7,8 +7,7 @@
     "packages/ui-components",
     "packages/components",
     "packages/svg-components",
-    "packages/microplan",
-    "packages/campaign",
+
     "packages/hrms",
     "packages/ui"
   ],
