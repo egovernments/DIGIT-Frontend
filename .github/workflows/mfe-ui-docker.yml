@@ -26,7 +26,7 @@ jobs:
 
     - name: Build the Docker image
       id: docker_build
-      working-directory: ./micro-ui/web/packages/core
+      working-directory: ./micro-ui/web/packages/ui
       run: |
         IMAGE_TAG=egovio/ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
         docker build . \
