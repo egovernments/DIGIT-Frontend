@@ -1307,7 +1307,6 @@ const SetupCampaign = ({ hierarchyType }) => {
       formData?.deliveryRule?.length > 0 &&
       !_.isEqual(totalFormData?.["HCM_CAMPAIGN_DELIVERY_DATA"]?.deliveryRule, formData?.deliveryRule)
     ) {
-      console.log("KYA RE SALA");
       refetchBoundary();
     }
     if (checkValid === false) {
