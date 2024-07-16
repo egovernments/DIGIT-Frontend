@@ -2,13 +2,13 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "0.0.0",
   "packages":[
-    "packages/core",
+   
     "packages/ui-libraries",
     "packages/ui-components",
     "packages/components",
     "packages/svg-components",
-    "packages/microplan",
-    "packages/campaign"
+    "packages/hrms",
+    "packages/ui"
   ],
   "command": {
     "run": {

@@ -20,13 +20,13 @@
     "webpack-merge": "5.7.3"
   },
   "workspaces": [
-    "packages/core",
+   
     "packages/ui-libraries",
     "packages/ui-components",
     "packages/components",
     "packages/svg-components",
-    "packages/microplan",
-    "packages/campaign"
+    "packages/hrms",
+    "packages/ui"
   ],
   "scripts": {
     "build": "yarn lerna run build",
