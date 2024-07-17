@@ -1,0 +1,103 @@
+
+
+<!-- TODO: update this -->
+
+# digit-ui-react-components
+
+## Install
+
+```bash
+npm install --save @digit-ui/digit-ui-react-components
+```
+
+## Limitation
+
+```bash
+This Package is more specific to DIGIT-UI's can be used across mission's
+```
+
+## Usage
+
+After adding the dependency make sure you have this dependency in
+
+```bash
+frontend/micro-ui/web/package.json
+```
+
+```json
+"@digit-ui/digit-ui-react-components":"1.4.108",
+```
+
+then navigate to App.js
+
+```bash
+ frontend/micro-ui/web/src/App.js
+```
+
+Syntax for importing any component;
+
+```jsx
+import React, { Component } from "react";
+import MyComponent from "@digit-ui/digit-ui-react-components";
+
+class Example extends Component {
+  render() {
+    return <MyComponent />;
+  }
+}
+```
+Syntax for the Inbox Composers
+
+```jsx
+    import { InboxSearchComposer } from "@digit-ui/digit-ui-react-components";
+
+    <React.Fragment>
+      <Header className="works-header-search">{t(updatedConfig?.label)}</Header>
+      <div className="inbox-search-wrapper">
+        <InboxSearchComposer configs={updatedConfig}></InboxSearchComposer>
+      </div>
+    </React.Fragment>
+```
+
+Syntax for the FormComposersV2
+
+```jsx
+    import { FormComposerV2 as FormComposer } from "@digit-ui/digit-ui-react-components";
+
+   <React.Fragment>
+      <Header >{t("CREATE_HEADER")}</Header>
+      <FormComposer
+        label={t("PROCEED")}
+        config={configs.map((config) => {
+          return {
+            ...config,
+            body: config.body.filter((a) => !a.hideInEmployee),
+          };
+        })}
+        defaultValues={sessionFormData}
+        onFormValueChange={onFormValueChange}
+        onSubmit={onFormSubmit}
+        fieldStyle={{ marginRight: 0 }}
+        className="form-no-margin"
+        labelBold={true}
+      />
+    </React.Fragment>
+```
+ 
+
+# Changelog
+
+```bash
+1.4.100 published for checking webpack usecase
+```
+
+# Contributors
+
+[jagankumar-egov] [nipunarora-eGov] [Tulika-eGov] [Ramkrishna-egov] [nabeelmd-eGov] [anil-egov] [vamshikrishnakole-wtt-egov] 
+
+## Published from DIGIT Core 
+Digit Dev Repo (https://github.com/egovernments/DIGIT-Dev/tree/digit-ui-core)
+
+## License
+
+MIT © [jagankumar-egov](https://github.com/jagankumar-egov)
