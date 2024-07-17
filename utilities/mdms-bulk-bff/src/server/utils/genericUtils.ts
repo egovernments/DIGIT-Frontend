@@ -1,5 +1,8 @@
 import { logger } from "./logger";
 import { NextFunction, Request, Response } from "express";
+import { httpRequest } from "./request";
+import config from "../config";
+import { throwError } from "./errorUtils";
 const NodeCache = require("node-cache");
 
 
@@ -136,3 +139,16 @@ const getResponseInfo = (code: Number) => ({
         desc: code == 304 ? "cached-response" : "new-response",
     },
 });
+
+export async function getFileUrl(request: any) {
+    const { fileStoreId, tenantId } = request.query;
+    const searchParams = {
+        tenantId,
+        fileStoreIds: fileStoreId
+    }
+    const response = await httpRequest(config.host.filestore + config.paths.filestore, {}, searchParams, "get");
+    if (!response?.fileStoreIds?.[0]?.url) {
+        throwError("FILE", 400, "INVALID_FILE");
+    }
+    return response?.fileStoreIds?.[0]?.url
+}

@@ -28,8 +28,8 @@ const config = {
     redisPort: process.env.REDIS_PORT || "6379",
   },
   kafka: {
-    KAFKA_SAVE_BOUNDARY_DETAILS_TOPIC: process.env.KAFKA_SAVE_BOUNDARY_DETAILS_TOPIC || "save-boundary-details",
-    KAFKA_UPDATE_BOUNDARY_DETAILS_TOPIC: process.env.KAFKA_UPDATE_BOUNDARY_DETAILS_TOPIC || "update-boundary-details",
+    KAFKA_SAVE_MDMS_DETAILS_TOPIC: process.env.KAFKA_SAVE_MDMS_DETAILS_TOPIC || "save-boundary-details",
+    KAFKA_UPDATE_MDMS_DETAILS_TOPIC: process.env.KAFKA_UPDATE_MDMS_DETAILS_TOPIC || "update-boundary-details",
   },
 
   // Database configuration
@@ -45,7 +45,7 @@ const config = {
   app: {
     port: parseInt(process.env.APP_PORT || "8080") || 8080,
     host: HOST,
-    contextPath: process.env.CONTEXT_PATH || "/boundary-bff",
+    contextPath: process.env.CONTEXT_PATH || "/mdms-bulk-bff",
     logLevel: process.env.APP_LOG_LEVEL || "debug",
     debugLogCharLimit: process.env.APP_MAX_DEBUG_CHAR ? Number(process.env.APP_MAX_DEBUG_CHAR) : 1000
   },
@@ -71,7 +71,10 @@ const config = {
     mdmsSchemaSearch: "mdms-v2/schema/v1/_search",
   },
   values: {
-    maxHttpRetries: "4"
+    maxHttpRetries: "4",
+    mdmsSheetName: "MDMS Data",
+    unfrozeTillRow: process.env.UNFROZE_TILL_ROW || "10000",
+    unfrozeTillColumn: process.env.UNFROZE_TILL_COLUMN || "50",
   }
 };
 // Exporting getErrorCodes function and config object

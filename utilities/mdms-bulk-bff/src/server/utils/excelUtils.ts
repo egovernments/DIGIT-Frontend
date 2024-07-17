@@ -1,6 +1,5 @@
 import config from "../config";
 import { throwError } from "./errorUtils";
-import { getLocalizedName } from "./localisationUtils";
 import { logger } from "./logger";
 import { httpRequest } from "./request";
 import * as ExcelJS from "exceljs";
@@ -122,15 +121,11 @@ function getJsonData(sheetData: any, getRow = false, getSheetName = false, sheet
 export const getSheetData = async (
   fileUrl: string,
   sheetName: string,
-  getRow = false,
-  createAndSearchConfig?: any,
-  localizationMap?: { [key: string]: string }
+  getRow = false
 ) => {
-  // Retrieve workbook using the getExcelWorkbookFromFileURL function
-  const localizedSheetName = getLocalizedName(sheetName, localizationMap);
-  const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, localizedSheetName);
+  const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, sheetName);
 
-  const worksheet: any = workbook.getWorksheet(localizedSheetName);
+  const worksheet: any = workbook.getWorksheet(sheetName);
 
   // Collect sheet data by iterating through rows and cells
   const sheetData = getSheetDataFromWorksheet(worksheet);
