@@ -1,0 +1,18 @@
+{
+    "name": "fetch-locales",
+    "version": "1.0.0",
+    "description": "A script to fetch locales from an API and store them",
+    "main": "fetch-locales.js",
+    "type": "module",
+    "scripts": {
+      "start": "node fetch-locales.js"
+    },
+    "dependencies": {
+      "axios": "^0.27.2"
+    },
+    "engines": {
+      "node": ">=20"
+    },
+    "author": "",
+    "license": "ISC"
+  }
