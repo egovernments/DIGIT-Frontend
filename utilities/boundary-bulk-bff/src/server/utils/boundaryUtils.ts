@@ -663,10 +663,36 @@ async function getBoundaryDetailsViaDb(searchBody: any) {
 
   try {
     const result = await executeQuery(query, values);
+    formatRows(result.rows);
     return result.rows;
   } catch (error: any) {
     console.log(error)
     logger.error(`Error fetching boundary details: ${error.message}`);
     throw error;
   }
+}
+
+function formatRows(rows: any) {
+  rows.forEach((row: any) => {
+    row.tenantId = row.tenantid;
+    delete row.tenantid;
+    row.hierarchyType = row.hierarchytype;
+    delete row.hierarchytype;
+    row.fileStoreId = row.filestoreid;
+    delete row.filestoreid;
+    row.processedFileStoreId = row.processedfilestoreid;
+    delete row.processedfilestoreid;
+    row.additionalDetails = row.additionaldetails;
+    delete row.additionaldetails;
+    row.auditDetails = {
+      createdTime: row.createdtime,
+      createdBy: row.createdby,
+      lastModifiedTime: row.lastmodifiedtime,
+      lastModifiedBy: row.lastmodifiedby
+    }
+    delete row.createdtime;
+    delete row.lastmodifiedtime;
+    delete row.createdby;
+    delete row.lastmodifiedby;
+  });
 }
