@@ -685,9 +685,9 @@ function formatRows(rows: any) {
     row.additionalDetails = row.additionaldetails;
     delete row.additionaldetails;
     row.auditDetails = {
-      createdTime: row.createdtime,
+      createdTime: parseInt(row.createdtime),
       createdBy: row.createdby,
-      lastModifiedTime: row.lastmodifiedtime,
+      lastModifiedTime: parseInt(row.lastmodifiedtime),
       lastModifiedBy: row.lastmodifiedby
     }
     delete row.createdtime;
