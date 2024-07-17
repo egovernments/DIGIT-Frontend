@@ -85,6 +85,7 @@ const CustomSelectWidget = (props) => {
     () => optionsList.map((e) => ({ label: t(Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${e?.label}`)), value: e.value })),
     [optionsList, schemaCode, data]
   );
+  const [formattedOptions2, setFormattedOptions2] = useState([]);
   const [limitedOptions, setLimitedOptions] = useState([]);
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
@@ -103,13 +104,13 @@ const CustomSelectWidget = (props) => {
         <components.MenuList {...props}>{props.children}</components.MenuList>
         <div className="link-container">
           <div onClick={handleSeeAll} className="view-all-link">
-            View All
+          {t("VIEW_ALL")}
           </div>
         </div>
       </div>
     );
   };
-  const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
+  const selectedOption = formattedOptions2?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
   const handleChange = (selectedValue) => {
     setShowTooltipFlag(true);
     setIsSelect(true);
@@ -130,7 +131,19 @@ const CustomSelectWidget = (props) => {
       setIsSeeAll(true);
     }
     setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == value)));
-  }, [formattedOptions, optionsLimit]);
+  // Update formattedOptions2
+  let newFormattedOptions2 = [...formattedOptions];
+  if (value && value !== "") {
+    const existingOption = formattedOptions.find((option) => option.value === value);
+    if (!existingOption) {
+      newFormattedOptions2.push({ value, label: `${schemaCode}_${value}` });
+    }
+  }
+  setFormattedOptions2(newFormattedOptions2);
+
+}, [formattedOptions, optionsLimit, value]);
+
+
   const onClickSelect = (selectedValue) => {
     selectedValue = { ...selectedValue, value: selectedValue.uniqueIdentifier, label: selectedValue.description };
     onChange(selectedValue.uniqueIdentifier);
@@ -139,6 +152,7 @@ const CustomSelectWidget = (props) => {
     );
     setShowModal(false);
   };
+
   const handleViewMoreClick = (detail) => {
     const schemaCode = detail?.schemaCode;
     const [moduleName, masterName] = schemaCode.split(".");
@@ -183,7 +197,7 @@ const CustomSelectWidget = (props) => {
       <Select
         className="form-control form-select"
         classNamePrefix="digit"
-        options={data ? limitedOptions : formattedOptions}
+        options={data ? limitedOptions : formattedOptions2}
         isDisabled={disabled || readonly}
         placeholder={placeholder}
         onBlur={onBlur}

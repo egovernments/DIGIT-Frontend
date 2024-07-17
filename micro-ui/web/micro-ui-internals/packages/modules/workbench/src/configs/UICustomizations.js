@@ -839,7 +839,7 @@ export const UICustomizations = {
       } else if (actionSelected === "VIEW_RATE_ANALYSIS") {
         window.location.href = `/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${
           props?.masterName === "Composition" ? props?.data?.data?.sorId : props?.uniqueIdentifier
-        }&fromeffective=${Date.now()}`;
+        }&fromeffective=${props?.masterName === "Composition" ? props?.data?.data?.effectiveFrom : Date.now()}`;
       }
       //action===EDIT go to edit screen
       else if (actionSelected === "EDIT") {
