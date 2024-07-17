@@ -1,5 +1,22 @@
 import config from '../../server/config/index'
-import { getLocalizedName } from './campaignUtils';
+import { getConfigurableColumnHeadersBasedOnCampaignType, getLocalizedName } from './campaignUtils';
+
+
+async function generateDynamicTargetHeaders(request: any, campaignObject: any,localizationMap?:any) {
+    let headerColumnsAfterHierarchy: any;
+    if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
+
+        const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
+        headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
+
+    }
+    else {
+        headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+    }
+    return headerColumnsAfterHierarchy;
+}
+
+
 function modifyDeliveryConditions(dataa: any[]): any {
     let resultSet = new Set<string>();
     dataa.forEach((delivery) => {
@@ -43,7 +60,7 @@ function modifyDeliveryConditions(dataa: any[]): any {
 
 
 function generateTargetColumnsBasedOnDeliveryConditions(uniqueDeliveryConditions: any, localizationMap?: any) {
-    const targetColumnsBasedOnDeliveryConditions: string[] = [config?.boundary?.boundaryCode];
+    const targetColumnsBasedOnDeliveryConditions: string[] = [];
 
     uniqueDeliveryConditions.forEach((str: any) => {
         const uniqueDeliveryConditionsObject = JSON.parse(str); // Parse JSON string into object
@@ -71,5 +88,6 @@ function createTargetString(uniqueDeliveryConditionsObject: any, localizationMap
 
 export {
     modifyDeliveryConditions,
-    generateTargetColumnsBasedOnDeliveryConditions
+    generateTargetColumnsBasedOnDeliveryConditions,
+    generateDynamicTargetHeaders
 };

@@ -16,7 +16,7 @@ import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
 import { addDataToSheet, formatWorksheet, getNewExcelWorkbook, updateFontNameToRoboto } from "./excelUtils";
 import createAndSearch from "../config/createAndSearch";
-import { generateTargetColumnsBasedOnDeliveryConditions, modifyDeliveryConditions } from "./targetUtils";
+import { generateDynamicTargetHeaders } from "./targetUtils";
 const NodeCache = require("node-cache");
 
 const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -1059,12 +1059,16 @@ function findMapValue(map: Map<any, any>, key: any): any | null {
 }
 
 function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: any) {
+  console.log("aaaaaaaaaaaaaaaa")
   const uniqueDistrictsForMainSheet: string[] = [];
   const differentDistrictTabs: any[] = [];
+  console.log(boundaryData, "ssssssssssss")
   for (const data of boundaryData) {
     const rowData = Object.values(data);
+    console.log(rowData, "qqqqqqqqq")
     const districtValue = data[differentTabsBasedOnLevel];
     const districtIndex = districtValue !== '' ? rowData.indexOf(districtValue) : -1;
+    console.log(districtIndex, "inddddddddddd")
 
     if (districtIndex != -1) {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
@@ -1078,6 +1082,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
   for (const uniqueData of uniqueDistrictsForMainSheet) {
     differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('#') + 1));
   }
+  console.log(differentDistrictTabs, "iiiiiiiiii")
   return differentDistrictTabs;
 }
 
@@ -1085,18 +1090,9 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
   var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
-  let headerColumnsAfterHierarchy: any;
-  if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
-    // fetching unique delivery conditions from deliveryRules
-    const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
-    // generating target columns base on delivery conditions
-    headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
-  }
-  else {
-    headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
-  }
+  const headerColumnsAfterHierarchy = await generateDynamicTargetHeaders(request, campaignObject, localizationMap);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
-  headers = [...headers, ...localizedHeadersAfterHierarchy]
+  headers = [...headers, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), ...localizedHeadersAfterHierarchy]
   return getLocalizedHeaders(headers, localizationMap);
 }
 

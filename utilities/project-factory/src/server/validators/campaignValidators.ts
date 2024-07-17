@@ -2,7 +2,7 @@ import createAndSearch from "../config/createAndSearch";
 import config from "../config";
 import { getFormattedStringForDebug, logger } from "../utils/logger";
 import { defaultheader, httpRequest } from "../utils/request";
-import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
+import { getCampaignSearchResponse, getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
 import { getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, getMdmsDataBasedOnCampaignType, replicateRequest, throwError } from "../utils/genericUtils";
@@ -20,7 +20,7 @@ import { searchProjectTypeCampaignService } from "../service/campaignManageServi
 import { campaignStatuses, resourceDataStatuses } from "../config/constants";
 import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
 import addAjvErrors from "ajv-errors";
-
+import { generateTargetColumnsBasedOnDeliveryConditions, modifyDeliveryConditions } from "../utils/targetUtils";
 
 
 
@@ -217,10 +217,21 @@ async function fetchBoundariesFromCampaignDetails(request: any) {
 
 
 async function validateTargets(request: any, data: any[], errors: any[], localizationMap?: any) {
-    const mdmsResponse = await getMdmsDataBasedOnCampaignType(request);
-    const columnsNotToBeFreezed = mdmsResponse?.columnsNotToBeFreezed;
-    const requiredColumns = mdmsResponse?.required;
-    const columnsToValidate = columnsNotToBeFreezed.filter((element: any) => requiredColumns.includes(element));
+    let columnsToValidate: any;
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
+    if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
+
+        const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
+        columnsToValidate = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
+
+    }
+    else {
+        const mdmsResponse = await getMdmsDataBasedOnCampaignType(request);
+        const columnsNotToBeFreezed = mdmsResponse?.columnsNotToBeFreezed;
+        const requiredColumns = mdmsResponse?.required;
+        columnsToValidate = columnsNotToBeFreezed.filter((element: any) => requiredColumns.includes(element));
+    }
     const localizedTargetColumnNames = getLocalizedHeaders(columnsToValidate, localizationMap);
     for (const key in data) {
         if (key !== getLocalizedName(getBoundaryTabName(), localizationMap) && key !== getLocalizedName(config?.values?.readMeTab, localizationMap)) {
@@ -441,6 +452,7 @@ async function validateHeadersOfTargetSheet(request: any, localizationMap?: any)
     const targetWorkbook: any = await getTargetWorkbook(fileUrl);
     const hierarchy = await getHierarchy(request, request?.body?.ResourceDetails?.tenantId, request?.body?.ResourceDetails?.hierarchyType);
     const finalValidHeadersForTargetSheetAsPerCampaignType = await getFinalValidHeadersForTargetSheetAsPerCampaignType(request, hierarchy, localizationMap);
+    console.log(finalValidHeadersForTargetSheetAsPerCampaignType, "fffffffffffff")
     logger.info("finalValidHeadersForTargetSheetAsPerCampaignType :" + JSON.stringify(finalValidHeadersForTargetSheetAsPerCampaignType));
     logger.info("validating headers of target sheet started")
     validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook, finalValidHeadersForTargetSheetAsPerCampaignType);
@@ -547,12 +559,14 @@ async function validateCreateRequest(request: any, localizationMap?: any) {
 }
 
 function validateHeadersOfTabsWithTargetInTargetSheet(targetWorkbook: any, expectedHeadersForTargetSheet: any) {
+    console.log(expectedHeadersForTargetSheet, "expppppppp")
     targetWorkbook.eachSheet((worksheet: any, sheetId: any) => {
         if (sheetId > 2) { // Starting from the second sheet
             // Convert the sheet to an array of headers
             const headersToValidate = worksheet.getRow(1).values
                 .filter((header: any) => header !== undefined && header !== null && header.toString().trim() !== '')
                 .map((header: any) => header.toString().trim());
+            console.log(headersToValidate, "uuuuuuuuuu")
             if (!_.isEqual(expectedHeadersForTargetSheet, headersToValidate)) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", `Headers not according to the template in Target sheet ${worksheet.name}`);
             }
@@ -1184,10 +1198,13 @@ async function immediateValidationForTargetSheet(dataFromSheet: any, localizatio
 
 
 function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
+    console.log()
     let tabsIndex = 2;
     logger.info("target sheet getting validated for different districts");
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
+    console.log(getLocalizedName(config?.boundary?.boundaryTab, localizationMap), "ppppppppppppp")
     const tabsOfDistrict = getDifferentDistrictTabs(dataFromSheet[getLocalizedName(config?.boundary?.boundaryTab, localizationMap)], differentTabsBasedOnLevel);
+    console.log(tabsOfDistrict, "ooooooooooo")
     logger.info("found " + tabsOfDistrict?.length + " districts");
     logger.debug("actual districts in boundary data sheet : " + getFormattedStringForDebug(tabsOfDistrict));
     const tabsFromTargetSheet = Object.keys(dataFromSheet);
