@@ -1,15 +1,13 @@
 import * as express from "express";
-import { searchBoundaryDetailService } from "../../service/mdmsBulkManageService";
+import { createMdmsDatasService, generateMdmsTemplateService } from "../../service/mdmsBulkManageService";
 import { logger } from "../../utils/logger";
 import { errorResponder, sendResponse } from "../../utils/genericUtils";
-import { createBoundariesService } from "../../service/mdmsBulkManageService";
-
 
 
 // Define the MeasurementController class
 class mdmsBulkManageController {
     // Define class properties
-    public path = "/v1/boundary";
+    public path = "/v1/mdmsbulk";
     public router = express.Router();
     public dayInMilliSecond = 86400000;
 
@@ -21,7 +19,7 @@ class mdmsBulkManageController {
     // Initialize routes for MeasurementController
     public intializeRoutes() {
         this.router.post(`${this.path}/create`, this.createMdmsDatas);
-        this.router.post(`${this.path}/search`, this.searchMdmsDatas);
+        this.router.post(`${this.path}/generate`, this.generateMdmsTemplate);
     }
     /**
  * Handles the creation of a project type campaign.
@@ -44,14 +42,14 @@ class mdmsBulkManageController {
         }
     };
 
-    searchMdmsDatas = async (
+    generateMdmsTemplate = async (
         request: express.Request,
         response: express.Response
     ) => {
         try {
-            logger.info("RECEIVED A BOUNDARY DETAILS SEARCH REQUEST");
-            await searchBoundaryDetailService(request);
-            return sendResponse(response, { boundaryDetails: request.body.boundaryDetails }, request);
+            logger.info("RECEIVED A BULK MDMS GENERATE TEMPLATE REQUEST");
+            await generateMdmsTemplateService(request);
+            return sendResponse(response, { mdmsGenerateDetails: request.body.mdmsGenerateDetails }, request);
         } catch (e: any) {
             console.log(e)
             logger.error(String(e))

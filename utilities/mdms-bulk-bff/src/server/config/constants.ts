@@ -29,7 +29,8 @@ export const CONSTANTS = {
             DOWNLOAD_URL_NOT_FOUND: "Not any download URL returned for the given fileStoreId",
             INVALID_FILE_FORMAT: "The uploaded file is not a valid excel file (xlsx or xls).",
             INVALID_COLUMNS: "Columns are invalid",
-            FETCHING_COLUMN_ERROR: "Error fetching Column Headers From Schema"
+            FETCHING_COLUMN_ERROR: "Error fetching Column Headers From Schema",
+            FILE_CREATION_ERROR: "Error in creating file"
         },
         MDMS: {
             INVALID_README_CONFIG: "Invalid readme config",

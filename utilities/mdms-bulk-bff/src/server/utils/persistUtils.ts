@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { mdmsProcessStatus } from '../config/constants';
 import config from '../config';
+import { produceModifiedMessages } from '../kafka/Producer';
 
 export function enrichAndPersistMDMSDetails(request: any) {
     const currentTime = Date.now();
@@ -23,5 +24,5 @@ export function enrichAndPersistMDMSDetails(request: any) {
     const producedMessage: any = {
         mdmsDetails
     };
-    produceModifiedMessages(producedMessage, config.kafka.KAFKA_SAVE_BOUNDARY_DETAILS_TOPIC);
+    produceModifiedMessages(producedMessage, config.kafka.KAFKA_SAVE_MDMS_DETAILS_TOPIC);
 }

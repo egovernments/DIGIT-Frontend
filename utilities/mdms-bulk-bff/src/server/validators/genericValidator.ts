@@ -1,8 +1,5 @@
 import Ajv from "ajv";
 import { throwError } from "../utils/errorUtils";
-import { httpRequest } from "../utils/request";
-import config from "../config";
-import { logger } from "../utils/logger";
 
 export function validateBodyViaSchema(schema: any, objectData: any) {
     const properties: any = { jsonPointers: true, allowUnknownAttributes: true, strict: false }
