@@ -133,11 +133,16 @@ const CustomSelectWidget = (props) => {
     setSelectedDetails(mainData?.filter((obj) => (multiple ? value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == value)));
 
     // Update formattedOptions2
-    useEffect(() => {
-      if (value && !formattedOptions.some(option => option.value === value)) {
-        setFormattedOptions2(prevOptions => [...prevOptions, { value, label: `${schemaCode}_${value}` }]);
+    let newFormattedOptions2 = [...formattedOptions];
+    if (value && value !== "") {
+      const existingOption = formattedOptions.find((option) => option.value === value);
+      if (!existingOption) {
+        newFormattedOptions2.push({ value, label: `${schemaCode}_${value}` });
+        // const updatedSelectedDetails = mainData?.filter((obj) => (multiple ? value?.includes(obj.uniqueIdentifier) : obj.uniqueIdentifier == value));
+        // setSelectedDetails(updatedSelectedDetails);
       }
-    }, [value, formattedOptions]);
+    }
+    setFormattedOptions2(newFormattedOptions2);
 
   }, [formattedOptions, optionsLimit,value]);
   const onClickSelect = (selectedValue) => {
