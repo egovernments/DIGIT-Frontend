@@ -7,13 +7,16 @@ import { LabelFieldPair } from "@egovernments/digit-ui-components";
 const TimelineComponent = ({}) => {
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
-  const [showTimeLine, setShowTimeline] = useState(false);
-  const [showTimeLineButton, setShowTimelineButton] = useState(true);
+  const isPreview = searchParams.get("preview");
+  const [showTimeLineButton, setShowTimelineButton] = useState(isPreview);
+  const [showTimeLine, setShowTimeline] = useState(!isPreview);
   const campaignId = searchParams.get("id");
 
   const formatLabel = (label) => {
     return `HCM_${label.replace(/-/g, "_").toUpperCase()}`;
   };
+
+  console.log(isPreview);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/getProcessTrack`,
@@ -72,7 +75,7 @@ const TimelineComponent = ({}) => {
   return (
     <React.Fragment>
       {showTimeLineButton && (
-        <LabelFieldPair>
+        <div className="timeline-div">
           <div className="timeline-button">{`${t("HCM_CAMPAIGN_CREATION_PROGRESS")}`}</div>
           <Button
             type={"button"}
@@ -84,11 +87,11 @@ const TimelineComponent = ({}) => {
               setShowTimelineButton(false);
             }}
           />
-        </LabelFieldPair>
+        </div>
       )}
       {showTimeLine && (
         (subElements.length > 0 || subElements2.length > 0) ? (
-          <TimelineMolecule initialVisibleCount={3} hideFutureLabel ={true}>
+          <TimelineMolecule >
             <Timeline label={t("HCM_UPCOMING")}
               variant="upcoming" 
               subElements={subElements2}
@@ -108,7 +111,7 @@ const TimelineComponent = ({}) => {
           </TimelineMolecule>
         ) : (
           <TimelineMolecule initialVisibleCount={1} hideFutureLabel ={true}>
-            {completedTimelines.map((timeline, index) => (
+            {completedTimelines?.map((timeline, index) => (
               <Timeline
                 key={index}
                 label={timeline?.label}
