@@ -2,7 +2,7 @@ export const mdmsCreateBodySchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "schemaName": {
+        "schemaCode": {
             "type": "string",
             "maxLength": 128,
             "minLength": 1
@@ -18,5 +18,5 @@ export const mdmsCreateBodySchema = {
             "maxLength": 128
         }
     },
-    "required": ["schemaName", "tenantId", "fileStoreId"]
+    "required": ["schemaCode", "tenantId", "fileStoreId"]
 };

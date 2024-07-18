@@ -6,6 +6,8 @@ import { throwError } from "../utils/errorUtils";
 import { getSheetData } from "../utils/excelUtils";
 import { getFileUrl } from "../utils/genericUtils";
 import { mdmsTemplateGenerateBody } from "../config/schemas/mdmsTemplateGenerateBody";
+import { logger } from "../utils/logger";
+import { getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
 
 export async function validateCreateMdmsDatasRequest(request: any) {
     validateBodyViaSchema(mdmsCreateBodySchema, request.query);
@@ -14,28 +16,28 @@ export async function validateCreateMdmsDatasRequest(request: any) {
 }
 
 async function validateMdmsSchema(request: any) {
-    const { schemaName, tenantId } = request.query;
+    const { schemaCode, tenantId } = request.query;
     const searchBody = {
         RequestInfo: request.body.RequestInfo,
         SchemaDefCriteria: {
             tenantId,
-            codes: [schemaName]
+            codes: [schemaCode]
         }
     }
     const schemaResponse = await httpRequest(config.host.mdmsHost + config.paths.mdmsSchemaSearch, searchBody);
     if (schemaResponse && schemaResponse?.SchemaDefinitions && schemaResponse?.SchemaDefinitions?.length > 0) {
         const schema = schemaResponse.SchemaDefinitions[0];
         if (!schema.isActive) {
-            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaName} is not active`);
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} is not active`);
         }
         if (!schema?.definition) {
-            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaName} not found`);
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
         }
         validateSchemaCompatibility(schema?.definition);
         request.body.currentSchema = schema?.definition;
     }
     else {
-        throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaName} not found`);
+        throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
     }
 }
 
@@ -60,14 +62,63 @@ function validateSchemaCompatibility(schemaDefination: any) {
 
 async function validateSheetData(request: any) {
     const fileUrl = await getFileUrl(request);
-    const data = await getSheetData(fileUrl, config.values.mdmsSheetName, true);
+    const data = await getSheetData(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode, true);
     const schema = request.body.currentSchema;
     for (const rowData of data) {
         validateBodyViaSchema(schema, rowData);
     }
+    request.body.dataToCreate = data;
 }
 
 export async function validateGenerateMdmsTemplateRequest(request: any) {
     validateBodyViaSchema(mdmsTemplateGenerateBody, request.query);
     await validateMdmsSchema(request);
+}
+
+export async function validateForSheetErrors(request: any) {
+    const uniqueFieldSet = await getUniqueFieldSet(request);
+    const sheetData = request.body.dataToCreate;
+    const xUniqueFields = request?.body?.currentSchema?.["x-unique"];
+    logger.info(`Unique fields in schema ${request?.query?.schemaCode} are ${xUniqueFields.join(", ")}`);
+    const uniqueFieldMap = new Map();
+    const duplicateEntries: any = [];
+    var errors: any = {};
+
+    sheetData.forEach((data: any) => {
+        let uniqueIdentifier = xUniqueFields.map((key: any) => data[key]).join('|');
+
+        if (uniqueFieldSet.has(uniqueIdentifier)) {
+            const message = `Entry already in mdms for data: ${uniqueIdentifier} at row ${data['!row#number!']}`;
+            logger.info(message);
+            duplicateEntries.push(message);
+            const rowNumber = data['!row#number!'];
+            if (errors?.[rowNumber]) {
+                errors[rowNumber].push(message);
+            } else {
+                errors[rowNumber] = [message];
+            }
+        }
+
+        if (uniqueFieldMap.has(uniqueIdentifier)) {
+            uniqueFieldMap.get(uniqueIdentifier).push(data['!row#number!']);
+        } else {
+            uniqueFieldMap.set(uniqueIdentifier, [data['!row#number!']]);
+        }
+    });
+
+    uniqueFieldMap.forEach((rows, identifier) => {
+        if (rows.length > 1) {
+            const message = `Duplicate entry found for data: ${identifier} at rows ${rows.join(', ')}`;
+            logger.info(message);
+            duplicateEntries.push(message);
+            rows.forEach((row: any) => {
+                if (errors?.[row]) {
+                    errors[row].push(message);
+                } else {
+                    errors[row] = [message];
+                }
+            })
+        }
+    });
+    request.body.errors = errors;
 }
