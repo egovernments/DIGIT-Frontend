@@ -325,7 +325,7 @@ const DigitJSONForm = ({
               {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
             </ActionBar>
           )}
-          {screenType === "view" && (
+          {screenType === "view" && viewActions && viewActions.length > 0 && (
             <ActionBar>
               {displayMenu ? (
                 <Menu
