@@ -42,6 +42,31 @@ const MyCampaign = () => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   }, []);
 
+  // useEffect(() => {
+  //   console.log("ppp");
+  // }, [session , Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const newSession = Digit.SessionStorage.get("HCM_TIMELINE_POPUP");
+      setSession(newSession);
+      setTimeLine(newSession);
+    };
+
+    window.addEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
+    };
+  }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
+
+  const handlePopupClose = () => {
+    setTimeLine(false);
+    setSession(false);
+    Digit.SessionStorage.set("HCM_TIMELINE_POPUP", false);
+    window.dispatchEvent(new Event("HCM_TIMELINE_POPUP_CHANGE"));
+  };
+
   const onClickRow = ({ original: row }) => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;
     switch (currentTab) {
