@@ -27,26 +27,10 @@ const MyCampaign = () => {
     myCampaignConfig?.myCampaignConfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
   );
 
-  const [session,setSession] = useState(Digit.SessionStorage.get("HCM_TIMELINE_POPUP"));
 
   const searchParams = new URLSearchParams(location.search);
-//   const [timeLine, setTimeLine] = useState(() => {
-//     const showPopUP = searchParams.get("showTimeline");
-//     console.log("show" , showPopUP);
-//     return showPopUP ? true : false;
-// });
-
-const [timeLine, setTimeLine] = useState(session);
-
-console.log("TTTTTTTTTT", Digit.SessionStorage.get("HCM_TIMELINE_POPUP"))
 
 
-
-console.log("sess" , session);
-
-console.log("location" ,location,location.search  )
-
-  console.log("time", timeLine)
 
   const onTabChange = (n) => {
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
@@ -57,31 +41,6 @@ console.log("location" ,location,location.search  )
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   }, []);
-
-  // useEffect(() => {
-  //   console.log("ppp");
-  // }, [session , Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const newSession = Digit.SessionStorage.get("HCM_TIMELINE_POPUP");
-      setSession(newSession);
-      setTimeLine(newSession);
-    };
-
-    window.addEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
-    };
-  }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
-
-  const handlePopupClose = () => {
-    setTimeLine(false);
-    setSession(false);
-    Digit.SessionStorage.set("HCM_TIMELINE_POPUP", false);
-    window.dispatchEvent(new Event("HCM_TIMELINE_POPUP_CHANGE"));
-  };
 
   const onClickRow = ({ original: row }) => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;
@@ -125,14 +84,7 @@ console.log("location" ,location,location.search  )
           }}
         ></InboxSearchComposer>
       </div>
-      {timeLine && (
-        <PopUp
-          type={"default"}
-          heading={ t("ES_CAMPAIGN_TIMELINE") }
-          onOverlayClick={handlePopupClose}
-          onClose={handlePopupClose}
-        ><TimelineComponent /></PopUp>
-      )}
+      
     </React.Fragment>
   );
 };
