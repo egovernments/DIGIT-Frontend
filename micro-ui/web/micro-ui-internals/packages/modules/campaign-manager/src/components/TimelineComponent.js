@@ -16,7 +16,6 @@ const TimelineComponent = ({}) => {
     return `HCM_${label.replace(/-/g, "_").toUpperCase()}`;
   };
 
-  console.log(isPreview);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/getProcessTrack`,
@@ -33,7 +32,6 @@ const TimelineComponent = ({}) => {
 
     return () => clearInterval(intervalId); 
   }, [refetch]);
-  console.log("gjne", progessTrack);
 
   const lastCompletedProcess = progessTrack?.processTrack
     .filter((process) => process.status === "completed")
