@@ -111,4 +111,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+.setup-campaign{
+  .digit-success{
+  z-index: 1000;
+  }
+}
+.digit-error{
+  z-index: 900;
 }
