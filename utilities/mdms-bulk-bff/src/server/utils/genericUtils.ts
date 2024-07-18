@@ -146,7 +146,7 @@ export async function getFileUrl(request: any) {
         tenantId,
         fileStoreIds: fileStoreId
     }
-    const response = await httpRequest(config.host.filestore + config.paths.filestore, {}, searchParams, "get");
+    const response = await httpRequest(config.host.filestore + config.paths.filestoreSearch, undefined, searchParams, "get");
     if (!response?.fileStoreIds?.[0]?.url) {
         throwError("FILE", 400, "INVALID_FILE");
     }

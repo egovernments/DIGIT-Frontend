@@ -8,7 +8,7 @@ export function enrichAndPersistMDMSDetails(request: any) {
     const mdmsDetails = {
         id: uuidv4(),
         tenantId: request?.query?.tenantId,
-        schemaName: request?.query?.schemaName,
+        schemaCode: request?.query?.schemaCode,
         fileStoreId: request?.query?.fileStoreId,
         status: mdmsProcessStatus.inprogress,
         processedFileStoreId: null,

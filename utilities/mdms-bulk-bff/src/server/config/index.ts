@@ -60,7 +60,8 @@ const config = {
   },
   // Paths for different services
   paths: {
-    filestore: process.env.FILE_STORE_SERVICE_END_POINT || "filestore/v1/files",
+    filestoreCreate: process.env.FILE_STORE_SERVICE_CREATE || "filestore/v1/files",
+    filestoreSearch: process.env.FILE_STORE_SERVICE_SEARCH || "filestore/v1/files/url",
     boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH || "boundary-service/boundary-relationships/_search",
     boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH || "boundary-service/boundary-hierarchy-definition/_search",
     boundaryEntitySearch: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH || "boundary-service/boundary/_search",
@@ -69,6 +70,7 @@ const config = {
     localizationCreate: "localization/messages/v1/_upsert",
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
     mdmsSchemaSearch: "mdms-v2/schema/v1/_search",
+    mdmsDataSearch: "mdms-v2/v2/_search",
   },
   values: {
     maxHttpRetries: "4",

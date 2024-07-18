@@ -27,7 +27,7 @@ export async function createAndUploadFile(
 
   // Make HTTP request to upload file
   var fileCreationResult = await httpRequest(
-    config.host.filestore + config.paths.filestore,
+    config.host.filestore + config.paths.filestoreCreate,
     formData,
     undefined,
     undefined,
