@@ -275,6 +275,8 @@ const DigitJSONForm = ({
   };
   const person = { t: t };
 
+  const formDisabled = screenType === "view" ? true : disabled;
+
   return (
     <React.Fragment>
       <Header className="digit-form-composer-header">
@@ -307,7 +309,7 @@ const DigitJSONForm = ({
           transformErrors={transformErrors.bind(person)}
           uiSchema={{ ...uiSchema, ...inputUiSchema }}
           onError={onError}
-          disabled={disabled}
+          disabled={formDisabled}
           // disabled the error onload
           // focusOnFirstError={true}
           /* added logic to show live validations after form submit is clicked */
