@@ -1,7 +1,7 @@
 import express from "express";
 import { logger } from "../utils/logger";
 import { enrichAndPersistMDMSDetails } from "../utils/persistUtils";
-import { validateCreateMdmsDatasRequest, validateGenerateMdmsTemplateRequest } from "../validators/mdmsValidator";
+import { validateCreateMdmsDatasRequest, validateGenerateMdmsTemplateRequest, validateSearchRequest } from "../validators/mdmsValidator";
 import { generateMdmsTemplate, processAfterValidation } from "../utils/mdmsBulkUploadServiceUtil";
 
 export async function createMdmsDatasService(request: express.Request) {
@@ -18,4 +18,8 @@ export async function generateMdmsTemplateService(request: any) {
     await validateGenerateMdmsTemplateRequest(request);
     logger.info("VALIDATED THE MDMS TEMPLATE GENERATE REQUEST");
     await generateMdmsTemplate(request);
+}
+
+export async function searchMdmsBulkDetailService(request: any) {
+    await validateSearchRequest(request);
 }

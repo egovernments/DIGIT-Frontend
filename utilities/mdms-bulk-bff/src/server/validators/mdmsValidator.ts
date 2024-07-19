@@ -7,8 +7,9 @@ import { getSheetData } from "../utils/excelUtils";
 import { getFileUrl } from "../utils/genericUtils";
 import { mdmsTemplateGenerateBody } from "../config/schemas/mdmsTemplateGenerateBody";
 import { logger } from "../utils/logger";
-import { getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
+import { getMdmsDetails, getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
 import { sheetDataStatus } from "../config/constants";
+import { mdmsSearchBodySchema } from "../config/schemas/mdmsSearchBody";
 
 export async function validateCreateMdmsDatasRequest(request: any) {
     validateBodyViaSchema(mdmsCreateBodySchema, request.query);
@@ -126,4 +127,9 @@ export async function validateForSheetErrors(request: any) {
         }
     });
     request.body.errors = errors;
+}
+
+export async function validateSearchRequest(request: any) {
+    validateBodyViaSchema(mdmsSearchBodySchema, request.query);
+    await getMdmsDetails(request);
 }

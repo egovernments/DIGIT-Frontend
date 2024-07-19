@@ -1,5 +1,5 @@
 import * as express from "express";
-import { createMdmsDatasService, generateMdmsTemplateService } from "../../service/mdmsBulkManageService";
+import { createMdmsDatasService, generateMdmsTemplateService, searchMdmsBulkDetailService } from "../../service/mdmsBulkManageService";
 import { logger } from "../../utils/logger";
 import { errorResponder, sendResponse } from "../../utils/genericUtils";
 
@@ -20,6 +20,7 @@ class mdmsBulkManageController {
     public intializeRoutes() {
         this.router.post(`${this.path}/create`, this.createMdmsDatas);
         this.router.post(`${this.path}/generate`, this.generateMdmsTemplate);
+        this.router.post(`${this.path}/search`, this.searchMdmsBulkDetails);
     }
     /**
  * Handles the creation of a project type campaign.
@@ -33,7 +34,7 @@ class mdmsBulkManageController {
         try {
             logger.info("RECEIVED A BULK MDMS CREATE REQUEST");
             await createMdmsDatasService(request);
-            return sendResponse(response, { boundaryDetails: request.body.boundaryDetails }, request);
+            return sendResponse(response, { mdmsDetails: request.body.mdmsDetails }, request);
         } catch (e: any) {
             console.log(e)
             logger.error(String(e))
@@ -50,6 +51,22 @@ class mdmsBulkManageController {
             logger.info("RECEIVED A BULK MDMS GENERATE TEMPLATE REQUEST");
             await generateMdmsTemplateService(request);
             return sendResponse(response, { mdmsGenerateDetails: request.body.mdmsGenerateDetails }, request);
+        } catch (e: any) {
+            console.log(e)
+            logger.error(String(e))
+            // Handle errors and send error response
+            return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
+        }
+    };
+
+    searchMdmsBulkDetails = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            logger.info("RECEIVED A MDMS DETAILS SEARCH REQUEST");
+            await searchMdmsBulkDetailService(request);
+            return sendResponse(response, { mdmsDetails: request.body.mdmsDetails }, request);
         } catch (e: any) {
             console.log(e)
             logger.error(String(e))

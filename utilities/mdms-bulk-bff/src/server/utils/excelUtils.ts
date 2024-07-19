@@ -1,4 +1,3 @@
-import { mdmsProcessStatus } from "../config/constants";
 import config from "../config";
 import { throwError } from "./errorUtils";
 import { logger } from "./logger";
@@ -340,7 +339,6 @@ export const freezeStatusColumn = (worksheet: any) => {
 
 
 export async function addErrorsToSheet(request: any, worksheet: any, errors: any, errorStatus: any) {
-  console.log(errors, " eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
   if (errors) {
     // Find the first unfilled column
     const headerRow = worksheet.getRow(1);
@@ -390,7 +388,6 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
       // Commit the row changes
       row.commit();
     }
-    request.body.mdmsDetails.status = mdmsProcessStatus.invalid;
   }
 }
 

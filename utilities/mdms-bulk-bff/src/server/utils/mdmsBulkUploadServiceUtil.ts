@@ -5,8 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "./request";
 import { logger } from "./logger";
 import { validateForSheetErrors } from "../validators/mdmsValidator";
-import { sheetDataStatus } from "../config/constants";
+import { mdmsProcessStatus, sheetDataStatus } from "../config/constants";
 import { getFileUrl } from "./genericUtils";
+import { persistDetailsOnCompletion } from "./persistUtils";
+import { executeQuery } from "./db";
 
 
 export async function generateMdmsTemplate(request: any) {
@@ -46,10 +48,15 @@ function getMdmsGenerateDetails(request: any, fileStoreId: string) {
 export async function processAfterValidation(request: any) {
     await validateForSheetErrors(request);
     await makeErrorSheet(request);
-    await createData(request)
+    await createData(request);
+    persistDetailsOnCompletion(request);
 }
 
 async function createData(request: any) {
+    if (request?.body?.mdmsDetails?.status == mdmsProcessStatus.invalid) {
+        logger.info("Invalid sheet data");
+        return;
+    }
     var createError: any = {};
     var createSuccess: any = {};
     const dataToCreate = request?.body?.dataToCreate;
@@ -99,10 +106,25 @@ async function generateProcessFileAfterCreate(request: any, createError: any, cr
     const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
     addErrorsToSheet(request, worksheet, createError, sheetDataStatus.failed);
     addErrorsToSheet(request, worksheet, createSuccess, sheetDataStatus.created);
+    changeStatus(request, createError, createSuccess)
     await formatProcessedSheet(worksheet);
     const fileDetails = await createAndUploadFile(workbook, request);
     logger.info(`File store id for after creation file is ${fileDetails?.[0]?.fileStoreId}`)
     request.body.mdmsDetails.processedFileStoreId = fileDetails?.[0]?.fileStoreId;
+}
+
+function changeStatus(request: any, createError: any, createSuccess: any) {
+    if (Object.keys(createError).length > 1) {
+        if (Object.keys(createSuccess).length > 0) {
+            request.body.mdmsDetails.status = mdmsProcessStatus.partiallyFailed;
+        }
+        else {
+            request.body.mdmsDetails.status = mdmsProcessStatus.failed;
+        }
+    }
+    else {
+        request.body.mdmsDetails.status = mdmsProcessStatus.completed;
+    }
 }
 
 async function makeErrorSheet(request: any) {
@@ -110,6 +132,7 @@ async function makeErrorSheet(request: any) {
     const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode);
     const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
     await addErrorsToSheet(request, worksheet, request.body.errors, sheetDataStatus.invalid);
+    if (Object.keys(request?.body?.errors).length > 1) request.body.mdmsDetails.status = mdmsProcessStatus.invalid;
     await formatProcessedSheet(worksheet);
     const fileDetails = await createAndUploadFile(workbook, request);
     logger.info(`File store id for processed error file is ${fileDetails?.[0]?.fileStoreId}`)
@@ -166,4 +189,58 @@ async function getAllMdmsData(request: any) {
         }
     }
     return allData;
+}
+
+export async function getMdmsDetails(request: any) {
+    const mdmsDetails = await getMdmsDetailsViaDb(request?.query);
+    request.body.mdmsDetails = mdmsDetails;
+}
+
+async function getMdmsDetailsViaDb(searchBody: any) {
+    const { schemaCode, tenantId, id, status } = searchBody || {};
+
+    let query = `SELECT * FROM ${config.DB_CONFIG.DB_MDMS_DETAILS_TABLE_NAME} WHERE 1=1`;
+    const values: any[] = [];
+
+    if (tenantId) {
+        query += ' AND "tenantId" = $' + (values.length + 1);
+        values.push(tenantId);
+    }
+    if (schemaCode) {
+        query += ' AND "schemaCode" = $' + (values.length + 1);
+        values.push(schemaCode);
+    }
+    if (id) {
+        query += ' AND "id" = $' + (values.length + 1);
+        values.push(id);
+    }
+    if (status) {
+        query += ' AND "status" = $' + (values.length + 1);
+        values.push(status);
+    }
+
+    try {
+        const result = await executeQuery(query, values);
+        formatRows(result.rows);
+        return result.rows;
+    } catch (error: any) {
+        console.log(error)
+        logger.error(`Error fetching boundary details: ${error.message}`);
+        throw error;
+    }
+}
+
+function formatRows(rows: any) {
+    rows.forEach((row: any) => {
+        row.auditDetails = {
+            createdTime: parseInt(row.createdTime),
+            createdBy: row.createdBy,
+            lastModifiedTime: parseInt(row.lastModifiedTime),
+            lastModifiedBy: row.lastModifiedBy
+        }
+        delete row.createdTime;
+        delete row.lastModifiedTime;
+        delete row.createdBy;
+        delete row.lastModifiedBy;
+    });
 }
