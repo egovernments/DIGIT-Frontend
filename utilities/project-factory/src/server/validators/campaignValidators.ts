@@ -1195,7 +1195,6 @@ async function immediateValidationForTargetSheet(dataFromSheet: any, localizatio
 
 
 function validateAllDistrictTabsPresentOrNot(dataFromSheet: any, localizationMap?: any) {
-    console.log()
     let tabsIndex = 2;
     logger.info("target sheet getting validated for different districts");
     const differentTabsBasedOnLevel = getLocalizedName(config?.boundary?.generateDifferentTabsOnBasisOf, localizationMap);
