@@ -48,7 +48,7 @@ class mdmsBulkManageController {
         response: express.Response
     ) => {
         try {
-            logger.info("RECEIVED A BULK MDMS GENERATE TEMPLATE REQUEST");
+            logger.info("RECEIVED A BULK MDMS TEMPLATE GENERATE REQUEST");
             await generateMdmsTemplateService(request);
             return sendResponse(response, { mdmsGenerateDetails: request.body.mdmsGenerateDetails }, request);
         } catch (e: any) {
