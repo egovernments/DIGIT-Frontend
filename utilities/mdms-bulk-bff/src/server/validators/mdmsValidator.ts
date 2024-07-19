@@ -8,6 +8,7 @@ import { getFileUrl } from "../utils/genericUtils";
 import { mdmsTemplateGenerateBody } from "../config/schemas/mdmsTemplateGenerateBody";
 import { logger } from "../utils/logger";
 import { getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
+import { sheetDataStatus } from "../config/constants";
 
 export async function validateCreateMdmsDatasRequest(request: any) {
     validateBodyViaSchema(mdmsCreateBodySchema, request.query);
@@ -62,12 +63,16 @@ function validateSchemaCompatibility(schemaDefination: any) {
 
 async function validateSheetData(request: any) {
     const fileUrl = await getFileUrl(request);
-    const data = await getSheetData(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode, true);
+    const sheetData = await getSheetData(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode, true);
+    const dataToCreate = sheetData.filter((data: any) => data?.["!status!"] != sheetDataStatus.created);
+    if (dataToCreate.length === 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", `There is no data in the sheet to create`);
+    }
     const schema = request.body.currentSchema;
-    for (const rowData of data) {
+    for (const rowData of dataToCreate) {
         validateBodyViaSchema(schema, rowData);
     }
-    request.body.dataToCreate = data;
+    request.body.dataToCreate = dataToCreate;
 }
 
 export async function validateGenerateMdmsTemplateRequest(request: any) {
@@ -88,7 +93,7 @@ export async function validateForSheetErrors(request: any) {
         let uniqueIdentifier = xUniqueFields.map((key: any) => data[key]).join('|');
 
         if (uniqueFieldSet.has(uniqueIdentifier)) {
-            const message = `Entry already in mdms for data: ${uniqueIdentifier} at row ${data['!row#number!']}`;
+            const message = `Entry already in mdms`;
             logger.info(message);
             duplicateEntries.push(message);
             const rowNumber = data['!row#number!'];
@@ -108,7 +113,7 @@ export async function validateForSheetErrors(request: any) {
 
     uniqueFieldMap.forEach((rows, identifier) => {
         if (rows.length > 1) {
-            const message = `Duplicate entry found for data: ${identifier} at rows ${rows.join(', ')}`;
+            const message = `Duplicate entry found at rows ${rows.join(', ')}`;
             logger.info(message);
             duplicateEntries.push(message);
             rows.forEach((row: any) => {

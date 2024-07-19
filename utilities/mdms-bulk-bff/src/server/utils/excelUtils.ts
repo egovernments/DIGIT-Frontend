@@ -1,3 +1,4 @@
+import { mdmsProcessStatus } from "../config/constants";
 import config from "../config";
 import { throwError } from "./errorUtils";
 import { logger } from "./logger";
@@ -40,10 +41,8 @@ export async function createAndUploadFile(
 
   // Extract response data
   const responseData = fileCreationResult?.files;
-  if (!responseData) {
-    throw new Error(
-      "Error while uploading excel file: INTERNAL_SERVER_ERROR"
-    );
+  if (!responseData?.[0]?.fileStoreId) {
+    throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", "File creation failed");
   }
 
   return responseData; // Return the response data
@@ -318,4 +317,122 @@ function formatOtherRows(row: any, frozeCells: boolean) {
     }
   });
   row.alignment = { wrapText: true };
+}
+
+export const freezeStatusColumn = (worksheet: any) => {
+  // Find the column index of the header '!status!'
+  const statusColumnIndex = worksheet.getRow(1).values.indexOf('!status!');
+
+  if (statusColumnIndex !== -1) {
+    // Protect the worksheet
+    worksheet.protect('passwordhere', {
+      selectLockedCells: true,
+      selectUnlockedCells: true
+    });
+
+    // Lock the status column up to 10,000 rows
+    for (let i = 1; i <= parseInt(config.values.unfrozeTillRow); i++) {
+      const cell = worksheet.getRow(i).getCell(statusColumnIndex);
+      cell.protection = { locked: true };
+    }
+  }
+};
+
+
+export async function addErrorsToSheet(request: any, worksheet: any, errors: any, errorStatus: any) {
+  console.log(errors, " eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+  if (errors) {
+    // Find the first unfilled column
+    const headerRow = worksheet.getRow(1);
+    let statusColIndex: number | undefined;
+    let errorsColIndex: number | undefined;
+    let firstEmptyColIndex: number | undefined;
+
+    headerRow.eachCell((cell: any, colNumber: any) => {
+      if (cell.value == '!status!') {
+        statusColIndex = colNumber;
+      }
+      if (cell.value == '!errors!') {
+        errorsColIndex = colNumber;
+      }
+      firstEmptyColIndex = colNumber + 1;
+    });
+
+    // If !errors! column is not found, use the first empty column
+    if (errorsColIndex === undefined && firstEmptyColIndex !== undefined) {
+      errorsColIndex = firstEmptyColIndex;
+      var cell = headerRow.getCell(errorsColIndex);
+      cell.value = '!errors!';
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '93C47D' }
+      };
+      cell.font = { bold: true, name: 'Roboto' };
+      worksheet.getColumn(errorsColIndex).width = 40;
+      headerRow.commit();
+    }
+
+    if (statusColIndex === undefined || errorsColIndex === undefined) {
+      throw new Error('!status! column not found and no empty column available for !errors!');
+    }
+
+    // Iterate through the errors object
+    for (const [rowNum, errorMessages] of Object.entries(errors)) {
+      const row = worksheet.getRow(Number(rowNum));
+
+      // Add 'invalid' to the !status! column
+      row.getCell(statusColIndex).value = errorStatus;
+
+      // Add the error messages to the !errors! column
+      row.getCell(errorsColIndex).value = (errorMessages as string[]).join(', ');
+
+      // Commit the row changes
+      row.commit();
+    }
+    request.body.mdmsDetails.status = mdmsProcessStatus.invalid;
+  }
+}
+
+export async function formatProcessedSheet(worksheet: any) {
+  // Find the indices of the !status! and !errors! columns
+  const headerRow = worksheet.getRow(1);
+  let statusColIndex: number | undefined;
+  let errorsColIndex: number | undefined;
+
+  headerRow.eachCell((cell: any, colNumber: any) => {
+    if (cell.value === '!status!') {
+      statusColIndex = colNumber;
+    }
+    if (cell.value === '!errors!') {
+      errorsColIndex = colNumber;
+    }
+  });
+
+  if (statusColIndex === undefined || errorsColIndex === undefined) {
+    throw new Error('!status! or !errors! column not found');
+  }
+
+  // Unlock all cells first
+  worksheet.eachRow({ includeEmpty: true }, (row: any) => {
+    row.eachCell({ includeEmpty: true }, (cell: any) => {
+      cell.protection = { locked: false };
+    });
+  });
+
+  // Lock the !status! and !errors! columns till specified rows
+  const unfrozeTillRow = parseInt(config.values.unfrozeTillRow, 10);
+  for (let i = 2; i <= unfrozeTillRow; i++) {
+    const statusCell = worksheet.getRow(i).getCell(statusColIndex);
+    const errorsCell = worksheet.getRow(i).getCell(errorsColIndex);
+
+    statusCell.protection = { locked: true };
+    errorsCell.protection = { locked: true };
+  }
+
+  // Protect the entire worksheet to enforce the cell protections
+  await worksheet.protect('passwordhere', {
+    selectLockedCells: true,
+    selectUnlockedCells: true
+  });
 }
