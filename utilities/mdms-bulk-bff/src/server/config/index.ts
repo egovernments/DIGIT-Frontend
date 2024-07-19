@@ -71,6 +71,7 @@ const config = {
     boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
     mdmsSchemaSearch: "mdms-v2/schema/v1/_search",
     mdmsDataSearch: "mdms-v2/v2/_search",
+    mdmsDataCreate: "mdms-v2/v2/_create",
   },
   values: {
     maxHttpRetries: "4",

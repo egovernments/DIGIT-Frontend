@@ -4,7 +4,14 @@ import Error from "./error.interface"
 export const mdmsProcessStatus = {
     inprogress: "inprogress",
     failed: "failed",
-    completed: "completed"
+    completed: "completed",
+    invalid: "invalid"
+}
+
+export const sheetDataStatus = {
+    invalid: "INVALID",
+    created: "CREATED",
+    failed: "FAILED"
 }
 
 export const CONSTANTS = {
