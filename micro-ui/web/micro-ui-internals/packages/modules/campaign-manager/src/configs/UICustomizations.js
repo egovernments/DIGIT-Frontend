@@ -1,7 +1,9 @@
 import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
-import { Button } from "@egovernments/digit-ui-components";
+import { Fragment } from "react";
+import { Button, PopUp } from "@egovernments/digit-ui-components";
+import TimelineComponent from "../components/TimelineComponent";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -11,26 +13,30 @@ const businessServiceMap = {};
 
 const inboxModuleNameMap = {};
 
-const onActionSelect = (value, row) => {
-  switch (value?.code) {
-    case "ACTION_LABEL_UPDATE_DATES":
-      window.history.pushState(
-        {
-          name: row?.campaignName,
-          data: row,
-          projectId: row?.projectId,
-        },
-        "",
-        `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
-      );
-      window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
+// const onActionSelect = (value, row) => {
+//   console.log("value")
+//   switch (value?.code) {
+//     case "ACTION_LABEL_UPDATE_DATES":
+//       window.history.pushState(
+//         {
+//           name: row?.campaignName,
+//           data: row,
+//           projectId: row?.projectId,
+//         },
+//         "",
+//         `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
+//       );
+//       window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
 
-      break;
-    default:
-      console.log(value);
-      break;
-  }
-};
+//       break;
+//     case "ACTION_LABEL_VIEW_TIMELINE":
+//       setTimeline(true);
+//       break;
+//     default:
+//       console.log(value);
+//       break;
+//   }
+// };
 
 export const UICustomizations = {
   MyCampaignConfigOngoing: {
@@ -98,6 +104,31 @@ export const UICustomizations = {
       return "";
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [timeLine, setTimeline] = React.useState(false);
+      // const { t } = useTranslation();
+      const onActionSelect = (value, row) => {
+        switch (value?.code) {
+          case "ACTION_LABEL_UPDATE_DATES":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
+            );
+            window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
+
+            break;
+          case "ACTION_LABEL_VIEW_TIMELINE":
+            setTimeline(true);
+            break;
+          default:
+            console.log(value);
+            break;
+        }
+      };
       switch (key) {
         case "CAMPAIGN_NAME":
           return (
@@ -114,17 +145,33 @@ export const UICustomizations = {
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_ACTIONS":
           return (
-            <Button
-              className="campaign-action-button"
-              type="actionButton"
-              variation="secondary"
-              label={"Action"}
-              options={[{ code: "ACTION_LABEL_VIEW_TIMELINE" }, { code: "ACTION_LABEL_CONFIGURE_APP" }, { code: "ACTION_LABEL_UPDATE_DATES" }]}
-              optionsKey="code"
-              showBottom={true}
-              isSearchable={false}
-              onOptionSelect={(item) => onActionSelect(item, row)}
-            />
+            <>
+              <Button
+                className="campaign-action-button"
+                type="actionButton"
+                variation="secondary"
+                label={"Action"}
+                options={[
+                  { code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
+                ]}
+                optionsKey="i18nKey"
+                showBottom={true}
+                isSearchable={false}
+                onOptionSelect={(item) => onActionSelect(item, row)}
+              />
+              {timeLine && (
+                <PopUp
+                  type={"default"}
+                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  onOverlayClick={() => setTimeline(false)}
+                  onClose={() => setTimeline(false)}
+                >
+                  <TimelineComponent campaignId={row?.id} resourceId={[row?.resources.find((resource) => resource?.type === "user")?.resourceId]} />
+                </PopUp>
+              )}
+            </>
           );
         default:
           return "case_not_found";
@@ -295,6 +342,31 @@ export const UICustomizations = {
       return "";
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [timeLine, setTimeline] = React.useState(false);
+      // const { t } = useTranslation();
+      const onActionSelect = (value, row) => {
+        switch (value?.code) {
+          case "ACTION_LABEL_UPDATE_DATES":
+            window.history.pushState(
+              {
+                name: row?.campaignName,
+                data: row,
+                projectId: row?.projectId,
+              },
+              "",
+              `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
+            );
+            window.location.href = `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`;
+
+            break;
+          case "ACTION_LABEL_VIEW_TIMELINE":
+            setTimeline(true);
+            break;
+          default:
+            console.log(value);
+            break;
+        }
+      };
       switch (key) {
         case "CAMPAIGN_NAME":
           return (
@@ -311,17 +383,33 @@ export const UICustomizations = {
           return Digit.DateUtils.ConvertEpochToDate(value);
         case "CAMPAIGN_ACTIONS":
           return (
-            <Button
-              className="campaign-action-button"
-              type="actionButton"
-              variation="secondary"
-              label={"Action"}
-              options={[{ code: "ACTION_LABEL_VIEW_TIMELINE" }, { code: "ACTION_LABEL_CONFIGURE_APP" }, { code: "ACTION_LABEL_UPDATE_DATES" }]}
-              optionsKey="code"
-              showBottom={true}
-              isSearchable={false}
-              onOptionSelect={(item) => onActionSelect(item, row)}
-            />
+            <>
+              <Button
+                className="campaign-action-button"
+                type="actionButton"
+                variation="secondary"
+                label={"Action"}
+                options={[
+                  { code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  { code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
+                ]}
+                optionsKey="i18nKey"
+                showBottom={true}
+                isSearchable={false}
+                onOptionSelect={(item) => onActionSelect(item, row)}
+              />
+              {timeLine && (
+                <PopUp
+                  type={"default"}
+                  heading={t("ES_CAMPAIGN_TIMELINE")}
+                  onOverlayClick={() => setTimeline(false)}
+                  onClose={() => setTimeline(false)}
+                >
+                  <TimelineComponent campaignId={row?.id} resourceId={[row?.resources.find((resource) => resource?.type === "user")?.resourceId]} />
+                </PopUp>
+              )}
+            </>
           );
         default:
           return "case_not_found";

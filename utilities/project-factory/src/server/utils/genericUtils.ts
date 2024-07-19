@@ -16,6 +16,7 @@ import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
 import { addDataToSheet, formatWorksheet, getNewExcelWorkbook, updateFontNameToRoboto } from "./excelUtils";
 import createAndSearch from "../config/createAndSearch";
+import { generateTargetColumnsBasedOnDeliveryConditions, modifyDeliveryConditions } from "./targetUtils";
 const NodeCache = require("node-cache");
 
 const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -643,7 +644,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   addDataToSheet(facilitySheet, facilitySheetData, undefined, undefined, true);
   hideUniqueIdentifierColumn(facilitySheet, createAndSearch?.["facility"]?.uniqueIdentifierColumn);
   changeFirstRowColumnColour(facilitySheet, 'E06666');
-  handledropdownthings(facilitySheet, request.body?.dropdowns);
+  await handledropdownthings(facilitySheet, request.body?.dropdowns);
 
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
@@ -706,7 +707,7 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
 
   const userSheet = workbook.addWorksheet(localizedUserTab);
   addDataToSheet(userSheet, userSheetData, undefined, undefined, true);
-  handledropdownthings(userSheet, request.body?.dropdowns);
+  await handledropdownthings(userSheet, request.body?.dropdowns);
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap)
   const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
@@ -763,7 +764,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, filteredBoundary?: any) {
   request.body.generatedResource = newEntryResponse;
-  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
+  await fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
   return request.body.generatedResource;
 }
 
@@ -1081,11 +1082,19 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 }
 
 
-async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
+async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
   var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
-
-  const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+  let headerColumnsAfterHierarchy: any;
+  if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
+    // fetching unique delivery conditions from deliveryRules
+    const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
+    // generating target columns base on delivery conditions
+    headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
+  }
+  else {
+    headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+  }
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
   headers = [...headers, ...localizedHeadersAfterHierarchy]
   return getLocalizedHeaders(headers, localizationMap);
