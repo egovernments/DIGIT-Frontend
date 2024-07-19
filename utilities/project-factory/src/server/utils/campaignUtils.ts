@@ -19,7 +19,7 @@ import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
 import { callGenerateIfBoundariesDiffer } from "./generateUtils";
 import { createProcessTracks, persistTrack } from "./processTrackUtils";
-import { generateDynamicTargetHeaders } from "./targetUtils";
+import { generateDynamicTargetHeaders, updateTargetColumnsIfDeliveryConditionsDifferForSMC } from "./targetUtils";
 const _ = require('lodash');
 
 
@@ -590,6 +590,7 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
     callGenerateIfBoundariesDiffer(request);
+    updateTargetColumnsIfDeliveryConditionsDifferForSMC(request);
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
     var updatedInnerCampaignDetails = {}
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)

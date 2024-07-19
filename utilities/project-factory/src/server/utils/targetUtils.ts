@@ -1,8 +1,11 @@
 import config from '../../server/config/index'
 import { getConfigurableColumnHeadersBasedOnCampaignType, getLocalizedName } from './campaignUtils';
+import _ from 'lodash';
+import { replicateRequest } from './genericUtils';
+import { callGenerate } from './generateUtils';
 
 
-async function generateDynamicTargetHeaders(request: any, campaignObject: any,localizationMap?:any) {
+async function generateDynamicTargetHeaders(request: any, campaignObject: any, localizationMap?: any) {
     let headerColumnsAfterHierarchy: any;
     if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
 
@@ -86,8 +89,38 @@ function createTargetString(uniqueDeliveryConditionsObject: any, localizationMap
     return targetString;
 }
 
+async function updateTargetColumnsIfDeliveryConditionsDifferForSMC(request: any) {
+    const existingCampaignDetails = request?.body?.ExistingCampaignDetails;
+    if (existingCampaignDetails) {
+        if (config?.isCallGenerateWhenDeliveryConditionsDiffer && !_.isEqual(existingCampaignDetails?.deliveryRules, request?.body?.CampaignDetails?.deliveryRules)) {
+            const newRequestBody = {
+                RequestInfo: request?.body?.RequestInfo,
+                Filters: {
+                    boundaries: request?.body?.CampaignDetails?.boundaries
+                }
+            };
+
+            const { query } = request;
+            const params = {
+                tenantId: request?.body?.CampaignDetails?.tenantId,
+                forceUpdate: 'true',
+                hierarchyType: request?.body?.CampaignDetails?.hierarchyType,
+                campaignId: request?.body?.CampaignDetails?.id
+            };
+
+            const newParamsBoundary = { ...query, ...params, type: "boundary" };
+            const newRequestBoundary = replicateRequest(request, newRequestBody, newParamsBoundary);
+            await callGenerate(newRequestBoundary, "boundary");
+        }
+    }
+}
+
+
+
+
 export {
     modifyDeliveryConditions,
     generateTargetColumnsBasedOnDeliveryConditions,
-    generateDynamicTargetHeaders
+    generateDynamicTargetHeaders,
+    updateTargetColumnsIfDeliveryConditionsDifferForSMC,
 };

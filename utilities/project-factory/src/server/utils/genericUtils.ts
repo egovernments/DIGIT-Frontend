@@ -1059,16 +1059,12 @@ function findMapValue(map: Map<any, any>, key: any): any | null {
 }
 
 function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: any) {
-  console.log("aaaaaaaaaaaaaaaa")
   const uniqueDistrictsForMainSheet: string[] = [];
   const differentDistrictTabs: any[] = [];
-  console.log(boundaryData, "ssssssssssss")
   for (const data of boundaryData) {
     const rowData = Object.values(data);
-    console.log(rowData, "qqqqqqqqq")
     const districtValue = data[differentTabsBasedOnLevel];
     const districtIndex = districtValue !== '' ? rowData.indexOf(districtValue) : -1;
-    console.log(districtIndex, "inddddddddddd")
 
     if (districtIndex != -1) {
       const districtLevelRow = rowData.slice(0, districtIndex + 1);
@@ -1082,7 +1078,6 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
   for (const uniqueData of uniqueDistrictsForMainSheet) {
     differentDistrictTabs.push(uniqueData.slice(uniqueData.lastIndexOf('#') + 1));
   }
-  console.log(differentDistrictTabs, "iiiiiiiiii")
   return differentDistrictTabs;
 }
 
