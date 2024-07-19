@@ -5,7 +5,8 @@ export const mdmsProcessStatus = {
     inprogress: "inprogress",
     failed: "failed",
     completed: "completed",
-    invalid: "invalid"
+    invalid: "invalid",
+    partiallyFailed: "partiallyFailed"
 }
 
 export const sheetDataStatus = {

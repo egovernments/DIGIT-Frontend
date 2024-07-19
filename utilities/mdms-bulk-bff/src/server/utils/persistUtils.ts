@@ -26,3 +26,13 @@ export function enrichAndPersistMDMSDetails(request: any) {
     };
     produceModifiedMessages(producedMessage, config.kafka.KAFKA_SAVE_MDMS_DETAILS_TOPIC);
 }
+
+export function persistDetailsOnCompletion(request: any) {
+    const currentTime = Date.now();
+    const mdmsDetails = request?.body?.mdmsDetails;
+    mdmsDetails.auditDetails.lastModifiedTime = currentTime;
+    const producedMessage: any = {
+        mdmsDetails
+    };
+    produceModifiedMessages(producedMessage, config.kafka.KAFKA_UPDATE_MDMS_DETAILS_TOPIC);
+}

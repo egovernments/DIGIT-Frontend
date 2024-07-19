@@ -2,8 +2,7 @@
 // Importing necessary module
 import { getErrorCodes } from "./constants";
 // Defining the HOST variable
-const HOST = process.env.EGOV_HOST ||
-  "https://unified-dev.digit.org/";
+const HOST = process.env.EGOV_HOST || "https://unified-dev.digit.org/";
 // Checking if HOST is set, if not, exiting the process
 if (!HOST) {
   console.log("You need to set the HOST variable");
@@ -16,20 +15,14 @@ const getDBSchemaName = (dbSchema = "") => {
 }
 // Configuration object containing various environment variables
 const config = {
-  excludeHierarchyTypeFromBoundaryCodes: false,
-  excludeBoundaryNameAtLastFromBoundaryCodes: false,
-  boundary: {
-    boundaryCode: process.env.BOUNDARY_CODE_HEADER_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_CODE",
-    boundaryTab: process.env.BOUNDARY_TAB_NAME || "HCM_ADMIN_CONSOLE_BOUNDARY_DATA",
-  },
   cacheValues: {
     cacheEnabled: process.env.CACHE_ENABLED,
     resetCache: process.env.RESET_CACHE,
     redisPort: process.env.REDIS_PORT || "6379",
   },
   kafka: {
-    KAFKA_SAVE_MDMS_DETAILS_TOPIC: process.env.KAFKA_SAVE_MDMS_DETAILS_TOPIC || "save-boundary-details",
-    KAFKA_UPDATE_MDMS_DETAILS_TOPIC: process.env.KAFKA_UPDATE_MDMS_DETAILS_TOPIC || "update-boundary-details",
+    KAFKA_SAVE_MDMS_DETAILS_TOPIC: process.env.KAFKA_SAVE_MDMS_DETAILS_TOPIC || "save-mdms-bulk-details",
+    KAFKA_UPDATE_MDMS_DETAILS_TOPIC: process.env.KAFKA_UPDATE_MDMS_DETAILS_TOPIC || "update-mdms-bulk-details",
   },
 
   // Database configuration
@@ -39,7 +32,7 @@ const config = {
     DB_NAME: process.env.DB_NAME || "postgres",
     DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
     DB_PORT: process.env.DB_PORT || "5432",
-    DB_BOUNDARY_DETAILS_TABLE_NAME: `${getDBSchemaName(process.env.DB_SCHEMA)}.eg_boundary_bulk_details`,
+    DB_MDMS_DETAILS_TABLE_NAME: `${getDBSchemaName(process.env.DB_SCHEMA)}.eg_mdms_bulk_details`,
   },
   // Application configuration
   app: {
@@ -54,21 +47,12 @@ const config = {
     KAFKA_BROKER_HOST: process.env.KAFKA_BROKER_HOST || "kafka-v2.kafka-cluster:9092",
     redisHost: process.env.REDIS_HOST || "localhost",
     filestore: process.env.EGOV_FILESTORE_SERVICE_HOST || "https://unified-dev.digit.org/",
-    boundaryHost: process.env.EGOV_BOUNDARY_HOST || "https://unified-dev.digit.org/",
-    localizationHost: process.env.EGOV_LOCALIZATION_HOST || "https://unified-dev.digit.org/",
     mdmsHost: process.env.EGOV_MDMS_HOST || "https://unified-dev.digit.org/",
   },
   // Paths for different services
   paths: {
-    filestoreCreate: process.env.FILE_STORE_SERVICE_CREATE || "filestore/v1/files",
-    filestoreSearch: process.env.FILE_STORE_SERVICE_SEARCH || "filestore/v1/files/url",
-    boundaryRelationship: process.env.EGOV_BOUNDARY_RELATIONSHIP_SEARCHPATH || "boundary-service/boundary-relationships/_search",
-    boundaryHierarchy: process.env.EGOV_BOUNDARY_HIERARCHY_SEARCHPATH || "boundary-service/boundary-hierarchy-definition/_search",
-    boundaryEntitySearch: process.env.EGOV_BOUNDARY_ENTITY_SEARCHPATH || "boundary-service/boundary/_search",
-    boundaryEntityCreate: process.env.EGOV_BOUNDARY_ENTITY_CREATEPATH || "boundary-service/boundary/_create",
-    localizationSearch: process.env.EGOV_LOCALIZATION_SEARCH || "localization/messages/v1/_search",
-    localizationCreate: "localization/messages/v1/_upsert",
-    boundaryRelationshipCreate: "boundary-service/boundary-relationships/_create",
+    filestoreCreate: "filestore/v1/files",
+    filestoreSearch: "filestore/v1/files/url",
     mdmsSchemaSearch: "mdms-v2/schema/v1/_search",
     mdmsDataSearch: "mdms-v2/v2/_search",
     mdmsDataCreate: "mdms-v2/v2/_create",
@@ -76,8 +60,8 @@ const config = {
   values: {
     maxHttpRetries: "4",
     mdmsSheetName: "MDMS Data",
-    unfrozeTillRow: process.env.UNFROZE_TILL_ROW || "10000",
-    unfrozeTillColumn: process.env.UNFROZE_TILL_COLUMN || "50",
+    unfrozeTillRow: "10000",
+    unfrozeTillColumn: "50",
   }
 };
 // Exporting getErrorCodes function and config object
