@@ -1,10 +1,9 @@
-import { Loader, FormComposerV2, Header } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
-import { Button, CardText, PopUp, Toast } from "@egovernments/digit-ui-components";
-import { isError } from "lodash";
+import { Button, PopUp, Toast } from "@egovernments/digit-ui-components";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -13,11 +12,16 @@ function UpdateDatesWithBoundaries() {
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
   const [showPopUp, setShowPopUp] = useState(null);
-  const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "dateWithBoundary" }], {
-    select: (data) => {
-      return data?.["HCM-ADMIN-CONSOLE"]?.dateWithBoundary?.[0]?.dateWithBoundary;
-    },
-  });
+  const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-ADMIN-CONSOLE",
+    [{ name: "dateWithBoundary" }],
+    {
+      select: (data) => {
+        return data?.["HCM-ADMIN-CONSOLE"]?.dateWithBoundary?.[0]?.dateWithBoundary;
+      },
+    }
+  );
   const closeToast = () => {
     setShowToast(null);
   };
@@ -100,11 +104,7 @@ function UpdateDatesWithBoundaries() {
           className={"boundaries-pop-module"}
           type={"default"}
           heading={t("ES_CAMPAIGN_CHANGE_DATE_CONFIRM")}
-          children={[
-            // <div>
-            //   <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_CHANGE_DATE_CONFIRM") + " "}</CardText>
-            // </div>,
-          ]}
+          children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
           }}
