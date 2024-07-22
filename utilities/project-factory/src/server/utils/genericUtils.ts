@@ -1134,6 +1134,49 @@ async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: an
 }
 
 
+function appendProjectTypeToCapacity(schema: any, projectType: string): any {
+  const updatedSchema = JSON.parse(JSON.stringify(schema)); // Deep clone the schema
+
+  const capacityKey = 'HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN';
+  const newCapacityKey = `${capacityKey}_${projectType}`;
+
+  // Update properties
+  if (updatedSchema.properties[capacityKey]) {
+    updatedSchema.properties[newCapacityKey] = {
+      ...updatedSchema.properties[capacityKey],
+      name: `${updatedSchema.properties[capacityKey].name}_${projectType}`
+    };
+    delete updatedSchema.properties[capacityKey];
+  }
+
+  // Update required
+  updatedSchema.required = updatedSchema.required.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update columns
+  updatedSchema.columns = updatedSchema.columns.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update unique
+  updatedSchema.unique = updatedSchema.unique.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update errorMessage
+  if (updatedSchema.errorMessage[capacityKey]) {
+    updatedSchema.errorMessage[newCapacityKey] = updatedSchema.errorMessage[capacityKey];
+    delete updatedSchema.errorMessage[capacityKey];
+  }
+
+  // Update columnsNotToBeFreezed
+  updatedSchema.columnsNotToBeFreezed = updatedSchema.columnsNotToBeFreezed.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  return updatedSchema;
+}
 
 
 export {
@@ -1181,7 +1224,8 @@ export {
   getConfigurableColumnHeadersFromSchemaForTargetSheet,
   createBoundaryDataMainSheet,
   getMdmsDataBasedOnCampaignType,
-  shutdownGracefully
+  shutdownGracefully,
+  appendProjectTypeToCapacity
 };
 
 
