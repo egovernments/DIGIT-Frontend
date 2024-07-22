@@ -16,6 +16,7 @@ import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
 import { addDataToSheet, formatWorksheet, getNewExcelWorkbook, updateFontNameToRoboto } from "./excelUtils";
 import createAndSearch from "../config/createAndSearch";
+import { generateDynamicTargetHeaders } from "./targetUtils";
 const NodeCache = require("node-cache");
 
 const updateGeneratedResourceTopic = config?.kafka?.KAFKA_UPDATE_GENERATED_RESOURCE_DETAILS_TOPIC;
@@ -763,7 +764,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, filteredBoundary?: any) {
   request.body.generatedResource = newEntryResponse;
-  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
+  await fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
   return request.body.generatedResource;
 }
 
@@ -1081,13 +1082,12 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 }
 
 
-async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, localizationMap?: any) {
+async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
   var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
-
-  const headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
+  const headerColumnsAfterHierarchy = await generateDynamicTargetHeaders(request, campaignObject, localizationMap);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
-  headers = [...headers, ...localizedHeadersAfterHierarchy]
+  headers = [...headers, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), ...localizedHeadersAfterHierarchy]
   return getLocalizedHeaders(headers, localizationMap);
 }
 
