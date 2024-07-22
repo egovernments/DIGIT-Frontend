@@ -57,6 +57,7 @@ async function createData(request: any) {
         logger.info("Invalid sheet data");
         return;
     }
+
     var createError: any = {};
     var createSuccess: any = {};
     const dataToCreate = request?.body?.dataToCreate;
@@ -68,37 +69,47 @@ async function createData(request: any) {
             uniqueIdentifier: null,
             isActive: true
         }
+    };
+
+    const concurrencyLimit = 50; // Set your desired concurrency limit here
+    const chunks = Math.ceil(dataToCreate.length / concurrencyLimit);
+
+    for (let i = 0; i < chunks; i++) {
+        const batch = dataToCreate.slice(i * concurrencyLimit, (i + 1) * concurrencyLimit);
+        const createPromises = batch.map(async (data: any) => {
+            var formattedData = JSON.parse(JSON.stringify(data));
+            delete formattedData?.["!status!"];
+            delete formattedData?.["!error!"];
+            delete formattedData?.["!row#number!"];
+            createBody.Mdms.data = formattedData;
+
+            try {
+                await httpRequest(config.host.mdmsHost + config.paths.mdmsDataCreate + `/${request?.query?.schemaCode}`, createBody);
+                const rowNumber = data["!row#number!"];
+                const message = "Successfully created";
+                if (createSuccess?.[rowNumber]) {
+                    createSuccess[rowNumber].push(message);
+                } else {
+                    createSuccess[rowNumber] = [message];
+                }
+            } catch (error: any) {
+                console.log(error);
+                const rowNumber = data["!row#number!"];
+                const message = error?.message || JSON.stringify(error) || "Unknown error";
+                if (createError?.[rowNumber]) {
+                    createError[rowNumber].push(message);
+                } else {
+                    createError[rowNumber] = [message];
+                }
+            }
+        });
+
+        await Promise.all(createPromises);
     }
-    for (const data of dataToCreate) {
-        var formattedData = JSON.parse(JSON.stringify(data));
-        delete formattedData?.["!status!"];
-        delete formattedData?.["!error!"];
-        delete formattedData?.["!row#number!"];
-        createBody.Mdms.data = formattedData;
-        try {
-            await httpRequest(config.host.mdmsHost + config.paths.mdmsDataCreate + `/${request?.query?.schemaCode}`, createBody);
-            const rowNumber = data["!row#number!"];
-            const message = "Successfully created";
-            if (createSuccess?.[rowNumber]) {
-                createSuccess[rowNumber].push(message);
-            }
-            else {
-                createSuccess[rowNumber] = [message];
-            }
-        } catch (error: any) {
-            console.log(error)
-            const rowNumber = data["!row#number!"];
-            const message = error?.message || JSON.stringify(error) || "Unknown error";
-            if (createError?.[rowNumber]) {
-                createError[rowNumber].push(message);
-            }
-            else {
-                createError[rowNumber] = [message];
-            }
-        }
-    }
+
     await generateProcessFileAfterCreate(request, createError, createSuccess);
 }
+
 
 async function generateProcessFileAfterCreate(request: any, createError: any, createSuccess: any) {
     const fileUrl = await getFileUrl(request);
