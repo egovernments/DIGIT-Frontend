@@ -61,15 +61,6 @@ async function createData(request: any) {
     var createError: any = {};
     var createSuccess: any = {};
     const dataToCreate = request?.body?.dataToCreate;
-    const createBody: any = {
-        RequestInfo: request.body.RequestInfo,
-        Mdms: {
-            tenantId: request?.query?.tenantId,
-            schemaCode: request?.query?.schemaCode,
-            uniqueIdentifier: null,
-            isActive: true
-        }
-    };
 
     const concurrencyLimit = 50; // Set your desired concurrency limit here
     const chunks = Math.ceil(dataToCreate.length / concurrencyLimit);
@@ -81,7 +72,17 @@ async function createData(request: any) {
             delete formattedData?.["!status!"];
             delete formattedData?.["!error!"];
             delete formattedData?.["!row#number!"];
-            createBody.Mdms.data = formattedData;
+
+            const createBody: any = {
+                RequestInfo: request.body.RequestInfo,
+                Mdms: {
+                    tenantId: request?.query?.tenantId,
+                    schemaCode: request?.query?.schemaCode,
+                    uniqueIdentifier: null,
+                    isActive: true,
+                    data: formattedData
+                }
+            };
 
             try {
                 await httpRequest(config.host.mdmsHost + config.paths.mdmsDataCreate + `/${request?.query?.schemaCode}`, createBody);
@@ -109,6 +110,7 @@ async function createData(request: any) {
 
     await generateProcessFileAfterCreate(request, createError, createSuccess);
 }
+
 
 
 async function generateProcessFileAfterCreate(request: any, createError: any, createSuccess: any) {
