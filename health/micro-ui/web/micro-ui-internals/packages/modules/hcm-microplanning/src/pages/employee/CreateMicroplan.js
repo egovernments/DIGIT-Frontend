@@ -10,6 +10,7 @@ import { Toast } from "@egovernments/digit-ui-components";
 import MicroplanPreview from "../../components/MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
 import CampaignDetails from "../../components/CampaignDetails";
+import BoundarySelection from "../../components/BoundarySelection";
 export const components = {
   MicroplanDetails,
   Upload,
@@ -18,6 +19,7 @@ export const components = {
   Mapping,
   MicroplanPreview,
   CampaignDetails,
+  BoundarySelection
 };
 
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
@@ -208,6 +210,7 @@ const CreateMicroplan = () => {
         }
         setLoaderActivation(false);
         setCheckDataCompletion("perform-action");
+        Digit.Utils.microplan.updateUrlParams({ id: data?.CampaignDetails?.id });
       },
       onError: (error, variables) => {
         setToast({

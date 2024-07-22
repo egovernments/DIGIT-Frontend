@@ -43,10 +43,10 @@ const MicroplanDetails = ({
   const [loader, setLoader] = useState(false);
 
   //fetch campaign data
-  // const { id = "" } = Digit.Hooks.useQueryParams();
+  const { id = "" } = Digit.Hooks.useQueryParams();
 
   //now instead of url param i'll fetch this id from sessionObject
-  const id = microplanData?.campaignId;
+  // const id = microplanData?.campaignId;
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
     {
       CampaignDetails: {

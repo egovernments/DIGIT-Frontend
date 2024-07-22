@@ -17,6 +17,14 @@ const formatDates = (value, type) => {
   }
 };
 
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 // get schema for validation
 const getSchema = (campaignType, type, section, schemas) => {
   if (!campaignType || !type || !section || !schemas) return {};
@@ -618,4 +626,5 @@ export default {
   transformIntoLocalisationCode,
   mergeDeep,
   createRequestBodyForCampaign,
+  updateUrlParams,
 };
