@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { httpRequest } from "../utils/request";
 import { getFormattedStringForDebug, logger } from "../utils/logger";
 import createAndSearch from '../config/createAndSearch';
-import { getDataFromSheet, generateActivityMessage, throwError, translateSchema, replicateRequest } from "../utils/genericUtils";
+import { getDataFromSheet, generateActivityMessage, throwError, translateSchema, replicateRequest, appendProjectTypeToCapacity } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../validators/campaignValidators';
 import { callMdmsTypeSchema, getCampaignNumber } from "./genericApis";
 import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist,getBoundaryOnWhichWeSplit, getLocalizedName, reorderBoundariesOfDataAndValidate, checkIfSourceIsMicroplan } from "../utils/campaignUtils";
@@ -730,7 +730,7 @@ async function performAndSaveResourceActivity(request: any, createAndSearchConfi
       }
       _.set(newRequestBody, createAndSearchConfig?.createBulkDetails?.createPath, chunkData);
       creationTime = Date.now();
-      if (type == "facility") {
+      if (type == "facility" || type == "facilityMicroplan") {
         await handeFacilityProcess(request, createAndSearchConfig, params, activities, newRequestBody);
       }
       else if (type == "user") {
@@ -847,11 +847,11 @@ async function processCreate(request: any, localizationMap?: any) {
     // console.log(`Source is MICROPLAN -->`, source);
     let createAndSearchConfig: any;
     createAndSearchConfig = createAndSearch[type];
+    const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+    const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
 
     if (checkIfSourceIsMicroplan(source)) {
-      const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-      const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-      logger.info(`Data create Source is MICROPLAN --> ${source}`);
+       logger.info(`Data create Source is MICROPLAN --> ${source}`);
       if (
         createAndSearchConfig &&
         createAndSearchConfig.parseArrayConfig &&
@@ -870,10 +870,17 @@ async function processCreate(request: any, localizationMap?: any) {
 
     const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
     let schema: any;
+
     if (type == "facility") {
       logger.info("Fetching schema to validate the created data for type: " + type);
       const mdmsResponse = await callMdmsTypeSchema(request, tenantId, type);
       schema = mdmsResponse
+    }
+    else if(type == "facilityMicroplan") {
+      const mdmsResponse = await callMdmsTypeSchema(request, tenantId, "facility", "microplan", "HCM-ADMIN-CONSOLE.adminSchemaMicroplan");
+      schema = mdmsResponse
+      logger.info("Appending project type to capacity for microplan " + campaignType);
+      schema = await appendProjectTypeToCapacity(schema, campaignType);
     }
     else if (type == "user") {
       logger.info("Fetching schema to validate the created data for type: " + type);

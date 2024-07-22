@@ -179,7 +179,7 @@ const createAndSearch: any = {
         uniqueIdentifier: "id",
         uniqueIdentifierColumn: "A",
         activeColumn: "F",
-        activeColumnName: "HCM_ADMIN_CONSOLE_FACILITY_USAGE",
+        activeColumnName: "HCM_ADMIN_CONSOLE_FACILITY_USAGE_MICROPLAN",
         uniqueIdentifierColumnName: "HCM_ADMIN_CONSOLE_FACILITY_CODE",
         matchEachKey: true,
         parseArrayConfig: {
