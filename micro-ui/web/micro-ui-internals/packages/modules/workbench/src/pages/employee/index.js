@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useRef} from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
@@ -12,16 +12,23 @@ import MDMSSearchv2 from "./MDMSSearchv2";
 import MDMSManageMaster from "./MDMSManageMaster";
 import LocalisationAdd from "./LocalisationAdd";
 
-const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
+const WorkbenchBreadCrumb = ({ location, defaultPath,initialContextPath }) => {
   const { t } = useTranslation();
   const search = useLocation().search;
   const fromScreen = new URLSearchParams(search).get("from") || null;
   const pathVar = location.pathname.replace(defaultPath + '/', "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier } = Digit.Hooks.useQueryParams()
 
+  const getHomePath = () => {
+    if (initialContextPath === 'works-ui') {
+      return '/works-ui/employee';
+    }
+    return `/${window.contextPath}/employee`;
+  };
+
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      path: getHomePath(),
       content: t("WORKBENCH_HOME"),
       show: true,
     },
@@ -64,6 +71,8 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 
 const App = ({ path }) => {
   const location = useLocation();
+  const initialContextPath = useRef(window.contextPath);
+
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
@@ -102,7 +111,7 @@ const App = ({ path }) => {
 
   return (
     <React.Fragment>
-      <WorkbenchBreadCrumb location={location} defaultPath={path} />
+      <WorkbenchBreadCrumb location={location} defaultPath={path} initialContextPath={initialContextPath.current} />
       <Switch>
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
