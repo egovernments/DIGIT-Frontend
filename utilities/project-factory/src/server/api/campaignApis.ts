@@ -6,7 +6,7 @@ import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, generateActivityMessage, throwError, translateSchema, replicateRequest } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../validators/campaignValidators';
 import { callMdmsTypeSchema, getCampaignNumber } from "./genericApis";
-import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getBoundaryOnWhichWeSplit, getLocalizedName, reorderBoundariesOfDataAndValidate } from "../utils/campaignUtils";
+import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getBoundaryOnWhichWeSplit, getLocalizedName, reorderBoundariesOfDataAndValidate, checkIfSourceIsMicroplan } from "../utils/campaignUtils";
 const _ = require('lodash');
 import { produceModifiedMessages } from "../kafka/Listener";
 import { createDataService } from "../service/dataManageService";
@@ -843,7 +843,31 @@ async function processCreate(request: any, localizationMap?: any) {
     boundaryBulkUpload(request, localizationMap);
   }
   else {
-    const createAndSearchConfig = createAndSearch[type]
+    const source = request?.body?.ResourceDetails?.additionalDetails?.source;
+    // console.log(`Source is MICROPLAN -->`, source);
+    let createAndSearchConfig: any;
+    createAndSearchConfig = createAndSearch[type];
+
+    if (checkIfSourceIsMicroplan(source)) {
+      const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+      const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
+      logger.info(`Data create Source is MICROPLAN --> ${source}`);
+      if (
+        createAndSearchConfig &&
+        createAndSearchConfig.parseArrayConfig &&
+        createAndSearchConfig.parseArrayConfig.parseLogic
+      ) {
+        createAndSearchConfig.parseArrayConfig.parseLogic = createAndSearchConfig.parseArrayConfig.parseLogic.map(
+          (item: any) => {
+            if (item.sheetColumn === "E") {
+              item.sheetColumnName += `_${campaignType}`;
+            }
+            return item;
+          }
+        );
+      }
+    }
+
     const dataFromSheet = await getDataFromSheet(request, request?.body?.ResourceDetails?.fileStoreId, request?.body?.ResourceDetails?.tenantId, createAndSearchConfig, undefined, localizationMap)
     let schema: any;
     if (type == "facility") {
