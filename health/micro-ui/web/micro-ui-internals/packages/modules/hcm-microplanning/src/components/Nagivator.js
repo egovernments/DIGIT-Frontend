@@ -6,6 +6,7 @@ import { Button } from "@egovernments/digit-ui-react-components";
 import { ArrowBack, ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { PRIMARY_THEME_COLOR } from "../configs/constants";
 import { memo } from "react";
+import { useHistory } from "react-router-dom";
 
 /**
  *
@@ -15,6 +16,7 @@ import { memo } from "react";
  */
 // Main component for creating a microplan
 const Navigator = memo((props) => {
+  const history = useHistory();
   // States
   const [currentPage, setCurrentPage] = useState();
   // const [toast, setToast] = useState();
@@ -48,10 +50,10 @@ const Navigator = memo((props) => {
     if (checkDataCompletion === "invalid") {
       if (navigationEvent && navigationEvent.name === "next") {
         props?.setToast({ state: "error", message: t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS") });
-      } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step !== undefined) {
-        if (navigationEvent.step > currentPage.id)
+      } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent?.step !== undefined) {
+        if (navigationEvent?.step > currentPage.id)
           props?.setToast({ state: "error", message: t("MICROPLAN_PLEASE_FILL_ALL_THE_FIELDS_AND_RESOLVE_ALL_THE_ERRORS") });
-        else onStepClick(navigationEvent.step);
+        else onStepClick(navigationEvent?.step);
       } else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
       setCheckDataCompletion("false");
     }
@@ -74,8 +76,8 @@ const Navigator = memo((props) => {
     // if (checkDataCompletion !== "valid" || navigationEvent === undefined) return;
     if (
       checkDataCompletion === "valid" &&
-      ((navigationEvent.step && navigationEvent.step <= activeSteps + 1) || !navigationEvent.step) &&
-      (!props?.status || checkStatusTillPageToNavigate(props?.status) || navigationEvent.step === currentPage.id + 1)
+      ((navigationEvent?.step && navigationEvent?.step <= activeSteps + 1) || !navigationEvent?.step) &&
+      (!props?.status || checkStatusTillPageToNavigate(props?.status) || navigationEvent?.step === currentPage.id + 1)
     ) {
       if (typeof props.nextEventAddon === "function") {
         if (LoadCustomComponent({ component: props.components[currentPage?.component] }) !== null)
@@ -124,6 +126,14 @@ const Navigator = memo((props) => {
 
   // Function to handle next button click
   const previousbuttonClickHandler = useCallback(() => {
+    //here if currentPage.id ===0 then simply go to home
+    if (currentPage?.id === 0) {
+      props.setMicroplanData(() => {
+        return {};
+      });
+      history.push("/microplan-ui/employee");
+      return;
+    }
     if (
       (props.checkDataCompleteness &&
         props?.config[currentPage?.id]?.checkForCompleteness &&
@@ -145,6 +155,7 @@ const Navigator = memo((props) => {
 
   // Function to handle next button click
   const nextbuttonClickHandler = useCallback(() => {
+    // here do additional logic to identify whether camp creation/update is required or not
     if (
       props.checkDataCompleteness &&
       props?.config[currentPage?.id]?.checkForCompleteness &&
@@ -242,7 +253,7 @@ const Navigator = memo((props) => {
       {/* Action bar */}
       <ActionBar className={`${currentPage?.id === 0 ? "custom-action-bar-no-first-button" : "custom-action-bar"} popup-wrap-rest-unfocus`}>
         {/* Back button */}
-        {currentPage?.id > 0 && (
+        {currentPage?.id >= 0 && (
           <Button
             type="button"
             className="custom-button custom-button-left-icon"
@@ -297,7 +308,7 @@ const handleNavigationEvent = (
         return props?.completeNavigation();
       }
       nextStep();
-    } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent.step !== undefined) onStepClick(navigationEvent.step);
+    } else if (navigationEvent && navigationEvent.name === "step" && navigationEvent?.step !== undefined) onStepClick(navigationEvent?.step);
     else if (navigationEvent && navigationEvent.name === "previousStep") previousStep();
     setCheckDataCompletion("false");
     setNavigationEvent(undefined);

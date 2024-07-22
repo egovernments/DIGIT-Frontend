@@ -616,9 +616,9 @@ $border-color: rgba(214, 213, 212, 1);
 
     @include select-dropdown;
 
-    .table{
-      border-left-width:0 !important;
-      border-right-width:0 !important;
+    .table {
+      border-left-width: 0 !important;
+      border-right-width: 0 !important;
     }
 
     table {
@@ -1444,10 +1444,6 @@ $border-color: rgba(214, 213, 212, 1);
         box-shadow: inset 0 -0.125rem 0 0 black;
       }
     }
-  }
-
-  .custom-action-bar-no-first-button {
-    justify-content: end;
   }
 }
 

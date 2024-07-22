@@ -170,6 +170,110 @@ const mapDataForApi = (data, Operators, microplanName, campaignId, status, reqTy
   return createApiRequestBody(status, microplanName, campaignId, files, assumptions, operations, resourceMapping);
 };
 
+function getTomorrowAndFutureEpoch() {
+  // Get the current date and time
+  let currentDate = new Date();
+
+  // Calculate the number of milliseconds in one day
+  let millisecondsInOneDay = 24 * 60 * 60 * 1000;
+
+  // Calculate tomorrow's date by adding one day to the current date
+  let tomorrowDate = new Date(currentDate.getTime() + millisecondsInOneDay);
+
+  // Get the epoch time (timestamp in milliseconds) for tomorrow's date
+  let tomorrowEpochTime = tomorrowDate.getTime();
+
+  // Calculate the number of milliseconds in 30 days
+  let millisecondsIn30Days = 30 * 24 * 60 * 60 * 1000;
+
+  // Calculate the date 30 days from tomorrow
+  let futureDate = new Date(tomorrowDate.getTime() + millisecondsIn30Days);
+
+  // Get the epoch time (timestamp in milliseconds) for the future date
+  let futureEpochTime = futureDate.getTime();
+
+  return {
+    tomorrowEpochTime: tomorrowEpochTime,
+    futureEpochTime: futureEpochTime,
+  };
+}
+
+const createRequestBodyForCampaign = (microplanData, t, reqType) => {
+  const { campaignType, disease, distributionStrat } = microplanData?.campaignDetails;
+  let reqBody = {};
+  if (reqType === "update") {
+    const times = getTomorrowAndFutureEpoch();
+    reqBody = {
+      ...microplanData.campaignObject,
+      projectType: campaignType?.code,
+      startDate: times.tomorrowEpochTime, // simply setting some dates because update is not allowed without dates as of now
+      endDate: times.futureEpochTime, // simply setting some dates because update is not allowed without dates as of now
+      additionalDetails: {
+        beneficiaryType: campaignType?.beneficiaryType,
+        disease,
+        distributionStrat,
+      },
+    };
+
+    delete reqBody.startDate;
+    delete reqBody.endDate;
+  } else if (reqType === "create") {
+    reqBody = {
+      hierarchyType: "Workbench",
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      action: "draft",
+      campaignName: generateUniqueMicroplanName(microplanData, t),
+      resources: [],
+      projectType: campaignType?.code,
+      additionalDetails: {
+        beneficiaryType: campaignType?.beneficiaryType,
+        disease,
+        distributionStrat,
+      },
+    };
+  }
+  return reqBody;
+};
+
+function generateUniqueString(inputStrings, t) {
+  // Join the input strings with "-"
+  let concatenatedString = inputStrings.join("-");
+
+  // Generate a unique identifier using the current timestamp
+  let uniqueIdentifier = Date.now();
+
+  // Append the unique identifier to the concatenated string
+  let uniqueString = `${concatenatedString}-${uniqueIdentifier}`;
+
+  return uniqueString;
+}
+
+function getMonthLast2DigitsOfYear() {
+  // Create a new Date object for the current date
+  let currentDate = new Date();
+
+  // Array of short month names
+  let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  // Get the month index (0-11) and find the short month name
+  let month = monthNames[currentDate.getMonth()];
+
+  // Get the last two digits of the year
+  let year = currentDate.getFullYear().toString().slice(-2);
+
+  // Concatenate the month name and the last two digits of the year
+  let result = `${month}${year}`;
+
+  return result;
+}
+
+const generateUniqueMicroplanName = (microplanData, t) => {
+  const { campaignType, disease, distributionStrat } = microplanData?.campaignDetails;
+  const tenant = t(Digit.Utils.locale.getTransformedLocale(`tenant_tenants_${Digit.ULBService.getCurrentTenantId()}`));
+  const uniqueName = generateUniqueString([tenant, disease.code, campaignType.code, getMonthLast2DigitsOfYear()]);
+  return uniqueName;
+};
+
 const extractFiles = (data, reqType) => {
   const files = [];
   if (data && data.upload) {
@@ -513,4 +617,5 @@ export default {
   processDropdownForNestedMultiSelect,
   transformIntoLocalisationCode,
   mergeDeep,
+  createRequestBodyForCampaign,
 };

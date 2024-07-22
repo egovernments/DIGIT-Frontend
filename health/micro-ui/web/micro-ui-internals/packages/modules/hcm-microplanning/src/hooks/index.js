@@ -5,6 +5,8 @@ import useUpdatePlanConfig from "./useUpdatePlanConfig";
 import useSavedMicroplans from "./useSavedMicroplans";
 import useSearchCampaign from "./useSearchCampaign";
 import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
+import useCreateCampaign from "./useCreateCampaign";
+import useUpdateCampaign from "./useUpdateCampaign";
 const UserService = {};
 
 const microplan = {
@@ -14,6 +16,8 @@ const microplan = {
   useSavedMicroplans,
   useSearchCampaign,
   useGenerateIdCampaign,
+  useCreateCampaign,
+  useUpdateCampaign,
 };
 
 const contracts = {};

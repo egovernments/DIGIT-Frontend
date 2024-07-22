@@ -9,7 +9,7 @@ import Navigator from "../../components/Nagivator";
 import { Toast } from "@egovernments/digit-ui-components";
 import MicroplanPreview from "../../components/MicroplanPreview";
 import MicroplanDetails from "../../components/MicroplanDetails";
-
+import CampaignDetails from "../../components/CampaignDetails";
 export const components = {
   MicroplanDetails,
   Upload,
@@ -17,6 +17,7 @@ export const components = {
   RuleEngine,
   Mapping,
   MicroplanPreview,
+  CampaignDetails,
 };
 
 import MicroplanCreatedScreen from "../../components/MicroplanCreatedScreen";
@@ -31,6 +32,9 @@ const CreateMicroplan = () => {
   const { id: campaignId = "" } = Digit.Hooks.useQueryParams();
   const { mutate: CreateMutate } = Digit.Hooks.microplan.useCreatePlanConfig();
   const { mutate: UpdateMutate } = Digit.Hooks.microplan.useUpdatePlanConfig();
+  const { mutate: CreateCampaign } = Digit.Hooks.microplan.useCreateCampaign(Digit.ULBService.getCurrentTenantId());
+  const { mutate: UpdateCampaign } = Digit.Hooks.microplan.useUpdateCampaign(Digit.ULBService.getCurrentTenantId());
+
   const [toRender, setToRender] = useState("navigator");
   const { t } = useTranslation();
 
@@ -137,6 +141,30 @@ const CreateMicroplan = () => {
       }));
 
       setCheckDataCompletion("false");
+
+      //we return from here if we are not ready to make api call(eg -> to next step, navigation event useEffect)
+      // here we can make a check to create/update campaign as well
+      // if current page is campaign details/boundary selection we want to make api call to create/update campaign
+      if (currentPage.updateCampaign) {
+        setLoaderActivation(true);
+        const reqType = microplanData?.campaignId ? "update" : "create";
+        //here create/update campaign
+        let body = Digit.Utils.microplan.createRequestBodyForCampaign(microplanData, t, reqType);
+        try {
+          if (!microplanData?.campaignId) {
+            //create a campaign
+            await createCampaignConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
+          } else if (microplanData?.campaignId) {
+            //update campaign
+            await updateCampaignConfiguration(body, setCheckDataCompletion, setLoaderActivation, state);
+          }
+        } catch (error) {
+          console.error("Failed to create/update campaign configuration:", error);
+        }
+
+        return;
+      }
+
       let body = Digit.Utils.microplan.mapDataForApi(
         microplanData,
         operatorsObject,
@@ -145,6 +173,7 @@ const CreateMicroplan = () => {
         "DRAFT",
         microplanData?.planConfigurationId ? "update" : "create"
       );
+
       if (!Digit.Utils.microplan.planConfigRequestBodyValidator(body, state, campaignType)) {
         setCheckDataCompletion("perform-action");
         return;
@@ -162,6 +191,67 @@ const CreateMicroplan = () => {
     },
     [microplanData, UpdateMutate, CreateMutate]
   );
+
+  const createCampaignConfiguration = async (body, setCheckDataCompletion, setLoaderActivation, state) => {
+    await CreateCampaign(body, {
+      onSuccess: async (data) => {
+        // for now setting the response object on session and campaignId
+        if (data?.CampaignDetails?.id) {
+          setMicroplanData((prev) => {
+            return {
+              ...prev,
+              microplanDetails: { ...prev.microplanDetails, name: data?.CampaignDetails?.campaignName },
+              campaignObject: data?.CampaignDetails,
+              campaignId: data?.CampaignDetails?.id,
+            };
+          });
+        }
+        setLoaderActivation(false);
+        setCheckDataCompletion("perform-action");
+      },
+      onError: (error, variables) => {
+        setToast({
+          message: t("ERROR_CAMPAIGN_DATA_NOT_SAVED"),
+          state: "error",
+          transitionTime: 10000,
+        });
+        setTimeout(() => {
+          setLoaderActivation(false);
+          setCheckDataCompletion("false");
+        }, 2000);
+      },
+    });
+  };
+
+  const updateCampaignConfiguration = async (body, setCheckDataCompletion, setLoaderActivation, state) => {
+    await UpdateCampaign(body, {
+      onSuccess: async (data) => {
+        // for now setting the response object on session and campaignId
+        if (data?.CampaignDetails?.id) {
+          setMicroplanData((prev) => {
+            return {
+              ...prev,
+              campaignObject: data?.CampaignDetails,
+              campaignId: data?.CampaignDetails?.id,
+            };
+          });
+        }
+        setLoaderActivation(false);
+        setCheckDataCompletion("perform-action");
+      },
+      onError: (error, variables) => {
+        setToast({
+          message: t("ERROR_CAMPAIGN_DATA_NOT_SAVED"),
+          state: "error",
+          transitionTime: 10000,
+        });
+        setTimeout(() => {
+          setLoaderActivation(false);
+          setCheckDataCompletion("false");
+        }, 2000);
+      },
+    });
+  };
 
   const createPlanConfiguration = async (body, setCheckDataCompletion, setLoaderActivation, state) => {
     await CreateMutate(body, {

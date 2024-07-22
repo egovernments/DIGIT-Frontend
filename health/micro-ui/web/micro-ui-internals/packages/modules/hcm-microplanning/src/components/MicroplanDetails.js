@@ -36,13 +36,17 @@ const MicroplanDetails = ({
   const { t } = useTranslation();
   const [microplan, setMicroplan] = useState(Digit.SessionStorage.get("microplanData")?.microplanDetails?.name);
   const { state, dispatch } = useMyContext();
+
   const [modal, setModal] = useState("none");
   // const [toast, setToast] = useState();
   const [showNamingConventions, setShowNamingConventions] = useState(false);
   const [loader, setLoader] = useState(false);
 
   //fetch campaign data
-  const { id = "" } = Digit.Hooks.useQueryParams();
+  // const { id = "" } = Digit.Hooks.useQueryParams();
+
+  //now instead of url param i'll fetch this id from sessionObject
+  const id = microplanData?.campaignId;
   const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
     {
       CampaignDetails: {
@@ -55,25 +59,17 @@ const MicroplanDetails = ({
       select: (data) => {
         const campaignCard = [
           {
-            label: t("CAMPAIGN_NAME"),
-            value: data?.campaignName ? data?.campaignName : t("ES_COMMON_NA"),
+            label: t("HCM_CAMPAIGN_DISEASE"),
+            value: data?.additionalDetails?.disease ? data?.additionalDetails?.disease?.code : t("ES_COMMON_NA"),
           },
           {
             label: t(`CAMPAIGN_TYPE`),
             value: data?.projectType ? t(`CAMPAIGN_TYPE_${data?.projectType}`) : t("ES_COMMON_NA"),
           },
           {
-            label: t(`CAMPAIGN_BENEFICIARY_TYPE`),
-            value: data?.additionalDetails?.beneficiaryType
-              ? t(`CAMPAIGN_BENEFICIARY_TYPE${data?.additionalDetails?.beneficiaryType}`)
-              : t("ES_COMMON_NA"),
-          },
-          {
-            label: t("CAMPAIGN_DATE"),
-            value: data.startDate
-              ? data.endDate
-                ? `${Digit.DateUtils.ConvertEpochToDate(data.startDate)} - ${Digit.DateUtils.ConvertEpochToDate(data.endDate)}`
-                : Digit.DateUtils.ConvertEpochToDate(data.startDate)
+            label: t(`HCM_CAMPAIGN_RESOURCE_DIST_STRAT`),
+            value: data?.additionalDetails?.distributionStrat
+              ? t(`CAMPAIGN_RESOURCE_DIST_TYPE_${data?.additionalDetails?.distributionStrat?.code}`)
               : t("ES_COMMON_NA"),
           },
         ];
@@ -159,7 +155,9 @@ const MicroplanDetails = ({
       if (!microplan || !validateName(microplan)) {
         setCheckDataCompletion("false");
         setShowNamingConventions(true);
-        return setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
+        setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
+        // Removed this return because we need to go back
+        // return;
       }
       const valid = await validateMicroplanName();
       if (!valid) {
@@ -195,6 +193,9 @@ const MicroplanDetails = ({
   //   setModal('none');
   // }, [setCheckDataCompletion, setModal]);
   function validateName(name) {
+    if (!microplan) {
+      return false;
+    }
     const microplanNamingRegxString = state?.MicroplanNamingRegx?.[0]?.data;
     const namePattern = new RegExp(microplanNamingRegxString);
     return namePattern.test(name);
