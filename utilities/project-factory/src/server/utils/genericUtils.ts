@@ -764,7 +764,7 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
 
 async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, filteredBoundary?: any) {
   request.body.generatedResource = newEntryResponse;
-  await fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
+  fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
   return request.body.generatedResource;
 }
 
@@ -1084,10 +1084,18 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
-  var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+   let headers: any;
+    const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
+    if (isSourceMicroplan) {
+      logger.info(`Source is Microplan.`);
+      headers = getLocalizedHeaders(hierarchy, localizationMap);
+    }
+    else {
+  headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
   const headerColumnsAfterHierarchy = await generateDynamicTargetHeaders(request, campaignObject, localizationMap);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
   headers = [...headers, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), ...localizedHeadersAfterHierarchy]
+  }
   return getLocalizedHeaders(headers, localizationMap);
 }
 
