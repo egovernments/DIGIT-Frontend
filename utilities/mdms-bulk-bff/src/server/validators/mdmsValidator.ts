@@ -7,7 +7,7 @@ import { getSheetData } from "../utils/excelUtils";
 import { getFileUrl } from "../utils/genericUtils";
 import { mdmsTemplateGenerateBody } from "../config/schemas/mdmsTemplateGenerateBody";
 import { logger } from "../utils/logger";
-import { getMdmsDetails, getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
+import { getAllMdmsData, getMdmsDetails, getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
 import { sheetDataStatus } from "../config/constants";
 import { mdmsSearchBodySchema } from "../config/schemas/mdmsSearchBody";
 
@@ -126,7 +126,35 @@ export async function validateForSheetErrors(request: any) {
             })
         }
     });
+    await validateXRefSchemaData(request, errors);
     request.body.errors = errors;
+}
+
+async function validateXRefSchemaData(request: any, errors: any) {
+    const schema = request?.body?.currentSchema;
+    const xRefSchema = schema?.["x-ref-schema"];
+    const sheetData = request?.body?.dataToCreate;
+    for (const xRef of xRefSchema) {
+        const fieldPath = xRef?.fieldPath;
+        const xRefSchemaCode = xRef?.schemaCode;
+        const allData = await getAllMdmsData(request, xRefSchemaCode);
+        const allUniqueIdentifiers = new Set();
+        allData.forEach((data: any) => {
+            allUniqueIdentifiers.add(data?.uniqueIdentifier);
+        });
+        for (const data of sheetData) {
+            const uniqueIdentifier = data[fieldPath];
+            if (!allUniqueIdentifiers.has(uniqueIdentifier)) {
+                const message = `Reference Entry ${uniqueIdentifier} not found in MDMS for schema ${xRefSchemaCode}`;
+                logger.info(message);
+                if (errors?.[data['!row#number!']]) {
+                    errors[data['!row#number!']].push(message);
+                } else {
+                    errors[data['!row#number!']] = [message];
+                }
+            }
+        }
+    }
 }
 
 export async function validateSearchRequest(request: any) {

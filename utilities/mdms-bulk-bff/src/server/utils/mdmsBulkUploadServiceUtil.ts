@@ -7,7 +7,7 @@ import { logger } from "./logger";
 import { validateForSheetErrors } from "../validators/mdmsValidator";
 import { mdmsProcessStatus, sheetDataStatus } from "../config/constants";
 import { getFileUrl } from "./genericUtils";
-import { persistDetailsOnCompletion } from "./persistUtils";
+import { persistDetailsOnCompletion, persistDetailsOnError } from "./persistUtils";
 import { executeQuery } from "./db";
 
 
@@ -46,10 +46,15 @@ function getMdmsGenerateDetails(request: any, fileStoreId: string) {
 }
 
 export async function processAfterValidation(request: any) {
-    await validateForSheetErrors(request);
-    await makeErrorSheet(request);
-    await createData(request);
-    persistDetailsOnCompletion(request);
+    try {
+        await validateForSheetErrors(request);
+        await makeErrorSheet(request);
+        await createData(request);
+        persistDetailsOnCompletion(request);
+    } catch (error) {
+        console.log(error);
+        persistDetailsOnError(request, error);
+    }
 }
 
 async function createData(request: any) {
@@ -71,6 +76,7 @@ async function createData(request: any) {
             var formattedData = JSON.parse(JSON.stringify(data));
             delete formattedData?.["!status!"];
             delete formattedData?.["!error!"];
+            delete formattedData?.["!errors!"];
             delete formattedData?.["!row#number!"];
 
             const createBody: any = {
@@ -153,7 +159,7 @@ async function makeErrorSheet(request: any) {
 }
 
 export async function getUniqueFieldSet(request: any) {
-    var allData = await getAllMdmsData(request);
+    var allData = await getAllMdmsData(request, request?.query?.schemaCode);
     const xUniqueFields = request?.body?.currentSchema?.["x-unique"];
 
     logger.info(`Unique fields in schema ${request?.query?.schemaCode} are ${xUniqueFields.join(", ")}`);
@@ -175,7 +181,7 @@ export async function getUniqueFieldSet(request: any) {
 
 
 
-async function getAllMdmsData(request: any) {
+export async function getAllMdmsData(request: any, schemaCode: any) {
     const allData = [];
     let offset = 0;
     const limit = 100;
@@ -185,7 +191,7 @@ async function getAllMdmsData(request: any) {
             RequestInfo: request.body.RequestInfo,
             MdmsCriteria: {
                 tenantId: request.query.tenantId,
-                schemaCode: request.query.schemaCode,
+                schemaCode: schemaCode,
                 limit: limit,
                 offset: offset
             }
@@ -198,7 +204,7 @@ async function getAllMdmsData(request: any) {
             }
             offset += limit;
         } else {
-            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Some error occurred while fetching data from MDMS of schema ${request.query.schemaCode}`);
+            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Some error occurred while fetching data from MDMS of schema ${schemaCode}`);
         }
     }
     return allData;

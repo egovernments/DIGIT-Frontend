@@ -36,3 +36,18 @@ export function persistDetailsOnCompletion(request: any) {
     };
     produceModifiedMessages(producedMessage, config.kafka.KAFKA_UPDATE_MDMS_DETAILS_TOPIC);
 }
+
+export function persistDetailsOnError(request: any, error: any) {
+    const currentTime = Date.now();
+    const mdmsDetails = request?.body?.mdmsDetails;
+    mdmsDetails.auditDetails.lastModifiedTime = currentTime;
+    mdmsDetails.status = mdmsProcessStatus.failed;
+    mdmsDetails.additionalDetails = {
+        ...mdmsDetails?.additionalDetails,
+        error: String((error?.message + (error?.description ? ` : ${error?.description}` : '')) || error)
+    }
+    const producedMessage: any = {
+        mdmsDetails
+    };
+    produceModifiedMessages(producedMessage, config.kafka.KAFKA_UPDATE_MDMS_DETAILS_TOPIC);
+}
