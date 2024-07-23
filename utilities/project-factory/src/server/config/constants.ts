@@ -116,7 +116,7 @@ export const processTrackTypes = {
     facilityCreation: "facility-creation",
     staffCreation: "staff-creation",
     targetAndDeliveryRulesCreation: "target-and-delivery-rules-creation",
-    confirmingResouceCreation: "confirming-resouce-creation",
+    confirmingResourceCreation: "confirming-resource-creation",
     prepareResourceForMapping: "prepare-resource-for-mapping",
     validateMappingResource: "validate-mapping-resource",
     staffMapping: "staff-mapping",
