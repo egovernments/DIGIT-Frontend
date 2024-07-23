@@ -128,7 +128,6 @@ export async function validateForSheetErrors(request: any) {
     });
     await validateXRefSchemaData(request, errors);
     request.body.errors = errors;
-    throw new Error("Test");
 }
 
 async function validateXRefSchemaData(request: any, errors: any) {
