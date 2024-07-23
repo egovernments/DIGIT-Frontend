@@ -1,265 +1,164 @@
+import { httpRequest } from "../utils/request";
+import { mdmsCreateBodySchema } from "../config/schemas/mdmsCreateBody";
+import { validateBodyViaSchema } from "./genericValidator";
 import config from "../config";
-import { throwError } from "./errorUtils";
-import { addDataToSheet, addErrorsToSheet, createAndUploadFile, formatProcessedSheet, freezeStatusColumn, getExcelWorkbookFromFileURL, getNewExcelWorkbook } from "./excelUtils";
-import { v4 as uuidv4 } from 'uuid';
-import { httpRequest } from "./request";
-import { logger } from "./logger";
-import { validateForSheetErrors } from "../validators/mdmsValidator";
-import { mdmsProcessStatus, sheetDataStatus } from "../config/constants";
-import { getFileUrl } from "./genericUtils";
-import { persistDetailsOnCompletion, persistDetailsOnError } from "./persistUtils";
-import { executeQuery } from "./db";
+import { throwError } from "../utils/errorUtils";
+import { getSheetData } from "../utils/excelUtils";
+import { getFileUrl } from "../utils/genericUtils";
+import { mdmsTemplateGenerateBody } from "../config/schemas/mdmsTemplateGenerateBody";
+import { logger } from "../utils/logger";
+import { getAllMdmsData, getMdmsDetails, getUniqueFieldSet } from "../utils/mdmsBulkUploadServiceUtil";
+import { sheetDataStatus } from "../config/constants";
+import { mdmsSearchBodySchema } from "../config/schemas/mdmsSearchBody";
 
-
-export async function generateMdmsTemplate(request: any) {
-    const schema = request.body.currentSchema;
-    const properties = schema.properties;
-    const headers = Object.keys(properties);
-    const sheetName = config.values.mdmsSheetName + " " + request.query.schemaCode;
-
-    const workbook = await getNewExcelWorkbook();
-    const worksheet = workbook.addWorksheet(sheetName);
-    addDataToSheet(worksheet, [[...headers, "!status!"]], undefined, undefined, true);
-    freezeStatusColumn(worksheet);
-
-    const fileDetails = await createAndUploadFile(workbook, request);
-    request.body.mdmsGenerateDetails = getMdmsGenerateDetails(request, fileDetails?.[0]?.fileStoreId);
+export async function validateCreateMdmsDatasRequest(request: any) {
+    validateBodyViaSchema(mdmsCreateBodySchema, request.query);
+    await validateMdmsSchema(request);
+    await validateSheetData(request);
 }
 
-
-function getMdmsGenerateDetails(request: any, fileStoreId: string) {
-    const currentTime = Date.now();
-    const mdmsGenerateDetails = {
-        id: uuidv4(),
-        tenantId: request?.query?.tenantId,
-        schemaCode: request?.query?.schemaCode,
-        fileStoreId: fileStoreId,
-        additionalDetails: null,
-        auditDetails: {
-            createdTime: currentTime,
-            lastModifiedTime: currentTime,
-            createdBy: request?.body?.RequestInfo?.userInfo?.uuid || null,
-            lastModifiedBy: request?.body?.RequestInfo?.userInfo?.uuid || null
+async function validateMdmsSchema(request: any) {
+    const { schemaCode, tenantId } = request.query;
+    const searchBody = {
+        RequestInfo: request.body.RequestInfo,
+        SchemaDefCriteria: {
+            tenantId,
+            codes: [schemaCode]
         }
-    };
-    return mdmsGenerateDetails;
-}
-
-export async function processAfterValidation(request: any) {
-    try {
-        await validateForSheetErrors(request);
-        await makeErrorSheet(request);
-        await createData(request);
-        persistDetailsOnCompletion(request);
-    } catch (error) {
-        console.log(error);
-        persistDetailsOnError(request, error);
     }
-}
-
-async function createData(request: any) {
-    if (request?.body?.mdmsDetails?.status == mdmsProcessStatus.invalid) {
-        logger.info("Invalid sheet data");
-        return;
-    }
-
-    var createError: any = {};
-    var createSuccess: any = {};
-    const dataToCreate = request?.body?.dataToCreate;
-
-    const concurrencyLimit = 50; // Set your desired concurrency limit here
-    const chunks = Math.ceil(dataToCreate.length / concurrencyLimit);
-
-    for (let i = 0; i < chunks; i++) {
-        const batch = dataToCreate.slice(i * concurrencyLimit, (i + 1) * concurrencyLimit);
-        const createPromises = batch.map(async (data: any) => {
-            var formattedData = JSON.parse(JSON.stringify(data));
-            delete formattedData?.["!status!"];
-            delete formattedData?.["!error!"];
-            delete formattedData?.["!errors!"];
-            delete formattedData?.["!row#number!"];
-
-            const createBody: any = {
-                RequestInfo: request.body.RequestInfo,
-                Mdms: {
-                    tenantId: request?.query?.tenantId,
-                    schemaCode: request?.query?.schemaCode,
-                    uniqueIdentifier: null,
-                    isActive: true,
-                    data: formattedData
-                }
-            };
-
-            try {
-                await httpRequest(config.host.mdmsHost + config.paths.mdmsDataCreate + `/${request?.query?.schemaCode}`, createBody);
-                const rowNumber = data["!row#number!"];
-                const message = "Successfully created";
-                if (createSuccess?.[rowNumber]) {
-                    createSuccess[rowNumber].push(message);
-                } else {
-                    createSuccess[rowNumber] = [message];
-                }
-            } catch (error: any) {
-                console.log(error);
-                const rowNumber = data["!row#number!"];
-                const message = error?.message || JSON.stringify(error) || "Unknown error";
-                if (createError?.[rowNumber]) {
-                    createError[rowNumber].push(message);
-                } else {
-                    createError[rowNumber] = [message];
-                }
-            }
-        });
-
-        await Promise.all(createPromises);
-    }
-
-    await generateProcessFileAfterCreate(request, createError, createSuccess);
-}
-
-
-
-async function generateProcessFileAfterCreate(request: any, createError: any, createSuccess: any) {
-    const fileUrl = await getFileUrl(request);
-    const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode);
-    const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
-    addErrorsToSheet(request, worksheet, createError, sheetDataStatus.failed);
-    addErrorsToSheet(request, worksheet, createSuccess, sheetDataStatus.created);
-    changeStatus(request, createError, createSuccess)
-    await formatProcessedSheet(worksheet);
-    const fileDetails = await createAndUploadFile(workbook, request);
-    logger.info(`File store id for after creation file is ${fileDetails?.[0]?.fileStoreId}`)
-    request.body.mdmsDetails.processedFileStoreId = fileDetails?.[0]?.fileStoreId;
-}
-
-function changeStatus(request: any, createError: any, createSuccess: any) {
-    if (Object.keys(createError).length > 1) {
-        if (Object.keys(createSuccess).length > 0) {
-            request.body.mdmsDetails.status = mdmsProcessStatus.partiallyFailed;
+    const schemaResponse = await httpRequest(config.host.mdmsHost + config.paths.mdmsSchemaSearch, searchBody);
+    if (schemaResponse && schemaResponse?.SchemaDefinitions && schemaResponse?.SchemaDefinitions?.length > 0) {
+        const schema = schemaResponse.SchemaDefinitions[0];
+        if (!schema.isActive) {
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} is not active`);
         }
-        else {
-            request.body.mdmsDetails.status = mdmsProcessStatus.failed;
+        if (!schema?.definition) {
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
         }
+        validateSchemaCompatibility(schema?.definition);
+        request.body.currentSchema = schema?.definition;
     }
     else {
-        request.body.mdmsDetails.status = mdmsProcessStatus.completed;
+        throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
     }
 }
 
-async function makeErrorSheet(request: any) {
+// Function to check if a type is complex (object or array)
+const isComplexType = (type: string | string[]): boolean => {
+    if (Array.isArray(type)) {
+        return type.includes("object") || type.includes("array");
+    }
+    return type === "object" || type === "array";
+};
+
+function validateSchemaCompatibility(schemaDefination: any) {
+    // Check each property type in the schema
+    const properties = schemaDefination.properties;
+    for (const propName in properties) {
+        const prop = properties[propName];
+        if (isComplexType(prop.type)) {
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${propName} have complex types`);
+        }
+    }
+}
+
+async function validateSheetData(request: any) {
     const fileUrl = await getFileUrl(request);
-    const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode);
-    const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
-    await addErrorsToSheet(request, worksheet, request.body.errors, sheetDataStatus.invalid);
-    if (Object.keys(request?.body?.errors).length > 1) request.body.mdmsDetails.status = mdmsProcessStatus.invalid;
-    await formatProcessedSheet(worksheet);
-    const fileDetails = await createAndUploadFile(workbook, request);
-    logger.info(`File store id for processed error file is ${fileDetails?.[0]?.fileStoreId}`)
-    request.body.mdmsDetails.processedFileStoreId = fileDetails?.[0]?.fileStoreId;
+    const sheetData = await getSheetData(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode, true);
+    const dataToCreate = sheetData.filter((data: any) => data?.["!status!"] != sheetDataStatus.created);
+    if (dataToCreate.length === 0) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", `There is no data in the sheet to create`);
+    }
+    const schema = request.body.currentSchema;
+    for (const rowData of dataToCreate) {
+        validateBodyViaSchema(schema, rowData);
+    }
+    request.body.dataToCreate = dataToCreate;
 }
 
-export async function getUniqueFieldSet(request: any) {
-    var allData = await getAllMdmsData(request, request?.query?.schemaCode);
+export async function validateGenerateMdmsTemplateRequest(request: any) {
+    validateBodyViaSchema(mdmsTemplateGenerateBody, request.query);
+    await validateMdmsSchema(request);
+}
+
+export async function validateForSheetErrors(request: any) {
+    const uniqueFieldSet = await getUniqueFieldSet(request);
+    const sheetData = request.body.dataToCreate;
     const xUniqueFields = request?.body?.currentSchema?.["x-unique"];
-
     logger.info(`Unique fields in schema ${request?.query?.schemaCode} are ${xUniqueFields.join(", ")}`);
-    // Extract the data properties from allData
-    var datasFromMdms = allData.map((data) => data.data);
+    const uniqueFieldMap = new Map();
+    const duplicateEntries: any = [];
+    var errors: any = {};
 
-    // Create a set of unique identifiers
-    var uniqueFieldSet = new Set();
-    datasFromMdms.forEach((item: any) => {
-        let uniqueIdentifier = xUniqueFields.map((key: any) => item[key]).join('|');
-        uniqueFieldSet.add(uniqueIdentifier);
-    });
+    sheetData.forEach((data: any) => {
+        let uniqueIdentifier = xUniqueFields.map((key: any) => data[key]).join('|');
 
-    return uniqueFieldSet;
-}
-
-
-
-
-
-
-export async function getAllMdmsData(request: any, schemaCode: any) {
-    const allData = [];
-    let offset = 0;
-    const limit = 100;
-
-    while (true) {
-        const searchBody = {
-            RequestInfo: request.body.RequestInfo,
-            MdmsCriteria: {
-                tenantId: request.query.tenantId,
-                schemaCode: schemaCode,
-                limit: limit,
-                offset: offset
+        if (uniqueFieldSet.has(uniqueIdentifier)) {
+            const message = `Entry already in mdms`;
+            logger.info(message);
+            duplicateEntries.push(message);
+            const rowNumber = data['!row#number!'];
+            if (errors?.[rowNumber]) {
+                errors[rowNumber].push(message);
+            } else {
+                errors[rowNumber] = [message];
             }
-        };
-        const mdmsResponse = await httpRequest(config.host.mdmsHost + config.paths.mdmsDataSearch, searchBody);
-        if (mdmsResponse && Array.isArray(mdmsResponse.mdms)) {
-            allData.push(...mdmsResponse.mdms);
-            if (mdmsResponse.mdms.length < limit) {
-                break;
-            }
-            offset += limit;
+        }
+
+        if (uniqueFieldMap.has(uniqueIdentifier)) {
+            uniqueFieldMap.get(uniqueIdentifier).push(data['!row#number!']);
         } else {
-            throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Some error occurred while fetching data from MDMS of schema ${schemaCode}`);
+            uniqueFieldMap.set(uniqueIdentifier, [data['!row#number!']]);
         }
-    }
-    return allData;
-}
-
-export async function getMdmsDetails(request: any) {
-    const mdmsDetails = await getMdmsDetailsViaDb(request?.query);
-    request.body.mdmsDetails = mdmsDetails;
-}
-
-async function getMdmsDetailsViaDb(searchBody: any) {
-    const { schemaCode, tenantId, id, status } = searchBody || {};
-
-    let query = `SELECT * FROM ${config.DB_CONFIG.DB_MDMS_DETAILS_TABLE_NAME} WHERE 1=1`;
-    const values: any[] = [];
-
-    if (tenantId) {
-        query += ' AND "tenantId" = $' + (values.length + 1);
-        values.push(tenantId);
-    }
-    if (schemaCode) {
-        query += ' AND "schemaCode" = $' + (values.length + 1);
-        values.push(schemaCode);
-    }
-    if (id) {
-        query += ' AND "id" = $' + (values.length + 1);
-        values.push(id);
-    }
-    if (status) {
-        query += ' AND "status" = $' + (values.length + 1);
-        values.push(status);
-    }
-
-    try {
-        const result = await executeQuery(query, values);
-        formatRows(result.rows);
-        return result.rows;
-    } catch (error: any) {
-        console.log(error)
-        logger.error(`Error fetching boundary details: ${error.message}`);
-        throw error;
-    }
-}
-
-function formatRows(rows: any) {
-    rows.forEach((row: any) => {
-        row.auditDetails = {
-            createdTime: parseInt(row.createdTime),
-            createdBy: row.createdBy,
-            lastModifiedTime: parseInt(row.lastModifiedTime),
-            lastModifiedBy: row.lastModifiedBy
-        }
-        delete row.createdTime;
-        delete row.lastModifiedTime;
-        delete row.createdBy;
-        delete row.lastModifiedBy;
     });
+
+    uniqueFieldMap.forEach((rows, identifier) => {
+        if (rows.length > 1) {
+            const message = `Duplicate entry found at rows ${rows.join(', ')}`;
+            logger.info(message);
+            duplicateEntries.push(message);
+            rows.forEach((row: any) => {
+                if (errors?.[row]) {
+                    errors[row].push(message);
+                } else {
+                    errors[row] = [message];
+                }
+            })
+        }
+    });
+    await validateXRefSchemaData(request, errors);
+    request.body.errors = errors;
+    throw new Error("Test");
+}
+
+async function validateXRefSchemaData(request: any, errors: any) {
+    const schema = request?.body?.currentSchema;
+    const xRefSchema = schema?.["x-ref-schema"];
+    const sheetData = request?.body?.dataToCreate;
+    for (const xRef of xRefSchema) {
+        const fieldPath = xRef?.fieldPath;
+        const xRefSchemaCode = xRef?.schemaCode;
+        const allData = await getAllMdmsData(request, xRefSchemaCode);
+        const allUniqueIdentifiers = new Set();
+        allData.forEach((data: any) => {
+            allUniqueIdentifiers.add(data?.uniqueIdentifier);
+        });
+        for (const data of sheetData) {
+            const uniqueIdentifier = data[fieldPath];
+            if (!allUniqueIdentifiers.has(uniqueIdentifier)) {
+                const message = `Reference Entry ${uniqueIdentifier} not found in MDMS for schema ${xRefSchemaCode}`;
+                logger.info(message);
+                if (errors?.[data['!row#number!']]) {
+                    errors[data['!row#number!']].push(message);
+                } else {
+                    errors[data['!row#number!']] = [message];
+                }
+            }
+        }
+    }
+}
+
+export async function validateSearchRequest(request: any) {
+    validateBodyViaSchema(mdmsSearchBodySchema, request.query);
+    await getMdmsDetails(request);
 }
