@@ -851,11 +851,7 @@ async function processCreate(request: any, localizationMap?: any) {
     const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
     if (checkIfSourceIsMicroplan(source)) {
       logger.info(`Data create Source is MICROPLAN --> ${source}`);
-      if (
-        createAndSearchConfig &&
-        createAndSearchConfig.parseArrayConfig &&
-        createAndSearchConfig.parseArrayConfig.parseLogic
-      ) {
+      if (createAndSearchConfig?.parseArrayConfig?.parseLogic) {
         createAndSearchConfig.parseArrayConfig.parseLogic = createAndSearchConfig.parseArrayConfig.parseLogic.map(
           (item: any) => {
             if (item.sheetColumn === "E") {
