@@ -165,6 +165,9 @@ const MDMSSearchv2 = () => {
 
   const onClickRow = ({original:row}) => {
     const [moduleName,masterName] = row.schemaCode.split(".")
+    if(window.location.href.includes("mukta"))
+    history.push(`/works-ui/employee/rateanalysis/view-rate-analysis?sorId=${row?.data?.sorId}&fromeffective=${row?.data?.effectiveFrom}`)
+    else
     history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`)
   }
 
@@ -223,7 +226,7 @@ const MDMSSearchv2 = () => {
         )}
       </div> */}
       {
-        updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) &&
+        updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && Digit.Utils.didEmployeeisAllowed(master,modulee) && 
         <ActionBar >
           <SubmitBar disabled={false} onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
