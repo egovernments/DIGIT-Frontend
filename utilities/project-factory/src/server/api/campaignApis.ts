@@ -6,7 +6,7 @@ import createAndSearch from '../config/createAndSearch';
 import { getDataFromSheet, generateActivityMessage, throwError, translateSchema, replicateRequest, appendProjectTypeToCapacity } from "../utils/genericUtils";
 import { immediateValidationForTargetSheet, validateSheetData, validateTargetSheetData } from '../validators/campaignValidators';
 import { callMdmsTypeSchema, getCampaignNumber } from "./genericApis";
-import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist,getBoundaryOnWhichWeSplit, getLocalizedName, reorderBoundariesOfDataAndValidate, checkIfSourceIsMicroplan } from "../utils/campaignUtils";
+import { boundaryBulkUpload, convertToTypeData, generateHierarchy, generateProcessedFileAndPersist, getBoundaryOnWhichWeSplit, getLocalizedName, reorderBoundariesOfDataAndValidate, checkIfSourceIsMicroplan } from "../utils/campaignUtils";
 const _ = require('lodash');
 import { produceModifiedMessages } from "../kafka/Listener";
 import { createDataService } from "../service/dataManageService";
@@ -849,9 +849,8 @@ async function processCreate(request: any, localizationMap?: any) {
     createAndSearchConfig = createAndSearch[type];
     const responseFromCampaignSearch = await getCampaignSearchResponse(request);
     const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-
     if (checkIfSourceIsMicroplan(source)) {
-       logger.info(`Data create Source is MICROPLAN --> ${source}`);
+      logger.info(`Data create Source is MICROPLAN --> ${source}`);
       if (
         createAndSearchConfig &&
         createAndSearchConfig.parseArrayConfig &&
