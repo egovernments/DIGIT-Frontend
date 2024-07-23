@@ -91,6 +91,8 @@ const CreateMicroplan = () => {
   };
   const { isLoading: ishierarchyLoading, data: hierarchyData } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  
+
   // useEffect to initialise the data from MDMS
   useEffect(() => {
     if (!state || !state.RuleConfigureOperators) return;
