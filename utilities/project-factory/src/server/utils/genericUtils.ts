@@ -1110,15 +1110,15 @@ async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any
   let headers: any;
   const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
   if (isSourceMicroplan) {
-      logger.info(`Source is Microplan.`);
-      headers = getLocalizedHeaders(hierarchy, localizationMap);
-    }
+    logger.info(`Source is Microplan.`);
+    headers = getLocalizedHeaders(hierarchy, localizationMap);
+  }
   else {
-  headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+    headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+  }
   const headerColumnsAfterHierarchy = await generateDynamicTargetHeaders(request, campaignObject, localizationMap);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
   headers = [...headers, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), ...localizedHeadersAfterHierarchy]
-  }
   return getLocalizedHeaders(headers, localizationMap);
 }
 
