@@ -47,7 +47,7 @@ const MicroplanDetails = ({
 
   //now instead of url param i'll fetch this id from sessionObject
   // const id = microplanData?.campaignId;
-  const { isLoading: isCampaignLoading, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
+  const { isLoading: isCampaignLoading,isFetching:isCampaignFetching, data: campaignData } = Digit.Hooks.microplan.useSearchCampaign(
     {
       CampaignDetails: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -66,12 +66,12 @@ const MicroplanDetails = ({
           },
           {
             label: t(`CAMPAIGN_TYPE`),
-            value: data?.projectType ? t(`CAMPAIGN_TYPE_${data?.projectType}`) : t("ES_COMMON_NA"),
+            value: data?.projectType ? t(Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${data?.projectType}`)) : t("ES_COMMON_NA"),
           },
           {
             label: t(`HCM_CAMPAIGN_RESOURCE_DIST_STRAT`),
             value: data?.additionalDetails?.distributionStrat
-              ? t(`CAMPAIGN_RESOURCE_DIST_TYPE_${data?.additionalDetails?.distributionStrat?.code}`)
+              ? t(Digit.Utils.locale.getTransformedLocale(`${data?.additionalDetails?.distributionStrat?.code}`))
               : t("ES_COMMON_NA"),
           },
         ];
@@ -159,7 +159,7 @@ const MicroplanDetails = ({
         setShowNamingConventions(true);
         setToast({ state: "error", message: t("ERROR_MICROPLAN_NAME_CRITERIA") });
         // Removed this return because we need to go back
-        // return;
+        return;
       }
       const valid = await validateMicroplanName();
       if (!valid) {
@@ -206,7 +206,7 @@ const MicroplanDetails = ({
     setMicroplan(e.target.value);
   };
 
-  if (isCampaignLoading) {
+  if (isCampaignLoading || isCampaignFetching) {
     return <Loader />;
   }
 
@@ -220,14 +220,16 @@ const MicroplanDetails = ({
         }}
         className="microplan-campaign-detials"
       >
-        <CardSectionHeader
+        {/* <CardSectionHeader
           style={{
             margin: "0",
             paddingLeft: "0",
           }}
         >
           {t("CAMPAIGN_DETAILS")}
-        </CardSectionHeader>
+        </CardSectionHeader> */}
+        <CardSubHeader style={{ marginBottom: "0.5rem" }}>{t("CAMPAIGN_DETAILS")}</CardSubHeader>
+
 
         <StatusTable style={{ paddingLeft: "0" }}>
           {campaignData?.length > 0 &&

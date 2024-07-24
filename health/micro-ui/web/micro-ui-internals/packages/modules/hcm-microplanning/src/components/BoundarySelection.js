@@ -12,8 +12,10 @@ import { mailConfig } from "../configs/mailConfig";
  * the selection of boundaries and updates the state accordingly. The component is designed to be
  * interactive and user-friendly for selecting boundaries within
  */
-function BoundarySelection({ props }) {
+const  BoundarySelection = (props) => {
+  
   const onSelect = (name, value) => {
+    debugger
     console.log("val", value);
     return;
   };
@@ -92,8 +94,6 @@ function BoundarySelection({ props }) {
     });
     window.history.replaceState({}, "", url);
   }
-
-  updateUrlParams({ name: "nip" });
 
   const fetchOptions = async () => {
     setLoaderEnabled(true);
@@ -509,7 +509,7 @@ function BoundarySelection({ props }) {
             })
             .map((boundary, index) =>
               boundary?.parentBoundaryType == null ? (
-                <LabelFieldPair key={index}>
+                <LabelFieldPair key={index} style={{ alignItems: 'flex-start' }}>
                   <CardLabel>
                     {/* {t(`${hierarchy}_${boundary?.boundaryType}`?.toUpperCase())} */}
                     {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
@@ -529,11 +529,14 @@ function BoundarySelection({ props }) {
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
                       }}
+                      config={{
+                        isDropdownWithChip: true, 
+                      }}
                     />
                   </div>
                 </LabelFieldPair>
               ) : (
-                <LabelFieldPair key={index}>
+                <LabelFieldPair key={index} style={{ alignItems: 'flex-start' }}>
                   <CardLabel>
                     {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
                     <span className="mandatory-span">*</span>
@@ -557,6 +560,9 @@ function BoundarySelection({ props }) {
                       optionsKey={"code"}
                       onSelect={(value) => {
                         handleBoundaryChange(value, boundary);
+                      }}
+                      config={{
+                        isDropdownWithChip: true, 
                       }}
                       selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                       addCategorySelectAllCheck={true}
