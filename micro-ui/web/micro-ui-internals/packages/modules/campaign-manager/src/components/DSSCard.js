@@ -69,13 +69,13 @@ const DSSCard = () => {
     enabled: true,
   });
 
+  if (!STADMIN) {
+    return null;
+  }
+
   const shouldInvokeProjectService = tenantData?.integrateProjectService || false;
   if (shouldInvokeProjectService) {
     return <DynamicDSSCard />;
-  }
-
-  if (!STADMIN) {
-    return null;
   }
 
   let links = Object.values(nationalScreenURLs)
