@@ -388,20 +388,6 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
         row.commit();
       }
     }
-
-    // Iterate through the errors object
-    for (const [rowNum, errorMessages] of Object.entries(errors)) {
-      const row = worksheet.getRow(Number(rowNum));
-
-      // Add 'invalid' to the !status! column
-      row.getCell(statusColIndex).value = errorStatus;
-
-      // Add the error messages to the !errors! column
-      row.getCell(errorsColIndex).value = (errorMessages as string[]).join(', ');
-
-      // Commit the row changes
-      row.commit();
-    }
   }
 }
 
