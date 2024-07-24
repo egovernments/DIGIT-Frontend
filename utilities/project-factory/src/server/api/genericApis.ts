@@ -10,7 +10,6 @@ const _ = require('lodash'); // Import lodash library
 import { getExcelWorkbookFromFileURL } from "../utils/excelUtils";
 import { produceModifiedMessages } from "../kafka/Listener";
 
-
 //Function to get Workbook with different tabs (for type target)
 const getTargetWorkbook = async (fileUrl: string, localizationMap?: any) => {
   // Define headers for HTTP request
