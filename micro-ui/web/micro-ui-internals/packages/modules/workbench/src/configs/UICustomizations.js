@@ -855,22 +855,33 @@ export const UICustomizations = {
     },
   },
   AddMdmsConfig: {
-    validateForm: async (data, props) => {
-      const response = await axios.post("/mdms-v2/v2/_search", {
-        MdmsCriteria: {
-          tenantId: props?.tenantId?.split(".")[0],
-
-          uniqueIdentifiers: [data.sorId],
-
-          schemaCode: "WORKS-SOR.SOR",
-        },
-      });
-      if (response?.data?.mdms?.[0]?.data?.sorType !== "W") {
-        // Perform your validation logic here using the response data
-        return { isValid: true };
-      } else {
-        return { isValid: false, message: "RATE_NOT_ALLOWED_FOR_W_TYPE" };
-      }
+    "WORKS-SOR.Rates": {
+      validateForm: async (data, props) => {
+        try {
+          const response = await axios.post("/mdms-v2/v2/_search", {
+            MdmsCriteria: {
+              tenantId: props?.tenantId?.split(".")[0],
+              uniqueIdentifiers: [data.sorId],
+              schemaCode: "WORKS-SOR.SOR",
+            },
+          });
+  
+          const validFrom = data?.validFrom;
+          const validTo = data?.validTo;
+  
+          if (validFrom > validTo) {
+            return { isValid: false, message: "RA_DATE_RANGE_ERROR" };
+          }
+  
+          if (response?.data?.mdms?.[0]?.data?.sorType !== "W") {
+            return { isValid: true };
+          } else {
+            return { isValid: false, message: "RATE_NOT_ALLOWED_FOR_W_TYPE" };
+          }
+        } catch (error) {
+          return { isValid: false, message: "VALIDATION_ERROR" };
+        }
+      },
     },
   },
 };
