@@ -40,21 +40,7 @@ export const loginConfig = [
               "(data)=>{ return Array.isArray(data['tenant'].tenants) && Digit.Utils.getUnique(data['tenant'].tenants).map(ele=>({code:ele.code,name:Digit.Utils.locale.getTransformedLocale('TENANT_TENANTS_'+ele.code)}))}",
           },
         },
-      },
-      {
-        isMandatory: false,
-        key: "check",
-        type: "component",
-        component: "PrivacyComponent",
-        withoutLabel: true,
-        disable: false,
-        customProps: {
-          module: "HCM",
-        },
-        populators: {
-          name: "check",
-        },
-      },
+      }
     ],
   },
 ];
