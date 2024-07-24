@@ -1,5 +1,5 @@
 import * as express from "express";
-import { createMdmsDatasService, generateMdmsTemplateService, searchMdmsBulkDetailService } from "../../service/mdmsBulkManageService";
+import { createMdmsDatasService, generateMdmsJSONTemplateService, generateMdmsTemplateService, searchMdmsBulkDetailService } from "../../service/mdmsBulkManageService";
 import { logger } from "../../utils/logger";
 import { errorResponder, sendResponse } from "../../utils/genericUtils";
 
@@ -21,6 +21,7 @@ class mdmsBulkManageController {
         this.router.post(`${this.path}/create`, this.createMdmsDatas);
         this.router.post(`${this.path}/generate`, this.generateMdmsTemplate);
         this.router.post(`${this.path}/search`, this.searchMdmsBulkDetails);
+        this.router.post(`${this.path}/generatejson`, this.generateMdmsJSONTemplate);
     }
     /**
  * Handles the creation of a project type campaign.
@@ -50,6 +51,22 @@ class mdmsBulkManageController {
         try {
             logger.info("RECEIVED A BULK MDMS TEMPLATE GENERATE REQUEST");
             await generateMdmsTemplateService(request);
+            return sendResponse(response, { mdmsGenerateDetails: request.body.mdmsGenerateDetails }, request);
+        } catch (e: any) {
+            console.log(e)
+            logger.error(String(e))
+            // Handle errors and send error response
+            return errorResponder({ message: String(e), code: e?.code, description: e?.description }, request, response, e?.status || 500);
+        }
+    };
+
+    generateMdmsJSONTemplate = async (
+        request: express.Request,
+        response: express.Response
+    ) => {
+        try {
+            logger.info("RECEIVED A BULK MDMS JSON TEMPLATE GENERATE REQUEST");
+            await generateMdmsJSONTemplateService(request);
             return sendResponse(response, { mdmsGenerateDetails: request.body.mdmsGenerateDetails }, request);
         } catch (e: any) {
             console.log(e)

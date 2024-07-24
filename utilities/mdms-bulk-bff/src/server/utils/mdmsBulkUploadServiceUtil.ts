@@ -9,6 +9,7 @@ import { mdmsProcessStatus, sheetDataStatus } from "../config/constants";
 import { getFileUrl } from "./genericUtils";
 import { persistDetailsOnCompletion, persistDetailsOnError } from "./persistUtils";
 import { executeQuery } from "./db";
+import { createAndUploadJSONFile } from "./jsonUtils";
 
 
 export async function generateMdmsTemplate(request: any) {
@@ -24,6 +25,56 @@ export async function generateMdmsTemplate(request: any) {
 
     const fileDetails = await createAndUploadFile(workbook, request);
     request.body.mdmsGenerateDetails = getMdmsGenerateDetails(request, fileDetails?.[0]?.fileStoreId);
+}
+
+export async function generateJSONMdmsTemplate(request: any) {
+    const schema: any = request.body.currentSchema;
+    const schemaCode: any = request.query.schemaCode;
+
+    // Function to transform schema properties into the desired format
+    const formatProperties = (properties: { [key: string]: any }, required: any, unique: any, refSchemas: any) => {
+        const formattedProps: { [key: string]: string } = {};
+
+        for (const [key, value] of Object.entries(properties)) {
+            let typeString = value.type;
+
+            // Check for required fields
+            if (required.includes(key)) {
+                typeString += ' | required';
+            }
+
+            // Check for unique fields
+            if (unique.includes(key)) {
+                typeString += ' | unique';
+            }
+
+            // Check for reference schemas
+            const ref = refSchemas.find((ref: any) => ref.fieldPath === key);
+            if (ref) {
+                typeString += ` | xRefWith ${ref.schemaCode}`;
+            }
+
+            formattedProps[key] = typeString;
+        }
+
+        return formattedProps;
+    };
+
+    // Format schema properties
+    const formattedProperties = formatProperties(
+        schema.properties,
+        schema.required,
+        schema['x-unique'],
+        schema['x-ref-schema']
+    );
+
+    // Prepare JSON object
+    const jsonObject = JSON.stringify({ [schemaCode]: [formattedProperties] }, null, 2);
+    const buffer = Buffer.from(jsonObject, 'utf-8');
+
+    // Create and upload the JSON file
+    const fileDetails = await createAndUploadJSONFile(buffer, request);
+    console.log(fileDetails, "File upload details");
 }
 
 
@@ -123,8 +174,9 @@ async function generateProcessFileAfterCreate(request: any, createError: any, cr
     const fileUrl = await getFileUrl(request);
     const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode);
     const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
-    addErrorsToSheet(request, worksheet, createError, sheetDataStatus.failed);
-    addErrorsToSheet(request, worksheet, createSuccess, sheetDataStatus.created);
+    console.log(createError, createSuccess, " cccccccccccccsssssssssssssssssssssss")
+    await addErrorsToSheet(request, worksheet, createError, sheetDataStatus.failed);
+    await addErrorsToSheet(request, worksheet, createSuccess, sheetDataStatus.created);
     changeStatus(request, createError, createSuccess)
     await formatProcessedSheet(worksheet);
     const fileDetails = await createAndUploadFile(workbook, request);
@@ -133,7 +185,7 @@ async function generateProcessFileAfterCreate(request: any, createError: any, cr
 }
 
 function changeStatus(request: any, createError: any, createSuccess: any) {
-    if (Object.keys(createError).length > 1) {
+    if (Object.keys(createError).length > 0) {
         if (Object.keys(createSuccess).length > 0) {
             request.body.mdmsDetails.status = mdmsProcessStatus.partiallyFailed;
         }

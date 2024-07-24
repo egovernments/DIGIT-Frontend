@@ -374,6 +374,21 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
     if (statusColIndex === undefined || errorsColIndex === undefined) {
       throw new Error('!status! column not found and no empty column available for !errors!');
     }
+    for (const data of request?.body?.dataToCreate) {
+      const rowNumber = data?.["!row#number!"];
+      const row = worksheet.getRow(rowNumber);
+      if (errors[rowNumber] as string[]) {
+        console.log(errors[rowNumber], " eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+        row.getCell(statusColIndex).value = errorStatus;
+        row.getCell(errorsColIndex).value = (errors[rowNumber] as string[]).join(', ');
+        row.commit();
+      }
+      else {
+        row.getCell(statusColIndex).value = '';
+        row.getCell(errorsColIndex).value = '';
+        row.commit();
+      }
+    }
 
     // Iterate through the errors object
     for (const [rowNum, errorMessages] of Object.entries(errors)) {
