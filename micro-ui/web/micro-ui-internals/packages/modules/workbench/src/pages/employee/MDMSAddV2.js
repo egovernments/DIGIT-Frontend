@@ -117,7 +117,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     };
     const onError = (resp) => {
       toggleSpinner(false);
-      setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
+      setShowToast(`${t("WBH_ERROR_MDMS_DATA")} : ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
     };
