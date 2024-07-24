@@ -9,18 +9,28 @@ export const loginConfig = [
       {
         label: "CORE_LOGIN_USERNAME",
         type: "text",
+        key: "username",
+        isMandatory: true,
         populators: {
           name: "username",
+          validation: {
+            required: true,
+          },
+          error: "ERR_USERNAME_REQUIRED",
         },
-        isMandatory: true,
       },
       {
         label: "CORE_LOGIN_PASSWORD",
         type: "password",
+        key: "password",
+        isMandatory: true,
         populators: {
           name: "password",
+          validation: {
+            required: true,
+          },
+          error: "ERR_PASSWORD_REQUIRED",
         },
-        isMandatory: true,
       },
       {
         isMandatory: true,

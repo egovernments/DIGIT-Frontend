@@ -108,8 +108,17 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    setDisable(false);
-    if (!formData?.check) setDisable(true);
+
+    // Extract keys from the config
+  const keys = config[0].body.map(field => field.key);
+
+  const hasEmptyFields = keys.some(key => {
+    const value = formData[key];
+    return value == null || value === '' || (key === 'check' && value === false) || (key === 'captcha' && value === false);
+  });
+
+  // Set disable based on the check
+  setDisable(hasEmptyFields);
   };
 
   return isLoading || isStoreLoading ? (
@@ -138,7 +147,17 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       >
         <Header />
       </FormComposerV2>
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+      {showToast && (
+        <Toast
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          // info={showToast?.key === "info" ? true : false}
+          // error={showToast?.key === "error" ? true : false}
+          transitionTime={10000000000}
+          label={t("showToast?.label")}
+          onClose={closeToast}
+        />
+      )}
+      {/* {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />} */}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
