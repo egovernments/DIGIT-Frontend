@@ -374,19 +374,19 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
     if (statusColIndex === undefined || errorsColIndex === undefined) {
       throw new Error('!status! column not found and no empty column available for !errors!');
     }
-
-    // Iterate through the errors object
-    for (const [rowNum, errorMessages] of Object.entries(errors)) {
-      const row = worksheet.getRow(Number(rowNum));
-
-      // Add 'invalid' to the !status! column
-      row.getCell(statusColIndex).value = errorStatus;
-
-      // Add the error messages to the !errors! column
-      row.getCell(errorsColIndex).value = (errorMessages as string[]).join(', ');
-
-      // Commit the row changes
-      row.commit();
+    for (const data of request?.body?.dataToCreate) {
+      const rowNumber = data?.["!row#number!"];
+      const row = worksheet.getRow(rowNumber);
+      if (errors[rowNumber] as string[]) {
+        row.getCell(statusColIndex).value = errorStatus;
+        row.getCell(errorsColIndex).value = (errors[rowNumber] as string[]).join(', ');
+        row.commit();
+      }
+      else {
+        row.getCell(statusColIndex).value = '';
+        row.getCell(errorsColIndex).value = '';
+        row.commit();
+      }
     }
   }
 }
