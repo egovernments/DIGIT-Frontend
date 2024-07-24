@@ -182,6 +182,7 @@ const didEmployeeHasRole = (role = "") => {
 const didEmployeeisAllowed = (master,module) => {
   if(master === "WORKS-SOR" && module === "Composition")
     return false
+  return true
 }
 
 /* to check the employee (loggedin user ) has given roles  */
