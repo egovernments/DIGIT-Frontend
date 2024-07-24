@@ -28,7 +28,13 @@ const CampaignDetails = ({
   const [distributionStrat, setDistributionStrat] = useState(Digit.SessionStorage.get("microplanData")?.campaignDetails?.distributionStrat);
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
-      const projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+      let projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
+      projectOptions = Digit.Utils.microplan.filterUniqueByKey(projectOptions, "code").map((row) => {
+        return {
+          ...row,
+          i18nKey: Digit.Utils.locale.getTransformedLocale(`CAMPAIGN_TYPE_${row.code}`),
+        };
+      });
       return {
         campaignTypes: projectOptions,
         diseases: [
@@ -147,7 +153,7 @@ const CampaignDetails = ({
             // variant={error ? "error" : ""}
             t={t}
             option={data?.campaignTypes}
-            optionKey={"code"}
+            optionKey={"i18nKey"}
             selected={campaignType}
             select={(value) => {
               setCampaignType(value);

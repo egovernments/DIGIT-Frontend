@@ -569,7 +569,7 @@ function BoundarySelection({ props }) {
             )}
         </div>
       </Card>
-      <InfoCard
+      {/* <InfoCard
         populators={{
           name: "infocard",
         }}
@@ -584,7 +584,7 @@ function BoundarySelection({ props }) {
           </span>,
         ]}
         label={"Info"}
-      />
+      /> */}
       {showPopUp && (
         <PopUp
           className={"boundaries-pop-module"}

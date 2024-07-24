@@ -609,6 +609,21 @@ const mergeDeep = (target, source) => {
   return target;
 };
 
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -627,4 +642,5 @@ export default {
   mergeDeep,
   createRequestBodyForCampaign,
   updateUrlParams,
+  filterUniqueByKey
 };

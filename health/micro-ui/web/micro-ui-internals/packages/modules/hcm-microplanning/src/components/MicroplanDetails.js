@@ -56,6 +56,8 @@ const MicroplanDetails = ({
     },
     {
       enabled: !!id,
+      cacheTime:0,
+      staleTime:0,
       select: (data) => {
         const campaignCard = [
           {
