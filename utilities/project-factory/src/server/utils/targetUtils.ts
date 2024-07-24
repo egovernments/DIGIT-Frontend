@@ -8,7 +8,7 @@ import { callGenerate } from './generateUtils';
 async function generateDynamicTargetHeaders(request: any, campaignObject: any, localizationMap?: any) {
     const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
     let headerColumnsAfterHierarchy: any;
-    if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate && !isSourceMicroplan) {
+    if (campaignObject.projectType === config?.isProjectTypeSMC && campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate && !isSourceMicroplan) {
 
         const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
         headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);

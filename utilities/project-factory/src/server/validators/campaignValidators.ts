@@ -220,7 +220,7 @@ async function validateTargets(request: any, data: any[], errors: any[], localiz
     let columnsToValidate: any;
     const responseFromCampaignSearch = await getCampaignSearchResponse(request);
     const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
-    if (campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
+    if (campaignObject?.projectType === config?.isProjectTypeSMC && campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && config?.enableDynamicTargetTemplate) {
 
         const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
         columnsToValidate = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
