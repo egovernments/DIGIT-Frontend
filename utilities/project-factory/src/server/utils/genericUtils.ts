@@ -465,18 +465,24 @@ function setDropdownFromSchema(request: any, schema: any, localizationMap?: { [k
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
-  let schema: any;
+  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.source);
+  let schema;
   if (isSourceMicroplan) {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan");
+    schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan", "HCM-ADMIN-CONSOLE.adminSchemaMicroplan");
   } else {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility");
+    schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
   const keys = schema?.columns;
   setDropdownFromSchema(request, schema, localizationMap);
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
-  const localizedHeaders = getLocalizedHeaders(headers, localizationMap);
+  let localizedHeaders;
+  if (isSourceMicroplan) {
+    localizedHeaders = getLocalizedHeadersForMicroplan(responseFromCampaignSearch, headers, localizationMap);
 
+  }
+  else {
+    localizedHeaders = getLocalizedHeaders(headers, localizationMap);
+  }
   const facilities = allFacilities.map((facility: any) => {
     return [
       facility?.id,
@@ -571,6 +577,21 @@ function createBoundaryDataMainSheet(request: any, boundaryData: any, differentT
 
 
 function getLocalizedHeaders(headers: any, localizationMap?: { [key: string]: string }) {
+  const messages = headers.map((header: any) => (localizationMap ? localizationMap[header] || header : header));
+  return messages;
+}
+
+function getLocalizedHeadersForMicroplan(responseFromCampaignSearch: any, headers: any, localizationMap?: { [key: string]: string }) {
+  
+  const projectType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
+
+  headers = headers.map((header: string) => {
+    if (header === 'HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN') {
+      return `${header}_${projectType}`;
+    }
+    return header;
+  });
+
   const messages = headers.map((header: any) => (localizationMap ? localizationMap[header] || header : header));
   return messages;
 }
@@ -1084,10 +1105,18 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
-  var headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
+  let headers: any;
+  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
+  if (isSourceMicroplan) {
+      logger.info(`Source is Microplan.`);
+      headers = getLocalizedHeaders(hierarchy, localizationMap);
+    }
+  else {
+  headers = getLocalizedHeaders(hierarchy.slice(districtIndex), localizationMap);
   const headerColumnsAfterHierarchy = await generateDynamicTargetHeaders(request, campaignObject, localizationMap);
   const localizedHeadersAfterHierarchy = getLocalizedHeaders(headerColumnsAfterHierarchy, localizationMap);
   headers = [...headers, getLocalizedName(config?.boundary?.boundaryCode, localizationMap), ...localizedHeadersAfterHierarchy]
+  }
   return getLocalizedHeaders(headers, localizationMap);
 }
 
@@ -1096,13 +1125,56 @@ async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: an
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
   const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
   let campaignType = campaignObject.projectType;
-  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
   campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
   const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
   return mdmsResponse;
 }
 
 
+function appendProjectTypeToCapacity(schema: any, projectType: string): any {
+  const updatedSchema = JSON.parse(JSON.stringify(schema)); // Deep clone the schema
+
+  const capacityKey = 'HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_MICROPLAN';
+  const newCapacityKey = `${capacityKey}_${projectType}`;
+
+  // Update properties
+  if (updatedSchema.properties[capacityKey]) {
+    updatedSchema.properties[newCapacityKey] = {
+      ...updatedSchema.properties[capacityKey],
+      name: `${updatedSchema.properties[capacityKey].name}_${projectType}`
+    };
+    delete updatedSchema.properties[capacityKey];
+  }
+
+  // Update required
+  updatedSchema.required = updatedSchema.required.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update columns
+  updatedSchema.columns = updatedSchema.columns.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update unique
+  updatedSchema.unique = updatedSchema.unique.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  // Update errorMessage
+  if (updatedSchema.errorMessage[capacityKey]) {
+    updatedSchema.errorMessage[newCapacityKey] = updatedSchema.errorMessage[capacityKey];
+    delete updatedSchema.errorMessage[capacityKey];
+  }
+
+  // Update columnsNotToBeFreezed
+  updatedSchema.columnsNotToBeFreezed = updatedSchema.columnsNotToBeFreezed.map((item: string) =>
+    item === capacityKey ? newCapacityKey : item
+  );
+
+  return updatedSchema;
+}
 
 
 export {
@@ -1150,7 +1222,8 @@ export {
   getConfigurableColumnHeadersFromSchemaForTargetSheet,
   createBoundaryDataMainSheet,
   getMdmsDataBasedOnCampaignType,
-  shutdownGracefully
+  shutdownGracefully,
+  appendProjectTypeToCapacity
 };
 
 
