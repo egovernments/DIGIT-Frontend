@@ -76,12 +76,7 @@ async function callGenerate(request: any, type: any, enableCaching = false) {
         const filteredBoundary = await getBoundarySheetData(request, localizationMap);
         await processGenerate(request, enableCaching, filteredBoundary);
     } else {
-        if (enableCaching) {
-            await processGenerate(request, true);
-        }
-        else {
-            await processGenerate(request);
-        }
+        await processGenerate(request, enableCaching);
     }
 }
 

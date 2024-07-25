@@ -44,11 +44,15 @@ const getBoundaryDataService = async (
     request: express.Request, enableCaching = false) => {
     try {
         const { hierarchyType, campaignId } = request?.query;
-        const cacheTTL = 300; // TTL in seconds (5 minutes)
+        const cacheTTL = config?.cacheTime; // TTL in seconds (5 minutes)
         const cacheKey = `${campaignId}-${hierarchyType}`;
-        const isRedisConnected = await checkRedisConnection();
-        const cachedData = await redis.get(cacheKey); // Get cached data
-        if (cachedData && enableCaching && isRedisConnected) {
+        let isRedisConnected = false;
+        let cachedData: any = null;
+        if (cacheKey && enableCaching) {
+            isRedisConnected = await checkRedisConnection();
+            cachedData = await redis.get(cacheKey); // Get cached data
+        }
+        if (cachedData) {
             logger.info("CACHE HIT :: " + cacheKey);
             logger.debug(`CACHED DATA :: ${getFormattedStringForDebug(cachedData)}`);
 
@@ -58,26 +62,25 @@ const getBoundaryDataService = async (
             }
 
             return JSON.parse(cachedData); // Return parsed cached data if available
-        }
-        else {
+        } else {
             logger.info("NO CACHE FOUND :: REQUEST :: " + cacheKey);
-            const workbook = getNewExcelWorkbook();
-            const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
-            const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
-            const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
-            // Retrieve boundary sheet data
-            const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
-            const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
-            const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
-            addDataToSheet(boundarySheet, boundarySheetData);
-            const boundaryFileDetails: any = await createAndUploadFile(workbook, request);
-            // Return boundary file details
-            logger.info("RETURNS THE BOUNDARY RESPONSE");
-            if (cacheKey && isRedisConnected) {
-                await redis.set(cacheKey, JSON.stringify(boundaryFileDetails), "EX", cacheTTL); // Cache the response data with TTL
-            }
-            return boundaryFileDetails;
         }
+        const workbook = getNewExcelWorkbook();
+        const localizationMapHierarchy = hierarchyType && await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(hierarchyType));
+        const localizationMapModule = await getLocalizedMessagesHandler(request, request?.query?.tenantId);
+        const localizationMap = { ...localizationMapHierarchy, ...localizationMapModule };
+        // Retrieve boundary sheet data
+        const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
+        const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
+        const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
+        addDataToSheet(boundarySheet, boundarySheetData);
+        const boundaryFileDetails: any = await createAndUploadFile(workbook, request);
+        // Return boundary file details
+        logger.info("RETURNS THE BOUNDARY RESPONSE");
+        if (cacheKey && isRedisConnected) {
+            await redis.set(cacheKey, JSON.stringify(boundaryFileDetails), "EX", cacheTTL); // Cache the response data with TTL
+        }
+        return boundaryFileDetails;
     } catch (e: any) {
         console.log(e)
         logger.error(String(e))
