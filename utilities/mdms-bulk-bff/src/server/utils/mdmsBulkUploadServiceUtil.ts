@@ -20,7 +20,7 @@ export async function generateMdmsTemplate(request: any) {
 
     const workbook = await getNewExcelWorkbook();
     const worksheet = workbook.addWorksheet(sheetName);
-    addDataToSheet(worksheet, [[...headers, "!status!"]], undefined, undefined, true);
+    addDataToSheet(worksheet, [headers], undefined, undefined, true);
     freezeStatusColumn(worksheet);
 
     const fileDetails = await createAndUploadFile(workbook, request);
@@ -74,7 +74,7 @@ export async function generateJSONMdmsTemplate(request: any) {
 
     // Create and upload the JSON file
     const fileDetails = await createAndUploadJSONFile(buffer, request);
-    console.log(fileDetails, "File upload details");
+    request.body.mdmsGenerateDetails = getMdmsGenerateDetails(request, fileDetails?.[0]?.fileStoreId);
 }
 
 
@@ -144,7 +144,7 @@ async function createData(request: any) {
             try {
                 await httpRequest(config.host.mdmsHost + config.paths.mdmsDataCreate + `/${request?.query?.schemaCode}`, createBody);
                 const rowNumber = data["!row#number!"];
-                const message = "Successfully created";
+                const message = "";
                 if (createSuccess?.[rowNumber]) {
                     createSuccess[rowNumber].push(message);
                 } else {
@@ -174,7 +174,6 @@ async function generateProcessFileAfterCreate(request: any, createError: any, cr
     const fileUrl = await getFileUrl(request);
     const workbook: any = await getExcelWorkbookFromFileURL(fileUrl, config.values.mdmsSheetName + " " + request.query.schemaCode);
     const worksheet: any = workbook.getWorksheet(config.values.mdmsSheetName + " " + request.query.schemaCode);
-    console.log(createError, createSuccess, " cccccccccccccsssssssssssssssssssssss")
     await addErrorsToSheet(request, worksheet, createError, sheetDataStatus.failed);
     await addErrorsToSheet(request, worksheet, createSuccess, sheetDataStatus.created);
     changeStatus(request, createError, createSuccess)
@@ -182,6 +181,16 @@ async function generateProcessFileAfterCreate(request: any, createError: any, cr
     const fileDetails = await createAndUploadFile(workbook, request);
     logger.info(`File store id for after creation file is ${fileDetails?.[0]?.fileStoreId}`)
     request.body.mdmsDetails.processedFileStoreId = fileDetails?.[0]?.fileStoreId;
+}
+
+function addXrefToRequire(schema: any) {
+    const xref = schema?.["x-ref-schema"];
+    const xUnique = schema?.["x-unique"];
+    if (xref) {
+        for (const x of xref) {
+
+        }
+    }
 }
 
 function changeStatus(request: any, createError: any, createSuccess: any) {

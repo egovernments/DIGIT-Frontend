@@ -36,7 +36,9 @@ async function validateMdmsSchema(request: any) {
             throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
         }
         validateSchemaCompatibility(schema?.definition);
-        request.body.currentSchema = schema?.definition;
+        var schemaDef = schema?.definition;
+        addXrefToRequire(schemaDef);
+        request.body.currentSchema = schemaDef;
     }
     else {
         throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);

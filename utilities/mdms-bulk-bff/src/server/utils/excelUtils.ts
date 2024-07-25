@@ -1,3 +1,4 @@
+import { sheetDataStatus } from "../config/constants";
 import config from "../config";
 import { throwError } from "./errorUtils";
 import { logger } from "./logger";
@@ -356,41 +357,61 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
       firstEmptyColIndex = colNumber + 1;
     });
 
-    // If !errors! column is not found, use the first empty column
-    if (errorsColIndex === undefined && firstEmptyColIndex !== undefined) {
-      errorsColIndex = firstEmptyColIndex;
-      var cell = headerRow.getCell(errorsColIndex);
-      cell.value = '!errors!';
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '93C47D' }
-      };
-      cell.font = { bold: true, name: 'Roboto' };
-      worksheet.getColumn(errorsColIndex).width = 40;
-      headerRow.commit();
-    }
+    manageExistenceOfStatusAndErrorCol(worksheet, headerRow, statusColIndex, errorsColIndex, firstEmptyColIndex);
 
-    if (statusColIndex === undefined || errorsColIndex === undefined) {
-      throw new Error('!status! column not found and no empty column available for !errors!');
-    }
     for (const data of request?.body?.dataToCreate) {
       const rowNumber = data?.["!row#number!"];
-      const row = worksheet.getRow(rowNumber);
-      if (errors[rowNumber] as string[]) {
-        console.log(errors[rowNumber], " eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-        row.getCell(statusColIndex).value = errorStatus;
-        row.getCell(errorsColIndex).value = (errors[rowNumber] as string[]).join(', ');
-        row.commit();
-      }
-      else {
-        row.getCell(statusColIndex).value = '';
-        row.getCell(errorsColIndex).value = '';
-        row.commit();
+      if (rowNumber !== undefined) {
+        const row = worksheet.getRow(rowNumber);
+        if (errors[rowNumber] && Array.isArray(errors[rowNumber])) {
+          console.log(`Updating row ${rowNumber}:`);
+          console.log(`Errors: ${errors[rowNumber]}`);
+          row.getCell(statusColIndex).value = errorStatus;
+          row.getCell(errorsColIndex).value = (errors[rowNumber] as string[]).join(', ');
+          row.commit();
+        } else if (errorStatus != sheetDataStatus.created) {
+          console.log(`No errors for row ${rowNumber}. Clearing values.`);
+          row.getCell(statusColIndex).value = '';
+          row.getCell(errorsColIndex).value = '';
+          row.commit();
+        }
+      } else {
+        console.log(`Row number not defined in data: ${JSON.stringify(data)}`);
       }
     }
   }
 }
+
+function manageExistenceOfStatusAndErrorCol(worksheet: any, headerRow: any, statusColIndex: number | undefined, errorsColIndex: number | undefined, firstEmptyColIndex: number | undefined) {
+  if (statusColIndex === undefined || statusColIndex === undefined) {
+    statusColIndex = firstEmptyColIndex;
+    var cell = headerRow.getCell(statusColIndex);
+    cell.value = '!status!';
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: '93C47D' }
+    };
+    cell.font = { bold: true, name: 'Roboto' };
+    worksheet.getColumn(statusColIndex).width = 40;
+    headerRow.commit();
+  }
+
+  if (errorsColIndex === undefined && firstEmptyColIndex !== undefined) {
+    errorsColIndex = firstEmptyColIndex + 1;
+    var cell = headerRow.getCell(errorsColIndex);
+    cell.value = '!errors!';
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: '93C47D' }
+    };
+    cell.font = { bold: true, name: 'Roboto' };
+    worksheet.getColumn(errorsColIndex).width = 40;
+    headerRow.commit();
+  }
+}
+
 
 export async function formatProcessedSheet(worksheet: any) {
   // Find the indices of the !status! and !errors! columns

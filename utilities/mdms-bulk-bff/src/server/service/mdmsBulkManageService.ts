@@ -22,7 +22,7 @@ export async function generateMdmsTemplateService(request: any) {
 
 export async function generateMdmsJSONTemplateService(request: any) {
     await validateGenerateMdmsTemplateRequest(request);
-    logger.info("VALIDATED THE MDMS TEMPLATE GENERATE REQUEST");
+    logger.info("VALIDATED THE MDMS JSON TEMPLATE GENERATE REQUEST");
     await generateJSONMdmsTemplate(request);
 }
 
