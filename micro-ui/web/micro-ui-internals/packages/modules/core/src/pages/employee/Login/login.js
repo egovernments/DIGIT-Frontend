@@ -147,17 +147,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       >
         <Header />
       </FormComposerV2>
-      {showToast && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          // info={showToast?.key === "info" ? true : false}
-          // error={showToast?.key === "error" ? true : false}
-          transitionTime={10000000000}
-          label={t("showToast?.label")}
-          onClose={closeToast}
-        />
-      )}
-      {/* {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />} */}
+      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
