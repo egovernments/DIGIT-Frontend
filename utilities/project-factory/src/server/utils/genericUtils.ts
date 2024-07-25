@@ -468,7 +468,7 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.source);
   let schema;
   if (isSourceMicroplan) {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan", "HCM-ADMIN-CONSOLE.adminSchemaMicroplan");
+    schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan");
   } else {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
