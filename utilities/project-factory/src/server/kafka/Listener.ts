@@ -2,7 +2,7 @@ import { ConsumerGroup, ConsumerGroupOptions, Message } from 'kafka-node';
 import config from '../config';
 import { getFormattedStringForDebug, logger } from '../utils/logger';
 import { shutdownGracefully, throwError } from '../utils/genericUtils';
-import { handleCampaignMapping, processMapping } from '../utils/campaignMappingUtils';
+import { handleCampaignMapping } from '../utils/campaignMappingUtils';
 import { producer } from './Producer';
 
 // Kafka Configuration
@@ -17,7 +17,6 @@ const kafkaConfig: ConsumerGroupOptions = {
 // Topic Names
 const topicNames = [
     config.kafka.KAFKA_START_CAMPAIGN_MAPPING_TOPIC,
-    config.kafka.KAFKA_PROCESS_CAMPAIGN_MAPPING_TOPIC,
     config.kafka.KAFKA_TEST_TOPIC
 ];
 
@@ -33,9 +32,6 @@ export function listener() {
             switch (message.topic) {
                 case config.kafka.KAFKA_START_CAMPAIGN_MAPPING_TOPIC:
                     await handleCampaignMapping(messageObject);
-                    break;
-                case config.kafka.KAFKA_PROCESS_CAMPAIGN_MAPPING_TOPIC:
-                    await processMapping(messageObject);
                     break;
                 default:
                     logger.warn(`Unhandled topic: ${message.topic}`);
