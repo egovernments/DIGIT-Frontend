@@ -84,7 +84,7 @@ const MDMSEdit = ({...props}) => {
   const handleUpdate = async (formData) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
 
-    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(formData, { tenantId: tenantId });
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(formData, { tenantId: stateId });
 
     if (validation && !validation?.isValid) {
       setShowToast({
