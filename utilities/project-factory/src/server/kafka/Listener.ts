@@ -60,7 +60,6 @@ export function listener() {
 }
 
 
-
 /**
  * Produces modified messages to a specified Kafka topic.
  * @param modifiedMessages An array of modified messages to be produced.
