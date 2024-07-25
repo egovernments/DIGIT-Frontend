@@ -82,6 +82,18 @@ const MDMSEdit = ({...props}) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
 
   const handleUpdate = async (formData) => {
+    const schemaCodeToValidate = `${moduleName}.${masterName}`;
+
+    const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(formData, { tenantId: tenantId });
+
+    if (validation && !validation?.isValid) {
+      setShowToast({
+        label: `${t("RA_DATE_RANGE_ERROR")}`,
+        isError: true
+      });
+      return;
+    }
+
 
     const onSuccess = (resp) => {
       
