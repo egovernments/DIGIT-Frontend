@@ -77,6 +77,7 @@ async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
         producer.send(payloads, (err: any) => {
             if (err) {
                 console.error(err);
+                console.log('Error coming for message : ', modifiedMessages);
                 logger.info('KAFKA :: PRODUCER :: Some Error Occurred ');
                 logger.error(`KAFKA :: PRODUCER :: Error :  ${JSON.stringify(err)}`);
             } else {
