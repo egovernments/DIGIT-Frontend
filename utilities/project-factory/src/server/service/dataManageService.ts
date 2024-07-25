@@ -44,7 +44,7 @@ const getBoundaryDataService = async (
     request: express.Request, enableCaching = false) => {
     try {
         const { hierarchyType, campaignId } = request?.query;
-        const cacheTTL = 300; // TTL in seconds (5 minutes)
+        const cacheTTL = config?.cacheTime; // TTL in seconds (5 minutes)
         const cacheKey = `${campaignId}-${hierarchyType}`;
         const isRedisConnected = await checkRedisConnection();
         const cachedData = await redis.get(cacheKey); // Get cached data
