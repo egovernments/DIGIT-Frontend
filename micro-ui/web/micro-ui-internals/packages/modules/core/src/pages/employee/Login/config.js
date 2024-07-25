@@ -9,18 +9,28 @@ export const loginConfig = [
       {
         label: "CORE_LOGIN_USERNAME",
         type: "text",
+        key: "username",
+        isMandatory: true,
         populators: {
           name: "username",
+          validation: {
+            required: true,
+          },
+          error: "ERR_USERNAME_REQUIRED",
         },
-        isMandatory: true,
       },
       {
         label: "CORE_LOGIN_PASSWORD",
         type: "password",
+        key: "password",
+        isMandatory: true,
         populators: {
           name: "password",
+          validation: {
+            required: true,
+          },
+          error: "ERR_PASSWORD_REQUIRED",
         },
-        isMandatory: true,
       },
       {
         isMandatory: true,
@@ -40,21 +50,7 @@ export const loginConfig = [
               "(data)=>{ return Array.isArray(data['tenant'].tenants) && Digit.Utils.getUnique(data['tenant'].tenants).map(ele=>({code:ele.code,name:Digit.Utils.locale.getTransformedLocale('TENANT_TENANTS_'+ele.code)}))}",
           },
         },
-      },
-      {
-        isMandatory: false,
-        key: "check",
-        type: "component",
-        component: "PrivacyComponent",
-        withoutLabel: true,
-        disable: false,
-        customProps: {
-          module: "HCM",
-        },
-        populators: {
-          name: "check",
-        },
-      },
+      }
     ],
   },
 ];

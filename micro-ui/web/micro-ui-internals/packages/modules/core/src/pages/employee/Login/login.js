@@ -108,8 +108,17 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    setDisable(false);
-    if (!formData?.check) setDisable(true);
+
+    // Extract keys from the config
+  const keys = config[0].body.map(field => field.key);
+
+  const hasEmptyFields = keys.some(key => {
+    const value = formData[key];
+    return value == null || value === '' || (key === 'check' && value === false) || (key === 'captcha' && value === false);
+  });
+
+  // Set disable based on the check
+  setDisable(hasEmptyFields);
   };
 
   return isLoading || isStoreLoading ? (

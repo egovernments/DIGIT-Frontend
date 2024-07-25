@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.7
+- Added privacy component in mdms
+
 ## 1.8.2-beta.6
 - Fixed forgot password link
 

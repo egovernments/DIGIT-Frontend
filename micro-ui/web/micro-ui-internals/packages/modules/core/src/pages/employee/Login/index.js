@@ -23,6 +23,8 @@ const EmployeeLogin = () => {
     if(isLoading == false && mdmsData?.config)
     {  
       setloginConfig(mdmsData?.config)
+    }else{
+      setloginConfig(defaultLoginConfig)
     }
   },[mdmsData, isLoading])
 
