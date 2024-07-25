@@ -1,0 +1,19 @@
+{
+    "name": "microfrontends-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+      "packages/*"
+    ],
+    "scripts": {
+      "bootstrap": "lerna bootstrap",
+      "start:host": "npm --prefix packages/host-app start",
+      "start:remote1": "npm --prefix packages/remote-app1 start",
+      "start:remote2": "npm --prefix packages/remote-app2 start",
+      "start": "npm run start:host && npm run start:remote1 && npm run start:remote2"
+    },
+    "devDependencies": {
+      "lerna": "^7.0.0" 
+    }
+  }
+  
