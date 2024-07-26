@@ -17,7 +17,8 @@
       "id": 2,
       "name": "BOUNDARY_SELECTION",
       "component": "BoundarySelection",
-      "checkForCompleteness": true
+      "checkForCompleteness": true,
+      "updateCampaign":true
     },
 
     {

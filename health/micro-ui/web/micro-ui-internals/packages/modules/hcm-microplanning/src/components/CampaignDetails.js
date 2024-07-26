@@ -103,20 +103,6 @@ const CampaignDetails = ({
     [checkDataCompletion, disease, campaignType, distributionStrat, microplanData, setCheckDataCompletion, setMicroplanData]
   );
 
-  // useEffect(() => {
-  //   debugger;
-  //   // if either of these states are not there then data is incomplete
-  //   if (!campaignType || !disease || !distributionStrat) {
-  //     props.setCheckDataCompletion("false");
-  //   }
-
-  //   if (validateCampaignData()) {
-  //     props.setCheckDataCompletion("valid");
-  //   } else {
-  //     props.setCheckDataCompletion("invalid");
-  //   }
-  // }, [campaignType, disease, distributionStrat]);
-
   if (isLoading) {
     return <Loader />;
   }

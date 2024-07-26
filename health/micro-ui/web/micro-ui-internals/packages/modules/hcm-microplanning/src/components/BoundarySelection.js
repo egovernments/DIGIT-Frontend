@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment, useMemo } from "react";
+import React, { useEffect, useState, Fragment, useMemo,useCallback } from "react";
 import { CardText, LabelFieldPair, Card, Header, CardLabel, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { InfoCard, MultiSelectDropdown, PopUp, Button, Toast } from "@egovernments/digit-ui-components";
@@ -12,12 +12,40 @@ import { mailConfig } from "../configs/mailConfig";
  * the selection of boundaries and updates the state accordingly. The component is designed to be
  * interactive and user-friendly for selecting boundaries within
  */
-const  BoundarySelection = (props) => {
-  
+
+function validateBoundariesSelected(selectedArray, typesList) {
+  return typesList.every(type => 
+      selectedArray.some(item => item.type === type)
+  );
+}
+function filterBoundaries(boundaries, boundaryTypeToExclude) {
+  // Find the index of the given boundary type
+  const indexToExclude = boundaries.findIndex(boundary => boundary.boundaryType === boundaryTypeToExclude);
+
+  // If the boundary type is found, filter out all boundaries below it
+  if (indexToExclude !== -1) {
+      return boundaries.filter((boundary, index) => index <= indexToExclude);
+  }
+
+  // If the boundary type is not found, return the original list
+  return boundaries;
+}
+
+const BoundarySelection = ({
+  MicroplanName = "default",
+  campaignType = Digit.SessionStorage.get("microplanHelperData")?.campaignData?.projectType,
+  microplanData,
+  setMicroplanData,
+  checkDataCompletion,
+  setCheckDataCompletion,
+  currentPage,
+  pages,
+  setToast,
+  ...props
+}) => {
+  //we need to set selected boundary data in microplan session
   const onSelect = (name, value) => {
-    debugger
-    console.log("val", value);
-    return;
+    console.log(value);
   };
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -56,11 +84,11 @@ const  BoundarySelection = (props) => {
     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData ? undefined : null
   );
   const [targetedData, setTargetedData] = useState();
-  const [boundaryData, setBoundaryData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData || {});
+  const [boundaryData, setBoundaryData] = useState(Digit.SessionStorage.get("microplanData")?.BoundarySelection?.boundaryData || {});
   // const [parentArray, setParentArray] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData.filter(item => item.includeAllChildren).map(item => item.code) || null);
   const [parentArray, setParentArray] = useState(null);
   const [boundaryTypeDataresult, setBoundaryTypeDataresult] = useState(null);
-  const [selectedData, setSelectedData] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData || []);
+  const [selectedData, setSelectedData] = useState(Digit.SessionStorage.get("microplanData")?.BoundarySelection?.selectedData || []);
   const [parentBoundaryTypeRoot, setParentBoundaryTypeRoot] = useState(
     (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.find((item) => item?.isRoot === true) || {})
       ?.boundaryType || null
@@ -97,19 +125,20 @@ const  BoundarySelection = (props) => {
 
   const fetchOptions = async () => {
     setLoaderEnabled(true);
-    const draftSelected = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+    const draftSelected = microplanData?.BoundarySelection?.selectedData
+    
     for (const item of draftSelected) {
       const code = item?.code;
       const parent = item?.parent;
       const boundary = item?.type;
 
-      const childBoundary = props?.props?.dataParams?.hierarchy?.boundaryHierarchy.filter((item) => item.parentBoundaryType === boundary)?.[0]
+      const childBoundary = params?.hierarchy?.boundaryHierarchy.filter((item) => item.parentBoundaryType === boundary)?.[0]
         ?.boundaryType;
       const reqCriteriaBoundaryTypeSearch = await Digit.CustomService.getResponse({
         url: "/boundary-service/boundary-relationships/_search",
         params: {
           tenantId: tenantId,
-          hierarchyType: props?.props?.dataParams?.hierarchyType,
+          hierarchyType: params?.hierarchyType,
           boundaryType: childBoundary,
           parent: code,
         },
@@ -133,19 +162,54 @@ const  BoundarySelection = (props) => {
   };
 
   useEffect(() => {
+    if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+
+    updateData(true);
+  }, [checkDataCompletion]);
+
+  // check if data has changed or not
+  const updateData = useCallback(
+    async (check) => {
+      //here simply check whether all the boundaries are selected
+      //if yes set them in microplanData and then move on(next/back)
+      if (checkDataCompletion !== "true" || !setCheckDataCompletion) return;
+      const sortedHierarchy = hierarchyTypeDataresult?.boundaryHierarchy 
+      const boundariesToBeSelected = filterBoundaries(sortedHierarchy,lowestHierarchy)?.map(row => row.boundaryType)
+      //check if atleast one in boundariesToBeSelected is there in selectedData
+      // TODO: commenting this for demo
+      // if(!validateBoundariesSelected(selectedData,boundariesToBeSelected)){
+      //   setToast({ state: "error", message: t("ERROR_SELECT_ALL_BOUNDARIES") })
+      //   setCheckDataCompletion("false");
+      //   return
+      // }
+
+      if(check){
+        setMicroplanData((previous) => ({
+          ...previous,
+          BoundarySelection:{selectedData,boundaryData}
+        }));
+        setCheckDataCompletion("valid")
+      }else{
+        setCheckDataCompletion("invalid")
+      }
+      
+    },
+    [checkDataCompletion, microplanData, setCheckDataCompletion, setMicroplanData]
+  );
+
+  useEffect(() => {
     if (
-      isDraft == "true" &&
-      props?.props?.dataParams?.hierarchy &&
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0 &&
-      draftBoundary === "true"
+      // isDraft == "true" &&
+      // props?.props?.dataParams?.hierarchy &&
+      // props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData?.length > 0 &&
+      // draftBoundary === "true"
+      microplanData?.BoundarySelection && params
     ) {
       fetchOptions();
     }
   }, [
-    isDraft,
-    draftBoundary,
-    props?.props?.dataParams?.hierarchy,
-    props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+    microplanData,
+    params
   ]);
 
   useEffect(() => {
@@ -215,16 +279,13 @@ const  BoundarySelection = (props) => {
 
   useEffect(() => {
     setBoundaryData(
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-        : {}
+      microplanData?.BoundarySelection?.boundaryData ? microplanData?.BoundarySelection?.boundaryData : {}
     );
     setSelectedData(
-      props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-        ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-        : []
+      microplanData?.BoundarySelection?.selectedData ? microplanData?.BoundarySelection?.selectedData : []
     );
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
+
+  }, [microplanData]);
 
   const closeToast = () => {
     setShowToast(null);
@@ -509,7 +570,7 @@ const  BoundarySelection = (props) => {
             })
             .map((boundary, index) =>
               boundary?.parentBoundaryType == null ? (
-                <LabelFieldPair key={index} style={{ alignItems: 'flex-start' }}>
+                <LabelFieldPair key={index} style={{ alignItems: "flex-start" }}>
                   <CardLabel>
                     {/* {t(`${hierarchy}_${boundary?.boundaryType}`?.toUpperCase())} */}
                     {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
@@ -530,13 +591,13 @@ const  BoundarySelection = (props) => {
                         handleBoundaryChange(value, boundary);
                       }}
                       config={{
-                        isDropdownWithChip: true, 
+                        isDropdownWithChip: true,
                       }}
                     />
                   </div>
                 </LabelFieldPair>
               ) : (
-                <LabelFieldPair key={index} style={{ alignItems: 'flex-start' }}>
+                <LabelFieldPair key={index} style={{ alignItems: "flex-start" }}>
                   <CardLabel>
                     {t((hierarchy + "_" + boundary?.boundaryType).toUpperCase())}
                     <span className="mandatory-span">*</span>
@@ -562,7 +623,7 @@ const  BoundarySelection = (props) => {
                         handleBoundaryChange(value, boundary);
                       }}
                       config={{
-                        isDropdownWithChip: true, 
+                        isDropdownWithChip: true,
                       }}
                       selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
                       addCategorySelectAllCheck={true}
@@ -639,5 +700,5 @@ const  BoundarySelection = (props) => {
       )}
     </>
   );
-}
+};
 export default BoundarySelection;
