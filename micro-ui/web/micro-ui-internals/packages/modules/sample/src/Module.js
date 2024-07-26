@@ -7,6 +7,8 @@ import ViewEstimateComponent from "./components/ViewEstimateComponent";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import AdditionalComponentWrapper from "./components/AdditionalComponent";
 import SampleMultiComponent from "./components/SampleMultiComponent";
+import EstimateDetailsComponent from "./components/EstimateDetailsComponent";
+import AddressDetailsComponent from "./components/AddressDetailsComponent";
 
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -31,6 +33,8 @@ const componentsToRegister = {
   ViewEstimatePage: ViewEstimateComponent,
   SampleAdditionalComponent: AdditionalComponentWrapper,
   SampleMultiComponent: SampleMultiComponent,
+  EstimateDetailsComponent: EstimateDetailsComponent,
+  AddressDetailsComponent: AddressDetailsComponent,
 };
 
 export const initSampleComponents = () => {
