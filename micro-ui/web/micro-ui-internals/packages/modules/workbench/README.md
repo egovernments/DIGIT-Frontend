@@ -110,6 +110,7 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.5 Fixed Search Popup Issue
 1.0.5 Updated Search Feature Change
 1.0.4 Added Search feature changes
 1.0.3 Changed url in view and edit screen of workbench and fix some bug
