@@ -19,7 +19,6 @@ const EstimateCreate = () => {
     const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
     const onSubmit = async (data) => {
-        await console.log(data);
         await mutation.mutate(
           {
             url: `/mdms-v2/v2/_create/digitAssignment.estimate`,

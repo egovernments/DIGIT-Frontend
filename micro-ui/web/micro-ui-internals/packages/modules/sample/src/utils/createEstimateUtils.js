@@ -17,7 +17,7 @@ export const transformCreateEstimateData = (data)=>{
           "longitude": data.longitude,
           "city": data.city || "od.testing"
         },
-        estimateDetails: data.estimateDetails.map((detail) => ({
+        estimateDetails: (data.estimateDetails || []).map((detail) => ({
           sorId: detail.sorId || "SOR_000364",
           category: detail.category || "SOR",
           name: detail.name || "Honey Comb brick masonry using 25cm x 12cm x 8cm KB brick having crushing strength not less than 75 Kg / cm2 in cement mortar (1:4) and plastered with 16mm thick CM(1:6) including white washing two coats etc. complete.",
