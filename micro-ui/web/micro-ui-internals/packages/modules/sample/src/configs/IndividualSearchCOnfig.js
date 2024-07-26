@@ -6,7 +6,7 @@ const defaultSearchValues = {
 export const searchconfig = () => 
 {
   return {
-    label: "Individual Search",
+    label: "Individual Search label",
     type: "search",
     apiDetails: {
       serviceName: "/individual/v1/_search",
@@ -63,6 +63,15 @@ export const searchconfig = () =>
                 name: "individualId",
               },
             },
+            // {
+            //   label: "Address ",
+            //   isMandatory: false,
+            //   type: "text",
+            //   disable: false,
+            //   populators: { 
+            //     name: "address",
+            //   },
+            // },
           ],
         },
 

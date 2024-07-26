@@ -52,7 +52,14 @@ const SampleCard = () => {
         label: t("Individual View Details"),
         link: `/${window?.contextPath}/employee/sample/individual-details-view`,
       },
-      
+      {
+        label: t("Create Contract"),
+        link: `/${window?.contextPath}/employee/sample/create-contract`,
+      },
+      {
+        label: t("Search Contract"),
+        link: `/${window?.contextPath}/employee/sample/search-contract`,
+      }
     ],
   };
 

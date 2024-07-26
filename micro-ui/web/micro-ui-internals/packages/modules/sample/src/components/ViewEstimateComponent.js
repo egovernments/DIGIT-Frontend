@@ -14,7 +14,7 @@ const ViewEstimateComponent = ({editApplicationNumber,...props}) => {
     console.log("tenantId",tenantId);
     console.log("estimateNumber",estimateNumber);
     const businessService = Digit?.Customizations?.["commonUiConfig"]?.getBusinessService("estimate");
-
+    
     const { isLoading, data: applicationDetails, isError } = Digit.Hooks.estimates.useEstimateDetailsScreen(t, tenantId, estimateNumber,{}, isStateChanged)  
     
     useEffect(()=>{

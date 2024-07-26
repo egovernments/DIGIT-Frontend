@@ -15,6 +15,10 @@ import SampleComponents from "./SampleComponents";
 import PanelCardResponse from "./PanelCardResponse";
 import TabIndividualSearch from "./TabIndividualSearch";
 import IndividualViewDetails from "./IndividualViewDetails";
+import CreateContract from"./CreateContract";
+import SearchContract from"./SearchContract";
+// import ViewContractDetails from "./ViewContractDetails";
+import ViewContract from "../../configs/ViewContract"
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -53,6 +57,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
         <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
         <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
+        <PrivateRoute path={`${path}/create-contract`} component={() => <CreateContract />} />
+        <PrivateRoute path={`${path}/search-contract`} component={() => <SearchContract />} />
+        <PrivateRoute path={`${path}/view-contract`} component={() => <ViewContract/>} />
       </AppContainer>
     </Switch>
   );
