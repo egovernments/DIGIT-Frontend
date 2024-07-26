@@ -2,9 +2,9 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
-import { Button, Card, Dropdown, FieldV1, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, DustbinIcon, FieldV1, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => {
+const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // const { t } = useTranslation();
@@ -65,8 +65,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
 
   return (
     <Card className={"boundary-with-container"}>
-      <Header className="header">{t(`${project?.address?.boundary}`)}</Header>
-      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Header className="header">{t(`${project?.address?.boundary}`)}</Header>
+        {canDelete ? (
+          <div className="delete-resource-icon" onClick={onDeleteCard}>
+            <DustbinIcon />
+          </div>
+        ) : null}
+      </div>
+      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
           <span className="mandatory-date">*</span>
@@ -104,9 +111,10 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
                 ? {}
                 : {
                     validation: {
-                      min: startDate
-                        ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
-                        : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
+                      min:
+                        startDate >= today
+                          ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
+                          : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
                     },
                   }
             }
