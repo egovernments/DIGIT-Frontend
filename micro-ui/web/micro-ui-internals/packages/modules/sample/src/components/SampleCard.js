@@ -52,6 +52,22 @@ const SampleCard = () => {
         label: t("Individual View Details"),
         link: `/${window?.contextPath}/employee/sample/individual-details-view`,
       },
+      {
+        label: t("Estimate Create"),
+        link: `/${window?.contextPath}/employee/sample/estimate-create`,
+      },
+      {
+        label: t("Estimate Search"),
+        link: `/${window?.contextPath}/employee/sample/estimate-search`,
+      },
+      // {
+      //   label: t("Estimate View Details"),
+      //   link: `/${window?.contextPath}/employee/sample/estimate-details-view`,
+      // },
+      // {
+      //   label: t("Contract Create"),
+      //   link: `/${window?.contextPath}/employee/sample/create-contract`,
+      // },
       
     ],
   };

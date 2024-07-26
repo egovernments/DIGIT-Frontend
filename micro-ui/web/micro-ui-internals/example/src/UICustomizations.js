@@ -183,6 +183,16 @@ export const UICustomizations = {
     }
   },
 
+  // SearchEstimateConfig : {
+  //   preprocess: (data) => {
+  //     console.log(data);
+  //   },
+  //   additionalCustomizations: (row, key, column, value, t, searchResult) => {
+  //     console.log(row, key, column, value, t);
+  //   }
+
+  // },
+
   AttendanceInboxConfig: {
     preProcess: (data) => {
       //set tenantId
