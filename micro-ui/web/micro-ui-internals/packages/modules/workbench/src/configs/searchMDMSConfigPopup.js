@@ -18,6 +18,7 @@ export const Config = {
         filterFormJsonPath: "requestBody.MdmsCriteria.custom",
         searchFormJsonPath: "requestBody.MdmsCriteria.custom"
     },
+    customHook:"useMDMSPopupSearch",
     sections: {
         search: {
             uiConfig: {
