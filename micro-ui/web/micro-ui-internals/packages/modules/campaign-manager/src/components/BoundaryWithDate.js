@@ -67,11 +67,11 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
     <Card className={"boundary-with-container"}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Header className="header">{t(`${project?.address?.boundary}`)}</Header>
-        {canDelete ? (
+        {canDelete && (
           <div className="delete-resource-icon" onClick={onDeleteCard}>
             <DustbinIcon />
           </div>
-        ) : null}
+        )}
       </div>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
