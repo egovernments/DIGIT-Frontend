@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useReducer, useMemo, act } from "react";
+import React, { useState, useEffect, Fragment, useReducer, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
