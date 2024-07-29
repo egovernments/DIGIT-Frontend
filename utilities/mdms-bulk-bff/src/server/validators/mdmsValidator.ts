@@ -43,7 +43,7 @@ async function validateMdmsSchema(request: any) {
             throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${schemaCode} not found`);
         }
         if (!(request.originalUrl.includes('/v1/mdmsbulk/generatejson') || request.originalUrl.includes('/v1/mdmsbulk/createfromjson'))) {
-            validateSchemaCompatibility(schema?.definition);
+            validateSchemaCompatibility(schema?.definition, request);
         }
         var schemaDef = schema?.definition;
         addXrefToRequire(schemaDef);
@@ -62,13 +62,13 @@ const isComplexType = (type: string | string[]): boolean => {
     return type === "object" || type === "array";
 };
 
-function validateSchemaCompatibility(schemaDefination: any) {
+function validateSchemaCompatibility(schemaDefination: any, request: any) {
     // Check each property type in the schema
     const properties = schemaDefination.properties;
     for (const propName in properties) {
         const prop = properties[propName];
         if (isComplexType(prop.type)) {
-            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Schema ${propName} have complex types`);
+            throwError("MDMS", 400, "INVALID_MDMS_SCHEMA", `Property ${propName} of the schema ${request.query.schemaCode} have complex types`);
         }
     }
 }
