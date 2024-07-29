@@ -28,7 +28,7 @@ const LanguageSelection = () => {
   if (isLoading) return <Loader/>;
   return (
     <Background>
-      <Card className="bannerCard removeBottomMargin">
+      <Card className={"bannerCard removeBottomMargin languageSelection"}>
         <div className="bannerHeader">
           <img className="bannerLogo" src={stateInfo?.logoUrl} alt="Digit" />
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
