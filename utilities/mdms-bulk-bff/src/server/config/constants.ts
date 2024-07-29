@@ -9,7 +9,7 @@ export const mdmsProcessStatus = {
     partiallyFailed: "partiallyFailed"
 }
 
-export const sheetDataStatus = {
+export const dataStatus = {
     invalid: "INVALID",
     created: "CREATED",
     failed: "FAILED"

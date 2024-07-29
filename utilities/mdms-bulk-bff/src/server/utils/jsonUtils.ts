@@ -2,6 +2,8 @@ import config from "../config";
 import { httpRequest } from "./request";
 import { throwError } from "./errorUtils";
 import FormData from "form-data"; // Import FormData for handling multipart/form-data requests
+import { logger } from "./logger";
+import { dataStatus } from "../config/constants";
 
 export async function createAndUploadJSONFile(
     buffer: Buffer,
@@ -37,4 +39,66 @@ export async function createAndUploadJSONFile(
     }
 
     return responseData; // Return the response data
+}
+
+export const getJsonFromFileURL = async (fileUrl: any) => {
+    // Define headers for HTTP request
+    const headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+    };
+
+    logger.info("Loading JSON file based on fileUrl");
+
+    try {
+        // Make HTTP request to retrieve JSON file
+        const responseFile = await httpRequest(
+            fileUrl,
+            null,
+            {},
+            "get",
+            "arraybuffer",
+            headers
+        );
+        logger.info("Received the JSON file response");
+
+        const jsonData = Buffer.from(responseFile).toString('utf-8');
+
+        // Return the parsed JSON data
+        return JSON.parse(jsonData);
+    } catch (error) {
+        logger.error("Error retrieving or parsing JSON file", error);
+        throwError(
+            "FILE",
+            400,
+            "INVALID_FILE",
+            `Failed to retrieve or parse JSON file from "${fileUrl}".`
+        );
+        return null;
+    }
+};
+
+export async function addErrorsToJSON(datas: any, errors: any, errorStatus: any) {
+    if (errors) {
+        for (const data of datas) {
+            const indexNumber = data?.["!index#number!"];
+            if (errors[indexNumber]) {
+                data["!status!"] = errorStatus;
+                data["!errors!"] = errors[indexNumber];
+                if (errorStatus == dataStatus.created) {
+                    delete data["!errors!"];
+                }
+            } else if (errorStatus != dataStatus.created) {
+                delete data["!status!"];
+                delete data["!errors!"];
+            }
+        }
+    }
+}
+
+export function putIndexNumber(dataToCreate: any) {
+    for (let i = 0; i < dataToCreate.length; i++) {
+        const data = dataToCreate[i];
+        data["!index#number!"] = i;
+    }
 }
