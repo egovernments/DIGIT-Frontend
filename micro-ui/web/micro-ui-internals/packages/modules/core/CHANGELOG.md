@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.8
+- Fixed header logout issue
+
 ## 1.8.2-beta.7
 - Added privacy component in mdms
 
