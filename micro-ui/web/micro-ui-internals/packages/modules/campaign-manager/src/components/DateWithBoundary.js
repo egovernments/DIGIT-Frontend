@@ -292,7 +292,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
           <BoundaryWithDate
             project={item}
             dateReducerDispatch={dateReducerDispatch}
-            canDelete={dateReducer?.length > 1 ? true : false}
+            canDelete={dateReducer?.length > 1}
             onDeleteCard={() => onDeleteBoundary(item, index)}
           />
         ))}
