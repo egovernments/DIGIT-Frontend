@@ -90,7 +90,9 @@ export async function addErrorsToJSON(datas: any, errors: any, errorStatus: any)
                     delete data["!errors!"];
                 }
             } else if (errorStatus != dataStatus.created) {
-                delete data["!status!"];
+                if (data?.["!status!"] != dataStatus.created) {
+                    delete data["!status!"];
+                }
                 delete data["!errors!"];
             }
         }
