@@ -89,14 +89,16 @@ async function validateJSONData(request: any) {
     const fileUrl = await getFileUrl(request);
     const jsonData: any = await getJsonFromFileURL(fileUrl);
     let dataToCreate = jsonData?.[request.query.schemaCode];
-    putIndexNumber(dataToCreate);
-    dataToCreate = dataToCreate.filter((data: any) => data?.["!status!"] != dataStatus.created);
-    if (dataToCreate.length === 0) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", `There is no data in the json file to create`);
+    if (dataToCreate && Array.isArray(dataToCreate) && dataToCreate.length > 0) {
+        putIndexNumber(dataToCreate);
+        dataToCreate = dataToCreate.filter((data: any) => data?.["!status!"] != dataStatus.created);
+        const schema = request.body.currentSchema;
+        validateBodyViaSchemaOfJSONData(schema, dataToCreate);
+        request.body.dataToCreate = dataToCreate;
     }
-    const schema = request.body.currentSchema;
-    validateBodyViaSchemaOfJSONData(schema, dataToCreate);
-    request.body.dataToCreate = dataToCreate;
+    else {
+        throwError("COMMON", 400, "VALIDATION_ERROR", `There is no data in the json file to create or you have misspelled the schema code`);
+    }
 }
 
 export async function validateGenerateMdmsTemplateRequest(request: any) {
