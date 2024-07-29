@@ -6,3 +6,5 @@ utilities/project-factory/node_modules/*
 utilities/egov-bff/node_modules/*
 utilities/
 /micro-frontends/web
+
+/micro-frontends/ai-generated/node_modules/

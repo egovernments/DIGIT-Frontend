@@ -7,13 +7,12 @@
     ],
     "scripts": {
       "bootstrap": "lerna bootstrap",
-      "start:host": "npm --prefix packages/host-app start",
-      "start:remote1": "npm --prefix packages/remote-app1 start",
-      "start:remote2": "npm --prefix packages/remote-app2 start",
-      "start": "npm run start:host && npm run start:remote1 && npm run start:remote2"
+      "start:host": "yarn --cwd packages/host-app start",
+      "start:remote1": "yarn --cwd packages/remote-app1 start",
+      "start:remote2": "yarn --cwd packages/remote-app2 start",
+      "start": "yarn run start:host && yarn run start:remote1 && yarn run start:remote2"
     },
     "devDependencies": {
-      "lerna": "^7.0.0" 
+      "lerna": "^7.0.0"
     }
   }
-  
