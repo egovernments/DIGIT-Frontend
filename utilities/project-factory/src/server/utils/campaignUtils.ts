@@ -17,7 +17,7 @@ import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { searchProjectTypeCampaignService } from "../service/campaignManageService";
 import { validateBoundaryOfResouces } from "../validators/campaignValidators";
 import { getExcelWorkbookFromFileURL, getNewExcelWorkbook, lockTargetFields, updateFontNameToRoboto } from "./excelUtils";
-import { callGenerateIfBoundariesDiffer } from "./generateUtils";
+import { areBoundariesSame, callGenerateIfBoundariesDiffer } from "./generateUtils";
 import { createProcessTracks, persistTrack } from "./processTrackUtils";
 import { generateDynamicTargetHeaders, isDynamicTargetTemplateForProjectType, updateTargetColumnsIfDeliveryConditionsDifferForSMC } from "./targetUtils";
 const _ = require('lodash');
@@ -589,8 +589,13 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
 
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
+    const existingCampaignDetails = request?.body?.ExistingCampaignDetails;
     callGenerateIfBoundariesDiffer(request);
-    updateTargetColumnsIfDeliveryConditionsDifferForSMC(request);
+    if (existingCampaignDetails) {
+        if (areBoundariesSame(existingCampaignDetails?.boundaries, request?.body?.CampaignDetails?.boundaries)) {
+            updateTargetColumnsIfDeliveryConditionsDifferForSMC(request);
+        }
+    }
     const ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
     var updatedInnerCampaignDetails = {}
     enrichInnerCampaignDetails(request, updatedInnerCampaignDetails)
@@ -1838,8 +1843,8 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
-function checkIfSourceIsMicroplan(campaignObject: any): boolean {
-    return campaignObject?.additionalDetails?.source === 'microplan';
+function checkIfSourceIsMicroplan(objectWithAdditionalDetails: any): boolean {
+    return objectWithAdditionalDetails?.additionalDetails?.source === 'microplan';
 }
 
 
