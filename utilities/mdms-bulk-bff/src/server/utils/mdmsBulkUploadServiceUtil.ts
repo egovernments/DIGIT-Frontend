@@ -9,7 +9,7 @@ import { mdmsProcessStatus, dataStatus } from "../config/constants";
 import { getFileUrl } from "./genericUtils";
 import { persistDetailsOnCompletion, persistDetailsOnError } from "./persistUtils";
 import { executeQuery } from "./db";
-import { addErrorsToJSON, createAndUploadJSONFile, getJsonFromFileURL, putIndexNumber } from "./jsonUtils";
+import { addErrorsToJSON, createAndUploadJSONFile, getJsonFromFileURL, putIndexNumber, removeIndexNumber } from "./jsonUtils";
 
 
 export async function generateMdmsTemplate(request: any) {
@@ -291,6 +291,7 @@ async function generateJSONProcessFileAfterCreate(request: any, createError: any
     await addErrorsToJSON(dataFromJsonFile, createError, dataStatus.failed);
     await addErrorsToJSON(dataFromJsonFile, createSuccess, dataStatus.created);
     changeStatus(request, createError, createSuccess)
+    removeIndexNumber(dataFromJsonFile);
     const jsonObject = JSON.stringify({ [request.query.schemaCode]: dataFromJsonFile }, null, 2);
     const buffer = Buffer.from(jsonObject, 'utf-8');
     const fileDetails = await createAndUploadJSONFile(buffer, request);
