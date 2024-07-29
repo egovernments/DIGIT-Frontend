@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.7]
+- Fixed LanguageSelection style.
+
 ## [1.8.2-beta.3] [06-06-2024]
 - added audit history styles
 

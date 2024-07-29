@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.9
+- Added classname for languageselection
+
 ## 1.8.2-beta.8
 - Fixed header logout issue
 
