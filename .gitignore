@@ -8,3 +8,5 @@ utilities/
 /micro-frontends/web
 
 /micro-frontends/ai-generated/node_modules/
+/micro-frontends/single-spa/node_modules/
+/micro-frontends/react-18/node_modules/
