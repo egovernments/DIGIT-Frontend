@@ -843,14 +843,13 @@ async function processCreate(request: any, localizationMap?: any) {
     boundaryBulkUpload(request, localizationMap);
   }
   else {
-    const source = request?.body?.ResourceDetails?.additionalDetails?.source;
     // console.log(`Source is MICROPLAN -->`, source);
     let createAndSearchConfig: any;
     createAndSearchConfig = createAndSearch[type];
     const responseFromCampaignSearch = await getCampaignSearchResponse(request);
     const campaignType = responseFromCampaignSearch?.CampaignDetails[0]?.projectType;
-    if (checkIfSourceIsMicroplan(source)) {
-      logger.info(`Data create Source is MICROPLAN --> ${source}`);
+    if (checkIfSourceIsMicroplan(request?.body?.ResourceDetails)) {
+      logger.info(`Data create Source is MICROPLAN`);
       if (createAndSearchConfig?.parseArrayConfig?.parseLogic) {
         createAndSearchConfig.parseArrayConfig.parseLogic = createAndSearchConfig.parseArrayConfig.parseLogic.map(
           (item: any) => {

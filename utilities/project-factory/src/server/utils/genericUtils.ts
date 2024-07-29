@@ -465,7 +465,7 @@ function setDropdownFromSchema(request: any, schema: any, localizationMap?: { [k
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.source);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
   let schema;
   if (isSourceMicroplan) {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan");
@@ -1108,7 +1108,7 @@ function getDifferentDistrictTabs(boundaryData: any, differentTabsBasedOnLevel: 
 async function getConfigurableColumnHeadersFromSchemaForTargetSheet(request: any, hierarchy: any, boundaryData: any, differentTabsBasedOnLevel: any, campaignObject: any, localizationMap?: any) {
   const districtIndex = hierarchy.indexOf(differentTabsBasedOnLevel);
   let headers: any;
-  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
   if (isSourceMicroplan) {
     logger.info(`Source is Microplan.`);
     headers = getLocalizedHeaders(hierarchy, localizationMap);
@@ -1127,7 +1127,7 @@ async function getMdmsDataBasedOnCampaignType(request: any, localizationMap?: an
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
   const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
   let campaignType = campaignObject.projectType;
-  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
   campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
   const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
   return mdmsResponse;

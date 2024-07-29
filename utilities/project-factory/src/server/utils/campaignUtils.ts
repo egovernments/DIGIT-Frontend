@@ -1403,7 +1403,7 @@ async function appendSheetsToWorkbook(request: any, boundaryData: any[], differe
         const [mainSheetData, uniqueDistrictsForMainSheet, districtLevelRowBoundaryCodeMap] = createBoundaryDataMainSheet(request, boundaryData, differentTabsBasedOnLevel, hierarchy, localizationMap)
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
         const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
-        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
         if (!(isSourceMicroplan)) {
             const mainSheet = workbook.addWorksheet(getLocalizedName(getBoundaryTabName(), localizationMap));
             const columnWidths = Array(12).fill(30);
@@ -1782,7 +1782,7 @@ const getConfigurableColumnHeadersBasedOnCampaignType = async (request: any, loc
         const responseFromCampaignSearch = await getCampaignSearchResponse(request);
         const campaignObject = responseFromCampaignSearch?.CampaignDetails?.[0];
         let campaignType = campaignObject?.projectType;
-        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject?.additionalDetails?.source);
+        const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
         campaignType = (isSourceMicroplan) ? `${config?.prefixForMicroplanCampaigns}-${campaignType}` : campaignType;
         const mdmsResponse = await callMdmsTypeSchema(request, request?.query?.tenantId || request?.body?.ResourceDetails?.tenantId, request?.query?.type || request?.body?.ResourceDetails?.type, campaignType)
         if (!mdmsResponse || mdmsResponse?.columns.length === 0) {
@@ -1843,8 +1843,8 @@ async function getBoundaryOnWhichWeSplit(request: any) {
 }
 
 
-function checkIfSourceIsMicroplan(inputString: any): boolean {
-    return inputString === 'microplan';
+function checkIfSourceIsMicroplan(objectWithAdditionalDetails: any): boolean {
+    return objectWithAdditionalDetails?.additionalDetails?.source === 'microplan';
 }
 
 
