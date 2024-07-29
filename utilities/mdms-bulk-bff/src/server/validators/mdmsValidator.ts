@@ -92,6 +92,9 @@ async function validateJSONData(request: any) {
     if (dataToCreate && Array.isArray(dataToCreate) && dataToCreate.length > 0) {
         putIndexNumber(dataToCreate);
         dataToCreate = dataToCreate.filter((data: any) => data?.["!status!"] != dataStatus.created);
+        if (dataToCreate.length <= 0) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", `There is no data in the json file to create`);
+        }
         const schema = request.body.currentSchema;
         validateBodyViaSchemaOfJSONData(schema, dataToCreate);
         request.body.dataToCreate = dataToCreate;
