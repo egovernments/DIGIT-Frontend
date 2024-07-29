@@ -1201,9 +1201,12 @@ async function callMdmsTypeSchema(
   request: any,
   tenantId: string,
   type: any,
-  campaignType = "all"
+  campaignType: string = "all",
+  additionalParam?: string
 ) {
   const { RequestInfo = {} } = request?.body || {};
+  const schemaCode = additionalParam && additionalParam.trim() !== "" ? additionalParam : "HCM-ADMIN-CONSOLE.adminSchema";
+
   const requestBody = {
     RequestInfo,
     MdmsCriteria: {
@@ -1211,7 +1214,7 @@ async function callMdmsTypeSchema(
       uniqueIdentifiers: [
         `${type}.${campaignType}`
       ],
-      schemaCode: "HCM-ADMIN-CONSOLE.adminSchema"
+      schemaCode: schemaCode
     }
   };
   const url = config.host.mdmsV2 + config.paths.mdms_v2_search;

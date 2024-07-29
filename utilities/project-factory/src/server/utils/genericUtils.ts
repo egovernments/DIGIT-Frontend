@@ -584,7 +584,7 @@ function getLocalizedHeaders(headers: any, localizationMap?: { [key: string]: st
 }
 
 function getLocalizedHeadersForMicroplan(responseFromCampaignSearch: any, headers: any, localizationMap?: { [key: string]: string }) {
-  
+
   const projectType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
 
   headers = headers.map((header: string) => {
