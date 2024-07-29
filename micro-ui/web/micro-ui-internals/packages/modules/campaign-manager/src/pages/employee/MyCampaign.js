@@ -27,10 +27,7 @@ const MyCampaign = () => {
     myCampaignConfig?.myCampaignConfig?.map((configItem, index) => ({ key: index, label: configItem.label, active: index === 0 ? true : false }))
   );
 
-
   const searchParams = new URLSearchParams(location.search);
-
-
 
   const onTabChange = (n) => {
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
@@ -41,10 +38,6 @@ const MyCampaign = () => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   }, []);
-
-  // useEffect(() => {
-  //   console.log("ppp");
-  // }, [session , Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -71,19 +64,20 @@ const MyCampaign = () => {
     const currentTab = tabData?.find((i) => i?.active === true)?.label;
     switch (currentTab) {
       case "CAMPAIGN_ONGOING":
-        history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
+        history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`);
         break;
       case "CAMPAIGN_COMPLETED":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
         break;
       case "CAMPAIGN_UPCOMING":
-        const changeDates = row?.status === "created" && changeDatesEnabled ? true : false;
         history.push(
-          `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&changeDates=${changeDates}`
+          `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}&actionBar=${true}`
         );
         break;
       case "CAMPAIGN_DRAFTS":
-        history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`);
+        history.push(
+          `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=${true}&fetchBoundary=${true}&draftBoundary=${true}`
+        );
         break;
       case "CAMPAIGN_FAILED":
         history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&preview=${true}&action=${false}`);
@@ -109,7 +103,6 @@ const MyCampaign = () => {
           }}
         ></InboxSearchComposer>
       </div>
-      
     </React.Fragment>
   );
 };

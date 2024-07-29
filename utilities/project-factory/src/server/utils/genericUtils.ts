@@ -361,7 +361,7 @@ async function getFinalUpdatedResponse(result: any, responseData: any, request: 
 
 
 
-async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResource: any, request: any, filteredBoundary?: any) {
+async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResource: any, request: any, enableCaching = false, filteredBoundary?: any) {
   try {
     const { type, hierarchyType } = request?.query;
     generatedResource = { generatedResource: newEntryResponse }
@@ -374,7 +374,7 @@ async function fullProcessFlowForNewEntry(newEntryResponse: any, generatedResour
     if (type === 'boundary') {
       // get boundary data from boundary relationship search api
       logger.info("Generating Boundary Data")
-      const boundaryDataSheetGeneratedBeforeDifferentTabSeparation = await getBoundaryDataService(request);
+      const boundaryDataSheetGeneratedBeforeDifferentTabSeparation = await getBoundaryDataService(request,enableCaching);
       logger.info(`Boundary data generated successfully: ${JSON.stringify(boundaryDataSheetGeneratedBeforeDifferentTabSeparation)}`);
       // get boundary sheet data after being generated
       logger.info("generating different tabs logic ")
@@ -527,13 +527,15 @@ async function createReadMeSheet(request: any, workbook: any, mainHeader: any, l
   const headerSet = new Set();
 
 
-  const datas = readMeConfig.texts.flatMap((text: any) => {
-    const descriptions = text.descriptions.map((description: any) => {
-      return getLocalizedName(description.text, localizationMap);
+  const datas = readMeConfig.texts
+    .filter((text: any) => text?.inSheet) // Filter out texts with inSheet set to false
+    .flatMap((text: any) => {
+      const descriptions = text.descriptions.map((description: any) => {
+        return getLocalizedName(description.text, localizationMap);
+      });
+      headerSet.add(getLocalizedName(text.header, localizationMap));
+      return [getLocalizedName(text.header, localizationMap), ...descriptions, ""];
     });
-    headerSet.add(getLocalizedName(text.header, localizationMap));
-    return [getLocalizedName(text.header, localizationMap), ...descriptions, "", "", "", ""];
-  });
 
   // Create the worksheet and add the main header
   const worksheet = workbook.addWorksheet(getLocalizedName("HCM_README_SHEETNAME", localizationMap));
@@ -783,9 +785,9 @@ async function processGenerateRequest(request: any, localizationMap?: { [key: st
   }
 }
 
-async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, filteredBoundary?: any) {
+async function processGenerateForNew(request: any, generatedResource: any, newEntryResponse: any, enableCaching = false, filteredBoundary?: any) {
   request.body.generatedResource = newEntryResponse;
-  await fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, filteredBoundary);
+  await fullProcessFlowForNewEntry(newEntryResponse, generatedResource, request, enableCaching, filteredBoundary);
   return request.body.generatedResource;
 }
 
@@ -805,7 +807,7 @@ function handleGenerateError(newEntryResponse: any, generatedResource: any, erro
   produceModifiedMessages(generatedResource, updateGeneratedResourceTopic);
 }
 
-async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, filteredBoundary?: any) {
+async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryResponse: any, responseData: any, request: any, enableCaching = false, filteredBoundary?: any) {
   const { forceUpdate } = request.query;
   const forceUpdateBool: boolean = forceUpdate === 'true';
   let generatedResource: any;
@@ -816,7 +818,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
     request.body.generatedResource = oldEntryResponse;
   }
   if (responseData.length === 0 || forceUpdateBool) {
-    processGenerateForNew(request, generatedResource, newEntryResponse, filteredBoundary)
+    processGenerateForNew(request, generatedResource, newEntryResponse, enableCaching, filteredBoundary)
   }
   else {
     request.body.generatedResource = responseData
@@ -825,7 +827,7 @@ async function updateAndPersistGenerateRequest(newEntryResponse: any, oldEntryRe
 /* 
 
 */
-async function processGenerate(request: any, filteredBoundary?: any) {
+async function processGenerate(request: any, enableCaching = false, filteredBoundary?: any) {
   // fetch the data from db  to check any request already exists
   const responseData = await searchGeneratedResources(request);
   // modify response from db 
@@ -835,7 +837,7 @@ async function processGenerate(request: any, filteredBoundary?: any) {
   // make old data status as expired
   const oldEntryResponse = await updateExistingResourceExpired(modifiedResponse, request);
   // generate data 
-  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, filteredBoundary);
+  await updateAndPersistGenerateRequest(newEntryResponse, oldEntryResponse, responseData, request, enableCaching, filteredBoundary);
 }
 /*
 TODO add comments @nitish-egov
