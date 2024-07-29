@@ -63,15 +63,16 @@ export const getJsonFromFileURL = async (fileUrl: any) => {
         logger.info("Received the JSON file response");
 
         const jsonData = Buffer.from(responseFile).toString('utf-8');
+        const jsonObject = JSON.parse(jsonData);
 
         // Return the parsed JSON data
-        return JSON.parse(jsonData);
+        return jsonObject;
     } catch (error) {
         logger.error("Error retrieving or parsing JSON file", error);
         throwError(
             "FILE",
             400,
-            "INVALID_FILE",
+            "INVALID_FILE_ERROR",
             `Failed to retrieve or parse JSON file from "${fileUrl}".`
         );
         return null;
@@ -100,5 +101,11 @@ export function putIndexNumber(dataToCreate: any) {
     for (let i = 0; i < dataToCreate.length; i++) {
         const data = dataToCreate[i];
         data["!index#number!"] = i;
+    }
+}
+
+export function removeIndexNumber(dataToCreate: any) {
+    for (const data of dataToCreate) {
+        delete data["!index#number!"];
     }
 }
