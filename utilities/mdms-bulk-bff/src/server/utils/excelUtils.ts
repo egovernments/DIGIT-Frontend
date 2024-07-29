@@ -367,8 +367,16 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
       }
       firstEmptyColIndex = colNumber + 1;
     });
+    let colIndexes = {
+      statusColIndex: statusColIndex,
+      errorsColIndex: errorsColIndex,
+      firstEmptyColIndex: firstEmptyColIndex
+    }
 
-    manageExistenceOfStatusAndErrorCol(worksheet, headerRow, statusColIndex, errorsColIndex, firstEmptyColIndex);
+    manageExistenceOfStatusAndErrorCol(worksheet, headerRow, colIndexes);
+    statusColIndex = colIndexes.statusColIndex;
+    errorsColIndex = colIndexes.errorsColIndex;
+    firstEmptyColIndex = colIndexes.firstEmptyColIndex;
 
     for (const data of request?.body?.dataToCreate) {
       const rowNumber = data?.["!row#number!"];
@@ -393,10 +401,14 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
   }
 }
 
-function manageExistenceOfStatusAndErrorCol(worksheet: any, headerRow: any, statusColIndex: number | undefined, errorsColIndex: number | undefined, firstEmptyColIndex: number | undefined) {
-  if (statusColIndex === undefined || statusColIndex === undefined) {
+function manageExistenceOfStatusAndErrorCol(worksheet: any, headerRow: any, colIndexes: any) {
+  // Destructure the properties from the colIndexes object
+  let { statusColIndex, errorsColIndex, firstEmptyColIndex } = colIndexes;
+
+  // Update statusColIndex if it is undefined
+  if (statusColIndex === undefined) {
     statusColIndex = firstEmptyColIndex;
-    var cell = headerRow.getCell(statusColIndex);
+    const cell = headerRow.getCell(statusColIndex);
     cell.value = '!status!';
     cell.fill = {
       type: 'pattern',
@@ -408,9 +420,10 @@ function manageExistenceOfStatusAndErrorCol(worksheet: any, headerRow: any, stat
     headerRow.commit();
   }
 
+  // Update errorsColIndex if it is undefined
   if (errorsColIndex === undefined && firstEmptyColIndex !== undefined) {
     errorsColIndex = firstEmptyColIndex + 1;
-    var cell = headerRow.getCell(errorsColIndex);
+    const cell = headerRow.getCell(errorsColIndex);
     cell.value = '!errors!';
     cell.fill = {
       type: 'pattern',
@@ -421,7 +434,13 @@ function manageExistenceOfStatusAndErrorCol(worksheet: any, headerRow: any, stat
     worksheet.getColumn(errorsColIndex).width = 40;
     headerRow.commit();
   }
+
+  // Directly update the properties of the passed object
+  colIndexes.statusColIndex = statusColIndex;
+  colIndexes.errorsColIndex = errorsColIndex;
+  colIndexes.firstEmptyColIndex = firstEmptyColIndex;
 }
+
 
 
 export async function formatProcessedSheet(worksheet: any) {
