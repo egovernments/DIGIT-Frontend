@@ -154,9 +154,8 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
-    if (showToast) {
-      setTimeout(() => setShowToast(null), 5000);
-    }
+    const timer = showToast && setTimeout(() => setShowToast(null), 5000);
+    return () => clearTimeout(timer);
   }, [showToast]);
   //hierarchy level
   useEffect(() => {
