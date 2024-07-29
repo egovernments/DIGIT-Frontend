@@ -1,4 +1,4 @@
-import { sheetDataStatus } from "../config/constants";
+import { dataStatus } from "../config/constants";
 import config from "../config";
 import { throwError } from "./errorUtils";
 import { logger } from "./logger";
@@ -131,6 +131,17 @@ export const getSheetData = async (
   const jsonData = getJsonData(sheetData, getRow);
   return jsonData;
 };
+
+// export const getJSONData = async (
+//   fileUrl: string,
+//   getIndex = false
+// ) => {
+//   const workbook: any = await (fileUrl);
+//   const worksheet: any = workbook.getWorksheet(sheetName);
+//   const sheetData = getSheetDataFromWorksheet(worksheet);
+//   const jsonData = getJsonData(sheetData, getRow);
+//   return jsonData;
+// };
 
 
 export const getNewExcelWorkbook = () => {
@@ -369,7 +380,7 @@ export async function addErrorsToSheet(request: any, worksheet: any, errors: any
           row.getCell(statusColIndex).value = errorStatus;
           row.getCell(errorsColIndex).value = (errors[rowNumber] as string[]).join(', ');
           row.commit();
-        } else if (errorStatus != sheetDataStatus.created) {
+        } else if (errorStatus != dataStatus.created) {
           console.log(`No errors for row ${rowNumber}. Clearing values.`);
           row.getCell(statusColIndex).value = '';
           row.getCell(errorsColIndex).value = '';
