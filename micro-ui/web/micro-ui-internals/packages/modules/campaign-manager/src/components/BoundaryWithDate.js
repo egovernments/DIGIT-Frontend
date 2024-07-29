@@ -83,7 +83,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             withoutLabel={true}
             type="date"
             value={startDate}
-            nonEditable={startDate?.length > 0 && today >= startDate ? true : false}
+            nonEditable={startDate?.length > 0 && today > startDate ? true : false}
             placeholder={t("HCM_START_DATE")}
             populators={
               today >= startDate
@@ -104,7 +104,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             withoutLabel={true}
             type="date"
             value={endDate}
-            nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
+            nonEditable={endDate?.length > 0 && today > endDate ? true : false}
             placeholder={t("HCM_END_DATE")}
             populators={{
               validation: {
@@ -135,7 +135,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                 <FieldV1
                   withoutLabel={true}
                   type="date"
-                  nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
+                  nonEditable={item?.startDate?.length > 0 && today > item?.startDate ? true : false}
                   value={item?.startDate}
                   placeholder={t("HCM_START_DATE")}
                   populators={
@@ -166,7 +166,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   withoutLabel={true}
                   type="date"
                   value={item?.endDate}
-                  nonEditable={item?.endDate?.length > 0 && today >= item?.endDate && today >= cycleDates?.[index + 1]?.startDate ? true : false}
+                  nonEditable={item?.endDate?.length > 0 && today > item?.endDate && today > cycleDates?.[index + 1]?.startDate ? true : false}
                   placeholder={t("HCM_END_DATE")}
                   populators={{
                     validation: {
