@@ -349,6 +349,7 @@ async function makeErrorJSON(request: any) {
     putIndexNumber(dataFromJsonFile);
     await addErrorsToJSON(dataFromJsonFile, request.body.errors, dataStatus.invalid);
     if (Object.keys(request?.body?.errors).length > 0) request.body.mdmsDetails.status = mdmsProcessStatus.invalid;
+    removeIndexNumber(dataFromJsonFile);
     const jsonObject = JSON.stringify({ [request.query.schemaCode]: dataFromJsonFile }, null, 2);
     const buffer = Buffer.from(jsonObject, 'utf-8');
     const fileDetails = await createAndUploadJSONFile(buffer, request);
