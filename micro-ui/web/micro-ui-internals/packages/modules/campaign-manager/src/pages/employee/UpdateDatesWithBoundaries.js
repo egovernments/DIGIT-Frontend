@@ -66,7 +66,7 @@ function UpdateDatesWithBoundaries() {
     }
     let isValid = checkValid(formData);
     if (!isValid) {
-      setShowToast({ isError: true, label: "MANDATORY_FIELDS_MISSING" });
+      setShowToast({ isError: true, label: "UPDATE_DATE_MANDATORY_FIELDS_MISSING" });
       return;
     }
     setShowPopUp(formData);
