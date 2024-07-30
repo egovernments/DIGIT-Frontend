@@ -32,9 +32,41 @@ function UpdateDatesWithBoundaries() {
     }
   }, [showToast]);
 
+  const checkValid = (data) => {
+    if (DateWithBoundary) {
+      const temp = data?.dateWithBoundary;
+      const allCycleDateValid = temp
+        .map((i) => i.additionalDetails.projectType.cycles.every((j) => j.startDate && j.endDate))
+        .every((k) => k === true);
+      const allDateValid = temp.every((i) => i.startDate && i.endDate);
+
+      if (allCycleDateValid && allDateValid) {
+        return true;
+      }
+      return false;
+    } else if (!DateWithBoundary) {
+      const cycleDateValid = data?.dateAndCycle?.additionalDetails?.projectType?.cycles?.every((item) => item?.startDate && item?.endDate);
+      if (data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate && cycleDateValid) {
+        return true;
+      }
+      return false;
+    }
+  };
   const onSubmit = async (formData) => {
-    if (!formData?.dateWithBoundary || formData?.dateWithBoundary?.length === 0) {
-      setShowToast({ isError: true, label: "SELECT_BOUNDARY_LEVEL_ERROR" });
+    if (DateWithBoundary) {
+      if (!formData?.dateWithBoundary || !Array.isArray(formData?.dateWithBoundary) || formData?.dateWithBoundary?.length === 0) {
+        setShowToast({ isError: true, label: "SELECT_BOUNDARY_LEVEL_ERROR" });
+        return;
+      }
+    } else if (!DateWithBoundary) {
+      if (!formData?.dateAndCycle) {
+        setShowToast({ isError: true, label: "SELECT_DATE_CHANGE_MANDATORY_ERROR" });
+        return;
+      }
+    }
+    let isValid = checkValid(formData);
+    if (!isValid) {
+      setShowToast({ isError: true, label: "MANDATORY_FIELDS_MISSING" });
       return;
     }
     setShowPopUp(formData);
