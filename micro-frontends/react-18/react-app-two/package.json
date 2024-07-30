@@ -1,7 +1,7 @@
 {
-  "name": "@app/react-app-one",
+  "name": "@app/react-app-two",
   "scripts": {
-    "start": "webpack serve --port 8081",
+    "start": "webpack serve --port 8082",
     "start:standalone": "webpack serve --env standalone",
     "build": "concurrently npm:build:*",
     "build:webpack": "webpack --mode=production",
