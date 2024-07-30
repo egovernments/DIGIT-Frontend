@@ -18,13 +18,18 @@
   -->
 
   <main>
-    <route default>
+    <!-- <route default>
       <application name="@app/react-app"></application>
       <application name="@app/react-app-one"></application>
       
-    </route>
+    </route> -->
+    <route path=":root-tenant">
     <route path="react-app-one">
       <application name="@app/react-app-one"></application>
+    </route>
+    <route path="react-app-two">
+      <application name="@app/react-app"></application>
+    </route>
     </route>
     
   </main>
