@@ -4,7 +4,7 @@ import { Header, InboxSearchComposerV2, Loader } from "@egovernments/digit-ui-re
 import { useHistory } from "react-router-dom";
 import { updateSessionUtils } from "../../utils/updateSessionUtils";
 import { useMyContext } from "../../utils/context";
-import { timeLineOptions } from "../../configs/timeLineOptions.json";
+import { timeLineOptions } from "../../configs/timeLineOptions";
 
 const configs = {
   label: "SAVED_MICROPLANS",
@@ -168,7 +168,7 @@ const SavedMicroplans = () => {
         Digit.SessionStorage.set("microplanData", computedSession);
         Digit.SessionStorage.set("microplanHelperData", {
           ...Digit.SessionStorage.get("microplanHelperData"),
-          activeSteps: timeLineOptions.length - 1,
+          activeSteps: timeLineOptions().length - 1,
         });
 
         setShowLoader(false);

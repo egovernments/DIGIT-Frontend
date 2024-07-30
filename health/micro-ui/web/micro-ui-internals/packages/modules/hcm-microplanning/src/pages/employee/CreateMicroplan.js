@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { timeLineOptions } from "../../configs/timeLineOptions.json";
+import { timeLineOptions } from "../../configs/timeLineOptions";
 import Upload from "../../components/Upload";
 import Hypothesis from "../../components/Hypothesis";
 import RuleEngine from "../../components/RuleEngine";
@@ -121,7 +121,7 @@ const CreateMicroplan = () => {
     if (data?.microplanStatus === "GENERATED") setToRender("success-screen");
     let statusData = {};
     let toCheckCompletenesData = [];
-    timeLineOptions.forEach((item) => {
+    timeLineOptions().forEach((item) => {
       statusData[item.name] = false;
       if (item?.checkForCompleteness) toCheckCompletenesData.push(item.name);
     });
@@ -337,7 +337,7 @@ const CreateMicroplan = () => {
           let currentPage;
           const data = Digit.SessionStorage.get("microplanData");
           if (data?.currentPage) currentPage = data.currentPage;
-          if (currentPage && props?.setCurrentPage && timeLineOptions.find((item) => item.id === currentPage?.id)) {
+          if (currentPage && props?.setCurrentPage && timeLineOptions().find((item) => item.id === currentPage?.id)) {
             props.setCurrentPage(currentPage);
             return true;
           }
@@ -363,7 +363,7 @@ const CreateMicroplan = () => {
       <div className="create-microplan">
         {toRender === "navigator" && (
           <Navigator
-            config={timeLineOptions}
+            config={timeLineOptions()}
             checkDataCompleteness={true}
             stepNavigationActive={true}
             components={components}

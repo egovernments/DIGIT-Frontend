@@ -18,7 +18,7 @@ const MicroplanningCard = () => {
     };
   };
 
-  let links = [generateLink("CREATE_NEW_MICROPLAN", "select-campaign"), generateLink("OPEN_SAVED_MICROPLANS", "saved-microplans")];
+  let links = [generateLink("CREATE_NEW_MICROPLAN", "select-campaign"), generateLink("OPEN_SAVED_MICROPLANS", "saved-microplans"),generateLink("CREATE_NEW_MICROPLAN_V1","create-microplan")];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
