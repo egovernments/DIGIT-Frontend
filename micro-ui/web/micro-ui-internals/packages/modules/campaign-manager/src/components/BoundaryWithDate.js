@@ -2,32 +2,35 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
-import { Button, Card, Dropdown, FieldV1, MultiSelectDropdown } from "@egovernments/digit-ui-components";
+import { Button, Card, Dropdown, DustbinIcon, FieldV1, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => {
+const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDelete, onDeleteCard }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now());
-  const [startDate, setStartDate] = useState(Digit.Utils.date.getDate(project?.startDate)); // Set default start date to today
-  const [endDate, setEndDate] = useState(Digit.Utils.date.getDate(project?.endDate)); // Default end date
+  const [startDate, setStartDate] = useState(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : ""); // Set default start date to today
+  const [endDate, setEndDate] = useState(project?.endDate ? Digit.Utils.date.getDate(project?.endDate) : ""); // Default end date
   const [cycleDates, setCycleDates] = useState(null);
 
   useEffect(() => {
-    setStartDate(Digit.Utils.date.getDate(project?.startDate));
-    setEndDate(Digit.Utils.date.getDate(project?.endDate));
+    setStartDate(project?.startDate ? Digit.Utils.date.getDate(project?.startDate) : "");
+    setEndDate(project?.endDate ? Digit.Utils.date.getDate(project?.endDate) : "");
     if (project?.additionalDetails?.projectType?.cycles?.length > 0) {
       const cycleDateData = project?.additionalDetails?.projectType?.cycles?.map((cycle) => ({
         cycleIndex: cycle.id,
-        startDate: Digit.Utils.date.getDate(cycle.startDate),
-        endDate: Digit.Utils.date.getDate(cycle.endDate),
+        startDate: cycle.startDate ? Digit.Utils.date.getDate(cycle.startDate) : "",
+        endDate: cycle?.endDate ? Digit.Utils.date.getDate(cycle.endDate) : "",
       }));
       setCycleDates(cycleDateData);
     }
   }, [project]);
 
   const handleDateChange = ({ date, endDate = false, cycleDate = false, cycleIndex }) => {
+    if (typeof date === "undefined") {
+      return null;
+    }
     if (!endDate) {
       dateReducerDispatch({
         type: "START_DATE",
@@ -44,6 +47,9 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
   };
 
   const handleCycleDateChange = ({ date, endDate = false, cycleIndex }) => {
+    if (typeof date === "undefined") {
+      return null;
+    }
     if (!endDate) {
       dateReducerDispatch({
         type: "CYCLE_START_DATE",
@@ -54,7 +60,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
       });
     } else {
       dateReducerDispatch({
-        type: "CYCYLE_END_DATE",
+        type: "CYCLE_END_DATE",
         date: date,
         item: project,
         cycleIndex: cycleIndex,
@@ -65,8 +71,15 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
 
   return (
     <Card className={"boundary-with-container"}>
-      <Header className="header">{t(`${project?.address?.boundary}`)}</Header>
-      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Header className="header">{t(`${project?.address?.boundary}`)}</Header>
+        {canDelete && (
+          <div className="delete-resource-icon" onClick={onDeleteCard}>
+            <DustbinIcon />
+          </div>
+        )}
+      </div>
+      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start", gap: "1rem" }}>
         <div className="campaign-dates">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
           <span className="mandatory-date">*</span>
@@ -76,7 +89,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
             withoutLabel={true}
             type="date"
             value={startDate}
-            nonEditable={today >= startDate ? true : false}
+            nonEditable={startDate?.length > 0 && today >= startDate ? true : false}
             placeholder={t("HCM_START_DATE")}
             populators={
               today >= startDate
@@ -89,7 +102,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
             }
             onChange={(d) => {
               handleDateChange({
-                date: d,
+                date: d?.target?.value,
               });
             }}
           />
@@ -97,22 +110,19 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
             withoutLabel={true}
             type="date"
             value={endDate}
-            nonEditable={today >= endDate ? true : false}
+            nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
             placeholder={t("HCM_END_DATE")}
-            populators={
-              today >= endDate
-                ? {}
-                : {
-                    validation: {
-                      min: startDate
-                        ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
-                        : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
-                    },
-                  }
-            }
+            populators={{
+              validation: {
+                min:
+                  startDate >= today
+                    ? Digit.Utils.date.getDate(new Date(startDate).getTime() + 2 * ONE_DAY_IN_MS)
+                    : Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
+              },
+            }}
             onChange={(d) => {
               handleDateChange({
-                date: d,
+                date: d?.target?.value,
                 endDate: true,
               });
             }}
@@ -131,28 +141,26 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
                 <FieldV1
                   withoutLabel={true}
                   type="date"
-                  nonEditable={today >= item?.startDate ? true : false}
+                  nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
                   value={item?.startDate}
                   placeholder={t("HCM_START_DATE")}
-                  populators={
-                    today >= item?.startDate
-                      ? {}
-                      : {
-                          validation: {
-                            min:
-                              index > 0
-                                ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + 86400000)
-                                    ?.toISOString()
-                                    ?.split("T")?.[0]
-                                : startDate,
-                            max: endDate,
-                          },
-                        }
-                  }
+                  populators={{
+                    validation: {
+                      min:
+                        index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
+                          ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
+                              ?.toISOString()
+                              ?.split("T")?.[0]
+                          : today >= startDate
+                          ? today
+                          : startDate,
+                      max: endDate,
+                    },
+                  }}
                   onChange={(d) => {
                     // setStartValidation(true);
                     handleCycleDateChange({
-                      date: d,
+                      date: d?.target?.value,
                       cycleIndex: item?.cycleIndex,
                     });
                   }}
@@ -161,25 +169,23 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch }) => 
                   withoutLabel={true}
                   type="date"
                   value={item?.endDate}
-                  nonEditable={today >= item?.endDate && today >= cycleDates?.[index + 1]?.startDate ? true : false}
+                  nonEditable={item?.endDate?.length > 0 && today >= item?.endDate && today >= cycleDates?.[index + 1]?.startDate ? true : false}
                   placeholder={t("HCM_END_DATE")}
-                  populators={
-                    today >= item?.endDate
-                      ? {}
-                      : {
-                          validation: {
-                            min: cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate
-                              ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + 86400000)
-                                  ?.toISOString()
-                                  ?.split("T")?.[0]
-                              : null,
-                            max: endDate,
-                          },
-                        }
-                  }
+                  populators={{
+                    validation: {
+                      min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
+                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
+                            ?.toISOString()
+                            ?.split("T")?.[0]
+                        : today >= startDate
+                        ? today
+                        : startDate,
+                      max: endDate,
+                    },
+                  }}
                   onChange={(d) => {
                     handleCycleDateChange({
-                      date: d,
+                      date: d?.target?.value,
                       endDate: true,
                       cycleIndex: item?.cycleIndex,
                     });
