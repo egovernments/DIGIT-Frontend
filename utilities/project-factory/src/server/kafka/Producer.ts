@@ -21,7 +21,7 @@ const checkBrokerAvailability = () => {
         } else {
             const brokers = data[1]?.metadata || {};
             const brokerCount = Object.keys(brokers).length;
-            logger.info('Broker count:', brokerCount);
+            logger.info('Broker count:' + String(brokerCount));
 
             if (brokerCount <= 0) {
                 logger.error('No brokers found. Shutting down the service.');
