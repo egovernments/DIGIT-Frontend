@@ -65,7 +65,7 @@ function modifyDeliveryConditions(dataa: any[]): any {
 
 function generateTargetColumnsBasedOnDeliveryConditions(uniqueDeliveryConditions: any, localizationMap?: any) {
     const targetColumnsBasedOnDeliveryConditions: string[] = [];
-    uniqueDeliveryConditions.forEach((str: any, index: number) => {
+    uniqueDeliveryConditions.forEach((str: any) => {
         const uniqueDeliveryConditionsObject = JSON.parse(str); // Parse JSON string into object
         const targetColumnString = createTargetString(uniqueDeliveryConditionsObject, localizationMap);
         targetColumnsBasedOnDeliveryConditions.push(targetColumnString);
