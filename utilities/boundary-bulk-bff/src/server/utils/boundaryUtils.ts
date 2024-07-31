@@ -2,7 +2,7 @@ import config from "../config";
 import { executeQuery } from "./db";
 import { throwError } from "./errorUtils";
 import { addDataToSheet, createAndUploadFile, createExcelSheet, getExcelWorkbookFromFileURL, getNewExcelWorkbook, getSheetData, prepareDataForExcel } from "./excelUtils";
-import { getLocalizedHeaders, getLocalizedName, transformAndCreateLocalisation } from "./localisationUtils";
+import { getLocalizedHeaders, getLocalizedName, localiseAllDatas, transformAndCreateLocalisation } from "./localisationUtils";
 import { getFormattedStringForDebug, logger } from "./logger";
 import { persistEntityCreate, persistError, persistRelationship, processAndPersist } from "./persistUtils";
 import { httpRequest } from "./request";
@@ -695,4 +695,94 @@ function formatRows(rows: any) {
     delete row.createdby;
     delete row.lastmodifiedby;
   });
+}
+
+export async function generateBoundaryFile(request: any) {
+  const allBoundaries = await getBoundariesOfHierarchy(request)
+  const workbook = getNewExcelWorkbook();
+  const localizedBoundaryTab = getLocalizedName(config?.boundary?.boundaryTab, request?.body?.localizationMap);
+  const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
+  addDataToSheet(boundarySheet, allBoundaries, undefined, undefined, true, true);
+  const boundaryFileDetails: any = await createAndUploadFile(workbook, request);
+  enrichRequestWithfFileId(request, boundaryFileDetails?.[0]?.fileStoreId);
+}
+
+function enrichRequestWithfFileId(request: any, fileStoreId: string) {
+  request.body.boundaryDetails = {
+    tenantId: request?.query?.tenantId,
+    hierarchyType: request?.query?.hierarchyType,
+    fileStoreId: fileStoreId
+  }
+}
+
+async function getBoundariesOfHierarchy(request: any) {
+  const { hierarchyType } = request?.query || {};
+  const hierarchy = await getHierarchy(request, request?.query?.tenantId, request?.query?.hierarchyType)
+  const modifiedHierarchy = hierarchy.map(ele => `${hierarchyType}_${ele}`.toUpperCase())
+  logger.info("modifiedHierarchy during generateBoundaryFile " + JSON.stringify(modifiedHierarchy))
+  const headers = [...modifiedHierarchy, config?.boundary?.boundaryCode];
+  const localizedHeaders = getLocalizedHeaders(headers, request?.body?.localizationMap);
+  logger.info("localizedHeaders during generateBoundaryFile " + JSON.stringify(localizedHeaders))
+  const allBoundaries = await getAllBoundaries(request)
+  const allDatas = getAllDatas(allBoundaries)
+  var localisedData = await localiseAllDatas(request, allDatas)
+  formatBoundaryData(allDatas, localisedData, localizedHeaders)
+  return [localizedHeaders, ...localisedData]
+}
+
+function getAllDatas(allBoundaries: any) {
+  let allDatas: string[][] = []
+  for (const data of allBoundaries) {
+    generatePaths(data, [], allDatas)
+  }
+  return allDatas
+}
+
+
+function formatBoundaryData(allDatas: any, localisedData: any, localizedHeaders: any) {
+  const lengthOfHeaders = localizedHeaders.length
+  for (let i = 0; i < localisedData.length; i++) {
+    const localisedDatas = localisedData[i]
+    const unlocalisedDatas = allDatas[i]
+    const dataLength = unlocalisedDatas.length
+    const lastElement = unlocalisedDatas[dataLength - 1];
+    const toAdd = lengthOfHeaders - dataLength - 1;
+    if (toAdd >= 0) {
+      for (let i = 0; i < toAdd; i++) {
+        localisedDatas.push('')
+      }
+      localisedDatas.push(lastElement)
+    }
+  }
+}
+
+function generatePaths(data: any, path: string[] = [], allDatas: string[][]) {
+  const newPath = [...path, data.code];
+  allDatas.push(newPath);
+  if (data.children && data.children.length > 0) {
+    for (let child of data.children) {
+      generatePaths(child, newPath, allDatas);
+    }
+  }
+}
+
+async function getAllBoundaries(request: any) {
+  const hierarchyType = request?.query?.hierarchyType;
+  const requestBody = {
+    RequestInfo: request?.body?.RequestInfo
+  }
+  const requestParams = {
+    tenantId: request?.query?.tenantId,
+    hierarchyType: hierarchyType,
+    "includeChildren": true
+  }
+  const url = `${config.host.boundaryHost}${config.paths.boundaryRelationship}`;
+  const boundaryRelationshipResponse = await httpRequest(url, requestBody, requestParams, undefined, undefined);
+  const boundaryData = boundaryRelationshipResponse?.TenantBoundary?.[0]?.boundary;
+  if (boundaryData) {
+    return boundaryData;
+  }
+  else {
+    return [];
+  }
 }

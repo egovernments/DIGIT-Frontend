@@ -133,3 +133,13 @@ export async function transformAndCreateLocalisation(
     // Call method to create localisation entries
     await createLocalisation(localisationMessages, tenantId, request);
 };
+
+export async function localiseAllDatas(request: any, arrayDatas: any) {
+    const newLocaisationMap: any = await getLocalizedMessagesHandler(request, request?.query?.tenantId, getLocalisationModuleName(request?.query?.hierarchyType));;
+    let localisedArray: any[] = [];
+    arrayDatas.map((data: any) => {
+        const localisedElement = getLocalizedHeaders(data, newLocaisationMap);
+        localisedArray.push(localisedElement);
+    })
+    return localisedArray;
+}

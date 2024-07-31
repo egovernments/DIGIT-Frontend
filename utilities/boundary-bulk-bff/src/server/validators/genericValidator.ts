@@ -17,6 +17,11 @@ export function validateBodyViaSchema(schema: any, objectData: any) {
                 const dataPath = error.dataPath.replace(/\//g, '.').replace(/^\./, '');
                 formattedErrorMessage = `${dataPath} ${error.message}`;
             }
+            else if (error?.instancePath) {
+                // Replace slash with dot and remove leading dot if present
+                const dataPath = error.instancePath.replace(/\//g, '.').replace(/^\./, '');
+                formattedErrorMessage = `${dataPath} ${error.message}`;
+            }
             else {
                 formattedErrorMessage = `${error.message}`
             }

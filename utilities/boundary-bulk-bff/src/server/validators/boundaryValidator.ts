@@ -7,6 +7,7 @@ import { getLocalizedHeaders, getLocalizedName } from "../utils/localisationUtil
 import { getHeadersOfBoundarySheet, getHierarchy } from "../utils/boundaryUtils";
 import { getSheetData } from "../utils/excelUtils";
 import { boundarySearchBodySchema } from "../config/schemas/boundarySearchBody";
+import { boundaryTemplateGenerateBodySchema } from "../config/schemas/boundaryTemplateGenerateBody";
 const _ = require('lodash');
 
 
@@ -83,4 +84,9 @@ export async function validateCreateBoundariesRequest(request: any, localization
 
 export function validateSearchBoundaryDetailRequest(request: any) {
     validateBodyViaSchema(boundarySearchBodySchema, request.query);
+}
+
+export async function validateBoundaryTemplateGenerateRequest(request: any) {
+    validateBodyViaSchema(boundaryTemplateGenerateBodySchema, request.query);
+    validateHierarchyType(request, request?.query?.hierarchyType, request?.query?.tenantId);
 }
