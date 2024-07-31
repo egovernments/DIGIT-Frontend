@@ -7,7 +7,7 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
   const { t } = useTranslation();
 
   // state for storing data
-  const [documentData, setDocumentData] = useState([
+  const [formData, setFormData] = useState([
     {
       key: 1,
       sorId: null,
@@ -22,8 +22,8 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
 
   // fn to update the value based on type. 
   const handleUpdateField = ({ type, value, item, index }) => {
-    setDocumentData((prev) => {
-      return prev?.map((i, n) => {
+    setFormData((prev) => {
+      return prev?.map((i) => {
         if (i.key === item.key) {
           return {
             ...i,
@@ -37,7 +37,7 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
 
   //fn to add more field
   const add = () => {
-    setDocumentData((prev) => [
+    setFormData((prev) => [
       ...prev,
       {
         key: prev?.length + 1,
@@ -53,19 +53,19 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
   };
   //fn to delete field
   const deleteItem = (data) => {
-    const fil = documentData.filter((i) => i.key !== data.key);
-    const up = fil.map((item, index) => ({ ...item, key: index + 1 }));
-    setDocumentData(up);
+    const fil = formData.filter((i) => i.key !== data.key);
+    const updated = fil.map((item, index) => ({ ...item, key: index + 1 }));
+    setFormData(updated);
   };
 
   // when doc update calling onselect for update the value in formdata
   useEffect(() => {
-    onSelect("estimateDetails", documentData);
-  }, [documentData]);
+    onSelect("estimateDetails", formData);
+  }, [formData]);
   
   return (
     <>
-      {documentData?.map((item, index) => (
+      {formData?.map((item, index) => (
         <div 
           key={item.key}
           style={{
@@ -75,7 +75,7 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
             marginBottom: "1.5rem",
           }}
         >
-          {documentData?.length > 1 ? (
+          {formData?.length > 1 ? (
             <div className="delete-resource-icon" style={{ textAlign: "right" }} onClick={() => deleteItem(item, index)}>
               <DustbinIcon />
             </div>
@@ -93,6 +93,9 @@ const AddEstimateComponent = ({ onSelect, ...props }) => {
                 value={item?.[field.key] || ""}
                 onChange={(event) => handleUpdateField({ type: field.key, value: event.target.value, item: item, index: index })}
             />
+            {/* {errors[index] && errors[index][field.key] && (
+              <span className="error-message">{errors[index][field.key]}</span>
+            )} */}
           </LabelFieldPair>
           )}
         </div>

@@ -5,7 +5,7 @@ export const estimateConfig = [
       {
         inline: true,
         label: "Proposal Date",
-        isMandatory: false,
+        isMandatory: true,
         key: "proposalDate",
         type: "date",
         disable: false,
@@ -14,20 +14,37 @@ export const estimateConfig = [
       {
         inline: true,
         label: "Status",
-        isMandatory: false,
+        isMandatory: true,
         key: "status",
         type: "text",
         disable: false,
-        populators: { name: "status", error: "Invalid", validation: { pattern: /^[A-Za-z]+$/i } },
+        populators: { name: "status", error: "Required", validation: { pattern: /^[A-Za-z]+$/i } },
       },
       {
         inline: true,
         label: "Workflow Status",
-        isMandatory: false,
+        isMandatory: true,
         key: "wfStatus",
-        type: "text",
+        type: "dropdown",
         disable: false,
-        populators: { name: "wfStatus", error: "Invalid", validation: { pattern: /^[A-Za-z]+$/i } },
+        populators: { 
+          name: "wfStatus", 
+          optionsKey: "name",
+          error: "Required",
+          required: true,
+
+          options : [
+            {
+              name: "PENDING",
+            },
+            {
+              name: "VERFIED",
+            },
+            {
+              name: "APPROVED",
+            }
+          ]
+          },
       },
       {
         inline: true,
@@ -41,7 +58,7 @@ export const estimateConfig = [
       {
         inline: true,
         label: "Description",
-        isMandatory: false,
+        isMandatory: true,
         key: "description",
         type: "text",
         disable: false,
@@ -50,7 +67,7 @@ export const estimateConfig = [
       {
         inline: true,
         label: "Executing Department",
-        isMandatory: false,
+        isMandatory: true,
         key: "executingDepartment",
         type: "text",
         disable: false,
@@ -96,7 +113,7 @@ export const estimateConfig = [
     key: "estimateDetails",
     body: [
       {
-        isMandatory: false,
+        isMandatory: true,
         key: "estimateDetails",
         type: "component", // for custom component
         component: "SampleAddEstimateComponent", // name of the component as per component registry
@@ -114,7 +131,7 @@ export const estimateConfig = [
               key: "sorId",
               type: "text",
               disable: false,
-              populators: { name: "sorId" },
+              populators: { name: "sorId", error: "Required" },
             },
             {
               inline: true,
@@ -139,7 +156,7 @@ export const estimateConfig = [
               label: "Unit Rate",
               isMandatory: false,
               key: "unitRate",
-              type: "amount",
+              type: "number",
               disable: false,
               populators: {
                   prefix: "₹ ",
@@ -158,10 +175,10 @@ export const estimateConfig = [
               inline: true,
               label: "No of units",
               isMandatory: false,
-              key: "noOfUnit",
+              key: "noOfunit",
               type: "number",
               disable: false,
-              populators: { name: "noOfUnit", error: " Invalid ", validation: { min: 0, max: 9999999999 } },
+              populators: { name: "noOfunit", error: " Invalid ", validation: { min: 0, max: 9999999999 } },
             },
             {
               inline: true,

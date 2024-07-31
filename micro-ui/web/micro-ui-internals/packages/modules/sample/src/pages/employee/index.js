@@ -59,7 +59,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/individual-details-view`} component={() => <IndividualViewDetails />} />
         <PrivateRoute path={`${path}/estimate-create`} component={() => <EstimateCreate />} />
         <PrivateRoute path={`${path}/estimate-search`} component={() => <EstimateSearch />} />
-        <PrivateRoute path={`${path}/estimate-details-view/:name`} component={() => <EstimateViewDetails />} />
+        <PrivateRoute path={`${path}/estimate-details-view/:uniqueIdentifier`} component={() => <EstimateViewDetails />} />
         {/* <PrivateRoute path={`${path}/contract-create`} component={() => <ContractCreate />} /> */}
       </AppContainer>
     </Switch>

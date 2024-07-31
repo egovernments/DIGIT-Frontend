@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 const EstimateViewDetails = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { name } = useParams();
+  const { uniqueIdentifier } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = {
@@ -21,9 +21,7 @@ const EstimateViewDetails = (props) => {
       apiOperation: "SEARCH",
       MdmsCriteria: {
         tenantId,
-        filters: {
-          "name": name
-        }
+        "uniqueIdentifiers": [uniqueIdentifier]
       },
     },
     config: {
@@ -91,26 +89,28 @@ const EstimateViewDetails = (props) => {
             },
             {
               name: "estimateDetails",
-              sections: [
-                {
-                  type: "DATA",
-                  cardHeader: { value: t("Estimate Details"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  values: [
-                    {
-                      key: "Name",
-                      value: response?.estimateDetails?.[0]?.name ? response?.estimateDetails?.[0]?.name : t("NA"),
-                    },
-                    {
-                      key: "Description",
-                      value: response?.estimateDetails?.[0]?.description ? response?.estimateDetails?.[0]?.description : t("NA"),
-                    },
-                    {
-                      key: "Amount",
-                      value: response?.estimateDetails?.[0]?.amountDetail?.[0]?.amount ? response?.estimateDetails?.[0]?.amountDetail?.[0]?.amount : t("NA"),
-                    },
-                  ],
-                },
-              ],
+              sections: response?.estimateDetails.map((detail, index) => ({
+                type: "DATA",
+                cardHeader: { value: t(`Estimate Details ${index + 1}`), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                values: [
+                  {
+                    key: "Sor Id",
+                    value: detail?.sorId ? detail?.sorId : t("NA"),
+                  },
+                  {
+                    key: "Name",
+                    value: detail?.name ? detail?.name : t("NA"),
+                  },
+                  {
+                    key: "Description",
+                    value: detail?.description ? detail?.description : t("NA"),
+                  },
+                  {
+                    key: "Amount",
+                    value: detail?.amountDetail?.[0]?.amount ? detail?.amountDetail?.[0]?.amount : t("NA"),
+                  },
+                ],
+              })),
             },
           ],
         };

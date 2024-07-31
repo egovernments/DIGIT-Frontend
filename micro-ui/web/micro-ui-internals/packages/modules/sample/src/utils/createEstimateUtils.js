@@ -1,36 +1,40 @@
 export const transformCreateEstimateData = (data)=>{
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const proposalDate = new Date(data.proposalDate).getTime();
+
   return {
     Mdms: {
-      tenantId: "mz",
+      tenantId: tenantId,
       schemaCode: "digitAssignment.estimate",
       uniqueIdentifier: null,
       data: {
-        proposalDate: data.proposalDate,
+        proposalDate: proposalDate,
         status: data.status,
-        wfStatus: data.wfStatus,
+        wfStatus: data.wfStatus.name,
         name: data.name,
         description: data.description,
         executingDepartment: data.executingDepartment,
         address: {
-          "tenantId": "od.testing",
-          "latitude": data.latitude,
-          "longitude": data.longitude,
+          "tenantId": tenantId,
+          "latitude": parseFloat(data.latitude),
+          "longitude": parseFloat(data.longitude),
           "city": data.city || "od.testing"
         },
         estimateDetails: (data.estimateDetails || []).map((detail) => ({
-          sorId: detail.sorId || "SOR_000364",
-          category: detail.category || "SOR",
-          name: detail.name || "Honey Comb brick masonry using 25cm x 12cm x 8cm KB brick having crushing strength not less than 75 Kg / cm2 in cement mortar (1:4) and plastered with 16mm thick CM(1:6) including white washing two coats etc. complete.",
-          description: detail.description || "asd",
-          unitRate: detail.unitRate,
-          noOfUnit: detail.noOfUnit,
-          uom: detail.uom,
-          length: detail.length,
-          width: detail.width,
+          sorId: detail.sorId || "NA",
+          category: detail.category || "NA",
+          name: detail.name || "NA",
+          description: detail.description || "NA",
+          unitRate: parseFloat(detail.unitRate) || 0,
+          noOfunit: parseInt(detail.noOfunit) || 0,
+          uom: detail.uom ||"NA",
+          length: parseFloat(detail.length) || 0,
+          width: parseFloat(detail.width) || 0,
           amountDetail: [
             {
               type: "EstimatedAmount",
-              amount: data.unitRate * data.noOfUnit || 0,
+              amount: (parseFloat(detail.unitRate) * parseInt(detail.noOfUnit))|| 0,
               isActive: true,
             },
           ],

@@ -34,8 +34,15 @@ export const UICustomizations = {
       // console.log(data);
       return data;
     },
-    // additionalCustomizations: (row, key, column, value, t, searchResult) => {
-    //   console.log(row, key, column, value, );
-    // }
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      console.log(row, key, column, value,searchResult,"ui-ci" );
+      // return (
+      //   <span className="link">
+      //     <Link to={`/microplan-ui/employee/sample/estimate-details-view`}>
+      //        lksdjfkl
+      //     </Link>
+      //   </span>
+      // );
+    }
   }
 };

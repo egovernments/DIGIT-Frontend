@@ -25,9 +25,9 @@ const EstimateSearch = () => {
 
   const onClickRow = (data) => {
     console.log(data)
-    const name = data.original.data.name;
-    console.log(name)
-    history.push(`/microplan-ui/employee/sample/estimate-details-view/${name}`);
+    const uniqueIdentifier = data.original.uniqueIdentifier;
+    console.log(uniqueIdentifier)
+    history.push(`/microplan-ui/employee/sample/estimate-details-view/${uniqueIdentifier}`);
   }
 
   return (

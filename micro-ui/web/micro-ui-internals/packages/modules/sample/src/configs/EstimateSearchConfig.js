@@ -10,12 +10,12 @@ export const searchconfig = () =>
     apiDetails: {
       serviceName: "/mdms-v2/v2/_search",
       requestParam: {
-          "tenantId":Digit.ULBService.getCurrentTenantId()
+          // "tenantId":Digit.ULBService.getCurrentTenantId()
       },
       requestBody: {
         apiOperation: "SEARCH",
         MdmsCriteria: {
-          "tenantId": Digit.ULBService.getCurrentTenantId(),
+          // "tenantId": Digit.ULBService.getCurrentTenantId(),
           "customs": {}
           // "schemaCode": ""
         },
@@ -114,6 +114,7 @@ export const searchconfig = () =>
             {
               label: "Name",
               jsonPath: "data.name",
+              // additionalCustomizations: true
             },
             {
               label: "Description",
