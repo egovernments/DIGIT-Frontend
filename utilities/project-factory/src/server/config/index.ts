@@ -18,7 +18,7 @@ const getDBSchemaName = (dbSchema = "") => {
 const config = {
   cacheTime : 300,
   enableDynamicTemplateFor: process.env.ENABLE_DYNAMIC_TEMPLATE_FOR || "MR-DN",
-  isCallGenerateWhenDeliveryConditionsDiffer: process.env.IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER || true,
+  isCallGenerateWhenDeliveryConditionsDiffer: process.env.IS_CALL_GENERATE_WHEN_DELIVERY_CONDITIONS_DIFFER || false,
   prefixForMicroplanCampaigns: "MP",
   excludeHierarchyTypeFromBoundaryCodes: process.env.EXCLUDE_HIERARCHY_TYPE_FROM_BOUNDARY_CODES || false,
   excludeBoundaryNameAtLastFromBoundaryCodes: process.env.EXCLUDE_BOUNDARY_NAME_AT_LAST_FROM_BOUNDARY_CODES || false,
