@@ -28,6 +28,9 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
   }, [project]);
 
   const handleDateChange = ({ date, endDate = false, cycleDate = false, cycleIndex }) => {
+    if (typeof date === "undefined" || date <= today) {
+      return null;
+    }
     if (!endDate) {
       dateReducerDispatch({
         type: "START_DATE",
@@ -44,6 +47,9 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
   };
 
   const handleCycleDateChange = ({ date, endDate = false, cycleIndex }) => {
+    if (typeof date === "undefined" || date <= today) {
+      return null;
+    }
     if (!endDate) {
       dateReducerDispatch({
         type: "CYCLE_START_DATE",
@@ -54,7 +60,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
       });
     } else {
       dateReducerDispatch({
-        type: "CYCYLE_END_DATE",
+        type: "CYCLE_END_DATE",
         date: date,
         item: project,
         cycleIndex: cycleIndex,
@@ -83,7 +89,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             withoutLabel={true}
             type="date"
             value={startDate}
-            nonEditable={startDate?.length > 0 && today > startDate ? true : false}
+            nonEditable={startDate?.length > 0 && today >= startDate ? true : false}
             placeholder={t("HCM_START_DATE")}
             populators={
               today >= startDate
@@ -96,7 +102,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             }
             onChange={(d) => {
               handleDateChange({
-                date: d,
+                date: d?.target?.value,
               });
             }}
           />
@@ -104,7 +110,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             withoutLabel={true}
             type="date"
             value={endDate}
-            nonEditable={endDate?.length > 0 && today > endDate ? true : false}
+            nonEditable={endDate?.length > 0 && today >= endDate ? true : false}
             placeholder={t("HCM_END_DATE")}
             populators={{
               validation: {
@@ -116,7 +122,7 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
             }}
             onChange={(d) => {
               handleDateChange({
-                date: d,
+                date: d?.target?.value,
                 endDate: true,
               });
             }}
@@ -135,29 +141,26 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                 <FieldV1
                   withoutLabel={true}
                   type="date"
-                  nonEditable={item?.startDate?.length > 0 && today > item?.startDate ? true : false}
+                  nonEditable={item?.startDate?.length > 0 && today >= item?.startDate ? true : false}
                   value={item?.startDate}
                   placeholder={t("HCM_START_DATE")}
-                  populators={
-                    today >= item?.startDate
-                      ? {}
-                      : {
-                          validation: {
-                            min:
-                              index > 0
-                                ? cycleDates?.find((j) => j.cycleIndex == index)?.endDate &&
-                                  new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + 86400000)
-                                    ?.toISOString()
-                                    ?.split("T")?.[0]
-                                : startDate,
-                            max: endDate,
-                          },
-                        }
-                  }
+                  populators={{
+                    validation: {
+                      min:
+                        index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
+                          ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
+                              ?.toISOString()
+                              ?.split("T")?.[0]
+                          : today >= startDate
+                          ? today
+                          : startDate,
+                      max: endDate,
+                    },
+                  }}
                   onChange={(d) => {
                     // setStartValidation(true);
                     handleCycleDateChange({
-                      date: d,
+                      date: d?.target?.value,
                       cycleIndex: item?.cycleIndex,
                     });
                   }}
@@ -166,21 +169,29 @@ const BoundaryWithDate = ({ project, props, onSelect, dateReducerDispatch, canDe
                   withoutLabel={true}
                   type="date"
                   value={item?.endDate}
-                  nonEditable={item?.endDate?.length > 0 && today > item?.endDate && today > cycleDates?.[index + 1]?.startDate ? true : false}
+                  nonEditable={
+                    item?.endDate?.length > 0 &&
+                    today >= item?.endDate &&
+                    (cycleDates?.[index + 1] ? today >= cycleDates?.[index + 1]?.startDate : true)
+                      ? true
+                      : false
+                  }
                   placeholder={t("HCM_END_DATE")}
                   populators={{
                     validation: {
-                      min: cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate
-                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + 86400000)
+                      min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
+                        ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
                             ?.toISOString()
                             ?.split("T")?.[0]
-                        : null,
+                        : today >= startDate
+                        ? today
+                        : startDate,
                       max: endDate,
                     },
                   }}
                   onChange={(d) => {
                     handleCycleDateChange({
-                      date: d,
+                      date: d?.target?.value,
                       endDate: true,
                       cycleIndex: item?.cycleIndex,
                     });

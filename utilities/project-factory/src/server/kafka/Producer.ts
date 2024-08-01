@@ -11,6 +11,13 @@ const kafkaClient = new KafkaClient({
     connectRetryOptions: { retries: 1 },
 });
 
+// Event listener for 'error' event, indicating that the client encountered an error
+kafkaClient.on('error', (err: any) => {
+    logger.error('Kafka client is in error state'); // Log message indicating client is in error state
+    console.error(err.stack || err); // Log the error stack or message
+    shutdownGracefully();
+});
+
 const createProducer = () => {
     producer = new Producer(kafkaClient, { partitionerType: 2 });
 
