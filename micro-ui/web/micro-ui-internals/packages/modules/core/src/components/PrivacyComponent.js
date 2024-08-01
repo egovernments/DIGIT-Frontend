@@ -8,7 +8,16 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isChecked, setIsChecked] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, "commonUiConfig", [{ name: "PrivacyPolicy" }]);
+  const { data: privacy } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "commonUiConfig",
+    [{ name: "PrivacyPolicy" }],
+    {
+      select: (data) => {
+        return data?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0];
+      },
+    }
+  );
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
@@ -44,7 +53,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           type={"default"}
           className={"privacy-popUpClass"}
           footerclassName={"popUpFooter"}
-          heading={t(privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.header)}
+          heading={t(privacy?.header)}
           onOverlayClick={() => {
             setShowPopUp(false);
           }}
@@ -77,7 +86,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           <div>
             <div className="privacy-table">{t("DIGIT_TABLE_OF_CONTENTS")}</div>
             <ul>
-              {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions
+              {privacy?.descriptions
                 .filter((desc) => desc?.isHeader)
                 .map((desc, index) => (
                   <li key={index}>
@@ -94,7 +103,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
                 ))}
             </ul>
           </div>
-          {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
+          {privacy?.descriptions.map((desc, index) => (
             <div
               key={index}
               id={desc.isHeader ? desc.text : undefined}
