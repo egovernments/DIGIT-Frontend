@@ -1,0 +1,16 @@
+{
+  "name": "single-spa-mfe",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^8.1.7",
+    "concurrently": "^6.2.1"
+  },
+  "scripts": {
+    "start":"lerna run start",
+    "build": "lerna run build"
+  }
+}
