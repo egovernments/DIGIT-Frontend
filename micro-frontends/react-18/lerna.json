@@ -1,17 +1,8 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "version": "0.0.0",
   "packages": [
-    "components",
-    "react-app",
-    "react-app-one",
-    "single-spa-root"
+    "packages/*"
   ],
-  "command": {
-    "run": {
-      "npmClient": "yarn"
-    }
-  },
-  "npmClient": "yarn",
-  "stream": true
+  "version": "0.0.0",
+  "npmClient": "npm"
 }
