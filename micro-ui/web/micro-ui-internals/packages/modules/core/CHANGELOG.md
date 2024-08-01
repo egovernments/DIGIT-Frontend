@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.10
+- Enchanced Privacy component for table of contents
+
 ## 1.8.2-beta.9
 - Added classname for languageselection
 

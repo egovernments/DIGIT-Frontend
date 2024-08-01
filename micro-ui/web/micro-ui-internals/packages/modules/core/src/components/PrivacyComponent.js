@@ -13,24 +13,31 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
     setIsChecked(event.target.checked);
   };
   useEffect(() => {
-      onSelect("check", isChecked);
+    onSelect("check", isChecked);
   }, [isChecked]);
   const onButtonClick = () => {
     setShowPopUp(true);
   };
 
+  const handleScrollToElement = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <React.Fragment>
-        <div className="digit-privacy-checkbox">
-      <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange}></CheckBox>
-      <Button
-              label= {t(`ES_PRIVACY_POLICY`)}
-              variation={"link"}
-              size={"medium"}
-              onClick={onButtonClick}
-              // isSuffix={true}
-              style={{ marginBottom: "1.18rem" , paddingLeft : "unset"}}
-            ></Button>
+      <div className="digit-privacy-checkbox">
+        <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange}></CheckBox>
+        <Button
+          label={t(`ES_PRIVACY_POLICY`)}
+          variation={"link"}
+          size={"medium"}
+          onClick={onButtonClick}
+          // isSuffix={true}
+          style={{ marginBottom: "1.18rem", paddingLeft: "unset" }}
+        ></Button>
       </div>
       {showPopUp && (
         <PopUp
@@ -38,7 +45,6 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           className={"privacy-popUpClass"}
           footerclassName={"popUpFooter"}
           heading={t(privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.header)}
-          
           onOverlayClick={() => {
             setShowPopUp(false);
           }}
@@ -49,7 +55,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
               variation={"secondary"}
               label={t("DIGIT_I_DO_NOT_ACCEPT")}
               onClick={() => {
-                setIsChecked(false),setShowPopUp(false);
+                setIsChecked(false), setShowPopUp(false);
               }}
             />,
             <Button
@@ -58,9 +64,8 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
               variation={"primary"}
               label={t("DIGIT_I_ACCEPT")}
               className={"accept-class"}
-              // style={{width : "11.886rem"}}
               onClick={() => {
-                setIsChecked(true),setShowPopUp(false);
+                setIsChecked(true), setShowPopUp(false);
               }}
             />,
           ]}
@@ -69,12 +74,44 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
             setShowPopUp(false);
           }}
         >
-                  {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
-            <div key={index} style={{ fontWeight: desc.isBold ? 700 : 400 }}>
+          <div>
+            <div className="privacy-table">{t("DIGIT_TABLE_OF_CONTENTS")}</div>
+            <ul>
+              {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions
+                .filter((desc) => desc?.isHeader)
+                .map((desc, index) => (
+                  <li key={index}>
+                    <Button
+                      label={t(desc.text)}
+                      variation={"link"}
+                      size={"medium"}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleScrollToElement(desc.text);
+                      }}
+                    ></Button>
+                  </li>
+                ))}
+            </ul>
+          </div>
+          {privacy?.commonUiConfig?.PrivacyPolicy?.[0]?.texts?.[0]?.descriptions.map((desc, index) => (
+            <div
+              key={index}
+              id={desc.isHeader ? desc.text : undefined}
+              style={{
+                fontWeight: desc.isBold ? 700 : 400,
+                paddingLeft: desc.isSpaceRequired ? "1rem" : "0",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {desc.isDotRequired && (
+                <span className="desc-dot"
+                ></span>
+              )}
               {t(desc.text)}
             </div>
           ))}
-
         </PopUp>
       )}
     </React.Fragment>

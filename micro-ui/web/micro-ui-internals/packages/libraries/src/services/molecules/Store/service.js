@@ -54,7 +54,10 @@ export const StoreService = {
     });
     return await Promise.all(allBoundries);
   },
-  digitInitData: async (stateCode, enabledModules) => {
+  digitInitData: async (stateCode, enabledModules , modulePrefix) => {
+    if(!modulePrefix){
+      modulePrefix = "rainmaker"
+    }
     const { MdmsRes } = await MdmsService.init(stateCode);
     const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0]||{};
     const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0]||{};
@@ -91,8 +94,8 @@ export const StoreService = {
 
     await LocalizationService.getLocale({
       modules: [
-        `rainmaker-common`,
-        `rainmaker-${stateCode.toLowerCase()}`
+        `${modulePrefix}-common`,
+        `${modulePrefix}-${stateCode.toLowerCase()}`
       ],
       locale: initData.selectedLanguage,
       tenantId: stateCode,
@@ -105,11 +108,14 @@ export const StoreService = {
     }, 0);
     return initData;
   },
-  defaultData: async (stateCode, moduleCode, language) => {
+  defaultData: async (stateCode, moduleCode, language, modulePrefix) => {
+    if(!modulePrefix){
+      modulePrefix = "rainmaker"
+    }
     let moduleCodes = [];
-    if(typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(`rainmaker-${code.toLowerCase()}`) });
+    if(typeof moduleCode !== "string") moduleCode.forEach(code => { moduleCodes.push(`${modulePrefix}-${code.toLowerCase()}`) });
     const LocalePromise = LocalizationService.getLocale({
-      modules: typeof moduleCode == "string" ? [`rainmaker-${moduleCode.toLowerCase()}`] : moduleCodes,
+      modules: typeof moduleCode == "string" ? [`${modulePrefix}-${moduleCode.toLowerCase()}`] : moduleCodes,
       locale: language,
       tenantId: stateCode,
     });

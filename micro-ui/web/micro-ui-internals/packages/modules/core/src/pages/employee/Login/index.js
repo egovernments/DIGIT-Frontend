@@ -4,10 +4,20 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import LoginComponent from "./login";
 
-const EmployeeLogin = () => {
+const EmployeeLogin = (tenantId) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const [loginConfig, setloginConfig] = useState(defaultLoginConfig);
+  const moduleCode = ["privacy-policy"];
+  const language = Digit.StoreData.getCurrentLanguage();
+  const modulePrefix = "digit";
+  const stateCode = tenantId?.stateCode;
+  const { data: store } = Digit.Services.useStore({
+    stateCode,
+    moduleCode,
+    language,
+    modulePrefix
+  });
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "commonUiConfig", ["LoginConfig"], {
     select: (data) => {
