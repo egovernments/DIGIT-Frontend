@@ -19,8 +19,7 @@
     "babel-loader": "^8.0.0",
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
-    "@babel/preset-react": "^7.23.3",
-    "@egovernments/digit-ui-components": "0.0.1-webpack.2"
+    "@babel/preset-react": "^7.23.3"
   },
   "dependencies": {
     
