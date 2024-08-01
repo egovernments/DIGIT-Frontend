@@ -27,7 +27,7 @@ function validateBoundarySheetHeaders(headersOfBoundarySheet: any[], hierarchy: 
     const boundaryCodeIndex = headersOfBoundarySheet.indexOf(localizedBoundaryCode);
     const keysBeforeBoundaryCode = boundaryCodeIndex === -1 ? headersOfBoundarySheet : headersOfBoundarySheet.slice(0, boundaryCodeIndex);
     if (keysBeforeBoundaryCode.some((key: any, index: any) => (key === undefined || key === null) || key !== hierarchy[index]) || keysBeforeBoundaryCode.length !== hierarchy.length) {
-        const errorMessage = `Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type: ${request?.query?.hierarchyType}`;
+        const errorMessage = `Boundary Sheet Headers are not the same as the hierarchy present for the given tenant and hierarchy type ${request?.query?.hierarchyType}`;
         throwError("BOUNDARY", 400, "BOUNDARY_SHEET_HEADER_ERROR", errorMessage);
     }
 }
