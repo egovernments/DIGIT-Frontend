@@ -3,14 +3,14 @@ import { useQuery } from "react-query";
 // import mergeConfig from "../../config/mergeConfig";
 import { StoreService } from "../services/molecules/Store/service";
 
-export const useStore = ({ stateCode, moduleCode, language }) => {
-  return useQuery(["store", stateCode, moduleCode, language], () => StoreService.defaultData(stateCode, moduleCode, language));
+export const useStore = ({ stateCode, moduleCode, language ,modulePrefix = "rainmaker" }) => {
+  return useQuery(["store", stateCode, moduleCode, language, modulePrefix], () => StoreService.defaultData(stateCode, moduleCode, language, modulePrefix));
 };
 
-export const useInitStore = (stateCode, enabledModules) => {
+export const useInitStore = (stateCode, enabledModules,modulePrefix = "rainmaker" ) => {
   const { isLoading, error, isError, data } = useQuery(
-    ["initStore", stateCode, enabledModules],
-    () => StoreService.digitInitData(stateCode, enabledModules),
+    ["initStore", stateCode, enabledModules,modulePrefix],
+    () => StoreService.digitInitData(stateCode, enabledModules ,modulePrefix),
     {
       staleTime: Infinity,
     }

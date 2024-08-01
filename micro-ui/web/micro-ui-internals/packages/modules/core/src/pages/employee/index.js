@@ -70,7 +70,7 @@ const EmployeeApp = ({
           >
             <Switch>
               <Route path={`${path}/user/login`}>
-                <EmployeeLogin />
+                <EmployeeLogin stateCode={stateCode} />
               </Route>
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
