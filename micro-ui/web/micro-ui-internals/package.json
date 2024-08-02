@@ -5,7 +5,6 @@
   "workspaces": [
     "packages/libraries",
     "example",
-    "packages/css",
     "packages/react-components",
     "packages/svg-components",
     "packages/modules/*"
@@ -21,7 +20,7 @@
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
-    "dev:css": "cd packages/css && yarn start",
+    "devD:css": "cd packages/css && yarn start",
     "publish:css": "cd packages/css && yarn publish --access public",
     "dev:libraries": "cd packages/libraries && yarn start",
     "dev:components": "cd packages/react-components && yarn start",
@@ -54,6 +53,7 @@
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
+    "**/node-sass": "npm:sass@^1.43.4",
     "**/babel-preset-react-app": "10.0.0",
     "fast-uri":"2.1.0"
   },
