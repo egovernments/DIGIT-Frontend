@@ -39,8 +39,8 @@
   border-left: none;
 }
 
-.employeeForgotPassword{
-  .digit-dropdown-select{
+.employeeForgotPassword {
+  .digit-dropdown-select {
     margin-bottom: 1.5rem;
   }
 }
@@ -160,8 +160,7 @@
   margin-bottom: 0px !important;
 }
 
-@media screen and (max-width : 768px) {
-
+@media screen and (max-width: 768px) {
   .employeeForgotPassword .employeeCard .employee-card-sub-header,
   .employeeChangePassword .employeeCard .employee-card-sub-header,
   .loginFormStyleEmployee .employeeCard .employee-card-sub-header {
@@ -237,7 +236,6 @@
   }
 }
 
-
 .loginFormStyleEmployee {
   .loginCardSubHeaderClassName {
     text-align: center !important;
@@ -247,7 +245,7 @@
     margin: auto !important;
     min-width: 408px !important;
 
-    .privacy-popUpClass{
+    .privacy-popUpClass {
       height: 32.875rem;
     }
 
@@ -257,7 +255,7 @@
     }
 
     header.digit-header-content {
-      &:not(.label){
+      &:not(.label) {
         text-align: center;
       }
     }
@@ -265,7 +263,7 @@
 
   .buttonClassName {
     max-width: 100% !important;
-    width: 100% !important
+    width: 100% !important;
   }
 
   .field .field-container .text-input input {
@@ -284,31 +282,29 @@
     max-height: 150px !important;
   }
 }
-.digit-privacy-checkbox{
+.digit-privacy-checkbox {
   display: flex;
   margin-bottom: -2.5rem;
   margin-top: -1.5rem;
   gap: 0.12rem;
   align-items: center;
-
 }
-.privacy-popup-header{
+.privacy-popup-header {
   font-weight: 700;
 }
 
 @media (min-width: 47.8rem) {
-  .privacy-popUpClass{
-    .digit-popup-footer-buttons{
-    flex-wrap: nowrap !important;
+  .privacy-popUpClass {
+    .digit-popup-footer-buttons {
+      flex-wrap: nowrap !important;
     }
-  .accept-class{
-    width: 11.886rem;
-    
+    .accept-class {
+      width: 11.886rem;
+    }
   }
 }
-}
 
-.languageSelection{
+.languageSelection {
   width: unset;
 }
 .desc-dot {
@@ -320,6 +316,15 @@
   margin-right: 0.5rem;
 }
 
-.privacy-table{
+.privacy-table {
   font-weight: 700;
+}
+.policy-subdescription {
+  margin-left: "1rem";
+  margin-top: "0.5rem";
+}
+.policy-subdescription-points {
+  display: "flex";
+  align-items: "center";
+  margin-bottom: "0.5rem";
 }
