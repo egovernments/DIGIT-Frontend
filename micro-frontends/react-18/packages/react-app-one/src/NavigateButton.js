@@ -2,9 +2,9 @@
 import React from 'react';
 import { navigateToUrl } from 'single-spa';
 
-const NavigateButton = () => {
+const NavigateButton = ({to="two"}) => {
   const navigate = () => {
-    navigateToUrl('/pwc/react-app-two');
+    navigateToUrl(`/pwc/react-app-${to}`);
   };
 
   return (
