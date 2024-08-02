@@ -6,6 +6,7 @@ import {
     Timeline,
     InfoButton
   } from "@egovernments/digit-ui-components";
+import SampleTwo from "./SampleTwo";
 const commonDivStyle = {
     display: "flex",
     flexDirection: "column",
@@ -922,6 +923,7 @@ return (<div>
 <InfoButton label={"Button"} size="large" isDisabled={false}></InfoButton>,
 
 </div>
+<SampleTwo />
 </div>)
 }
 
