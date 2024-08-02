@@ -62,6 +62,7 @@ const sendWithRetries = (payloads: any[], retries = 3, shutdown: boolean = false
         producer.send(payloads, async (err: any) => {
             if (err) {
                 logger.error('Error sending message:', err);
+                logger.debug(`Was trying to send: ${JSON.stringify(payloads)}`);
                 if (retries > 0) {
                     logger.info(`Retrying to send message. Retries left: ${retries}`);
                     await new Promise(resolve => setTimeout(resolve, 2000)); // wait before retrying
