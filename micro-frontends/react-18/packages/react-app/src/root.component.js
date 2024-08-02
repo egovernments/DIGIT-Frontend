@@ -1,4 +1,5 @@
 import React from "react";
+import Sample from "./Sample";
 // import { Button, Text,Checkbox } from "../../components/src";
 // import {Button} from "components";
 // import {Checkbox} from "components";
@@ -17,6 +18,6 @@ import React from "react";
 // console.log("hey react-app default");
 export default function Root(props) {
   return <section>{props.name} hey react-app-default
-
+<Sample></Sample>
   </section>;
 }
