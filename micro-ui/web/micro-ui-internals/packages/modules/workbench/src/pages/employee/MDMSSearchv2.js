@@ -96,11 +96,11 @@ const MDMSSearchv2 = () => {
   
   useEffect(() => {
     if (currentSchema) {
-      const dropDownOptions = [];
+      let dropDownOptions = [];
       const {
         definition: { properties },
       } = currentSchema;
-      
+      const schemaCodeToValidate = `${master}.${modulee}`;
       Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
@@ -111,7 +111,9 @@ const MDMSSearchv2 = () => {
           });
         }
       });
-
+      console.log(dropDownOptions, schemaCodeToValidate,"dropdown");
+      dropDownOptions = dropDownOptions?.length > 0 && Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) : dropDownOptions;
+      
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
       // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
