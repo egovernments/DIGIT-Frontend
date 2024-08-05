@@ -1,6 +1,6 @@
 {
   "name": "egovernments",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "workspaces": [
     "example",
@@ -47,7 +47,7 @@
     "ajv": "8.12.0",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.6",
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.10",
     "@egovernments/digit-ui-components": "0.0.2-beta.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
