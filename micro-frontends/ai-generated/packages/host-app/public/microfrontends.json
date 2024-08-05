@@ -1,4 +1,0 @@
-{
-    "remote-app1": "http://localhost:3111/remoteEntry.js",
-    "remote-app2": "http://localhost:3112/remoteEntry.js"
-  }

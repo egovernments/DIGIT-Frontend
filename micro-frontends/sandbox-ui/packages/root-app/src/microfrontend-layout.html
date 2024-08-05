@@ -1,0 +1,39 @@
+<single-spa-router>
+  <!--
+
+    This is the single-spa Layout Definition for your microfrontends.
+    See https://single-spa.js.org/docs/layout-definition/ for more information.
+
+  -->
+
+  <!-- Example layouts you might find helpful:
+
+  <nav>
+    <application name="@org/navbar"></application>
+  </nav>
+  <route path="settings">
+    <application name="@org/settings"></application>
+  </route>
+
+  -->
+
+  <main>
+    <!-- <route default>
+      <application name="@egovernments/user-app"></application>
+      <application name="@egovernments/data-mgmt-app"></application>
+      
+    </route> -->
+    <route path=":root-tenant">
+    <route path="react-app-one">
+      <application name="@egovernments/data-mgmt-app"></application>
+    </route>
+    <route path="react-app-zero">
+      <application name="@egovernments/user-app"></application>
+    </route>
+    <route path="react-app-two">
+      <application name="@egovernments/account-mgmt-app"></application>
+    </route>
+    </route>
+    
+  </main>
+</single-spa-router>
