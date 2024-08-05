@@ -1,32 +1,38 @@
 const path = require("path");
 
 module.exports = {
-  mode: "development", // Use "development" for faster rebuilds in watch mode
+  mode: "development",
   entry: "./src/index.js",
   output: {
-    filename: "index.js",
+    filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     library: {
-      name: "componentsLib",
+      name: "@egovernments/sandbox-components",
       type: "umd",
     },
-    globalObject: 'this',
+    globalObject: 'this', // Add this line to ensure compatibility in different environments
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js"],
   },
   externals: {
     react: {
       commonjs: 'react',
       commonjs2: 'react',
-      amd: 'React',
+      amd: 'react',
       root: 'React',
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'react-dom',
+      root: 'ReactDOM',
     }
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -34,6 +40,10 @@ module.exports = {
             presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"], // Add this block to handle CSS files
       },
     ],
   },
