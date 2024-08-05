@@ -1,9 +1,8 @@
 {
   "name": "@egovernments/sandbox-components",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "license": "MIT",
   "main": "dist/main.js",
-  "module": "dist/main.js",
   "source": "src/index.js",
   "engines": {
     "node": ">=20"

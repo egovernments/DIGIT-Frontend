@@ -39,6 +39,6 @@
     "@types/systemjs": "^6.1.1",
     "single-spa": "^5.9.3",
     "single-spa-layout": "^1.6.0",
-    "@egovernments/sandbox-components": "0.0.3"
+    "@egovernments/sandbox-components": "0.0.5"
   }
 }

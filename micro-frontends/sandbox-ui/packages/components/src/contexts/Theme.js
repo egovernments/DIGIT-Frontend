@@ -1,4 +1,4 @@
-import { createContext, useState, use,useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 export const ThemeContext = createContext();
 
@@ -35,7 +35,7 @@ const ThemeProvider = ({ children }) => {
 };
 
 const Card = ({ children }) => {
-  const { theme, toggleTheme } = use(ThemeContext);
+  const { theme, toggleTheme } = {theme:"light"};
 
   return (
     <div

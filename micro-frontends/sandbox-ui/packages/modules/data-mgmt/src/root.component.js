@@ -1,5 +1,5 @@
 import NavigateButton from "./NavigateButton";
-import { Sample } from "@egovernments/sandbox-components";
+import { Test } from "@egovernments/sandbox-components";
 
 export default function Root(props) {
   
@@ -13,6 +13,6 @@ export default function Root(props) {
   <section>{props.name} hey react-app-2 
   <NavigateButton to="two"></NavigateButton>
   </section>;
-<Sample />
+    <Test />
   </>
 }

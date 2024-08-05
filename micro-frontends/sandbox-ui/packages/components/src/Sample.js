@@ -1,12 +1,16 @@
-import React  from "react";
-import TabForm from "./TabForm";
-import StepperForm from "./StepperForm";
+import React from "react";
+import TabForm from "./components/TabForm";
+// import StepperForm from "./components/StepperForm";
 
-const Sample=()=>{
-    return <div>
-<TabForm></TabForm>
-<StepperForm></StepperForm>
+const Sample = () => {
+  console.log("sample");
+  
+  return (
+    <div>
+      <TabForm></TabForm>
+      {/* <StepperForm></StepperForm> */}
     </div>
-}
+  );
+};
 
 export default Sample;

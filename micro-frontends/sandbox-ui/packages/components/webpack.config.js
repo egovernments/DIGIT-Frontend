@@ -27,8 +27,7 @@ module.exports = {
       commonjs2: 'react-dom',
       amd: 'react-dom',
       root: 'ReactDOM',
-    },
-    'react-router-dom': 'react-router-dom'
+    }
   },
   module: {
     rules: [

@@ -1,8 +1,9 @@
 // src/components/JsonSchemaForm.js
 import React from "react";
 // import { useUserState } from "../state/useUserState";
-import CustomDatePicker from "./CustomCheck"; // Import the custom component
-import FormComposer from "./hoc/FormComposer";
+import FormComposer from "../hoc/FormComposer";
+import CustomDatePicker from "../CustomCheck"; // Import the custom component
+// import { useDrawerState } from "../state/useDrawerState";
 
 const schema = {
   title: "Complex Form",
@@ -96,21 +97,21 @@ const uiSchema = {
       "ui:order": ["newsletter", "subscriptionFrequency"],
     },
   },
-  "ui:layout": {
+  "ui:layout":{
     layouts: [
       { label: "Personal Info", fields: ["personalInfo"] },
       { label: "Address", fields: ["address"] },
       { label: "Phones", fields: ["phones"] },
       { label: "Preferences", fields: ["preferences"] },
     ],
-
-    conditionalLayout: {
+    
+     conditionalLayout:{
       3: {
         fields: ["preferences.newsletter"],
         rule: (values) => values["preferences.newsletter"],
       },
     },
-    type: "TAB", //"TAB||STEPPER"
+    type:"STEPPER" //"TAB||STEPPER"
   },
   personalInfo: {
     firstName: { "ui:widget": "text" },
@@ -158,11 +159,16 @@ const customWidgets = {
   date: CustomDatePicker,
 };
 
-const TabForm = () => {
+
+
+const StepperForm = () => {
   // const { setData, resetData, data } = useUserState();
+  // const { setData:setDrawer,data:drawerData } = useDrawerState();
+
   return (
     <>
       {/* <h1>Hi {data?.name}</h1> */}
+      {/* <button onClick={()=>setDrawer({...drawerData,isOpen:!drawerData?.isOpen,fromScreen:"Stepper" ,content:"Hii"})}>open</button> */}
       <FormComposer
         schema={schema}
         uiSchema={uiSchema}
@@ -171,4 +177,4 @@ const TabForm = () => {
     </>
   );
 };
-export default TabForm;
+export default StepperForm;

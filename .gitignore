@@ -7,6 +7,5 @@ utilities/egov-bff/node_modules/*
 utilities/
 /micro-frontends/web
 
-/micro-frontends/ai-generated/node_modules/
-/micro-frontends/single-spa/node_modules/
-/micro-frontends/react-18/node_modules/
+/micro-frontends/sandbox-ui/node_modules/
+/micro-frontends/sandbox-ui/*-lock.json
