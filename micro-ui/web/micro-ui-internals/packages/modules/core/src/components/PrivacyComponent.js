@@ -130,10 +130,13 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
                   {description.subDescriptions.map((subDesc, subSubIndex) => (
                     <div key={subSubIndex} className="policy-subdescription-points">
                       {subDesc.type === 'points' && (
-                        <span style={{ marginRight: '0.5rem', listStyleType: 'disc' }}>&#8226;</span>
+                        <span style={{ marginRight: '0.5rem', listStyleType: 'disc' , paddingLeft: '1rem'}}>&#8226;</span>
                       )}
                       {subDesc.type === 'step' && (
-                        <span style={{ marginRight: '0.5rem', listStyleType: 'decimal' }}>{subSubIndex + 1}. </span>
+                        <span style={{ marginRight: '0.5rem', listStyleType: 'decimal' , paddingLeft: '1rem'}}>{subSubIndex + 1}. </span>
+                      )}
+                      {subDesc.type === null && (
+                        <span style={{ marginRight: '0.5rem', paddingLeft: '1rem'}}> </span>
                       )}
                       {t(subDesc.text)}
                     </div>
