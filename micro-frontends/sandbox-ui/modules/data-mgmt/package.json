@@ -1,7 +1,14 @@
 {
-  "name": "@egovernments/account-mgmt-app",
+  "name": "@egovernments/data-mgmt-app",
+  "version": "0.0.1",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "start": "webpack serve --port 8082",
+    "start": "webpack serve --port 8081",
     "start:standalone": "webpack serve --env standalone",
     "build": "concurrently npm:build:*",
     "build:webpack": "webpack --mode=production",

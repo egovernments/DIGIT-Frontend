@@ -9,7 +9,7 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/modules/*"
+    "modules/*"
   ],
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.1-webpack.121",

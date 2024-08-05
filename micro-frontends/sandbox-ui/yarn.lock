@@ -10,37 +10,6 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@app/react-app-one@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/react-18/packages/react-app-one":
-  resolved "file:packages/react-app-one"
-  dependencies:
-    react "18.3.1"
-    react-dom "18.3.1"
-    single-spa-react "^6.0.1"
-
-"@app/react-app-two@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/react-18/packages/react-app-two":
-  resolved "file:packages/react-app-two"
-  dependencies:
-    react "18.3.1"
-    react-dom "18.3.1"
-    single-spa-react "^6.0.1"
-
-"@app/react-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/react-18/packages/react-app":
-  resolved "file:packages/react-app"
-  dependencies:
-    components "1.0.0"
-    react "18.3.1"
-    react-dom "18.3.1"
-    single-spa-react "^6.0.1"
-
-"@app/root-config@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/react-18/packages/single-spa-root":
-  resolved "file:packages/single-spa-root"
-  dependencies:
-    "@types/jest" "^27.0.1"
-    "@types/systemjs" "^6.1.1"
-    components "1.0.0"
-    single-spa "^5.9.3"
-    single-spa-layout "^1.6.0"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.24.7":
   version "7.24.7"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.24.7.tgz"
@@ -1055,6 +1024,22 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+"@egovernments/account-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/account-mgmt":
+  version "0.0.1"
+  resolved "file:modules/account-mgmt"
+  dependencies:
+    react "18.3.1"
+    react-dom "18.3.1"
+    single-spa-react "^6.0.1"
+
+"@egovernments/data-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/data-mgmt":
+  version "0.0.1"
+  resolved "file:modules/data-mgmt"
+  dependencies:
+    react "18.3.1"
+    react-dom "18.3.1"
+    single-spa-react "^6.0.1"
+
 "@egovernments/digit-ui-components@0.0.1-webpack.121":
   version "0.0.1-webpack.121"
   resolved "https://registry.npmjs.org/@egovernments/digit-ui-components/-/digit-ui-components-0.0.1-webpack.121.tgz"
@@ -1082,6 +1067,28 @@
     prop-types "15.8.1"
     react "18.3.1"
     react-dom "18.3.1"
+
+"@egovernments/root-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/packages/root-app":
+  version "0.0.1"
+  resolved "file:packages/root-app"
+  dependencies:
+    "@egovernments/account-mgmt-app" "0.0.1"
+    "@egovernments/data-mgmt-app" "0.0.1"
+    "@egovernments/user-app" "0.0.1"
+    "@types/jest" "^27.0.1"
+    "@types/systemjs" "^6.1.1"
+    components "1.0.0"
+    single-spa "^5.9.3"
+    single-spa-layout "^1.6.0"
+
+"@egovernments/user-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/user-app":
+  version "0.0.1"
+  resolved "file:modules/user-app"
+  dependencies:
+    components "1.0.0"
+    react "18.3.1"
+    react-dom "18.3.1"
+    single-spa-react "^6.0.1"
 
 "@emnapi/core@^1.1.0":
   version "1.2.0"
@@ -2877,7 +2884,7 @@ chalk@^2.4.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^4.0.0, chalk@^4.1.0:
+chalk@^4.0.0:
   version "4.1.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -2886,6 +2893,14 @@ chalk@^4.0.0, chalk@^4.1.0:
     supports-color "^7.1.0"
 
 chalk@^4.0.2:
+  version "4.1.2"
+  resolved "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
+  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
+chalk@^4.1.0:
   version "4.1.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -3143,7 +3158,7 @@ compare-func@^2.0.0:
     array-ify "^1.0.0"
     dot-prop "^5.1.0"
 
-components@1.0.0, "components@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/react-18/packages/components":
+components@1.0.0, "components@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/packages/components":
   version "1.0.0"
   resolved "file:packages/components"
 
@@ -3195,7 +3210,7 @@ concat-stream@^2.0.0:
     readable-stream "^3.0.2"
     typedarray "^0.0.6"
 
-concurrently@^6.2.1:
+concurrently@^6.2.1, concurrently@^8.2.2:
   version "6.5.1"
   resolved "https://registry.npmjs.org/concurrently/-/concurrently-6.5.1.tgz"
   integrity sha512-FlSwNpGjWQfRwPLXvJ/OgysbBxPkWpiVjy1042b0U7on7S7qwwMIILRj7WTN1mTgqa582bG6NFuScOoh6Zgdag==
@@ -3208,21 +3223,6 @@ concurrently@^6.2.1:
     supports-color "^8.1.0"
     tree-kill "^1.2.2"
     yargs "^16.2.0"
-
-concurrently@^8.2.2:
-  version "8.2.2"
-  resolved "https://registry.npmjs.org/concurrently/-/concurrently-8.2.2.tgz"
-  integrity sha512-1dP4gpXFhei8IOtlXRE/T/4H88ElHgTiUzh71YUmtjTEHMSRS2Z/fgOxHSxxusGHogsRfxNq1vyAwxSC+EVyDg==
-  dependencies:
-    chalk "^4.1.2"
-    date-fns "^2.30.0"
-    lodash "^4.17.21"
-    rxjs "^7.8.1"
-    shell-quote "^1.8.1"
-    spawn-command "0.0.2"
-    supports-color "^8.1.1"
-    tree-kill "^1.2.2"
-    yargs "^17.7.2"
 
 connect-history-api-fallback@^2.0.0:
   version "2.0.0"
@@ -3438,7 +3438,14 @@ dargs@^7.0.0:
   resolved "https://registry.npmjs.org/dargs/-/dargs-7.0.0.tgz"
   integrity sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==
 
-date-fns@^2.16.1, date-fns@^2.30.0:
+date-fns@^2.16.1:
+  version "2.30.0"
+  resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.30.0.tgz"
+  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+
+date-fns@^2.30.0:
   version "2.30.0"
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.30.0.tgz"
   integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
@@ -5118,17 +5125,7 @@ jest-diff@^27.5.1:
     jest-get-type "^27.5.1"
     pretty-format "^27.5.1"
 
-jest-diff@^29.4.1:
-  version "29.7.0"
-  resolved "https://registry.npmjs.org/jest-diff/-/jest-diff-29.7.0.tgz"
-  integrity sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==
-  dependencies:
-    chalk "^4.0.0"
-    diff-sequences "^29.6.3"
-    jest-get-type "^29.6.3"
-    pretty-format "^29.7.0"
-
-"jest-diff@>=29.4.3 < 30":
+jest-diff@^29.4.1, "jest-diff@>=29.4.3 < 30":
   version "29.7.0"
   resolved "https://registry.npmjs.org/jest-diff/-/jest-diff-29.7.0.tgz"
   integrity sha512-LMIgiIrhigmPrs03JHpxUh2yISK3vLFPkAodPeo0+BuF7wA2FoQbkEg1u8gBYBThncu7e1oEDUfIXVuTqLRUjw==
@@ -6780,7 +6777,16 @@ pretty-error@^4.0.0:
     lodash "^4.17.20"
     renderkid "^3.0.0"
 
-pretty-format@^27.0.0, pretty-format@^27.5.1:
+pretty-format@^27.0.0:
+  version "27.5.1"
+  resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-27.5.1.tgz"
+  integrity sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==
+  dependencies:
+    ansi-regex "^5.0.1"
+    ansi-styles "^5.0.0"
+    react-is "^17.0.1"
+
+pretty-format@^27.5.1:
   version "27.5.1"
   resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-27.5.1.tgz"
   integrity sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==
@@ -6925,12 +6931,7 @@ randombytes@^2.1.0:
   dependencies:
     safe-buffer "^5.1.0"
 
-range-parser@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
-  integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
-
-range-parser@~1.2.1:
+range-parser@^1.2.1, range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
@@ -7368,20 +7369,20 @@ rxjs@^7.8.1:
   dependencies:
     tslib "^2.1.0"
 
-safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@>=5.1.0, safe-buffer@~5.1.0, safe-buffer@~5.1.1, safe-buffer@5.1.2:
+safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@>=5.1.0, safe-buffer@~5.2.0, safe-buffer@5.2.1:
+  version "5.2.1"
+  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
+  integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
+
+safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
   integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
-safe-buffer@~5.2.0:
-  version "5.2.1"
-  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
-  integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
-
-safe-buffer@5.2.1:
-  version "5.2.1"
-  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
-  integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
+safe-buffer@5.1.2:
+  version "5.1.2"
+  resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
+  integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
 
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"

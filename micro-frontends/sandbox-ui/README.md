@@ -38,7 +38,7 @@ To get started with the Sandbox Portal, follow these steps:
 
 3. **Start the Development Server**:
     ```sh
-    npm start
+    npm run start
     ```
 
 ## Usage

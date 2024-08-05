@@ -1,5 +1,12 @@
 {
   "name": "@egovernments/user-app",
+  "version": "0.0.1",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "webpack serve --port 8080",
     "start:standalone": "webpack serve --env standalone",

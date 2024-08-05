@@ -1,5 +1,12 @@
 {
   "name": "@egovernments/root-app",
+  "version": "0.0.1",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "webpack serve --port 9001 --env isLocal",
     "lint": "eslint src --ext js",
