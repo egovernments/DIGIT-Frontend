@@ -15,6 +15,7 @@ module.exports = (webpackConfigEnv, argv) => {
     disableHtmlGeneration: true,
   });
 
+  
   return merge(defaultConfig, {
     mode: 'production',
     output: {
