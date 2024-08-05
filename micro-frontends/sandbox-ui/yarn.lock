@@ -1024,17 +1024,17 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@egovernments/account-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/account-mgmt":
+"@egovernments/account-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/packages/modules/account-mgmt":
   version "0.0.1"
-  resolved "file:modules/account-mgmt"
+  resolved "file:packages/modules/account-mgmt"
   dependencies:
     react "18.3.1"
     react-dom "18.3.1"
     single-spa-react "^6.0.1"
 
-"@egovernments/data-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/data-mgmt":
+"@egovernments/data-mgmt-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/packages/modules/data-mgmt":
   version "0.0.1"
-  resolved "file:modules/data-mgmt"
+  resolved "file:packages/modules/data-mgmt"
   dependencies:
     react "18.3.1"
     react-dom "18.3.1"
@@ -1072,18 +1072,15 @@
   version "0.0.1"
   resolved "file:packages/root-app"
   dependencies:
-    "@egovernments/account-mgmt-app" "0.0.1"
-    "@egovernments/data-mgmt-app" "0.0.1"
-    "@egovernments/user-app" "0.0.1"
     "@types/jest" "^27.0.1"
     "@types/systemjs" "^6.1.1"
     components "1.0.0"
     single-spa "^5.9.3"
     single-spa-layout "^1.6.0"
 
-"@egovernments/user-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/modules/user-app":
+"@egovernments/user-app@file:/Users/jagankumar/Office/Work/repo/DIGIT-Frontend/micro-frontends/sandbox-ui/packages/modules/user-app":
   version "0.0.1"
-  resolved "file:modules/user-app"
+  resolved "file:packages/modules/user-app"
   dependencies:
     components "1.0.0"
     react "18.3.1"
