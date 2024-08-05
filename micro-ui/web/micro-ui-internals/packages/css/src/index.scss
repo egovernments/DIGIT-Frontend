@@ -825,3 +825,19 @@ input[type="number"] {
   justify-content: space-between;
   align-items: center;
 }
+
+.app-iframe {
+  height: unset !important;
+}
+.app-iframe-wrapper.dss-kibana-iframe-wrapper {
+  left: unset !important;
+  top: unset !important;
+  position: unset !important;
+}
+
+.app-iframe.dss-kibana-iframe {
+  position: unset !important;
+}
+.employeeCard.kibana-card.chart-item {
+  width: 100%;
+}
