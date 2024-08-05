@@ -111,7 +111,6 @@ const MDMSSearchv2 = () => {
           });
         }
       });
-      console.log(dropDownOptions, schemaCodeToValidate,"dropdown");
       dropDownOptions = dropDownOptions?.length > 0 && Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions) : dropDownOptions;
       
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;

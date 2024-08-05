@@ -887,7 +887,6 @@ export const UICustomizations = {
   SearchMDMSv2Config: {
     "WORKS-SOR.Rates": {
       sortValidDatesFirst : (arr)  => {
-        debugger;
         const validFrom = arr.find(item => item.name === 'validFrom');
         const validTo = arr.find(item => item.name === 'validTo');
     
