@@ -1,6 +1,6 @@
 {
-  "name": "components",
-  "version": "1.0.0",
+  "name": "@egovernments/sandbox-components",
+  "version": "0.0.3",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -63,8 +63,9 @@
   },
   "keywords": [
     "digit",
-    "core",
-    "components",
-    "dpg"
+    "egov",
+    "dpg",
+    "digit-ui",
+    "libraries"
   ]
 }

@@ -7,7 +7,7 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     library: {
-      name: "components",
+      name: "@egovernments/sandbox-components",
       type: "umd",
     },
     globalObject: 'this', // Add this line to ensure compatibility in different environments
@@ -28,7 +28,6 @@ module.exports = {
       amd: 'react-dom',
       root: 'ReactDOM',
     },
-    'react-i18next': 'react-i18next',
     'react-router-dom': 'react-router-dom'
   },
   module: {
