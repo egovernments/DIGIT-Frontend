@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.2-beta.9]
+- Updated LanguageSelection Style.
+
 ## [1.8.2-beta.7]
 - Fixed LanguageSelection style.
 
