@@ -26,14 +26,19 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Setup Docker
-        uses: docker/setup-buildx-action@v1
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
       - name: Install dependencies and build root project
         run: |
           npm install
           npm run build
         working-directory: micro-frontends/sandbox-ui
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v1
 
       - name: Check modified files
         id: check_files
