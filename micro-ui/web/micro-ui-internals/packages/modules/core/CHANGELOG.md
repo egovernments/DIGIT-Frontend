@@ -1,5 +1,11 @@
 # Changelog 
 
+## 1.8.2-beta.12
+- Updated the css 
+
+## 1.8.2-beta.11
+- Changed the policy schema
+
 ## 1.8.2-beta.10
 - Enchanced Privacy component for table of contents
 
