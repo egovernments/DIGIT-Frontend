@@ -84,15 +84,14 @@ const UploadBoundary = () => {
 
   const validateHeaderRow = (headerRow) => {
     const expectedHeaders = modifiedHierarchy;
-    
-    // Check if the length of the headerRow matches the length of expectedHeaders
-    if (headerRow.length !== expectedHeaders.length) {
-      return false;
-    }
 
     // Check each header in the headerRow against the corresponding header in expectedHeaders
     for (let i = 0; i < headerRow.length; i++) {
       if (headerRow[i] !== expectedHeaders[i]) {
+        const boundary = t(`HCM_${headerRow[i].replace(/\s+/g, '_').toUpperCase()}`);
+        if(boundary === t("HCM_BOUNDARY_CODE")){
+          continue;
+        }
         return false;
       }
     }
