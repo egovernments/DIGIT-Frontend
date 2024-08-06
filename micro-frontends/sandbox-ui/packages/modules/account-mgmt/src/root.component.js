@@ -1,14 +1,12 @@
-import {TestComponent} from "@egovernments/digit-ui-components";
-import {
-  Tag,
-  SelectionCard,
-  ErrorMessage,
-} from "@egovernments/digit-ui-components";
+import { DigitUIComponents } from "components";
+
+const { TestComponent, Tag, SelectionCard, ErrorMessage } = DigitUIComponents;
 
 export default function Root(props) {
-  return<div>
-    <h1>hi</h1>
-    <Tag />
+  return (
+    <div>
+      <h1>hi</h1>
+      <Tag />
       <SelectionCard
         options={[
           {
@@ -18,6 +16,8 @@ export default function Root(props) {
         ]}
       />
       <ErrorMessage message="Error" />
-    <TestComponent></TestComponent>
-    <section>{props.name} hey react-app-2</section></div> ;
+      <TestComponent></TestComponent>
+      <section>{props.name} hey react-app-2</section>
+    </div>
+  );
 }

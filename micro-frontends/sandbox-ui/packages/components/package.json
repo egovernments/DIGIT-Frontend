@@ -1,6 +1,10 @@
 {
   "name": "@egovernments/sandbox-components",
+<<<<<<< Updated upstream
   "version": "0.0.6",
+=======
+  "version": "0.0.1",
+>>>>>>> Stashed changes
   "license": "MIT",
   "main": "dist/main.js",
   "source": "src/index.js",

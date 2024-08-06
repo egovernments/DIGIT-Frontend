@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from './Button';
 
-// import {ActionBar,Button} from "@egovernments/digit-ui-components";
 const ActionBar =(children)=><div>{children}</div>
 
 export default function Test(props) {

@@ -7,7 +7,8 @@ const Sample = () => {
   
   return (
     <div>
-      <TabForm></TabForm>
+      {/* <TabForm></TabForm> */}
+      yes
       {/* <StepperForm></StepperForm> */}
     </div>
   );

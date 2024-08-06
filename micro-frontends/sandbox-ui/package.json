@@ -13,7 +13,6 @@
   ],
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.1-webpack.121",
-    "@egovernments/sandbox-components": "0.0.5",
     "webpack-dev-server": "^5.0.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
