@@ -1,18 +1,27 @@
 import NavigateButton from "./NavigateButton";
 import { Test } from "components";
+import {ReactQueryWrapper} from "components";
+import TestComponent from "./TestState";
+import NetworkTest from "./components/NetworkTest";
+
+
 
 export default function Root(props) {
   
   return <>
-   <section>{props.name} hey react-app-0 
-  <NavigateButton to="zero"></NavigateButton>
+  <ReactQueryWrapper>
+   <section>hey account-mgmt
+  <NavigateButton to="account-mgmt"></NavigateButton>
   </section>;
-  <section>{props.name} hey react-app-1 
-  <NavigateButton to="one"></NavigateButton>
+  <section> hey user
+  <NavigateButton to="user"></NavigateButton>
   </section>;
-  <section>{props.name} hey react-app-2 
-  <NavigateButton to="two"></NavigateButton>
+  <section>hey data-mgmt
+  <NavigateButton to="data-mgmt"></NavigateButton>
   </section>;
     <Test />
+    <TestComponent/>
+    <NetworkTest></NetworkTest>
+    </ReactQueryWrapper>
   </>
 }
