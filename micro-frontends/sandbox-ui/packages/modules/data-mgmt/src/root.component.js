@@ -1,5 +1,5 @@
 import NavigateButton from "./NavigateButton";
-import { Test } from "@egovernments/sandbox-components";
+import { Test } from "components";
 
 export default function Root(props) {
   
