@@ -2,13 +2,13 @@
 import React from 'react';
 import { navigateToUrl } from 'single-spa';
 
-const NavigateButton = ({to="user"}) => {
+const NavigateButton = ({link,name}) => {
   const navigate = () => {
-    navigateToUrl(`/pwc/${to}`);
+    navigateToUrl(`${link}`);
   };
 
   return (
-    <button onClick={navigate}>Go to App2</button>
+    <button onClick={navigate}>{name}</button>
   );
 };
 
