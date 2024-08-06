@@ -14,6 +14,30 @@ module.exports = (webpackConfigEnv, argv) => {
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
+    devServer: {
+      port: 9001,
+      proxy: [
+        {
+          context: () => true,
+          target:  'https://unified-dev.digit.org',
+          secure: true,
+          changeOrigin:true,
+          bypass: function (req, res, proxyOptions) {
+            if (req.headers.accept.indexOf('html') !== -1) {
+              console.log('Skipping proxy for browser request.');
+              return '/index.html';
+            }
+          },
+          headers: {
+            "Connection": "keep-alive"
+        },
+        },
+      ],
+      historyApiFallback: {
+        index: "/",
+      },
+      server:"http", //Enable HTTPS
+    },
     plugins: [
       new HtmlWebpackPlugin({
         inject: false,
