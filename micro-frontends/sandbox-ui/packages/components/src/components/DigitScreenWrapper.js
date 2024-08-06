@@ -8,6 +8,7 @@ import Topbar from './Topbar';
  * Renders the Sidebar and Topbar components along with the main content area.
  * 
  * @returns {JSX.Element} The rendered App component.
+ * @author jagankumar-egov
  */
 function DigitScreenWrapper({children}) {
   return (
