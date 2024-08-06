@@ -10,6 +10,11 @@ module.exports = (webpackConfigEnv, argv) => {
   });
 
   return merge(defaultConfig, {
-    // modify the webpack config however you'd like to by adding to this object
-  });
+    resolve: {
+      alias: {
+        components: path.resolve(__dirname, '../../components/src'),
+      },
+    },
+  }// modify the webpack config however you'd like to by adding to this object
+);
 };

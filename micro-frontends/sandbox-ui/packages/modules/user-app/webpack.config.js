@@ -13,7 +13,7 @@ module.exports = (webpackConfigEnv, argv) => {
   return merge(defaultConfig, {
     resolve: {
       alias: {
-        components: path.resolve(__dirname, '../components/src'),
+        components: path.resolve(__dirname, '../../components/src'),
       },
     },
   });
