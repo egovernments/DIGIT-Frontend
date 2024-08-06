@@ -110,6 +110,8 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
+1.0.2-beta.7 : localisation admin issue fixed
+1.0.2-beta.6 : boundary screen updated for support migration of data
 1.0.2-beta.4 If you dont want to use modulename and mastername in mdms-v2 data create and update api use {MDMS_SCHEMACODE_INACTION} this constant in global config and set it as false
 1.0.2-beta.3 updated the bulkupload time for MDMS data create
 1.0.2-beta.2 added audit history feature
