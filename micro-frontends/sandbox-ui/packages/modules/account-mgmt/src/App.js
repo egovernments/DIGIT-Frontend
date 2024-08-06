@@ -23,9 +23,12 @@ import AccountMgmtApp from "./pages";
 export default function App(props) {
   const { baseAppURL, rootTenant } = props;
   return (
+    <>
+    <h2>Account Management</h2>
     <AccountMgmtApp 
       baseAppURL={`${baseAppURL}/account-mgmt`} 
       rootTenant={rootTenant} 
     />
+    </>
   );
 }

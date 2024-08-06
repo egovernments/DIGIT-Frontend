@@ -18,13 +18,13 @@ const Sidebar = () => {
             <Link to="/home" className="hover:text-gray-400">Home</Link>
           </li>
           <li>
-            <Link to="/about" className="hover:text-gray-400">About</Link>
+            <Link to="/pwc/account-mgmt" className="hover:text-gray-400">Account-mgmt</Link>
           </li>
           <li>
-            <Link to="/services" className="hover:text-gray-400">Services</Link>
+            <Link to="/pwc/data-mgmt" className="hover:text-gray-400">Data-mgmt</Link>
           </li>
           <li>
-            <Link to="/contact" className="hover:text-gray-400">Contact</Link>
+            <Link to="/pwc/user" className="hover:text-gray-400">User</Link>
           </li>
         </ul>
       </nav>

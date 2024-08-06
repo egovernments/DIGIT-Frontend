@@ -22,16 +22,6 @@ const DigitRouter = ({ routes = [], baseAppURL }) => {
   return (
     <div>
       <Router>
-        {/* Added for Testing Purpose */}
-        <nav>
-          <ul>
-            {routes?.map((route, key) => (
-              <li key={key}>
-                <Link to={`${baseAppURL}/${route?.url}`}>{route?.url}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             {routes.map((route, key) => {
@@ -50,6 +40,16 @@ const DigitRouter = ({ routes = [], baseAppURL }) => {
             })}
           </Routes>
         </Suspense>
+        {/* Added for Testing Purpose TODO REMOVE THIS*/}
+        <nav>
+          <ul>
+            {routes?.map((route, key) => (
+              <li key={key}>
+                <Link to={`${baseAppURL}/${route?.url}`}>{route?.url}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </Router>
     </div>
   );
