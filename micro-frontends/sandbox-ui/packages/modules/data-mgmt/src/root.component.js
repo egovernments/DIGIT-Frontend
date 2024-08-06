@@ -1,9 +1,14 @@
 import NavigateButton from "./NavigateButton";
 import { Test } from "components";
+import {ReactQueryWrapper} from "components";
+import TestComponent from "./TestState";
+
+
 
 export default function Root(props) {
   
   return <>
+  <ReactQueryWrapper>
    <section>{props.name} hey react-app-0 
   <NavigateButton to="zero"></NavigateButton>
   </section>;
@@ -14,5 +19,7 @@ export default function Root(props) {
   <NavigateButton to="two"></NavigateButton>
   </section>;
     <Test />
+    <TestComponent/>
+    </ReactQueryWrapper>
   </>
 }
