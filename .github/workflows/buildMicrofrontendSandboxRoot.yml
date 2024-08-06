@@ -28,7 +28,7 @@ jobs:
           run_job_digit_ui=false
           while IFS= read -r file
           do
-            if [[ $file == health/micro-ui/* ]]; then
+            if [[ $file == micro-frontends/sandbox-ui/packages/root-app/* ]]; then
               echo "This modified file is under the 'digit_ui' folder."
               run_job_digit_ui=true
             fi
