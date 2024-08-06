@@ -1,7 +1,7 @@
 name: Digit Sandbox Root App Build workflow
 on:
   push:
-    branches: [ 'sandbox-test']
+    branches: [ 'sandbox-develop']
     paths:
       - 'micro-frontends/sandbox-ui/packages/root-app/**'
   workflow_dispatch:
