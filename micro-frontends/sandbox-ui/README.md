@@ -36,7 +36,12 @@ To get started with the Sandbox Portal, follow these steps:
     npm install
     ```
 
-3. **Start the Development Server**:
+3. **Build Packages & Components**:
+    ```sh
+    npm run build
+    ```
+
+4. **Start the Development Server**:
     ```sh
     npm run start
     ```
@@ -55,24 +60,45 @@ Once the development server is running, you can access the application at `http:
 - **React Query**: Data fetching and state management library.
 - **Digit UI Components**: Pre-built UI components tailored for the project.
 
+### Digit UI Components 
+Pre-built UI components, it is a library of reusable components that can be used in the Sandbox Portal.
+Refer [Storybook](https://unified-dev.digit.org/storybook/) to know more about the components.
+
+- **Usage**
+ ```sh
+    import { DigitUIComponents } from "components";
+
+    const { InfoCard, Stepper, Button, Timeline, InfoButton, or any component } = DigitUIComponents;
+
+    <Button/>
+
+ ```
+
 ## Project Structure
 
 ```
-sandbox-portal/
-├── public/                  # Public assets
-├── src/                     # Source files
-│   ├── components/          # React components
-│   ├── hooks/               # Custom hooks
-│   ├── pages/               # Page components
-│   ├── services/            # API services
-│   ├── styles/              # TailwindCSS styles
-│   ├── App.js               # Main App component
-│   └── index.js             # Entry point
-├── .gitignore               # Git ignore file
-├── package.json             # NPM package configuration
-├── tailwind.config.js       # TailwindCSS configuration
-├── webpack.config.js        # Webpack configuration
-└── README.md                # Project README
+sandbox-ui/
+├── packages/                      # Microfrontends
+│   ├── components/                # Shared React components
+│   │   └── src/                   # Source files for shared components
+│   ├── root-app/                  # Main rendered JS app
+│   │   ├── public/                # Public assets for root app
+│   │   ├── src/                   # Source files for root app
+│   ├── modules/                   # Microfrontend modules
+│   │   ├── account-mgmt/          # Account Management App
+│   │   │   ├── public/            # Public assets for module 1
+│   │   │   ├── src/               # Source files for module 1
+│   │   ├── data-mgmt/             # Data Management App
+│   │   │   ├── public/            # Public assets for module 2
+│   │   │   ├── src/               # Source files for module 2
+│   │   ├── user-app/              # User App
+│   │   │   ├── public/            # Public assets for module 2
+│   │   │   ├── src/               # Source files for module 2
+├── .gitignore                     # Git ignore file
+├── package.json                   # NPM package configuration
+├── lerna.json                     # Lerna configuration
+└── README.md                      # Project README
+
 ```
 
 ## Contributing
