@@ -64,9 +64,10 @@ function NetworkTest() {
   // if(isLoading){
   //   return  <div>Loading...</div>
   // }
+  
   return (
     <div className="App">
-      {data ? <div>Data: {JSON.stringify(data)}</div> : <div>Loading...</div>}
+      {mdms2 ? <div>Data: {JSON.stringify(mdms2)}</div> : <div>Loading...</div>}
     </div>
   );
 }
