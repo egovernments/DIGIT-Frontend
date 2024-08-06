@@ -4,6 +4,7 @@ import DigitUIComponents from "./DigitUIComponents"
 import Sample from "./Sample";
 import Test from "./components/Test";
 import States from "./states" 
+import {Hooks} from "./hooks"
 import ReactQueryWrapper from "./providers/QueryProvider"
 
 // 导出组件
@@ -14,5 +15,6 @@ export {
   Test,
   Sample,
   States,
-  ReactQueryWrapper
+  ReactQueryWrapper,
+  Hooks
 }
