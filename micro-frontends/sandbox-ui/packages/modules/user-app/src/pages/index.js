@@ -1,5 +1,7 @@
 import React, { lazy } from "react";
 import { DigitRouter } from "components"; // Import the DigitRouter component for routing
+import Sample from "../components/Sample";
+import SampleWithForm from "../../../../components/src/Sample";
 
 /**
  * Define routes for the application.
@@ -54,6 +56,10 @@ const routes = [
  */
 const UserApp = ({ rootTenant, baseAppURL }) => {
   return (
+    // <>
+    //   <Sample></Sample>
+    //   <SampleWithForm></SampleWithForm>
+    // </>
     <DigitRouter baseAppURL={baseAppURL} routes={routes} />
   );
 };
