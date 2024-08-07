@@ -1,0 +1,80 @@
+name: Digit Sandbox Root App Build Workflow
+
+on:
+  push:
+    branches: [ 'sandbox-test']
+    paths:
+      - 'micro-frontends/sandbox-ui/packages/modules/**'
+  workflow_dispatch:
+
+jobs:
+  docker_image-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app:
+          - name: user
+            folder: user-app
+          - name: data-mgmt
+            folder: data-mgmt
+          - name: account-mgmt
+            folder: account-mgmt
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies and build root project
+        run: |
+          npm install
+          npm run build
+        working-directory: micro-frontends/sandbox-ui
+
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Check modified files
+        id: check_files
+        run: |
+          echo "=============== List modified files ==============="
+          git diff --name-only HEAD^ HEAD
+
+          echo "========== Check paths of modified files =========="
+          git diff --name-only HEAD^ HEAD > files.txt
+          run_job=false
+          while IFS= read -r file
+          do
+            if [[ $file == micro-frontends/sandbox-ui/packages/modules/${{ matrix.app.folder }}/** ]]; then
+              echo "This modified file is under the '${{ matrix.app.folder }}' folder."
+              run_job=true
+            fi
+          done < files.txt
+
+          # Set the output based on whether the job should run
+          echo "::set-output name=run_job::$run_job"
+          echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Login to egovio Docker Container Registry
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |      
+          # Authenticate with Docker Hub
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Build and Push Docker image for ${{ matrix.app.name }}
+        if: ${{ steps.check_files.outputs.run_job == 'true' }}
+        run: |
+          docker build -t sandbox-${{ matrix.app.name }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} -f docker/Dockerfile .
+          docker tag sandbox-${{ matrix.app.name }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }} egovio/sandbox-${{ matrix.app.name }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker push egovio/sandbox-${{ matrix.app.name }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+        working-directory: micro-frontends/sandbox-ui/packages/modules/${{ matrix.app.folder }}
