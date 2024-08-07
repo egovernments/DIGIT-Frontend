@@ -22,8 +22,6 @@ const RenderIndividualField = React.memo(
           control={control}
           rules={{ required: property.required }}
           render={({ field }) => {
-            console.log(property, " fffffffffffffffff")
-
             if (property.enum) {
               return (
                 <select {...field}>
