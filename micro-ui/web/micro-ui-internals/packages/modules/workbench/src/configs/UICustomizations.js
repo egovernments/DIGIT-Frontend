@@ -903,6 +903,25 @@ export const UICustomizations = {
         return arr;
     }
     
+    },
+    "WORKS-SOR.Composition": {
+      sortValidDatesFirst : (arr)  => {
+        const validFrom = arr.find(item => item.name === 'validFrom');
+        const validTo = arr.find(item => item.name === 'validTo');
+    
+        if (validFrom && validTo) {
+            const validFromIndex = arr.indexOf(validFrom);
+            const validToIndex = arr.indexOf(validTo);
+    
+            if (validFromIndex > validToIndex) {
+                arr.splice(validFromIndex, 1);
+                arr.splice(validToIndex, 0, validFrom);
+            }
+        }
+    
+        return arr;
+    }
+    
     }
   }
 };
