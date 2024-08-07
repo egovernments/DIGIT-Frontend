@@ -18,7 +18,7 @@ const routes = [
   },
   {
     url: "page-three",
-    withAuth: false, // Indicates that no authentication is required for this route
+    withAuth: true, // Indicates that no authentication is required for this route
     component: lazy(() => import("./PageThree")), // Lazy-load the PageThree component
   },
 ];

@@ -21,6 +21,26 @@ const routes = [
     withAuth: false, // Indicates that no authentication is required for this route
     component: lazy(() => import("./PageThree")), // Lazy-load the PageThree component
   },
+  {
+    url: "sign-up",
+    withAuth: false, // Indicates that no authentication is required for this route
+    component: lazy(() => import("./SignUpScreen")), // Lazy-load the PageThree component
+  },  
+  {
+    url: "sign-in",
+    withAuth: false, // Indicates that no authentication is required for this route
+    component: lazy(() => import("./SignInScreen")), // Lazy-load the PageThree component
+  },  
+  {
+    url: "otp",
+    withAuth: false, // Indicates that no authentication is required for this route
+    component: lazy(() => import("./OTPScreen")), // Lazy-load the PageThree component
+  },
+  {
+    url: "home",
+    withAuth: false, // Indicates that no authentication is required for this route
+    component: lazy(() => import("./HomeScreen")), // Lazy-load the PageThree component
+  },
 ];
 
 /**
