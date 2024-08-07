@@ -177,10 +177,10 @@ sandbox-ui/
 │   │   ├── account-mgmt/          # Account Management App
 │   │   │   ├── docker/            # Docker configuration for the module
 │   │   │   ├── node_modules/      # Node.js modules
-│   │   │   ├── css/               # css files for module 1
-│   │   │   │   ├── components/    # css for components
-│   │   │   │   ├── pages/         # css for pages
 │   │   │   ├── src/               # Source files for Data Management App
+│   │   │   │   ├── css/               # css files for module 1
+│   │   │   │   │   ├── components/    # css for components
+│   │   │   │   │   ├── pages/         # css for pages
 │   │   │   │   ├── components/    # React components for data management
 │   │   │   │   │   ├── NetworkTest.js
 │   │   │   │   │   ├── Sample.js
@@ -202,10 +202,10 @@ sandbox-ui/
 │   │   ├── data-mgmt/             # Data Management App
 │   │   │   ├── docker/            # Docker configuration for the module
 │   │   │   ├── node_modules/      # Node.js modules
-│   │   │   ├── css/               # css files for module 1
-│   │   │   │   ├── components/    # css for components
-│   │   │   │   ├── pages/         # css for pages
 │   │   │   ├── src/               # Source files for Data Management App
+│   │   │   │   ├── css/               # css files for module
+│   │   │   │   │   ├── components/    # css for components
+│   │   │   │   │   ├── pages/         # css for pages
 │   │   │   │   ├── components/    # React components for data management
 │   │   │   │   │   ├── NetworkTest.js
 │   │   │   │   │   ├── Sample.js
@@ -227,10 +227,10 @@ sandbox-ui/
 │   │   ├── user-app/              # User App
 │   │   │   ├── docker/            # Docker configuration for the module
 │   │   │   ├── node_modules/      # Node.js modules
-│   │   │   ├── css/               # css files for module 1
-│   │   │   │   ├── components/    # css for components
-│   │   │   │   ├── pages/         # css for pages
 │   │   │   ├── src/               # Source files for Data Management App
+│   │   │   │   ├── css/               # css files for module
+│   │   │   │   │   ├── components/    # css for components
+│   │   │   │   │   ├── pages/         # css for pages
 │   │   │   │   ├── components/    # React components for data management
 │   │   │   │   │   ├── NetworkTest.js
 │   │   │   │   │   ├── Sample.js

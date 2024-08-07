@@ -27,7 +27,7 @@ module.exports = (webpackConfigEnv, argv) => {
       rules: [
         {
           test: /\.scss$/i,
-          include: path.resolve(__dirname, 'css'),
+          include: path.resolve(__dirname, 'src/css'),
           exclude: /node_modules/,
           use: [
             'style-loader',
