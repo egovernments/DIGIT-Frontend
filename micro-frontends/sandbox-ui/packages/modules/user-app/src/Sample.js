@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { DigitUIComponents } from "components";
 
 import SampleTwo from "./SampleTwo";
+import HomeScreen from "../../../components/src/components/homecomponents/HomeScreen";
+import { ReactQueryWrapper } from "../../../components/src";
 const { InfoCard, Stepper, Button, Timeline, InfoButton } = DigitUIComponents;
 const commonDivStyle = {
   display: "flex",
@@ -961,6 +963,10 @@ const Sample = () => {
         ,
       </div>
       <SampleTwo />
+      <ReactQueryWrapper>
+      <HomeScreen></HomeScreen>
+      </ReactQueryWrapper>
+      
     </div>
   );
 };
