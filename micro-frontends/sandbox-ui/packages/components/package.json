@@ -43,7 +43,6 @@
     "single-spa": "5.9.3",
     "react-hook-form": "7.52.0",
     "react-stepper-horizontal": "1.0.11",
-    "react-tabs": "6.0.2",
     "localforage": "^1.10.0",
     "@tanstack/react-query": "5.50.1"
   },
