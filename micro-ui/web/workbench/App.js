@@ -1,20 +1,15 @@
-/**
- * The above code initializes various Digit UI modules and components, sets up customizations, and
- * renders the DigitUI component based on the enabled modules and state code.
- * @returns The `App` component is being returned, which renders the `DigitUI` component with the
- * specified props such as `stateCode`, `enabledModules`, `moduleReducers`, and `defaultLanding`. The
- * `DigitUI` component is responsible for rendering the UI based on the provided configuration and
- * modules.
- */
 import React from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
-// import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import {
+  initPGRComponents,
+  PGRReducers,
+} from "@egovernments/digit-ui-module-pgr";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -22,15 +17,14 @@ const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  // "HRMS",
+  "HRMS",
   "Engagement",
   "Workbench",
-  "HCMWORKBENCH",
-  "Campaign"
+  "PGR"
 ];
 
 const moduleReducers = (initData) => ({
-  initData,
+  initData, pgr: PGRReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -39,12 +33,11 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
-  // initHRMSComponents();
+  initPGRComponents();
+  initEngagementComponents();
+  initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
-  initWorkbenchHCMComponents();
-  initCampaignComponents();
-
 };
 
 initLibraries().then(() => {

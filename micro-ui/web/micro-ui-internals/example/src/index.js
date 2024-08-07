@@ -4,28 +4,27 @@ import ReactDOM from "react-dom";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+// import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
+import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
+import { PGRReducers , initPGRComponents} from "@egovernments/digit-ui-module-pgr";
+
 import "@egovernments/digit-ui-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
 import { UICustomizations } from "./UICustomizations";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 
 var Digit = window.Digit || {};
 
-const enabledModules = [
-  "DSS",
-  "HRMS",
-  "Workbench",
-  "HCMWORKBENCH",
-  "Campaign",
-  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities",
-  "Microplanning"
-  //added to check fsm
-  // "FSM"
+const enabledModules = [ "DSS", "HRMS",
+"Workbench"
+,"PGR"
+//  "Engagement", "NDSS","QuickPayLinks", "Payment",
+  // "Utilities",
+//added to check fsm
+// "FSM"
 ];
 
 const initTokens = (stateCode) => {
@@ -65,13 +64,18 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-  initUtilitiesComponents();
+
+  initDSSComponents();
+  initHRMSComponents();
+  initEngagementComponents();
+  // initUtilitiesComponents();
   initWorkbenchComponents();
-  initWorkbenchHCMComponents();
-  initCampaignComponents();
+  initPGRComponents();
 
-  const moduleReducers = (initData) => initData;
 
+  const moduleReducers = (initData) =>  ({
+    pgr: PGRReducers(initData),
+  });
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);

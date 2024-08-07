@@ -14,5 +14,5 @@ cp workbench/inter-package.json $INTERNALS/package.json
 
 cp $INTERNALS/example/src/UICustomizations.js src/Customisations
 
-echo "UI :: workbench " && echo "Branch: $(git branch --show-current)" && echo "$(git log -1 --pretty=%B)" && echo "installing packages" 
+echo "UI :: Workbench " && echo "Branch: $(git branch --show-current)" && echo "$(git log -1 --pretty=%B)" && echo "installing packages" 
 
