@@ -2,7 +2,7 @@
 import React from "react";
 // import { useUserState } from "../state/useUserState";
 import FormComposer from "../hoc/FormComposer";
-import CustomDatePicker from "../CustomCheck"; // Import the custom component
+import { CustomDatePicker, CustomDropdown } from "../CustomWidgets"; // Import the custom component
 // import { useDrawerState } from "../state/useDrawerState";
 
 const schema = {
@@ -16,6 +16,13 @@ const schema = {
         firstName: { type: "string", title: "First Name" },
         lastName: { type: "string", title: "Last Name" },
         dob: { type: "date", format: "date", title: "Date of Birth" },
+        gender: {
+          type: "string", title: "Gender", options: [
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' },
+            { value: 'other', label: 'Other' },
+          ]
+        },
       },
       required: ["firstName", "lastName"],
     },
@@ -79,7 +86,7 @@ const uiSchema = {
   "ui:groups": {
     personalInfo: {
       fields: ["personalInfo"],
-      "ui:order": ["checkBox", "firstName", "lastName", "dob"],
+      "ui:order": ["checkBox", "firstName", "lastName", "dob", "gender"],
     },
     address: {
       fields: ["address"],
@@ -118,6 +125,7 @@ const uiSchema = {
     firstName: { "ui:widget": "text" },
     lastName: { "ui:widget": "text" },
     dob: { "ui:widget": "date" },
+    gender: { "ui:widget": "dropdown" }
   },
   address: {
     street: { "ui:widget": "text" },
@@ -158,6 +166,7 @@ const uiSchema = {
 };
 const customWidgets = {
   date: CustomDatePicker,
+  dropdown: CustomDropdown
 };
 
 

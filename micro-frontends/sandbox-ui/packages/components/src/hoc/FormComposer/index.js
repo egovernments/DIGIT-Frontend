@@ -5,13 +5,13 @@ import { getUpdatedUISchema } from "./formTabUtils";
 import Stepper from "react-stepper-horizontal";
 import useLastUpdatedField from "../../hooks/useLastUpdatedField";
 import DigitUIComponents from "../../DigitUIComponents";
+
 const { TextInput, CheckBox, Button, DatePicker } = DigitUIComponents;
 
 const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors, customWidgets }) => {
     const CustomWidget = customWidgets[uiWidget];
     const { theme, toggleTheme } = { theme: "light" };
-
     return (
       <div key={name} style={{ display: "inline-block", marginRight: "20px" }}>
         <label className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -22,6 +22,8 @@ const RenderIndividualField = React.memo(
           control={control}
           rules={{ required: property.required }}
           render={({ field }) => {
+            console.log(property, " fffffffffffffffff")
+
             if (property.enum) {
               return (
                 <select {...field}>
@@ -32,12 +34,15 @@ const RenderIndividualField = React.memo(
                   ))}
                 </select>
               );
-            } else {
+            }
+            else if (CustomWidget) {
+              const combinedProps = { ...field, ...property };
+              return <CustomWidget {...combinedProps} />;
+            }
+            else {
               switch (property.type) {
                 case "boolean":
                   return <CheckBox {...field} checked={field.value} />;
-                case "date":
-                  return <DatePicker {...field} />;
                 default:
                   return <TextInput {...field} />;
               }
@@ -473,8 +478,6 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
             })}
           </>
         )
-
-
       ) : (
         <>
           {renderGroups(
