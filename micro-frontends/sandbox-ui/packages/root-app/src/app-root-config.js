@@ -5,6 +5,12 @@ import {
   constructLayoutEngine,
 } from "single-spa-layout";
 import microfrontendLayout from "./microfrontend-layout.html";
+// Extract the root tenant from the URL
+function getRootTenant() {
+  const url = new URL(window.location.href);
+  const segments = url.pathname.split('/');
+  return segments[1]; // Assuming the root tenant is the first segment
+}
 
 const routes = constructRoutes(microfrontendLayout);
 const applications = constructApplications({
@@ -15,6 +21,11 @@ const applications = constructApplications({
 });
 const layoutEngine = constructLayoutEngine({ routes, applications });
 
-applications.forEach(registerApplication);
+applications.forEach((app) => {
+  registerApplication({
+    ...app,
+    customProps: () => ({ rootTenant: getRootTenant(),baseAppURL:`/${getRootTenant()}` }),
+  });
+});
 layoutEngine.activate();
 start();

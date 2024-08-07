@@ -1,6 +1,5 @@
-import { DigitUIComponents } from "components";
 import React, { useState } from "react";
-
+import { DigitUIComponents } from "components";
 const {
   CheckBox,
   InputTextAmount,
@@ -9,7 +8,11 @@ const {
   Paragraph,
   TextArea,
   TextInput,
-} = DigitUIComponents;
+  TestComponent,
+  Tag,
+  SelectionCard,
+  ErrorMessage,
+} = DigitUIComponents; // Import only the necessary component
 
 const SampleTwo = () => {
   return (
@@ -21,6 +24,17 @@ const SampleTwo = () => {
       <InputTextAmount />
       <CheckBox />
       <h2>SampleTwo</h2>
+      <Tag />
+      <SelectionCard
+        options={[
+          {
+            code: "sasa",
+            name: "name",
+          },
+        ]}
+      />
+      <ErrorMessage message="Error" />
+      <TestComponent></TestComponent>
     </div>
   );
 };
