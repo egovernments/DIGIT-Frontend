@@ -22,7 +22,6 @@ export const CustomDatePicker = ({ value, onChange, label }) => {
 
 export const CustomDropdown = ({ options, value, onChange, label }) => {
 
-  console.log(options, value, onChange, label)
   const handleChange = (event) => {
     onChange(event.target.value);
   };
