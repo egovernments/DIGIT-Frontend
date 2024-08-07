@@ -49,6 +49,44 @@ To get started with the Sandbox Portal, follow these steps:
    npm run start
    ```
 
+Sure! Here’s the FAQ section formatted for direct inclusion in a README file:
+
+---
+
+## FAQ
+
+### Q: What should I do if I see many file changes or if my local server crashes due to dependency issues?
+
+A: Run the following command:
+```bash
+bash clean.sh
+```
+
+### Q: How can I check if my local server is running correctly?
+
+A: After starting your server, you should be able to see it running at port 9001.
+
+Sure, here's an updated FAQ section for your README file that includes instructions on checking the Node.js version and performing a fresh install:
+
+
+### Q: How do I check my Node.js version and perform a fresh install?
+
+A: First, check your Node.js version by running:
+```bash
+node -v
+```
+You should see something like:
+```bash
+v20.9.0
+```
+
+To perform a fresh install, run:
+```bash
+npm ci
+```
+
+---
+
 ## Usage
 
 Once the development server is running, you can access the application at `http://localhost:9001`. Explore the various digital products and interact with the features provided by the sandbox portal.
