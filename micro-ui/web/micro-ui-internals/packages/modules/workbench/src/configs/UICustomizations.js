@@ -906,8 +906,8 @@ export const UICustomizations = {
     },
     "WORKS-SOR.Composition": {
       sortValidDatesFirst : (arr)  => {
-        const validFrom = arr.find(item => item.name === 'validFrom');
-        const validTo = arr.find(item => item.name === 'validTo');
+        const validFrom = arr.find(item => item.name === 'effectiveFrom');
+        const validTo = arr.find(item => item.name === 'effectiveTo');
     
         if (validFrom && validTo) {
             const validFromIndex = arr.indexOf(validFrom);
