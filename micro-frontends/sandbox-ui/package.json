@@ -22,9 +22,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.2.1",
-    "css-loader": "^7.1.2",
-    "lerna": "^8.1.7",
-    "style-loader": "^4.0.0"
+    "lerna": "^8.1.7"
   },
   "resolutions": {
     "**/react": "18.3.1",
