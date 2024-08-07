@@ -1,17 +1,17 @@
 import React from "react";
 import TabForm from "./components/TabForm";
-// import StepperForm from "./components/StepperForm";
+import StepperForm from "./components/StepperForm";
 
-const Sample = () => {
+const SampleWithForm = () => {
   console.log("sample");
-  
+
   return (
     <div>
-      {/* <TabForm></TabForm> */}
+      <TabForm></TabForm>
       yes
-      {/* <StepperForm></StepperForm> */}
+      <StepperForm></StepperForm>
     </div>
   );
 };
 
-export default Sample;
+export default SampleWithForm;

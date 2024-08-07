@@ -1,6 +1,6 @@
 import React from "react";
 import Sample from "./Sample";
-import {Button} from "components"
+import { Button, SampleWithForm } from "components"
 // import { Button, Text,Checkbox } from "../../components/src";
 // import {Button} from "components";
 // import {Checkbox} from "components";
@@ -19,7 +19,7 @@ import {Button} from "components"
 // console.log("hey react-app default");
 export default function Root(props) {
   return <section>{props.name} hey react-app-default
-<Button>Hi</Button>
-<Sample></Sample>
+    <Sample></Sample>
+    <SampleWithForm></SampleWithForm>
   </section>;
 }

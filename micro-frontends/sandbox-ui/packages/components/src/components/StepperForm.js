@@ -12,9 +12,10 @@ const schema = {
     personalInfo: {
       type: "object",
       properties: {
+        checkBox: { type: "boolean", title: "CheckBox" },
         firstName: { type: "string", title: "First Name" },
         lastName: { type: "string", title: "Last Name" },
-        dob: { type: "string", format: "date", title: "Date of Birth" },
+        dob: { type: "date", format: "date", title: "Date of Birth" },
       },
       required: ["firstName", "lastName"],
     },
@@ -78,7 +79,7 @@ const uiSchema = {
   "ui:groups": {
     personalInfo: {
       fields: ["personalInfo"],
-      "ui:order": ["firstName", "lastName", "dob"],
+      "ui:order": ["checkBox", "firstName", "lastName", "dob"],
     },
     address: {
       fields: ["address"],
@@ -97,21 +98,21 @@ const uiSchema = {
       "ui:order": ["newsletter", "subscriptionFrequency"],
     },
   },
-  "ui:layout":{
+  "ui:layout": {
     layouts: [
       { label: "Personal Info", fields: ["personalInfo"] },
       { label: "Address", fields: ["address"] },
       { label: "Phones", fields: ["phones"] },
       { label: "Preferences", fields: ["preferences"] },
     ],
-    
-     conditionalLayout:{
+
+    conditionalLayout: {
       3: {
         fields: ["preferences.newsletter"],
         rule: (values) => values["preferences.newsletter"],
       },
     },
-    type:"STEPPER" //"TAB||STEPPER"
+    type: "STEPPER" //"TAB||STEPPER"
   },
   personalInfo: {
     firstName: { "ui:widget": "text" },
