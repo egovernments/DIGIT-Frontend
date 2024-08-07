@@ -1,10 +1,11 @@
 import NavigateButton from "./NavigateButton";
 import { Test } from "components";
+import "../css/index.scss"
 
 export default function Root(props) {
   
   return <>
-   <section>{props.name} hey react-app-0 
+    <section className="custom-class">{props.name} hey react-app-0
   <NavigateButton to="zero"></NavigateButton>
   </section>;
   <section>{props.name} hey react-app-1 

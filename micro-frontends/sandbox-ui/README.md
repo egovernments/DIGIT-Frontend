@@ -88,12 +88,15 @@ sandbox-ui/
 │   │   ├── account-mgmt/          # Account Management App
 │   │   │   ├── public/            # Public assets for module 1
 │   │   │   ├── src/               # Source files for module 1
+│   │   │   ├── css/               # css files for module 1
 │   │   ├── data-mgmt/             # Data Management App
 │   │   │   ├── public/            # Public assets for module 2
 │   │   │   ├── src/               # Source files for module 2
+│   │   │   ├── css/               # css files for module 2
 │   │   ├── user-app/              # User App
-│   │   │   ├── public/            # Public assets for module 2
-│   │   │   ├── src/               # Source files for module 2
+│   │   │   ├── public/            # Public assets for module 3
+│   │   │   ├── src/               # Source files for module 3
+│   │   │   ├── css/               # css files for module 3
 ├── .gitignore                     # Git ignore file
 ├── package.json                   # NPM package configuration
 ├── lerna.json                     # Lerna configuration

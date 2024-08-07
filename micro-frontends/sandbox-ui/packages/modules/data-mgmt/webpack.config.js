@@ -1,5 +1,5 @@
 const path = require('path');
-const { merge } = require("webpack-merge");
+const { mergeWithRules } = require("webpack-merge");
 const singleSpaDefaults = require("webpack-config-single-spa-react");
 
 module.exports = (webpackConfigEnv, argv) => {
@@ -10,12 +10,33 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
-  return merge(defaultConfig, {
+  return mergeWithRules({
+    module: {
+      rules: {
+        test: "match",
+        use: "replace"
+      }
+    }
+  })(defaultConfig, {
     resolve: {
       alias: {
         components: path.resolve(__dirname, '../../components/src'),
       },
     },
-  }// modify the webpack config however you'd like to by adding to this object
-  );
+    module: {
+      rules: [
+        {
+          test: /\.scss$/i,
+          include: path.resolve(__dirname, 'css'),
+          exclude: /node_modules/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            'sass-loader'
+          ],
+        },
+      ],
+    },
+  });
 };

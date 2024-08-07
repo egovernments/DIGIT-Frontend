@@ -14,15 +14,17 @@
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.1-webpack.121",
     "@egovernments/sandbox-components": "0.0.5",
-    "webpack-dev-server": "^5.0.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-i18next": "15.0.0",
-    "react-router-dom": "6.25.1"
+    "react-router-dom": "6.25.1",
+    "webpack-dev-server": "^5.0.4"
   },
   "devDependencies": {
     "concurrently": "^6.2.1",
-    "lerna": "^8.1.7"
+    "css-loader": "^7.1.2",
+    "lerna": "^8.1.7",
+    "style-loader": "^4.0.0"
   },
   "resolutions": {
     "**/react": "18.3.1",
@@ -33,5 +35,3 @@
     "build": "lerna run build"
   }
 }
-
-
