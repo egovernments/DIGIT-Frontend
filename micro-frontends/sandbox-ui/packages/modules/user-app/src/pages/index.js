@@ -1,11 +1,9 @@
 import React, { lazy } from "react";
 import { DigitRouter } from "components"; // Import the DigitRouter component for routing
-import Sample from "../components/Sample";
-import SampleWithForm from "../../../../components/src/Sample";
 
 /**
  * Define routes for the application.
- * Each route specifieDigitRouters the URL, authentication requirement, and the component to be lazy-loaded.
+ * Each route specifies the URL, authentication requirement, and the component to be lazy-loaded.
  */
 const routes = [
   {
@@ -27,12 +25,12 @@ const routes = [
     url: "sign-up",
     withAuth: false, // Indicates that no authentication is required for this route
     component: lazy(() => import("./SignUpScreen")), // Lazy-load the PageThree component
-  },
+  },  
   {
     url: "sign-in",
     withAuth: false, // Indicates that no authentication is required for this route
     component: lazy(() => import("./SignInScreen")), // Lazy-load the PageThree component
-  },
+  },  
   {
     url: "otp",
     withAuth: false, // Indicates that no authentication is required for this route
@@ -56,10 +54,6 @@ const routes = [
  */
 const UserApp = ({ rootTenant, baseAppURL }) => {
   return (
-    // <>
-    //   <Sample></Sample>
-    //   <SampleWithForm></SampleWithForm>
-    // </>
     <DigitRouter baseAppURL={baseAppURL} routes={routes} />
   );
 };

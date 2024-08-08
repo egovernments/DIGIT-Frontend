@@ -1,7 +1,7 @@
 // src/components/JsonSchemaForm.js
 import React from "react";
 // import { useUserState } from "../state/useUserState";
-import { CustomDatePicker } from "../CustomWidgets"; // Import the custom component
+import CustomDatePicker from "../CustomCheck"; // Import the custom component
 import FormComposer from "../hoc/FormComposer";
 
 const schema = {
