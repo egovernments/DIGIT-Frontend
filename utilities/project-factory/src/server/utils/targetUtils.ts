@@ -3,11 +3,13 @@ import { checkIfSourceIsMicroplan, getConfigurableColumnHeadersBasedOnCampaignTy
 import _ from 'lodash';
 import { replicateRequest } from './genericUtils';
 import { callGenerate } from './generateUtils';
+import { logger } from './logger';
 
 
 async function generateDynamicTargetHeaders(request: any, campaignObject: any, localizationMap?: any) {
     const isSourceMicroplan = checkIfSourceIsMicroplan(campaignObject);
     let headerColumnsAfterHierarchy: any;
+    logger.info(isDynamicTargetTemplateForProjectType(campaignObject?.projectType))
     if (isDynamicTargetTemplateForProjectType(campaignObject?.projectType) && campaignObject.deliveryRules && campaignObject.deliveryRules.length > 0 && !isSourceMicroplan) {
         const modifiedUniqueDeliveryConditions = modifyDeliveryConditions(campaignObject.deliveryRules);
         headerColumnsAfterHierarchy = generateTargetColumnsBasedOnDeliveryConditions(modifiedUniqueDeliveryConditions, localizationMap);
@@ -17,6 +19,7 @@ async function generateDynamicTargetHeaders(request: any, campaignObject: any, l
         headerColumnsAfterHierarchy = await getConfigurableColumnHeadersBasedOnCampaignType(request);
         headerColumnsAfterHierarchy.shift();
     }
+    console.log(headerColumnsAfterHierarchy,"hierrrrrrrrrrrrrrr")
     return headerColumnsAfterHierarchy;
 }
 
@@ -119,8 +122,10 @@ async function updateTargetColumnsIfDeliveryConditionsDifferForSMC(request: any)
 }
 
 function isDynamicTargetTemplateForProjectType(projectType: string) {
+    logger.info(projectType)
     const projectTypesFromConfig = config?.enableDynamicTemplateFor;
     const projectTypesArray = projectTypesFromConfig ? projectTypesFromConfig.split(',') : [];
+    console.log(projectTypesArray,"typessssssss")
     return projectTypesArray.includes(projectType);
 }
 
