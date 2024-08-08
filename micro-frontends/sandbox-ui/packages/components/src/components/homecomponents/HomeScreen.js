@@ -6,7 +6,7 @@ import mockData from './mockData.json'; // Assuming the JSON is saved as mockDat
 import './HomeScreen.css';
 import useMDMSHook from "../../hooks/useMDMSHook";
 
-const { InfoCard, Stepper, Button, Timeline, InfoButton, Card } = DigitUIComponents
+const { InfoCard, Stepper, Button, Timeline, InfoButton, Card ,isLoading, error} = DigitUIComponents
 
 const HomeScreen = () => {
     const tenantId = "pg"; // Replace with actual tenant ID
@@ -17,19 +17,17 @@ const HomeScreen = () => {
       }
     ];
   
-    const { data, isLoading, error } = useMDMSHook({
-      url: "/mdms-v2/v1/_search",
-      moduleDetails,
-      config: {
-        select: (data) => data?.MdmsRes?.SandBox?.HomeScreen || [],
-      },
-      tenantId
-    });
+    const { data:mdms0 } = useMDMSHook({tenantId: "pg",moduleDetails:[
+        {
+          moduleName: "SandBox",
+          masterDetails: [{ name: "HomeScreen" }],
+        },
+      ]})
   
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading data: {error.message}</div>;
   
-    const cards = data || [];
+    const cards = mdms0 || [];
   
     return (
       <div className="custom-card-container">
