@@ -21,6 +21,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
   };
 
   return (
+    <div className="custom-margin-bottom">
     <FormStep
       isDisabled={!(mobileNumber.length === 10 && canSubmit)}
       onSelect={onSelect}
@@ -35,6 +36,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
       value={mobileNumber}
       validation={validation} 
     ></FormStep>
+    </div>
   );
 };
 
