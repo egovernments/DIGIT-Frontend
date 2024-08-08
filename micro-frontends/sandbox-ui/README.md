@@ -77,27 +77,27 @@ Refer [Storybook](https://unified-dev.digit.org/storybook/) to know more about t
 ## Project Structure
 
 ```
-sandbox-ui/
-├── packages/                      # Microfrontends
-│   ├── components/                # Shared React components
-│   │   └── src/                   # Source files for shared components
-│   ├── root-app/                  # Main rendered JS app
-│   │   ├── public/                # Public assets for root app
-│   │   ├── src/                   # Source files for root app
-│   ├── modules/                   # Microfrontend modules
-│   │   ├── account-mgmt/          # Account Management App
-│   │   │   ├── public/            # Public assets for module 1
-│   │   │   ├── src/               # Source files for module 1
-│   │   ├── data-mgmt/             # Data Management App
-│   │   │   ├── public/            # Public assets for module 2
-│   │   │   ├── src/               # Source files for module 2
-│   │   ├── user-app/              # User App
-│   │   │   ├── public/            # Public assets for module 2
-│   │   │   ├── src/               # Source files for module 2
-├── .gitignore                     # Git ignore file
-├── package.json                   # NPM package configuration
-├── lerna.json                     # Lerna configuration
-└── README.md                      # Project README
+    sandbox-ui/
+    ├── packages/                      # Microfrontends
+    │   ├── components/                # Shared React components
+    │   │   └── src/                   # Source files for shared components
+    │   ├── root-app/                  # Main rendered JS app
+    │   │   ├── public/                # Public assets for root app
+    │   │   ├── src/                   # Source files for root app
+    │   ├── modules/                   # Microfrontend modules
+    │   │   ├── account-mgmt/          # Account Management App
+    │   │   │   ├── public/            # Public assets for module 1
+    │   │   │   ├── src/               # Source files for module 1
+    │   │   ├── data-mgmt/             # Data Management App
+    │   │   │   ├── public/            # Public assets for module 2
+    │   │   │   ├── src/               # Source files for module 2
+    │   │   ├── user-app/              # User App
+    │   │   │   ├── public/            # Public assets for module 2
+    │   │   │   ├── src/               # Source files for module 2
+    ├── .gitignore                     # Git ignore file
+    ├── package.json                   # NPM package configuration
+    ├── lerna.json                     # Lerna configuration
+    └── README.md                      # Project README
 
 ```
 

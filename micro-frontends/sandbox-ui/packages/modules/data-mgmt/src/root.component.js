@@ -10,14 +10,14 @@ export default function Root(props) {
   
   return <>
   <ReactQueryWrapper>
-   <section>hey account-mgmt
-  <NavigateButton to="account-mgmt"></NavigateButton>
+   <section>hey account-mgmtt
+  <NavigateButton to="account-mgmttt"></NavigateButton>
   </section>;
-  <section> hey user
-  <NavigateButton to="user"></NavigateButton>
+  <section> hey userr
+  <NavigateButton to="userrr"></NavigateButton>
   </section>;
-  <section>hey data-mgmt
-  <NavigateButton to="data-mgmt"></NavigateButton>
+  <section>hey data-mgmtt
+  <NavigateButton to="data-mgmttt"></NavigateButton>
   </section>;
     <Test />
     <TestComponent/>

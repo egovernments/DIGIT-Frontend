@@ -44,7 +44,8 @@
     "react-stepper-horizontal": "1.0.11",
     "react-tabs": "6.0.2",
     "localforage": "^1.10.0",
-    "@tanstack/react-query": "5.50.1"
+    "@tanstack/react-query": "5.50.1",
+    "@egovernments/digit-ui-components": "0.0.9-beta.1"
   },
   "peerDependencies": {
     "react": "18.3.1",
