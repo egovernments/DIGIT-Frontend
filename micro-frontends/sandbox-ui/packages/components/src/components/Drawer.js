@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 
 import { DigitUIComponents } from "components";
-import "./Drawer.css";
+import "./../css/index.css";
 
 const { Card, Button, TextBlock } = DigitUIComponents;
 
@@ -26,16 +26,18 @@ function Drawer({ drawerDirection = "right", mdmsData = [] }) {
           <TextBlock header="SetUp your SandBox!" headerClasName="header" />
           {mdmsData.map((item) => (
             <Card key={item.actionId} className="slider-card">
-              <Card className="icon">{item.iconName}</Card>
+              <div className="icon">{item.iconName}</div>
               <span className="card-divider"></span>
               <Card className="content-button">
                 <TextBlock
                   caption="Explore your Applications"
                   captionClassName="caption"
-                  body="Explore default DIGIT applications, envision use cases and make your applications live after configuration."
+                  bodyClasName="textbody"
+                  body="Explore default DIGIT applications, envision use cases and make your applications live after configuration. Explore default DIGIT applications, envision use cases and make your applications live after configuration."
                 />
-
-                <Button variation="secondary">{item.buttonName}</Button>
+                <Card className="button">
+                  <Button variation="secondary" label={item.buttonName} />
+                </Card>
               </Card>
             </Card>
           ))}

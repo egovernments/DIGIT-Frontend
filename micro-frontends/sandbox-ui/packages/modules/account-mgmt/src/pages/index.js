@@ -24,7 +24,7 @@ const routes = [
   {
     url: "test-drawer",
     withAuth: true, // Indicates that no authentication is required for this route
-    component: lazy(() => import("./Drawer")), // Lazy-load the PageThree component
+    component: lazy(() => import("./DrawerTest")), // Lazy-load the PageThree component
   },
 ];
 

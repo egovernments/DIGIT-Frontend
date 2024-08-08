@@ -1,6 +1,6 @@
 import React from "react";
 import { DigitUIComponents } from "components"; // Import only the necessary component
-import Drawer from "./Drawer";
+import Drawer from "../../../../components/src/components/Drawer";
 
 // import { Sample } from "../components";
 const { Card } = DigitUIComponents;
