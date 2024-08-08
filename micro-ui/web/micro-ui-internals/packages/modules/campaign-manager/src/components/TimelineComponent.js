@@ -284,7 +284,7 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
             initialVisibleCount={1}
             hideFutureLabel={true}
             viewLessLabelForPast={t("HCM_SHOW_LESS")}
-            viewMoreLabelForPast={"HCM_SHOW_MORE"}
+            viewMoreLabelForPast={t("HCM_SHOW_MORE")}
           >
             {completedTimelines?.map((timeline, index) => (
               <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
