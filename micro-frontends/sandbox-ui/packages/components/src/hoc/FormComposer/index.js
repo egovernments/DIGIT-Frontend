@@ -5,44 +5,10 @@ import { getUpdatedUISchema } from "./formTabUtils";
 import Stepper from "react-stepper-horizontal";
 import useLastUpdatedField from "../../hooks/useLastUpdatedField";
 import DigitUIComponents from "../../DigitUIComponents";
+import { EnumBasedDropdown } from "./EnumBasedDropdown";
+import { CheckBox } from "./CheckBox";
 
 const { TextInput, Button } = DigitUIComponents;
-
-const EnumBasedDropdown = ({ options, value, onChange }) => {
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
-
-  return (
-    <div style={{ marginBottom: '10px' }}>
-      <select
-        className='digit-citizenCard-input'
-        value={value}
-        onChange={handleChange}
-      >
-        {options.map((option, index) => (
-          <option key={index} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
-
-const CheckBox = ({ checked, onChange, label }) => {
-  return (
-    <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-      {label}
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        style={{ width: '2vh', height: '2vw' }}
-      />
-    </label>
-  );
-};
 
 
 const RenderIndividualField = React.memo(
@@ -234,7 +200,6 @@ const RenderField = ({
     }
     return null;
   }
-  console.log(property, " pppppppppppppppppp")
   if (property.type === "array") {
     return (
       <RenderArrayField
