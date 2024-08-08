@@ -1,11 +1,11 @@
 import { AppContainer, BackButton ,Toast} from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
-import { loginSteps } from "./config";
+ import { useTranslation } from "react-i18next";
+ import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+ import { loginSteps } from "./config";
 import SelectMobileNumber from "./SelectMobileNumber";
-import SelectName from "./SelectName";
-import SelectOtp from "./SelectOtp";
+ import SelectName from "./SelectName";
+ import SelectOtp from "./SelectOtp";
 
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
@@ -31,20 +31,20 @@ const getFromLocation = (state, searchParams) => {
 };
 
 const Login = ({ stateCode, isUserRegistered = true }) => {
-  const { t } = useTranslation();
-  const location = useLocation();
-  const { path, url } = useRouteMatch();
+   const { t } = useTranslation();
+   const location = useLocation();
+   const { path, url } = useRouteMatch();
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [isOtpValid, setIsOtpValid] = useState(true);
-  const [tokens, setTokens] = useState(null);
-  const [params, setParmas] = useState(isUserRegistered ? {} : location?.state?.data);
-  const [errorTO, setErrorTO] = useState(null);
-  const searchParams = Digit.Hooks.useQueryParams();
+   const [isOtpValid, setIsOtpValid] = useState(true);
+   const [tokens, setTokens] = useState(null);
+   const [params, setParmas] = useState(isUserRegistered ? {} : location?.state?.data);
+ const [errorTO, setErrorTO] = useState(null);
+   const searchParams = Digit.Hooks.useQueryParams();
   const [canSubmitName, setCanSubmitName] = useState(false);
-  const [canSubmitOtp, setCanSubmitOtp] = useState(true);
-  const [canSubmitNo, setCanSubmitNo] = useState(true);
+   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
+   const [canSubmitNo, setCanSubmitNo] = useState(true);
 
   useEffect(() => {
     let errorTimeout;
@@ -230,10 +230,11 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   };
 
   return (
-    <div className="citizen-form-wrapper">
-      <Switch>
-        <AppContainer>
-          <BackButton />
+     <div className="citizen-form-wrapper">
+       <Switch>
+         <AppContainer>
+          {/* <BackButton /> */}
+    <div>
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
@@ -245,25 +246,30 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               t={t}
             />
           </Route>
-          <Route path={`${path}/otp`}>
-            <SelectOtp
+          </div>,
+    <div>
+        <Route path={`${path}/otp`}>
+           <SelectOtp
               config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
               onOtpChange={handleOtpChange}
               onResend={resendOtp}
               onSelect={selectOtp}
-              otp={params.otp}
-              error={isOtpValid}
-              canSubmit={canSubmitOtp}
-              t={t}
-            />
-          </Route>
+               otp={params.otp}
+               error={isOtpValid}
+               canSubmit={canSubmitOtp}
+               t={t}
+             />
+           </Route> 
+    </div>,
+    <div>
           <Route path={`${path}/name`}>
-            <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
+            <SelectName  onSelect={selectName} t={t} isDisabled={canSubmitName} />
           </Route>
-          {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
+          </div>,
+           {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
         </AppContainer>
-      </Switch>
-    </div>
+       </Switch>
+     </div>
   );
 };
 
