@@ -8,12 +8,14 @@ import {Hooks} from "./hooks"
 import ReactQueryWrapper from "./providers/QueryProvider"
 import DigitRouter from "./components/DigitRouter"
 import DigitApp from "./components/DigitApp";
+import YoutubeVideo from "./components/YoutubeVideo";
 
 
 // 导出组件
 export {
   Button,
   DigitUIComponents,
+  YoutubeVideo,
   // Test,
   Test,
   Sample,
