@@ -32,7 +32,7 @@ import { queryClient } from "../states/stateConfigs";
  */
 
 const useMDMSHook = ({
-  url = "/mdms-v2/v1/_search",
+  url = "/egov-mdms-service/v1/_search",
   moduleDetails = [],
   config = {},
   tenantId = "",
@@ -45,7 +45,6 @@ const useMDMSHook = ({
     cacheTime: 0,
     ...config,
   });
-  console.log("the respone from mdms is"+ data);
 
   return {
     isLoading,

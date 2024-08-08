@@ -15,6 +15,7 @@ const PageThree = () => {
     <Card type="primary">
       <NetworkTest />
       <Sample />
+
     </Card>
   );
 };

@@ -17,20 +17,27 @@ const HomeScreen = () => {
       }
     ];
   
-    const { data:mdms0 } = useMDMSHook({tenantId: "pg",moduleDetails:[
+    const { data: mdms2 } = useMDMSHook({
+      tenantId: "pg",
+      moduleDetails: [
         {
           moduleName: "SandBox",
-          masterDetails: [{ name: "HomeScreen" }],
+          masterDetails: [
+            { name: "HomeScreen" },
+          ],
         },
-      ]})
+      ],
+      url: "/mdms-v2/v1/_search",
+    });
   
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading data: {error.message}</div>;
   
-    const cards = mdms0 || [];
-  
+    const cards = mdms2?.MdmsRes?.SandBox?.HomeScreen ?? [];
+    console.log("Data from mdms is:", cards);
     return (
       <div className="custom-card-container">
+        Hi in the homescreen
         {cards.map((card, index) => (
           <CustomCard key={index} card={card} />
         ))}

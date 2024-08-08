@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import SampleTwo from "./SampleTwo";
 import { DigitUIComponents } from "components";
-import HomeScreen from "../../../components/src/components/homecomponents/HomeScreen";
-import { ReactQueryWrapper } from "../../../components/src";
 const { CheckBox, InfoCard, Stepper, Button, Timeline, InfoButton } =
   DigitUIComponents; // Import only the necessary component
 const commonDivStyle = {
@@ -963,10 +961,6 @@ const Sample = () => {
         ,
       </div>
       <SampleTwo />
-      <ReactQueryWrapper>
-      <HomeScreen></HomeScreen>
-      </ReactQueryWrapper>
-      
     </div>
   );
 };
