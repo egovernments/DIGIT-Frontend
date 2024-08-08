@@ -1,7 +1,5 @@
 import React from "react";
-import { DigitUIComponents } from "components"; // Import only the necessary componen
-import TabForm from "../../../../components/src/components/TabForm";
-import StepperForm from "../../../../components/src/components/StepperForm";
+import { DigitUIComponents, TabForm, StepperForm } from "components"; // Import only the necessary componen
 const { Card } = DigitUIComponents;
 /**
  * PageOne Screen
@@ -13,8 +11,8 @@ const { Card } = DigitUIComponents;
 const FormPage = () => {
     return (
         <Card type="primary">
-            <TabForm></TabForm>
-            <StepperForm></StepperForm>
+            <TabForm />
+            <StepperForm />
         </Card>
     );
 };
