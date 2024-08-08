@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import SampleTwo from "./SampleTwo";
 import { DigitUIComponents } from "components";
-
 const { CheckBox, InfoCard, Stepper, Button, Timeline, InfoButton } =
   DigitUIComponents; // Import only the necessary component
-
 const commonDivStyle = {
   display: "flex",
   flexDirection: "column",

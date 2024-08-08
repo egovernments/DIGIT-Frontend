@@ -1,0 +1,48 @@
+[
+    {
+      "actionId": "1",
+      "order": 1,
+      "navigationURL": "/tenant-management",
+      "iconName": "UserIcon",
+      "name": "Tenant Management",
+      "description": "Tenant Management helps to manage data and access controls across multiple hierarchies",
+      "buttonName": "Manage Tenants"
+    },
+    {
+      "actionId": "2",
+      "order": 2,
+      "navigationURL": "/account-management",
+      "iconName": "UserIcon", 
+      "name": "Account Management",
+      "description": "Add, delete and manage users/employees of your organization and assign various roles and permissions",
+      "buttonName": "Manage Users"
+    },
+    {
+      "actionId": "3",
+      "order": 3,
+      "navigationURL": "/data-configurations",
+      "iconName": "UserIcon", 
+      "name": "Data and Configurations",
+      "description": "Manage common data masters across multiple Tenants and applications",
+      "buttonName": "Manage Data"
+    },
+    {
+      "actionId": "4",
+      "order": 4,
+      "navigationURL": "/applications",
+      "iconName": "UserIcon", 
+      "name": "Applications",
+      "description": "Access and explore DIGIT default applications. Setup and configure as per needs.",
+      "buttonName": "View all applications"
+    },
+    {
+      "actionId": "5",
+      "order": 5,
+      "navigationURL": "/client-interface",
+      "iconName": "UserIcon", 
+      "name": "Client Interface",
+      "description": "Access links, login credentials and download APKs for client interface",
+      "buttonName": "View Client Interface"
+    }
+  ]
+  

@@ -1,0 +1,83 @@
+/* HomeScreen.css */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.button-container button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.custom-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #f7f7f7;
+  padding: 20px;
+}
+
+.custom-card {
+  background-color: white;
+  padding: 20px;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.custom-card-icon {
+  margin-right: 10px;
+  font-size: 24px;
+}
+
+.custom-card-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #004085;
+}
+
+.custom-card-description {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.custom-card-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  color: #007bff;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.custom-card-button:hover {
+  color: #0056b3;
+}
+
+.custom-card-button:after {
+  content: ' →';
+  color: #007bff;
+  margin-left: 5px;
+  transition: margin-left 0.3s ease;
+}
+
+.custom-card-button:hover:after {
+  margin-left: 10px;
+  color: #0056b3;
+}

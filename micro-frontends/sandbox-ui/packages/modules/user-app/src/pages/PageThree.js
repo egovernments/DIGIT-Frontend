@@ -2,6 +2,7 @@ import React from "react";
 import { DigitUIComponents } from "components"; // Import only the necessary component
 import Sample from "../components/Sample";
 import NetworkTest from "../components/NetworkTest";
+import HomeScreen from "../../../../../packages/components/src/components/homecomponents/HomeScreen";
 const { Card } = DigitUIComponents;
 /**
  * PageOne Screen
@@ -15,6 +16,7 @@ const PageThree = () => {
     <Card type="primary">
       <NetworkTest />
       <Sample />
+      <HomeScreen></HomeScreen>
     </Card>
   );
 };
