@@ -1591,7 +1591,17 @@ const SetupCampaign = ({ hierarchyType }) => {
       />
       {actionBar === "true" && (
         <ActionBar style={{ zIndex: "19" }}>
-          {displayMenu ? <Menu options={["UPDATE_DATES", "CONFIGURE_APP"]} t={t} onSelect={onActionSelect} /> : null}
+          {displayMenu ?
+           <Menu 
+          //  options={[
+          //   "UPDATE_DATES", 
+          //   // "CONFIGURE_APP"
+          // ]}
+          options={[
+            ...(draftData?.status === "created" ? [  "UPDATE_DATES"] : []),
+            // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+          ]}
+             t={t} onSelect={onActionSelect} /> : null}
           <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
