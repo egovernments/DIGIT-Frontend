@@ -7,6 +7,9 @@ import States from "./states"
 import {Hooks} from "./hooks"
 import ReactQueryWrapper from "./providers/QueryProvider"
 import HomeScreen from "./components/homecomponents/HomeScreen";
+import DigitRouter from "./components/DigitRouter"
+import DigitApp from "./components/DigitApp";
+
 
 // 导出组件
 export {
@@ -18,5 +21,7 @@ export {
   Sample,
   States,
   ReactQueryWrapper,
-  Hooks
+  Hooks,
+  DigitRouter,
+  DigitApp
 }

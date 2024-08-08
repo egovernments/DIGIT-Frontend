@@ -15,7 +15,21 @@
     browsers. More information at https://github.com/single-spa/create-single-spa/issues/112
   -->
   <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
-
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .powered-by {
+    position: fixed;
+    bottom: 2rem;
+    right: 50%;
+    width: 11rem;
+    height: auto;
+    z-index: 1000;
+    display: flex; /* Ensure the logo is above other content */
+    }
+</style>
   <!--
     This CSP allows any SSL-enabled host and for arbitrary eval(), but you should limit these directives further to increase your app's security.
     Learn more about CSP policies at https://content-security-policy.com/#directive
@@ -85,9 +99,14 @@
   <script>
     System.import('@egovernments/root-app');
   </script>
-  <a href="/pwc/react-app-zero">Go to default App</a>
-<a href="/pwc/react-app-one">Go to App1</a>
-  <a href="/pwc/react-app-two">Go to App2</a>
+  <!-- <a href="/pwc/account-mgmt">Go to account-mgmt</a>
+<a href="/pwc/data-mgmt">Go to data-mgmt</a>
+  <a href="/pwc/user">Go to user</a> -->
+  <div class="powered-by">
+    <a href="https://www.example.com" target="_blank" rel="noopener noreferrer">
+        <img src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/digit-footer.png" alt="Powered by Logo">
+    </a>
+</div>
   <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
 </body>
 </html>
