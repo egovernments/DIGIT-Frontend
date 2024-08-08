@@ -14,11 +14,13 @@ export const Complaint = {
     uploadedImages,
     mobileNumber,
     name,
+    user,
   }) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const defaultData = {
       service: {
         tenantId: cityCode,
+        active :true,
         serviceCode: complaintType,
         description: description,
         additionalDetail: {},
@@ -36,15 +38,18 @@ export const Complaint = {
           },
           geoLocation: {},
         },
+        user: user, 
       },
       workflow: {
-        action: "APPLY",
-        verificationDocuments: uploadedImages,
+        // action: "APPLY",
+        // verificationDocuments: uploadedImages,
+        action: "CREATE", assignes: [], hrmsAssignes: [], comments: ""
       },
     };
 
+    
     if (Digit.SessionStorage.get("user_type") === "employee") {
-      defaultData.service.citizen = {
+      defaultData.service.user = {
         name: name,
         type: "CITIZEN",
         mobileNumber: mobileNumber,
@@ -59,6 +64,7 @@ export const Complaint = {
         tenantId: tenantId,
       };
     }
+
     const response = await Digit.PGRService.create(defaultData, cityCode);
     return response;
   },
@@ -79,8 +85,7 @@ export const Complaint = {
       : null;
 
     if (!uploadedDocument) complaintDetails.workflow.verificationDocuments = [];
-    
-    //TODO: get tenant id
+
     const response = await Digit.PGRService.update(complaintDetails, tenantId);
     return response;
   },
