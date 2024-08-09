@@ -1,170 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import DigitUIComponents from "../DigitUIComponents";
-const { Sidebar, SVG, ProfileIcon,
-  AnnouncementIcon,
-  ReceiptIcon,
-  CreateEstimateIcon,
-  GotoInboxIcon,
-  ArrowLeft,
-  ArrowDown,
-  CameraSvg,
-  DeleteBtn,
-  DownloadIcon,
-  Ellipsis,
-  SuccessSvg,
-  ErrorSvg,
-  StarFilled,
-  StarEmpty,
-  SearchIconSvg,
-  CheckSvg,
-  RoundedCheck,
-  Calender,
-  Phone,
-  FilterSvg,
-  SortSvg,
-  Close,
-  Feedback,
-  GetApp,
-  HamburgerIcon,
-  ArrowBack,
-  ArrowForward,
-  ArrowRightInbox,
-  SortDown,
-  SortUp,
-  ShippingTruck,
-  CloseSvg,
-  CalendarIcon,
-  UpwardArrow,
-  DownwardArrow,
-  Poll,
-  FilterIcon,
-  RefreshIcon,
-  RefreshSVG,
-  Details,
-  PrintIcon,
-  PropertyHouse,
-  PrimaryDownlaodIcon,
-  InfoBannerIcon,
-  ShareIcon,
-  RupeeIcon,
-  ComplaintIcon,
-  DropIcon,
-  Person,
-  WhatsappIcon,
-  EmailIcon,
-  DocumentIcon,
-  DocumentIconSolid,
-  EventsIconSolid,
-  SurveyIconSolid,
-  PMBIconSolid,
-  DustbinIcon,
-  ExternalLinkIcon,
-  DownloadImgIcon,
-  ViewsIcon,
-  PrevIcon,
-  DocumentSVG,
-  ArrowToFirst,
-  ArrowToLast,
-  DownloadPrefixIcon,
-  CaseIcon,
-  PersonIcon,
-  PTIcon,
-  OBPSIcon,
-  OBPSIconSolidBg,
-  CitizenTruck,
-  FSMIcon,
-  EDCRIcon,
-  BPAIcon,
-  BPAHomeIcon,
-  HelpIcon,
-  NotificationBell,
-  MapMarker,
-  Clock,
-  EventCalendar,
-  ImageIcon,
-  TickMark,
-  PDFSvg,
-  EditIcon,
-  SearchIcon,
-  DeleteIcon,
-  CreateLoiIcon,
-  PMBIcon,
-  GenericFileIcon,
-  ArrowLeftWhite,
-  WSICon,
-  ArrowVectorDown,
-  ArrowDirection,
-  CameraIcon,
-  RemoveIcon,
-  GalleryIcon,
-  EditPencilIcon,
-  AddressBookIcon,
-  LocationIcon,
-  CollectionsBookmarIcons,
-  FinanceChartIcon,
-  CollectionIcon,
-  MCollectIcon,
-  PGRIcon,
-  TLIcon,
-  BillsIcon,
-  ErrorIcon,
-  DownloadBtnCommon,
-  PrintBtnCommon,
-  WhatsappIconGreen,
-  HelpLineIcon,
-  ServiceCenterIcon,
-  TimerIcon,
-  RupeeSymbol,
-  ValidityTimeIcon,
-  AddIcon,
-  SubtractIcon,
-  AddNewIcon,
-  ViewReportIcon,
-  InboxIcon,
-  PrivacyMaskIcon,
-  FirenocIcon,
-  BirthIcon,
-  DeathIcon,
-  ArrowCollapseUp,
-  ArrowCollapseDown,
-  AddFilled,
-  AddFileFilled,
-  LocateIcon,
-  /* Works Management  */
-  NoResultsFoundIcon,
-  WorksMgmtIcon,
-  BioMetricIcon,
-  MuktaHomeIcon,
-  HRIcon,
-  ProjectIcon,
-  EstimateIcon,
-  ContractIcon,
-  AttendanceIcon,
-  WageseekerIcon,
-  OrganisationIcon,
-  HelperIcon,
-  DashboardIcon,
-  ExpenditureIcon,
-  DoubleTickIcon,
-  InfoIcon,
-  PaymentIcon,
-  HistoryIcon,
-  WarningIcon,
-  AttentionListIcon,
-  UploadIcon,
-  FileIcon,
-  DeleteIconv2,
-  InfoIconOutline,
-  XlsxFile,
-  JpgFile,
-  PdfFile,
-  DocFile,
-  PngFile,
-  DocUpload,
-  DocXlsxUpload,
-  DocPdfUpload,
-  DocdocUpload, } = DigitUIComponents;
+import { iconRender } from "../utils/iconRender";
+const { Sidebar } = DigitUIComponents;
+
+import data from "../utils/dummyData";
 
 
 /**
@@ -174,357 +14,180 @@ const { Sidebar, SVG, ProfileIcon,
  * 
  * @returns {JSX.Element} The rendered Sidebar component.
  */
-const Sidebar1 = () => {
+
+/* the data used here is hardcoded from an api call....
+api can be called.. just add the fetch function for it...
+*/
+
+const SidebarV2 = () => {
 
   const [search, setSearch] = useState("");
-  const url = 'http://localhost:9001/access/v1/actions/mdms/_get';
-  const payload = {
-    "roleCodes": [
-      "HRMS_ADMIN",
-      "WORK_ORDER_CREATOR",
-      "ESTIMATE_VERIFIER",
-      "ESTIMATE_APPROVER",
-      "MB_VERIFIER",
-      "WORK_ORDER_VERIFIER",
-      "PROJECT_VIEWER",
-      "MB_CREATOR",
-      "MUSTER_ROLL_VERIFIER",
-      "OFFICER_IN_CHARGE",
-      "PROJECT_CREATOR",
-      "EMPLOYEE_COMMON",
-      "BILL_VIEWER",
-      "TECHNICAL_SANCTIONER",
-      "BILL_CREATOR",
-      "MUSTER_ROLL_APPROVER",
-      "ESTIMATE_VIEWER",
-      "WORK_ORDER_APPROVER",
-      "MB_APPROVER",
-      "ESTIMATE_CREATOR",
-      "MB_VIEWER",
-      "MUKTA_ADMIN"
-    ],
-    "tenantId": "pg",
-    "actionMaster": "actions-test",
-    "enabled": true,
-    "RequestInfo": {
-      "apiId": "Rainmaker",
-      "authToken": "da34f2ea-854c-413b-8c57-c9ef741072b6",
-      "userInfo": {
-        "id": 922,
-        "uuid": "45614d29-9a50-4970-aba5-81b380745f48",
-        "userName": "ANSH-001",
-        "name": "Ansh",
-        "mobileNumber": "9876543210",
-        "emailId": "",
-        "locale": null,
-        "type": "EMPLOYEE",
-        "roles": [
-          {
-            "name": "HRMS Admin",
-            "code": "HRMS_ADMIN",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "WORK ORDER CREATOR",
-            "code": "WORK_ORDER_CREATOR",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "ESTIMATE VERIFIER",
-            "code": "ESTIMATE_VERIFIER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "ESTIMATE APPROVER",
-            "code": "ESTIMATE_APPROVER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MB_VERIFIER",
-            "code": "MB_VERIFIER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "WORK ORDER VERIFIER",
-            "code": "WORK_ORDER_VERIFIER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "PROJECT VIEWER",
-            "code": "PROJECT_VIEWER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MB_CREATOR",
-            "code": "MB_CREATOR",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MUSTER ROLL VERIFIER",
-            "code": "MUSTER_ROLL_VERIFIER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "OFFICER IN CHARGE",
-            "code": "OFFICER_IN_CHARGE",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "PROJECT CREATOR",
-            "code": "PROJECT_CREATOR",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "Employee Common",
-            "code": "EMPLOYEE_COMMON",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "BILL_VIEWER",
-            "code": "BILL_VIEWER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "TECHNICAL SANCTIONER",
-            "code": "TECHNICAL_SANCTIONER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "BILL_CREATOR",
-            "code": "BILL_CREATOR",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MUSTER ROLL APPROVER",
-            "code": "MUSTER_ROLL_APPROVER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "ESTIMATE VIEWER",
-            "code": "ESTIMATE_VIEWER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "WORK ORDER APPROVER",
-            "code": "WORK_ORDER_APPROVER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MB_APPROVER",
-            "code": "MB_APPROVER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "ESTIMATE CREATOR",
-            "code": "ESTIMATE_CREATOR",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MB_VIEWER",
-            "code": "MB_VIEWER",
-            "tenantId": "pg.citya"
-          },
-          {
-            "name": "MUKTA Admin",
-            "code": "MUKTA_ADMIN",
-            "tenantId": "pg.citya"
-          }
-        ],
-        "active": true,
-        "tenantId": "pg.citya",
-        "permanentCity": "CityA"
-      },
-      "msgId": "1723182672458|en_IN",
-      "plainAccessRequest": {},
-      "ts": 1723182672458
-    }
-  };
-  let data = {};
-  const [transformedSidebarItems, setTransformedSidebarItems] = useState([]);
+  // const url = 'http://localhost:9001/access/v1/actions/mdms/_get';
+  // const payload = {
+  //   "roleCodes": [
+  //     "HRMS_ADMIN",
+  //     "WORK_ORDER_CREATOR",
+  //     "ESTIMATE_VERIFIER",
+  //     "ESTIMATE_APPROVER",
+  //     "MB_VERIFIER",
+  //     "WORK_ORDER_VERIFIER",
+  //     "PROJECT_VIEWER",
+  //     "MB_CREATOR",
+  //     "MUSTER_ROLL_VERIFIER",
+  //     "OFFICER_IN_CHARGE",
+  //     "PROJECT_CREATOR",
+  //     "EMPLOYEE_COMMON",
+  //     "BILL_VIEWER",
+  //     "TECHNICAL_SANCTIONER",
+  //     "BILL_CREATOR",
+  //     "MUSTER_ROLL_APPROVER",
+  //     "ESTIMATE_VIEWER",
+  //     "WORK_ORDER_APPROVER",
+  //     "MB_APPROVER",
+  //     "ESTIMATE_CREATOR",
+  //     "MB_VIEWER",
+  //     "MUKTA_ADMIN"
+  //   ],
+  //   "tenantId": "pg",
+  //   "actionMaster": "actions-test",
+  //   "enabled": true,
+  //   "RequestInfo": {
+  //     "apiId": "Rainmaker",
+  //     "authToken": "da34f2ea-854c-413b-8c57-c9ef741072b6",
+  //     "userInfo": {
+  //       "id": 922,
+  //       "uuid": "45614d29-9a50-4970-aba5-81b380745f48",
+  //       "userName": "ANSH-001",
+  //       "name": "Ansh",
+  //       "mobileNumber": "9876543210",
+  //       "emailId": "",
+  //       "locale": null,
+  //       "type": "EMPLOYEE",
+  //       "roles": [
+  //         {
+  //           "name": "HRMS Admin",
+  //           "code": "HRMS_ADMIN",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "WORK ORDER CREATOR",
+  //           "code": "WORK_ORDER_CREATOR",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "ESTIMATE VERIFIER",
+  //           "code": "ESTIMATE_VERIFIER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "ESTIMATE APPROVER",
+  //           "code": "ESTIMATE_APPROVER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MB_VERIFIER",
+  //           "code": "MB_VERIFIER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "WORK ORDER VERIFIER",
+  //           "code": "WORK_ORDER_VERIFIER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "PROJECT VIEWER",
+  //           "code": "PROJECT_VIEWER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MB_CREATOR",
+  //           "code": "MB_CREATOR",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MUSTER ROLL VERIFIER",
+  //           "code": "MUSTER_ROLL_VERIFIER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "OFFICER IN CHARGE",
+  //           "code": "OFFICER_IN_CHARGE",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "PROJECT CREATOR",
+  //           "code": "PROJECT_CREATOR",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "Employee Common",
+  //           "code": "EMPLOYEE_COMMON",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "BILL_VIEWER",
+  //           "code": "BILL_VIEWER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "TECHNICAL SANCTIONER",
+  //           "code": "TECHNICAL_SANCTIONER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "BILL_CREATOR",
+  //           "code": "BILL_CREATOR",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MUSTER ROLL APPROVER",
+  //           "code": "MUSTER_ROLL_APPROVER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "ESTIMATE VIEWER",
+  //           "code": "ESTIMATE_VIEWER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "WORK ORDER APPROVER",
+  //           "code": "WORK_ORDER_APPROVER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MB_APPROVER",
+  //           "code": "MB_APPROVER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "ESTIMATE CREATOR",
+  //           "code": "ESTIMATE_CREATOR",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MB_VIEWER",
+  //           "code": "MB_VIEWER",
+  //           "tenantId": "pg.citya"
+  //         },
+  //         {
+  //           "name": "MUKTA Admin",
+  //           "code": "MUKTA_ADMIN",
+  //           "tenantId": "pg.citya"
+  //         }
+  //       ],
+  //       "active": true,
+  //       "tenantId": "pg.citya",
+  //       "permanentCity": "CityA"
+  //     },
+  //     "msgId": "1723182672458|en_IN",
+  //     "plainAccessRequest": {},
+  //     "ts": 1723182672458
+  //   }
+  // };
+  // let data = {};
+  // const [transformedSidebarItems, setTransformedSidebarItems] = useState([]);
   const [loading, setLoading] = useState(true); // To manage loading state
-
-  const iconMap = {
-    ProfileIcon,
-  AnnouncementIcon,
-  ReceiptIcon,
-  CreateEstimateIcon,
-  GotoInboxIcon,
-  ArrowLeft,
-  ArrowDown,
-  CameraSvg,
-  DeleteBtn,
-  DownloadIcon,
-  Ellipsis,
-  SuccessSvg,
-  ErrorSvg,
-  StarFilled,
-  StarEmpty,
-  SearchIconSvg,
-  CheckSvg,
-  RoundedCheck,
-  Calender,
-  Phone,
-  FilterSvg,
-  SortSvg,
-  Close,
-  Feedback,
-  GetApp,
-  HamburgerIcon,
-  ArrowBack,
-  ArrowForward,
-  ArrowRightInbox,
-  SortDown,
-  SortUp,
-  ShippingTruck,
-  CloseSvg,
-  CalendarIcon,
-  UpwardArrow,
-  DownwardArrow,
-  Poll,
-  FilterIcon,
-  RefreshIcon,
-  RefreshSVG,
-  Details,
-  PrintIcon,
-  PropertyHouse,
-  PrimaryDownlaodIcon,
-  InfoBannerIcon,
-  ShareIcon,
-  RupeeIcon,
-  ComplaintIcon,
-  DropIcon,
-  Person,
-  WhatsappIcon,
-  EmailIcon,
-  DocumentIcon,
-  DocumentIconSolid,
-  EventsIconSolid,
-  SurveyIconSolid,
-  PMBIconSolid,
-  DustbinIcon,
-  ExternalLinkIcon,
-  DownloadImgIcon,
-  ViewsIcon,
-  PrevIcon,
-  DocumentSVG,
-  ArrowToFirst,
-  ArrowToLast,
-  DownloadPrefixIcon,
-  CaseIcon,
-  PersonIcon,
-  PTIcon,
-  OBPSIcon,
-  OBPSIconSolidBg,
-  CitizenTruck,
-  FSMIcon,
-  EDCRIcon,
-  BPAIcon,
-  BPAHomeIcon,
-  HelpIcon,
-  NotificationBell,
-  MapMarker,
-  Clock,
-  EventCalendar,
-  ImageIcon,
-  TickMark,
-  PDFSvg,
-  EditIcon,
-  SearchIcon,
-  DeleteIcon,
-  CreateLoiIcon,
-  PMBIcon,
-  GenericFileIcon,
-  ArrowLeftWhite,
-  WSICon,
-  ArrowVectorDown,
-  ArrowDirection,
-  CameraIcon,
-  RemoveIcon,
-  GalleryIcon,
-  EditPencilIcon,
-  AddressBookIcon,
-  LocationIcon,
-  CollectionsBookmarIcons,
-  FinanceChartIcon,
-  CollectionIcon,
-  MCollectIcon,
-  PGRIcon,
-  TLIcon,
-  BillsIcon,
-  ErrorIcon,
-  DownloadBtnCommon,
-  PrintBtnCommon,
-  WhatsappIconGreen,
-  HelpLineIcon,
-  ServiceCenterIcon,
-  TimerIcon,
-  RupeeSymbol,
-  ValidityTimeIcon,
-  AddIcon,
-  SubtractIcon,
-  AddNewIcon,
-  ViewReportIcon,
-  InboxIcon,
-  PrivacyMaskIcon,
-  FirenocIcon,
-  BirthIcon,
-  DeathIcon,
-  ArrowCollapseUp,
-  ArrowCollapseDown,
-  AddFilled,
-  AddFileFilled,
-  LocateIcon,
-  /* Works Management  */
-  NoResultsFoundIcon,
-  WorksMgmtIcon,
-  BioMetricIcon,
-  MuktaHomeIcon,
-  HRIcon,
-  ProjectIcon,
-  EstimateIcon,
-  ContractIcon,
-  AttendanceIcon,
-  WageseekerIcon,
-  OrganisationIcon,
-  HelperIcon,
-  DashboardIcon,
-  ExpenditureIcon,
-  DoubleTickIcon,
-  InfoIcon,
-  PaymentIcon,
-  HistoryIcon,
-  WarningIcon,
-  AttentionListIcon,
-  UploadIcon,
-  FileIcon,
-  DeleteIconv2,
-  InfoIconOutline,
-  XlsxFile,
-  JpgFile,
-  PdfFile,
-  DocFile,
-  PngFile,
-  DocUpload,
-  DocXlsxUpload,
-  DocPdfUpload,
-  DocdocUpload, 
-
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("fetching");
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        const responseData = await response.json();
-        data = responseData;
+  let transformedSidebarItems=[];
         console.log("data", data);
 
         function mergeObjects(obj1, obj2) {
@@ -591,14 +254,14 @@ const Sidebar1 = () => {
             const iconName = item ? item.leftIcon.split(':').pop() : '';
 
             // Get the corresponding React component from the iconMap
-            const IconComponent = iconMap[iconName] || null;
-
+            //const IconComponent = iconMap[iconName] || null;
             const obj = {
               // label: item ? item.displayName : key,
               label: key,
               //icon: item ? item.leftIcon : '', // Assuming icon is in leftIcon field
               //icon: item ? item.leftIcon.split(':').pop() : '',
-              icon: IconComponent ? <IconComponent /> : null,  // Render the icon component
+              //icon: IconComponent ? <IconComponent /> : null,  // Render the icon component
+              icon: iconRender(iconName),
               link: item ? item.navigationURL : '',
               children: [],
             };
@@ -656,42 +319,43 @@ const Sidebar1 = () => {
           return items.map(processItem);
         };
 
+        function updateMenuWithIcons(menu) {
+          menu.forEach(parent => {
+              if (parent.icon === null && parent.children) {
+                  // Find the first non-null icon in the children
+                  for (const child of parent.children) {
+                      if (child.icon && child.icon.props) {
+                          parent.icon = child.icon;
+                          break; // Stop after finding the first non-null icon
+                      }
+                  }
+              }
+              
+              // Recursively process children (if any)
+              if (parent.children) {
+                  updateMenuWithIcons(parent.children);
+              }
+          });
+      
+          return menu;
+      };
+
 
 
         console.log("confug", configEmployeeSideBar);
         const transformedItems = transformConfig(configEmployeeSideBar);
-        console.log("transformed0", transformedSidebarItems);
+        //console.log("transformed0", transformedSidebarItems);
         // Use the sorting function on the transformedSidebarItems
         const sortedItems = sortSidebarItems(transformedItems);
 
         const cleanedSidebarItems = removeLeadingNumbers(sortedItems);
-        console.log(cleanedSidebarItems);
-        setTransformedSidebarItems(cleanedSidebarItems); // Update state with transformed data
+
+        const updatedSidebarItemsWithIcons = updateMenuWithIcons(cleanedSidebarItems);
+        console.log(updatedSidebarItemsWithIcons);
+        // setTransformedSidebarItems(updatedSidebarItemsWithIcons); // Update state with transformed data
+        transformedSidebarItems=updatedSidebarItemsWithIcons;
         console.log("transformed", transformedSidebarItems);
-        setLoading(false); // Set loading to false after data is fetched and transformed
-      } catch (error) {
-        console.error('Error:', error);
-        setLoading(false); // Set loading to false even if there's an error
-      }
-    };
-
-    //fetchData();
-    const runProgram = async () => {
-      await fetchData(); // Wait for the fetchData function to complete
-      console.log("Final transformed config:", transformedSidebarItems);
-      // You can now use transformedSidebarItems outside of fetchData
-    };
-
-    runProgram();
-  }, []); // Empty dependency array to run once on component mount
-
-  useEffect(() => {
-    console.log("Final Transformed Sidebar Items:", transformedSidebarItems);
-  }, [transformedSidebarItems]); // Log when transformedSidebarItems changes
-
-  if (loading) {
-    return <div>Loading...</div>; // Display a loading message or spinner while fetching data
-  }
+        
   return (
     <aside className="w-64 h-screen bg-gray-800 text-white top-0 left-0 p-4">
       <h2 className="text-2xl font-semibold mb-6">Sidebar</h2>
@@ -699,8 +363,7 @@ const Sidebar1 = () => {
         expandedWidth="200px"
         // transitionDuration={1.0}
         items={
-          transformedSidebarItems
-          
+         transformedSidebarItems
         }
       />
       <nav>
@@ -723,4 +386,4 @@ const Sidebar1 = () => {
   );
 };
 
-export default Sidebar1;
+export default SidebarV2;
