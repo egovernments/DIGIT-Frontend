@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import UserApp from "./pages";
+
 
 /**
  * Main application component that initializes the UserApp with provided props.
@@ -24,7 +26,7 @@ export default function App(props) {
   const { baseAppURL, rootTenant } = props;
   return (
     <>
-      <h2>User App</h2>
+      <h2>User Appppp</h2>
       <UserApp baseAppURL={`${baseAppURL}/user`} rootTenant={rootTenant} />
     </>
   );
