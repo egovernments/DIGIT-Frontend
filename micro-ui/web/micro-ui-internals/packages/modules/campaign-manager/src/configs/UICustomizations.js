@@ -157,9 +157,14 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                // options={[
+                //   { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
+                //   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                //   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                // ]}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
+                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                 ]}
                 optionsKey="i18nKey"
@@ -174,10 +179,7 @@ export const UICustomizations = {
                   onOverlayClick={() => setTimeline(false)}
                   onClose={() => setTimeline(false)}
                 >
-                  <TimelineComponent
-                    campaignId={row?.id}
-                    resourceId={resourceIdArr}
-                  />
+                  <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
             </>
@@ -413,6 +415,7 @@ export const UICustomizations = {
                 name: row?.campaignName,
                 data: row,
                 projectId: row?.projectId,
+                campaignId: row?.id,
               },
               "",
               `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${row?.id}`
@@ -450,9 +453,14 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
+                // options={[
+                //   { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
+                //   // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                //   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                // ]}
                 options={[
-                  { key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") },
-                  { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
+                  ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
+                  // { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
                 ]}
                 optionsKey="i18nKey"
