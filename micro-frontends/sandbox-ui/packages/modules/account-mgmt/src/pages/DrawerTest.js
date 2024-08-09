@@ -11,8 +11,9 @@ const mdmsData = [
     name: "Home",
     module: "Module1",
     buttonLabel: "TestButton1--Testing",
-    title: "TITLE_HEADER_1",
-    label: "TITLE_HEADER_1_LABEL",
+    title: "Explore you Application",
+    label:
+      "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
   },
   {
     actionId: 12,
@@ -22,6 +23,9 @@ const mdmsData = [
     iconName: "Atm",
     name: "Home",
     module: "Module1",
+    title: "Explore you Application",
+    label:
+      "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
   },
   {
     actionId: 13,
@@ -31,6 +35,9 @@ const mdmsData = [
     iconName: "DSOTruck",
     name: "Settings",
     module: "Module2",
+    title: "Explore you Work",
+    label:
+      "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
   },
   {
     actionId: 13,
@@ -40,6 +47,9 @@ const mdmsData = [
     iconName: "MyLocation",
     name: "Settings",
     module: "Module2",
+    title: "Explore you Application",
+    label:
+      "iuhdais haifna haiojsl  ashfio a,sduhioafsn hioasjo mfhaiojfl hiajfo fsk hioafsm afsbifsahoafs  afs",
   },
 ];
 

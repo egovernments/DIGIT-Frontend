@@ -57,18 +57,12 @@
   transform: translateX(0);
 }
 
-
-.toggle-button.open .vertical-bar{
-  margin-right: 0.8rem;
-  margin-left: 0;
-}
-
 .vertical-bar{
   background-color: #D9D9D9;
   height: 13em;
   width: 0.6em;
   border-radius: 1.5em;
-  margin-left: 0.8rem;
+
   
 }
 .iconContainer{
