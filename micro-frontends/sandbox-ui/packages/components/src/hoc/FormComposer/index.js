@@ -1,17 +1,54 @@
-// src/components/JsonSchemaForm.js
 import React, { useMemo, useCallback, useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { getUpdatedUISchema } from "./formTabUtils";
 import Stepper from "react-stepper-horizontal";
 import useLastUpdatedField from "../../hooks/useLastUpdatedField";
+import DigitUIComponents from "../../DigitUIComponents";
+
+const { TextInput, Button } = DigitUIComponents;
+
+const EnumBasedDropdown = ({ options, value, onChange }) => {
+  const handleChange = (event) => {
+    onChange(event.target.value);
+  };
+
+  return (
+    <div style={{ marginBottom: '10px' }}>
+      <select
+        className='digit-citizenCard-input'
+        value={value}
+        onChange={handleChange}
+      >
+        {options.map((option, index) => (
+          <option key={index} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const CheckBox = ({ checked, onChange, label }) => {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+      {label}
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        style={{ width: '2vh', height: '2vw' }}
+      />
+    </label>
+  );
+};
+
 
 const RenderIndividualField = React.memo(
   ({ name, property, uiWidget, control, errors, customWidgets }) => {
     const CustomWidget = customWidgets[uiWidget];
-    const { theme, toggleTheme } = {theme:"light"};
-
+    const { theme, toggleTheme } = { theme: "light" };
     return (
       <div key={name} style={{ display: "inline-block", marginRight: "20px" }}>
         <label className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -22,33 +59,24 @@ const RenderIndividualField = React.memo(
           control={control}
           rules={{ required: property.required }}
           render={({ field }) => {
-            if (property.type === "boolean") {
-              return <input type="checkbox" {...field} checked={field.value} />;
-            } else if (property.enum) {
-              return (
-                <select {...field}>
-                  {property.enum.map((option, index) => (
-                    <option key={index} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              );
-            } else if (CustomWidget) {
-              return <CustomWidget {...field} />;
-            } else {
-              return (
-                <input
-                  type={
-                    uiWidget === "email"
-                      ? "email"
-                      : uiWidget === "number"
-                      ? "number"
-                      : "text"
-                  }
-                  {...field}
-                />
-              );
+            if (property.enum) {
+              return <EnumBasedDropdown
+                options={property.enum}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            }
+            else if (CustomWidget) {
+              const combinedProps = { ...field, ...property };
+              return <CustomWidget {...combinedProps} />;
+            }
+            else {
+              switch (property.type) {
+                case "boolean":
+                  return <CheckBox {...field} checked={field.value} />;
+                default:
+                  return <TextInput {...field} />;
+              }
             }
           }}
         />
@@ -64,9 +92,29 @@ const RenderArrayField = React.memo(
       control,
       name,
     });
-    const { theme, toggleTheme } = {theme:"light"};
-    if (property?.type == "array" && property?.items?.type == "string") {
-    }
+    const { theme, toggleTheme } = { theme: "light" };
+
+    const buttonStyles = {
+      backgroundColor: "#007bff",
+      padding: "5px 10px",   // Reduced padding for a smaller button
+      cursor: "pointer",
+      marginRight: "5px",    // Reduced margin for a smaller button
+      borderRadius: "5px",   // Keeps the rounded corners
+      fontSize: "calc(1rem + 1vw)", // Adjust font size based on viewport width
+      width: "8vw",         // Width as a percentage of viewport width
+      height: "auto",        // Automatically adjust height based on content
+      minWidth: "80px",      // Minimum width of the button
+      minHeight: "30px",     // Minimum height of the button
+      display: "flex",       // Ensure proper alignment of content
+      alignItems: "center",  // Center content vertically
+      justifyContent: "center" // Center content horizontally
+    };
+
+
+
+
+
+
     return (
       <div key={name}>
         <label className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -99,18 +147,23 @@ const RenderArrayField = React.memo(
                 customWidgets={customWidgets}
               />
             )}
-            <button type="button" onClick={() => remove(index)}>
-              Remove
-            </button>
+            <Button
+              label="Remove"
+              style={buttonStyles}
+              onClick={() => remove(index)}
+            />
           </Card>
         ))}
-        <button type="button" onClick={() => append({})}>
-          Add {property.title}
-        </button>
+        <Button
+          label="Add"
+          style={buttonStyles}
+          onClick={() => append({})}
+        />
       </div>
     );
   }
 );
+
 function findUIDependencies(obj, path = "") {
   const result = [];
 
@@ -150,6 +203,7 @@ const RenderDependentField = ({
     />
   );
 };
+
 const RenderField = ({
   name,
   property,
@@ -161,7 +215,7 @@ const RenderField = ({
 }) => {
   const uiWidget = uiSchema && uiSchema["ui:widget"];
   const dependencies = uiSchema && uiSchema["ui:dependencies"];
-  const { theme, toggleTheme } = {theme:"light"};
+  const { theme, toggleTheme } = { theme: "light" };
 
   if (dependencies) {
     const dependentValue = watch(dependencies.dependentField);
@@ -180,7 +234,7 @@ const RenderField = ({
     }
     return null;
   }
-
+  console.log(property, " pppppppppppppppppp")
   if (property.type === "array") {
     return (
       <RenderArrayField
@@ -233,6 +287,13 @@ const RenderField = ({
 const FormComposer = ({ schema, uiSchema, customWidgets }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
+  const buttonStyles = {
+    backgroundColor: "#007bff",
+    padding: "10px 20px",
+    cursor: "pointer",
+    marginRight: "10px",
+  }
+
   const {
     control,
     handleSubmit,
@@ -258,7 +319,6 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
 
   const dependencies = findUIDependencies(uiSchema);
 
-  // Extracting unique dependent fields from dependencies
   // Extracting unique dependent fields from dependencies
   const dependentFields = useMemo(() => {
     const fields = [];
@@ -313,7 +373,9 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
     },
     [schema, uiSchema, control, errors, watch]
   );
+
   const uiLayout = uiSchema?.["ui:layout"];
+
   const isTabVisible = (tab) => {
     if (!uiLayout?.conditionalLayout?.[tab]) return true;
     const condition = uiLayout?.conditionalLayout?.[tab];
@@ -329,7 +391,7 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
           {renderFields(
             groups[groupName]?.["ui:order"],
             schema.properties[groupName] || schema,
-            uiSchema,
+            uiSchema[groupName],
             control,
             errors
           )}
@@ -338,8 +400,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
     },
     [schema, uiSchema, control, errors, renderFields]
   );
-  const { theme, toggleTheme } = {theme:"light"};
 
+  const { theme, toggleTheme } = { theme: "light" };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
@@ -348,9 +410,13 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
       {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 0 ? (
         uiLayout?.type !== "TAB" ? (
           <>
-            {" "}
             <Stepper
-              steps={uiLayout?.layouts.map((step) => ({ title: step.label }))}
+              steps={uiLayout?.layouts.map((step, index) => ({
+                title: step.label,
+                onClick: () => {
+                  setCurrentTab(index);
+                },
+              }))}
               activeStep={currentTab}
             />
             {uiLayout?.layouts.map((tab, index) => {
@@ -360,11 +426,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
               );
               return (
                 isTabVisible(index) &&
-                index == currentTab && (
-                  <div
-                    key={index}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
+                index === currentTab && (
+                  <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                     <h2>{tab.label}</h2>
                     {renderGroups(
                       updatedUiSchema?.["ui:groups"],
@@ -373,87 +436,103 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                       control,
                       errors
                     )}
-
-                    {currentTab > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setCurrentTab((prev) => prev - 1)}
-                      >
-                        Previous
-                      </button>
-                    )}
-                    {currentTab < uiLayout?.layouts.length - 1 && (
-                      <button
-                        type="button"
-                        onClick={() => setCurrentTab((prev) => prev + 1)}
-                      >
-                        Next
-                      </button>
-                    )}
-                    {currentTab === uiLayout?.layouts.length - 1 && (
-                      <button type="submit">Submit</button>
-                    )}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
+                      {currentTab > 0 && (
+                        <Button
+                          label="Previous"
+                          onClick={() => setCurrentTab((prev) => prev - 1)}
+                          style={buttonStyles}
+                        />
+                      )}
+                      {currentTab < uiLayout?.layouts.length - 1 && (
+                        <Button
+                          label="Next"
+                          onClick={() => setCurrentTab((prev) => prev + 1)}
+                          style={buttonStyles}
+                        />
+                      )}
+                      {currentTab === uiLayout?.layouts.length - 1 && (
+                        <Button
+                          label="Submit"
+                          type="submit"
+                          style={buttonStyles}
+                        />
+                      )}
+                    </div>
                   </div>
                 )
               );
             })}
           </>
         ) : (
-          <Tabs
-            selectedIndex={currentTab}
-            onSelect={(index) => setCurrentTab(index)}
-          >
-            <>
-              <TabList>
-                {uiLayout?.layouts.map(
-                  (tab, index) =>
-                    isTabVisible(index) && <Tab key={index}>{tab.label}</Tab>
-                )}
-              </TabList>
-
-              {uiLayout?.layouts.map((tab, index) => {
-                const updatedUiSchema = React.useMemo(
-                  () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
-                  [index, uiSchema, uiLayout?.layouts]
-                );
-
-                return (
-                  isTabVisible(index) && (
-                    <TabPanel key={index}>
-                      <h2>{tab.label}</h2>
-                      {renderGroups(
-                        updatedUiSchema?.["ui:groups"],
-                        schema,
-                        updatedUiSchema,
-                        control,
-                        errors
-                      )}
-
+          <>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', flexWrap: 'wrap' }}>
+              {uiLayout?.layouts.map((tab, index) => (
+                isTabVisible(index) && (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setCurrentTab(index)}
+                    style={{
+                      padding: '10px 20px',
+                      margin: '10px',
+                      backgroundColor: currentTab === index ? '#007bff' : '#ccc',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                )
+              ))}
+            </div>
+            {uiLayout?.layouts.map((tab, index) => {
+              const updatedUiSchema = React.useMemo(
+                () => getUpdatedUISchema(index, uiSchema, uiLayout?.layouts),
+                [index, uiSchema, uiLayout?.layouts]
+              );
+              return (
+                isTabVisible(index) &&
+                index === currentTab && (
+                  <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                    <h2>{tab.label}</h2>
+                    {renderGroups(
+                      updatedUiSchema?.["ui:groups"],
+                      schema,
+                      updatedUiSchema,
+                      control,
+                      errors
+                    )}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
                       {currentTab > 0 && (
-                        <button
-                          type="button"
+                        <Button
+                          label="Previous"
                           onClick={() => setCurrentTab((prev) => prev - 1)}
-                        >
-                          Previous
-                        </button>
+                          style={buttonStyles}
+                        />
                       )}
                       {currentTab < uiLayout?.layouts.length - 1 && (
-                        <button
-                          type="button"
+                        <Button
+                          label="Next"
                           onClick={() => setCurrentTab((prev) => prev + 1)}
-                        >
-                          Next
-                        </button>
+                          style={buttonStyles}
+                        />
                       )}
                       {currentTab === uiLayout?.layouts.length - 1 && (
-                        <button type="submit">Submit</button>
+                        <Button
+                          label="Submit"
+                          type="submit"
+                          style={buttonStyles}
+                        />
                       )}
-                    </TabPanel>
-                  )
-                );
-              })}
-            </>
-          </Tabs>
+                    </div>
+                  </div>
+                )
+              );
+            })}
+          </>
         )
       ) : (
         <>
@@ -470,17 +549,25 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
     </form>
   );
 };
-const Card = ({ key, children }) => {
+
+const Card = ({ children }) => {
   return (
     <div
-      key={key}
       style={{
         border: "1px solid #ccc",
+        borderRadius: "4px",
         padding: "10px",
         margin: "10px 0",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexWrap: "wrap",
       }}
     >
-      {children}
+      {React.Children.map(children, (child, index) => (
+        <div style={{ marginLeft: index === 0 ? 0 : "10px" }}>
+          {child}
+        </div>
+      ))}
     </div>
   );
 };

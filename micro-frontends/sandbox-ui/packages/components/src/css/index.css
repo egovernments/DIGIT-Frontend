@@ -1,174 +1,37 @@
+@import url("./drawer.css");
+/* // @import 'tailwindcss/base';
+// @import 'tailwindcss/components';
+// @import 'tailwindcss/utilities';
 
+// add styles to your classname here  */
 
-.drawer-container {
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  top:0;
-  right: 0;
-  left:auto;
-  height: 100%;  
-  z-index: 1001;
-}
-
-@media (min-width: 48rem) {
-  .digit-text-block-wrap {
-      grid-gap: 1.5rem;
-      gap: 0.8em;
-  }
-}
-
-
-.drawer {
-  position: absolute;
-  height: 100%;
-  width: 75rem;
-  top: 0;
-  right: 0;
-  transform: translateX(100%);
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  overflow: auto;
-  ::-webkit-scrollbar { width: 0; }
-  scrollbar-width: none;
-  margin-top: 5em;
-  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-  transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
-  padding-bottom: 6.3em;
-  z-index: 1001;
-  
-}
-
-.fullscreen-blur {
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(1px); 
-  background-color: rgba(255, 255, 255, 0.1); 
-
-  pointer-events: none;
-}
-
-.drawer.open {
-  transform: translateX(0);
-}
-
-.vertical-bar{
-  background-color: #D9D9D9;
-  height: 13em;
-  width: 0.6em;
-  border-radius: 1.5em;
-
-  
-}
-.iconContainer{
-  display:flex;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
   align-items: center;
-
+  z-index: 1000;
 }
 
+.player-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
 
-.slider-card {
-  display: flex;
-  flex-direction: row;
-  border: 1px solid 
-  #D6D5D4;
- border-radius: 2em;
-  margin-top: 3em;
-  justify-content: space-between;
-  flex-grow: 1;
+.player-click-area {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
 
-  }
-
-  .content-button{
-    display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex-grow :1;
-  border:none;
-  box-shadow: none;
-  }
-
-  .icon{
-    flex: 0 0 11em;
-    min-height: 9em;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    width: 10em;
-  }
-  .card-divider {
-    width: 0.25em;
-    height: 10em;
-    background-color: #D6D5D4;
-    
-
-  }
-
-  .custom-button{
-    justify-content: center;
-  }
-  .button{
-    box-shadow: none;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-  }
-  .toggle-button {
-    margin-top: 6.3em;
-    position: absolute;
-    top: 0;
-    width: 4rem;
-    right: 0;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: right 0.3s ease;
-    height: 100%; 
-    border-radius: 3em 0 0 3em;
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    transition: right 0.3s ease;
-    justify-content: center;
-    z-index: 1001;
- 
-
-  }
-  .toggle-button.open{
-    right:75rem;
-  }
-
-
-  .header{
-    text-align: center;
-    margin-top: 10px;
-    color: #0B4B66;
-  }
-
-  
-   .digit-text-block-wrap {
-    .digit-text-block-header-content {
-      .digit-text-block-caption{
-        &.caption{
-          color: #0B4B66;
-        }
-      }
-      .digit-text-block-header{
-        &.header{
-          color: #0B4B66;
-        }
-      }
-    }
-   }
-
-
-  
-  
+.player-iframe {
+  position: relative;
+  z-index: 0;
+}
