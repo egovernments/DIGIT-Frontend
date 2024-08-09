@@ -8,6 +8,7 @@ import { Hooks } from "./hooks"
 import ReactQueryWrapper from "./providers/QueryProvider"
 import DigitRouter from "./components/DigitRouter"
 import DigitApp from "./components/DigitApp";
+import YoutubeVideo from "./components/YoutubeVideo";
 import TabForm from "./components/TabForm";
 import StepperForm from "./components/StepperForm";
 
@@ -16,6 +17,7 @@ import StepperForm from "./components/StepperForm";
 export {
   Button,
   DigitUIComponents,
+  YoutubeVideo,
   // Test,
   Test,
   Sample,
