@@ -12,7 +12,7 @@ function AddProduct() {
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
   const { mutate: createProduct } = Digit.Hooks.campaign.useCreateProduct(tenantId);
-  const { mutate: createProductVariant } = Digit.Hooks.campaign.useCreateProductVariant(tenantId);
+  const { mutate: createProductVariant } = Digit.Hooks.campaign.useCreateProductVariant(tenantId) ;
 
   const checkValid = (formData) => {
     const target = formData?.["addProduct"];
@@ -92,6 +92,14 @@ function AddProduct() {
               productId: i?.id,
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
+              additionalFields: {
+                fields: [
+                    {
+                        value: state?.projectType,
+                        key: "projectType"
+                    }
+                ]
+            }
             };
           }
           return;

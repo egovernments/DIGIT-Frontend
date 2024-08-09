@@ -578,6 +578,7 @@ const SetupCampaign = ({ hierarchyType }) => {
     return resources;
   }
 
+
   useEffect(async () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
       const temp = restructureData(totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule);
@@ -858,6 +859,8 @@ const SetupCampaign = ({ hierarchyType }) => {
     }
   }, [shouldUpdate]);
 
+  console.log("totalFormData" , totalFormData);
+
   function validateCycleData(data) {
     const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
     const cycleData = data.cycleConfigure.cycleData;
@@ -911,7 +914,7 @@ const SetupCampaign = ({ hierarchyType }) => {
       cycle.deliveries.forEach((delivery) => {
         delivery.deliveryRules.forEach((rule) => {
           // Validate attributes and products length
-          if (projectType !== "LLIN-MZ" && !rule?.deliveryType) {
+          if (projectType === "MR-DN" && !rule?.deliveryType) {
             isValid = false;
             deliveryRulesError?.push({
               name: `CYCLE_${cycle?.cycleIndex}`,
