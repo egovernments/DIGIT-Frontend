@@ -1,6 +1,7 @@
 import React from 'react';
 import ErrorBoundary from './ErrorBoundary'; // Import the ErrorBoundary component to handle JavaScript errors in the component tree
 import ReactQueryWrapper from '../providers/QueryProvider'; // Import the ReactQueryWrapper component to provide React Query context to children components
+import { DigitContextProvider } from '../contexts/DigitContext';
 
 /**
  * DigitApp Component
@@ -28,9 +29,11 @@ import ReactQueryWrapper from '../providers/QueryProvider'; // Import the ReactQ
 const DigitApp = ({ children, ...props }) => (
   <ErrorBoundary>
     <ReactQueryWrapper>
+      <DigitContextProvider initialValue={props}>
       {React.Children.map(children, child =>
         React.cloneElement(child, { ...props }) // Clone each child element and pass additional props to it
       )}
+      </DigitContextProvider>
     </ReactQueryWrapper>
   </ErrorBoundary>
 );
