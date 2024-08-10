@@ -1,5 +1,6 @@
 import React from "react";
 import DataMgmtApp from "./pages";
+import useGlobalConfig from "../../../components/src/hooks/useGlobalConfig";
 
 /**
  * Main application component that initializes the UserApp with provided props.
@@ -20,13 +21,13 @@ import DataMgmtApp from "./pages";
  *
  * @returns {JSX.Element} The rendered `UserApp` component with the given props.
  */
-export default function App(props) {
-  const { baseAppURL, rootTenant } = props;
+export default function App() {
+  const { appURL, rootTenant ,moduleName} = useGlobalConfig();
   return (
     <>
       <h2>Data Management</h2>
       <DataMgmtApp
-        baseAppURL={`${baseAppURL}/data-mgmt`}
+        baseAppURL={appURL}
         rootTenant={rootTenant}
       />
     </>

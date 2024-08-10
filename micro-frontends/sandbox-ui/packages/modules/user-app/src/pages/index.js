@@ -38,7 +38,7 @@ const routes = [
   },
   {
     url: "home",
-    withAuth: false, // Indicates that no authentication is required for this route
+    withAuth: true, // Indicates that no authentication is required for this route
     component: lazy(() => import("./HomeScreen")), // Lazy-load the PageThree component
   },
   {

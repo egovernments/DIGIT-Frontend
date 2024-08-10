@@ -40,7 +40,7 @@ import { DigitApp } from "components";
 const lifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: (props) => <DigitApp {...props}><App/></DigitApp>, // Pass props to the root component
+  rootComponent: (props) => <DigitApp {...props} moduleName="data-mgmt"><App/></DigitApp>, // Pass props to the root component
   errorBoundary(err, info, props) {
     // Customize the root error boundary for your microfrontend here.
     return null; // Return a fallback UI or null to hide the error boundary
