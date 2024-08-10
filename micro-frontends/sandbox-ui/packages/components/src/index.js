@@ -5,7 +5,7 @@ import Sample from "./Sample";
 import Test from "./components/Test";
 import States from "./states";
 import { Hooks } from "./hooks";
-import ReactQueryWrapper from "./providers/QueryProvider";
+import ReactQueryWrapper from "./contexts/ReactQueryProvider";
 import DigitRouter from "./components/DigitRouter";
 import DigitApp from "./components/DigitApp";
 import YoutubeVideo from "./components/YoutubeVideo";
