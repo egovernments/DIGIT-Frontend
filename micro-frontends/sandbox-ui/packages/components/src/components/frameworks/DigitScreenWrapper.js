@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar1 from './Sidebar';
-import Topbar from './Topbar';
+import Sidebar1 from '../Sidebar';
+import Topbar from '../Topbar';
 
 /**
  * Main Application Component

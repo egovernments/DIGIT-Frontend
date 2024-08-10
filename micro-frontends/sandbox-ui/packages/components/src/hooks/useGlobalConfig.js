@@ -13,7 +13,7 @@
  * @returns {Object} Returns an object containing rootTenant, fallback, baseAppURL, appURL, and moduleName.
  */
 import { useContext } from 'react';
-import { DigitContext } from '../contexts/DigitContext';
+import { DigitContext } from '../contexts/DigitContextProvider';
 
 const useGlobalConfig = () => {
   // Access the context using useContext hook
