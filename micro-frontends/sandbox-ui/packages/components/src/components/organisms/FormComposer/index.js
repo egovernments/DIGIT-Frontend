@@ -68,6 +68,7 @@ const CheckBox = ({ checked, onChange, label }) => {
  * @param {Object} props.control - The control object from react-hook-form.
  * @param {Object} props.errors - The form errors object from react-hook-form.
  * @param {Object} props.customWidgets - A dictionary of custom widgets.
+ * 
  *
  * @returns {React.ReactNode} The rendered field component.
  */
@@ -369,10 +370,12 @@ const RenderField = ({
  * @param {Object} props.customWidgets - A dictionary of custom widgets.
  * @param {Function} props.onSubmit - Function to call when the form is submitted.
  * @param {Function} props.onError - Function to call when the form submission fails.
+ * @param {React.ReactNode}  props.submitHandler - component to handle submit by its own
+ * 
  * @author jagankumar-egov
  * @returns {React.ReactNode} The rendered form component.
  */
-const FormComposer = ({ schema, uiSchema, customWidgets }) => {
+const FormComposer = ({ schema, uiSchema, customWidgets,onSubmit,onError,submitHandler=false }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const buttonStyles = {
@@ -438,7 +441,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
     });
   }, [lastUpdatedField, reset, trigger, getValues, dependencies]);
 
-  const onSubmit = useCallback((data) => {
+  const formOnSubmit = useCallback((data) => {
+    onSubmit(data);
     console.log("Form Data:", data);
   }, []);
 
@@ -491,11 +495,12 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
 
   const { theme, toggleTheme } = { theme: "light" };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(formOnSubmit)}>
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
         {schema.title}
       </h1>
-      {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 0 ? (
+      {/* uiLayout?.layouts?.length > 1  is set to 1 since even if layout has 1 then there is no need of stepper or tab need to discuss if any change required*/}
+      {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 1 ? (
         uiLayout?.type !== "TAB" ? (
           <>
             <Stepper
@@ -524,7 +529,9 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                       control,
                       errors
                     )}
+                    {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
+                    {!(uiLayout?.hideTabNavigateButtons)&& <>
                       {currentTab > 0 && (
                         <Button
                           label="Previous"
@@ -546,6 +553,7 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                           style={buttonStyles}
                         />
                       )}
+                      </>}
                     </div>
                   </div>
                 )
@@ -593,7 +601,9 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                       control,
                       errors
                     )}
+                    {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
+                    {!(uiLayout?.hideTabNavigateButtons)&& <>
                       {currentTab > 0 && (
                         <Button
                           label="Previous"
@@ -615,6 +625,7 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                           style={buttonStyles}
                         />
                       )}
+                      </>}
                     </div>
                   </div>
                 )
@@ -631,7 +642,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
             control,
             errors
           )}
-          <button type="submit">Submit</button>
+         {!submitHandler&& <button type="submit">Submit</button>}
+         {submitHandler && submitHandler}
         </>
       )}
     </form>

@@ -97,10 +97,9 @@ const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, re
       mergedPromises[params.tenantId] = [];
 
       Request({
-        serviceName,
         url,
         data: callData,
-        useCache,
+        options:{ useCache },
         params,
       })
         .then(data => {
