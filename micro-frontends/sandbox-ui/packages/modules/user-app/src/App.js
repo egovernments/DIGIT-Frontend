@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import UserApp from "./pages";
-import useGlobalConfig from "../../../components/src/hooks/useGlobalConfig";
+import { Hooks } from "components";
+
 
 
 /**
@@ -24,7 +25,7 @@ import useGlobalConfig from "../../../components/src/hooks/useGlobalConfig";
  * @returns {JSX.Element} The rendered `UserApp` component with the given props.
  */
 export default function App() {
-  const { appURL, rootTenant ,moduleName} = useGlobalConfig();
+  const { appURL, rootTenant ,moduleName} = Hooks?.useGlobalConfig();
   
   return (
     <>
