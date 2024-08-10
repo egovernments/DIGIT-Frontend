@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import withAuth from "../hoc/withAuth";
+import withAuth from "../../hoc/withAuth";
 
 /**
  * `DigitRouter` Component

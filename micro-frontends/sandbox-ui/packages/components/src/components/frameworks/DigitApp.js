@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrorBoundary from './ErrorBoundary'; // Import the ErrorBoundary component to handle JavaScript errors in the component tree
-import ReactQueryProvider from '../contexts/ReactQueryProvider'; // Import the ReactQueryWrapper component to provide React Query context to children components
-import { DigitContextProvider } from '../contexts/DigitContextProvider';
+import ReactQueryProvider from '../../contexts/ReactQueryProvider'; // Import the ReactQueryWrapper component to provide React Query context to children components
+import { DigitContextProvider } from '../../contexts/DigitContextProvider';
 
 /**
  * DigitApp Component
