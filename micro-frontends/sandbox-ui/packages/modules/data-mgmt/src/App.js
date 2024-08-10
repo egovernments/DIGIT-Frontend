@@ -1,6 +1,6 @@
 import React from "react";
 import DataMgmtApp from "./pages";
-import useGlobalConfig from "../../../components/src/hooks/useGlobalConfig";
+import { Hooks } from "components";
 
 /**
  * Main application component that initializes the UserApp with provided props.
@@ -22,7 +22,7 @@ import useGlobalConfig from "../../../components/src/hooks/useGlobalConfig";
  * @returns {JSX.Element} The rendered `UserApp` component with the given props.
  */
 export default function App() {
-  const { appURL, rootTenant ,moduleName} = useGlobalConfig();
+  const { appURL, rootTenant ,moduleName} = Hooks?.useGlobalConfig();
   return (
     <>
       <h2>Data Management</h2>

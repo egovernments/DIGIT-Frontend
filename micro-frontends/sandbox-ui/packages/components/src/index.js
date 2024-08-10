@@ -12,7 +12,7 @@ import YoutubeVideo from "./components/YoutubeVideo";
 import TabForm from "./components/TabForm";
 import StepperForm from "./components/StepperForm";
 import Drawer from "./components/Drawer";
-
+import * as Components from "./components";
 // 导出组件
 export {
   Button,
@@ -29,4 +29,5 @@ export {
   DigitApp,
   TabForm,
   StepperForm,
+  Components
 };
