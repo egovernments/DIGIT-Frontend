@@ -1,4 +1,4 @@
-name: Digit Sandbox Root App Build Workflow
+name: Digit Sandbox Modules App Build Workflow
 
 on:
   push:
