@@ -8,13 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+# RUN npm install
 
 # Copy the rest of the application code
 COPY . .
 
 # Build the application
-RUN npm run build
+# RUN npm run build
 
 # Use a lightweight web server to serve the built files
 FROM nginx:alpine
