@@ -324,7 +324,7 @@ const SidebarV2 = () => {
               if (parent.icon === null && parent.children) {
                   // Find the first non-null icon in the children
                   for (const child of parent.children) {
-                      if (child.icon && child.icon.props) {
+                      if (child.icon?.props) {
                           parent.icon = child.icon;
                           break; // Stop after finding the first non-null icon
                       }
