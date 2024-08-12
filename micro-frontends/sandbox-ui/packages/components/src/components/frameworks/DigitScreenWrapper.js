@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar1 from '../Sidebar';
+import SidebarV2 from '../Sidebar';
 import Topbar from '../Topbar';
 
 /**
@@ -13,7 +13,7 @@ import Topbar from '../Topbar';
 function DigitScreenWrapper({children}) {
   return (
     <div className="flex">
-      <Sidebar1 />
+      <SidebarV2 />
       <div className="flex-1 ml-64">
         <Topbar />
         <main className="pt-16 p-6">
