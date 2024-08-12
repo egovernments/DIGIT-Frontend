@@ -12,6 +12,19 @@
   cursor: pointer;
 }
 
+.custom-card-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.custom-card-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
 .custom-card-container {
   display: flex;
   flex-wrap: wrap;
