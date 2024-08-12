@@ -471,6 +471,8 @@ const AddIRSCustomAttributeField = ({
     // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
       if (item.ruleKey === deliveryRuleIndex) {
+        item.attributes.find((i) => i.key === attribute.key).attribute = { code: "TYPE_OF_STRUCTURE"};
+        item.attributes.find((i) => i.key === attribute.key).operator = { code: "EQUAL_TO" };
         item.attributes.find((i) => i.key === attribute.key).value = value?.code;
       }
       return item;
@@ -479,7 +481,6 @@ const AddIRSCustomAttributeField = ({
   };
 
   const selectOperator = (value) => {
-    console.log("value" , value)
     // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
       if (item.ruleKey === deliveryRuleIndex) {
@@ -511,7 +512,7 @@ const AddIRSCustomAttributeField = ({
           disable={true}
           isMandatory={true}
           option={[{ key: 1, code: "EQUAL_TO" }]}
-          select={(value) => selectOperator(value)}
+          select={{ code: "EQUAL_TO" }}
           optionKey="code"
           t={t}
         />
@@ -613,19 +614,12 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     setDeliveryRules(newData);
   };
 
-  const selectedStructureCodes = campaignData
-    .flatMap(cycle =>
-      cycle.deliveries.flatMap(delivery =>
-        delivery.deliveryRules.flatMap(rule =>
-          rule.attributes.map(attribute => attribute.value)
-        )
-      )
-    );
+  const selectedStructureCodes = campaignData.flatMap((cycle) =>
+    cycle.deliveries.flatMap((delivery) => delivery.deliveryRules.flatMap((rule) => rule.attributes.map((attribute) => attribute.value)))
+  );
 
-  const filteredStructureConfig = structureConfig?.filter(
-    structure => !selectedStructureCodes.includes(structure?.code)
-  );  
-  
+  const filteredStructureConfig = structureConfig?.filter((structure) => !selectedStructureCodes.includes(structure?.code));
+
   return (
     <Card className="attribute-container">
       {filteredDeliveryConfig?.customAttribute && filteredDeliveryConfig?.projectType === "LLIN-mz"
@@ -924,16 +918,11 @@ const AddDeliveryRuleWrapper = ({}) => {
     });
   };
 
-  const selectedStructureCodes = campaignData
-    .flatMap(cycle =>
-      cycle?.deliveries.flatMap(delivery =>
-        delivery?.deliveryRules.flatMap(rule =>
-          rule?.attributes.map(attribute => attribute?.value)
-        )
-      )
-    );
+  const selectedStructureCodes = campaignData.flatMap((cycle) =>
+    cycle?.deliveries.flatMap((delivery) => delivery?.deliveryRules.flatMap((rule) => rule?.attributes.map((attribute) => attribute?.value)))
+  );
 
-    const isIRSDelivery = filteredDeliveryConfig?.projectType === "IRS-mz" && selectedStructureCodes?.length < 4;
+  const isIRSDelivery = filteredDeliveryConfig?.projectType === "IRS-mz" && selectedStructureCodes?.length < 4;
   return (
     <>
       {deliveryRules?.map((item, index) => (
@@ -957,27 +946,26 @@ const AddDeliveryRuleWrapper = ({}) => {
           onButtonClick={addMoreDelivery}
         />
       )} */}
-      {filteredDeliveryConfig?.projectType === "IRS-mz" ? (
-      selectedStructureCodes?.length < 4 && (
-        <Button
-          variation="secondary"
-          label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-          className={"add-rule-btn hover"}
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          onButtonClick={addMoreDelivery}
-        />
-      )
-    ) : (
-      !filteredDeliveryConfig?.deliveryAddDisable && deliveryRules?.length < 5 && (
-        <Button
-          variation="secondary"
-          label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-          className={"add-rule-btn hover"}
-          icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
-          onButtonClick={addMoreDelivery}
-        />
-      )
-    )}
+      {filteredDeliveryConfig?.projectType === "IRS-mz"
+        ? selectedStructureCodes?.length < 4 && (
+            <Button
+              variation="secondary"
+              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+              className={"add-rule-btn hover"}
+              icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+              onButtonClick={addMoreDelivery}
+            />
+          )
+        : !filteredDeliveryConfig?.deliveryAddDisable &&
+          deliveryRules?.length < 5 && (
+            <Button
+              variation="secondary"
+              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+              className={"add-rule-btn hover"}
+              icon={<AddIcon styles={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
+              onButtonClick={addMoreDelivery}
+            />
+          )}
     </>
   );
 };
