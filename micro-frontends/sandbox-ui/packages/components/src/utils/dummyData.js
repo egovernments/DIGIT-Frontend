@@ -204,7 +204,7 @@ const data={
             "createdBy": null,
             "lastModifiedDate": null,
             "lastModifiedBy": null,
-            "path": "5BILLS.CreratePurchaseBill",
+            "path": "5BILLS.CreatePurchaseBill",
             "navigationURL": "/works-ui/employee/contracts/search-contract?status=ACCEPTED",
             "leftIcon": "dynamic:ExpenditureIcon",
             "rightIcon": ""
