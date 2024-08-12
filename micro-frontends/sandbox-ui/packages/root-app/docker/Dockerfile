@@ -17,17 +17,27 @@ COPY . .
 RUN npm run build
 
 # Use a lightweight web server to serve the built files
-FROM nginx:alpine
+# FROM nginx:alpine
 
-# Copy the built files from the previous stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# # Copy the built files from the previous stage
+# COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy the nginx configuration file
-COPY --from=build /app/docker/nginx.conf /etc/nginx/nginx.conf
+# # Copy the nginx configuration file
+# COPY --from=build /app/docker/nginx.conf /etc/nginx/nginx.conf
 
 
-# Expose port 80
-EXPOSE 80
+# # Expose port 80
+# EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# # Start Nginx
+# CMD ["nginx", "-g", "daemon off;"]
+
+FROM nginx:mainline-alpine
+
+ENV WORK_DIR=/var/web/sandbox-ui
+
+RUN mkdir -p ${WORK_DIR}
+
+COPY --from=build /app/dist ${WORK_DIR}/
+COPY --from=build /app/docker/nginx.conf /etc/nginx/conf.d/default.conf
+
