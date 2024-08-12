@@ -360,7 +360,7 @@ const SidebarV2 = () => {
     <aside className="w-64 h-screen bg-gray-800 text-white top-0 left-0 p-4">
       <h2 className="text-2xl font-semibold mb-6">Sidebar</h2>
       <Sidebar
-        expandedWidth="200px"
+        expandedWidth="500px"
         // transitionDuration={1.0}
         items={
          transformedSidebarItems
