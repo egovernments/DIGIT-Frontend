@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import withNavigator from "./withNavigator";
 import { useAuthState } from "../states/useAuthState";
-import DigitScreenWrapper from "../components/DigitScreenWrapper";
+import DigitScreenWrapper from "../components/frameworks/DigitScreenWrapper";
 
 /**
  * Higher-Order Component (HOC) for authentication.

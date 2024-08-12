@@ -10,3 +10,4 @@ utilities/
 /micro-frontends/sandbox-ui/node_modules/
 /micro-frontends/sandbox-ui/*-lock.json
 /micro-frontends/sandbox-ui/dist/
+*-lock.json
