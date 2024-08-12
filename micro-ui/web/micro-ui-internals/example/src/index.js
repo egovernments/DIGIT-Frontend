@@ -11,6 +11,7 @@ import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilitie
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
 import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
 import {initOpenPaymentComponents} from "@egovernments/digit-ui-module-open-payment";
+import {initSandboxComponents} from "@egovernments/digit-ui-module-sandbox";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -26,6 +27,7 @@ const enabledModules = [
   "Utilities","PGR",
 //added to check fsm
 // "FSM"
+"Sandbox",
 "OpenPayment"
 ];
 
@@ -75,6 +77,7 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initPGRComponents();
   initOpenPaymentComponents();
+  initSandboxComponents();
 
   const moduleReducers = (initData) =>  ({
     pgr: PGRReducers(initData),
