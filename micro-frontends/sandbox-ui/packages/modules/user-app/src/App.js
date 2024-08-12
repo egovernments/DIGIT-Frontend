@@ -31,7 +31,7 @@ export default function App() {
   return (
     <>
       <h2>User Appppp</h2>
-      <UserApp baseAppURL={`${baseAppURL}/user`} rootTenant={rootTenant} />
+      <UserApp baseAppURL={appURL} rootTenant={rootTenant} />
     </>
   );
 }
