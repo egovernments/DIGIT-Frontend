@@ -2,7 +2,7 @@ name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'develop','microplan' ]
+    branches: [ 'develop','microplan','microplan-v1-scratch' ]
     paths:
       - 'health/micro-ui/web/micro-ui-internals/**'
     
