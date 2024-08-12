@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import DigitUIComponents from "../DigitUIComponents";
-import { iconRender } from "../utils/iconRender";
+import { sidebarIconRender } from "../utils/sidebarIconRender";
 const { Sidebar } = DigitUIComponents;
 
 import data from "../utils/dummyData";
@@ -261,7 +261,7 @@ const SidebarV2 = () => {
               //icon: item ? item.leftIcon : '', // Assuming icon is in leftIcon field
               //icon: item ? item.leftIcon.split(':').pop() : '',
               //icon: IconComponent ? <IconComponent /> : null,  // Render the icon component
-              icon: iconRender(iconName),
+              icon: sidebarIconRender(iconName),
               link: item ? item.navigationURL : '',
               children: [],
             };

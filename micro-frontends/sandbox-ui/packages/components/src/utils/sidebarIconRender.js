@@ -1,4 +1,4 @@
-export const iconRender = (iconReq, iconFill, width, height,className) => {
+export const sidebarIconRender = (iconReq, iconFill, width, height,className) => {
     try {
       const components = require("@egovernments/digit-ui-components");
       const DynamicIcon = components?.[iconReq];
