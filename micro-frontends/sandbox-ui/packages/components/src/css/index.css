@@ -7,17 +7,28 @@
     height: 100vh;
     justify-content: center;
     position: relative;
+    cursor: pointer;
+    
   }
   
   .slider-image {
     height: 100vh;
     width: 22rem;
     border-radius: 8px;
+    color: red;
+    transition: opacity 1.5s ease-in-out;
+    
+  }
+  .slider-image.fade-in {
+    opacity: 1;
+  }
+  
+  .slider-image.fade-out {
+    opacity: 0;
   }
   
   .slider-card {
     background-color: rgba(104, 104, 255, 0.6);
-    /* Convert SCSS rgba function to CSS */
     border-radius: 0.7rem;
     position: absolute;
     top: 0;
@@ -108,4 +119,27 @@
   
   .digit-text-block-wrap{
     gap:0rem;
+  }
+
+  .slider-dots {
+    position: absolute;
+    top: 22rem;
+    left:2.5rem;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+  }
+  
+  .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: orange;
+    border-radius: 50%;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 1s;
+  }
+  
+  .dot.active {
+    opacity: 1;
   }
