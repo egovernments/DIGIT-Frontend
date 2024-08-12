@@ -31,6 +31,12 @@ config:
         dockerfile: health/micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
 
+  - name: builds/Digit-Frontend/sandbox-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/sandbox/Dockerfile
+        image-name: sandbox-ui      
+
   - name: builds/Digit-Frontend/microplan-ui
     build:
       - work-dir: health/micro-ui/
