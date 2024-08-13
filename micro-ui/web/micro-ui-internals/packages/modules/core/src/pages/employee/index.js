@@ -8,6 +8,8 @@ import ChangePassword from "./ChangePassword";
 import ForgotPassword from "./ForgotPassword";
 import LanguageSelection from "./LanguageSelection";
 import EmployeeLogin from "./Login";
+import SignUp from "./SignUp";
+import Otp from "./Otp";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
@@ -71,6 +73,12 @@ const EmployeeApp = ({
             <Switch>
               <Route path={`${path}/user/login`}>
                 <EmployeeLogin stateCode={stateCode} />
+              </Route>
+              <Route path={`${path}/user/sign-up`}>
+                <SignUp stateCode={stateCode} />
+              </Route>
+              <Route path={`${path}/user/otp`}>
+                <Otp  />
               </Route>
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
