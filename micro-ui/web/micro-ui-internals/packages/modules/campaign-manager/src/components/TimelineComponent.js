@@ -248,49 +248,61 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
   return (
     <React.Fragment>
       <div className="timeline-user">
-        {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
-          <TimelineMolecule>
-            {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
-
-            {/* <Timeline
-              label={t("HCM_CURRENT")}
-              subElements={subElements}
-              variant="inprogress"
-              showConnector={true}
-            /> */}
-            {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
-
-            {upcomingTimelines?.map((timeline, index) => (
-              <Timeline
-                key={index}
-                label={timeline?.label}
-                subElements={timeline?.subElements}
-                variant="upcoming"
-                showConnector={true}
-                className={"upcoming-timeline"}
-              />
-            ))}
-
-            {inProgressTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
-            ))}
-
-            {completedTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-            ))}
-          </TimelineMolecule>
-        ) : (
+      {progessTrack ? (
           <TimelineMolecule
             initialVisibleCount={1}
             hideFutureLabel={true}
             viewLessLabelForPast={t("HCM_SHOW_LESS")}
             viewMoreLabelForPast={t("HCM_SHOW_MORE")}
           >
-            {completedTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-            ))}
+            {(() => {
+              const processesToRender = [];
+              let foundFirstFailed = false;
+
+              for (let i = 0; i < progessTrack?.processTrack?.length; i++) {
+                const process = progessTrack?.processTrack[i];
+                if (process.status === "failed") {
+                  processesToRender.push(
+                    <Timeline
+                      key={i}
+                      isError
+                      label={t(formatLabel(process?.type))}
+                      showDefaultValueForDate
+                      subElements={[epochToDateTime(process.lastModifiedTime)]}
+                      variant="completed"
+                    />
+                  );
+                  foundFirstFailed = true;
+                  break;
+                } else {
+                  if (process.showInUi) {
+                    let variant = "completed";
+                    if (process.status === "inprogress") {
+                      variant = "inprogress";
+                    } else if (process.status === "toBeCompleted") {
+                      variant = "upcoming";
+                    }
+
+                    processesToRender.push(
+                      <Timeline
+                        key={i}
+                        label={t(formatLabel(process?.type))}
+                        subElements={[epochToDateTime(process.lastModifiedTime)]}
+                        variant={variant}
+                        showConnector={true}
+                      />
+                    );
+                  }
+                }
+              }
+              return processesToRender.reverse();
+            })()}
           </TimelineMolecule>
+        ) : (
+          <p>{t("LOADING")}</p> // You can replace this with a loading spinner or any other indicator
         )}
+
+
         {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
           <Button
             label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
