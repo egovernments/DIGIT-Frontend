@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-components": "0.0.2-beta.2",
-    "@egovernments/digit-ui-react-components": "1.8.2-beta.4",
+    "@egovernments/digit-ui-components": "0.0.2-beta.19",
+    "@egovernments/digit-ui-react-components": "1.8.2-beta.11",
     "@egovernments/digit-ui-svg-components": "1.0.8",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",

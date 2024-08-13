@@ -93,6 +93,11 @@ const TimelineComponent = ({campaignId, resourceId}) => {
       return latestProcess;
     }, null);
 
+  const failedProcess = progessTrack?.processTrack
+    .filter((process) => process.status === "failed")
+    .reduce((latestProcess, currentProcess) => {
+      return latestProcess === null || currentProcess.lastModifiedTime > latestProcess.lastModifiedTime ? currentProcess : latestProcess;
+    }, null);
 
   const searchAPIData = async (campaignId, resourceId) => {
     try {
@@ -112,21 +117,26 @@ const TimelineComponent = ({campaignId, resourceId}) => {
   };
 
   useEffect(() => {
-    if (resourceId.length === 0 && lastCompletedProcess?.type === "campaign-creation" && lastCompletedProcess?.status === "completed" && !dataFetched ) {
+    if (
+      resourceId.length === 0 &&
+      lastCompletedProcess?.type === "campaign-creation" &&
+      lastCompletedProcess?.status === "completed" &&
+      !dataFetched
+    ) {
       const fetchData = async () => {
         try {
           const data = await searchAPIData(campaignId);
           setSearchDATA(data);
-          setDataFetched(true)
+          setDataFetched(true);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
       };
-  
+
       fetchData();
     }
-  }, [campaignId, newResourceId, lastCompletedProcess , dataFetched]);
-  
+  }, [campaignId, newResourceId, lastCompletedProcess, dataFetched]);
+
   useEffect(() => {
     if (searchDATA) {
       const userResource = searchDATA?.CampaignDetails?.[0]?.resources?.find((resource) => resource.type === "user");
@@ -135,11 +145,11 @@ const TimelineComponent = ({campaignId, resourceId}) => {
       }
     }
   }, [searchDATA]);
-  
+
   useEffect(() => {
     let intervalId;
 
-    if (lastCompletedProcess?.type !== "campaign-creation") {
+    if (failedProcess?.status !== "failed" && lastCompletedProcess?.type !== "campaign-creation") {
       intervalId = setInterval(() => {
         refetch();
       }, baseTimeOut?.["HCM-ADMIN-CONSOLE"]?.baseTimeOut?.[0]?.timelineRefetch);
@@ -162,23 +172,41 @@ const TimelineComponent = ({campaignId, resourceId}) => {
     subElements: [epochToDateTime(process.lastModifiedTime)],
   }));
 
+  // const inprogressProcesses = progessTrack?.processTrack
+  //   .filter((process) => process.status === "inprogress" && process.showInUi === true)
+  //   .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
+
+  // const subElements =
+  //   inprogressProcesses?.length > 0
+  //     ? inprogressProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
+  //     : [];
+
+  // const upcomingProcesses = progessTrack?.processTrack
+  //   .filter((process) => process.status === "toBeCompleted" && process.showInUi === true)
+  //   .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
+
+  // const subElements2 =
+  //   upcomingProcesses?.length > 0
+  //     ? upcomingProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
+  //     : [];
+
   const inprogressProcesses = progessTrack?.processTrack
     .filter((process) => process.status === "inprogress" && process.showInUi === true)
     .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
 
-  const subElements =
-    inprogressProcesses?.length > 0
-      ? inprogressProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
-      : [];
+  const inProgressTimelines = inprogressProcesses?.map((process) => ({
+    label: t(formatLabel(process?.type)),
+    subElements: [epochToDateTime(process.lastModifiedTime)],
+  }));
 
   const upcomingProcesses = progessTrack?.processTrack
     .filter((process) => process.status === "toBeCompleted" && process.showInUi === true)
     .map((process) => ({ type: process.type, lastModifiedTime: process.lastModifiedTime }));
 
-  const subElements2 =
-    upcomingProcesses?.length > 0
-      ? upcomingProcesses.map((process) => `${t(formatLabel(process?.type))} , ${epochToDateTime(process.lastModifiedTime)}`)
-      : [];
+  const upcomingTimelines = upcomingProcesses?.map((process) => ({
+    label: t(formatLabel(process?.type)),
+    subElements: [epochToDateTime(process.lastModifiedTime)],
+  }));
 
   // useEffect(()=>{
   //   const lastCompletedProcess = progessTrack?.processTrack
@@ -220,9 +248,9 @@ const TimelineComponent = ({campaignId, resourceId}) => {
   return (
     <React.Fragment>
       <div className="timeline-user">
-        {subElements.length > 0 || subElements2.length > 0 ? (
+      {inProgressTimelines?.length > 0 || upcomingTimelines?.length > 0 ? (
           <TimelineMolecule>
-            <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} />
+            {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
 
             {/* <Timeline
               label={t("HCM_CURRENT")}
@@ -230,7 +258,22 @@ const TimelineComponent = ({campaignId, resourceId}) => {
               variant="inprogress"
               showConnector={true}
             /> */}
-            {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />}
+            {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
+
+            {upcomingTimelines?.map((timeline, index) => (
+              <Timeline
+                key={index}
+                label={timeline?.label}
+                subElements={timeline?.subElements}
+                variant="upcoming"
+                showConnector={true}
+                className={"upcoming-timeline"}
+              />
+            ))}
+
+{inProgressTimelines?.map((timeline, index) => (
+              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
+            ))}
 
             {completedTimelines?.map((timeline, index) => (
               <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
@@ -239,7 +282,14 @@ const TimelineComponent = ({campaignId, resourceId}) => {
         ) : (
           <TimelineMolecule initialVisibleCount={1} hideFutureLabel={true}>
             {completedTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
+              <Timeline 
+              key={index} 
+              label={timeline?.label} 
+              subElements={timeline?.subElements} 
+              variant="completed" 
+              viewLessLabelForPast={t("HCM_SHOW_LESS")}
+              viewMoreLabelForPast={t("HCM_SHOW_MORE")}
+              showConnector={true} />
             ))}
           </TimelineMolecule>
         )}
