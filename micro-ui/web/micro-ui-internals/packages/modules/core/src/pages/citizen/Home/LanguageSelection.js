@@ -41,6 +41,13 @@ const LanguageSelection = () => {
         <CardHeader>{t("CS_COMMON_CHOOSE_LANGUAGE")}</CardHeader>
         <RadioButtons {...RadioButtonProps} />
       </PageBasedInput>
+      <style>
+        {`
+          .digit-submit-bar-container {
+            display: none;
+          }
+        `}
+      </style>
     </div>
   );
 };
