@@ -71,7 +71,7 @@ const UICreateConfigGenerator = (MDMSSchema = {}, UISchema = {}) => {
  * @returns {Array<object>} Returns the Create screen config
  */
 const getMDMSContextPath = () => {
-  return window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
+  return window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 };
 
 const isSchemaCodeInMDMSAction = () => {
