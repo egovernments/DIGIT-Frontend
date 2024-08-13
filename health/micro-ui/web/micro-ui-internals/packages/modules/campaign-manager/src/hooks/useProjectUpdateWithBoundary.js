@@ -4,6 +4,7 @@ const useProjectUpdateWithBoundary = async ({ formData }) => {
       url: "/health-project/v1/_update",
       body: {
         Projects: [item],
+        isCascadingProjectDateUpdate: true,
       },
     }).then((res) => {
       return res;
