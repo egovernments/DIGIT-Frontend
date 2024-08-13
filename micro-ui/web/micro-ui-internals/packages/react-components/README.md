@@ -88,6 +88,7 @@ Syntax for the FormComposersV2
 ### Changelog
 
 ```bash
+1.8.3 upated dropdown option selection 
 1.8.2 updated serachcomponent for serachscreen inside popup
 1.8.1 build issue fix due to ajv library
 1.8.0 workbench v1.0 release
