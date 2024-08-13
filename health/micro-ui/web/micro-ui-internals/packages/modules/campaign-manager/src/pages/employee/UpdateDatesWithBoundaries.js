@@ -12,6 +12,8 @@ function UpdateDatesWithBoundaries() {
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
   const [showPopUp, setShowPopUp] = useState(null);
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get("id");
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-ADMIN-CONSOLE",
@@ -35,18 +37,27 @@ function UpdateDatesWithBoundaries() {
   const checkValid = (data) => {
     if (DateWithBoundary) {
       const temp = data?.dateWithBoundary;
-      const allCycleDateValid = temp
-        .map((i) => i.additionalDetails.projectType.cycles.every((j) => j.startDate && j.endDate))
-        .every((k) => k === true);
+      // const allCycleDateValid = temp
+      //   .map((i) => i.additionalDetails.projectType.cycles.every((j) => j.startDate && j.endDate))
+      //   .every((k) => k === true);
+      const allCycleDateValid = temp?.projectType === "MR-DN" 
+      ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true) 
+      : true;
       const allDateValid = temp.every((i) => i.startDate && i.endDate);
 
-      if (allCycleDateValid && allDateValid) {
+      if (temp?.projectType === "MR-DN" && allCycleDateValid && allDateValid) {
+        return true;
+      }
+      else if (temp?.projectType !== "MR-DN" && allDateValid) {
         return true;
       }
       return false;
     } else if (!DateWithBoundary) {
       const cycleDateValid = data?.dateAndCycle?.additionalDetails?.projectType?.cycles?.every((item) => item?.startDate && item?.endDate);
-      if (data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate && cycleDateValid) {
+      if (data?.dateAndCycle?.projectType === "MR-DN" && data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate && cycleDateValid) {
+        return true;
+      }
+      else if (data?.dateAndCycle?.projectType !== "MR-DN" && data?.dateAndCycle?.startDate && data?.dateAndCycle?.endDate) {
         return true;
       }
       return false;
@@ -100,7 +111,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
         });
       } else {
         const res = await Digit.CustomService.getResponse({
@@ -115,7 +126,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
         });
       }
     } catch (error) {
@@ -159,7 +170,9 @@ function UpdateDatesWithBoundaries() {
         }}
         variant="default"
         style={{ marginBottom: "1.5rem", marginTop: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
-        additionalElements={[<span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT`)}</span>]}
+        additionalElements={[<span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT1`)}</span>,
+          <span style={{ color: "#505A5F" }}>{t(`UPDATE_DATE_CHANGE_INFO_TEXT2`)}</span>
+        ]}
         label={"Info"}
         headerClassName={"headerClassName"}
       />
@@ -170,6 +183,9 @@ function UpdateDatesWithBoundaries() {
           heading={t("ES_CAMPAIGN_CHANGE_DATE_CONFIRM")}
           children={[]}
           onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
             setShowPopUp(false);
           }}
           footerChildren={[
