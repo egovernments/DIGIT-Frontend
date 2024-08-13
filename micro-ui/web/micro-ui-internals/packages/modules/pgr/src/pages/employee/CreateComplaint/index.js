@@ -278,32 +278,17 @@ export const CreateComplaint = ({ parentUrl }) => {
             onChange: handlePincode,
           },
         },
-        {
-          label: t("CS_COMPLAINT_DETAILS_CITY"),
-          isMandatory: true,
-          type: "dropdown",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCity}
-              freeze={true}
-              option={getCities()}
-              id="city"
-              select={selectCity}
-              optionKey="i18nKey"
-              t={t}
-            />
-          ),
-        },
+       
         {
           label: t("CS_CREATECOMPLAINT_MOHALLA"),
           type: "dropdown",
           isMandatory: true,
           dependency: selectedCity && localities ? true : false,
           populators: (
-            <Dropdown  selected={selectedLocality} optionKey="i18nkey" id="locality" option={[{i18nkey:"i18nkey",name:"gggg",code:"code"}]} select={selectLocality} t={t} />
+            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
           ),
         },
+        
         {
           label: t("CS_COMPLAINT_DETAILS_LANDMARK"),
           type: "textarea",
