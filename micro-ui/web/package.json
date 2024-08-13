@@ -15,8 +15,8 @@
   "homepage": "/digit-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.2-beta.6",
-    "@egovernments/digit-ui-module-workbench": "1.0.2-beta.6",
-    "@egovernments/digit-ui-module-core": "1.8.2-beta.12",
+    "@egovernments/digit-ui-module-workbench": "1.0.2-beta.8",
+    "@egovernments/digit-ui-module-core": "1.8.2-beta.13",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.39",
     "@egovernments/digit-ui-module-open-payment":"0.0.1",
     "@egovernments/digit-ui-module-hrms": "1.8.1-beta.1",
