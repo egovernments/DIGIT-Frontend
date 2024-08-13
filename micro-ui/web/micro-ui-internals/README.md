@@ -62,6 +62,14 @@ To run this project, you will need to add the following environment variables to
 
 [sample .env file](https://github.com/egovernments/Digit-Core/blob/workbench/frontend/micro-ui/web/micro-ui-internals/example/.env-unifieddev)
 
+## Environment Variables
+
+To create your own globalConfig, copy and refer the below file.
+```bash
+    frontend/micro-ui/web/micro-ui-internals/sampleGlobalConfig.js
+```
+
+
 ## Tech Stack
 
 **Libraries:** 

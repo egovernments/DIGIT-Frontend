@@ -20,16 +20,12 @@ module.exports = {
           }
         },
       },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      }
     ],
   },
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
-    publicPath: "/core-ui/",
+    publicPath: "/sandbox-ui/",
   },
   optimization: {
     splitChunks: {
