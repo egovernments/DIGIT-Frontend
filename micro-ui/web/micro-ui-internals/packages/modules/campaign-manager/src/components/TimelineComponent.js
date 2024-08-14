@@ -162,6 +162,12 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     };
   }, [lastCompletedProcess]);
 
+  useEffect(() => {
+    if (lastCompletedProcess?.type === "campaign-creation") {
+      fetchUser(); // Fetch the user credentials again after the campaign is created
+    }
+  }, [lastCompletedProcess]);
+
   const completedProcesses = progessTrack?.processTrack
     .filter((process) => process.status === "completed" && process.showInUi === true)
     .sort((a, b) => b.lastModifiedTime - a.lastModifiedTime)
@@ -245,6 +251,66 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
 
   // }, [progessTrack])
 
+
+  // return (
+  //   <React.Fragment>
+  //     <div className="timeline-user">
+  //       {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
+  //         <TimelineMolecule>
+  //           {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
+
+  //           {/* <Timeline
+  //             label={t("HCM_CURRENT")}
+  //             subElements={subElements}
+  //             variant="inprogress"
+  //             showConnector={true}
+  //           /> */}
+  //           {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
+
+  //           {upcomingTimelines?.map((timeline, index) => (
+  //             <Timeline
+  //               key={index}
+  //               label={timeline?.label}
+  //               subElements={timeline?.subElements}
+  //               variant="upcoming"
+  //               showConnector={true}
+  //               className={"upcoming-timeline"}
+  //             />
+  //           ))}
+
+  //           {inProgressTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
+  //           ))}
+
+  //           {completedTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
+  //           ))}
+  //         </TimelineMolecule>
+  //       ) : (
+  //         <TimelineMolecule
+  //           initialVisibleCount={1}
+  //           hideFutureLabel={true}
+  //           viewLessLabelForPast={t("HCM_SHOW_LESS")}
+  //           viewMoreLabelForPast={t("HCM_SHOW_MORE")}
+  //         >
+  //           {completedTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
+  //           ))}
+  //         </TimelineMolecule>
+  //       )}
+  //       {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
+  //         <Button
+  //           label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+  //           variation="primary"
+  //           icon={"DownloadIcon"}
+  //           type="button"
+  //           className="campaign-download-template-btn hover"
+  //           onClick={downloadUserCred}
+  //         />
+  //       )}
+  //     </div>
+  //   </React.Fragment>
+  // );
   return (
     <React.Fragment>
       <div className="timeline-user">
