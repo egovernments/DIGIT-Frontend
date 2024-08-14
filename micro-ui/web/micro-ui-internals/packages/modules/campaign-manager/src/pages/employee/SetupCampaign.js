@@ -550,6 +550,8 @@ const SetupCampaign = ({ hierarchyType }) => {
                 value:
                   attribute?.attribute?.code === "Gender" && attribute?.value?.length > 0
                     ? attribute?.value
+                    : attribute?.attribute?.code === "TYPE_OF_STRUCTURE"
+                    ? attribute?.value 
                     : attribute?.value
                     ? Number(attribute?.value)
                     : null,
@@ -577,7 +579,6 @@ const SetupCampaign = ({ hierarchyType }) => {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
   }
-
 
   useEffect(async () => {
     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
@@ -858,8 +859,6 @@ const SetupCampaign = ({ hierarchyType }) => {
       setShouldUpdate(false);
     }
   }, [shouldUpdate]);
-
-  console.log("totalFormData" , totalFormData);
 
   function validateCycleData(data) {
     const { cycle, deliveries } = data?.cycleConfigure?.cycleConfgureDate;
