@@ -2,7 +2,7 @@
 import React from "react";
 // import { useUserState } from "../state/useUserState";
 import CustomDatePicker from "../CustomCheck"; // Import the custom component
-import FormComposer from "../hoc/FormComposer";
+import FormComposer from "./organisms/FormComposer";
 
 const schema = {
   title: "Complex Form",

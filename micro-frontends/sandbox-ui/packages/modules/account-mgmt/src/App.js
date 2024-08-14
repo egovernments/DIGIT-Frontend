@@ -1,5 +1,6 @@
 import React from "react";
 import AccountMgmtApp from "./pages";
+import { Hooks } from "components";
 
 /**
  * Main application component that initializes the UserApp with provided props.
@@ -20,13 +21,14 @@ import AccountMgmtApp from "./pages";
  * 
  * @returns {JSX.Element} The rendered `UserApp` component with the given props.
  */
-export default function App(props) {
-  const { baseAppURL, rootTenant } = props;
-  return (
+export default function App() {
+  const { appURL, rootTenant ,moduleName} = Hooks?.useGlobalConfig();
+
+    return (
     <>
     <h2>Account Management</h2>
     <AccountMgmtApp 
-      baseAppURL={`${baseAppURL}/account-mgmt`} 
+      baseAppURL={appURL} 
       rootTenant={rootTenant} 
     />
     </>

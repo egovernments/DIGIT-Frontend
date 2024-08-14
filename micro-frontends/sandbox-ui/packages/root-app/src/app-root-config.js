@@ -6,10 +6,12 @@ import {
 } from "single-spa-layout";
 import microfrontendLayout from "./microfrontend-layout.html";
 // Extract the root tenant from the URL
+const rootDefaultTenant= "pg"; // later it might be default
 function getRootTenant() {
   const url = new URL(window.location.href);
   const segments = url.pathname.split('/');
-  return segments[1]; // Assuming the root tenant is the first segment
+    // need to revisit this logic in deployment 
+  return segments?.every(e=>e=="")?rootDefaultTenant:(segments?.[1]||rootDefaultTenant);// Assuming the root tenant is the first segment
 }
 
 const routes = constructRoutes(microfrontendLayout);
@@ -22,9 +24,10 @@ const applications = constructApplications({
 const layoutEngine = constructLayoutEngine({ routes, applications });
 
 applications.forEach((app) => {
+  const rootTenant= getRootTenant();
   registerApplication({
     ...app,
-    customProps: () => ({ rootTenant: getRootTenant(),baseAppURL:`/${getRootTenant()}` }),
+    customProps: () => ({ rootTenant: rootTenant,baseAppURL:`/${rootTenant}`,fallback:rootTenant==rootDefaultTenant }),
   });
 });
 layoutEngine.activate();

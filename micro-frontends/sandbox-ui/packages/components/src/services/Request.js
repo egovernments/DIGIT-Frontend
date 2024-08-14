@@ -125,20 +125,25 @@ export const Request = async ({
   url,
   data = {},
   headers = {},
-  useCache = false,
   params = {},
-  auth,
-  urlParams = {},
-  userService,
-  locale = true,
-  authHeader = false,
-  setTimeParam = true,
-  userDownload = false,
-  noRequestInfo = false,
-  multipartFormData = false,
-  multipartData = {},
-  reqTimestamp = false,
+  options = {},
 }) => {
+  const {
+    plainAccessRequest = {},
+    locale = true,
+    auth = true,
+    multipartFormData = false,
+    multipartData = {},
+    reqTimestamp = false,
+    authHeader = false,
+    noRequestInfo = false,
+    urlParams = {},
+    useCache = true,
+    userService = true,
+    setTimeParam = true,
+    userDownload = false,
+  } = options;
+
   // Step 1: Prepare request data
   const token = await getToken();
   const preparedData = await prepareRequestData(
@@ -149,7 +154,8 @@ export const Request = async ({
     userService,
     locale,
     noRequestInfo,
-    reqTimestamp
+    reqTimestamp,
+    headers
   );
 
   // Step 2: Set headers based on request type
@@ -204,11 +210,11 @@ const prepareRequestData = async (
   userService,
   locale,
   noRequestInfo,
-  reqTimestamp
+  reqTimestamp,
+  headers
 ) => {
   const ts = new Date().getTime();
   const preparedData = { ...data };
-
   if (method.toUpperCase() === "POST") {
     preparedData.RequestInfo = { apiId: "Rainmaker" };
 
@@ -239,27 +245,34 @@ const prepareRequestData = async (
         ts: Number(ts),
       };
     }
+    if (headers?.["Content-Type"] == "application/x-www-form-urlencoded") {
+      const urlEncodedData = new URLSearchParams();
+      const keys = Object.keys(data);
+      keys?.length > 0 &&
+        keys.map((key) => urlEncodedData.append(key, data?.[key]));
+      return urlEncodedData;
+    }
   }
-
   return preparedData;
 };
-
+// "Content-Type", "application/x-www-form-urlencoded" || application/json", || application/pdf",
 // Function to set request headers
 const setRequestHeaders = async (headers, authHeader, token, userDownload) => {
   const defaultHeaders = {
     "Content-Type": "application/json",
-    Accept: "application/pdf",
+    Accept: "application/json",
   };
+  const updatedHeader = { ...defaultHeaders, ...headers };
 
   if (authHeader) {
-    headers = { ...headers, ...(await authHeaders(token)) };
+    updatedHeader = { ...updatedHeader, ...(await authHeaders(token)) };
   }
 
   if (userDownload) {
-    headers = { ...headers, ...defaultHeaders };
+    updatedHeader = { ...updatedHeader, Accept: "application/pdf" };
   }
 
-  return headers;
+  return updatedHeader;
 };
 
 // Function to handle caching or timestamp parameters

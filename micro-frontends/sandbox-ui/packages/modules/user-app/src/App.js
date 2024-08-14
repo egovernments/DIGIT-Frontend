@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import UserApp from "./pages";
+import { Hooks } from "components";
+
+
+
 
 /**
  * Main application component that initializes the UserApp with provided props.
@@ -20,12 +25,13 @@ import UserApp from "./pages";
  *
  * @returns {JSX.Element} The rendered `UserApp` component with the given props.
  */
-export default function App(props) {
-  const { baseAppURL, rootTenant } = props;
+export default function App() {
+  const { appURL, rootTenant ,moduleName} = Hooks?.useGlobalConfig();
+  
   return (
     <>
-      <h2>User App</h2>
-      <UserApp baseAppURL={`${baseAppURL}/user`} rootTenant={rootTenant} />
+      <h2>User Appppp</h2>
+      <UserApp baseAppURL={appURL} rootTenant={rootTenant} />
     </>
   );
 }

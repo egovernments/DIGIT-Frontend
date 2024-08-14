@@ -69,5 +69,5 @@ const Theme = ({ children }) => {
     </ThemeProvider>
   );
 };
-
-export default Theme
+// not ready TODO
+export default Theme;

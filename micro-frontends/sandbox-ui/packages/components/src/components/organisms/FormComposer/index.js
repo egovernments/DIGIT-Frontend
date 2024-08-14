@@ -52,6 +52,20 @@ const RenderIndividualField = React.memo(
   }
 );
 
+/**
+ * RenderArrayField - Renders an array of fields with options to add or remove items.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.name - The name of the field array.
+ * @param {Object} props.property - The property configuration for the field array.
+ * @param {Object} props.uiSchema - The UI schema for the field array.
+ * @param {Object} props.control - The control object from react-hook-form.
+ * @param {Object} props.errors - The form errors object from react-hook-form.
+ * @param {Function} props.watch - The watch function from react-hook-form.
+ * @param {Object} props.customWidgets - A dictionary of custom widgets.
+ *
+ * @returns {React.ReactNode} The rendered field array component.
+ */
 const RenderArrayField = React.memo(
   ({ name, property, uiSchema, control, errors, watch, customWidgets }) => {
     const { fields, append, remove } = useFieldArray({
@@ -130,6 +144,14 @@ const RenderArrayField = React.memo(
   }
 );
 
+/**
+ * findUIDependencies - Recursively searches an object for UI dependencies.
+ *
+ * @param {Object} obj - The object to search for UI dependencies.
+ * @param {string} [path=""] - The current path in the object.
+ *
+ * @returns {Array} An array of objects containing the path and the dependency object.
+ */
 function findUIDependencies(obj, path = "") {
   const result = [];
 
@@ -148,6 +170,20 @@ function findUIDependencies(obj, path = "") {
   return result;
 }
 
+/**
+ * RenderDependentField - Renders a field based on its dependencies.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.name - The name of the field.
+ * @param {Object} props.property - The property configuration for the field.
+ * @param {Object} props.control - The control object from react-hook-form.
+ * @param {Function} props.watch - The watch function from react-hook-form.
+ * @param {Object} props.errors - The form errors object from react-hook-form.
+ * @param {Object} props.dependencies - The dependencies configuration for the field.
+ * @param {Object} props.customWidgets - A dictionary of custom widgets.
+ *
+ * @returns {React.ReactNode} The rendered dependent field component.
+ */
 const RenderDependentField = ({
   name,
   property,
@@ -170,6 +206,20 @@ const RenderDependentField = ({
   );
 };
 
+/**
+ * RenderField - Renders a field based on its configuration.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.name - The name of the field.
+ * @param {Object} props.property - The property configuration for the field.
+ * @param {Object} props.uiSchema - The UI schema for the field.
+ * @param {Object} props.control - The control object from react-hook-form.
+ * @param {Object} props.errors - The form errors object from react-hook-form.
+ * @param {Function} props.watch - The watch function from react-hook-form.
+ * @param {Object} props.customWidgets - A dictionary of custom widgets.
+ *
+ * @returns {React.ReactNode} The rendered field component.
+ */
 const RenderField = ({
   name,
   property,
@@ -249,7 +299,21 @@ const RenderField = ({
   );
 };
 
-const FormComposer = ({ schema, uiSchema, customWidgets }) => {
+/**
+ * FormComposer - A form builder component using React Hook Form.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.schema - The schema configuration for the form.
+ * @param {Object} props.uiSchema - The UI schema for the form.
+ * @param {Object} props.customWidgets - A dictionary of custom widgets.
+ * @param {Function} props.onSubmit - Function to call when the form is submitted.
+ * @param {Function} props.onError - Function to call when the form submission fails.
+ * @param {React.ReactNode}  props.submitHandler - component to handle submit by its own
+ * 
+ * @author jagankumar-egov
+ * @returns {React.ReactNode} The rendered form component.
+ */
+const FormComposer = ({ schema, uiSchema, customWidgets, onSubmit, onError, submitHandler = false }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const buttonStyles = {
@@ -315,7 +379,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
     });
   }, [lastUpdatedField, reset, trigger, getValues, dependencies]);
 
-  const onSubmit = useCallback((data) => {
+  const formOnSubmit = useCallback((data) => {
+    onSubmit(data);
     console.log("Form Data:", data);
   }, []);
 
@@ -368,11 +433,12 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
 
   const { theme, toggleTheme } = { theme: "light" };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(formOnSubmit)}>
       <h1 className={theme === "light" ? "text-gray-800" : "text-white"}>
         {schema.title}
       </h1>
-      {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 0 ? (
+      {/* uiLayout?.layouts?.length > 1  is set to 1 since even if layout has 1 then there is no need of stepper or tab need to discuss if any change required*/}
+      {uiLayout && uiLayout?.layouts && uiLayout?.layouts?.length > 1 ? (
         uiLayout?.type !== "TAB" ? (
           <>
             <Stepper
@@ -401,28 +467,31 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                       control,
                       errors
                     )}
+                    {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
-                      {currentTab > 0 && (
-                        <Button
-                          label="Previous"
-                          onClick={() => setCurrentTab((prev) => prev - 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab < uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Next"
-                          onClick={() => setCurrentTab((prev) => prev + 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab === uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Submit"
-                          type="submit"
-                          style={buttonStyles}
-                        />
-                      )}
+                      {!(uiLayout?.hideTabNavigateButtons) && <>
+                        {currentTab > 0 && (
+                          <Button
+                            label="Previous"
+                            onClick={() => setCurrentTab((prev) => prev - 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab < uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Next"
+                            onClick={() => setCurrentTab((prev) => prev + 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab === uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Submit"
+                            type="submit"
+                            style={buttonStyles}
+                          />
+                        )}
+                      </>}
                     </div>
                   </div>
                 )
@@ -470,28 +539,31 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
                       control,
                       errors
                     )}
+                    {submitHandler && submitHandler}
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
-                      {currentTab > 0 && (
-                        <Button
-                          label="Previous"
-                          onClick={() => setCurrentTab((prev) => prev - 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab < uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Next"
-                          onClick={() => setCurrentTab((prev) => prev + 1)}
-                          style={buttonStyles}
-                        />
-                      )}
-                      {currentTab === uiLayout?.layouts.length - 1 && (
-                        <Button
-                          label="Submit"
-                          type="submit"
-                          style={buttonStyles}
-                        />
-                      )}
+                      {!(uiLayout?.hideTabNavigateButtons) && <>
+                        {currentTab > 0 && (
+                          <Button
+                            label="Previous"
+                            onClick={() => setCurrentTab((prev) => prev - 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab < uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Next"
+                            onClick={() => setCurrentTab((prev) => prev + 1)}
+                            style={buttonStyles}
+                          />
+                        )}
+                        {currentTab === uiLayout?.layouts.length - 1 && (
+                          <Button
+                            label="Submit"
+                            type="submit"
+                            style={buttonStyles}
+                          />
+                        )}
+                      </>}
                     </div>
                   </div>
                 )
@@ -508,7 +580,8 @@ const FormComposer = ({ schema, uiSchema, customWidgets }) => {
             control,
             errors
           )}
-          <button type="submit">Submit</button>
+          {!submitHandler && <button type="submit">Submit</button>}
+          {submitHandler && submitHandler}
         </>
       )}
     </form>
@@ -536,5 +609,7 @@ const Card = ({ children }) => {
     </div>
   );
 };
+
+
 
 export default FormComposer;

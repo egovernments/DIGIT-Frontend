@@ -1,5 +1,5 @@
 import React from "react";
-import { DigitUIComponents, States } from "components"; // Import only the necessary component
+import { DigitUIComponents, States, YoutubeVideo } from "components"; // Import only the necessary component
 const { Card } = DigitUIComponents;
 const { useUserState } = States;
 /**
@@ -11,11 +11,16 @@ const { useUserState } = States;
  */
 const PageTwo = () => {
   const { setData, resetData, data } = useUserState();
+  const obj = { link: "https://www.youtube.com/watch?v=ONzdr4SmOng", locale: "" , overlay: true}
 
   return (
     <Card type="primary">
       {" "}
       <h1>Hi {data?.name}</h1>
+      <p>video - triggering overlay</p>
+      <YoutubeVideo {...obj}/>
+      <p>video - not triggering overlay</p>
+      <YoutubeVideo {...{ ...obj, overlay: false }}/>
     </Card>
   );
 };

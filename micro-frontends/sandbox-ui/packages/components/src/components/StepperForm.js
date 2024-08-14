@@ -1,7 +1,7 @@
 // src/components/JsonSchemaForm.js
 import React from "react";
 // import { useUserState } from "../state/useUserState";
-import FormComposer from "../hoc/FormComposer";
+import FormComposer from "./organisms/FormComposer";
 import { CustomDatePicker, CustomDropdown } from "../CustomWidgets"; // Import the custom component
 // import { useDrawerState } from "../state/useDrawerState";
 
