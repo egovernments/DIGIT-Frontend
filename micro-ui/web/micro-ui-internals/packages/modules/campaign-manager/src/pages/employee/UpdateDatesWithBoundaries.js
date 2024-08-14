@@ -92,21 +92,19 @@ function UpdateDatesWithBoundaries() {
           let itemEndDate = item?.endDate;
           let endDate = new Date(item?.endDate);
           let endSecond = endDate?.getSeconds();
-          // if (endSecond < 59) {
-          //   return {
-          //     ...item,
-          //     endDate: itemEndDate + 1000,
-          //   };
-          // } else {
-          //   return {
-          //     ...item,
-          //     endDate: itemEndDate - 1000,
-          //   };
-          // }
+          if (endSecond < 59) {
+            return {
+              ...item,
+              endDate: itemEndDate + 1000,
+            };
+          } else {
+            return {
+              ...item,
+              endDate: itemEndDate - 1000,
+            };
+          }
         });
-        // const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
-        const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
-
+        const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: t("ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS"),
@@ -120,8 +118,6 @@ function UpdateDatesWithBoundaries() {
           url: "/health-project/v1/_update",
           body: {
             Projects: [formData?.dateAndCycle],
-            isCascadingProjectDateUpdate: true,
-
           },
         });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
