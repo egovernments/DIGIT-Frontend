@@ -1,4 +1,4 @@
-import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, Loader, FormComposerV2, Toast, useCustomAPIMutationHook } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -50,62 +50,54 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     history.replace(redirectPath);
   }, [user]);
 
+  const reqCreate = {
+   url: `/tenant-management/tenant/_create`,
+   params: {},
+   body: {},
+   config: {
+     enable: false,
+   },
+ };
 
-  // const requestCriteria = {
-  //   url: "/org-services/organisation/v1/_search",
-  //   changeQueryName: "ddd",
-  //   // params: {
-  //   //   tenantId,
-  //   //   offset: 0,
-  //   //   limit: 100,
-  //   //   // includeAncestors: true,
-  //   // },
-  //   body: {
-  //     "SearchCriteria": {
-  //        "tenantId": "pg.citya",
-  //        "orgNumber": "wsw"
-  //   },
-  //   "Pagination": {
-  //       "offSet": 0,
-  //       "limit": 10
-  //   },
-  //     apiOperation: "SEARCH",
-  //   },
-  //   config: {
-  //     enabled: "aa" ? true : false,
-  //   },
-  // };
+  
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+
+  const onLogin = async(data) => {
 
 
-  // const { data: organization, refetch } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+          //  history.push({
+          //         pathname: `/${window?.contextPath}/employee/user/otp`,
+          //         state: {email:data.email },
+          //       });
 
-  const onLogin = async (data) => {
-    // if (!data.city) {
-    //   alert("Please Select City!");
-    //   return;
-    // }
-    console.log("accoiut",data.email),
-    setDisable(true);
+    await mutation.mutate(
+      {
+        body: {
+          "tenant": {
+                   "name": data.accountName,
+                   "email": data.email
+              },
+        },
+        config: {
+          enable: true,
+        },
+      },
+      {
+        onError: (error, variables) => {
+          console.log(error, "eryjhtj");
+          setShowToast({ key: "error", label: error?.message ? error?.message : error });
+        },
+        onSuccess: async (data) => {
+          console.log("abcd",data);
+          
+          history.push({
+                  pathname: `/${window?.contextPath}/employee/user/otp`,
+                  state: {email:data.email },
+                });
+          Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+        },
+      });
 
-    const requestData = {
-      ...data,
-      userType: "EMPLOYEE",
-    };
-    requestData.tenantId = data?.city?.code || Digit.ULBService.getStateId();
-    delete requestData.city;
-    try {
-      const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
-      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
-      setUser({ info, ...tokens });
-    } catch (err) {
-      setShowToast(
-        err?.response?.data?.error_description ||
-          (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
-          t("INVALID_LOGIN_CREDENTIALS")
-      );
-      setTimeout(closeToast, 5000);
-    }
-    setDisable(false);
   };
 
   const closeToast = () => {
@@ -113,10 +105,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   };
 
  
-  const defaultValue = {
-    code: Digit.ULBService.getStateId(),
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
-  };
+  // const defaultValue = {
+  //   code: Digit.ULBService.getStateId(),
+  //   name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit.ULBService.getStateId()}`),
+  // };
 
   let config = [{ body: propsConfig?.inputs }];
 
