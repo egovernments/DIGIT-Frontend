@@ -1,41 +1,76 @@
-import React from 'react';
-import ErrorBoundary from './ErrorBoundary'; // Import the ErrorBoundary component to handle JavaScript errors in the component tree
-import ReactQueryProvider from '../../contexts/ReactQueryProvider'; // Import the ReactQueryWrapper component to provide React Query context to children components
-import { DigitContextProvider } from '../../contexts/DigitContextProvider';
+import React from "react";
+import ErrorBoundary from "./ErrorBoundary"; // Handles JavaScript errors in the component tree and displays a fallback UI.
+import ReactQueryProvider from "../../contexts/ReactQueryProvider"; // Provides React Query context for data fetching and caching.
+import { DigitContextProvider } from "../../contexts/DigitContextProvider"; // Provides Digit-specific context to child components.
+import DigitUIComponents from "../../DigitUIComponents"; // Imports the UI components from the DigitUI library.
+import { useToastState } from "../../states/useToastState";
+
+const { Toast } = DigitUIComponents;
 
 /**
  * DigitApp Component
- * 
+ *
  * This component serves as a wrapper for other components, providing common functionality and context.
- * 
- * It uses two key providers:
- * - **ErrorBoundary**: Catches JavaScript errors anywhere in the component tree and displays a fallback UI.
- * - **ReactQueryProvider**: Provides React Query context to all child components for data fetching and caching.
- * 
- * The component also passes down any additional props to its children.
- * 
+ * It uses key providers such as ErrorBoundary, ReactQueryProvider, and DigitContextProvider.
+ *
  * @param {object} props - The props to pass to the children components.
- * @param {ReactNode} props.children - The child components to be rendered inside the wrappers.
- * 
- * @example
- * <DigitApp someProp="value">
- *   <SomeChildComponent />
- * </DigitApp>
- * 
+ * @param {React.ReactNode} props.children - The child components to be rendered inside the wrappers.
+ *
  * @returns {React.Element} The rendered DigitApp component.
- * 
+ *
  * @author jagankumar-egov
  */
-const DigitApp = ({ children, ...props }) => (
-  <ErrorBoundary>
-    <ReactQueryProvider>
-      <DigitContextProvider initialValue={props}>
-      {React.Children.map(children, child =>
-        React.cloneElement(child, { ...props }) // Clone each child element and pass additional props to it
+const DigitApp = ({ children, ...props }) => {
+  return (
+    <ErrorBoundary>
+      <ReactQueryProvider>
+        <DigitContextProvider initialValue={props}>
+          {/* Wrapping children with DigitModuleWrapper to provide additional props */}
+          <DigitModuleWrapper children={children} {...props} />
+
+          {/* Example static content, can be removed if unnecessary */}
+          <h2>jag</h2>
+
+          {/* Example Toast component, currently commented out */}
+          {/* <Toast type={"error"} label={"Test"} onClose={() => {}} /> */}
+        </DigitContextProvider>
+      </ReactQueryProvider>
+    </ErrorBoundary>
+  );
+};
+
+/**
+ * DigitModuleWrapper Component
+ *
+ * This component wraps the children components to pass down additional props.
+ * It also checks the state from useToastState and renders a Toast notification if necessary.
+ *
+ * @param {object} props - The props to pass to the children components.
+ * @param {React.ReactNode} props.children - The child components to be wrapped.
+ *
+ * @returns {React.Element} The wrapped children components with additional props.
+ */
+const DigitModuleWrapper = ({ children, ...props }) => {
+  const { data ={} } = useToastState();
+  const { label="", type, transitionTime, showToast=false } = data;
+
+  return (
+    <>
+      {/* Clone each child element and pass additional props */}
+      {React.Children.map(children, (child) =>
+        React.cloneElement(child, { ...props })
       )}
-      </DigitContextProvider>
-    </ReactQueryProvider>
-  </ErrorBoundary>
-);
+
+      {/* Display Toast notification if showToast is true */}
+      {showToast && (
+        <Toast
+          label={label}
+          type={type}
+          transitionTime={transitionTime} // Example transition time, adjust as needed
+        />
+      )}
+    </>
+  );
+};
 
 export default DigitApp;
