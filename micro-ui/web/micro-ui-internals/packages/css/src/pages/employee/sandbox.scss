@@ -1,0 +1,25 @@
+.sandbox-module-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.sandbox-module-card {
+  min-height: 263px !important;
+  width: 263px !important;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  padding: unset !important;
+  margin: unset !important;
+  position: relative;
+}
+
+.sandbox-module-button {
+  position: absolute;
+  width: 100%;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  margin: auto;
+  width: auto;
+}
