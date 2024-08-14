@@ -3,18 +3,19 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { transformCreateData } from "../../utils/createUtils";
+import { transformCreateData } from "../../../utils/TenantCreateUtil";
 import { tenantCreateConfig } from "../../../configs/tenantCreateConfig";
 
 const fieldStyle = { marginRight: 0 };
 
 const TenantCreate = () => {
   const defaultValue = {};
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  //const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId="pg";
   const { t } = useTranslation();
   const history = useHistory();
   const reqCreate = {
-    url: `/individual/v1/_create`,
+    url: `/tenant-management/tenant/_create`,
     params: {},
     body: {},
     config: {
@@ -25,11 +26,10 @@ const TenantCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
+    console.log("data is"+ data);
     await mutation.mutate(
       {
-        url: `/individual/v1/_create`,
-        params: { tenantId },
+        url: `/tenant-management/tenant/_create`,
         body: transformCreateData(data),
         config: {
           enable: true,
@@ -39,7 +39,7 @@ const TenantCreate = () => {
   };
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("CREATE_TENANT")}</Header>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={tenantCreateConfig.map((config) => {

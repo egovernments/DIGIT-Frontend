@@ -5,7 +5,8 @@ import { Switch } from "react-router-dom";
 import SandboxResponse from "./SandboxResponse";
 import SandboxCreate from "./SandboxCreate";
 import SandboxSearch from "./SandboxSearch";
-import ApplicationHome from "./applicationMgmt/ApplicationHome";
+import TenantSearch from "./tenantMgmt/TenantView";
+import TenantCreate from "./tenantMgmt/TenantCreate";
 const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      path: `/${window?.contextPath}/application-management/home`,
+      path: `/${window?.contextPath}/employee`,
       content: t(location.pathname.split("/").pop()),
       show: true,
     },
@@ -31,12 +32,12 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse />} />
+        <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse></SandboxResponse>} />
         <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />
-        <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch />} />
-        <PrivateRoute path={`${path}/tenant-management/create`} component={() => <SandboxCreate />} />
-        <PrivateRoute path={`${path}/tenant-management/search`} component={() => <SandboxSearch />} />
-        <PrivateRoute path={`${path}/application-management/home`} component={() => <ApplicationHome />} />
+        <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch></SandboxSearch>} />
+        <PrivateRoute path={`${path}/tenant-management/create`} component={() => <TenantCreate />} />
+        <PrivateRoute path={`${path}/tenant-management/search`} component={() => <TenantSearch />} />
+        <PrivateRoute path={`${path}/application-management/home`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
       </AppContainer>
     </Switch>
