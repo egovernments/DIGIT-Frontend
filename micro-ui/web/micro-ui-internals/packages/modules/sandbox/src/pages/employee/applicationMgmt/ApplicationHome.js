@@ -15,7 +15,6 @@ const ApplicationHome = () => {
         [{ name: "ModuleMasterConfig" }],
         {
             select: (data) => {
-                console.log("data", data)
                 return data?.["sandbox-ui"]?.ModuleMasterConfig;
             },
             enabled: true
@@ -31,7 +30,7 @@ const ApplicationHome = () => {
             Application Home
         </CardHeader>
         <div className='sandbox-module-container'>
-            {moduleMasterData?.map((item) => <ModuleCard className="sandbox-module-card" label={item?.module} buttonLabel={t(`SANDBOX_VIEW`)} onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module/${item?.module}`)} />)}
+            {moduleMasterData?.map((item) => <ModuleCard className="sandbox-module-card" label={item?.module} buttonLabel={t(`SANDBOX_VIEW`)} onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${item?.module}`)} />)}
         </div>
     </div>
     )

@@ -6,6 +6,8 @@ import SandboxResponse from "./SandboxResponse";
 import SandboxCreate from "./SandboxCreate";
 import SandboxSearch from "./SandboxSearch";
 import ApplicationHome from "./applicationMgmt/ApplicationHome";
+import ModuleMasterTable from "./applicationMgmt/ModuleMasterTable";
+
 const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -38,6 +40,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/tenant-management/search`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/home`} component={() => <ApplicationHome />} />
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
+        <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />
       </AppContainer>
     </Switch>
   );
