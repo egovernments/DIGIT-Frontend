@@ -16,7 +16,7 @@ const SandboxCard = () => {
       },
       {
         label: t("Application Management"),
-        link: `/${window?.contextPath}/employee/sandbox/application-management`,
+        link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
       }
     ],
   };
