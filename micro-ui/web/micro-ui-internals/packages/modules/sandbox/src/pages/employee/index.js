@@ -7,7 +7,6 @@ import SandboxCreate from "./SandboxCreate";
 import SandboxSearch from "./SandboxSearch";
 import ApplicationHome from "./applicationMgmt/ApplicationHome";
 import ModuleMasterTable from "./applicationMgmt/ModuleMasterTable";
-
 const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
