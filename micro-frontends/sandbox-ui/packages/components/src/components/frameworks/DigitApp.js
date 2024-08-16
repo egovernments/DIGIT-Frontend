@@ -27,10 +27,6 @@ const DigitApp = ({ children, ...props }) => {
         <DigitContextProvider initialValue={props}>
           {/* Wrapping children with DigitModuleWrapper to provide additional props */}
           <DigitModuleWrapper children={children} {...props} />
-
-          {/* Example static content, can be removed if unnecessary */}
-          <h2>jag</h2>
-
           {/* Example Toast component, currently commented out */}
           {/* <Toast type={"error"} label={"Test"} onClose={() => {}} /> */}
         </DigitContextProvider>

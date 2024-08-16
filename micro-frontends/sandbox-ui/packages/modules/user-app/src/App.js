@@ -30,7 +30,7 @@ export default function App() {
   
   return (
     <>
-      <h2>User Appppp</h2>
+      <h2>User Module</h2>
       <UserApp baseAppURL={appURL} rootTenant={rootTenant} />
     </>
   );
