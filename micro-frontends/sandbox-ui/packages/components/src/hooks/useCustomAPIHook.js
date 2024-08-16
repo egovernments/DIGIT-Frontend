@@ -30,21 +30,23 @@ import { queryClient } from "../states/stateConfigs";
  * @returns {Object} Returns the object which contains data and isLoading flag
  */
 
-const useCustomAPIHook = ({
-  url,
-  params,
-  body,
-  config = {},
-  changeQueryName = "Random",
-  options,
-}) => {
+const useCustomAPIHook = (defaultConfig) => {
   const client = queryClient;
+  const { url="", params=[], body={}, headers={}, options={}, ...config } = defaultConfig;
+  
+
 
   const { isLoading, data, isFetching, refetch } = useQuery({
     queryKey: [url, JSON.stringify(params), JSON.stringify(body)].filter(
       (e) => e
     ),
-    queryFn: () => genericService({ url, params, body, options }),
+    queryFn: () => genericService({
+      url,
+      params,
+      body,
+      headers,
+      options,
+    }),
 
     cacheTime: 0,
     ...config,

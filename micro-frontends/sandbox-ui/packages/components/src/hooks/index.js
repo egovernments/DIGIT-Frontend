@@ -4,6 +4,7 @@ import useGlobalConfig from "./useGlobalConfig";
 import useCustomAPIMutationHook from "./useCustomAPIMutationHook";
 import useAppToast from "./useAppToast";
 import userAppUser from "./useAppUser";
+import useNavigate from "./useNavigate";
 
 export const Hooks={
     useCustomAPIHook,
@@ -11,5 +12,6 @@ export const Hooks={
     useGlobalConfig,
     useCustomAPIMutationHook,
     useAppToast,
-    userAppUser
+    userAppUser,
+    useNavigate
 }

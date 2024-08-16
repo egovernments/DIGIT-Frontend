@@ -4,6 +4,7 @@ import { Components } from "components";
 import { Hooks } from "components";
 import useAppToast from "../../../../components/src/hooks/useAppToast";
 import userAppUser from "../../../../components/src/hooks/useAppUser";
+import useNavigate from "../../../../components/src/hooks/useNavigate";
 const { FormComposer } = Components?.organisms;
 
 // Define the schema for the login form with two methods
@@ -83,6 +84,7 @@ const formDataToRequestData = (formData) => {
  */
 const SignInScreen = () => {
   const {showToast}=useAppToast();
+  const {navigateTo}=useNavigate();
   const {loggedIn }=userAppUser();
   const { mutation, revalidate } = Hooks?.useCustomAPIMutationHook({
     url: "/user/oauth/token",
@@ -102,7 +104,8 @@ const SignInScreen = () => {
           // Handle the success case
           console.log('Mutation was successful:', data);
           showToast('Mutation was successful:')
-          loggedIn()
+          loggedIn(data?.["access_token"],data?.["UserRequest"]?.tenantId)
+          navigateTo("home");
           // Perform any additional actions like showing a success message
           // or updating the UI based on the response
         },

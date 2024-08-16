@@ -59,7 +59,6 @@ const userAppUser = () => {
 
   // Return the current toast state along with the show and hide functions
   return {
-    ...data,
     loggedIn,
     loggedOut,
   };
