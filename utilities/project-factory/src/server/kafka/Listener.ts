@@ -28,6 +28,8 @@ export function listener() {
         try {
             const messageObject = JSON.parse(message.value?.toString() || '{}');
 
+            logger.info(`KAFKA :: LISTENER :: Received a message from topic ${message.topic}`);
+            logger.debug(`KAFKA :: LISTENER :: Message: ${getFormattedStringForDebug(messageObject)}`);
             switch (message.topic) {
                 case config.kafka.KAFKA_START_CAMPAIGN_MAPPING_TOPIC:
                     await handleCampaignMapping(messageObject);
@@ -35,9 +37,6 @@ export function listener() {
                 default:
                     logger.warn(`Unhandled topic: ${message.topic}`);
             }
-
-            logger.info(`KAFKA :: LISTENER :: Received a message from topic ${message.topic}`);
-            logger.debug(`KAFKA :: LISTENER :: Message: ${getFormattedStringForDebug(messageObject)}`);
         } catch (error) {
             logger.error(`KAFKA :: LISTENER :: Error processing message: ${error}`);
             console.error(error);

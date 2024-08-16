@@ -190,18 +190,10 @@ function deterMineLastColumnAndEnrichUserDetails(worksheet: any, errorDetailsCol
     }
 
     if (userNameAndPassword) {
-        worksheet.getCell("I1").value = "UserName";
-        worksheet.getCell("J1").value = "Password";
+        worksheet.getCell("J1").value = "UserName";
+        worksheet.getCell("K1").value = "Password";
 
         // Set the fill color to green for cell I1
-        worksheet.getCell("I1").fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'ff9248' } // Green color
-        };
-        worksheet.getCell("I1").font = { bold: true };
-
-        // Set the fill color to green for cell J1
         worksheet.getCell("J1").fill = {
             type: 'pattern',
             pattern: 'solid',
@@ -209,13 +201,21 @@ function deterMineLastColumnAndEnrichUserDetails(worksheet: any, errorDetailsCol
         };
         worksheet.getCell("J1").font = { bold: true };
 
+        // Set the fill color to green for cell J1
+        worksheet.getCell("K1").fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'ff9248' } // Green color
+        };
+        worksheet.getCell("K1").font = { bold: true };
+
         userNameAndPassword.forEach((data: any) => {
             const rowIndex = data.rowNumber;
-            worksheet.getCell(`I${rowIndex}`).value = data?.userName;
-            worksheet.getCell(`J${rowIndex}`).value = data?.password;
+            worksheet.getCell(`J${rowIndex}`).value = data?.userName;
+            worksheet.getCell(`K${rowIndex}`).value = data?.password;
         });
 
-        lastColumn = "J";
+        lastColumn = "K";
         request.body.userNameAndPassword = undefined;
     }
 
