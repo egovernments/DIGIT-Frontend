@@ -945,7 +945,7 @@ async function validateCampaignName(request: any, actionInUrl: any) {
 }
 
 async function validateById(request: any) {
-    const { id, tenantId, action } = request?.body?.CampaignDetails
+    const { id, tenantId } = request?.body?.CampaignDetails
     if (!id) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "id is required");
     }
