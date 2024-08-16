@@ -47,6 +47,9 @@ export const searchCampaignDetailsSchema = {
         "campaignNumber": {
             "type": "string"
         },
+        "isActive": {
+            "type": "boolean"
+        },
         "pagination": {
             "type": "object",
             "properties": {

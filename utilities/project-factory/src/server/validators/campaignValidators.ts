@@ -6,7 +6,7 @@ import { getCampaignSearchResponse, getHeadersOfBoundarySheet, getHierarchy, han
 import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
 import { getDifferentDistrictTabs, getLocalizedHeaders, getLocalizedMessagesHandler, getMdmsDataBasedOnCampaignType, replicateRequest, throwError } from "../utils/genericUtils";
-import { createBoundaryMap, generateProcessedFileAndPersist, getFinalValidHeadersForTargetSheetAsPerCampaignType, getLocalizedName } from "../utils/campaignUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getFinalValidHeadersForTargetSheetAsPerCampaignType, getLocalizedName, getRootBoundaryCode } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
 import { searchCriteriaSchema } from "../config/models/SearchCriteria";
 import { searchCampaignDetailsSchema } from "../config/models/searchCampaignDetails";
@@ -675,7 +675,20 @@ async function validateCampaignBoundary(boundaries: any[], hierarchyType: any, t
     }
 }
 
+function validateRootBoundaryWithParent(request: any) {
+    const CampaignDetails = request?.body?.CampaignDetails
+    const parentCampaign = request?.body?.parentCampaign
+    if (CampaignDetails?.parentId) {
+        const campaignBoundaries = CampaignDetails?.boundaries
+        const parentBoundaries = parentCampaign?.boundaries
+        if (getRootBoundaryCode(campaignBoundaries) !== getRootBoundaryCode(parentBoundaries)) {
+            throwError("COMMON", 400, "VALIDATION_ERROR", "Root boundary code should be same as parent campaign root boundary code");
+        }
+    }
+}
+
 async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyType: any, tenantId: any, request: any): Promise<void> {
+    validateRootBoundaryWithParent(request)
     if (!request?.body?.CampaignDetails?.projectId) {
         if (boundaries) {
             if (!Array.isArray(boundaries)) {
@@ -845,14 +858,42 @@ function validateProjectCampaignMissingFields(CampaignDetails: any) {
 
 function validateDraftProjectCampaignMissingFields(CampaignDetails: any) {
     validateCampaignBodyViaSchema(campaignDetailsDraftSchema, CampaignDetails)
-    const { startDate, endDate, action } = CampaignDetails;
-    if (action != "changeDates") {
-        if (startDate && endDate && (new Date(endDate).getTime() - new Date(startDate).getTime()) < (24 * 60 * 60 * 1000)) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "endDate must be at least one day after startDate");
+    const { startDate, endDate } = CampaignDetails;
+    if (startDate && endDate && (new Date(endDate).getTime() - new Date(startDate).getTime()) < (24 * 60 * 60 * 1000)) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "endDate must be at least one day after startDate");
+    }
+    const today: any = Date.now();
+    if (startDate <= today) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "startDate cannot be today or past date");
+    }
+}
+
+async function validateParent(request: any, actionInUrl: any) {
+    if (request?.body?.CampaignDetails?.parentId) {
+        const CampaignDetails: any = request.body.CampaignDetails;
+        const tenantId = request.body.CampaignDetails?.tenantId
+        const searchBodyForParent: any = {
+            RequestInfo: request.body.RequestInfo,
+            CampaignDetails: {
+                tenantId: tenantId,
+                ids: [CampaignDetails?.parentId]
+            }
         }
-        const today: any = Date.now();
-        if (startDate <= today) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "startDate cannot be today or past date");
+        if (actionInUrl == "create") {
+            searchBodyForParent.CampaignDetails.isActive = true
+        }
+        const req: any = replicateRequest(request, searchBodyForParent)
+        const parentSearchResponse: any = await searchProjectTypeCampaignService(req)
+        if (Array.isArray(parentSearchResponse?.CampaignDetails)) {
+            if (parentSearchResponse?.CampaignDetails?.length <= 0) {
+                throwError("CAMPAIGN", 400, "PARENT_CAMPAIGN_ERROR");
+            }
+            else {
+                request.body.parentCampaign = parentSearchResponse?.CampaignDetails[0]
+            }
+        }
+        else {
+            throwError("CAMPAIGN", 500, "CAMPAIGN_SEARCH_ERROR");
         }
     }
 }
@@ -871,7 +912,8 @@ async function validateCampaignName(request: any, actionInUrl: any) {
             RequestInfo: request.body.RequestInfo,
             CampaignDetails: {
                 tenantId: tenantId,
-                campaignName: campaignName
+                campaignName: campaignName,
+                isActive: true
             }
         }
         const req: any = replicateRequest(request, searchBody)
@@ -880,12 +922,19 @@ async function validateCampaignName(request: any, actionInUrl: any) {
             if (searchResponse?.CampaignDetails?.length > 0) {
                 const allCampaigns = searchResponse?.CampaignDetails;
                 logger.info(`campaignName to match : ${"'"}${campaignName}${"'"}`)
-                const campaignWithMatchingName: any = allCampaigns.find((campaign: any) => "'" + campaign?.campaignName + "'" == "'" + campaignName + "'") || null;
-                if (campaignWithMatchingName && actionInUrl == "create") {
-                    throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
-                }
-                else if (campaignWithMatchingName && actionInUrl == "update" && campaignWithMatchingName?.id != CampaignDetails?.id) {
-                    throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                const matchingCampaigns: any[] = allCampaigns.filter((campaign: any) => campaign?.campaignName === campaignName);
+                for (const campaignWithMatchingName of matchingCampaigns) {
+                    if (campaignWithMatchingName && actionInUrl == "create") {
+                        if (!CampaignDetails?.parentId) {
+                            throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                        }
+                        else if (campaignWithMatchingName?.id != CampaignDetails?.parentId && campaignWithMatchingName?.isActive) {
+                            throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                        }
+                    }
+                    else if (campaignWithMatchingName && actionInUrl == "update" && campaignWithMatchingName?.id != CampaignDetails?.id) {
+                        throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
+                    }
                 }
             }
         }
@@ -896,7 +945,7 @@ async function validateCampaignName(request: any, actionInUrl: any) {
 }
 
 async function validateById(request: any) {
-    const { id, tenantId, action } = request?.body?.CampaignDetails
+    const { id, tenantId } = request?.body?.CampaignDetails
     if (!id) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "id is required");
     }
@@ -913,10 +962,8 @@ async function validateById(request: any) {
         if (searchResponse?.CampaignDetails?.length > 0) {
             logger.debug(`CampaignDetails : ${getFormattedStringForDebug(searchResponse?.CampaignDetails)}`);
             request.body.ExistingCampaignDetails = searchResponse?.CampaignDetails[0];
-            if (action != "changeDates") {
-                if (request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
-                    throwError("COMMON", 400, "VALIDATION_ERROR", `Campaign can only be updated in drafted state. Change action to changeDates if you want to just update date.`);
-                }
+            if (request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
+                throwError("COMMON", 400, "VALIDATION_ERROR", `Campaign can only be updated in drafted state.`);
             }
         }
         else {
@@ -964,50 +1011,12 @@ async function validateProjectType(request: any, projectType: any, tenantId: any
     }
 }
 
-function isObjectOrArray(value: any) {
-    return typeof value === 'object' || Array.isArray(value);
-}
-
-async function validateChangeDatesRequest(request: any) {
-    var ExistingCampaignDetails = request?.body?.ExistingCampaignDetails;
-    const { startDate: exsistingStartDate, endDate: exsistingEndDate } = ExistingCampaignDetails;
-    var newCampaignDetails = request?.body?.CampaignDetails;
-    const { startDate: newStartDate, endDate: newEndDate } = newCampaignDetails;
-
-    for (const key in newCampaignDetails) {
-        if (!isObjectOrArray(newCampaignDetails[key])) {
-            // If the value is not an object or array, compare it with the corresponding value in ExistingCampaignDetails
-            if (!(key == "startDate" || key == "endDate" || key == "action") && newCampaignDetails[key] !== ExistingCampaignDetails[key]) {
-                // Handle the validation failure (for example, throw an error or log a message)
-                throwError("COMMON", 400, "VALIDATION_ERROR", `${key} value in request campaign is not matching with existing campaign`);
-            }
-        }
-    }
-    const today: any = Date.now();
-    if (exsistingStartDate <= today) {
-        if (exsistingStartDate != newStartDate) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "StartDate cannot be updated for ongoing or completed campaign.");
-        }
-    }
-    if (exsistingEndDate < today) {
-        if (exsistingEndDate != newEndDate) {
-            throwError("COMMON", 400, "VALIDATION_ERROR", "EndDate cannot be updated as campaign is completed.");
-        }
-    }
-    request.body.CampaignDetails = ExistingCampaignDetails;
-    request.body.CampaignDetails.action = "changeDates";
-    request.body.CampaignDetails.startDate = newStartDate;
-    request.body.CampaignDetails.endDate = newEndDate;
-}
-
 async function validateCampaignBody(request: any, CampaignDetails: any, actionInUrl: any) {
     const { hierarchyType, action, tenantId, boundaries, resources, projectType } = CampaignDetails;
-    if (action == "changeDates") {
-        await validateChangeDatesRequest(request);
-    }
-    else if (action == "create") {
+    if (action == "create") {
         validateProjectCampaignMissingFields(CampaignDetails);
         await validateCampaignName(request, actionInUrl);
+        await validateParent(request, actionInUrl);
         if (tenantId != request?.body?.RequestInfo?.userInfo?.tenantId) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "tenantId is not matching with userInfo");
         }
@@ -1019,6 +1028,7 @@ async function validateCampaignBody(request: any, CampaignDetails: any, actionIn
     else {
         validateDraftProjectCampaignMissingFields(CampaignDetails);
         await validateCampaignName(request, actionInUrl);
+        await validateParent(request, actionInUrl);
         await validateHierarchyType(request, hierarchyType, tenantId);
         await validateProjectType(request, projectType, tenantId);
     }
@@ -1031,6 +1041,7 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
         if (!id) {
             throwError("COMMON", 400, "VALIDATION_ERROR", "id is required for update");
         }
+        await validateById(request);
     }
     if (!CampaignDetails) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "CampaignDetails is required");
@@ -1038,14 +1049,8 @@ async function validateProjectCampaignRequest(request: any, actionInUrl: any) {
     if (!action) {
         throwError("COMMON", 400, "VALIDATION_ERROR", "CampaignDetails.action is required and must be either 'create' or 'draft'")
     }
-    if (!(action == "create" || action == "draft" || action == "changeDates")) {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "action can only be create, draft or changeDates");
-    }
-    if (actionInUrl == "update") {
-        await validateById(request);
-    }
-    if (action == "changeDates" && actionInUrl == "create") {
-        throwError("COMMON", 400, "VALIDATION_ERROR", "changeDates is not allowed during create");
+    if (!(action == "create" || action == "draft")) {
+        throwError("COMMON", 400, "VALIDATION_ERROR", "action can only be create or draft");
     }
     await validateCampaignBody(request, CampaignDetails, actionInUrl);
 }
