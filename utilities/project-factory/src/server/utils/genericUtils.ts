@@ -462,18 +462,27 @@ function setDropdownFromSchema(request: any, schema: any, localizationMap?: { [k
   request.body.dropdowns = dropdowns;
 }
 
+function setHiddenColumns(request: any, schema: any, localizationMap?: { [key: string]: string }) {
+  // from schema.properties find the key whose value have value.hideColumn == true
+  const hiddenColumns = Object.entries(schema.properties).filter(([key, value]: any) => value.hideColumn == true).map(([key, value]: any) => getLocalizedName(key, localizationMap));
+  logger.info(`Columns to hide ${JSON.stringify(hiddenColumns)}`)
+  request.body.hiddenColumns = hiddenColumns;
+}
+
 async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
   const tenantId = request?.query?.tenantId;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
   const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
+  const campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
   let schema;
   if (isSourceMicroplan) {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility", "microplan");
+    schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-${campaignType}`);
   } else {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
   const keys = schema?.columns;
   setDropdownFromSchema(request, schema, localizationMap);
+  setHiddenColumns(request, schema, localizationMap);
   const headers = ["HCM_ADMIN_CONSOLE_FACILITY_CODE", ...keys]
   let localizedHeaders;
   if (isSourceMicroplan) {
@@ -668,6 +677,7 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   hideUniqueIdentifierColumn(facilitySheet, createAndSearch?.["facility"]?.uniqueIdentifierColumn);
   changeFirstRowColumnColour(facilitySheet, 'E06666');
   await handledropdownthings(facilitySheet, request.body?.dropdowns);
+  await handleHiddenColumns(facilitySheet, request.body?.hiddenColumns);
 
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
@@ -679,23 +689,22 @@ async function createFacilityAndBoundaryFile(facilitySheetData: any, boundaryShe
   request.body.fileDetails = fileDetails;
 }
 
-async function handledropdownthings(facilitySheet: any, dropdowns: any) {
+async function handledropdownthings(sheet: any, dropdowns: any) {
   let dropdownColumnIndex = -1;
   if (dropdowns) {
     for (const key of Object.keys(dropdowns)) {
       if (dropdowns[key]) {
-        // Iterate through each row to find the column index of "Boundary Code (Mandatory)"
-        await facilitySheet.eachRow({ includeEmpty: true }, (row: any) => {
-          row.eachCell({ includeEmpty: true }, (cell: any, colNumber: any) => {
-            if (cell.value === key) {
-              dropdownColumnIndex = colNumber;
-            }
-          });
+
+        const firstRow = sheet.getRow(1);
+        firstRow.eachCell({ includeEmpty: true }, (cell: any, colNumber: any) => {
+          if (cell.value === key) {
+            dropdownColumnIndex = colNumber;
+          }
         });
 
         // If dropdown column index is found, set multi-select dropdown for subsequent rows
         if (dropdownColumnIndex !== -1) {
-          facilitySheet.getColumn(dropdownColumnIndex).eachCell({ includeEmpty: true }, (cell: any, rowNumber: any) => {
+          sheet.getColumn(dropdownColumnIndex).eachCell({ includeEmpty: true }, (cell: any, rowNumber: any) => {
             if (rowNumber > 1) {
               // Set dropdown list with no typing allowed
               cell.dataValidation = {
@@ -711,6 +720,23 @@ async function handledropdownthings(facilitySheet: any, dropdowns: any) {
           });
         }
       }
+    }
+  }
+}
+
+async function handleHiddenColumns(sheet: any, hiddenColumns: any) {
+  if (hiddenColumns) {
+    for (const columnName of hiddenColumns) {
+      const firstRow = sheet.getRow(1);
+      let colIndex = -1;
+      firstRow.eachCell({ includeEmpty: true }, (cell: any, colNumber: any) => {
+        if (cell.value === columnName) {
+          colIndex = colNumber;
+        }
+        if (colIndex !== -1) {
+          sheet.getColumn(colIndex).hidden = true
+        }
+      });
     }
   }
 }
@@ -731,6 +757,7 @@ async function createUserAndBoundaryFile(userSheetData: any, boundarySheetData: 
   const userSheet = workbook.addWorksheet(localizedUserTab);
   addDataToSheet(userSheet, userSheetData, undefined, undefined, true);
   await handledropdownthings(userSheet, request.body?.dropdowns);
+  await handleHiddenColumns(userSheet, request.body?.hiddenColumns);
   // Add boundary sheet to the workbook
   const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap)
   const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
