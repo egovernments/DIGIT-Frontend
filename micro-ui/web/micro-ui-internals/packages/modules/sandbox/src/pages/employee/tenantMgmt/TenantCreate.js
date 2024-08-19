@@ -10,8 +10,7 @@ const fieldStyle = { marginRight: 0 };
 
 const TenantCreate = () => {
   const defaultValue = {};
-  //const tenantId = Digit.ULBService.getCurrentTenantId();
-  const tenantId="pg";
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
   const reqCreate = {
@@ -26,7 +25,6 @@ const TenantCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async (data) => {
-    console.log("data is"+ data);
     await mutation.mutate(
       {
         url: `/tenant-management/tenant/_create`,
