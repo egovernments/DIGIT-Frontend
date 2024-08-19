@@ -133,15 +133,14 @@ const fetchResourceFile = async (tenantId, resourceIdArr) => {
   });
   return res?.ResourceDetails;
 };
-
-const fetchcd = async (tenantId, nid) => { 
+const fetchcd = async (tenantId, projectId) => { 
     const reqCriteriaResource = {
       url: `/health-project/v1/_search?limit=1000&offset=0&tenantId=mz`,
       body: {
         Projects: [
           {
             tenantId: tenantId,  // Ensure tenantId is defined and in scope
-            id: nid
+            id: projectId
           }
         ]
       }
@@ -170,7 +169,7 @@ const CampaignSummary = (props) => {
   const [userErrors, setUserErrors] = useState(null);
   const [cycleDatesError, setCycleDatesError] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
-  const [nid, setnid] = useState(null);
+  const [projectId, setprojectId] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [cycles, setCycles] = useState([]);
@@ -222,14 +221,9 @@ const CampaignSummary = (props) => {
     // }
   }, [props?.props?.summaryErrors]);
 
-  let apidata;
-
-    useEffect(() => {
-
-      let cd;
+  useEffect(() => {
         const fun = async () => {
-          let temp = await fetchcd(tenantId, nid);
-          apidata = temp;
+          let temp = await fetchcd(tenantId, projectId);
           if (temp) {
             await new Promise((resolve) => {
               setStartDate(temp?.startDate);
@@ -240,7 +234,7 @@ const CampaignSummary = (props) => {
           }
         };
         fun();
-  }, [nid]);
+  }, [projectId]);
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -258,7 +252,7 @@ const CampaignSummary = (props) => {
         setStartDate(data?.[0]?.startDate);
         setEndDate(data?.[0]?.endDate);
         let processid;
-        setnid(data?.[0]?.projectId);
+        setprojectId(data?.[0]?.projectId);
         setCards(data?.cards);
 
         const ss = async () => {
@@ -552,7 +546,6 @@ if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0].value=="Configuration f
         }
     }
   });
-  console.log("new updated object:", updatedObject);
 }
 
   return (
