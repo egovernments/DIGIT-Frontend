@@ -115,8 +115,8 @@ export const UICustomizations = {
       }
     },
   },
-  moduleMasterConfigPGR: {
-    preProcess: (data) => {
+  moduleMasterConfig: {
+    preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       data.params = {
         tenantId: tenantId,
@@ -136,7 +136,7 @@ export const UICustomizations = {
         ],
       };
       data.config.select = (data) => {
-        const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === "PGR");
+        const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === additionalDetails?.moduleName);
         return {
           module: temp?.module,
           master: temp?.master?.filter((item) => item.type === "module" || item.type === "common"),
@@ -174,141 +174,19 @@ export const UICustomizations = {
           return value;
 
         case "SANDBOX_ACTIONS":
+          const handleRedirect = (value) => {
+            window.history.pushState(
+              null,
+              "",
+              `/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${value?.split(".")?.[1]}`
+            );
+            const navEvent = new PopStateEvent("popstate");
+            window.dispatchEvent(navEvent);
+          };
+
           return (
             <div>
-              <SVG.Edit />
-              <SVG.Delete />
-            </div>
-          );
-        default:
-          return t("ES_COMMON_NA");
-      }
-    },
-  },
-  moduleMasterConfigHRMS: {
-    preProcess: (data) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.params = {
-        tenantId: tenantId,
-      };
-      data.body = { RequestInfo: data.body.RequestInfo };
-      data.body.MdmsCriteria = {
-        tenantId: tenantId,
-        moduleDetails: [
-          {
-            moduleName: "sandbox-ui",
-            masterDetails: [
-              {
-                name: "ModuleMasterConfig",
-              },
-            ],
-          },
-        ],
-      };
-      data.config.select = (data) => {
-        const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === "HRMS");
-        return {
-          module: temp?.module,
-          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common"),
-        };
-      };
-
-      delete data.body.custom;
-      delete data.body.inbox;
-      // delete data.params;
-
-      return data;
-    },
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      //here we can add multiple conditions
-      //like if a cell is link then we return link
-      //first we can identify which column it belongs to then we can return relevant result
-      switch (key) {
-        case "SANDBOX_MODULE_NAME":
-          return (
-            <span className="link">
-              <Link
-                to={`/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${
-                  value?.split(".")?.[1]
-                }`}
-              >
-                {value?.split(".")?.[0]}
-              </Link>
-            </span>
-          );
-        case "SANDBOX_MASTER_NAME":
-          return row?.code?.split(".")?.[1] ? row?.code?.split(".")?.[1] : row?.code?.split(".")?.[0];
-
-        case "SANDBOX_MASTER_TYPE":
-          return value;
-
-        default:
-          return t("ES_COMMON_NA");
-      }
-    },
-  },
-  moduleMasterConfigHCM: {
-    preProcess: (data) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.params = {
-        tenantId: tenantId,
-      };
-      data.body = { RequestInfo: data.body.RequestInfo };
-      data.body.MdmsCriteria = {
-        tenantId: tenantId,
-        moduleDetails: [
-          {
-            moduleName: "sandbox-ui",
-            masterDetails: [
-              {
-                name: "ModuleMasterConfig",
-              },
-            ],
-          },
-        ],
-      };
-      data.config.select = (data) => {
-        const temp = data?.MdmsRes?.["sandbox-ui"]?.ModuleMasterConfig?.find((item) => item?.module === "HCM");
-        return {
-          module: temp?.module,
-          master: temp?.master?.filter((item) => item.type === "module" || item.type === "common"),
-        };
-      };
-
-      delete data.body.custom;
-      delete data.body.inbox;
-      // delete data.params;
-
-      return data;
-    },
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      //here we can add multiple conditions
-      //like if a cell is link then we return link
-      //first we can identify which column it belongs to then we can return relevant result
-      switch (key) {
-        case "SANDBOX_MODULE_NAME":
-          return (
-            <span className="link">
-              <Link
-                to={`/${window.contextPath}/employee/workbench/mdms-search-v2?moduleName=${value?.split(".")?.[0]}&masterName=${
-                  value?.split(".")?.[1]
-                }`}
-              >
-                {value?.split(".")?.[0]}
-              </Link>
-            </span>
-          );
-        case "SANDBOX_MASTER_NAME":
-          return row?.code?.split(".")?.[1] ? row?.code?.split(".")?.[1] : row?.code?.split(".")?.[0];
-
-        case "SANDBOX_MASTER_TYPE":
-          return value;
-
-        case "SANDBOX_ACTIONS":
-          return (
-            <div className="sandbox-table-actions">
-              <SVG.Edit />
-              <SVG.Delete />
+              <SVG.Edit style={{ cursor: "pointer" }} onClick={() => handleRedirect(row?.code)} />
             </div>
           );
         default:

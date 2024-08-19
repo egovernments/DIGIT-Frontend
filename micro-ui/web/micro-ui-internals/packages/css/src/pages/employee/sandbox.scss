@@ -24,7 +24,17 @@
   width: auto;
 }
 
-.sandbox-table-actions{
+.sandbox-table-actions {
   display: flex;
   gap: 1rem;
+}
+.table.sandbox-application-table {
+  border-collapse: collapse;
+  border-color: transparent;
+  border-width: 0 1.5rem;
+  tbody {
+    tr:hover {
+      background: rgba(#f47738, 0.12);
+    }
+  }
 }
