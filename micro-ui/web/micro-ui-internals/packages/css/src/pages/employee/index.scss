@@ -576,3 +576,50 @@
   .customEmployeeCard {
     @apply m-sm !important;
   }
+
+
+  .card-sandbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .cardHeader-sandbox {
+    font-size: 24px;
+    color: green;
+    margin-bottom: 10px;
+  }
+  
+  .cardText-sandbox {
+    font-size: 16px;
+    color: green;
+    margin-top: -10px; 
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .field-sandbox {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: black;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  
+  .button-sandbox {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+  }

@@ -6,6 +6,21 @@ import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-rou
 import { OtpConfig } from "./config";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import { useEffect } from "react";
+
+/* set employee details to enable backward compatiable */
+const setEmployeeDetail = (userObject, token) => {
+  let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
+  localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
+  localStorage.setItem("tenant-id", userObject?.tenantId);
+  localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
+  localStorage.setItem("locale", locale);
+  localStorage.setItem("Employee.locale", locale);
+  localStorage.setItem("token", token);
+  localStorage.setItem("Employee.token", token);
+  localStorage.setItem("user-info", JSON.stringify(userObject));
+  localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
+};
 
 const Otp = () => {
   const { t } = useTranslation();
@@ -14,18 +29,71 @@ const Otp = () => {
   const location = useLocation();
   const [showToast, setShowToast] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(false);
+  const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
-
+  const { email ,tenantCode } = location.state || {};
+  
   const config = [
     {
       body: OtpConfig[0].body
     },
   ];
 
-  const navigateToLogin = (formData) => {
-    console.log("xxxxx", formData)
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    Digit.SessionStorage.set("citizen.userRequestObject", user);
+    const filteredRoles = user?.info?.roles?.filter((role) => role.tenantId === Digit.SessionStorage.get("Employee.tenantId"));
+    if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
+    Digit.UserService.setUser(user);
+    setEmployeeDetail(user?.info, user?.access_token);
+    let redirectPath = `/${window?.contextPath}/employee`;
 
-    history.replace(`/${window?.contextPath}/employee/login`);
+    /* logic to redirect back to same screen where we left off  */
+    if (window?.location?.href?.includes("from=")) {
+      redirectPath = decodeURIComponent(window?.location?.href?.split("from=")?.[1]) || `/${window?.contextPath}/employee`;
+    }
+
+    history.push({
+      pathname: redirectPath,
+      state: {email:email },
+    });
+  }, [user]);
+
+  // const navigateToLogin = (formData) => {
+  //   console.log("xxxxx", formData)
+
+  //   history.push({
+  //     pathname: `/${window?.contextPath}/employee/user/url`,
+  //     state: {email:email },
+  //   });
+
+  // };
+
+  const onSubmit = async () => {
+    
+    setDisable(true);
+
+    const requestData = {
+      username: email,
+      password: formValue["otpComponent"]?.otp,
+      tenantId: tenantCode,
+      userType: "EMPLOYEE",
+    };
+    try {
+      const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+      Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
+      setUser({ info, ...tokens });
+    } catch (err) {
+      setShowToast(
+        err?.response?.data?.error_description ||
+          (err?.message == "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+          t("INVALID_LOGIN_CREDENTIALS")
+      );
+      setTimeout(closeToast, 5000);
+    }
+    setDisable(false);
   };
 
   return (
@@ -34,12 +102,12 @@ const Otp = () => {
         <BackLink />
       </div>
       <FormComposerV2
-        onSubmit={navigateToLogin}
+        onSubmit={onSubmit}
         noBoxShadow
         inline
         submitInForm
         onFormValueChange={(setValue, formValue) => {
-          const otpValue = formValue["OtpComponent"]; // Assuming "OtpComponent" is the key for OTP value
+          const otpValue = formValue["OtpComponent"]; 
           if (otpValue?.otp?.length === 6) {
             setIsOtpValid(true);
           } else {
@@ -49,10 +117,8 @@ const Otp = () => {
         isDisabled={!isOtpValid}
         config={config}
         label={OtpConfig[0].texts.submitButtonLabel}
-        // secondaryActionLabel={OtpConfig.texts.secondaryButtonLabel}
-        onSecondayActionClick={navigateToLogin}
+        // onSecondayActionClick={navigateToLogin}
         heading={OtpConfig[0].texts.header}
-        // description={OtpConfig[0].texts.description}
         headingStyle={{ textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="employeeForgotPassword"

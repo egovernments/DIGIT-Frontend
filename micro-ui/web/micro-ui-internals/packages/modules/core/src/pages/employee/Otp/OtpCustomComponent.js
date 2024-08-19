@@ -7,15 +7,11 @@ import Background from "../../../components/Background";
 import { useEffect } from "react";
 
 const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
-    console.log("runnn",props)
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
-  const history = useHistory();
   const location = useLocation();
   const [showToast, setShowToast] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const [isOtpValid, setIsOtpValid] = useState(true);
-  const [canSubmitOtp, setCanSubmitOtp] = useState(true);
   const [timeLeft, setTimeLeft] = useState(30);
 
   useInterval(

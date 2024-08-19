@@ -65,10 +65,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const onLogin = async(data) => {
 
 
-          //  history.push({
-          //         pathname: `/${window?.contextPath}/employee/user/otp`,
-          //         state: {email:data.email },
-          //       });
+           history.push({
+                  pathname: `/${window?.contextPath}/employee/user/otp`,
+                  state: {email:data.email },
+                });
 
     await mutation.mutate(
       {
