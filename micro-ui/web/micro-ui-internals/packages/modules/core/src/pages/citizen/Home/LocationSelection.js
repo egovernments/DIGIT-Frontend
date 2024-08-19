@@ -1,9 +1,9 @@
-import {  CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-components";
+import {  CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 
- const LocationSelection = () => {
+const LocationSelection = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
@@ -29,7 +29,7 @@ import { useHistory, useLocation } from "react-router-dom";
     return {
       options: cities,
       optionsKey: "i18nKey",
-      additionalWrapperClass: "digit-reverse-radio-selection-wrapper",
+      additionalWrapperClass: "reverse-radio-selection-wrapper",
       onSelect: selectCity,
       selectedOption: selectedCity,
     };
@@ -57,13 +57,6 @@ import { useHistory, useLocation } from "react-router-dom";
         <SearchOnRadioButtons {...RadioButtonProps} placeholder={t("COMMON_TABLE_SEARCH")} />
         {showError ? <CardLabelError>{t("CS_COMMON_LOCATION_SELECTION_ERROR")}</CardLabelError> : null}
       </PageBasedInput>
-      <style>
-        {`
-          .digit-submit-bar-container {
-            display: none;
-          }
-        `}
-      </style>
     </div>
   );
 };

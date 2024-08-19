@@ -1,4 +1,4 @@
-import { FormStep } from "@egovernments/digit-ui-components";
+import { FormStep } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { PGRConstants } from "./PGRConstants";
 
@@ -35,6 +35,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
       onChange={onMobileChange}
       value={mobileNumber}
       validation={validation} 
+      
     ></FormStep>
     </div>
   );
