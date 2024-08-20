@@ -738,9 +738,13 @@ async function createStaff(resouceBody: any) {
     "post",
     undefined,
     undefined,
-    undefined,
-    false
+    true,
+    false,
+    true
   );
+  if (!(staffResponse?.statusCode == 202 || staffResponse?.Errors?.[0]?.message?.includes('errorCode=DUPLICATE_ENTITY'))) {
+    throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Error while mapping project staff ${JSON.stringify(staffResponse)}`);
+  }
   logger.info("Project Staff mapping created");
   logger.debug(
     "Project Staff mapping response " +
@@ -766,9 +770,13 @@ async function createProjectResource(resouceBody: any) {
     "post",
     undefined,
     undefined,
-    undefined,
-    false
+    true,
+    false,
+    true
   );
+  if (!(projectResourceResponse?.statusCode == 202 || projectResourceResponse?.Errors?.[0]?.message?.includes('errorCode=DUPLICATE_ENTITY'))) {
+    throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Error while mapping project resource ${JSON.stringify(projectResourceResponse)}`);
+  }
   logger.debug("Project Resource Created");
   logger.debug(
     "Project Resource Creation response :: " +
@@ -794,9 +802,13 @@ async function createProjectFacility(resouceBody: any) {
     "post",
     undefined,
     undefined,
-    undefined,
-    false
+    true,
+    false,
+    true
   );
+  if (!(projectFacilityResponse?.statusCode == 202 || projectFacilityResponse?.Errors?.[0]?.message?.includes('errorCode=DUPLICATE_ENTITY'))) {
+    throwError("COMMON", 500, "INTERNAL_SERVER_ERROR", `Error while mapping project facility ${JSON.stringify(projectFacilityResponse)}`);
+  }
   logger.info("Project Facility Created");
   logger.debug(
     "Project Facility Creation response" +
