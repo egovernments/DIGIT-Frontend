@@ -38,12 +38,12 @@ function UpdateDatesWithBoundaries() {
     if (DateWithBoundary) {
       const temp = data?.dateWithBoundary;
       // const allCycleDateValid = temp
-      //   .map((i) => i.additionalDetails.projectType.cycles.every((j) => j.startDate && j.endDate))
+      //   .map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate))
       //   .every((k) => k === true);
       const allCycleDateValid = temp?.projectType === "MR-DN" 
       ? temp.map((i) => i?.additionalDetails?.projectType?.cycles.every((j) => j?.startDate && j?.endDate)).every((k) => k === true) 
       : true;
-      const allDateValid = temp.every((i) => i.startDate && i.endDate);
+      const allDateValid = temp.every((i) => i?.startDate && i?.endDate);
 
       if (temp?.projectType === "MR-DN" && allCycleDateValid && allDateValid) {
         return true;
@@ -104,6 +104,7 @@ function UpdateDatesWithBoundaries() {
           //   };
           // }
         });
+        // const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
@@ -127,7 +128,7 @@ function UpdateDatesWithBoundaries() {
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
           actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
+          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`,
         });
       }
     } catch (error) {
