@@ -16,30 +16,28 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const history = useHistory();
 
   const reqCreate = {
-   url: `/tenant-management/tenant/_create`,
-   params: {},
-   body: {},
-   config: {
-     enable: false,
-   },
- };
+    url: `/tenant-management/tenant/_create`,
+    params: {},
+    body: {},
+    config: {
+      enable: false,
+    },
+  };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
-  const onLogin = async(data) => {
-
-
-           history.push({
-                  pathname: `/${window?.contextPath}/employee/user/otp`,
-                  state: {email:data.email },
-                });
+  const onLogin = async (data) => {
+    history.push({
+      pathname: `/${window?.contextPath}/employee/user/otp`,
+      state: { email: data.email },
+    });
 
     await mutation.mutate(
       {
         body: {
-          "tenant": {
-                   "name": data.accountName,
-                   "email": data.email
-              },
+          tenant: {
+            name: data.accountName,
+            email: data.email,
+          },
         },
         config: {
           enable: true,
@@ -51,16 +49,16 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           setShowToast({ key: "error", label: error?.message ? error?.message : error });
         },
         onSuccess: async (data) => {
-          console.log("abcd",data);
-          
+          console.log("abcd", data);
+
           history.push({
-                  pathname: `/${window?.contextPath}/employee/user/otp`,
-                  state: {email:data.email },
-                });
+            pathname: `/${window?.contextPath}/employee/user/otp`,
+            state: { email: data.email },
+          });
           Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
         },
-      });
-
+      }
+    );
   };
 
   const closeToast = () => {
@@ -77,17 +75,16 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-
     // Extract keys from the config
-  const keys = config[0].body.map(field => field.key);
+    const keys = config[0].body.map((field) => field.key);
 
-  const hasEmptyFields = keys.some(key => {
-    const value = formData[key];
-    return value == null || value === '' || (key === 'check' && value === false) || (key === 'captcha' && value === false);
-  });
+    const hasEmptyFields = keys.some((key) => {
+      const value = formData[key];
+      return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
+    });
 
-  // Set disable based on the check
-  setDisable(hasEmptyFields);
+    // Set disable based on the check
+    setDisable(hasEmptyFields);
   };
 
   return isLoading || isStoreLoading ? (
@@ -108,9 +105,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
         onFormValueChange={onFormValueChange}
         heading={propsConfig?.texts?.header}
-        className="loginFormStyleEmployee"
-        cardSubHeaderClassName="loginCardSubHeaderClassName"
-        cardClassName="loginCardClassName"
+        className="sandbox-signup-form"
+        cardSubHeaderClassName="signupCardSubHeaderClassName"
+        cardClassName="signupCardClassName"
         buttonClassName="buttonClassName"
       >
         <Header />
@@ -124,7 +121,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
-        />{" "}
+        />
       </div>
     </Background>
   );

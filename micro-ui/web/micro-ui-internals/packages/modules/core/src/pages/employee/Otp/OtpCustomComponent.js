@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { BackLink, FormStep, OTPInput, CardText, CardLabelError, Toast } from "@egovernments/digit-ui-components";
+import React, { Fragment, useState } from "react";
+import { CardText, CardLabelError, Toast } from "@egovernments/digit-ui-components";
+import { OTPInput } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import useInterval from "../../../hooks/useInterval";
@@ -10,7 +11,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const [showToast, setShowToast] = useState(null);
-  const [params, setParams] = useState(location?.state?.data || {});
+  const [params, setParams] = useState({});
   const [isOtpValid, setIsOtpValid] = useState(true);
   const [timeLeft, setTimeLeft] = useState(30);
 
@@ -25,36 +26,30 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
     setParams({ ...params, otp });
   };
 
-
   useEffect(() => {
     onSelect("OtpComponent", params);
-}, [params]);
+  }, [params]);
 
-
-
-const resendOtp = async () => {
+  const resendOtp = async () => {
     const data = { mobileNumber: params.mobileNumber };
     console.log("Resending OTP with data:", data);
     setTimeLeft(30);
     // Add actual resend OTP logic here
   };
-  
+
   return (
-      <FormStep   t={t} >
-        <OTPInput length={6} onChange={handleOtpChange} value={params.otp} />
-        {timeLeft > 0 ? (
-          <CardText>{`${t("CS_RESEND_ANOTHER_OTP")} ${timeLeft} ${t("CS_RESEND_SECONDS")}`}</CardText>
-        ) : (
-          <p className="card-text-button" onClick={resendOtp}>
-            {t("CS_RESEND_OTP")}
-          </p>
-        )}
-        {!isOtpValid && <CardLabelError>{t("CS_INVALID_OTP")}</CardLabelError>}
-      </FormStep>
+    <>
+      <OTPInput length={6} onChange={handleOtpChange} value={params?.otp} />
+      {timeLeft > 0 ? (
+        <CardText>{`${t("CS_RESEND_ANOTHER_OTP")} ${timeLeft} ${t("CS_RESEND_SECONDS")}`}</CardText>
+      ) : (
+        <p className="card-text-button" onClick={resendOtp}>
+          {t("CS_RESEND_OTP")}
+        </p>
+      )}
+      {!isOtpValid && <CardLabelError>{t("CS_INVALID_OTP")}</CardLabelError>}
+    </>
   );
 };
 
 export default OtpComponent;
-
-
-

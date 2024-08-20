@@ -108,7 +108,7 @@ const Otp = () => {
         heading={OtpConfig[0].texts.header}
         headingStyle={{ textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
-        className="employeeForgotPassword"
+        className="sandboxOtpForm"
       >
         <Header />
       </FormComposerV2>
