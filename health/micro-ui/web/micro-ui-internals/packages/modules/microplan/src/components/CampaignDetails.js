@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 
-const CampaignDetails = (props) => {
+const CampaignDetails = ({onSelect,props}) => {
 
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
@@ -37,6 +37,12 @@ const CampaignDetails = (props) => {
       };
     },
   });
+
+  useEffect(() => {
+    onSelect(props.name,{
+      distributionStrat,disease,campaignType
+    })
+  }, [distributionStrat,disease,campaignType]);
 
   if(isLoading){
     return <Loader />

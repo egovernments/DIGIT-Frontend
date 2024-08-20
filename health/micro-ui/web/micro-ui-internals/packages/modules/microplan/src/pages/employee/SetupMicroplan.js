@@ -14,7 +14,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import {MicroplanConfig} from "../../configs/SetupMicroplanConfig"
-import { QueryClient, useQueryClient } from "react-query";
 import { Stepper, Toast } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 
@@ -27,11 +26,14 @@ const SetupMicroplan = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [totalFormData, setTotalFormData] = useState({});
   const [active, setActive] = useState(0);
-  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(null, null, null));
+  const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting));
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+
+  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("MICROPLAN_DATA", {});
+
 
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
@@ -64,7 +66,30 @@ const SetupMicroplan = () => {
     // setSummaryErrors(null);
   }, [currentKey]);
 
-  const onSubmit = () => {
+  useEffect(() => {
+    setTotalFormData(params);
+  }, [params]);
+
+  const onSubmit = (formData) => {
+    // setIsSubmittting to true -> to run inline validations within the components
+    setIsSubmitting(true);
+    const name = filteredConfig?.[0]?.form?.[0]?.name;
+    
+    
+    // run toast level validations 
+    // decide whether to call api or not based on config
+    // update totalFormData
+    setTotalFormData(prev => {
+      return {
+        ...prev,
+        [name]:formData
+      }
+    })
+    // store data in session storage appropriately(basically sync session with totalFormData)
+    setParams({
+      ...params,
+      [name]:formData
+    })
     setCurrentStep(prev => prev + 1)
     setCurrentKey(prev => prev + 1)
   }

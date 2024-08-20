@@ -5,7 +5,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
         {
           stepCount: "1",
           key: "1",
-          name: "MP_CAMPAIGN_DETAILS",
+          name: "CAMPAIGN_DETAILS",
           body: [
             {
               isMandatory: false,
@@ -21,7 +21,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
                 isSubmitting: isSubmitting,
               },
               populators: {
-                name: "projectType",
+                name: "campaignDetails",
               },
             },
           ],
