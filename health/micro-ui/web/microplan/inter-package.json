@@ -22,8 +22,10 @@
     "publish:css": "cd packages/css && yarn publish --access public",
     "dev:example": "cd example && yarn start",
     "dev:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn start",
+    "dev:microplan": "cd packages/modules/microplan && yarn start",
     "build": "run-p build:**",
     "build:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
+    "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },

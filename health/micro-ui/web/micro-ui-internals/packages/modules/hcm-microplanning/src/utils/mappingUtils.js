@@ -171,8 +171,9 @@ export const extractGeoData = (
     }
     const processedDataWithResources = dataWithResources.map((item, index) => {
       if (index === 0) return item;
-      const newProperties = keys.reduce((acc, key, i) => (key !== "feature" ? { ...acc, [key]: item[i] } : acc), {});
-      item[item.length - 1] = { ...item[item.length - 1], properties: newProperties };
+      const featureIndex = keys.length - 1;
+      const newProperties = keys.concat(resources).reduce((acc, key, i) => (key !== "feature" ? { ...acc, [key]: item[i] } : acc), {});
+      item[featureIndex] = { ...item[featureIndex], properties: newProperties };
       return item;
     });
 
