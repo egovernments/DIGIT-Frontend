@@ -460,6 +460,66 @@ const transformIntoLocalisationCode = (code) => {
   return code?.toUpperCase();
 };
 
+const mergeDeep = (target, source) => {
+  if (!source) {
+    return target;
+  }
+
+  if (!target) {
+    target = {};
+  }
+
+  for (let key in source) {
+    if (source[key] instanceof Object && !Array.isArray(source[key])) {
+      if (!target[key]) {
+        Object.assign(target, { [key]: {} });
+      }
+      mergeDeep(target[key], source[key]);
+    } else if (Array.isArray(source[key])) {
+      if (!target[key]) {
+        target[key] = [];
+      }
+      source[key].forEach((sourceItem) => {
+        let isDuplicate = false;
+        target[key].forEach((targetItem) => {
+          if (JSON.stringify(sourceItem) === JSON.stringify(targetItem)) {
+            isDuplicate = true;
+          }
+        });
+        if (!isDuplicate) {
+          target[key].push(sourceItem);
+        }
+      });
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+  return target;
+};
+
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
+
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -475,4 +535,7 @@ export default {
   getSchema,
   processDropdownForNestedMultiSelect,
   transformIntoLocalisationCode,
+  mergeDeep,
+  filterUniqueByKey,
+  updateUrlParams
 };

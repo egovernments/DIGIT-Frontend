@@ -97,7 +97,7 @@
   }
 
   h2 {
-    @apply text-left overflow-hidden whitespace-no-wrap flex-grow flex items-center h-6;
+    @apply text-left overflow-hidden whitespace-no-wrap flex-grow  items-center h-6;
     letter-spacing: 0rem;
     color: theme(digitv2.lightTheme.paper);
     margin: 0rem;

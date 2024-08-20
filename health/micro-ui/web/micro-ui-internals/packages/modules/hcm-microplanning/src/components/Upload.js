@@ -24,6 +24,7 @@ import {
   convertToSheetArray,
   findGuideLine,
   delay,
+  boundaryCodeValidations,
 } from "../utils/uploadUtils";
 import { UploadGuideLines, UploadedFile, FileUploadComponent, UploadComponents, UploadInstructions, UploadSection } from "./UploadHelperComponents";
 
@@ -689,10 +690,15 @@ const Upload = ({
       const schemaData = getSchema(campaignType, selectedFileType.id, selectedSection.id, validationSchemas);
       let error;
       if (!checkForSchemaData(schemaData)) return;
-
-      const { data, valid, errors } = computeMappedDataAndItsValidations(schemaData);
+      const { data, valid, errors, doDeleteFile } = await computeMappedDataAndItsValidations(schemaData);
       error = errors;
-      if (!valid) return;
+      if (!valid) {
+        if (doDeleteFile) {
+          deleteFile();
+        }
+        setLoader();
+        return;
+      }
       let filestoreId;
       if (!error) {
         filestoreId = await saveFileToFileStore();
@@ -762,21 +768,30 @@ const Upload = ({
       return;
     }
   };
-  const computeMappedDataAndItsValidations = (schemaData) => {
-    const data = computeGeojsonWithMappedProperties();
+  const computeMappedDataAndItsValidations = async (schemaData) => {
+    const { data, doDeleteFile } = computeGeojsonWithMappedProperties();
+    if (!data) return { data: {}, valid: false, doDeleteFile };
+    // const boundar
+    const boundaryCheckResponse = await boundaryCodeValidations(data, campaignData, GEOJSON, t);
+    const errorObject =
+      boundaryCheckResponse && Object.keys(boundaryCheckResponse).length !== 0 ? { [selectedSection.id]: boundaryCheckResponse } : undefined; // geojson and shapefile have same handler as their format is same
     const response = geojsonPropertiesValidation(data, schemaData.schema, fileData?.section, t);
-    if (!response.valid) {
-      handleValidationErrorResponse(response.message, response.errors);
-      return { data: data, errors: response.errors, valid: response.valid };
+    if (!response.valid || errorObject) {
+      handleValidationErrorResponse(
+        response.message ? response.message : errorObject ? ["ERROR_REFER_UPLOAD_PREVIEW_TO_SEE_THE_ERRORS"] : undefined,
+        response.errors ? response.errors : {},
+        errorObject ? errorObject : {}
+      );
+      return { data: data, errors: Digit.Utils.microplan.mergeDeep(response.errors, errorObject), valid: response.valid && !errorObject };
     }
-    return { data: data, valid: response.valid };
+    return { data: data, valid: response.valid, errorObject };
   };
 
-  const handleValidationErrorResponse = (error, errorLocationObject = {}) => {
+  const handleValidationErrorResponse = (error, errorLocationObject = {}, errorObject = {}) => {
     const fileObject = fileData;
     if (fileObject) {
       fileObject.error = [error];
-      if (errorLocationObject) fileObject.errorLocationObject = errorLocationObject;
+      if (errorLocationObject) fileObject.errorLocationObject = Digit.Utils.microplan.mergeDeep(errorLocationObject, errorObject);
       setFileData((previous) => ({ ...previous, error, errorLocationObject }));
       setFileDataList((prevFileDataList) => {
         let temp = _.cloneDeep(prevFileDataList);
@@ -844,6 +859,20 @@ const Upload = ({
       item["properties"] = newProperties;
       newFeatures.push(item);
     }
+
+    if (
+      schemaData?.schema?.Properties &&
+      Object.keys(schemaData.schema.Properties).includes(schemaData.activeInactiveField) &&
+      schemaData.schema.Properties?.[schemaData.activeInactiveField]?.isRequired
+    ) {
+      const hasColumn = newFeatures.reduce((acc, feature) => {
+        return acc && !!feature?.properties?.[schemaData.activeInactiveField];
+      }, true);
+      if (!hasColumn) {
+        setToast({ state: "error", message: t("ERROR_ACTIVE_INACTIVE_COLUMN_MISSING", { columnName: t(schemaData.activeInactiveField) }) });
+        return { doDeleteFile: true };
+      }
+    }
     let filteredFeature = [];
     for (const item of newFeatures) {
       if (
@@ -856,9 +885,14 @@ const Upload = ({
       }
       filteredFeature.push(item);
     }
+
+    if (filteredFeature.length === 0) {
+      setToast({ state: "error", message: t("ERROR_ACTIVE_DATA_MISSING") });
+      return { doDeleteFile: true };
+    }
     let data = fileData.data;
     data["features"] = filteredFeature;
-    return data;
+    return { data };
   };
 
   // Handler for checing file extension and showing errors in case it is wrong
@@ -949,7 +983,7 @@ const Upload = ({
               )
             ) : (
               <div className="upload-component">
-                {selectedSection != null && fileData !== null && (
+                {selectedSection != null && fileData !== null && fileData !== undefined && (
                   <UploadedFile
                     selectedSection={selectedSection}
                     selectedFileType={selectedFileType}
