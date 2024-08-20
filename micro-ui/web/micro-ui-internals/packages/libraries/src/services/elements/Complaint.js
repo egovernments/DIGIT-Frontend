@@ -14,7 +14,7 @@ export const Complaint = {
     uploadedImages,
     mobileNumber,
     name,
-    user,
+   
   }) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const defaultData = {
@@ -38,11 +38,17 @@ export const Complaint = {
           },
           geoLocation: {},
         },
-        user: user, 
+    citizen:{
+      mobileNumber,
+      name,
+      type:"CITIZEN"
+    },
+    
+
       },
       workflow: {
         action: "APPLY",
-        // verificationDocuments: uploadedImages,
+         verificationDocuments: uploadedImages,
         //action: "CREATE", assignes: [], hrmsAssignes: [], comments: ""
       },
     };

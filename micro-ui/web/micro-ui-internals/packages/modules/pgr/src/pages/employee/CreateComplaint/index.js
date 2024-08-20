@@ -191,7 +191,8 @@ export const CreateComplaint = ({ parentUrl }) => {
         lastModifiedTime: Date.now()
       }
     };
-    const formData = { ...data, cityCode, city, district, region, localityCode, localityName, landmark, complaintType, mobileNumber, name,user };
+    
+    const formData = { ...data, cityCode, city, district, region, localityCode, localityName, landmark, complaintType, mobileNumber, name };
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/response");

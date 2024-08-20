@@ -14,13 +14,12 @@ const createComplaint = ({
   localityName,
   uploadedImages,
   mobileNumber,
-  name,
-  user
+  name
 }) => async (dispatch, getState) => {
   //func
   const response = await Digit.Complaint.create({
     cityCode,
-    user,
+    
     complaintType,
     description,
     landmark,
@@ -33,8 +32,7 @@ const createComplaint = ({
     localityName,
     uploadedImages,
     mobileNumber,
-    name,
-    
+    name
   });
   dispatch({
     type: CREATE_COMPLAINT,
