@@ -20,11 +20,11 @@ const ChangeLanguage = (prop) => {
         <Dropdown
           className={"language-dropdown"}
           option={languages}
-          selected={languages.find((language) => language.value === selectedLanguage)}
+          selected={languages?.find((language) => language?.value === selectedLanguage)}
           optionKey={"label"}
           select={handleChangeLanguage}
           freeze={true}
-          customSelector={<label className="cp">{languages.find((language) => language.value === selected).label}</label>}
+          customSelector={<label className="cp">{languages?.find((language) => language?.value === selected)?.label}</label>}
         />
       </div>
     );
