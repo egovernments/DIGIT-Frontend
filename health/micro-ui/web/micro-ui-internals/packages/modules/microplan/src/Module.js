@@ -4,6 +4,8 @@ import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import MicroplanCard from "./components/MicroplanCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import MicroplanDetails from "./components/MicroplanDetails";
+import CampaignDetails from "./components/CampaignDetails";
 
 export const MicroplanModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -30,6 +32,8 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   MicroplanModule,
   MicroplanCard,
+  CampaignDetails,
+  MicroplanDetails
 };
 
 export const initMicroplanComponents = () => {

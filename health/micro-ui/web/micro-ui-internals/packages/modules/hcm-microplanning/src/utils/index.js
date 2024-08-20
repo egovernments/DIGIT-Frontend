@@ -497,6 +497,29 @@ const mergeDeep = (target, source) => {
   return target;
 };
 
+function filterUniqueByKey(arr, key) {
+  const uniqueValues = new Set();
+  const result = [];
+
+  arr.forEach((obj) => {
+    const value = obj[key];
+    if (!uniqueValues.has(value)) {
+      uniqueValues.add(value);
+      result.push(obj);
+    }
+  });
+
+  return result;
+}
+
+function updateUrlParams(params) {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+}
+
 export default {
   formatDates,
   computeGeojsonWithMappedProperties,
@@ -513,4 +536,6 @@ export default {
   processDropdownForNestedMultiSelect,
   transformIntoLocalisationCode,
   mergeDeep,
+  filterUniqueByKey,
+  updateUrlParams
 };
