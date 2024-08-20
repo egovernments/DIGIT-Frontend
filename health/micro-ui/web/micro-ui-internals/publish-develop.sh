@@ -12,7 +12,7 @@ msg() {
 # sleep 5
 
 msg "Building and publishing css"
-cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --tag campaign-1.0
+cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --tag campaign-0.3
 
 
 # msg "Building and publishing libraries"
