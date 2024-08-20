@@ -39,6 +39,11 @@ const Otp = () => {
     },
   ];
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
+
   useEffect(() => {
     if (!user) {
       return;
@@ -48,12 +53,7 @@ const Otp = () => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
-    let redirectPath = `/${window?.contextPath}/employee`;
-
-    /* logic to redirect back to same screen where we left off  */
-    if (window?.location?.href?.includes("from=")) {
-      redirectPath = decodeURIComponent(window?.location?.href?.split("from=")?.[1]) || `/${window?.contextPath}/employee`;
-    }
+    let redirectPath = `/${window?.contextPath}/employee/user/url`;
 
     history.push({
       pathname: redirectPath,
@@ -61,23 +61,12 @@ const Otp = () => {
     });
   }, [user]);
 
-  // const navigateToLogin = (formData) => {
-  //   console.log("xxxxx", formData)
 
-  //   history.push({
-  //     pathname: `/${window?.contextPath}/employee/user/url`,
-  //     state: {email:email },
-  //   });
-
-  // };
-
-  const onSubmit = async () => {
+  const onSubmit = async (formData) => {
     
-    setDisable(true);
-
     const requestData = {
       username: email,
-      password: formValue["otpComponent"]?.otp,
+      password: formData?.OtpComponent?.otp,
       tenantId: tenantCode,
       userType: "EMPLOYEE",
     };
@@ -93,7 +82,6 @@ const Otp = () => {
       );
       setTimeout(closeToast, 5000);
     }
-    setDisable(false);
   };
 
   return (
@@ -117,7 +105,6 @@ const Otp = () => {
         isDisabled={!isOtpValid}
         config={config}
         label={OtpConfig[0].texts.submitButtonLabel}
-        // onSecondayActionClick={navigateToLogin}
         heading={OtpConfig[0].texts.header}
         headingStyle={{ textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}

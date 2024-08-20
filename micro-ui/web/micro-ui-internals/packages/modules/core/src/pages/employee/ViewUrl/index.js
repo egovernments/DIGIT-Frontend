@@ -8,6 +8,13 @@ const ViewUrl = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { email , otp , tenantCode } = location.state || {};
+  const history = useHistory();
+
+  const onButtonClick = () => {
+    history.push({
+      pathname: `/${window?.contextPath}/employee`,
+    });
+  };
 
   return (
     <Background>
@@ -31,7 +38,7 @@ const ViewUrl = () => {
           populators={{}}
         />
         <div>{t("SANDBOX_URL_FOOT")}</div>
-        <Button label={t("SIGN_IN")} className="button-sandbox"></Button>
+        <Button onClick={onButtonClick} label={t("SIGN_IN")} ></Button>
       </Card>
       <div className="EmployeeLoginFooter">
         <img
