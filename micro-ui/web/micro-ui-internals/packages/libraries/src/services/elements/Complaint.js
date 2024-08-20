@@ -41,9 +41,9 @@ export const Complaint = {
         user: user, 
       },
       workflow: {
-        // action: "APPLY",
+        action: "APPLY",
         // verificationDocuments: uploadedImages,
-        action: "CREATE", assignes: [], hrmsAssignes: [], comments: ""
+        //action: "CREATE", assignes: [], hrmsAssignes: [], comments: ""
       },
     };
 
