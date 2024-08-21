@@ -1,30 +1,118 @@
-const defaultSearchValues = {
-  individualName: "",
-  mobileNumber: "",
-  IndividualID: ""
-};
+/* const defaultSearchValues = {
+    tenantName: "",
+    tenantCode: ""  
+  };
 export const tenantSearchConfig = () => 
 {
-return {
-  label: "Individual Search",
-  type: "search",
-  apiDetails: {
-    serviceName: "/individual/v1/_search",
-    requestParam: {
-        "tenantId":Digit.ULBService.getCurrentTenantId()
+  return {
+    label: "Tenant Search",
+    type: "search",
+    apiDetails: {
+      serviceName: "/tenant-management/tenant/_search",
+      requestBody: {
+        apiOperation: "SEARCH",
+        Individual: {
+          "tenantId": Digit.ULBService.getCurrentTenantId(),
+        },
+      },
+      minParametersForSearchForm: 0,
+      tableFormJsonPath: "requestParam",
+      filterFormJsonPath: "requestBody.Individual",
+      searchFormJsonPath: "requestBody.Individual",
     },
-    requestBody: {
-      apiOperation: "SEARCH",
-      Individual: {
-        "tenantId": Digit.ULBService.getCurrentTenantId(),
+    sections: {
+      search: {
+        uiConfig: {
+          formClassName: "custom-both-clear-search",
+          primaryLabel: "ES_COMMON_SEARCH",
+          secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+          minReqFields: 0,
+          defaultValues: defaultSearchValues, // Set default values for search fields
+          fields: [
+            {
+              label: "Tenant name ",
+              isMandatory: false,
+              key: "name",
+              type: "tenantName",
+              populators: { 
+                name: "tenantName", 
+                error: "Required", 
+                validation: { pattern: /^[A-Za-z]+$/i } 
+              },
+            },
+            {
+              label: "Tenant code",
+              isMandatory: false,
+              key: "tenantCode",
+              type: "text",
+              disable: false,
+              populators: { 
+                name: "tenantCode", 
+                error: "Required", 
+                validation: { pattern: /^[A-Za-z]+$/i } 
+              },
+            },
+          ],
+        },
+
+        show: true
+      },
+      searchResult: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        uiConfig: {
+          columns: [
+            {
+              label: "IndividualID",
+              jsonPath: "individualId",
+            },
+            
+            {
+              label: "Name",
+              jsonPath: "name.givenName",
+              
+            },
+            {
+              label: "Address",
+              jsonPath: "address.locality.code",
+            },
+          ],
+
+          enableColumnSort: true,
+          resultsJsonPath: "Individual"
+        },
+        show: true,
       },
     },
-   masterName: "commonUiConfig",
-    moduleName: "SearchPucarConfig",
+  };
+};  */
+
+
+
+
+const defaultSearchValues = {
+  tenantName: "",
+  tenantCode: ""
+};
+export const tenantSearchConfig = (data) => 
+{
+return {
+  label: "Tenant Search",
+  type: "search",
+  apiDetails: {
+    serviceName: "/tenant-management/tenant/_search",
+    requestParam: {
+        "name":tenantName,
+        "code":tenantCode
+    },
+    requestBody: {
+
+    },
+    masterName: "commonUiConfig",
+    moduleName: "tenantSearchConfig",
     minParametersForSearchForm: 0,
     tableFormJsonPath: "requestParam",
-    filterFormJsonPath: "requestBody.Individual",
-    searchFormJsonPath: "requestBody.Individual",
+    filterFormJsonPath: "requestBody.tenant",
+    searchFormJsonPath: "requestBody.tenant",
   },
   sections: {
     search: {
@@ -36,31 +124,25 @@ return {
         defaultValues: defaultSearchValues, // Set default values for search fields
         fields: [
           {
-            label: "Applicant name ",
+            label: "Tenant name ",
             isMandatory: false,
-            key: "individualName",
+            key: "tenantName",
             type: "text",
             populators: { 
-              name: "individualName", 
+              name: "name", 
               error: "Required", 
               validation: { pattern: /^[A-Za-z]+$/i } 
             },
           },
           {
-            label: "Phone number",
+            label: "Tenant code ",
             isMandatory: false,
-            key: "Phone number",
-            type: "number",
-            disable: false,
-            populators: { name: "mobileNumber", error: "Pucar error message", validation: { min: 0, max: 999999999} },
-          },
-          {
-            label: "Individual Id ",
-            isMandatory: false,
+            key: "tenantCode",
             type: "text",
-            disable: false,
             populators: { 
-              name: "individualId",
+              name: "code", 
+              error: "Required", 
+              validation: { pattern: /^[A-Za-z]+$/i } 
             },
           },
         ],
@@ -73,23 +155,23 @@ return {
       uiConfig: {
         columns: [
           {
-            label: "IndividualID",
-            jsonPath: "individualId",
+            label: "code",
+            jsonPath: "code",
           },
           
           {
-            label: "Name",
-            jsonPath: "name.givenName",
+            label: "name",
+            jsonPath: "name",
             
           },
           {
-            label: "Address",
-            jsonPath: "address.locality.code",
+            label: "email",
+            jsonPath: "email",
           },
         ],
 
         enableColumnSort: true,
-        resultsJsonPath: "Individual"
+        resultsJsonPath: "Tenants"
       },
       show: true,
     },
