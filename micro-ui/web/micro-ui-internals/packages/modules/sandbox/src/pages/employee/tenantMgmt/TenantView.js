@@ -7,9 +7,8 @@ import { useTranslation } from "react-i18next";
 import { tenantSearchConfig } from "../../../configs/tenantSearchConfig";
 
 const defaultSearchValues = {
-  individualName: "",
-  mobileNumber: "",
-  IndividualID: ""
+  tenantName: "",
+  tenantCode: ""
 };
 
 
@@ -20,6 +19,7 @@ const TenantView = () => {
   const indConfigs = tenantSearchConfig();
 
   useEffect(() => {
+    console.log("default values" + defaultSearchValues);
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
   }, []);

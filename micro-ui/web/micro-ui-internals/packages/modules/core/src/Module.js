@@ -13,6 +13,7 @@ import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
+import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -118,7 +119,8 @@ const componentsToRegister = {
   SelectOtp,
   ChangeCity,
   ChangeLanguage,
-  PrivacyComponent
+  PrivacyComponent,
+  OtpComponent
 };
 
 export const initCoreComponents = () => {

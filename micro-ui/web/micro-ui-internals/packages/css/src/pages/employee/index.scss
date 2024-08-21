@@ -111,7 +111,7 @@
   .sidebar {
     position: fixed;
     left: 0;
-    background: #0B4B66;
+    background: #0b4b66;
     height: 100%;
     color: theme(colors.white);
     margin-top: 83px;
@@ -146,10 +146,10 @@
       align-items: center;
       padding: 20px;
       font-size: 14px;
-      
+
       &.level-0 {
-        margin:0 0.3rem 0 0.3rem;
-        &.select-level{
+        margin: 0 0.3rem 0 0.3rem;
+        &.select-level {
           border-top: 1px solid;
           border-bottom: 1px solid;
         }
@@ -186,11 +186,9 @@
       }
 
       &:hover {
-        
-        background-color: #0B4B66;
+        background-color: #0b4b66;
 
         cursor: pointer;
-        
       }
       .search-icon-wrapper {
         border: 2px solid theme(colors.white);
@@ -226,7 +224,7 @@
         fill: theme(colors.white);
       }
       &:hover {
-        background-color: #6A8E9D;
+        background-color: #6a8e9d;
         opacity: 0.8;
         cursor: pointer;
         svg {
@@ -234,11 +232,9 @@
         }
       }
 
-
       &.active {
         border-left: 4px solid theme(colors.primary.main);
         &.level-0 {
-        
         }
         &.level-1 {
           border-left: 8.5px solid theme(colors.primary.main);
@@ -247,8 +243,7 @@
           border-left: 4px solid theme(colors.primary.main);
         }
 
-        &.level-3{
-
+        &.level-3 {
         }
         color: theme(colors.primary.main) !important;
         border-right: none;
@@ -523,55 +518,55 @@
 }
 
 .link {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
 .breadcrumb {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
-.sidebar-link.active{
-.custom-link{
-  text-decoration: none;
-  div{
-    span{
-      color: theme(colors.primary.main) !important;
-      text-decoration: none;
+.sidebar-link.active {
+  .custom-link {
+    text-decoration: none;
+    div {
+      span {
+        color: theme(colors.primary.main) !important;
+        text-decoration: none;
+      }
     }
   }
 }
-}
 .bread-crumb {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
-.sidebar-link{
-  .custom-link{
+.sidebar-link {
+  .custom-link {
     text-decoration: none;
-    div{
-      span{
+    div {
+      span {
         color: theme(colors.white);
         text-decoration: none;
       }
     }
   }
-  }
-  .mandatory-span {
-    margin-left: 0.5rem;
-    color: red !important;
-    font-size: 1rem;
-    font-weight: 700;
-  }
-  
+}
+.mandatory-span {
+  margin-left: 0.5rem;
+  color: red !important;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 /* TODO fix required NABEEL/ANIL for home screen card */
   .customEmployeeCard {
     @apply m-sm !important;

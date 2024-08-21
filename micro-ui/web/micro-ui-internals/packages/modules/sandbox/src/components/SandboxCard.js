@@ -11,12 +11,16 @@ const SandboxCard = () => {
     kpis: [],
     links: [
       {
-        label: t("Tenant  Management"),
+        label: t("SANDBOX_TENANT_CREATE"),
+        link: `/${window?.contextPath}/employee/sandbox/tenant-management/create`,
+      },
+      {
+        label: t("SANDBOX_TENANT_SEARCH"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
       },
       {
         label: t("Application Management"),
-        link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
+        link: `/${window?.contextPath}/employee/sandbox/application-management`,
       }
     ],
   };
