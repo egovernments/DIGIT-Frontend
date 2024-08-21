@@ -1,11 +1,15 @@
+
+import { useTranslation } from "react-i18next";
+
 const defaultSearchValues = {
     value: "",
     field: {}
   }
   export const vehiclesearchconfig = () => 
   {
+    const { t } = useTranslation();
     return {
-      label: "Vehicle Search",
+      label: t("Vehicle Search"),
       type: "search",
       apiDetails: {
         serviceName: "/mdms-v2/v2/_search",
@@ -37,83 +41,41 @@ const defaultSearchValues = {
               alignItems:"center",
               justifyContent:"end",
               gridColumn:"4",
-              showFormInstruction:"hjbwdncckjds"
             },
             headerStyle: null,
             label:"Yuyuy",
             formClassName: "custom-both-clear-search",
-            primaryLabel: "ES_COMMON_SEARCH",
-            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            primaryLabel: t("ES_COMMON_SEARCH"),
+            secondaryLabel:t( "ES_COMMON_CLEAR_SEARCH"),
             minReqFields: 0,
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
-              // {
-              //   label: "Choose Vehicle",
-              //   key: "field",
-              //   type: "textArea",
-              //   isMandatory: false,
-              //   disable: false,
-              //   populators: {
-              //     name: "field",
-              //     optionsKey: "label",
-              //     optionsCustomStyle: { top: "0rem" },  //search field
-              //     options: [
-              //       {
-              //         label: "Select Vehicle Type",
-              //         name: "name",
-              //       },
-                   
-              //     ],
-              //   },
-              // },
               {
-                label: "Choose  Type",
-                key: "field",
-                type: "dropdown",
+                label: t("Vehicle Type "),
                 isMandatory: false,
-                disable: false,
-                populators: {
-                  name: "field",
-                  optionsKey: "label",
-                  optionsCustomStyle: { top: "0rem" },  //search field
-                  options: [
-                    {
-                      label: "Select Vehicle Type",
-                      name: "name",
-                    },
-                   
-                  ],
+                key: "vehicle",
+                type: "text",
+                populators: { 
+                  name: "individualName", 
+                  error: "Required", 
+                  validation: { pattern: /^[A-Za-z]+$/i } 
                 },
               },
               // {
-              //   label: "Field Value",
-              //   type: "text",
-              //   key: "value",
+              //   label: "Phone number",
               //   isMandatory: false,
+              //   key: "Phone number",
+              //   type: "number",
               //   disable: false,
-              //   populators: {
-              //     name: "value",
-              //     validation: { pattern: {}, maxlength: 140 },
-              //   },
+              //   populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999} },
               // },
               // {
-              //   label: "Schema Code",
+              //   label: "Individual Id ",
               //   isMandatory: false,
-              //   key: "schemaCode",
               //   type: "text",
               //   disable: false,
               //   populators: { 
-              //     name: "schemaCode",
-              //   },
-              // },
-              // {
-              //   label: "Id",
-              //   isMandatory: false,
-              //   key: "id",
-              //   type: "text",
-              //   disable: false,
-              //   populators: { 
-              //     name: "id",
+              //     name: "individualId",
               //   },
               // },
             ],
@@ -127,19 +89,19 @@ const defaultSearchValues = {
           uiConfig: {
             columns: [
               {
-                label: "Vehicle Type",
+                label: t("Vehicle Type"),
                 jsonPath: "data.name",
               },
               {
-                label: "Manufacturer",
+                label: t("Manufacturer"),
                 jsonPath: "data.description",
               },
               {
-                label: "Model",
+                label: t("Model"),
                 jsonPath: "data.executingDepartment",
               },
               {
-                label:"Capacity",
+                label:t("Capacity"),
                 jsonPath:"data.wfStatus"
               }
             ],

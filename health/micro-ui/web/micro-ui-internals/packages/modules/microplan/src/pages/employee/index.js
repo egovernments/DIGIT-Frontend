@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
+import VehicleSearch from "./VehicleSearch";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -30,6 +31,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan />} />
+         <PrivateRoute path={`${path}/vehicle-search`} component={() => <VehicleSearch></VehicleSearch>} /> 
       </AppContainer>
     </Switch>
   );
