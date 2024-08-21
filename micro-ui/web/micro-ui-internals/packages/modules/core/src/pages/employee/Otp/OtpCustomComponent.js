@@ -64,7 +64,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
           });
         },
         onSuccess: async (data) => {
-          setShowToast({label:t("OTP_RESNED_SUCCESFULL")})
+          setShowToast({key:"info",label:t("OTP_RESNED_SUCCESFULL")})
            
         },
       });
@@ -81,7 +81,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
         </p>
       )}
       {!isOtpValid && <CardLabelError>{t("CS_INVALID_OTP")}</CardLabelError>}
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+      {showToast && <Toast type={showToast?.key} label={t(showToast?.label)} onClose={closeToast} />}
     </>
   );
 };

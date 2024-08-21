@@ -115,6 +115,62 @@ export const UICustomizations = {
       }
     },
   },
+    tenantSearchConfig: {
+        customValidationCheck: (data) => {
+          //checking both to and from date are present
+        },
+        preProcess: (data) => {
+        //   data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
+        let requestParams={};
+          if(data.name){
+            requestParams.name=data.name;
+          }
+        //   let requestBody = { ...data.body.Individual };
+        //   const pathConfig = {
+        //     name: "name.givenName",
+        //   };
+        //   const dateConfig = {
+        //     createdFrom: "daystart",
+        //     createdTo: "dayend",
+        //   };
+        //   const selectConfig = {
+        //     wardCode: "wardCode[0].code",
+        //     socialCategory: "socialCategory.code",
+        //   };
+        //   const textConfig = ["name", "individualId"];
+        //   let Individual = Object.keys(requestBody)
+        //     .map((key) => {
+        //       if (selectConfig[key]) {
+        //         requestBody[key] = _.get(requestBody, selectConfig[key], null);
+        //       } else if (typeof requestBody[key] == "object") {
+        //         requestBody[key] = requestBody[key]?.code;
+        //       } else if (textConfig?.includes(key)) {
+        //         requestBody[key] = requestBody[key]?.trim();
+        //       }
+        //       return key;
+        //     })
+        //     .filter((key) => requestBody[key])
+        //     .reduce((acc, curr) => {
+        //       if (pathConfig[curr]) {
+        //         _.set(acc, pathConfig[curr], requestBody[curr]);
+        //       } else if (dateConfig[curr] && dateConfig[curr]?.includes("day")) {
+        //         _.set(acc, curr, Digit.Utils.date.convertDateToEpoch(requestBody[curr], dateConfig[curr]));
+        //       } else {
+        //         _.set(acc, curr, requestBody[curr]);
+        //       }
+        //       return acc;
+        //     }, {});
+    
+        //   data.body.Individual = { ...Individual };
+          return data;
+        },
+        additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        },
+        MobileDetailsOnClick: (row, tenantId) => {
+        },
+        additionalValidations: (type, data, keys) => {
+        },
+      }
   moduleMasterConfig: {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();

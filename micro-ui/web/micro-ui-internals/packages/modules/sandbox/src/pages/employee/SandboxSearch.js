@@ -4,12 +4,11 @@ import {
   } from "@egovernments/digit-ui-react-components";
   import React, { useState, useEffect } from "react";
   import { useTranslation } from "react-i18next";
-  import { searchconfig } from "../../configs/pucarSearchConfig";
+  import {tenantSearchConfig } from "../../configs/tenantSearchConfig";
   
   const defaultSearchValues = {
-    individualName: "",
-    mobileNumber: "",
-    IndividualID: ""
+    tenantName: "",
+    tenantCode: ""
   };
 
  
@@ -17,7 +16,7 @@ import {
   const TenantSearch = () => {
     const { t } = useTranslation();
     const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
-    const indConfigs = searchconfig();
+    const indConfigs = tenantSearchConfig();
 
     useEffect(() => {
       // Set default values when component mounts
