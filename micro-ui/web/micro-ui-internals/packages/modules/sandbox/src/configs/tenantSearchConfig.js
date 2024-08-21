@@ -50,7 +50,7 @@ export const tenantSearchConfig = () =>
             populators: { 
               name: "name", 
               error: "Required", 
-              validation: { pattern: /^[A-Za-z]+$/i } 
+              validation: { pattern: /^[A-Za-z0-9]+$/i } 
             },
           },
           {
@@ -61,7 +61,7 @@ export const tenantSearchConfig = () =>
             populators: { 
               name: "code", 
               error: "Required", 
-              validation: { pattern: /^[A-Za-z]+$/i } 
+              validation: { pattern: /^[A-Za-z0-9]+$/i } 
             },
           },
         ],
