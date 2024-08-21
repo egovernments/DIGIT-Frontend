@@ -7,9 +7,19 @@ import SandboxCreate from "./SandboxCreate";
 import SandboxSearch from "./SandboxSearch";
 import ApplicationHome from "./applicationMgmt/ApplicationHome";
 import ModuleMasterTable from "./applicationMgmt/ModuleMasterTable";
+
 const bredCrumbStyle = { maxWidth: "min-content" };
-const ProjectBreadCrumb = ({ location }) => {
+
+const ProjectBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const module = location.href.includes("module=")
+    ? location.href
+        .replace(defaultPath + "/", "")
+        .split("?")?.[1]
+        ?.split("=")?.[1]
+    : null;
+
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -17,11 +27,17 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      path: `/${window?.contextPath}/application-management/home`,
-      content: t(location.pathname.split("/").pop()),
-      show: true,
+      path: pathVar === "application-management/home" ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
+      content: t("APPLICATION_MANAGEMENT_CRUMB"),
+      show: pathVar.includes("application-management") ? true : false,
+    },
+    {
+      path: module ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
+      content: t(`APPLICATON_MODULE_${module}`),
+      show: module ? true : false,
     },
   ];
+
   return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
 };
 
@@ -30,7 +46,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
     <Switch>
       <AppContainer className="ground-container">
         <React.Fragment>
-          <ProjectBreadCrumb location={location} />
+          <ProjectBreadCrumb location={location} defaultPath={path} />
         </React.Fragment>
         <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse />} />
         <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />
