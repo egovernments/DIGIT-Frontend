@@ -1,128 +1,47 @@
-/* const defaultSearchValues = {
-    tenantName: "",
-    tenantCode: ""  
-  };
 export const tenantSearchConfig = () => 
-{
-  return {
-    label: "Tenant Search",
-    type: "search",
-    apiDetails: {
-      serviceName: "/tenant-management/tenant/_search",
-      requestBody: {
-        apiOperation: "SEARCH",
-        Individual: {
-          "tenantId": Digit.ULBService.getCurrentTenantId(),
-        },
+  (
+    {
+  moduleName: "commonSandboxUiConfig",
+  showTab: false,
+  tenantSearchConfig: [
+    {
+      label: `Tenant Search`,
+      type: "search",
+      apiDetails: {
+        serviceName: "/tenant-management/tenant/_search",
+        requestParam: {},
+        requestBody: {},
+        minParametersForSearchForm: 0,
+        minParametersForFilterForm: 0,
+        masterName: "commonUiConfig",
+        moduleName: "tenantSearchConfig",
+        tableFormJsonPath: "requestBody.inbox",
+        filterFormJsonPath: "requestBody.tenant",
+        searchFormJsonPath: "requestBody.tenant",
+        // customHookName:"useCustomMDMS"
       },
-      minParametersForSearchForm: 0,
-      tableFormJsonPath: "requestParam",
-      filterFormJsonPath: "requestBody.Individual",
-      searchFormJsonPath: "requestBody.Individual",
-    },
-    sections: {
-      search: {
-        uiConfig: {
-          formClassName: "custom-both-clear-search",
-          primaryLabel: "ES_COMMON_SEARCH",
-          secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-          minReqFields: 0,
-          defaultValues: defaultSearchValues, // Set default values for search fields
+      sections: {
+        search: {
+          uiConfig: {
+            headerLabel: "ES_COMMON_SEARCH",
+            type: "search",
+            typeMobile: "filter",
+            searchWrapperStyles: {
+              flexDirection: "column-reverse",
+              marginTop: "1.4rem",
+              alignItems: "center",
+              justifyContent: "end",
+              gridColumn: "3",
+            },
+            headerStyle: null,
+            primaryLabel: "Search",
+            secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
+            minReqFields: 0,
+            defaultValues: {
+              name: "",
+              code: "",
+            },
           fields: [
-            {
-              label: "Tenant name ",
-              isMandatory: false,
-              key: "name",
-              type: "tenantName",
-              populators: { 
-                name: "tenantName", 
-                error: "Required", 
-                validation: { pattern: /^[A-Za-z]+$/i } 
-              },
-            },
-            {
-              label: "Tenant code",
-              isMandatory: false,
-              key: "tenantCode",
-              type: "text",
-              disable: false,
-              populators: { 
-                name: "tenantCode", 
-                error: "Required", 
-                validation: { pattern: /^[A-Za-z]+$/i } 
-              },
-            },
-          ],
-        },
-
-        show: true
-      },
-      searchResult: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-        uiConfig: {
-          columns: [
-            {
-              label: "IndividualID",
-              jsonPath: "individualId",
-            },
-            
-            {
-              label: "Name",
-              jsonPath: "name.givenName",
-              
-            },
-            {
-              label: "Address",
-              jsonPath: "address.locality.code",
-            },
-          ],
-
-          enableColumnSort: true,
-          resultsJsonPath: "Individual"
-        },
-        show: true,
-      },
-    },
-  };
-};  */
-
-
-
-
-const defaultSearchValues = {
-  tenantName: "",
-  tenantCode: ""
-};
-export const tenantSearchConfig = (data) => 
-{
-return {
-  label: "Tenant Search",
-  type: "search",
-  apiDetails: {
-    serviceName: "/tenant-management/tenant/_search",
-    requestParam: {
-        "name":tenantName,
-        "code":tenantCode
-    },
-    requestBody: {
-
-    },
-    masterName: "commonUiConfig",
-    moduleName: "tenantSearchConfig",
-    minParametersForSearchForm: 0,
-    tableFormJsonPath: "requestParam",
-    filterFormJsonPath: "requestBody.tenant",
-    searchFormJsonPath: "requestBody.tenant",
-  },
-  sections: {
-    search: {
-      uiConfig: {
-        formClassName: "custom-both-clear-search",
-        primaryLabel: "ES_COMMON_SEARCH",
-        secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
-        minReqFields: 0,
-        defaultValues: defaultSearchValues, // Set default values for search fields
-        fields: [
           {
             label: "Tenant name ",
             isMandatory: false,
@@ -146,11 +65,13 @@ return {
             },
           },
         ],
-      },
-
-      show: true
-    },
-    searchResult: {
+          },
+          label: "",
+          labelMobile: "ES_COMMON_SEARCH",
+          children: {},
+          show: false,
+        },
+            searchResult: {
       tenantId: Digit.ULBService.getCurrentTenantId(),
       uiConfig: {
         columns: [
@@ -175,6 +96,17 @@ return {
       },
       show: true,
     },
-  },
-};
-};
+        links: {
+          show: false,
+        },
+        filter: {
+          show: false,
+        },
+      },
+      additionalSections: {},
+      persistFormData: true,
+      showAsRemovableTagsInMobile: false,
+    },
+  ],
+}
+);
