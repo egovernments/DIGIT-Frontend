@@ -564,15 +564,6 @@ function convertUserRoles(employees: any[], request: any) {
   }
 }
 
-function generateHash(input: string): string {
-  const prime = 31; // Prime number
-  let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    hash = (hash * prime + input.charCodeAt(i)) % 100000; // Limit hash to 5 digits
-  }
-  return hash.toString().padStart(6, '0');
-}
-
 function generateUserPassword() {
   // Function to generate a random lowercase letter
   function getRandomLowercaseLetter() {
@@ -609,15 +600,12 @@ function generateUserPassword() {
 
 
 function enrichUserNameAndPassword(employees: any[]) {
-  const epochTime = Date.now();
   employees.forEach((employee) => {
-    const { user, "!row#number!": rowNumber } = employee;
-    const nameInitials = user.name.split(' ').map((name: any) => name.charAt(0)).join('');
-    const generatedCode = `${nameInitials}${generateHash(`${epochTime}`)}${rowNumber}`;
+    const { user } = employee;
     const generatedPassword = config?.user?.userPasswordAutoGenerate == "true" ? generateUserPassword() : config?.user?.userDefaultPassword
-    user.userName = generatedCode;
+    user.userName = null;
     user.password = generatedPassword;
-    employee.code = generatedCode
+    employee.code = null
   });
 }
 
@@ -793,12 +781,8 @@ async function handleResouceDetailsError(request: any, error: any) {
   if (request?.body?.Activities && Array.isArray(request?.body?.Activities) && request?.body?.Activities.length > 0) {
     logger.info("Waiting for 2 seconds");
     await new Promise(resolve => setTimeout(resolve, 2000));
-    const activities = request?.body?.Activities;
-    for (let i = 0; i < activities.length; i += 50) {
-      const chunk = activities.slice(i, Math.min(i + 50, activities.length));
-      const activityObject: any = { Activities: chunk };
-      await produceModifiedMessages(activityObject, config?.kafka?.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
-    }
+    const activityObject: any = { Activities: request?.body?.Activities };
+    await produceModifiedMessages(activityObject, config?.kafka?.KAFKA_CREATE_RESOURCE_ACTIVITY_TOPIC);
   }
 }
 
