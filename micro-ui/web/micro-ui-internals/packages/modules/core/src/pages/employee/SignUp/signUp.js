@@ -9,7 +9,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
-  const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
 
@@ -26,11 +25,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
-    history.push({
-      pathname: `/${window?.contextPath}/employee/user/otp`,
-      state: { email: data.email },
-    });
-
     await mutation.mutate(
       {
         body: {
@@ -45,17 +39,13 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       },
       {
         onError: (error, variables) => {
-          console.log(error, "eryjhtj");
           setShowToast({ key: "error", label: error?.message ? error?.message : error });
         },
         onSuccess: async (data) => {
-          console.log("abcd", data);
-
           history.push({
             pathname: `/${window?.contextPath}/employee/user/otp`,
-            state: { email: data.email },
+            state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
           });
-          Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
         },
       }
     );

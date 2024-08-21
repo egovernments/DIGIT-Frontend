@@ -30,13 +30,46 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
     onSelect("OtpComponent", params);
   }, [params]);
 
-  const resendOtp = async () => {
-    const data = { mobileNumber: params.mobileNumber };
-    console.log("Resending OTP with data:", data);
-    setTimeLeft(30);
-    // Add actual resend OTP logic here
+  const reqCreate = {
+    url: `/user-otp/v1/_send`,
+    params: {tenantId:props?.props?.code},
+    body: {},
+    config: {
+      enable: false,
+    },
   };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
+  const resendOtp = async () => {
+    setTimeLeft(30);
+    await mutation.mutate(
+      {
+        body: {
+        "otp": {
+        "userName": props?.props?.email,
+        "type": "login",
+        "tenantId": props?.props?.tenant,
+        "userType": "EMPLOYEE"
+        }
+        },
+        config: {
+          enable: true,
+        },
+      },
+      {
+        onError: (error, variables) => {
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`,
+          });
+        },
+        onSuccess: async (data) => {
+          setShowToast({key:"info",label:t("OTP_RESNED_SUCCESFULL")})
+           
+        },
+      });
+
+  };
   return (
     <>
       <OTPInput length={6} onChange={handleOtpChange} value={params?.otp} />
@@ -48,6 +81,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
         </p>
       )}
       {!isOtpValid && <CardLabelError>{t("CS_INVALID_OTP")}</CardLabelError>}
+      {showToast && <Toast type={showToast?.key} label={t(showToast?.label)} onClose={closeToast} />}
     </>
   );
 };
