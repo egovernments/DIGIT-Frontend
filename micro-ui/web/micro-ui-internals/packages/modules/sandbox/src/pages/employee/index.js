@@ -5,7 +5,7 @@ import { Switch } from "react-router-dom";
 import SandboxResponse from "./SandboxResponse";
 import SandboxCreate from "./SandboxCreate";
 import SandboxSearch from "./SandboxSearch";
-import TenantSearch from "./tenantMgmt/TenantView";
+import TenantView from "./tenantMgmt/TenantView";
 import TenantCreate from "./tenantMgmt/TenantCreate";
 const bredCrumbStyle = { maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -36,7 +36,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />
         <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch></SandboxSearch>} />
         <PrivateRoute path={`${path}/tenant-management/create`} component={() => <TenantCreate />} />
-        <PrivateRoute path={`${path}/tenant-management/search`} component={() => <TenantSearch />} />
+        <PrivateRoute path={`${path}/tenant-management/search`} component={() => <TenantView />} />
         <PrivateRoute path={`${path}/application-management/home`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
       </AppContainer>
