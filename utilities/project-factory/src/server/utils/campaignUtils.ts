@@ -615,7 +615,7 @@ async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boo
     request.body.CampaignDetails.status = action == "create" ? campaignStatuses.started : campaignStatuses.drafted;
     const boundaryCode = !(request?.body?.CampaignDetails?.projectId) ? getRootBoundaryCode(request.body.CampaignDetails.boundaries) : (request?.body?.CampaignDetails?.boundaryCode || ExistingCampaignDetails?.boundaryCode)
     request.body.CampaignDetails.boundaryCode = boundaryCode
-    request.body.CampaignDetails.isActive = ExistingCampaignDetails?.isActive
+    request.body.CampaignDetails.isActive = ExistingCampaignDetails?.isActive || null
     request.body.CampaignDetails.parentId = ExistingCampaignDetails?.parentId || null
     request.body.CampaignDetails.startDate = request?.body?.CampaignDetails?.startDate || ExistingCampaignDetails?.startDate || null
     request.body.CampaignDetails.endDate = request?.body?.CampaignDetails?.endDate || ExistingCampaignDetails?.endDate || null
