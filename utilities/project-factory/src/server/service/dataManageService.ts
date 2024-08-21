@@ -11,6 +11,7 @@ import { getBoundaryTabName } from "../utils/boundaryUtils";
 import { getNewExcelWorkbook } from "../utils/excelUtils";
 import { redis, checkRedisConnection } from "../utils/redisUtils"; // Importing checkRedisConnection function
 import config from '../config/index'
+import { enhanceBoundarySheetDataWithParent } from "../utils/generateUtils";
 
 
 
@@ -72,6 +73,7 @@ const getBoundaryDataService = async (
         // Retrieve boundary sheet data
         const boundarySheetData: any = await getBoundarySheetData(request, localizationMap);
         const localizedBoundaryTab = getLocalizedName(getBoundaryTabName(), localizationMap);
+        await enhanceBoundarySheetDataWithParent(request, boundarySheetData, localizedBoundaryTab)
         const boundarySheet = workbook.addWorksheet(localizedBoundaryTab);
         addDataToSheet(boundarySheet, boundarySheetData);
         const boundaryFileDetails: any = await createAndUploadFile(workbook, request);

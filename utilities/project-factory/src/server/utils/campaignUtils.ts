@@ -552,6 +552,9 @@ async function enrichAndPersistCampaignWithError(requestBody: any, error: any) {
 }
 
 async function enrichAndPersistCampaignForCreate(request: any, firstPersist: boolean = false) {
+    if (firstPersist) {
+        callGenerateIfBoundariesDiffer(request);
+    }
     const action = request?.body?.CampaignDetails?.action;
     if (firstPersist) {
         request.body.CampaignDetails.campaignNumber = await getCampaignNumber(request.body, "CMP-[cy:yyyy-MM-dd]-[SEQ_EG_CMP_ID]", "campaign.number", request?.body?.CampaignDetails?.tenantId);
@@ -597,7 +600,9 @@ function enrichInnerCampaignDetails(request: any, updatedInnerCampaignDetails: a
 async function enrichAndPersistCampaignForUpdate(request: any, firstPersist: boolean = false) {
     const action = request?.body?.CampaignDetails?.action;
     const existingCampaignDetails = request?.body?.ExistingCampaignDetails;
-    callGenerateIfBoundariesDiffer(request);
+    if (firstPersist) {
+        callGenerateIfBoundariesDiffer(request);
+    }
     if (existingCampaignDetails) {
         if (areBoundariesSame(existingCampaignDetails?.boundaries, request?.body?.CampaignDetails?.boundaries)) {
             updateTargetColumnsIfDeliveryConditionsDifferForSMC(request);

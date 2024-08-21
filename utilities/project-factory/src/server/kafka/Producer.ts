@@ -101,7 +101,7 @@ async function produceModifiedMessages(modifiedMessages: any[], topic: any) {
             },
         ];
 
-        await sendWithRetries(payloads, 3);
+        await sendWithRetries(payloads, 1);
     } catch (error) {
         logger.error(`KAFKA :: PRODUCER :: Exception caught: ${JSON.stringify(error)}`);
         throwError("COMMON", 400, "KAFKA_ERROR", "Some error occurred in Kafka"); // Re-throw the error after logging it
