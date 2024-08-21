@@ -29,7 +29,6 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
       show: true,
     },
     {
-<<<<<<< HEAD
       path: pathVar === "application-management/home" ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
       content: t("APPLICATION_MANAGEMENT_CRUMB"),
       show: pathVar.includes("application-management") ? true : false,
@@ -38,11 +37,6 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
       path: module ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
       content: t(`APPLICATON_MODULE_${module}`),
       show: module ? true : false,
-=======
-      path: `/${window?.contextPath}/employee`,
-      content: t(location.pathname.split("/").pop()),
-      show: true,
->>>>>>> develop
     },
   ];
 
