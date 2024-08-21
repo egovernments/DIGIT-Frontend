@@ -3,7 +3,6 @@ import { BackLink, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";
-import { OtpConfig } from "./config";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import { useEffect } from "react";
@@ -31,13 +30,37 @@ const Otp = () => {
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
-  const { email ,tenantCode } = location.state || {};
+  const { email ,tenant } = location.state || {};
   
   const config = [
     {
-      body: OtpConfig[0].body
+      body: [
+        {
+          type: "component",
+          component: "OtpComponent",
+          key: "OtpComponent",
+          withoutLabel: true,
+          isMandatory: false,
+          customProps: {
+            email: email,
+            tenant: tenant,
+          },
+          populators: {
+            required: true,
+          },
+        },
+      ],
     },
   ];
+
+  const OtpConfig=[
+    {
+      texts: {
+        header: "CORE_COMMON_OTP_LABEL",
+        submitButtonLabel: "CORE_COMMON_SUBMIT",
+      },
+    }
+  ]
 
   const closeToast = () => {
     setShowToast(null);
@@ -57,7 +80,7 @@ const Otp = () => {
 
     history.push({
       pathname: redirectPath,
-      state: {email:email },
+      state: {tenant:tenant },
     });
   }, [user]);
 
@@ -67,7 +90,7 @@ const Otp = () => {
     const requestData = {
       username: email,
       password: formData?.OtpComponent?.otp,
-      tenantId: tenantCode,
+      tenantId: tenant,
       userType: "EMPLOYEE",
     };
     try {

@@ -22,6 +22,7 @@ module.exports = function (app) {
   [
     "/access/v1/actions/mdms",
     "/tenant-management",
+    "/user-otp",
     "/egov-mdms-service",
     "/mdms-v2",
     "/egov-idgen",
