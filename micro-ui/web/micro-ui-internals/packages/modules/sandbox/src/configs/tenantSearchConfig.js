@@ -18,7 +18,7 @@ export const tenantSearchConfig = () =>
         tableFormJsonPath: "requestBody.inbox",
         filterFormJsonPath: "requestBody.tenant",
         searchFormJsonPath: "requestBody.tenant",
-        // customHookName:"useCustomMDMS"
+
       },
       sections: {
         search: {
@@ -44,7 +44,7 @@ export const tenantSearchConfig = () =>
           fields: [
           {
             label: "Tenant name ",
-            isMandatory: false,
+            isMandatory: true,
             key: "tenantName",
             type: "text",
             populators: { 
@@ -69,9 +69,9 @@ export const tenantSearchConfig = () =>
           label: "",
           labelMobile: "ES_COMMON_SEARCH",
           children: {},
-          show: false,
+          show: true,
         },
-            searchResult: {
+      searchResult: {
       tenantId: Digit.ULBService.getCurrentTenantId(),
       uiConfig: {
         columns: [

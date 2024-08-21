@@ -37,9 +37,8 @@ const TenantView = () => {
 
   return (
     <React.Fragment>
-      <Header >{t(indConfigs?.label)}</Header>
+      <Header styles={{ fontSize: "32px" }}>{t(config?.tenantSearchConfig?.[0]?.label || "N/A")}</Header>
       <div className="inbox-search-wrapper">
-        {/* Pass defaultValues as props to InboxSearchComposer */}
         <InboxSearchComposer
           configs={config?.tenantSearchConfig?.[0]}
           additionalConfig={{
@@ -47,8 +46,8 @@ const TenantView = () => {
               onClickRow,
             },
           }}
-        ></InboxSearchComposer>      
-        </div>
+        ></InboxSearchComposer>
+      </div>
     </React.Fragment>
   );
 };
