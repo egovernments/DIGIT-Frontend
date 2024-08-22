@@ -1,8 +1,7 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Header } from "@egovernments/digit-ui-react-components";
-import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2, Header, Toast } from "@egovernments/digit-ui-react-components";
 import { transformCreateData } from "../../../utils/TenantCreateUtil";
 import { tenantCreateConfig } from "../../../configs/tenantCreateConfig";
 
@@ -13,6 +12,12 @@ const TenantCreate = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
+  const [showToast, setShowToast] = useState(false);
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(false);
+    }, 5000)
+  };
   const reqCreate = {
     url: `/tenant-management/tenant/_create`,
     params: {},
@@ -33,6 +38,24 @@ const TenantCreate = () => {
           enable: true,
         },
       },
+      {
+        onError: (error, variables) => {
+          setShowToast({
+            label: error.toString(),
+            isError: true
+          });
+          setTimeout(() => {
+            setShowToast(false);
+          }, 5000);
+        },
+        onSuccess: async (data) => {
+          setShowToast({ key: "success", label: t("TQM_ADD_TEST_SUCCESS") });
+          setTimeout(() => {
+            closeToast();
+            history.push(`/digit-ui/employee`);
+          }, 3000);
+        },
+      }
     );
   };
   return (
@@ -52,6 +75,8 @@ const TenantCreate = () => {
         fieldStyle={fieldStyle}
         noBreakLine={true}
       />
+
+      {showToast && <Toast error={showToast?.isError} label={showToast?.label} isDleteBtn={"true"} onClose={() => setShowToast(false)} />}
 
     </div>
   );
