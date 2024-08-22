@@ -2,6 +2,8 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation } from "react-router-dom";
+import CreateEmployee from "./createEmployee";
+
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -17,7 +19,8 @@ const EmployeeApp = ({ path, url, userType }) => {
   const HRMSResponse = Digit?.ComponentRegistryService?.getComponent("HRMSResponse");
   const HRMSDetails = Digit?.ComponentRegistryService?.getComponent("HRMSDetails");
   const Inbox = Digit?.ComponentRegistryService?.getComponent("HRInbox");
-  const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
+  //const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
+  
   const EditEmpolyee = Digit?.ComponentRegistryService?.getComponent("HREditEmpolyee");
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
@@ -46,6 +49,7 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="hrms" filterComponent="HRMS_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
             )}
           />
+         
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
           <PrivateRoute path={`${path}/response`} component={(props) => <HRMSResponse {...props} parentRoute={path} />} />
           <PrivateRoute path={`${path}/details/:tenantId/:id`} component={() => <HRMSDetails />} />
@@ -55,5 +59,5 @@ const EmployeeApp = ({ path, url, userType }) => {
     </Switch>
   );
 };
-
+console.log("index hrms")
 export default EmployeeApp;
