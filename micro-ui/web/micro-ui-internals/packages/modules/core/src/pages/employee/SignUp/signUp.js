@@ -43,7 +43,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         },
         onSuccess: async (data) => {
           history.push({
-            pathname: `/${window?.contextPath}/employee/user/otp`,
+            pathname: `/${window?.globalPath}/user/otp`,
             state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
           });
         },

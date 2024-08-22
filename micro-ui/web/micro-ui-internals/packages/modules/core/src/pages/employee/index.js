@@ -75,7 +75,7 @@ const EmployeeApp = ({
               <Route path={`${path}/user/login`}>
                 <EmployeeLogin stateCode={stateCode} />
               </Route>
-              <Route path={`${path}/user/sign-up`}>
+              {/* <Route path={`${path}/user/sign-up`}>
                 <SignUp stateCode={stateCode} />
               </Route>
               <Route path={`${path}/user/otp`}>
@@ -83,7 +83,7 @@ const EmployeeApp = ({
               </Route>
               <Route path={`${path}/user/url`}>
                 <ViewUrl  />
-              </Route>
+              </Route> */}
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
               </Route>

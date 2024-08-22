@@ -50,12 +50,12 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} defaultPath={path} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse></SandboxResponse>} />
+        <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse />} />
         <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />
-        <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch></SandboxSearch>} />
+        <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/tenant-management/create`} component={() => <TenantCreate />} />
         <PrivateRoute path={`${path}/tenant-management/search`} component={() => <TenantView />} />
-        <PrivateRoute path={`${path}/application-management/home`} component={() => <SandboxSearch />} />
+        <PrivateRoute path={`${path}/application-management/home`} component={() => <ApplicationHome />} />
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />
       </AppContainer>

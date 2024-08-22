@@ -17,7 +17,8 @@ const ApplicationHome = () => {
         return data?.["sandbox-ui"]?.ModuleMasterConfig;
       },
       enabled: true,
-    }
+    },
+    true
   );
 
   if (moduleMasterLoading) {

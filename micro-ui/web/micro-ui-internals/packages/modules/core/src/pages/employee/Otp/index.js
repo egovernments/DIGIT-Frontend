@@ -76,7 +76,7 @@ const Otp = () => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
-    let redirectPath = `/${window?.contextPath}/employee/user/url`;
+    let redirectPath = `/${window?.globalPath}/user/url`;
 
     history.push({
       pathname: redirectPath,

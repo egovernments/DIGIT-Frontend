@@ -11,7 +11,7 @@ export const moduleMasterConfig = (module) => ({
         moduleName: module,
       },
       apiDetails: {
-        serviceName: "/egov-mdms-service/v1/_search",
+        serviceName: "/mdms-v2/v1/_search",
         requestParam: {},
         requestBody: {},
         minParametersForSearchForm: 0,
