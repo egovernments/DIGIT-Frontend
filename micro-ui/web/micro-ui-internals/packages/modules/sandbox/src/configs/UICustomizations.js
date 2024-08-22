@@ -121,9 +121,13 @@ export const UICustomizations = {
     },
     preProcess: (data) => {
       //   data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
-      let requestParams = {};
-      if (data.name) {
-        requestParams.name = data.name;
+      const { name, code } = data?.state?.searchForm || {};
+
+      if (name) {
+        data.params.name = name;
+      }
+      if (code) {
+        data.params.code = code;
       }
       //   let requestBody = { ...data.body.Individual };
       //   const pathConfig = {
