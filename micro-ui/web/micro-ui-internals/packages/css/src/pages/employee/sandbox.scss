@@ -1,0 +1,100 @@
+.sandbox-module-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.sandbox-module-card {
+  min-height: 263px !important;
+  width: 263px !important;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  padding: unset !important;
+  margin: unset !important;
+  position: relative;
+}
+
+.sandbox-module-button {
+  position: absolute;
+  width: 100%;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  margin: auto;
+  width: auto;
+}
+
+.sandbox-table-actions {
+  display: flex;
+  gap: 1rem;
+}
+.table.sandbox-application-table {
+  border-collapse: collapse;
+  border-color: transparent;
+  border-width: 0 1.5rem;
+  tbody {
+    tr:hover {
+      background: rgba(#f47738, 0.12);
+    }
+  }
+}
+
+.digit-header-content.sandbox-header {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.sandbox-success-signup {
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background-color: #00703c;
+}
+
+.digit-card-header.cardHeader-sandbox {
+  color: #00703c !important;
+}
+
+.cardText-sandbox {
+  font-size: 1rem;
+  color: #00703c !important;
+  margin-top: -0.625rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.field-sandbox {
+  width: 100%;
+  padding: 0.625rem; /* 10px / 16 */
+  border: 0.0625rem solid #d6d5d4; /* 1px / 16 */
+  border-radius: 0.3125rem; /* 5px / 16 */
+}
+.sandbox-url-footer {
+  align-self: flex-start;
+  margin-bottom: 1.5rem;
+}
+.card-sandbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.5rem; /* 8px / 16 */
+  padding: 1.25rem; /* 20px / 16 */
+  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1); /* 0 2px 10px */
+  max-width: 25rem; /* 400px / 16 */
+  .digit-header-content.label {
+    align-self: flex-start;
+  }
+}
+
+.sandbox-signup-form {
+  .digit-employee-card.signupCardClassName {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

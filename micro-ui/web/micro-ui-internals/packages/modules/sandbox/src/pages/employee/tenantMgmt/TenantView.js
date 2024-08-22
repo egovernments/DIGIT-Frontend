@@ -5,31 +5,48 @@ import {
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { tenantSearchConfig } from "../../../configs/tenantSearchConfig";
+import { useHistory, useLocation } from "react-router-dom";
 
 const defaultSearchValues = {
-  individualName: "",
-  mobileNumber: "",
-  IndividualID: ""
+  tenantName: "",
+  tenantCode: ""
 };
 
 
-
 const TenantView = () => {
+  
   const { t } = useTranslation();
   const [defaultValues, setDefaultValues] = useState(defaultSearchValues); // State to hold default values for search fields
   const indConfigs = tenantSearchConfig();
+
+  const location = useLocation();
+  const history = useHistory();
+  const searchParams = new URLSearchParams(location.search);
+  const name = searchParams.get("name");
+  const code = searchParams.get("code");
+  const config = tenantSearchConfig(name,code);
 
   useEffect(() => {
     // Set default values when component mounts
     setDefaultValues(defaultSearchValues);
   }, []);
 
+  const onClickRow = ({ original: row }) => {
+    const value = row?.code;
+  };
+
   return (
     <React.Fragment>
-      <Header >{t(indConfigs?.label)}</Header>
+      <Header styles={{ fontSize: "32px" }}>{t(config?.tenantSearchConfig?.[0]?.label || "N/A")}</Header>
       <div className="inbox-search-wrapper">
-        {/* Pass defaultValues as props to InboxSearchComposer */}
-        <InboxSearchComposer configs={indConfigs} defaultValues={defaultValues}></InboxSearchComposer>
+        <InboxSearchComposer
+          configs={config?.tenantSearchConfig?.[0]}
+          additionalConfig={{
+            resultsTable: {
+              onClickRow,
+            },
+          }}
+        ></InboxSearchComposer>
       </div>
     </React.Fragment>
   );

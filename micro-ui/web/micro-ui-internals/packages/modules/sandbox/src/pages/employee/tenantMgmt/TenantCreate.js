@@ -1,9 +1,8 @@
-import React from "react";
+import React,{ useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Header } from "@egovernments/digit-ui-react-components";
-import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { transformCreateData } from "../../utils/createUtils";
+import { FormComposerV2, Header, Toast } from "@egovernments/digit-ui-react-components";
+import { transformCreateData } from "../../../utils/TenantCreateUtil";
 import { tenantCreateConfig } from "../../../configs/tenantCreateConfig";
 
 const fieldStyle = { marginRight: 0 };
@@ -13,8 +12,14 @@ const TenantCreate = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
+  const [showToast, setShowToast] = useState(false);
+  const closeToast = () => {
+    setTimeout(() => {
+      setShowToast(false);
+    }, 5000)
+  };
   const reqCreate = {
-    url: `/individual/v1/_create`,
+    url: `/tenant-management/tenant/_create`,
     params: {},
     body: {},
     config: {
@@ -25,21 +30,37 @@ const TenantCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
     await mutation.mutate(
       {
-        url: `/individual/v1/_create`,
-        params: { tenantId },
+        url: `/tenant-management/tenant/_create`,
         body: transformCreateData(data),
         config: {
           enable: true,
         },
       },
+      {
+        onError: (error, variables) => {
+          setShowToast({
+            label: error.toString(),
+            isError: true
+          });
+          setTimeout(() => {
+            setShowToast(false);
+          }, 5000);
+        },
+        onSuccess: async (data) => {
+          setShowToast({ key: "success", label: t("TQM_ADD_TEST_SUCCESS") });
+          setTimeout(() => {
+            closeToast();
+            history.push(`/digit-ui/employee`);
+          }, 3000);
+        },
+      }
     );
   };
   return (
     <div>
-      <Header> {t("CREATE_INDIVIDUAL")}</Header>
+      <Header> {t("CREATE_TENANT")}</Header>
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={tenantCreateConfig.map((config) => {
@@ -49,12 +70,13 @@ const TenantCreate = () => {
         })}
         defaultValues={defaultValue}
         onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData");
         }}
         onSubmit={(data,) => onSubmit(data,)}
         fieldStyle={fieldStyle}
         noBreakLine={true}
       />
+
+      {showToast && <Toast error={showToast?.isError} label={showToast?.label} isDleteBtn={"true"} onClose={() => setShowToast(false)} />}
 
     </div>
   );
