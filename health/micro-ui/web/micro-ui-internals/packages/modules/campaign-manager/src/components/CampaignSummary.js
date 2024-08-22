@@ -5,6 +5,7 @@ import { Button, EditIcon, Header, Loader, ViewComposer } from "@egovernments/di
 import { InfoBannerIcon, Toast } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 function mergeObjects(item) {
   const arr = item;
@@ -134,26 +135,31 @@ const fetchResourceFile = async (tenantId, resourceIdArr) => {
   return res?.ResourceDetails;
 };
 const fetchcd = async (tenantId, projectId) => { 
-    const reqCriteriaResource = {
-      url: `/health-project/v1/_search?limit=1000&offset=0&tenantId=mz`,
-      body: {
-        Projects: [
-          {
-            tenantId: tenantId,  // Ensure tenantId is defined and in scope
-            id: projectId
-          }
-        ]
-      }
-    };
-  try{
-    const res = await Digit.CustomService.getResponse(reqCriteriaResource);
-    return res?.Project?.[0];
-  }
-  catch(e) {
-    console.log("error", e);
-  }
+  const url = getProjectServiceUrl();
+  const reqCriteriaResource = {
+    url: `${url}/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      limit: 10,
+      offset: 0,
+    },
+    body: {
+      Projects: [
+        {
+          tenantId: tenantId,
+          id: projectId
+        }
+      ]
+    }
+  };
+try{
+  const res = await Digit.CustomService.getResponse(reqCriteriaResource);
+  return res?.Project?.[0];
+}
+catch(e) {
+  console.log("error", e);
+}
 };
-
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
   const history = useHistory();

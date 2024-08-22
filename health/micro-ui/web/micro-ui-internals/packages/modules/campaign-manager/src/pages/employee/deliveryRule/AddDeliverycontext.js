@@ -566,16 +566,17 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     },
   });
 
-  const { isLoading: structureConfigLoading, data: structureConfig } = Digit.Hooks.useCustomMDMS(
+  const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
     tenantId,
-    "HCM-ADMIN-CONSOLE",
-    [{ name: "structureType" }],
+    "HCM",
+    [{ name: "HOUSE_STRUCTURE_TYPES" }],
     {
       select: (data) => {
-        return data?.["HCM-ADMIN-CONSOLE"]?.structureType;
+        return data?.["HCM"]?.["HOUSE_STRUCTURE_TYPES"];
       },
     }
   );
+
   const [attributes, setAttributes] = useState([{ key: 1, deliveryRuleIndex, attribute: "", operator: "", value: "" }]);
   const reviseIndexKeys = () => {
     setAttributes((prev) => prev.map((unit, index) => ({ ...unit, key: index + 1 })));
