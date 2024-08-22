@@ -39,7 +39,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       },
       {
         onError: (error, variables) => {
-          setShowToast({ key: "error", label: error?.message ? error?.message : error });
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0]?.code ? `SANDBOX_SIGNUP_${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_SIGNUP_ERROR`,
+          });
         },
         onSuccess: async (data) => {
           history.push({
@@ -102,7 +105,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       >
         <Header />
       </FormComposerV2>
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+      {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
         <img
           alt="Powered by DIGIT"
