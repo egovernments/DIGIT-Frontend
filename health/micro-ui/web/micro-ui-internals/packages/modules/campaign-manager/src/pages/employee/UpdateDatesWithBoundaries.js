@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
 import { Button, InfoCard, PopUp, Toast } from "@egovernments/digit-ui-components";
+import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
@@ -114,8 +115,9 @@ function UpdateDatesWithBoundaries() {
           actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=10&summary=true`
         });
       } else {
+        const url = getProjectServiceUrl();
         const res = await Digit.CustomService.getResponse({
-          url: "/health-project/v1/_update",
+          url: `${url}/v1/_update`,
           body: {
             Projects: [formData?.dateAndCycle],
             isCascadingProjectDateUpdate: true,

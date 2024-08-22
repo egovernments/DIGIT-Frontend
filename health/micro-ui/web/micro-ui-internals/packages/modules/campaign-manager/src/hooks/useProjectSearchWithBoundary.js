@@ -1,7 +1,10 @@
+import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+
 const useProjectSearchWithBoundary = async ({ name, tenantId, boundaries }) => {
   const requests = boundaries.map(({ code }) => {
+    const url = getProjectServiceUrl();
     return Digit.CustomService.getResponse({
-      url: "/health-project/v1/_search",
+      url: `${url}/v1/_search`,
       params: {
         tenantId: tenantId,
         limit: 10,
