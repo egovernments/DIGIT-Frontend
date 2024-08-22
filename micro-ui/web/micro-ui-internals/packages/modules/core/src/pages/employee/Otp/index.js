@@ -31,6 +31,7 @@ const Otp = () => {
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const { email ,tenant } = location.state || {};
+  const loginType = "OTP"
   
   const config = [
     {
@@ -56,7 +57,7 @@ const Otp = () => {
   const OtpConfig=[
     {
       texts: {
-        header: "CORE_COMMON_OTP_LABEL",
+        header: t("CORE_COMMON_OTP_LABEL"),
         submitButtonLabel: "CORE_COMMON_SUBMIT",
       },
     }
@@ -77,11 +78,16 @@ const Otp = () => {
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.globalPath}/user/url`;
+    let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
 
-    history.push({
-      pathname: redirectPath,
-      state: {tenant:tenant },
-    });
+    if (loginType === "OTP") {
+        history.push(redirectPathOtpLogin);
+    } else {
+      history.push({
+        pathname: redirectPath,
+        state: { tenant: tenant },
+      });
+    }
   }, [user]);
 
 

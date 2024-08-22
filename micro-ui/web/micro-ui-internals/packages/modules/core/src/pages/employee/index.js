@@ -72,8 +72,11 @@ const EmployeeApp = ({
             }
           >
             <Switch>
-              <Route path={`${path}/user/login`}>
+              <Route exact path={`${path}/user/login`}>
                 <EmployeeLogin stateCode={stateCode} />
+              </Route>
+              <Route exact path={`${path}/user/login/otp`}>
+                <Otp  />
               </Route>
               {/* <Route path={`${path}/user/sign-up`}>
                 <SignUp stateCode={stateCode} />

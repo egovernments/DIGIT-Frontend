@@ -26,6 +26,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
+  const loginType = "OTP"
 
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
@@ -86,6 +87,50 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     setDisable(false);
   };
 
+  const reqCreate = {
+    url: `/user-otp/v1/_send`,
+    params: {tenantId:Digit.ULBService.getStateId()},
+    body: {},
+    config: {
+      enable: false,
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+
+  const onOtpLogin = async(data) => {
+    const inputEmail = data.email;
+    await mutation.mutate(
+      {
+        body: {
+        "otp": {
+        "userName": data.email,
+        "type": "login",
+        "tenantId": Digit.ULBService.getStateId(),
+        "userType": "EMPLOYEE"
+        }
+        },
+        config: {
+          enable: true,
+        },
+      },
+      {
+        onError: (error, variables) => {
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`,
+          });
+          setTimeout(closeToast, 5000);
+        },
+        onSuccess: async (data) => {
+          history.push({
+            pathname: `/${window?.contextPath}/employee/user/login/otp`,
+            state: { email:inputEmail , tenant: Digit.ULBService.getStateId() },
+          });
+        },
+      });
+
+  }
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -129,7 +174,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         <BackLink />
       </div>
       <FormComposerV2
-        onSubmit={onLogin}
+        onSubmit={loginType === "OTP" ? onOtpLogin : onLogin}
         isDisabled={isDisabled || disable}
         noBoxShadow
         inline
