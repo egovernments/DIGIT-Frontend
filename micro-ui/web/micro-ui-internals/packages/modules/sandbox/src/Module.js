@@ -4,6 +4,7 @@ import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import SandboxCard from "./components/SandboxCard";
 import { overrideHooks, updateCustomConfigs } from "./utils";
+import ModuleCard from "./components/ModuleCard";
 
 export const SandboxModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -25,6 +26,7 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   SandboxModule,
   SandboxCard,
+  SandboxModuleCard: ModuleCard
 };
 
 export const initSandboxComponents = () => {
