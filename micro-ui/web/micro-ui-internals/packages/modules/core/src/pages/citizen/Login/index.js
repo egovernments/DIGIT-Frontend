@@ -62,10 +62,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       errorTimeout && clearTimeout(errorTimeout);
     };
   }, [error]);
-  console.log('Context Path at render:', window?.contextPath);
+  
 
   useEffect(() => {
-    console.log('Context Path a:', window?.contextPath);
+   
     if (!user) {
       return;
     }
@@ -95,10 +95,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     )
   );
 
-  //const getUserType = () => Digit.UserService.getType();
-  const userType =  
-"citizen";
-  //console.log("User Type:", userType);
+  const getUserType = () => Digit.UserService.getType();
+ 
+  
   const handleOtpChange = (otp) => {
     setParmas({ ...params, otp });
   };

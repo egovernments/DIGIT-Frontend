@@ -120,46 +120,7 @@ export const CreateComplaint = ({ parentUrl }) => {
     onSubmit(data);
   };
 
-  //On SUbmit
-  // const onSubmit = async (data) => 
-  //   {
-  //  // if (!canSubmit) return;
-  //   const cityCode = selectedCity.code;
-  //   const city = selectedCity.city.name;
-  //   const district = selectedCity.city.name;
-  //   const region = selectedCity.city.name;
-  //   const localityCode = selectedLocality.code;
-  //   const localityName = selectedLocality.name;
-  //   const landmark = data.landmark;
-  //   const { key } = subType;
-  //   const complaintType = key;
-  //   const mobileNumber = data.mobileNumber;
-  //   const name = data.name;
-    
-  //   const formData = { ...data, cityCode, city, district, region,user, localityCode, localityName, landmark, complaintType, mobileNumber, name };
-  //   await dispatch(createComplaint(formData));
-  //   await client.refetchQueries(["fetchInboxData"]);
-  //   history.push(parentUrl + "/response");
-  //   const user = 
-  //   {
-  //     userName: "9846966111", // or use actual data from your context or state
-  //     name: "jdjjdk", // or use actual data from your context or state
-  //     type: "EMPLOYEE",
-  //     mobileNumber: "9846966111",
-  //     roles: [], // or use actual roles if applicable
-  //     tenantId: "mz", // or use actual tenantId from context or state
-  //     uuid: "c9623295-7921-47ca-9994-aa19f47276ee", // or use actual UUID from context or state
-  //     active: true,
-  //     isDeleted: false,
-  //     rowVersion: 1,
-  //     auditDetails: {
-  //       createdBy: "c9623295-7921-47ca-9994-aa19f47276ee",
-  //       createdTime: Date.now(),
-  //       lastModifiedBy: "c9623295-7921-47ca-9994-aa19f47276ee",
-  //       lastModifiedTime: Date.now()
-  //     }
-  // };
-  //   }
+  
   const onSubmit = async (data) => {
     //if (!canSubmit) return;
     const cityCode = selectedCity.code;
@@ -173,24 +134,6 @@ export const CreateComplaint = ({ parentUrl }) => {
     const complaintType = key;
     const mobileNumber = data.mobileNumber;
     const name = data.name;
-    const user = {
-      userName: "9846966111",
-      name: "jdjjdk",
-      type: "EMPLOYEE",
-      mobileNumber: "9846966111",
-      roles: [],
-      tenantId: "mz",
-      uuid: "c9623295-7921-47ca-9994-aa19f47276ee",
-      active: true,
-      isDeleted: false,
-      rowVersion: 1,
-      auditDetails: {
-        createdBy: "c9623295-7921-47ca-9994-aa19f47276ee",
-        createdTime: Date.now(),
-        lastModifiedBy: "c9623295-7921-47ca-9994-aa19f47276ee",
-        lastModifiedTime: Date.now()
-      }
-    };
     
     const formData = { ...data, cityCode, city, district, region, localityCode, localityName, landmark, complaintType, mobileNumber, name };
     await dispatch(createComplaint(formData));
@@ -317,7 +260,7 @@ export const CreateComplaint = ({ parentUrl }) => {
       heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
       config={config}
       onSubmit={wrapperSubmit}
-      isDisabled={false}
+      isDisabled={!canSubmit && !submitted}
       label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
     />
   );
