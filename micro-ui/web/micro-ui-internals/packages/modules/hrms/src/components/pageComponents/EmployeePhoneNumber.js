@@ -28,8 +28,8 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
       name: "mobileNumber",
       populators: {
         validation: {
-          required: false,
-          pattern:/^[4-9]\d{9,10}$/,
+          required: true,
+          pattern:getPhonePattern,
         },
         componentInFront: (
           <select
