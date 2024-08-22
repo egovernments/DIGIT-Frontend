@@ -573,6 +573,17 @@
   }
 
   .digit-toast-success.animate.digit-error {
-    left: auto;
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 5rem;
+    animation: slideInFromBottom 0.5s ease forwards; /* Apply the animation */
   }  
+
+  @keyframes slideInFromBottom {
+    0% {
+        transform: translateX(-50%) translateY(100%); /* Start below the viewport */
+    }
+    100% {
+        transform: translateX(-50%) translateY(0); /* End at the centered position */
+    }
+}

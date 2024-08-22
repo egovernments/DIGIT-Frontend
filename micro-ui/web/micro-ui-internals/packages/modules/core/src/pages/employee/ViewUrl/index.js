@@ -7,15 +7,14 @@ import Background from "../../../components/Background";
 const ViewUrl = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { email, otp, tenantCode } = location.state || {};
+  const { tenant } = location.state || {};
   const history = useHistory();
 
   const onButtonClick = () => {
     history.push({
-      pathname: `/${window?.contextPath}/employee`,
+      pathname: `/${window?.contextPath}/${tenant}/employee`,
     });
   };
-
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
@@ -33,7 +32,7 @@ const ViewUrl = () => {
           label={t("SANDBOX_URL")}
           type="text"
           nonEditable={false}
-          value={email}
+          value={`${window.location.host}/${window?.contextPath}/${tenant}`}
           placeholder={t("SANDBOX_URL_PLACEHOLDER")}
           populators={{}}
         />

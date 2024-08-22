@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-// import { loginConfig as defaultLoginConfig } from "./config";
 import { SignUpConfig as defaultSignUpConfig  } from "./config";
-// import LoginComponent from "./login";
 import Login from "./signUp";
 
 const SignUp = ({stateCode}) => {
@@ -20,24 +18,24 @@ const SignUp = ({stateCode}) => {
     modulePrefix
   });
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["SignUpConfig"], {
     select: (data) => {
       return {
-        config: data?.commonUiConfig?.LoginConfig
+        config: data?.commonUiConfig?.SignUpConfig
       };
     },
     retry: false,
   });
 
-  //let SignUpConfig = mdmsData?.config ? mdmsData?.config : defaultSignUpConfig;
-//   useEffect(() => {
-//     if(isLoading == false && mdmsData?.config)
-//     {  
-//       setSignUpConfig(mdmsData?.config)
-//     }else{
-//       setSignUpConfig(defaultSignUpConfig)
-//     }
-//   },[mdmsData, isLoading])
+  // let SignUpConfig = mdmsData?.config ? mdmsData?.config : defaultSignUpConfig;
+  useEffect(() => {
+    if(isLoading == false && mdmsData?.config)
+    {  
+      setSignUpConfig(mdmsData?.config)
+    }else{
+      setSignUpConfig(defaultSignUpConfig)
+    }
+  },[mdmsData, isLoading])
 
 
   const SignUpParams = useMemo(() =>
