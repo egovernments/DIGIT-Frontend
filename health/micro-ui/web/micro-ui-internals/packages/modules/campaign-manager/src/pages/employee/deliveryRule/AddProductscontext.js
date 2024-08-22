@@ -18,7 +18,7 @@ const DustbinIcon = () => (
 function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedProducts }) {
   const { t } = useTranslation();
   const oldSessionData = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  const { campaignData, dispatchCampaignData } = useContext(CycleContext);
+  const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const tenantId = Digit.ULBService.getStateId();
   const updateSession = () => {
     const newData = {
@@ -38,10 +38,9 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
       value: null,
     },
   ]);
-  const data = Digit.Hooks.campaign.useProductList(tenantId);
+  const data = Digit.Hooks.campaign.useProductList(tenantId, filteredDeliveryConfig?.projectType);
   useEffect(() => {
     const updatedProducts = selectedProducts.map((selectedProduct, index) => {
-     
       const id = selectedProduct?.value;
       return {
         key: index + 1,
@@ -57,7 +56,6 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
 
     setProducts(updatedProducts);
   }, [selectedProducts]);
-
 
   const filteredData = data?.filter((item) => !selectedDelivery?.products?.some((entry) => entry?.value === item?.id));
   const temp = filteredData?.filter((item) => !products?.some((entry) => entry?.value?.id === item?.id));
@@ -253,11 +251,12 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
                 optionKey="displayName"
               />
             </LabelFieldPair>
-
-            <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
-              <TextInput type="numeric" defaultValue={i?.count} value={i?.count} onChange={(d) => incrementC(i, d)} />
-            </LabelFieldPair>
+            {filteredDeliveryConfig?.projectType === "MR-DN" && (
+              <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
+                <TextInput type="numeric" defaultValue={i?.count} value={i?.count} onChange={(d) => incrementC(i, d)} />
+              </LabelFieldPair>
+            )}
           </div>
         </div>
       ))}
@@ -287,6 +286,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
               state: {
                 campaignId: id,
                 urlParams: window?.location?.search,
+                projectType: filteredDeliveryConfig?.projectType,
               },
             }}
           >

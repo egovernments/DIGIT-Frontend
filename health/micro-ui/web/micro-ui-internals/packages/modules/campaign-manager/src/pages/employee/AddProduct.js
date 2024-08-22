@@ -92,6 +92,14 @@ function AddProduct() {
               productId: i?.id,
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
+              additionalFields: {
+                fields: [
+                    {
+                        value: state?.projectType,
+                        key: "projectType"
+                    }
+                ]
+            }
             };
           }
           return;

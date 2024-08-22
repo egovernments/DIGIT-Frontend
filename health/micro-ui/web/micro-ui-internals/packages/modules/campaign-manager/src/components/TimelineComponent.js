@@ -248,7 +248,7 @@ const TimelineComponent = ({campaignId, resourceId}) => {
   return (
     <React.Fragment>
       <div className="timeline-user">
-      {inProgressTimelines?.length > 0 || upcomingTimelines?.length > 0 ? (
+        {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
           <TimelineMolecule>
             {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
 
@@ -271,7 +271,7 @@ const TimelineComponent = ({campaignId, resourceId}) => {
               />
             ))}
 
-{inProgressTimelines?.map((timeline, index) => (
+            {inProgressTimelines?.map((timeline, index) => (
               <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
             ))}
 
@@ -280,16 +280,14 @@ const TimelineComponent = ({campaignId, resourceId}) => {
             ))}
           </TimelineMolecule>
         ) : (
-          <TimelineMolecule initialVisibleCount={1} hideFutureLabel={true}>
+          <TimelineMolecule
+            initialVisibleCount={1}
+            hideFutureLabel={true}
+            viewLessLabelForPast={t("HCM_SHOW_LESS")}
+            viewMoreLabelForPast={t("HCM_SHOW_MORE")}
+          >
             {completedTimelines?.map((timeline, index) => (
-              <Timeline 
-              key={index} 
-              label={timeline?.label} 
-              subElements={timeline?.subElements} 
-              variant="completed" 
-              viewLessLabelForPast={t("HCM_SHOW_LESS")}
-              viewMoreLabelForPast={t("HCM_SHOW_MORE")}
-              showConnector={true} />
+              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
             ))}
           </TimelineMolecule>
         )}
