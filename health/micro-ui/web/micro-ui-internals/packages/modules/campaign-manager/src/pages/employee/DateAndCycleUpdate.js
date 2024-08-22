@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { LabelFieldPair, Header } from "@egovernments/digit-ui-react-components";
 import { Card, FieldV1 } from "@egovernments/digit-ui-components";
+import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 
 const initialState = (projectData) => {
   return projectData;
@@ -80,9 +81,9 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { state } = useLocation();
   const historyState = window.history.state;
-
+  const url = getProjectServiceUrl();
   const reqCriteria = {
-    url: "/health-project/v1/_search",
+    url: `${url}/v1/_search`,
     params: {
       tenantId: tenantId,
       limit: 10,
