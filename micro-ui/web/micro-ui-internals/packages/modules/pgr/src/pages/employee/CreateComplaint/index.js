@@ -7,7 +7,7 @@ import { useQueryClient } from "react-query";
 
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
-
+import { PGRConstants } from "../../../constants/PGRConstants";
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
-  const [canSubmit, setSubmitValve] = useState(false);
+  //const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
@@ -43,14 +43,26 @@ export const CreateComplaint = ({ parentUrl }) => {
   const history = useHistory();
   const serviceDefinitions = Digit.GetServiceDefinitions;
   const client = useQueryClient();
+  const [selectedCountryCode, setSelectedCountryCode] = useState(PGRConstants.INDIA_COUNTRY_CODE);
+  const countryOptions = Object.values(PGRConstants).map(({ countryCode }, index) => (
+    <option key={index} value={countryCode}>
+      {countryCode}
+    </option>
+  ));
 
-  useEffect(() => {
-    if (complaintType?.key && subType?.key && selectedCity?.code && selectedLocality?.code) {
-      setSubmitValve(true);
-    } else {
-      setSubmitValve(false);
+  const  getPhonePattern=(selectedCountryCode) =>{
+    return Object.values(PGRConstants).filter(e=>e.countryCode==selectedCountryCode)?.[0]?.regex;
+        
     }
-  }, [complaintType, subType, selectedCity, selectedLocality]);
+
+
+  // useEffect(() => {
+  //   if (complaintType?.key && subType?.key && selectedCity?.code && selectedLocality?.code) {
+  //     setSubmitValve(true);
+  //   } else {
+  //     setSubmitValve(false);
+  //   }
+  // }, [complaintType, subType, selectedCity, selectedLocality]);
 
   useEffect(() => {
     setLocalities(fetchedLocalities);
@@ -102,14 +114,54 @@ export const CreateComplaint = ({ parentUrl }) => {
   }
 
   const wrapperSubmit = (data) => {
-    if (!canSubmit) return;
+    // if (!canSubmit) return;
     setSubmitted(true);
-    !submitted && onSubmit(data);
+    //!submitted && 
+    onSubmit(data);
   };
 
   //On SUbmit
+  // const onSubmit = async (data) => 
+  //   {
+  //  // if (!canSubmit) return;
+  //   const cityCode = selectedCity.code;
+  //   const city = selectedCity.city.name;
+  //   const district = selectedCity.city.name;
+  //   const region = selectedCity.city.name;
+  //   const localityCode = selectedLocality.code;
+  //   const localityName = selectedLocality.name;
+  //   const landmark = data.landmark;
+  //   const { key } = subType;
+  //   const complaintType = key;
+  //   const mobileNumber = data.mobileNumber;
+  //   const name = data.name;
+    
+  //   const formData = { ...data, cityCode, city, district, region,user, localityCode, localityName, landmark, complaintType, mobileNumber, name };
+  //   await dispatch(createComplaint(formData));
+  //   await client.refetchQueries(["fetchInboxData"]);
+  //   history.push(parentUrl + "/response");
+  //   const user = 
+  //   {
+  //     userName: "9846966111", // or use actual data from your context or state
+  //     name: "jdjjdk", // or use actual data from your context or state
+  //     type: "EMPLOYEE",
+  //     mobileNumber: "9846966111",
+  //     roles: [], // or use actual roles if applicable
+  //     tenantId: "mz", // or use actual tenantId from context or state
+  //     uuid: "c9623295-7921-47ca-9994-aa19f47276ee", // or use actual UUID from context or state
+  //     active: true,
+  //     isDeleted: false,
+  //     rowVersion: 1,
+  //     auditDetails: {
+  //       createdBy: "c9623295-7921-47ca-9994-aa19f47276ee",
+  //       createdTime: Date.now(),
+  //       lastModifiedBy: "c9623295-7921-47ca-9994-aa19f47276ee",
+  //       lastModifiedTime: Date.now()
+  //     }
+  // };
+  //   }
   const onSubmit = async (data) => {
-    if (!canSubmit) return;
+    //if (!canSubmit) return;
     const cityCode = selectedCity.code;
     const city = selectedCity.city.name;
     const district = selectedCity.city.name;
@@ -121,12 +173,31 @@ export const CreateComplaint = ({ parentUrl }) => {
     const complaintType = key;
     const mobileNumber = data.mobileNumber;
     const name = data.name;
+    const user = {
+      userName: "9846966111",
+      name: "jdjjdk",
+      type: "EMPLOYEE",
+      mobileNumber: "9846966111",
+      roles: [],
+      tenantId: "mz",
+      uuid: "c9623295-7921-47ca-9994-aa19f47276ee",
+      active: true,
+      isDeleted: false,
+      rowVersion: 1,
+      auditDetails: {
+        createdBy: "c9623295-7921-47ca-9994-aa19f47276ee",
+        createdTime: Date.now(),
+        lastModifiedBy: "c9623295-7921-47ca-9994-aa19f47276ee",
+        lastModifiedTime: Date.now()
+      }
+    };
+    
     const formData = { ...data, cityCode, city, district, region, localityCode, localityName, landmark, complaintType, mobileNumber, name };
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/response");
   };
-
+  
   const handlePincode = (event) => {
     const { value } = event.target;
     setPincode(value);
@@ -135,7 +206,7 @@ export const CreateComplaint = ({ parentUrl }) => {
     }
   };
 
-  const isPincodeValid = () => !pincodeNotValid;
+  //const isPincodeValid = () => pincodeNotValid;
 
   const config = [
     {
@@ -149,11 +220,18 @@ export const CreateComplaint = ({ parentUrl }) => {
             name: "mobileNumber",
             validation: {
               required: true,
-              pattern: /^[6-9]\d{9}$/,
+              pattern: getPhonePattern(selectedCountryCode),
+             
             },
-            componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
+            componentInFront: <div className="employee-card-input employee-card-input--front">
+              <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
+              {countryOptions}           
+          </select>
+          </div>,
             error: t("CORE_COMMON_MOBILE_ERROR"),
+            
           },
+          
         },
         {
           label: t("ES_CREATECOMPLAINT_COMPLAINT_NAME"),
@@ -196,28 +274,12 @@ export const CreateComplaint = ({ parentUrl }) => {
           type: "text",
           populators: {
             name: "pincode",
-            validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
+           //validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
             error: t("CORE_COMMON_PINCODE_INVALID"),
             onChange: handlePincode,
           },
         },
-        {
-          label: t("CS_COMPLAINT_DETAILS_CITY"),
-          isMandatory: true,
-          type: "dropdown",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCity}
-              freeze={true}
-              option={getCities()}
-              id="city"
-              select={selectCity}
-              optionKey="i18nKey"
-              t={t}
-            />
-          ),
-        },
+       
         {
           label: t("CS_CREATECOMPLAINT_MOHALLA"),
           type: "dropdown",
@@ -227,6 +289,7 @@ export const CreateComplaint = ({ parentUrl }) => {
             <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
           ),
         },
+        
         {
           label: t("CS_COMPLAINT_DETAILS_LANDMARK"),
           type: "textarea",
@@ -254,7 +317,7 @@ export const CreateComplaint = ({ parentUrl }) => {
       heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
       config={config}
       onSubmit={wrapperSubmit}
-      isDisabled={!canSubmit && !submitted}
+      isDisabled={false}
       label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
     />
   );

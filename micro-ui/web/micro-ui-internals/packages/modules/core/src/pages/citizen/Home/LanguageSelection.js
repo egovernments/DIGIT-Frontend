@@ -13,7 +13,7 @@ const LanguageSelection = () => {
   const texts = useMemo(
     () => ({
       header: t("CS_COMMON_CHOOSE_LANGUAGE"),
-      submitBarLabel: t("CORE_COMMON_CONTINUE"),
+       submitBarLabel: t("CORE_COMMON_CONTINUE"),
     }),
     [t]
   );
@@ -41,6 +41,13 @@ const LanguageSelection = () => {
         <CardHeader>{t("CS_COMMON_CHOOSE_LANGUAGE")}</CardHeader>
         <RadioButtons {...RadioButtonProps} />
       </PageBasedInput>
+      <style>
+        {`
+          .digit-submit-bar-container {
+            display: none;
+          }
+        `}
+      </style>
     </div>
   );
 };

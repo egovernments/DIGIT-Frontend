@@ -47,6 +47,13 @@ const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
 };
 
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  setUploadedFile(file);
+};
+
+
+
 const CloseBtn = (props) => {
   return (
     <div className="icon-bg-secondary" onClick={props.onClick}>
@@ -195,15 +202,25 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
         <TextArea name="comment" onChange={addComment} value={comments} />
         <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
         <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>
-        <UploadFile
+        {/* <UploadFile
           id={"pgr-doc"}
           accept=".jpg"
           onUpload={selectfile}
           onDelete={() => {
             setUploadedFile(null);
           }}
-          message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
-        />
+         // message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
+        /> */}
+
+
+<UploadFile
+  id="pgr-doc"
+  accept=".jpg"
+  onUpload={handleFileUpload}
+  onDelete={() => setUploadedFile(null)}
+  uploadedFiles={uploadedFile ? [[uploadedFile.name, uploadedFile]] : []}
+  message={uploadedFile ? `1 ${t('CS_ACTION_FILEUPLOADED')}` : ''}
+/>
       </Card>
     </Modal>
   );
@@ -212,6 +229,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 export const ComplaintDetails = (props) => {
   let { id } = useParams();
   const { t } = useTranslation();
+  const [uploadedFile, setUploadedFile] = useState(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
   // const [actionCalled, setActionCalled] = useState(false);
