@@ -2,15 +2,18 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
+import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
 
 const EmployeeLogin = ({stateCode}) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const [loginConfig, setloginConfig] = useState(defaultLoginConfig);
+  const [loginOtpConfig, setloginOtpConfig] = useState(defaultLoginOtpConfig);
   const moduleCode = ["privacy-policy"];
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
+  const loginType = "OTP"
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
@@ -51,10 +54,27 @@ const EmployeeLogin = ({stateCode}) => {
     )
   );
 
+  const loginOtpParams = useMemo(() =>
+    loginOtpConfig.map(
+      (step) => {
+        const texts = {};
+        for (const key in step.texts) {
+          texts[key] = t(step.texts[key]);
+        }
+        return { ...step, texts };
+      },
+      [loginOtpConfig]
+    )
+  );
+
   return (
     <Switch>
       <Route path={`${path}`} exact>
+      {loginType === "OTP" ? (
+        <LoginComponent config={loginOtpParams[0]} t={t} />
+      ) : (
         <LoginComponent config={loginParams[0]} t={t} />
+      )}
       </Route>
     </Switch>
   );
