@@ -5,7 +5,7 @@ import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
 
-const EmployeeLogin = ({stateCode}) => {
+const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const [loginConfig, setloginConfig] = useState(defaultLoginConfig);
@@ -13,18 +13,18 @@ const EmployeeLogin = ({stateCode}) => {
   const moduleCode = ["privacy-policy"];
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
-  const loginType = "OTP"
+  const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    modulePrefix
+    modulePrefix,
   });
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
     select: (data) => {
       return {
-        config: data?.commonUiConfig?.LoginConfig
+        config: data?.commonUiConfig?.LoginConfig,
       };
     },
     retry: false,
@@ -32,14 +32,12 @@ const EmployeeLogin = ({stateCode}) => {
 
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
-    if(isLoading == false && mdmsData?.config)
-    {  
-      setloginConfig(mdmsData?.config)
-    }else{
-      setloginConfig(defaultLoginConfig)
+    if (isLoading == false && mdmsData?.config) {
+      setloginConfig(mdmsData?.config);
+    } else {
+      setloginConfig(defaultLoginConfig);
     }
-  },[mdmsData, isLoading])
-
+  }, [mdmsData, isLoading]);
 
   const loginParams = useMemo(() =>
     loginConfig.map(
@@ -70,11 +68,7 @@ const EmployeeLogin = ({stateCode}) => {
   return (
     <Switch>
       <Route path={`${path}`} exact>
-      {loginType === "OTP" ? (
-        <LoginComponent config={loginOtpParams[0]} t={t} />
-      ) : (
-        <LoginComponent config={loginParams[0]} t={t} />
-      )}
+        {loginType ? <LoginComponent config={loginOtpParams[0]} t={t} /> : <LoginComponent config={loginParams[0]} t={t} />}
       </Route>
     </Switch>
   );

@@ -30,9 +30,9 @@ const Otp = () => {
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
-  const { email ,tenant } = location.state || {};
-  const loginType = "OTP"
-  
+  const { email, tenant } = location.state || {};
+  const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+
   const config = [
     {
       body: [
@@ -54,19 +54,18 @@ const Otp = () => {
     },
   ];
 
-  const OtpConfig=[
+  const OtpConfig = [
     {
       texts: {
         header: t("CORE_COMMON_OTP_LABEL"),
         submitButtonLabel: "CORE_COMMON_SUBMIT",
       },
-    }
-  ]
+    },
+  ];
 
   const closeToast = () => {
     setShowToast(null);
   };
-
 
   useEffect(() => {
     if (!user) {
@@ -80,8 +79,8 @@ const Otp = () => {
     let redirectPath = `/${window?.globalPath}/user/url`;
     let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
 
-    if (loginType === "OTP") {
-        history.push(redirectPathOtpLogin);
+    if (loginType) {
+      history.push(redirectPathOtpLogin);
     } else {
       history.push({
         pathname: redirectPath,
@@ -90,9 +89,7 @@ const Otp = () => {
     }
   }, [user]);
 
-
   const onSubmit = async (formData) => {
-    
     const requestData = {
       username: email,
       password: formData?.OtpComponent?.otp,
@@ -124,7 +121,7 @@ const Otp = () => {
         inline
         submitInForm
         onFormValueChange={(setValue, formValue) => {
-          const otpValue = formValue["OtpComponent"]; 
+          const otpValue = formValue["OtpComponent"];
           if (otpValue?.otp?.length === 6) {
             setIsOtpValid(true);
           } else {
@@ -152,11 +149,8 @@ const Otp = () => {
           }}
         />{" "}
       </div>
-    </Background >
+    </Background>
   );
 };
 
 export default Otp;
-
-
-
