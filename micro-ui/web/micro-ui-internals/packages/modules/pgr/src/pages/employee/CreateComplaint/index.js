@@ -8,6 +8,7 @@ import { useQueryClient } from "react-query";
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 import { PGRConstants } from "../../../constants/PGRConstants";
+
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
-  //const [canSubmit, setSubmitValve] = useState(false);
+ // const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
@@ -114,15 +115,15 @@ export const CreateComplaint = ({ parentUrl }) => {
   }
 
   const wrapperSubmit = (data) => {
-    // if (!canSubmit) return;
+    //if (!canSubmit) return;
     setSubmitted(true);
-    //!submitted && 
+   // !submitted && 
     onSubmit(data);
   };
 
   
   const onSubmit = async (data) => {
-    //if (!canSubmit) return;
+   // if (!canSubmit) return;
     const cityCode = selectedCity.code;
     const city = selectedCity.city.name;
     const district = selectedCity.city.name;
@@ -260,7 +261,8 @@ export const CreateComplaint = ({ parentUrl }) => {
       heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
       config={config}
       onSubmit={wrapperSubmit}
-      isDisabled={!canSubmit && !submitted}
+     // isDisabled={!canSubmit && !submitted}
+      isDisabled={false}
       label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
     />
   );
