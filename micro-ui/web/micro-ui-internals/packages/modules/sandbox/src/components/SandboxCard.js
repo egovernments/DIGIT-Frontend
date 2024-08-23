@@ -5,23 +5,29 @@ import { useTranslation } from "react-i18next";
 const SandboxCard = () => {
   const { t } = useTranslation();
 
+  const ROLES = {
+    SUPERUSER: ["SUPERUSER"],
+  };
   const propsForModuleCard = {
     Icon: <PropertyHouse />,
-    moduleName: t("Sandbox"),
+    moduleName: t("SANDBOX_CARD_HEADER"),
     kpis: [],
     links: [
       {
-        label: t("SANDBOX_TENANT_CREATE"),
+        label: t("SANDBOX_TENANT_CREATE_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/create`,
+        roles: ROLES.SUPERUSER,
       },
       {
-        label: t("SANDBOX_TENANT_SEARCH"),
+        label: t("SANDBOX_TENANT_SEARCH_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
+        roles: ROLES.SUPERUSER,
       },
       {
-        label: t("Application Management"),
+        label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
-      }
+        roles: ROLES.SUPERUSER,
+      },
     ],
   };
 

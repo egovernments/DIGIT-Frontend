@@ -103,7 +103,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         cardClassName="signupCardClassName sandbox-onboarding-wrapper"
         buttonClassName="buttonClassName"
       >
-        <Header />
+        <Header showTenant={false} />
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>

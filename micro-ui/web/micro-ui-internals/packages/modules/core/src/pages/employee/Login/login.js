@@ -26,7 +26,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-  const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
 
   const history = useHistory();
   // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
@@ -175,7 +174,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         <BackLink />
       </div>
       <FormComposerV2
-        onSubmit={loginType ? onOtpLogin : onLogin}
+        onSubmit={loginOTPBased ? onOtpLogin : onLogin}
         isDisabled={isDisabled || disable}
         noBoxShadow
         inline

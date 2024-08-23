@@ -78,15 +78,6 @@ const EmployeeApp = ({
               <Route exact path={`${path}/user/login/otp`}>
                 <Otp isLogin={true} />
               </Route>
-              {/* <Route path={`${path}/user/sign-up`}>
-                <SignUp stateCode={stateCode} />
-              </Route>
-              <Route path={`${path}/user/otp`}>
-                <Otp  />
-              </Route>
-              <Route path={`${path}/user/url`}>
-                <ViewUrl  />
-              </Route> */}
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
               </Route>
