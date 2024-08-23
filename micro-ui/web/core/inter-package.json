@@ -43,7 +43,7 @@
     "build:core": "cd packages/modules/core && yarn build",
     "build:hrms": "cd packages/modules/hrms && yarn build",
     "buildD:common": "cd packages/modules/common && yarn build",
-    "buildD:utilities": "cd packages/modules/utilities && yarn build",
+    "build:utilities": "cd packages/modules/utilities && yarn build",
     "buildD:engagement": "cd packages/modules/engagement && yarn build",
     "buildD:workbench": "cd packages/modules/workbench && yarn build",
     "build:pgr": "cd packages/modules/pgr && yarn build",
