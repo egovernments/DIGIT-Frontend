@@ -27,6 +27,7 @@ const PGRCard = () => {
       link: `/${window?.contextPath}/employee/pgr/complaint/create`,
       role: "CSR"
     }
+    
   ]
 
   propsForCSR = propsForCSR.filter(link => link.role && Digit.Utils.didEmployeeHasRole(link.role) );
@@ -49,7 +50,12 @@ const PGRCard = () => {
         label: t("ES_PGR_INBOX"),
         link: `/${window?.contextPath}/employee/pgr/inbox`
     },
+    {
+      label: t("DSS"),
+      link: `/${window?.contextPath}/employee/dss/dashboard/pgr`,
+    },
     ...propsForCSR
+    
     ]
 }
 
