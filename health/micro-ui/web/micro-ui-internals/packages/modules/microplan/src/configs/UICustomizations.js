@@ -133,6 +133,7 @@ export const UICustomizations = {
 
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      
       if (key === "Vehicle Type") {
         return (
           <div>{`₹ ${value}`}</div>
