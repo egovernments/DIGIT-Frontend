@@ -3,11 +3,22 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DesktopInbox from "../components/inbox/DesktopInbox";
 import MobileInbox from "../components/inbox/MobileInbox";
+import { HRMSConstants } from "./HRMSConstants";
 
 const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filterComponent, isInbox }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { isLoading: isLoading, Errors, data: res } = Digit.Hooks.hrms.useHRMSCount(tenantId);
+  const [selectedCountryCode, setSelectedCountryCode] = useState(HRMSConstants.INDIA.countryCode);
 
+  const countryOptions = Object.values(HRMSConstants).map(({ countryCode }, index) => (
+    <option key={index} value={countryCode}>
+      {countryCode}
+    </option>
+  ));
+
+  const getPhonePattern = (selectedCountryCode) => {
+    return Object.values(HRMSConstants).find(e => e.countryCode === selectedCountryCode)?.regex;
+  };
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
@@ -74,10 +85,19 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
       {
         label: t("HR_MOB_NO_LABEL"),
         name: "phone",
-        maxlength: 10,
-        pattern: "[6-9][0-9]{9}",
+       
+        pattern: getPhonePattern,
         title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-        componentInFront: "+91",
+        componentInFront: (
+          <select
+            value={selectedCountryCode}
+            onChange={(e) => setSelectedCountryCode(e.target.value)}
+            
+          >
+            {countryOptions}
+          </select>
+        ),
+        error: t("CORE_COMMON_MOBILE_ERROR"),
       },
       {
         label: t("HR_EMPLOYEE_ID_LABEL"),
