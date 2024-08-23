@@ -41,7 +41,7 @@ export const SignUpConfig = [
         withoutLabel: true,
         disable: false,
         customProps: {
-          module: "HCM",
+          module: "SandboxSignUp",
         },
         populators: {
           name: "check",

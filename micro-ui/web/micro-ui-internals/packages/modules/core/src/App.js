@@ -93,7 +93,9 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
   return (
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
-      style={isUserProfile ? { padding: 0, paddingTop: "80px", marginLeft: "64px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }}
+      style={
+        isUserProfile ? { padding: 0, paddingTop: "80px", marginLeft: "64px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
+      }
     >
       <Switch>
         <Route exact path={`/${window?.globalPath}/user/sign-up`}>
@@ -105,16 +107,18 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
         <Route exact path={`/${window?.globalPath}/user/url`}>
           <ViewUrl />
         </Route>
-        <Route path={`/${window?.contextPath}`}>
-          <DigitApp
-            stateCode={stateCode}
-            modules={modules}
-            appTenants={appTenants}
-            logoUrl={logoUrl}
-            initData={initData}
-            defaultLanding={defaultLanding}
-          />
-        </Route>
+        {window?.globalPath !== window?.contextPath && (
+          <Route path={`/${window?.contextPath}`}>
+            <DigitApp
+              stateCode={stateCode}
+              modules={modules}
+              appTenants={appTenants}
+              logoUrl={logoUrl}
+              initData={initData}
+              defaultLanding={defaultLanding}
+            />
+          </Route>
+        )}
         <Route>
           <Redirect to={`/${globalPath}/user/sign-up`} />
         </Route>

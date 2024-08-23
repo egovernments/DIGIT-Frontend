@@ -7,21 +7,21 @@ const SandboxCard = () => {
 
   const propsForModuleCard = {
     Icon: <PropertyHouse />,
-    moduleName: t("Sandbox"),
+    moduleName: t("SANDBOX_CARD_HEADER"),
     kpis: [],
     links: [
       {
-        label: t("SANDBOX_TENANT_CREATE"),
+        label: t("SANDBOX_TENANT_CREATE_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/create`,
       },
       {
-        label: t("SANDBOX_TENANT_SEARCH"),
+        label: t("SANDBOX_TENANT_SEARCH_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
       },
       {
-        label: t("Application Management"),
+        label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
-      }
+      },
     ],
   };
 
