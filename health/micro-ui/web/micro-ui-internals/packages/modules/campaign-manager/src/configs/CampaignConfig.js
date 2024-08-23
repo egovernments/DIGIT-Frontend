@@ -12,12 +12,12 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               key: "projectType",
               type: "component",
               skipAPICall: true,
-              component: "CampaignSelection",
+              component: "CampaignSelection",   //Name of compoennt registered in module
               withoutLabel: true,
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
+                sessionData: totalFormData,    //!important
                 isSubmitting: isSubmitting,
               },
               populators: {

@@ -248,7 +248,7 @@ const SetupCampaign = ({ hierarchyType }) => {
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
-  const searchParams = new URLSearchParams(location.search);
+  const searchParams = new URLSearchParams(location.search);  //!see
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
   const isSummary = searchParams.get("summary");
@@ -1380,7 +1380,7 @@ const SetupCampaign = ({ hierarchyType }) => {
     if ((currentKey === 5 || currentKey === 6) && step > 1) {
       return;
     }
-    const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));
+    const filteredSteps = campaignConfig[0].form.filter((item) => item.stepCount === String(step + 1));    //!FIltering take place here
 
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps[0].name;
@@ -1596,7 +1596,7 @@ const SetupCampaign = ({ hierarchyType }) => {
             // "CONFIGURE_APP"
           ]}
            t={t} onSelect={onActionSelect} /> : null}
-          <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t("ES_COMMON_TAKE_ACTION11")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
       {showToast && (

@@ -453,7 +453,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       {loaderEnabled && <LoaderWithGap text={"CAMPAIGN_BOUNDARY_PLEASE_WAIT"}></LoaderWithGap>}
       <Card>
         <div className="selecting-boundary-div">
-          <Header>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</Header>
+          <Header>{t(`CAMPAIGN_SELECT`)}</Header>
           <CardText>{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</CardText>
           {hierarchyTypeDataresult?.boundaryHierarchy
             .filter((boundary, index, array) => {
