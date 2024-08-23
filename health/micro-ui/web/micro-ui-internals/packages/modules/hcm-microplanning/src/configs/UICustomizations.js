@@ -66,8 +66,7 @@ function cleanObject(obj) {
 export const UICustomizations = {
   VehicleSearchConfig: {
     preProcess: (data) => {
-      debugger
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+            const tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.MdmsCriteria.tenantId = tenantId;
 
       const filters = {};
@@ -84,7 +83,7 @@ export const UICustomizations = {
 
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      debugger;
+      
       if (key === "Vehicle Type") {
         return (
           <div>{`₹ ${value}`}</div>
