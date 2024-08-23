@@ -11,9 +11,10 @@ const ViewUrl = () => {
   const history = useHistory();
 
   const onButtonClick = () => {
-    history.push({
-      pathname: `/${window?.contextPath}/${tenant}/employee`,
-    });
+    window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+    // history.push({
+    // pathname: `/${window?.globalPath}/${tenant}/employee`,
+    // });
   };
   return (
     <Background>
@@ -32,7 +33,7 @@ const ViewUrl = () => {
           label={t("SANDBOX_URL")}
           type="text"
           nonEditable={false}
-          value={`${window.location.host}/${window?.contextPath}/${tenant}`}
+          value={`${window.location.host}/${window?.globalPath}/${tenant}`}
           placeholder={t("SANDBOX_URL_PLACEHOLDER")}
           populators={{}}
         />
@@ -47,7 +48,7 @@ const ViewUrl = () => {
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
-        />{" "}
+        />
       </div>
     </Background>
   );
