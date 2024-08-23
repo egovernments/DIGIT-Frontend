@@ -22,11 +22,12 @@ const useAppToast = () => {
    * @param {string} label - The message to display in the toast.
    * @param {string} [type="success"] - The type of the toast (e.g., success, error, etc.).
    */
-  const showToast = (label = "", type = "success") => {
+  const showToast = (label = "", type = "success",transitionTime=5000) => {
     setData({
       ...data,
       label,
       type,
+      transitionTime,
       showToast: true,
     });
   };

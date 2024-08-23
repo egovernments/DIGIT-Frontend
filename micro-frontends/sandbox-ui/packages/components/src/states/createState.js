@@ -46,14 +46,15 @@ export function createGlobalState(
     }
 
     // Query to fetch and cache data with no automatic refetching
-    const { data } = useQuery({
+    const { data,refetch } = useQuery({
       queryKey: [queryKey],
       queryFn: fetchData,
-      refetchInterval: true, // Disable refetching at intervals
-      refetchOnMount: true, // Disable refetching on component mount
-      refetchOnWindowFocus: true, // Disable refetching on window focus
-      refetchOnReconnect: true, // Disable refetching on network reconnect
-      refetchIntervalInBackground: true, // Disable refetching in background
+      notifyOnChangeProps:["data"],
+      refetchInterval: false, // Disable refetching at intervals
+      refetchOnMount: false, // Disable refetching on component mount
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+      refetchOnReconnect: false, // Disable refetching on network reconnect
+      refetchIntervalInBackground: false, // Disable refetching in background
     });
 
     // Function to update data and cache

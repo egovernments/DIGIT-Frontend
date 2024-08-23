@@ -4,6 +4,7 @@ import ReactQueryProvider from "../../contexts/ReactQueryProvider"; // Provides 
 import { DigitContextProvider } from "../../contexts/DigitContextProvider"; // Provides Digit-specific context to child components.
 import DigitUIComponents from "../../DigitUIComponents"; // Imports the UI components from the DigitUI library.
 import { useToastState } from "../../states/useToastState";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const { Toast } = DigitUIComponents;
 
@@ -29,6 +30,8 @@ const DigitApp = ({ children, ...props }) => {
           <DigitModuleWrapper children={children} {...props} />
           {/* Example Toast component, currently commented out */}
           {/* <Toast type={"error"} label={"Test"} onClose={() => {}} /> */}
+          <ReactQueryDevtools initialIsOpen={true} />
+
         </DigitContextProvider>
       </ReactQueryProvider>
     </ErrorBoundary>
@@ -49,6 +52,7 @@ const DigitApp = ({ children, ...props }) => {
 const DigitModuleWrapper = ({ children, ...props }) => {
   const { data ={} } = useToastState();
   const { label="", type, transitionTime, showToast=false } = data;
+console.log(data,'datadata');
 
   return (
     <>
