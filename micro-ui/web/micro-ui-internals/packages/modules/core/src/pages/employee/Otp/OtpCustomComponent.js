@@ -79,7 +79,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
   };
   return (
     <>
-    <CardLabel className={"sandbox-custom-otp-header"} >{t("CS_RESEND_OTP")}</CardLabel>
+    <CardLabel className={"sandbox-custom-otp-header"} >{t("CS_OTP_EMAIL")}</CardLabel>
     <CardLabel className={"sandbox-custom-otp-email"}>{props?.props?.email}</CardLabel>
     <CardLabel className={"sandbox-custom-otp-subheader"}>{t("SANDBOX_ENTER_OTP")}</CardLabel>
       <OTPInput className={"sandbox-otp-input"} length={6} onChange={handleOtpChange} value={params?.otp} />
