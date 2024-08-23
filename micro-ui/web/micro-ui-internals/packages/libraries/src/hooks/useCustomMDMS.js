@@ -49,7 +49,11 @@ const useCustomMDMS = (tenantId, moduleName, masterDetails = [], config = {}, md
       config: {
         enabled: mdmsv2 ? true : false,
         select: (response) => {
-          return config.select(response.MdmsRes);
+          //mdms will be an array of master data
+          if (config.select) {
+            return config.select(response.MdmsRes);
+          }
+          return response;
         },
       },
     });
