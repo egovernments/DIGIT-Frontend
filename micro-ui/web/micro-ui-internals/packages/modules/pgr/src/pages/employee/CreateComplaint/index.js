@@ -12,7 +12,7 @@ import { PGRConstants } from "../../../constants/PGRConstants";
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
   const { t } = useTranslation();
-
+  
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
   const [complaintType, setComplaintType] = useState({});
@@ -34,7 +34,6 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [selectedLocality, setSelectedLocality] = useState(null);
  // const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
   const [params, setParams] = useState({});
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
@@ -167,11 +166,13 @@ export const CreateComplaint = ({ parentUrl }) => {
               pattern: getPhonePattern(selectedCountryCode),
              
             },
-            componentInFront: <div className="employee-card-input employee-card-input--front">
-              <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
-              {countryOptions}           
-          </select>
-          </div>,
+            componentInFront: (
+              <div className="employee-card-input employee-card-input--front">
+                <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
+                  {countryOptions}
+                </select>
+              </div>
+            ),
             error: t("CORE_COMMON_MOBILE_ERROR"),
             
           },
@@ -199,7 +200,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
           isMandatory: true,
           type: "dropdown",
-          populators: <Dropdown option={menu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={menu || []} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
         },
         {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_SUBTYPE"),
@@ -233,7 +234,6 @@ export const CreateComplaint = ({ parentUrl }) => {
             <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
           ),
         },
-        
         {
           label: t("CS_COMPLAINT_DETAILS_LANDMARK"),
           type: "textarea",
@@ -247,23 +247,19 @@ export const CreateComplaint = ({ parentUrl }) => {
       head: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS"),
       body: [
         {
-          label: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS"),
+          label: t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS"),
           type: "textarea",
           populators: {
-            name: "description",
+            name: "complaintDetails",
           },
         },
       ],
     },
   ];
+
   return (
-    <FormComposer
-      heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
-      config={config}
-      onSubmit={wrapperSubmit}
-     // isDisabled={!canSubmit && !submitted}
-      isDisabled={false}
-      label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
-    />
+    <div>
+      <FormComposer config={config} onSubmit={wrapperSubmit} />
+    </div>
   );
 };

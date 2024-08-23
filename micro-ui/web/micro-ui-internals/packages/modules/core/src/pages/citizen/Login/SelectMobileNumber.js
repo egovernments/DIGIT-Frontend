@@ -15,28 +15,26 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
     return Object.values(PGRConstants).find(e => e.countryCode === selectedCountryCode)?.regex;
   };
 
-  const validation = {
-    required: true,
-    pattern: getPhonePattern(selectedCountryCode),
-  };
+  const regexPattern = getPhonePattern(selectedCountryCode);
+
+  
+  const isValid = regexPattern ? regexPattern.test(mobileNumber) : false;
 
   return (
     <div className="custom-margin-bottom">
-    <FormStep
-      isDisabled={!(mobileNumber.length === 10 && canSubmit)}
-      onSelect={onSelect}
-      config={config}
-      t={t}
-      componentInFront={
-        <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
-          {countryOptions}
-        </select>
-      }
-      onChange={onMobileChange}
-      value={mobileNumber}
-      validation={validation} 
-      
-    ></FormStep>
+      <FormStep
+        isDisabled={!(isValid && canSubmit)}
+        onSelect={onSelect}
+        config={config}
+        t={t}
+        componentInFront={
+          <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
+            {countryOptions}
+          </select>
+        }
+        onChange={onMobileChange}
+        value={mobileNumber}
+      ></FormStep>
     </div>
   );
 };
