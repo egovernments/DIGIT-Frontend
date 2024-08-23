@@ -1,6 +1,6 @@
 import { Link, useHistory } from "react-router-dom";
 import _ from "lodash";
-
+import React from "react";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -135,10 +135,9 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       
       if (key === "Vehicle Type") {
-        return (
-          <div>{`₹ ${value}`}</div>
-        );
+        return <div> ${value} </div>
       }
+      return <div> Aib</div>
 
       
     },

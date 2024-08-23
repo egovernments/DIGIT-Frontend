@@ -89,7 +89,7 @@ const defaultSearchValues = {
               {
                 label: "Vehicle Type",
                 jsonPath: "data.name",
-                // additionalCustomization: true
+                additionalCustomization: true
               },
               {
                 label: "Manufacturer",
