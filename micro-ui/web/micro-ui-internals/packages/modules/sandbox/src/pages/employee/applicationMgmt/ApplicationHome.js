@@ -27,12 +27,12 @@ const ApplicationHome = () => {
 
   return (
     <>
-      <Header className="sandbox-header">Application Home</Header>
+      <Header className="sandbox-header">{t("SANDBOX_APPLICATION_HOME_HEADER")}</Header>
       <div className="sandbox-module-container">
         {moduleMasterData?.map((item) => (
           <ModuleCard
             className="sandbox-module-card"
-            label={item?.module}
+            label={t(`SANDBOX_APPLICATION_MODULE_${item?.module}`)}
             buttonLabel={t(`SANDBOX_VIEW`)}
             onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${item?.module}`)}
           />

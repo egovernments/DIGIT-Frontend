@@ -21,7 +21,7 @@ const setEmployeeDetail = (userObject, token) => {
   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
 };
 
-const Otp = () => {
+const Otp = ({ isLogin = false }) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -31,7 +31,6 @@ const Otp = () => {
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const { email, tenant } = location.state || {};
-  const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
 
   const config = [
     {
@@ -79,13 +78,15 @@ const Otp = () => {
     let redirectPath = `/${window?.globalPath}/user/url`;
     let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
 
-    if (loginType) {
+    if (isLogin) {
       history.push(redirectPathOtpLogin);
+      return;
     } else {
       history.push({
         pathname: redirectPath,
         state: { tenant: tenant },
       });
+      return;
     }
   }, [user]);
 

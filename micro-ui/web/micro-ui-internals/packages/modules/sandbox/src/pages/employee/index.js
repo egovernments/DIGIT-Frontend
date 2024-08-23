@@ -35,7 +35,7 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
     },
     {
       path: module ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
-      content: t(`APPLICATON_MODULE_${module}`),
+      content: t(`APPLICATON_MODULE_CRUMB_${module}`),
       show: module ? true : false,
     },
   ];

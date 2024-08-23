@@ -76,7 +76,7 @@ const EmployeeApp = ({
                 <EmployeeLogin stateCode={stateCode} />
               </Route>
               <Route exact path={`${path}/user/login/otp`}>
-                <Otp  />
+                <Otp isLogin={true} />
               </Route>
               {/* <Route path={`${path}/user/sign-up`}>
                 <SignUp stateCode={stateCode} />
@@ -128,7 +128,13 @@ const EmployeeApp = ({
           <div className={`main ${DSO ? "m-auto" : ""} digit-home-main`}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
-                <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} additionalComponent={additionalComponent} />
+                <AppModules
+                  stateCode={stateCode}
+                  userType="employee"
+                  modules={modules}
+                  appTenants={appTenants}
+                  additionalComponent={additionalComponent}
+                />
               </ErrorBoundary>
             </div>
             <div className="employee-home-footer">

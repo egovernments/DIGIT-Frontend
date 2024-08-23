@@ -1,10 +1,10 @@
 export const tenantCreateConfig = [
   {
- head: "Create Tenant",   
-  body: [
+    head: null,
+    body: [
       {
         inline: true,
-        label: "Tenant Name",
+        label: "SANDBOX_CREATE_TENANT_NAME_LABEL",
         isMandatory: true,
         key: "tenantName",
         type: "text",
@@ -13,7 +13,7 @@ export const tenantCreateConfig = [
       },
       {
         inline: true,
-        label: "Email Id",
+        label: "SANDBOX_CREATE_TENANT_EMAIL_LABEL",
         isMandatory: true,
         key: "emailId",
         type: "text",
@@ -24,7 +24,7 @@ export const tenantCreateConfig = [
         isMandatory: false,
         key: "isActive",
         type: "dropdown",
-        label: "isActive",
+        label: "SANDBOX_CREATE_TENANT_ACTIVE_LABEL",
         disable: false,
         populators: {
           name: "isActive",
@@ -33,20 +33,18 @@ export const tenantCreateConfig = [
           required: true,
           options: [
             {
-                "code": "true",
-                "name": "true",
-                "active": true
+              code: "true",
+              name: "TRUE",
+              active: true,
             },
             {
-                "code": "false",
-                "name": "false",
-                "active": true
-            }
-        ],
+              code: "false",
+              name: "FALSE",
+              active: true,
+            },
+          ],
         },
       },
-
-
     ],
-  }
+  },
 ];

@@ -19,7 +19,7 @@ const TenantCreate = () => {
     }, 5000);
   };
   const reqCreate = {
-    url: `/tenant-management/tenant/_create`,
+    url: `/tenant-management/subTenant/_create`,
     params: {},
     body: {},
     config: {
@@ -60,9 +60,9 @@ const TenantCreate = () => {
   };
   return (
     <div>
-      <Header> {t("CREATE_TENANT")}</Header>
+      <Header> {t("SANDBOX_CREATE_TENANT_HEADER")}</Header>
       <FormComposerV2
-        label={t("SUBMIT_BUTTON")}
+        label={t("SANDBOX_CREATE_TENANT_SUBMIT_BUTTON")}
         config={tenantCreateConfig.map((config) => {
           return {
             ...config,

@@ -19,7 +19,7 @@ const setEmployeeDetail = (userObject, token) => {
   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
 };
 
-const Login = ({ config: propsConfig, t, isDisabled }) => {
+const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};

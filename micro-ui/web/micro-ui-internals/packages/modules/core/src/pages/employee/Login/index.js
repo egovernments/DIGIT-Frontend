@@ -68,7 +68,7 @@ const EmployeeLogin = ({ stateCode }) => {
   return (
     <Switch>
       <Route path={`${path}`} exact>
-        {loginType ? <LoginComponent config={loginOtpParams[0]} t={t} /> : <LoginComponent config={loginParams[0]} t={t} />}
+        {loginType ? <LoginComponent config={loginOtpParams[0]} t={t} loginOTPBased={loginType}/> : <LoginComponent config={loginParams[0]} t={t} />}
       </Route>
     </Switch>
   );
