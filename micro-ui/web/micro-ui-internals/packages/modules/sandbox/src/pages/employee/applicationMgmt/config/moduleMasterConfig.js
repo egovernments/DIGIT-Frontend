@@ -11,7 +11,7 @@ export const moduleMasterConfig = (module) => ({
         moduleName: module,
       },
       apiDetails: {
-        serviceName: "/mdms-v2/v1/_search",
+        serviceName: `/${window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH")}/v1/_search`,
         requestParam: {},
         requestBody: {},
         minParametersForSearchForm: 0,
