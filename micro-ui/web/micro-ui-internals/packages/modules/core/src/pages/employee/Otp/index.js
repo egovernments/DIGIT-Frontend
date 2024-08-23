@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BackLink, Loader, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";
@@ -56,7 +56,8 @@ const Otp = ({ isLogin = false }) => {
   const OtpConfig = [
     {
       texts: {
-        header: t("CORE_COMMON_OTP_LABEL"),
+        // header: t("CORE_COMMON_OTP_LABEL"),
+        header: t("SANDBOX_OTP_VERIFICATION"),
         submitButtonLabel: "CORE_COMMON_SUBMIT",
       },
     },
@@ -135,9 +136,9 @@ const Otp = ({ isLogin = false }) => {
         heading={OtpConfig[0].texts.header}
         headingStyle={{ textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
-        className="sandboxOtpForm"
+        className="sandbox-onboarding-wrapper"
       >
-        <Header />
+        <Header showTenant={false} />
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">

@@ -52,7 +52,14 @@ export const ULBService = {
    * @returns {String}
    */
   getStateId: () => {
-    return window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+    const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+    const pathname = window.location.pathname;
+    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+    const start = pathname.indexOf(context) + context.length + 1;
+    const end = pathname.indexOf("employee");
+    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
+
+    return isMultiRootTenant && tenant ? tenant : window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
   },
   /**
    * Custom method to get employee's current ulb object

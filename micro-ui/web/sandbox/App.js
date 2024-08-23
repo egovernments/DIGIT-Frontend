@@ -38,10 +38,24 @@ initLibraries().then(() => {
 });
 
 function App() {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
-  const stateCode =
-    window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
-    process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
+  const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+
+  if (isMultiRootTenant) {
+    const pathname = window.location.pathname;
+    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+    const start = pathname.indexOf(context) + context.length + 1;
+    const end = pathname.indexOf("employee");
+    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
+    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") + `${tenant ? `/${tenant}` : ""}` || "digit-ui";
+    window.globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  } else {
+    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  }
+
+  const stateCode = Digit.ULBService.getStateId();
+  // const stateCode =
+  //   window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
+  //   process.env.REACT_APP_STATE_LEVEL_TENANT_ID;
   if (!stateCode) {
     return <h1>stateCode is not defined</h1>;
   }

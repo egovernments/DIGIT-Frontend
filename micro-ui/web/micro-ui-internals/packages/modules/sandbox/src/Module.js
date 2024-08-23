@@ -27,6 +27,7 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   SandboxModule,
   SandboxCard,
+  WorkbenchCard: null,
   SandboxModuleCard: ModuleCard,
 };
 

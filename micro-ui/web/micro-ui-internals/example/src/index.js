@@ -64,7 +64,8 @@ const initDigitUI = () => {
 
   if (isMultiRootTenant) {
     const pathname = window.location.pathname;
-    const start = pathname.indexOf("sandbox-ui") + "sandbox-ui".length + 1;
+    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+    const start = pathname.indexOf(context) + context.length + 1;
     const end = pathname.indexOf("employee");
     const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
     window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") + `${tenant ? `/${tenant}` : ""}` || "digit-ui";
@@ -97,7 +98,8 @@ const initDigitUI = () => {
     pgr: PGRReducers(initData),
   });
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = Digit.ULBService.getStateId();
   initTokens(stateCode);
 
   ReactDOM.render(
