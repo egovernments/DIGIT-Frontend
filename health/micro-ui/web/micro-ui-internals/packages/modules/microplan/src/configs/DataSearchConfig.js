@@ -5,11 +5,11 @@ const defaultSearchValues = {
     value: "",
     field: {}
   }
-  export const vehiclesearchconfig = () => 
+  export const datasearchconfig = () => 
   {
     const { t } = useTranslation();
     return {
-      label: t("Vehicle_Search"),
+      label: t("Data Collector"),
       type: "search",
       apiDetails: {
         serviceName: "/mdms-v2/v2/_search",
@@ -19,6 +19,8 @@ const defaultSearchValues = {
         requestBody: {
           apiOperation: "SEARCH",
           MdmsCriteria: {
+            "tenantId": Digit.ULBService.getCurrentTenantId(),
+            customs:{}
             
           },
         },
@@ -30,6 +32,12 @@ const defaultSearchValues = {
         searchFormJsonPath: "requestBody.MdmsCriteria.customs",
       },
       sections: {
+        links:{
+            uiConfig:{
+                label:"this is my first try"
+            },
+            // show:true
+        },
         search: {
           uiConfig: {
             searchWrapperStyles: {
@@ -40,7 +48,7 @@ const defaultSearchValues = {
               justifyContent:"end",
               gridColumn:"4",
             },
-            headerStyle: null,
+            headerStyle:{background:"red",font:"red"} ,
             label:"Yuyuy",
             formClassName: "custom-both-clear-search",
             primaryLabel: t("ES_COMMON_SEARCH"),
@@ -49,7 +57,7 @@ const defaultSearchValues = {
             defaultValues: defaultSearchValues, // Set default values for search fields
             fields: [
               {
-                label: "Vehicle Type ",
+                label: "Search User ",
                 isMandatory: false,
                 key: "vehicle",
                 type: "text",
@@ -87,20 +95,24 @@ const defaultSearchValues = {
           uiConfig: {
             columns: [
               {
-                label: "Vehicle Type",
+                label: "Name",
                 jsonPath: "data.name",
               },
               {
-                label: "Manufacturer",
+                label: "Email",
                 jsonPath: "data.description",
               },
               {
-                label: "Model",
+                label: "Contact number",
                 jsonPath: "data.executingDepartment",
               },
               {
-                label:"Capacity",
+                label:"Administartive hierarchy",
                 jsonPath:"data.wfStatus"
+              },
+              {
+                label: "Administator",
+                jsonPath: "data.proposalDate",
               }
             ],
             enableGlobalSearch: false,
