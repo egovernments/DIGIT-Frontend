@@ -185,7 +185,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         onSecondayActionClick={onForgotPassword}
         onFormValueChange={onFormValueChange}
         heading={propsConfig?.texts?.header}
-        className="loginFormStyleEmployee"
+        className={`loginFormStyleEmployee ${loginType ? "sandbox-onboarding-wrapper" : ""}`}
         cardSubHeaderClassName="loginCardSubHeaderClassName"
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"

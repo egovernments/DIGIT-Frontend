@@ -3,6 +3,7 @@ import { BackLink, Button, Card, CardHeader, CardText, FieldV1, SVG } from "@ego
 import { useTranslation } from "react-i18next";
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
+import Header from "../../../components/Header";
 
 const ViewUrl = () => {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ const ViewUrl = () => {
         <BackLink />
       </div>
       <Card className="card-sandbox">
+        <Header showTenant={false} />
         <div className="sandbox-success-signup">
           <SVG.TickMark fill={"#fff"} height={40} width={60} />
         </div>

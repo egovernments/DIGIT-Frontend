@@ -100,7 +100,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         heading={propsConfig?.texts?.header}
         className="sandbox-signup-form"
         cardSubHeaderClassName="signupCardSubHeaderClassName"
-        cardClassName="signupCardClassName"
+        cardClassName="signupCardClassName sandbox-onboarding-wrapper"
         buttonClassName="buttonClassName"
       >
         <Header showTenant={false} />
