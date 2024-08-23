@@ -92,6 +92,7 @@ export const StoreService = {
     await LocalizationService.getLocale({
       modules: [
         `${modulePrefix}-common`,
+        `digit-ui`,
         `${modulePrefix}-${stateCode.toLowerCase()}`
       ],
       locale: initData.selectedLanguage,

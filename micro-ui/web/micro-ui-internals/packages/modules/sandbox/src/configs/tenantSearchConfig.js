@@ -5,7 +5,7 @@ export const tenantSearchConfig = () =>
   showTab: false,
   tenantSearchConfig: [
     {
-      label: `Tenant Search`,
+      label: `SANDBOX_TENANT_SEARCH_HEADER`,
       type: "search",
       apiDetails: {
         serviceName: "/tenant-management/tenant/_search",
@@ -43,7 +43,7 @@ export const tenantSearchConfig = () =>
             },
           fields: [
           {
-            label: "Tenant name ",
+            label: "SANDBOX_TENANT_SEARCH_NAME_LABEL",
             isMandatory: true,
             key: "tenantName",
             type: "text",
@@ -54,7 +54,7 @@ export const tenantSearchConfig = () =>
             },
           },
           {
-            label: "Tenant code ",
+            label: "SANDBOX_TENANT_SEARCH_CODE_LABEL",
             isMandatory: false,
             key: "tenantCode",
             type: "text",
@@ -76,17 +76,17 @@ export const tenantSearchConfig = () =>
       uiConfig: {
         columns: [
           {
-            label: "code",
+            label: "SANDBOX_TENANT_COLUMN_CODE",
             jsonPath: "code",
           },
           
           {
-            label: "name",
+            label: "SANDBOX_TENANT_COLUMN_NAME",
             jsonPath: "name",
             
           },
           {
-            label: "email",
+            label: "SANDBOX_TENANT_COLUMN_EMAIL",
             jsonPath: "email",
           },
         ],
