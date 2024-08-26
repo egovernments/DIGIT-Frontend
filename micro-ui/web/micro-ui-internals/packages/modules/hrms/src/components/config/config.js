@@ -1,6 +1,6 @@
 export const newConfig = [
   {
-    head: "Personal Details",
+    head: "HR_PERSONAL_DETAILS_FORM_HEADER",
     body: [
       {
         type: "component",

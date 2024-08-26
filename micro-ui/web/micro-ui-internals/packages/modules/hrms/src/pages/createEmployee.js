@@ -1,4 +1,4 @@
-import { FormComposer, Toast ,Loader, Header} from "@egovernments/digit-ui-react-components";
+import { FormComposer, Toast, Loader, Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -6,25 +6,28 @@ import { newConfig } from "../components/config/config";
 import _ from "lodash";
 
 const CreateEmployee = () => {
+  console.log("create hrms");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
-  const [mobileNumber, setMobileNumber] = useState(null);
+  // const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  const [phonecheck, setPhonecheck] = useState(false);
-  const [checkfield, setcheck] = useState(false)
+  // const [phonecheck, setPhonecheck] = useState(false);
+  const [checkfield, setcheck] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
   const isMobile = window.Digit.Utils.browser.isMobile();
 
- const { data: mdmsData,isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
       return {
-        config: data?.MdmsRes?.['egov-hrms']?.CommonFieldsConfig
+        config: newConfig,
+        // config: data?.MdmsRes?.['egov-hrms']?.CommonFieldsConfig
       };
     },
     retry: false,
     enable: false,
   });
+
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
@@ -36,58 +39,43 @@ const CreateEmployee = () => {
   }, []);
 
   const checkMailNameNum = (formData) => {
-
     const email = formData?.SelectEmployeeEmailId?.emailId || '';
     const name = formData?.SelectEmployeeName?.employeeName || '';
     const address = formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || '';
     const validEmail = email.length == 0 ? true : email.match(Digit.Utils.getPattern('Email'));
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
-  }
-  useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
-      setShowToast(null);
-      Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
-        if (result.Employees.length > 0) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
-          setPhonecheck(false);
-        } else {
-          setPhonecheck(true);
-        }
-      });
-    } else {
-      setPhonecheck(false);
-    }
-  }, [mobileNumber]);
+  };
 
   const defaultValues = {
-
-    Jurisdictions:
-      [{
+    Jurisdictions: [
+      {
         id: undefined,
         key: 1,
         hierarchy: null,
         boundaryType: null,
         boundary: {
-          code: tenantId
+          code: tenantId,
         },
         roles: [],
-      }]
-  }
+      },
+    ],
+  };
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
-  const [sessionFormData,setSessionFormData, clearSessionFormData] = employeeCreateSession;
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
+  console.log("mmmm");
 
   const onFormValueChange = (setValue = true, formData) => {
-
     if (!_.isEqual(sessionFormData, formData)) {
-        setSessionFormData({...sessionFormData,...formData});
+      setSessionFormData({ ...sessionFormData, ...formData });
     }
 
-    if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
-      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
-    } else {
-      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
-    }
+    // if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
+    //   setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    // } else {
+    //   setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    // }
+
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
       if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
@@ -113,6 +101,7 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
+
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
@@ -122,7 +111,7 @@ const CreateEmployee = () => {
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
       checkfield &&
       setassigncheck &&
-      phonecheck &&
+      // phonecheck &&
       checkMailNameNum(formData)
     ) {
       setSubmitValve(true);
@@ -133,25 +122,28 @@ const CreateEmployee = () => {
 
   const navigateToAcknowledgement = (Employees) => {
     history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "CREATE", action: "CREATE" });
-  }
-
-  
-
+  };
 
   const onSubmit = (data) => {
-    if (data.Jurisdictions.filter(juris => juris.tenantId == tenantId).length == 0) {
+    if (data.Jurisdictions.filter((juris) => juris.tenantId == tenantId).length == 0) {
       setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
       return;
     }
-    if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
-      if (sum && sum?.tenantId) {
-        acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
-      }
-      return acc;
-    }, {})).every(s => s == 1)) {
+
+    if (
+      !Object.values(
+        data.Jurisdictions.reduce((acc, sum) => {
+          if (sum && sum?.tenantId) {
+            acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
+          }
+          return acc;
+        }, {})
+      ).every((s) => s == 1)
+    ) {
       setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
       return;
     }
+
     let roles = data?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
         item["tenantId"] = ele.boundary;
@@ -184,8 +176,8 @@ const CreateEmployee = () => {
         tests: [],
       },
     ];
-      /* use customiseCreateFormData hook to make some chnages to the Employee object */
-      Employees=Digit?.Customizations?.HRMS?.customiseCreateFormData?Digit.Customizations.HRMS.customiseCreateFormData(data,Employees):Employees;
+    /* use customiseCreateFormData hook to make some changes to the Employee object */
+    Employees = Digit?.Customizations?.HRMS?.customiseCreateFormData ? Digit.Customizations.HRMS.customiseCreateFormData(data, Employees) : Employees;
 
     if (data?.SelectEmployeeId?.code && data?.SelectEmployeeId?.code?.trim().length > 0) {
       Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId?.code }).then((result, err) => {
@@ -200,18 +192,21 @@ const CreateEmployee = () => {
       navigateToAcknowledgement(Employees);
     }
   };
+
   if (isLoading) {
     return <Loader />;
   }
-  const config =mdmsData?.config?mdmsData.config: newConfig;
+  
+  // const config = mdmsData?.config ? mdmsData.config : newConfig;
+  const config = newConfig;
+  
   return (
     <div>
-      <div style={isMobile ? {marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000"} :{ marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
+      <div style={isMobile ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" } : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
         <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header>
       </div>
       <FormComposer
-        // defaultValues={defaultValues}
-        defaultValues = {sessionFormData}
+        defaultValues={sessionFormData}
         heading={t("")}
         config={config}
         onSubmit={onSubmit}
@@ -231,4 +226,5 @@ const CreateEmployee = () => {
     </div>
   );
 };
+
 export default CreateEmployee;

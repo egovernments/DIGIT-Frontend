@@ -1,11 +1,11 @@
-import { AppContainer, BackButton ,Toast} from "@egovernments/digit-ui-components";
+import { AppContainer, BackButton ,Toast} from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
-import { loginSteps } from "./config";
+ import { useTranslation } from "react-i18next";
+ import { Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+ import { loginSteps } from "./config";
 import SelectMobileNumber from "./SelectMobileNumber";
-import SelectName from "./SelectName";
-import SelectOtp from "./SelectOtp";
+ import SelectName from "./SelectName";
+ import SelectOtp from "./SelectOtp";
 
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
@@ -31,20 +31,20 @@ const getFromLocation = (state, searchParams) => {
 };
 
 const Login = ({ stateCode, isUserRegistered = true }) => {
-  const { t } = useTranslation();
-  const location = useLocation();
-  const { path, url } = useRouteMatch();
+   const { t } = useTranslation();
+   const location = useLocation();
+   const { path, url } = useRouteMatch();
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [isOtpValid, setIsOtpValid] = useState(true);
-  const [tokens, setTokens] = useState(null);
-  const [params, setParmas] = useState(isUserRegistered ? {} : location?.state?.data);
-  const [errorTO, setErrorTO] = useState(null);
-  const searchParams = Digit.Hooks.useQueryParams();
+   const [isOtpValid, setIsOtpValid] = useState(true);
+   const [tokens, setTokens] = useState(null);
+   const [params, setParmas] = useState(isUserRegistered ? {} : location?.state?.data);
+ const [errorTO, setErrorTO] = useState(null);
+   const searchParams = Digit.Hooks.useQueryParams();
   const [canSubmitName, setCanSubmitName] = useState(false);
-  const [canSubmitOtp, setCanSubmitOtp] = useState(true);
-  const [canSubmitNo, setCanSubmitNo] = useState(true);
+   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
+   const [canSubmitNo, setCanSubmitNo] = useState(true);
 
   useEffect(() => {
     let errorTimeout;
@@ -62,8 +62,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       errorTimeout && clearTimeout(errorTimeout);
     };
   }, [error]);
+  
 
   useEffect(() => {
+   
     if (!user) {
       return;
     }
@@ -94,7 +96,8 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   );
 
   const getUserType = () => Digit.UserService.getType();
-
+ 
+  
   const handleOtpChange = (otp) => {
     setParmas({ ...params, otp });
   };
@@ -106,12 +109,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
 
   const selectMobileNumber = async (mobileNumber) => {
     setCanSubmitNo(false);
+
     setParmas({ ...params, ...mobileNumber });
     const data = {
       ...mobileNumber,
       tenantId: stateCode,
-      userType: getUserType(),
+      userType:  getUserType(),
     };
+    
     if (isUserRegistered) {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
       if (!err) {
@@ -138,12 +143,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       setCanSubmitNo(true);
     }
   };
-
+console.log("path",path);
   const selectName = async (name) => {
     const data = {
       ...params,
       tenantId: stateCode,
-      userType: getUserType(),
+      userType:  getUserType(),
       ...name,
     };
     setParmas({ ...params, ...name });
@@ -167,7 +172,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           username: mobileNumber,
           password: otp,
           tenantId: stateCode,
-          userType: getUserType(),
+          userType:  getUserType(),
         };
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
 
@@ -230,10 +235,11 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   };
 
   return (
-    <div className="citizen-form-wrapper">
-      <Switch>
-        <AppContainer>
-          <BackButton />
+     <div className="citizen-form-wrapper">
+       <Switch>
+         <AppContainer>
+          {/* <BackButton /> */}
+    <div>
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
@@ -242,29 +248,78 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               onMobileChange={handleMobileChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
+                className="card-header"
               t={t}
             />
           </Route>
-          <Route path={`${path}/otp`}>
-            <SelectOtp
-              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
+          </div>,
+    <div>
+        <Route path={`${path}/otp`}>
+           <SelectOtp
+              config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText : `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
               onOtpChange={handleOtpChange}
               onResend={resendOtp}
               onSelect={selectOtp}
-              otp={params.otp}
-              error={isOtpValid}
-              canSubmit={canSubmitOtp}
-              t={t}
-            />
-          </Route>
+               otp={params.otp}
+               error={isOtpValid}
+               canSubmit={canSubmitOtp}
+               t={t}
+             />
+           </Route> 
+    </div>,
+    <div>
           <Route path={`${path}/name`}>
-            <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
+            <SelectName  onSelect={selectName} t={t} isDisabled={canSubmitName} />
           </Route>
-          {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
+          </div>,
+           {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
         </AppContainer>
-      </Switch>
-    </div>
-  );
+       </Switch>
+     </div>
+   );
+  // return (
+  //   <div className="citizen-form-wrapper ">
+
+  //     <Switch>
+  //       <AppContainer>
+  //         {/* <BackButton /> */}
+  //         <Route path={`${path}`} exact>
+        
+  //         <div>
+  //           <SelectMobileNumber
+  //             onSelect={selectMobileNumber} 
+  //             config={stepItems[0]}
+  //             mobileNumber={params.mobileNumber || ""}
+  //             onMobileChange={handleMobileChange}
+  //             canSubmit={canSubmitNo}
+  //             showRegisterLink={isUserRegistered && !location.state?.role}
+  //             t={t}
+  //           />
+  //           </div>
+            
+  //         </Route>
+  //         <Route path={`${path}/otp`}>
+  //           <SelectOtp
+  //             config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText : `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` },
+  //            }}
+  //             onOtpChange={handleOtpChange}
+  //             onResend={resendOtp}
+  //             onSelect={selectOtp}
+  //             otp={params.otp}
+  //             error={isOtpValid}
+  //             canSubmit={canSubmitOtp}
+  //             t={t}
+  //           />
+  //         </Route>
+  //         <Route path={`${path}/name`}>
+  //           <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
+  //         </Route>
+  //         {/* {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />} */}
+  //         {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
+  //       </AppContainer>
+  //     </Switch>
+  //   </div>
+  // );
 };
 
 export default Login;

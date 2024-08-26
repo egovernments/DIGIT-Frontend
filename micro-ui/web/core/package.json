@@ -10,20 +10,18 @@
   "workspaces": [
     "micro-ui-internals/packages/libraries",
     "micro-ui-internals/packages/react-components",
-    "micro-ui-internals/packages/modules/core",
-    "micro-ui-internals/packages/modules/workbench"
+    "micro-ui-internals/packages/modules/*"
   ],
   "homepage": "/core-ui",
   "dependencies": {
-    "@egovernments/digit-ui-components": "0.0.2-beta.18",
     "@egovernments/digit-ui-libraries": "1.8.2-beta.6",
-    "@egovernments/digit-ui-module-workbench": "1.0.2-beta.8",
-    "@egovernments/digit-ui-module-core": "1.8.2-beta.13",
-    "@egovernments/digit-ui-module-utilities": "1.0.1-beta.39",
-    "@egovernments/digit-ui-module-open-payment":"0.0.1",
-    "@egovernments/digit-ui-module-hrms": "1.8.1-beta.1",
+    "@egovernments/digit-ui-module-core": "1.8.2-beta.15",
+    "@egovernments/digit-ui-module-hrms": "1.8.1-beta.2",
     "@egovernments/digit-ui-module-pgr": "1.8.1-beta.1",
     "@egovernments/digit-ui-react-components": "1.8.2-beta.12",
+    "@egovernments/digit-ui-components": "0.0.2-beta.18",
+    "@egovernments/digit-ui-module-dss": "1.8.1",
+    "@egovernments/digit-ui-module-utilities":"1.0.1-beta.39",
     "babel-loader": "8.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -33,9 +31,13 @@
     "web-vitals": "1.1.2",
     "react-hook-form": "6.15.8",
     "react-i18next": "11.16.2",
+    "terser-brunch": "^4.1.0",
+    "css-loader": "5.2.6",
+    "style-loader": "2.0.0",
     "react-query": "3.6.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0",
     "http-proxy-middleware": "1.3.1",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",

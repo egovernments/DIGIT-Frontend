@@ -7,11 +7,12 @@ import { useQueryClient } from "react-query";
 
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
+import { PGRConstants } from "../../../constants/PGRConstants";
 
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
   const { t } = useTranslation();
-
+  
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
   const [complaintType, setComplaintType] = useState({});
@@ -31,9 +32,8 @@ export const CreateComplaint = ({ parentUrl }) => {
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
-  const [canSubmit, setSubmitValve] = useState(false);
+ // const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
   const [params, setParams] = useState({});
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
@@ -43,14 +43,26 @@ export const CreateComplaint = ({ parentUrl }) => {
   const history = useHistory();
   const serviceDefinitions = Digit.GetServiceDefinitions;
   const client = useQueryClient();
+  const [selectedCountryCode, setSelectedCountryCode] = useState(PGRConstants.INDIA_COUNTRY_CODE);
+  const countryOptions = Object.values(PGRConstants).map(({ countryCode }, index) => (
+    <option key={index} value={countryCode}>
+      {countryCode}
+    </option>
+  ));
 
-  useEffect(() => {
-    if (complaintType?.key && subType?.key && selectedCity?.code && selectedLocality?.code) {
-      setSubmitValve(true);
-    } else {
-      setSubmitValve(false);
+  const  getPhonePattern=(selectedCountryCode) =>{
+    return Object.values(PGRConstants).filter(e=>e.countryCode==selectedCountryCode)?.[0]?.regex;
+        
     }
-  }, [complaintType, subType, selectedCity, selectedLocality]);
+
+
+  // useEffect(() => {
+  //   if (complaintType?.key && subType?.key && selectedCity?.code && selectedLocality?.code) {
+  //     setSubmitValve(true);
+  //   } else {
+  //     setSubmitValve(false);
+  //   }
+  // }, [complaintType, subType, selectedCity, selectedLocality]);
 
   useEffect(() => {
     setLocalities(fetchedLocalities);
@@ -102,14 +114,15 @@ export const CreateComplaint = ({ parentUrl }) => {
   }
 
   const wrapperSubmit = (data) => {
-    if (!canSubmit) return;
+    //if (!canSubmit) return;
     setSubmitted(true);
-    !submitted && onSubmit(data);
+   // !submitted && 
+    onSubmit(data);
   };
 
-  //On SUbmit
+  
   const onSubmit = async (data) => {
-    if (!canSubmit) return;
+   // if (!canSubmit) return;
     const cityCode = selectedCity.code;
     const city = selectedCity.city.name;
     const district = selectedCity.city.name;
@@ -121,12 +134,13 @@ export const CreateComplaint = ({ parentUrl }) => {
     const complaintType = key;
     const mobileNumber = data.mobileNumber;
     const name = data.name;
+    
     const formData = { ...data, cityCode, city, district, region, localityCode, localityName, landmark, complaintType, mobileNumber, name };
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/response");
   };
-
+  
   const handlePincode = (event) => {
     const { value } = event.target;
     setPincode(value);
@@ -135,7 +149,7 @@ export const CreateComplaint = ({ parentUrl }) => {
     }
   };
 
-  const isPincodeValid = () => !pincodeNotValid;
+  //const isPincodeValid = () => pincodeNotValid;
 
   const config = [
     {
@@ -149,11 +163,20 @@ export const CreateComplaint = ({ parentUrl }) => {
             name: "mobileNumber",
             validation: {
               required: true,
-              pattern: /^[6-9]\d{9}$/,
+              pattern: getPhonePattern(selectedCountryCode),
+             
             },
-            componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
+            componentInFront: (
+              <div className="employee-card-input employee-card-input--front">
+                <select value={selectedCountryCode} onChange={(e) => setSelectedCountryCode(e.target.value)}>
+                  {countryOptions}
+                </select>
+              </div>
+            ),
             error: t("CORE_COMMON_MOBILE_ERROR"),
+            
           },
+          
         },
         {
           label: t("ES_CREATECOMPLAINT_COMPLAINT_NAME"),
@@ -177,7 +200,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
           isMandatory: true,
           type: "dropdown",
-          populators: <Dropdown option={menu} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
+          populators: <Dropdown option={menu || []} optionKey="name" id="complaintType" selected={complaintType} select={selectedType} />,
         },
         {
           label: t("CS_COMPLAINT_DETAILS_COMPLAINT_SUBTYPE"),
@@ -196,28 +219,12 @@ export const CreateComplaint = ({ parentUrl }) => {
           type: "text",
           populators: {
             name: "pincode",
-            validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
+           //validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
             error: t("CORE_COMMON_PINCODE_INVALID"),
             onChange: handlePincode,
           },
         },
-        {
-          label: t("CS_COMPLAINT_DETAILS_CITY"),
-          isMandatory: true,
-          type: "dropdown",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCity}
-              freeze={true}
-              option={getCities()}
-              id="city"
-              select={selectCity}
-              optionKey="i18nKey"
-              t={t}
-            />
-          ),
-        },
+       
         {
           label: t("CS_CREATECOMPLAINT_MOHALLA"),
           type: "dropdown",
@@ -240,22 +247,19 @@ export const CreateComplaint = ({ parentUrl }) => {
       head: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS"),
       body: [
         {
-          label: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS"),
+          label: t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS"),
           type: "textarea",
           populators: {
-            name: "description",
+            name: "complaintDetails",
           },
         },
       ],
     },
   ];
+
   return (
-    <FormComposer
-      heading={t("ES_CREATECOMPLAINT_NEW_COMPLAINT")}
-      config={config}
-      onSubmit={wrapperSubmit}
-      isDisabled={!canSubmit && !submitted}
-      label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")}
-    />
+    <div>
+      <FormComposer config={config} onSubmit={wrapperSubmit} />
+    </div>
   );
 };

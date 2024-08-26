@@ -1,5 +1,4 @@
 import {
-  BackButton,
   CitizenHomeCard,
   CitizenInfoLabel,
   Loader,
@@ -94,8 +93,8 @@ const CitizenHome = ({
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
-        ) ? null : (
-          <BackButton />
+        // ) ? null : (
+          // <BackButton />
         )}
         <div className="citizenAllServiceGrid">
           {moduleArray
