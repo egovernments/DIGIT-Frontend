@@ -28,6 +28,8 @@ const SetupMicroplan = () => {
   const [active, setActive] = useState(0);
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting));
   const [currentKey, setCurrentKey] = useState(() => {
+    console.log(searchParams,location);
+    debugger;
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
