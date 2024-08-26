@@ -60,19 +60,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
-
-  if (isMultiRootTenant) {
-    const pathname = window.location.pathname;
-    const start = pathname.indexOf("sandbox-ui") + "sandbox-ui".length + 1;
-    const end = pathname.indexOf("employee");
-    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
-    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") + `${tenant ? `/${tenant}` : ""}` || "digit-ui";
-    window.globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  } else {
-    window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  }
-
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   window.Digit.Customizations = {
     PGR: pgrCustomizations,
     commonUiConfig: UICustomizations,

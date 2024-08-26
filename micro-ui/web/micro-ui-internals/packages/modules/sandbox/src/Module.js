@@ -9,13 +9,12 @@ import ModuleCard from "./components/ModuleCard";
 export const SandboxModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const moduleCode = ["sandbox"];
+  const moduleCode = ["common", "workflow", "Sandbox", "sandbox"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    modulePrefix: "digit",
   });
 
   if (isLoading) {
@@ -27,7 +26,7 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   SandboxModule,
   SandboxCard,
-  SandboxModuleCard: ModuleCard,
+  SandboxModuleCard: ModuleCard
 };
 
 export const initSandboxComponents = () => {

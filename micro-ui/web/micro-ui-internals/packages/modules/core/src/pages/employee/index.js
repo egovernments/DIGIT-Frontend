@@ -72,13 +72,10 @@ const EmployeeApp = ({
             }
           >
             <Switch>
-              <Route exact path={`${path}/user/login`}>
+              <Route path={`${path}/user/login`}>
                 <EmployeeLogin stateCode={stateCode} />
               </Route>
-              <Route exact path={`${path}/user/login/otp`}>
-                <Otp isLogin={true} />
-              </Route>
-              {/* <Route path={`${path}/user/sign-up`}>
+              <Route path={`${path}/user/sign-up`}>
                 <SignUp stateCode={stateCode} />
               </Route>
               <Route path={`${path}/user/otp`}>
@@ -86,7 +83,7 @@ const EmployeeApp = ({
               </Route>
               <Route path={`${path}/user/url`}>
                 <ViewUrl  />
-              </Route> */}
+              </Route>
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />
               </Route>
@@ -128,13 +125,7 @@ const EmployeeApp = ({
           <div className={`main ${DSO ? "m-auto" : ""} digit-home-main`}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
-                <AppModules
-                  stateCode={stateCode}
-                  userType="employee"
-                  modules={modules}
-                  appTenants={appTenants}
-                  additionalComponent={additionalComponent}
-                />
+                <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} additionalComponent={additionalComponent} />
               </ErrorBoundary>
             </div>
             <div className="employee-home-footer">

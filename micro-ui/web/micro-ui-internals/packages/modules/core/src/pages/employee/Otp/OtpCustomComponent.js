@@ -15,10 +15,6 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const [isOtpValid, setIsOtpValid] = useState(true);
   const [timeLeft, setTimeLeft] = useState(30);
 
-  const closeToast = () => {
-    setShowToast(null);
-  };
-
   useInterval(
     () => {
       setTimeLeft(timeLeft - 1);
@@ -36,7 +32,7 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
 
   const reqCreate = {
     url: `/user-otp/v1/_send`,
-    params: { tenantId: props?.props?.code },
+    params: {tenantId:props?.props?.code},
     body: {},
     config: {
       enable: false,
@@ -64,18 +60,15 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
         onError: (error, variables) => {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0].code
-              ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}`
-              : `SANDBOX_RESEND_OTP_ERROR`,
+            label: error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`,
           });
-          setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
-          setShowToast({ key: "info", label: t("OTP_RESNED_SUCCESFULL") });
-          setTimeout(closeToast, 5000);
+          setShowToast({key:"info",label:t("OTP_RESNED_SUCCESFULL")})
+           
         },
-      }
-    );
+      });
+
   };
   return (
     <>

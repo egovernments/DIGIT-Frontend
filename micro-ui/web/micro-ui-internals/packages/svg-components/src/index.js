@@ -1,10 +1,3 @@
-import { Add } from "./svg/Add";
-import { Profile } from "./svg/Profile";
-import { PdfIcon } from "./svg/PdfIcon";
-import { DocIcon } from "./svg/DocIcon";
-import { XlsxIcon } from "./svg/XlsxIcon";
-import { PngIcon } from "./svg/PngIcon";
-import { JpgIcon } from "./svg/JpgIcon";
 import { Rotation3D } from "./svg/Rotation3D";
 import { SixFtApart } from "./svg/SixFtApart";
 import { Rotate360 } from "./svg/Rotate360";
@@ -806,13 +799,6 @@ import { HealthFacility } from "./svg/HealthFacility"
 import { SchoolBuilding } from "./svg/SchoolBuilding"
 
 export {
-  Add,
-  Profile,
-  PdfIcon,
-  DocIcon,
-  XlsxIcon,
-  JpgIcon,
-  PngIcon,
   Success,
   TickMark,
   Rotation3D,

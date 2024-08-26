@@ -21,7 +21,7 @@ const setEmployeeDetail = (userObject, token) => {
   localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
 };
 
-const Otp = ({ isLogin = false }) => {
+const Otp = () => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const history = useHistory();
@@ -30,8 +30,8 @@ const Otp = ({ isLogin = false }) => {
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
-  const { email, tenant } = location.state || {};
-
+  const { email ,tenant } = location.state || {};
+  
   const config = [
     {
       body: [
@@ -53,18 +53,19 @@ const Otp = ({ isLogin = false }) => {
     },
   ];
 
-  const OtpConfig = [
+  const OtpConfig=[
     {
       texts: {
-        header: t("CORE_COMMON_OTP_LABEL"),
+        header: "CORE_COMMON_OTP_LABEL",
         submitButtonLabel: "CORE_COMMON_SUBMIT",
       },
-    },
-  ];
+    }
+  ]
 
   const closeToast = () => {
     setShowToast(null);
   };
+
 
   useEffect(() => {
     if (!user) {
@@ -75,22 +76,17 @@ const Otp = ({ isLogin = false }) => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
-    let redirectPath = `/${window?.globalPath}/user/url`;
-    let redirectPathOtpLogin = `/${window?.contextPath}/employee`;
+    let redirectPath = `/${window?.contextPath}/employee/user/url`;
 
-    if (isLogin) {
-      history.push(redirectPathOtpLogin);
-      return;
-    } else {
-      history.push({
-        pathname: redirectPath,
-        state: { tenant: tenant },
-      });
-      return;
-    }
+    history.push({
+      pathname: redirectPath,
+      state: {tenant:tenant },
+    });
   }, [user]);
 
+
   const onSubmit = async (formData) => {
+    
     const requestData = {
       username: email,
       password: formData?.OtpComponent?.otp,
@@ -122,7 +118,7 @@ const Otp = ({ isLogin = false }) => {
         inline
         submitInForm
         onFormValueChange={(setValue, formValue) => {
-          const otpValue = formValue["OtpComponent"];
+          const otpValue = formValue["OtpComponent"]; 
           if (otpValue?.otp?.length === 6) {
             setIsOtpValid(true);
           } else {
@@ -150,8 +146,11 @@ const Otp = ({ isLogin = false }) => {
           }}
         />{" "}
       </div>
-    </Background>
+    </Background >
   );
 };
 
 export default Otp;
+
+
+

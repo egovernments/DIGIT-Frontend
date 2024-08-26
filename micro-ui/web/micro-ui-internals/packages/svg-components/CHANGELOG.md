@@ -1,8 +1,5 @@
 # Changelog
 
-## [1.0.11]
-- Added Profile,Add,File Icons.
-
 ## [1.0.9]
 - Fixed icons for Church, Health Facility, School Building, and Warehouses.
 

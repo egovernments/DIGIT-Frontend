@@ -120,10 +120,6 @@ export const UICustomizations = {
       //checking both to and from date are present
     },
     preProcess: (data) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.params = {
-        code: tenantId,
-      };
       //   data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
       const { name, code } = data?.state?.searchForm || {};
 

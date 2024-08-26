@@ -5,7 +5,7 @@ import { getI18n } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import { DigitApp, DigitAppWrapper } from "./App";
+import { DigitApp } from "./App";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import ChangeCity from "./components/ChangeCity";
 import ChangeLanguage from "./components/ChangeLanguage";
@@ -30,7 +30,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLand
     <Provider store={data}>
       <Router>
         <BodyContainer>
-          <DigitAppWrapper
+          <DigitApp
             initData={initData}
             stateCode={stateCode}
             modules={initData?.modules}

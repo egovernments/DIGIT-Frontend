@@ -1,11 +1,4 @@
 import {
-    Add,
-    Profile,
-    PdfIcon,
-    DocIcon,
-    XlsxIcon,
-    JpgIcon,
-    PngIcon,
     Rotation3D,
     SixFtApart,
     Rotate360,
@@ -788,13 +781,6 @@ import {
 
 
  export const SVG={
-    Add,
-    Profile,
-    PdfIcon,
-    DocIcon,
-    XlsxIcon,
-    JpgIcon,
-    PngIcon,
     Rotation3D,
     SixFtApart,
     Rotate360,

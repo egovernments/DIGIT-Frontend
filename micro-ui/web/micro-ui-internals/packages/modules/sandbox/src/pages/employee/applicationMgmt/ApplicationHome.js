@@ -17,8 +17,7 @@ const ApplicationHome = () => {
         return data?.["sandbox-ui"]?.ModuleMasterConfig;
       },
       enabled: true,
-    },
-    true
+    }
   );
 
   if (moduleMasterLoading) {
@@ -27,12 +26,12 @@ const ApplicationHome = () => {
 
   return (
     <>
-      <Header className="sandbox-header">{t("SANDBOX_APPLICATION_HOME_HEADER")}</Header>
+      <Header className="sandbox-header">Application Home</Header>
       <div className="sandbox-module-container">
         {moduleMasterData?.map((item) => (
           <ModuleCard
             className="sandbox-module-card"
-            label={t(`SANDBOX_APPLICATION_MODULE_${item?.module}`)}
+            label={item?.module}
             buttonLabel={t(`SANDBOX_VIEW`)}
             onButtonClick={() => history.push(`/${window?.contextPath}/employee/sandbox/application-management/module?module=${item?.module}`)}
           />
