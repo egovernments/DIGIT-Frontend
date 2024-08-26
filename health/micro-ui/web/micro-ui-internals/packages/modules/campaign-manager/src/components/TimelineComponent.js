@@ -7,39 +7,39 @@ import { downloadExcelWithCustomName } from "../utils";
 
 function epochToDateTime(epoch) {
   // Create a new Date object using the epoch time
-  const date = new Date(epoch ); 
+  const date = new Date(epoch);
   // Extract the date components
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
-  const day = String(date.getDate()).padStart(2, '0');
-  
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+  const day = String(date.getDate()).padStart(2, "0");
+
   // Extract the time components
   let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
   // Determine AM/PM and convert to 12-hour format
-  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  const formattedHours = String(hours).padStart(2, '0');
-  
+  const formattedHours = String(hours).padStart(2, "0");
+
   // Format the date and time
   const formattedDate = `${day}/${month}/${year}`;
   const formattedTime = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
-  
+
   // Return the formatted date and time
   return `${formattedDate} ${formattedTime}`;
 }
 
-const TimelineComponent = ({campaignId, resourceId}) => {
+const TimelineComponent = ({ campaignId, resourceId }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const [userCredential, setUserCredential] = useState(null);
   const [newResourceId, setNewResourceId] = useState(resourceId);
   const [searchDATA, setSearchDATA] = useState(null);
-  const [dataFetched, setDataFetched] = useState(false); 
+  const [dataFetched, setDataFetched] = useState(false);
   const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "baseTimeOut" }]);
 
   const formatLabel = (label) => {
@@ -82,7 +82,7 @@ const TimelineComponent = ({campaignId, resourceId}) => {
     },
   };
   // use refetch interval in this
-  const { data: progessTrack , refetch} = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: progessTrack , refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const lastCompletedProcess = progessTrack?.processTrack
     .filter((process) => process.status === "completed" && process.showInUi === true)
@@ -160,6 +160,12 @@ const TimelineComponent = ({campaignId, resourceId}) => {
         clearInterval(intervalId);
       }
     };
+  }, [lastCompletedProcess]);
+
+  useEffect(() => {
+    if (lastCompletedProcess?.type === "campaign-creation") {
+      fetchUser(); // Fetch the user credentials again after the campaign is created
+    }
   }, [lastCompletedProcess]);
 
   const completedProcesses = progessTrack?.processTrack
@@ -245,51 +251,121 @@ const TimelineComponent = ({campaignId, resourceId}) => {
 
   // }, [progessTrack])
 
+  // return (
+  //   <React.Fragment>
+  //     <div className="timeline-user">
+  //       {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
+  //         <TimelineMolecule>
+  //           {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
+
+  //           {/* <Timeline
+  //             label={t("HCM_CURRENT")}
+  //             subElements={subElements}
+  //             variant="inprogress"
+  //             showConnector={true}
+  //           /> */}
+  //           {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
+
+  //           {upcomingTimelines?.map((timeline, index) => (
+  //             <Timeline
+  //               key={index}
+  //               label={timeline?.label}
+  //               subElements={timeline?.subElements}
+  //               variant="upcoming"
+  //               showConnector={true}
+  //               className={"upcoming-timeline"}
+  //             />
+  //           ))}
+
+  //           {inProgressTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
+  //           ))}
+
+  //           {completedTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
+  //           ))}
+  //         </TimelineMolecule>
+  //       ) : (
+  //         <TimelineMolecule
+  //           initialVisibleCount={1}
+  //           hideFutureLabel={true}
+  //           viewLessLabelForPast={t("HCM_SHOW_LESS")}
+  //           viewMoreLabelForPast={t("HCM_SHOW_MORE")}
+  //         >
+  //           {completedTimelines?.map((timeline, index) => (
+  //             <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
+  //           ))}
+  //         </TimelineMolecule>
+  //       )}
+  //       {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
+  //         <Button
+  //           label={t("CAMPAIGN_DOWNLOAD_USER_CRED")}
+  //           variation="primary"
+  //           icon={"DownloadIcon"}
+  //           type="button"
+  //           className="campaign-download-template-btn hover"
+  //           onClick={downloadUserCred}
+  //         />
+  //       )}
+  //     </div>
+  //   </React.Fragment>
+  // );
+
   return (
     <React.Fragment>
       <div className="timeline-user">
-        {upcomingTimelines?.length > 0 || inProgressTimelines?.length > 0 ? (
-          <TimelineMolecule>
-            {/* <Timeline label={t("HCM_UPCOMING")} variant="upcoming" subElements={subElements2} className={"upcoming-timeline"} showConnector={true} /> */}
-
-            {/* <Timeline
-              label={t("HCM_CURRENT")}
-              subElements={subElements}
-              variant="inprogress"
-              showConnector={true}
-            /> */}
-            {/* {subElements.length > 0 && <Timeline label={t("HCM_CURRENT")} subElements={subElements} variant="inprogress" showConnector={true} />} */}
-
-            {upcomingTimelines?.map((timeline, index) => (
-              <Timeline
-                key={index}
-                label={timeline?.label}
-                subElements={timeline?.subElements}
-                variant="upcoming"
-                showConnector={true}
-                className={"upcoming-timeline"}
-              />
-            ))}
-
-            {inProgressTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="inprogress" showConnector={true} />
-            ))}
-
-            {completedTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-            ))}
-          </TimelineMolecule>
-        ) : (
+      {progessTrack ? (
           <TimelineMolecule
             initialVisibleCount={1}
             hideFutureLabel={true}
             viewLessLabelForPast={t("HCM_SHOW_LESS")}
             viewMoreLabelForPast={t("HCM_SHOW_MORE")}
           >
-            {completedTimelines?.map((timeline, index) => (
-              <Timeline key={index} label={timeline?.label} subElements={timeline?.subElements} variant="completed" showConnector={true} />
-            ))}
+            {(() => {
+              const processesToRender = [];
+              let foundFirstFailed = false;
+
+              for (let i = 0; i < progessTrack?.processTrack?.length; i++) {
+                const process = progessTrack?.processTrack[i];
+                if (process.status === "failed") {
+                  processesToRender.push(
+                    <Timeline
+                      key={i}
+                      isError
+                      label={t(formatLabel(process?.type))}
+                      showDefaultValueForDate
+                      subElements={[epochToDateTime(process.lastModifiedTime)]}
+                      variant="completed"
+                    />
+                  );
+                  foundFirstFailed = true;
+                  break;
+                } else {
+                  if (process.showInUi) {
+                    let variant = "completed";
+                    if (process.status === "inprogress") {
+                      variant = "inprogress";
+                    } else if (process.status === "toBeCompleted") {
+                      variant = "upcoming";
+                    }
+
+                    processesToRender.push(
+                      <Timeline
+                        key={i}
+                        label={t(formatLabel(process?.type))}
+                        subElements={[epochToDateTime(process.lastModifiedTime)]}
+                        variant={variant}
+                        showConnector={true}
+                      />
+                    );
+                  }
+                }
+              }
+              return processesToRender.reverse();
+            })()}
           </TimelineMolecule>
+        ) : (
+          <p></p> // You can replace this with a loading spinner or any other indicator
         )}
         {userCredential && lastCompletedProcess?.type === "campaign-creation" && (
           <Button
