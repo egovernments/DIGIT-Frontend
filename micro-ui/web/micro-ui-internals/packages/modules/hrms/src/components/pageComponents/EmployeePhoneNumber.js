@@ -8,11 +8,10 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
   const [isError, setError] = useState(false);
   const [selectedCountryCode, setSelectedCountryCode] = useState(HRMSConstants.INDIA.countryCode);
 
-  const countryOptions = Object.values(HRMSConstants).map(({ countryCode }, index) => (
-    <option key={index} value={countryCode}>
-      {countryCode}
-    </option>
-  ));
+  // Define getPhonePattern here
+  const getPhonePattern = (countryCode) => {
+    return Object.values(HRMSConstants).find(e => e.countryCode === countryCode)?.regex;
+  };
 
   const [regexPattern, setRegexPattern] = useState(getPhonePattern(selectedCountryCode));
 
@@ -25,6 +24,12 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     return regexPattern ? regexPattern.test(value) : false;
   };
 
+  const handleMobileNumberChange = (value, inputName) => {
+    const isValid = validateMobileNumber(value);
+    setError(!isValid);
+    onSelect(config.key, { ...formData[config.key], [inputName]: value });
+  };
+
   const inputs = [
     {
       label: t("HR_MOB_NO_LABEL"),
@@ -34,7 +39,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
       populators: {
         validation: {
           required: true,
-          pattern: regexPattern, // Directly use the regexPattern
+          pattern: regexPattern, // Use the regex pattern for validation
         },
         componentInFront: (
           <select
@@ -42,19 +47,17 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
             onChange={(e) => setSelectedCountryCode(e.target.value)}
             className="employee-card-input employee-card-input--front"
           >
-            {countryOptions}
+            {Object.values(HRMSConstants).map(({ countryCode }, index) => (
+              <option key={index} value={countryCode}>
+                {countryCode}
+              </option>
+            ))}
           </select>
         ),
         error: t("CORE_COMMON_MOBILE_ERROR"),
       },
     },
   ];
-
-  const handleMobileNumberChange = (value, inputName) => {
-    const isValid = validateMobileNumber(value);
-    setError(!isValid);
-    onSelect(config.key, { ...formData[config.key], [inputName]: value });
-  };
 
   return (
     <div>
@@ -71,7 +74,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                 <TextInput
                   className="field desktop-w-full"
                   key={input.name}
-                  value={mobileNumber}
+                  value={mobileNumber || formData[config.key]?.[input.name] || ""}
                   onChange={(e) => handleMobileNumberChange(e.target.value, input.name)}
                   onBlur={(e) => setError(!validateMobileNumber(e.target.value))}
                   {...register(input.name, {
