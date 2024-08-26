@@ -123,7 +123,7 @@ export const UICustomizations = {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       data.params = {
         code: tenantId,
-        includeSubTenants: true
+        includeSubTenants: true,
       };
       //   data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
       const { name, code } = data?.state?.searchForm || {};
