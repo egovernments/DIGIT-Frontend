@@ -27,7 +27,9 @@ const ViewUrl = () => {
         <div className="sandbox-success-signup">
           <SVG.TickMark fill={"#fff"} height={40} width={60} />
         </div>
-        <CardHeader className="cardHeader-sandbox">{t("SANDBOX_HEADER")}</CardHeader>
+        <CardHeader className="cardHeader-sandbox" styles={{ color: "#00703c" }}>
+          {t("SANDBOX_HEADER")}
+        </CardHeader>
         <CardText className="cardText-sandbox">{t("SAMDBOX_URL_SUB")}</CardText>
         <FieldV1
           className="field-sandbox"

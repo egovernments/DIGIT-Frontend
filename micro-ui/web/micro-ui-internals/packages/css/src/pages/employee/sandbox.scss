@@ -69,13 +69,13 @@
 }
 
 .cardText-sandbox {
-  font-size: 1rem;
+  font-size: 1rem !important;
   font-family: "Roboto";
   font-weight: 400;
   color: #00703c !important;
-  margin-top: -0.625rem;
-  margin-bottom: 1rem;
-  text-align: center;
+  margin-top: -0.625rem !important;
+  margin-bottom: 1rem !important;
+  text-align: center !important;
 }
 
 .field-sandbox {
@@ -223,5 +223,26 @@
       width: 10rem;
       height: 2rem;
     }
+  }
+}
+
+.digit-employee-card.card-sandbox {
+  .bannerHeader {
+    .bannerLogo {
+      width: 10rem;
+      height: 2rem;
+    }
+  }
+  .sandbox-success-signup {
+    margin-top: unset;
+  }
+  .digit-field {
+    margin-top: 0.5rem;
+  }
+  .sandbox-url-footer {
+    margin-top: -1.5rem;
+  }
+  .digit-button-primary {
+    width: 100%;
   }
 }
