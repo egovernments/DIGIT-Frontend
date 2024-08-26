@@ -16,17 +16,17 @@ const SandboxCard = () => {
       {
         label: t("SANDBOX_TENANT_CREATE_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/create`,
-        roles: ROLES.SUPERUSER,
+        // roles: ROLES.SUPERUSER,
       },
       {
         label: t("SANDBOX_TENANT_SEARCH_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/tenant-management/search`,
-        roles: ROLES.SUPERUSER,
+        // roles: ROLES.SUPERUSER,
       },
       {
         label: t("SANDBOX_APPLICATION_MANAGEMENT_HOMECARD_LABEL"),
         link: `/${window?.contextPath}/employee/sandbox/application-management/home`,
-        roles: ROLES.SUPERUSER,
+        // roles: ROLES.SUPERUSER,
       },
     ],
   };

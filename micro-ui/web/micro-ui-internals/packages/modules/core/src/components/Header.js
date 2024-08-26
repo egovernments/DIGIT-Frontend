@@ -9,7 +9,6 @@ const Header = ({ showTenant = true }) => {
 
   if (isLoading) return <Loader />;
 
-  console.log("showTenant", showTenant);
   return (
     <div className="bannerHeader">
       <img className="bannerLogo" src={stateInfo?.logoUrl} style={!showTenant ? { borderRight: "unset" } : {}} />
