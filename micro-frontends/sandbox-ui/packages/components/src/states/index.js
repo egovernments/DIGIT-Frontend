@@ -4,6 +4,7 @@ import { useLocaleState } from "./useLocaleState";
 import { useNavigatorState } from "./useNavigatorState";
 import { useTenantState } from "./useTenantState";
 import { useUserState } from "./useUserState";
+import { useToastState } from "./useToastState";
 
 /**
  * Centralized export of state management hooks.
@@ -34,6 +35,7 @@ const States = {
   useLocaleState,
   useNavigatorState,
   useTenantState,
+  useToastState
 };
 
 export default States;

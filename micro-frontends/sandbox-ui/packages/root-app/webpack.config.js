@@ -16,6 +16,7 @@ module.exports = (webpackConfigEnv, argv) => {
     // modify the webpack config however you'd like to by adding to this object
     devServer: {
       port: 9001,
+      open: true, // This opens the default browser
       proxy: [
         {
           context: () => true,

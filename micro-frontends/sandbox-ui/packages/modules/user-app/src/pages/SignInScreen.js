@@ -2,6 +2,9 @@
 import React from "react";
 import { Components } from "components";
 import { Hooks } from "components";
+import useAppToast from "../../../../components/src/hooks/useAppToast";
+import userAppUser from "../../../../components/src/hooks/useAppUser";
+import useNavigate from "../../../../components/src/hooks/useNavigate";
 const { FormComposer } = Components?.organisms;
 
 // Define the schema for the login form with two methods
@@ -80,18 +83,43 @@ const formDataToRequestData = (formData) => {
  * @returns {JSX.Element} A JSX element representing the page content.
  */
 const SignInScreen = () => {
+  const {showToast}=useAppToast();
+  const {navigateTo}=useNavigate();
+  const {loggedIn }=userAppUser();
   const { mutation, revalidate } = Hooks?.useCustomAPIMutationHook({
     url: "/user/oauth/token",
     params: {},
     body: {},
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: { "Content-Type": "application/x-www-form-urlencoded","authorization":"Basic ZWdvdi11c2VyLWNsaWVudDo=" },
     options: { method: "POST" },
   });
 
   const handleSubmit = (formData) => {
-    mutation.mutate({
-      body: { ...formDataToRequestData(formData) }, // Override specific fields if needed
-    });
+    mutation.mutate(
+      {
+        body: { ...formDataToRequestData(formData) }, // Override specific fields if needed
+      },
+      {
+        onSuccess: (data) => {
+          // Handle the success case
+          console.log('Mutation was successful:', data);
+          showToast('Mutation was successful:')
+          loggedIn(data?.["access_token"],data?.["UserRequest"]?.tenantId)
+          navigateTo("home");
+          // Perform any additional actions like showing a success message
+          // or updating the UI based on the response
+        },
+        onError: (error) => {
+          // Handle the error case
+          console.error('Mutation failed:', error);
+          showToast('Mutation was successful:',"error")
+
+          // Perform any additional actions like showing an error message
+          // or handling specific error cases
+        },
+      }
+    );
+    
   };
   return (
     <>
