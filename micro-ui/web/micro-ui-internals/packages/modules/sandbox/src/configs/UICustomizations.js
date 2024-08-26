@@ -123,10 +123,10 @@ export const UICustomizations = {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       data.params = {
         code: tenantId,
+        includeSubTenants: true
       };
       //   data.params = { ...data.params, tenantId: Digit.ULBService.getCurrentTenantId() };
       const { name, code } = data?.state?.searchForm || {};
-
       if (name) {
         data.params.name = name;
       }
@@ -180,7 +180,7 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       data.params = {
-        tenantId: tenantId,
+        tenantId: tenantId
       };
       data.body = { RequestInfo: data.body.RequestInfo };
       data.body.MdmsCriteria = {

@@ -52,7 +52,7 @@ const TenantCreate = () => {
           setShowToast({ key: "success", label: t("SANDBOX_TENANT_CREATE_SUCCESS_TOAST") });
           setTimeout(() => {
             closeToast();
-            history.push(`/${window?.contextPath}/employee`);
+            history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/search`);
           }, 3000);
         },
       }
