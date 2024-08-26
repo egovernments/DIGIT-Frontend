@@ -1,6 +1,6 @@
 import React from "react";
+import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
@@ -28,6 +28,7 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
+  initCoreComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initSandboxComponents();
