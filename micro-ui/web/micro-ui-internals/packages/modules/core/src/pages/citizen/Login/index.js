@@ -239,7 +239,7 @@ console.log("path",path);
        <Switch>
          <AppContainer>
           {/* <BackButton /> */}
-    <div>
+    
           <Route path={`${path}`} exact>
             <SelectMobileNumber
               onSelect={selectMobileNumber}
@@ -252,8 +252,8 @@ console.log("path",path);
               t={t}
             />
           </Route>
-          </div>,
-    <div>
+          
+    
         <Route path={`${path}/otp`}>
            <SelectOtp
               config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText : `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
@@ -266,7 +266,7 @@ console.log("path",path);
                t={t}
              />
            </Route> 
-    </div>,
+    
     <div>
           <Route path={`${path}/name`}>
             <SelectName  onSelect={selectName} t={t} isDisabled={canSubmitName} />
