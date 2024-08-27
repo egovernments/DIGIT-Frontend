@@ -469,12 +469,9 @@ function setHiddenColumns(request: any, schema: any, localizationMap?: { [key: s
   request.body.hiddenColumns = hiddenColumns;
 }
 
-async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
+async function getSchemaBasedOnSource(request: any, isSourceMicroplan: boolean, resourceDistributionStrategy: string) {
   const tenantId = request?.query?.tenantId;
-  const responseFromCampaignSearch = await getCampaignSearchResponse(request);
-  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
-  const resourceDistributionStrategy = responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.resourceDistributionStrategy;
-  let schema;
+  let schema: any;
   if (isSourceMicroplan) {
     if (resourceDistributionStrategyTypes.includes(resourceDistributionStrategy)) {
       schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-FACILITY-${resourceDistributionStrategy}`);
@@ -485,6 +482,13 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   } else {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
+  return schema;
+}
+
+async function createFacilitySheet(request: any, allFacilities: any[], localizationMap?: { [key: string]: string }) {
+  const responseFromCampaignSearch = await getCampaignSearchResponse(request);
+  const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
+  let schema: any = await getSchemaBasedOnSource(request, isSourceMicroplan, responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.resourceDistributionStrategy);
   const keys = schema?.columns;
   setDropdownFromSchema(request, schema, localizationMap);
   setHiddenColumns(request, schema, localizationMap);
