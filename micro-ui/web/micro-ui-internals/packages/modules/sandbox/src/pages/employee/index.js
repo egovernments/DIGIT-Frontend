@@ -9,6 +9,7 @@ import TenantView from "./tenantMgmt/TenantView";
 import TenantCreate from "./tenantMgmt/TenantCreate";
 import ApplicationHome from "./applicationMgmt/ApplicationHome";
 import ModuleMasterTable from "./applicationMgmt/ModuleMasterTable";
+import TenantUpdate from "./tenantMgmt/TenantUpdate";
 
 const bredCrumbStyle = { maxWidth: "min-content" };
 
@@ -55,6 +56,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/tenant-management/create`} component={() => <TenantCreate />} />
         <PrivateRoute path={`${path}/tenant-management/search`} component={() => <TenantView />} />
+        <PrivateRoute path={`${path}/tenant-management/update`} component={() => <TenantUpdate />} />
         <PrivateRoute path={`${path}/application-management/home`} component={() => <ApplicationHome />} />
         <PrivateRoute path={`${path}/application-management/module-master`} component={() => <SandboxSearch />} />
         <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />

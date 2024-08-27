@@ -32,7 +32,13 @@ const TenantView = () => {
   }, []);
 
   const onClickRow = ({ original: row }) => {
-    const value = row?.code;
+    const code = row?.code;
+    const name= row?.name;
+    const email=row?.email;
+    console.log("cde in the row is"+code);
+    console.log("name in the row is"+name);
+    history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/update`, {name,code,email});
+
   };
 
   return (
