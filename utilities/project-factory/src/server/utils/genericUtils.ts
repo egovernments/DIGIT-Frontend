@@ -473,10 +473,10 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   const tenantId = request?.query?.tenantId;
   const responseFromCampaignSearch = await getCampaignSearchResponse(request);
   const isSourceMicroplan = checkIfSourceIsMicroplan(responseFromCampaignSearch?.CampaignDetails?.[0]);
-  const campaignType = responseFromCampaignSearch?.CampaignDetails?.[0]?.projectType;
+  const resourceDistributionStrategy = responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.resourceDistributionStrategy;
   let schema;
   if (isSourceMicroplan) {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-${campaignType}`);
+    schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-FACILITY-${resourceDistributionStrategy}`);
   } else {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
