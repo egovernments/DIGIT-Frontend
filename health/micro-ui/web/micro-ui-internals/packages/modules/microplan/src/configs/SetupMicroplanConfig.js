@@ -17,7 +17,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
+                sessionData: totalFormData,  //!session data
                 isSubmitting: isSubmitting,
               },
               populators: {
@@ -41,7 +41,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
+                sessionData: totalFormData,  //!Session data again
                 isSubmitting: isSubmitting,
               },
               populators: {

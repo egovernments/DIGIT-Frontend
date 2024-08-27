@@ -1,6 +1,6 @@
 import {
   Loader,
-  FormComposerV2,
+  FormComposerV2, //important 
   Header,
   MultiUploadWrapper,
   Button,
@@ -27,8 +27,9 @@ const SetupMicroplan = () => {
   const [totalFormData, setTotalFormData] = useState({});
   const [active, setActive] = useState(0);
   const [microplanConfig, setMicroplanConfig] = useState(MicroplanConfig(totalFormData, null, isSubmitting));
-  const [currentKey, setCurrentKey] = useState(() => {
-    console.log(searchParams,location);
+  const [currentKey, setCurrentKey] = useState(() => {  //! This only determines which page we are on
+    console.log("location",location);
+    console.log("search Param", searchParams);
     debugger;
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -38,11 +39,12 @@ const SetupMicroplan = () => {
 
 
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
+    debugger;
     return microplanConfig
       .map((config) => {
         return {
           ...config,
-          form: config?.form.filter((step) => parseInt(step.key) === currentKey),
+          form: config?.form.filter((step) => parseInt(step.key) === currentKey), //! Checks currKey
         };
       })
       .filter((config) => config.form.length > 0);
@@ -52,6 +54,7 @@ const SetupMicroplan = () => {
 
   useEffect(() => {
     setFilteredConfig(filterMicroplanConfig(microplanConfig, currentKey));
+    debugger;
   }, [microplanConfig, currentKey]);
 
   const config = filteredConfig?.[0];
@@ -59,20 +62,25 @@ const SetupMicroplan = () => {
   // setting the current step when the key is changed on the basis of the config
   useEffect(() => {
     setCurrentStep(Number(filteredConfig?.[0]?.form?.[0]?.stepCount - 1));
+    debugger;
     // setShowToast(null);
   }, [currentKey, filteredConfig]);
 
   useEffect(() => {
+    debugger;
     setIsSubmitting(false);
     Digit.Utils.microplan.updateUrlParams({ key: currentKey, summary: false });
     // setSummaryErrors(null);
   }, [currentKey]);
 
   useEffect(() => {
+    debugger;
+    console.log("params",params);
     setTotalFormData(params);
   }, [params]);
 
-  const onSubmit = (formData) => {
+  const onSubmit = (formData) => {   //! Goes to next step
+    debugger;
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
     const name = filteredConfig?.[0]?.form?.[0]?.name;
@@ -97,10 +105,12 @@ const SetupMicroplan = () => {
   }
 
   const onStepClick = (step) =>{
+    debugger;
     // setCurrentStep(prev => prev + 1)
   }
 
-  const onSecondayActionClick = () => {
+  const onSecondayActionClick = () => {  //!back button click
+    debugger;
     //if step is 1 then redirect to home page
     //otherwise go to prev step
     setCurrentKey(prev => prev-1)
@@ -115,14 +125,14 @@ const SetupMicroplan = () => {
     <React.Fragment>
         <Stepper
           customSteps={[
-            "HCM_CAMPAIGN_SETUP_DETAILS",
-            "MICROPLAN_DETAILS",
-            "MP_BOUNDARY_SELECTION",
-            "UPLOAD_DATA",
-            "MP_USER_CREATION",
-            "HYPOTHESIS",
-            "FORMULA_CONFIGURATION",
-            "SUMMARY"
+            "HCM_CAMPAIGN_SETUP_DETAILSS",
+            "MICROPLAN_DETAILSSSS",
+            "MP_BOUNDARY_SELECTION1",
+            "UPLOAD_DATA1",
+            "MP_USER_CREATION1",
+            "HYPOTHESIS1",
+            "FORMULA_CONFIGURATION1",
+            "SUMMARY1"
           ]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
@@ -132,19 +142,19 @@ const SetupMicroplan = () => {
         config={config?.form.map((config) => {
           return {
             ...config,
-            body: config?.body.filter((a) => !a.hideInEmployee),
+            body: config?.body.filter((a) => !a.hideInEmployee), //! Doubt
           };
         })}
-        onSubmit={onSubmit}
+        onSubmit={onSubmit}  //!next step
         showSecondaryLabel={true}
         secondaryLabel={t("ES_COMMON_BACK")}
-        actionClassName={"actionBarClass"}
-        className="setup-campaign"
-        cardClassName="setup-campaign-card"
+        actionClassName={"actionBarClass"}  //! 
+        className="setup-campaign" //!index.scss
+        cardClassName="setup-campaign-card" //! css selection
         // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
-        onSecondayActionClick={onSecondayActionClick}
+        onSecondayActionClick={onSecondayActionClick} //!prev step
         label={
-          t("ES_COMMON_NEXT")
+          t("ES_COMMON_NEXT")  //!next button name
         }
       />
       {/* {actionBar === "true" && (
