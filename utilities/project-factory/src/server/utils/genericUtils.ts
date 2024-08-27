@@ -10,7 +10,7 @@ import { checkIfSourceIsMicroplan, getConfigurableColumnHeadersBasedOnCampaignTy
 import Localisation from "../controllers/localisationController/localisation.controller";
 import { executeQuery } from "./db";
 import { generatedResourceTransformer } from "./transforms/searchResponseConstructor";
-import { generatedResourceStatuses, headingMapping, resourceDataStatuses } from "../config/constants";
+import { generatedResourceStatuses, headingMapping, resourceDataStatuses, resourceDistributionStrategyTypes } from "../config/constants";
 import { getLocaleFromRequest, getLocaleFromRequestInfo, getLocalisationModuleName } from "./localisationUtils";
 import { getBoundaryColumnName, getBoundaryTabName } from "./boundaryUtils";
 import { getBoundaryDataService } from "../service/dataManageService";
@@ -476,7 +476,12 @@ async function createFacilitySheet(request: any, allFacilities: any[], localizat
   const resourceDistributionStrategy = responseFromCampaignSearch?.CampaignDetails?.[0]?.additionalDetails?.resourceDistributionStrategy;
   let schema;
   if (isSourceMicroplan) {
-    schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-FACILITY-${resourceDistributionStrategy}`);
+    if (resourceDistributionStrategyTypes.includes(resourceDistributionStrategy)) {
+      schema = await callMdmsTypeSchema(request, tenantId, "facility", `MP-FACILITY-${resourceDistributionStrategy}`);
+    }
+    else {
+      throwError("CAMPAIGN", 500, "INVALID_RESOURCE_DISTRIBUTION_STRATEGY", `Invalid resource distribution strategy: ${resourceDistributionStrategy} ; Allowed resource distribution strategies: ${resourceDistributionStrategyTypes}`);
+    }
   } else {
     schema = await callMdmsTypeSchema(request, tenantId, "facility", "all");
   }
