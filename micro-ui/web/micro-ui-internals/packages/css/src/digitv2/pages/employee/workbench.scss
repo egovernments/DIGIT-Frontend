@@ -516,12 +516,13 @@ a{
 
 .tooltip .tooltiptext {
 
-  top: 2rem;
   left: 0;
-  margin-left: 0rem;
-  width: fit-content;
+  margin-left: 100%;
+  width: max-content;
   height: max-content;
   white-space: normal;
+  line-height: normal;
+  bottom: 80%;
 
   .tooltiptextvalue {
     font-size: 14px;
