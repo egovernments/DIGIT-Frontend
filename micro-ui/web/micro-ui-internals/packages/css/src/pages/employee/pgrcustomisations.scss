@@ -1,6 +1,6 @@
 
 .link-label {
-  color: #f47738 !important;
+  color: #C84C0E !important;
 }
 .submit-bar
   {
@@ -11,7 +11,7 @@
   color:#C84C0E !important;
 }
 
-.link {
+.link a {
   color:#C84C0E !important;
 }
 .action-bar-wrap .menu-wrap{
@@ -26,5 +26,14 @@
 }
 .CitizenHomeCard .links a {
   text-decoration: none !important;
+  color:#C84C0E !important;
+}
+.submit-bar header{
+  background-color:#C84C0E !important;
+}
+.inboxLinks .header .logo svg path {
+  fill: #C84C0E !important;
+}
+.clear-search .link-label {
   color:#C84C0E !important;
 }
