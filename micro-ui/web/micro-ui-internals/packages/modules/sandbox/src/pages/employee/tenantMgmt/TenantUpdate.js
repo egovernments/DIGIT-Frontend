@@ -27,44 +27,50 @@ const TenantUpdate = () => {
     }, 5000);
   };
   const reqCreate = {
-    url: `/tenant-management/tenant/_update`,
+    url: `/tenant-management/subTenant/_update`,
     params: {},
     body: {},
     config: {
       enable: false,
     },
   };
-
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
-
   const onSubmit = async (data) => {
-    await mutation.mutate(
-      {
-        url: `/tenant-management/tenant/_update`,
-        body: transformCreateData(data),
-        config: {
-          enable: true,
+    if(tenantId==code){
+      setShowToast({
+        label: t("SANDBOX_TENANT_CANNOT_UPDATE_TOAST"),
+        isError: true,
+      });
+    }
+    else{
+      await mutation.mutate(
+        {
+          url: `/tenant-management/subTenant/_update`,
+          body: transformCreateData(data),
+          config: {
+            enable: true,
+          },
         },
-      },
-      {
-        onError: (error, variables) => {
-          setShowToast({
-            label: error.toString(),
-            isError: true,
-          });
-          setTimeout(() => {
-            setShowToast(false);
-          }, 5000);
-        },
-        onSuccess: async (data) => {
-          setShowToast({ key: "success", label: t("SANDBOX_TENANT_UPDATE_SUCCESS_TOAST") });
-          setTimeout(() => {
-            closeToast();
-            history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/_search`);
-          }, 3000);
-        },
-      }
-    );
+        {
+          onError: (error, variables) => {
+            setShowToast({
+              label: error.toString(),
+              isError: true,
+            });
+            setTimeout(() => {
+              setShowToast(false);
+            }, 5000);
+          },
+          onSuccess: async (data) => {
+            setShowToast({ key: "success", label: t("SANDBOX_TENANT_UPDATE_SUCCESS_TOAST") });
+            setTimeout(() => {
+              closeToast();
+              history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/_search`);
+            }, 3000);
+          },
+        }
+      );
+    }
   };
   return (
     <div>
