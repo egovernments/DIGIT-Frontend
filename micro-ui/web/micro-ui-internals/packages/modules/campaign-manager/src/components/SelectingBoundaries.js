@@ -333,6 +333,7 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   };
 
   const handleBoundaryChange = (data, boundary) => {
+    console.log("data" , data);
     setTargetedData(boundary?.boundaryType);
     if (
       !updateBoundary &&
@@ -447,6 +448,8 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
       setParentArray(codes);
     }
   };
+
+  console.log("selecteddddddddd" , selectedData , boundaryData);
 
   return (
     <>
