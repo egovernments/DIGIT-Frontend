@@ -120,7 +120,7 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, initD
           </Route>
         )}
         <Route>
-          <Redirect to={`/${globalPath}/user/sign-up`} />
+          <Redirect to={`/${window?.globalPath}/user/sign-up`} />
         </Route>
       </Switch>
     </div>
