@@ -1,11 +1,5 @@
-import {
-  CitizenHomeCard,
-  CitizenInfoLabel,
-  Loader,
-  FSMIcon,
-  MCollectIcon,
-  BillsIcon
-} from "@egovernments/digit-ui-components";
+import { Loader, FSMIcon, MCollectIcon, BillsIcon } from "@egovernments/digit-ui-components";
+import { CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,37 +43,38 @@ export const processLinkData = (newData, code, t) => {
         });
     });
   }
-
+  if (newObj && newObj.links) {
+    newObj.links = newObj?.links.map((obj) => ({
+      ...obj,
+      link: obj?.link?.replace("digit-ui", window.contextPath),
+      navigationURL: obj?.navigationURL?.replace("digit-ui", window.contextPath),
+    }));
+  }
   return newObj;
 };
 const iconSelector = (code) => {
   switch (code) {
     case "PT":
-      return <PTIcon className="fill-path-primary-main" />;
+      return <FSMIcon className="fill-path-primary-main" />;
     case "WS":
-      return <WSICon className="fill-path-primary-main" />;
+      return <MCollectIcon className="fill-path-primary-main" />;
     case "FSM":
       return <FSMIcon className="fill-path-primary-main" />;
     case "MCollect":
       return <MCollectIcon className="fill-path-primary-main" />;
     case "PGR":
-      return <PGRIcon className="fill-path-primary-main" />;
+      return <MCollectIcon className="fill-path-primary-main" />;
     case "TL":
-      return <TLIcon className="fill-path-primary-main" />;
+      return <MCollectIcon className="fill-path-primary-main" />;
     case "OBPS":
-      return <OBPSIcon className="fill-path-primary-main" />;
+      return <MCollectIcon className="fill-path-primary-main" />;
     case "Bills":
       return <BillsIcon className="fill-path-primary-main" />;
     default:
-      return <PTIcon className="fill-path-primary-main" />;
+      return <FSMIcon className="fill-path-primary-main" />;
   }
 };
-const CitizenHome = ({
-  modules,
-  getCitizenMenu,
-  fetchedCitizen,
-  isLoading,
-}) => {
+const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => {
   const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
   const moduleArr = modules.filter(({ code }) => code !== "Payment");
   const moduleArray = [paymentModule, ...moduleArr];
@@ -93,7 +88,7 @@ const CitizenHome = ({
       <div className="citizen-all-services-wrapper">
         {location.pathname.includes(
           "sanitation-ui/citizen/all-services"
-        // ) ? null : (
+          // ) ? null : (
           // <BackButton />
         )}
         <div className="citizenAllServiceGrid">
@@ -101,17 +96,12 @@ const CitizenHome = ({
             .filter((mod) => mod)
             .map(({ code }, index) => {
               let mdmsDataObj;
-              if (fetchedCitizen)
-                mdmsDataObj = fetchedCitizen
-                  ? processLinkData(getCitizenMenu, code, t)
-                  : undefined;
+              if (fetchedCitizen) mdmsDataObj = fetchedCitizen ? processLinkData(getCitizenMenu, code, t) : undefined;
               if (mdmsDataObj?.links?.length > 0) {
                 return (
                   <CitizenHomeCard
                     header={t(mdmsDataObj?.header)}
-                    links={mdmsDataObj?.links
-                      ?.filter((ele) => ele?.link)
-                      ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
+                    links={mdmsDataObj?.links?.filter((ele) => ele?.link)?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
                     Icon={() => iconSelector(code)}
                     Info={
                       code === "OBPS"
@@ -119,9 +109,7 @@ const CitizenHome = ({
                             <CitizenInfoLabel
                               style={{ margin: "0px", padding: "10px" }}
                               info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                              text={t(
-                                `BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`
-                              )}
+                              text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
                             />
                           )
                         : null
@@ -143,9 +131,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
       <div className="employee-app-container digit-home-employee-app">
         <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper">
           {modules.map(({ code }, index) => {
-            const Card =
-              Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
-              (() => <React.Fragment />);
+            const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
             return <Card key={index} />;
           })}
         </div>
@@ -154,10 +140,7 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
       {additionalComponent &&
         additionalComponent?.length > 0 &&
         additionalComponent.map((i) => {
-          const Component =
-            typeof i === "string"
-              ? Digit.ComponentRegistryService.getComponent(i)
-              : null;
+          const Component = typeof i === "string" ? Digit.ComponentRegistryService.getComponent(i) : null;
           return Component ? (
             <div className="additional-component-wrapper">
               <Component />
@@ -168,25 +151,9 @@ const EmployeeHome = ({ modules, additionalComponent }) => {
   );
 };
 
-export const AppHome = ({
-  userType,
-  modules,
-  getCitizenMenu,
-  fetchedCitizen,
-  isLoading,
-  additionalComponent,
-}) => {
+export const AppHome = ({ userType, modules, getCitizenMenu, fetchedCitizen, isLoading, additionalComponent }) => {
   if (userType === "citizen") {
-    return (
-      <CitizenHome
-        modules={modules}
-        getCitizenMenu={getCitizenMenu}
-        fetchedCitizen={fetchedCitizen}
-        isLoading={isLoading}
-      />
-    );
+    return <CitizenHome modules={modules} getCitizenMenu={getCitizenMenu} fetchedCitizen={fetchedCitizen} isLoading={isLoading} />;
   }
-  return (
-    <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
-  );
+  return <EmployeeHome modules={modules} additionalComponent={additionalComponent} />;
 };

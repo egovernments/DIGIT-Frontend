@@ -23,7 +23,8 @@ import TimeLine from "../../components/TimeLine";
 const WorkflowComponent = ({ complaintDetails, id, getWorkFlow, zoomImage }) => {
   const tenantId = Digit.SessionStorage.get("CITIZEN.COMMON.HOME.CITY")?.code || complaintDetails.service.tenantId;
   let workFlowDetails = Digit.Hooks.useWorkflowDetails({ tenantId: tenantId, id, moduleCode: "PGR" });
-  const { data: ComplainMaxIdleTime, isLoading: ComplainMaxIdleTimeLoading } = Digit.Hooks.pgr.useMDMS.ComplainClosingTime(tenantId?.split(".")[0]);
+  // TODO @hridya integrate with proper mdms
+  const { data: ComplainMaxIdleTime, isLoading: ComplainMaxIdleTimeLoading } = Digit?.Hooks?.pgr?.useMDMS?.ComplainClosingTime?.(tenantId?.split(".")[0])||{data:0};
 
   useEffect(() => {
     getWorkFlow(workFlowDetails.data);

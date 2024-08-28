@@ -51,7 +51,7 @@ const Home = ({
     [
       {
         name: "actions-test",
-        filter: `[?(@.url == '${window.contextPath}-card')]`,
+        filter: `[?(@.url == 'digit-ui-card')]`,
       },
     ],
     {
@@ -161,7 +161,15 @@ const Home = ({
 
         <Switch>
           <Route exact path={path}>
-            <CitizenHome />
+            {/* <CitizenHome /> */}
+            {/* disabled since we had only pgr for ethopia demo */}
+            <AppHome
+              userType="citizen"
+              modules={modules}
+              getCitizenMenu={linkData}
+              fetchedCitizen={isLinkDataFetched}
+              isLoading={islinkDataLoading}
+            />
           </Route>
 
           <Route exact path={`${path}/select-language`}>
