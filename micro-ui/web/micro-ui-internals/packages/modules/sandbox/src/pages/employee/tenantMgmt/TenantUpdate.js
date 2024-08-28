@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory ,useLocation} from "react-router-dom";
 import { FormComposerV2, Header, Toast } from "@egovernments/digit-ui-react-components";
-import { transformCreateData } from "../../../utils/TenantCreateUtil";
-import { tenantCreateConfig } from "../../../configs/tenantCreateConfig";
+import { transformCreateData } from "../../../utils/TenantUpdateUtil";
+import { tenantUpdateConfig } from "../../../configs/tenantUpdateConfig";
 
 const fieldStyle = { marginRight: 0 };
 
 const TenantUpdate = () => {
   const location = useLocation();
   const { name,code,email} = location.state || {};
-  console.log("name code and email is"+ name+code+email);
   const defaultValue = {
-    tenantName:name
+    tenantName:name,
+    tenantCode:code,
+    emailId:email,
+    isActive:""
   };
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -25,7 +27,7 @@ const TenantUpdate = () => {
     }, 5000);
   };
   const reqCreate = {
-    url: `/tenant-management/subTenant/_create`,
+    url: `/tenant-management/tenant/_update`,
     params: {},
     body: {},
     config: {
@@ -38,7 +40,7 @@ const TenantUpdate = () => {
   const onSubmit = async (data) => {
     await mutation.mutate(
       {
-        url: `/tenant-management/tenant/_create`,
+        url: `/tenant-management/tenant/_update`,
         body: transformCreateData(data),
         config: {
           enable: true,
@@ -55,10 +57,10 @@ const TenantUpdate = () => {
           }, 5000);
         },
         onSuccess: async (data) => {
-          setShowToast({ key: "success", label: t("SANDBOX_TENANT_CREATE_SUCCESS_TOAST") });
+          setShowToast({ key: "success", label: t("SANDBOX_TENANT_UPDATE_SUCCESS_TOAST") });
           setTimeout(() => {
             closeToast();
-            history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/search`);
+            history.push(`/${window?.contextPath}/employee/sandbox/tenant-management/_search`);
           }, 3000);
         },
       }
@@ -66,10 +68,10 @@ const TenantUpdate = () => {
   };
   return (
     <div>
-      <Header> {t("SANDBOX_CREATE_TENANT_HEADER")}</Header>
+      <Header> {t("SANDBOX_UPDATE_TENANT_HEADER")}</Header>
       <FormComposerV2
-        label={t("SANDBOX_CREATE_TENANT_SUBMIT_BUTTON")}
-        config={tenantCreateConfig.map((config) => {
+        label={t("SANDBOX_UPDATE_TENANT_SUBMIT_BUTTON")}
+        config={tenantUpdateConfig.map((config) => {
           return {
             ...config,
           };
