@@ -65,11 +65,11 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     }
   };
 
-  useEffect(() => {
-    if (newResourceId?.length > 0) {
-      fetchUser();
-    }
-  }, [newResourceId]);
+  // useEffect(() => {
+  //   if (newResourceId?.length > 0) {
+  //     fetchUser();
+  //   }
+  // }, [newResourceId && lastCompletedProcess]);
 
   const downloadUserCred = async () => {
     downloadExcelWithCustomName(userCredential);
@@ -162,11 +162,16 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
     };
   }, [lastCompletedProcess]);
 
+  // useEffect(() => {
+  //   if (lastCompletedProcess?.type === "campaign-creation") {
+  //     fetchUser(); // Fetch the user credentials again after the campaign is created
+  //   }
+  // }, [lastCompletedProcess]);
   useEffect(() => {
-    if (lastCompletedProcess?.type === "campaign-creation") {
-      fetchUser(); // Fetch the user credentials again after the campaign is created
+    if (newResourceId?.length > 0) {
+      fetchUser();
     }
-  }, [lastCompletedProcess]);
+  }, [newResourceId, lastCompletedProcess]);
 
   const completedProcesses = progessTrack?.processTrack
     .filter((process) => process.status === "completed" && process.showInUi === true)
@@ -310,60 +315,69 @@ const TimelineComponent = ({ campaignId, resourceId }) => {
   //     </div>
   //   </React.Fragment>
   // );
-
+  
   return (
     <React.Fragment>
       <div className="timeline-user">
-      {progessTrack ? (
-          <TimelineMolecule
-            initialVisibleCount={1}
-            hideFutureLabel={true}
-            viewLessLabelForPast={t("HCM_SHOW_LESS")}
-            viewMoreLabelForPast={t("HCM_SHOW_MORE")}
-          >
-            {(() => {
-              const processesToRender = [];
-              let foundFirstFailed = false;
-
-              for (let i = 0; i < progessTrack?.processTrack?.length; i++) {
-                const process = progessTrack?.processTrack[i];
-                if (process.status === "failed") {
+        {progessTrack ? (
+          (() => {
+            const processesToRender = [];
+            let foundFirstFailed = false;
+            let allCompleted = true;
+  
+            for (let i = 0; i < progessTrack?.processTrack?.length; i++) {
+              const process = progessTrack?.processTrack[i];
+              if (process.status === "failed") {
+                processesToRender.push(
+                  <Timeline
+                    key={i}
+                    isError
+                    label={t(formatLabel(process?.type))}
+                    showDefaultValueForDate
+                    subElements={[epochToDateTime(process.lastModifiedTime)]}
+                    variant="completed"
+                  />
+                );
+                foundFirstFailed = true;
+                allCompleted = false; // Mark as not all completed
+                break;
+              } else {
+                if (process.showInUi) {
+                  let variant = "completed";
+                  if (process.status === "inprogress") {
+                    variant = "inprogress";
+                    allCompleted = false; // If any process is in progress, mark as not all completed
+                  } else if (process.status === "toBeCompleted") {
+                    variant = "upcoming";
+                    allCompleted = false; // If any process is upcoming, mark as not all completed
+                  }
+  
                   processesToRender.push(
                     <Timeline
                       key={i}
-                      isError
                       label={t(formatLabel(process?.type))}
-                      showDefaultValueForDate
                       subElements={[epochToDateTime(process.lastModifiedTime)]}
-                      variant="completed"
+                      variant={variant}
+                      showConnector={true}
                     />
                   );
-                  foundFirstFailed = true;
-                  break;
-                } else {
-                  if (process.showInUi) {
-                    let variant = "completed";
-                    if (process.status === "inprogress") {
-                      variant = "inprogress";
-                    } else if (process.status === "toBeCompleted") {
-                      variant = "upcoming";
-                    }
-
-                    processesToRender.push(
-                      <Timeline
-                        key={i}
-                        label={t(formatLabel(process?.type))}
-                        subElements={[epochToDateTime(process.lastModifiedTime)]}
-                        variant={variant}
-                        showConnector={true}
-                      />
-                    );
-                  }
                 }
               }
-              return processesToRender.reverse();
-            })()}
-          </TimelineMolecule>
+            }
+  
+            return (
+              <TimelineMolecule
+                // initialVisibleCount={allCompleted ? 1 : processesToRender.length} // Show all if not completed
+                // hideFutureLabel={!allCompleted} // Hide future labels if not completed
+                hideFutureLabel={true}
+                hidePastLabel={!allCompleted}
+                {...(!allCompleted && { initialVisibleCount: processesToRender.length })}
+                {...(allCompleted && { initialVisibleCount: 1})}
+              >
+                {processesToRender.reverse()}
+              </TimelineMolecule>
+            );
+          })()
         ) : (
           <p></p> // You can replace this with a loading spinner or any other indicator
         )}

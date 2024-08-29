@@ -533,8 +533,8 @@ useEffect(()=> {
     updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
 }, [startDate, endDate]);
 
-if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0].value=="Configuration for Multi Round Campaigns")
-{
+if(updatedObject?.cards[1]?.sections[0]?.values[0].value==t("MR-DN"))
+{  
   updatedObject.cards.forEach((card) => {
     if (card.name && card.name.startsWith("CYCLE_")) {
         const cycleId = card.name.split("_")[1];
