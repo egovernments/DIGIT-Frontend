@@ -533,7 +533,7 @@ useEffect(()=> {
     updatedObject.cards[1].sections[0].values[3].value=Digit.Utils.date.convertEpochToDate(endDate);
 }, [startDate, endDate]);
 
-if(updatedObject?.cards[1]?.sections[0]?.values?.[0].value==t("MR-DN"))
+if(updatedObject?.cards?.[1]?.sections?.[0]?.values?.[0]?.value==t("MR-DN"))
 {  
   updatedObject.cards.forEach((card) => {
     if (card.name && card.name.startsWith("CYCLE_")) {
