@@ -5,6 +5,8 @@ import { Switch } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
 import VehicleSearch from "./VehicleSearch";
 import DataSearch from "./DataSearch";
+import Checklist from "./Sample";
+import MicroplanSearch from "./MicroplanSearch";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -34,7 +36,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
          <PrivateRoute path={`${path}/setup-microplan`} component={() => <SetupMicroplan />} />
          <PrivateRoute path={`${path}/vehicle-search`} component={() => <VehicleSearch></VehicleSearch>} /> 
          <PrivateRoute path={`${path}/data-search`} component={() => <DataSearch></DataSearch>} /> 
-
+         <PrivateRoute path={`${path}/sample`} component={() => <Checklist></Checklist>} /> 
+         <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} /> 
          
       </AppContainer>
     </Switch>

@@ -12,7 +12,7 @@ export const MicroplanConfig = (totalFormData, dataParams, isSubmitting, summary
               key: "campaignDetails",
               type: "component",
               skipAPICall: false,
-              component: "CampaignDetails",
+              component: "EstimateComponent",
               withoutLabel: true,
               disable: false,
               customProps: {

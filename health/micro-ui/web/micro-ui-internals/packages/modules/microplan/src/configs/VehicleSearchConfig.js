@@ -9,7 +9,7 @@ const defaultSearchValues = {
   {
     const { t } = useTranslation();
     return {
-      label: t("Vehicle_Search"),
+      // label:"Choose Vehicles For Campaign ",
       type: "search",
       apiDetails: {
         serviceName: "/mdms-v2/v2/_search",
@@ -32,6 +32,7 @@ const defaultSearchValues = {
       sections: {
         search: {
           uiConfig: {
+            showFormInstruction:"Please choose the vehicles that will ne used in the campaign",
             searchWrapperStyles: {
               // display:"none",
               flexDirection:"column-reverse",
@@ -42,23 +43,53 @@ const defaultSearchValues = {
             },
             headerStyle: null,
             label:"Yuyuy",
+            headerLabel:"Please choose the vehicle",
             formClassName: "custom-both-clear-search",
             primaryLabel: t("ES_COMMON_SEARCH"),
             secondaryLabel:t( "ES_COMMON_CLEAR_SEARCH"),
             minReqFields: 0,
             defaultValues: defaultSearchValues, // Set default values for search fields
-            fields: [
+            fields: [     //!label-field pair
+              // {
+              //   label: "Vehicle Type ",
+              //   isMandatory: false,
+              //   key: "vehicle",
+              //   type: "text",
+              //   style: { fontSize: "1rem", color: "blue" },
+              //   populators: { 
+              //     name: "individualName", 
+              //     error: "Required", 
+              //     validation: { pattern: /^[A-Za-z]+$/i } 
+              //   },
+              // },
+
               {
-                label: "Vehicle Type ",
+                label: "Choose Vehicle Type",
+                key: "field",            //note
+                type: "dropdown",
                 isMandatory: false,
-                key: "vehicle",
-                type: "text",
-                populators: { 
-                  name: "individualName", 
-                  error: "Required", 
-                  validation: { pattern: /^[A-Za-z]+$/i } 
+                disable: false,
+                populators: {
+                  name: "field",
+                  optionsKey: "label",
+                  optionsCustomStyle: { top: "2.3rem"},
+                  options: [
+                    {
+                      label: "Motorcycle",
+                      name: "motorcycle",
+                    },
+                    {
+                      label: "Truck",
+                      name: "truck",
+                    },
+                    
+                    
+  
+                  ],
                 },
               },
+
+
               // {
               //   label: "Phone number",
               //   isMandatory: false,

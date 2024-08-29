@@ -26,9 +26,12 @@ import {
     }, []);
 
     const onClickRow = (data) => {
-      console.log(data);
+
+      // console.log(data);
+      console.log("hi");
+      console.log(data.name);
       const row = data.original.data.name;
-      console.log(row);
+      // console.log(row);
       
   
     }
@@ -43,6 +46,7 @@ import {
           <InboxSearchComposer
             configs={vehicleConfigs}
             defaultValues={defaultValues}
+            headerLabel={"Choose vehicles for campaign"}
             additionalConfig={{
               resultsTable: {
                 onClickRow
