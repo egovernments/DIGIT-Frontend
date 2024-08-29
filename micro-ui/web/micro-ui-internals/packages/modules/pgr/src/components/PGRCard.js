@@ -50,11 +50,11 @@ const PGRCard = () => {
         label: t("ES_PGR_INBOX"),
         link: `/${window?.contextPath}/employee/pgr/inbox`
     },
+    ...propsForCSR,
     {
       label: t("DSS"),
       link: `/${window?.contextPath}/employee/dss/dashboard/pgr`,
-    },
-    ...propsForCSR
+    }
     
     ]
 }
