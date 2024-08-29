@@ -4,19 +4,19 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { newConfig } from "../components/config/config";
 import _ from "lodash";
-
+import { HRMSConstants } from "./HRMSConstants";
 const CreateEmployee = () => {
-  console.log("create hrms");
+  
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
-  // const [mobileNumber, setMobileNumber] = useState(null);
+   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
-  // const [phonecheck, setPhonecheck] = useState(false);
+  const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
   const isMobile = window.Digit.Utils.browser.isMobile();
-
+  
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
       return {
@@ -44,7 +44,8 @@ const CreateEmployee = () => {
     const address = formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || '';
     const validEmail = email.length == 0 ? true : email.match(Digit.Utils.getPattern('Email'));
     return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
-  };
+  }
+  
 
   const defaultValues = {
     Jurisdictions: [
@@ -63,18 +64,22 @@ const CreateEmployee = () => {
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
-  console.log("mmmm");
+  
 
   const onFormValueChange = (setValue = true, formData) => {
+   
+    let setassigncheck = false;
+    let phonecheck = false;
+
     if (!_.isEqual(sessionFormData, formData)) {
       setSessionFormData({ ...sessionFormData, ...formData });
     }
 
-    // if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
-    //   setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
-    // } else {
-    //   setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
-    // }
+    if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
+      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    } else {
+      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    }
 
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
@@ -86,9 +91,10 @@ const CreateEmployee = () => {
       }
     }
 
-    let setassigncheck = false;
+    
     for (let i = 0; i < formData?.Assignments?.length; i++) {
       let key = formData?.Assignments[i];
+     
       if (
         !(key.department && key.designation && key.fromDate && (formData?.Assignments[i].toDate || formData?.Assignments[i]?.isCurrentAssignment))
       ) {
@@ -101,6 +107,7 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
+    
 
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
@@ -111,13 +118,14 @@ const CreateEmployee = () => {
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
       checkfield &&
       setassigncheck &&
-      // phonecheck &&
+      phonecheck &&
       checkMailNameNum(formData)
     ) {
       setSubmitValve(true);
-    } else {
-      setSubmitValve(false);
-    }
+    } 
+    // else {
+    //   setSubmitValve(false);
+    // }
   };
 
   const navigateToAcknowledgement = (Employees) => {
@@ -211,7 +219,7 @@ const CreateEmployee = () => {
         config={config}
         onSubmit={onSubmit}
         onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
+        isDisabled={false}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
       {showToast && (
