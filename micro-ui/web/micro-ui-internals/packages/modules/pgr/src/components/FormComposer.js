@@ -12,6 +12,7 @@ import {
   ActionBar,
   SubmitBar,
   LabelFieldPair,
+  
 } from "@egovernments/digit-ui-react-components";
 
 import { useTranslation } from "react-i18next";
@@ -78,7 +79,8 @@ export const FormComposer = (props) => {
         {formFields}
         {props.children}
         <ActionBar>
-          <SubmitBar disabled={isDisabled} label={t(props.label)} submit="submit" />
+       
+          <SubmitBar disabled={isDisabled} label={t("CS_ADDCOMPLAINT_ADDITIONAL_DETAILS_SUBMIT_COMPLAINT")} submit="submit" />
         </ActionBar>
       </Card>
     </form>

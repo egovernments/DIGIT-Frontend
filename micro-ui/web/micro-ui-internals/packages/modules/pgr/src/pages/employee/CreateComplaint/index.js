@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
-
+import { Header } from "@egovernments/digit-ui-react-components";
 import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 import { PGRConstants } from "../../../constants/PGRConstants";
@@ -20,7 +20,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
-
+  const isMobile = window.Digit.Utils.browser.isMobile();
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     getCities()[0]?.code,
     "admin",
@@ -257,8 +257,16 @@ export const CreateComplaint = ({ parentUrl }) => {
     },
   ];
 
+ 
+
   return (
     <div>
+      <div>
+        {/* <Header>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Header> */}
+        <div style={isMobile ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" } : { marginLeft: "15px", fontFamily: "calibri", color: "#FF0000" }}>
+        <Header>{t("CS_PGR_CREATE_COMPLAINT")}</Header>
+      </div>
+      </div>
       <FormComposer config={config} onSubmit={wrapperSubmit} />
     </div>
   );
