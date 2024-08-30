@@ -44,3 +44,21 @@
 .SearchOnRadioButton{
   max-width: 540px !important;
 }
+
+
+
+.input-otp-wrap{
+    background-color: unset !important
+}
+.date-wrap{
+  align-items:center;
+}
+
+.status-highlight{
+display: flex;
+    justify-content: center;
+    align-items: center;
+  p{
+  padding-top:0px
+  }
+}
