@@ -2,15 +2,14 @@
 
 // default values of search input component
 const defaultSearchValues = {
-    individualName: "",
-    mobileNumber: "",
-    IndividualID: "",
-  };
+  microplanName: "",
+
+};
+
   
   //config for tab search sceeen
   export const TabSearchconfig = {
-    tenantId: "mz",
-    moduleName: "commonCampaignUiConfig",
+    // moduleName: "commonCampaignUiConfig",
     showTab: true, // setting true will enable tab screen
     TabSearchconfig: [ // all tab config should be added in json array
       {
@@ -28,7 +27,7 @@ const defaultSearchValues = {
             },
           },
          masterName: "commonUiConfig",
-          moduleName: "MicroplanSearchConfig1",
+          moduleName: "MicroplanSearchConfig",
           minParametersForSearchForm: 0,
           tableFormJsonPath: "requestParam",
           filterFormJsonPath: "requestBody.MdmsCriteria.customs",
@@ -46,10 +45,10 @@ const defaultSearchValues = {
                 {
                   label: "Name of the microplan",
                   isMandatory: false,
-                  key: "individualName",
+                  key: "microplanName",
                   type: "text",
                   populators: {
-                    name: "individualName",
+                    name: "microplanName",
                     error: "Required",
                     validation: { pattern: /^[A-Za-z]+$/i },
                   },
@@ -116,25 +115,25 @@ const defaultSearchValues = {
         },
       },
       {
-        label: "Individual Search Tab2",
+        label: "My microplans 1",
         type: "search",
         apiDetails: {
-          serviceName: "/individual/v1/_search",
+          serviceName: "/mdms-v2/v2/_search",
           requestParam: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
+              "tenantId":Digit.ULBService.getCurrentTenantId()
           },
           requestBody: {
             apiOperation: "SEARCH",
-            Individual: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
+            MdmsCriteria: {
+              
             },
           },
-          masterName: "commonUiConfig",
-          moduleName: "SearchIndividualConfig",
+         masterName: "commonUiConfig",
+          moduleName: "MicroplanSearchConfig",
           minParametersForSearchForm: 0,
           tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.Individual",
-          searchFormJsonPath: "requestBody.Individual",
+          filterFormJsonPath: "requestBody.MdmsCriteria.customs",
+          searchFormJsonPath: "requestBody.MdmsCriteria.customs",
         },
         sections: {
           search: {
@@ -146,33 +145,33 @@ const defaultSearchValues = {
               defaultValues: defaultSearchValues, // Set default values for search fields
               fields: [
                 {
-                  label: "Applicant name ",
+                  label: "Name of the microplan",
                   isMandatory: false,
-                  key: "individualName",
+                  key: "microplanName",
                   type: "text",
                   populators: {
-                    name: "individualName",
+                    name: "microplanName",
                     error: "Required",
                     validation: { pattern: /^[A-Za-z]+$/i },
                   },
                 },
-                {
-                  label: "Phone number",
-                  isMandatory: false,
-                  key: "Phone number",
-                  type: "number",
-                  disable: false,
-                  populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
-                },
-                {
-                  label: "Individual Id ",
-                  isMandatory: false,
-                  type: "text",
-                  disable: false,
-                  populators: {
-                    name: "individualId",
-                  },
-                },
+                // {
+                //   label: "Phone number",
+                //   isMandatory: false,
+                //   key: "Phone number",
+                //   type: "number",
+                //   disable: false,
+                //   populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+                // },
+                // {
+                //   label: "Individual Id ",
+                //   isMandatory: false,
+                //   type: "text",
+                //   disable: false,
+                //   populators: {
+                //     name: "individualId",
+                //   },
+                // },
               ],
             },
   
@@ -183,47 +182,60 @@ const defaultSearchValues = {
             uiConfig: {
               columns: [
                 {
-                  label: "IndividualID",
-                  jsonPath: "individualId",
+                  label: "Name of the Microplan ",
+                  jsonPath: "data.name",
                 },
   
                 {
-                  label: "Name",
-                  jsonPath: "name.givenName",
+                  label: "Microplan Status",
+                  jsonPath: "data.description",
                 },
                 {
-                  label: "Address",
-                  jsonPath: "address.locality.code",
+                  label: "Campaign Disease",
+                  jsonPath: "data.executingDepartment",
                 },
+                {
+                  label:"Camapaign Type",
+                  jsonPath:"data.wfStatus"
+                },
+                {
+                  label:"Distribution Strategy",
+                  jsonPath:" proposalDate"
+                },
+                {
+                  label:"Actions",
+                  jsonPath:"data.status",
+                  additionalCustomization:true
+                }
               ],
   
               enableColumnSort: true,
-              resultsJsonPath: "Individual",
+              resultsJsonPath: "mdms",
             },
             show: true,
           },
         },
       },
       {
-        label: "Individual Search Tab3",
+        label: "My microplans 2",
         type: "search",
         apiDetails: {
-          serviceName: "/individual/v1/_search",
+          serviceName: "/mdms-v2/v2/_search",
           requestParam: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
+              "tenantId":Digit.ULBService.getCurrentTenantId()
           },
           requestBody: {
             apiOperation: "SEARCH",
-            Individual: {
-              tenantId: Digit.ULBService.getCurrentTenantId(),
+            MdmsCriteria: {
+              
             },
           },
-          masterName: "commonUiConfig",
-          moduleName: "SearchIndividualConfig",
+         masterName: "commonUiConfig",
+          moduleName: "MicroplanSearchConfig",
           minParametersForSearchForm: 0,
           tableFormJsonPath: "requestParam",
-          filterFormJsonPath: "requestBody.Individual",
-          searchFormJsonPath: "requestBody.Individual",
+          filterFormJsonPath: "requestBody.MdmsCriteria.customs",
+          searchFormJsonPath: "requestBody.MdmsCriteria.customs",
         },
         sections: {
           search: {
@@ -235,59 +247,71 @@ const defaultSearchValues = {
               defaultValues: defaultSearchValues, // Set default values for search fields
               fields: [
                 {
-                  label: "Applicant name ",
+                  label: "Name of the microplan",
                   isMandatory: false,
-                  key: "individualName",
+                  key: "microplanName",   //!doubt
                   type: "text",
                   populators: {
-                    name: "individualName",
+                    name: "microplanName",
                     error: "Required",
                     validation: { pattern: /^[A-Za-z]+$/i },
                   },
                 },
-                {
-                  label: "Phone number",
-                  isMandatory: false,
-                  key: "Phone number",
-                  type: "number",
-                  disable: false,
-                  populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
-                },
-                {
-                  label: "Individual Id ",
-                  isMandatory: false,
-                  type: "text",
-                  disable: false,
-                  populators: {
-                    name: "individualId",
-                  },
-                },
+                // {
+                //   label: "Phone number",
+                //   isMandatory: false,
+                //   key: "Phone number",
+                //   type: "number",
+                //   disable: false,
+                //   populators: { name: "mobileNumber", error: "sample error message", validation: { min: 0, max: 999999999 } },
+                // },
+                // {
+                //   label: "Individual Id ",
+                //   isMandatory: false,
+                //   type: "text",
+                //   disable: false,
+                //   populators: {
+                //     name: "individualId",
+                //   },
+                // },
               ],
             },
   
             show: true,
           },
           searchResult: {
-            tenantId: Digit.ULBService.getCurrentTenantId(),
             uiConfig: {
               columns: [
                 {
-                  label: "IndividualID",
-                  jsonPath: "individualId",
+                  label: "Name of the Microplan ",
+                  jsonPath: "data.name",
                 },
   
                 {
-                  label: "Name",
-                  jsonPath: "name.givenName",
+                  label: "Microplan Status",
+                  jsonPath: "data.description",
                 },
                 {
-                  label: "Address",
-                  jsonPath: "address.locality.code",
+                  label: "Campaign Disease",
+                  jsonPath: "data.executingDepartment",
                 },
+                {
+                  label:"Camapaign Type",
+                  jsonPath:"data.wfStatus"
+                },
+                {
+                  label:"Distribution Strategy",
+                  jsonPath:" proposalDate"
+                },
+                {
+                  label:"Actions",
+                  jsonPath:"data.status",
+                  additionalCustomization:true
+                }
               ],
   
               enableColumnSort: true,
-              resultsJsonPath: "Individual",
+              resultsJsonPath: "mdms",
             },
             show: true,
           },

@@ -25,6 +25,7 @@ const MicroplanSearch = () => {
   }, []);
 
   const onTabChange = (n) => {
+    debugger
     setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false }))); //setting tab enable which is being clicked
     setConfig(TabSearchconfig?.TabSearchconfig?.[n]);// as per tab number filtering the config
   };

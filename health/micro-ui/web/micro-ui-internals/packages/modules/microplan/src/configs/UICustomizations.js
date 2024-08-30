@@ -1,6 +1,9 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import _ from "lodash";
 import React from "react";
+import { Dropdown } from "@egovernments/digit-ui-components";
+
+
 
 
 
@@ -136,47 +139,57 @@ export const UICustomizations = {
 
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      
+
       if (key === "Vehicle Type") {
         return <div> ${value} </div>
       }
       return <div> Aib</div>
 
-      
+
     },
   },
 
-  
 
-    MicroplanSearchConfig1: {
-      preProcess: (data) => {
-        const tenantId = Digit.ULBService.getCurrentTenantId();
-        data.body.MdmsCriteria.tenantId = tenantId;
-  
-        const filters = {};
-        const custom = data.body.MdmsCriteria.customs;
-  
-        const { field, value } = custom || {};
-        if (field && field.name && value) {
-          filters[field.name] = value;
-        }
-  
-        data.body.MdmsCriteria.filters = filters;
-        delete data.body.customs;
-        return data;
-  
-      },
-      additionalCustomizations: (row, key, column, value, t, searchResult) => {
-        
-        if (key === "Actions") {
-          return <div> $${value} </div>
-        }
-        return <div> Aib</div>
-  
-        
-      },
+
+  MicroplanSearchConfig: {
+    preProcess: (data) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.MdmsCriteria.tenantId = tenantId;
+
+      const filters = {};
+      const custom = data.body.MdmsCriteria.customs;
+
+      const { field, value } = custom || {};
+      if (field && field.name && value) {
+        filters[field.name] = value;
+      }
+
+      data.body.MdmsCriteria.filters = filters;
+      delete data.body.customs;
+      return data;
+
     },
-  
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      if(key==="Actions"){
+        return (
+          <Dropdown
+          option={[
+            { code: "1", name: "Edit Setup" },
+            { code: "2", name: "Duplicate Setup" },
+            { code: "3", name: "View Summary" },
+          ]}
+          select={(e)=>{console.log(e,"event")}}
+          optionKey={"name"}
+          selected={{ code: "1", name: "Actions" }}
+        ></Dropdown>
+        // <p>$${value}</p>
+
+        );
+      }
+
+    },
+  },
+
 
 
 };
