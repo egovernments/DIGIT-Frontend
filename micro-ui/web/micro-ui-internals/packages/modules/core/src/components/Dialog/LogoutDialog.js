@@ -18,7 +18,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss, PopupStyles, isDisabled, 
     <Button
       type={"button"}
       size={"large"}
-      variation={"digit-action-cancel"}
+      variation={"secondary"}
       label={t("CORE_LOGOUT_CANCEL")}
       className={"logout-cancel-button"}
       onClick={onCancel}
@@ -31,7 +31,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss, PopupStyles, isDisabled, 
       formId={"modal-action"}
       onClick={onSelect}
       isDisabled={isDisabled}
-    />,
+    />
   ];
 
   const footerWithoutSubmit = [
@@ -55,6 +55,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss, PopupStyles, isDisabled, 
       onClose={onDismiss}
       className={"digit-logout-popup-wrapper"}
       onOverlayClick={onDismiss}
+      equalWidthButtons={true}
       style={PopupStyles}
     ></PopUp>
   );
