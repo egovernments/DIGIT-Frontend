@@ -114,7 +114,7 @@
     background: #0b4b66;
     height: 100%;
     color: theme(colors.white);
-    margin-top: 83px;
+    margin-top: 60px;
     z-index: 999;
     transition: 0.3s ease all;
     white-space: nowrap;
@@ -572,18 +572,19 @@
     @apply m-sm !important;
   }
 
-  .digit-toast-success.animate.digit-error {
+ /* .digit-toast-success.animate.digit-error {
     left: 50%;
     transform: translateX(-50%);
     bottom: 5rem;
-    animation: slideInFromBottom 0.5s ease forwards; /* Apply the animation */
+    animation: slideInFromBottom 0.5s ease forwards; 
   }  
 
   @keyframes slideInFromBottom {
     0% {
-        transform: translateX(-50%) translateY(100%); /* Start below the viewport */
+        transform: translateX(-50%) translateY(100%); 
     }
     100% {
-        transform: translateX(-50%) translateY(0); /* End at the centered position */
+        transform: translateX(-50%) translateY(0); 
     }
 }
+*/

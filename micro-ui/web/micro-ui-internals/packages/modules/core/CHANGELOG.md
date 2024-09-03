@@ -1,5 +1,8 @@
 # Changelog 
 
+## 1.8.2-beta.17
+- Integrated new topbar,sidebar and hambuger
+
 ## 1.8.2-beta.12
 - Updated the css 
 
