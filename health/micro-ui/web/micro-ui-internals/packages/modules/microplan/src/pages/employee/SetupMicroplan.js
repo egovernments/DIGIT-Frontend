@@ -54,6 +54,10 @@ const SetupMicroplan = () => {
     setFilteredConfig(filterMicroplanConfig(microplanConfig, currentKey));
   }, [microplanConfig, currentKey]);
 
+  useEffect(() => {
+    setMicroplanConfig(MicroplanConfig(totalFormData, null, isSubmitting));
+  }, [totalFormData, isSubmitting]);
+
   const config = filteredConfig?.[0];
 
   // setting the current step when the key is changed on the basis of the config
@@ -74,7 +78,6 @@ const SetupMicroplan = () => {
 
   const onSubmit = (formData) => {
     //run validations
-    
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
     const name = filteredConfig?.[0]?.form?.[0]?.name;

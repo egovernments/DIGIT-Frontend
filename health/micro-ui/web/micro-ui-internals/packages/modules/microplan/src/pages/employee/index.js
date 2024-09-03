@@ -34,21 +34,18 @@ const App = ({ path, stateCode, userType, tenants }) => {
       { name: "resourceDistributionStrategy"}
     ],
     {
-      cacheTime:Infinity
+      cacheTime:Infinity,
+      select:(data) => {
+        dispatch({
+          type: "SETINITDATA",
+          state: {
+            ...data?.["hcm-microplanning"],
+          },
+        });
+      }
     },
-    true //mdmsv2
+    {schemaCode:"hcm-microplanning"} //mdmsv2
   );
-
-  useEffect(() => {
-    if(MicroplanMdmsData){
-      dispatch({
-        type: "SETINITDATA",
-        state: {
-          ...MicroplanMdmsData?.MdmsRes?.["hcm-microplanning"],
-        },
-      });
-    }
-  }, [isLoadingMdmsMicroplanData])
   
 
   if(isLoadingMdmsMicroplanData){

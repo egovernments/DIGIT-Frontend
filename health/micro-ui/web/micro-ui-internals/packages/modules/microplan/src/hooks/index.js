@@ -1,17 +1,19 @@
 import utils from "../utils";
-const microplan = {
-  
+const microplanv1 = {
+  hook:() => {
+    
+  }
 };
 
 const Hooks = {
-  microplan
+  microplanv1
 };
 
 const Utils = {
   browser: {
     microplan: () => { },
   },
-  microplan: {
+  microplanv1: {
     ...utils,
     he:()=>{
       console.log("he");
