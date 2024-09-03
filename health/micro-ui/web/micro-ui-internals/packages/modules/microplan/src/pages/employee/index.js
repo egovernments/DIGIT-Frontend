@@ -1,8 +1,9 @@
-import { AppContainer, BreadCrumb, PrivateRoute } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import React,{useEffect} from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
+import { useMyContext } from "../../utils/context";
 
 const bredCrumbStyle={ maxWidth: "min-content" };
 const ProjectBreadCrumb = ({ location }) => {
@@ -23,6 +24,34 @@ const ProjectBreadCrumb = ({ location }) => {
 };
 
 const App = ({ path, stateCode, userType, tenants }) => {
+  const { dispatch } = useMyContext();
+  const { isLoading: isLoadingMdmsMicroplanData, data:MicroplanMdmsData } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    "hcm-microplanning",
+    [
+      { name: "MicroplanNamingConvention" },
+      { name: "MicroplanNamingRegx" },
+      { name: "resourceDistributionStrategy"}
+    ],
+    {
+      cacheTime:Infinity,
+      select:(data) => {
+        dispatch({
+          type: "SETINITDATA",
+          state: {
+            ...data?.["hcm-microplanning"],
+          },
+        });
+      }
+    },
+    {schemaCode:"hcm-microplanning"} //mdmsv2
+  );
+  
+
+  if(isLoadingMdmsMicroplanData){
+    return <Loader />
+  }
+
   return (
     <Switch>
       <AppContainer className="ground-container">

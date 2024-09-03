@@ -3,20 +3,21 @@ import { UploadIcon, FileIcon, DeleteIconv2, Toast, Card, Header, Loader } from 
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown } from "@egovernments/digit-ui-components";
-
-const CampaignDetails = ({onSelect,props}) => {
-
+import { useMyContext } from "../utils/context";
+const CampaignDetails = ({onSelect,props:customProps,...props}) => {
+  const {campaignType:campaignTypeSession,disease:diseaseSession,distributionStrat:distributionStratSession} = customProps?.sessionData?.CAMPAIGN_DETAILS?.[customProps?.name] || {}
+  const { dispatch,state } = useMyContext();
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
-  const [campaignType, setCampaignType] = useState(Digit.SessionStorage.get("microplanData")?.campaignDetails?.campaignType);
+  const [campaignType, setCampaignType] = useState(campaignTypeSession);
   const [disease, setDisease] = useState(
-    Digit.SessionStorage.get("microplanData")?.campaignDetails?.disease
-      ? Digit.SessionStorage.get("microplanData")?.campaignDetails?.disease
+    diseaseSession
+      ? diseaseSession
       : {
           code: "MALARIA",
         }
   );
-  const [distributionStrat, setDistributionStrat] = useState(Digit.SessionStorage.get("microplanData")?.campaignDetails?.distributionStrat);
+  const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }], {
     select: (data) => {
       let projectOptions = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
@@ -33,13 +34,17 @@ const CampaignDetails = ({onSelect,props}) => {
             code: "MALARIA",
           },
         ],
-        distributionStrategies: data?.["HCM-PROJECT-TYPES"]?.projectTypes?.[0]?.distributionStrategy,
+        // distributionStrategies: data?.["HCM-PROJECT-TYPES"]?.projectTypes?.[0]?.distributionStrategy,
+        distributionStrategies:state?.resourceDistributionStrategy
       };
     },
-  });
+  },
+  {schemaCode:"ProjectType"}
+);
+
 
   useEffect(() => {
-    onSelect(props.name,{
+    onSelect(customProps.name,{
       distributionStrat,disease,campaignType
     })
   }, [distributionStrat,disease,campaignType]);
