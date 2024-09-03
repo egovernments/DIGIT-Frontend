@@ -50,6 +50,7 @@ const useCustomMDMS = (tenantId, moduleName, masterDetails = [], config = {}, md
         enabled: mdmsv2 ? true : false,
         select: (response) => {
           //mdms will be an array of master data
+          //published this change in 1.8.2-beta.7
           if (config.select) {
             return config.select(response.MdmsRes);
           }
